@@ -2,133 +2,147 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC61C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73D1C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2B1205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557230854;
-	bh=8YUmshPyy0q14BdVHB/P/jPKNh9TtyoGbe4OullyzNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eYp+lHdDcgkISfkP9zKTlQiB1Tzop4C6jRmNZ3mu2WEagsH75rS4JywjNNauOALS1
-	 Ji77CDZ3TlWBEAMakPnllt4atK67zF1jrx2zF1nhfeM8HeUF0zwepPlYPGyr5Ebg0F
-	 IN1p4wEbqg2l7mXDBi8qNVdEUSlTwFZmuaQCDAJU=
+	by mail.kernel.org (Postfix) with ESMTP id 6B2BB205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:14:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BnIvsJZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfEGMHd (ORCPT
+        id S1726529AbfEGMOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfEGMHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:07:33 -0400
-Received: from earth.universe (dyndsl-091-248-189-167.ewe-ip-backbone.de [91.248.189.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84515205ED;
-        Tue,  7 May 2019 12:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557230852;
-        bh=8YUmshPyy0q14BdVHB/P/jPKNh9TtyoGbe4OullyzNQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aPNhihC08Wl4P/mRlm3289tw35E/nUp3qqu3x9rVatbUfxzyXLLL++v//5GgdIVrc
-         hpB0ABlF1i4erxtyZobMT3pMFymJB/hPfRIeNry9snwNQUhqx0QTGH3ZtmZhLfYszi
-         +vfQDiWyaOn55s+PaF9FjEip0ujm8D3pzo211WFA=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 3E0333C0CBD; Tue,  7 May 2019 14:07:30 +0200 (CEST)
-Date:   Tue, 7 May 2019 14:07:30 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] spi updates for v5.2
-Message-ID: <20190507120730.5ylk6v4yvzxuzqld@earth.universe>
-References: <20190506143301.GU14916@sirena.org.uk>
- <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
- <20190507021853.GY14916@sirena.org.uk>
- <20190507030241.GC14916@sirena.org.uk>
- <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
- <20190507110345.GF14916@sirena.org.uk>
+        Tue, 7 May 2019 08:14:55 -0400
+Received: from mail-eopbgr30049.outbound.protection.outlook.com ([40.107.3.49]:11073
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbfEGMOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:14:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2iVld42hbF7+tIVJxDvQSMVMYZbqDx4EQwGMQtxtrA=;
+ b=BnIvsJZD1hsLhzaQPHXGvLQYlkP+CBQDM9iRW5LabBO9S99LI9TH1CyFFerm+J13rGE8YmpnXd2r9V8XyKeEvmQL7dTZRG5FXub2SqNagShnKhKXm1UwvJcQJtdtjfrK9b0S6CP1JJep5d8ZZgiNuDNX0X6Z4DYv7UyON2mGw+M=
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
+ AM0PR04MB4689.eurprd04.prod.outlook.com (20.176.214.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.14; Tue, 7 May 2019 12:14:50 +0000
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec]) by AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec%7]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 12:14:50 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     =?Windows-1252?Q?Petr_=8Atetiar?= <ynezz@true.cz>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH net-next v2 0/4] of_get_mac_address ERR_PTR fixes
+Thread-Topic: [PATCH net-next v2 0/4] of_get_mac_address ERR_PTR fixes
+Thread-Index: AQHVBFI0RuJU2cpMvEWgdGL840mRHg==
+Date:   Tue, 7 May 2019 12:14:50 +0000
+Message-ID: <AM0PR04MB6434E06E7C43A2C95EB81F42EE310@AM0PR04MB6434.eurprd04.prod.outlook.com>
+References: <1557177887-30446-1-git-send-email-ynezz@true.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd066af7-f27a-4e62-3648-08d6d2e59aaf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4689;
+x-ms-traffictypediagnostic: AM0PR04MB4689:
+x-microsoft-antispam-prvs: <AM0PR04MB4689F6460F9132925426F4B0EE310@AM0PR04MB4689.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(396003)(366004)(346002)(199004)(189003)(74316002)(7416002)(66066001)(99286004)(5660300002)(14454004)(66574012)(9686003)(91956017)(7736002)(305945005)(256004)(71190400001)(478600001)(6506007)(186003)(6116002)(3846002)(53546011)(6246003)(86362001)(53936002)(68736007)(2501003)(486006)(66476007)(66556008)(64756008)(66446008)(76116006)(66946007)(14444005)(446003)(73956011)(7696005)(102836004)(26005)(33656002)(55016002)(316002)(8676002)(81166006)(4326008)(8936002)(81156014)(476003)(71200400001)(2906002)(110136005)(52536014)(25786009)(54906003)(76176011)(229853002)(44832011)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4689;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AhRPnDqmD6ntyYASANAaACNjKL+k8eWc81cF/HVFoM6nZPDgZZBx3DUtUCebbSWW5bZzF47Yx3YrFF6hpZGcrtyCK2ej7hAXXzxiMiy4JRkaPRJlZx4aAO2Oyskc+wFcpw13YeyKrAXJ/InJ08cLN2zh32KXD7KY10Q4HHrSnYf1AjvV7T1U6NyspoxVr6/r/AT8mFkTSTO9KDXdUSWvsC62g3VEYACvV75qjiLKRGDrXq3JbzAjFMxK2LgbDjyZLnU6AgXEuaOxkj5z6GT6FUXZ6YxkEEzG/FBpX2KUHp/Ikmw3C9b6vaNDDmsiMiRWqJDBwIv70tAhz85M9a5GBT2/gvKmpFik6R+3CHS1uweSybtZKI2+kV1eFl4czAeUx4nd5DMWO//02Bv7iVt1VwOfkWIGzCW4PkkistZsev4=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="apdjlhrolhn33wku"
-Content-Disposition: inline
-In-Reply-To: <20190507110345.GF14916@sirena.org.uk>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd066af7-f27a-4e62-3648-08d6d2e59aaf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 12:14:50.3172
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4689
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---apdjlhrolhn33wku
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, May 07, 2019 at 08:03:45PM +0900, Mark Brown wrote:
-> On Mon, May 06, 2019 at 08:13:49PM -0700, Linus Torvalds wrote:
-> > On Mon, May 6, 2019 at 8:02 PM Mark Brown <broonie@kernel.org> wrote:
->=20
-> > >                    Everything I'm
-> > > seeing is saying that Google just isn't enthusiastic about domains li=
-ke
-> > > kernel.org which is going an issue.
->=20
-> > Well, there are other people who use kernel.org email addresses.  Ingo
-> > Molnar, Rafael Wysocki, a couple of others.  But you're the one
-> > getting marked as spam.
->=20
-> I'm not going to search for rule 36 SPI.
->=20
-> > Somebody just hates you. I do end up checking my spam-box regularly,
-> > so maybe it doesn't matter.
->=20
-> Some spot checks are suggesting that they use gmail as their outbound
-> relay which I can imagine they'd like but would break some stuff for me
-> for non-kernel.org mail I think, it'd be a major rework to not inject
-> stuff via sendmail.
-
-FWIW, I send out kernel.org mails via mail.kernel.org. Konstantin
-added that service in 2014. You can get a password with
-
-ssh git@gitolite.kernel.org getsmtppass
-
-and then use the following settings for (example for git):
-
-[sendemail]
-    smtpserver     =3D mail.kernel.org
-    smtpserverport =3D 587
-    smtpencryption =3D tls
-    smtpuser       =3D <user>@kernel.org
-    smtppass       =3D [randomstring]
-
--- Sebastian
-
---apdjlhrolhn33wku
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzRdP4ACgkQ2O7X88g7
-+prBZw/+KfZqvuSCjDB0CmIEcWFMa7zz9KEU1klbG3ftpHjdKTrbR6lFBX7jkMuW
-6658BbTexe8PmoWKg3daBeDw6pbLYy65jeMMKV/P+9loo6rRnYAuiwv6lMSr4uDJ
-75VkJTRflXZiTl5j0RTWiJjg53YNpWJ4TxGhtuTsjBzQWG+DgeL4oNINLFcDaS0m
-Cfxs6VQnsQJ3PyfBH8+wIaRQNsvfZukVCU25iAC3G9cs/mvnXvrGyjSEg15AsqUR
-otao8WId93VwJbZ+2cg9REs/SlnQm0aiZy9pMoNGUl+J+TIlbbyLsz+uwkQph1Nk
-+1kxdxCiBjWjZDfXTWpL3+0/1xKfQ6TmZ3F9LLTChGmSdif9qtYjSY61FEkmUBpu
-B0yi0Q+LLqzT9QYl3bBcJWLI1GDnEpG3wJ29O6l5B5W+0qt82Sg8WD16BNgdRpEo
-BM2hiDVDNAUDdElA7uDvdvTaW3VXTL1/cUqVfcIZF4ZfcEOBYV5w0mriFsfwmatY
-pVz506pbRKC8ww4WllcDxIOlwM1rM2QgKvbnd0eO0OeMhFTXRTaMuX2sc4j+SLgG
-1dnBnQ/d2jgX84fhdC2KCIvdUp1nJESGsiXnUgcRyaDEQwOu8UERFYvGM6LtQ6Hh
-6lGNfIjHX5UWw6a5Mi1FtJm6mg6fpnd4h3EPiu6XWBm5XIGHQoU=
-=sj12
------END PGP SIGNATURE-----
-
---apdjlhrolhn33wku--
+On 07.05.2019 00:25, Petr =8Atetiar wrote:=0A=
+> Hi,=0A=
+> =0A=
+> this patch series is an attempt to fix the mess, I've somehow managed to=
+=0A=
+> introduce.=0A=
+> =0A=
+> First patch in this series is defacto v5 of the previous 05/10 patch in t=
+he=0A=
+> series, but since the v4 of this 05/10 patch wasn't picked up by the=0A=
+> patchwork for some unknown reason, this patch wasn't applied with the oth=
+er=0A=
+> 9 patches in the series, so I'm resending it as a separate patch of this=
+=0A=
+> fixup series again.=0A=
+> =0A=
+> Second patch is a result of this rebase against net-next tree, where I wa=
+s=0A=
+> checking again all current users of of_get_mac_address and found out, tha=
+t=0A=
+> there's new one in DSA, so I've converted this user to the new ERR_PTR=0A=
+> encoded error value as well.=0A=
+> =0A=
+> Third patch which was sent as v5 wasn't considered for merge, but I still=
+=0A=
+> think, that we need to check for possible NULL value, thus current IS_ERR=
+=0A=
+> check isn't sufficient and we need to use IS_ERR_OR_NULL instead.=0A=
+> =0A=
+> Fourth patch fixes warning reported by kbuild test robot.=0A=
+> =0A=
+> Cheers,=0A=
+> =0A=
+> Petr=0A=
+> =0A=
+> Petr =8Atetiar (4):=0A=
+>    net: ethernet: support of_get_mac_address new ERR_PTR error=0A=
+>    net: dsa: support of_get_mac_address new ERR_PTR error=0A=
+>    staging: octeon-ethernet: Fix of_get_mac_address ERR_PTR check=0A=
+>    net: usb: smsc: fix warning reported by kbuild test robot=0A=
+=0A=
+>   drivers/net/ethernet/freescale/fec_main.c             | 2 +-=0A=
+=0A=
+This fixes netboot on imx (probably all of them).=0A=
+=0A=
+Tested-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+=0A=
+But shouldn't "support of_get_mac_address new ERR_PTR error" somehow be =0A=
+reordered so that it's done before allowing non-null errors from =0A=
+of_get_mac_address?=0A=
+=0A=
+Otherwise it will break bisect for many people.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
