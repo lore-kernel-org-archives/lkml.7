@@ -2,146 +2,119 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D92C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0F9C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8535420835
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4888D20835
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfEGDhJ (ORCPT
+        id S1727355AbfEGDmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 23:37:09 -0400
-Received: from mga06.intel.com ([134.134.136.31]:2344 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726601AbfEGDhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 23:37:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 20:34:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,440,1549958400"; 
-   d="scan'208";a="344609157"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga006.fm.intel.com with ESMTP; 06 May 2019 20:34:06 -0700
-Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 6 May 2019 20:34:06 -0700
-Received: from BGSMSX108.gar.corp.intel.com (10.223.4.192) by
- FMSMSX125.amr.corp.intel.com (10.18.125.40) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 6 May 2019 20:34:05 -0700
-Received: from BGSMSX107.gar.corp.intel.com ([169.254.9.125]) by
- BGSMSX108.gar.corp.intel.com ([169.254.8.150]) with mapi id 14.03.0415.000;
- Tue, 7 May 2019 09:04:02 +0530
-From:   "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "Mark Brown" <broonie@kernel.org>
-CC:     "M, Naveen" <naveen.m@intel.com>, Ben Zhang <benzh@chromium.org>,
-        "Rajat Jain" <rajatja@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: RE: [PATCH v1 1/2] ASoC: SOF: Add Comet Lake PCI ID
-Thread-Topic: [PATCH v1 1/2] ASoC: SOF: Add Comet Lake PCI ID
-Thread-Index: AQHVBF66kVtld5KEb06yyEGKrvv3D6Zeht+AgAB5C1A=
-Date:   Tue, 7 May 2019 03:34:02 +0000
-Message-ID: <64FD1F8348A3A14CA3CB4D4C9EB1D15F30A7C756@BGSMSX107.gar.corp.intel.com>
-References: <20190506225321.74100-1-evgreen@chromium.org>
- <20190506225321.74100-2-evgreen@chromium.org>
- <74e8cfcd-b99f-7f66-48ce-44d60eb2bbca@linux.intel.com>
-In-Reply-To: <74e8cfcd-b99f-7f66-48ce-44d60eb2bbca@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.223.10.10]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 23:42:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38284 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726912AbfEGDmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 23:42:07 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 44A7083ABDF68C9C0024;
+        Tue,  7 May 2019 11:42:05 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 7 May 2019 11:41:55 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
+        <rppt@linux.ibm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <ebiederm@xmission.com>
+CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH 0/4] support reserving crashkernel above 4G on arm64 kdump 
+Date:   Tue, 7 May 2019 11:50:54 +0800
+Message-ID: <20190507035058.63992-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBQaWVycmUtTG91aXMgQm9zc2Fy
-dCBbbWFpbHRvOnBpZXJyZS1sb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbV0gDQpTZW50OiBU
-dWVzZGF5LCBNYXkgNywgMjAxOSA3OjExIEFNDQpUbzogRXZhbiBHcmVlbiA8ZXZncmVlbkBjaHJv
-bWl1bS5vcmc+OyBMaWFtIEdpcmR3b29kIDxsaWFtLnIuZ2lyZHdvb2RAbGludXguaW50ZWwuY29t
-PjsgTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPg0KQ2M6IE0sIE5hdmVlbiA8bmF2ZWVu
-Lm1AaW50ZWwuY29tPjsgTSBSLCBTYXRoeWEgUHJha2FzaCA8c2F0aHlhLnByYWthc2gubS5yQGlu
-dGVsLmNvbT47IEJlbiBaaGFuZyA8YmVuemhAY2hyb21pdW0ub3JnPjsgUmFqYXQgSmFpbiA8cmFq
-YXRqYUBjaHJvbWl1bS5vcmc+OyBKYXJvc2xhdiBLeXNlbGEgPHBlcmV4QHBlcmV4LmN6PjsgYWxz
-YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBU
-YWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuY29tPjsgTGlhbSBHaXJkd29vZCA8bGdpcmR3b29kQGdt
-YWlsLmNvbT4NClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEgMS8yXSBBU29DOiBTT0Y6IEFkZCBDb21l
-dCBMYWtlIFBDSSBJRA0KDQoNCg0KT24gNS82LzE5IDU6NTMgUE0sIEV2YW4gR3JlZW4gd3JvdGU6
-DQo+PiBBZGQgc3VwcG9ydCBmb3IgSW50ZWwgQ29tZXQgTGFrZSBwbGF0Zm9ybXMgYnkgYWRkaW5n
-IGEgbmV3IEtjb25maWcgZm9yIA0KPj4gQ29tZXRMYWtlIGFuZCB0aGUgYXBwcm9wcmlhdGUgUENJ
-IElELg0KDQo+VGhpcyBpcyBvZGQuIEkgY2hlY2tlZCBpbnRlcm5hbGx5IGEgZmV3IHdlZWtzIGJh
-Y2sgYW5kIHRoZSBDTUwgUENJIElEIHdhcyA5ZGM4LCBzYW1lIGFzIFdITCBhbmQgQ05MLCBzbyB3
-ZSBkaWQgbm90IGFkZCBhIFBDSSBJRCBvbiBwdXJwb3NlLiBUbyB0aGUgYmVzdCBvZiBteSBrbm93
-bGVkZ2UgU09GIHByb2JlcyBmaW5lIG9uIENNTCBhbmQgdGhlIGtub3duIGlzc3VlcyBjYW4gYmUg
-Zm91bmQgb24gdGhlIFNPRiBnaXRodWIgWzFdLg0KDQpUaGUgUENJIElEIGNoYW5nZSBpcyBzZWVu
-IG9uIGxhdGVyIHByb2R1Y3Rpb24gU2kgdmVyc2lvbnMuIFRoZSBQQ0kgSUQgaXMgMDJjOC4NCg0K
-PkNhcmUgdG8gc2VuZCB0aGUgbG9nIG9mIHN1ZG8gbHNwY2kgLXMgMDoxZi4zIC12biA/DQoNCkhl
-cmUgeW91IGdvOg0KbG9jYWxob3N0IH4gIyBzdWRvIGxzcGNpIC1zIDA6MWYuMyAtdm4NCjAwOjFm
-LjMgMDQwMTogODA4NjowMmM4DQogICAgICAgIFN1YnN5c3RlbTogODA4Njo3MjcwDQogICAgICAg
-IEZsYWdzOiBmYXN0IGRldnNlbCwgSVJRIDExDQogICAgICAgIE1lbW9yeSBhdCBkMTExNDAwMCAo
-NjQtYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6ZT0xNktdDQogICAgICAgIE1lbW9yeSBhdCBk
-MTAwMDAwMCAoNjQtYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6ZT0xTV0NCiAgICAgICAgQ2Fw
-YWJpbGl0aWVzOiBbNTBdIFBvd2VyIE1hbmFnZW1lbnQgdmVyc2lvbiAzDQogICAgICAgIENhcGFi
-aWxpdGllczogWzgwXSBWZW5kb3IgU3BlY2lmaWMgSW5mb3JtYXRpb246IExlbj0xNCA8Pz4NCiAg
-ICAgICAgQ2FwYWJpbGl0aWVzOiBbNjBdIE1TSTogRW5hYmxlLSBDb3VudD0xLzEgTWFza2FibGUt
-IDY0Yml0Kw0KDQoNClsxXQ0KaHR0cHM6Ly9naXRodWIuY29tL3RoZXNvZnByb2plY3Qvc29mL2lz
-c3Vlcz9xPWlzJTNBb3BlbitpcyUzQWlzc3VlK2xhYmVsJTNBQ01MDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBFdmFuIEdyZWVuIDxldmdyZWVuQGNocm9taXVtLm9yZz4NCj4gLS0tDQo+IA0KPiAgIHNv
-dW5kL3NvYy9zb2YvaW50ZWwvS2NvbmZpZyB8IDE2ICsrKysrKysrKysrKysrKysNCj4gICBzb3Vu
-ZC9zb2Mvc29mL3NvZi1wY2ktZGV2LmMgfCAgNCArKysrDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAy
-MCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL3NvZi9pbnRlbC9L
-Y29uZmlnIGIvc291bmQvc29jL3NvZi9pbnRlbC9LY29uZmlnIA0KPiBpbmRleCAzMmVlMGZhYmFi
-OTIuLjBiNjE2ZDAyNWYwNSAxMDA2NDQNCj4gLS0tIGEvc291bmQvc29jL3NvZi9pbnRlbC9LY29u
-ZmlnDQo+ICsrKyBiL3NvdW5kL3NvYy9zb2YvaW50ZWwvS2NvbmZpZw0KPiBAQCAtMjQsNiArMjQs
-NyBAQCBjb25maWcgU05EX1NPQ19TT0ZfSU5URUxfUENJDQo+ICAgCXNlbGVjdCBTTkRfU09DX1NP
-Rl9DQU5OT05MQUtFICBpZiBTTkRfU09DX1NPRl9DQU5OT05MQUtFX1NVUFBPUlQNCj4gICAJc2Vs
-ZWN0IFNORF9TT0NfU09GX0NPRkZFRUxBS0UgIGlmIFNORF9TT0NfU09GX0NPRkZFRUxBS0VfU1VQ
-UE9SVA0KPiAgIAlzZWxlY3QgU05EX1NPQ19TT0ZfSUNFTEFLRSAgICAgaWYgU05EX1NPQ19TT0Zf
-SUNFTEFLRV9TVVBQT1JUDQo+ICsJc2VsZWN0IFNORF9TT0NfU09GX0NPTUVUTEFLRSAgIGlmIFNO
-RF9TT0NfU09GX0NPTUVUTEFLRV9TVVBQT1JUDQo+ICAgCWhlbHANCj4gICAJICBUaGlzIG9wdGlv
-biBpcyBub3QgdXNlci1zZWxlY3RhYmxlIGJ1dCBhdXRvbWFnaWNhbGx5IGhhbmRsZWQgYnkNCj4g
-ICAJICAnc2VsZWN0JyBzdGF0ZW1lbnRzIGF0IGEgaGlnaGVyIGxldmVsIEBAIC0xNzksNiArMTgw
-LDIxIEBAIGNvbmZpZyANCj4gU05EX1NPQ19TT0ZfSUNFTEFLRQ0KPiAgIAkgIFRoaXMgb3B0aW9u
-IGlzIG5vdCB1c2VyLXNlbGVjdGFibGUgYnV0IGF1dG9tYWdpY2FsbHkgaGFuZGxlZCBieQ0KPiAg
-IAkgICdzZWxlY3QnIHN0YXRlbWVudHMgYXQgYSBoaWdoZXIgbGV2ZWwNCj4gICANCj4gK2NvbmZp
-ZyBTTkRfU09DX1NPRl9DT01FVExBS0UNCj4gKwl0cmlzdGF0ZQ0KPiArCXNlbGVjdCBTTkRfU09D
-X1NPRl9DQU5OT05MQUtFDQo+ICsJaGVscA0KPiArCSAgVGhpcyBvcHRpb24gaXMgbm90IHVzZXIt
-c2VsZWN0YWJsZSBidXQgYXV0b21hZ2ljYWxseSBoYW5kbGVkIGJ5DQo+ICsJICAnc2VsZWN0JyBz
-dGF0ZW1lbnRzIGF0IGEgaGlnaGVyIGxldmVsDQo+ICsNCj4gK2NvbmZpZyBTTkRfU09DX1NPRl9D
-T01FVExBS0VfU1VQUE9SVA0KPiArCWJvb2wgIlNPRiBzdXBwb3J0IGZvciBDb21ldExha2UiDQo+
-ICsJaGVscA0KPiArCSAgVGhpcyBhZGRzIHN1cHBvcnQgZm9yIFNvdW5kIE9wZW4gRmlybXdhcmUg
-Zm9yIEludGVsKFIpIHBsYXRmb3Jtcw0KPiArCSAgdXNpbmcgdGhlIENvbWV0bGFrZSBwcm9jZXNz
-b3JzLg0KPiArCSAgU2F5IFkgaWYgeW91IGhhdmUgc3VjaCBhIGRldmljZS4NCj4gKwkgIElmIHVu
-c3VyZSBzZWxlY3QgIk4iLg0KPiArDQo+ICAgY29uZmlnIFNORF9TT0NfU09GX0hEQV9DT01NT04N
-Cj4gICAJdHJpc3RhdGUNCj4gICAJc2VsZWN0IFNORF9TT0NfU09GX0lOVEVMX0NPTU1PTg0KPiBk
-aWZmIC0tZ2l0IGEvc291bmQvc29jL3NvZi9zb2YtcGNpLWRldi5jIGIvc291bmQvc29jL3NvZi9z
-b2YtcGNpLWRldi5jIA0KPiBpbmRleCBiNzc4ZGZmYjJkMjUuLjVmMDEyODMzN2U0MCAxMDA2NDQN
-Cj4gLS0tIGEvc291bmQvc29jL3NvZi9zb2YtcGNpLWRldi5jDQo+ICsrKyBiL3NvdW5kL3NvYy9z
-b2Yvc29mLXBjaS1kZXYuYw0KPiBAQCAtMzUzLDYgKzM1MywxMCBAQCBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHBjaV9kZXZpY2VfaWQgc29mX3BjaV9pZHNbXSA9IHsNCj4gICAjaWYgSVNfRU5BQkxFRChD
-T05GSUdfU05EX1NPQ19TT0ZfSUNFTEFLRSkNCj4gICAJeyBQQ0lfREVWSUNFKDB4ODA4NiwgMHgz
-NEM4KSwNCj4gICAJCS5kcml2ZXJfZGF0YSA9ICh1bnNpZ25lZCBsb25nKSZpY2xfZGVzY30sDQo+
-ICsjZW5kaWYNCj4gKyNpZiBJU19FTkFCTEVEKENPTkZJR19TTkRfU09DX1NPRl9DT01FVExBS0Up
-DQo+ICsJeyBQQ0lfREVWSUNFKDB4ODA4NiwgMHgwMmM4KSwNCj4gKwkJLmRyaXZlcl9kYXRhID0g
-KHVuc2lnbmVkIGxvbmcpJmNubF9kZXNjfSwNCj4gICAjZW5kaWYNCj4gICAJeyAwLCB9DQo+ICAg
-fTsNCj4gDQo=
+This patch series enable reserving crashkernel on high memory in arm64.
+
+We use crashkernel=X to reserve crashkernel below 4G, which will fail
+when there is no enough memory. Currently, crashkernel=Y@X can be used
+to reserve crashkernel above 4G, in this case, if swiotlb or DMA buffers
+are requierd, capture kernel will boot failure because of no low memory.
+
+When crashkernel is reserved above 4G in memory, kernel should reserve
+some amount of low memory for swiotlb and some DMA buffers. So there may
+be two crash kernel regions, one is below 4G, the other is above 4G. Then
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+
+Besides, we need to modify kexec-tools:
+  arm64: support more than one crash kernel regions(see [1])
+
+I post this patch series about one month ago. The previous changes and
+discussions can be retrived from:
+
+Changes since [v4]
+- reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+
+Changes since [v3]
+- Add memblock_cap_memory_ranges back for multiple ranges.
+- Fix some compiling warnings.
+
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+  two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+  patch.
+
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+  in fdt_enforce_memory_region().
+  There are at most two crash kernel regions, for two crash kernel regions
+  case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+  and then remove the memory range in the middle.
+
+[1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+[v1]: https://lkml.org/lkml/2019/4/2/1174
+[v2]: https://lkml.org/lkml/2019/4/9/86
+[v3]: https://lkml.org/lkml/2019/4/9/306
+[v4]: https://lkml.org/lkml/2019/4/15/273
+
+Chen Zhou (3):
+  x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+  arm64: kdump: support reserving crashkernel above 4G
+  kdump: update Documentation about crashkernel on arm64
+
+Mike Rapoport (1):
+  memblock: extend memblock_cap_memory_range to multiple ranges
+
+ Documentation/admin-guide/kernel-parameters.txt |  6 +--
+ arch/arm64/include/asm/kexec.h                  |  3 ++
+ arch/arm64/kernel/setup.c                       |  3 ++
+ arch/arm64/mm/init.c                            | 72 +++++++++++++++++++------
+ arch/x86/include/asm/kexec.h                    |  3 ++
+ arch/x86/kernel/setup.c                         | 66 +++--------------------
+ include/linux/kexec.h                           |  5 ++
+ include/linux/memblock.h                        |  2 +-
+ kernel/kexec_core.c                             | 56 +++++++++++++++++++
+ mm/memblock.c                                   | 44 +++++++--------
+ 10 files changed, 157 insertions(+), 103 deletions(-)
+
+-- 
+2.7.4
+
