@@ -2,173 +2,146 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A61C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FB9C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C5E205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CC6206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfEGRYp (ORCPT
+        id S1727425AbfEGRZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:24:45 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46096 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726473AbfEGRYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:24:45 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x47HMurS031460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 May 2019 13:22:59 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 7D6D5420024; Tue,  7 May 2019 13:22:56 -0400 (EDT)
-Date:   Tue, 7 May 2019 13:22:56 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190507172256.GB5900@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
-        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
+        Tue, 7 May 2019 13:25:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60408 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbfEGRZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:25:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF4F4A78;
+        Tue,  7 May 2019 10:25:20 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 778373F5AF;
+        Tue,  7 May 2019 10:25:19 -0700 (PDT)
+Date:   Tue, 7 May 2019 18:25:12 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] arm64: use the correct function type for
+ __arm64_sys_ni_syscall
+Message-ID: <20190507172512.GA35803@lakrids.cambridge.arm.com>
+References: <20190503191225.6684-1-samitolvanen@google.com>
+ <20190503191225.6684-4-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507080119.GB28121@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190503191225.6684-4-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 10:01:19AM +0200, Greg KH wrote:
-> > My understanding is that the intent of KUnit is to avoid booting a kernel on
-> > real hardware or in a virtual machine.  That seems to be a matter of semantics
-> > to me because isn't invoking a UML Linux just running the Linux kernel in
-> > a different form of virtualization?
-> > 
-> > So I do not understand why KUnit is an improvement over kselftest.
-> > 
-> > It seems to me that KUnit is just another piece of infrastructure that I
-> > am going to have to be familiar with as a kernel developer.  More overhead,
-> > more information to stuff into my tiny little brain.
-> > 
-> > I would guess that some developers will focus on just one of the two test
-> > environments (and some will focus on both), splitting the development
-> > resources instead of pooling them on a common infrastructure.
-> > 
-> > What am I missing?
+On Fri, May 03, 2019 at 12:12:25PM -0700, Sami Tolvanen wrote:
+> Calling sys_ni_syscall through a syscall_fn_t pointer trips indirect
+> call Control-Flow Integrity checking due to a function type
+> mismatch. Use SYSCALL_DEFINE0 for __arm64_sys_ni_syscall instead and
+> remove the now unnecessary casts.
 > 
-> kselftest provides no in-kernel framework for testing kernel code
-> specifically.  That should be what kunit provides, an "easy" way to
-> write in-kernel tests for things.
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/kernel/sys.c   | 14 +++++++++-----
+>  arch/arm64/kernel/sys32.c | 12 ++++++++----
+>  2 files changed, 17 insertions(+), 9 deletions(-)
 > 
-> Brendan, did I get it right?
+> diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+> index b44065fb16160..4f8e8a7237a85 100644
+> --- a/arch/arm64/kernel/sys.c
+> +++ b/arch/arm64/kernel/sys.c
+> @@ -47,22 +47,26 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
+>  	return ksys_personality(personality);
+>  }
+>  
+> +asmlinkage long sys_ni_syscall(void);
+> +
+> +SYSCALL_DEFINE0(ni_syscall)
+> +{
+> +	return sys_ni_syscall();
+> +}
 
-Yes, that's basically right.  You don't *have* to use KUnit.  It's
-supposed to be a simple way to run a large number of small tests that
-for specific small components in a system.
+I strongly think that we cant to fix up the common definition in
+kernel/sys_ni.c rather than having a point-hack in arm64. Other
+architectures (e.g. x86, s390) will want the same for CFI, and I'd like
+to ensure that our approached don't diverge.
 
-For example, I currently use xfstests using KVM and GCE to test all of
-ext4.  These tests require using multiple 5 GB and 20GB virtual disks,
-and it works by mounting ext4 file systems and exercising ext4 through
-the system call interfaces, using userspace tools such as fsstress,
-fsx, fio, etc.  It requires time overhead to start the VM, create and
-allocate virtual disks, etc.  For example, to run a single 3 seconds
-xfstest (generic/001), it requires full 10 seconds to run it via
-kvm-xfstests.
+I took a quick look, and it looks like it's messy but possible to fix
+up the core.
 
-KUnit is something else; it's specifically intended to allow you to
-create lightweight tests quickly and easily, and by reducing the
-effort needed to write and run unit tests, hopefully we'll have a lot
-more of them and thus improve kernel quality.
+I also suspect that using SYSCALL_DEFINE0() as it currently stands isn't
+a great idea, since it'll allow fault injection for unimplemented
+syscalls, which sounds dubious to me.
 
-As an example, I have a volunteer working on developing KUinit tests
-for ext4.  We're going to start by testing the ext4 extent status
-tree.  The source code is at fs/ext4/extent_status.c; it's
-approximately 1800 LOC.  The Kunit tests for the extent status tree
-will exercise all of the corner cases for the various extent status
-tree functions --- e.g., ext4_es_insert_delayed_block(),
-ext4_es_remove_extent(), ext4_es_cache_extent(), etc.  And it will do
-this in isolation without our needing to create a test file system or
-using a test block device.
+Thanks,
+Mark.
 
-Next we'll test the ext4 block allocator, again in isolation.  To test
-the block allocator we will have to write "mock functions" which
-simulate reading allocation bitmaps from disk.  Again, this will allow
-the test writer to explicitly construct corner cases and validate that
-the block allocator works as expected without having to reverese
-engineer file system data structures which will force a particular
-code path to be executed.
-
-So this is why it's largely irrelevant to me that KUinit uses UML.  In
-fact, it's a feature.  We're not testing device drivers, or the
-scheduler, or anything else architecture-specific.  UML is not about
-virtualization.  What it's about in this context is allowing us to
-start running test code as quickly as possible.  Booting KVM takes
-about 3-4 seconds, and this includes initializing virtio_scsi and
-other device drivers.  If by using UML we can hold the amount of
-unnecessary kernel subsystem initialization down to the absolute
-minimum, and if it means that we can communicating to the test
-framework via a userspace "printf" from UML/KUnit code, as opposed to
-via a virtual serial port to KVM's virtual console, it all makes for
-lighter weight testing.
-
-Why did I go looking for a volunteer to write KUnit tests for ext4?
-Well, I have a plan to make some changes in restructing how ext4's
-write path works, in order to support things like copy-on-write, a
-more efficient delayed allocation system, etc.  This will require
-making changes to the extent status tree, and by having unit tests for
-the extent status tree, we'll be able to detect any bugs that we might
-accidentally introduce in the es tree far more quickly than if we
-didn't have those tests available.  Google has long found that having
-these sorts of unit tests is a real win for developer velocity for any
-non-trivial code module (or C++ class), even when you take into
-account the time it takes to create the unit tests.
-
-					- Ted
-
-P.S.  Many thanks to Brendan for finding such a volunteer for me; the
-person in question is a SRE from Switzerland who is interested in
-getting involved with kernel testing, and this is going to be their
-20% project.  :-)
-
+> +
+>  /*
+>   * Wrappers to pass the pt_regs argument.
+>   */
+>  #define sys_personality		sys_arm64_personality
+>  
+> -asmlinkage long sys_ni_syscall(const struct pt_regs *);
+> -#define __arm64_sys_ni_syscall	sys_ni_syscall
+> -
+>  #undef __SYSCALL
+>  #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+>  #include <asm/unistd.h>
+>  
+>  #undef __SYSCALL
+> -#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
+> +#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+>  
+>  const syscall_fn_t sys_call_table[__NR_syscalls] = {
+> -	[0 ... __NR_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
+> +	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
+>  #include <asm/unistd.h>
+>  };
+> diff --git a/arch/arm64/kernel/sys32.c b/arch/arm64/kernel/sys32.c
+> index 0f8bcb7de7008..f8f6c26cfd326 100644
+> --- a/arch/arm64/kernel/sys32.c
+> +++ b/arch/arm64/kernel/sys32.c
+> @@ -133,17 +133,21 @@ COMPAT_SYSCALL_DEFINE6(aarch32_fallocate, int, fd, int, mode,
+>  	return ksys_fallocate(fd, mode, arg_u64(offset), arg_u64(len));
+>  }
+>  
+> -asmlinkage long sys_ni_syscall(const struct pt_regs *);
+> -#define __arm64_sys_ni_syscall	sys_ni_syscall
+> +asmlinkage long sys_ni_syscall(void);
+> +
+> +COMPAT_SYSCALL_DEFINE0(ni_syscall)
+> +{
+> +	return sys_ni_syscall();
+> +}
+>  
+>  #undef __SYSCALL
+>  #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+>  #include <asm/unistd32.h>
+>  
+>  #undef __SYSCALL
+> -#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
+> +#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+>  
+>  const syscall_fn_t compat_sys_call_table[__NR_compat_syscalls] = {
+> -	[0 ... __NR_compat_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
+> +	[0 ... __NR_compat_syscalls - 1] = __arm64_sys_ni_syscall,
+>  #include <asm/unistd32.h>
+>  };
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
