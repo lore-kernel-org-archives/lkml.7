@@ -2,138 +2,115 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE06CC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CB7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D7B20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557237351;
-	bh=4YXwuQ8n+Mqq/6UmCl8odTutlhbgLjaGJtxDalHRu+c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kzFKZGxFhX4o3RFV/YS1s0huLw+b+86RjA851CkVxYdSqM4ZVRpe4CnLDx0KcvQs
-	 Dw3CddH3PwaEwGLLiHDUCv3qivnutchPlVD4DXeo8Yl5RSaP7XmJVBUx7AMBp7WH2x
-	 HHguQ9DaA8HqkfiBpZh22Wz73Y2okeJQZZ7IGSdM=
+	by mail.kernel.org (Postfix) with ESMTP id 5D15A20873
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="llFcOTK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfEGNzt (ORCPT
+        id S1726921AbfEGNzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbfEGNzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:55:47 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A7B20825;
-        Tue,  7 May 2019 13:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557237346;
-        bh=4YXwuQ8n+Mqq/6UmCl8odTutlhbgLjaGJtxDalHRu+c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pnafkpE4qlw7jKn8s8/zR35xVN0A8YHgDu53f0ErqhVo9cl+t0GSODeCMIPeFNUD+
-         ASTPNHetdXRiS3KHVFxdOso5hIJuCfm85Hqe3d18XHoJ0vJ48Bbfb/0FPAgl79K28z
-         PvfKleyRjtnL77GBp0t4FUNToyEpOP+3jxLvFgtQ=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andreas Ziegler <andreas.ziegler@fau.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] tracing: uprobes: Re-enable $comm support for uprobe events
-Date:   Tue,  7 May 2019 22:55:41 +0900
-Message-Id: <155723734162.9149.4042756162201097965.stgit@devnote2>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <155723732200.9149.10482668315693777743.stgit@devnote2>
-References: <155723732200.9149.10482668315693777743.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 7 May 2019 09:55:53 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45456 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfEGNzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:55:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r76so3352622lja.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 06:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GL4GdceTvSBDxGp9W+MspMxjOoV99Lda4j4e4jx38nI=;
+        b=llFcOTK+JkPns+fb4NcOVv0q5GX/MkbEvLVrRcmQmQuLjeReEygm2oo4TQK2ESIoeC
+         qpk+7qDr4E2vZHh/7r5kzvVev7KuXcBa94RdAlDSZP2KJ1Gt9mKrytjoRTEWRABSm1fZ
+         2M02NrzjG4ijQ3/UySGQh39ERffrUwLnuy1nIvh+Q7uRXxsht53qaV3OwxnySPLs1LXb
+         VG7PrdYlT+fKUQ2qDmc491dlWBX/1kNkD0W7E4VaZjRKEnDoKkCF8F3X+M3FU6bhgOvq
+         MU8xYZ9sk/52vBJFW7GguZBMYBs6u4/tgJQqvutUuyLjJfmy3b2nMc0CGdCqbUtaVsII
+         jd3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GL4GdceTvSBDxGp9W+MspMxjOoV99Lda4j4e4jx38nI=;
+        b=Sm+kV54U5xyxqAbeIdhLAYmTJOLbuMYf3lXvmKRSxHiRvteX3E3zQqmCwQdt6gN4v6
+         ssZAa4rvMxCEnG0r3OpsNfur8evqwmVxxqtbK+mBB/7nY5tehWjFEVVA9QF6T31EGD/W
+         KgDV7O680/Ns+KQvY3imnRGHu0bNzgmZjwtbxjWu+mWwRkbc9k1fDct0hSg3+Q62aMX8
+         0IhawcmAwOmkd9uxajfhHFCpLiRGRThf1398++LJXzwCKdWp7Bia2+47eWT3NbMh4O9z
+         9M5mc8Gd0PB7rZQ9l0xuFTKZtLf/bUk/5OMyeP3VCa/LL71gX8T4Dl7NjPu70OqXhGpU
+         STog==
+X-Gm-Message-State: APjAAAXT2Jt2A/yq3kokqGuivNxWLTA6bs9q3QlXwFQlwu1lkV0NsiC6
+        DagbUq3Hz7fmEfl8zr/JSwHscbFQAcvSIUeectsugC7x7BI=
+X-Google-Smtp-Source: APXvYqygTLTj7reqA2P0us3hcnaMnc/IWqpf8ylWxz0boCKxN0gY34MsJLpkYv35ahJhmIuRv+P6GjuHd0tle4CILho=
+X-Received: by 2002:a2e:d1a:: with SMTP id 26mr17526393ljn.147.1557237348745;
+ Tue, 07 May 2019 06:55:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+ <20190506044836.2914-2-luca.abeni@santannapisa.it> <20190507134850.yreebscc3zigfmtd@queper01-lin>
+In-Reply-To: <20190507134850.yreebscc3zigfmtd@queper01-lin>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 7 May 2019 15:55:37 +0200
+Message-ID: <CAKfTPtAmekVR59pvBZO-Xp57=qHoxYkvmQwc2fWVa1x4U2_pNg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/6] sched/dl: Improve deadline admission control for
+ asymmetric CPU capacities
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 533059281ee5 ("tracing: probeevent: Introduce new
-argument fetching code") dropped the $comm support from uprobe
-events, this re-enables it.
+On Tue, 7 May 2019 at 15:48, Quentin Perret <quentin.perret@arm.com> wrote:
+>
+> Hi Luca,
+>
+> On Monday 06 May 2019 at 06:48:31 (+0200), Luca Abeni wrote:
+> > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> > index edfcf8d982e4..646d6d349d53 100644
+> > --- a/drivers/base/arch_topology.c
+> > +++ b/drivers/base/arch_topology.c
+> > @@ -36,6 +36,7 @@ DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
+> >
+> >  void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+> >  {
+> > +     topology_update_cpu_capacity(cpu, per_cpu(cpu_scale, cpu), capacity);
+>
+> Why is that one needed ? Don't you end up re-building the sched domains
+> after this anyways ?
 
-For $comm support, uses strlcpy() instead of strncpy_from_user()
-to copy current task's comm. Because it is in the kernel space,
-strncpy_from_user() always fails to copy the comm.
-This also uses strlen() instead of strnlen_user() to measure the
-length of the comm.
+I was looking at the same point.
+Also this doesn't take into account if the cpu is offline
 
-Note that this uses -ECOMM as a token value to fetch the comm
-string. If the user-space pointer points -ECOMM, it will be
-translated to task->comm.
+Do we also need of the line below in set_rq_online
++               rq->rd->rd_capacity += arch_scale_cpu_capacity(NULL,
+cpu_of(rq));
 
-Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reported-by: Andreas Ziegler <andreas.ziegler@fau.de>
-Acked-by: Andreas Ziegler <andreas.ziegler@fau.de>
----
-  Changes in v3
-   - Always add +1 to strlen() result.
-   - Use -ECOMM as a token to specify current->comm.
----
- kernel/trace/trace_probe.h  |    1 +
- kernel/trace/trace_uprobe.c |   13 +++++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+building the sched_domain seems a better place to set rq->rd->rd_capacity
 
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index b7737666c1a8..f9a8c632188b 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -124,6 +124,7 @@ struct fetch_insn {
- 
- /* fetch + deref*N + store + mod + end <= 16, this allows N=12, enough */
- #define FETCH_INSN_MAX	16
-+#define FETCH_TOKEN_COMM	(-ECOMM)
- 
- /* Fetch type information table */
- struct fetch_type {
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index cd8750a72768..eb7e06b54741 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -156,7 +156,10 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	if (unlikely(!maxlen))
- 		return -ENOMEM;
- 
--	ret = strncpy_from_user(dst, src, maxlen);
-+	if (addr == FETCH_TOKEN_COMM)
-+		ret = strlcpy(dst, current->comm, maxlen);
-+	else
-+		ret = strncpy_from_user(dst, src, maxlen);
- 	if (ret >= 0) {
- 		if (ret == maxlen)
- 			dst[ret - 1] = '\0';
-@@ -180,7 +183,10 @@ fetch_store_strlen(unsigned long addr)
- 	int len;
- 	void __user *vaddr = (void __force __user *) addr;
- 
--	len = strnlen_user(vaddr, MAX_STRING_SIZE);
-+	if (addr == FETCH_TOKEN_COMM)
-+		len = strlen(current->comm) + 1;
-+	else
-+		len = strnlen_user(vaddr, MAX_STRING_SIZE);
- 
- 	return (len > MAX_STRING_SIZE) ? 0 : len;
- }
-@@ -220,6 +226,9 @@ process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
- 	case FETCH_OP_IMM:
- 		val = code->immediate;
- 		break;
-+	case FETCH_OP_COMM:
-+		val = FETCH_TOKEN_COMM;
-+		break;
- 	case FETCH_OP_FOFFS:
- 		val = translate_user_vaddr(code->immediate);
- 		break;
-
+>
+> >       per_cpu(cpu_scale, cpu) = capacity;
+> >  }
+>
+> Thanks,
+> Quentin
