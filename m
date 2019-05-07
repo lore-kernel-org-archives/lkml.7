@@ -4,53 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD7DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A23DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2CA204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FF52054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208360;
-	bh=GGMllsJGL70Wd30hAUJvDQAa7WiQC42hvwxpkkNUawc=;
+	s=default; t=1557208371;
+	bh=80IEwwC54eOIhR/DAUBDvx8lBm+qTTeIDofqqhSKcmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGO6IBXgUzvmEe2H2dcL9td1HWXFPV7QHiY8Ypqco3McHYYF7Aj+ACsQW2kdPkQ1T
-	 1GpUOw4inV0Rbm5LfseNdLMIs1FFZ3XRC7ZfRbuQ9LUk0w1pTHW1jOIagLYK6h+vlI
-	 gHUYCwBR5dhUoFgcUxW6QKTmpNQ1wAVUkeu2/dkA=
+	b=d3bk0Mvhj0AJsDLHV6e1CBL5ShXwtgF4Trh6rIkxZv5LhwlaEV3EL81Q/LQqvbJ76
+	 0y/eqDp60SvpiEJYIjFS3WIWf/8ebOuAyslHuFro5hCcPw5S5DhlOSy/QTZ1zeCvkm
+	 RX6BCdJT1ICfoA6gbn+ZnH2r5OQN4dJ6Wp8jC2tE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfEGFwj (ORCPT
+        id S1729051AbfEGFwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59088 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbfEGFj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:39:27 -0400
+        id S1728048AbfEGFjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:39:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B1720B7C;
-        Tue,  7 May 2019 05:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48D8B20578;
+        Tue,  7 May 2019 05:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207566;
-        bh=GGMllsJGL70Wd30hAUJvDQAa7WiQC42hvwxpkkNUawc=;
+        s=default; t=1557207562;
+        bh=80IEwwC54eOIhR/DAUBDvx8lBm+qTTeIDofqqhSKcmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t8GgBtQJ0UHmTFmnOOR4/W1+6lh2y1QcfHfrYisQWuEZFovMo1iTIFgSTZ4+tfpt7
-         sh+p5+uzarc9x7kMQJpYuv8jniQIdNloU80dGRywI5nP61TCwIXcpJoes768sbwJwR
-         7tZLRwLw9EXLywua3+ZqeimTjJVQUSGmbXl4SdzM=
+        b=jjmZFbvm4P3aVNtLMRQa1JpeyJyMehc2pi+tewURBxkTqoGjNecn8OoyFxkGNG8wG
+         iF9RHURFHla3qXnFPrbN7fP2A7WE9kBzFsfwDkV9cFP2ump+wDPs06FYFcV1UiB/ky
+         NGh2EzuX69U+5VX/FsrrJy5evMp8D3QtGy5Z1eb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/95] selftests/net: correct the return value for run_netsocktests
-Date:   Tue,  7 May 2019 01:37:18 -0400
-Message-Id: <20190507053826.31622-29-sashal@kernel.org>
+Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        John Crispin <john@phrozen.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 26/95] MIPS: perf: ath79: Fix perfcount IRQ assignment
+Date:   Tue,  7 May 2019 01:37:15 -0400
+Message-Id: <20190507053826.31622-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,44 +67,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Po-Hsu Lin <po-hsu.lin@canonical.com>
+From: Petr Štetiar <ynezz@true.cz>
 
-[ Upstream commit 30c04d796b693e22405c38e9b78e9a364e4c77e6 ]
+[ Upstream commit a1e8783db8e0d58891681bc1e6d9ada66eae8e20 ]
 
-The run_netsocktests will be marked as passed regardless the actual test
-result from the ./socket:
+Currently it's not possible to use perf on ath79 due to genirq flags
+mismatch happening on static virtual IRQ 13 which is used for
+performance counters hardware IRQ 5.
 
-    selftests: net: run_netsocktests
-    ========================================
-    --------------------
-    running socket test
-    --------------------
-    [FAIL]
-    ok 1..6 selftests: net: run_netsocktests [PASS]
+On TP-Link Archer C7v5:
 
-This is because the test script itself has been successfully executed.
-Fix this by exit 1 when the test failed.
+           CPU0
+  2:          0      MIPS   2  ath9k
+  4:        318      MIPS   4  19000000.eth
+  7:      55034      MIPS   7  timer
+  8:       1236      MISC   3  ttyS0
+ 12:          0      INTC   1  ehci_hcd:usb1
+ 13:          0  gpio-ath79   2  keys
+ 14:          0  gpio-ath79   5  keys
+ 15:         31  AR724X PCI    1  ath10k_pci
 
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ $ perf top
+ genirq: Flags mismatch irq 13. 00014c83 (mips_perf_pmu) vs. 00002003 (keys)
+
+On TP-Link Archer C7v4:
+
+         CPU0
+  4:          0      MIPS   4  19000000.eth
+  5:       7135      MIPS   5  1a000000.eth
+  7:      98379      MIPS   7  timer
+  8:         30      MISC   3  ttyS0
+ 12:      90028      INTC   0  ath9k
+ 13:       5520      INTC   1  ehci_hcd:usb1
+ 14:       4623      INTC   2  ehci_hcd:usb2
+ 15:      32844  AR724X PCI    1  ath10k_pci
+ 16:          0  gpio-ath79  16  keys
+ 23:          0  gpio-ath79  23  keys
+
+ $ perf top
+ genirq: Flags mismatch irq 13. 00014c80 (mips_perf_pmu) vs. 00000080 (ehci_hcd:usb1)
+
+This problem is happening, because currently statically assigned virtual
+IRQ 13 for performance counters is not claimed during the initialization
+of MIPS PMU during the bootup, so the IRQ subsystem doesn't know, that
+this interrupt isn't available for further use.
+
+So this patch fixes the issue by simply booking hardware IRQ 5 for MIPS PMU.
+
+Tested-by: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Acked-by: John Crispin <john@phrozen.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/run_netsocktests | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/ath79/setup.c          |  6 ------
+ drivers/irqchip/irq-ath79-misc.c | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/run_netsocktests b/tools/testing/selftests/net/run_netsocktests
-index b093f39c298c..14e41faf2c57 100755
---- a/tools/testing/selftests/net/run_netsocktests
-+++ b/tools/testing/selftests/net/run_netsocktests
-@@ -7,7 +7,7 @@ echo "--------------------"
- ./socket
- if [ $? -ne 0 ]; then
- 	echo "[FAIL]"
-+	exit 1
- else
- 	echo "[PASS]"
- fi
+diff --git a/arch/mips/ath79/setup.c b/arch/mips/ath79/setup.c
+index 26a058d58d37..c7c31e214813 100644
+--- a/arch/mips/ath79/setup.c
++++ b/arch/mips/ath79/setup.c
+@@ -183,12 +183,6 @@ const char *get_system_type(void)
+ 	return ath79_sys_type;
+ }
+ 
+-int get_c0_perfcount_int(void)
+-{
+-	return ATH79_MISC_IRQ(5);
+-}
+-EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
 -
+ unsigned int get_c0_compare_int(void)
+ {
+ 	return CP0_LEGACY_COMPARE_IRQ;
+diff --git a/drivers/irqchip/irq-ath79-misc.c b/drivers/irqchip/irq-ath79-misc.c
+index aa7290784636..0390603170b4 100644
+--- a/drivers/irqchip/irq-ath79-misc.c
++++ b/drivers/irqchip/irq-ath79-misc.c
+@@ -22,6 +22,15 @@
+ #define AR71XX_RESET_REG_MISC_INT_ENABLE	4
+ 
+ #define ATH79_MISC_IRQ_COUNT			32
++#define ATH79_MISC_PERF_IRQ			5
++
++static int ath79_perfcount_irq;
++
++int get_c0_perfcount_int(void)
++{
++	return ath79_perfcount_irq;
++}
++EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
+ 
+ static void ath79_misc_irq_handler(struct irq_desc *desc)
+ {
+@@ -113,6 +122,8 @@ static void __init ath79_misc_intc_domain_init(
+ {
+ 	void __iomem *base = domain->host_data;
+ 
++	ath79_perfcount_irq = irq_create_mapping(domain, ATH79_MISC_PERF_IRQ);
++
+ 	/* Disable and clear all interrupts */
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
 -- 
 2.20.1
 
