@@ -2,683 +2,252 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D71C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48E7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1942E206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7680B206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=serhei.io header.i=@serhei.io header.b="j/iK/Jsr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BIxOz+2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfEGVJh (ORCPT
+        id S1728463AbfEGVLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:09:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59678 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728501AbfEGVJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:09:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5194AAE60;
-        Tue,  7 May 2019 21:09:30 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] MIPS: SGI-IP27: abstract chipset irq from bridge
-Date:   Tue,  7 May 2019 23:09:15 +0200
-Message-Id: <20190507210917.4691-4-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190507210917.4691-1-tbogendoerfer@suse.de>
-References: <20190507210917.4691-1-tbogendoerfer@suse.de>
+        Tue, 7 May 2019 17:11:25 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:41135 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727209AbfEGVLZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 17:11:25 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 15AB422E6B;
+        Tue,  7 May 2019 17:11:24 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Tue, 07 May 2019 17:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serhei.io; h=
+        mime-version:message-id:date:from:to:cc:subject:content-type; s=
+        fm1; bh=yPJ+Nwe/PIIiecmLmSS6mO5e5JH49mkAaPW0jrEfCYg=; b=j/iK/Jsr
+        oLjex0bwOSaEvflTfulA+GLXQeT9jWg58KDB7AAvUBB2IZAby5I+DBUKlscfBBtR
+        W61uS+Szm2lGJ9qY6VCJCjKQ/dfty/OIvcYEQbj3x7F2CJ7AyAgy7Le1ZFxCrHXg
+        O+rDyhfPHSSgbXoxGwUZy79yxBbezZdcIcElFOcpnZuVg9fp9271oAlqhzPM0YIB
+        DVSsyWXZ4MDahWh6T0DG0cAWRjkIuYPUoXyC7iMdKVRFB2UwM7lJV1WpBMKZShAw
+        tiIncsJuBDuPnlz5wXaETL5misSj7v4tXBd5w8VvA6sawDsFnYeyTg2CwQ6jROK+
+        Uh/XbGlsGLGzhQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm2; bh=yPJ+Nwe/PIIiecmLmSS6mO5e5JH49
+        mkAaPW0jrEfCYg=; b=BIxOz+2xbL9z4HvElUsXYFysuJ0o3Zv9/nTH1HmFvBwBA
+        Hpg7rXdlOIWr1tbdvHs1M633iRLMYbccMIfVioc16jqQiTWC1i9zkj5NNsMZ/X3+
+        BH7nupLVRw8mnnwPwYfgqiv0GCjNpi27Cf5A0DwdgkoLkzlvLCukAy5+tvXQtgAT
+        uJkIPtZ9Uj/rhAl8XKOk4I7W3HV+uP0PoeWDb4FsxZ1NdfN2vCFTWmXGyJ+WFhkf
+        ZhI+pKoC8ikgHNfN+IIR70WPjnGrA4f2T+7QPATtOGbe8Y5UkG6YH4Da3vPawgsi
+        jLThetQ6T4P68knaTu865fnLr66FzLMecUQlHVyUA==
+X-ME-Sender: <xms:e_TRXGJ_d8F0D66JXxrKuJBFcswGxo8aqEcAyNs6KQhqXjgjYADqfw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkedtgdduieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfffhffvufgtsehttdertd
+    erredtnecuhfhrohhmpedfufgvrhhhvghiucforghkrghrohhvfdcuoehmvgesshgvrhhh
+    vghirdhioheqnecuffhomhgrihhnpehsohhurhgtvgifrghrvgdrohhrghdpfhgvughorh
+    grphhrohhjvggtthdrohhrghenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehsvghr
+    hhgvihdrihhonecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:e_TRXAAmAA8nlCDOF9skY1a57kmEJc0mq-rIXM_xQzNMXVYqZzGEgg>
+    <xmx:e_TRXAE0WexaPlfP-ebIbDtKXC5qqVwnUiP3QWzfdT4EzAHeiDaCeQ>
+    <xmx:e_TRXE7iPF55iC8Z0ZB3jylUKfaKAdoaRgqQEN2T5s5m_ufMxw6mwg>
+    <xmx:fPTRXF4tI6od1ECfrX_68drqntv6EH9wr-01pcNrZI9xfob2vCOh1g>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 64CB07C3DB; Tue,  7 May 2019 17:11:23 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-449-gfb3fc5a-fmstable-20190430v1
+Mime-Version: 1.0
+Message-Id: <c91e217c-3caa-4f9d-be22-6d59753278b5@www.fastmail.com>
+Date:   Tue, 07 May 2019 17:11:06 -0400
+From:   "Serhei Makarov" <me@serhei.io>
+To:     systemtap@sourceware.org
+Cc:     linux-kernel@vger.kernel.org, lwn@lwn.net
+Subject: systemtap 4.1 release
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bridge ASIC is widely used in different SGI systems, but the connected
-chipset is either HUB, HEART or BEDROCK. This commit switches to
-irq domain hierarchy for hub and bridge interrupts to get bridge
-setup out of hub interrupt code.
+The SystemTap team announces release 4.1!
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/Kconfig                    |   1 +
- arch/mips/include/asm/pci/bridge.h   |   3 +-
- arch/mips/include/asm/sn/irq_alloc.h |  11 ++
- arch/mips/pci/pci-xtalk-bridge.c     | 178 ++++++++++++++++++++++++++++++--
- arch/mips/sgi-ip27/ip27-irq.c        | 190 ++++++++++++++++-------------------
- 5 files changed, 265 insertions(+), 118 deletions(-)
- create mode 100644 arch/mips/include/asm/sn/irq_alloc.h
+stapbpf transport improvements and string tapset functions, translator pass-2
+performance improvements, @thisN macros provide alternative to @entry mechanism,
+preview of stapbpf statistics aggregate functionality
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index dfb5d4151ba1..4c4bb3d6a188 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -676,6 +676,7 @@ config SGI_IP27
- 	select SYS_HAS_EARLY_PRINTK
- 	select HAVE_PCI
- 	select IRQ_MIPS_CPU
-+	select IRQ_DOMAIN_HIERARCHY
- 	select NR_CPUS_DEFAULT_64
- 	select PCI_DRIVERS_GENERIC
- 	select PCI_XTALK_BRIDGE
-diff --git a/arch/mips/include/asm/pci/bridge.h b/arch/mips/include/asm/pci/bridge.h
-index d42b27c97c23..a92cd30b48c9 100644
---- a/arch/mips/include/asm/pci/bridge.h
-+++ b/arch/mips/include/asm/pci/bridge.h
-@@ -805,6 +805,7 @@ struct bridge_controller {
- 	struct bridge_regs	*base;
- 	unsigned long		baddr;
- 	unsigned long		intr_addr;
-+	struct irq_domain	*domain;
- 	unsigned int		pci_int[8];
- 	nasid_t			nasid;
- };
-@@ -819,6 +820,4 @@ struct bridge_controller {
- #define bridge_clr(bc, reg, val)	\
- 	__raw_writel(__raw_readl(&bc->base->reg) & ~(val), &bc->base->reg)
- 
--extern int request_bridge_irq(struct bridge_controller *bc, int pin);
--
- #endif /* _ASM_PCI_BRIDGE_H */
-diff --git a/arch/mips/include/asm/sn/irq_alloc.h b/arch/mips/include/asm/sn/irq_alloc.h
-new file mode 100644
-index 000000000000..09b89cecff56
---- /dev/null
-+++ b/arch/mips/include/asm/sn/irq_alloc.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_SN_IRQ_ALLOC_H
-+#define __ASM_SN_IRQ_ALLOC_H
-+
-+struct irq_alloc_info {
-+	void *ctrl;
-+	nasid_t nasid;
-+	int pin;
-+};
-+
-+#endif /* __ASM_SN_IRQ_ALLOC_H */
-diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
-index 8f481984ab6e..bcf7f559789a 100644
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -14,7 +14,7 @@
- 
- #include <asm/pci/bridge.h>
- #include <asm/paccess.h>
--#include <asm/sn/intr.h>
-+#include <asm/sn/irq_alloc.h>
- 
- /*
-  * Most of the IOC3 PCI config register aren't present
-@@ -310,6 +310,135 @@ static struct pci_ops bridge_pci_ops = {
- 	.write	 = pci_write_config,
- };
- 
-+struct bridge_irq_chip_data {
-+	struct bridge_controller *bc;
-+	nasid_t nasid;
-+};
-+
-+static int bridge_set_affinity(struct irq_data *d, const struct cpumask *mask,
-+			       bool force)
-+{
-+#ifdef CONFIG_NUMA
-+	struct bridge_irq_chip_data *data = d->chip_data;
-+	int bit = d->parent_data->hwirq;
-+	int pin = d->hwirq;
-+	nasid_t nasid;
-+	int ret, cpu;
-+
-+	ret = irq_chip_set_affinity_parent(d, mask, force);
-+	if (ret >= 0) {
-+		cpu = cpumask_first_and(mask, cpu_online_mask);
-+		nasid = COMPACT_TO_NASID_NODEID(cpu_to_node(cpu));
-+		bridge_write(data->bc, b_int_addr[pin].addr,
-+			     (((data->bc->intr_addr >> 30) & 0x30000) |
-+			      bit | (nasid << 8)));
-+		bridge_read(data->bc, b_wid_tflush);
-+	}
-+	return ret;
-+#else
-+	return irq_chip_set_affinity_parent(d, mask, force);
-+#endif
-+}
-+
-+struct irq_chip bridge_irq_chip = {
-+	.name             = "BRIDGE",
-+	.irq_mask         = irq_chip_mask_parent,
-+	.irq_unmask       = irq_chip_unmask_parent,
-+	.irq_set_affinity = bridge_set_affinity
-+};
-+
-+static int bridge_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+			       unsigned int nr_irqs, void *arg)
-+{
-+	struct bridge_irq_chip_data *data;
-+	struct irq_alloc_info *info = arg;
-+	int ret;
-+
-+	if (nr_irqs > 1 || !info)
-+		return -EINVAL;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret >= 0) {
-+		data->bc = info->ctrl;
-+		data->nasid = info->nasid;
-+		irq_domain_set_info(domain, virq, info->pin, &bridge_irq_chip,
-+				    data, handle_level_irq, NULL, NULL);
-+	} else {
-+		kfree(data);
-+	}
-+
-+	return ret;
-+}
-+
-+static void bridge_domain_free(struct irq_domain *domain, unsigned int virq,
-+			       unsigned int nr_irqs)
-+{
-+	struct irq_data *irqd = irq_domain_get_irq_data(domain, virq);
-+
-+	if (nr_irqs)
-+		return;
-+
-+	kfree(irqd->chip_data);
-+	irq_domain_free_irqs_top(domain, virq, nr_irqs);
-+}
-+
-+static int bridge_domain_activate(struct irq_domain *domain,
-+				  struct irq_data *irqd, bool reserve)
-+{
-+	struct bridge_irq_chip_data *data = irqd->chip_data;
-+	struct bridge_controller *bc = data->bc;
-+	int bit = irqd->parent_data->hwirq;
-+	int pin = irqd->hwirq;
-+	u32 device;
-+
-+	bridge_write(bc, b_int_addr[pin].addr,
-+		     (((bc->intr_addr >> 30) & 0x30000) |
-+		      bit | (data->nasid << 8)));
-+	bridge_set(bc, b_int_enable, (1 << pin));
-+	bridge_set(bc, b_int_enable, 0x7ffffe00); /* more stuff in int_enable */
-+
-+	/*
-+	 * Enable sending of an interrupt clear packt to the hub on a high to
-+	 * low transition of the interrupt pin.
-+	 *
-+	 * IRIX sets additional bits in the address which are documented as
-+	 * reserved in the bridge docs.
-+	 */
-+	bridge_set(bc, b_int_mode, (1UL << pin));
-+
-+	/*
-+	 * We assume the bridge to have a 1:1 mapping between devices
-+	 * (slots) and intr pins.
-+	 */
-+	device = bridge_read(bc, b_int_device);
-+	device &= ~(7 << (pin*3));
-+	device |= (pin << (pin*3));
-+	bridge_write(bc, b_int_device, device);
-+
-+	bridge_read(bc, b_wid_tflush);
-+	return 0;
-+}
-+
-+static void bridge_domain_deactivate(struct irq_domain *domain,
-+				     struct irq_data *irqd)
-+{
-+	struct bridge_irq_chip_data *data = irqd->chip_data;
-+
-+	bridge_clr(data->bc, b_int_enable, (1 << irqd->hwirq));
-+	bridge_read(data->bc, b_wid_tflush);
-+}
-+
-+static const struct irq_domain_ops bridge_domain_ops = {
-+	.alloc      = bridge_domain_alloc,
-+	.free       = bridge_domain_free,
-+	.activate   = bridge_domain_activate,
-+	.deactivate = bridge_domain_deactivate
-+};
-+
- /*
-  * All observed requests have pin == 1. We could have a global here, that
-  * gets incremented and returned every time - unfortunately, pci_map_irq
-@@ -322,11 +451,16 @@ static struct pci_ops bridge_pci_ops = {
- static int bridge_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- {
- 	struct bridge_controller *bc = BRIDGE_CONTROLLER(dev->bus);
-+	struct irq_alloc_info info;
- 	int irq;
- 
- 	irq = bc->pci_int[slot];
- 	if (irq == -1) {
--		irq = request_bridge_irq(bc, slot);
-+		info.ctrl = bc;
-+		info.nasid = bc->nasid;
-+		info.pin = slot;
-+
-+		irq = irq_domain_alloc_irqs(bc->domain, 1, bc->nasid, &info);
- 		if (irq < 0)
- 			return irq;
- 
-@@ -337,18 +471,34 @@ static int bridge_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- 
- static int bridge_probe(struct platform_device *pdev)
- {
-+	struct xtalk_bridge_platform_data *bd = dev_get_platdata(&pdev->dev);
- 	struct device *dev = &pdev->dev;
- 	struct bridge_controller *bc;
- 	struct pci_host_bridge *host;
-+	struct irq_domain *domain, *parent;
-+	struct fwnode_handle *fn;
- 	int slot;
- 	int err;
--	struct xtalk_bridge_platform_data *bd = dev_get_platdata(&pdev->dev);
-+
-+	parent = irq_get_default_host();
-+	if (!parent)
-+		return -ENODEV;
-+	fn = irq_domain_alloc_named_fwnode("BRIDGE");
-+	if (!fn)
-+		return -ENOMEM;
-+	domain = irq_domain_create_hierarchy(parent, 0, 8, fn,
-+					     &bridge_domain_ops, NULL);
-+	irq_domain_free_fwnode(fn);
-+	if (!domain)
-+		return -ENOMEM;
- 
- 	pci_set_flags(PCI_PROBE_ONLY);
- 
- 	host = devm_pci_alloc_host_bridge(dev, sizeof(*bc));
--	if (!host)
--		return -ENOMEM;
-+	if (!host) {
-+		err = -ENOMEM;
-+		goto err_remove_domain;
-+	}
- 
- 	bc = pci_host_bridge_priv(host);
- 
-@@ -357,15 +507,15 @@ static int bridge_probe(struct platform_device *pdev)
- 	bc->busn.end		= 0xff;
- 	bc->busn.flags		= IORESOURCE_BUS;
- 
-+	bc->domain		= domain;
-+
- 	pci_add_resource_offset(&host->windows, &bd->mem, bd->mem_offset);
- 	pci_add_resource_offset(&host->windows, &bd->io, bd->io_offset);
- 	pci_add_resource(&host->windows, &bc->busn);
- 
- 	err = devm_request_pci_bus_resources(dev, &host->windows);
--	if (err < 0) {
--		pci_free_resource_list(&host->windows);
--		return err;
--	}
-+	if (err < 0)
-+		goto err_free_resource;
- 
- 	bc->nasid = bd->nasid;
- 
-@@ -419,7 +569,7 @@ static int bridge_probe(struct platform_device *pdev)
- 
- 	err = pci_scan_root_bus_bridge(host);
- 	if (err < 0)
--		return err;
-+		goto err_free_resource;
- 
- 	pci_bus_claim_resources(host->bus);
- 	pci_bus_add_devices(host->bus);
-@@ -427,12 +577,20 @@ static int bridge_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, host->bus);
- 
- 	return 0;
-+
-+err_free_resource:
-+	pci_free_resource_list(&host->windows);
-+err_remove_domain:
-+	irq_domain_remove(domain);
-+	return err;
- }
- 
- static int bridge_remove(struct platform_device *pdev)
- {
- 	struct pci_bus *bus = platform_get_drvdata(pdev);
-+	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
- 
-+	irq_domain_remove(bc->domain);
- 	pci_lock_rescan_remove();
- 	pci_stop_root_bus(bus);
- 	pci_remove_root_bus(bus);
-diff --git a/arch/mips/sgi-ip27/ip27-irq.c b/arch/mips/sgi-ip27/ip27-irq.c
-index a32f843cdbe0..37be04975831 100644
---- a/arch/mips/sgi-ip27/ip27-irq.c
-+++ b/arch/mips/sgi-ip27/ip27-irq.c
-@@ -12,22 +12,20 @@
- #include <linux/ioport.h>
- #include <linux/kernel.h>
- #include <linux/bitops.h>
-+#include <linux/sched.h>
- 
- #include <asm/io.h>
- #include <asm/irq_cpu.h>
--#include <asm/pci/bridge.h>
- #include <asm/sn/addrs.h>
- #include <asm/sn/agent.h>
- #include <asm/sn/arch.h>
- #include <asm/sn/hub.h>
- #include <asm/sn/intr.h>
-+#include <asm/sn/irq_alloc.h>
- 
- struct hub_irq_data {
--	struct bridge_controller *bc;
- 	u64	*irq_mask[2];
- 	cpuid_t	cpu;
--	int	bit;
--	int	pin;
- };
- 
- static DECLARE_BITMAP(hub_irq_map, IP27_HUB_IRQ_COUNT);
-@@ -54,7 +52,7 @@ static void enable_hub_irq(struct irq_data *d)
- 	struct hub_irq_data *hd = irq_data_get_irq_chip_data(d);
- 	unsigned long *mask = per_cpu(irq_enable_mask, hd->cpu);
- 
--	set_bit(hd->bit, mask);
-+	set_bit(d->hwirq, mask);
- 	__raw_writeq(mask[0], hd->irq_mask[0]);
- 	__raw_writeq(mask[1], hd->irq_mask[1]);
- }
-@@ -64,71 +62,11 @@ static void disable_hub_irq(struct irq_data *d)
- 	struct hub_irq_data *hd = irq_data_get_irq_chip_data(d);
- 	unsigned long *mask = per_cpu(irq_enable_mask, hd->cpu);
- 
--	clear_bit(hd->bit, mask);
-+	clear_bit(d->hwirq, mask);
- 	__raw_writeq(mask[0], hd->irq_mask[0]);
- 	__raw_writeq(mask[1], hd->irq_mask[1]);
- }
- 
--static unsigned int startup_bridge_irq(struct irq_data *d)
--{
--	struct hub_irq_data *hd = irq_data_get_irq_chip_data(d);
--	struct bridge_controller *bc;
--	nasid_t nasid;
--	u32 device;
--	int pin;
--
--	if (!hd)
--		return -EINVAL;
--
--	pin = hd->pin;
--	bc = hd->bc;
--
--	nasid = COMPACT_TO_NASID_NODEID(cpu_to_node(hd->cpu));
--	bridge_write(bc, b_int_addr[pin].addr,
--		     (0x20000 | hd->bit | (nasid << 8)));
--	bridge_set(bc, b_int_enable, (1 << pin));
--	bridge_set(bc, b_int_enable, 0x7ffffe00); /* more stuff in int_enable */
--
--	/*
--	 * Enable sending of an interrupt clear packt to the hub on a high to
--	 * low transition of the interrupt pin.
--	 *
--	 * IRIX sets additional bits in the address which are documented as
--	 * reserved in the bridge docs.
--	 */
--	bridge_set(bc, b_int_mode, (1UL << pin));
--
--	/*
--	 * We assume the bridge to have a 1:1 mapping between devices
--	 * (slots) and intr pins.
--	 */
--	device = bridge_read(bc, b_int_device);
--	device &= ~(7 << (pin*3));
--	device |= (pin << (pin*3));
--	bridge_write(bc, b_int_device, device);
--
--	bridge_read(bc, b_wid_tflush);
--
--	enable_hub_irq(d);
--
--	return 0;	/* Never anything pending.  */
--}
--
--static void shutdown_bridge_irq(struct irq_data *d)
--{
--	struct hub_irq_data *hd = irq_data_get_irq_chip_data(d);
--	struct bridge_controller *bc;
--
--	if (!hd)
--		return;
--
--	disable_hub_irq(d);
--
--	bc = hd->bc;
--	bridge_clr(bc, b_int_enable, (1 << hd->pin));
--	bridge_read(bc, b_wid_tflush);
--}
--
- static void setup_hub_mask(struct hub_irq_data *hd, const struct cpumask *mask)
- {
- 	nasid_t nasid;
-@@ -144,9 +82,6 @@ static void setup_hub_mask(struct hub_irq_data *hd, const struct cpumask *mask)
- 		hd->irq_mask[0] = REMOTE_HUB_PTR(nasid, PI_INT_MASK0_B);
- 		hd->irq_mask[1] = REMOTE_HUB_PTR(nasid, PI_INT_MASK1_B);
- 	}
--
--	/* Make sure it's not already pending when we connect it. */
--	REMOTE_HUB_CLR_INTR(nasid, hd->bit);
- }
- 
- static int set_affinity_hub_irq(struct irq_data *d, const struct cpumask *mask,
-@@ -163,7 +98,7 @@ static int set_affinity_hub_irq(struct irq_data *d, const struct cpumask *mask,
- 	setup_hub_mask(hd, mask);
- 
- 	if (irqd_is_started(d))
--		startup_bridge_irq(d);
-+		enable_hub_irq(d);
- 
- 	irq_data_update_effective_affinity(d, cpumask_of(hd->cpu));
- 
-@@ -172,20 +107,22 @@ static int set_affinity_hub_irq(struct irq_data *d, const struct cpumask *mask,
- 
- static struct irq_chip hub_irq_type = {
- 	.name		  = "HUB",
--	.irq_startup	  = startup_bridge_irq,
--	.irq_shutdown	  = shutdown_bridge_irq,
- 	.irq_mask	  = disable_hub_irq,
- 	.irq_unmask	  = enable_hub_irq,
- 	.irq_set_affinity = set_affinity_hub_irq,
- };
- 
--int request_bridge_irq(struct bridge_controller *bc, int pin)
-+static int hub_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+			    unsigned int nr_irqs, void *arg)
- {
-+	struct irq_alloc_info *info = arg;
- 	struct hub_irq_data *hd;
- 	struct hub_data *hub;
- 	struct irq_desc *desc;
- 	int swlevel;
--	int irq;
-+
-+	if (nr_irqs > 1 || !info)
-+		return -EINVAL;
- 
- 	hd = kzalloc(sizeof(*hd), GFP_KERNEL);
- 	if (!hd)
-@@ -196,46 +133,41 @@ int request_bridge_irq(struct bridge_controller *bc, int pin)
- 		kfree(hd);
- 		return -EAGAIN;
- 	}
--	irq = swlevel + IP27_HUB_IRQ_BASE;
--
--	hd->bc = bc;
--	hd->bit = swlevel;
--	hd->pin = pin;
--	irq_set_chip_data(irq, hd);
-+	irq_domain_set_info(domain, virq, swlevel, &hub_irq_type, hd,
-+			    handle_level_irq, NULL, NULL);
- 
- 	/* use CPU connected to nearest hub */
--	hub = hub_data(NASID_TO_COMPACT_NODEID(bc->nasid));
-+	hub = hub_data(NASID_TO_COMPACT_NODEID(info->nasid));
- 	setup_hub_mask(hd, &hub->h_cpus);
- 
--	desc = irq_to_desc(irq);
--	desc->irq_common_data.node = bc->nasid;
-+	/* Make sure it's not already pending when we connect it. */
-+	REMOTE_HUB_CLR_INTR(info->nasid, swlevel);
-+
-+	desc = irq_to_desc(virq);
-+	desc->irq_common_data.node = info->nasid;
- 	cpumask_copy(desc->irq_common_data.affinity, &hub->h_cpus);
- 
--	return irq;
-+	return 0;
- }
- 
--void ip27_hub_irq_init(void)
-+static void hub_domain_free(struct irq_domain *domain,
-+			    unsigned int virq, unsigned int nr_irqs)
- {
--	int i;
-+	struct irq_data *irqd;
- 
--	for (i = IP27_HUB_IRQ_BASE;
--	     i < (IP27_HUB_IRQ_BASE + IP27_HUB_IRQ_COUNT); i++)
--		irq_set_chip_and_handler(i, &hub_irq_type, handle_level_irq);
--
--	/*
--	 * Some interrupts are reserved by hardware or by software convention.
--	 * Mark these as reserved right away so they won't be used accidentally
--	 * later.
--	 */
--	for (i = 0; i <= BASE_PCI_IRQ; i++)
--		set_bit(i, hub_irq_map);
--
--	set_bit(IP_PEND0_6_63, hub_irq_map);
-+	if (nr_irqs > 1)
-+		return;
- 
--	for (i = NI_BRDCAST_ERR_A; i <= MSC_PANIC_INTR; i++)
--		set_bit(i, hub_irq_map);
-+	irqd = irq_domain_get_irq_data(domain, virq);
-+	if (irqd && irqd->chip_data)
-+		kfree(irqd->chip_data);
- }
- 
-+static const struct irq_domain_ops hub_domain_ops = {
-+	.alloc = hub_domain_alloc,
-+	.free  = hub_domain_free,
-+};
-+
- /*
-  * This code is unnecessarily complex, because we do
-  * intr enabling. Basically, once we grab the set of intrs we need
-@@ -252,7 +184,9 @@ static void ip27_do_irq_mask0(struct irq_desc *desc)
- {
- 	cpuid_t cpu = smp_processor_id();
- 	unsigned long *mask = per_cpu(irq_enable_mask, cpu);
-+	struct irq_domain *domain;
- 	u64 pend0;
-+	int irq;
- 
- 	/* copied from Irix intpend0() */
- 	pend0 = LOCAL_HUB_L(PI_INT_PEND0);
-@@ -276,7 +210,14 @@ static void ip27_do_irq_mask0(struct irq_desc *desc)
- 		generic_smp_call_function_interrupt();
- 	} else
- #endif
--		generic_handle_irq(__ffs(pend0) + IP27_HUB_IRQ_BASE);
-+	{
-+		domain = irq_desc_get_handler_data(desc);
-+		irq = irq_linear_revmap(domain, __ffs(pend0));
-+		if (irq)
-+			generic_handle_irq(irq);
-+		else
-+			spurious_interrupt();
-+	}
- 
- 	LOCAL_HUB_L(PI_INT_PEND0);
- }
-@@ -285,7 +226,9 @@ static void ip27_do_irq_mask1(struct irq_desc *desc)
- {
- 	cpuid_t cpu = smp_processor_id();
- 	unsigned long *mask = per_cpu(irq_enable_mask, cpu);
-+	struct irq_domain *domain;
- 	u64 pend1;
-+	int irq;
- 
- 	/* copied from Irix intpend0() */
- 	pend1 = LOCAL_HUB_L(PI_INT_PEND1);
-@@ -294,7 +237,12 @@ static void ip27_do_irq_mask1(struct irq_desc *desc)
- 	if (!pend1)
- 		return;
- 
--	generic_handle_irq(__ffs(pend1) + IP27_HUB_IRQ_BASE + 64);
-+	domain = irq_desc_get_handler_data(desc);
-+	irq = irq_linear_revmap(domain, __ffs(pend1) + 64);
-+	if (irq)
-+		generic_handle_irq(irq);
-+	else
-+		spurious_interrupt();
- 
- 	LOCAL_HUB_L(PI_INT_PEND1);
- }
-@@ -325,11 +273,41 @@ void install_ipi(void)
- 
- void __init arch_init_irq(void)
- {
-+	struct irq_domain *domain;
-+	struct fwnode_handle *fn;
-+	int i;
-+
- 	mips_cpu_irq_init();
--	ip27_hub_irq_init();
-+
-+	/*
-+	 * Some interrupts are reserved by hardware or by software convention.
-+	 * Mark these as reserved right away so they won't be used accidentally
-+	 * later.
-+	 */
-+	for (i = 0; i <= BASE_PCI_IRQ; i++)
-+		set_bit(i, hub_irq_map);
-+
-+	set_bit(IP_PEND0_6_63, hub_irq_map);
-+
-+	for (i = NI_BRDCAST_ERR_A; i <= MSC_PANIC_INTR; i++)
-+		set_bit(i, hub_irq_map);
-+
-+	fn = irq_domain_alloc_named_fwnode("HUB");
-+	WARN_ON(fn == NULL);
-+	if (!fn)
-+		return;
-+	domain = irq_domain_create_linear(fn, IP27_HUB_IRQ_COUNT,
-+					  &hub_domain_ops, NULL);
-+	WARN_ON(domain == NULL);
-+	if (!domain)
-+		return;
-+
-+	irq_set_default_host(domain);
- 
- 	irq_set_percpu_devid(IP27_HUB_PEND0_IRQ);
--	irq_set_chained_handler(IP27_HUB_PEND0_IRQ, ip27_do_irq_mask0);
-+	irq_set_chained_handler_and_data(IP27_HUB_PEND0_IRQ, ip27_do_irq_mask0,
-+					 domain);
- 	irq_set_percpu_devid(IP27_HUB_PEND1_IRQ);
--	irq_set_chained_handler(IP27_HUB_PEND1_IRQ, ip27_do_irq_mask1);
-+	irq_set_chained_handler_and_data(IP27_HUB_PEND1_IRQ, ip27_do_irq_mask1,
-+					 domain);
- }
--- 
-2.13.7
+= Where to get it
+
+  https://sourceware.org/systemtap/ - our project page
+  https://sourceware.org/systemtap/ftp/releases/
+  https://koji.fedoraproject.org/koji/packageinfo?packageID=615
+  git tag release-4.1 (commit 984d6d1696ed06626b07cb65ab55d6ae0ece1131)
+
+  There have been over 210 commits since the last release.
+  There have 28+ bugs fixed / features added since the last release.
+
+
+= SystemTap frontend (stap) changes
+
+- New macros @this1, ..., @this8 have been added to the script language.
+  The macros can be used to save values in entry probes and later retrieve
+  them in return probes. This can be used in instances where @entry does
+  not work. For example:
+
+     probe tp_syscall.read {
+         @this1 = buf_uaddr
+     }
+
+     probe tp_syscall.read.return {
+         buf_uaddr = @this1
+         printf("%s", user_string(buf_uaddr))
+     }
+
+- Operator @var() no longer assumes @entry() in return probes.
+  The old behavior can be restored by the '--compatible 4.0' option.
+
+= SystemTap backend changes
+
+- Runtime/tapsets were ported to include up to kernel version 5.1-rc2
+
+- The translator's pass-2 (elaboration) phase has been dramatically
+  accelerated by eschewing processing of unreferenced parts of the
+  tapset and embedded-C code.
+
+- A new stapbpf transport layer has been implemented based on perf_events
+  infrastructure. This transport layer removes some limitations on strings
+  and printf() that were previously imposed by BPF's trace_printk() mechanism:
+  - It is now possible to use format-width specifiers in printf().
+  - It is now possible to use more than three format specifiers in printf().
+  - It is now possible to use multiple '%s' format specifiers in printf().
+  - Using stapbpf should no longer trigger a trace_printk()-associated
+    warning on dmesg.
+
+- In the stapbpf backend, foreach() now supports iteration of arrays
+  with string keys.
+
+- A preview version of statistical aggregate functionality for stapbpf
+  is now included. For now, in the stapbpf backend, aggregates only
+  support @count(), @sum() and @avg() operations.
+
+- Added support for unhandled DWARF operator DW_OP_GNU_parameter_ref in
+  location expressions for target symbols.
+
+- Where available (kernel 4.15+), the kernel-module runtime now uses
+  the kernel-provided ktime_get_real_fast_ns() mechanism for timekeeping
+  rather than the SystemTap runtime's own timekeeping machinery.
+
+= SystemTap tapset changes
+
+- New stapbpf tapset task.stp with function task_current.
+
+- New stapbpf tapset functions kernel_string, kernel_string_n,
+  execname, ktime_get_ns.
+
+- Numerous improvements to tapset support for ARM architectures.
+
+- Added prometheus_dump_*_unquoted versions of prometheus_dump_*
+  to allow dumping JSON-valid data without redundant quoting.
+
+= SystemTap sample scripts
+
+All 180+ examples can be found at https://sourceware.org/systemtap/examples/
+
+- Numerous changes to existing examples to improve performance, mostly
+  by using statistical aggregates instead of ordinary variables where possible.
+
+- Numerous changes to existing examples to improve compatibility with
+  recent kernel versions.
+
+- Numerous changes to existing examples to use @this1, ..., @this8 macros
+  instead of @entry mechanism.
+
+- New sample script:
+
+ucalls.stp       Profile method invocations in Java, Perl, Php, Python, Ruby, and Tcl
+
+- New stapbpf sample script, with thanks to David Valin:
+
+cachestat.stp    Monitors hits and misses to the page cache
+                 and reports a count every 5 seconds.
+
+= Examples of tested kernel versions
+
+2.6.32 (RHEL6 x86_64, i686)
+3.10.0 (RHEL7 x86_64)
+4.15.0 (Ubuntu 18.04 x86_64)
+4.20 (Fedora 29 aarch64)
+5.0 (Ubuntu 16.04.6 aarch64)
+5.0.7 (Fedora 29 x86_64)
+5.0.9 (Fedora 28 i686)
+5.1.0-rc2 (Fedora Rawhide x86_64, but see BPF caveat below!)
+
+= Known issues with this release
+
+- Some kernel crashes continue to be reported when a script probes
+  broad kernel function wildcards.  (PR2725)
+
+- An upstream kernel commit #2062afb4f804a put "-fno-var-tracking-assignments"
+  into KCFLAGS, dramatically reducing debuginfo quality, which can cause
+  debuginfo failures. The simplest fix is to erase, excise, nay, eradicate
+  this line from the top level linux Makefile:
+
+  KBUILD_CFLAGS   += $(call cc-option, -fno-var-tracking-assignments)
+
+- BPF interpreters in recent Fedora rawhide kernels (version 5.1.0-0.rc7.git1.1.fc31) 
+  were found to contain a kernel-panic-triggering bug (RHBZ1706102) that can
+  be elicited by stapbpf. Until this is fixed, take care when running BPF programs
+  on very recent kernels. (5.1 and later)
+
+= Coming soon
+
+- More stapbpf functionality including full statistics aggregate support
+
+= Contributors for this release
+
+*David Ward, Frank Ch. Eigler, *Hou Tao, Jafeer Uddin,
+Mark Wielaard, Martin Cermak, Peter Robinson, Serhei Makarov,
+Stan Cox, Torsten Polle, Victor Kamensky, William Cohen,
+Yichun Zhang (agentzh)
+
+Special thanks to new contributors, marked with '*' above.
+
+Special thanks to Serhei for assembling these notes.
+
+= Bugs fixed for this release <https://sourceware.org/PR#####>
+
+14689 missing 'syscalls' tracepoints 
+16596 Support DW_OP_GNU_entry_value in location expressions 
+21080 support needed for new pkey_* syscalls 
+22330 bpf: generate printf via event tuples, userspace formatting postprocessing 
+23074 unhandled DW_OP operation in DWARF expression (DW_OP_GNU_parameter_ref) 
+23391 support {,foo,bar} alternation in wildcards 
+23435 stapbpf transport layer can swallow a message before exit() 
+23474 bpf kernel_string(), user_string() tapset 
+23507 Need a command-line option to disable the automatic (unread) global variable display 
+23747 Unknown  section .note.Linux in kernel module cause tests with --all-modules to fail to compile 
+23761 generalized @entry 
+23775 Pass 2 failed when generate a kernel module for stap script which uses kernel trace-point 
+23799 sprint_ustack() returns empty strings while sprint_ubacktrace() does not 
+23816 printf with multiple %s does not work on bpf 
+23860 unknown opcode 0x8f in string manipulation code 
+23875 support string map keys in foreach iteration 
+23890 on f29 and later, elf segment/plt rearrangement leads to buildid verification errors 
+23891 stap and stapio process are stuck in signal processor and could not terminate properly 
+23894 SystemTap_Beginners_Guide: -ldd should be --ldd 
+24199 misleading error when providing wrong printf format for pid(). 
+24217 pass-2 sloth in probe condition-expression analysis 
+24224 tapsets.cxx kernel relocation assert fails when attempting to access some function parameters 
+24239 during elaboration pass, avoid unnecessary sym/type resolution of functions/globals not known to be needed 
+24327  @defined unable to handle $$parms and $$vars meta variables 
+24329 bpf userspace: consecutive map string lookups overwrite each other 
+24363 Slow pass 2 due to varuse_collecting_visitor::visit_embeddedcode() 
+24408 using @kregister(0) in kernel tracepoint probe handler will cause a kernel crash on linux 5.x.x kernel 
+24416 Tests stuck in uprobes_onthefly.exp 
 
