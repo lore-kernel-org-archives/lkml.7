@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34864C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AF3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F064F204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B21204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208303;
-	bh=sz3G/G7S59Ufj57jzQemIJTIAXrIRuQ6U/WPK+vEEH4=;
+	s=default; t=1557208310;
+	bh=/PXPE8j4QrWpIB45+kYwvSBrtZU8uMuCh26U6b8XGiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hEudq5xbBqfwSS3EpZVcf9OaaRF4E32mh34FJwb+/eKGvgs6SDEpGh4tNgB8DT0EV
-	 DdKA/oCr8I9hxG3KF1mQUJOrQ5qesSamFGUwRozjqnvBwBf8HS4kAvfa843kGsyt7B
-	 X0VuP09v5oNUvqoQjDBU0s0JdZV11pLk1FUQllYs=
+	b=caD1PhaFJP0Yd0Qu7bxzOhgNeMyySJICcQ21y9gHg0vkRGXkqBUQiWB8UCPf1GJfm
+	 jhMqhVYNUwtI0vPfxiZ2zn93gYme7hd7WCibFEGQNv40iRPdgBQ7DUVZKpjNgtyTIc
+	 w8nVp7b6UAeUBWHwVfOiQwtONkUlpRnFNN0RxEb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfEGFvl (ORCPT
+        id S1729056AbfEGFvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59330 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:51:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbfEGFjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:39:49 -0400
+        id S1728929AbfEGFjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:39:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2908420675;
-        Tue,  7 May 2019 05:39:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E98A20578;
+        Tue,  7 May 2019 05:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207589;
-        bh=sz3G/G7S59Ufj57jzQemIJTIAXrIRuQ6U/WPK+vEEH4=;
+        s=default; t=1557207586;
+        bh=/PXPE8j4QrWpIB45+kYwvSBrtZU8uMuCh26U6b8XGiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Satpoahixke2p4Zp9JZVVKOWs1CcyW3t1DJSB83E+AzV9BpY82ddC0SbXxJsNH21G
-         LbRoRAhgwY/SEtYNk74AdND7XsGRzdRSsFsP/GyGtKbaRSZw/ISkTQHIosKCp0+zCQ
-         YpZNaL8fZ/Ybg5gI0j2k1eplXFWNBAz+fiSv5iZo=
+        b=tGIqxbIAOZIzJKAvileGS0Ytyr6dFlSaA8AWqJ7ZLn8BlyAWp5GwfjE6GAV2rprcN
+         Gg4Rl4TN/cN5i6Rd42sqbzPb43+XWV8+c39tCkfPHu6hsPA6Z1awKC4BVhFfhPCEx9
+         slFjGDbzAP9dmu9sBN6CBOlIxjcxDyA91WjmyPjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erik Schmauss <erik.schmauss@intel.com>,
-        Jean-Marc Lenoir <archlinux@jihemel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        Fuxin Zhang <zhangfx@lemote.com>,
+        Zhangjin Wu <wuzhangjin@gmail.com>,
+        Huacai Chen <chenhuacai@gmail.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-acpi@vger.kernel.org, devel@acpica.org
-Subject: [PATCH AUTOSEL 4.14 39/95] ACPICA: AML interpreter: add region addresses in global list during initialization
-Date:   Tue,  7 May 2019 01:37:28 -0400
-Message-Id: <20190507053826.31622-39-sashal@kernel.org>
+        linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 37/95] MIPS: VDSO: Reduce VDSO_RANDOMIZE_SIZE to 64MB for 64bit
+Date:   Tue,  7 May 2019 01:37:26 -0400
+Message-Id: <20190507053826.31622-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,47 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Schmauss <erik.schmauss@intel.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit 4abb951b73ff0a8a979113ef185651aa3c8da19b ]
+[ Upstream commit c61c7def1fa0a722610d89790e0255b74f3c07dd ]
 
-The table load process omitted adding the operation region address
-range to the global list. This omission is problematic because the OS
-queries the global list to check for address range conflicts before
-deciding which drivers to load. This commit may result in warning
-messages that look like the following:
+Commit ea7e0480a4b6 ("MIPS: VDSO: Always map near top of user memory")
+set VDSO_RANDOMIZE_SIZE to 256MB for 64bit kernel. But take a look at
+arch/mips/mm/mmap.c we can see that MIN_GAP is 128MB, which means the
+mmap_base may be at (user_address_top - 128MB). This make the stack be
+surrounded by mmaped areas, then stack expanding fails and causes a
+segmentation fault. Therefore, VDSO_RANDOMIZE_SIZE should be less than
+MIN_GAP and this patch reduce it to 64MB.
 
-[    7.871761] ACPI Warning: system_IO range 0x00000428-0x0000042F conflicts with op_region 0x00000400-0x0000047F (\PMIO) (20180531/utaddress-213)
-[    7.871769] ACPI: If an ACPI driver is available for this device, you should use it instead of the native driver
-
-However, these messages do not signify regressions. It is a result of
-properly adding address ranges within the global address list.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200011
-Tested-by: Jean-Marc Lenoir <archlinux@jihemel.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: ea7e0480a4b6 ("MIPS: VDSO: Always map near top of user memory")
+Patchwork: https://patchwork.linux-mips.org/patch/20910/
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
+Cc: Fuxin Zhang <zhangfx@lemote.com>
+Cc: Zhangjin Wu <wuzhangjin@gmail.com>
+Cc: Huacai Chen <chenhuacai@gmail.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/acpi/acpica/dsopcode.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/mips/include/asm/processor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/dsopcode.c b/drivers/acpi/acpica/dsopcode.c
-index 0336df7ac47d..e8070f6ca835 100644
---- a/drivers/acpi/acpica/dsopcode.c
-+++ b/drivers/acpi/acpica/dsopcode.c
-@@ -451,6 +451,10 @@ acpi_ds_eval_region_operands(struct acpi_walk_state *walk_state,
- 			  ACPI_FORMAT_UINT64(obj_desc->region.address),
- 			  obj_desc->region.length));
+diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
+index 8bbbab611a3f..0b86a01de956 100644
+--- a/arch/mips/include/asm/processor.h
++++ b/arch/mips/include/asm/processor.h
+@@ -81,7 +81,7 @@ extern unsigned int vced_count, vcei_count;
  
-+	status = acpi_ut_add_address_range(obj_desc->region.space_id,
-+					   obj_desc->region.address,
-+					   obj_desc->region.length, node);
-+
- 	/* Now the address and length are valid for this opregion */
+ #endif
  
- 	obj_desc->region.flags |= AOPOBJ_DATA_VALID;
+-#define VDSO_RANDOMIZE_SIZE	(TASK_IS_32BIT_ADDR ? SZ_1M : SZ_256M)
++#define VDSO_RANDOMIZE_SIZE	(TASK_IS_32BIT_ADDR ? SZ_1M : SZ_64M)
+ 
+ extern unsigned long mips_stack_top(void);
+ #define STACK_TOP		mips_stack_top()
 -- 
 2.20.1
 
