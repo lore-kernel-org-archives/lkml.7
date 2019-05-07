@@ -2,190 +2,147 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC49C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD891C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357C9206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB7D206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:15:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTQNGYZ1"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="KJE16D65";
+	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="Js1Kxxfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfEGDOR (ORCPT
+        id S1726933AbfEGDPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 23:14:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46486 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfEGDOR (ORCPT
+        Mon, 6 May 2019 23:15:51 -0400
+Received: from alln-iport-5.cisco.com ([173.37.142.92]:51670 "EHLO
+        alln-iport-5.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfEGDPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 23:14:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j11so7822249pff.13;
-        Mon, 06 May 2019 20:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XPy6o0NjYz38vWpV6pc1h2A6N4smSYs4Cq49Ux9zwV8=;
-        b=uTQNGYZ1XWIvXYHBEeJQovmqhK2Jtpq+d64Qro6G5OKceot5sQNTlLbfduNr0K3PGx
-         CsKeB5E/nKLx2mO5rHvB5C3cSTlrSg27HAg1bLnsc6sS6Ob71hOBqLsY7CZ9Kc78pahW
-         2bjV9Jxur71IdhgsqsXU4h/nzLhauMpdelIF+i15235Qca74Y0OgvP33q3BLK9LqDfFd
-         Xr/fhjikEY63MLGvaPSmYU14OjokXybBFpWj/AGZsAXkXpEZkB0f6qswg2ygyAISGWpA
-         7eDh4rZZ2yShjUppASxA0qxx7J3s6zLlj/zKwFDiXJf9dX+MaLJqGhuEngD27vSXcDZx
-         mNcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XPy6o0NjYz38vWpV6pc1h2A6N4smSYs4Cq49Ux9zwV8=;
-        b=bpGmhPA4nLB6Twbk5csOyQsxQkRfpaM0M3+zBCdYF2ditokfKtQja54RhMiUuc8VKm
-         99wUhRwxzKKuwyDDRdKqc6806OVTvYJavNSiJdHNcBvgtC7UWcOTyRAUDT0EEbaN1iDK
-         +RVrbZ901k3ouQgWRIsfQp0kmUNLbEGByWkcmXyT3JEvzPSjDv/lPCMVi7oNFshfQhZV
-         DQViNHZ5miie3fHmUTwEvaSjQ13KFLJ1W3FHorGtDGD0t85LWDeqsujQJ57zffUlBUWq
-         qmAY4eJOXIAnz2b787wqSKwdvk1M4M4d3RaXVzdp3qBJC96szIC6dw2ggUlAs/J5IJVe
-         /PYA==
-X-Gm-Message-State: APjAAAU5SaVa7bH19Pdkzl0Pf2PmKJ6V6i2/NLXVqmpEE+nCc7gnNWnF
-        MWEiMzXZNqRh8l8aS+kWvo5YXwxZ0NA=
-X-Google-Smtp-Source: APXvYqwISNSy9xefPMYRgOslBbKIROeiQ4y33+rxQnv0dnHw2MR5wA3FiL1meR7p3JPjBqzEw/Pz1Q==
-X-Received: by 2002:a65:4802:: with SMTP id h2mr34368073pgs.98.1557198856091;
-        Mon, 06 May 2019 20:14:16 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id m11sm17053726pgd.12.2019.05.06.20.14.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 20:14:15 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        gregkh@linuxfoundation.org, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
-Date:   Mon, 6 May 2019 20:14:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190501230126.229218-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 6 May 2019 23:15:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=189; q=dns/txt; s=iport;
+  t=1557198950; x=1558408550;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=fPAYb48Hd7lHF4bhR2S9Sze28R1001viE0ObfRnKrNo=;
+  b=KJE16D65a3ochwtyxr4dKCMzpghceS63CxxkYbsC2qMi0KhVl7J0oVVx
+   VMCBHwCLCrL+J/C84QqEk5oJGN45i7Y5hbtoAWC0j8D1rNy0+/SMHX39W
+   IiYyNdVWWSyz8o4a/tyT4THFe7tKfYPUl/ftBJecjlxPfhIxZFvQPUPbP
+   4=;
+IronPort-PHdr: =?us-ascii?q?9a23=3AHhalQhExKcJAlmaCN2AsxJ1GYnJ96bzpIg4Y7I?=
+ =?us-ascii?q?YmgLtSc6Oluo7vJ1Hb+e4w0A3SRYuO7fVChqKWqK3mVWEaqbe5+HEZON0ETB?=
+ =?us-ascii?q?oZkYMTlg0kDtSCDBj1LfTCZC0hF8MEX1hgrDm2?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AoAABX99Bc/5JdJa1kGgEBAQEBAgE?=
+ =?us-ascii?q?BAQEHAgEBAQGBVAIBAQEBCwGBPVADgT4gBAsoCodNA48CSoINlySCUgNUDgE?=
+ =?us-ascii?q?BLYRAAoITIzcGDgEDAQEEAQECAQJtHAyFSwEBAwESLgEBNwEECwIBCEYyJQI?=
+ =?us-ascii?q?EAQ0NGoRrAw4PAQKkJwKBNYhfgiCCeQEBBYUIGIIOCRSBHgGLTReBf4ERRoJ?=
+ =?us-ascii?q?MPoREAoM6giaNLIVohxmNFAkCggmSZYF/AZNRjB+UdAIEAgQFAg4BAQWBZSK?=
+ =?us-ascii?q?BVnAVgyeCDwwXFIM4ilNygSmPegGBIAEB?=
+X-IronPort-AV: E=Sophos;i="5.60,440,1549929600"; 
+   d="scan'208";a="269658509"
+Received: from rcdn-core-10.cisco.com ([173.37.93.146])
+  by alln-iport-5.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 07 May 2019 03:15:49 +0000
+Received: from XCH-ALN-020.cisco.com (xch-aln-020.cisco.com [173.36.7.30])
+        by rcdn-core-10.cisco.com (8.15.2/8.15.2) with ESMTPS id x473Fnn8015624
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 7 May 2019 03:15:49 GMT
+Received: from xhs-aln-001.cisco.com (173.37.135.118) by XCH-ALN-020.cisco.com
+ (173.36.7.30) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 May
+ 2019 22:15:48 -0500
+Received: from xhs-aln-003.cisco.com (173.37.135.120) by xhs-aln-001.cisco.com
+ (173.37.135.118) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 May
+ 2019 22:15:47 -0500
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (173.37.151.57)
+ by xhs-aln-003.cisco.com (173.37.135.120) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 6 May 2019 22:15:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
+ s=selector1-cisco-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hcLtg9Lq3H1u2ZPx1vFp08nNfUh5T6wqgusaofLNVdQ=;
+ b=Js1KxxfkCHyyiOZO5kjUxdX4ArMB1CoTrTFJbBf8tZL7PdQqsSBl7V1mXIT6MHAr9eDHY3JOa//xhmRJAPeVMQGPU2M4S/vEtfdb3wIao96DRw+7VsMaN7rqQWF8c++5Ehcg7BMI0/veaxQRU3H9Lad3Rjy1M1fjbs3BTHQYpc0=
+Received: from BYAPR11MB3383.namprd11.prod.outlook.com (20.177.186.96) by
+ BYAPR11MB3269.namprd11.prod.outlook.com (20.177.185.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Tue, 7 May 2019 03:15:44 +0000
+Received: from BYAPR11MB3383.namprd11.prod.outlook.com
+ ([fe80::b0ec:ad30:c80b:e94]) by BYAPR11MB3383.namprd11.prod.outlook.com
+ ([fe80::b0ec:ad30:c80b:e94%3]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 03:15:44 +0000
+From:   "Ruslan Babayev (fib)" <fib@cisco.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "20190505220524.37266-2-ruslan@babayev.com" 
+        <20190505220524.37266-2-ruslan@babayev.com>
+CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>
+Subject: Re: [PATCH RFC v2 net-next 2/2] net: phy: sfp: enable i2c-bus
+ detection on ACPI based systems
+Thread-Topic: [PATCH RFC v2 net-next 2/2] net: phy: sfp: enable i2c-bus
+ detection on ACPI based systems
+Thread-Index: AQHVBG1FwjU1WTeEMUumoWKXpb9bbKZe8vkAgAAKMLo=
+Date:   Tue, 7 May 2019 03:15:44 +0000
+Message-ID: <BYAPR11MB3383B74F06254EDA7157D314AD310@BYAPR11MB3383.namprd11.prod.outlook.com>
+References: <20190505220524.37266-2-ruslan@babayev.com>
+ <20190507003557.40648-3-ruslan@babayev.com>,<20190507023812.GA12262@lunn.ch>
+In-Reply-To: <20190507023812.GA12262@lunn.ch>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=fib@cisco.com; 
+x-originating-ip: [128.107.241.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a3345170-67b5-4000-31d1-08d6d29a4b01
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR11MB3269;
+x-ms-traffictypediagnostic: BYAPR11MB3269:
+x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR11MB326964AF9D90E52091BD25F9AD310@BYAPR11MB3269.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(366004)(396003)(346002)(189003)(199004)(3846002)(6116002)(229853002)(7736002)(76116006)(7416002)(6436002)(6246003)(66476007)(66946007)(66556008)(64756008)(73956011)(66446008)(2906002)(316002)(66066001)(14454004)(54906003)(2501003)(110136005)(86362001)(478600001)(55016002)(99286004)(186003)(9686003)(7696005)(8936002)(76176011)(71200400001)(4326008)(71190400001)(68736007)(53936002)(25786009)(81166006)(81156014)(8676002)(107886003)(256004)(26005)(102836004)(305945005)(33656002)(74316002)(558084003)(446003)(11346002)(476003)(5660300002)(52536014)(6506007)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3269;H:BYAPR11MB3383.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cisco.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xf9x/x5x7U9vmwYTaz+4d4OmwoCFBmSkTCjoyBGtrqGMd8XKGMgT3n36nxHnke62BWO7l8Mmd2sjrYSIn3AYVODsEwmD46nW+hayNcWyTFDTj5Am4B10EJv68J3kdSflDsWF4WU5QCTUoIikbScDEJo6Kgv2wLdTxxf/6bY7FIrTNPmbDnOhvnGKNsEMhYI1wAqLECcYKcgamH4q43FhDSVpvkq/3Fxn37zWa/DlJwAvfjfhdGb9t+YpmO3emoVOxrRA+3kLWPiy7Gpdt+ypwAuux3uSdwhgkvePwoPUP22FLckM/3ge7P3VAUIgCeXN6Q/bDFgfWtl1aCXeErGIHW3if5iDPd5VM+0d/wIFfzAD+EtxRYk7ZCPFFzJx1TNhn6QNznBtqF8djUNgNtPEZUfeep/JplvwjA6paUL9rg4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3345170-67b5-4000-31d1-08d6d29a4b01
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 03:15:44.3749
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3269
+X-OriginatorOrg: cisco.com
+X-Outbound-SMTP-Client: 173.36.7.30, xch-aln-020.cisco.com
+X-Outbound-Node: rcdn-core-10.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 4:01 PM, Brendan Higgins wrote:
-> ## TLDR
-> 
-> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
-> 5.2.
-> 
-> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
-> we would merge through your tree when the time came? Am I remembering
-> correctly?
-> 
-> ## Background
-> 
-> This patch set proposes KUnit, a lightweight unit testing and mocking
-> framework for the Linux kernel.
-> 
-> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
-> it does not require installing the kernel on a test machine or in a VM
-> and does not require tests to be written in userspace running on a host
-> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
-> can run several dozen tests in under a second. Currently, the entire
-> KUnit test suite for KUnit runs in under a second from the initial
-> invocation (build time excluded).
-> 
-> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
-> Googletest/Googlemock for C++. KUnit provides facilities for defining
-> unit test cases, grouping related test cases into test suites, providing
-> common infrastructure for running tests, mocking, spying, and much more.
-
-As a result of the emails replying to this patch thread, I am now
-starting to look at kselftest.  My level of understanding is based
-on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
-and a _tiny_ bit of looking at kselftest code.
-
-tl;dr; I don't really understand kselftest yet.
-
-
-(1) why KUnit exists
-
-> ## What's so special about unit testing?
-> 
-> A unit test is supposed to test a single unit of code in isolation,
-> hence the name. There should be no dependencies outside the control of
-> the test; this means no external dependencies, which makes tests orders
-> of magnitudes faster. Likewise, since there are no external dependencies,
-> there are no hoops to jump through to run the tests. Additionally, this
-> makes unit tests deterministic: a failing unit test always indicates a
-> problem. Finally, because unit tests necessarily have finer granularity,
-> they are able to test all code paths easily solving the classic problem
-> of difficulty in exercising error handling code.
-
-(2) KUnit is not meant to replace kselftest
-
-> ## Is KUnit trying to replace other testing frameworks for the kernel?
-> 
-> No. Most existing tests for the Linux kernel are end-to-end tests, which
-> have their place. A well tested system has lots of unit tests, a
-> reasonable number of integration tests, and some end-to-end tests. KUnit
-> is just trying to address the unit test space which is currently not
-> being addressed.
-
-My understanding is that the intent of KUnit is to avoid booting a kernel on
-real hardware or in a virtual machine.  That seems to be a matter of semantics
-to me because isn't invoking a UML Linux just running the Linux kernel in
-a different form of virtualization?
-
-So I do not understand why KUnit is an improvement over kselftest.
-
-It seems to me that KUnit is just another piece of infrastructure that I
-am going to have to be familiar with as a kernel developer.  More overhead,
-more information to stuff into my tiny little brain.
-
-I would guess that some developers will focus on just one of the two test
-environments (and some will focus on both), splitting the development
-resources instead of pooling them on a common infrastructure.
-
-What am I missing?
-
--Frank
-
-
-> 
-> ## More information on KUnit
-> 
-> There is a bunch of documentation near the end of this patch set that
-> describes how to use KUnit and best practices for writing unit tests.
-> For convenience I am hosting the compiled docs here:
-> https://google.github.io/kunit-docs/third_party/kernel/docs/
-> Additionally for convenience, I have applied these patches to a branch:
-> https://kunit.googlesource.com/linux/+/kunit/rfc/v5.1-rc7/v1
-> The repo may be cloned with:
-> git clone https://kunit.googlesource.com/linux
-> This patchset is on the kunit/rfc/v5.1-rc7/v1 branch.
-> 
-> ## Changes Since Last Version
-> 
-> None. I just rebased the last patchset on v5.1-rc7.
-> 
-
+=0A=
+> As i said before, i know ~0 about ACPI. Does devm_gpiod_get() just=0A=
+> work for ACPI?=0A=
+> Thanks=0A=
+>        Andrew=0A=
+=0A=
+It does.=0A=
+=0A=
+Regards,=0A=
+Ruslan=0A=
