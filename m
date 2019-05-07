@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26208C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AD0C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E2E20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C063205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208268;
-	bh=NokzQTe48QPHBQvyu/mp0gTTSkMF3B3nNkgwopDX6Rs=;
+	s=default; t=1557208276;
+	bh=T86Ozqa4zQwnEIPLFsnsGeVLTp6aZdkd1zJOQJbGNi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kdni2kOeOkpmN0e/2VGUbqf20USHKXiaX8yWuVGszYmqs/RHyxIZ1+lgqISp23rin
-	 4sVK44Ia/s+zDxyG68rDdOKvgj5kLV1yOJpA6tDH7JJJe+odRIWg53IF/lvNB6VEJC
-	 nuL504NS5gPMvCe9esyvnvw9RXMb5MIBuuUZqPzU=
+	b=AvVEhAk8gH/cGAg3V6uAFV1MXM7TVs42jKs9SncGq/8GuszS9S97wCr8lO2xh3UpV
+	 TWHoEHCD7NWjN84Jb894f2U30M+UnxCm17ZOBPG3oUZ3Lm3a4woXiFtH/yoCEFagnk
+	 hhTIDRawwOmlPRMPMQovICDeSqYBFcXOHqqmf4jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfEGFvG (ORCPT
+        id S1729277AbfEGFvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59452 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbfEGFj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:39:58 -0400
+        id S1728989AbfEGFj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:39:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ACF0216F4;
-        Tue,  7 May 2019 05:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8895C216C4;
+        Tue,  7 May 2019 05:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207598;
-        bh=NokzQTe48QPHBQvyu/mp0gTTSkMF3B3nNkgwopDX6Rs=;
+        s=default; t=1557207597;
+        bh=T86Ozqa4zQwnEIPLFsnsGeVLTp6aZdkd1zJOQJbGNi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZcA2Wmd2psZlcHLkUFyugE5AmFHIDHw0lC14TUe/LdMTo0a148NZuajvdVhbxtJgJ
-         AycBnkM8VdGUFKmfkOxQqmNBs6p2xa3D4z+A47VM9TitdV2cZcUGbMytTW9bzAgdN1
-         Ug+AFgdsjPrG8oiVbIj99he8kHiT3KqlfjysWf78=
+        b=ktvlgAkdVzgLpEU+g4sYERpClVVQrnwTn8ftkdOrbhhCkrHgJR6UoscKL9WNvK6cJ
+         9MgYUYplaBGS2PDiEbTcVfFvO80bDcNFBCZpupp3Pkh8q4G4b2AyKK2lk0qjCKA24u
+         rOeq9XoyM3GDcJMb71x36frCK4S6re6FPmyBV4B0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 47/95] fuse: fix possibly missed wake-up after abort
-Date:   Tue,  7 May 2019 01:37:36 -0400
-Message-Id: <20190507053826.31622-47-sashal@kernel.org>
+        linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 46/95] media: adv7842: when the EDID is cleared, unconfigure CEC as well
+Date:   Tue,  7 May 2019 01:37:35 -0400
+Message-Id: <20190507053826.31622-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -59,62 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-[ Upstream commit 2d84a2d19b6150c6dbac1e6ebad9c82e4c123772 ]
+[ Upstream commit ab83203e181015b099720aff43ffabc1812e0fb3 ]
 
-In current fuse_drop_waiting() implementation it's possible that
-fuse_wait_aborted() will not be woken up in the unlikely case that
-fuse_abort_conn() + fuse_wait_aborted() runs in between checking
-fc->connected and calling atomic_dec(&fc->num_waiting).
+When there is no EDID the CEC adapter should be unconfigured as
+well. So call cec_phys_addr_invalidate() when this happens.
 
-Do the atomic_dec_and_test() unconditionally, which also provides the
-necessary barrier against reordering with the fc->connected check.
-
-The explicit smp_mb() in fuse_wait_aborted() is not actually needed, since
-the spin_unlock() in fuse_abort_conn() provides the necessary RELEASE
-barrier after resetting fc->connected.  However, this is not a performance
-sensitive path, and adding the explicit barrier makes it easier to
-document.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Fixes: b8f95e5d13f5 ("fuse: umount should wait for all requests")
-Cc: <stable@vger.kernel.org> #v4.19
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: <stable@vger.kernel.org>      # for v4.18 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- fs/fuse/dev.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/media/i2c/adv7842.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 63fd33383413..af78ceead2dc 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -133,9 +133,13 @@ static bool fuse_block_alloc(struct fuse_conn *fc, bool for_background)
+diff --git a/drivers/media/i2c/adv7842.c b/drivers/media/i2c/adv7842.c
+index f9c23173c9fa..dcce8d030e5d 100644
+--- a/drivers/media/i2c/adv7842.c
++++ b/drivers/media/i2c/adv7842.c
+@@ -799,8 +799,10 @@ static int edid_write_hdmi_segment(struct v4l2_subdev *sd, u8 port)
+ 	/* Disable I2C access to internal EDID ram from HDMI DDC ports */
+ 	rep_write_and_or(sd, 0x77, 0xf3, 0x00);
  
- static void fuse_drop_waiting(struct fuse_conn *fc)
- {
--	if (fc->connected) {
--		atomic_dec(&fc->num_waiting);
--	} else if (atomic_dec_and_test(&fc->num_waiting)) {
-+	/*
-+	 * lockess check of fc->connected is okay, because atomic_dec_and_test()
-+	 * provides a memory barrier mached with the one in fuse_wait_aborted()
-+	 * to ensure no wake-up is missed.
-+	 */
-+	if (atomic_dec_and_test(&fc->num_waiting) &&
-+	    !READ_ONCE(fc->connected)) {
- 		/* wake up aborters */
- 		wake_up_all(&fc->blocked_waitq);
- 	}
-@@ -2170,6 +2174,8 @@ EXPORT_SYMBOL_GPL(fuse_abort_conn);
+-	if (!state->hdmi_edid.present)
++	if (!state->hdmi_edid.present) {
++		cec_phys_addr_invalidate(state->cec_adap);
+ 		return 0;
++	}
  
- void fuse_wait_aborted(struct fuse_conn *fc)
- {
-+	/* matches implicit memory barrier in fuse_drop_waiting() */
-+	smp_mb();
- 	wait_event(fc->blocked_waitq, atomic_read(&fc->num_waiting) == 0);
- }
- 
+ 	pa = cec_get_edid_phys_addr(edid, 256, &spa_loc);
+ 	err = cec_phys_addr_validate(pa, &pa, NULL);
 -- 
 2.20.1
 
