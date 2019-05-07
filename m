@@ -2,152 +2,147 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1809C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7477AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B2A205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557250874;
-	bh=cjcACS3FzZFNBPd9EO1/4Nj92eFoQzA0WfrnynIctUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lZUFy68s3k8ZiNpEdtWh9pvHfLu2dFkgPfN5NCWExUbTqpnU6b2kvjvNirWJXIfs5
-	 AozUvViQlHnXlolJlzB0obRRF0v7j3E1sYoW6Kfp5urat1ai3KoyRplV18bV5DBtDT
-	 7rwq0sliYEc9HLzihTB3Kg8hA5vq2bBR4A4EUOBk=
+	by mail.kernel.org (Postfix) with ESMTP id 1FEED205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YHIxNHX0";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="mVNBml0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfEGRlN (ORCPT
+        id S1727209AbfEGRly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:41:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40188 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGRlN (ORCPT
+        Tue, 7 May 2019 13:41:54 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:1358 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfEGRlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:41:13 -0400
-Received: by mail-ot1-f67.google.com with SMTP id w6so15768664otl.7;
-        Tue, 07 May 2019 10:41:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9rNLy/ZQaK42lTMWdGC3VYdIL1Q3ruxBaNI2KenFfZA=;
-        b=NoJANvVa5MJa2GDQ56bsQi0f06K1Ss/FeZD3Do/ChnePT0M5DF3K3wPO544Ng7PpdB
-         3YKrM7kF59MvMUu8q7gL5VW1APow1/J4I4BziM6S8Wrs8Kc1sFB+EtQN30cs34tabB2i
-         bMXSbnAu02yEXbBRdU9omHFTaWFgS/4s/Ras8zblpwT3q0z0LZPhXv+8AztThugD3TMV
-         O8t+n9Z0gMHU9/p2KuhTjeGjD9xGFPz7PlP7jrwWeIgDL6jwgSruopMFQ/MWyJ0a2iPR
-         dwdwCu4p2dmeHyh1sau35zP4s6oIl2RXs60PqxBIp0CwjOg7flGR9hjWZ1qli4tQCpGI
-         YxEA==
-X-Gm-Message-State: APjAAAUxiDhKKJi7sxTS1UeoW+wNwJA8OZpPYNOgYVWUG1HjDJUV7i7b
-        chGLmkfWXVAk/GWGiyXEkg==
-X-Google-Smtp-Source: APXvYqxVT+rgS9ARF8x0VFy/ggxBe7eDGWK8eU6UPVfhX/GM8vt4GowdhjtHpTbE2QIioJsCsu6roQ==
-X-Received: by 2002:a9d:6b93:: with SMTP id b19mr24293889otq.313.1557250872208;
-        Tue, 07 May 2019 10:41:12 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 24sm2059963oiz.14.2019.05.07.10.41.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 10:41:11 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:41:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK HU <ck.hu@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        ginny.chen@mediatek.com, kendrick.hsu@mediatek.com,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Subject: Re: [PATCH v5 03/12] dt-binding: gce: add binding for gce subsys
- property
-Message-ID: <20190507174110.GA6767@bogus>
-References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
- <20190507081355.52630-4-bibby.hsieh@mediatek.com>
+        Tue, 7 May 2019 13:41:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1557250913; x=1588786913;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Aqfv8bte4O2HcYt0lff9qDyZKmFB7VFpc9htTQrvi/o=;
+  b=YHIxNHX0yflBfCQnTZCDEJMc0oUBxzg+Sof4TgncfZAC184MgP5LaqcC
+   oRAgHLNdesoIZxNOnXxC7aR9bjcf0cRUDewtIWpuBm47r8Sf27mFB7emU
+   CFMPfLf3xEsKuxXlQPfYDMyZzbxzDbryv9cfbiLuTg3ArPv/xsOuO5tJ6
+   7pcF9looWc0TlA55N7rAqMdc3cesjlcOfQ8HYh60J15BSvTWuYX3ZYZ4V
+   epQfc7iGo4TRFbGgfMuvLpNCe91X138dhXCqQZOwNOqUBVdibCh9hw1oN
+   Yeqj7aq4wmSYItUMOYug98VRs7aiJbY5gozRDy+sLBjIgZdNv2WAkxFrf
+   w==;
+X-IronPort-AV: E=Sophos;i="5.60,442,1549900800"; 
+   d="scan'208";a="213720204"
+Received: from mail-co1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.52])
+  by ob1.hgst.iphmx.com with ESMTP; 08 May 2019 01:41:52 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4cw455upwGHUtAwzNgQ5TKUtUfYSxxp3STqZPa+xYtc=;
+ b=mVNBml0DeDG1zAu1TJ7hJJHcr7zPSZsyw2ZRTHzJFNpOGqsxtgT366PJIyk51QK3acy32UDdRoyZ5ROBE2BnYs3hU7GvuyscC9hi6Gh376qfzvFf9Z+W0KQGEpep8ByZRRENiO+zpe8uznGrOyk1f53mofrfoiwMg/NuHBuO7BQ=
+Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
+ SN6PR04MB4158.namprd04.prod.outlook.com (52.135.71.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Tue, 7 May 2019 17:41:51 +0000
+Received: from SN6PR04MB4527.namprd04.prod.outlook.com
+ ([fe80::c4f:1604:178c:d974]) by SN6PR04MB4527.namprd04.prod.outlook.com
+ ([fe80::c4f:1604:178c:d974%5]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 17:41:51 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+CC:     Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [PATCH] nvme-pci: mark expected switch fall-through
+Thread-Topic: [PATCH] nvme-pci: mark expected switch fall-through
+Thread-Index: AQHVBOB79kdJ84ToAkqBJNoy4OB4Dw==
+Date:   Tue, 7 May 2019 17:41:51 +0000
+Message-ID: <SN6PR04MB4527B0A6917F74B5C241FD0F86310@SN6PR04MB4527.namprd04.prod.outlook.com>
+References: <20190507142300.GA25717@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.44.174]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d4afcc66-6e02-4829-e513-08d6d31349b6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4158;
+x-ms-traffictypediagnostic: SN6PR04MB4158:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB4158841C38489E1FB46EA29486310@SN6PR04MB4158.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:813;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(376002)(366004)(396003)(189003)(199004)(68736007)(446003)(110136005)(86362001)(9686003)(8936002)(478600001)(81166006)(316002)(74316002)(72206003)(52536014)(14454004)(6436002)(54906003)(8676002)(55016002)(76176011)(7696005)(33656002)(229853002)(66066001)(81156014)(476003)(256004)(26005)(14444005)(53546011)(71190400001)(71200400001)(4326008)(305945005)(99286004)(53936002)(25786009)(186003)(6246003)(7736002)(102836004)(6506007)(5660300002)(73956011)(3846002)(2906002)(6116002)(91956017)(76116006)(486006)(66946007)(64756008)(66476007)(66446008)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4158;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e7vRaO42a6cNTaLtSQ+rYa92Y8ync5EWwNlACo2pIuuXzekJI8fYh1B8PnsgfMLvU6pvag3kZXQZuBO3aIUqyr/k6RioeoTmLUGYWANgeXn2Lo7Nrkz1KbVYTSm/hx9vmx7kkBK5ovoP7LreIcBXYdIOkQRVA71qVYAhJdNxIYVjuoZ9SCKduLE11RAfxYvqGuj+4aky1Xltu1D9rbve1Ae4Qc9wtZWxtSoiZU8h/HtevZP4mAXRxgMV/pckFmJX3bR87mysboNquRrzw/r7xzY8qs+jc+9KxMF0W0ct/UHq+q81PIabSYZ8CiGbwE/q1NJCGZFnWh97R/DKhvgIobR/nQkZ8XwULcVr56fKwIn2+Flt1bfUMxFJVsLJqIU5HTuPS80WXvZx5gKJ9IWOkYd6zVfrbvQUyw9U/f7GDgA=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507081355.52630-4-bibby.hsieh@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4afcc66-6e02-4829-e513-08d6d31349b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 17:41:51.3035
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 04:13:46PM +0800, Bibby Hsieh wrote:
-> tcmdq driver provide a function that get the relationship
-> of sub system number from device node for client.
-> add specification for #subsys-cells, mediatek,gce-subsys.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  .../devicetree/bindings/mailbox/mtk-gce.txt       | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 1f7f8f2a3f49..8fd9479bc9f6 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -21,11 +21,19 @@ Required properties:
->  	priority: Priority of GCE thread.
->  	atomic_exec: GCE processing continuous packets of commands in atomic
->  		way.
-> +- #subsys-cells: Should be 3.
-> +	<&phandle subsys_number start_offset size>
-> +	phandle: Label name of a gce node.
-> +	subsys_number: specify the sub-system id which is corresponding
-> +		       to the register address.
-> +	start_offset: the start offset of register address that GCE can access.
-> +	size: the total size of register address that GCE can access.
-
-Like the #event-cells, do you need this if it isn't variable?
-
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
->    property and list of phandle, mailbox specifiers.
-> -- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
-> +Optional propertier for a client device:
-> +- mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
->    to the register address.
-
-This isn't a u32, but a phandle + 3 cells (or a list of those). How many 
-entries can there be?
-
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
-> @@ -40,6 +48,7 @@ Example:
->  		clocks = <&infracfg CLK_INFRA_GCE>;
->  		clock-names = "gce";
->  		#mbox-cells = <3>;
-> +		#subsys-cells = <3>;
->  	};
->  
->  Example for a client device:
-> @@ -48,9 +57,9 @@ Example for a client device:
->  		compatible = "mediatek,mt8173-mmsys";
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
->  		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
->  				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> -
-> +		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
-> +					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
->  		...
->  	};
-> -- 
-> 2.18.0
-> 
+Looks good.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
+On 5/7/19 7:23 AM, Gustavo A. R. Silva wrote:=0A=
+> In preparation to enabling -Wimplicit-fallthrough, mark switch=0A=
+> cases where we are expecting to fall through.=0A=
+>=0A=
+> This patch fixes the following warning:=0A=
+>=0A=
+> drivers/nvme/host/pci.c: In function =91nvme_timeout=92:=0A=
+> drivers/nvme/host/pci.c:1298:12: warning: this statement may fall through=
+ [-Wimplicit-fallthrough=3D]=0A=
+>    shutdown =3D true;=0A=
+>    ~~~~~~~~~^~~~~~=0A=
+> drivers/nvme/host/pci.c:1299:2: note: here=0A=
+>   case NVME_CTRL_CONNECTING:=0A=
+>   ^~~~=0A=
+>=0A=
+> Warning level 3 was used: -Wimplicit-fallthrough=3D3=0A=
+>=0A=
+> This patch is part of the ongoing efforts to enable=0A=
+> -Wimplicit-fallthrough.=0A=
+>=0A=
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>=0A=
+> ---=0A=
+>  drivers/nvme/host/pci.c | 1 +=0A=
+>  1 file changed, 1 insertion(+)=0A=
+>=0A=
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c=0A=
+> index 3e4fb891a95a..a12f992868c9 100644=0A=
+> --- a/drivers/nvme/host/pci.c=0A=
+> +++ b/drivers/nvme/host/pci.c=0A=
+> @@ -1296,6 +1296,7 @@ static enum blk_eh_timer_return nvme_timeout(struct=
+ request *req, bool reserved)=0A=
+>  	switch (dev->ctrl.state) {=0A=
+>  	case NVME_CTRL_DELETING:=0A=
+>  		shutdown =3D true;=0A=
+> +		/* fall through */=0A=
+>  	case NVME_CTRL_CONNECTING:=0A=
+>  	case NVME_CTRL_RESETTING:=0A=
+>  		dev_warn_ratelimited(dev->ctrl.device,=0A=
+=0A=
+=0A=
