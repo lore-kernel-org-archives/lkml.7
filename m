@@ -2,100 +2,137 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF820C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58453C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC11A20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338062087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfEGOlh (ORCPT
+        id S1726762AbfEGOm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:41:37 -0400
-Received: from mail.sssup.it ([193.205.80.98]:17999 "EHLO mail.santannapisa.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfEGOlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:41:37 -0400
-Received: from [83.43.182.198] (account l.abeni@santannapisa.it HELO nowhere)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 138899014; Tue, 07 May 2019 16:41:35 +0200
-Date:   Tue, 7 May 2019 16:41:27 +0200
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
-Message-ID: <20190507164127.00cbaaec@nowhere>
-In-Reply-To: <20190507141048.d45ia7qfytnfdhqc@queper01-lin>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
-        <20190506044836.2914-3-luca.abeni@santannapisa.it>
-        <20190507141048.d45ia7qfytnfdhqc@queper01-lin>
-Organization: Scuola Superiore S.Anna
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 7 May 2019 10:42:59 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:51816 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726444AbfEGOm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:42:59 -0400
+Received: (qmail 2035 invoked by uid 2102); 7 May 2019 10:42:58 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 7 May 2019 10:42:58 -0400
+Date:   Tue, 7 May 2019 10:42:58 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Johan Hovold <johan@kernel.org>
+cc:     syzbot <syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com>,
+        <andreyknvl@google.com>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <mchehab@kernel.org>, <syzkaller-bugs@googlegroups.com>,
+        <wen.yang99@zte.com.cn>
+Subject: Re: general protection fault in smsusb_init_device
+In-Reply-To: <20190507083430.GD4333@localhost>
+Message-ID: <Pine.LNX.4.44L0.1905071035450.1632-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 7 May 2019, Johan Hovold wrote:
 
-On Tue, 7 May 2019 15:10:50 +0100
-Quentin Perret <quentin.perret@arm.com> wrote:
-
-> On Monday 06 May 2019 at 06:48:32 (+0200), Luca Abeni wrote:
-> >  static inline unsigned long cpu_bw_dl(struct rq *rq)
-> >  {
-> > -	return (rq->dl.running_bw * SCHED_CAPACITY_SCALE) >>
-> > BW_SHIFT;
-> > +	unsigned long res;
-> > +
-> > +	res = (rq->dl.running_bw * SCHED_CAPACITY_SCALE) >>
-> > BW_SHIFT; +
-> > +	return (res << SCHED_CAPACITY_SHIFT) /
-> > +	       arch_scale_cpu_capacity(NULL, rq->cpu);  
-> 
-> The only user of cpu_bw_dl() is schedutil right ? If yes, we probably
-> don't want to scale things here -- schedutil already does this I
-> believe.
-
-I think I added this modification because I arrived to the conclusion
-that schedutils does not perform this rescaling (at least, I think it
-did not perform it when I wrote the patch :)
-
-
-BTW, while re-reading the patch I do not understand why this change was
-added in this specific patch... I suspect it should have gone in a
-separate patch.
-
-
-
-				Luca
-
-> 
-> Thanks,
-> Quentin
-> 
-> >  }
+> On Mon, May 06, 2019 at 04:41:41PM -0400, Alan Stern wrote:
+> > On Thu, 18 Apr 2019, syzbot wrote:
+> > 
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=128ec3fd200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=53f029db71c19a47325a
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16138e67200000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128dddbf200000
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+> > > 
+> > > usb 1-1: config 0 descriptor??
+> > > usb 1-1: string descriptor 0 read error: -71
+> > > smsusb:smsusb_probe: board id=18, interface number 0
+> > > kasan: CONFIG_KASAN_INLINE enabled
+> > > kasan: GPF could be caused by NULL-ptr deref or user memory access
+> > > general protection fault: 0000 [#1] SMP KASAN PTI
+> > > CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> > > Google 01/01/2011
+> > > Workqueue: usb_hub_wq hub_event
+> > > RIP: 0010:smsusb_init_device+0x366/0x937  
+> > > drivers/media/usb/siano/smsusb.c:429
+> > 
+> > The driver assumes endpoint 1in exists, and doesn't check the existence 
+> > of the endpoints it uses.
+> > 
+> > Alan Stern
+> > 
+> > 
+> > #syz test: https://github.com/google/kasan.git usb-fuzzer
+> > 
+> >  drivers/media/usb/siano/smsusb.c |   32 +++++++++++++++++++-------------
+> >  1 file changed, 19 insertions(+), 13 deletions(-)
+> > 
+> > Index: usb-devel/drivers/media/usb/siano/smsusb.c
+> > ===================================================================
+> > --- usb-devel.orig/drivers/media/usb/siano/smsusb.c
+> > +++ usb-devel/drivers/media/usb/siano/smsusb.c
+> > @@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
+> >  	struct smsusb_device_t *dev;
+> >  	void *mdev;
+> >  	int i, rc;
+> > +	int in_maxp;
 > >  
-> >  static inline unsigned long cpu_util_dl(struct rq *rq)
-> > -- 
-> > 2.20.1
-> >   
+> >  	/* create device object */
+> >  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+> > @@ -411,6 +412,23 @@ static int smsusb_init_device(struct usb
+> >  	dev->udev = interface_to_usbdev(intf);
+> >  	dev->state = SMSUSB_DISCONNECTED;
+> >  
+> > +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+> > +		struct usb_endpoint_descriptor *desc =
+> > +				&intf->cur_altsetting->endpoint[i].desc;
+> > +
+> > +		if (desc->bEndpointAddress & USB_DIR_IN) {
+> > +			dev->in_ep = desc->bEndpointAddress;
+> > +			in_maxp = usb_endpoint_maxp(desc);
+> > +		} else {
+> > +			dev->out_ep = desc->bEndpointAddress;
+> > +		}
+> > +	}
+> > +
+> > +	pr_debug("in_ep = %02x, out_ep = %02x\n",
+> > +		dev->in_ep, dev->out_ep);
+> > +	if (!dev->in_ep || !dev->out_ep)	/* Missing endpoints? */
+> > +		return -EINVAL;
+> 
+> Looks like you're now leaking dev here, and so is the current code in
+> the later error paths.
+> 
+> Since this return value will be returned from probe, you may want to use
+> -ENXIO or -ENODEV instead of -EINVAL.
+> 
+> Looks good otherwise.
+
+Thanks for the review.  You're right about the memory leak (although 
+you're wrong about the later error paths: smsusb_term_device() 
+deallocates dev).  And -ENODEV does seem like a better return code.
+
+I'll update the patch as you suggest.
+
+Alan Stern
 
