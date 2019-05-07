@@ -2,191 +2,205 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17971C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13626C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE86621479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA752087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:07:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JvAH6Zcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfEGHGt (ORCPT
+        id S1726855AbfEGHHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:06:49 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:38203 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfEGHGt (ORCPT
+        Tue, 7 May 2019 03:07:46 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42117 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfEGHHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:06:49 -0400
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 1420C100012;
-        Tue,  7 May 2019 07:06:41 +0000 (UTC)
-Date:   Tue, 7 May 2019 09:06:41 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: allwinner: h6:
- orangepi-one-plus: Add Ethernet support
-Message-ID: <20190507070641.7whs4ckiqupaah35@flea>
-References: <20190503115928.27662-1-jagan@amarulasolutions.com>
- <20190503144651.ttqfha656dykqjzo@flea>
- <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA@mail.gmail.com>
- <20190506133101.c3twwwydy5mez3db@core.my.home>
+        Tue, 7 May 2019 03:07:45 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x47770aP355922
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 7 May 2019 00:07:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x47770aP355922
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557212821;
+        bh=jJJAS++DwwhviYTEtHslAE5eTRHqSq/delEGoB/SbQc=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=JvAH6ZcvDvdw6Vwx5P/sUgpQv7qxi0zW17+N4fTdGMAKF1SFHdO5o8Viqupam23ND
+         CknR3uZPhbYpjVfuOTpQdFz4GLrtVjyo0RfX8axvVxX8pno6rOArQVsdaW+HAAUdUW
+         s0DBu4Tn/Ul9QIhBrXLwszcpUKOd1DHdvYPSXoG5GtHTzkox9gWowAwlek6VPrWybr
+         G0Wu/Qaq+Oxk++aqA+JKF7/iKQ980oBd+MW9+92shP/dgVmaQPFU/hfbBcSFd9xtog
+         i5aswlog6iHW3P9E6Og9di7dGEXujr1VqM7NRuhtH+7UuRe5BY3hQ9WqK7TLJwoNIu
+         vcCzLtcFyQNXg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x477704O355919;
+        Tue, 7 May 2019 00:07:00 -0700
+Date:   Tue, 7 May 2019 00:07:00 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Waiman Long <tipbot@zytor.com>
+Message-ID: <tip-a9e9bcb45b1525ba7aea26ed9441e8632aeeda58@git.kernel.org>
+Cc:     huang.ying.caritas@gmail.com, dave@stgolabs.net, hpa@zytor.com,
+        bp@alien8.de, will.deacon@arm.com, tglx@linutronix.de,
+        tim.c.chen@linux.intel.com, peterz@infradead.org,
+        longman@redhat.com, torvalds@linux-foundation.org,
+        mingo@kernel.org, linux-kernel@vger.kernel.org
+Reply-To: hpa@zytor.com, bp@alien8.de, will.deacon@arm.com,
+          huang.ying.caritas@gmail.com, dave@stgolabs.net,
+          torvalds@linux-foundation.org, mingo@kernel.org,
+          tim.c.chen@linux.intel.com, longman@redhat.com,
+          linux-kernel@vger.kernel.org, peterz@infradead.org,
+          tglx@linutronix.de
+In-Reply-To: <20190428212557.13482-2-longman@redhat.com>
+References: <20190428212557.13482-2-longman@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/urgent] locking/rwsem: Prevent decrement of reader
+ count before increment
+Git-Commit-ID: a9e9bcb45b1525ba7aea26ed9441e8632aeeda58
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="t252ai7obnvmcokm"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190506133101.c3twwwydy5mez3db@core.my.home>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  a9e9bcb45b1525ba7aea26ed9441e8632aeeda58
+Gitweb:     https://git.kernel.org/tip/a9e9bcb45b1525ba7aea26ed9441e8632aeeda58
+Author:     Waiman Long <longman@redhat.com>
+AuthorDate: Sun, 28 Apr 2019 17:25:38 -0400
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 7 May 2019 08:46:46 +0200
 
---t252ai7obnvmcokm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+locking/rwsem: Prevent decrement of reader count before increment
 
-On Mon, May 06, 2019 at 03:31:01PM +0200, Ond=C5=99ej Jirman wrote:
-> > > > ---
-> > > > Changes for v2:
-> > > > - emac changes on top of https://patchwork.kernel.org/cover/1089952=
-9/
-> > > >   series
-> > > >
-> > > >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  8 ++++
-> > > >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 42 +++++++++++++++=
-++++
-> > > >  2 files changed, 50 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-p=
-lus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> > > > index 12e17567ab56..9e8ed1053715 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> > > > @@ -9,4 +9,12 @@
-> > > >  / {
-> > > >       model =3D "OrangePi One Plus";
-> > > >       compatible =3D "xunlong,orangepi-one-plus", "allwinner,sun50i=
--h6";
-> > > > +
-> > > > +     aliases {
-> > > > +             ethernet0 =3D &emac;
-> > > > +     };
-> > > > +};
-> > > > +
-> > > > +&emac {
-> > > > +     status =3D "okay";
-> > > >  };
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi =
-b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > > > index 62e27948a3fa..c48e24acaf8a 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > > > @@ -45,6 +45,48 @@
-> > > >               regulator-max-microvolt =3D <5000000>;
-> > > >               regulator-always-on;
-> > > >       };
-> > > > +
-> > > > +     /*
-> > > > +      * The board uses 2.5V RGMII signalling. Power sequence to en=
-able
-> > > > +      * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power ra=
-ils
-> > > > +      * at the same time and to wait 100ms.
-> > > > +      */
-> > > > +     reg_gmac_2v5: gmac-2v5 {
-> > > > +             compatible =3D "regulator-fixed";
-> > > > +             regulator-name =3D "gmac-2v5";
-> > > > +             regulator-min-microvolt =3D <2500000>;
-> > > > +             regulator-max-microvolt =3D <2500000>;
-> > > > +             startup-delay-us =3D <100000>;
-> > > > +             enable-active-high;
-> > > > +             gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* GMAC_EN: PD6=
- */
-> > > > +
-> > > > +             /* The real parent of gmac-2v5 is reg_vcc5v, but we n=
-eed to
-> > > > +              * enable two regulators to power the phy. This is on=
-e way
-> > > > +              * to achieve that.
-> > > > +              */
-> > > > +             vin-supply =3D <&reg_aldo2>; /* VCC3V3-MAC: GMAC-3V */
-> > > > +     };
-> > > > +};
-> > > > +
-> > > > +&emac {
-> > > > +     pinctrl-names =3D "default";
-> > > > +     pinctrl-0 =3D <&ext_rgmii_pins>;
-> > > > +     phy-mode =3D "rgmii";
-> > > > +     phy-handle =3D <&ext_rgmii_phy>;
-> > > > +     phy-supply =3D <&reg_gmac_2v5>;
-> > > > +     allwinner,rx-delay-ps =3D <1500>;
-> > > > +     allwinner,tx-delay-ps =3D <700>;
-> > > > +};
-> > > > +
-> > > > +&mdio {
-> > > > +     ext_rgmii_phy: ethernet-phy@1 {
-> > > > +             compatible =3D "ethernet-phy-ieee802.3-c22";
-> > > > +             reg =3D <1>;
-> > > > +
-> > > > +             reset-gpios =3D <&pio 3 14 GPIO_ACTIVE_LOW>; /* RGMII=
--RESET: PD14 */
-> > > > +             reset-assert-us =3D <15000>;
-> > > > +             reset-deassert-us =3D <40000>;
-> > > > +     };
-> > > >  };
-> > >
-> > > ... however, at no point in time you explain why you made that switch,
-> > > and while most of the definition of the EMAC nodes is in the DTSI, you
-> > > only enable it in one DTS.
-> >
-> > The dtsi is shared b/w 1+ and lite2 and 1+ has emac, so I enabled the
-> > status directly on dts and keeping the relevant nodes on dtsi just
-> > like SoC dtsi does. do I need to mention this in commit log?
->
-> Lite 2 doesn't have reg_gmac_2v5 and it also doesn't have the external ph=
-y.
-> But with this patch, reg_gmac_2v5 will also show up in the Lite 2's final
-> DTB.
->
-> Comapred to SoC dtsi, the SoC always has things that are in the dtsi, they
-> are just not enabled/used by the board, but they are present on the chip.
->
-> So this comes down to what the meaning of board-level dtsi should be. I
-> doubt we want it to mean "a collection of stuff that may or may not be
-> present on the boards that depend on it".
+During my rwsem testing, it was found that after a down_read(), the
+reader count may occasionally become 0 or even negative. Consequently,
+a writer may steal the lock at that time and execute with the reader
+in parallel thus breaking the mutual exclusion guarantee of the write
+lock. In other words, both readers and writer can become rwsem owners
+simultaneously.
 
-Agreed.
+The current reader wakeup code does it in one pass to clear waiter->task
+and put them into wake_q before fully incrementing the reader count.
+Once waiter->task is cleared, the corresponding reader may see it,
+finish the critical section and do unlock to decrement the count before
+the count is incremented. This is not a problem if there is only one
+reader to wake up as the count has been pre-incremented by 1.  It is
+a problem if there are more than one readers to be woken up and writer
+can steal the lock.
 
-Maxime
+The wakeup was actually done in 2 passes before the following v4.9 commit:
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+  70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
 
---t252ai7obnvmcokm
-Content-Type: application/pgp-signature; name="signature.asc"
+To fix this problem, the wakeup is now done in two passes
+again. In the first pass, we collect the readers and count them.
+The reader count is then fully incremented. In the second pass, the
+waiter->task is then cleared and they are put into wake_q to be woken
+up later.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: huang ying <huang.ying.caritas@gmail.com>
+Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
+Link: http://lkml.kernel.org/r/20190428212557.13482-2-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/rwsem-xadd.c | 46 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 15 deletions(-)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNEugQAKCRDj7w1vZxhR
-xSqpAP9+c1gUKZN/ouCvKfloPe7AajE+A0yKbWtfWhHElWT14QEAzjJAuWb8Rv+a
-FfdAW6X7qq2yr9sNkluAa/DRkDrm+Q8=
-=30DV
------END PGP SIGNATURE-----
-
---t252ai7obnvmcokm--
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index 6b3ee9948bf1..0b1f77957240 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -130,6 +130,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ {
+ 	struct rwsem_waiter *waiter, *tmp;
+ 	long oldcount, woken = 0, adjustment = 0;
++	struct list_head wlist;
+ 
+ 	/*
+ 	 * Take a peek at the queue head waiter such that we can determine
+@@ -188,18 +189,43 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 	 * of the queue. We know that woken will be at least 1 as we accounted
+ 	 * for above. Note we increment the 'active part' of the count by the
+ 	 * number of readers before waking any processes up.
++	 *
++	 * We have to do wakeup in 2 passes to prevent the possibility that
++	 * the reader count may be decremented before it is incremented. It
++	 * is because the to-be-woken waiter may not have slept yet. So it
++	 * may see waiter->task got cleared, finish its critical section and
++	 * do an unlock before the reader count increment.
++	 *
++	 * 1) Collect the read-waiters in a separate list, count them and
++	 *    fully increment the reader count in rwsem.
++	 * 2) For each waiters in the new list, clear waiter->task and
++	 *    put them into wake_q to be woken up later.
+ 	 */
+-	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
+-		struct task_struct *tsk;
+-
++	list_for_each_entry(waiter, &sem->wait_list, list) {
+ 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
+ 			break;
+ 
+ 		woken++;
+-		tsk = waiter->task;
++	}
++	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
++
++	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
++	lockevent_cond_inc(rwsem_wake_reader, woken);
++	if (list_empty(&sem->wait_list)) {
++		/* hit end of list above */
++		adjustment -= RWSEM_WAITING_BIAS;
++	}
++
++	if (adjustment)
++		atomic_long_add(adjustment, &sem->count);
++
++	/* 2nd pass */
++	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
++		struct task_struct *tsk;
+ 
++		tsk = waiter->task;
+ 		get_task_struct(tsk);
+-		list_del(&waiter->list);
++
+ 		/*
+ 		 * Ensure calling get_task_struct() before setting the reader
+ 		 * waiter to nil such that rwsem_down_read_failed() cannot
+@@ -213,16 +239,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 		 */
+ 		wake_q_add_safe(wake_q, tsk);
+ 	}
+-
+-	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
+-	lockevent_cond_inc(rwsem_wake_reader, woken);
+-	if (list_empty(&sem->wait_list)) {
+-		/* hit end of list above */
+-		adjustment -= RWSEM_WAITING_BIAS;
+-	}
+-
+-	if (adjustment)
+-		atomic_long_add(adjustment, &sem->count);
+ }
+ 
+ /*
