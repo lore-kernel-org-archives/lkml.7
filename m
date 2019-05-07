@@ -2,88 +2,76 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27240C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273FEC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064402087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77ED20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfEGTn7 (ORCPT
+        id S1726609AbfEGToz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:43:59 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33610 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfEGTn7 (ORCPT
+        Tue, 7 May 2019 15:44:55 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:43311 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGToz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:43:59 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 676D614B8AF42;
-        Tue,  7 May 2019 12:43:58 -0700 (PDT)
-Date:   Tue, 07 May 2019 12:43:58 -0700 (PDT)
-Message-Id: <20190507.124358.1158001675039394639.davem@davemloft.net>
-To:     maxime.chevallier@bootlin.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
-        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
-        jakub.kicinski@netronome.com
-Subject: Re: [PATCH net] net: mvpp2: cls: Add missing NETIF_F_NTUPLE flag
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190507123635.17782-1-maxime.chevallier@bootlin.com>
-References: <20190507123635.17782-1-maxime.chevallier@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 12:43:58 -0700 (PDT)
+        Tue, 7 May 2019 15:44:55 -0400
+Received: by mail-lf1-f48.google.com with SMTP id u27so12472046lfg.10;
+        Tue, 07 May 2019 12:44:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=Ssd009GDqXFUgegCEA2wlem81XMpI7r+xaCXsSHDscY=;
+        b=AiwWB9s+XumjJPYzXnkeAHwOIkZpJ/KUfk+t2jTsknoUlkvq+H+UwgnvUKvNoeFGq+
+         V8RvcrJvzUCOPwhEiylyvwvWe2Agj/rTK8ooPizyzAqLeYZosQwfFkigFNjc2xkQCCY5
+         F8KH0z0MsqR5A276ZzW8+fg6clKaMsUxylZEq291pmm15QEFwQCTsNKbLzh3cyPyZB47
+         B3Ow9wk6hYGKXisE78AEcW6OVqKzhM8iQ+ZQiQuGphvy09TNY+WZufxpIajx0mZu3vpm
+         sBBqnSne5OFaQ77ZAg33srlx/F0LQNXVu5DQXAoPmfclyKJ/2eXkk+FFsFjdHTBzVAoI
+         ui8g==
+X-Gm-Message-State: APjAAAXiYidxnzuXE1e5Y7xuKVM3bYf/XxZIl/WegvD27QQuiLuR3rDM
+        lylz30f9P1hzG0Rff6QBFVg=
+X-Google-Smtp-Source: APXvYqzuTb6pH6QAKu1Oh0j+/UVmrEPEQGonyFoe0Pnj3t6A6Z3VwfzN5WGMlKQawhAeb4bVqEnXew==
+X-Received: by 2002:ac2:514b:: with SMTP id q11mr17742299lfd.114.1557258293517;
+        Tue, 07 May 2019 12:44:53 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:6a7:f0bd:5989:4f17:8168:6ecf? ([2a00:1fa0:6a7:f0bd:5989:4f17:8168:6ecf])
+        by smtp.gmail.com with ESMTPSA id j24sm3296240lfh.28.2019.05.07.12.44.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 12:44:52 -0700 (PDT)
+Date:   Tue, 07 May 2019 22:44:48 +0300
+In-Reply-To: <CAK7LNAQUMZ4QHeYin16P-NJq77CgxuR96R46wgbf5jkpYhYP8Q@mail.gmail.com>
+References: <1556107369-7655-1-git-send-email-alex.popov@linux.com> <ce9c3689-86f3-eda7-8c3d-4af834ee750d@linux.com> <CAK7LNAQUMZ4QHeYin16P-NJq77CgxuR96R46wgbf5jkpYhYP8Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [v2 1/1] kconfig: Terminate menu blocks with a comment in the generated config
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Alexander Popov <alex.popov@linux.com>
+Message-ID: <C3B61434-2789-4643-B936-A056B073F1CC@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Date: Tue,  7 May 2019 14:36:35 +0200
 
-> Now that the mvpp2 driver supports classification offloading, we must
-> add the NETIF_F_NTUPLE to the features list.
-> 
-> Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
-> Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
-> Hello David,
-> 
-> This patch applies on top of a commit 90b509b39ac9, which is in net-next
-> but hasn't made it to -net yet.
-> 
-> Thanks,
-> 
-> Maxime
-> 
->  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> index 25fbed2b8d94..1f164c893936 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -5040,8 +5040,10 @@ static int mvpp2_port_probe(struct platform_device *pdev,
->  	dev->hw_features |= features | NETIF_F_RXCSUM | NETIF_F_GRO |
->  			    NETIF_F_HW_VLAN_CTAG_FILTER;
->  
-> -	if (mvpp22_rss_is_supported())
-> +	if (mvpp22_rss_is_supported()) {
->  		dev->hw_features |= NETIF_F_RXHASH;
-> +		dev->features |= NETIF_F_NTUPLE;
-> +	}
 
-As Jakub said, this definitely looks like a typo and this should
-be hw_features.
+7 May 2019 15:29:26 GMT+03:00, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>This patch breaks "make testconfig".
+>
+>Please get rid of the "endof" for the rootmenu
+>at the end of the .config file.
+
+Thanks a lot for having a look! 
+I'll fix this issue, test it and return with the next version. 
+
+Best regards, 
+Alexander 
