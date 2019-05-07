@@ -2,97 +2,119 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8135DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EAAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51908214AE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mNEn/Vr/"
+	by mail.kernel.org (Postfix) with ESMTP id 4AB75206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfEGL6B (ORCPT
+        id S1726618AbfEGL71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:58:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35904 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfEGL5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:57:33 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o4so21954690wra.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iSJwm6tn+7I484rTSQE+9G4s/2gB2UbS4DNi3jkBUBM=;
-        b=mNEn/Vr/31eZbnej6Dg0h/hnFDWLlkBcEwMYlTvgR2fZfYHhc8C86b8PHfbQ10RhzE
-         OTskncyXPrt0dQjKrKukwuPSxLnLMTzkzUR2z/Jkxb/a+6WDwCVt4lv3ZaF820tYaIob
-         tuf16F2dSjNiqPkH5gm9OnbrpTFTKxf6LyzurPi+Va86c17sUsuCrBpGchuK5J17m5xO
-         rg4PXE6327aNDlU7NbYNzBVWS91nqt5zldFzY21IhWqlP4FsirL85mUIAQg6/3AB0z9/
-         NmnLL1w7VliMQj8ox1Vj6xZ0AB6ypbombWuknSOgJ9y351oasZ0zgBY6yh9HlysKvuq5
-         8wZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iSJwm6tn+7I484rTSQE+9G4s/2gB2UbS4DNi3jkBUBM=;
-        b=QhYT6esPgWBZZgEIZt3iBjOmZ/wDCGcpK956+kcHwReJ0Ts0azPXpoxlbghrwo9Gx+
-         0o/WNbgqEzOu3JmWT1lYADlao+HtUpBahZZ2+xxIHFv+yJfQbA9BMxjndXH4kHDyGLJs
-         4r+kMaqWcgmVo3HlF8pOq7tTtKCR6pOi7fKqrnd9417b6Btzsd5+pZQLVi6/1zJv1mRW
-         uQvjbX7Hl/x6VJc4X9JSV6IMyk4lkavZGGhU8DHvgNyG5Mz/+yq9Nsz9R91p8wE2pebP
-         /5Vhg5ee5oOwMTvIJVQN9ryytaJg4xXGyo7II8PiuLNQSnCeJKwj2BWoT0s+ZYTVhuKm
-         3CQg==
-X-Gm-Message-State: APjAAAWXupiQeMjGq1jHNuJm87059aQv/fRc40c5BG6K+9LGQCOEpTXJ
-        YgAmc2pRF7iqyfdIe2ZKVAnubA==
-X-Google-Smtp-Source: APXvYqxDAVU5GNWwoSpkR+LWWEpkvnXYCivvCs72/0tzaSmpcVNC5sOdYuZ8yVIH+uK3uM0DEJJXRw==
-X-Received: by 2002:adf:eb50:: with SMTP id u16mr10188307wrn.54.1557230251531;
-        Tue, 07 May 2019 04:57:31 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s11sm7120274wrb.71.2019.05.07.04.57.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 04:57:30 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        khilman@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-Date:   Tue,  7 May 2019 13:57:23 +0200
-Message-Id: <20190507115726.23714-4-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
-References: <20190507115726.23714-1-glaroque@baylibre.com>
+        Tue, 7 May 2019 07:59:27 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34788 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfEGL70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 07:59:26 -0400
+Received: from we0048.dip.tu-dresden.de ([141.76.176.48] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hNykl-0008Hr-QN; Tue, 07 May 2019 13:59:23 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ezequiel@collabora.com, tom@vamrs.com, dev@vamrs.com
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Enable SPI1 on Ficus
+Date:   Tue, 07 May 2019 13:59:23 +0200
+Message-ID: <111262745.IyAHIOZrRb@phil>
+In-Reply-To: <20190507113635.GB309@Mani-XPS-13-9360>
+References: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org> <2127870.SxaTtWf5LP@phil> <20190507113635.GB309@Mani-XPS-13-9360>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add optional drive-strength-microamp property
+Am Dienstag, 7. Mai 2019, 13:36:35 CEST schrieb Manivannan Sadhasivam:
+> On Tue, May 07, 2019 at 01:22:03PM +0200, Heiko Stuebner wrote:
+> > Am Montag, 6. Mai 2019, 14:04:58 CEST schrieb Manivannan Sadhasivam:
+> > > Enable SPI1 exposed on both Low and High speed expansion connectors
+> > > of Ficus. SPI1 has 3 different chip selects wired as below:
+> > > 
+> > > CS0 - Serial Flash (unpopulated)
+> > > CS1 - Low Speed expansion
+> > > CS2 - High Speed expansion
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> > > index 027d428917b8..9baa378fc770 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> > > @@ -146,6 +146,12 @@
+> > >  	};
+> > >  };
+> > >  
+> > > +&spi1 {
+> > > +	/* On both Low speed and High speed expansion */
+> > > +	cs-gpios = <0>, <&gpio4 6 0>, <&gpio4 7 0>;
+> > 
+> > cs0 should still be part of the cs-gpios though (gpio1 RK_PB2).
+> > The flash is part of the schematics, so there might be board with
+> > it pre-populated or people might put a flash chip on it.
+> > 
+> 
+> Why? CS0 is owned by the SPI controller itself, so we can't use it as
+> a GPIO. Otherwise, we need to change the pinctrl definition of it, which
+> doesn't look good to me.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Ok, but are you sure mixing both pinctrl-based chip-select with gpio-based
+chip-select will actually work when the spi-flash is populated?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index a47dd990a8d3..a7618605bf1e 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -51,6 +51,10 @@ Configuration nodes support the generic properties "bias-disable",
- "bias-pull-up" and "bias-pull-down", described in file
- pinctrl-bindings.txt
- 
-+Optional properties :
-+ - drive-strength-microamp: Drive strength for the specified pins in uA.
-+			    This property is only valid for G12A and newer.
-+
- === Example ===
- 
- 	pinctrl: pinctrl@c1109880 {
--- 
-2.17.1
+But it looks like you're right in that spi_set_cs() checks for a gpio-cs
+first and falls back to the controller-based chip-select.
+
+So I guess this can stay as it is.
+
+> 
+> > Also please use the constants for pin specification (RK_PA6, RK_PA7 above)
+> > 
+> 
+> Sure.
+
+Thanks
+Heiko
+
+> 
+> Thanks,
+> Mani
+> 
+> > 
+> > Heiko
+> > 
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > >  &usbdrd_dwc3_0 {
+> > >  	dr_mode = "host";
+> > >  };
+> > > 
+> > 
+> > 
+> > 
+> > 
+> 
+
+
+
 
