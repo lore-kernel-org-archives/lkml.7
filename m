@@ -2,164 +2,131 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3101C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F958C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2C520578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CB1206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KW7vTBZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfEGNhZ (ORCPT
+        id S1726777AbfEGNiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:37:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31717 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfEGNhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:37:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 06:37:24 -0700
-X-ExtLoop1: 1
-Received: from asakoono-mobl.gar.corp.intel.com (HELO [10.251.159.132]) ([10.251.159.132])
-  by fmsmga005.fm.intel.com with ESMTP; 07 May 2019 06:37:23 -0700
-Subject: Re: [alsa-devel] [PATCH v1 1/2] ASoC: SOF: Add Comet Lake PCI ID
-To:     "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Rajat Jain <rajatja@chromium.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ben Zhang <benzh@chromium.org>,
-        "M, Naveen" <naveen.m@intel.com>
-References: <20190506225321.74100-1-evgreen@chromium.org>
- <20190506225321.74100-2-evgreen@chromium.org>
- <74e8cfcd-b99f-7f66-48ce-44d60eb2bbca@linux.intel.com>
- <64FD1F8348A3A14CA3CB4D4C9EB1D15F30A7C756@BGSMSX107.gar.corp.intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <ff778a2b-ee22-6223-199c-856da069f755@linux.intel.com>
-Date:   Tue, 7 May 2019 08:37:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 09:38:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37465 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfEGNit (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:38:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a12so12299012wrn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 06:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=95N2sOqjFK2SEDFDpk3AdvSOj/M5lpdzHr7lDlnGVig=;
+        b=KW7vTBZFonygPEsPYR1tw6TF8a/+gXvDihNoSLjkrxXD8EgTDd6B/RdpwFdhKeGKjh
+         6niiPi11BNQAxL+xjtMG3PPpvoSbSOC+X92Ty7yBwRaLMUDScWXaw06sNMnB05Vtuu/d
+         /3bxbZ0wyFRkvqGIjczQh4UZP6lHC8oJa5sZOagRNjiJDcHXQJCj1HPZ6AwfLUZTH6NW
+         y23etyfvPFxvuNmszYYvWFb8iPgsedsyRJ3ARs3XG4v+bj5ih3n5O5JQ68Q2JghSn9kT
+         XFUjawSumswdkJhhx9MzEMszB1MoI6gcv7yFFfkxcuULqLCzYchbsr9qz5sOZ3YE2PY/
+         zxrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=95N2sOqjFK2SEDFDpk3AdvSOj/M5lpdzHr7lDlnGVig=;
+        b=uJNvsDz2onrmz4YfbplAC6uNwFNHE9FxVFQqQHDAxrV4CfrtuTIlQsEssmswK/KatH
+         dKxLoZKHFo/P8UOKJr05K1pM0/g//N1zURZ7a5LkqTNjeZrrixi9daM+JIhviu5T2fJs
+         M3XZRgPugfzJ302SnJjc+MEN+dwzI0BmOImzf1yW5Hj+EgngaXNbGKo56sWJ5gfBdloc
+         Z3VxpvuTKsVqrwoLXf3nBIOBpqbqKDyz2zxEFSk9lRsqNbhnJh0fLKXEHQlD8EYRcrLM
+         LZSHZdZRuHVHp21Y78if21VccAIM93xIECPj9S8Nmaeb0wBIteH3oZXsjYVo0fxziHyA
+         qUjA==
+X-Gm-Message-State: APjAAAXJ7+4K/2pp9k5Z4Tchn0khrT5cMCTintIzWZUQnmvk28ZTa8yX
+        zJXoJAu5sDfaDpensRdd0hn96A==
+X-Google-Smtp-Source: APXvYqzrdd7zz5Iz0HMfCihsYkzCM0ADuKXZIalIyV9JbYo1YJoAg+GYQ1uc4j1S1mhLwC9oPzMZig==
+X-Received: by 2002:adf:eb8e:: with SMTP id t14mr999162wrn.113.1557236327254;
+        Tue, 07 May 2019 06:38:47 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id v12sm11606546wrw.23.2019.05.07.06.38.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 06:38:46 -0700 (PDT)
+Date:   Tue, 7 May 2019 14:38:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD
+ function
+Message-ID: <20190507133844.GA6194@dell>
+References: <20190426084038.6377-1-esben@geanix.com>
+ <20190426084038.6377-3-esben@geanix.com>
+ <20190507114905.GB29524@dell>
+ <87o94ejwrx.fsf@haabendal.dk>
 MIME-Version: 1.0
-In-Reply-To: <64FD1F8348A3A14CA3CB4D4C9EB1D15F30A7C756@BGSMSX107.gar.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87o94ejwrx.fsf@haabendal.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 07 May 2019, Esben Haabendal wrote:
 
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > On Fri, 26 Apr 2019, Esben Haabendal wrote:
+> >
+> >> The serial8250-mfd driver is for adding 8250/16550 UART ports as functions
+> >> to an MFD driver.
+> >> 
+> >> When calling mfd_add_device(), platform_data should be a pointer to a
+> >> struct plat_serial8250_port, with proper settings like .flags, .type,
+> >> .iotype, .regshift and .uartclk.  Memory (or ioport) and IRQ should be
+> >> passed as cell resources.
+> >
+> > What?  No, please!
+> >
+> > If you *must* create a whole driver just to be able to use
+> > platform_*() helpers (which I don't think you should), then please
+> > call it something else.  This doesn't have anything to do with MFD.
+> 
+> True.
+> 
+> I really don't think it is a good idea to create a whole driver just to
+> be able to use platform_get_*() helpers.  And if I am forced to do this,
+> because I am unable to convince Andy to improve the standard serial8250
+> driver to support that, it should be called MFD.  The driver would be
 
-On 5/6/19 10:34 PM, M R, Sathya Prakash wrote:
-> 
-> 
-> -----Original Message-----
-> From: Pierre-Louis Bossart [mailto:pierre-louis.bossart@linux.intel.com]
-> Sent: Tuesday, May 7, 2019 7:11 AM
-> To: Evan Green <evgreen@chromium.org>; Liam Girdwood <liam.r.girdwood@linux.intel.com>; Mark Brown <broonie@kernel.org>
-> Cc: M, Naveen <naveen.m@intel.com>; M R, Sathya Prakash <sathya.prakash.m.r@intel.com>; Ben Zhang <benzh@chromium.org>; Rajat Jain <rajatja@chromium.org>; Jaroslav Kysela <perex@perex.cz>; alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Takashi Iwai <tiwai@suse.com>; Liam Girdwood <lgirdwood@gmail.com>
-> Subject: Re: [PATCH v1 1/2] ASoC: SOF: Add Comet Lake PCI ID
-> 
-> 
-> 
-> On 5/6/19 5:53 PM, Evan Green wrote:
->>> Add support for Intel Comet Lake platforms by adding a new Kconfig for
->>> CometLake and the appropriate PCI ID.
-> 
->> This is odd. I checked internally a few weeks back and the CML PCI ID was 9dc8, same as WHL and CNL, so we did not add a PCI ID on purpose. To the best of my knowledge SOF probes fine on CML and the known issues can be found on the SOF github [1].
-> 
-> The PCI ID change is seen on later production Si versions. The PCI ID is 02c8.
+I assume you mean "shouldn't"?
 
-we must be talking about a different skew. I'll check, give me a couple 
-of days.
+> generally usable for all usecases where platform_get_*() works.
+> 
+> I don't have any idea what to call such a driver.  It really would just
+> be a fork of the current serial8250 driver, just allowing use of
+> platform_get_*(), supporting exactly the same hardware.
+> 
+> I am still hoping that we can find a way to improve serial8250 to be
+> usable in these cases.
 
-> 
->> Care to send the log of sudo lspci -s 0:1f.3 -vn ?
-> 
-> Here you go:
-> localhost ~ # sudo lspci -s 0:1f.3 -vn
-> 00:1f.3 0401: 8086:02c8
->          Subsystem: 8086:7270
->          Flags: fast devsel, IRQ 11
->          Memory at d1114000 (64-bit, non-prefetchable) [size=16K]
->          Memory at d1000000 (64-bit, non-prefetchable) [size=1M]
->          Capabilities: [50] Power Management version 3
->          Capabilities: [80] Vendor Specific Information: Len=14 <?>
->          Capabilities: [60] MSI: Enable- Count=1/1 Maskable- 64bit+
-> 
-> 
-> [1]
-> https://github.com/thesofproject/sof/issues?q=is%3Aopen+is%3Aissue+label%3ACML
->>
->> Signed-off-by: Evan Green <evgreen@chromium.org>
->> ---
->>
->>    sound/soc/sof/intel/Kconfig | 16 ++++++++++++++++
->>    sound/soc/sof/sof-pci-dev.c |  4 ++++
->>    2 files changed, 20 insertions(+)
->>
->> diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
->> index 32ee0fabab92..0b616d025f05 100644
->> --- a/sound/soc/sof/intel/Kconfig
->> +++ b/sound/soc/sof/intel/Kconfig
->> @@ -24,6 +24,7 @@ config SND_SOC_SOF_INTEL_PCI
->>    	select SND_SOC_SOF_CANNONLAKE  if SND_SOC_SOF_CANNONLAKE_SUPPORT
->>    	select SND_SOC_SOF_COFFEELAKE  if SND_SOC_SOF_COFFEELAKE_SUPPORT
->>    	select SND_SOC_SOF_ICELAKE     if SND_SOC_SOF_ICELAKE_SUPPORT
->> +	select SND_SOC_SOF_COMETLAKE   if SND_SOC_SOF_COMETLAKE_SUPPORT
->>    	help
->>    	  This option is not user-selectable but automagically handled by
->>    	  'select' statements at a higher level @@ -179,6 +180,21 @@ config
->> SND_SOC_SOF_ICELAKE
->>    	  This option is not user-selectable but automagically handled by
->>    	  'select' statements at a higher level
->>    
->> +config SND_SOC_SOF_COMETLAKE
->> +	tristate
->> +	select SND_SOC_SOF_CANNONLAKE
->> +	help
->> +	  This option is not user-selectable but automagically handled by
->> +	  'select' statements at a higher level
->> +
->> +config SND_SOC_SOF_COMETLAKE_SUPPORT
->> +	bool "SOF support for CometLake"
->> +	help
->> +	  This adds support for Sound Open Firmware for Intel(R) platforms
->> +	  using the Cometlake processors.
->> +	  Say Y if you have such a device.
->> +	  If unsure select "N".
->> +
->>    config SND_SOC_SOF_HDA_COMMON
->>    	tristate
->>    	select SND_SOC_SOF_INTEL_COMMON
->> diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
->> index b778dffb2d25..5f0128337e40 100644
->> --- a/sound/soc/sof/sof-pci-dev.c
->> +++ b/sound/soc/sof/sof-pci-dev.c
->> @@ -353,6 +353,10 @@ static const struct pci_device_id sof_pci_ids[] = {
->>    #if IS_ENABLED(CONFIG_SND_SOC_SOF_ICELAKE)
->>    	{ PCI_DEVICE(0x8086, 0x34C8),
->>    		.driver_data = (unsigned long)&icl_desc},
->> +#endif
->> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE)
->> +	{ PCI_DEVICE(0x8086, 0x02c8),
->> +		.driver_data = (unsigned long)&cnl_desc},
->>    #endif
->>    	{ 0, }
->>    };
->>
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
-> 
+Me too.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
