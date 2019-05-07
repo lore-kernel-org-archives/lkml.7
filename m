@@ -2,202 +2,116 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B1BC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEFAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCCA21019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E170205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vDCyn5Cx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NKcG+r6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfEGJbp (ORCPT
+        id S1726773AbfEGJcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:31:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43177 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfEGJbp (ORCPT
+        Tue, 7 May 2019 05:32:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35245 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfEGJco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:31:45 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z5so8559326lji.10;
-        Tue, 07 May 2019 02:31:43 -0700 (PDT)
+        Tue, 7 May 2019 05:32:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w12so7845941wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UugU8bcqRlU6fUtnSXsie58MePyLeanBGjIGYAFl8bk=;
-        b=vDCyn5CxNnPUPCEqRgPPlKFIwkGh/ugk6h4gCIIv1s1wr1Lel0KufmmwTeWRK6cFDT
-         h2ti7rwxjv1O4yhQZ02PvNEutBCvkvaq7h/wJdxO2cz/XL0qz9d9/HTSRvsDOdBzlocn
-         iWQh0CS8vqZVsb+nXhX2CYGUxEWTs6bCS82HjQVVirqa7/XfDz97RjhVJKMVWLEmxPeW
-         Rmlz66GyZI1vX5/Tc12EhrsLodCCTcjncx4/2iAN5psrKBFrK1b/TrYrH0zYgiZK3R3t
-         omo7CMkoX1Rr1hZj8fbMT6i9rpk0cIrSy1MIFs+MVbmreVQE7EngxF2+uHyx6KbvFOfB
-         roYg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=G7Dumy4AOd1vCBggiJHZKL6Nn0KP4/1BivjvxQRWHRk=;
+        b=NKcG+r6/zP79zGYJQFgwyIJuD7cMOk/77HIGMvK1mr6K0hvINAMEtSAJpXL1Bbc1wE
+         kiWtshjAD0n63GZ+InjbXUYB+y/J8xLsBihWtOfb74XrJLiQzYcRzW1y9MIbsSFtgDH+
+         3HKIAXBuy0mD5UCzu7U6GvNZBu6UKWb8YGpvDpjo2OkM0/r7ophexlilpXli02aeBkbg
+         X+Tyoz6UIB7fPDUx+yUlEA4zw4ELZAs7v85oq7yF/NB3EXsf+PxVAY9+YCocUV7/spJg
+         3DoyBOxPIbRw9zAxsHjbXC5EMqzT39QDPqSeiYAyGRrs9jMoTMk4Ad1gpSNomauuxUyg
+         mLBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UugU8bcqRlU6fUtnSXsie58MePyLeanBGjIGYAFl8bk=;
-        b=Gl6dvSeqHw3CwFqFdzNMc8dDwChqk7VlaCexrPN2/JFRUgJRGe686qURx3Jo3klU0m
-         9j5QF3ZjL5XxzNNdj0XW0/H/SVcm343BOmppuB7I0SvfvES0CDFWM3cwyDd7iP7YcGys
-         nRoG1KL4LNFwuCygsQ0SkR8PWMh+aGTNZdRxq+M5ov8uJ1srlRnLQ76hsFotDsvOwMAf
-         63WdZJGb4JBjM0PG8yEYZWufU2ISMeC1fv6CNs4LBIDU6VOFDb1QPkYBJkHyPEK97lmm
-         z++t6QCRWYk9DK0dW7jzvniFkbpfiPwhgAXCQFKVRmH3pZVMQx930I7OiySRGNfYaECs
-         bo7w==
-X-Gm-Message-State: APjAAAVveesWlvPt1dnTeMLyvEFcoItUd4hSL+5AmoXWBPFu8JiDDBn4
-        g2p+UDItiTt9LqRqCRcCPEFsqcsecHYeP9sB58mwTr446g==
-X-Google-Smtp-Source: APXvYqzsrvWHDsBC8hJz1bIApGfTaiO6V5Ia64cqo9Y/K1NUL41UYcprH8OmSozcsgbmqxm93LCrYpQjYbNdgC8Oj1k=
-X-Received: by 2002:a2e:9d4c:: with SMTP id y12mr16436600ljj.132.1557221502347;
- Tue, 07 May 2019 02:31:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=G7Dumy4AOd1vCBggiJHZKL6Nn0KP4/1BivjvxQRWHRk=;
+        b=jMQGuieKFBi++QHa3DXRtzfU/CM060vyOSafYoART/xM/tUUmhyzPK6/sg8E93/n/s
+         zKnICybkgfeZZ5gM1ASx4ETPh+WfDjNoNWrVq6ZSU/Ft5miK49Qx8T1O9VnUptUi08Co
+         iH9z4YDMGE1lgTGuN6Mamq7hF+uJnoUYnVzoJABvMK5FxlZJXUYmLzKLeDwYvYI3dt49
+         a8pBzyYDvLhXfgRN3voTlZ65Y7N91zbsSCaWpP8OVRf2QHyAzAdapOymhF3g4dsedSVH
+         RqmvBbR+gijd3ug0Ynlt6S0j5+Id0zgV8TSUcPR4HcYx1MVaKxg19Icqh2AkVpN+MS94
+         ZInw==
+X-Gm-Message-State: APjAAAXP1/dhBBnrEJvNE8PWFWGRp0xk8190NNiJjxlC9xmUU9Y5IE6H
+        99La1M+6bFNvzupZ3KNG/lXiKCOOZsA=
+X-Google-Smtp-Source: APXvYqzzMke6HbKJ7MgmPbfT9g2onn2MByckb//Ing49zbvFroSoe7K25cgK8jM9yeL80ui3gBbjGQ==
+X-Received: by 2002:a5d:4642:: with SMTP id j2mr1210049wrs.268.1557221563105;
+        Tue, 07 May 2019 02:32:43 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id h24sm15794834wmb.40.2019.05.07.02.32.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 02:32:41 -0700 (PDT)
+Date:   Tue, 7 May 2019 10:32:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
+ resources
+Message-ID: <20190507093239.GB4529@dell>
+References: <20190430140416.4707-1-esben@geanix.com>
+ <20190430153736.GL9224@smile.fi.intel.com>
+ <874l6efxta.fsf@haabendal.dk>
+ <20190502104556.GS9224@smile.fi.intel.com>
+ <87pnp11112.fsf@haabendal.dk>
 MIME-Version: 1.0
-References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
- <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com>
- <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com> <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Tue, 7 May 2019 11:33:01 +0200
-Message-ID: <CAEJqkgiB7woieNZ-vVm7x-GzVrqGpJWLXOM9JpSUgPgE7eA6gA@mail.gmail.com>
-Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pnp11112.fsf@haabendal.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Di., 7. Mai 2019 um 10:35 Uhr schrieb Rafael J. Wysocki <rafael@kernel.org>:
->
-> On Tue, May 7, 2019 at 9:31 AM Gabriel C <nix.or.die@gmail.com> wrote:
-> >
-> > Am Di., 7. Mai 2019 um 09:01 Uhr schrieb Rafael J. Wysocki <rafael@kernel.org>:
-> > >
-> >  Hello Rafael ,  Erik
-> >
-> > > +Erik
-> > >
-> > > On Tue, May 7, 2019 at 1:33 AM Gabriel C <nix.or.die@gmail.com> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > while testing kernel-5.1 I get on one of my Lenovo Laptops very
-> > > > strange 'ACPI Debug:' messages.
-> > > >
-> > > > After some grepping I realized these are Debug messages from DSDT ,
-> > > > however my kernel does
-> > > > not have ACPI_DEBUG enabled.
-> > > >
-> > > > I found out the module triggering this, on this Laptop is
-> > > > ideapad_laptop , but looking at the code
-> > > > I cannot see what would causes that.
-> > > >
-> > > > Also on the same Laptop with any 5.0.X kernels I cannot see these.
-> > > >
-> > > >
-> > > > ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1
-> > > > # CONFIG_ACPI_DEBUGGER is not set
-> > > > # CONFIG_ACPI_DEBUG is not set
-> > > > # CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set
-> > > > # CONFIG_THINKPAD_ACPI_DEBUG is not set
-> > > >
-> > > > .. dmesg ..
-> > > > ...
-> > > > [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
-> > > > [ideapad_laptop] @ 1322
-> > > > [   68.026708] input: Ideapad extra buttons as
-> > > > /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
-> > > > [   68.038236] ACPI Debug:  "=====QUERY_64====="
-> > > > [   68.050232] ACPI Debug:  "=====QUERY_65====="
-> > > > [   68.060218] ACPI Debug:  "=====QUERY_64====="
-> > > > [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
-> > > > [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
-> > > > [ideapad_laptop] returned 0 after 69751 usecssg
-> > > >
-> > > > ...
-> > > >
-> > > > These =====QUERY_XX===== messages are from DSDT:
-> > > >
-> > > > ~/acpi$ grep QUERY dsdt.dsl
-> > > >                Debug = "=====QUERY_11====="
-> > > >                Debug = "=====QUERY_12====="
-> > > >                Debug = "=====QUERY_24====="
-> > > >                Debug = "=====QUERY_25====="
-> > > >                Debug = "=====QUERY_37====="
-> > > >                Debug = "=====QUERY_38====="
-> > > >                Debug = "=====QUERY_64====="
-> > > >                Debug = "=====QUERY_65====="
-> > > >
-> > > > Also this is the code from DSDT for QUERY 64 and 65:
-> > > >
-> > > > ...
-> > > >             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
-> > > >            {
-> > > >                Debug = "=====QUERY_64====="
-> > > >                If ((OSYS == 0x07D9))
-> > > >                {
-> > > >                    If (((WLEX == One) & (WLAT == One)))
-> > > >                    {
-> > > >                        SGOV (0x02040005, One)
-> > > >                    }
-> > > >                    Else
-> > > >                    {
-> > > >                        SGOV (0x02040005, Zero)
-> > > >                    }
-> > > >                }
-> > > >            }
-> > > >
-> > > >            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
-> > > >            {
-> > > >                Debug = "=====QUERY_65====="
-> > > >                If ((OSYS == 0x07D9))
-> > > >                {
-> > > >                    If (((BTEX == One) & (BTAT == One)))
-> > > >                    {
-> > > >                        SGOV (0x0202000B, One)
-> > > >                    }
-> > > >                    Else
-> > > >                    {
-> > > >                        SGOV (0x0202000B, Zero)
-> > > >                    }
-> > > >                }
-> > > >            }
-> > > >
-> > > > ...
-> > > >
-> > > >
-> > > > Any idea what would cause this ?
-> >
-> > I think I found what is causing that.
-> >
-> > Commit aa9aaa4d61c0048d3faad056893cd7860bbc084c is moving
-> > definition of Linux's  ACPI_DEBUG_DEFAULT to incude/acpi/platform/aclinux.h ,
-> > however include/acpi/acpi.h didn't got updated and  ACPI_DEBUG_DEFAULT now
-> > being always defined as  (ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT |
-> > ACPI_LV_EVALUATION | ACPI_LV_REPAIR)
->
-> I'm not sure what you mean by this.
->
-> include/acpi/acpi.h should get the right definitions through
-> include/acpi/platform/acenv.h and include/acpi/acoutput.h that are
-> included by it.
->
+On Thu, 02 May 2019, Esben Haabendal wrote:
 
-Hmm yes should , I missed that include. However it does not work.
+> Hi Lee
+> 
+> Could you help clarify whether or not this patch is trying to do
+> something odd/wrong?
+> 
+> I might be misunderstanding Andy (probably is), but the discussion
+> revolves around the changes I propose where I change the serial8250
+> driver to use platform_get_resource() in favour of
+> request_mem_region()/release_mem_region().
 
-I've just put back old code back into drivers/acpi/bus.c to test
-and all working now fine without any other changes.
+Since 'serial8250' is registered as a platform device, I don't see any
+reason why it shouldn't have the capability to obtain its memory
+regions from the platform_get_*() helpers.
 
-> It looks like incude/acpi/platform/aclinux.h has not been included by
-> include/acpi/platform/acenv.h for some reason when building this
-> module.
+> In my understanding, use of platform_get_resource() is the right thing
+> to do in order to integrate properly with with MFD drivers that splits a
+> common memory resource in mfd_add_device() using the mem_base argument.
 
-If this one getting it wrong all will do so , they all just include
-<linux/acpi.h>.
-
-Probably not so much users will notice that , I just did because my
-BIOS vendor forgot DEBUG around.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
