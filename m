@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7447C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65B2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604A320675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7200C20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208737;
-	bh=BdgObAC3fFlR0Js2Ty8pV2oYIcVW9JV+U9TauSCP3z4=;
+	s=default; t=1557208743;
+	bh=jv5sLOOrWk1SbFGvZzGcNY8fisqZ8uWYRa6eu+j6bS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kX1UtNWM5K36ONUIIEA0N2uM86fCYQYT3wnosh5xXBJG/hxlpUAQ/XvsrGyEL9cYe
-	 LvLIdGwyUum3EyaYidCAaf8FZqsKMeQ2jAaNPDTk9evLgnehyBUkt4DY2BNGupU91z
-	 Z/RRAaExwxlKPJZooNaPCcRAY0sk5YqdHuONcJQE=
+	b=OfFTSNDauW6VDpcBA7deqvFZ3I4Cw9iSCMYrJLU4SbksMxH/6Jtl50iugoPrf4j4W
+	 7F8FyTDITMifvUYH29KV/M4vNSHtADSdEYEbvgI0Z3Qu5keQ6hutqotSjr7UztcyrV
+	 KK9qrl7hgHryYRxzE+F2aN1PVuydW5OVLEheXq4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfEGFhC (ORCPT
+        id S1728690AbfEGF7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:37:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfEGFhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726764AbfEGFhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 May 2019 01:37:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D62920C01;
-        Tue,  7 May 2019 05:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0794B21655;
+        Tue,  7 May 2019 05:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207418;
-        bh=BdgObAC3fFlR0Js2Ty8pV2oYIcVW9JV+U9TauSCP3z4=;
+        s=default; t=1557207420;
+        bh=jv5sLOOrWk1SbFGvZzGcNY8fisqZ8uWYRa6eu+j6bS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Uj0LqoKyCiZ3QFPW2MLJb9lRorYh68FSjluWP18J7nutRjIYLrIJKF26Fk3d+ru0
-         X9ygRuN65f4gAqo7fNPSOWxo8Tfrz8Z6ERqyjb9Uza5LTqHHVpBGEE7/rN1vu4kBu+
-         Hzu2weFCMYokrKIn1Hkz0rCdDcMzdPY0J0PKQFg0=
+        b=BPk4bcMdT0hhWbXSMmFKdHMNPdYspXBElLKZ6z39ks/DzehLMznt8ReZgrwb73axJ
+         NyDwHwdnkD2RUAKjDfroD/yZieoDRssRmfZOmw9lTbnvYN2bM249W/Lq2yapTbfJOD
+         olUM0cRu5g+7DezBR5eD6Kw8jr932tJXLOoLEeps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux@endlessm.com,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 31/81] x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
-Date:   Tue,  7 May 2019 01:35:02 -0400
-Message-Id: <20190507053554.30848-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 32/81] x86/mm/tlb: Revert "x86/mm: Align TLB invalidation info"
+Date:   Tue,  7 May 2019 01:35:03 -0400
+Message-Id: <20190507053554.30848-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -66,102 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 0082517fa4bce073e7cf542633439f26538a14cc ]
+[ Upstream commit 780e0106d468a2962b16b52fdf42898f2639e0a0 ]
 
-Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
-shutdown process, but then it hangs in BIOS POST with a black screen.
+Revert the following commit:
 
-The problem is intermittent - at some points it has appeared related to
-Secure Boot settings or different kernel builds, but ultimately we have
-not been able to identify the exact conditions that trigger the issue to
-come and go.
+  515ab7c41306: ("x86/mm: Align TLB invalidation info")
 
-Besides, the EFI mode cannot be disabled in the BIOS of this model.
+I found out (the hard way) that under some .config options (notably L1_CACHE_SHIFT=7)
+and compiler combinations this on-stack alignment leads to a 320 byte
+stack usage, which then triggers a KASAN stack warning elsewhere.
 
-However, after extensive testing, we observe that using the EFI reboot
-method reliably avoids the issue in all cases.
+Using 320 bytes of stack space for a 40 byte structure is ludicrous and
+clearly not right.
 
-So add a boot time quirk to use EFI reboot on such systems.
-
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Nadav Amit <namit@vmware.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux@endlessm.com
-Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
-[ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
+Fixes: 515ab7c41306 ("x86/mm: Align TLB invalidation info")
+Link: http://lkml.kernel.org/r/20190416080335.GM7905@worktop.programming.kicks-ass.net
+[ Minor changelog edits. ]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
- include/linux/efi.h      |  7 ++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 725624b6c0c0..8fd3cedd9acc 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
- 	return 0;
- }
- 
-+/*
-+ * Some machines don't handle the default ACPI reboot method and
-+ * require the EFI reboot method:
-+ */
-+static int __init set_efi_reboot(const struct dmi_system_id *d)
-+{
-+	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
-+		reboot_type = BOOT_EFI;
-+		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
-+	}
-+	return 0;
-+}
-+
- void __noreturn machine_real_restart(unsigned int type)
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index a6d1b0241aea..a6836ab0fcc7 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -694,7 +694,7 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
  {
- 	local_irq_disable();
-@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
- 		},
- 	},
-+	{	/* Handle reboot issue on Acer TravelMate X514-51T */
-+		.callback = set_efi_reboot,
-+		.ident = "Acer TravelMate X514-51T",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
-+		},
-+	},
+ 	int cpu;
  
- 	/* Apple */
- 	{	/* Handle problems with rebooting on Apple MacBook5 */
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 401e4b254e30..cc3391796c0b 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1564,7 +1564,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
- 			   struct screen_info *si, efi_guid_t *proto,
- 			   unsigned long size);
+-	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
++	struct flush_tlb_info info = {
+ 		.mm = mm,
+ 	};
  
--bool efi_runtime_disabled(void);
-+#ifdef CONFIG_EFI
-+extern bool efi_runtime_disabled(void);
-+#else
-+static inline bool efi_runtime_disabled(void) { return true; }
-+#endif
-+
- extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
- 
- enum efi_secureboot_mode {
 -- 
 2.20.1
 
