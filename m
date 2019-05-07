@@ -2,127 +2,108 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75A2C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF39CC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994A8205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E25B208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hd/bYwse"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YehQViZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfEGVG6 (ORCPT
+        id S1728515AbfEGVIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:06:58 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33156 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfEGVG5 (ORCPT
+        Tue, 7 May 2019 17:08:07 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35533 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfEGVIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:06:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z28so9298642pfk.0;
-        Tue, 07 May 2019 14:06:57 -0700 (PDT)
+        Tue, 7 May 2019 17:08:06 -0400
+Received: by mail-vs1-f67.google.com with SMTP id s4so7135990vsl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VL8uiSCPpzZNMmP+oEVAuQOFn8NTTTisNh1ggwInehw=;
-        b=hd/bYwseMXfh2hIOB9c0up4PVwZLYR4n6c+ckG//+BXsEDwauzmZywkj452nBvEUDt
-         sAiDFdvaMIJ1RFSq6Ts6UGBoViNk/9II0Yq0+34q03rC6fWIJ2LcUt4FNYDtMLd4p6Xi
-         gD3JeSihu3tqX3M4nl+YuCPfpbSEDGaEDr2VfjzyKCSZFUVAN1IOj3Q5JHx4ucy/V6MF
-         nDJ4pXd7Pr1CvPECi+wBzmq0f6e2kR0w8cY0Ztn+n4WwBsSpM4QEMxpV0dDs2g/QlysO
-         1r1V265aKrVbP6t/tlMivLjqUmI8SGQ3fMGawtfQMSNccF+8pthXpJZzv3ElDkKqXo86
-         91aw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NyT42HhZo+NoWlMcFfVHa74AFNvsodijHlMncKg590Q=;
+        b=YehQViZvLM7Lmr9d7H2oBVwOnhxc/W7ZGb3C0R7fmfvEgavSj8wr0dWjHPOIOGCXVB
+         ++EpCbZEDhD0i+6YXXoX1RK3f89W5kHuFQztGG9LtdCwHB6ZKLxVsTYZOa3dSuXWWfxY
+         9ZMhyvs5cRAiCyhMUyX4IsaE2+u2EYpSjxKnk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VL8uiSCPpzZNMmP+oEVAuQOFn8NTTTisNh1ggwInehw=;
-        b=njOAxN3jaEB78TLtXJKaK9RmrVK8q2f/LPwUL2Bz9XKdSigg/ZePefEe6JI4G74jA0
-         SGzApNGHssH6uH9P+qDJ/k5immq2nWte477zSxy+6zKuwHdm+QkVhAs6ODw0C9wUompQ
-         msGv3w1l0WBJHl+r2dk7ro8qgxw2YU24ahQw3IvF+pomPZ+yZb7kAzp7PZRgaOe9YZMj
-         h7poDGwh+o2lSnoVHC7h1oqMBslKKxQScou72Yl0xw7ewHvHaBZKIhiskzCSri6El8TJ
-         bX79ztvkw5JU28kWizIugG/bRZkMb6YXNVgcMkLrCPIICSOO5DT1hK4NVQs2KKwUvtTI
-         ifjg==
-X-Gm-Message-State: APjAAAXdgRqF7KhTmldw4pKu+iNUSK1Up40uwdhYXBPU5Em0Nz8rZFYn
-        0m2gaTxvaIFSb4r1TBhLH/0=
-X-Google-Smtp-Source: APXvYqx1ktV35C20uU5UuqbaQvu3JK7lhcdWdBSMcoeOiHXkOeEm0E+QpkPPBfwH3ZwQSt0JbhhpAw==
-X-Received: by 2002:a62:160b:: with SMTP id 11mr43708208pfw.88.1557263216768;
-        Tue, 07 May 2019 14:06:56 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k191sm27841147pfc.151.2019.05.07.14.06.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 14:06:55 -0700 (PDT)
-Date:   Tue, 7 May 2019 14:06:54 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v2 1/3] kernel: Provide a __pow10() function
-Message-ID: <20190507210654.GA4951@roeck-us.net>
-References: <20190507193504.28248-1-f.fainelli@gmail.com>
- <20190507193504.28248-2-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NyT42HhZo+NoWlMcFfVHa74AFNvsodijHlMncKg590Q=;
+        b=BHtmjqKbvlujE4xWJ/ji7L7PlK7phcppHi+Ejw+GP5FvZB+Cj15V5zDrMBX4OBy7Fo
+         Nn2v6Fy/ancLL/+vn8TY/djRecAOnCy3n9CfcjhuJ3XzrUZ0bu6vOV054aMX9T/2x3dY
+         onEWJlkseLUBh53kdI9C173lzihp9TJKLY1z8gV4ItO6GLJAu7DKojxCZk26Z1pbcgpK
+         h2P46HvmBV+d1Ng/wYKBjnNOrp3gsyMpXUi4wNslJjEIzVwn/mFC6kvTDAnKFRNa0wft
+         CRyp/fdw6EwNaO1IFaLBwEBEcBjnvn/Xc3MXk3RqPxhc5AS/YpM6J1ml1dEtjEebJV7a
+         6hIQ==
+X-Gm-Message-State: APjAAAW9rYDXpic0vuM5cq3xCKif7S2692oFpqgpgE6N/8hfafDeEPeY
+        ffKSWJ/iQ8wNjpmLBFcL51FBczyF41g=
+X-Google-Smtp-Source: APXvYqwLezLE7rqjiSlmLyRrKOxdOAzwyCQYgFZ4tlU6UUJSXJHLbGPp6/fssSgs8d1fVbTpc3svVA==
+X-Received: by 2002:a05:6102:119:: with SMTP id z25mr17856577vsq.145.1557263284942;
+        Tue, 07 May 2019 14:08:04 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id r67sm3718298vkd.39.2019.05.07.14.08.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 14:08:03 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id x78so11306067vsc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:08:03 -0700 (PDT)
+X-Received: by 2002:a67:dd95:: with SMTP id i21mr13304046vsk.48.1557263282871;
+ Tue, 07 May 2019 14:08:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507193504.28248-2-f.fainelli@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190507161321.34611-1-keescook@chromium.org> <20190507170039.GB1399@sol.localdomain>
+In-Reply-To: <20190507170039.GB1399@sol.localdomain>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 7 May 2019 14:07:51 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
+Message-ID: <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] crypto: x86: Fix indirect function call casts
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Joao Moreira <jmoreira@suse.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 12:35:02PM -0700, Florian Fainelli wrote:
-> Provide a simple macro that can return the value of 10 raised to a
-> positive integer. We are going to use this in order to scale units from
-> firmware to HWMON.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  include/linux/kernel.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 2d14e21c16c0..62fc8bd84bc9 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -294,6 +294,17 @@ static inline u32 reciprocal_scale(u32 val, u32 ep_ro)
->  	return (u32)(((u64) val * ep_ro) >> 32);
->  }
->  
-> +/* Return in f the value of 10 raise to the power x */
-> +#define __pow10(x, f)(					\
-> +{							\
-> +	typeof(x) __x = abs(x);				\
-> +	f = 1;						\
-> +	while (__x--)					\
-> +		f *= 10;				\
-> +	f;						\
-> +}							\
-> +)
+On Tue, May 7, 2019 at 10:00 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > Given the above, the current efforts to improve the Linux security,
+> > and the upcoming kernel support to compilers with CFI features, this
+> > creates macros to be used to build the needed function definitions,
+> > to be used in camellia, cast6, serpent, twofish, and aesni.
+>
+> So why not change the function prototypes to be compatible with common_glue_*_t
+> instead, rather than wrapping them with another layer of functions?  Is it
+> because indirect calls into asm code won't be allowed with CFI?
 
-Kind of unusual. I would have expected to use this like
-	f = __pow10(x);
-ie without having to provide f as parameter. That would be much less
-confusing. I assume this is to make the result type independent, but
-I am not sure if that is worth the trouble.
+I don't know why they're not that way to begin with. But given that
+the casting was already happening, this is just moving it to a place
+where CFI won't be angry. :)
 
-Are there users outside the hwmon code ? If not, it might be simpler
-to keep it there for now.
+> >   crypto: x86/crypto: Use new glue function macros
+>
+> This one should be "x86/serpent", not "x86/crypto".
 
-Thanks,
-Guenter
+Oops, yes, that's my typo. I'll fix for v4. Do the conversions
+themselves look okay (the changes are pretty mechanical)? If so,
+Herbert, do you want a v4 with the typo fix, or do you want to fix
+that up yourself?
 
-> +
->  #if defined(CONFIG_MMU) && \
->  	(defined(CONFIG_PROVE_LOCKING) || defined(CONFIG_DEBUG_ATOMIC_SLEEP))
->  #define might_fault() __might_fault(__FILE__, __LINE__)
-> -- 
-> 2.17.1
-> 
+Thanks!
+
+-- 
+Kees Cook
