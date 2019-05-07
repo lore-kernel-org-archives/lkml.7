@@ -2,105 +2,97 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCECC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC16DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0C221479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557217694;
-	bh=3bYekOg5chMAE9u92AGpHNwO30W4q703j1p2RVq9G04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XpTxoMrpSilgugHcsPZ+TozkGbMdFJVVZCQeF2JO6tLTArsTGOt2daWn+h5xQJqqe
-	 QQtbSQsf9+xfqal+CyAKaCcV8u7k/CO8sMo+EXdhAAZXe3SYbR9kTiJLYNlpKfKbUy
-	 RbvzGmDXbIMgilv2pPkKz8iY23l6VV9i6llStwUM=
+	by mail.kernel.org (Postfix) with ESMTP id C1AFB20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfEGI2N (ORCPT
+        id S1726679AbfEGIaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:28:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53911 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfEGI2N (ORCPT
+        Tue, 7 May 2019 04:30:22 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:57965 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfEGIaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:28:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 198so1397437wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 01:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I9/t0l8esd3uIHHniKsPDoKMHi99dvvKOn/depEA9Ww=;
-        b=c4OTbmYaxzuUH/XWCIErjasNeZRc0g3+mpMItTTezim4HBjklHevkqyM/j2/sdjSfs
-         iecV47xXgCguoneQaSYLTU1GQLgg3ZY/+CGxg55c/o6jyUgJjV3Cu9f7eyyE2XYa1hLU
-         Gzt2Fc78fhJqj/V/ZcNVlqbZIwXGWT5yL6yxLmFqRFyOqoBp692i+gL1zaLMpCQbzyQh
-         572QYMRF6OsGgVQM78ZvDRZRsG0O8JQo4CsfC+uydqPiN6YhLFakGRA1WBJXt8W36Bbw
-         ORvh8bE0jH+lMYRsNIXMaPAZxaWPw8wZ++Epo/SWtMX3fvJz1A5z40NA8f16U8sAR2l1
-         IBoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I9/t0l8esd3uIHHniKsPDoKMHi99dvvKOn/depEA9Ww=;
-        b=DqoPN4e3AxyLfYm6sjOtZxN0JBH+quoN86efJ8s+ixEP6Gp1tqCyXifOHVgk5NoGCK
-         ZTet+/z3uVxxgNPGzRVjUFHdOxg3DTB6vcDRzZwQXi8BL9LQa8vn+Ppk4njncmIjZeUh
-         dWz1kVSqVtDFZ3lG7KSyw1mtSCyP6Yzyveo+Im6rvNbNNEgE6ya19OAxaWJP5AVAuJgV
-         yfvXez5rWmU2oOlbnmse54nLvOpRPAOKvs91K3E+cgt5IfnOE6/prGaxANoUoKzQiVrN
-         Gq4DcZGKLeN0gB+mqdqaRQFzCHixBzFPRCv42Rx1bQ477HpPOaOjtdpSpysN9dw6nUh1
-         NYLQ==
-X-Gm-Message-State: APjAAAVoxBtDWqWNnkBKHJYtREy7bxerojnOL8SqWX8n+dWNTYtej3Zf
-        iBnnM43VyLZaDp8VXHHH4gM=
-X-Google-Smtp-Source: APXvYqy3SGSmi8lBio88aqgpwuD4kF4r1j/oihsGcjKqU7lNMpy7GZk83SDcRJ2H+zzXZtXGH7KVew==
-X-Received: by 2002:a1c:f119:: with SMTP id p25mr19613663wmh.4.1557217691590;
-        Tue, 07 May 2019 01:28:11 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id i9sm10536330wmb.4.2019.05.07.01.28.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 01:28:10 -0700 (PDT)
-Date:   Tue, 7 May 2019 10:28:08 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Pingfan Liu <kernelfans@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Kees Cook <keescook@chromium.org>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/boot: move early_serial_base to .data section
-Message-ID: <20190507082808.GB125993@gmail.com>
-References: <1557208860-12846-1-git-send-email-kernelfans@gmail.com>
+        Tue, 7 May 2019 04:30:21 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Joergen.Andreasen@microchip.com";
+  x-sender="Joergen.Andreasen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Joergen.Andreasen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,441,1549954800"; 
+   d="scan'208";a="31898599"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 07 May 2019 01:30:20 -0700
+Received: from localhost (10.10.76.4) by chn-sv-exch07.mchp-main.com
+ (10.10.76.108) with Microsoft SMTP Server id 14.3.352.0; Tue, 7 May 2019
+ 01:30:14 -0700
+Date:   Tue, 7 May 2019 10:30:13 +0200
+From:   Joergen Andreasen <joergen.andreasen@microchip.com>
+To:     Jiri Pirko <jiri@resnulli.us>
+CC:     <netdev@vger.kernel.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Ralf Baechle" <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        "James Hogan" <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        <pieter.jansenvanvuuren@netronome.com>
+Subject: Re: [PATCH net-next 2/3] net: mscc: ocelot: Implement port policers
+ via tc command
+Message-ID: <20190507083012.4yjd7ok6dhzkrdf7@soft-dev16>
+References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
+ <20190502094029.22526-3-joergen.andreasen@microchip.com>
+ <20190504130726.GA14684@nanopsycho.orion>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <1557208860-12846-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190504130726.GA14684@nanopsycho.orion>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jiri,
 
-* Pingfan Liu <kernelfans@gmail.com> wrote:
-
-> arch/x86/boot/compressed/head_64.S clears BSS after relocated. If early
-> serial is set up before clearing BSS, the early_serial_base will be reset
-> to 0.
+The 05/04/2019 15:07, Jiri Pirko wrote:
+> External E-Mail
 > 
-> Initializing early_serial_base as -1 to push it to .data section.
+> 
+> Thu, May 02, 2019 at 11:40:28AM CEST, joergen.andreasen@microchip.com wrote:
+> >Hardware offload of port policers are now supported via the tc command.
+> >Supported police parameters are: rate, burst and overhead.
+> 
+> Joergen, please see:
+> [PATCH net-next 00/13] net: act_police offload support
+> That patchset is also pushing flow intermediate representation for this,
+> so I believe that you should base this patch on top of that.
+> 
 
-I'm wondering whether it's wise to clear the BSS after relocation to 
-begin with. It already gets cleared once, and an implicit zeroing of all 
-fields on kernel relocation sounds dubious to me.
+I will base my patches on top of that.
 
-Is there a strong reason for that? I.e. is there some uninitialized or 
-otherwise important-to-clear data there?
-
-Thanks,
-
-	Ingo
+-- 
+Joergen Andreasen, Microchip
