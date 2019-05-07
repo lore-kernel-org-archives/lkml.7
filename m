@@ -2,72 +2,140 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FD2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D7BC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC5520675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15172087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208575;
-	bh=t1e6qR30XoBlOonZc+HmloDE9SesZNKua7dzCp++aG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bWzepVioaTLHrE37XVCsY5pFuulzLQecOGhaU55X98Gxoru/2b/+nNpQY7Gmk3GHM
-	 Ew9tl4BauTYLBuKbwZxuiAizVMUwJpNjUc4rFGhBlrQqrN3O6nFVNJoP/jXgQNJxCh
-	 dOUugnKINvwLzC5VGa1puXjQbKX634wPbwitxq1w=
+	s=default; t=1557208585;
+	bh=y9ZLVXMrz9krp9KqLxl4O+qrXhLwZoiMvHNYlQn2wu8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0mUIhoQeESE2LBedQrpX0uKHb8xy6U133BTSSkT+xkspoVvSSOV7kCgWJlIvVyL8X
+	 ApsOflBR17Eg0YfITYmPl1Y4U/h6WLRqgsJf9HKmmJL/Ah7rL960ernmVMGcVFWg50
+	 sg1EHLyBc4YTynVyTNROSVZfCBFG3Pg55VXmAaqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfEGF4N (ORCPT
+        id S1728609AbfEGF4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfEGF4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:56:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727983AbfEGFiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:03 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92B7205ED;
-        Tue,  7 May 2019 05:56:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C11A421655;
+        Tue,  7 May 2019 05:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557208571;
-        bh=t1e6qR30XoBlOonZc+HmloDE9SesZNKua7dzCp++aG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cS1hFIOnRvtfqQN3aLt7ozfE6Nuiq9UTnTOQrVkeHauYc1jvYJAkxhbMj00JJ/kq8
-         odLH6j1FQmphq7y78OZj13oyaZILigDagMpaWuM4iWulZY7DlG5US2/tuOgbrvKwiT
-         99ZYJ1DTzPkw+U5sEkwJV99kJJSajOReiixmSaOo=
-Date:   Tue, 7 May 2019 07:56:08 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 5/7] soundwire: add debugfs support
-Message-ID: <20190507055608.GC17986@kroah.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-6-pierre-louis.bossart@linux.intel.com>
- <20190504070301.GD9770@kroah.com>
- <a9e1c3d2-fe29-1683-9253-b66034c62010@linux.intel.com>
- <20190506163810.GK3845@vkoul-mobl.Dlink>
+        s=default; t=1557207482;
+        bh=y9ZLVXMrz9krp9KqLxl4O+qrXhLwZoiMvHNYlQn2wu8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cJzielO5QAPxr5NXCU89nVN8nPJnzsYPuPtBAZGRWiZoTtL30Hh1rt72TISAzZif2
+         MU+Uk5v5s1Jvx9jHSvOxFb+mtUmeubSBJJsNRRMIs2YV2QuRR/yCi9G6S7qxRzmgs9
+         6ObaPFkKUtUDJW1vG3fdmSoaNGt1BFX59h/D15rM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jan Kara <jack@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 67/81] mm/memory.c: fix modifying of page protection by insert_pfn()
+Date:   Tue,  7 May 2019 01:35:38 -0400
+Message-Id: <20190507053554.30848-67-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
+References: <20190507053554.30848-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506163810.GK3845@vkoul-mobl.Dlink>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:08:10PM +0530, Vinod Koul wrote:
-> Yes, but then device exit routine is supposed to do debugfs cleanup as
-> well, so that would ensure these references are dropped at that point of
-> time. Greg should that not take care of it or we *should* always do
-> refcounting.
+From: Jan Kara <jack@suse.cz>
 
-Always do refcounting.  How else can you "guarantee" that it is safe?
+[ Upstream commit cae85cb8add35f678cf487139d05e083ce2f570a ]
+
+Aneesh has reported that PPC triggers the following warning when
+excercising DAX code:
+
+  IP set_pte_at+0x3c/0x190
+  LR insert_pfn+0x208/0x280
+  Call Trace:
+     insert_pfn+0x68/0x280
+     dax_iomap_pte_fault.isra.7+0x734/0xa40
+     __xfs_filemap_fault+0x280/0x2d0
+     do_wp_page+0x48c/0xa40
+     __handle_mm_fault+0x8d0/0x1fd0
+     handle_mm_fault+0x140/0x250
+     __do_page_fault+0x300/0xd60
+     handle_page_fault+0x18
+
+Now that is WARN_ON in set_pte_at which is
+
+        VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
+
+The problem is that on some architectures set_pte_at() cannot cope with
+a situation where there is already some (different) valid entry present.
+
+Use ptep_set_access_flags() instead to modify the pfn which is built to
+deal with modifying existing PTE.
+
+Link: http://lkml.kernel.org/r/20190311084537.16029-1-jack@suse.cz
+Fixes: b2770da64254 "mm: add vm_insert_mixed_mkwrite()"
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Chandan Rajendra <chandan@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ mm/memory.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index 9c69278173b7..e0010cb870e0 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1796,10 +1796,12 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+ 				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
+ 				goto out_unlock;
+ 			}
+-			entry = *pte;
+-			goto out_mkwrite;
+-		} else
+-			goto out_unlock;
++			entry = pte_mkyoung(*pte);
++			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
++			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
++				update_mmu_cache(vma, addr, pte);
++		}
++		goto out_unlock;
+ 	}
+ 
+ 	/* Ok, finally just insert the thing.. */
+@@ -1808,7 +1810,6 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+ 	else
+ 		entry = pte_mkspecial(pfn_t_pte(pfn, prot));
+ 
+-out_mkwrite:
+ 	if (mkwrite) {
+ 		entry = pte_mkyoung(entry);
+ 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+-- 
+2.20.1
+
