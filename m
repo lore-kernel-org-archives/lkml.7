@@ -2,70 +2,119 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7198C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EBDC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA4320989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222B020989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557238432;
+	bh=mjdFGwwOnKVIrVi45uvuiRFe3/cX2qeCwTGz3dUy0Kg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=x1n00BwAXe1xW1kjdBBBOD1PYUjoPHxU1V/5JUuH0wFxQE5WvpjsfPex41SytKgVV
+	 5OltDGSwq8t5om9LApxn0c/4xWspKDqv9rs3XJIihpvrtO/eZWpjVTDf0DoSv2QmlE
+	 i4gNV9gexhRgfRIl0WSd7nlBvXRc1hwym8nB9KTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbfEGONp (ORCPT
+        id S1726824AbfEGONv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:13:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55644 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbfEGONp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:13:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7ADD80D;
-        Tue,  7 May 2019 07:13:44 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 277933F5C1;
-        Tue,  7 May 2019 07:13:42 -0700 (PDT)
-Date:   Tue, 7 May 2019 15:13:40 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Luca Abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 7 May 2019 10:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfEGONt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:13:49 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 143D62087F;
+        Tue,  7 May 2019 14:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557238428;
+        bh=mjdFGwwOnKVIrVi45uvuiRFe3/cX2qeCwTGz3dUy0Kg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lxB89NazciAzmWLPcaYInGMewi23ldKwznAmX9DJnMQqyTZbnJqAs1Z9etpVbAI5a
+         qKcSGIYw5ona7JNwl1DubsRno1UQqfUO6QCjfaWmCcGAR7iBgeoNzRtrCHr8dAfLwA
+         WgNqsCmaTdIXAoLSULY5EtT6I151yfQfDpJe4tnQ=
+Date:   Tue, 7 May 2019 23:13:40 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 3/6] sched/dl: Try better placement even for deadline
- tasks that do not block
-Message-ID: <20190507141338.tnp62joujcrxyv5j@queper01-lin>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-4-luca.abeni@santannapisa.it>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506044836.2914-4-luca.abeni@santannapisa.it>
-User-Agent: NeoMutt/20171215
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-Id: <20190507231340.92b1b0665d1110f90929d878@kernel.org>
+In-Reply-To: <20190506174511.2f8b696b@gandalf.local.home>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <20190502193129.664c5b2e@gandalf.local.home>
+        <20190502195052.0af473cf@gandalf.local.home>
+        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+        <20190503092247.20cc1ff0@gandalf.local.home>
+        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+        <20190506095631.6f71ad7c@gandalf.local.home>
+        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+        <20190506130643.62c35eeb@gandalf.local.home>
+        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
+        <20190506145745.17c59596@gandalf.local.home>
+        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
+        <20190506162915.380993f9@gandalf.local.home>
+        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
+        <20190506174511.2f8b696b@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 06 May 2019 at 06:48:33 (+0200), Luca Abeni wrote:
-> @@ -1591,6 +1626,7 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
->  
->  	rcu_read_lock();
->  	curr = READ_ONCE(rq->curr); /* unlocked access */
-> +	het = static_branch_unlikely(&sched_asym_cpucapacity);
+On Mon, 6 May 2019 17:45:11 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Nit: not sure how the generated code looks like but I wonder if this
-could potentially make you loose the benefit of the static key ?
+> If we go with Peter's patch, I can make this code much more sane, and
+> not have to worry about having &regs->sp be at the top of the stack. I
+> could simply, just push everything in the order of pt_regs and call the
+> handler.
 
-Thanks,
-Quentin
+Hi Steve, I need to catch up with the origin of this series, but it seems
+also good to optprobe which is doing similar trick on pt_regs. If we can
+assume that int3 pt_regs can have a gap, optprobe can also make a gap, and
+it can be also used for storing destination address.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
