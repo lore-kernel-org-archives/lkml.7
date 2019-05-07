@@ -2,98 +2,171 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB00CC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5633CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B350920825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319A120825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfEGVYY (ORCPT
+        id S1728568AbfEGVYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 17:24:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58342 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbfEGVYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:24:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726811AbfEGVYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 17:24:31 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E57320656;
-        Tue,  7 May 2019 21:24:20 +0000 (UTC)
-Date:   Tue, 7 May 2019 17:24:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
+        by mx1.redhat.com (Postfix) with ESMTPS id C7D465AFE9;
+        Tue,  7 May 2019 21:24:30 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36B665C21F;
+        Tue,  7 May 2019 21:24:27 +0000 (UTC)
+Date:   Tue, 7 May 2019 16:24:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
         Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190507172418.67ef6fc3@gandalf.local.home>
-In-Reply-To: <20190507172159.5t3bm3mjkwagvite@treble>
-References: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
-        <20190506225819.11756974@oasis.local.home>
-        <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
-        <20190506232158.13c9123b@oasis.local.home>
-        <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
-        <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
-        <20190507111227.1d4268d7@gandalf.local.home>
-        <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
-        <20190507163440.GV2606@hirez.programming.kicks-ass.net>
-        <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
-        <20190507172159.5t3bm3mjkwagvite@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+Message-ID: <20190507212425.7gfqx5e3yc4fbdfy@treble>
+References: <20190430091049.30413-1-pmladek@suse.com>
+ <20190430091049.30413-2-pmladek@suse.com>
+ <20190507004032.2fgddlsycyypqdsn@treble>
+ <20190507014332.l5pmvjyfropaiui2@treble>
+ <20190507112950.wejw6nmfwzmm3vaf@pathway.suse.cz>
+ <20190507120350.gpazr6xivzwvd3az@treble>
+ <20190507142847.pre7tvm4oysimfww@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190507142847.pre7tvm4oysimfww@pathway.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 07 May 2019 21:24:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 12:21:59 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, May 07, 2019 at 04:28:47PM +0200, Petr Mladek wrote:
+> > > > > Also this check is effectively the same as the klp_have_reliable_stack()
+> > > > > check which is done in kernel/livepatch/core.c.  So I think it would be
+> > > > > clearer and more consistent if the same check is done here:
+> > > > > 
+> > > > > 	if (!klp_have_reliable_stack())
+> > > > > 		return -ENOSYS;
+> > > 
+> > > Huh, it smells with over engineering to me.
+> > 
+> > How so?  It makes the code more readable and the generated code should
+> > be much better because it becomes a build-time check.
+> 
+> save_stack_trace_tsk_reliable() returns various error codes.
+> We catch a specific one because otherwise the message below
+> might be misleading.
+> 
+> I do not see why we should prevent this error by calling
+> a custom hack: klp_have_reliable_stack()?
 
-> regs->sp is *undefined* on x86-32.  We're damning our future selves to
-> have to always remember to use that darn kernel_stack_pointer() helper
-> for eternity just because of x86-32.
+I wouldn't call it a hack.  It's a simple build-time check.
 
-And there's been several times I forget that regs->sp can not be read
-directly. Especially most of my bug reports are for x86_64 these days.
-But when I had that seldom x86_32 one, and go debugging, I would print
-out "regs->sp" and then the system would crash. And I spend some time
-wondering why?
+> Regarding reliability. If anyone changes semantic of
+> save_stack_trace_tsk_reliable() error codes, they would likely
+> check if all users (one at the moment) handle it correctly.
+> 
+> On the other hand, the dependency between the -ENOSYS
+> return value and klp_have_reliable_stack() is far from
+> obvious.
 
-It's been a bane of mine for some time.
+I don't follow your point.
 
+> If we want to discuss and fix this to the death. We should change
+> the return value from -ENOSYS to -EOPNOTSUPP. The reason
+> is the same as in the commit 375bfca3459db1c5596
+> ("livepatch: core: Return EOPNOTSUPP instead of ENOSYS").
+> 
+> Note that EOPNOTSUPP is the same errno as ENOTSUP, see
+> man 3 errno.
 
--- Steve
+Sure, but that's a separate issue.
+
+> > But I think Miroslav's suggestion to revert 1d98a69e5cef would be even
+> > better.
+> 
+> AFAIK, Miroslav wanted to point out that your opinion was inconsistent.
+
+How is my opinion inconsistent?
+
+Is there something wrong with the original approach, which was reverted
+with
+
+  1d98a69e5cef ("livepatch: Remove reliable stacktrace check in klp_try_switch_task()")
+
+?
+
+As I mentioned, that has some advantages:
+
+- The generated code is simpler/faster because it uses a build-time
+  check.
+
+- The code is more readable IMO.  Especially if the check is done higher
+  up the call stack by reverting 1d98a69e5cef.  That way the arch
+  support short-circuiting is done in the logical place, before doing
+  any more unnecessary work.  It's faster, but also, more importantly,
+  it's less surprising.
+
+- It's also more consistent with other code, since the intent of this
+  check is the same as the klp_have_reliable_stack() use in
+  klp_enabled_patch().
+
+If you disagree with those, please explain why.
+
+> > > > > 	ret = save_stack_trace_tsk_reliable(task, &trace);
+> > > > > 
+> > > > > 	[ no need to check ret for ENOSYS here ]
+> > > > > 
+> > > > > Then, IMO, no comment is needed.
+> > > > 
+> > > > BTW, if you agree with this approach then we can leave the
+> > > > WARN_ON_ONCE() in save_stack_trace_tsk_reliable() after all.
+> > > 
+> > > I really like the removal of the WARN_ON_ONCE(). I consider
+> > > it an old fashioned way used when people are lazy to handle
+> > > errors. It might make sense when the backtrace helps to locate
+> > > the context but the context is well known here. Finally,
+> > > WARN() should be used with care. It might cause reboot
+> > > with panic_on_warn.
+> > 
+> > The warning makes the function consistent with the other weak functions
+> > in stacktrace.c and clarifies that it should never be called unless an
+> > arch has misconfigured something.  And if we aren't even checking the
+> > specific ENOSYS error as I proposed then this warning would make the
+> > error more obvious.
+> 
+> I consider both WARN() and error value as superfluous. I like the
+> error value because it allows users to handle the situation as
+> they need it.
+
+... but if there are no users of the weak function then the point is
+moot.
+
+> Best Regards,
+> Petr
+> 
+> PS: This is my last mail in the thread this week. I will eventually
+> return to it with a clear head next week. It is all nitpicking from
+> my POV and I have better things to do.
+
+I don't think it's helpful to characterize it as nitpicking.  The
+details of the code are important.
+
+-- 
+Josh
