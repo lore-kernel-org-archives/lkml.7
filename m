@@ -6,49 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372D7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3FA2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9D92054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208461;
-	bh=xV59cFLHO7fUe7r0rNDRIvFKzsHQRpZ8VrpLlf1gk84=;
+	s=default; t=1557208468;
+	bh=HtjpE101QbK9gW+OtJSdPiOgOJv26Q+FNS6nJPvoi+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVDEDe7Rv79hnBTun2xgCeHtaDtIwwiP9GmgnGkE2bjs0wbKRxBY+zvZp+7owolJg
-	 viVF7q6PaWrG7IZoJzrD6PHBM4Kvm+2I/GhW7bu4VRwmtiJzq7uaZaNIYHjdUC9Z9j
-	 yA5P3J7D4iijqFTYAXWilhdcaVCdz6o0fGT5ob1Y=
+	b=yFxJ9ELRBRWBQXh2Ae24gwQn+zjR8B15mlI6v4Ost9NpCEI+2HIQZUBEQ4bLikAuP
+	 ek5nWUN/HDKi9aBmQkpIwRGutmcwW/ch29Oo+qauHt/WEYoUzVNu8mTQukhib7SzMO
+	 m3ihDec4WhMdVcqY6cP9u2XUADE3TQbmPaNQeRBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfEGFyU (ORCPT
+        id S1728892AbfEGFy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbfEGFic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:32 -0400
+        id S1728667AbfEGFia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8FBF205ED;
-        Tue,  7 May 2019 05:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B772B2087F;
+        Tue,  7 May 2019 05:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207512;
-        bh=xV59cFLHO7fUe7r0rNDRIvFKzsHQRpZ8VrpLlf1gk84=;
+        s=default; t=1557207510;
+        bh=HtjpE101QbK9gW+OtJSdPiOgOJv26Q+FNS6nJPvoi+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYD/0UAFPJueub5Jl0SCG9qOUkTeBy1uOCBbwgkX0HE196NZ/wOsRTamaSmRMZLIq
-         UDKva8mHAjSE+IPl26tXuSryURNFqkfhV4q63fBEyFqHk/dqB6DYiPkNpUjbp+gFJ0
-         jWYYf1jQn1yGNtgmcV2e0b5dRgoueFqqeHzyBqU8=
+        b=06Gm+cveueb/1/OmhyQVt5sCsWm6lEsIZb5lxbW48NuqbnalZZ41PB5U1e/B83t/y
+         yOT7Xcl1F5OozUdF2a1fOuD23yp6lUOg6DSifCLnP75HEAVM2Y4C7Ou4814c3g/FPV
+         2pWR2guGvFyukMfU4ufKuaNnIQangB+bc8hl/VQI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/95] HID: input: add mapping for "Toggle Display" key
-Date:   Tue,  7 May 2019 01:36:54 -0400
-Message-Id: <20190507053826.31622-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 03/95] HID: input: add mapping for Expose/Overview key
+Date:   Tue,  7 May 2019 01:36:52 -0400
+Message-Id: <20190507053826.31622-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,37 +60,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit c01908a14bf735b871170092807c618bb9dae654 ]
+[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
 
-According to HUT 1.12 usage 0xb5 from the generic desktop page is reserved
-for switching between external and internal display, so let's add the
-mapping.
+According to HUTRR77 usage 0x29f from the consumer page is reserved for
+the Desktop application to present all running user’s application windows.
+Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
+add the mapping.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 9eeac82e9542..2597b0eddd64 100644
+index d146a9b545ee..35422c419f52 100644
 --- a/drivers/hid/hid-input.c
 +++ b/drivers/hid/hid-input.c
-@@ -677,6 +677,14 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 			break;
- 		}
+@@ -1016,6 +1016,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
+ 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
  
-+		if ((usage->hid & 0xf0) == 0xb0) {	/* SC - Display */
-+			switch (usage->hid & 0xf) {
-+			case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
-+			default: goto ignore;
-+			}
-+			break;
-+		}
++		case 0x29f: map_key_clear(KEY_SCALE);		break;
 +
- 		/*
- 		 * Some lazy vendors declare 255 usages for System Control,
- 		 * leading to the creation of ABS_X|Y axis and too many others.
+ 		default: map_key_clear(KEY_UNKNOWN);
+ 		}
+ 		break;
 -- 
 2.20.1
 
