@@ -2,109 +2,147 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E45AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B28C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49192087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1179320989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557227036;
-	bh=x+5iUr9nwUYaiOIoKDa8W56q3BBQqe0XB/MQU3UxaBU=;
+	s=default; t=1557227366;
+	bh=lH6zDECW23fQQmezy1wEZakHblsm5N0Cv80tHjWVNCc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1ITbOYKIRG95dUSkejvs5EQg0gY+3V4PxpoQOL3/VibudNT+kDV6bgxrr1gAT8FjD
-	 mQ/Usryj/Nn+frAB80NHRIt9MvZ8r3QKdRcZsxNkYbJB3UXlRMGZD5s1mamREq9Mr8
-	 CiGh5IDsTuoMyXVqjRln8O3nw5Q/Rl9+hX5+nDzE=
+	b=pVn1TkJz2EY/T2i6oge5T+JKfZICV53foZFZD1Ir4am1jfmj+Zw3KmGMjdEckqNPc
+	 0vIPfMBDXNTPc2sjJb1E9ydviAUVJ+h8tJ9ui3lOsx0xhBxc9mP02VBj5a09VA804V
+	 s4z8+YaJTglKlH2reeEUwsEAw2ingfjFFJKFrWIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfEGLDy (ORCPT
+        id S1726653AbfEGLJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:03:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35360 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfEGLDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:03:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VxO5HXqAUGV48DUVM+11/Wfy8Lwq9a0eGcJIbwEBSr0=; b=pwV9zI+7Gb/AO2irMfgamCo/8
-        9SzCfi0XGbTSRPnLjCFuzRY9A/XU77YOhPYnOgUt1FYjqMv367eK6Enk3ZmH2Lcs6/7xkTz3isiGI
-        goqe9+c14AroYvA5dSK5VF3Q6Cqbz1kgmBKtOYrZcz6IQUxX5mO8MIUiL9gdtGzHTCqjw=;
-Received: from [2001:268:c0e4:c15b:6e1:832c:7bbd:a9e1] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hNxt1-0004cv-5v; Tue, 07 May 2019 11:03:51 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 6C5BB44000C; Tue,  7 May 2019 12:03:45 +0100 (BST)
-Date:   Tue, 7 May 2019 20:03:45 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] spi updates for v5.2
-Message-ID: <20190507110345.GF14916@sirena.org.uk>
-References: <20190506143301.GU14916@sirena.org.uk>
- <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
- <20190507021853.GY14916@sirena.org.uk>
- <20190507030241.GC14916@sirena.org.uk>
- <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
+        Tue, 7 May 2019 07:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfEGLJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 07:09:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C2420825;
+        Tue,  7 May 2019 11:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557227363;
+        bh=lH6zDECW23fQQmezy1wEZakHblsm5N0Cv80tHjWVNCc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sOR88QRttf7cjAkI3eaLJvcyuSDmHQ1qjgDydZzWSVyPd9M9JC19/WtjAWBZWLubr
+         f+UE6Pt1H11AOiDsTKtWprMz1kZ3IkqTZNIcPGlWUmF6tRAMSgJ9qZUBzgkZWyiER3
+         Rk2qbQJj3O1NasgjA5/lculWTtaWpGs1D1JA91xo=
+Date:   Tue, 7 May 2019 13:09:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Daniel Colascione <dancol@google.com>,
+        Todd Kjos <tkjos@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Martijn Coenen <maco@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        kernel-team <kernel-team@android.com>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190507110921.GA32210@kroah.com>
+References: <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io>
+ <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <20190507021622.GA27300@sultan-box.localdomain>
+ <20190507070430.GA24150@kroah.com>
+ <20190507072721.GA4364@sultan-box.localdomain>
+ <20190507074334.GB26478@kroah.com>
+ <20190507081236.GA1531@sultan-box.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5yI2NvEZ36o0Huwo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190507081236.GA1531@sultan-box.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 07, 2019 at 01:12:36AM -0700, Sultan Alsawaf wrote:
+> On Tue, May 07, 2019 at 09:43:34AM +0200, Greg Kroah-Hartman wrote:
+> > Given that any "new" android device that gets shipped "soon" should be
+> > using 4.9.y or newer, is this a real issue?
+> 
+> It's certainly a real issue for those who can't buy brand new Android devices
+> without software bugs every six months :)
 
---5yI2NvEZ36o0Huwo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Heh.
 
-On Mon, May 06, 2019 at 08:13:49PM -0700, Linus Torvalds wrote:
-> On Mon, May 6, 2019 at 8:02 PM Mark Brown <broonie@kernel.org> wrote:
+But, your "new code" isn't going to be going into any existing device,
+or any device that will come out this year.  The soonest it would be
+would be next year, and by then, 4.9.y is fine.
 
-> >                    Everything I'm
-> > seeing is saying that Google just isn't enthusiastic about domains like
-> > kernel.org which is going an issue.
+> > And if it is, I'm sure that asking for those patches to be backported to
+> > 4.4.y would be just fine, have you asked?
+> >
+> > Note that I know of Android Go devices, running 3.18.y kernels, do NOT
+> > use the in-kernel memory killer, but instead use the userspace solution
+> > today.  So trying to get another in-kernel memory killer solution added
+> > anywhere seems quite odd.
+> 
+> It's even more odd that although a userspace solution is touted as the proper
+> way to go on LKML, almost no Android OEMs are using it, and even in that commit
+> I linked in the previous message, Google made a rather large set of
+> modifications to the supposedly-defunct lowmemorykiller.c not one month ago.
+> What's going on?
 
-> Well, there are other people who use kernel.org email addresses.  Ingo
-> Molnar, Rafael Wysocki, a couple of others.  But you're the one
-> getting marked as spam.
+"almost no"?  Again, Android Go is doing that, right?
 
-I'm not going to search for rule 36 SPI.
+And yes, there is still some 4.4 android-common work happening in this
+area, see this patch that just got merged:
+	https://android-review.googlesource.com/c/kernel/common/+/953354
 
-> Somebody just hates you. I do end up checking my spam-box regularly,
-> so maybe it doesn't matter.
+So, for 4.4.y based devices, that should be enough, right?
 
-Some spot checks are suggesting that they use gmail as their outbound
-relay which I can imagine they'd like but would break some stuff for me
-for non-kernel.org mail I think, it'd be a major rework to not inject
-stuff via sendmail.
+> Qualcomm still uses lowmemorykiller.c [1] on the Snapdragon 845.
 
---5yI2NvEZ36o0Huwo
-Content-Type: application/pgp-signature; name="signature.asc"
+Qualcomm should never be used as an example of a company that has any
+idea of what to do in their kernel :)
 
------BEGIN PGP SIGNATURE-----
+> If PSI were backported to 4.4, or even 3.18, would it really be used?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzRZg4ACgkQJNaLcl1U
-h9CAyQf8DVlvoFWeiTUwpzTQFEIq5Wwp/JRRXMVMhw7sxqeRaOBRVanVtNu8wtKH
-ZcDWMjKJnSwyS6aaMJi+mVvWklpvUZoJDWV1WhpTgdPE7GMpA76Iylgp2ykHlaCX
-aiHtn/eDeipQQVNN9/AUhmVzph3pOS5QamOfi4QKA9EY7+5xMfiFT1bEPbfi1p58
-PykMZ+pbaIWrLFhdo5uRzJdF6AnlyMxsyRVh0JSFTk+E5JoEEMKTM78CfwXH6FIF
-Nv0sHzV5bxN6FJrGXRh6BQJM1RSEkUvRIsounFTh7IfSqyNb7aITNXRBoXYPqEQ2
-uN7xilb711sEZoay6sh217Saj+5RFA==
-=wPfk
------END PGP SIGNATURE-----
+Why wouldn't it, if it worked properly?
 
---5yI2NvEZ36o0Huwo--
+> I don't really understand the aversion to an in-kernel memory killer
+> on LKML despite the rest of the industry's attraction to it. Perhaps
+> there's some inherently great cost in using the userspace solution
+> that I'm unaware of?
+
+Please see the work that went into PSI and the patches around it.
+There's also a lwn.net article last week about the further work ongoing
+in this area.  With all of that, you should see how in-kernel memory
+killers are NOT the way to go.
+
+> Regardless, even if PSI were backported, a full-fledged LMKD using it has yet to
+> be made, so it wouldn't be of much use now.
+
+"LMKD"?  Again, PSI is in the 4.9.y android-common tree, so the
+userspace side should be in AOSP, right?
+
+thanks,
+
+greg k-h
