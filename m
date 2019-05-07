@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4444C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985C7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7485C21530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DAA7216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207431;
-	bh=6f/UtJtw1bJSmZaZWnczhzXREwDOP/CPECI0sdf2Qc8=;
+	s=default; t=1557207436;
+	bh=tARrl+dlCeMWwd6+nJw4vqRjGE7VzfnCPt7TdhVL47o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RwmZU+0e7i/ynCyXlPAkrHtg6MgxsOy7od/QhrF47IqBQ/hj2zPx2CFLrsdslKQzU
-	 kM73Lk2Sp8/zW0Tpxbgwy3YOOBfT7VDoJDIkOvzETUiOH2a5KO/jktF6gAOJImereI
-	 NSx3ojtVDO1X+KS+RviAWjZUdNQasEO/N/OuUTdI=
+	b=s3ssxUmskHWAJyL3LQYR/c9Zstclo4fLvxIx1ANSHgutgSmjWpxGlZou0bh3GMOtw
+	 Jn/BDaTc2wmDbXY1D7OIaWBkDodHvg+iouhbC4q0BEeVp3DqulCciYSDDBC8mf6vsi
+	 1zrnEkoS7PdKEeUJFZiIM5j5mQKwgNvb0ZdoSSqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfEGFhJ (ORCPT
+        id S1728291AbfEGFhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56870 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbfEGFhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:06 -0400
+        id S1727651AbfEGFhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B08206A3;
-        Tue,  7 May 2019 05:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 985FE20B7C;
+        Tue,  7 May 2019 05:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207426;
-        bh=6f/UtJtw1bJSmZaZWnczhzXREwDOP/CPECI0sdf2Qc8=;
+        s=default; t=1557207428;
+        bh=tARrl+dlCeMWwd6+nJw4vqRjGE7VzfnCPt7TdhVL47o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoO62XhEo5kYhHH9oZz98vYFv1upz5opYTVrwLeJnf+A7KHcpi4xxfBR7If7d0U3z
-         kADYzHGwfOCRqxb2nRwt6tRgKtVTLwpC5Tj6c7dvfdPUyh/8S4tyHOEyrSJfMqNJ2e
-         afnK4uj5Jy4r9JQ/wojXKtwLXj58zS6L0F5T+5mM=
+        b=c4gbq5IPnNr0m429qYkJy+i2DNLNq542pzOJQMqHGCUoWv/XBV8YFkqpM+vCLSzHt
+         4qegXFtxnBhZT7MllaFJ5d9w6I8x7Jtw1WjJhoZcMJ7SjbZHaoTYXgOI6KY+VKdqXu
+         LCWkR9ItanqlcSnUBmm5P0Z97XI7wa0vnTbEAtyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 36/81] tools lib traceevent: Fix missing equality check for strcmp
-Date:   Tue,  7 May 2019 01:35:07 -0400
-Message-Id: <20190507053554.30848-36-sashal@kernel.org>
+Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 38/81] ocelot: Don't sleep in atomic context (irqs_disabled())
+Date:   Tue,  7 May 2019 01:35:09 -0400
+Message-Id: <20190507053554.30848-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -60,59 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
+[ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
+Preemption disabled at:
+ [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
+ Call trace:
+ [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
+ [<ffff00000808a9a4>] show_stack+0x14/0x20
+ [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
+ [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
+ [<ffff0000080fe890>] __might_sleep+0x50/0x88
+ [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
+ [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188 [mscc_ocelot_common]
+ [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
+ [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
 
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
+Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
 
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
-
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
-
-Detected by cppcheck.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
+ drivers/net/ethernet/mscc/ocelot.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 10985d991ed2..6ccfd13d5cf9 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2192,7 +2192,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index 0bdd3c400c92..10291198decd 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -605,7 +605,7 @@ static int ocelot_mact_mc_add(struct ocelot_port *port,
+ 			      struct netdev_hw_addr *hw_addr)
+ {
+ 	struct ocelot *ocelot = port->ocelot;
+-	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_KERNEL);
++	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_ATOMIC);
  
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
- 
- 	if (strcmp(type, "s8") == 0)
+ 	if (!ha)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
