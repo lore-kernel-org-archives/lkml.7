@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6D5C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A7DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E02920B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584FF206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207508;
-	bh=kxTii2ZzhW44xrLVe3drDnbmjm4vKaWPoTd0ghA4gcc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjJMZ8pEcxkJi6JD5iuBsib8xvz1uZVlcRiTOii/04G9FzTXit24lYfkQhRnWLu2W
-	 FjC7oZhgtXbXE5JPUUtRNPc+u0kpFtBv5OIcY/LGTlXkp13BVrjsRLzZ6ZnXARDkZK
-	 KOuhHXjdPNPSL5WMkXkSNzqm2VNrii/n0Ergejzw=
+	s=default; t=1557207512;
+	bh=RZD/a2cE2LfZoQN7QH14SlZNsSVhfHoBkmQDKGxT8+c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vlRypzqHdzoET4UkvqY1pMMgeCoRfj5D1aYEM/Vmsr3+6oNK0s4jmnDkQxN7+vALX
+	 zPIF0T+X65Lj1S7NC0c2/xGc0qIre7As0vOnzC9jByLaCBK/6zuXLlAXwgOG9G2Ayt
+	 jgddter39pMgBQFfVz3WnAMRwSTSc/Tr3+NaHWJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfEGFi1 (ORCPT
+        id S1728672AbfEGFib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58122 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbfEGFiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:22 -0400
+        id S1727897AbfEGFi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 861EA20B7C;
-        Tue,  7 May 2019 05:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE2B205ED;
+        Tue,  7 May 2019 05:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207501;
-        bh=kxTii2ZzhW44xrLVe3drDnbmjm4vKaWPoTd0ghA4gcc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HL2h/Iqvi6kOpfdIzPQMhipmJjwW0DmkwTwEmtVIBSPEUFvp4+WHYPAaeg3xpZkrp
-         PjktYzIN7yxIHqsxIuxBng15J0lAB7VnO2s+H1V0XISsWztFQYf4jc/7gcliOW2s+l
-         9ZXmLl/OxickfVPRAqbBA8m6oF/eQHWTH46JJZjU=
+        s=default; t=1557207508;
+        bh=RZD/a2cE2LfZoQN7QH14SlZNsSVhfHoBkmQDKGxT8+c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=myxQtKNaoPJ/Rk0MzgORWqu/pGp+RV9/I1vQSLQuvVxPahrXJkg+EO5ky8gerEJzn
+         zc2gPAbrkw7Em4f0JGXNkwnenOFvPynNQ/BJty9ZMzHquM4f7MVFXppDyYNp0KODjX
+         5FEkAKdySnx1qw26l+DJ3Vf6OyBUd/u6YbeF9fHo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 80/81] nfc: nci: Potential off by one in ->pipes[] array
-Date:   Tue,  7 May 2019 01:35:51 -0400
-Message-Id: <20190507053554.30848-80-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/95] iio: adc: xilinx: fix potential use-after-free on remove
+Date:   Tue,  7 May 2019 01:36:50 -0400
+Message-Id: <20190507053826.31622-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
-References: <20190507053554.30848-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,42 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 6491d698396fd5da4941980a35ca7c162a672016 ]
+[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
 
-This is similar to commit e285d5bfb7e9 ("NFC: Fix the number of pipes")
-where we changed NFC_HCI_MAX_PIPES from 127 to 128.
+When cancel_delayed_work() returns, the delayed work may still
+be running. This means that the core could potentially free
+the private structure (struct xadc) while the delayed work
+is still using it. This is a potential use-after-free.
 
-As the comment next to the define explains, the pipe identifier is 7
-bits long.  The highest possible pipe is 127, but the number of possible
-pipes is 128.  As the code is now, then there is potential for an
-out of bounds array access:
+Fix by calling cancel_delayed_work_sync(), which waits for
+any residual work to finish before returning.
 
-    net/nfc/nci/hci.c:297 nci_hci_cmd_received() warn: array off by one?
-    'ndev->hci_dev->pipes[pipe]' '0-127 == 127'
-
-Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/nfc/nci_core.h | 2 +-
+ drivers/iio/adc/xilinx-xadc-core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index 87499b6b35d6..df5c69db68af 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -166,7 +166,7 @@ struct nci_conn_info {
-  * According to specification 102 622 chapter 4.4 Pipes,
-  * the pipe identifier is 7 bits long.
-  */
--#define NCI_HCI_MAX_PIPES          127
-+#define NCI_HCI_MAX_PIPES          128
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index 4a60497a1f19..e89711b30ae8 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1302,7 +1302,7 @@ static int xadc_remove(struct platform_device *pdev)
+ 	}
+ 	free_irq(irq, indio_dev);
+ 	clk_disable_unprepare(xadc->clk);
+-	cancel_delayed_work(&xadc->zynq_unmask_work);
++	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+ 	kfree(xadc->data);
+ 	kfree(indio_dev->channels);
  
- struct nci_hci_gate {
- 	u8 gate;
 -- 
 2.20.1
 
