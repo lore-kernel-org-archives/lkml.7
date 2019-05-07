@@ -2,222 +2,121 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7DAC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B2CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DD921019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOcuYAIP"
+	by mail.kernel.org (Postfix) with ESMTP id A312C206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfEGS0f (ORCPT
+        id S1727170AbfEGS1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:26:35 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37194 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfEGS0f (ORCPT
+        Tue, 7 May 2019 14:27:21 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:39660 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfEGS1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:26:35 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g3so9080879pfi.4;
-        Tue, 07 May 2019 11:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Ka6LMhnLUqE6odqHoqHbUWiiXGVvr4B6Nmgf+rChy8c=;
-        b=cOcuYAIPrMY/Uq90XRPSi4cwB9on+DinYs/8giKSoraOxRpRFgcbT3A6dE4d2DKjUv
-         SXbOQOv+3PyvNj527v/E9s7lqOOovuVcSomj9Pfk8n8qBuRP+sr8URGGVUP1vgGE7etT
-         4x23lx6yYTZLM8N3lfTgLxgne1laMn1FFlf3cy/zl/CcfYbLF4qD6BrESasSNWvGvIeW
-         gWBxisQbxafoJQxI3sckzXNufldEjSrnUnistzYprsfX3iUmVdfPS0yJwgiSjESAhu+B
-         dtp6ip6P6bdUar1QCgOnYKw+6kyjsQSSaYnzCfw3aSc79sk+w4QoYNHVkBUk3MnSwkp8
-         8/yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Ka6LMhnLUqE6odqHoqHbUWiiXGVvr4B6Nmgf+rChy8c=;
-        b=EJr8A0/YaK7+orKdv/LS0f14APZHluUGZhUWG8BHd/uXxb30Hp8zW0spGbAekV4Gqg
-         1lpt6Py0nCEbeus/Gpu+tgyXCUhdJlSx7FlEPOMXSK+VXIm/Ln6BSUsqmbGNgl5oob6t
-         n/L9rNQdfAASvE5hk71MpADXo88qrnrjdncu2IaTDcceMiZjV6Zk+Tyvcj403IAzx4x7
-         Aiiq2hN3qlChhZdkdpOQVyhR3QM60hEd/fGupUGFyw64n6OAWYVyh9lny2REJMM8WxSb
-         iZucDwcJJfz+p93/Hn4SonuNQOqfIRgto0+TrHcDGYRe0yZJcwjdl787nwO1mGzX0U2p
-         YhqA==
-X-Gm-Message-State: APjAAAWiSdfoKr9aV8SHkobcP2sto+La2It0kiPPSZ4IBxjYT8OmmlG/
-        8gjvRJXxXSV8ZQdyiKriUak=
-X-Google-Smtp-Source: APXvYqzb2/1UXpXeRyCSxRVpxZ155VBzZSFtSfXBZM1fiBmJtLpX7RPquqonlMC+TGl2KFDs/mKNZw==
-X-Received: by 2002:a63:f707:: with SMTP id x7mr40797735pgh.343.1557253594058;
-        Tue, 07 May 2019 11:26:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a80sm2725413pfj.105.2019.05.07.11.26.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 11:26:32 -0700 (PDT)
-Date:   Tue, 7 May 2019 11:26:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jean Delvare <jdelvare@suse.com>,
+        Tue, 7 May 2019 14:27:21 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 31EC0803C6;
+        Tue,  7 May 2019 20:27:14 +0200 (CEST)
+Date:   Tue, 7 May 2019 20:27:13 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Claudiu.Beznea@microchip.com,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, thierry.reding@gmail.com,
+        lee.jones@linaro.org, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH 2/2] hwmon: scmi: Scale values to target desired HWMON
- units
-Message-ID: <20190507182631.GA29510@roeck-us.net>
-References: <20190506224109.9357-1-f.fainelli@gmail.com>
- <20190506224109.9357-3-f.fainelli@gmail.com>
- <a4dd5f4f-af12-8783-c612-cf3e88a9b94f@roeck-us.net>
- <e67efa2b-813c-c9f3-8f3d-b32c1b61ebc8@gmail.com>
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH v3 0/6] add LCD support for SAM9X60
+Message-ID: <20190507182713.GA16862@ravnborg.org>
+References: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e67efa2b-813c-c9f3-8f3d-b32c1b61ebc8@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1556195748-11106-1-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
+        a=KFo_gGakGootahdhYqwA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+Hi Thierry.
 
-On Tue, May 07, 2019 at 10:44:00AM -0700, Florian Fainelli wrote:
-> On 5/7/19 6:55 AM, Guenter Roeck wrote:
-> > Hi Florian,
-> > 
-> > On 5/6/19 3:41 PM, Florian Fainelli wrote:
-> >> If the SCMI firmware implementation is reporting values in a scale that
-> >> is different from the HWMON units, we need to scale up or down the value
-> >> according to how far appart they are.
-> >>
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >>   drivers/hwmon/scmi-hwmon.c | 55 +++++++++++++++++++++++++++++++-------
-> >>   1 file changed, 46 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
-> >> index a80183a488c5..e9913509cb88 100644
-> >> --- a/drivers/hwmon/scmi-hwmon.c
-> >> +++ b/drivers/hwmon/scmi-hwmon.c
-> >> @@ -18,6 +18,51 @@ struct scmi_sensors {
-> >>       const struct scmi_sensor_info **info[hwmon_max];
-> >>   };
-> >>   +static enum hwmon_sensor_types scmi_types[] = {
-> >> +    [TEMPERATURE_C] = hwmon_temp,
-> >> +    [VOLTAGE] = hwmon_in,
-> >> +    [CURRENT] = hwmon_curr,
-> >> +    [POWER] = hwmon_power,
-> >> +    [ENERGY] = hwmon_energy,
-> >> +};
-> >> +
-> >> +static u64 scmi_hwmon_scale(const struct scmi_sensor_info *sensor,
-> >> u64 value)
-> >> +{
-> >> +    u64 scaled_value = value;
-> > 
-> > I don't think that variable is necessary.
-> > 
-> >> +    s8 desired_scale;
-> > 
-> > Just scale ? Also, you could assign scale here directly, and subtract
-> > the offset below. Then "n" would not be necessary.
-> > Such as
-> >     s8 scale = sensor->scale;    // assuming scale is s8
-> >     ...
-> >     case CURRENT:
-> >         scale += 3;
-> >     ...
-> > 
-> > That would also be less confusing, since it would avoid the double
-> > negation.
-> > 
-> >> +    int n, p;
-> > 
-> >> +
-> >> +    switch (sensor->type) {
-> >> +    case TEMPERATURE_C:
-> >> +    case VOLTAGE:
-> >> +    case CURRENT:
-> >> +        /* fall through */
-> > Unnecessary comment
+>   pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
+OK to add the "pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM"
+patch via drm-misc?
+Then we can add all 6 patches in one go.
+
+	Sam
+
+(Kept remaining of mail for reference)
 > 
-> Is not removing the comment going to upset gcc when using
-> -Wimplicit-fallthrough?
+> Hi,
 > 
-
-There is no implicit fallthrough, and the comment would have to be
-ahead of the previous case statement. Such as:
-
-	case VOLTAGE:
-		scale++;
-		/* fall through */
-	case CURRENT:
-		scale++;
-		break;
-	...
-
-Two case statements together don't count as fall through.
-
-Guenter
-
-> > 
-> >> +        desired_scale = -3;
-> >> +        break;
-> >> +    case POWER:
-> >> +    case ENERGY:
-> >> +        /* fall through */
-> > Unnecessary comment.
-> > 
-> >> +        desired_scale = -6;
-> >> +        break;
-> >> +    default:
-> >> +        return scaled_value;
-> > 
-> > Here we presumably want a scale of 0. However, if the scale passed
-> > from SCMI is, say, -5 or +5, we return the original (unadjusted)
-> > value. Seems to me we would still want to adjust the value to match
-> > hwmon expectations. Am I missing something ?
+> These patches adds support for SAM9X60's LCD controller.
 > 
-> You raise a valid point, not that could happen today because if the
-> sensor type has a value we don't recognize, we have not registered it,
-> so we would not even try to read rom it, but let's be future proof.
+> First patches add option to specify if controller clock source is fixed.
+> Second patch avoid a variable initialization in atmel_hlcdc_crtc_mode_set_nofb().
+> The 3rd add compatibles in pwm-atmel-hlcdc driver.
+> The 4th patch enables sys_clk in probe since SAM9X60 needs this.
+> Specific support was added also in suspend/resume hooks.
+> The 5th patch adds SAM9X60's LCD configuration and enabled it.
 > 
-> > 
-> >> +    }
-> >> +
-> >> +    n = (s8)sensor->scale - desired_scale;
-> >> +        if (n == 0)
-> > 
-> > Indentation seems off here.
-> > 
-> >> +                return scaled_value;
-> >> +
-> >> +    for (p = 0; p < abs(n); p++) {
-> >> +        /* Need to scale up from sensor to HWMON */
-> >> +        if (n > 0)
-> >> +            scaled_value *= 10;
-> >> +        else
-> >> +            do_div(scaled_value, 10);
-> >> +    }
-> > 
-> > Something like
-> > 
-> >     factor = pow10(abs(scale));
-> >     if (scale > 0)
-> >         value *= factor;
-> >     else
-> >         do_div(value, factor);
-> > 
-> > would avoid the repeated abs() and do_div(). Unfortunately there is
-> > no pow10() helper, so you would have to write that. Still, I think
-> > that would be much more efficient.
+> I took the changes of this series and introduced also a fix
+> (this is the 6th patch in this series) - if you want to send it separately
+> I would gladly do it.
 > 
-> Sounds reasonable. Thanks for your feedback!
+> I resend this to also include Lee Jones for pwm-atmel-hlcdc changes.
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+> Changes in v3:
+> - keep compatible string on patch 3/6 on a single line (I keep here a tab
+>   in front of ".compatible" to be aligned with the rest of the code in
+>   atmel_hlcdc_dt_ids[])
+> - patches 4/7 and 3/7 from v2 were applied so remove them from this version
+> - add a fix for atmel_hlcdc (patch 6/6)
+> 
+> Changes in v2:
+> - use "|" operator in patch 1/7 to set ATMEL_HLCDC_CLKSEL on cfg
+> - collect Acked-by, Reviewed-by tags
+> 
+> Claudiu Beznea (4):
+>   drm: atmel-hlcdc: add config option for clock selection
+>   drm: atmel-hlcdc: avoid initializing cfg with zero
+>   pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's PWM
+>   drm/atmel-hclcdc: revert shift by 8
+> 
+> Sandeep Sheriker Mallikarjun (2):
+>   drm: atmel-hlcdc: enable sys_clk during initalization.
+>   drm: atmel-hlcdc: add sam9x60 LCD controller
+> 
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c  |  18 ++--
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c    | 120 +++++++++++++++++++++++-
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h    |   2 +
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c |   2 +-
+>  drivers/pwm/pwm-atmel-hlcdc.c                   |   1 +
+>  5 files changed, 132 insertions(+), 11 deletions(-)
+> 
 > -- 
-> Florian
+> 2.7.4
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
