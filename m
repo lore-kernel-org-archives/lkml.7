@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5858BC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442F8C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D66220C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10520214AE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208592;
-	bh=IppytvYArZuXTW2szNeE2hJxNI5S5UlMeksAx99e3SI=;
+	s=default; t=1557208593;
+	bh=6W6Mi8HUuZjYOIMAeuu7rV6HK6WPwU1LYU98bGf0QEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulSFr0hjI5CPyC6OJU4IHOSvH0NWgNWtxt9XVhsKuNrPz0DKqavAtVQikOnJrFV6O
-	 vCWhvrXRod5lSmBRR8Nybkawx0RY5wAvPqbs3SMRpafJMWSS6qdYMAjh7ImXTRh0nD
-	 VAUoi7mKt10NIu52ej6gj+Q7LJ02uIp+KcO05afA=
+	b=cP8EO2138J911+ZHqf28ySKWm+BbYshd/yV2uEQXTmHIGSBXYRj6bkGb7BlNFWMeK
+	 peimeHYA35HdxI2CaEGcwnk3QhTU4rOBt3jCGKO8wAuvrHzkAg3SKNPXyw22uVmxLq
+	 HhgUa7FqSkNSio8y7TqTyA6z9W7GbjIjnBuYZ9IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfEGFiA (ORCPT
+        id S1728634AbfEGF4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfEGFhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:52 -0400
+        id S1728494AbfEGFiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E03C21655;
-        Tue,  7 May 2019 05:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E6B92087F;
+        Tue,  7 May 2019 05:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207471;
-        bh=IppytvYArZuXTW2szNeE2hJxNI5S5UlMeksAx99e3SI=;
+        s=default; t=1557207479;
+        bh=6W6Mi8HUuZjYOIMAeuu7rV6HK6WPwU1LYU98bGf0QEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MJDAe+Q8BtWOa7ZcE5Nhrwv8fVlVdUDKrBBA5uyN8ewee5qPYeFEICzUwTICkzc9
-         nmaKmRp5CU321IEBBuL08It6AEwLyC3Bv+GHNjQPCRvK1A4shsMxUHKsII6Je9iH/F
-         q749X/MzBagkRVB1LWR/excuDnMx+wSrEjwCmdYU=
+        b=pW0l8XyzOPEmXsGUKpS7eFKiCILO9PuBReTTyJJUsi7DxrapYJ8YsKzcQ6iBllY9p
+         /MwM/rTevi0gZhN4VxdR1TdSEn92e93iBiHmMZEutf9FIrNeHbxEuYBCk1uG1Jvjcs
+         qwXiEvNugsMizYroc8J92Pn0XPndL15bwxH1952U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lijun Ou <oulijun@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 62/81] RDMA/hns: Bugfix for mapping user db
-Date:   Tue,  7 May 2019 01:35:33 -0400
-Message-Id: <20190507053554.30848-62-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 65/81] powerpc/smp: Fix NMI IPI xmon timeout
+Date:   Tue,  7 May 2019 01:35:36 -0400
+Message-Id: <20190507053554.30848-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -58,46 +60,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lijun Ou <oulijun@huawei.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 2557fabd6e29f349bfa0ac13f38ac98aa5eafc74 ]
+[ Upstream commit 88b9a3d1425a436e95c41f09986fdae2daee437a ]
 
-When the maximum send wr delivered by the user is zero, the qp does not
-have a sq.
+The xmon debugger IPI handler waits in the callback function while
+xmon is still active. This means they don't complete the IPI, and the
+initiator always times out waiting for them.
 
-When allocating the sq db buffer to store the user sq pi pointer and map
-it to the kernel mode, max_send_wr is used as the trigger condition, while
-the kernel does not consider the max_send_wr trigger condition when
-mapmping db. It will cause sq record doorbell map fail and create qp fail.
+Things manage to work after the timeout because there is some fallback
+logic to keep NMI IPI state sane in case of the timeout, but this is a
+bit ugly.
 
-The failed print information as follows:
+This patch changes NMI IPI back to half-asynchronous (i.e., wait for
+everyone to call in, do not wait for IPI function to complete), but
+the complexity is avoided by going one step further and allowing new
+IPIs to be issued before the IPI functions to all complete.
 
- hns3 0000:7d:00.1: Send cmd: tail - 418, opcode - 0x8504, flag - 0x0011, retval - 0x0000
- hns3 0000:7d:00.1: Send cmd: 0xe59dc000 0x00000000 0x00000000 0x00000000 0x00000116 0x0000ffff
- hns3 0000:7d:00.1: sq record doorbell map failed!
- hns3 0000:7d:00.1: Create RC QP failed
+If synchronization against that is required, it is left up to the
+caller, but current callers don't require that. In fact with the
+timeout handling, callers must be able to cope with this already.
 
-Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5b73151fff63 ("powerpc: NMI IPI make NMI IPIs fully sychronous")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/smp.c | 93 ++++++++++++---------------------------
+ 1 file changed, 29 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index efb7e961ca65..2fa4fb17f6d3 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -494,7 +494,7 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index 22abba5f4cf0..6dc43205382b 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -338,13 +338,12 @@ void arch_send_call_function_ipi_mask(const struct cpumask *mask)
+  * NMI IPIs may not be recoverable, so should not be used as ongoing part of
+  * a running system. They can be used for crash, debug, halt/reboot, etc.
+  *
+- * NMI IPIs are globally single threaded. No more than one in progress at
+- * any time.
+- *
+  * The IPI call waits with interrupts disabled until all targets enter the
+- * NMI handler, then the call returns.
++ * NMI handler, then returns. Subsequent IPIs can be issued before targets
++ * have returned from their handlers, so there is no guarantee about
++ * concurrency or re-entrancy.
+  *
+- * No new NMI can be initiated until targets exit the handler.
++ * A new NMI can be issued before all targets exit the handler.
+  *
+  * The IPI call may time out without all targets entering the NMI handler.
+  * In that case, there is some logic to recover (and ignore subsequent
+@@ -355,7 +354,7 @@ void arch_send_call_function_ipi_mask(const struct cpumask *mask)
  
- static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
+ static atomic_t __nmi_ipi_lock = ATOMIC_INIT(0);
+ static struct cpumask nmi_ipi_pending_mask;
+-static int nmi_ipi_busy_count = 0;
++static bool nmi_ipi_busy = false;
+ static void (*nmi_ipi_function)(struct pt_regs *) = NULL;
+ 
+ static void nmi_ipi_lock_start(unsigned long *flags)
+@@ -394,7 +393,7 @@ static void nmi_ipi_unlock_end(unsigned long *flags)
+  */
+ int smp_handle_nmi_ipi(struct pt_regs *regs)
  {
--	if (attr->qp_type == IB_QPT_XRC_TGT)
-+	if (attr->qp_type == IB_QPT_XRC_TGT || !attr->cap.max_send_wr)
+-	void (*fn)(struct pt_regs *);
++	void (*fn)(struct pt_regs *) = NULL;
+ 	unsigned long flags;
+ 	int me = raw_smp_processor_id();
+ 	int ret = 0;
+@@ -405,29 +404,17 @@ int smp_handle_nmi_ipi(struct pt_regs *regs)
+ 	 * because the caller may have timed out.
+ 	 */
+ 	nmi_ipi_lock_start(&flags);
+-	if (!nmi_ipi_busy_count)
+-		goto out;
+-	if (!cpumask_test_cpu(me, &nmi_ipi_pending_mask))
+-		goto out;
+-
+-	fn = nmi_ipi_function;
+-	if (!fn)
+-		goto out;
+-
+-	cpumask_clear_cpu(me, &nmi_ipi_pending_mask);
+-	nmi_ipi_busy_count++;
+-	nmi_ipi_unlock();
+-
+-	ret = 1;
+-
+-	fn(regs);
+-
+-	nmi_ipi_lock();
+-	if (nmi_ipi_busy_count > 1) /* Can race with caller time-out */
+-		nmi_ipi_busy_count--;
+-out:
++	if (cpumask_test_cpu(me, &nmi_ipi_pending_mask)) {
++		cpumask_clear_cpu(me, &nmi_ipi_pending_mask);
++		fn = READ_ONCE(nmi_ipi_function);
++		WARN_ON_ONCE(!fn);
++		ret = 1;
++	}
+ 	nmi_ipi_unlock_end(&flags);
+ 
++	if (fn)
++		fn(regs);
++
+ 	return ret;
+ }
+ 
+@@ -453,7 +440,7 @@ static void do_smp_send_nmi_ipi(int cpu, bool safe)
+  * - cpu is the target CPU (must not be this CPU), or NMI_IPI_ALL_OTHERS.
+  * - fn is the target callback function.
+  * - delay_us > 0 is the delay before giving up waiting for targets to
+- *   complete executing the handler, == 0 specifies indefinite delay.
++ *   begin executing the handler, == 0 specifies indefinite delay.
+  */
+ int __smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us, bool safe)
+ {
+@@ -467,31 +454,33 @@ int __smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us, bool
+ 	if (unlikely(!smp_ops))
  		return 0;
  
- 	return 1;
+-	/* Take the nmi_ipi_busy count/lock with interrupts hard disabled */
+ 	nmi_ipi_lock_start(&flags);
+-	while (nmi_ipi_busy_count) {
++	while (nmi_ipi_busy) {
+ 		nmi_ipi_unlock_end(&flags);
+-		spin_until_cond(nmi_ipi_busy_count == 0);
++		spin_until_cond(!nmi_ipi_busy);
+ 		nmi_ipi_lock_start(&flags);
+ 	}
+-
++	nmi_ipi_busy = true;
+ 	nmi_ipi_function = fn;
+ 
++	WARN_ON_ONCE(!cpumask_empty(&nmi_ipi_pending_mask));
++
+ 	if (cpu < 0) {
+ 		/* ALL_OTHERS */
+ 		cpumask_copy(&nmi_ipi_pending_mask, cpu_online_mask);
+ 		cpumask_clear_cpu(me, &nmi_ipi_pending_mask);
+ 	} else {
+-		/* cpumask starts clear */
+ 		cpumask_set_cpu(cpu, &nmi_ipi_pending_mask);
+ 	}
+-	nmi_ipi_busy_count++;
++
+ 	nmi_ipi_unlock();
+ 
++	/* Interrupts remain hard disabled */
++
+ 	do_smp_send_nmi_ipi(cpu, safe);
+ 
+ 	nmi_ipi_lock();
+-	/* nmi_ipi_busy_count is held here, so unlock/lock is okay */
++	/* nmi_ipi_busy is set here, so unlock/lock is okay */
+ 	while (!cpumask_empty(&nmi_ipi_pending_mask)) {
+ 		nmi_ipi_unlock();
+ 		udelay(1);
+@@ -499,34 +488,19 @@ int __smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us, bool
+ 		if (delay_us) {
+ 			delay_us--;
+ 			if (!delay_us)
+-				goto timeout;
++				break;
+ 		}
+ 	}
+ 
+-	while (nmi_ipi_busy_count > 1) {
+-		nmi_ipi_unlock();
+-		udelay(1);
+-		nmi_ipi_lock();
+-		if (delay_us) {
+-			delay_us--;
+-			if (!delay_us)
+-				goto timeout;
+-		}
+-	}
+-
+-timeout:
+ 	if (!cpumask_empty(&nmi_ipi_pending_mask)) {
+ 		/* Timeout waiting for CPUs to call smp_handle_nmi_ipi */
+ 		ret = 0;
+ 		cpumask_clear(&nmi_ipi_pending_mask);
+ 	}
+-	if (nmi_ipi_busy_count > 1) {
+-		/* Timeout waiting for CPUs to execute fn */
+-		ret = 0;
+-		nmi_ipi_busy_count = 1;
+-	}
+ 
+-	nmi_ipi_busy_count--;
++	nmi_ipi_function = NULL;
++	nmi_ipi_busy = false;
++
+ 	nmi_ipi_unlock_end(&flags);
+ 
+ 	return ret;
+@@ -594,17 +568,8 @@ void crash_send_ipi(void (*crash_ipi_callback)(struct pt_regs *))
+ static void nmi_stop_this_cpu(struct pt_regs *regs)
+ {
+ 	/*
+-	 * This is a special case because it never returns, so the NMI IPI
+-	 * handling would never mark it as done, which makes any later
+-	 * smp_send_nmi_ipi() call spin forever. Mark it done now.
+-	 *
+ 	 * IRQs are already hard disabled by the smp_handle_nmi_ipi.
+ 	 */
+-	nmi_ipi_lock();
+-	if (nmi_ipi_busy_count > 1)
+-		nmi_ipi_busy_count--;
+-	nmi_ipi_unlock();
+-
+ 	spin_begin();
+ 	while (1)
+ 		spin_cpu_relax();
 -- 
 2.20.1
 
