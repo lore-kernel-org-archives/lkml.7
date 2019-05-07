@@ -2,164 +2,180 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB939C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEA02054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0C52054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="M5MayXek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfEGRxx (ORCPT
+        id S1727564AbfEGRx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:53:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34000 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfEGRxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:53:52 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 38B66301EA86;
-        Tue,  7 May 2019 17:53:51 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CEB2600D4;
-        Tue,  7 May 2019 17:53:45 +0000 (UTC)
-Date:   Tue, 7 May 2019 12:53:42 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 2/3] x86_64: Allow breakpoints to emulate call
- functions
-Message-ID: <20190507175342.fskdj2qidpao65qi@treble>
-References: <20190507174227.673261270@goodmis.org>
- <20190507174400.219947724@goodmis.org>
+        Tue, 7 May 2019 13:53:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45650 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfEGRx6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:53:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id u3so7253544oic.12;
+        Tue, 07 May 2019 10:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7flmOY2ATgGfQPKE9sBeHn57pA1FJ9fgxAgK5bf/VXc=;
+        b=M5MayXekFPagZQ5mdyBhaKAXMoy8IaH7d9jFE8KzsTXxsbxQ+j+4u6H02CRXeL1p5J
+         EzTE4z4LojpYp7Nlyn/gV+zMJm1tyEgP7BseAUmRN5bNXZbn+mB/rydOG9HvlIhkFyaO
+         V7Ay9tjeHOlLKfjzLdrymd3PBPnHCI5M10i3TlkXg++ucuhiPqCFcRweLF36wgBHWu+y
+         3krEQlgulpbzhOpy467IhUvTv78AUJes+Ykb5SVN0BXM58cB7ogm+1SN9Qmavd8uyhBD
+         aOZQOORBm3cucV/GAcz/jWRugt2Z9BjR8sAWbT+0owqHjp9a/hqBudd3nV/HVJwhNulA
+         wqGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7flmOY2ATgGfQPKE9sBeHn57pA1FJ9fgxAgK5bf/VXc=;
+        b=O1FGoCk4YRIUPSpaT5AcagsxW+FX66tViFTuUOJghs8/QuWVZYHoVDyYkUjbCVyWSy
+         /Yv/HfeCu1g9SKK/uICGQXQYSvT6knayw0O9Nb37XCgdDqAVF7v0BPd//Wt4jbii8RXK
+         hoWpIm55TlRHMnRI/h0IR5JdJCduRzQYP7xVFn9UKtW1SZikxRH/ifbe+Whqgv8JLl37
+         mC2NqJctOkwJk4UfU5dQre71Q3kbFqiKr/qa7BgKR1oCKPKrsvRS2IEf6hv1+uuB+H+j
+         Kt6lIZyeYBRGV2/TkiIqodh2j16C3ZmsKiixOlRn8eiCbqMPUWF2NsTvHD5G7dT2LMuy
+         XOew==
+X-Gm-Message-State: APjAAAWTIQpPbpU/MOlhOLyvJFAu7d5oh6d/w5YCWuw1METgsurOmXI2
+        ntfbAC+DTijPNWr1ySoa4DJBwIE2aApWY/nxzmMMWLdga9A=
+X-Google-Smtp-Source: APXvYqwnv2W92AwYPmHA+pZgR+UfUWyGF7yrgdcg/vKDBYgUmxUAUGXWBDjENWKrzjJVY2Wha6sDhMq72YjhPCXJxfg=
+X-Received: by 2002:aca:5b06:: with SMTP id p6mr1023295oib.129.1557251635564;
+ Tue, 07 May 2019 10:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190507174400.219947724@goodmis.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 07 May 2019 17:53:51 +0000 (UTC)
+References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-5-glaroque@baylibre.com>
+In-Reply-To: <20190507115726.23714-5-glaroque@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 7 May 2019 19:53:44 +0200
+Message-ID: <CAFBinCBQSE7wh367Aa25zwtDphsx8Z_KGDTn8dcSCir6bLvq_A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] pinctrl: meson: Rework enable/disable bias part
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:42:29PM -0400, Steven Rostedt wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> In order to allow breakpoints to emulate call functions, they need to push
-> the return address onto the stack. But because the breakpoint exception
-> frame is added to the stack when the breakpoint is hit, there's no room to
-> add the address onto the stack and return to the address of the emulated
-> called funtion.
-> 
-> To handle this, copy the exception frame on entry of the breakpoint handler
-> and have leave a gap that can be used to add a return address to the stack
-> frame and return from the breakpoint to the emulated called function,
-> allowing for that called function to return back to the location after the
-> breakpoint was placed.
+Hi Guillaume,
 
-This part is done by patch 1.
+On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> rework bias enable/disable part to prepare drive-strength integration
+if it was my patch I would add "no functional changes" at the end to
+make it explicit that this only changes the structure of the code.
 
-> 
-> The helper functions were also added:
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+with the minor comments from below addressed:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-No longer "also" :-)
-
->   int3_emulate_push(): to push the address onto the gap in the stack
->   int3_emulate_jmp(): changes the location of the regs->ip to return there.
->   int3_emulate_call(): push the return address and change regs->ip
-> 
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Nicolai Stange <nstange@suse.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: the arch/x86 maintainers <x86@kernel.org>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: Miroslav Benes <mbenes@suse.cz>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Joe Lawrence <joe.lawrence@redhat.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nayna Jain <nayna@linux.ibm.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-> Cc: stable@vger.kernel.org
-> Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> [ Modified to only work for x86_64 ]
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > ---
->  arch/x86/include/asm/text-patching.h | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-> index e85ff65c43c3..455bf9f88233 100644
-> --- a/arch/x86/include/asm/text-patching.h
-> +++ b/arch/x86/include/asm/text-patching.h
-> @@ -39,4 +39,26 @@ extern int poke_int3_handler(struct pt_regs *regs);
->  extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
->  extern int after_bootmem;
->  
-> +static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
+>  drivers/pinctrl/meson/pinctrl-meson.c | 79 ++++++++++++++++-----------
+>  1 file changed, 48 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index 96a4a72708e4..a216a7537564 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -174,13 +174,57 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
+>         return 0;
+>  }
+>
+> +static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
+> +                                     unsigned int pin)
 > +{
-> +	regs->ip = ip;
-> +}
+> +       struct meson_bank *bank;
+> +       unsigned int reg, bit = 0;
+> +       int ret;
 > +
-> +#define INT3_INSN_SIZE 1
-> +#define CALL_INSN_SIZE 5
-> +
-> +#ifdef CONFIG_X86_64
-> +static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
-> +{
-> +	regs->sp -= sizeof(unsigned long);
-> +	*(unsigned long *)regs->sp = val;
-> +}
+> +       ret = meson_get_bank(pc, pin, &bank);
+> +       if (ret)
+> +               return ret;
+add an empty line here to keep it consistent with the rest of the code
 
-How this works isn't really obvious.  A comment is probably warranted to
-explain the fact that the int3 entry code reserved some space on the
-stack.
+[...]
+>  static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+>                              unsigned long *configs, unsigned num_configs)
+>  {
+>         struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+>         struct meson_bank *bank;
+bank is not read anymore (it's passed to meson_get_bank to set it, but
+then it's not read, which is probably why my compiler doesn't
+complain)
 
--- 
-Josh
+>         enum pin_config_param param;
+> -       unsigned int reg, bit;
+>         int i, ret;
+>
+>         ret = meson_get_bank(pc, pin, &bank);
+> @@ -192,44 +236,17 @@ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+>
+>                 switch (param) {
+>                 case PIN_CONFIG_BIAS_DISABLE:
+> -                       dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
+> -
+> -                       meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
+> -                                              &bit);
+> -                       ret = regmap_update_bits(pc->reg_pullen, reg,
+> -                                                BIT(bit), 0);
+> +                       ret = meson_pinconf_disable_bias(pc, pin);
+>                         if (ret)
+>                                 return ret;
+>                         break;
+>                 case PIN_CONFIG_BIAS_PULL_UP:
+> -                       dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
+> -
+> -                       meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+> -                                              &reg, &bit);
+> -                       ret = regmap_update_bits(pc->reg_pullen, reg,
+> -                                                BIT(bit), BIT(bit));
+> -                       if (ret)
+> -                               return ret;
+> -
+> -                       meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+> -                       ret = regmap_update_bits(pc->reg_pull, reg,
+> -                                                BIT(bit), BIT(bit));
+> +                       ret = meson_pinconf_enable_bias(pc, pin, 1);
+use "true" instead of "1"?
+
+>                         if (ret)
+>                                 return ret;
+>                         break;
+>                 case PIN_CONFIG_BIAS_PULL_DOWN:
+> -                       dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
+> -
+> -                       meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+> -                                              &reg, &bit);
+> -                       ret = regmap_update_bits(pc->reg_pullen, reg,
+> -                                                BIT(bit), BIT(bit));
+> -                       if (ret)
+> -                               return ret;
+> -
+> -                       meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+> -                       ret = regmap_update_bits(pc->reg_pull, reg,
+> -                                                BIT(bit), 0);
+> +                       ret = meson_pinconf_enable_bias(pc, pin, 0);
+use "false" instead of "0"?
+
+one overall comment: thank you for working on this!
+in my opinion it's a good preparation step to ensure that
+meson_pinconf_set is easy to understand even if we add more
+functionality here
+
+
+Regards
+Martin
