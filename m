@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428ECC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66582C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154B120C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38746214AE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207229;
-	bh=ptVtqOMVYoCmNDp4VQ6JUp/GpkRIfYIiQsi7nEBA6lM=;
+	s=default; t=1557207234;
+	bh=lI2xi2mj34+sJkfJwEYZcKAO+lQOs07Up/5HbiAgGoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j/KVDOP+iRQ2YB4zf6VQOHJnPDBlK0V0FQuNsVhO91ZmErU5y4HO+iOyrMDYpgNq9
-	 Uviy8fO3EEtAM6EL7ClSncHyOjFVZCQOEfEcVA/Qj67+GKBPdHQnT7p8xIy8deTn+p
-	 z8DceI1bjz0JanL/G9xx30jzbVUBvw5rwqPtM0B4=
+	b=qmwNwsLIaoz8IENgao5PiVotNf1StQYFaCQbBOjpgMozkXmkbLtsKhnIUfMuHpzlQ
+	 H9QMox7HQSjSE/b6tjygmODb9i3QQSImo4GONuI2rO8dDqQpj2kb4MH3WwNNgRCU4j
+	 R/aZL0WxYOkjOBAOyewnxPwypHrUyUhgWzH8Oyl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfEGFdr (ORCPT
+        id S1727364AbfEGFdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfEGFdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:44 -0400
+        id S1726614AbfEGFdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EF5D20C01;
-        Tue,  7 May 2019 05:33:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13194206A3;
+        Tue,  7 May 2019 05:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207223;
-        bh=ptVtqOMVYoCmNDp4VQ6JUp/GpkRIfYIiQsi7nEBA6lM=;
+        s=default; t=1557207229;
+        bh=lI2xi2mj34+sJkfJwEYZcKAO+lQOs07Up/5HbiAgGoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yf19qSUfp5SdwV/i6ZOQIRErURGB+DvdoIbzkpTrk5O53jnNPGpH1qvRvV/VHAeYz
-         EroZF7oLZj+kbzWMFiaAXzNYKRl+awTRY5eA7kYfXPG4+UnlHYI0NBnWzfNMEBQDKX
-         pVP6uov3baSnzCWYfz2ASakqvzJJUOq9U3xuM80g=
+        b=WGoJmsL3g/ar1DUKFMzlKstcoVtOcYKtcXXvbuIgEYwXOQHcyVokGTl5++7cPddbP
+         EgSFTlWJkdkFf5lN4XsPWa2vjs39uT2dCZ9pDU9DuBbG1+moI35VQxMjtvv/pBsNcm
+         w9pvsYXsekE3wGzoGlgUW27PGNhKYWEyPjHQ0wU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Bolotin <dbolotin@marvell.com>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 36/99] qed: Fix missing DORQ attentions
-Date:   Tue,  7 May 2019 01:31:30 -0400
-Message-Id: <20190507053235.29900-36-sashal@kernel.org>
+Cc:     David Francis <David.Francis@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Bhawanpreet Lakha <BhawanpreetLakha@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 38/99] drm/amd/display: If one stream full updates, full update all planes
+Date:   Tue,  7 May 2019 01:31:32 -0400
+Message-Id: <20190507053235.29900-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -61,112 +64,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Bolotin <dbolotin@marvell.com>
+From: David Francis <David.Francis@amd.com>
 
-[ Upstream commit d4476b8a6151b2dd86c09b5acec64f66430db55d ]
+[ Upstream commit c238bfe0be9ef7420f7669a69e27c8c8f4d8a568 ]
 
-When the DORQ (doorbell block) is overflowed, all PFs get attentions at the
-same time. If one PF finished handling the attention before another PF even
-started, the second PF might miss the DORQ's attention bit and not handle
-the attention at all.
-If the DORQ attention is missed and the issue is not resolved, another
-attention will not be sent, therefore each attention is treated as a
-potential DORQ attention.
-As a result, the attention callback is called more frequently so the debug
-print was moved to reduce its quantity.
-The number of periodic doorbell recovery handler schedules was reduced
-because it was the previous way to mitigating the missed attention issue.
+[Why]
+On some compositors, with two monitors attached, VT terminal
+switch can cause a graphical issue by the following means:
 
-Signed-off-by: Denis Bolotin <dbolotin@marvell.com>
-Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There are two streams, one for each monitor. Each stream has one
+plane
+
+current state:
+	M1:S1->P1
+	M2:S2->P2
+
+The user calls for a terminal switch and a commit is made to
+change both planes to linear swizzle mode. In atomic check,
+a new dc_state is constructed with new planes on each stream
+
+new state:
+	M1:S1->P3
+	M2:S2->P4
+
+In commit tail, each stream is committed, one at a time. The first
+stream (S1) updates properly, triggerring a full update and replacing
+the state
+
+current state:
+	M1:S1->P3
+	M2:S2->P4
+
+The update for S2 comes in, but dc detects that there is no difference
+between the stream and plane in the new and current states, and so
+triggers a fast update. The fast update does not program swizzle,
+so the second monitor is corrupted
+
+[How]
+Add a flag to dc_plane_state that forces full updates
+
+When a stream undergoes a full update, set this flag on all changed
+planes, then clear it on the current stream
+
+Subsequent streams will get full updates as a result
+
+Signed-off-by: David Francis <David.Francis@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet Lakha@amd.com>
+Acked-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed.h      |  1 +
- drivers/net/ethernet/qlogic/qed/qed_int.c  | 20 ++++++++++++++++++--
- drivers/net/ethernet/qlogic/qed/qed_main.c |  2 +-
- 3 files changed, 20 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 19 +++++++++++++++++++
+ drivers/gpu/drm/amd/display/dc/dc.h      |  3 +++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
-index d5fece7eb169..07ae600d0f35 100644
---- a/drivers/net/ethernet/qlogic/qed/qed.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed.h
-@@ -436,6 +436,7 @@ struct qed_db_recovery_info {
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 1f92e7e8e3d3..5af2ea1f201d 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1308,6 +1308,11 @@ static enum surface_update_type det_surface_update(const struct dc *dc,
+ 		return UPDATE_TYPE_FULL;
+ 	}
  
- 	/* Lock to protect the doorbell recovery mechanism list */
- 	spinlock_t lock;
-+	bool dorq_attn;
- 	u32 db_recovery_counter;
- };
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index b994f81eb51c..00688f4c0464 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -436,17 +436,19 @@ static int qed_dorq_attn_cb(struct qed_hwfn *p_hwfn)
- 	struct qed_ptt *p_ptt = p_hwfn->p_dpc_ptt;
- 	int rc;
- 
--	int_sts = qed_rd(p_hwfn, p_ptt, DORQ_REG_INT_STS);
--	DP_NOTICE(p_hwfn->cdev, "DORQ attention. int_sts was %x\n", int_sts);
-+	p_hwfn->db_recovery_info.dorq_attn = true;
- 
- 	/* int_sts may be zero since all PFs were interrupted for doorbell
- 	 * overflow but another one already handled it. Can abort here. If
- 	 * This PF also requires overflow recovery we will be interrupted again.
- 	 * The masked almost full indication may also be set. Ignoring.
- 	 */
-+	int_sts = qed_rd(p_hwfn, p_ptt, DORQ_REG_INT_STS);
- 	if (!(int_sts & ~DORQ_REG_INT_STS_DORQ_FIFO_AFULL))
- 		return 0;
- 
-+	DP_NOTICE(p_hwfn->cdev, "DORQ attention. int_sts was %x\n", int_sts);
++	if (u->surface->force_full_update) {
++		update_flags->bits.full_update = 1;
++		return UPDATE_TYPE_FULL;
++	}
 +
- 	/* check if db_drop or overflow happened */
- 	if (int_sts & (DORQ_REG_INT_STS_DB_DROP |
- 		       DORQ_REG_INT_STS_DORQ_FIFO_OVFL_ERR)) {
-@@ -503,6 +505,17 @@ static int qed_dorq_attn_cb(struct qed_hwfn *p_hwfn)
- 	return -EINVAL;
- }
+ 	type = get_plane_info_update_type(u);
+ 	elevate_update_type(&overall_type, type);
  
-+static void qed_dorq_attn_handler(struct qed_hwfn *p_hwfn)
-+{
-+	if (p_hwfn->db_recovery_info.dorq_attn)
-+		goto out;
-+
-+	/* Call DORQ callback if the attention was missed */
-+	qed_dorq_attn_cb(p_hwfn);
-+out:
-+	p_hwfn->db_recovery_info.dorq_attn = false;
-+}
-+
- /* Instead of major changes to the data-structure, we have a some 'special'
-  * identifiers for sources that changed meaning between adapters.
-  */
-@@ -1076,6 +1089,9 @@ static int qed_int_deassertion(struct qed_hwfn  *p_hwfn,
+@@ -1637,6 +1642,14 @@ void dc_commit_updates_for_stream(struct dc *dc,
  		}
- 	}
  
-+	/* Handle missed DORQ attention */
-+	qed_dorq_attn_handler(p_hwfn);
+ 		dc_resource_state_copy_construct(state, context);
 +
- 	/* Clear IGU indication for the deasserted bits */
- 	DIRECT_REG_WR((u8 __iomem *)p_hwfn->regview +
- 				    GTT_BAR0_MAP_REG_IGU_CMD +
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
-index 6adf5bda9811..26bfcbeebc4c 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_main.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
-@@ -966,7 +966,7 @@ static void qed_update_pf_params(struct qed_dev *cdev,
++		for (i = 0; i < dc->res_pool->pipe_count; i++) {
++			struct pipe_ctx *new_pipe = &context->res_ctx.pipe_ctx[i];
++			struct pipe_ctx *old_pipe = &dc->current_state->res_ctx.pipe_ctx[i];
++
++			if (new_pipe->plane_state && new_pipe->plane_state != old_pipe->plane_state)
++				new_pipe->plane_state->force_full_update = true;
++		}
  	}
- }
  
--#define QED_PERIODIC_DB_REC_COUNT		100
-+#define QED_PERIODIC_DB_REC_COUNT		10
- #define QED_PERIODIC_DB_REC_INTERVAL_MS		100
- #define QED_PERIODIC_DB_REC_INTERVAL \
- 	msecs_to_jiffies(QED_PERIODIC_DB_REC_INTERVAL_MS)
+ 
+@@ -1680,6 +1693,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 		dc->current_state = context;
+ 		dc_release_state(old);
+ 
++		for (i = 0; i < dc->res_pool->pipe_count; i++) {
++			struct pipe_ctx *pipe_ctx = &context->res_ctx.pipe_ctx[i];
++
++			if (pipe_ctx->plane_state && pipe_ctx->stream == stream)
++				pipe_ctx->plane_state->force_full_update = false;
++		}
+ 	}
+ 	/*let's use current_state to update watermark etc*/
+ 	if (update_type >= UPDATE_TYPE_FULL)
+diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
+index 4b5bbb13ce7f..7d5656d7e460 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc.h
++++ b/drivers/gpu/drm/amd/display/dc/dc.h
+@@ -496,6 +496,9 @@ struct dc_plane_state {
+ 	struct dc_plane_status status;
+ 	struct dc_context *ctx;
+ 
++	/* HACK: Workaround for forcing full reprogramming under some conditions */
++	bool force_full_update;
++
+ 	/* private to dc_surface.c */
+ 	enum dc_irq_source irq_source;
+ 	struct kref refcount;
 -- 
 2.20.1
 
