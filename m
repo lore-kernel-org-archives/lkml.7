@@ -2,308 +2,92 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9BEC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CF4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DA3206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAA620578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="q87w5cOd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKmsmkpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfEGKZR (ORCPT
+        id S1726743AbfEGK0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:25:17 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17720 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfEGKZQ (ORCPT
+        Tue, 7 May 2019 06:26:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41081 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfEGK0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:25:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd15ce70001>; Tue, 07 May 2019 03:24:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 03:25:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 03:25:14 -0700
-Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 10:25:08 +0000
-Subject: Re: [PATCH V5 14/16] phy: tegra: Add PCIe PIPE2UPHY support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-15-vidyas@nvidia.com> <20190503113558.GH32400@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <11cf6543-46c0-f95a-d23d-059aeef807ac@nvidia.com>
-Date:   Tue, 7 May 2019 15:55:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190503113558.GH32400@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557224679; bh=BOABvpH1oxJXKgemW+XeH/LQSarKXw3t6a6SIta4LAQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=q87w5cOdVbN7Lw0+BoqF7OyKYTdp52C4oht1PNzd+X4fyWO79R+hDxiRxgfO8isJo
-         jcsUgNyYhu0KgRfBMo6Nosie0qtRK38dpbwdpDE5oEBLgR4SjYzWFKF7iZN/LIriIy
-         v/mZhSEaBSpg6OU+hEDp0/4ByYuwqHs9Qd3oiQWbBjwHuPXh3RvPdvzh/75uFcGlzK
-         FsEcekp+bw0KUYMe+AvdvZjNp19mpJmqRecVcSwOxwgSw3rNEtIJSI9IukPzOfhJAL
-         nYPuMftanyBln7tnv4PMFo2Ny451WIe9IzE2mD2lKloGuxcfczgPR4JinwX5B8RbVR
-         gmEAf3nI19asg==
+        Tue, 7 May 2019 06:26:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id l132so3474881pfc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 03:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sLt8k/Ibit5MXW+2DcTy1x+/PaPOiRW0J72G+A/4PHY=;
+        b=OKmsmkpVX1GWo4n6EuuYNx3ev2lqwZzR/saFLgXL8WaxXKLuX/fHhBi4I9e3PUm0SW
+         x3j+ZL/4U2LSuDBvcXu1Yc+ISrlUjm598fdc+a68nCrvGGDyJlejuBmTa0bvHmzp2Bfu
+         t2y6ZPnLIO6eK+ZKzBUHbdxzzAfbv8oMQdMlEVQHinAXo3JI7d9yGKV8UekGXsWFs6p/
+         3XVqQz1gqkdPy+I3NMpt1FXyy7VQIHK3BejMQKrAfJpJKEv+lR5b+WZvHbgXexktnw6g
+         J/Dxf2zo++G8J89BNQ74cyDMSd3zHByeY8inkFGzVPyixM0zLfUQThhJkR8qx/zcinjC
+         FkhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sLt8k/Ibit5MXW+2DcTy1x+/PaPOiRW0J72G+A/4PHY=;
+        b=esPM1BCMUzfZQwoo0peASyzeqwDhZoM7YbJYaxvCgPsHC2/ieILhMJ0vw/wc/Eb/I1
+         PTf+WSuV6+HNnkHN9toZeRXIvxh7plimdUKRt+T8e8AKceIBx8Bj13DIMmg5eMwgHLXG
+         a6NOlOIk/3XeUSYqWz94BRhNAmmV3cgyBqOdkxIO6Rg7wMq2e3UU3ww36p7NAcnpHUN6
+         wpiEfMI1uZODQDjrfoi4ol3qisf8Maee6f0iQfg9lkAb4irvCosXnodq38Q+tzoz72Rk
+         C+/kwf8eb6jy61nDhPZc4PMl6eGpDdMrfOGYoXV4fvaMG3AO3b6oPb5TLwKplZt45UG7
+         0z4A==
+X-Gm-Message-State: APjAAAXKfz2z7a3sYJ4DCa74NhiYiUXk0ZbpREazDWLbbWCLPKhsKuzY
+        /TAOr/+Mqxek8mX717rsndc=
+X-Google-Smtp-Source: APXvYqyp30i6Tlo5D4c9BcoBQCHXBNTyHMUqXt2iDVFysO6A3yCt9BbeBsRn4Bmd6F3usKLscraP1Q==
+X-Received: by 2002:a63:5c5f:: with SMTP id n31mr39262217pgm.325.1557224813794;
+        Tue, 07 May 2019 03:26:53 -0700 (PDT)
+Received: from app09.andestech.com (59-120-53-16.HINET-IP.hinet.net. [59.120.53.16])
+        by smtp.gmail.com with ESMTPSA id i75sm22993533pfj.80.2019.05.07.03.26.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 03:26:53 -0700 (PDT)
+From:   Greentime Hu <green.hu@gmail.com>
+X-Google-Original-From: Greentime Hu <greentime@andestech.com>
+To:     greentime@andestech.com, linux-kernel@vger.kernel.org
+Cc:     green.hu@gmail.com
+Subject: [PATCH] MAINTAINERS: update nds32 git repo path
+Date:   Tue,  7 May 2019 18:22:25 +0800
+Message-Id: <20190507102225.4174-1-greentime@andestech.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/2019 5:05 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:50:02AM +0530, Vidya Sagar wrote:
->> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
->> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
->> For each PCIe lane of a controller, there is a P2U unit instantiated at
->> hardware level. This driver provides support for the programming required
->> for each P2U that is going to be used for a PCIe controller.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * Rebased on top of linux-next top of the tree
->>
->> Changes since [v2]:
->> * Replaced spaces with tabs in Kconfig file
->> * Sorted header file inclusion alphabetically
->>
->> Changes since [v1]:
->> * Added COMPILE_TEST in Kconfig
->> * Removed empty phy_ops implementations
->> * Modified code according to DT documentation file modifications
->>
->>   drivers/phy/tegra/Kconfig             |   7 ++
->>   drivers/phy/tegra/Makefile            |   1 +
->>   drivers/phy/tegra/pcie-p2u-tegra194.c | 120 ++++++++++++++++++++++++++
->>   3 files changed, 128 insertions(+)
->>   create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
->>
->> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
->> index a3b1de953fb7..06d423fa85b4 100644
->> --- a/drivers/phy/tegra/Kconfig
->> +++ b/drivers/phy/tegra/Kconfig
->> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
->>   
->>   	  To compile this driver as a module, choose M here: the module will
->>   	  be called phy-tegra-xusb.
->> +
->> +config PHY_TEGRA194_PCIE_P2U
->> +	tristate "NVIDIA Tegra P2U PHY Driver"
->> +	depends on ARCH_TEGRA || COMPILE_TEST
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
->> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
->> index a93cd9a499b2..1aaca794f40c 100644
->> --- a/drivers/phy/tegra/Makefile
->> +++ b/drivers/phy/tegra/Makefile
->> @@ -5,3 +5,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) += xusb-tegra186.o
->> +obj-$(CONFIG_PHY_TEGRA194_PCIE_P2U) += pcie-p2u-tegra194.o
->> diff --git a/drivers/phy/tegra/pcie-p2u-tegra194.c b/drivers/phy/tegra/pcie-p2u-tegra194.c
->> new file mode 100644
->> index 000000000000..a5d85e411088
->> --- /dev/null
->> +++ b/drivers/phy/tegra/pcie-p2u-tegra194.c
->> @@ -0,0 +1,120 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
->> + *
->> + * Copyright (C) 2019 NVIDIA Corporation.
->> + *
->> + * Author: Vidya Sagar <vidyas@nvidia.com>
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <soc/tegra/bpmp-abi.h>
-> 
-> Looks to me like not all of the above are actually needed. I don't see
-> anything from delay.h used, and you certainly aren't using anything from
-> soc/tegra/bpmp-abi.h either.
-Done.
+We use git.kernel.org to put nds32's latest code instead of github.
 
-> 
->> +
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +
->> +#define P2U_RX_DEBOUNCE_TIME				0xa4
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
->> +
->> +struct tegra_p2u {
->> +	void __iomem *base;
->> +};
->> +
->> +static int tegra_p2u_power_on(struct phy *x)
->> +{
->> +	struct tegra_p2u *phy = phy_get_drvdata(x);
->> +	u32 val;
->> +
->> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
->> +	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +
->> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +
->> +	val = readl(phy->base + P2U_RX_DEBOUNCE_TIME);
->> +	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
->> +	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
->> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct phy_ops ops = {
->> +	.power_on	= tegra_p2u_power_on,
->> +	.owner		= THIS_MODULE,
-> 
-> I think it's perhaps best to just stick with single spaces around the =
-> instead of trying to arbitrarily align these. See below for why I think
-> so.
-Done.
+Signed-off-by: Greentime Hu <greentime@andestech.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->> +};
->> +
->> +static int tegra_p2u_probe(struct platform_device *pdev)
->> +{
->> +	struct phy_provider *phy_provider;
->> +	struct device *dev = &pdev->dev;
->> +	struct phy *generic_phy;
->> +	struct tegra_p2u *phy;
->> +	struct resource *res;
->> +
->> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctl");
->> +	phy->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(phy->base))
->> +		return PTR_ERR_OR_ZERO(phy->base);
->> +
->> +	platform_set_drvdata(pdev, phy);
-> 
-> You could use dev_set_drvdata() here since you already use dev (instead
-> of pdev) everywhere else.
-Since this is a platform driver, wouldn't it make more sense to use platform_set_drvdata()
-instead of dev_set_drvdata()?
-
-> 
->> +
->> +	generic_phy = devm_phy_create(dev, NULL, &ops);
->> +	if (IS_ERR(generic_phy))
->> +		return PTR_ERR_OR_ZERO(generic_phy);
->> +
->> +	phy_set_drvdata(generic_phy, phy);
->> +
->> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->> +	if (IS_ERR(phy_provider))
->> +		return PTR_ERR_OR_ZERO(phy_provider);
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_p2u_remove(struct platform_device *pdev)
->> +{
->> +	return 0;
->> +}
-> 
-> I thought it had already been mentioned that you don't need to implement
-> this if it's empty?
-Done.
-
-> 
->> +
->> +static const struct of_device_id tegra_p2u_id_table[] = {
->> +	{
->> +		.compatible = "nvidia,tegra194-p2u",
->> +	},
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, tegra_p2u_id_table);
->> +
->> +static struct platform_driver tegra_p2u_driver = {
->> +	.probe		= tegra_p2u_probe,
->> +	.remove		= tegra_p2u_remove,
->> +	.driver		= {
->> +		.name	= "tegra194-p2u",
->> +		.of_match_table = tegra_p2u_id_table,
-> 
-> Again, I don't think the artificial padding does this any good. For
-> example, the .driver.name's assignment operator is padded to the same
-> column as members of the parent structure, so that's confusing to read.
-> Also, .of_match_table is not padded at all, so it's inconsistent. Just
-> use single spaces around =. That's easy to keep consistent and really
-> doesn't read that bad.
-Done.
-
-> 
->> +	},
->> +};
->> +
->> +module_platform_driver(tegra_p2u_driver);
-> 
-> It's customary to have no blank line between the closing "};" and the
-> module_platform_driver() macro.
-Done.
-
-> 
-> Thierry
-> 
->> +
->> +MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra PIPE2UPHY PHY driver");
->> +MODULE_LICENSE("GPL v2");
->> -- 
->> 2.17.1
->>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c2fce72e694..967ac42d1a89 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -963,7 +963,7 @@ F:	drivers/staging/iio/*/ad*
+ ANDES ARCHITECTURE
+ M:	Greentime Hu <green.hu@gmail.com>
+ M:	Vincent Chen <deanbo422@gmail.com>
+-T:	git https://github.com/andestech/linux.git
++T:	git https://git.kernel.org/pub/scm/linux/kernel/git/greentime/linux.git
+ S:	Supported
+ F:	arch/nds32/
+ F:	Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
+-- 
+2.18.0
 
