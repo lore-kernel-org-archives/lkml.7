@@ -6,95 +6,153 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE5C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8413CC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2E520825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489FC20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MOXKNuRq"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="l69sznhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfEGWrE (ORCPT
+        id S1726544AbfEGWsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:47:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33780 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfEGWrD (ORCPT
+        Tue, 7 May 2019 18:48:33 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39649 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGWsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:47:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e11so11420259wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:47:02 -0700 (PDT)
+        Tue, 7 May 2019 18:48:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z128so8620162qkb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=9KmZcvbM51Ahdr1a8pXzpoTQRpVZOoeydHZiJZ+kMlg=;
-        b=MOXKNuRq6G1Cab3TGfzPz4NbGfvhNpLU88y5ZOW5Te+AH0kwjRSNyHHZEzkkuNnZ6/
-         YuB86zdivMVacZQP/8IxTQiZlyLYBPW3FVP6/tluXjHMXo7O0hTCBW2Kx4zmDB4GJvBS
-         H+aEqkhJk/JqUsu23xQdhI0TKNY5tgGDqtmTKGi3a3QLnmjy6axqCP4WUxqPqdVJMuk5
-         V8CwDqImiJ1IbdQOEAy7Evv+jGR5P+g48nUyu1kc/syvD5pcOkCYSDaxdHHniQdq2Vjm
-         oAsNM1wf4daUks7iunqls+++luohTyjiyN+vJgN2cwh3AE30Ts+bzAxs2F1SzJm4L+v0
-         g6Qg==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=xxk1I9iNW8G6154lt9spaBJJd7VgHW36j4K0WHRcyow=;
+        b=l69sznhGwxe1nQgn6oxo52fenPGAnolimIs47b9+djCmMsyaO5sSy7wxLA1EkAK2D9
+         Ogwc8X6C/P5xKukKPWVeM+ojSJvK0ZPxyWjevAizgd9m/bOLgEMnBbUOgJKTXD0TrOI6
+         jyKSLHIqhXmIwaKh2Qd9U5RuuuzcDG6LdXQaKcugEjpT2ttzlYrNCcu1GZYRilZU0nwz
+         ToI3exO4jnbQTK74obnVqFjqQlBKJBuolE9ZGG8vdYlb9DyS+GaCTtn671TxyxBKBto+
+         8ZkbJMwPJ7dFLYiuAqHpR0o2ZMsVDKhA8PfqIY1x5ceXgzcgSovzWZL0Jr2xhvC3nyu+
+         387w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=9KmZcvbM51Ahdr1a8pXzpoTQRpVZOoeydHZiJZ+kMlg=;
-        b=HKDV4EgsmaejEWNTvSrKR7vVZ+0B3nzNUjC0MI0KbFziPCkKvd+uP9yfdnF/0Dv8mA
-         jgTa6RDJuORzzEI+ERQJRqgbPfzx5Ub6+Iyhp5MIHhw35sY8q+6GPl8BmaMg4sqnxA68
-         js/p10pNdvttG5iLtAxEN2MMgDiI4Mqd5rqHpMzqSs8kGc3KG6IMBxG3Gas4rZtimze6
-         avti+Y6Wj9yxz1i1lCpuxdRNguOJnPEivguZnV7kANo87m4I9Ac4NG9oNFUks08m6dsE
-         Jc7to7Befvuk2R4oTMVJilkWFcUHOieslMZlvOo4aPuh8ZvmM2j56lkY8riDA+u6gmQu
-         Y/hw==
-X-Gm-Message-State: APjAAAUewK3Qc+0qQhvpV7+4+X1YurvS3q950WFFOjicNUI9tSDdB5cX
-        /HNNQlLDcNCn8ZAbBpOQmSLbFA==
-X-Google-Smtp-Source: APXvYqwRoaj/hHFJl0RN2ppt7xelUHTljhJJzr+5KeC3rV8d9qUmGOi31ZkwaoRwnza8C+/Dy5wqzw==
-X-Received: by 2002:adf:9c87:: with SMTP id d7mr18660680wre.68.1557269222219;
-        Tue, 07 May 2019 15:47:02 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id 91sm25815586wrs.43.2019.05.07.15.47.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 15:47:01 -0700 (PDT)
-Message-ID: <5cd20ae5.1c69fb81.b91f5.9074@mx.google.com>
-Date:   Tue, 07 May 2019 15:47:01 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=xxk1I9iNW8G6154lt9spaBJJd7VgHW36j4K0WHRcyow=;
+        b=NTm78KwqqF5Po+RsGIP03skYqva7RZU/u+cqhf/nTijfv04UnHRkvQ94nDCSTPywVZ
+         tzsQjEZMiMUEmr+mdoz/jQv4xdrZHjyQY7guFQ8MJvvMDrjJsvxHCqOI0SRdwV7n8k3H
+         J6WChxgOGcc+TPmbCjeH1s05BuKUMcJWay5ANiZ0dRsbvZhFbSWykECYVOY3gIOTkynf
+         QV7W0BpSU3FMJtrvqinTVoiRod/mMixbBD5QC4raKZcMa8tx6P1Ffu8bPfXQAX8Kg3gc
+         MJd0a1zCdKtGq1joBsPXN764CASHPOYs3kNwUgiGo1BiRN71mWidtl45snbtAIzdR6LW
+         bm4g==
+X-Gm-Message-State: APjAAAVjFwjCf4IojXUIms6Li82BqL1yiuOqcINA8NUsX2Ugao7/DYa1
+        1uu8NQ+2ejfmV8r1amapHAuE0A==
+X-Google-Smtp-Source: APXvYqy9K+QwTsgkQpI2AW+V0xRPiKAtUOLm3ktla5vxOmCdm5ertpiO/mGcasVbRdz8N8oPmbAstA==
+X-Received: by 2002:a37:b404:: with SMTP id d4mr4847748qkf.111.1557269311293;
+        Tue, 07 May 2019 15:48:31 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id s1sm8793121qkm.93.2019.05.07.15.48.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 07 May 2019 15:48:31 -0700 (PDT)
+Date:   Tue, 7 May 2019 15:48:21 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     syzbot <syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com>
+Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net, doronrk@fb.com,
+        kafai@fb.com, kjlu@umn.edu, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, vakul.garg@nxp.com, yhs@fb.com,
+        yuehaibing@huawei.com, John Fastabend <john.fastabend@gmail.com>
+Subject: Re: WARNING: ODEBUG bug in del_timer (3)
+Message-ID: <20190507154821.1b04f4aa@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <000000000000dace5e0588529558@google.com>
+References: <000000000000dace5e0588529558@google.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Kernel: v4.14.116-76-g2e004f6acb80
-In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
-References: <20190506143053.287515952@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/75] 4.14.117-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 64 boots: 0 failed, 64 passed (v4.14.116-76-g2=
-e004f6acb80)
+CCing John, looks like John's upcoming fix may address this:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.116-76-g2e004f6acb80/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.116-76-g2e004f6acb80/
+bpf: sockmap, only stop/flush strp if it was enabled at some point
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.116-76-g2e004f6acb80
-Git Commit: 2e004f6acb8062e310cf8e50c91d562d91dcdb73
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 31 unique boards, 15 SoC families, 10 builds out of 201
+On Tue, 07 May 2019 14:06:06 -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    71ae5fc8 Merge tag 'linux-kselftest-5.2-rc1' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=136c06f0a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=511168bc7720867
+> dashboard link: https://syzkaller.appspot.com/bug?extid=13d91ed9bbcd7dc13230
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17128012a00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> ODEBUG: assert_init not available (active state 0) object type: timer_list  
+> hint:           (null)
+> WARNING: CPU: 1 PID: 22 at lib/debugobjects.c:325  
+> debug_print_object+0x16a/0x250 lib/debugobjects.c:325
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Workqueue: events sk_psock_destroy_deferred
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   panic+0x2cb/0x65c kernel/panic.c:214
+>   __warn.cold+0x20/0x45 kernel/panic.c:566
+>   report_bug+0x263/0x2b0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+>   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
+> RIP: 0010:debug_print_object+0x16a/0x250 lib/debugobjects.c:325
+> Code: dd 60 f4 a1 87 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48  
+> 8b 14 dd 60 f4 a1 87 48 c7 c7 00 ea a1 87 e8 44 02 12 fe <0f> 0b 83 05 31  
+> 10 2d 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
+> RSP: 0018:ffff8880a9a3f970 EFLAGS: 00010086
+> RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff815aec76 RDI: ffffed1015347f20
+> RBP: ffff8880a9a3f9b0 R08: ffff8880a9a2a5c0 R09: ffffed1015d240f1
+> R10: ffffed1015d240f0 R11: ffff8880ae920787 R12: 0000000000000001
+> R13: ffffffff889ac720 R14: ffffffff81605b60 R15: ffff8880990fdba8
+>   debug_object_assert_init lib/debugobjects.c:694 [inline]
+>   debug_object_assert_init+0x23d/0x2f0 lib/debugobjects.c:665
+>   debug_timer_assert_init kernel/time/timer.c:725 [inline]
+>   debug_assert_init kernel/time/timer.c:770 [inline]
+>   del_timer+0x7c/0x120 kernel/time/timer.c:1192
+>   try_to_grab_pending+0x2d7/0x710 kernel/workqueue.c:1249
+>   __cancel_work_timer+0xc4/0x520 kernel/workqueue.c:3079
+>   cancel_delayed_work_sync+0x1b/0x20 kernel/workqueue.c:3252
+>   strp_done+0x5d/0xf0 net/strparser/strparser.c:526
+>   sk_psock_destroy_deferred+0x3a/0x6c0 net/core/skmsg.c:558
+>   process_one_work+0x98e/0x1790 kernel/workqueue.c:2263
+>   worker_thread+0x98/0xe40 kernel/workqueue.c:2409
+>   kthread+0x357/0x430 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
----
-For more info write to <info@kernelci.org>
