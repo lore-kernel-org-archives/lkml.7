@@ -2,173 +2,216 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8148C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A1C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC2B2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478EE20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557262147;
+	bh=UgQi0e7oHFXGjN1t4VrSnFtRC24frVRuEPTYfkilrW0=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=FPPT9TE3Evf8q2lHnKFPQmSrn9VUrD3sEP+vmx2/RsY4FaYgGQYAIHFmk8ZpRLct0
+	 MiD61uQ2eCBOhhv73/xAKX57qIZrFaDOAWASWTggIBVJgkvvIdUmW9HJSszOy+kWbV
+	 ffmlqeu0FTUlgumEwkmbQNayZBpTzXJfKjIImF6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfEGUrq (ORCPT
+        id S1727109AbfEGUtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:47:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38380 "EHLO mx1.redhat.com"
+        Tue, 7 May 2019 16:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfEGUrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:47:46 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726329AbfEGUtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:49:06 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5B8256698A;
-        Tue,  7 May 2019 20:47:45 +0000 (UTC)
-Received: from [10.36.116.95] (ovpn-116-95.ams2.redhat.com [10.36.116.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A7013600D4;
-        Tue,  7 May 2019 20:47:42 +0000 (UTC)
-Subject: Re: [PATCH v2 2/8] s390x/mm: Implement arch_remove_memory()
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>
-References: <20190507183804.5512-1-david@redhat.com>
- <20190507183804.5512-3-david@redhat.com>
- <CAPcyv4gtAMn2mDz0s1GRTJ52MeTK3jJYLQne6MiEx_ipPFUsmA@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <97a6a2ab-0e8b-d403-ca39-ffa4425e15a5@redhat.com>
-Date:   Tue, 7 May 2019 22:47:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED85205C9;
+        Tue,  7 May 2019 20:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557262144;
+        bh=UgQi0e7oHFXGjN1t4VrSnFtRC24frVRuEPTYfkilrW0=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=wxmG5tUCN0ycumdAr5/YRmGR0VS6AW087jInglKNSFP74iCaL9HDqJd0HLwAUYT/F
+         TNmpN2BxlDjHfQzQm3/94TRUXspHIbucrf9jvaUpSHO+GHrTTODDiGrafiurVmYr3b
+         9cRG+CeH6C9+gOusj5zihFQMz3pxy+0EUL75anQU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4gtAMn2mDz0s1GRTJ52MeTK3jJYLQne6MiEx_ipPFUsmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 07 May 2019 20:47:45 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1557215457.2147.90.camel@mtksdaap41>
+References: <20190430112012.4514-1-roger.lu@mediatek.com> <20190430112012.4514-2-roger.lu@mediatek.com> <155665629219.168659.8221738507474891604@swboyd.mtv.corp.google.com> <1556777971.12123.35.camel@mtksdaap41> <155691770027.200842.16164651681407381397@swboyd.mtv.corp.google.com> <1557215457.2147.90.camel@mtksdaap41>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC v1 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Cc:     Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>,
+        Angus.Lin@mediatek.com, devicetree@vger.kernel.org,
+        Viresh Kumar <vireshk@kernel.org>, linux-pm@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org, Andy-YT.Liu@mediatek.com,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, HenryC.Chen@mediatek.com
+To:     Roger Lu <roger.lu@mediatek.com>
+Message-ID: <155726214346.14659.17800352563837760252@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 07 May 2019 13:49:03 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.05.19 22:46, Dan Williams wrote:
-> On Tue, May 7, 2019 at 11:38 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> Will come in handy when wanting to handle errors after
->> arch_add_memory().
->>
->> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Oscar Salvador <osalvador@suse.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  arch/s390/mm/init.c | 13 +++++++------
->>  1 file changed, 7 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index 31b1071315d7..1e0cbae69f12 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -237,12 +237,13 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>  void arch_remove_memory(int nid, u64 start, u64 size,
->>                         struct vmem_altmap *altmap)
->>  {
->> -       /*
->> -        * There is no hardware or firmware interface which could trigger a
->> -        * hot memory remove on s390. So there is nothing that needs to be
->> -        * implemented.
->> -        */
->> -       BUG();
->> +       unsigned long start_pfn = start >> PAGE_SHIFT;
->> +       unsigned long nr_pages = size >> PAGE_SHIFT;
->> +       struct zone *zone;
->> +
->> +       zone = page_zone(pfn_to_page(start_pfn));
-> 
-> Does s390 actually support passing in an altmap? If 'yes', I think it
-> also needs the vmem_altmap_offset() fixup like x86-64:
-> 
->         /* With altmap the first mapped page is offset from @start */
->         if (altmap)
->                 page += vmem_altmap_offset(altmap);
-> 
-> ...but I suspect it does not support altmap since
-> arch/s390/mm/vmem.c::vmemmap_populate() does not arrange for 'struct
-> page' capacity to be allocated out of an altmap defined page pool.
-> 
-> I think it would be enough to disallow any arch_add_memory() on s390
-> where @altmap is non-NULL. At least until s390 gains ZONE_DEVICE
-> support and can enable the pmem use case.
-> 
+Quoting Roger Lu (2019-05-07 00:50:57)
+> Dear Stephen,
+>=20
+> Sorry for the late reply.
+>=20
+> On Fri, 2019-05-03 at 14:08 -0700, Stephen Boyd wrote:
+> > Quoting Roger Lu (2019-05-01 23:19:31)
+> > > On Tue, 2019-04-30 at 13:31 -0700, Stephen Boyd wrote:
+> > > > Quoting Roger Lu (2019-04-30 04:20:10)
+> > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt =
+b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..355329db74ba
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > [..]
+> > > > > +
+> > > > > +               svs_gpu: svs_gpu {
+> > > > > +                       compatible =3D "mediatek,mt8183-svs-gpu";
+> > > > > +                       power-domains =3D <&scpsys MT8183_POWER_D=
+OMAIN_MFG_2D>;
+> > > > > +                       operating-points-v2 =3D <&gpu_opp_table>;
+> > > > > +               };
+> > > >=20
+> > > > It looks like you need multiple OPPs for a single device, because i=
+t has
+> > > > different independent power supplies it wants to associate the OPP
+> > > > tables with?
+> > > Yes. SVS has different controllers inside the hardware in order to
+> > > calculate and optimize different OPP table voltage part.
+> >=20
+> > So is there more than one SVS register region that needs certain devices
+> > to be powered on or at least have their power domain enabled so that the
+> > SVS hardware can read the voltage and adjust accordingly? I should read
+> > the driver I suppose.
+> No, basically, each SVS controller (aka SVS bank) only has one SVS
+> register region that needs to be powered on for the init.
+> In MT8183 SVS case, SVS has four controllers (banks). Each SVS bank
+> needs corresponding power domain to be on for its init.
+>=20
+> #SVS bank corresponding power domain
+> svs_cpu_little: Needs CPU-A53 power on for init
+> svs_cpu_big: Needs CPU-A73 power on for init
+> svs_cci: Needs CPU-A53 power on for init
+> svs_gpu: Needs MFG_2D power on for init
+>=20
+> P.S SVS driver will use pm_runtime_get_sync() to turn on power before
+> svs bank init and pm_runtime_put_sync() to turn off power power after
+> svs bank init.
 
-As far as I know, it doesn't yet, however I guess this could change once
-virtio-pmem is supported?
+Ok. How are you making sure that certain CPUs are powered on?
 
-Thanks!
+>=20
+> >=20
+> > >=20
+> > > > Why can't these OPP tables be attached to the devices that
+> > > > use them, i.e. CPU, GPU, CCI, etc.? Seems odd that those devices do=
+n't
+> > > > have OPP tables that this hardware block can look up somehow.
+> > > Those OPP tables are attached by our DVFS node (please refers below
+> > > patch). SVS just shares with their OPP table and help optimize these =
+OPP
+> > > tables' voltage part.
+> > >=20
+> > > Add cpufreq DTS node to the mt8183 and mt8183-evb
+> > > https://patchwork.kernel.org/patch/10921675/
+> >=20
+> > Cool thanks for the pointer.
+> >=20
+> > >=20
+> > >=20
+> > > > Similarly,
+> > > > the power domains should probably be part of the devices that are u=
+sing
+> > > > them and not these sub-nodes that are mirroring the other hardware
+> > > > blocks in the system?
+> > > Oh. There is a svs controller in GPU power-domain. We need to turn on
+> > > GPU power so that svs controller can work functionally. Therefore, we
+> > > add GPU power-domains in our svs_gpu sub-node.
+> > >=20
+> > >=20
+> >=20
+> > Sorry, I'm not really following what you're saying too closely. I think
+> > I get it but it sounds complicated.
+> >=20
+> > I'm mostly wondering if having properties like svs-gpu =3D <&gpu_node>,
+> > and svs-cci =3D <&cci_node> would work for you. The idea would be to li=
+nk
+> > this hardware block to the nodes that it's going to adjust the OPPs of.
+> > Once you have the node, use some sort of OPP API to get the OPP table
+> > for a device_node and adjust it at runtime for the current OPP.
+> Yes, I understand your idea. Thank you. I share my design purpose and
+> the troubles I encountered when linking other hardware block.
+>=20
+> #my design purpose
+> 1. SVS bank doesn't need all the resources in other device node like
+> cci_node. Therefore, I model SVS sub-nodes to declare what svs bank
+> needs.
 
--- 
+Do you mean that there are other properties in the cci_node that the SVS
+hardware block doesn't use? That doesn't sound like a problem to me. I
+view nodes in the SoC bus as all memory mapped IO devices and it sounds
+like SVS is a hardware IP core that's off to the side in the system that
+has some sensors that goes into various other IP blocks in the system.
+It's correct to model the registers and interrupts, etc. as one node for
+the one hardware block that's delivered by the hardware engineers.
 
-Thanks,
+>=20
+> #troubles - linking other hardware block
+> 1. I don't know how to get cpu devcie after we link CPU node
+> (svs_cpu_little =3D <cpu0>). I use "get_cpu_device(unsigned cpu)" in Linux
+> driver to attain cpuX device generally.
 
-David / dhildenb
+This should probably be some sort of list property that points to all
+the CPUs in the little and big clusters. Then the code can iterate
+through the node pointers and look for an OPP table in any of them by
+combining of_cpu_node_to_id() with get_cpu_device()?
+
+> 2. Our MT8183 has three gpu-related node as below, svs_gpu need the
+> reference of gpu (OPP table) & gpu_core2 (power-domain MFG_2D) to make
+> sure svs_gpu can init and update gpu OPP table. I don't know how to
+> refer two nodes by one property. Therefore, I model a svs_gpu to declare
+> what it needs.
+>=20
+> gpu: mali@13040000 {
+>         ...
+>         power-domains =3D <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>;
+>         operating-points-v2 =3D <&gpu_opp_table>;
+>         ...
+> }
+>=20
+> gpu_core1: mali_gpu_core1 {
+>         ...
+>         power-domains =3D <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>;
+> };
+>=20
+> gpu_core2: mali_gpu_core2 {
+>         ...
+>         power-domains =3D <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> };
+
+These three nodes should be combined into one node for the GPU. The
+power domains will need to be referred to by name. Luckily we have
+support for multiple power domains in the kernel now so this should
+work. Let us know if it doesn't work for some reason.
+
+>=20
+> P.S MT8183 GPU won't do upstream. So, there is no patchwork weblink to
+> refer.
+
+Sure.
+
