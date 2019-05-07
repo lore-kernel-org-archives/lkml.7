@@ -2,106 +2,113 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E7EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B71C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56F92087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008CA20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qnU27xfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfEGC6Y (ORCPT
+        id S1726875AbfEGDCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 22:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbfEGC6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 22:58:24 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FCB920835;
-        Tue,  7 May 2019 02:58:20 +0000 (UTC)
-Date:   Mon, 6 May 2019 22:58:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190506225819.11756974@oasis.local.home>
-In-Reply-To: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-        <20190506095631.6f71ad7c@gandalf.local.home>
-        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
-        <20190506130643.62c35eeb@gandalf.local.home>
-        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
-        <20190506145745.17c59596@gandalf.local.home>
-        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
-        <20190506162915.380993f9@gandalf.local.home>
-        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
-        <20190506174511.2f8b696b@gandalf.local.home>
-        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
-        <20190506210416.2489a659@oasis.local.home>
-        <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
-        <20190506215353.14a8ef78@oasis.local.home>
-        <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 May 2019 23:02:40 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:58979 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfEGDCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 23:02:40 -0400
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x4732XTi030985;
+        Tue, 7 May 2019 12:02:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4732XTi030985
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557198154;
+        bh=UOVlLy/wVLqCQ3IZ+Xag1tGC9ICcteYP+5Dq8Jc65YI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qnU27xfl2yzx44U8NaR8OU7ABPcGyNqa7uFJGGZjX9cXCokLckUcXX9ZuDz//UxXN
+         GOE+EqtXEFxSinlaoVXqcYz3BxOzUAVwRjFqi+71qtK1ykNrrU2/2px/kd7rAQZk5a
+         cGVPc4u5sQn97E4BHufZBrNvAvMHoN/aTEd2RP8iT7qGrLY3GOalcyX5+Q+5+m7I4i
+         Ciqcg93DefrJEPE+kqoOatuYoxYfOqa3dl0Bfa+EQXj8uH9fAsOkDjJZBmS3nNUSDq
+         thuQiTpbPA3RTc1Mw3Lurq09bPBvSTWKLc4HAGtWAC391uBYOZJ5pdEvOSntRCuch6
+         VnKPqTXdVqTqQ==
+X-Nifty-SrcIP: [209.85.221.172]
+Received: by mail-vk1-f172.google.com with SMTP id s80so3686018vke.6;
+        Mon, 06 May 2019 20:02:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAXEN7lThhOqdEBEK60RCocds4BkqIZKURmp88mUaleCPmLzsTmg
+        jrwVMMW9RQtE6mhDddHi4LCbgRRqj31MYWENHSA=
+X-Google-Smtp-Source: APXvYqwZFmp6rx95CPF6ap2Yd8GVckWMHJtSP4IT1kInt+74f9qNDrEMuC5mHVSMzYfllgArBDaTWG+xaTomfNEtkuA=
+X-Received: by 2002:a1f:b297:: with SMTP id b145mr15295623vkf.74.1557198152590;
+ Mon, 06 May 2019 20:02:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1552234395-7699-1-git-send-email-yamada.masahiro@socionext.com> <84db9131-5498-d2d5-a984-11079e3c2a6e@gmail.com>
+In-Reply-To: <84db9131-5498-d2d5-a984-11079e3c2a6e@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 7 May 2019 12:01:56 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARLOvginNm-YCUtqju4J=oqU5TTjt0GxPh+Y-KV-jV-PA@mail.gmail.com>
+Message-ID: <CAK7LNARLOvginNm-YCUtqju4J=oqU5TTjt0GxPh+Y-KV-jV-PA@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: fix 'Save As' menu of xconfig
+To:     Robert Gadsdon <rhgadsdon@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 19:22:06 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, May 7, 2019 at 4:10 AM Robert Gadsdon <rhgadsdon@gmail.com> wrote:
+>
+> On 03/10/2019 09:13 AM, Masahiro Yamada wrote:
+> > The 'Save As' menu of xconfig is not working; it always saves the
+> > kernel configuration into the default file irrespective of the file
+> > chosen in the dialog box.
+> >
+> > The 'Save' menu always writes into the default file, but it would
+> > make more sense to write into the file previously chosen by 'Load'
+> > or 'Save As'.
+> >
+> > Signed-off-by: Masahiro Yamada<yamada.masahiro@socionext.com>
+> > ---
+>
+> The 'save as' may be used for out-of-tree kernel config saves, but the
+> default 'save' should always save to the in-tree .config file, as before
+> (and for the past 10+ years..)  If the kernel config was loaded from an
+> out-of-tree location, it now saves back to that out-of-tree location,
+> which is useless for the kernel compile..
 
-> Notice? We'd not even have to look up any values.  We'd literally just
-> do something like
-> 
->         int offset = locked_atomic_read(ip+1);
->         return int3_emulate_call(ip, ip+5+offset);
-> 
-> and it would be *atomic* with respect to whatever other user that
-> updates the instruction, as long as they update the offset with a
-> "xchg" instruction.
 
-Honestly, I'm not really sure what you are trying to do here.
+I think it is quite natural that
+"save" overwrites the file being edited.
 
-Are you talking about making the update to the code in the int3
-handler? And then just returning back to the regs->ip and executing the
-new call (not really emulating).
+And, that is how the 'save' of menuconfig/nconfig works.
 
--- Steve
+
+> I have always kept my hardware/system-specific kernel configs
+> out-of-tree, and then applied them in-tree before compiling.
+>
+> Now, I have to use 'save as' and type in the entire in-tree path
+> (/usr/src/linux-5.1/.config) each time, in order to apply the specific
+> config to the kernel, ready for compilation.
+
+
+It is easy to do it without using xconfig.
+
+cp /your/custom/config .config
+
+
+
+
+> Robert Gadsdon.
+> rglinuxtech.com
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
