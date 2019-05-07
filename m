@@ -2,121 +2,176 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AB9C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B17C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7472121479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB29F20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:12:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dmxNIGNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfEGIMm (ORCPT
+        id S1727145AbfEGIMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:12:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42420 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfEGIMl (ORCPT
+        Tue, 7 May 2019 04:12:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44054 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfEGIMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:12:41 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f23so14042078otl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 01:12:41 -0700 (PDT)
+        Tue, 7 May 2019 04:12:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id c6so8030921lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 01:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3hq9FSGG02VY06FlEFLrIkkrfLPXKNPAfTz/bP6Jco8=;
+        b=dmxNIGNrK286lTwLeNhvSglENwlRHGAUuMY7NMTexs5jIQmgcP4QFfDbaerm46jT33
+         j/5cAT2yGKZUvNjqWt1YCoOisGXwegMPYPqsz83NlKForf9OuHlsO4gew3nUZE84cPuG
+         KoI7MtZZ27ER876p8ZAMqWs6hniSq4XiLOTD0LJKk4H87VhypXP3LhJlfRndK1emedSl
+         +eoH9QsQmeXqRvTiniNtNjSubZWax0bE4b0xb05MKO3TiYCdnxrBGyH5hhqb4ssuHDb0
+         5pbbDbDxELxK2Pr8dZ5EGjS7LYJdYDIedLbUzqqvYJBrQ2uCLYiuY88/EUjta8KLjfoC
+         gmmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NQ6dv2i93HZ0YYfKZpbV9MkWY21B58FCrXMAN8Dpx2E=;
-        b=dZIlEjfY4liPM3W2qTMdmD+JxskOfa9Bul07lgqcCrnp45rYhbjJ6QWCFBgD08ai4a
-         JtbbnHwz4yZ8jQV7Eb+Ryc94rylxIInI1RoCR2xyKGMS35F5CnSsiNv9oO+zVBwBpf4t
-         ELFgHhxyYHttctizB6mPVsGOCLkElyEAvStY+vtmO37BDBV1+v66gPnXzahl8fyxGxLr
-         +exUYA/p/NswjW9QCqqZyjKcigYRS0OiZYDNiqNLgkOhAeFKegZmw1E/veMTzHSsenjl
-         XskfmfkwldNk7N3TijO/N7Fv+V+VjmLyIEZDvzYnxbJwM9oR+i4nmyfSA/fXbU9MAjUx
-         TS9w==
-X-Gm-Message-State: APjAAAUTZigACLwZoLg1Tj8yOStVCqbo7B+24J+MM1uJcHB2DhHv8ISI
-        wVeDtD2ksLlr+12vDh8aYwI=
-X-Google-Smtp-Source: APXvYqxazZcvVgW8B8Abx61RE3d6GpWO8pSjTz4Bl2xHSbS/zPSIG/vaJXjunEVO9ubN+ITWd3WpFw==
-X-Received: by 2002:a9d:6d19:: with SMTP id o25mr3196049otp.151.1557216760884;
-        Tue, 07 May 2019 01:12:40 -0700 (PDT)
-Received: from sultan-box.localdomain ([107.193.118.89])
-        by smtp.gmail.com with ESMTPSA id k60sm5643992otc.42.2019.05.07.01.12.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 01:12:40 -0700 (PDT)
-Date:   Tue, 7 May 2019 01:12:36 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Daniel Colascione <dancol@google.com>,
-        Todd Kjos <tkjos@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Martijn Coenen <maco@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        kernel-team <kernel-team@android.com>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190507081236.GA1531@sultan-box.localdomain>
-References: <20190318002949.mqknisgt7cmjmt7n@brauner.io>
- <20190318235052.GA65315@google.com>
- <20190319221415.baov7x6zoz7hvsno@brauner.io>
- <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
- <20190319231020.tdcttojlbmx57gke@brauner.io>
- <20190320015249.GC129907@google.com>
- <20190507021622.GA27300@sultan-box.localdomain>
- <20190507070430.GA24150@kroah.com>
- <20190507072721.GA4364@sultan-box.localdomain>
- <20190507074334.GB26478@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3hq9FSGG02VY06FlEFLrIkkrfLPXKNPAfTz/bP6Jco8=;
+        b=L1i3m+ZQCdmYRwQOlzNjXcXxZya0QSrv2Qr+tUy9FCjSHj3Z34I7LromzH300p5R2l
+         1UndPzhuhsiqEaGmgxp+vP3RKJ+4B49OsG+Sl5rl+N8aMnH+kMs/W39ufIR0tnnTlLvD
+         Fv3h6zYxv2Zuw4Gzw6EaHnQxi1kdsVl1jo4RzsYvcftYItL9BEegNYZbkDAq/IclnFox
+         aUdy6h6hfQFbtf5y7nMq/vNUYqSkB11U71uBwElGOkWxxgYqHpf96trvhh/U+lQDBKdl
+         07yp3+pUHEEPAvnOejSDFJQgUxJh2mU37gdXOqs1Z6ZL/9ww1K1jNXFsJ1YGWDz5FflT
+         zYGg==
+X-Gm-Message-State: APjAAAXFt5JdIAghgBPKclAJzRNBm6WnAn6D1Jta03dKSL65hzvhE1mD
+        78R/m4P1K5b9wcYrdTzg1ynX61b7QZ2twgKc5vhVNA==
+X-Google-Smtp-Source: APXvYqxh7UgOnP5AIFKlhkZ26FDOZnUL6zYLVAbc2rh5hj9GhsDGTp2ikFlg4LlDgqc/zkvcNfhMvwR4F4Gs1Tu2R6Y=
+X-Received: by 2002:a2e:1311:: with SMTP id 17mr16088273ljt.75.1557216768150;
+ Tue, 07 May 2019 01:12:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507074334.GB26478@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190506143051.102535767@linuxfoundation.org>
+In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 May 2019 13:42:36 +0530
+Message-ID: <CA+G9fYveekDik6yESocHSA46poeLKKVExjx0KkMyLin_Cvf7-Q@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/62] 4.9.174-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:43:34AM +0200, Greg Kroah-Hartman wrote:
-> Given that any "new" android device that gets shipped "soon" should be
-> using 4.9.y or newer, is this a real issue?
-
-It's certainly a real issue for those who can't buy brand new Android devices
-without software bugs every six months :)
-
-> And if it is, I'm sure that asking for those patches to be backported to
-> 4.4.y would be just fine, have you asked?
+On Mon, 6 May 2019 at 20:18, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Note that I know of Android Go devices, running 3.18.y kernels, do NOT
-> use the in-kernel memory killer, but instead use the userspace solution
-> today.  So trying to get another in-kernel memory killer solution added
-> anywhere seems quite odd.
+> This is the start of the stable review cycle for the 4.9.174 release.
+> There are 62 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 08 May 2019 02:29:15 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.174-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-It's even more odd that although a userspace solution is touted as the proper
-way to go on LKML, almost no Android OEMs are using it, and even in that commit
-I linked in the previous message, Google made a rather large set of
-modifications to the supposedly-defunct lowmemorykiller.c not one month ago.
-What's going on?
+The results from 4.9.174-rc2,
 
-Qualcomm still uses lowmemorykiller.c [1] on the Snapdragon 845. If PSI were
-backported to 4.4, or even 3.18, would it really be used? I don't really
-understand the aversion to an in-kernel memory killer on LKML despite the rest
-of the industry's attraction to it. Perhaps there's some inherently great cost
-in using the userspace solution that I'm unaware of?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Regardless, even if PSI were backported, a full-fledged LMKD using it has yet to
-be made, so it wouldn't be of much use now.
+Summary
+------------------------------------------------------------------------
 
-Thanks,
-Sultan
+kernel: 4.9.174-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 43d95ffd279c80b33fcc2c0b327c1195e3331185
+git describe: v4.9.173-61-g43d95ffd279c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.173-61-g43d95ffd279c
 
-[1] https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/arch/arm64/configs/sdm845_defconfig?h=LA.UM.7.3.r1-07400-sdm845.0#n492
+No regressions (compared to build v4.9.173)
+
+No fixes (compared to build v4.9.173)
+
+Ran 23406 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
