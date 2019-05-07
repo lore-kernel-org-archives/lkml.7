@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA393C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB69C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CE5216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822FE21530
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207329;
-	bh=CqM25Liyll1vUZ+oKuFskUUke6oAbdea2XABoh0OlYE=;
+	s=default; t=1557207332;
+	bh=i8CY65LK6Isnm5MVu32IgJ4xlKEoxA8v+lpkPc2ysys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vb7lV7KCaA/WT7dFvxaPBdazq5Be6OrQP/GbeDTtE7OISwZIazC6GsEuikqnnfNft
-	 B5qtzLnxuxyaZgoeodswLzAgjdPnP+KUO87GZsW9preUFUALkL7FMWBGv4551Ks6IS
-	 aKytnYvrXB6mOkDlmTYp1e3OhsW4dWz/RrZ5hNcU=
+	b=XfD4Ix30EKmueAdA7eyChJEBNu2bzLMeoHQJtZen2Hp+8YBL9OW6sPo5xUQktF//b
+	 uUpIuA6MfaEwWHi/iInouD/2kBIbhxo3sluZ1xD6wSsE494ZMNbkb1LyqPXnsRN9hl
+	 PG7P/ZJ+16wHL7XrUSQmt+iIpwA5IjbuwJSbTs3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfEGFf2 (ORCPT
+        id S1727820AbfEGFfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:35:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55316 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:35:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727760AbfEGFfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:16 -0400
+        id S1727276AbfEGFfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1103521479;
-        Tue,  7 May 2019 05:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372BB20B7C;
+        Tue,  7 May 2019 05:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207315;
-        bh=CqM25Liyll1vUZ+oKuFskUUke6oAbdea2XABoh0OlYE=;
+        s=default; t=1557207323;
+        bh=i8CY65LK6Isnm5MVu32IgJ4xlKEoxA8v+lpkPc2ysys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWk22WJD4Bn64dhVWKXO7glZYVd4lqIym4OH7iKKPl70LwOEDOlhdf6Dex3sJMGOu
-         eu6bjUo6UUxKrgOL7BxGNFuErcXlCYdDX8/RNsI/I/5dvH6A3cXsxtTnv2jlM7ccsO
-         6OP9sO6+YsrF9e5s2bMnqYp0kWqzHM7YHvtQabZY=
+        b=0rpj1QAHGbJjO6hLnT1G0JL8JIzH1ZnNU6R/WePokZ2LbJdKiC15RFp/99g8L8HkJ
+         pFFb7fU9MwF8iimV6qIUwDBjzuXyQMD3j5G3+EL28UTJU61FlHEBpx/fJ+fJBIabO4
+         tLOuxfyUCtsYCPnIH6mdMUsNJbVxrBjAW0aaFhOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tigran Tadevosyan <tigran.tadevosyan@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Qian Cai <cai@lca.pw>, Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 81/99] ARM: 8856/1: NOMMU: Fix CCR register faulty initialization when MPU is disabled
-Date:   Tue,  7 May 2019 01:32:15 -0400
-Message-Id: <20190507053235.29900-81-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 86/99] x86/mm: Fix a crash with kmemleak_scan()
+Date:   Tue,  7 May 2019 01:32:20 -0400
+Message-Id: <20190507053235.29900-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -60,38 +65,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tigran Tadevosyan <tigran.tadevosyan@arm.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit c3143967807adb1357c36b68a7563fc0c4e1f615 ]
+[ Upstream commit 0d02113b31b2017dd349ec9df2314e798a90fa6e ]
 
-When CONFIG_ARM_MPU is not defined, the base address of v7M SCB register
-is not initialized with correct value. This prevents enabling I/D caches
-when the L1 cache poilcy is applied in kernel.
+The first kmemleak_scan() call after boot would trigger the crash below
+because this callpath:
 
-Fixes: 3c24121039c9da14692eb48f6e39565b28c0f3cf ("ARM: 8756/1: NOMMU: Postpone MPU activation till __after_proc_init")
-Signed-off-by: Tigran Tadevosyan <tigran.tadevosyan@arm.com>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+  kernel_init
+    free_initmem
+      mem_encrypt_free_decrypted_mem
+        free_init_pages
+
+unmaps memory inside the .bss when DEBUG_PAGEALLOC=y.
+
+kmemleak_init() will register the .data/.bss sections and then
+kmemleak_scan() will scan those addresses and dereference them looking
+for pointer references. If free_init_pages() frees and unmaps pages in
+those sections, kmemleak_scan() will crash if referencing one of those
+addresses:
+
+  BUG: unable to handle kernel paging request at ffffffffbd402000
+  CPU: 12 PID: 325 Comm: kmemleak Not tainted 5.1.0-rc4+ #4
+  RIP: 0010:scan_block
+  Call Trace:
+   scan_gray_list
+   kmemleak_scan
+   kmemleak_scan_thread
+   kthread
+   ret_from_fork
+
+Since kmemleak_free_part() is tolerant to unknown objects (not tracked
+by kmemleak), it is fine to call it from free_init_pages() even if not
+all address ranges passed to this function are known to kmemleak.
+
+ [ bp: Massage. ]
+
+Fixes: b3f0907c71e0 ("x86/mm: Add .bss..decrypted section to hold shared variables")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brijesh Singh <brijesh.singh@amd.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190423165811.36699-1-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/head-nommu.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/init.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
-index ec29de250076..cab89479d15e 100644
---- a/arch/arm/kernel/head-nommu.S
-+++ b/arch/arm/kernel/head-nommu.S
-@@ -133,9 +133,9 @@ __secondary_data:
-  */
- 	.text
- __after_proc_init:
--#ifdef CONFIG_ARM_MPU
- M_CLASS(movw	r12, #:lower16:BASEADDR_V7M_SCB)
- M_CLASS(movt	r12, #:upper16:BASEADDR_V7M_SCB)
-+#ifdef CONFIG_ARM_MPU
- M_CLASS(ldr	r3, [r12, 0x50])
- AR_CLASS(mrc	p15, 0, r3, c0, c1, 4)          @ Read ID_MMFR0
- 	and	r3, r3, #(MMFR0_PMSA)           @ PMSA field
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index f905a2371080..8dacdb96899e 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -5,6 +5,7 @@
+ #include <linux/memblock.h>
+ #include <linux/swapfile.h>
+ #include <linux/swapops.h>
++#include <linux/kmemleak.h>
+ 
+ #include <asm/set_memory.h>
+ #include <asm/e820/api.h>
+@@ -766,6 +767,11 @@ void free_init_pages(const char *what, unsigned long begin, unsigned long end)
+ 	if (debug_pagealloc_enabled()) {
+ 		pr_info("debug: unmapping init [mem %#010lx-%#010lx]\n",
+ 			begin, end - 1);
++		/*
++		 * Inform kmemleak about the hole in the memory since the
++		 * corresponding pages will be unmapped.
++		 */
++		kmemleak_free_part((void *)begin, end - begin);
+ 		set_memory_np(begin, (end - begin) >> PAGE_SHIFT);
+ 	} else {
+ 		/*
 -- 
 2.20.1
 
