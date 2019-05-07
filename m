@@ -2,144 +2,178 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F1CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A607C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5477206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C045206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="d387T7rI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/Ae+FE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfEGPch (ORCPT
+        id S1726679AbfEGPdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:32:37 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:21788 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGPch (ORCPT
+        Tue, 7 May 2019 11:33:37 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43017 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGPdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:32:37 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,442,1549954800"; 
-   d="scan'208";a="31960315"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 07 May 2019 08:32:35 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Tue, 7 May 2019 08:32:35 -0700
+        Tue, 7 May 2019 11:33:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u27so11929479lfg.10;
+        Tue, 07 May 2019 08:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8QqbYESgXt9g+I75TZNWTl9nIU6DAI2skvafxKXSbIU=;
- b=d387T7rIuCqTjiPaYPb/2rpQrrZrKEcCPs6uPfDdNKp0uv5zyLlB0ZwsAM7sJHYQwMaUmX/WD3x+ZsSuWuXtsqA2TQN1JpWASFvMwU7e5Tmvei/4Vz4NmUya8/yTpxy+uOJP6k6tM5eOLxgtfQINCNTkrCpE5Mfc593m66witQ4=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1919.namprd11.prod.outlook.com (10.175.54.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Tue, 7 May 2019 15:32:34 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::990d:15eb:1a20:3255]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::990d:15eb:1a20:3255%6]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 15:32:33 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <harini.katakam@xilinx.com>, <davem@davemloft.net>,
-        <rafalo@cadence.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <michal.simek@xilinx.com>, <harinikatakamlinux@gmail.com>
-Subject: Re: [PATCH] net: macb: Change interrupt and napi enable order in open
-Thread-Topic: [PATCH] net: macb: Change interrupt and napi enable order in
- open
-Thread-Index: AQHVBOGZMbHCnAOQYkeJXI/NCGajJ6ZfymGA
-Date:   Tue, 7 May 2019 15:32:33 +0000
-Message-ID: <1f828865-16ec-0d2e-93a3-e911d0b6baa2@microchip.com>
-References: <1557239350-4760-1-git-send-email-harini.katakam@xilinx.com>
-In-Reply-To: <1557239350-4760-1-git-send-email-harini.katakam@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0041.namprd05.prod.outlook.com
- (2603:10b6:a03:74::18) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f23b32fd-789a-45d6-9eb2-08d6d3013993
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR11MB1919;
-x-ms-traffictypediagnostic: MWHPR11MB1919:
-x-microsoft-antispam-prvs: <MWHPR11MB19190C94BEA149CDBF0AC6F2E0310@MWHPR11MB1919.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(136003)(376002)(346002)(189003)(199004)(2501003)(81156014)(8676002)(81166006)(4326008)(68736007)(8936002)(53936002)(31686004)(36756003)(229853002)(14444005)(256004)(2906002)(6512007)(486006)(305945005)(7736002)(71190400001)(71200400001)(3846002)(6116002)(6246003)(66446008)(6486002)(6436002)(66066001)(25786009)(5660300002)(2201001)(110136005)(86362001)(54906003)(99286004)(478600001)(72206003)(316002)(31696002)(14454004)(476003)(186003)(11346002)(102836004)(446003)(26005)(66946007)(66476007)(66556008)(64756008)(386003)(6506007)(52116002)(2616005)(53546011)(73956011)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1919;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LTX3QD86g20QgD4mr+zrz43Dy5o5Uf7iDlDxlYXk9NlafVVtyQTZPMntr3q/+9CB/eCnnOB9WLyFPGZDEcdfe33+MdgLosHLMRW/+DvG+1n3Zcf0/4GJ0XGYEs+GGFjFJyqBuYBQxuO7fa0GPVqbByKy3rgH1jDANZByfjMf54xXYHRV5uZcqf4ybMhCxmP+zpm7Wg9J5dbbDiN8sQ8UHdiVGYdYMd3hKkU4O1v6SjoPGLLJTL+Fq+Urj4JFUxjzHDEXB4yXJP7Wb1wOvjWHTIdZL3tODg9GLH4NXHUxME4Lprx74/xSqSrg6tTUc1iWF3notRprLBy4u8mlfucS5QWoe4L+JVFi2ay11S142a49EA82rROJ78nqiOAbuSlNS/GH/sfrHT0iHPEEKn8VEpnAXy7NHgytV/mdp+ilZWA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <532FBD47D62B164C95435D0E227D07D4@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WQisPNfHOfBJIalj0+j26baB7DA29UKmypJYO0pbRkw=;
+        b=p/Ae+FE2KJJFwABwsALHLaFGmLRrrZwfw6c20iqhoqGxxvYFHcl4Mbl0rgeHBsHgPd
+         OWKfLJJPdkXbaBXWmTfG2b+0VB+VBwspEXLsxCtj7qabY+QR3AuBBRrFxF4qAWHRzYvs
+         zYS5wXWXvLvn+A3xfxJzBuUlOnPihB7fWAzS1N/DW/RHkNGXlNuoaXHhBErG5LjCU/59
+         2JX3nb3qPqK1wEs4pVqoZhR/R+PhflOPKM25QrzQs3w8tRqi4ZRRttnaw5JIbVdOwDzG
+         8IfTMUwpsgVHh+VXKBiQwX9yY3LofCi+aLAV1TjzFzet2eZgw12JYXQ9t0IZA51CzxJg
+         7IvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WQisPNfHOfBJIalj0+j26baB7DA29UKmypJYO0pbRkw=;
+        b=atU+mJRapPz1pCa058oT/JKS+qELDqufX4CB8rG7sKsRwLmq8WWQZIk6EokRQZN+Tc
+         3oDO71WQ8MhPSiXjTugiVOTJRBXFyvrTWrbnU/yzspz229EU9RhBvFrb1DXD0B913aff
+         +uAXGeSFbHywuVxsvPg9zGsH1mC3kfvyIz6vNiwUAU6hoc4uPMnBUOv43VTO1B/ApCpa
+         HtbGhmfNX0Kmefw/IKjAv+DthisuslzCN4+Godi0SudmWAXlzqa9xw3iwKp2Z/cgfepm
+         kS6sqQuSvntxUYYZ1Gu/S69qUaAWP3r8gkf23bYDMC5LTY/LvnxanqVrmSHBvpgT13y/
+         2e8A==
+X-Gm-Message-State: APjAAAX0GKjU5PO8BzwAjvlP4Vg0gWJ9E9oIMI4bJKCExReX9Rw1yubV
+        kdTqMCZPtBmPMdztyvJklonbRghW5lFBnYgyUiQ=
+X-Google-Smtp-Source: APXvYqyy1KmutZbnqJrWqU9nAQFKvt+pfus9NE6eVAUy299obZzU9NfS85opZFbrS+ROq8Sw9zfcEjMSxrm8MGvA9oM=
+X-Received: by 2002:ac2:54a1:: with SMTP id w1mr18136772lfk.46.1557243214820;
+ Tue, 07 May 2019 08:33:34 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f23b32fd-789a-45d6-9eb2-08d6d3013993
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 15:32:33.7330
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1919
-X-OriginatorOrg: microchip.com
+References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 7 May 2019 12:33:39 -0300
+Message-ID: <CAOMZO5B2nMsVNO6O_D+YTSjux=-DjNPGxhkEi3AQquOZVODumA@mail.gmail.com>
+Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700 Adapt
+To:     =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDcvMDUvMjAxOSBhdCAxNjoyOSwgSGFyaW5pIEthdGFrYW0gd3JvdGU6DQo+IEV4dGVybmFs
-IEUtTWFpbA0KPiANCj4gDQo+IEN1cnJlbnQgb3JkZXIgaW4gb3BlbjoNCj4gLT4gRW5hYmxlIGlu
-dGVycnVwdHMgKG1hY2JfaW5pdF9odykNCj4gLT4gRW5hYmxlIE5BUEkNCj4gLT4gU3RhcnQgUEhZ
-DQo+IA0KPiBTZXF1ZW5jZSBvZiBSWCBoYW5kbGluZzoNCj4gLT4gUlggaW50ZXJydXB0IG9jY3Vy
-cw0KPiAtPiBJbnRlcnJ1cHQgaXMgY2xlYXJlZCBhbmQgaW50ZXJydXB0IGJpdHMgZGlzYWJsZWQg
-aW4gaGFuZGxlcg0KPiAtPiBOQVBJIGlzIHNjaGVkdWxlZA0KPiAtPiBJbiBOQVBJLCBSWCBidWRn
-ZXQgaXMgcHJvY2Vzc2VkIGFuZCBSWCBpbnRlcnJ1cHRzIGFyZSByZS1lbmFibGVkDQo+IA0KPiBX
-aXRoIHRoZSBhYm92ZSwgb24gUUVNVSBvciBmaXhlZCBsaW5rIHNldHVwcyAod2hlcmUgUEhZIHN0
-YXRlIGRvZXNuJ3QNCj4gbWF0dGVyKSwgdGhlcmUncyBhIGNoYW5jZSBtYWNiIFJYIGludGVycnVw
-dCBvY2N1cnMgYmVmb3JlIE5BUEkgaXMNCj4gZW5hYmxlZC4gVGhpcyB3aWxsIHJlc3VsdCBpbiBO
-QVBJIGJlaW5nIHNjaGVkdWxlZCBiZWZvcmUgaXQgaXMgZW5hYmxlZC4NCj4gRml4IHRoaXMgbWFj
-YiBvcGVuIGJ5IGNoYW5naW5nIHRoZSBvcmRlci4NCj4gDQo+IEZpeGVzOiBhZTFmMmE1NmQyNzMg
-KCJuZXQ6IG1hY2I6IEFkZGVkIHN1cHBvcnQgZm9yIG1hbnkgUlggcXVldWVzIikNCj4gU2lnbmVk
-LW9mZi1ieTogSGFyaW5pIEthdGFrYW0gPGhhcmluaS5rYXRha2FtQHhpbGlueC5jb20+DQoNCml0
-IGxvb2tzIG9rYXkgdG8gbWU6DQpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJy
-ZUBtaWNyb2NoaXAuY29tPg0KDQo+IC0tLQ0KPiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVu
-Y2UvbWFjYl9tYWluLmMgfCA2ICsrKy0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
-bnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2Uv
-bWFjYl9tYWluLmMNCj4gaW5kZXggNWQ1YzlkNy4uYzA0OTQxMCAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYw0KPiArKysgYi9kcml2ZXJzL25l
-dC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IEBAIC0yNDI3LDEyICsyNDI3LDEyIEBA
-IHN0YXRpYyBpbnQgbWFjYl9vcGVuKHN0cnVjdCBuZXRfZGV2aWNlICpkZXYpDQo+ICAgCQlnb3Rv
-IHBtX2V4aXQ7DQo+ICAgCX0NCj4gICANCj4gLQlicC0+bWFjYmdlbV9vcHMubW9nX2luaXRfcmlu
-Z3MoYnApOw0KPiAtCW1hY2JfaW5pdF9odyhicCk7DQo+IC0NCj4gICAJZm9yIChxID0gMCwgcXVl
-dWUgPSBicC0+cXVldWVzOyBxIDwgYnAtPm51bV9xdWV1ZXM7ICsrcSwgKytxdWV1ZSkNCj4gICAJ
-CW5hcGlfZW5hYmxlKCZxdWV1ZS0+bmFwaSk7DQo+ICAgDQo+ICsJYnAtPm1hY2JnZW1fb3BzLm1v
-Z19pbml0X3JpbmdzKGJwKTsNCj4gKwltYWNiX2luaXRfaHcoYnApOw0KPiArDQo+ICAgCS8qIHNj
-aGVkdWxlIGEgbGluayBzdGF0ZSBjaGVjayAqLw0KPiAgIAlwaHlfc3RhcnQoZGV2LT5waHlkZXYp
-Ow0KPiAgIA0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
+[Adding Sam, who is helping to review/collect panel-simple patches]
+
+On Tue, May 7, 2019 at 12:27 PM S=C3=A9bastien Szymanski
+<sebastien.szymanski@armadeus.com> wrote:
+>
+> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+> that it can be connected on the TFT header of Armadeus Dev boards.
+>
+> Cc: stable@vger.kernel.org # v4.19
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
+>
+> ---
+>  .../display/panel/armadeus,st0700-adapt.txt   |  9 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/armad=
+eus,st0700-adapt.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0=
+700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st=
+0700-adapt.txt
+> new file mode 100644
+> index 000000000000..a30d63db3c8f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-ada=
+pt.txt
+> @@ -0,0 +1,9 @@
+> +Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT =
+with
+> +an adapter board.
+> +
+> +Required properties:
+> +- compatible: "armadeus,st0700-adapt"
+> +- power-supply: see panel-common.txt
+> +
+> +Optional properties:
+> +- backlight: see panel-common.txt
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
+/panel-simple.c
+> index 9e8218f6a3f2..45ca8d10b66f 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -446,6 +446,32 @@ static const struct panel_desc ampire_am800480r3tmqw=
+a1h =3D {
+>         .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
+>  };
+>
+> +static const struct display_timing santek_st0700i5y_rbslw_f_timing =3D {
+> +       .pixelclock =3D { 26400000, 33300000, 46800000 },
+> +       .hactive =3D { 800, 800, 800 },
+> +       .hfront_porch =3D { 16, 210, 354 },
+> +       .hback_porch =3D { 45, 36, 6 },
+> +       .hsync_len =3D { 1, 10, 40 },
+> +       .vactive =3D { 480, 480, 480 },
+> +       .vfront_porch =3D { 7, 22, 147 },
+> +       .vback_porch =3D { 22, 13, 3 },
+> +       .vsync_len =3D { 1, 10, 20 },
+> +       .flags =3D DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
+> +               DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE
+> +};
+> +
+> +static const struct panel_desc armadeus_st0700_adapt =3D {
+> +       .timings =3D &santek_st0700i5y_rbslw_f_timing,
+> +       .num_timings =3D 1,
+> +       .bpc =3D 6,
+> +       .size =3D {
+> +               .width =3D 154,
+> +               .height =3D 86,
+> +       },
+> +       .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18,
+> +       .bus_flags =3D DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDG=
+E,
+> +};
+> +
+>  static const struct drm_display_mode auo_b101aw03_mode =3D {
+>         .clock =3D 51450,
+>         .hdisplay =3D 1024,
+> @@ -2544,6 +2570,9 @@ static const struct of_device_id platform_of_match[=
+] =3D {
+>         }, {
+>                 .compatible =3D "arm,rtsm-display",
+>                 .data =3D &arm_rtsm,
+> +       }, {
+> +               .compatible =3D "armadeus,st0700-adapt",
+> +               .data =3D &armadeus_st0700_adapt,
+>         }, {
+>                 .compatible =3D "auo,b101aw03",
+>                 .data =3D &auo_b101aw03,
+> --
+> 2.19.2
+>
