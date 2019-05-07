@@ -2,113 +2,89 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80760C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308D2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F1820578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18A620578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ll7Xf50N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfEGTjy (ORCPT
+        id S1726455AbfEGTlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:39:54 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33512 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEGTjx (ORCPT
+        Tue, 7 May 2019 15:41:16 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:33744 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfEGTlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:39:53 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E829614B8B70B;
-        Tue,  7 May 2019 12:39:52 -0700 (PDT)
-Date:   Tue, 07 May 2019 12:39:52 -0700 (PDT)
-Message-Id: <20190507.123952.2046042425594195721.davem@davemloft.net>
-To:     ldir@darbyshire-bryant.me.uk
-Cc:     jhs@mojatatu.com, jiri@resnulli.us, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        shuah@kernel.org, xiyou.wangcong@gmail.com
-Subject: Re: [net-next v3] net: sched: Introduce act_ctinfo action
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190505131736.50496-1-ldir@darbyshire-bryant.me.uk>
-References: <20190505101523.48425-1-ldir@darbyshire-bryant.me.uk>
-        <20190505131736.50496-1-ldir@darbyshire-bryant.me.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 12:39:53 -0700 (PDT)
+        Tue, 7 May 2019 15:41:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1557258074; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=dDlIc1LhGttw6Zm+8qHMSGAIbRm2qsIU1NXuMH8CFM8=;
+        b=Ll7Xf50N170tFv4iwPKFMDCMEvSrdJBTziEShjQek9JJ5vyLNn6R+PtjKhIhgp2RWsiJg8
+        ito6YErP6gmhtMf1/1oLbXjJdom1NYo8h8mh937FflTbC5wX5cAbnkW2sMEAB+3bF53VIa
+        hXJHMsuvpDanOR92PwkW+e2kyschFEM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     od@zcrc.me, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] MIPS: jz4740: Fix Ingenic SoCs sometimes reporting wrong ISA
+Date:   Tue,  7 May 2019 21:41:01 +0200
+Message-Id: <20190507194101.17112-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-Date: Sun, 5 May 2019 13:20:13 +0000
+The config0 register in the Xburst always reports a MIPS32r2
+ISA, but not all of them support it.
 
-> ctinfo is a new tc filter action module.  It is designed to restore
-> information contained in conntrack marks to other places.  At present it
-> can restore DSCP values to IPv4/6 diffserv fields and also copy
-> conntrack marks to skb marks.  As such the 2nd function effectively
-> replaces the existing act_connmark module
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ arch/mips/jz4740/setup.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-This needs more time for review and therefore I'm deferring this to the
-next merge window.
+diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
+index 7e63c54eb8d2..2508c026bdfa 100644
+--- a/arch/mips/jz4740/setup.c
++++ b/arch/mips/jz4740/setup.c
+@@ -64,6 +64,7 @@ static unsigned long __init get_board_mach_type(const void *fdt)
+ 
+ void __init plat_mem_setup(void)
+ {
++	struct cpuinfo_mips *c = &current_cpu_data;
+ 	int offset;
+ 	void *dtb;
+ 
+@@ -81,6 +82,18 @@ void __init plat_mem_setup(void)
+ 		jz4740_detect_mem();
+ 
+ 	mips_machtype = get_board_mach_type(dtb);
++
++	switch (mips_machtype) {
++	case MACH_INGENIC_JZ4740:
++		/*
++		 * The config0 register in the Xburst always reports a MIPS32r2
++		 * ISA, but not all of them support it.
++		 */
++		c->isa_level &= ~MIPS_CPU_ISA_M32R2;
++		break;
++	default:
++		break;
++	}
+ }
+ 
+ void __init device_tree_init(void)
+-- 
+2.21.0.593.g511ec345e18
 
-Also:
-
-> +static int tcf_ctinfo_act(struct sk_buff *skb, const struct tc_action *a,
-> +			  struct tcf_result *res)
-> +{
-> +	const struct nf_conntrack_tuple_hash *thash = NULL;
-> +	struct nf_conntrack_tuple tuple;
-> +	enum ip_conntrack_info ctinfo;
-> +	struct tcf_ctinfo *ca = to_ctinfo(a);
-> +	struct tcf_ctinfo_params *cp;
-> +	struct nf_conntrack_zone zone;
-> +	struct nf_conn *ct;
-> +	int proto, wlen;
-> +	int action;
-
-Reverse christmas tree for these local variables please.
-
-> +static int tcf_ctinfo_init(struct net *net, struct nlattr *nla,
-> +			   struct nlattr *est, struct tc_action **a,
-> +			   int ovr, int bind, bool rtnl_held,
-> +			   struct tcf_proto *tp,
-> +			   struct netlink_ext_ack *extack)
-> +{
-> +	struct tc_action_net *tn = net_generic(net, ctinfo_net_id);
-> +	struct tcf_ctinfo_params *cp_new;
-> +	struct nlattr *tb[TCA_CTINFO_MAX + 1];
-> +	struct tcf_chain *goto_ch = NULL;
-> +	struct tcf_ctinfo *ci;
-> +	struct tc_ctinfo *actparm;
-> +	struct tc_ctinfo_dscp *dscpparm;
-> +	int ret = 0, err, i;
-
-Likewise.
-
-> +static inline int tcf_ctinfo_dump(struct sk_buff *skb, struct tc_action *a,
-> +				  int bind, int ref)
-> +{
-> +	unsigned char *b = skb_tail_pointer(skb);
-> +	struct tcf_ctinfo *ci = to_ctinfo(a);
-> +	struct tcf_ctinfo_params *cp;
-> +	struct tc_ctinfo opt = {
-> +		.index   = ci->tcf_index,
-> +		.refcnt  = refcount_read(&ci->tcf_refcnt) - ref,
-> +		.bindcnt = atomic_read(&ci->tcf_bindcnt) - bind,
-> +	};
-> +	struct tcf_t t;
-> +	struct tc_ctinfo_dscp dscpparm;
-> +	struct tc_ctinfo_stats_dscp dscpstats;
-
-Likewise.
-
-Also, never use the inline keyword in foo.c files, always let the compiler
-decide.
