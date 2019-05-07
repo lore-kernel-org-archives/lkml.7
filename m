@@ -2,209 +2,133 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3770C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74102C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98868205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441B220825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:59:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiCljLFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfEGN7S (ORCPT
+        id S1726838AbfEGN7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:59:18 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50871 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfEGN7S (ORCPT
+        Tue, 7 May 2019 09:59:24 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43247 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfEGN7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:59:18 -0400
-X-Originating-IP: 90.88.28.253
-Received: from localhost (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id D76541C0017;
-        Tue,  7 May 2019 13:59:12 +0000 (UTC)
-Date:   Tue, 7 May 2019 15:59:12 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Frank Lee <tiny.windzz@gmail.com>, Icenowy Zheng <icenowy@aosc.io>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, lars@metafoo.de,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        robh+dt@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        pmeerw@pmeerw.net, knaack.h@gmx.de,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
- thermal sensor
-Message-ID: <20190507135912.4lev7ly2w4drlt7s@flea>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-2-tiny.windzz@gmail.com>
- <20190505162215.3594f77d@archlinux>
- <20190506122807.4u323iys74jddcet@flea>
- <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
- <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
- <20190506175525.swc5u7j6ntry7v3g@core.my.home>
+        Tue, 7 May 2019 09:59:23 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w33so16490926edb.10;
+        Tue, 07 May 2019 06:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c4qUAvfECC+5XnnozAJrEygXcMh19erkY9Z8c0W8zz4=;
+        b=LiCljLFxU+I+ROMxt+Drpvlt9cCT3G4Fx5na1wBOG54AsZXFm/nrhOKzcoHFBnm2mO
+         DOfqpzOqNkaFkjz59+OqLjk8w7K8/h/80dUgrSRraXySbx21wgjnMYwi6m2ss5qIBADs
+         1Dy5nupzlgCfouz8KqIv87vpIYhdkPfktQregqQInYjTRMbmJudYQYDjxubv5EX5FMvt
+         K7ZAuzIy2szKl51EthtG9j+3E+eUfDLjVa7hv4d0F30Ffh2OJvzO7b82NFHMBxLAjiq3
+         HjlfgEW8crnISA1k1kN2IJ7FF6nXvit73f7RmyRv75YggtLQ4LGMSte71ianYpK3/PCe
+         gQaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c4qUAvfECC+5XnnozAJrEygXcMh19erkY9Z8c0W8zz4=;
+        b=NcXZnjmYR2eGlE7Jy0SKAFXrfvl51NYY6z5D7eEVT0bgiG8NstgAmhvjtQy+Z2jzut
+         qRTA39ZTBnT5mKoDn7t5NPoRU5fQvasVFRsKTeHVhezrdiVLCDIPmW8pYMnTehcUW50U
+         GN1KInquwP+4fKT9oBaMLrW4XsiiO+s22Xiy+8zFizQM/9UHjGRhEN72IDsGC/iTgWE/
+         bseb1sArSbQftmTovy1GNhR2+Cdxeh6IDTx09fCnlJvzJE16qX3oltnMlNuS00AkuyGg
+         Ic9N8NmhOE5DDqsoIjVKoTYDSYm8kbEg/11qCL2G8NEUAB/I5j9aqz0KtkP7go6ktOBH
+         m6MA==
+X-Gm-Message-State: APjAAAWgjVRnKYEVyCoQh0In+pxFPJnmVo6wjH63nu5oaOP1o0bhnMgU
+        BPGFTB9zpZCAbz1Cim83+NAGh/wv67GRrpvXEX8=
+X-Google-Smtp-Source: APXvYqxH4Q4BwOE6qyChi1eCxJOf+jcHtJWG150h5jBaAvMYs9tpbxLhKMxGNhR0giXV2aIBTMPFS9EpL44SwVwIBwg=
+X-Received: by 2002:a17:906:6410:: with SMTP id d16mr24647031ejm.75.1557237561209;
+ Tue, 07 May 2019 06:59:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bydgprfj47ik7yub"
-Content-Disposition: inline
-In-Reply-To: <20190506175525.swc5u7j6ntry7v3g@core.my.home>
-User-Agent: NeoMutt/20180716
+References: <20190507103434.16174-1-colin.king@canonical.com>
+In-Reply-To: <20190507103434.16174-1-colin.king@canonical.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 7 May 2019 16:59:10 +0300
+Message-ID: <CA+h21hoEVYKTeGxSxPi0E1bWp1rBE=sG5T8MzGOBkranpdGhjQ@mail.gmail.com>
+Subject: Re: [PATCH][next] net: dsa: sja1105: fix check on while loop exit
+To:     Colin King <colin.king@canonical.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---bydgprfj47ik7yub
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 06, 2019 at 07:55:25PM +0200, Ond=C5=99ej Jirman wrote:
-> On Tue, May 07, 2019 at 01:08:39AM +0800, Frank Lee wrote:
-> > On Tue, May 7, 2019 at 12:52 AM Icenowy Zheng <icenowy@aosc.io> wrote:
-> > >
-> > > =E5=9C=A8 2019-05-06=E4=B8=80=E7=9A=84 14:28 +0200=EF=BC=8CMaxime Rip=
-ard=E5=86=99=E9=81=93=EF=BC=9A
-> > > > Hi,
-> > > >
-> > > > On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
-> > > > > On Fri,  3 May 2019 03:28:07 -0400
-> > > > > Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > > > >
-> > > > > > For some SOCs, there are more than one thermal sensor, and there
-> > > > > > are
-> > > > > > currently four sensors on the A80. So we need to do some work in
-> > > > > > order
-> > > > > > to support multiple thermal sensors:
-> > > > > >
-> > > > > >   1) add sensor_count in gpadc_data.
-> > > > > >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support
-> > > > > > multiple
-> > > > > >      thermal_zone_device and distinguish between different
-> > > > > > sensors.
-> > > > > >   3) modify read temperature and initialization function.
-> > > > >
-> > > > > This comment doesn't mention the devm change. If it had it would
-> > > > > have
-> > > > > raised immediate alarm bells.
-> > > > >
-> > > > > I'm also not keen on the web of pointers that this driver is
-> > > > > steadily
-> > > > > evolving.  I can't immediately see how to reduce that complexity
-> > > > > however.
-> > > >
-> > > > So I might be responsible for that, and looking back, this has been=
- a
-> > > > mistake.
-> > > >
-> > > > This driver was initally put together to support a controller found
-> > > > in
-> > > > older (A10 up to A31) Allwinner SoCs. This controller had an ADC
-> > > > driver that could be operated as a touchscreen controller, and was
-> > > > providing a CPU temperature sensor and a general purpose ADC.
-> > > >
-> > > > However, we already had a driver for that controller in drivers/inp=
-ut
-> > > > to report the CPU temperature, and the one in IIO was introduced to
-> > > > support the general purpose ADC (and the CPU temperature). The long
-> > > > term goal was to add the touchscreen feature as well eventually so
-> > > > that we could remove the one in drivers/input. That didn't happen.
-> > > >
-> > > > At the same time, the Allwinner hardware slowly evolved to remove t=
-he
-> > > > touchscreen and ADC features, and only keep the CPU temperature
-> > > > readout. It then evolved further on to support multiple temperatures
-> > > > (for different clusters, the GPU, and so on).
-> > > >
-> > > > So, today, we're in a situation where I was pushing everything into
-> > > > that IIO drivers since there was similiraties between all the
-> > > > generations, but the fact that we have to support so many odd cases
-> > > > (DT bindings compatibility, controllers with and without ADC, etc)
-> > > > that it becomes a real mess.
-> > > >
-> > > > And that mess isn't really used by anybody, since we want to have t=
-he
-> > > > touchscreen.
-> > > >
-> > > > There's only one SoC that is supported only by that driver, which is
-> > > > the A33 that only had a CPU temperature readout, and is still pretty
-> > > > similar to the latest SoC from Allwinner (that is supported by this
-> > > > series).
-> > > >
-> > > > I guess, for everyone's sanity and in order to not stall this
-> > > > further,
-> > > > it would just be better to create an hwmon driver for the A33 (and
-> > > > onwards, including the H6) for the SoC that just have the temperatu=
-re
-> > > > readout feature. And for the older SoC, we just keep the older driv=
-er
-> > > > under input/. Once the A33 is supported, we'll remove the driver in
-> > > > IIO (and the related bits in drivers/mfd).
-> >
-> > a hwmon driver or a thermal driver=EF=BC=9F
-> >
-> > >
-> > > I think a thermal driver is better.
-> >
-> > This is what I hope to see a few months ago.
-> >
-> > >
-> > > Other SoCs' thermal sensor drivers are all thermal drivers.
-> > >
-> > > >
-> > > > Armbian already has a driver for that they never upstreamed iirc, so
-> > > > it might be a good starting point, and we would add the support for
-> > > > the H6. How does that sound?
-> > >
-> > > I think the developer abandoned to upstream it because of the previous
-> > > problem ;-)
-> > >
-> > > Maybe it can be taken and add A33&H6 support.
-> >
-> > If OK, I am going to start some thermal driver work this weekend.  : )
+On Tue, 7 May 2019 at 13:34, Colin King <colin.king@canonical.com> wrote:
 >
-> There are plenty of thermal drivers flying around, with varying levels
-> of support for various SoCs:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> - H3/H5: https://megous.com/git/linux/commit/?h=3Dths-5.1&id=3Db8e20c5da7=
-a00b3a3fa1b274fc8d5bea95872b0a
-> - A83T: https://megous.com/git/linux/commit/?h=3Dths-5.1&id=3D796dff9a946=
-fd475cc1e4bb948a723ea841c640c
-> - H6: https://megous.com/git/linux/commit/?h=3Dopi3-5.1&id=3Daeab762c19b4=
-aa228a295258c9d6b2e1f143bf86
+> The while-loop exit condition check is not correct; the
+> loop should continue if the returns from the function calls are
+> negative or the CRC status returns are invalid.  Currently it
+> is ignoring the returns from the function calls.  Fix this by
+> removing the status return checks and only break from the loop
+> at the very end when we know that all the success condtions have
+> been met.
 >
-> For H3/H5 Icenowy also tried to upstream some variant of my THS driver, w=
-ith
-> better SID/calibration data reading support.
+> Kudos to Dan Carpenter for describing the correct fix.
 >
-> I'd suggest starting with the H6 driver above (as that implements the
-> calibration data readout correctly), and make it so that it can support m=
-ultiple
-> SoCs.
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>
+> V2: Discard my broken origina fix. Use correct fix as described by
+>     Dan Carpenter.
+> ---
+>  drivers/net/dsa/sja1105/sja1105_spi.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+> index 244a94ccfc18..40ac696adf63 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_spi.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+> @@ -465,9 +465,11 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+>                         dev_err(dev, "Switch reported that configuration is "
+>                                 "invalid, retrying...\n");
+>                         continue;
+> +
+>                 }
+> -       } while (--retries && (status.crcchkl == 1 || status.crcchkg == 1 ||
+> -                status.configs == 0 || status.ids == 1));
+> +               /* Success! */
+> +               break;
+> +       } while (--retries);
+>
+>         if (!retries) {
+>                 rc = -EIO;
+> --
+> 2.20.1
+>
 
-Yeah, that seems like a good plan
+Hi Colin, Dan,
 
-Maxime
+Thanks for the fix.
+This portion below needs to be changed as well: "else if (retries !=
+RETRIES - 1)" should become "else if (retries != RETRIES)" because on
+success, it now does not decrement retries due to the early break.
+Otherwise this message gets printed: "Succeeded after 0 tried" which
+was not the original intention.
+Please also remove the extraneous newline introduced at 468.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Tested-by: Vladimir Oltean <olteanv@gmail.com>
 
---bydgprfj47ik7yub
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNGPMAAKCRDj7w1vZxhR
-xS2VAQDOVlzfYshYqB3RzzDSqFMZPH8If+sem/QedfMd4Lyj7AD+KkQ+2ms4+Ca9
-JJceZmhL6UGhaXOTV4RQUMJQA+c6zgU=
-=DXHT
------END PGP SIGNATURE-----
-
---bydgprfj47ik7yub--
+-Vladimir
