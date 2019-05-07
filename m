@@ -2,148 +2,187 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F3EC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBDCC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37820204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A21204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JGZHfyKR"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oESQ57Q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfEGJCS (ORCPT
+        id S1726457AbfEGJFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:02:18 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40417 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfEGJCR (ORCPT
+        Tue, 7 May 2019 05:05:38 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44292 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfEGJFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:02:17 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d15so13587753ljc.7;
-        Tue, 07 May 2019 02:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=idf6J5BYIz2qpvZphx7IVfySZl6fHba9vEhZ9Dg+tNo=;
-        b=JGZHfyKR1B4j0sfbqrtFouyX9ZlCy/oB6GalaN7JMdopZbtoSrycF7igkFh5PQMGAJ
-         1A66do7+ckC4y9Dz/UMe4sUH8/0YWBPw02Rwx2KReYVEtkwq047CX5oTpvl2lprU9AKa
-         lkM4P+M4M2Wl8eQbAoI4TTi795tE1R+MLctQfpsFyP2TFvyuOCg/oITxdsJunIFgWnht
-         0FABCWn9ptiCJLqHREEql4DdM9BhVA8G8B81MZXFs1UzhzQsxnlFZU8p48iqsgV5uCbK
-         kF4MaFaTWVaNPkeQgDcVmjVISVOSvbhFegQl2bWrPIgt6S7vLDvxtN1PNnUtnStGcTyX
-         IDmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=idf6J5BYIz2qpvZphx7IVfySZl6fHba9vEhZ9Dg+tNo=;
-        b=FPPInpbyxAJOXnqs0M2iy2wDlKnvGotHe41RGGon/Kh/J3CpdIrWnMXVlp0u9KK56F
-         ZxYbeCyC/Nx3oNJx79y40Hdio80jMS4ofQ6L9q93+iV1DbUR7Cpoq1xTlpngkskrU15a
-         pg5E16mpFVzDD9j8t0/euma8h2SozxIX6AFWUNq1qDCKaDzDuMPmiHuUeJw8endFZewJ
-         eHXMWMdgOpVnU1FlNYDAbin89A8xdJBDxbGE+Bx1tA6sNFM/P9d4vhw46c63edtk5DkR
-         MWFb5oCoXwBIJrbG0QwAEZdKywCkBpKev2+sUIN1tpNAFuBOo8qyHiTHTCRIRyID7C8p
-         jiFQ==
-X-Gm-Message-State: APjAAAVSC/lzfV99y2pgkqbJ9Y5BHj9CZZ9NsNJ+O5AglHussHN4LxDh
-        JPQ7QeXWOdFNuc+L58y3Y8U=
-X-Google-Smtp-Source: APXvYqz2xL4Z6UGfAgNHY/bP4Obl7GW1M9Shr1U7Mt9s7z4K2QpPCDVnSuQA1Zq8DO3Q1hnR9xp+VA==
-X-Received: by 2002:a05:651c:97:: with SMTP id 23mr5193077ljq.143.1557219734819;
-        Tue, 07 May 2019 02:02:14 -0700 (PDT)
-Received: from mobilestation ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id g13sm3138451lfh.49.2019.05.07.02.02.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 07 May 2019 02:02:14 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:02:12 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Peter Korsgaard <peter.korsgaard@barco.com>,
-        Peter Rosin <peda@axentia.se>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] i2c-mux-gpio: Split plat- and dt-specific code up
-Message-ID: <20190507090210.hn6vgcjg2q6tysbp@mobilestation>
-References: <20190424123414.25311-1-fancer.lancer@gmail.com>
- <20190425232028.9333-1-fancer.lancer@gmail.com>
+        Tue, 7 May 2019 05:05:38 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190507090536euoutp027c2401f17f1d8d512e3ef3c449549f70~cW0gQIi-h2596725967euoutp02U
+        for <linux-kernel@vger.kernel.org>; Tue,  7 May 2019 09:05:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190507090536euoutp027c2401f17f1d8d512e3ef3c449549f70~cW0gQIi-h2596725967euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557219936;
+        bh=Ukf+FLcqAF3cEVXKTbQFGjd2gzyerf+1cQvBi47rjTU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=oESQ57Q+uc54HIJ91fJzUQOwmfe0jjkbA2i3J5cuHk6Vp8QkhbcY+ti7BUCe6fZ8J
+         VGd4XJUBYHe9vEaGGMPfqd8BHEET9uH1uyOxPztvC+DHLJM1n/t+ZVkjNBjoux3xt/
+         QyifCw8f1I4nDILwUonTV5/osasGLhNQbQuXFGyE=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190507090535eucas1p1eeff1030a0df912b00643c9273cc6d72~cW0fM8Bm23257032570eucas1p1p;
+        Tue,  7 May 2019 09:05:35 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id EA.90.04325.E5A41DC5; Tue,  7
+        May 2019 10:05:34 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190507090534eucas1p2f6624c19f0c2d2b084bddcc72d544a60~cW0eVsZMY2656426564eucas1p2P;
+        Tue,  7 May 2019 09:05:34 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190507090533eusmtrp1aefae86a1bd5f3855c85ddf8ff2df8ff~cW0eHdzcR3169331693eusmtrp14;
+        Tue,  7 May 2019 09:05:33 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-5e-5cd14a5ed4c8
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E9.35.04140.D5A41DC5; Tue,  7
+        May 2019 10:05:33 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190507090533eusmtip20d4a7dacfddd5212fbd5671d0e54bc67~cW0ddmHD72340623406eusmtip2D;
+        Tue,  7 May 2019 09:05:33 +0000 (GMT)
+Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
+ description
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
+Message-ID: <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
+Date:   Tue, 7 May 2019 11:05:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190425232028.9333-1-fancer.lancer@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTURjGPbu7u9fV5DgrXyqKRmIJzbKIS99F1IqooJA+pFp50dG2bFdd
+        X5AWZJpLUzAbliWZ08yPKWqSS1S0stqWYJFf6VZWumJsBaFWzrvI/573eX7nnPeBQxPSHnIu
+        rdImsjqtUi0TiYV17b+sy47stMcsH2lcxlTnV5LMW+8wyRS2vSaZLMcIwVitVRTz6tIoxZgd
+        3STT1VggYjyGNsTkWy0C5lFbH8UUv7ULmJ5Uk4j586SBYlpH00jm57MhtAkryu+UI8VjYx+l
+        MJelixQ19y8qrteWIYXHvGCv6JB4XSyrViWzusgNx8TxTUX5goSxoDPXClJRCkqfmYECacCr
+        oP5BFpGBxLQUmxB8cT0R8YMXwf1BD8UPHgTO/HT070ha3m9/UIKgdcAj5AcXgvHv7ZSPCsH7
+        oaK/e1LTtAjLoaHstM+ehRfB2JU80scT+CUJNmOa0BdI8DZorpggfFqIF4PD3jt1z2x8AAba
+        q0ieCYbnt5xTfCDeDiOFT6d8AofCe2ehgNcLod5VMFUIcCoNX8xu/9pboa46Q8jrEPjaUUvx
+        ej505mb6fQ5SDPf8/AVwZN32M2uhtcNO+soQeClUNkby9maoMU0gnw04CN65gvkVgiCn7ibB
+        2xK4ekXK00ugNtMm4PUcKCnPo7KRzDitmHFaGeO0Msb/795FwjIUyiZxmjiWW6ll9XJOqeGS
+        tHHyE6c0ZjT55Tp/d/xoQJbx4y0I00g2U5K9xRYjJZXJ3FlNCwKakM2SKD+9jpFKYpVnz7G6
+        U0d1SWqWa0HzaKEsVHI+4MNhKY5TJrInWTaB1f1LBXTg3BQkn3jzKj7cud5iOHc5LG+PXmMa
+        V2/sstT1OZszPpbaTEWbdxU1kdFa447iBS92dw6FR98QlO5T1AREub0zAvSfB6PWxOb2rgg2
+        eHM25Ri8G+5t7VGpqiv6V9vFB+9+u+y+sCvC9DBs2F3q0RQG7NzdL9N/bdVE3Mp0rLUFk39q
+        5TIhF69cEUHoOOVf0QlhiG4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xe7qxXhdjDI6eNrXYOGM9q8X1L89Z
+        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
+        cbtxBZvF/z072C0Ov2lntfh24hGjg4DHmnlrGD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfA
+        FqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXsXfR
+        DKaC33wV3XMaGRsYO3m6GDk5JARMJNqn/WPvYuTiEBJYyihx5+N9ZoiEmMSkfdvZIWxhiT/X
+        uthAbCGB14wSi6akgNjCAiES6+5dA6rh4GAT0JPYsaoQJCwioCjxu20aK8hMZoFLrBJbtzWx
+        Qiw4yCyxb/9aVpAqXgE3iQPr/oItYxFQkXh88Q7YMlGBCIkz71ewQNQISpyc+QTM5hRwl3g9
+        fz9YL7OAmcS8zQ+ZIWxxiVtP5jNB2PIS29/OYZ7AKDQLSfssJC2zkLTMQtKygJFlFaNIamlx
+        bnpusZFecWJucWleul5yfu4mRmBcbzv2c8sOxq53wYcYBTgYlXh4H9heiBFiTSwrrsw9xCjB
+        wawkwpv47FyMEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDU05eSbyhqaG5haWhubG5sZmF
+        kjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGrnPM25azl7jyGalVRxxusHEs1BFiak3u031c
+        +qz3kMjpuTVdx3rlf+lE7GWbv03nqkrgrMytLSpfuvNPfPl8339x6svtIhV52xkXrmqwvWUt
+        vudVvM6ysimVt/6eEsqqq3Xi/Pv47fyo1Uo/fM4tKXYo7OHWKxYw2vzEw3VbhOWL6OWXVzEo
+        sRRnJBpqMRcVJwIAomVimwEDAAA=
+X-CMS-MailID: 20190507090534eucas1p2f6624c19f0c2d2b084bddcc72d544a60
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
+        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+        <20190430223629.GA22317@bogus>
+        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
+        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
+        <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello folks,
+Hi Rob,
 
-Any updates on this patchset status? I haven't got any comment on v2, but
-instead a notification about the status change was sent to me:
+On 5/6/19 12:29 PM, Lukasz Luba wrote:
+> Hi Rob,
+> 
+> On 5/2/19 10:24 PM, Rob Herring wrote:
+>> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba 
+>> <l.luba@partner.samsung.com> wrote:
+>>>
+>>> Hi Rob,
+>>>
+>>> On 5/1/19 12:36 AM, Rob Herring wrote:
+>>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
+>>>>> Extend the documenation by events description with new 
+>>>>> 'event-data-type'
+>>>>> field. Add example how the event might be defined in DT.
+>>>>
+>>>> Why do we need event types in DT? We don't do this for other h/w 
+>>>> such as
+>>>> ARM PMU.
+>>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
+>>> arch/arm/kernel/perf_event_v7.c
+>>> and are seen from perf. They are different type and for different
+>>> purpose. The Ecynos PPMU events are not seen in perf, they are
+>>> for internal monitoring and must not be reset by other actors like perf.
+>>> They are used by the 'bus drivers' to made some heuristics and tune the
+>>> internal settings, like frequency.
+>>>
+>>> Chanwoo has written PPMU driver which relies on DT definition.
+>>> The DT events are used by other DT devices by phandle.
+>>
+>> How is that done? I don't see anything in the binding for that.
+> Here are the DT devices and how they are pinned together:
+> - declared devfreq events:
+> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi 
+> 
+> - devfreq events pinned to the bus device:
+> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107 
+> 
+> - the bus device itself:
+> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457 
+> 
+> 
+> Regards,
+> Lukasz
+> 
+>>
+>> Rob
+>>
+>>
+Can I send the next version of the patch set, which has Chanwoo's
+suggestions, or do you have some objections to this PPMU entries?
 
-> * linux-i2c: [v2,1/3] i2c-mux-gpio: Unpin a platform-based device initialization
->     - http://patchwork.ozlabs.org/patch/1091120/
->     - for: Linux I2C development
->    was: New
->    now: Superseded
->
-> * linux-i2c: [v2,2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs request code
->     - http://patchwork.ozlabs.org/patch/1091122/
->     - for: Linux I2C development
->    was: New
->    now: Superseded
->
-> * linux-i2c: [v2,3/3] i2c-mux-gpio: Create of-based GPIOs request method
->     - http://patchwork.ozlabs.org/patch/1091121/
->     - for: Linux I2C development
->    was: New
->    now: Superseded
-
-I may misunderstand something, but how come the v2 patchset switched to be superseded
-while it is the last patchset version I've sent?
-
--Sergey
-
-On Fri, Apr 26, 2019 at 02:20:25AM +0300, Serge Semin wrote:
-> The main idea of this patchset was to add the full dt GPIOs specifier
-> support in i2c-mux-gpio driver. In particular we needed to have the
-> full GPIOs specifier being handled including the flags like GPIO_ACTIVE_HIGH,
-> GPIO_ACTIVE_LOW, GPIO_PUSH_PULL, GPIO_OPEN_DRAIN or GPIO_OPEN_SOURCE.
-> Due to using a legacy GPIO interface the former driver implementation
-> didn't provide this ability.
-> 
-> On the way of adding the full dt-GPIO flags support a small set of
-> refactorings has been done in order to keep the platform_data-based
-> systems support, make the code more readable and the alterations - clearer.
-> In general the whole changes might be considered as the plat- and dt-
-> specific code split up. In the first patch we unpinned the platform-specific
-> method of GPIO-chip probing. The second patch introduces a new initial_state
-> value field into the "gpiomux" structure. The third one is responsible for
-> GPIO request loop isoltaing into a dedicated function. At this stage common
-> it is a common function for both dt- and plat- code paths. Finally last
-> patch introduces a full dt-based GPIOs request method, which uses
-> gpiod_get_from_of_node() method in order to parse the corresponding dt GPIO
-> specifiers with their falgs. The last patch does what we inteded this patchset
-> for in the first place - adds the full dt-GPIO specifiers support.
-> 
-> Changelog v2
-> - Remove fallback pattern when selecting the dt- or plat-based code paths.
->   (Cause the patch "i2c-mux-gpio: Return an error if no onfig data found"
->    removal.)
-> - Use a dedicated initial_state variable to keep the initial channels selector
->   state. (Causes the patch "i2c-mux-gpio: Save initial channel number to the
->   idle" removal.)
-> - Mention open-drain, open-source flags in the patchset descriptions.
-> 
-> 
-> Serge Semin (3):
->   i2c-mux-gpio: Unpin a platform-based device initialization
->   i2c-mux-gpio: Unpin the platform-specific GPIOs request code
->   i2c-mux-gpio: Create of-based GPIOs request method
-> 
->  drivers/i2c/muxes/i2c-mux-gpio.c | 226 ++++++++++++++++++++-----------
->  1 file changed, 146 insertions(+), 80 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+Regards,
+Lukasz
