@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A89C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E39CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE94214AE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34573214AE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207611;
-	bh=mybmYd28yC+E0RdWF+IdtO+ykCH8Uoyv3hzAE4MP8r8=;
+	s=default; t=1557207616;
+	bh=HeUEZ4EShkEDGQAY7rwzP+ZLsb5wZJcbmnVnt73gLow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DkeC+p3v7mut5qGBQeihebq6Vt21jX/sMGVzm3lnwU8HWEO7e8fyFNPtMDnqfAV/U
-	 iOYK+jpVcMROiRlf5ugYNZ0Icpy79OMYvcfoH/Lnyez1UfjXWE4S4oL6bffStg1jZZ
-	 NMEPiSmRVRd3UXathum+BjjmcoyTe+xTQJ2IYp5U=
+	b=Na1WsYTldhjsnemFYmHO7dVCk2UeDQowdOfZ7nx9/aajrDedYqXAVvpzNnK83xV4i
+	 KauwfjGXYSb+0WXeudOOhwsFdw2lGEwRcmw+GGaJKUl7AzaI3ujHNHgpY6gy8/PwyX
+	 +ahOYb86i1FGW78MiqS5nKPx0euHOlt9W4JUO1xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfEGFkK (ORCPT
+        id S1729043AbfEGFkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59606 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfEGFkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:06 -0400
+        id S1729038AbfEGFkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B0B216C8;
-        Tue,  7 May 2019 05:40:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC0DA20B7C;
+        Tue,  7 May 2019 05:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207605;
-        bh=mybmYd28yC+E0RdWF+IdtO+ykCH8Uoyv3hzAE4MP8r8=;
+        s=default; t=1557207611;
+        bh=HeUEZ4EShkEDGQAY7rwzP+ZLsb5wZJcbmnVnt73gLow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iYQLF4/eZXZwTdnl7agelMIGS/gAJI1Z2vm+TwAVpY6Hj8a6kll6pZ+RkI+f8K94t
-         /flh3XIYBxwNiEXMKFznRJnhNra2IG+ULajaZ+U8T0xchGDo4m0e+ZpbHA/0Lz3Ejw
-         cJxrP/BM8Tnjr4jr4nGIrEIQblY3Sz4BhjVZ/LD0=
+        b=SeGZPjJHMW7Ehi4/0hwbjnWFIEIy9HLKjxkh/wCe9TztuUle/iiQSafqz9WKjejqB
+         56YAHMp5TYdKvvLd60OkU0RF64icVsrH2Sz3nHf4wM+pta7DGYoEbIt0fAIXusgJ6c
+         lh5W5db25aQZznMPihUh+b4tIWKlPZqY2oSj9Vt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hugues Fruchet <hugues.fruchet@st.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 52/95] media: ov5640: fix auto controls values when switching to manual mode
-Date:   Tue,  7 May 2019 01:37:41 -0400
-Message-Id: <20190507053826.31622-52-sashal@kernel.org>
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 55/95] drm/i915: Downgrade Gen9 Plane WM latency error
+Date:   Tue,  7 May 2019 01:37:44 -0400
+Message-Id: <20190507053826.31622-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -62,44 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugues Fruchet <hugues.fruchet@st.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit a8f438c684eaa4cbe6c98828eb996d5ec53e24fb ]
+[ Upstream commit 86c1c87d0e6241cbe35bd52badfc84b154e1b959 ]
 
-When switching from auto to manual mode, V4L2 core is calling
-g_volatile_ctrl() in manual mode in order to get the manual initial value.
-Remove the manual mode check/return to not break this behaviour.
+According to intel_read_wm_latency() it is perfectly legal for one WM
+and all subsequent levels to be 0 (and the deeper powersaving states
+disabled), so don't shout *ERROR*, over and over again.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Tested-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Ville Syrjala <ville.syrjala@linux.intel.com>
+Acked-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180726161527.10516-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/media/i2c/ov5640.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/i915/intel_pm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 0366c8dc6ecf..acf5c8a55bbd 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -1900,16 +1900,12 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+index 96a5237741e0..cb377b003321 100644
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -2934,8 +2934,8 @@ static void intel_print_wm_latency(struct drm_i915_private *dev_priv,
+ 		unsigned int latency = wm[level];
  
- 	switch (ctrl->id) {
- 	case V4L2_CID_AUTOGAIN:
--		if (!ctrl->val)
--			return 0;
- 		val = ov5640_get_gain(sensor);
- 		if (val < 0)
- 			return val;
- 		sensor->ctrls.gain->val = val;
- 		break;
- 	case V4L2_CID_EXPOSURE_AUTO:
--		if (ctrl->val == V4L2_EXPOSURE_MANUAL)
--			return 0;
- 		val = ov5640_get_exposure(sensor);
- 		if (val < 0)
- 			return val;
+ 		if (latency == 0) {
+-			DRM_ERROR("%s WM%d latency not provided\n",
+-				  name, level);
++			DRM_DEBUG_KMS("%s WM%d latency not provided\n",
++				      name, level);
+ 			continue;
+ 		}
+ 
 -- 
 2.20.1
 
