@@ -2,147 +2,191 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C806FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD87C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D75E20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B8920656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjEGDLuO"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jMnRAkDo";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gXY+qolL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfEGS2w (ORCPT
+        id S1727245AbfEGS3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:28:52 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41978 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfEGS2w (ORCPT
+        Tue, 7 May 2019 14:29:24 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:44332 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726473AbfEGS3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:28:52 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d8so12562439lfb.8;
-        Tue, 07 May 2019 11:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uAxHVQCsBo1b5PlzfwAXI4RufhZYGzT/dUPxeSN4rRc=;
-        b=hjEGDLuO2QkLFE8Scimbk32wX+OqUolVirFNhseP74IGhXIAWEtuYU5TRLGFPXeMoy
-         V99BKgFguxrWHHkqwFK3m4I9tpkLvyr49I0nLrWvzgCN9IEmfvRRD313pFeeajY+dG88
-         VDec2lVe5xV+COKmhh8tuB/yR9jlX6Y1xSW/DscySsqLUNspbvMG6IpTkgE2vyUqIWLh
-         WhLUCP/qh3zrcwy1PGZReAeZu/bEG3YP8jmDJHw7z8Pa/ZQt/HwaizKaB1PfyAR7Xy6X
-         m8qV5vv4DgonM+sp1SuNzIPUGQehozrnPS1S48fcfic4emtxfvT1oycRfAJZTbbAuj2C
-         MKog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uAxHVQCsBo1b5PlzfwAXI4RufhZYGzT/dUPxeSN4rRc=;
-        b=lWaE6hh0juyFLPMgnbl42J41HZC1Jic9OMxaa6PWcgIhgqnaYFhrBYv69z0t0IcZ9i
-         C785ILoeYmlhjjjiLf7SgvR+HBLLQ2QhRFpW1yK71X4rkdN5JFIebiuaTSf0bjvPBV6M
-         rF10eTHLOtUezfmFx/ibePbNtTed91Of/wFmam0mrqXCeDVhU6Xx13S3tBqHsw/9YU8d
-         nX853wDPlFPIb53bS7R0UX5nqcL7tBbrkFC+n45zeMWuqIlC2JkW/C2AKJFGlb2vlFhc
-         wQw7kTDkyLXWJoe8EUeUkowl3w36BgYDSj2Iz6ShOFlOO7AdeoetKEYw94HpA+Vqud5v
-         qf1Q==
-X-Gm-Message-State: APjAAAX406jKXJ8aixBqhLb1e2oEZjv+513Lpd8KVPPf/wOinXlBvngO
-        Kz3Qpg6iKD4ZZAEmN7FVTudKC9CxKgUsbblq3YHD9Bw=
-X-Google-Smtp-Source: APXvYqwWE8j/YwpgzAJc07ZnEdvmNMqpEjiJgo/l8eCz+eM3VRlwhGXZEJL4TCGOh/ka/80d1PC8L4zwgaWBO1jEVxQ=
-X-Received: by 2002:a19:655a:: with SMTP id c26mr13965657lfj.97.1557253730334;
- Tue, 07 May 2019 11:28:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <1557242200-26194-1-git-send-email-kernel@probst.it> <CAH2r5mtqkHYbHJkf_LbAjhujnNRQP6Zmkmqhj1dUHomwsc3e=w@mail.gmail.com>
-In-Reply-To: <CAH2r5mtqkHYbHJkf_LbAjhujnNRQP6Zmkmqhj1dUHomwsc3e=w@mail.gmail.com>
-From:   Pavel Shilovsky <piastryyy@gmail.com>
-Date:   Tue, 7 May 2019 11:28:39 -0700
-Message-ID: <CAKywueSJCs2B2cGmZvGNfxDU7KNvkBOsuyuaOSV=3GWG80f+kw@mail.gmail.com>
-Subject: Re: [PATCH v2] cifs: fix strcat buffer overflow and reduce raciness
- in smb21_set_oplock_level()
-To:     Steve French <smfrench@gmail.com>
-Cc:     Christoph Probst <kernel@probst.it>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 May 2019 14:29:23 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47ITEIf021679;
+        Tue, 7 May 2019 11:29:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=VVoJzXiIYMBgDhT3M8nX5YcJdyN0mYb2wMXwaieyRzE=;
+ b=jMnRAkDo9k2SGz/kCGNFcfyn9qU4AMGJLpNcNWfyW87KWp92hDGbAiedW/ssJfWqVwvN
+ EY74zcKm6e8zoZOzxM7HM0EXsZy/E/EtwFU/JH9mutOk+zJuVD/BN5qzSFuv6gavPlap
+ ZhB03JaKONUysDZsAZlla/wMhyAl9q5bzls= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sb1yf2sq3-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 07 May 2019 11:29:15 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 7 May 2019 11:29:10 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 7 May 2019 11:29:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VVoJzXiIYMBgDhT3M8nX5YcJdyN0mYb2wMXwaieyRzE=;
+ b=gXY+qolLLs+Jqjph12tlca+tYatrrbMMpy+0C0gDTzqD052RUktGomri9WT8MgPD5GUN81MWOIo78ghH1SmfmJ03zZf6q+DCM39obIUJqc2W0Q/I4J1S0lWECK/er/nXXDV7fg+TgurV0QAwiVJP7fRrnlzbPT1u4E0gOO3WBFs=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1213.namprd15.prod.outlook.com (10.175.2.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.15; Tue, 7 May 2019 18:29:08 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 18:29:08 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 07/12] perf script: Pad dso name for --call-trace
+Thread-Topic: [PATCH 07/12] perf script: Pad dso name for --call-trace
+Thread-Index: AQHVAYjr0qNMvZQyn0Whx89yRppmGaZepSIAgACxZgCAAKvnAA==
+Date:   Tue, 7 May 2019 18:29:07 +0000
+Message-ID: <37A033AF-567C-47F5-8FBB-DBD26ED1BD13@fb.com>
+References: <20190503081841.1908-1-jolsa@kernel.org>
+ <20190503081841.1908-8-jolsa@kernel.org>
+ <8385E7AF-756B-4113-9388-BD81D0F58374@fb.com> <20190507081350.GA17416@krava>
+In-Reply-To: <20190507081350.GA17416@krava>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::2:3cfe]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bace93b9-9086-4009-4d26-08d6d319e478
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1213;
+x-ms-traffictypediagnostic: MWHPR15MB1213:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR15MB1213C90D94C7775A7C321387B3310@MWHPR15MB1213.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(346002)(136003)(366004)(396003)(199004)(189003)(6306002)(54906003)(6512007)(33656002)(81166006)(186003)(8676002)(8936002)(6916009)(305945005)(6506007)(82746002)(53546011)(99286004)(81156014)(25786009)(7736002)(76176011)(46003)(229853002)(68736007)(966005)(6486002)(486006)(14454004)(6436002)(4326008)(11346002)(446003)(5660300002)(476003)(2616005)(64756008)(57306001)(53936002)(6246003)(316002)(256004)(7416002)(478600001)(66946007)(73956011)(83716004)(76116006)(36756003)(102836004)(71190400001)(6116002)(2906002)(71200400001)(66476007)(86362001)(66446008)(66556008)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1213;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MJegnCnmnrymnKHUafPIUFEiS8ScFZcseSBdVFPGAipAlmeI8ZMfHM1KxyPCO3N8DsE81UNcKOHOeiS9qsnSbRYhKD9uuyE/YM3yI/XxRxo54AzrL6xbs3lbeZo/t2XaHFMzKj5wuT0aWqGslCpbjJiwsbAQcuC/28so6Zm35fq/fkQJl7KXoUSpYvuoI5OWm8maU6Zz8QOnNw4KXkw1pMNGQa841NSPs4LT9djiMxgLQHIkB7H2/pDIVYJ7Uqtq1lIKlkuAwCvWL5DFEpJIqi63qXzxiDqOWLZ+DwJxxDlFYEBS8Xr2OuqvnEuC6C9kV1OVk1O8dt/6AWKb4aSY5FHmX+KzBfVo7DTfa0wnJkceE0Ao6HYnI/ymnW+6yNNCP50AQcH4UZUnIfCoTIICDUuPuPGjWsikJYMW0zRp8MA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1A5D3B078D40584E8FC3625223C7FA5E@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: bace93b9-9086-4009-4d26-08d6d319e478
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 18:29:07.8254
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1213
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070119
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=B2=D1=82, 7 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 09:13, Steve French =
-via samba-technical
-<samba-technical@lists.samba.org>:
->
-> merged into cifs-2.6.git for-next
->
-> On Tue, May 7, 2019 at 10:17 AM Christoph Probst via samba-technical
-> <samba-technical@lists.samba.org> wrote:
-> >
-> > Change strcat to strncpy in the "None" case to fix a buffer overflow
-> > when cinode->oplock is reset to 0 by another thread accessing the same
-> > cinode. It is never valid to append "None" to any other message.
-> >
-> > Consolidate multiple writes to cinode->oplock to reduce raciness.
-> >
-> > Signed-off-by: Christoph Probst <kernel@probst.it>
-> > ---
-> >  fs/cifs/smb2ops.c | 14 ++++++++------
-> >  1 file changed, 8 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-> > index c36ff0d..aa61dcf 100644
-> > --- a/fs/cifs/smb2ops.c
-> > +++ b/fs/cifs/smb2ops.c
-> > @@ -2917,26 +2917,28 @@ smb21_set_oplock_level(struct cifsInodeInfo *ci=
-node, __u32 oplock,
-> >                        unsigned int epoch, bool *purge_cache)
-> >  {
-> >         char message[5] =3D {0};
-> > +       unsigned int new_oplock =3D 0;
-> >
-> >         oplock &=3D 0xFF;
-> >         if (oplock =3D=3D SMB2_OPLOCK_LEVEL_NOCHANGE)
-> >                 return;
-> >
-> > -       cinode->oplock =3D 0;
-> >         if (oplock & SMB2_LEASE_READ_CACHING_HE) {
-> > -               cinode->oplock |=3D CIFS_CACHE_READ_FLG;
-> > +               new_oplock |=3D CIFS_CACHE_READ_FLG;
-> >                 strcat(message, "R");
-> >         }
-> >         if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
-> > -               cinode->oplock |=3D CIFS_CACHE_HANDLE_FLG;
-> > +               new_oplock |=3D CIFS_CACHE_HANDLE_FLG;
-> >                 strcat(message, "H");
-> >         }
-> >         if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
-> > -               cinode->oplock |=3D CIFS_CACHE_WRITE_FLG;
-> > +               new_oplock |=3D CIFS_CACHE_WRITE_FLG;
-> >                 strcat(message, "W");
-> >         }
-> > -       if (!cinode->oplock)
-> > -               strcat(message, "None");
-> > +       if (!new_oplock)
-> > +               strncpy(message, "None", sizeof(message));
-> > +
-> > +       cinode->oplock =3D new_oplock;
-> >         cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
-> >                  &cinode->vfs_inode);
-> >  }
-> > --
-> > 2.1.4
-> >
-> >
->
 
-Thanks for cleaning it up!
 
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+> On May 7, 2019, at 1:13 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+>=20
+> On Mon, May 06, 2019 at 09:38:55PM +0000, Song Liu wrote:
+>=20
+> SNIP
+>=20
+>>>=20
+>>> Link: http://lkml.kernel.org/n/tip-99g9rg4p20a1o99vr0nkjhq8@git.kernel.=
+org
+>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>>> ---
+>>> tools/include/linux/kernel.h  |  1 +
+>>> tools/lib/vsprintf.c          | 19 +++++++++++++++++++
+>>> tools/perf/builtin-script.c   |  1 +
+>>> tools/perf/util/map.c         |  6 ++++++
+>>> tools/perf/util/symbol_conf.h |  1 +
+>>> 5 files changed, 28 insertions(+)
+>>>=20
+>>> diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.=
+h
+>>> index 857d9e22826e..cba226948a0c 100644
+>>> --- a/tools/include/linux/kernel.h
+>>> +++ b/tools/include/linux/kernel.h
+>>> @@ -102,6 +102,7 @@
+>>>=20
+>>> int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
+>>> int scnprintf(char * buf, size_t size, const char * fmt, ...);
+>>> +int scnprintf_pad(char * buf, size_t size, const char * fmt, ...);
+>>>=20
+>>> #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_arr=
+ay(arr))
+>>>=20
+>>> diff --git a/tools/lib/vsprintf.c b/tools/lib/vsprintf.c
+>>> index e08ee147eab4..149a15013b23 100644
+>>> --- a/tools/lib/vsprintf.c
+>>> +++ b/tools/lib/vsprintf.c
+>>> @@ -23,3 +23,22 @@ int scnprintf(char * buf, size_t size, const char * =
+fmt, ...)
+>>>=20
+>>>       return (i >=3D ssize) ? (ssize - 1) : i;
+>>> }
+>>> +
+>>> +int scnprintf_pad(char * buf, size_t size, const char * fmt, ...)
+>>> +{
+>>> +	ssize_t ssize =3D size;
+>>> +	va_list args;
+>>> +	int i;
+>>=20
+>> nit: I guess we can avoid mixing int, ssize_t and size_t here?
+>=20
+> I copied that from scnprintf ;-)
+>=20
+> the thing is that at the end we call vsnprintf, which takes size_t
+> as size param and returns int, so there will be casting at some
+> point in any case..
+>=20
+> I guess the ssize_t was introduced to compare the size_t value with int
+>=20
 
---
-Best regards,
-Pavel Shilovsky
+Interesting. Given scnprintf works fine, I think we can keep the patch
+as-is.=20
+
+Thanks,
+Song=
