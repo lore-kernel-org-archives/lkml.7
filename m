@@ -2,232 +2,131 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0594FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74381C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FDD20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410C220578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:53:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQqWVK1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfEGJxC (ORCPT
+        id S1727161AbfEGJxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:53:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36886 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbfEGJxA (ORCPT
+        Tue, 7 May 2019 05:53:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34355 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbfEGJxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:53:00 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9EEDA282A09
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-pm@vger.kernel.org, sre@kernel.org
-Cc:     Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
-        rjw@rjwysocki.net, gwendal@chromium.org,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
-        kernel@collabora.com, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH v4 2/2] power: supply: cros: allow to set input voltage and current limit
-Date:   Tue,  7 May 2019 11:52:48 +0200
-Message-Id: <20190507095248.17915-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507095248.17915-1-enric.balletbo@collabora.com>
-References: <20190507095248.17915-1-enric.balletbo@collabora.com>
+        Tue, 7 May 2019 05:53:11 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so11079032wrq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:53:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=tcxS/2hWpXskjofGSRtseVQHc72BiZ0p45vo0Vdka28=;
+        b=jQqWVK1unu7T2kZOE+gg87wq3FaLBBLlf79ijlqE53cIvYRlBTOVpLHtKmzgG75Uaz
+         qUGpykrKD76+xOMdprElOVqPIa03BD97ytwIq+mwM+TGIkPSdwAwZ1uahhv//mR+X23W
+         Kn5toaEsASuWW9khg23mJ3aXmivkbYcSxPH49QsSeNjur0i3t72nwda3GHlL2N+/9Yyo
+         A/dxuHpJ/VAh9F5sxGxlLyMKoFOpfJTgnYenmbAw4NQeGwteCCBUiLdJSt2WeDZMeT+7
+         sI35QOEHso5oe2aQHXF/3m9iCI4corsq29MMd0hNv4SHtAUwaNo9TFi4uSNjOd5xdvG+
+         qj9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=tcxS/2hWpXskjofGSRtseVQHc72BiZ0p45vo0Vdka28=;
+        b=UxKrx9J3zgnyFFLAmX1skJjXBepPiEvdXEGgifaO++NHMI7U5+aHrB6az2bcHyCWut
+         1CpMvpldbi7nBdVJZErLlRuDxshRDuK56jm3WJeHmb/3xNlMBmXSJm4xBHkusB1NHlV2
+         QWlzbQXnB6K+RmHjmDm/ta6wl/6LjOW0aCAWQtqirVY6Disi5a53zmGClrIg2GaGZTUR
+         rrEgqk0aaL1WWGIk9h9WUyHdOhHuDa2nObb2Qa46ZLo5ZOWq3Zvxpr87S6dtJV8l0zOV
+         7AXGW+7aQdwxM3Vs4seG/4/tB1bZdxNiWMAUK0apqVzVygq5JAPnSF3K3MFAVECCGjSM
+         NZ4g==
+X-Gm-Message-State: APjAAAVn3lBkdPclOH5gi5auOgH21VpTOBcj01tTU+C2RixWYZNZcszp
+        EnuWW33gDvpRoTwJOJn2ZMjVkg==
+X-Google-Smtp-Source: APXvYqwo3mM58fkGHxIdzaZEGdBCoVtchbx0EHRZjuaTTSmrlX26j60GrA4koYEVJwZOeYXfzyNWBg==
+X-Received: by 2002:adf:f7d0:: with SMTP id a16mr21241175wrq.211.1557222789633;
+        Tue, 07 May 2019 02:53:09 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id p67sm11911297wmp.22.2019.05.07.02.53.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 02:53:09 -0700 (PDT)
+Date:   Tue, 7 May 2019 10:53:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Brian Masney <masneyb@onstation.org>, jingoohan1@gmail.com,
+        robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dmurphy@ti.com, jonathan@marek.ca,
+        Daniel Thompson <daniel@redfelineninja.org.uk>
+Subject: Re: [PATCH v6 1/3] backlight: lm3630a: return 0 on success in
+ update_status functions
+Message-ID: <20190507095307.GE4529@dell>
+References: <20190424092505.6578-1-masneyb@onstation.org>
+ <20190424092505.6578-2-masneyb@onstation.org>
+ <864c1ddc-1008-0041-1559-e491ca0186ef@linaro.org>
+ <20190502104239.GA24563@basecamp>
+ <20190502104644.e3eth2cdebuz2mpk@holly.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190502104644.e3eth2cdebuz2mpk@holly.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows reading and writing the input voltage and current
-limit through the POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT and
-POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT sysfs properties. This allows
-userspace to see current values and to re-configure these values at
-runtime based on system-level knowledge or user input.
+On Thu, 02 May 2019, Daniel Thompson wrote:
 
-By default there is no limit, this is reported as a -1 when reading from
-userspace. Writing a value will set the current or voltage limit in uA
-or uV, and writing any negative value will remove that limit.
+> On Thu, May 02, 2019 at 06:42:39AM -0400, Brian Masney wrote:
+> > On Thu, May 02, 2019 at 11:07:51AM +0100, Daniel Thompson wrote:
+> > > On 24/04/2019 10:25, Brian Masney wrote:
+> > > > lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
+> > > > both return the brightness value if the brightness was successfully
+> > > > updated. Writing to these attributes via sysfs would cause a 'Bad
+> > > > address' error to be returned. These functions should return 0 on
+> > > > success, so let's change it to correct that error.
+> > > > 
+> > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
+> > > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > 
+> > > Hi Brian, sorry for the delay. For some reason your mails are being dumped
+> > > before they reach me so I only discovered these patches when I paid proper
+> > > attention to the replies and fetched them from patchwork.
+> > > 
+> > > Hi Lee, is the same thing happening for you? ;-)
+> > 
+> > Huh, that's odd. I haven't ran into that issue when working with people
+> > from Linaro in other subsystems.
+> > 
+> > As a sanity check, I used 'git send-email' to send this patch to
+> > check-auth@verifier.port25.com and it verified that I still have SPF,
+> > DKIM, reverse DNS, etc. all setup properly on this domain.
+> > 
+> > hotmail.com addresses are the only ones I've had issues with in the
+> > past, but I doubt you're forwarding your email there. :)
+> 
+> No... and strangely enough your recent e-mail sailed through just fine.
+> Let's wait and see what is happening for Lee (which I suspect may not be
+> until well into next week).
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
----
+Just catching up now.  On first pass - only ~800 mails to go!
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- Fix the upper limit that can be set.
-- Remove unnecessary else.
+Looks like I do have Brian's mails though.
 
- drivers/power/supply/cros_usbpd-charger.c | 116 ++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
-
-diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
-index 7e9c3984ef6a..3a9ea94c3de3 100644
---- a/drivers/power/supply/cros_usbpd-charger.c
-+++ b/drivers/power/supply/cros_usbpd-charger.c
-@@ -53,6 +53,8 @@ struct charger_data {
- };
- 
- static enum power_supply_property cros_usbpd_charger_props[] = {
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_CURRENT_MAX,
-@@ -80,6 +82,10 @@ static enum power_supply_usb_type cros_usbpd_charger_usb_types[] = {
- 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID
- };
- 
-+/* Input voltage/current limit in mV/mA. Default to none. */
-+static u16 input_voltage_limit = EC_POWER_LIMIT_NONE;
-+static u16 input_current_limit = EC_POWER_LIMIT_NONE;
-+
- static bool cros_usbpd_charger_port_is_dedicated(struct port_data *port)
- {
- 	return port->port_number >= port->charger->num_usbpd_ports;
-@@ -324,6 +330,26 @@ static int cros_usbpd_charger_get_port_status(struct port_data *port,
- 	return ret;
- }
- 
-+static int cros_usbpd_charger_set_ext_power_limit(struct charger_data *charger,
-+						  u16 current_lim,
-+						  u16 voltage_lim)
-+{
-+	struct ec_params_external_power_limit_v1 req;
-+	int ret;
-+
-+	req.current_lim = current_lim;
-+	req.voltage_lim = voltage_lim;
-+
-+	ret = cros_usbpd_charger_ec_command(charger, 0,
-+					    EC_CMD_EXTERNAL_POWER_LIMIT,
-+					    &req, sizeof(req), NULL, 0);
-+	if (ret < 0)
-+		dev_err(charger->dev,
-+			"Unable to set the 'External Power Limit': %d\n", ret);
-+
-+	return ret;
-+}
-+
- static void cros_usbpd_charger_power_changed(struct power_supply *psy)
- {
- 	struct port_data *port = power_supply_get_drvdata(psy);
-@@ -396,6 +422,18 @@ static int cros_usbpd_charger_get_prop(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_USB_TYPE:
- 		val->intval = port->psy_usb_type;
- 		break;
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		if (input_current_limit == EC_POWER_LIMIT_NONE)
-+			val->intval = -1;
-+		else
-+			val->intval = input_current_limit * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		if (input_voltage_limit == EC_POWER_LIMIT_NONE)
-+			val->intval = -1;
-+		else
-+			val->intval = input_voltage_limit * 1000;
-+		break;
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		val->strval = port->model_name;
- 		break;
-@@ -409,6 +447,81 @@ static int cros_usbpd_charger_get_prop(struct power_supply *psy,
- 	return 0;
- }
- 
-+static int cros_usbpd_charger_set_prop(struct power_supply *psy,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	struct port_data *port = power_supply_get_drvdata(psy);
-+	struct charger_data *charger = port->charger;
-+	struct device *dev = charger->dev;
-+	u16 intval;
-+	int ret;
-+
-+	/* U16_MAX in mV/mA is the maximum supported value */
-+	if (val->intval >= U16_MAX * 1000)
-+		return -EINVAL;
-+	/* A negative number is used to clear the limit */
-+	if (val->intval < 0)
-+		intval = EC_POWER_LIMIT_NONE;
-+	else	/* Convert from uA/uV to mA/mV */
-+		intval = val->intval / 1000;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		ret = cros_usbpd_charger_set_ext_power_limit(charger, intval,
-+							input_voltage_limit);
-+		if (ret < 0)
-+			break;
-+
-+		input_current_limit = intval;
-+		if (input_current_limit == EC_POWER_LIMIT_NONE)
-+			dev_info(dev,
-+			  "External Current Limit cleared for all ports\n");
-+		else
-+			dev_info(dev,
-+			  "External Current Limit set to %dmA for all ports\n",
-+			  input_current_limit);
-+		break;
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		ret = cros_usbpd_charger_set_ext_power_limit(charger,
-+							input_current_limit,
-+							intval);
-+		if (ret < 0)
-+			break;
-+
-+		input_voltage_limit = intval;
-+		if (input_voltage_limit == EC_POWER_LIMIT_NONE)
-+			dev_info(dev,
-+			  "External Voltage Limit cleared for all ports\n");
-+		else
-+			dev_info(dev,
-+			  "External Voltage Limit set to %dmV for all ports\n",
-+			  input_voltage_limit);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int cros_usbpd_charger_property_is_writeable(struct power_supply *psy,
-+						enum power_supply_property psp)
-+{
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		ret = 1;
-+		break;
-+	default:
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
- static int cros_usbpd_charger_ec_event(struct notifier_block *nb,
- 				       unsigned long queued_during_suspend,
- 				       void *_notify)
-@@ -525,6 +638,9 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
- 
- 		psy_desc = &port->psy_desc;
- 		psy_desc->get_property = cros_usbpd_charger_get_prop;
-+		psy_desc->set_property = cros_usbpd_charger_set_prop;
-+		psy_desc->property_is_writeable =
-+				cros_usbpd_charger_property_is_writeable;
- 		psy_desc->external_power_changed =
- 					cros_usbpd_charger_power_changed;
- 		psy_cfg.drv_data = port;
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
