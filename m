@@ -2,141 +2,167 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A84C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876E5C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5ADC2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557226034;
-	bh=h/Vf28zyKT7ZTVLlLgZV6Ssyfl0DWtXw+260nTk0YiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=14ISIuTqsgwMrlUNCLvupPs4tLaEx0fle8dFEaQCNSD/LT6copUY+aKWJLoDOJ/+v
-	 QojE1Ju+BPfzH1muPq2bYiQ0tjyv/o523tcOGff0PMbcjksGauyec9oc+9KIQb97wI
-	 xtqprC77BOL51oiVHOGr3fr5ZPU8Sf9Or2SYpN8k=
+	by mail.kernel.org (Postfix) with ESMTP id 5B58B20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfEGKrN (ORCPT
+        id S1726543AbfEGKwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:47:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37278 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725844AbfEGKrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:47:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3D211AD56;
-        Tue,  7 May 2019 10:47:11 +0000 (UTC)
-Date:   Tue, 7 May 2019 12:47:09 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
-Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
- eligibility
-Message-ID: <20190507104709.GP31017@dhcp22.suse.cz>
-References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190423175252.GP25106@dhcp22.suse.cz>
- <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
- <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
+        Tue, 7 May 2019 06:52:24 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49976 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfEGKwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:52:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35C2C374;
+        Tue,  7 May 2019 03:52:23 -0700 (PDT)
+Received: from [10.37.12.89] (unknown [10.37.12.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D85883F5AF;
+        Tue,  7 May 2019 03:52:19 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        christoffer.dall@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
+References: <20190426143740.31973-1-julien.grall@arm.com>
+ <20190426143740.31973-4-julien.grall@arm.com>
+ <20190426145232.GK3567@e103592.cambridge.arm.com>
+ <322340c7-0c97-76f8-8ab8-875040b4459c@arm.com>
+ <20190426153114.GL3567@e103592.cambridge.arm.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <4fddb4e5-6691-c393-d7f8-15cfc6fe7c4d@arm.com>
+Date:   Tue, 7 May 2019 11:52:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190426153114.GL3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dave,
 
-[Hmm, I thought, Hugh was CCed]
+On 4/26/19 4:31 PM, Dave Martin wrote:
+> On Fri, Apr 26, 2019 at 04:06:02PM +0100, Julien Grall wrote:
+>> Hi,
+>>
+>> On 26/04/2019 15:52, Dave Martin wrote:
+>>> On Fri, Apr 26, 2019 at 03:37:40PM +0100, Julien Grall wrote:
+>>>> When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+>>>> the kernel may be able to use FPSIMD/SVE. This is for instance the case
+>>>> for crypto code.
+>>>>
+>>>> Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+>>>> function kernel_neon_{begin, end}. Furthermore, this can only be used
+>>>> when may_use_simd() returns true.
+>>>>
+>>>> The current implementation of may_use_simd() allows softirq to use
+>>>> FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+>>>> When in use, softirqs usually fall back to a software method.
+>>>>
+>>>> At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+>>>> when touching the FPSIMD/SVE context. This has the drawback to disable
+>>>> all softirqs even if they are not using FPSIMD/SVE.
+>>>>
+>>>> Since a softirq is supposed to check may_use_simd() anyway before
+>>>> attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+>>>> disabled when touching the FPSIMD/SVE context. Instead, we can simply
+>>>> disable preemption and mark the FPSIMD/SVE context as in use by setting
+>>>> CPU's kernel_neon_busy flag.
+>>>
+>>> fpsimd_context_busy?
+>>
+>> Yes.
+>>
+>>>
+>>>> Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
+>>>> area using FPSIMD/SVE context and uses them in replacement of
+>>>
+>>> Paragraph mangled during edit?
+>>
+>> Possibly, I will update it.
+>>
+>>>
+>>> -> "are introduced ... and they are used to replace ..."
+>>>
+>>>> local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+>>>> also re-implemented to use the new helpers.
+>>>>
+>>>> Additionally, double-underscored versions of the helpers are provided to
+>>>> be used in function called with interrupt masked. They are used for
+>>>> sanity and also help to mark place where the FPSIMD context can be
+>>>> manipulate freely.
+>>>
+>>> For the benefit of other readers, this should be more explicit.  Also,
+>>> the distinction between the normal and __ helpers is that the latter
+>>> can be caller with preemption disabled.
+>>>
+>>> To clarify the impact, we can say something like
+>>>
+>>> "These are only relevant on paths where irqs are disabled anyway, so
+>>> they are not needed for correctness in the current code. Let's use them
+>>> anyway though: this marks the critical sections clearly and will help
+>>> to avoid mistakes during future maintenance."
+>>
+>> How about the following commit message?
+>>
+>>      arm64/fpsimd: Don't disable softirq when touching FPSIMD/SVE state
+>>
+>>      When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+>>      the kernel may be able to use FPSIMD/SVE. This is for instance the case
+>>      for crypto code.
+>>
+>>      Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+>>      function kernel_neon_{begin, end}. Furthermore, this can only be used
+>>      when may_use_simd() returns true.
+>>
+>>      The current implementation of may_use_simd() allows softirq to use
+>>      FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+>>      When in use, softirqs usually fall back to a software method.
+>>
+>>      At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+>>      when touching the FPSIMD/SVE context. This has the drawback to disable
+>>      all softirqs even if they are not using FPSIMD/SVE.
+>>
+>>      Since a softirq is supposed to check may_use_simd() anyway before
+>>      attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+>>      disabled when touching the FPSIMD/SVE context. Instead, we can simply
+>>      disable preemption and mark the FPSIMD/SVE context as in use by setting
+>>      CPU's fpsimd_context_busy flag.
+>>
+>>      Two new helpers {get, put}_cpu_fpsimd_context are introduced to mark
+>>      the area using FPSIMD/SVE context and they are used to replace
+>>      local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+>>      also re-implemented to use the new helpers.
+>>
+>>      Additionally, double-underscored versions of the helpers are provided to
+>>      called when preemption is already disabled. These are only relevant on
+>>      paths where irqs are disabled anyway, so they are not needed for
+>>      correctness in the current code. Let's use them anyway though: this
+>>      marks critical sections clearly and will help to avoid mistakes during
+>>      future maintenance.
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+> 
+> (For the diff as well as the commit message, obviously.)
 
-On Mon 06-05-19 16:37:42, Yang Shi wrote:
-> 
-> 
-> On 4/28/19 12:13 PM, Yang Shi wrote:
-> > 
-> > 
-> > On 4/23/19 10:52 AM, Michal Hocko wrote:
-> > > On Wed 24-04-19 00:43:01, Yang Shi wrote:
-> > > > The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
-> > > > for each
-> > > > vma") introduced THPeligible bit for processes' smaps. But, when
-> > > > checking
-> > > > the eligibility for shmem vma, __transparent_hugepage_enabled() is
-> > > > called to override the result from shmem_huge_enabled().  It may result
-> > > > in the anonymous vma's THP flag override shmem's.  For example,
-> > > > running a
-> > > > simple test which create THP for shmem, but with anonymous THP
-> > > > disabled,
-> > > > when reading the process's smaps, it may show:
-> > > > 
-> > > > 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
-> > > > Size:               4096 kB
-> > > > ...
-> > > > [snip]
-> > > > ...
-> > > > ShmemPmdMapped:     4096 kB
-> > > > ...
-> > > > [snip]
-> > > > ...
-> > > > THPeligible:    0
-> > > > 
-> > > > And, /proc/meminfo does show THP allocated and PMD mapped too:
-> > > > 
-> > > > ShmemHugePages:     4096 kB
-> > > > ShmemPmdMapped:     4096 kB
-> > > > 
-> > > > This doesn't make too much sense.  The anonymous THP flag should not
-> > > > intervene shmem THP.  Calling shmem_huge_enabled() with checking
-> > > > MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
-> > > > dax vma check since we already checked if the vma is shmem already.
-> > > Kirill, can we get a confirmation that this is really intended behavior
-> > > rather than an omission please? Is this documented? What is a global
-> > > knob to simply disable THP system wise?
-> > 
-> > Hi Kirill,
-> > 
-> > Ping. Any comment?
-> 
-> Talked with Kirill at LSFMM, it sounds this is kind of intended behavior
-> according to him. But, we all agree it looks inconsistent.
-> 
-> So, we may have two options:
->     - Just fix the false negative issue as what the patch does
->     - Change the behavior to make it more consistent
-> 
-> I'm not sure whether anyone relies on the behavior explicitly or implicitly
-> or not.
+Thank you! I will resend the series once rc1 has been cut.
 
-Well, I would be certainly more happy with a more consistent behavior.
-Talked to Hugh at LSFMM about this and he finds treating shmem objects
-separately from the anonymous memory. And that is already the case
-partially when each mount point might have its own setup. So the primary
-question is whether we need a one global knob to controll all THP
-allocations. One argument to have that is that it might be helpful to
-for an admin to simply disable source of THP at a single place rather
-than crawling over all shmem mount points and remount them. Especially
-in environments where shmem points are mounted in a container by a
-non-root. Why would somebody wanted something like that? One example
-would be to temporarily workaround high order allocations issues which
-we have seen non trivial amount of in the past and we are likely not at
-the end of the tunel.
+Cheers,
 
-That being said I would be in favor of treating the global sysfs knob to
-be global for all THP allocations. I will not push back on that if there
-is a general consensus that shmem and fs in general are a different
-class of objects and a single global control is not desirable for
-whatever reasons.
-
-Kirill, Hugh othe folks?
 -- 
-Michal Hocko
-SUSE Labs
+Julien Grall
