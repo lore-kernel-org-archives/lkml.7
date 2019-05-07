@@ -2,97 +2,117 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC16DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E3CC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AFB20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CA120C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EjKMx+Ir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfEGIaW (ORCPT
+        id S1726809AbfEGIbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:30:22 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:57965 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfEGIaV (ORCPT
+        Tue, 7 May 2019 04:31:21 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9684 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfEGIbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:30:21 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="Joergen.Andreasen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,441,1549954800"; 
-   d="scan'208";a="31898599"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 07 May 2019 01:30:20 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch07.mchp-main.com
- (10.10.76.108) with Microsoft SMTP Server id 14.3.352.0; Tue, 7 May 2019
- 01:30:14 -0700
-Date:   Tue, 7 May 2019 10:30:13 +0200
-From:   Joergen Andreasen <joergen.andreasen@microchip.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     <netdev@vger.kernel.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Ralf Baechle" <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        "James Hogan" <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        <pieter.jansenvanvuuren@netronome.com>
-Subject: Re: [PATCH net-next 2/3] net: mscc: ocelot: Implement port policers
- via tc command
-Message-ID: <20190507083012.4yjd7ok6dhzkrdf7@soft-dev16>
-References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
- <20190502094029.22526-3-joergen.andreasen@microchip.com>
- <20190504130726.GA14684@nanopsycho.orion>
+        Tue, 7 May 2019 04:31:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd1425a0000>; Tue, 07 May 2019 01:31:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 May 2019 01:31:14 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 01:31:14 -0700
+Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 08:31:07 +0000
+Subject: Re: [PATCH V5 09/16] Documentation/devicetree: Add PCIe
+ supports-clkreq property
+To:     Rob Herring <robh@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-10-vidyas@nvidia.com> <20190426152229.GA8492@bogus>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <d8ef9c8d-031b-4c77-b225-4a1fef3bc9eb@nvidia.com>
+Date:   Tue, 7 May 2019 14:01:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190504130726.GA14684@nanopsycho.orion>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190426152229.GA8492@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557217882; bh=E4R0bJaTc1XE8Bf2zvQbXuwPLi2Wnco5hGqGVqidxEo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EjKMx+IrwLC7OlCn4DahxXHLMvnH1eWfEWPdkY/ioG3avM5ymJYSCMMugCZWV4n1x
+         FsOJwNFO2fEcxle7Ne9WovuScxWqwRHx8lpa3BH6b5A5udhmvr0irtXmCru6Hy0Yj+
+         ED+8LoEy0fZ9yJDTov8NGlEc5ExVyXI8sLRmBkfdsUftk4M49ons7tllllj0Ao4+Oe
+         LOAiIjAeZxulLxMFTdZE5b+O4bXhiWyDQ+7rWqPnDr9cE9Ti4gLfT9GPKz0qwyUW5n
+         cJYifvYWO84KI8RI3CC/5HLc5ZfUjYfPOLxSDFJM4BbzUCxT5FdeB/KHkV5KIq3TQV
+         tkXX3FOplgwVQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+On 4/26/2019 8:52 PM, Rob Herring wrote:
+> On Wed, Apr 24, 2019 at 10:49:57AM +0530, Vidya Sagar wrote:
+>> Some host controllers need to know the existence of clkreq signal routing to
+>> downstream devices to be able to advertise low power features like ASPM L1
+>> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
+>> states might lead to downstream devices falling off the bus. Hence a new device
+>> tree property 'supports-clkreq' is added to make such host controllers
+>> aware of clkreq signal routing to downstream devices.
+> 
+> Please be consistent with subjects (Use 'dt-bindings: ...')
+When I had made this change, I did a git log and saw 'Documentation/devicetree:' as
+the prefix and hence added it. But, now, with linux-next top of the tree,  I see
+two more commits with 'dt-bindings:' prefix. I'll change my patch also to the new
+'dt-bindings:' prefix.
 
-The 05/04/2019 15:07, Jiri Pirko wrote:
-> External E-Mail
 > 
+> With that change,
 > 
-> Thu, May 02, 2019 at 11:40:28AM CEST, joergen.andreasen@microchip.com wrote:
-> >Hardware offload of port policers are now supported via the tc command.
-> >Supported police parameters are: rate, burst and overhead.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> Joergen, please see:
-> [PATCH net-next 00/13] net: act_police offload support
-> That patchset is also pushing flow intermediate representation for this,
-> so I believe that you should base this patch on top of that.
-> 
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> Changes since [v2]:
+>> * None
+>>
+>> Changes since [v1]:
+>> * This is a new patch in v2 series
+>>
+>>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
 
-I will base my patches on top of that.
-
--- 
-Joergen Andreasen, Microchip
