@@ -2,120 +2,164 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7994C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB939C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50DA2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BEA02054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfEGRxB (ORCPT
+        id S1727543AbfEGRxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:53:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62483 "EHLO mga11.intel.com"
+        Tue, 7 May 2019 13:53:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34000 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfEGRxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:53:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 10:53:00 -0700
-Received: from unknown (HELO [10.232.112.171]) ([10.232.112.171])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 07 May 2019 10:52:59 -0700
-Subject: Re: [PATCH v2 4/7] nvme.h: add telemetry log page definisions
-To:     Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christoph Hellwig <hch@lst.de>
-References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
- <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
-From:   "Heitke, Kenneth" <kenneth.heitke@intel.com>
-Message-ID: <67f0d1ab-2edb-24ea-a4b5-62c90c1ef0fb@intel.com>
-Date:   Tue, 7 May 2019 11:52:58 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726452AbfEGRxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:53:52 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 38B66301EA86;
+        Tue,  7 May 2019 17:53:51 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CEB2600D4;
+        Tue,  7 May 2019 17:53:45 +0000 (UTC)
+Date:   Tue, 7 May 2019 12:53:42 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 2/3] x86_64: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190507175342.fskdj2qidpao65qi@treble>
+References: <20190507174227.673261270@goodmis.org>
+ <20190507174400.219947724@goodmis.org>
 MIME-Version: 1.0
-In-Reply-To: <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190507174400.219947724@goodmis.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 07 May 2019 17:53:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/7/2019 10:58 AM, Akinobu Mita wrote:
-> Copy telemetry log page definisions from nvme-cli.
+On Tue, May 07, 2019 at 01:42:29PM -0400, Steven Rostedt wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Jens Axboe <axboe@fb.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> In order to allow breakpoints to emulate call functions, they need to push
+> the return address onto the stack. But because the breakpoint exception
+> frame is added to the stack when the breakpoint is hit, there's no room to
+> add the address onto the stack and return to the address of the emulated
+> called funtion.
+> 
+> To handle this, copy the exception frame on entry of the breakpoint handler
+> and have leave a gap that can be used to add a return address to the stack
+> frame and return from the breakpoint to the emulated called function,
+> allowing for that called function to return back to the location after the
+> breakpoint was placed.
+
+This part is done by patch 1.
+
+> 
+> The helper functions were also added:
+
+No longer "also" :-)
+
+>   int3_emulate_push(): to push the address onto the gap in the stack
+>   int3_emulate_jmp(): changes the location of the regs->ip to return there.
+>   int3_emulate_call(): push the return address and change regs->ip
+> 
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Nicolai Stange <nstange@suse.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: the arch/x86 maintainers <x86@kernel.org>
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: Miroslav Benes <mbenes@suse.cz>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Joe Lawrence <joe.lawrence@redhat.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nayna Jain <nayna@linux.ibm.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+> Cc: stable@vger.kernel.org
+> Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> [ Modified to only work for x86_64 ]
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > ---
-> * v2
-> - New patch in this version.
+>  arch/x86/include/asm/text-patching.h | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
->   include/linux/nvme.h | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
-> 
-> diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-> index c40720c..5217fe4 100644
-> --- a/include/linux/nvme.h
-> +++ b/include/linux/nvme.h
-> @@ -396,6 +396,28 @@ enum {
->   	NVME_NIDT_UUID		= 0x03,
->   };
->   
-> +/* Derived from 1.3a Figure 101: Get Log Page – Telemetry Host
-> + * -Initiated Log (Log Identifier 07h)
-> + */
-
-Is this Host Initiated or Controller Initiated? The comment says host
-initiated but everything else seems to indicated controller initiated.
-Is controller initiated even the correct choice because the controller
-would have sent an AER to indicate that the host should pull the
-telemetry data.
-
-
-> +struct nvme_telemetry_log_page_hdr {
-> +	__u8    lpi; /* Log page identifier */
-> +	__u8    rsvd[4];
-> +	__u8    iee_oui[3];
-> +	__le16  dalb1; /* Data area 1 last block */
-> +	__le16  dalb2; /* Data area 2 last block */
-> +	__le16  dalb3; /* Data area 3 last block */
-> +	__u8    rsvd1[368]; /* TODO verify */
-> +	__u8    ctrlavail; /* Controller initiated data avail?*/
-> +	__u8    ctrldgn; /* Controller initiated telemetry Data Gen # */
-> +	__u8    rsnident[128];
-> +	/* We'll have to double fetch so we can get the header,
-> +	 * parse dalb1->3 determine how much size we need for the
-> +	 * log then alloc below. Or just do a secondary non-struct
-> +	 * allocation.
-> +	 */
-> +	__u8    telemetry_dataarea[0];
-> +};
+> diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+> index e85ff65c43c3..455bf9f88233 100644
+> --- a/arch/x86/include/asm/text-patching.h
+> +++ b/arch/x86/include/asm/text-patching.h
+> @@ -39,4 +39,26 @@ extern int poke_int3_handler(struct pt_regs *regs);
+>  extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+>  extern int after_bootmem;
+>  
+> +static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
+> +{
+> +	regs->ip = ip;
+> +}
 > +
->   struct nvme_smart_log {
->   	__u8			critical_warning;
->   	__u8			temperature[2];
-> @@ -832,6 +854,7 @@ enum {
->   	NVME_LOG_FW_SLOT	= 0x03,
->   	NVME_LOG_CHANGED_NS	= 0x04,
->   	NVME_LOG_CMD_EFFECTS	= 0x05,
-> +	NVME_LOG_TELEMETRY_CTRL	= 0x08,
->   	NVME_LOG_ANA		= 0x0c,
->   	NVME_LOG_DISC		= 0x70,
->   	NVME_LOG_RESERVATION	= 0x80,
-> 
+> +#define INT3_INSN_SIZE 1
+> +#define CALL_INSN_SIZE 5
+> +
+> +#ifdef CONFIG_X86_64
+> +static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
+> +{
+> +	regs->sp -= sizeof(unsigned long);
+> +	*(unsigned long *)regs->sp = val;
+> +}
+
+How this works isn't really obvious.  A comment is probably warranted to
+explain the fact that the int3 entry code reserved some space on the
+stack.
+
+-- 
+Josh
