@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD4FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C0C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94FE20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8BC20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207826;
-	bh=dL6rAOH5fTYZkLqGJXikIDn4M18h3IAezKwUhDlz4hY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlIZtqUITP/iksX/Q4wepY7L7DZtkgmxhJvD4k8y4WrUnW5vEm8x1RbxjzJYhxS37
-	 nIuDQ16P903GGdts0A6anBDjjyYpsf3C1lzoi000xpungxGlwccpiOBpfaQcYLwzia
-	 3pudf+jZEC9nXlqsY2ZvUgi4kQW5fCq0o2uH3tNc=
+	s=default; t=1557207831;
+	bh=ORIW/Z6sxOAMgncxRTcvupdrdp7O7IKVNDywnbsCAvU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BUOJbO91Azph4agKeEIcC+akSWy8I+eZVhIPSGHzI4dWXPZI4738sMnoWh5xU86k7
+	 Xv2Pd3wCvtwR9o8utlUcEO6KjNAXzCgNuXf+OyEY9Ww135EGcXksXkHp7bUBpmXc9w
+	 eqaBM7bzXicVRLn8U2hc5rY994U7yB0js7HBubKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbfEGFnC (ORCPT
+        id S1729680AbfEGFmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33736 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbfEGFmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:42:52 -0400
+        id S1728734AbfEGFmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:42:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11CD9205ED;
-        Tue,  7 May 2019 05:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDBBE20578;
+        Tue,  7 May 2019 05:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207771;
-        bh=dL6rAOH5fTYZkLqGJXikIDn4M18h3IAezKwUhDlz4hY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=olCwDFlQF3y12iXiHnYVUzsvFzAo88s8zs9FKzb5Rb+nyW7BpwUPIBxv5CvGEURHP
-         w7sSqH4MU4cI84uTxX4uU/dZZ8mg7u5kwtBLOH8c+MJUZgda1jO3mzMYeY05qBOKXN
-         tiduHpIpUHbeGnvZmgFBXIxxGYOb2NoHSKOGogGo=
+        s=default; t=1557207769;
+        bh=ORIW/Z6sxOAMgncxRTcvupdrdp7O7IKVNDywnbsCAvU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HYMBgw5QwTCbjI/kLMcpIdGvz1EIBJZXkF1VWuMQLTpQeKJwLPd/flgbAIYO/fX/r
+         TJ37rWMErpvlnTsRE73t+PWUZaFA/Nl4AQvxxw5YREQ0sp9FuX1hjRlGnf8ceJ9dcD
+         aWLgry1qsiL25ReaDVg8/FcSYXkT6PZtj+Tc0Dm4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 03/10] s390/dasd: Fix capacity calculation for large volumes
-Date:   Tue,  7 May 2019 01:42:39 -0400
-Message-Id: <20190507054247.537-3-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 01/10] iio: adc: xilinx: fix potential use-after-free on remove
+Date:   Tue,  7 May 2019 01:42:37 -0400
+Message-Id: <20190507054247.537-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507054247.537-1-sashal@kernel.org>
-References: <20190507054247.537-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Oberparleiter <oberpar@linux.ibm.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
+[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
 
-The DASD driver incorrectly limits the maximum number of blocks of ECKD
-DASD volumes to 32 bit numbers. Volumes with a capacity greater than
-2^32-1 blocks are incorrectly recognized as smaller volumes.
+When cancel_delayed_work() returns, the delayed work may still
+be running. This means that the core could potentially free
+the private structure (struct xadc) while the delayed work
+is still using it. This is a potential use-after-free.
 
-This results in the following volume capacity limits depending on the
-formatted block size:
+Fix by calling cancel_delayed_work_sync(), which waits for
+any residual work to finish before returning.
 
-  BLKSIZE  MAX_GB   MAX_CYL
-      512    2047   5843492
-     1024    4095   8676701
-     2048    8191  13634816
-     4096   16383  23860929
-
-The same problem occurs when a volume with more than 17895697 cylinders
-is accessed in raw-track-access mode.
-
-Fix this problem by adding an explicit type cast when calculating the
-maximum number of blocks.
-
-Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 4bbcdf991c26..4856e5bbb42f 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -2031,14 +2031,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
- 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index a483747cdc9b..b520de11fc17 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1315,7 +1315,7 @@ static int xadc_remove(struct platform_device *pdev)
+ 	}
+ 	free_irq(irq, indio_dev);
+ 	clk_disable_unprepare(xadc->clk);
+-	cancel_delayed_work(&xadc->zynq_unmask_work);
++	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+ 	kfree(xadc->data);
+ 	kfree(indio_dev->channels);
  
- raw:
--	block->blocks = (private->real_cyl *
-+	block->blocks = ((unsigned long) private->real_cyl *
- 			  private->rdc_data.trk_per_cyl *
- 			  blk_per_trk);
- 
- 	dev_info(&device->cdev->dev,
--		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
-+		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
- 		 "%s\n", (block->bp_block >> 10),
--		 ((private->real_cyl *
-+		 (((unsigned long) private->real_cyl *
- 		   private->rdc_data.trk_per_cyl *
- 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
- 		 ((blk_per_trk * block->bp_block) >> 10),
 -- 
 2.20.1
 
