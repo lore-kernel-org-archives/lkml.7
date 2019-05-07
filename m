@@ -2,135 +2,139 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34239C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454AEC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0583E20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557206407;
-	bh=Flvx6Er9d/coVStQbYYupZGxgW4cRN7G6LywOsFj20Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OEuN1zUFzlIgCQQdMVN1mwNmdyFdxb0f4YcY/2Bqm4IF6+A7ZsO92DiaoDkqj7jdV
-	 dhO39+6Engmd9x+wy4MRWhKOsePhafMVtUsaiFdUviiAvJSn73EUQbAjT7hqi7yGlH
-	 KRQumPlADKyLfPRl2iG5z3ZZnx9R0CWmqnJxHUsc=
+	by mail.kernel.org (Postfix) with ESMTP id 0F1EF20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:25:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oTNWEoWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEGFUG (ORCPT
+        id S1726455AbfEGFZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfEGFUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:20:05 -0400
-Received: from localhost (unknown [106.200.210.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D3D20825;
-        Tue,  7 May 2019 05:20:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557206404;
-        bh=Flvx6Er9d/coVStQbYYupZGxgW4cRN7G6LywOsFj20Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tPo+br1JJSOD6ymilcJdrWRHzZOLmQSbawbDknuiOMWpT4SBxpHYGA4PfLjWsZzxQ
-         326OqhKd60CoNvFoUaCfvE3AdFsB2yoOuo+J6RQjAJLAQi02uorkEflM3niUMGlRkd
-         77/Eu5kvMgpKxc5XqSsEs2H35F4wBc4pzQZnvIjs=
-Date:   Tue, 7 May 2019 10:49:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org,
-        tiwai@suse.de, linux-kernel@vger.kernel.org,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 2/7] soundwire: add Slave sysfs support
-Message-ID: <20190507051959.GC16052@vkoul-mobl>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-3-pierre-louis.bossart@linux.intel.com>
- <20190504065444.GC9770@kroah.com>
- <c675ea60-5bfa-2475-8878-c589b8d20b32@linux.intel.com>
- <20190506151953.GA13178@kroah.com>
- <20190506162208.GI3845@vkoul-mobl.Dlink>
- <be72bbb1-b51f-8201-fdff-958836ed94d1@linux.intel.com>
+        Tue, 7 May 2019 01:25:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36990 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfEGFZD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:25:03 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o7so5679388qtp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 22:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0hFqmwNLrgOZ2d4LHKnw2c1GsxJZR0XMM1CJizfkss0=;
+        b=oTNWEoWULY5My61dxjSyob+ke4AB8mRsMSGQA39QxxGStJqKwc6brL3ScY9Pf6MlNV
+         cHlwWL4HZ2LL18qYr53Bt8gCq0vAEVs49chuSjny1Td+/Havv9W25UPJAwR7YrDl8KVP
+         gd5O+H3z2FdeEtB4nJ1685Y+V8/0Vt3jWOwxA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0hFqmwNLrgOZ2d4LHKnw2c1GsxJZR0XMM1CJizfkss0=;
+        b=oqEcTq7/KU4XMr5J6DMqRLe2tm5s8KhBNuGHU+YsJN5uWq9l/ypq1JyBIJs8idLS1d
+         OxQLpKs8bGCyKIawLCynRrqHdJv9mFoQoFXWC6aiOekXqzq0NKWU8t7NAXfeGLSQ5/ZP
+         mG4IVHgjTjiSIUZG8tvtHEahZkUqUruGtc4AUjmqPg9Q3d22k5T4Z+EXhDi30tpMDyz7
+         B3XEnSZr+lhyPGfYidQZGgd6aHZeo5MLRACqi8GFj0LqKv3HIraczvEJn4079+9u74GJ
+         mkSzP8kuOWpFIcodzbFrRXm6Cq0OZt+uZgyycLp9obhyOmoOGQvfWSaty2iWzx4k7otI
+         Txpw==
+X-Gm-Message-State: APjAAAVRaOBJLwvrSEPJFUuXfuC/Uxlqt6WCBYFcI37NJmPfBluNKJo/
+        ord2Djw9jP2CxeF94K/5CRNxwPNmT6kiPxokIW7Xhg==
+X-Google-Smtp-Source: APXvYqw2tJU/Bf+A/JCr79IIzV4N6cX86Z0Gi/0NwYK3aYJCyNc6+UuOalKy+yiSTLrBH1vrjl87uP7dCzAESuSwzsc=
+X-Received: by 2002:ac8:1ae2:: with SMTP id h31mr7545363qtk.75.1557206702363;
+ Mon, 06 May 2019 22:25:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be72bbb1-b51f-8201-fdff-958836ed94d1@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com> <20190503093117.54830-5-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20190503093117.54830-5-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 7 May 2019 14:24:51 +0900
+Message-ID: <CANMq1KCiK69kXkpagccqd1=pKOs7qOOVuJUaCe5JfoGVmPt7mg@mail.gmail.com>
+Subject: Re: [PATCH v3 04/10] dt-bindings: mfd: Add compatible for the
+ MediaTek MT6358 PMIC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-05-19, 11:46, Pierre-Louis Bossart wrote:
-> On 5/6/19 11:22 AM, Vinod Koul wrote:
-> > On 06-05-19, 17:19, Greg KH wrote:
-> > > On Mon, May 06, 2019 at 09:42:35AM -0500, Pierre-Louis Bossart wrote:
-> > > > > > +
-> > > > > > +int sdw_sysfs_slave_init(struct sdw_slave *slave)
-> > > > > > +{
-> > > > > > +	struct sdw_slave_sysfs *sysfs;
-> > > > > > +	unsigned int src_dpns, sink_dpns, i, j;
-> > > > > > +	int err;
-> > > > > > +
-> > > > > > +	if (slave->sysfs) {
-> > > > > > +		dev_err(&slave->dev, "SDW Slave sysfs is already initialized\n");
-> > > > > > +		err = -EIO;
-> > > > > > +		goto err_ret;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	sysfs = kzalloc(sizeof(*sysfs), GFP_KERNEL);
-> > > > > 
-> > > > > Same question as patch 1, why a new device?
-> > > > 
-> > > > yes it's the same open. In this case, the slave devices are defined at a
-> > > > different level so it's also confusing to create a device to represent the
-> > > > slave properties. The code works but I am not sure the initial directions
-> > > > are correct.
-> > > 
-> > > You can just make a subdir for your attributes by using the attribute
-> > > group name, if a subdirectory is needed just to keep things a bit more
-> > > organized.
-> > 
-> > The key here is 'a subdir' which is not the case here. We did discuss
-> > this in the initial patches for SoundWire which had sysfs :)
-> > 
-> > The way MIPI disco spec organized properties, we have dp0 and dpN
-> > properties each of them requires to have a subdir of their own and that
-> > was the reason why I coded it to be creating a device.
-> 
-> Vinod, the question was not for dp0 and dpN, it's fine to have
-> subdirectories there, but rather why we need separate devices for the master
-> and slave properties.
+On Fri, May 3, 2019 at 6:34 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> This adds compatible for the MediaTek MT6358 PMIC.
+>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> index 0ebd08af777d..62f1c17c7738 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+>  This document describes the binding for MFD device and its sub module.
+>
+>  Required properties:
+> -compatible: "mediatek,mt6397" or "mediatek,mt6323"
+> +compatible:
+> +       "mediatek,mt6323" for PMIC MT6323
+> +       "mediatek,mt6358" for PMIC MT6358
+> +       "mediatek,mt6397" for PMIC MT6397
+>
+>  Optional subnodes:
+>
+>  - rtc
+>         Required properties:
+> -               - compatible: "mediatek,mt6397-rtc"
+> +               - compatible: "mediatek,mt6397-rtc" or "mediatek,mt6358-rtc"
+>  - regulators
+>         Required properties:
+>                 - compatible: "mediatek,mt6397-regulator"
+>         see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+> +               - compatible: "mediatek,mt6358-regulator"
+> +       see Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+>                 - compatible: "mediatek,mt6323-regulator"
+>         see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+>  - codec
+>         Required properties:
+> -               - compatible: "mediatek,mt6397-codec"
+> +               - compatible: "mediatek,mt6397-codec" or "mediatek,mt6358-sound"
 
-Slave does not have a separate device. IIRC the properties for Slave are
-in /sys/bus/soundwire/device/<slave>/...
+Sean had a question about this
+(https://patchwork.kernel.org/patch/10846669/#22524299):
+"why didn't we use a more consistent naming as mt6358-codec?"
 
-For master yes we can skip the device creation, it was done for
-consistency sake of having these properties ties into sys/bus/soundwire/
-
-I don't mind if they are shown up in respective device node (PCI/platform
-etc) /sys/bus/foo/device/<> 
-
-But for creating subdirectories you would need the new dpX devices.
-
-HTH
-
-> 
-> > 
-> > Do we have a better way to handle this?
-> > 
-> > > Otherwise, you need to mess with having multiple "types" of struct
-> > > device all associated with the same bus.  It is possible, and not that
-> > > hard, but I don't think you are doing that here.
-> > > 
-> > > thnaks,
-> > > 
-> > > greg k-h
-> > 
-
--- 
-~Vinod
+>  - clk
+>         Required properties:
+>                 - compatible: "mediatek,mt6397-clk"
+> --
+> 2.18.0
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
