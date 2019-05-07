@@ -2,94 +2,190 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91773C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC49C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B46A206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557198851;
-	bh=n1/AWwgqvLeN1r7QRiMYLxNxFxsxeh+m0zuZtk1LZSE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M9jCE5dyBGWBcivu3aAVxGk/ew0FhdakmR2HCZcjUmspPxP/QpMJ3S2xhIX0i/Ew3
-	 HniM4fWpUYLAVJ3OpGEeEFAEdlw6MPwNmQO2kgZnCpy9jzse2Sg/SFZHUKmnd4f9f2
-	 vyQkZF2QUyIDZjHUCHU5Z+afRhsltRypNU5Rm4BQ=
+	by mail.kernel.org (Postfix) with ESMTP id 357C9206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTQNGYZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfEGDOK (ORCPT
+        id S1726939AbfEGDOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 23:14:10 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36659 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfEGDOJ (ORCPT
+        Mon, 6 May 2019 23:14:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46486 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfEGDOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 23:14:09 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z1so691184ljb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 20:14:08 -0700 (PDT)
+        Mon, 6 May 2019 23:14:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j11so7822249pff.13;
+        Mon, 06 May 2019 20:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NAywE/O6BBw64w+qckpowQka/mRy1kuf8xIOtgSlqWg=;
-        b=US/fJoAPz7lzHtSZnbgRW4K5atTbEpEBP5zyP2oKurgVKd8txdmImfmaIgshMnEMAb
-         xSnmMOZqhcKy1MX50lnymuCMS1McGvzRVrmFv4HQAsgfGfHLaJWK7/2yYGweA3hNu0PN
-         AMs1YUN4vcefoei8JVl+AEwOV8XaK9FHWo/vU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XPy6o0NjYz38vWpV6pc1h2A6N4smSYs4Cq49Ux9zwV8=;
+        b=uTQNGYZ1XWIvXYHBEeJQovmqhK2Jtpq+d64Qro6G5OKceot5sQNTlLbfduNr0K3PGx
+         CsKeB5E/nKLx2mO5rHvB5C3cSTlrSg27HAg1bLnsc6sS6Ob71hOBqLsY7CZ9Kc78pahW
+         2bjV9Jxur71IdhgsqsXU4h/nzLhauMpdelIF+i15235Qca74Y0OgvP33q3BLK9LqDfFd
+         Xr/fhjikEY63MLGvaPSmYU14OjokXybBFpWj/AGZsAXkXpEZkB0f6qswg2ygyAISGWpA
+         7eDh4rZZ2yShjUppASxA0qxx7J3s6zLlj/zKwFDiXJf9dX+MaLJqGhuEngD27vSXcDZx
+         mNcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NAywE/O6BBw64w+qckpowQka/mRy1kuf8xIOtgSlqWg=;
-        b=imjg9Ju9wKfQ05sbBGuSgD50thjhcP/bOwmtdk2P6NXNJMd781L8RVYz0kud0JiuTV
-         /aSSSZ/vYFwPARorMKV4M1B8z5D9yt3hsQGmCkPgQbUagy5LWyEejblgIk+Kcyed+e7H
-         6TN4fa9IfEqYgE9zqjKfuIluX0Zsy3FzLuhE2rc30WmKSDNQ8mosFDXX12pmbBqzdq9Y
-         cyldnJOuaDW22vlYKDW+TCCLFyfBLGR1UJfcY8W4xYfB3RfTUs07K0J2kVJQleoAuS5Q
-         6C8YnzG06Uaf2LIfQJGdz1IUFuJVbJsHNIf9lIUNjdiEi3Ij2pW8Ukocpnkfv1Q64pfl
-         2HwA==
-X-Gm-Message-State: APjAAAWoM6dLpAoTblXV/OWFemmC4rPMItAef04XrSwyeLINF/j67Thq
-        OI6F3IoWCbTY6rM1/Alkm/U4mwwkjC8=
-X-Google-Smtp-Source: APXvYqyywfqd8XkEw+6ZHmkVqhV/7SpGUKRSylwgSN5UqB6SZ1LPzIxo9deSR09hpkvG1jVx2u8eTg==
-X-Received: by 2002:a2e:9c0a:: with SMTP id s10mr15706872lji.162.1557198847365;
-        Mon, 06 May 2019 20:14:07 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id y3sm2847072lfh.12.2019.05.06.20.14.06
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XPy6o0NjYz38vWpV6pc1h2A6N4smSYs4Cq49Ux9zwV8=;
+        b=bpGmhPA4nLB6Twbk5csOyQsxQkRfpaM0M3+zBCdYF2ditokfKtQja54RhMiUuc8VKm
+         99wUhRwxzKKuwyDDRdKqc6806OVTvYJavNSiJdHNcBvgtC7UWcOTyRAUDT0EEbaN1iDK
+         +RVrbZ901k3ouQgWRIsfQp0kmUNLbEGByWkcmXyT3JEvzPSjDv/lPCMVi7oNFshfQhZV
+         DQViNHZ5miie3fHmUTwEvaSjQ13KFLJ1W3FHorGtDGD0t85LWDeqsujQJ57zffUlBUWq
+         qmAY4eJOXIAnz2b787wqSKwdvk1M4M4d3RaXVzdp3qBJC96szIC6dw2ggUlAs/J5IJVe
+         /PYA==
+X-Gm-Message-State: APjAAAU5SaVa7bH19Pdkzl0Pf2PmKJ6V6i2/NLXVqmpEE+nCc7gnNWnF
+        MWEiMzXZNqRh8l8aS+kWvo5YXwxZ0NA=
+X-Google-Smtp-Source: APXvYqwISNSy9xefPMYRgOslBbKIROeiQ4y33+rxQnv0dnHw2MR5wA3FiL1meR7p3JPjBqzEw/Pz1Q==
+X-Received: by 2002:a65:4802:: with SMTP id h2mr34368073pgs.98.1557198856091;
+        Mon, 06 May 2019 20:14:16 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id m11sm17053726pgd.12.2019.05.06.20.14.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 20:14:06 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id f23so12925945ljc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 20:14:06 -0700 (PDT)
-X-Received: by 2002:a2e:9644:: with SMTP id z4mr85776ljh.22.1557198846159;
- Mon, 06 May 2019 20:14:06 -0700 (PDT)
+        Mon, 06 May 2019 20:14:15 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        gregkh@linuxfoundation.org, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+Date:   Mon, 6 May 2019 20:14:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190506143301.GU14916@sirena.org.uk> <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
- <20190507021853.GY14916@sirena.org.uk> <20190507030241.GC14916@sirena.org.uk>
-In-Reply-To: <20190507030241.GC14916@sirena.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 6 May 2019 20:13:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
-Message-ID: <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
-Subject: Re: [GIT PULL] spi updates for v5.2
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190501230126.229218-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 8:02 PM Mark Brown <broonie@kernel.org> wrote:
->
->                    Everything I'm
-> seeing is saying that Google just isn't enthusiastic about domains like
-> kernel.org which is going an issue.
+On 5/1/19 4:01 PM, Brendan Higgins wrote:
+> ## TLDR
+> 
+> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
+> 5.2.
+> 
+> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
+> we would merge through your tree when the time came? Am I remembering
+> correctly?
+> 
+> ## Background
+> 
+> This patch set proposes KUnit, a lightweight unit testing and mocking
+> framework for the Linux kernel.
+> 
+> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+> it does not require installing the kernel on a test machine or in a VM
+> and does not require tests to be written in userspace running on a host
+> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
+> can run several dozen tests in under a second. Currently, the entire
+> KUnit test suite for KUnit runs in under a second from the initial
+> invocation (build time excluded).
+> 
+> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+> Googletest/Googlemock for C++. KUnit provides facilities for defining
+> unit test cases, grouping related test cases into test suites, providing
+> common infrastructure for running tests, mocking, spying, and much more.
 
-Well, there are other people who use kernel.org email addresses.  Ingo
-Molnar, Rafael Wysocki, a couple of others.  But you're the one
-getting marked as spam.
+As a result of the emails replying to this patch thread, I am now
+starting to look at kselftest.  My level of understanding is based
+on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
+and a _tiny_ bit of looking at kselftest code.
 
-Somebody just hates you. I do end up checking my spam-box regularly,
-so maybe it doesn't matter.
+tl;dr; I don't really understand kselftest yet.
 
-                 Linus
+
+(1) why KUnit exists
+
+> ## What's so special about unit testing?
+> 
+> A unit test is supposed to test a single unit of code in isolation,
+> hence the name. There should be no dependencies outside the control of
+> the test; this means no external dependencies, which makes tests orders
+> of magnitudes faster. Likewise, since there are no external dependencies,
+> there are no hoops to jump through to run the tests. Additionally, this
+> makes unit tests deterministic: a failing unit test always indicates a
+> problem. Finally, because unit tests necessarily have finer granularity,
+> they are able to test all code paths easily solving the classic problem
+> of difficulty in exercising error handling code.
+
+(2) KUnit is not meant to replace kselftest
+
+> ## Is KUnit trying to replace other testing frameworks for the kernel?
+> 
+> No. Most existing tests for the Linux kernel are end-to-end tests, which
+> have their place. A well tested system has lots of unit tests, a
+> reasonable number of integration tests, and some end-to-end tests. KUnit
+> is just trying to address the unit test space which is currently not
+> being addressed.
+
+My understanding is that the intent of KUnit is to avoid booting a kernel on
+real hardware or in a virtual machine.  That seems to be a matter of semantics
+to me because isn't invoking a UML Linux just running the Linux kernel in
+a different form of virtualization?
+
+So I do not understand why KUnit is an improvement over kselftest.
+
+It seems to me that KUnit is just another piece of infrastructure that I
+am going to have to be familiar with as a kernel developer.  More overhead,
+more information to stuff into my tiny little brain.
+
+I would guess that some developers will focus on just one of the two test
+environments (and some will focus on both), splitting the development
+resources instead of pooling them on a common infrastructure.
+
+What am I missing?
+
+-Frank
+
+
+> 
+> ## More information on KUnit
+> 
+> There is a bunch of documentation near the end of this patch set that
+> describes how to use KUnit and best practices for writing unit tests.
+> For convenience I am hosting the compiled docs here:
+> https://google.github.io/kunit-docs/third_party/kernel/docs/
+> Additionally for convenience, I have applied these patches to a branch:
+> https://kunit.googlesource.com/linux/+/kunit/rfc/v5.1-rc7/v1
+> The repo may be cloned with:
+> git clone https://kunit.googlesource.com/linux
+> This patchset is on the kunit/rfc/v5.1-rc7/v1 branch.
+> 
+> ## Changes Since Last Version
+> 
+> None. I just rebased the last patchset on v5.1-rc7.
+> 
+
