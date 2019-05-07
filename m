@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE78C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BB5C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133522087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DFE20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207679;
-	bh=zd5RSH0O9kIwj9YqjFxjmGw/uZ3pKRg7EYMAUNdc7nQ=;
+	s=default; t=1557207685;
+	bh=xB1tNO1j3rxBe2fALyoQaHHk4bUGFOXu+AFvL4TlhdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzzipO79ocjPQu22T5ygvf5ja0wIqcx5NG3BmRmnhFigu3Csi5HpER7I+Ndc2RO+k
-	 1QgKPsgU5kEedrGKURiMRlK0myn5qdnPXVMOFCY81CfUH1HnMz40nKq0bXyr2Zwbf0
-	 pR+kZK+IxRdCgBwhfr62D+BuU+LHrgj4Xs1l5A9I=
+	b=yUydbgol4+HS0Cwsn5ISDi2T68I9CwhqiCXEn2gnLPotOL+AT2JI+LHpN0XakjT0R
+	 h1CJOVWyfo7cU+Vv0Uzv5Anxt2YhNjha570Ngq5M3mJR0oCLpirEFy/FuWi9uMnnVH
+	 WcAoinZ2jcQyyLzHge4KMg6ZPkS4CD84tpn+d1B4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfEGFlR (ORCPT
+        id S1729313AbfEGFlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729270AbfEGFlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:11 -0400
+        id S1729281AbfEGFlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7CA21655;
-        Tue,  7 May 2019 05:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91727216C8;
+        Tue,  7 May 2019 05:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207670;
-        bh=zd5RSH0O9kIwj9YqjFxjmGw/uZ3pKRg7EYMAUNdc7nQ=;
+        s=default; t=1557207672;
+        bh=xB1tNO1j3rxBe2fALyoQaHHk4bUGFOXu+AFvL4TlhdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ErfimIpmodP/4HR89jSiRfU/zpuyrLqQV17d2Qllo8PGfoQUpm/PaH7cug69/720i
-         CF8hwqW9FiRmNa6bq6Pk2pe0GCbT1uJJoXKxvLJ6OhI380PRFq9NLqovgX8+y1D6rH
-         9pEKowv9SMtKnuFlHJiKwDHFL3ZikZvnR8txfaEA=
+        b=cuXsI/K0Hg6wV2GWtj0PLwdQxYximIpNKlpeObizO9lLHfrxBncJFuPtkqQ/nq7S+
+         KvNYFL8SaDc18Vc2uZ7ImSkIGtE8YTZxd9LexFka0z0ovDOUyiL8H09oc1nPykNMjk
+         rubhCYoa7ibPhyDim9I2oy/pqLEnvIOLjWQkZy7A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengliang <zhengliang6@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Alex Kushnarov <alexanderk@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 87/95] f2fs: fix to data block override node segment by mistake
-Date:   Tue,  7 May 2019 01:38:16 -0400
-Message-Id: <20190507053826.31622-87-sashal@kernel.org>
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 89/95] mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
+Date:   Tue,  7 May 2019 01:38:18 -0400
+Message-Id: <20190507053826.31622-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,67 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengliang <zhengliang6@huawei.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit a0770e13c8da83bdb64738c0209ab02dd3cfff8b ]
+[ Upstream commit d4d0e40977ac450f32f2db5e4d8e23c9d2578899 ]
 
-v4: Rearrange the previous three versions.
+The driver cannot guarantee in the prepare phase that it will be able to
+write an MDB entry to the device. In case the driver returned success
+during the prepare phase, but then failed to add the entry in the commit
+phase, a WARNING [1] will be generated by the switchdev core.
 
-The following scenario could lead to data block override by mistake.
+Fix this by doing the work in the prepare phase instead.
 
-TASK A            |  TASK kworker                                            |     TASK B                                            |       TASK C
-                  |                                                          |                                                       |
-open              |                                                          |                                                       |
-write             |                                                          |                                                       |
-close             |                                                          |                                                       |
-                  |  f2fs_write_data_pages                                   |                                                       |
-                  |    f2fs_write_cache_pages                                |                                                       |
-                  |      f2fs_outplace_write_data                            |                                                       |
-                  |        f2fs_allocate_data_block (get block in seg S,     |                                                       |
-                  |                                  S is full, and only     |                                                       |
-                  |                                  have this valid data    |                                                       |
-                  |                                  block)                  |                                                       |
-                  |          allocate_segment                                |                                                       |
-                  |          locate_dirty_segment (mark S as PRE)            |                                                       |
-                  |        f2fs_submit_page_write (submit but is not         |                                                       |
-                  |                                written on dev)           |                                                       |
-unlink            |                                                          |                                                       |
- iput_final       |                                                          |                                                       |
-  f2fs_drop_inode |                                                          |                                                       |
-    f2fs_truncate |                                                          |                                                       |
- (not evict)      |                                                          |                                                       |
-                  |                                                          | write_checkpoint                                      |
-                  |                                                          |  flush merged bio but not wait file data writeback    |
-                  |                                                          |  set_prefree_as_free (mark S as FREE)                 |
-                  |                                                          |                                                       | update NODE/DATA
-                  |                                                          |                                                       | allocate_segment (select S)
-                  |     writeback done                                       |                                                       |
+[1]
+[  358.544486] swp12s0: Commit of object (id=2) failed.
+[  358.550061] WARNING: CPU: 0 PID: 30 at net/switchdev/switchdev.c:281 switchdev_port_obj_add_now+0x9b/0xe0
+[  358.560754] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted 5.0.0-custom-13382-gf2449babf221 #1350
+[  358.570472] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  358.580582] Workqueue: events switchdev_deferred_process_work
+[  358.587001] RIP: 0010:switchdev_port_obj_add_now+0x9b/0xe0
+...
+[  358.614109] RSP: 0018:ffffa6b900d6fe18 EFLAGS: 00010286
+[  358.619943] RAX: 0000000000000000 RBX: ffff8b00797ff000 RCX: 0000000000000000
+[  358.627912] RDX: ffff8b00b7a1d4c0 RSI: ffff8b00b7a152e8 RDI: ffff8b00b7a152e8
+[  358.635881] RBP: ffff8b005c3f5bc0 R08: 000000000000022b R09: 0000000000000000
+[  358.643850] R10: 0000000000000000 R11: ffffa6b900d6fcc8 R12: 0000000000000000
+[  358.651819] R13: dead000000000100 R14: ffff8b00b65a23c0 R15: 0ffff8b00b7a2200
+[  358.659790] FS:  0000000000000000(0000) GS:ffff8b00b7a00000(0000) knlGS:0000000000000000
+[  358.668820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  358.675228] CR2: 00007f00aad90de0 CR3: 00000001ca80d000 CR4: 00000000001006f0
+[  358.683188] Call Trace:
+[  358.685918]  switchdev_port_obj_add_deferred+0x13/0x60
+[  358.691655]  switchdev_deferred_process+0x6b/0xf0
+[  358.696907]  switchdev_deferred_process_work+0xa/0x10
+[  358.702548]  process_one_work+0x1f5/0x3f0
+[  358.707022]  worker_thread+0x28/0x3c0
+[  358.711099]  ? process_one_work+0x3f0/0x3f0
+[  358.715768]  kthread+0x10d/0x130
+[  358.719369]  ? __kthread_create_on_node+0x180/0x180
+[  358.724815]  ret_from_fork+0x35/0x40
 
-So we need to guarantee io complete before truncate inode in f2fs_drop_inode.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Zheng Liang <zhengliang6@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 3a49b4fde2a1 ("mlxsw: Adding layer 2 multicast support")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- fs/f2fs/super.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 4c169ba50c0f..06b75737b1a0 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -668,6 +668,10 @@ static int f2fs_drop_inode(struct inode *inode)
- 			sb_start_intwrite(inode->i_sb);
- 			f2fs_i_size_write(inode, 0);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+index 3ba9f2c079b2..8a1788108f52 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -1320,7 +1320,7 @@ static int mlxsw_sp_port_mdb_add(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	u16 fid_index;
+ 	int err = 0;
  
-+			f2fs_submit_merged_write_cond(F2FS_I_SB(inode),
-+					inode, NULL, 0, DATA);
-+			truncate_inode_pages_final(inode->i_mapping);
-+
- 			if (F2FS_HAS_BLOCKS(inode))
- 				f2fs_truncate(inode);
+-	if (switchdev_trans_ph_prepare(trans))
++	if (switchdev_trans_ph_commit(trans))
+ 		return 0;
  
+ 	bridge_port = mlxsw_sp_bridge_port_find(mlxsw_sp->bridge, orig_dev);
 -- 
 2.20.1
 
