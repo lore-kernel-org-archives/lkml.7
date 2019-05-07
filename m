@@ -2,159 +2,249 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E73C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CEAC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6189621019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557216085;
-	bh=QzyiMEIgGcOHF7/0RhAcYYAteXaKFmx6V5mlxAloU/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D5LqcndYmjqb6fEB2dZB6OzthvCWBctVlRiSj00mApxc2mnnRdfM4CYG02V28CF0V
-	 aDHgDTMPr8em7phhPHfNBs1r5bgMuy+cC+4fh6ENrKt6TQxXns/PWRpstJhuDeXcqi
-	 INcPegRoUnq/mdd+7w7S67ZmlnirGFNMXWpzUU8M=
+	by mail.kernel.org (Postfix) with ESMTP id 5DA1020B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ILwo5gUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfEGIBY (ORCPT
+        id S1726982AbfEGIEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:01:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfEGIBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:01:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6057820B7C;
-        Tue,  7 May 2019 08:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557216081;
-        bh=QzyiMEIgGcOHF7/0RhAcYYAteXaKFmx6V5mlxAloU/E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JYZnGuH3Pbk4yrhdCzdKoMJOLOSIlgRBPlakGO9b31IdpbGDZVFQSkxHJZke5YiqF
-         kLlxf+8LdYwPSAUw422OvFILYSfk5W9idQInw+r9Pj1esrAbnpH/5dYqp76eoeqJjE
-         y7EgY8L7QWLFChBoIcI/eDpJ/HS6IYXXX+xBrQeg=
-Date:   Tue, 7 May 2019 10:01:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190507080119.GB28121@kroah.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+        Tue, 7 May 2019 04:04:47 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3111 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfEGIEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:04:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd13bf90000>; Tue, 07 May 2019 01:04:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 May 2019 01:04:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 01:04:44 -0700
+Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 08:04:37 +0000
+Subject: Re: [PATCH V5 05/16] PCI: dwc: Move config space capability search
+ API
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>
+CC:     "mperttunen@nvidia.com" <mperttunen@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-6-vidyas@nvidia.com>
+ <305100E33629484CBB767107E4246BBB0A230666@de02wembxa.internal.synopsys.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ee628f18-0f19-f501-db28-7db31fd3bcbc@nvidia.com>
+Date:   Tue, 7 May 2019 13:34:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <305100E33629484CBB767107E4246BBB0A230666@de02wembxa.internal.synopsys.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557216249; bh=oaxpdSeWbRmtvMFY8nsXxh8qoIbsiyLvjd1S5o4zNW0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ILwo5gUOR2el5WDFG8gTIVo8IOsekFFb1GtKg8mIiSV10Pk+Apx5Cv5HXE0FBFjFd
+         mBcKO7JTtL01hhLZ1fZS1NCvxOdjjMBBtsNWOpfX5YZBHwMk1gBTbWJSv+QL0q8g7+
+         l8wbF7OMqYdBlWuKra6TviXzvJ0t41eO4UKbtk0pYQQCWNGZaYfvUlkrAi1Q8MoCyx
+         SrE9pfRwa1HzE+rSWA+KonGDS3iS20kDMFJRgmWLoYtBtBTK/NEcJs/lBGwQK36KP0
+         i2ovkD/PC/7VWmASEU2q1uz6Mny2VY99Ozh/+rw2VEtvzTYrrYrPYG010MLN3qGaEE
+         IUYzS2I7lRorw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
-> On 5/1/19 4:01 PM, Brendan Higgins wrote:
-> > ## TLDR
-> > 
-> > I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
-> > 5.2.
-> > 
-> > Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
-> > we would merge through your tree when the time came? Am I remembering
-> > correctly?
-> > 
-> > ## Background
-> > 
-> > This patch set proposes KUnit, a lightweight unit testing and mocking
-> > framework for the Linux kernel.
-> > 
-> > Unlike Autotest and kselftest, KUnit is a true unit testing framework;
-> > it does not require installing the kernel on a test machine or in a VM
-> > and does not require tests to be written in userspace running on a host
-> > kernel. Additionally, KUnit is fast: From invocation to completion KUnit
-> > can run several dozen tests in under a second. Currently, the entire
-> > KUnit test suite for KUnit runs in under a second from the initial
-> > invocation (build time excluded).
-> > 
-> > KUnit is heavily inspired by JUnit, Python's unittest.mock, and
-> > Googletest/Googlemock for C++. KUnit provides facilities for defining
-> > unit test cases, grouping related test cases into test suites, providing
-> > common infrastructure for running tests, mocking, spying, and much more.
+On 4/24/2019 1:43 PM, Gustavo Pimentel wrote:
+> On Wed, Apr 24, 2019 at 6:19:53, Vidya Sagar <vidyas@nvidia.com> wrote:
 > 
-> As a result of the emails replying to this patch thread, I am now
-> starting to look at kselftest.  My level of understanding is based
-> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
-> and a _tiny_ bit of looking at kselftest code.
+>> Move PCIe config space capability search API to common DesignWare file
+>> as this can be used by both host and ep mode codes.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Changes from [v4]:
+>> * Removed redundant APIs in pcie-designware-ep.c file after moving them
+>>    to pcie-designware.c file based on Bjorn's comments.
+>>
+>> Changes from [v3]:
+>> * Rebased to linux-next top of the tree
+>>
+>> Changes from [v2]:
+>> * None
+>>
+>> Changes from [v1]:
+>> * Removed dw_pcie_find_next_ext_capability() API from here and made a
+>>    separate patch for that
+>>
+>>   .../pci/controller/dwc/pcie-designware-ep.c   | 37 +-----------------
+>>   drivers/pci/controller/dwc/pcie-designware.c  | 39 +++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+>>   3 files changed, 43 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 2bf5a35c0570..65f479250087 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>>   	__dw_pcie_ep_reset_bar(pci, bar, 0);
+>>   }
+>>   
+>> -static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>> -			      u8 cap)
+>> -{
+>> -	u8 cap_id, next_cap_ptr;
+>> -	u16 reg;
+>> -
+>> -	if (!cap_ptr)
+>> -		return 0;
+>> -
+>> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+>> -	cap_id = (reg & 0x00ff);
+>> -
+>> -	if (cap_id > PCI_CAP_ID_MAX)
+>> -		return 0;
+>> -
+>> -	if (cap_id == cap)
+>> -		return cap_ptr;
+>> -
+>> -	next_cap_ptr = (reg & 0xff00) >> 8;
+>> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>> -}
+>> -
+>> -static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+>> -{
+>> -	u8 next_cap_ptr;
+>> -	u16 reg;
+>> -
+>> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>> -	next_cap_ptr = (reg & 0x00ff);
+>> -
+>> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>> -}
+>> -
+>>   static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+>>   				   struct pci_epf_header *hdr)
+>>   {
+>> @@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>>   		return -ENOMEM;
+>>   	}
+>> -	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
+>> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>>   
+>> -	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
+>> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+>>   
+>>   	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>>   	if (offset) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 8e0081ccf83b..ed21e861df82 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -20,6 +20,45 @@
+>>   #define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
+>>   #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
+>>   
+>> +/*
+>> + * These APIs are different from standard pci_find_*capability() APIs in the
+>> + * sense that former can only be used post device enumeration as they require
+>> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
+>> + * pointer and can be used before link up also.
+>> + */
+>> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>> +				  u8 cap)
+>> +{
+>> +	u8 cap_id, next_cap_ptr;
+>> +	u16 reg;
+>> +
+>> +	if (!cap_ptr)
+>> +		return 0;
+>> +
+>> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+>> +	cap_id = (reg & 0x00ff);
+>> +
+>> +	if (cap_id > PCI_CAP_ID_MAX)
+>> +		return 0;
+>> +
+>> +	if (cap_id == cap)
+>> +		return cap_ptr;
+>> +
+>> +	next_cap_ptr = (reg & 0xff00) >> 8;
+>> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+>> +}
+>> +
+>> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>> +{
+>> +	u8 next_cap_ptr;
+>> +	u16 reg;
+>> +
+>> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>> +	next_cap_ptr = (reg & 0x00ff);
+>> +
+>> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+>> +}
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>>   {
+>>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 9ee98ced1ef6..35160b4ce929 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -248,6 +248,8 @@ struct dw_pcie {
+>>   #define to_dw_pcie_from_ep(endpoint)   \
+>>   		container_of((endpoint), struct dw_pcie, ep)
+>>   
+>> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>> +
 > 
-> tl;dr; I don't really understand kselftest yet.
-> 
-> 
-> (1) why KUnit exists
-> 
-> > ## What's so special about unit testing?
-> > 
-> > A unit test is supposed to test a single unit of code in isolation,
-> > hence the name. There should be no dependencies outside the control of
-> > the test; this means no external dependencies, which makes tests orders
-> > of magnitudes faster. Likewise, since there are no external dependencies,
-> > there are no hoops to jump through to run the tests. Additionally, this
-> > makes unit tests deterministic: a failing unit test always indicates a
-> > problem. Finally, because unit tests necessarily have finer granularity,
-> > they are able to test all code paths easily solving the classic problem
-> > of difficulty in exercising error handling code.
-> 
-> (2) KUnit is not meant to replace kselftest
-> 
-> > ## Is KUnit trying to replace other testing frameworks for the kernel?
-> > 
-> > No. Most existing tests for the Linux kernel are end-to-end tests, which
-> > have their place. A well tested system has lots of unit tests, a
-> > reasonable number of integration tests, and some end-to-end tests. KUnit
-> > is just trying to address the unit test space which is currently not
-> > being addressed.
-> 
-> My understanding is that the intent of KUnit is to avoid booting a kernel on
-> real hardware or in a virtual machine.  That seems to be a matter of semantics
-> to me because isn't invoking a UML Linux just running the Linux kernel in
-> a different form of virtualization?
-> 
-> So I do not understand why KUnit is an improvement over kselftest.
-> 
-> It seems to me that KUnit is just another piece of infrastructure that I
-> am going to have to be familiar with as a kernel developer.  More overhead,
-> more information to stuff into my tiny little brain.
-> 
-> I would guess that some developers will focus on just one of the two test
-> environments (and some will focus on both), splitting the development
-> resources instead of pooling them on a common infrastructure.
-> 
-> What am I missing?
+> Can you remove this extra line space?
+In patch 06/15, I added dw_pcie_find_ext_capability() API so that they are grouped together
+(separated by a blank line) like how dw_pcie_read() and dw_pcie_write() are grouped.
 
-kselftest provides no in-kernel framework for testing kernel code
-specifically.  That should be what kunit provides, an "easy" way to
-write in-kernel tests for things.
+> 
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>>   
+>> -- 
+>> 2.17.1
+> 
+> 
 
-Brendan, did I get it right?
-
-thanks,
-
-greg k-h
