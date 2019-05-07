@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D0CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF8C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6C620578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5B2205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207912;
-	bh=SfOYGrwafrGb80XX8lNI80SVvGXZZ3XdIymKvzEEnaU=;
+	s=default; t=1557207921;
+	bh=P3D94zbq9asJwEpL9jM2m7mvRPXYbmOzVN6Zns/Q08M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLSyY3YkvMp6YIsyG2j59NEdRQD1DGY9O40Z/nwSsuz2nS42F5iIVbbJcvDIvQs4h
-	 UrJQ4dIZgQ3JzMX9XreXxB2wQ/Pk9PEpe4TCf6JZ+RTr+BX/0SAMX6Gmbw0pFv+qIa
-	 iFyKYj5BvOZ/lZeiQzgQq7On8ANkMoNPcflxkO1M=
+	b=F5dzZUSCa8oLHXdxj4+vDKUJp9DzWPX3GJC7ajMs1W/a6Leb6pTijIrNXOiQyZ0yo
+	 nEF765oUIoVmp3B/wVejx+WKo8WHtTOaZ944W9r4BDvHlvcMMUeL/EliuTmCOMU17J
+	 WcUZvDGce0wXB4VqWaHFbve5N5R6gpCUtHXOhGJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfEGFmR (ORCPT
+        id S1729426AbfEGFpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33130 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbfEGFmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:42:07 -0400
+        id S1729475AbfEGFmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:42:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F6BA206A3;
-        Tue,  7 May 2019 05:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F9620B7C;
+        Tue,  7 May 2019 05:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207727;
-        bh=SfOYGrwafrGb80XX8lNI80SVvGXZZ3XdIymKvzEEnaU=;
+        s=default; t=1557207729;
+        bh=P3D94zbq9asJwEpL9jM2m7mvRPXYbmOzVN6Zns/Q08M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s6DcmJAwWhsEYo+0LqwuggPnZLeUzpDG0LKYw+4+F/hRwBD2ynFjjqjgrRdKt9Qx9
-         92LCErG+SDgMXwfzYgatE54esNboE5/zq4xlNXe/GXaJoNGCOKq37J7dBSU3I/Jw/Z
-         mC0pS2P9RLrDRRqh+gpN7B2Ce8Mn14pPlGvDymeU=
+        b=sl5ROjvp73eV5mrJpfFRbVq3fIAvPKSOqqKBNocRhEfBDxav1My04aF4726DJF63j
+         xKBv1Mt1jmlgTV10f8iX+JT0fh6C/Ad6Q1wePGKuG91tpS2ByDs9yNEApGAPFmOGi2
+         lwDcc7dm+eZjLfroldQgG04htqI/88dvj/8hP2WQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+Cc:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/25] s390: ctcm: fix ctcm_new_device error return code
-Date:   Tue,  7 May 2019 01:41:16 -0400
-Message-Id: <20190507054123.32514-19-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 21/25] selftests/net: correct the return value for run_netsocktests
+Date:   Tue,  7 May 2019 01:41:18 -0400
+Message-Id: <20190507054123.32514-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -61,53 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Po-Hsu Lin <po-hsu.lin@canonical.com>
 
-[ Upstream commit 27b141fc234a3670d21bd742c35d7205d03cbb3a ]
+[ Upstream commit 30c04d796b693e22405c38e9b78e9a364e4c77e6 ]
 
-clang points out that the return code from this function is
-undefined for one of the error paths:
+The run_netsocktests will be marked as passed regardless the actual test
+result from the ./socket:
 
-../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
-      [-Wsometimes-uninitialized]
-                if (priv->channel[direction] == NULL) {
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
-        return result;
-               ^~~~~~
-../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
-                if (priv->channel[direction] == NULL) {
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
-        int result;
-                  ^
+    selftests: net: run_netsocktests
+    ========================================
+    --------------------
+    running socket test
+    --------------------
+    [FAIL]
+    ok 1..6 selftests: net: run_netsocktests [PASS]
 
-Make it return -ENODEV here, as in the related failure cases.
-gcc has a known bug in underreporting some of these warnings
-when it has already eliminated the assignment of the return code
-based on some earlier optimization step.
+This is because the test script itself has been successfully executed.
+Fix this by exit 1 when the test failed.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/ctcm_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/net/run_netsocktests | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-index ad17fc5883f6..e22b9ac3e564 100644
---- a/drivers/s390/net/ctcm_main.c
-+++ b/drivers/s390/net/ctcm_main.c
-@@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
- 		if (priv->channel[direction] == NULL) {
- 			if (direction == CTCM_WRITE)
- 				channel_free(priv->channel[CTCM_READ]);
-+			result = -ENODEV;
- 			goto out_dev;
- 		}
- 		priv->channel[direction]->netdev = dev;
+diff --git a/tools/testing/selftests/net/run_netsocktests b/tools/testing/selftests/net/run_netsocktests
+index 16058bbea7a8..c195b4478662 100755
+--- a/tools/testing/selftests/net/run_netsocktests
++++ b/tools/testing/selftests/net/run_netsocktests
+@@ -6,7 +6,7 @@ echo "--------------------"
+ ./socket
+ if [ $? -ne 0 ]; then
+ 	echo "[FAIL]"
++	exit 1
+ else
+ 	echo "[PASS]"
+ fi
+-
 -- 
 2.20.1
 
