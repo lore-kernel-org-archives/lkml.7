@@ -2,98 +2,134 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D27C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FD7C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3442053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557246586;
-	bh=HydT7mdg9YKE0YlCquV+jJBxsbV6UX7TylyFZiB787c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bxajdOMN6L5Cb0N+hRRpn3KNQZ6dVBNbnLqFZJFfEw+qwpzUiae7SyolUyBbwvMFr
-	 /CdQ7csnbgdUSG/AMqJSix4ihLRgLv94hgszcEjZDHeOoZJ3Jax58Q9B605549l6MH
-	 7GreCh5lk0ICFOL//7LomCX988DjhVrI1z1KLAD0=
+	by mail.kernel.org (Postfix) with ESMTP id D03072053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfEGQ3p (ORCPT
+        id S1726715AbfEGQbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbfEGQ3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:29:45 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D8D205C9;
-        Tue,  7 May 2019 16:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557246584;
-        bh=HydT7mdg9YKE0YlCquV+jJBxsbV6UX7TylyFZiB787c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LrnMyRwMwRudUklA0mNBpQhSPIbk8Ay3W6bMnDCplhfOXhHVlWsu/KgILCn1MWHOu
-         7kWlnFV5M2vFJG1btZnYN6qbtuBKcl7ZNBkd+FmuScm50o32qbacxlLrbR7LIDQiqh
-         Z17WhDYrHB+lXwryq9robNVX9U2qqfrZUl3WB8d4=
-Date:   Tue, 7 May 2019 12:29:42 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Amir Goldstein <amir73il@gmail.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 50/95] fsnotify: generalize handling of
- extra event flags
-Message-ID: <20190507162942.GD1747@sasha-vm>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-50-sashal@kernel.org>
- <20190507132330.GB4635@quack2.suse.cz>
+        Tue, 7 May 2019 12:31:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59100 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbfEGQbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:31:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C93E8374;
+        Tue,  7 May 2019 09:31:20 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EA733F5AF;
+        Tue,  7 May 2019 09:31:19 -0700 (PDT)
+Date:   Tue, 7 May 2019 17:30:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 00/3] MIPS: SGI-IP27 rework part2
+Message-ID: <20190507163041.GA640@e121166-lin.cambridge.arm.com>
+References: <20190319154755.31049-1-tbogendoerfer@suse.de>
+ <20190418205726.GB126710@google.com>
+ <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
+ <20190507174820.381fd56f678609416fd8b617@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507132330.GB4635@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190507174820.381fd56f678609416fd8b617@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 03:23:30PM +0200, Jan Kara wrote:
->On Tue 07-05-19 01:37:39, Sasha Levin wrote:
->> From: Amir Goldstein <amir73il@gmail.com>
->>
->> [ Upstream commit 007d1e8395eaa59b0e7ad9eb2b53a40859446a88 ]
->>
->> FS_EVENT_ON_CHILD gets a special treatment in fsnotify() because it is
->> not a flag specifying an event type, but rather an extra flags that may
->> be reported along with another event and control the handling of the
->> event by the backend.
->>
->> FS_ISDIR is also an "extra flag" and not an "event type" and therefore
->> desrves the same treatment. With inotify/dnotify backends it was never
->> possible to set FS_ISDIR in mark masks, so it did not matter.
->> With fanotify backend, mark adding code jumps through hoops to avoid
->> setting the FS_ISDIR in the commulative object mask.
->>
->> Separate the constant ALL_FSNOTIFY_EVENTS to ALL_FSNOTIFY_FLAGS and
->> ALL_FSNOTIFY_EVENTS, so the latter can be used to test for specific
->> event types.
->>
->> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
->> Signed-off-by: Jan Kara <jack@suse.cz>
->> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
->
->Sasha, why did you select this patch? It is just a cleanup with no user
->visible effect and was done mostly to simplify implementing following
->features...
+On Tue, May 07, 2019 at 05:48:20PM +0200, Thomas Bogendoerfer wrote:
+> On Tue, 7 May 2019 16:31:17 +0100
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> 
+> > On Thu, Apr 18, 2019 at 03:57:26PM -0500, Bjorn Helgaas wrote:
+> > > Hi Thomas,
+> > > 
+> > > On Tue, Mar 19, 2019 at 04:47:49PM +0100, Thomas Bogendoerfer wrote:
+> > > > SGI IP27 (Origin/Onyx2) and SGI IP30 (Octane) have a similair
+> > > > architecture and share some hardware (ioc3/bridge). To share
+> > > > the software parts this patchset reworks SGI IP27 interrupt
+> > > > and pci bridge code. By using features Linux gained during the
+> > > > many years since SGI IP27 code was integrated this even results
+> > > > in code reduction and IMHO cleaner code.
+> > > > 
+> > > > Tests have been done on a two module O200 (4 CPUs) and an
+> > > > Origin 2000 (8 CPUs).
+> > > 
+> > > Thanks for doing all this work!  It seems like it basically converts
+> > > some of the SGI PCI code to the structure typical of current host
+> > > controller drivers and moves it to drivers/pci/controller, which all
+> > > seems great to me.
+> > 
+> > I had a look and the code is really, really MIPS specific, actually
+> > I would be interested in understanding how many platforms it supports,
+> > it is not even FW configurable.
+> 
+> it's MIPS only and used in basically 3 different SGI platforms.
+> 
+> > With hard-coded resources, <asm/...> includes in driver code and MIPS
+> > specific kludges even if it does reuse some APIs shared with controller
+> > drivers I am not 100% certain that moving it to drivers/pci/controller
+> > buys us anything, this is really arch specific code, however we slice
+> > it.
+> 
+> hmm, I thought the idea of having one drivers/pci/controller directory
+> is to have all of them in one place.
 
-Sigh, my script picked up the patch after this one (by mistake). I've
-dropped that one but missed this one twice(!). Thanks for the heads-up,
-I'll drop it.
+Well, drivers/pci/controller code should at least try to be arch
+agnostic to belong there, there are exceptions, as I said but
+they are the exception not the rule.
 
---
+> > The line between what stays in arch and what goes to
+> > drivers/pci/controller is thin but this code is definitely more on the
+> > arch side IMHO.
+> 
+> what makes the xgene driver different from the xtalk-bridge driver ? Ok
+> it used DT, but it's still just for a specific type of SOCs from one
+> vendor, isn't it ?
+
+Eg no <asm/...> includes required; its code can in principle be
+reused on other arches, this series can't, it is arch code IMO.
+
+> > I do not question Thomas' effort, which I appreciate, I question
+> > the end result and its usefulness, this series is even increasing
+> > lines of kernel code, I would like to see the benefits.
+> 
+> the move from arch/mips/pci to drivers/pci/controller increases lines of
+> code by two lines. The whole patchset adds 155 lines, but also adds
+> functionality to be able to use the driver with different platforms.
+
+I am not convinced it will buy you much to be honest, I might be wrong.
+
+If we move the code we have to have a compelling reason for it to
+happen and at the moment I do not necessarily see one, happy to
+be proven wrong if you extend it to support other platforms cleanly
+(eg with firmware bindings) on top of this series.
+
+> Anyway I can live with not moving to drivers/pci/controller if you don't
+> like it there.
+
+I can't certainly maintain it, it is too MIPS specific and I do not like
+this code either but that's certainly not your fault.
+
+- Hardcoded resources
+- No firmware bindings
+- Lots of MIPS specific workarounds
+- arch code dependency
+
+I do not think that as it stands it belongs in driver/pci/controller,
+no.
+
 Thanks,
-Sasha
+Lorenzo
