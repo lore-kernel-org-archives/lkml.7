@@ -2,97 +2,114 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE19C46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895ADC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A32214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C91205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfEGMyX (ORCPT
+        id S1726732AbfEGMyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 08:54:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59966 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfEGMyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:54:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726000AbfEGMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:54:34 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9914C20578;
-        Tue,  7 May 2019 12:54:19 +0000 (UTC)
-Date:   Tue, 7 May 2019 08:54:17 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 3544B81E07;
+        Tue,  7 May 2019 12:54:34 +0000 (UTC)
+Received: from x230.aquini.net (dhcp-17-61.bos.redhat.com [10.18.17.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CDE1E5C3FA;
+        Tue,  7 May 2019 12:54:32 +0000 (UTC)
+Date:   Tue, 7 May 2019 08:54:31 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190507085417.381d96d0@gandalf.local.home>
-In-Reply-To: <20190507124131.GO2623@hirez.programming.kicks-ass.net>
-References: <20190502193129.664c5b2e@gandalf.local.home>
-        <20190502195052.0af473cf@gandalf.local.home>
-        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
-        <20190503092247.20cc1ff0@gandalf.local.home>
-        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
-        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
-        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-        <20190507085753.GO2606@hirez.programming.kicks-ass.net>
-        <20190507092731.GH2650@hirez.programming.kicks-ass.net>
-        <20190507082716.73cd5a01@gandalf.local.home>
-        <20190507124131.GO2623@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
+Message-ID: <20190507125430.GA31025@x230.aquini.net>
+References: <1557158023-23021-1-git-send-email-jsavitz@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557158023-23021-1-git-send-email-jsavitz@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 07 May 2019 12:54:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 14:41:31 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> > Kprobes sets the FTRACE_OPS_FL_IPMODIFY flag, thus
-> > they can never be put at the same location that is being live patched.  
+On Mon, May 06, 2019 at 11:53:43AM -0400, Joel Savitz wrote:
+> There is currently no easy and architecture-independent way to find the
+> lowest unusable virtual address available to a process without
+> brute-force calculation. This patch allows a user to easily retrieve
+> this value via /proc/<pid>/status.
 > 
-> OK, so do we want to allow kprobes that also modify regs->sp ? Because
-> then we need to change these trampolines a bit.
+> Using this patch, any program that previously needed to waste cpu cycles
+> recalculating a non-sensitive process-dependent value already known to
+> the kernel can now be optimized to use this mechanism.
 > 
-> I'd prefer not to allow kprobes this.
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  Documentation/filesystems/proc.txt | 2 ++
+>  fs/proc/task_mmu.c                 | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> index 66cad5c86171..1c6a912e3975 100644
+> --- a/Documentation/filesystems/proc.txt
+> +++ b/Documentation/filesystems/proc.txt
+> @@ -187,6 +187,7 @@ read the file /proc/PID/status:
+>    VmLib:      1412 kB
+>    VmPTE:        20 kb
+>    VmSwap:        0 kB
+> +  VmTaskSize:	137438953468 kB
+>    HugetlbPages:          0 kB
+>    CoreDumping:    0
+>    THP_enabled:	  1
+> @@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
+>   VmPTE                       size of page table entries
+>   VmSwap                      amount of swap used by anonymous private data
+>                               (shmem swap usage is not included)
+> + VmTaskSize                  lowest unusable address in process virtual memory
 
-I believe no kprobe changes sp, because it would have had the same
-issues we are trying to solve now. And even though we are changing
-things to allow it, it's not a regression to keep kprobes from doing it.
+Can we change this help text to "size of process' virtual address space memory" ?
 
--- Steve
+>   HugetlbPages                size of hugetlb memory portions
+>   CoreDumping                 process's memory is currently being dumped
+>                               (killing the process may lead to a corrupted core)
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 95ca1fe7283c..0af7081f7b19 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+>  	seq_put_decimal_ull_width(m,
+>  		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
+>  	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
+> +	seq_put_decimal_ull_width(m,
+> +		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
+>  	seq_puts(m, " kB\n");
+>  	hugetlb_report_usage(m, mm);
+>  }
+> -- 
+> 2.18.1
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
