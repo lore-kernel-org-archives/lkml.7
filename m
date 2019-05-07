@@ -2,256 +2,123 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABFEC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765A3C46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6462087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400C720C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="godi/eRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfEGPNA (ORCPT
+        id S1726583AbfEGPPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:13:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37188 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbfEGPM7 (ORCPT
+        Tue, 7 May 2019 11:15:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33153 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfEGPP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:12:59 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47F3xmX081977
-        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 11:12:58 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sb9utye1u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 11:12:52 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Tue, 7 May 2019 16:12:29 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 May 2019 16:12:26 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47FCNwl23527566
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 May 2019 15:12:23 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8348B2065;
-        Tue,  7 May 2019 15:12:23 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0BE17B2067;
-        Tue,  7 May 2019 15:12:23 +0000 (GMT)
-Received: from [9.85.152.217] (unknown [9.85.152.217])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 May 2019 15:12:22 +0000 (GMT)
-Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
-To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
- <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
- <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
- <ecc5d1d5-a1ea-64ed-2af0-b2a6ca00d748@linux.ibm.com>
- <23915628-a517-1749-a0c0-e73e6e20f911@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Tue, 7 May 2019 11:12:22 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 7 May 2019 11:15:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so2488358pgv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:from:to:subject:date:message-id;
+        bh=jxvbr3KCxGuFA0UUCE0tn2m+gj1lVeJv2p0ZckpwEOo=;
+        b=godi/eRqc9u1IGuhM6qD/GD01ckleD8wICQ7/wytewi8a7HBbzkII3459Dcb5M+5sy
+         SFVxVOPrh7oEqVmF4uK8oXWesB2bHmyIkIDNTNkIiFE6aVDQAuMrT+Lhyc7dZjrVGUz3
+         OYxlsQzH8MWBzSPmXLdIQNiSbw2MXf7hEu7OfDrD/NCs0oNCRXmxFjIiJhNeiDiPuNi3
+         WPOv5roEbMkZgK8sd3IbMVL6LZW1FMNM5rqNKdKe625cMdK66Qm1aU5VhWd0NQHg5Ra3
+         0XZSzk+0CYdxAWjOaclyJKyw53FQhY5XIYz5khKa4DFmlAxxdg66yLH1zv2d6LR1LfWo
+         kvgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=mime-version:x-gm-message-state:from:to:subject:date:message-id;
+        bh=jxvbr3KCxGuFA0UUCE0tn2m+gj1lVeJv2p0ZckpwEOo=;
+        b=YILXGZHmlEf4iVQMsP1Vg8SeWjBMA0Y12gtmU/D0HRsGup4ap1zd1HuWW11jugMy5U
+         N8l0xlkCeiwvNENrfyRSCOqjkRSckQAQ1FpLABva34UR1Wa8h/ua080H81MYi7i/E4zc
+         CqxNYeQCEgyHH1mR5VcH4mOEi3bRPMwly7Xdll9wG5mC6e/hnouBu2rEFC2QdROX5Zzk
+         AmNvTStqqreKKooiWy67UvedUZd8v1bHCbjVlSlHd9Ls8V2gCCYysTLfaY6cc3LQiPEQ
+         QeIcq1FOr2wXFjctJty656/dMxajH/+KJmYiPhV6zXwF1TzOiItzQXDPLyl11C3kqTq9
+         BMtw==
 MIME-Version: 1.0
-In-Reply-To: <23915628-a517-1749-a0c0-e73e6e20f911@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050715-2213-0000-0000-0000038A1A4B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011066; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01199921; UDB=6.00629552; IPR=6.00980804;
- MB=3.00026770; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-07 15:12:28
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050715-2214-0000-0000-00005E5771DF
-Message-Id: <2549bc2f-4e5a-cc24-b976-f771a7243cc8@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905070098
+X-Gm-Message-State: APjAAAXKs2cm9sN+CDnEO2hB9y2W+d149kRZPu7WrtE3gY3xQ4+kr70D
+        52eK4FyZqp92b5tM48RBEvtQUWVShEJ8tlYJAY+gHb+xaYvG3tid+mmkICs0GRc4BrfBo46y/tn
+        BowjR1tGmK/KM8GdLxg==
+X-Google-Smtp-Source: APXvYqzrXRe5boGKu4+E5H+iFQtt2WKa8IE844ytrYjmvDo2sjKQXZGEQiX+PPyG3XVys162mtMbAQ==
+X-Received: by 2002:a65:4649:: with SMTP id k9mr16750621pgr.239.1557242128887;
+        Tue, 07 May 2019 08:15:28 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id 2sm5397398pgc.49.2019.05.07.08.15.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 May 2019 08:15:28 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 v2 0/3] Extend dt bindings to support I2C on sifive devices and a fix broken IRQ in polling mode.
+Date:   Tue,  7 May 2019 20:45:05 +0530
+Message-Id: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain; charset="US-ASCII"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 4:10 AM, Pierre Morel wrote:
-> On 06/05/2019 21:37, Tony Krowiak wrote:
->> On 5/6/19 2:41 AM, Pierre Morel wrote:
->>> On 03/05/2019 23:14, Tony Krowiak wrote:
->>>> Refactors the AP queue reset function to wait until the queue is empty
->>>> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
->>>> required by the AP architecture.
->>>>
->>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>>> ---
->>>>   drivers/s390/crypto/vfio_ap_ops.c | 35 
->>>> ++++++++++++++++++++++++++++++++---
->>>>   1 file changed, 32 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
->>>> b/drivers/s390/crypto/vfio_ap_ops.c
->>>> index 900b9cf20ca5..b88a2a2ba075 100644
->>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
->>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->>>> @@ -271,6 +271,32 @@ static int 
->>>> vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
->>>>       return 0;
->>>>   }
->>>> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, 
->>>> unsigned long apqi)
->>>> +{
->>>> +    struct ap_queue_status status;
->>>> +    ap_qid_t qid = AP_MKQID(apid, apqi);
->>>> +    int retry = 5;
->>>> +
->>>> +    do {
->>>> +        status = ap_tapq(qid, NULL);
->>>> +        switch (status.response_code) {
->>>> +        case AP_RESPONSE_NORMAL:
->>>> +            if (status.queue_empty)
->>>> +                return;
->>>> +            msleep(20);
->>>
->>> NIT:     Fall through ?
->>
->> Yes
->>
->>>
->>>> +            break;
->>>> +        case AP_RESPONSE_RESET_IN_PROGRESS:
->>>> +        case AP_RESPONSE_BUSY:
->>>> +            msleep(20);
->>>> +            break;
->>>> +        default:
->>>> +            pr_warn("%s: tapq err %02x: %04lx.%02lx may not be 
->>>> empty\n",
->>>> +                __func__, status.response_code, apid, apqi);
->>>
->>> I do not thing the warning sentence is appropriate:
->>> The only possible errors here are if the AP is not available due to 
->>> AP checkstop, deconfigured AP or invalid APQN.
->>
->> Right you are! I'll work on a new message.
->>
->>>
->>>
->>>> +            return;
->>>> +        }
->>>> +    } while (--retry);
->>>> +}
->>>> +
->>>>   /**
->>>>    * assign_adapter_store
->>>>    *
->>>> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct 
->>>> notifier_block *nb,
->>>>       return NOTIFY_OK;
->>>>   }
->>>> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int 
->>>> apqi,
->>>> -                    unsigned int retry)
->>>> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
->>>>   {
->>>>       struct ap_queue_status status;
->>>> +    int retry = 5;
->>>>       do {
->>>>           status = ap_zapq(AP_MKQID(apid, apqi));
->>>>           switch (status.response_code) {
->>>>           case AP_RESPONSE_NORMAL:
->>>> +            vfio_ap_mdev_wait_for_qempty(apid, apqi);
->>>> +            return 0;
->>>> +        case AP_RESPONSE_DECONFIGURED:
->>>
->>> Since you modify the switch, you can return for all the following cases:
->>> AP_RESPONSE_DECONFIGURE
->>> ..._CHECKSTOP
->>> ..._INVALID_APQN
->>>
->>>
->>> And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
->>> AP_RESPONSE_NORMAL
->>
->> If a queue reset is in progress, we retry the zapq. Are you saying we
->> should wait for qempty then reissue the zapq?
-> 
-> 
-> Yes, I fear that if we reissue the zapq while RESET is in progress we 
-> could fall in a loop depending on the reset hardware time and the 
-> software retry .
+The patch is based on mainline v5.1 and extends DT-bindings for Opencore based I2C device in FU540 
+SoC, available on HiFive unleashed board (Rev A00), and also provides a workaround for broken IRQ
+which affect I2C polling mode interface on FU540 chipsets. 
 
-I already did this in the forthcoming v4 series.
+The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated.
 
-> 
->>
->>>
->>>>               return 0;
->>>>           case AP_RESPONSE_RESET_IN_PROGRESS:
->>>>           case AP_RESPONSE_BUSY:
->>>
->>> While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
->>> code for ZAPQ, you can remove this.
->>
->> Okay
->>
->>>
->>>> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct 
->>>> mdev_device *mdev)
->>>>                    matrix_mdev->matrix.apm_max + 1) {
->>>>           for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
->>>>                        matrix_mdev->matrix.aqm_max + 1) {
->>>> -            ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
->>>> +            ret = vfio_ap_mdev_reset_queue(apid, apqi);
->>>
->>> IMHO, since you are at changing this call, passing the apqn as 
->>> parameter would be a good simplification.
->>
->> Okay.
-> 
-> Sorry, I should have add: NIT.
-> 
->>
->>>
->>>
->>>
->>>>               /*
->>>>                * Regardless whether a queue turns out to be busy, or
->>>>                * is not operational, we need to continue resetting
->>>
->>> Depends on why the reset failed, but this is out of scope.
->>
->> I'm not sure what you mean by out of scope here, but you do make a valid
->> point. If the response code for the zapq is AP_RESPONSE_DECONFIGURED,
->> there is probably no sense in continuing to reset queues for that
->> particular adapter. I'll consider a change here.
-> 
-> Yes, this was the point, but I consider this as a enhancement, trying a 
-> reset on bad queues AFAIK do no arm.
+This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
+core's IF(interrupt flag) and TIP flags to break from the polling loop upon completion of transfer.
 
-I included the enhancement in the forthcoming v4 series.
+To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and 
+appropriate device node is added into board specific device tree as per the information provided in 
+dt-bindings in Documentation/devicetree/bindings/i2c/i2c-sifive.txt.
+Without this workaround, the CPU stall's infinitely.
 
-> 
->>
->>>
->>>>
->>>
->>>
->>
-> 
-> 
+Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
 
+
+Patch History:
+
+V0<->V1:
+-Incorporate review comments from Andrew
+-Extend dt bindings into i2c-ocores.txt instead of adding new file
+-Rename SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ
+
+V0:
+-Update dt bindings for sifive i2c devices
+-Fix broken IRQ affecting i2c polling mode interface.
+
+
+Sagar Shrikant Kadam (3):
+  dt-bindings: i2c: extend existing opencore bindings.
+  i2c-ocore: sifive: add support for i2c device on FU540-c000 SoC.
+  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
+
+ .../devicetree/bindings/i2c/i2c-ocores.txt         | 20 +++++++++++++
+ drivers/i2c/busses/i2c-ocores.c                    | 33 +++++++++++++++++++---
+ 2 files changed, 49 insertions(+), 4 deletions(-)
+
+-- 
+1.9.1
+
+
+-- 
+The information transmitted is intended only for the person or entity to 
+which it is addressed and may contain confidential and/or privileged 
+material. If you are not the intended recipient of this message please do 
+not read, copy, use or disclose this communication and notify the sender 
+immediately. It should be noted that any review, retransmission, 
+dissemination or other use of, or taking action or reliance upon, this 
+information by persons or entities other than the intended recipient is 
+prohibited.
