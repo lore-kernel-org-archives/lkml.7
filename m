@@ -2,109 +2,94 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3253C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F552054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fvP0O3tZ"
+	by mail.kernel.org (Postfix) with ESMTP id B52642054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557248226;
+	bh=VDMc0En6Ctw4wEmBmf9DSnDD+MPODldEW2o5fA2OpDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MdjEVdPQN7m2zOLNM90GtyB/XJDs2ngoRx/hZVZHnwcJnNGpv6jefO9pvbndQVGuY
+	 s5HVoYzOUqX1xS0ZzpuotHkBGKf+Oj5SQr05JPkIEmVCa/zA5hSTyYQNBTkSGv32RH
+	 yatAO3lfo2FtIV4kF5+UV+hukQxNADS96R0h9fCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfEGQ4U (ORCPT
+        id S1727225AbfEGQ5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:56:20 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46480 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfEGQ4T (ORCPT
+        Tue, 7 May 2019 12:57:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34351 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbfEGQ5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:56:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h21so14932687ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=esZbZU1pgP8duus3WEzDEySF+/YyqE39bcTa0BgZfHg=;
-        b=fvP0O3tZ7ZjnILeoVNXqpBW5oInlJpRKtMsHavAo8Xz6rGRg89S6GZWi4pGffqfCFg
-         oatIXFLAoC9CKwk1ym8unSGXwAYeKchgsJsEKUm2XnsjPb9LqnjMjeafzahNU3X/YERf
-         pCPdN8c31gCwwkI7LCI3zaZ1cxosDpm3CpW9c=
+        Tue, 7 May 2019 12:57:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l17so6093665otq.1;
+        Tue, 07 May 2019 09:57:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=esZbZU1pgP8duus3WEzDEySF+/YyqE39bcTa0BgZfHg=;
-        b=ZM49TvrxVp0fo7p1rpTGvIp49sWtbFGNgpCv45oMa4lukr75T7C8/aX0vtUfw3h8ak
-         TQfXKKcVqiuGoAUAePP0KtUfjY74cekAbQ4lTSa7MKObUDgCVUDhQ5MztLACLlfmaN2F
-         h0BNnRSf0HXhuZL5C8HUJMIvOF+PUa0S6YsC/Oxu066UGPISywvo55eQHM4xgaoaBJRx
-         YhzkIS1JOcZVHxYHqOeiWJenjKtTZAUHaJqiYttVnphiA6pg+j9ZUI+gIIMwn3U9ZqPA
-         PwbXFKXUVyOaVWJecgo5YpBxDmd9dyumGGeMC1PGMqzqx1QPTZXjkoM3SFlUkgH0w0ye
-         g2wA==
-X-Gm-Message-State: APjAAAWubI4B0fhyBhLomX+RMHZk06VnkHGwjP6h2IcDs4eqwNF3nbeD
-        8JdaSRYOHf1PM4QP7xOKlMxDPGVRrKw=
-X-Google-Smtp-Source: APXvYqyjTyZJ9aqAMxg5NK8qmc096hrVJYTZ0SiDoU4UhcV8+pO0itJeTJYFn2mbNW+2mq2jcrtSrA==
-X-Received: by 2002:a2e:3c06:: with SMTP id j6mr16326190lja.99.1557247694175;
-        Tue, 07 May 2019 09:48:14 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id j19sm3466097lfm.29.2019.05.07.09.48.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 09:48:12 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id d8so12344223lfb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:48:12 -0700 (PDT)
-X-Received: by 2002:ac2:54b7:: with SMTP id w23mr821657lfk.139.1557247692296;
- Tue, 07 May 2019 09:48:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6RHMQB9VsKEtQqS8G9mnViUVuGlcHIfclZdgk/wbUV8=;
+        b=ZK8Nnu8GY66LDCSZq9QHAPh4hsCklQ8xzNMP2br18SU511tv/5Ar3EDHFMBbNj4q84
+         H/HXBJKPmqr3eSIlQVR2C7CAMtR3Ji1kj83o84EB0EI+sE9MPy+RpLIEmzYAjy+Bkr7F
+         nzztk84LEqvq6mQ3va1itB0Sgia+gH833y+H6YlAdYSnQymQrQXEgjXQ3C2mhT3+nr2H
+         8r7Bf2f4iFdxvedbrhnuggX0AaOffjPewdvx6ULHYk7IqN1XHbE4iJbFzuVdSs2oIGC6
+         Px3OTIz+X9dw9xKvqMLypw4itkcwDi3dEMSOBje4iLdsm/x1al2vDXZdR0u2Ccc392zo
+         ZwrA==
+X-Gm-Message-State: APjAAAXDu4i8RLtNo1FNwlU4Qacm5/0G+zT+xtdPQP2zayHD45lNylUM
+        K5hkXtiHHpQQFD2h+yjy5asR74M=
+X-Google-Smtp-Source: APXvYqzu8AIp7fFUsfN2rUa5cBm1eaPc1YwsapNxl5TxnL6Ff2he9kIUwK3dNY/DU/9pQHKCc0s8Gg==
+X-Received: by 2002:a05:6830:1510:: with SMTP id k16mr6166230otp.226.1557248224453;
+        Tue, 07 May 2019 09:57:04 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g21sm2591156otj.25.2019.05.07.09.57.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 09:57:03 -0700 (PDT)
+Date:   Tue, 7 May 2019 11:57:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v7 04/13] dt-bindings: ddr: rename lpddr2 directory
+Message-ID: <20190507165703.GA20137@bogus>
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190506151213eucas1p2ca40029d09ddbbcd11e4a1dd60ae9654@eucas1p2.samsung.com>
+ <1557155521-30949-5-git-send-email-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-References: <20190503174730.245762-1-dianders@chromium.org>
- <CA+ASDXOkHxYumCBv-T0gxTjdMVTu-c=33Lk-0TUgJ3WGUn2DVQ@mail.gmail.com> <CAD=FV=UKTDFwq3PSdpPmShRcOtZaH1mU=2H-ynoG4VooV=rKVQ@mail.gmail.com>
-In-Reply-To: <CAD=FV=UKTDFwq3PSdpPmShRcOtZaH1mU=2H-ynoG4VooV=rKVQ@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 7 May 2019 09:48:00 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMOmD+Wp5wfWU_1m+eEKhGTz62Ru1TJhH7Cea_CKa9PHw@mail.gmail.com>
-Message-ID: <CA+ASDXMOmD+Wp5wfWU_1m+eEKhGTz62Ru1TJhH7Cea_CKa9PHw@mail.gmail.com>
-Subject: Re: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557155521-30949-5-git-send-email-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 9:25 AM Doug Anderson <dianders@chromium.org> wrote:
-> On Mon, May 6, 2019 at 2:40 PM Brian Norris <briannorris@chromium.org> wrote:
-> > The last part of the sentence technically isn't true -- the original
-> > bindings (notably, with no DT maintainer Reviewed-by) didn't specify
-> > where such a node should be found:
-> >
-> > 35da60941e44 pstore/ram: add Device Tree bindings
-> >
-> > so child-of-root used to be a valid location. But anyway, this code is
-> > just part of a heuristic for "old DT" (where later bindings clarified
-> > this), so it still seems valid.
->
-> I agree that it was unclear in the past, but it is true that being
-> under the root node is not according to the _current_ upstream
-> bindings, right?  ;-)
+On Mon,  6 May 2019 17:11:52 +0200, Lukasz Luba wrote:
+> Change directory name to be ready for new types of memories.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../devicetree/bindings/ddr/lpddr2-timings.txt     |  52 +++++++++++
+>  Documentation/devicetree/bindings/ddr/lpddr2.txt   | 102 +++++++++++++++++++++
+>  .../devicetree/bindings/lpddr2/lpddr2-timings.txt  |  52 -----------
+>  .../devicetree/bindings/lpddr2/lpddr2.txt          | 102 ---------------------
+>  4 files changed, 154 insertions(+), 154 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
+>  create mode 100644 Documentation/devicetree/bindings/ddr/lpddr2.txt
+>  delete mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
+>  delete mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2.txt
+> 
 
-Sure, I suppose. Although, given the general ABI policy around DT, it
-seems to me that something that was "according to" an old binding
-cannot really be made "no longer" according to the binding. It can be
-discouraged, and removed from new DTs, but it doesn't really become
-*wrong*.
-
-But our DT was definitely *not* according to even the (un-reviewed)
-merged binding. So I'm mostly mincing words here.
-
-Brian
+Reviewed-by: Rob Herring <robh@kernel.org>
