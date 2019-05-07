@@ -2,108 +2,231 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABF3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E274C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C2A2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D859B20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557243999;
+	bh=penb8S4fViGUKJbQWsYzyhvsGBxaCjDKIZ8jATHrGD0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=iMwgD1hHe+TIGn5H1tbA9W6LuXJcFVVTvebaHyQoFdSH672ykd2ciKN+LDMYfeeiX
+	 ihX1xQNQV6rDXaHsfNOj+EpfRB5YaiRXAAu+V1VpXN16TbA5asbtN5sXqrtQ/9nZEm
+	 H1kV+MAk5wGGIQ3DpifxoOyspNtjPVx4jWXpdqC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfEGPpm (ORCPT
+        id S1726922AbfEGPqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 11:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfEGPpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:45:42 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726197AbfEGPqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:46:37 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5E4220825;
-        Tue,  7 May 2019 15:45:38 +0000 (UTC)
-Date:   Tue, 7 May 2019 11:45:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190507114537.48a863fa@gandalf.local.home>
-In-Reply-To: <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <20190506162915.380993f9@gandalf.local.home>
-        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
-        <20190506174511.2f8b696b@gandalf.local.home>
-        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
-        <20190506210416.2489a659@oasis.local.home>
-        <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
-        <20190506215353.14a8ef78@oasis.local.home>
-        <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
-        <20190506225819.11756974@oasis.local.home>
-        <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
-        <20190506232158.13c9123b@oasis.local.home>
-        <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
-        <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
-        <20190507111227.1d4268d7@gandalf.local.home>
-        <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9402087F;
+        Tue,  7 May 2019 15:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557243996;
+        bh=penb8S4fViGUKJbQWsYzyhvsGBxaCjDKIZ8jATHrGD0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=18LtHFvCsfPLrZOB7VMaA18HObI1ydwRxW+80PWInoUC+/lLTvQ3zuCIyhnYdzQk9
+         7ESDca5xHFkL1s7Xurm+sbOAwQmd4Tq1YLCMdk2f7GIVlYYeq6gKfAWVx6GJzdCadv
+         2NxRvZIg1FTCAyntWh8sBpS/h3bu/zaLJEMTrc64=
+Date:   Tue, 7 May 2019 08:46:35 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: new features for 5.2
+Message-ID: <20190507154635.GT5207@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 08:31:14 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi Linus,
 
-> The reality is that changing something fundamental like the kernel
-> stack at this point for an architecture that will not change in the
-> future is silly.
+Here's a big pile of new stuff for XFS for 5.2.  XFS has grown the
+ability to report metadata health status to userspace after online fsck
+checks the filesystem.  The online metadata checking code is (I really
+hope) feature complete with the addition of checks for the global fs
+counters, though it'll remain EXPERIMENTAL for now.
 
-x86_32 will no longer have updates, but will x86_64? And we will
-constantly be adding more work around hacks to handle the difference of
-the pt_regs in the future. I see Peter's patch easing that future pain.
+There are also fixes for thundering herds of writeback completions and
+some other deadlocks, fixes for theoretical integer overflow attacks on
+space accounting, and removal of the long-defunct 'mntpt' option which
+was deprecated in the mid-2000s and (it turns out) totally broken since
+2011 (and nobody complained...).
 
-> 
-> The reality is that Peter's patch is much bigger than mine, because it
-> needed a lot of other changes *because* it did that change.
+The branch merges cleanly against this morning's HEAD (as well as HEAD +
+iomap-5.2-merge) and survived an overnight run of xfstests.  Let me know
+if you run into anything weird along the way.  FYI, I will also be out
+for about 10 days starting Thursday, so if anything urgent comes up
+during that time, please don't hesitate to ask Dave or Eric.
 
-It was much bigger because it removed a lot of the work around hacks.
+--D
 
-But you are the "benevolent dictator", and I don't see me changing your
-mind.
+The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
 
-I'll go and implement it the way you like.
+  Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
 
--- Steve
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-merge-4
+
+for you to fetch changes up to 910832697cf85536c7fe26edb8bc6f830c4b9bb6:
+
+  xfs: change some error-less functions to void types (2019-05-01 20:26:30 -0700)
+
+----------------------------------------------------------------
+Changes for Linux 5.2:
+
+- Fix some more buffer deadlocks when performing an unmount after a hard
+  shutdown.
+- Fix some minor space accounting issues.
+- Fix some use after free problems.
+- Make the (undocumented) FITRIM behavior consistent with other filesystems.
+- Embiggen the xfs geometry ioctl's data structure.
+- Introduce a new AG geometry ioctl.
+- Introduce a new online health reporting infrastructure and ioctl for
+  userspace to query a filesystem's health status.
+- Enhance online scrub and repair to update the health reports.
+- Reduce thundering herd problems when writeback io completes.
+- Fix some transaction reservation type errors.
+- Fix integer overflow problems with delayed alloc reservation counters.
+- Fix some problems where we would exit to userspace without unlocking.
+- Fix inconsistent behavior when finishing deferred ops fails.
+- Strengthen scrub to check incore data against ondisk metadata.
+- Remove long-broken mntpt mount option.
+- Add an online scrub function for the filesystem summary counters,
+  which should make online metadata scrub more or less feature complete
+  for now.
+- Various cleanups.
+
+----------------------------------------------------------------
+Brian Foster (7):
+      xfs: fix use after free in buf log item unlock assert
+      xfs: wake commit waiters on CIL abort before log item abort
+      xfs: shutdown after buf release in iflush cluster abort path
+      xfs: don't account extra agfl blocks as available
+      xfs: make tr_growdata a permanent transaction
+      xfs: assert that we don't enter agfl freeing with a non-permanent transaction
+      xfs: add missing error check in xfs_prepare_shift()
+
+Christoph Hellwig (1):
+      xfs: don't parse the mtpt mount option
+
+Darrick J. Wong (27):
+      xfs: track metadata health status
+      xfs: replace the BAD_SUMMARY mount flag with the equivalent health code
+      xfs: clear BAD_SUMMARY if unmounting an unhealthy filesystem
+      xfs: add a new ioctl to describe allocation group geometry
+      xfs: report fs and rt health via geometry structure
+      xfs: report AG health via AG geometry ioctl
+      xfs: report inode health via bulkstat
+      xfs: refactor scrub context initialization
+      xfs: collapse scrub bool state flags into a single unsigned int
+      xfs: hoist the already_fixed variable to the scrub context
+      xfs: scrub/repair should update filesystem metadata health
+      xfs: scrub should only cross-reference with healthy btrees
+      xfs: implement per-inode writeback completion queues
+      xfs: remove unused m_data_workqueue
+      xfs: merge adjacent io completions of the same type
+      xfs: abort unaligned nowait directio early
+      xfs: widen quota block counters to 64-bit integers
+      xfs: widen inode delalloc block counter to 64-bits
+      xfs: kill the xfs_dqtrx_t typedef
+      xfs: unlock inode when xfs_ioctl_setattr_get_trans can't get transaction
+      xfs: fix broken bhold behavior in xrep_roll_ag_trans
+      xfs: track delayed allocation reservations across the filesystem
+      xfs: rename the speculative block allocation reclaim toggle functions
+      xfs: allow scrubbers to pause background reclaim
+      xfs: scrub should check incore counters against ondisk headers
+      xfs: always rejoin held resources during defer roll
+      xfs: add online scrub for superblock counters
+
+Dave Chinner (1):
+      xfs: bump XFS_IOC_FSGEOMETRY to v5 structures
+
+Eric Sandeen (1):
+      xfs: change some error-less functions to void types
+
+Wang Shilong (1):
+      xfs,fstrim: fix to return correct minlen
+
+ fs/xfs/Makefile                |   3 +
+ fs/xfs/libxfs/xfs_ag.c         |  54 ++++++
+ fs/xfs/libxfs/xfs_ag.h         |   2 +
+ fs/xfs/libxfs/xfs_alloc.c      |  13 +-
+ fs/xfs/libxfs/xfs_attr.c       |  35 ++--
+ fs/xfs/libxfs/xfs_attr.h       |   2 +-
+ fs/xfs/libxfs/xfs_bmap.c       |  17 +-
+ fs/xfs/libxfs/xfs_defer.c      |  14 +-
+ fs/xfs/libxfs/xfs_dquot_buf.c  |   4 +-
+ fs/xfs/libxfs/xfs_fs.h         | 139 +++++++++++----
+ fs/xfs/libxfs/xfs_health.h     | 190 ++++++++++++++++++++
+ fs/xfs/libxfs/xfs_quota_defs.h |   2 +-
+ fs/xfs/libxfs/xfs_sb.c         |  18 +-
+ fs/xfs/libxfs/xfs_sb.h         |   2 +-
+ fs/xfs/libxfs/xfs_trans_resv.c |   6 +-
+ fs/xfs/libxfs/xfs_types.c      |   2 +-
+ fs/xfs/libxfs/xfs_types.h      |   2 +
+ fs/xfs/scrub/agheader.c        |  20 +++
+ fs/xfs/scrub/common.c          |  47 ++++-
+ fs/xfs/scrub/common.h          |   4 +
+ fs/xfs/scrub/fscounters.c      | 366 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/health.c          | 237 +++++++++++++++++++++++++
+ fs/xfs/scrub/health.h          |  14 ++
+ fs/xfs/scrub/ialloc.c          |   4 +-
+ fs/xfs/scrub/parent.c          |   2 +-
+ fs/xfs/scrub/quota.c           |   2 +-
+ fs/xfs/scrub/repair.c          |  34 ++--
+ fs/xfs/scrub/repair.h          |   5 +-
+ fs/xfs/scrub/scrub.c           |  49 ++++--
+ fs/xfs/scrub/scrub.h           |  27 ++-
+ fs/xfs/scrub/trace.h           |  63 ++++++-
+ fs/xfs/xfs_aops.c              | 135 ++++++++++++--
+ fs/xfs/xfs_aops.h              |   1 -
+ fs/xfs/xfs_bmap_util.c         |   2 +
+ fs/xfs/xfs_buf_item.c          |   4 +-
+ fs/xfs/xfs_discard.c           |   3 +-
+ fs/xfs/xfs_dquot.c             |  17 +-
+ fs/xfs/xfs_file.c              |   6 +-
+ fs/xfs/xfs_fsops.c             |   3 +-
+ fs/xfs/xfs_fsops.h             |   2 +-
+ fs/xfs/xfs_health.c            | 392 +++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_icache.c            |  11 +-
+ fs/xfs/xfs_icache.h            |   4 +-
+ fs/xfs/xfs_inode.c             |  31 ++--
+ fs/xfs/xfs_inode.h             |  17 +-
+ fs/xfs/xfs_ioctl.c             |  62 ++++---
+ fs/xfs/xfs_ioctl32.c           |   9 +-
+ fs/xfs/xfs_itable.c            |   2 +
+ fs/xfs/xfs_log.c               |   3 +-
+ fs/xfs/xfs_log_cil.c           |  21 ++-
+ fs/xfs/xfs_log_recover.c       |  10 +-
+ fs/xfs/xfs_mount.c             |  35 +++-
+ fs/xfs/xfs_mount.h             |  32 +++-
+ fs/xfs/xfs_qm.c                |   3 +-
+ fs/xfs/xfs_qm.h                |   8 +-
+ fs/xfs/xfs_quota.h             |  37 ++--
+ fs/xfs/xfs_super.c             |  41 ++---
+ fs/xfs/xfs_trace.h             |  76 ++++++++
+ fs/xfs/xfs_trans_dquot.c       |  52 +++---
+ 59 files changed, 2085 insertions(+), 313 deletions(-)
+ create mode 100644 fs/xfs/libxfs/xfs_health.h
+ create mode 100644 fs/xfs/scrub/fscounters.c
+ create mode 100644 fs/xfs/scrub/health.c
+ create mode 100644 fs/xfs/scrub/health.h
+ create mode 100644 fs/xfs/xfs_health.c
