@@ -2,100 +2,129 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4E5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766DDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4C5206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557198564;
-	bh=88qJCu/ONF2Ojuu8ZM2ztz7hkM/LPels7aRcGh2bldk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nnp9CRsRzRYvpK9XsE/WakCoMOrCfSfKApjsq+X5oiwRjVmEQPPROuYa5g/5sxGuZ
-	 SgwHw4L0USfzdzMtcf2yVwSj7fQRcZBejeFQ1+j2T3sFQ9L+pDcV0rptsmuJQNwlN2
-	 wtTLII1w/dWTnHpPmOT4eFyS+yqETHRGc74a2j6U=
+	by mail.kernel.org (Postfix) with ESMTP id 49973206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qPZyJEvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfEGDJX (ORCPT
+        id S1726908AbfEGDLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 23:09:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57808 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfEGDJX (ORCPT
+        Mon, 6 May 2019 23:11:04 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52210 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfEGDLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 23:09:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=khFxpRl02USJUzpyMLkUGZ+tc4b4r8QmCyQqy6hkspo=; b=E3Vwwn1yM8pqViPhHCCH5xb44
-        EtiTUyEI+VnmPBbDvA/Fe9PrP4LtTf54h0Zb1KZUDpXNITavN6UIBuU10JHjTuH3divp8d4JFUdOr
-        w00hFhLr8Fw8YHs50x5LNrh4f14X5zyg30ibyArpmw3QuivY6oVCJTWSjEKpt7JJQW+qU=;
-Received: from [2001:268:c0e6:658d:8f3d:d90b:c4e4:2fdf] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hNqTp-0003Yx-1P; Tue, 07 May 2019 03:09:21 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 2127C44000C; Tue,  7 May 2019 04:09:17 +0100 (BST)
-Date:   Tue, 7 May 2019 12:09:17 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] spi updates for v5.2
-Message-ID: <20190507030917.GE14916@sirena.org.uk>
-References: <20190506143301.GU14916@sirena.org.uk>
- <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
- <20190507021853.GY14916@sirena.org.uk>
- <CAHk-=whLZMe5kNpNMnhh5oVHFKNv7Um4tBS+rH=kLvM+CWzzxw@mail.gmail.com>
+        Mon, 6 May 2019 23:11:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4738uBG073685;
+        Tue, 7 May 2019 03:10:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=Sa+cOJtJx0K5ZUTspQzVWRaHsaM72rSdt2S6cah8KqE=;
+ b=qPZyJEvFwNkpPyu498f2W9cJG3cwo3YzJHpJuUkM4qNXyo0XdOQ9+2nBbN/aGX6t9k1U
+ wHeLMsyAc1cE1N+uTUZnW/Iyw54XcN6jiBEm0jAv/cQLsff/0gr7PXOraCv+40U7PJWD
+ R/9Fkc7FCq8Z9qdqoT6DH83+M46p62s329nBRNiN69nX2PhdQ2dCEdLOHXuJEXE0hF3p
+ GLmiF0TCkWeY+nB04qmMqqK6u9J8x9umk/1yUcK+AKwwac5NjQpKLneDVrp7r8yIEyQW
+ 1GH7C9dCib2+z68OBCyWe+2gDeM+qGNzSX60HntCF330GSmcl5vC0+RL01+Q5LaL4Rk4 Og== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2s94b0j77m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 03:10:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x473A5lN185360;
+        Tue, 7 May 2019 03:10:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2s94af7xxr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 03:10:22 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x473A6JU021461;
+        Tue, 7 May 2019 03:10:07 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 May 2019 20:10:06 -0700
+Date:   Mon, 6 May 2019 23:09:57 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Alan Tull <atull@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Steve Sistare <steven.sistare@oracle.com>,
+        Wu Hao <hao.wu@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvm-ppc@vger.kernel.org" <kvm-ppc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: add account_locked_vm utility function
+Message-ID: <20190507030957.3qp7yflco6ckcj5q@ca-dmjordan1.us.oracle.com>
+References: <20190503201629.20512-1-daniel.m.jordan@oracle.com>
+ <20190503232818.GA5182@mellanox.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lXp6bW3Dj4tVIRc6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whLZMe5kNpNMnhh5oVHFKNv7Um4tBS+rH=kLvM+CWzzxw@mail.gmail.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190503232818.GA5182@mellanox.com>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905070018
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905070018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 03, 2019 at 11:28:22PM +0000, Jason Gunthorpe wrote:
+> On Fri, May 03, 2019 at 01:16:30PM -0700, Daniel Jordan wrote:
+> > Andrew, this one patch replaces these six from [1]:
+> > 
+> >     mm-change-locked_vms-type-from-unsigned-long-to-atomic64_t.patch
+> >     vfio-type1-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
+> >     vfio-spapr_tce-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
+> >     fpga-dlf-afu-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
+> >     kvm-book3s-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
+> >     powerpc-mmu-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
+> > 
+> > That series converts locked_vm to an atomic, but on closer inspection causes at
+> > least one accounting race in mremap, and fixing it just for this type
+> > conversion came with too much ugly in the core mm to justify, especially when
+> > the right long-term fix is making these drivers use pinned_vm instead.
+> 
+> Did we ever decide what to do here? Should all these drivers be
+> switched to pinned_vm anyhow?
 
---lXp6bW3Dj4tVIRc6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well, there were the concerns about switching in [1].  Alex, is there an
+example of an application or library that would break or be exploitable?  If
+there were particular worries (qemu for vfio type1, for example), perhaps some
+coordinated changes across the kernel and userspace would be possible,
+especially given the amount of effort it's likely going to take to get the
+locked_vm/pinned_vm accounting sorted out.
 
-On Mon, May 06, 2019 at 07:34:29PM -0700, Linus Torvalds wrote:
-
-> So I think it's just google that still doesn't like sirena.org.uk.
-> Iirc, that's happened before, no?
-
-In the past that always looked like it was triggered by some of the
-blacklists that basically seem to have a business model that involves
-at least partly charging people money for whitelisting and so are
-perhaps a little trigger happy when it comes to listing servers.  This
-time around I'm not seeing any signs of that happening but I might've
-missed some, I don't know if Google stopped using those blacklists or
-something.
-
---lXp6bW3Dj4tVIRc6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzQ9twACgkQJNaLcl1U
-h9DlmAf+PS8WuSqYd3RRA49FxQqSRt+Bp5GM5C0z2IJfoqh0YnlayPl0Eqc2O95h
-IiTKzDfw4odLeEzdtFz1gUXK8EXE+22Lv1IhOmu9AZ+/yQKWh1LJNn5XqHMWFY9K
-NhPgP+HE9wcr5DRSbjxCiZiUpGyz+guCcXGU2LUOpyWKWO6wMvqiDar8h7GYWtsC
-oH+ttNsgHSvIQtSHG74JhykgPcWuHgEDngMtUnteCcvEcQvvO3QbX/hPBYqnTjvG
-it6bKiu1FOkBeWKA9xgBzFC7/rjcrOeQPePWkn/Y1lBXo0ep89OpM1Y8kaWJ5pFR
-GvyswI4qHc+povDf88hk5ETcW1ux7A==
-=NvuY
------END PGP SIGNATURE-----
-
---lXp6bW3Dj4tVIRc6--
+[1] https://lore.kernel.org/linux-mm/20190213130330.76ef1987@w520.home/
