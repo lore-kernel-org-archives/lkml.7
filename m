@@ -4,59 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ABCC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E32C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8EC205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5689920675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209107;
-	bh=b5n7aL0jy61kZcvf177QrIp1CQWhvFLaSUq005Z4tgk=;
+	s=default; t=1557209125;
+	bh=5TjZaBYSgceF7iNSbVKKpL0yebG/csYnnmkws1WVf7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOepy/9IMnGV4YW+yoOC1Qgp5TERRfx3mhRC58GJZpzNpSVze1kLRmzTfLg9+agVN
-	 V5mMEaLAbKKMU6n70JpAWAzAPZMvD40Mann7AkRjFYbidup/oiKdQPxlZOu6suhsnI
-	 l5+LfFFZe9clnipiiESf5+RwB6B+nzWu3o3qFfsw=
+	b=cjlEW6j9FMUqEKaijxEW/MOY4RxMelq10J9UQaLhg/Mr70OLPfforE7WSmbmQ01Rh
+	 RiKJZ9CZsXuJjBvouaZCbhZaYwq1KisTkWiqGM9Lh/J7nt060UPXy4SL9oJjTMSipg
+	 FUBc9iAzcEy77ARbFCg4qkaOSb7DwpDP71de8FRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfEGFeV (ORCPT
+        id S1726265AbfEGGFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54196 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727478AbfEGFeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:18 -0400
+        id S1727454AbfEGFeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A44420989;
-        Tue,  7 May 2019 05:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F2C20B7C;
+        Tue,  7 May 2019 05:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207257;
-        bh=b5n7aL0jy61kZcvf177QrIp1CQWhvFLaSUq005Z4tgk=;
+        s=default; t=1557207252;
+        bh=5TjZaBYSgceF7iNSbVKKpL0yebG/csYnnmkws1WVf7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oZAYMyC6xI9WaR18EHD2hOW7nsOYMiBhbqALkyYbT/L5mg2OjdYlpX3ZUgwPSDCmd
-         XTezQtRJUcjMOVGDHHVSUTI8vpjskPOohz4cwSLwh1IimTEqTYCA3AJzm7EUNxmRGB
-         RWB9GJG6e8yEFZQUUqLTqKfOV5RKQfuaiYQb7BCc=
+        b=fEwj/gepjl8acZL51QDfk+GGWTYJi4b1UZuaufoOWy/lc9KzP9bt1H9EBfqNBR5FD
+         peIWreoKooHi8p99I0UDYQlzwAED+Vry0Y4Df0FERvf8pA/C/yD+g0wsmeOowl4rJ2
+         41nMrAk/kXWV1DajQLwFzq93igHSP6YTk/cocERs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Thomas Garnier <thgarnie@google.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, frank.ramsay@hpe.com,
-        herbert@gondor.apana.org.au, kirill@shutemov.name,
-        mike.travis@hpe.com, x86-ml <x86@kernel.org>,
-        yamada.masahiro@socionext.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 54/99] x86/mm/KASLR: Fix the size of the direct mapping section
-Date:   Tue,  7 May 2019 01:31:48 -0400
-Message-Id: <20190507053235.29900-54-sashal@kernel.org>
+Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 52/99] ocelot: Don't sleep in atomic context (irqs_disabled())
+Date:   Tue,  7 May 2019 01:31:46 -0400
+Message-Id: <20190507053235.29900-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -69,90 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baoquan He <bhe@redhat.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-[ Upstream commit ec3937107ab43f3e8b2bc9dad95710043c462ff7 ]
+[ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
 
-kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
-the maximum amount of system RAM supported. The size of the direct
-mapping section is obtained from the smaller one of the below two
-values:
+Preemption disabled at:
+ [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
+ Call trace:
+ [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
+ [<ffff00000808a9a4>] show_stack+0x14/0x20
+ [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
+ [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
+ [<ffff0000080fe890>] __might_sleep+0x50/0x88
+ [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
+ [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188 [mscc_ocelot_common]
+ [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
+ [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
 
-  (actual system RAM size + padding size) vs (max system RAM size supported)
+Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
 
-This calculation is wrong since commit
-
-  b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
-
-In it, __PHYSICAL_MASK_SHIFT was changed to be 52, regardless of whether
-the kernel is using 4-level or 5-level page tables. Thus, it will always
-use 4 PB as the maximum amount of system RAM, even in 4-level paging
-mode where it should actually be 64 TB.
-
-Thus, the size of the direct mapping section will always
-be the sum of the actual system RAM size plus the padding size.
-
-Even when the amount of system RAM is 64 TB, the following layout will
-still be used. Obviously KALSR will be weakened significantly.
-
-   |____|_______actual RAM_______|_padding_|______the rest_______|
-   0            64TB                                            ~120TB
-
-Instead, it should be like this:
-
-   |____|_______actual RAM_______|_________the rest______________|
-   0            64TB                                            ~120TB
-
-The size of padding region is controlled by
-CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING, which is 10 TB by default.
-
-The above issue only exists when
-CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING is set to a non-zero value,
-which is the case when CONFIG_MEMORY_HOTPLUG is enabled. Otherwise,
-using __PHYSICAL_MASK_SHIFT doesn't affect KASLR.
-
-Fix it by replacing __PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
-
- [ bp: Massage commit message. ]
-
-Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Garnier <thgarnie@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: frank.ramsay@hpe.com
-Cc: herbert@gondor.apana.org.au
-Cc: kirill@shutemov.name
-Cc: mike.travis@hpe.com
-Cc: thgarnie@google.com
-Cc: x86-ml <x86@kernel.org>
-Cc: yamada.masahiro@socionext.com
-Link: https://lkml.kernel.org/r/20190417083536.GE7065@MiWiFi-R3L-srv
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/kaslr.c | 2 +-
+ drivers/net/ethernet/mscc/ocelot.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index 3f452ffed7e9..d669c5e797e0 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -94,7 +94,7 @@ void __init kernel_randomize_memory(void)
- 	if (!kaslr_memory_enabled())
- 		return;
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index 215a45374d7b..0ef95abde6bb 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -613,7 +613,7 @@ static int ocelot_mact_mc_add(struct ocelot_port *port,
+ 			      struct netdev_hw_addr *hw_addr)
+ {
+ 	struct ocelot *ocelot = port->ocelot;
+-	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_KERNEL);
++	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_ATOMIC);
  
--	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
-+	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
- 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
- 
- 	/*
+ 	if (!ha)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
