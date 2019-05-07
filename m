@@ -2,55 +2,53 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D86C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE65C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B81206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PEt+uDwu"
+	by mail.kernel.org (Postfix) with ESMTP id 8DFF020825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfEGWJ1 (ORCPT
+        id S1726368AbfEGWOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:09:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58184 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfEGWJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:09:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7dysCa616JXiACnyZIUeJWuKqMgmDWSXPEUP+GsKS8I=; b=PEt+uDwuGjD6g9mBjjRsFqOXg
-        L2IR0LhRqHS9qLACZfqOEa0Ycu49dGbSvpA9YwP2xIVfOcxj8O7M+pjfbVyGSTlmEpihhyMD8AUvG
-        I8QQPQGzQuBuuntCfUI5fEEUrAXsWCEwdQtt98U3be/ak7FeF9xqaV1vUS2XnbZXVHPXBIUdMKSj+
-        mN3iAC6EwE5eRYPQYv6cYT1jEBhRIVzTvQUlRXIMChiENREGE/x+CVWdGb/s/KySJgT54y5jo+QAq
-        PZnbtvKFOeTnpkcYq8gWdkPfgwj878uVOMOUE2qMiaGJXLRrqS/0H3v+vh63VW42h30YDkdyaBujd
-        ICoGj3gzA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hO8H6-0003Ld-0x; Tue, 07 May 2019 22:09:24 +0000
-Subject: Re: [PATCH v8 1/1] Add support for IPMB driver
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>, minyard@acm.org,
-        wsa@the-dreams.de, vadimp@mellanox.com, michaelsh@mellanox.com
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <cover.1557264413.git.Asmaa@mellanox.com>
- <3609b6b92f0a45f0364058c0d0078db209f0dd14.1557264413.git.Asmaa@mellanox.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <14d0e867-50c7-95bf-ec44-277ec3357ef5@infradead.org>
-Date:   Tue, 7 May 2019 15:09:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 18:14:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:22538 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfEGWOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 18:14:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 15:14:38 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 07 May 2019 15:14:38 -0700
+Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
+        by linux.intel.com (Postfix) with ESMTP id 58075580238;
+        Tue,  7 May 2019 15:14:37 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] ASoC: SOF: Add Comet Lake PCI IDs
+To:     Evan Green <evgreen@chromium.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Naveen M <naveen.m@intel.com>,
+        Sathya Prakash <sathya.prakash.m.r@intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+References: <20190507215359.113378-1-evgreen@chromium.org>
+ <20190507215359.113378-2-evgreen@chromium.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <cb0accd5-6b0d-065a-9b54-321252862d88@linux.intel.com>
+Date:   Tue, 7 May 2019 17:14:36 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <3609b6b92f0a45f0364058c0d0078db209f0dd14.1557264413.git.Asmaa@mellanox.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190507215359.113378-2-evgreen@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,158 +56,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Minor nit-picks below. The Kconfig would work but select CANNONLAKE even 
+if you don't want it.
 
-Just a few doc comments below...
+>   
+> +config SND_SOC_SOF_COMETLAKE_LP
+> +	tristate
+> +	select SND_SOC_SOF_CANNONLAKE
 
-On 5/7/19 2:30 PM, Asmaa Mnebhi wrote:
-> Support receiving IPMB requests on a Satellite MC from the BMC.
-> Once a response is ready, this driver will send back a response
-> to the BMC via the IPMB channel.
-> 
-> Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
-> Acked-by: vadimp@mellanox.com
-> ---
->  Documentation/IPMB.txt           | 103 +++++++++++
->  drivers/char/ipmi/Kconfig        |   8 +
->  drivers/char/ipmi/Makefile       |   1 +
->  drivers/char/ipmi/ipmb_dev_int.c | 382 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 494 insertions(+)
->  create mode 100644 Documentation/IPMB.txt
->  create mode 100644 drivers/char/ipmi/ipmb_dev_int.c
-> 
-> diff --git a/Documentation/IPMB.txt b/Documentation/IPMB.txt
-> new file mode 100644
-> index 0000000..fd9d168
-> --- /dev/null
-> +++ b/Documentation/IPMB.txt
-> @@ -0,0 +1,103 @@
-> +============================
-> +IPMB Driver fro Satellite MC
+This should be
+select SND_SOF_SOF_HDA_COMMON
 
-               for
+> +	help
+> +	  This option is not user-selectable but automagically handled by
+> +	  'select' statements at a higher level
+> +
+> +config SND_SOC_SOF_COMETLAKE_LP_SUPPORT
+> +	bool "SOF support for CometLake-LP"
+> +	help
+> +	  This adds support for Sound Open Firmware for Intel(R) platforms
+> +	  using the Cometlake-LP processors.
+> +	  Say Y if you have such a device.
+> +	  If unsure select "N".
+> +
+> +config SND_SOC_SOF_COMETLAKE_H
+> +	tristate
+> +	select SND_SOC_SOF_CANNONLAKE
 
-> +============================
-> +
-> +The Intelligent Platform Management Bus, or IPMB is an
+This should be
+select SND_SOF_SOF_HDA_COMMON
 
-                                            or IPMB,
+> +	help
+> +	  This option is not user-selectable but automagically handled by
+> +	  'select' statements at a higher level
+> +
+> +config SND_SOC_SOF_COMETLAKE_H_SUPPORT
+> +	bool "SOF support for CometLake-H"
+> +	help
+> +	  This adds support for Sound Open Firmware for Intel(R) platforms
+> +	  using the Cometlake-H processors.
+> +	  Say Y if you have such a device.
+> +	  If unsure select "N".
 
-> +I2C bus that provides a standardized interconnection between
-> +different boards within a chassis. This interconnection is
-> +between the baseboard management (BMC) and chassis electronics.
-> +IPMB is also associated with the messaging protocol through the
-> +IPMB bus.
-> +
-> +The devices using the IPMB are usually management
-> +controllers that perform management functions such as servicing
-> +the front panel interface, monitoring the baseboard,
-> +hot-swapping disk drivers in the system chassis, etc...
-> +
-> +When an IPMB is implemented in the system, the BMC serves as
-> +a controller to give system software access to the IPMB. The BMC
-> +sends IPMI requests to a device (usually a Satellite Management
-> +Controller or Satellite MC) via IPMB and the device
-> +sends a response back to the BMC.
-> +
-> +For more information on IPMB and the format of an IPMB message,
-> +refer to the IPMB and IPMI specifications.
-> +
-> +IPMB driver for Satellite MC
-> +----------------------------
-> +
-> +ipmb-dev-int - This is the driver needed on a Satellite MC to
-> +receive IPMB messages from a BMC and send a response back.
-> +This driver works hand with the i2c driver and a userspace
-
-drop "hand"
-s/i2c/I2C/
-
-> +program such as OpenIPMI:
-> +
-> +1) It is an I2C slave backend driver. So, it defines a callback
-> +function to set the Satellite MC as an I2C slave.
-> +This callback function handles the received IPMI requests.
-> +
-> +2) It defines the read and write functions to enable a user
-> +space program (such as OpenIPMI) to communicate with the kernel.
-> +
-> +
-> +Load the IPMB driver
-> +--------------------
-> +
-> +The driver needs to be loaded at boot time or manually first.
-> +First, make sure you have the following in your config file:
-> +CONFIG_IPMB_DEVICE_INTERFACE=y
-> +
-> +1) If you want the driver to be loaded at boot time:
-> +
-
-Are these instructions for a hardware/firmware developer?
-
-> +a) Add this entry to your ACPI table, under the appropriate SMBus:
-> +
-> +Device (SMB0) // Example SMBus host controller
-> +{
-> +  Name (_HID, "<Vendor-Specific HID>") // Vendor-Specific HID
-> +  Name (_UID, 0) // Unique ID of particular host controller
-> +  :
-> +  :
-> +    Device (IPMB)
-> +    {
-> +      Name (_HID, "IPMB0001") // IPMB device interface
-> +      Name (_UID, 0) // Unique device identifier
-> +    }
-> +}
-> +
-> +b) Example for device tree:
-> +
-> +&i2c2 {
-> +         status = "okay";
-> + 
-> +         ipmb@10 {
-> +                 compatible = "ipmb-dev";
-> +                 reg = <0x10>;
-> +         };
-> +};
-> +
-> +2) Manually from linux:
-
-s/linux/Linux/
-
-> +modprobe ipmb-dev-int
-> +
-> +
-> +Instantiate the device
-> +----------------------
-> +
-> +After loading the driver, you can instantiate the device as
-> +described in the document 'instantiating-devices'.
-
-what document is that?  where?
-
-> +If you have multiple BMCs, each connected to your Satellite MC via
-> +a different I2C bus, you can instantiate a device for each of
-> +those BMCs.
-> +The name of the instantiated device contains the I2C bus number
-> +associated with it as follows:
-> +
-> +BMC1 ------ IPMB/I2C bus 1 ---------|   /dev/ipmb-1
-> +				Satellite MC
-> +BMC1 ------ IPMB/I2C bus 2 ---------|   /dev/ipmb-2
-> +
-> +For instance, you can instantiate the ipmb-dev-int device from
-> +user space at the 7 bit address 0x10 on bus 2:
-> +
-> +  # echo ipmb-dev 0x1010 > /sys/bus/i2c/devices/i2c-2/new_device
-> +
-> +This will create device file /dev/ipmb-2, which can be accessed
-
-   This will create the device file
-
-> +by the user space program. The device needs to be instantiated
-> +before running the user space program.
-
-thanks.
--- 
-~Randy
