@@ -2,181 +2,133 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF53C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6096C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C51920989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557218110;
-	bh=5V6T6+XVKDu+t26T7gKG7QTDumdAPtPm8AM8FEdKAMs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HzZ48BSgIeNV3Hbf7r3cObGDpM4JSTiBdJ6r9FgY2cScjsNCy4n82GI3So+t5nh1P
-	 gh/9TLaYAnO7Z3Bi4ZWv7OJwOQGDedU9UiUHbHuLMqkOroPtwtKGDc9bAZwlEre15G
-	 k/rd8QJnBPBpoBw60yrkRxaiYB4ZA40t27Jeouag=
+	by mail.kernel.org (Postfix) with ESMTP id 978B120C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D1SGwGWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfEGIfJ (ORCPT
+        id S1726769AbfEGIgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:35:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39263 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfEGIfJ (ORCPT
+        Tue, 7 May 2019 04:36:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51036 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfEGIgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:35:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id x16so5851056oic.6;
-        Tue, 07 May 2019 01:35:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6SxMmkP+qrTMooncfYcZ8EYVxmGvWyjBxzbd0N8H+DY=;
-        b=R173PrfQ6Hv23OgekbcFGlRs8D2AEokaxGBphH/6Vyrwvc+YrkMIOTQEDSJ8pumMZL
-         +h0pNV6pBjsNMuHUagEcqfaDclyA4nlGss41e8h7buwgjQl0js/gEuiHQWc4dxuH3e1s
-         vz2oTqjTWMudeD47k/xwjJQ3xyVg3+loqpW34hOXs2R1CaDvzRvtUPYlry9W4q3DTFST
-         vBsBIhcWxePEZ0F0peabVvOkMrYVnbOgiNQspOVqSufwQThAhvkiP3b31FZXRm8jxsOn
-         eYFF+DD+XFGimwcp+1HrgeQ04tbarL6RxON6g3vjH7FOSopj8Z+02nFDwqF6RNqMRMDV
-         8dbA==
-X-Gm-Message-State: APjAAAU1h1IwmHs6aVG+XaGYeAzgvnzLqHYR+1HEhNodN3sKEK8IFkvC
-        Lli+8GTZc60k3AbH/7pH3BVamcpqhi1/B5v5gYI=
-X-Google-Smtp-Source: APXvYqxGZD9naHZ2K7DX4Lus8IP4GTwcbDbDxO6hGyFx+mkTUyD/nb8n2uAcDG+C015zd8xM72NZYPA5CmslIXJx8AU=
-X-Received: by 2002:aca:ba82:: with SMTP id k124mr1820842oif.110.1557218108118;
- Tue, 07 May 2019 01:35:08 -0700 (PDT)
+        Tue, 7 May 2019 04:36:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x478TBxo096718;
+        Tue, 7 May 2019 08:36:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=gk9Dtv9o1/4gyZrnDr3aPqWHNTjb2IjnVRwXqAT2xgU=;
+ b=D1SGwGWt0cE5S9XyXe999RT+OEkQUheSHMhRyFjCLb/yPLwgb7FaKDgArE/Xwb/apB4h
+ 9wsYL1YIMzPARXwxixv0oSQHCVbIQ5tW2Ras++Ctt/oDF1MJsn+UWQu3oKYxBhHYAIF7
+ yvQixaMstJHJi3Ov5NkPjLP3vOgOQt78gQIkAoQn4NC2V0zt/qB4TS2dUiLFKhX3j8vg
+ K6gEODdmvPMlimBdGYztdJBjFfLf9Ary0dxukIQueD0S+K0Rb0TWvcntTZI6T1Yl5EJ0
+ HIww9FRCtbE3HW+Me0uiKtHhhCQII5AWL7OErlisxWZ85ygUZAU/yyoHJSSCEzf0DY0m MA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2s94bfufx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 08:36:45 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x478ZqNP106670;
+        Tue, 7 May 2019 08:36:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2sagyttcxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 08:36:45 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x478ae1v003958;
+        Tue, 7 May 2019 08:36:41 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 May 2019 01:36:40 -0700
+Date:   Tue, 7 May 2019 11:36:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Frank Haverkamp <haver@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] genwqe: Prevent an integer overflow in the ioctl
+Message-ID: <20190507083634.GA13046@mwanda>
 MIME-Version: 1.0
-References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
- <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com> <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
-In-Reply-To: <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 May 2019 10:34:56 +0200
-Message-ID: <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
-Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
-To:     Gabriel C <nix.or.die@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905070056
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905070056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 9:31 AM Gabriel C <nix.or.die@gmail.com> wrote:
->
-> Am Di., 7. Mai 2019 um 09:01 Uhr schrieb Rafael J. Wysocki <rafael@kernel.org>:
-> >
->  Hello Rafael ,  Erik
->
-> > +Erik
-> >
-> > On Tue, May 7, 2019 at 1:33 AM Gabriel C <nix.or.die@gmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > while testing kernel-5.1 I get on one of my Lenovo Laptops very
-> > > strange 'ACPI Debug:' messages.
-> > >
-> > > After some grepping I realized these are Debug messages from DSDT ,
-> > > however my kernel does
-> > > not have ACPI_DEBUG enabled.
-> > >
-> > > I found out the module triggering this, on this Laptop is
-> > > ideapad_laptop , but looking at the code
-> > > I cannot see what would causes that.
-> > >
-> > > Also on the same Laptop with any 5.0.X kernels I cannot see these.
-> > >
-> > >
-> > > ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1
-> > > # CONFIG_ACPI_DEBUGGER is not set
-> > > # CONFIG_ACPI_DEBUG is not set
-> > > # CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set
-> > > # CONFIG_THINKPAD_ACPI_DEBUG is not set
-> > >
-> > > .. dmesg ..
-> > > ...
-> > > [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
-> > > [ideapad_laptop] @ 1322
-> > > [   68.026708] input: Ideapad extra buttons as
-> > > /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
-> > > [   68.038236] ACPI Debug:  "=====QUERY_64====="
-> > > [   68.050232] ACPI Debug:  "=====QUERY_65====="
-> > > [   68.060218] ACPI Debug:  "=====QUERY_64====="
-> > > [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
-> > > [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
-> > > [ideapad_laptop] returned 0 after 69751 usecssg
-> > >
-> > > ...
-> > >
-> > > These =====QUERY_XX===== messages are from DSDT:
-> > >
-> > > ~/acpi$ grep QUERY dsdt.dsl
-> > >                Debug = "=====QUERY_11====="
-> > >                Debug = "=====QUERY_12====="
-> > >                Debug = "=====QUERY_24====="
-> > >                Debug = "=====QUERY_25====="
-> > >                Debug = "=====QUERY_37====="
-> > >                Debug = "=====QUERY_38====="
-> > >                Debug = "=====QUERY_64====="
-> > >                Debug = "=====QUERY_65====="
-> > >
-> > > Also this is the code from DSDT for QUERY 64 and 65:
-> > >
-> > > ...
-> > >             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
-> > >            {
-> > >                Debug = "=====QUERY_64====="
-> > >                If ((OSYS == 0x07D9))
-> > >                {
-> > >                    If (((WLEX == One) & (WLAT == One)))
-> > >                    {
-> > >                        SGOV (0x02040005, One)
-> > >                    }
-> > >                    Else
-> > >                    {
-> > >                        SGOV (0x02040005, Zero)
-> > >                    }
-> > >                }
-> > >            }
-> > >
-> > >            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
-> > >            {
-> > >                Debug = "=====QUERY_65====="
-> > >                If ((OSYS == 0x07D9))
-> > >                {
-> > >                    If (((BTEX == One) & (BTAT == One)))
-> > >                    {
-> > >                        SGOV (0x0202000B, One)
-> > >                    }
-> > >                    Else
-> > >                    {
-> > >                        SGOV (0x0202000B, Zero)
-> > >                    }
-> > >                }
-> > >            }
-> > >
-> > > ...
-> > >
-> > >
-> > > Any idea what would cause this ?
->
-> I think I found what is causing that.
->
-> Commit aa9aaa4d61c0048d3faad056893cd7860bbc084c is moving
-> definition of Linux's  ACPI_DEBUG_DEFAULT to incude/acpi/platform/aclinux.h ,
-> however include/acpi/acpi.h didn't got updated and  ACPI_DEBUG_DEFAULT now
-> being always defined as  (ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT |
-> ACPI_LV_EVALUATION | ACPI_LV_REPAIR)
+There are a couple potential integer overflows here.
 
-I'm not sure what you mean by this.
+	round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
 
-include/acpi/acpi.h should get the right definitions through
-include/acpi/platform/acenv.h and include/acpi/acoutput.h that are
-included by it.
+The first thing is that the "m->size + (...)" addition could overflow,
+and the second is that round_up() overflows to zero if the result is
+within PAGE_SIZE of the type max.
 
-It looks like incude/acpi/platform/aclinux.h has not been included by
-include/acpi/platform/acenv.h for some reason when building this
-module.
+In this code, the "m->size" variable is an u64 but we're saving the
+result in "map_size" which is an unsigned long and genwqe_user_vmap()
+takes an unsigned long as well.  So I have used ULONG_MAX as the upper
+bound.  From a practical perspective unsigned long is fine/better than
+trying to change all the types to u64.
+
+Fixes: eaf4722d4645 ("GenWQE Character device and DDCB queue")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/misc/genwqe/card_dev.c   | 2 ++
+ drivers/misc/genwqe/card_utils.c | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/drivers/misc/genwqe/card_dev.c b/drivers/misc/genwqe/card_dev.c
+index 8c1b63a4337b..d2098b4d2945 100644
+--- a/drivers/misc/genwqe/card_dev.c
++++ b/drivers/misc/genwqe/card_dev.c
+@@ -780,6 +780,8 @@ static int genwqe_pin_mem(struct genwqe_file *cfile, struct genwqe_mem *m)
+ 
+ 	if ((m->addr == 0x0) || (m->size == 0))
+ 		return -EINVAL;
++	if (m->size > ULONG_MAX - PAGE_SIZE - (m->addr & ~PAGE_MASK))
++		return -EINVAL;
+ 
+ 	map_addr = (m->addr & PAGE_MASK);
+ 	map_size = round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
+diff --git a/drivers/misc/genwqe/card_utils.c b/drivers/misc/genwqe/card_utils.c
+index 89cff9d1012b..7571700abc6e 100644
+--- a/drivers/misc/genwqe/card_utils.c
++++ b/drivers/misc/genwqe/card_utils.c
+@@ -586,6 +586,10 @@ int genwqe_user_vmap(struct genwqe_dev *cd, struct dma_mapping *m, void *uaddr,
+ 	/* determine space needed for page_list. */
+ 	data = (unsigned long)uaddr;
+ 	offs = offset_in_page(data);
++	if (size > ULONG_MAX - PAGE_SIZE - offs) {
++		m->size = 0;	/* mark unused and not added */
++		return -EINVAL;
++	}
+ 	m->nr_pages = DIV_ROUND_UP(offs + size, PAGE_SIZE);
+ 
+ 	m->page_list = kcalloc(m->nr_pages,
+-- 
+2.18.0
+
