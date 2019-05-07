@@ -2,147 +2,292 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9332FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3B4C46460
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6868A205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAAF208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbNXzgMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfEGVhb (ORCPT
+        id S1728664AbfEGVh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:37:31 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.43]:32750 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726650AbfEGVha (ORCPT
+        Tue, 7 May 2019 17:37:57 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40597 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfEGVh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:37:30 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 26121400C8A5B
-        for <linux-kernel@vger.kernel.org>; Tue,  7 May 2019 16:37:29 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id O7mDh2G9HiQerO7mDhgkVe; Tue, 07 May 2019 16:37:29 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.7] (port=47892 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hO7mC-0028qh-Oz; Tue, 07 May 2019 16:37:28 -0500
-Subject: Re: [PATCH] Input: libps2 - mark expected switch fall-through
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190507182409.GA11027@embeddedor>
- <20190507192744.GA248929@dtor-ws>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <bad0e811-8554-082d-7f9b-4ecbe62848ec@embeddedor.com>
-Date:   Tue, 7 May 2019 16:37:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 17:37:56 -0400
+Received: by mail-lf1-f67.google.com with SMTP id o16so12940358lfl.7;
+        Tue, 07 May 2019 14:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c2AE0M9uKxK1GU3dXIY+HrWBQ1aPXALof+/VlxHoO1M=;
+        b=DbNXzgMpRyh83SvjTc5fgop9liZROTeCkrJGrIMAKnH2aSH/LcjlunA9HTEQgF+rul
+         fVxaDKk7NMt9d6pbHZBJzW5ng7rRKuykuwsuBittWxi+JRaxuAxvPpAn4q/FjOo1yfoT
+         rwmLbWRldEEy6U6vrxyKPVpA2gSly1lNMmXbH5XKQjbd+rJTRhPY03YWyqEcxuJGDDsy
+         ORZVda2Rdjm9HP6Vw+wX+WE7ZIvr2g3DUY5F8KOvIcdIoUtPnsScpb1T6NBfSnpOem3F
+         y6hDn5TVggVc14Fdk4eCrk5RSrMgd9YWfBGkK0Jgf/tUduV4OnBlu7alxcXegoxpXiDm
+         J1uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c2AE0M9uKxK1GU3dXIY+HrWBQ1aPXALof+/VlxHoO1M=;
+        b=R1JkDsMrPya4xu3DLCDDYIk4hH8dbSjOzGByG+ve6J4+pe+1MiPfiOxWRrbUtif1X/
+         4ntK3FU4Ga4VgITPRDX8IoPgpqtwotTWjbVoIjFtd48C5CdHz7f9vV6QVMLN8wnsyrOX
+         LEL8D5SmNSM5Dyrjv9lU3c5q7WmbpuVIUYS2DIu08w+5vKRITJKEo0JCtL1eCOwkCqMd
+         7/3/Q3TOn6H4PS102UZwm3sMtx0o3MqdaocfaJBAJPCVEWIplPcqk+R6NentWeAxkKds
+         +eqNQHHFn5ETgr/5p0/aWwhqiQfScPPsMP9L6LPj3rToJ+82SYBwCeavL93l6dGIUeey
+         0hQA==
+X-Gm-Message-State: APjAAAXNqV/P99wR8OQxxOgp0UoRHT7lQbJS02Yql2DRFD9NZd/NVZcI
+        r4+uz/W8uXoUl+ZO3Wb76Z739uVdcVIeiyRd2g==
+X-Google-Smtp-Source: APXvYqwGEIJQDKGUklBybOb13P03Jr/Opb2A6gTJ5xcjl3Z1hLJsdqb8cp455ZXZTFghgckkxPAIIzgwj/K6ua1Kvuk=
+X-Received: by 2002:ac2:53ad:: with SMTP id j13mr4458442lfh.14.1557265074026;
+ Tue, 07 May 2019 14:37:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190507192744.GA248929@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.7
-X-Source-L: No
-X-Exim-ID: 1hO7mC-0028qh-Oz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.7]:47892
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
+ <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com>
+ <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
+ <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
+ <CAEJqkgiB7woieNZ-vVm7x-GzVrqGpJWLXOM9JpSUgPgE7eA6gA@mail.gmail.com>
+ <CF6A88132359CE47947DB4C6E1709ED53C5A9EBD@ORSMSX122.amr.corp.intel.com>
+ <CAEJqkggvtYobXNjFbvqjajMcbZ_+3PrQJC-9kK+nn5cgXgOyWg@mail.gmail.com> <CF6A88132359CE47947DB4C6E1709ED53C5A9F1C@ORSMSX122.amr.corp.intel.com>
+In-Reply-To: <CF6A88132359CE47947DB4C6E1709ED53C5A9F1C@ORSMSX122.amr.corp.intel.com>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Tue, 7 May 2019 23:39:13 +0200
+Message-ID: <CAEJqkgiTRo0K9YTAK6VaYoHKqae4Oz6q4pxboRMt+s99A=gG3w@mail.gmail.com>
+Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
+To:     "Schmauss, Erik" <erik.schmauss@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Di., 7. Mai 2019 um 22:17 Uhr schrieb Schmauss, Erik
+<erik.schmauss@intel.com>:
+>
+>
+>
+> > -----Original Message-----
+> > From: Gabriel C [mailto:nix.or.die@gmail.com]
+> > Sent: Tuesday, May 7, 2019 12:06 PM
+> > To: Schmauss, Erik <erik.schmauss@intel.com>
+> > Cc: Rafael J. Wysocki <rafael@kernel.org>; ACPI Devel Maling List <linux-
+> > acpi@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Moore,
+> > Robert <robert.moore@intel.com>
+> > Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without
+> > CONFIG_ACPI_DEBUG being set
+> >
+> > Am Di., 7. Mai 2019 um 20:46 Uhr schrieb Schmauss, Erik
+> > <erik.schmauss@intel.com>:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Gabriel C [mailto:nix.or.die@gmail.com]
+> > > > Sent: Tuesday, May 7, 2019 2:33 AM
+> > > > To: Rafael J. Wysocki <rafael@kernel.org>
+> > > > Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>; LKML
+> > > > <linux- kernel@vger.kernel.org>; Schmauss, Erik
+> > > > <erik.schmauss@intel.com>
+> > > > Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without
+> > > > CONFIG_ACPI_DEBUG being set
+> > > >
+> > > > Am Di., 7. Mai 2019 um 10:35 Uhr schrieb Rafael J. Wysocki
+> > > > <rafael@kernel.org>:
+> > > > >
+> > > > > On Tue, May 7, 2019 at 9:31 AM Gabriel C <nix.or.die@gmail.com>
+> > wrote:
+> > > > > >
+> > > > > > Am Di., 7. Mai 2019 um 09:01 Uhr schrieb Rafael J. Wysocki
+> > > > <rafael@kernel.org>:
+> > > > > > >
+> > > > > >  Hello Rafael ,  Erik
+> > > > > >
+> > > > > > > +Erik
+> > > > > > >
+> > > > > > > On Tue, May 7, 2019 at 1:33 AM Gabriel C
+> > > > > > > <nix.or.die@gmail.com>
+> > > > wrote:
+> > > > > > > >
+> > > > > > > > Hello,
+> > > > > > > >
+> > > > > > > > while testing kernel-5.1 I get on one of my Lenovo Laptops
+> > > > > > > > very strange 'ACPI Debug:' messages.
+> > > > > > > >
+> > > > > > > > After some grepping I realized these are Debug messages from
+> > > > > > > > DSDT , however my kernel does not have ACPI_DEBUG enabled.
+> > > > > > > >
+> > > > > > > > I found out the module triggering this, on this Laptop is
+> > > > > > > > ideapad_laptop , but looking at the code I cannot see what
+> > > > > > > > would causes that.
+> > > > > > > >
+> > > > > > > > Also on the same Laptop with any 5.0.X kernels I cannot see these.
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1 #
+> > > > > > > > CONFIG_ACPI_DEBUGGER is not set # CONFIG_ACPI_DEBUG is
+> > not
+> > > > set #
+> > > > > > > > CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set #
+> > > > > > > > CONFIG_THINKPAD_ACPI_DEBUG is not set
+> > > > > > > >
+> > > > > > > > .. dmesg ..
+> > > > > > > > ...
+> > > > > > > > [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
+> > > > > > > > [ideapad_laptop] @ 1322
+> > > > > > > > [   68.026708] input: Ideapad extra buttons as
+> > > > > > > >
+> > > > /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
+> > > > > > > > [   68.038236] ACPI Debug:  "=====QUERY_64====="
+> > > > > > > > [   68.050232] ACPI Debug:  "=====QUERY_65====="
+> > > > > > > > [   68.060218] ACPI Debug:  "=====QUERY_64====="
+> > > > > > > > [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
+> > > > > > > > [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
+> > > > > > > > [ideapad_laptop] returned 0 after 69751 usecssg
+> > > > > > > >
+> > > > > > > > ...
+> > > > > > > >
+> > > > > > > > These =====QUERY_XX===== messages are from DSDT:
+> > > > > > > >
+> > > > > > > > ~/acpi$ grep QUERY dsdt.dsl
+> > > > > > > >                Debug = "=====QUERY_11====="
+> > > > > > > >                Debug = "=====QUERY_12====="
+> > > > > > > >                Debug = "=====QUERY_24====="
+> > > > > > > >                Debug = "=====QUERY_25====="
+> > > > > > > >                Debug = "=====QUERY_37====="
+> > > > > > > >                Debug = "=====QUERY_38====="
+> > > > > > > >                Debug = "=====QUERY_64====="
+> > > > > > > >                Debug = "=====QUERY_65====="
+> > > > > > > >
+> > > > > > > > Also this is the code from DSDT for QUERY 64 and 65:
+> > > > > > > >
+> > > > > > > > ...
+> > > > > > > >             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
+> > > > > > > >            {
+> > > > > > > >                Debug = "=====QUERY_64====="
+> > > > > > > >                If ((OSYS == 0x07D9))
+> > > > > > > >                {
+> > > > > > > >                    If (((WLEX == One) & (WLAT == One)))
+> > > > > > > >                    {
+> > > > > > > >                        SGOV (0x02040005, One)
+> > > > > > > >                    }
+> > > > > > > >                    Else
+> > > > > > > >                    {
+> > > > > > > >                        SGOV (0x02040005, Zero)
+> > > > > > > >                    }
+> > > > > > > >                }
+> > > > > > > >            }
+> > > > > > > >
+> > > > > > > >            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
+> > > > > > > >            {
+> > > > > > > >                Debug = "=====QUERY_65====="
+> > > > > > > >                If ((OSYS == 0x07D9))
+> > > > > > > >                {
+> > > > > > > >                    If (((BTEX == One) & (BTAT == One)))
+> > > > > > > >                    {
+> > > > > > > >                        SGOV (0x0202000B, One)
+> > > > > > > >                    }
+> > > > > > > >                    Else
+> > > > > > > >                    {
+> > > > > > > >                        SGOV (0x0202000B, Zero)
+> > > > > > > >                    }
+> > > > > > > >                }
+> > > > > > > >            }
+> > > > > > > >
+> > > > > > > > ...
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > Any idea what would cause this ?
+> > > > > >
+> > > > > > I think I found what is causing that.
+> > > > > >
+> > > > > > Commit aa9aaa4d61c0048d3faad056893cd7860bbc084c is moving
+> > > > definition
+> > > > > > of Linux's  ACPI_DEBUG_DEFAULT to incude/acpi/platform/aclinux.h
+> > > > > > , however include/acpi/acpi.h didn't got updated and
+> > > > > > ACPI_DEBUG_DEFAULT now being always defined as  (ACPI_LV_INIT
+> > |
+> > > > > > ACPI_LV_DEBUG_OBJECT | ACPI_LV_EVALUATION |
+> > ACPI_LV_REPAIR)
+> > > > >
+> > > > > I'm not sure what you mean by this.
+> > > > >
+> > > > > include/acpi/acpi.h should get the right definitions through
+> > > > > include/acpi/platform/acenv.h and include/acpi/acoutput.h that are
+> > > > > included by it.
+> > > > >
+> > > >
+> > > > Hmm yes should , I missed that include. However it does not work.
+> > > >
+> > > > I've just put back old code back into drivers/acpi/bus.c to test and
+> > > > all working now fine without any other changes.
+> > > >
+> > > > > It looks like incude/acpi/platform/aclinux.h has not been included
+> > > > > by include/acpi/platform/acenv.h for some reason when building
+> > > > > this module.
+> > > >
+> > > > If this one getting it wrong all will do so , they all just include
+> > <linux/acpi.h>.
+> > > >
+> > > > Probably not so much users will notice that , I just did because my
+> > > > BIOS vendor forgot DEBUG around.
+> > >
+> > > Do you still get this issue after doing make clean and rebuilding your
+> > kernel?
+> >
+> > A clean build from tarball has this issue for me. I don't think is a building
+> > problem , any <5.1 kernel is fine , kernel 5.1 with your commit reverted is fine
+> > too , kernel 5.1 with your commit in but the removed hunk in bus.c re-added
+> > is fine also.
+>
+> I took a closer look. This was an obvious mistake on my part. Thanks for catching it.
+>
+> The following should fix it:
+>
+
+I can confirm it does fix the bug , thx.
 
 
-On 5/7/19 2:27 PM, Dmitry Torokhov wrote:
-> On Tue, May 07, 2019 at 01:24:09PM -0500, Gustavo A. R. Silva wrote:
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
->> This patch fixes the following warning:
->>
->> drivers/input/serio/libps2.c: In function ‘ps2_handle_ack’:
->> drivers/input/serio/libps2.c:407:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (ps2dev->flags & PS2_FLAG_NAK) {
->>       ^
->> drivers/input/serio/libps2.c:417:2: note: here
->>   case 0x00:
->>   ^~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Applied, thank you.
-> 
-
-Awesome. :)
-
-Thanks, Dmitry.
---
-Gustavo
+> diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
+> index 624b90b34085..70b55b8fe48b 100644
+> --- a/include/acpi/platform/aclinux.h
+> +++ b/include/acpi/platform/aclinux.h
+> @@ -66,6 +66,12 @@
+>
+>  #define ACPI_INIT_FUNCTION __init
+>
+> +
+> +/* Use a specific bugging default separate from ACPICA */
+> +
+> +#undef ACPI_DEBUG_DEFAULT
+> +#define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
+> +
+>  #ifndef CONFIG_ACPI
+>
+>  /* External globals for __KERNEL__, stubs is needed */
+> @@ -82,11 +88,6 @@
+>  #define ACPI_NO_ERROR_MESSAGES
+>  #undef ACPI_DEBUG_OUTPUT
+>
+> -/* Use a specific bugging default separate from ACPICA */
+> -
+> -#undef ACPI_DEBUG_DEFAULT
+> -#define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
+> -
+>  /* External interface for __KERNEL__, stub is needed */
+>
+>  #define ACPI_EXTERNAL_RETURN_STATUS(prototype) \
