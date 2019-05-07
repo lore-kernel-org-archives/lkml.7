@@ -2,86 +2,70 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6329C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2640AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72ACD206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA092208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557251663;
-	bh=wIdOeoWBqmWd4F+oemrD/NRxvbi8qBfaju2fXEsswHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YA175H4AlxHuKTk4F1O6Sz1TNtoJHpWvNrp3vEU8NJkSyYd+/0FCUDi5V2NO7za1g
-	 0je9IETaJUmnLpYu/FFE3k8C0KufUy1B4TXCxUkUic0Ib4Mo0cwSHGta4t6tn/tVN2
-	 VsT1+T1vRzLEXFJSk9TDQy78UI5wa4Rjt2OTARJI=
+	s=default; t=1557251706;
+	bh=Y1LA9D+kG+wN2ClShGRqO+2LDd+9PEchv/ivXPGwT6s=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=eQx0HXalbsFXrp9wPB6zpny832s02sBi/eXzy17DnqvB7GmXTIN5YaSMPluk8ZdR0
+	 mBaDsm8h7ltvuwZEf87Z4qW+SGi89q7lSQkZ0dMHTE7/s4mYZibX1xg3W+tWa/rvAY
+	 aAzlOuxtkM5yOkniy3fLjg6r2y+/QXVOTbR/i5BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfEGRyW (ORCPT
+        id S1727575AbfEGRzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:54:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59646 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbfEGRyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:54:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B223CAB91;
-        Tue,  7 May 2019 17:54:20 +0000 (UTC)
-Date:   Tue, 7 May 2019 19:54:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
+        Tue, 7 May 2019 13:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbfEGRzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:55:04 -0400
+Subject: Re: [GIT PULL] ktest: Updates for 5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557251703;
+        bh=Y1LA9D+kG+wN2ClShGRqO+2LDd+9PEchv/ivXPGwT6s=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=YkQl4Wx5ctNQz1m0BldPV1DkpK2MV9UafrzIe6vK9VuS+SgX3Yi4ujmQhspSjNgZU
+         8lDlFQE216/RsAesOpGSNvfdtBaHmf0IsD2JArVR+IVN5a+dp89Y7UBX1t5fau3+Ez
+         pC8SkKxHw9RyUMu3dhotaddtYJRPl3iirhguQlYI=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190506133837.55832171@gandalf.local.home>
+References: <20190506133837.55832171@gandalf.local.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190506133837.55832171@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-ktest.git
+ ktest-v5.1
+X-PR-Tracked-Commit-Id: 37e1677330bdc2e96e70f18701e589876f054c67
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 68253e718c2778427db451e39a8366aa49982b71
+Message-Id: <155725170376.24816.6389425639250250116.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 May 2019 17:55:03 +0000
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
- pages for the full memory section
-Message-ID: <20190507175419.GW31017@dhcp22.suse.cz>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-62-sashal@kernel.org>
- <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
- <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
- <20190507170208.GF1747@sasha-vm>
- <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
- <20190507171806.GG1747@sasha-vm>
- <20190507173224.GS31017@dhcp22.suse.cz>
- <20190507173655.GA1403@bombadil.infradead.org>
- <20190507174514.GI1747@sasha-vm>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507174514.GI1747@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        John 'Warthog9' Hawley <warthog9@kernel.org>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-05-19 13:45:14, Sasha Levin wrote:
-[...]
-> We're going to have (quite a) large amount of systems with "weird"
-> memory layouts that do memory hotplug quite frequently in production, so
-> this whole "tends to work usually" thing kinda scares me.
+The pull request you sent on Mon, 6 May 2019 13:38:37 -0400:
 
-Memory hotplug is simply not production ready for those cases,
-unfortunately. It tends to work just fine with properly section
-aligned systems with memory being in the movable zones or for zone
-device. Everything beyond that is kinda long way to get there...
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-ktest.git ktest-v5.1
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/68253e718c2778427db451e39a8366aa49982b71
+
+Thank you!
+
 -- 
-Michal Hocko
-SUSE Labs
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
