@@ -2,161 +2,181 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8EDC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF53C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD61520989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C51920989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557218074;
-	bh=bw0jJnTi+BOG3JkGkLCdHvD3XznpBQkEgnF6ljfR6lM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JwwN9xn390+Ac0ubxc/7zgEsAjy4jxd6oJrXzdTUiBAlvOhcSxT/bN5RVU1PQUgT9
-	 Q0ZxFYGAbnUq7Y1kCVqUzyh31ml4N5mPfx+CXeD/vjHH97W3TiPa6c5Mbch/f8xqDx
-	 PS526wxnQyNcXA4/zjM6UV4D+lNdaELv5kLBs3hg=
+	s=default; t=1557218110;
+	bh=5V6T6+XVKDu+t26T7gKG7QTDumdAPtPm8AM8FEdKAMs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HzZ48BSgIeNV3Hbf7r3cObGDpM4JSTiBdJ6r9FgY2cScjsNCy4n82GI3So+t5nh1P
+	 gh/9TLaYAnO7Z3Bi4ZWv7OJwOQGDedU9UiUHbHuLMqkOroPtwtKGDc9bAZwlEre15G
+	 k/rd8QJnBPBpoBw60yrkRxaiYB4ZA40t27Jeouag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfEGIed (ORCPT
+        id S1727085AbfEGIfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:34:33 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45502 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfEGIed (ORCPT
+        Tue, 7 May 2019 04:35:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39263 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfEGIfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:34:33 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r76so2443825lja.12;
-        Tue, 07 May 2019 01:34:31 -0700 (PDT)
+        Tue, 7 May 2019 04:35:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x16so5851056oic.6;
+        Tue, 07 May 2019 01:35:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JVwysLC6toX2nyIeQoEP1UKJSN5udlnWwblQh6x6pT0=;
-        b=blBmAm0OpW0B8WbcjIwqSDGTJPb31Qdt4XuH8z7CduanKt2BUn5kSaigkD4c9Kg312
-         sH/xHeR3T3xUDXfDGoVeCLuN4enVw8dKX2D1leq5Xq9s64a0xrV5VJDQc01gliPUKkrH
-         tF+b2nywJHI2r9DN7047vIv8qS/4cKYJwL+5d9pYgejRuI2sYrpp9ict5Y+ZFGVW6b8+
-         9O+YTyDVSZFNBroSM1hdWwaEOwhSXkqTbBREpJuI6yPt+u/MxrJ8oQFG04P+2kjSyLkD
-         Q22BbCU6WpN2qH0jkccnr7RZYyUNwKnsHa2Z14cK/yfQrFjc0OVQ4nt+TUUb52VqG3eT
-         ANfg==
-X-Gm-Message-State: APjAAAXq4Tz6lTMBbNxVoueHOP8yPOG+IlimPocF7tJdqAiDakvBvjlF
-        6gG4jKtInlP/w8UudyAgV4Y=
-X-Google-Smtp-Source: APXvYqz2fBtz+GXsvkihKxsOKNeL6Kpuy9x3cAuWG48o19KNu9qW6OyOXPHMXK2/1GINfd/FZYqRTQ==
-X-Received: by 2002:a2e:3311:: with SMTP id d17mr16663969ljc.52.1557218071028;
-        Tue, 07 May 2019 01:34:31 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id d23sm2820976ljj.38.2019.05.07.01.34.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 01:34:29 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hNvYU-0006uI-C9; Tue, 07 May 2019 10:34:30 +0200
-Date:   Tue, 7 May 2019 10:34:30 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com,
-        wen.yang99@zte.com.cn
-Subject: Re: general protection fault in smsusb_init_device
-Message-ID: <20190507083430.GD4333@localhost>
-References: <0000000000008d89900586ccd37b@google.com>
- <Pine.LNX.4.44L0.1905061638380.1585-100000@iolanthe.rowland.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6SxMmkP+qrTMooncfYcZ8EYVxmGvWyjBxzbd0N8H+DY=;
+        b=R173PrfQ6Hv23OgekbcFGlRs8D2AEokaxGBphH/6Vyrwvc+YrkMIOTQEDSJ8pumMZL
+         +h0pNV6pBjsNMuHUagEcqfaDclyA4nlGss41e8h7buwgjQl0js/gEuiHQWc4dxuH3e1s
+         vz2oTqjTWMudeD47k/xwjJQ3xyVg3+loqpW34hOXs2R1CaDvzRvtUPYlry9W4q3DTFST
+         vBsBIhcWxePEZ0F0peabVvOkMrYVnbOgiNQspOVqSufwQThAhvkiP3b31FZXRm8jxsOn
+         eYFF+DD+XFGimwcp+1HrgeQ04tbarL6RxON6g3vjH7FOSopj8Z+02nFDwqF6RNqMRMDV
+         8dbA==
+X-Gm-Message-State: APjAAAU1h1IwmHs6aVG+XaGYeAzgvnzLqHYR+1HEhNodN3sKEK8IFkvC
+        Lli+8GTZc60k3AbH/7pH3BVamcpqhi1/B5v5gYI=
+X-Google-Smtp-Source: APXvYqxGZD9naHZ2K7DX4Lus8IP4GTwcbDbDxO6hGyFx+mkTUyD/nb8n2uAcDG+C015zd8xM72NZYPA5CmslIXJx8AU=
+X-Received: by 2002:aca:ba82:: with SMTP id k124mr1820842oif.110.1557218108118;
+ Tue, 07 May 2019 01:35:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1905061638380.1585-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
+ <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com> <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
+In-Reply-To: <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 May 2019 10:34:56 +0200
+Message-ID: <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
+Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:41:41PM -0400, Alan Stern wrote:
-> On Thu, 18 Apr 2019, syzbot wrote:
-> 
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=128ec3fd200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=53f029db71c19a47325a
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16138e67200000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128dddbf200000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
-> > 
-> > usb 1-1: config 0 descriptor??
-> > usb 1-1: string descriptor 0 read error: -71
-> > smsusb:smsusb_probe: board id=18, interface number 0
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] SMP KASAN PTI
-> > CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc5-319617-gd34f951 #4
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > Google 01/01/2011
-> > Workqueue: usb_hub_wq hub_event
-> > RIP: 0010:smsusb_init_device+0x366/0x937  
-> > drivers/media/usb/siano/smsusb.c:429
-> 
-> The driver assumes endpoint 1in exists, and doesn't check the existence 
-> of the endpoints it uses.
-> 
-> Alan Stern
-> 
-> 
-> #syz test: https://github.com/google/kasan.git usb-fuzzer
-> 
->  drivers/media/usb/siano/smsusb.c |   32 +++++++++++++++++++-------------
->  1 file changed, 19 insertions(+), 13 deletions(-)
-> 
-> Index: usb-devel/drivers/media/usb/siano/smsusb.c
-> ===================================================================
-> --- usb-devel.orig/drivers/media/usb/siano/smsusb.c
-> +++ usb-devel/drivers/media/usb/siano/smsusb.c
-> @@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
->  	struct smsusb_device_t *dev;
->  	void *mdev;
->  	int i, rc;
-> +	int in_maxp;
->  
->  	/* create device object */
->  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-> @@ -411,6 +412,23 @@ static int smsusb_init_device(struct usb
->  	dev->udev = interface_to_usbdev(intf);
->  	dev->state = SMSUSB_DISCONNECTED;
->  
-> +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
-> +		struct usb_endpoint_descriptor *desc =
-> +				&intf->cur_altsetting->endpoint[i].desc;
-> +
-> +		if (desc->bEndpointAddress & USB_DIR_IN) {
-> +			dev->in_ep = desc->bEndpointAddress;
-> +			in_maxp = usb_endpoint_maxp(desc);
-> +		} else {
-> +			dev->out_ep = desc->bEndpointAddress;
-> +		}
-> +	}
-> +
-> +	pr_debug("in_ep = %02x, out_ep = %02x\n",
-> +		dev->in_ep, dev->out_ep);
-> +	if (!dev->in_ep || !dev->out_ep)	/* Missing endpoints? */
-> +		return -EINVAL;
+On Tue, May 7, 2019 at 9:31 AM Gabriel C <nix.or.die@gmail.com> wrote:
+>
+> Am Di., 7. Mai 2019 um 09:01 Uhr schrieb Rafael J. Wysocki <rafael@kernel.org>:
+> >
+>  Hello Rafael ,  Erik
+>
+> > +Erik
+> >
+> > On Tue, May 7, 2019 at 1:33 AM Gabriel C <nix.or.die@gmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > while testing kernel-5.1 I get on one of my Lenovo Laptops very
+> > > strange 'ACPI Debug:' messages.
+> > >
+> > > After some grepping I realized these are Debug messages from DSDT ,
+> > > however my kernel does
+> > > not have ACPI_DEBUG enabled.
+> > >
+> > > I found out the module triggering this, on this Laptop is
+> > > ideapad_laptop , but looking at the code
+> > > I cannot see what would causes that.
+> > >
+> > > Also on the same Laptop with any 5.0.X kernels I cannot see these.
+> > >
+> > >
+> > > ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1
+> > > # CONFIG_ACPI_DEBUGGER is not set
+> > > # CONFIG_ACPI_DEBUG is not set
+> > > # CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set
+> > > # CONFIG_THINKPAD_ACPI_DEBUG is not set
+> > >
+> > > .. dmesg ..
+> > > ...
+> > > [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
+> > > [ideapad_laptop] @ 1322
+> > > [   68.026708] input: Ideapad extra buttons as
+> > > /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
+> > > [   68.038236] ACPI Debug:  "=====QUERY_64====="
+> > > [   68.050232] ACPI Debug:  "=====QUERY_65====="
+> > > [   68.060218] ACPI Debug:  "=====QUERY_64====="
+> > > [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
+> > > [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
+> > > [ideapad_laptop] returned 0 after 69751 usecssg
+> > >
+> > > ...
+> > >
+> > > These =====QUERY_XX===== messages are from DSDT:
+> > >
+> > > ~/acpi$ grep QUERY dsdt.dsl
+> > >                Debug = "=====QUERY_11====="
+> > >                Debug = "=====QUERY_12====="
+> > >                Debug = "=====QUERY_24====="
+> > >                Debug = "=====QUERY_25====="
+> > >                Debug = "=====QUERY_37====="
+> > >                Debug = "=====QUERY_38====="
+> > >                Debug = "=====QUERY_64====="
+> > >                Debug = "=====QUERY_65====="
+> > >
+> > > Also this is the code from DSDT for QUERY 64 and 65:
+> > >
+> > > ...
+> > >             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
+> > >            {
+> > >                Debug = "=====QUERY_64====="
+> > >                If ((OSYS == 0x07D9))
+> > >                {
+> > >                    If (((WLEX == One) & (WLAT == One)))
+> > >                    {
+> > >                        SGOV (0x02040005, One)
+> > >                    }
+> > >                    Else
+> > >                    {
+> > >                        SGOV (0x02040005, Zero)
+> > >                    }
+> > >                }
+> > >            }
+> > >
+> > >            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
+> > >            {
+> > >                Debug = "=====QUERY_65====="
+> > >                If ((OSYS == 0x07D9))
+> > >                {
+> > >                    If (((BTEX == One) & (BTAT == One)))
+> > >                    {
+> > >                        SGOV (0x0202000B, One)
+> > >                    }
+> > >                    Else
+> > >                    {
+> > >                        SGOV (0x0202000B, Zero)
+> > >                    }
+> > >                }
+> > >            }
+> > >
+> > > ...
+> > >
+> > >
+> > > Any idea what would cause this ?
+>
+> I think I found what is causing that.
+>
+> Commit aa9aaa4d61c0048d3faad056893cd7860bbc084c is moving
+> definition of Linux's  ACPI_DEBUG_DEFAULT to incude/acpi/platform/aclinux.h ,
+> however include/acpi/acpi.h didn't got updated and  ACPI_DEBUG_DEFAULT now
+> being always defined as  (ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT |
+> ACPI_LV_EVALUATION | ACPI_LV_REPAIR)
 
-Looks like you're now leaking dev here, and so is the current code in
-the later error paths.
+I'm not sure what you mean by this.
 
-Since this return value will be returned from probe, you may want to use
--ENXIO or -ENODEV instead of -EINVAL.
+include/acpi/acpi.h should get the right definitions through
+include/acpi/platform/acenv.h and include/acpi/acoutput.h that are
+included by it.
 
-Looks good otherwise.
-
-Johan
+It looks like incude/acpi/platform/aclinux.h has not been included by
+include/acpi/platform/acenv.h for some reason when building this
+module.
