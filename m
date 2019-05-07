@@ -2,228 +2,164 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC23C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4CFC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54AB21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7353520C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rFmCGa/z"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OWYcMWvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfEGJZ2 (ORCPT
+        id S1726857AbfEGJ0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:25:28 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37037 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfEGJZ2 (ORCPT
+        Tue, 7 May 2019 05:26:30 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12219 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfEGJ0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:25:28 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190507092525euoutp013b695b9ffbf20a92bea4e6e3f3022332~cXF0Sudz-2476924769euoutp01K
-        for <linux-kernel@vger.kernel.org>; Tue,  7 May 2019 09:25:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190507092525euoutp013b695b9ffbf20a92bea4e6e3f3022332~cXF0Sudz-2476924769euoutp01K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557221126;
-        bh=dB+e2yrRh4QWNuV04t7a1d5E5ggX5TKGj86c7YDqDwY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=rFmCGa/z8wWMtc1sMbraKn6s7StHoNJFXZSg1xZ7Hyvys1iA9AjNZxwHiWVch3xqC
-         BdPpp7Gm5mE9zPJo2NZ7xg6a74a8+82T8qSC6sNeLNEil6S9Pvoho0PFs6eZiVgrVx
-         pOZBY2RWoajG4IsZaXBAYsOSMR+UbkN3TsUFjlY4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190507092525eucas1p22aa50e61cefb7cbeaa20193174475e49~cXFziqM8f1247712477eucas1p2C;
-        Tue,  7 May 2019 09:25:25 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 12.85.04377.40F41DC5; Tue,  7
-        May 2019 10:25:24 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190507092524eucas1p20bdd1319a20df133d656ce1b7932a5ce~cXFypbLUF1030410304eucas1p2P;
-        Tue,  7 May 2019 09:25:24 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190507092523eusmtrp27af9be321ccedbfe7d126bf0001eca29~cXFybNd8T2025120251eusmtrp24;
-        Tue,  7 May 2019 09:25:23 +0000 (GMT)
-X-AuditID: cbfec7f4-5632c9c000001119-5f-5cd14f04f2dd
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id DE.7A.04146.30F41DC5; Tue,  7
-        May 2019 10:25:23 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190507092522eusmtip2067e1bc04156a115241aa01517a2c12f~cXFxfK_XN0483604836eusmtip2L;
-        Tue,  7 May 2019 09:25:22 +0000 (GMT)
-Subject: Re: [PATCH v7 01/13] clk: samsung: add needed IDs for DMC clocks in
- Exynos5420
-To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <eab8fd90-7075-3f7b-5634-553fdf32f546@partner.samsung.com>
-Date:   Tue, 7 May 2019 11:25:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 7 May 2019 05:26:30 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd14f210000>; Tue, 07 May 2019 02:25:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 May 2019 02:26:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 May 2019 02:26:27 -0700
+Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 09:26:22 +0000
+Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-11-vidyas@nvidia.com> <20190503111923.GE32400@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <af37a21a-a14e-70c0-8687-de2c29e2d99b@nvidia.com>
+Date:   Tue, 7 May 2019 14:56:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <e808eb3a-9fbe-897d-ce25-cab732581391@samsung.com>
+In-Reply-To: <20190503111923.GE32400@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUURjtzntv3tMaub40PyqSplWjsU262G4LQ0QG0aJJ9bKXSo7WPJc2
-        ymxxyWkxXBozCyNzKtwl/dGig+aSoyRUimWOZGQppgmWbTNPyX/nfud895wDH0fxPcxULjQ8
-        UtSHC2FqpSNdVj1sWUj7NQcuqvu1gBRm5DPk9WA3Q7LNjQx50G9F5HpdloI0XNKRK9Yeilgs
-        BSx5GfeFJa8qbirJgMGMSIbliYI8MrezpO3sfSWp+hLPkKctm0nbTycy9KITreW1Q99TaG1m
-        bDOtLTe2s9oiU6JSazjXq9ReLjEhbXH9Se1A0YxtXIDjyoNiWGi0qPdavd8xpH3kAnukZfqx
-        9ic5VCy65paEHDjAy+CZNU+RhBw5Ht9HMDyUTdsIHg8iqC2cKRMDCDqShxVjG73melomchEk
-        G+KR/PiK4P2LfNammoz9wZT1w0644BwEqXk/7SYUfqCAke+PmCTEcUqsgcemo7YFFd4EnfEG
-        xoZpPBsMN1rt2BXvhvfVBYyscYbaG132fA54DZT130M2TGE3aO3KVsjYHc6VZlI2L8CpHPwu
-        6lPYvABvgMy3vnKFyfC5poSV8XT4U549Wk2CWMMdJONTYL2SNapZAVU1zfbIFPaA/AovebwO
-        zNZSJP/uBG++OssJnCClLJ2SxypIuMjL6vlQktw0ajQFch+msVeR2jiul3FcF+O4Lsb/vrcR
-        bUJuYpSkCxalJeFijEYSdFJUeLAmKEJXhP6dYP3vmsHHqGLkQCXCHFJPUl31bQrkGSFaOq6r
-        RMBRaheV8LExkFcdFI6fEPUR+/RRYaJUiaZxtNpNdXJCxx4eBwuR4mFRPCLqx1gF5zA1Fk0I
-        mCF9+EambZwUkFu3d8POtO6slbnbAt2pvZsKq6N3HUp/2HM+0fP26Yb17hajf/Ec1nV1wpkQ
-        q7f+5vPevDM+Qaoq7y0L58b1XVZGbl/O93fMW9pYGX/LOyZ01jsPHz/vHXO6u139T0cJhRq/
-        lolYszV1TfOC2lUJYXdx4yfpVmmdmpZChMWelF4S/gLOddAifgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42I5/e/4PV1m/4sxBl8Wm1lsnLGe1eL6l+es
-        FvOPnGO1WP3xMaPF5FNzmSzOdOda9D9+zWxx/vwGdouzTW/YLS7vmsNm8bn3CKPFjPP7mCzW
-        HrnLbnG7cQWbxeE37awW+694Wdz+zWfx7cQjRgchj29fJ7F4zG64yOKxc9Zddo9NqzrZPHqb
-        37F59G1Zxeix+XS1x+dNcgEcUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK
-        +nY2Kak5mWWpRfp2CXoZd/+0shdckam4u28xcwPjRPEuRk4OCQETiXdHTrN0MXJxCAksZZRo
-        +HKMHSIhJjFp33YoW1jiz7UuNoii14wSu36uYgFJCAtESqya+4sRxBYRWMwo8bW1GqSIWWA1
-        k8Skj1ugOtqYJU4d2wzUwcHBJqAnsWNVIUgDr4CbxKP2XlYQm0VARaJ35i0wW1QgQuLM+xUs
-        EDWCEidnPgGzOQXsJbZ9XAa2jFnATGLe5ofMELa4xK0n85kgbHmJ5q2zmScwCs1C0j4LScss
-        JC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERj724793LyD8dLG4EOMAhyMSjy8
-        D2wvxAixJpYVV+YeYpTgYFYS4U18di5GiDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OBaSmv
-        JN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANjhZ2mjwGDrk7G4YXX
-        HmWpTUjc1C1wdr3OlBrxzojFnFOVjFfEetb0BWv718ozhnZH+9b7GU05fv3qcp24v9lVq99v
-        Wz1ZO3eTe5jtl0y7qQVJD5IcXL90TboS8k997gU9ede9d/bk7/R8J675f/8uuY85EcZ7hJPO
-        X7g6Nb2APUZuZ5S8hpkSS3FGoqEWc1FxIgDiB5B8EwMAAA==
-X-CMS-MailID: 20190507092524eucas1p20bdd1319a20df133d656ce1b7932a5ce
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf@eucas1p1.samsung.com>
-        <1557155521-30949-2-git-send-email-l.luba@partner.samsung.com>
-        <8b063f30-1a4d-3292-2e57-6e33e94d57ae@samsung.com>
-        <55e89fc7-6f22-b384-adbf-40c68618bdac@partner.samsung.com>
-        <e808eb3a-9fbe-897d-ce25-cab732581391@samsung.com>
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557221153; bh=eWcAPdSLPxJziq38mCpdrLZ+f2V3YxaE900UI9oR3M8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OWYcMWvJ73bokiGH63V36U0ZgG8nxhs8EQ2XMAIA4G0gV+uy3N+HNa8DmcsgGNdK0
+         D1NepnPvHbMlRi2jlis8jLRQJ/IIL+3whFkwsP/EOIb41Y13dZMzHL2p8jXCg9/mUt
+         dzQGM0Y9s2al3Sc0vyWiY0c/fRmZungo6rW+z8pJBvjs10N+DySMc/bawK835Q/Zpf
+         uvMRmbvvdco9nPfEO86i4nn+WiklGhd20caEUBkxbgDF/UOKvKPr7Mf31b+5jafde3
+         +Rttxta7sKTnjOTzIbVEi1vFuO19t/QK5Amj/+moN09AKuMqVtEpYp4LMjhkR3bqPK
+         DK5cwNjqUrygA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/7/19 11:17 AM, Chanwoo Choi wrote:
-> On 19. 5. 7. 오후 5:51, Lukasz Luba wrote:
->> Hi Chanwoo,
+On 5/3/2019 4:49 PM, Thierry Reding wrote:
+> On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
+>> Add support for Tegra194 PCIe controllers. These controllers are based
+>> on Synopsys DesignWare core IP.
 >>
->> On 5/7/19 9:33 AM, Chanwoo Choi wrote:
->>> Hi Lukasz,
->>>
->>> On 19. 5. 7. 오전 12:11, Lukasz Luba wrote:
->>>> Define new IDs for clocks used by Dynamic Memory Controller in
->>>> Exynos5422 SoC.
->>>>
->>>> Acked-by: Rob Herring <robh@kernel.org>
->>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>>> ---
->>>>    include/dt-bindings/clock/exynos5420.h | 28 ++++++++++++++++++++++------
->>>>    1 file changed, 22 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
->>>> index 355f469..bf50d8a 100644
->>>> --- a/include/dt-bindings/clock/exynos5420.h
->>>> +++ b/include/dt-bindings/clock/exynos5420.h
->>>> @@ -60,6 +60,7 @@
->>>>    #define CLK_MAU_EPLL		159
->>>>    #define CLK_SCLK_HSIC_12M	160
->>>>    #define CLK_SCLK_MPHY_IXTAL24	161
->>>> +#define CLK_SCLK_BPLL		162
->>>>    
->>>>    /* gate clocks */
->>>>    #define CLK_UART0		257
->>>> @@ -195,6 +196,16 @@
->>>>    #define CLK_ACLK432_CAM		518
->>>>    #define CLK_ACLK_FL1550_CAM	519
->>>>    #define CLK_ACLK550_CAM		520
->>>> +#define CLK_CLKM_PHY0		521
->>>> +#define CLK_CLKM_PHY1		522
->>>> +#define CLK_ACLK_PPMU_DREX0_0	523
->>>> +#define CLK_ACLK_PPMU_DREX0_1	524
->>>> +#define CLK_ACLK_PPMU_DREX1_0	525
->>>> +#define CLK_ACLK_PPMU_DREX1_1	526
->>>> +#define CLK_PCLK_PPMU_DREX0_0	527
->>>> +#define CLK_PCLK_PPMU_DREX0_1	528
->>>> +#define CLK_PCLK_PPMU_DREX1_0	529
->>>> +#define CLK_PCLK_PPMU_DREX1_1	530
->>>>    
->>>>    /* mux clocks */
->>>>    #define CLK_MOUT_HDMI		640
->>>> @@ -217,6 +228,8 @@
->>>>    #define CLK_MOUT_EPLL		657
->>>>    #define CLK_MOUT_MAU_EPLL	658
->>>>    #define CLK_MOUT_USER_MAU_EPLL	659
->>>> +#define CLK_MOUT_SCLK_SPLL	660
->>>> +#define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
->>>>    
->>>>    /* divider clocks */
->>>>    #define CLK_DOUT_PIXEL		768
->>>> @@ -243,13 +256,16 @@
->>>>    #define CLK_DOUT_ACLK300_GSCL	789
->>>>    #define CLK_DOUT_ACLK400_DISP1	790
->>>>    #define CLK_DOUT_PCLK_CDREX	791
->>>> -#define CLK_DOUT_SCLK_CDREX	792
->>>> -#define CLK_DOUT_ACLK_CDREX1	793
->>>> -#define CLK_DOUT_CCLK_DREX0	794
->>>> -#define CLK_DOUT_CLK2X_PHY0	795
->>>> -#define CLK_DOUT_PCLK_CORE_MEM	796
->>>
->>> The your previous patch didn't change the id number
->>> of already exiting clocks. It cause the fault.
->>> In order to keep the compatibility, you keep
->>> the original id number without modification.
->> True, the previous patch didn't change these IDs.
->> I have not seen any faults during builds and stress tests, though.
-> 
-> If you use the built dtb file before modification, it cause the fault.
-> It is advantage of device-tree style to split out
-> the dependency between kernel image and dtb.
-Good point.
-> 
->>>
->>> Please don't change the id number of the existing clocks
->>> and then just add the new clocks.
->> OK, I will add CLK_DOUT_PCLK_DREX0	and CLK_DOUT_PCLK_DREX1
->> at the end:
->> ------------------>8--------------------------
->> @@ -248,8 +261,11 @@
->>    #define CLK_DOUT_CCLK_DREX0    794
->>    #define CLK_DOUT_CLK2X_PHY0    795
->>    #define CLK_DOUT_PCLK_CORE_MEM 796
->> +#define CLK_FF_DOUT_SPLL2      797
->> +#define CLK_DOUT_PCLK_DREX0    798
->> +#define CLK_DOUT_PCLK_DREX1    799
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v4]:
+>> * None
 >>
->>    /* must be greater than maximal clock id */
->> -#define CLK_NR_CLKS            797
->> +#define CLK_NR_CLKS            800
->> -----------------8<---------------------------
+>> Changes since [v3]:
+>> * None
 >>
->> Can I add your ack in the modified version?
+>> Changes since [v2]:
+>> * Using only 'Cx' (x-being controller number) format to represent a controller
+>> * Changed to 'value: description' format where applicable
+>> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+>> * Provided more documentation for 'nvidia,init-link-speed' property
+>> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+>>
+>> Changes since [v1]:
+>> * Added documentation for 'power-domains' property
+>> * Removed 'window1' and 'window2' properties
+>> * Removed '_clk' and '_rst' from clock and reset names
+>> * Dropped 'pcie' from phy-names
+>> * Added entry for BPMP-FW handle
+>> * Removed offsets for some of the registers and added them in code and would be pickedup based on
+>>    controller ID
+>> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
+>> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
+>> * Added more documentation for 'nvidia,update-fc-fixup' property
+>> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+>> * Added '-us' to all properties that represent time in microseconds
+>> * Moved P2U documentation to a separate file
+>>
+>>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
+>>   1 file changed, 187 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> new file mode 100644
+>> index 000000000000..208dff126108
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> @@ -0,0 +1,187 @@
+>> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+>> +
+>> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+>> +and thus inherits all the common properties defined in designware-pcie.txt.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+>> +- device_type: Must be "pci"
+>> +- power-domains: A phandle to the node that controls power to the respective
+>> +  PCIe controller and a specifier name for the PCIe controller. Following are
+>> +  the specifiers for the different PCIe controllers
+>> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+>> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
+>> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
+>> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
+>> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+>> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+>> +  these specifiers are defined in
+>> +  "include/dt-bindings/power/tegra194-powergate.h" file.
+>> +- reg: A list of physical base address and length for each set of controller
 > 
-> I agree.
-Thank you.
+> Perhaps "list of physical base address and length pairs".
+Ok.
 
-Regards,
-Lukasz
+> 
+>> +  registers. Must contain an entry for each entry in the reg-names property.
+>> +- reg-names: Must include the following entries:
+>> +  "appl": Controller's application logic registers
+>> +  "config": As per the definition in designware-pcie.txt
+>> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
+>> +             Translation Unit) registers of the PCIe core are made available
+>> +             fow SW access.
+> 
+> s/fow/for/
+Done.
+
+> 
+> Thierry
+> 
+
