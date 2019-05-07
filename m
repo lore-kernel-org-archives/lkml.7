@@ -2,89 +2,91 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49939C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDF7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27523205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CF8205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="fO9vlopf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfEGJeP (ORCPT
+        id S1726669AbfEGJfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:34:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16687 "EHLO mga04.intel.com"
+        Tue, 7 May 2019 05:35:38 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60078 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbfEGJeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:34:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 02:34:14 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 07 May 2019 02:34:10 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 07 May 2019 12:34:09 +0300
-Date:   Tue, 7 May 2019 12:34:09 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Ruslan Babayev <ruslan@babayev.com>, linux@armlinux.org.uk,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, wsa@the-dreams.de,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: Re: [PATCH net-next 2/2] net: phy: sfp: enable i2c-bus detection on
- ACPI based systems
-Message-ID: <20190507093409.GT2895@lahna.fi.intel.com>
-References: <20190505220524.37266-3-ruslan@babayev.com>
- <20190506045951.GB2895@lahna.fi.intel.com>
- <20190506194019.GB25013@lunn.ch>
+        id S1726286AbfEGJfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1557221735; bh=ldoLNmoDFfbeja2q4a+Rh5QICPMhKBlbE7KGJkgYnvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fO9vlopfZxr3U78dgV0RXJxUiXqgiQfcDS0dXQA3Fe/vMCA9+DW3PyWSNIk8Cp0d9
+         OTRKbUeidJ2E4+080m3bpyzxfqpXMliXGec0mzapVPD8iuS5e1ESFtyh/FDKNeqkeC
+         QelJZ4Kg7S8J3krLQMFKbmOWVCjGFQ1sx0LgRkiY=
+Date:   Tue, 7 May 2019 11:35:35 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wens@csie.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: Enable HDMI output on
+ orangepi 3
+Message-ID: <20190507093535.uapqhxduwtbdgbtq@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wens@csie.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190420145240.27400-1-tiny.windzz@gmail.com>
+ <20190502073401.3l3fl4alicyzpud7@flea>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190506194019.GB25013@lunn.ch>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190502073401.3l3fl4alicyzpud7@flea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 09:40:19PM +0200, Andrew Lunn wrote:
-> On Mon, May 06, 2019 at 07:59:51AM +0300, Mika Westerberg wrote:
-> > On Sun, May 05, 2019 at 03:05:23PM -0700, Ruslan Babayev wrote:
-> > > Lookup I2C adapter using the "i2c-bus" device property on ACPI based
-> > > systems similar to how it's done with DT.
-> > > 
-> > > An example DSD describing an SFP on an ACPI based system:
-> > > 
-> > > Device (SFP0)
-> > > {
-> > >     Name (_HID, "PRP0001")
-> > >     Name (_DSD, Package ()
-> > >     {
-> > >         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > >         Package () {
-> > >             Package () { "compatible", "sff,sfp" },
-> > >             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
-> > 
-> > Hmm, ACPI has I2cSerialBusV2() resource for this purpose. Why you are not
-> > using that?
+Hi Maxime,
+
+On Thu, May 02, 2019 at 09:34:01AM +0200, Maxime Ripard wrote:
+> On Sat, Apr 20, 2019 at 10:52:40AM -0400, Yangtao Li wrote:
+> > Orangepi 3 has HDMI type A connector.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > 
-> Hi Mika
-> 
-> Does that reference the bus as a whole, or a device on the bus?
+> Queued for 5.3, thanks!
+> Maxime
 
-It references a single device on the bus.
+This patch is not enough. HDMI support on Orange Pi 3 also needs to
+enable DDC IO. While the SoC will feed some default output singal
+into the display, without DDC enabled it will not work reliably.
 
-> The SFP subsystem needs a reference to the bus as a whole. There can
-> be an at24 like EEPROM at addresses 0x50 and 0x51. There can be an
-> MDIO bus encapsulated in i2c at addresses 0x40-0x5f, excluding 0x50
-> and 0x51. What actually is there depends on the SFP module which is
-> plugged into the SFP cage, and it is all hot-plugable.
+That support is part of my Orange Pi 3 series, and will be reworked
+for v5 of that series.
 
-Yeah, as I replied on the other email I2CSerialBusV2() cannot really be
-used here. I did not realize that the device is referencing the whole bus.
+While I can rebase on top of this, it would be easier if you dropped
+this patch until the propper support is ready. I don't see any reason
+why this should be rushed with half-working solution.
+
+regards,
+	o.
+
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
