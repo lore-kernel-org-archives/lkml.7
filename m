@@ -2,121 +2,91 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6EFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F96C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB12E206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AB62087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bns0Ectz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfEGCYU (ORCPT
+        id S1726453AbfEGCYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 22:24:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:40196 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfEGCYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 22:24:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 19:24:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,440,1549958400"; 
-   d="scan'208";a="149048898"
-Received: from speesari-mobl.amr.corp.intel.com (HELO [10.251.22.59]) ([10.251.22.59])
-  by orsmga003.jf.intel.com with ESMTP; 06 May 2019 19:24:18 -0700
-Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
- master(s)
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
- <20190504065242.GA9770@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
-Date:   Mon, 6 May 2019 21:24:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 22:24:50 -0400
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:34538 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfEGCYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 22:24:50 -0400
+Received: by mail-oi1-f177.google.com with SMTP id v10so11223920oib.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 19:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ENt8EH2AAnwBKCorpSXemefyGkNkcFdd76Kvn0m/73I=;
+        b=Bns0EctzfedQpalxj+ZfwBrnI8ZtOQ3/N3ixrvIbT5nXLenik6VZUxxKdWfB18lZTz
+         l3nzmIyPnXWgQ21B9uVy3vKuGTuKTw5S+4q9XCObk/ziGBvRoTsPW36reK51sWC7fZok
+         BrCLD8yfUlGYzrVtHDldVmfZqgYlnBc6KiaxCK19X8nTCtb5CrT7/wJk90lLw2w+6ts0
+         xBC3qfcxw9KiJBILYFaHM2hyIk/pKa5s32kY81F+OJKysmygMBTwGyjhYGboL1kxqs8t
+         cYj9Fl2LhCmcarl0ArssFpmyt34UhTz6ApSHUwXzvOwc3bC1y36MIAxo0emuNofnGPx1
+         hP0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ENt8EH2AAnwBKCorpSXemefyGkNkcFdd76Kvn0m/73I=;
+        b=tqEbCLterg2dZYHTefOks40xgsp1tWr/2kCthuFZ2JjCh/mJVhHawe25+tIFQHT+AE
+         cWhGBwxTBEfUeOIlOC44UuntCvvdCkcg1BJzSGRnBqe46a9jQBtzu/ean5HmMZNDBnEr
+         /aZkoXk+pT7rIfh+xEK7n0pkcU2AeHXcUBLeBEAftaIvmt1UE0qYDZI8d8WM6W52oa3U
+         tU1SQ0neKfoEnTbbc/9pzeHqny27V8gHedm047ez/JQkRDg3iOBxc+hrsOLkpHF/DiKB
+         2bQBa6MKQyC+6QwtnFvlwttEqAud3vG8O0vCSTcZuY/NHLSUwF6btuAxPk/BAHUgMEZw
+         oi0A==
+X-Gm-Message-State: APjAAAXNuhkeFsbF3kILlNPnvVwLWTgcORtzT1xTw90DRriDq6evVbpW
+        5tox6j/gWuJMNIIxC3Z8XU9vhet3VLBkJawO8/5WUw==
+X-Google-Smtp-Source: APXvYqxDFhz3zuwYGZ7tCI6PtDhGBgsbl0VYgZTW61EsTkBcv+Uine20QXZFV3YEWb4Lpi368CvUqaZLnGfKujZezk4=
+X-Received: by 2002:aca:b8c4:: with SMTP id i187mr861789oif.6.1557195889449;
+ Mon, 06 May 2019 19:24:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190504065242.GA9770@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <ee4a22c3491628abf94c8d356dccd67984604811.1555049554.git.baolin.wang@linaro.org>
+ <20190418102606.AE0181126DA9@debutante.sirena.org.uk> <CAMz4kuLK_XS93Wpq+BkXVAJA3M+vFnL8pR0gR7aRpYxBzwLv9w@mail.gmail.com>
+ <20190506134856.GP14916@sirena.org.uk>
+In-Reply-To: <20190506134856.GP14916@sirena.org.uk>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 7 May 2019 10:24:38 +0800
+Message-ID: <CAMz4kuLdRspCGNFxATjzWXvBMwBGwXFczGUQKFEyiOSxGwaMcw@mail.gmail.com>
+Subject: Re: Applied "ASoC: sprd: Add reserved DMA memory support" to the asoc tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 6 May 2019 at 21:49, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, May 06, 2019 at 03:37:39PM +0800, Baolin Wang wrote:
+>
+> > I did not find this patch in your sound git tree and the linux-next
+> > tree, so could you check if you missed this patch? Or did I miss
+> > anything? Thanks a lot.
+>
+> Something seems to have gone wrong at some point which caused some
+> patches to go AWOL, not sure what.  I thought I'd caught all of them but
+> I guess not this one, I restored it now.
 
->> +int sdw_sysfs_bus_init(struct sdw_bus *bus)
->> +{
->> +	struct sdw_master_sysfs *master;
->> +	int err;
->> +
->> +	if (bus->sysfs) {
->> +		dev_err(bus->dev, "SDW sysfs is already initialized\n");
->> +		return -EIO;
->> +	}
->> +
->> +	master = kzalloc(sizeof(*master), GFP_KERNEL);
->> +	if (!master)
->> +		return -ENOMEM;
-> 
-> Why are you creating a whole new device to put all of this under?  Is
-> this needed?  What will the sysfs tree look like when you do this?  Why
-> can't the "bus" device just get all of these attributes and no second
-> device be created?
+OK. Thanks :)
 
-I tried a quick hack and indeed we could simplify the code with 
-something as simple as:
-
-[attributes omitted]
-
-static const struct attribute_group sdw_master_node_group = {
-	.attrs = master_node_attrs,
-	.name = "mipi-disco"
-};
-
-int sdw_sysfs_bus_init(struct sdw_bus *bus)
-{
-	return sysfs_create_group(&bus->dev->kobj, &sdw_master_node_group);
-}
-
-void sdw_sysfs_bus_exit(struct sdw_bus *bus)
-{
-	sysfs_remove_group(&bus->dev->kobj, &sdw_master_node_group);	
-}
-
-which gives me a simpler structure and doesn't require additional 
-pretend-devices:
-
-/sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# ls
-clock_gears
-/sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# more clock_gears
-8086
-
-The issue I have is that for the _show() functions, I don't see a way to 
-go from the device argument to bus. In the example above I forced the 
-output but would need a helper.
-
-static ssize_t clock_gears_show(struct device *dev,
-				struct device_attribute *attr, char *buf)
-{
-	struct sdw_bus *bus; // this is what I need to find from dev
-	ssize_t size = 0;
-	int i;
-
-	return sprintf(buf, "%d \n", 8086);
-}
-
-my brain is starting to fry, but I don't see how container_of() would 
-work here since the bus structure contains a pointer to the device. I 
-don't also see a way to check for all devices for the bus_type soundwire.
-For the slaves we do have a macro based on container_of(), so wondering 
-if we made a mistake in the bus definition? Vinod, any thoughts?
+-- 
+Baolin Wang
+Best Regards
