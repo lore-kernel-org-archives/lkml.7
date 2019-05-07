@@ -2,249 +2,127 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CEAC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464DDC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1020B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ILwo5gUO"
+	by mail.kernel.org (Postfix) with ESMTP id 1C2C420B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfEGIEr (ORCPT
+        id S1727075AbfEGIFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:04:47 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3111 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfEGIEq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:04:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd13bf90000>; Tue, 07 May 2019 01:04:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 01:04:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 01:04:44 -0700
-Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 08:04:37 +0000
-Subject: Re: [PATCH V5 05/16] PCI: dwc: Move config space capability search
- API
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>
-CC:     "mperttunen@nvidia.com" <mperttunen@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-6-vidyas@nvidia.com>
- <305100E33629484CBB767107E4246BBB0A230666@de02wembxa.internal.synopsys.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <ee628f18-0f19-f501-db28-7db31fd3bcbc@nvidia.com>
-Date:   Tue, 7 May 2019 13:34:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 7 May 2019 04:05:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbfEGIFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:05:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 67009AE52;
+        Tue,  7 May 2019 08:04:59 +0000 (UTC)
+Subject: Re: [PATCH] riscv: fix locking violation in page fault handler
+To:     Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <mvm5zqmu35d.fsf@suse.de>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b2030f8c-010e-7088-271e-e2398f7d37db@suse.com>
+Date:   Tue, 7 May 2019 11:04:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <305100E33629484CBB767107E4246BBB0A230666@de02wembxa.internal.synopsys.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <mvm5zqmu35d.fsf@suse.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557216249; bh=oaxpdSeWbRmtvMFY8nsXxh8qoIbsiyLvjd1S5o4zNW0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ILwo5gUOR2el5WDFG8gTIVo8IOsekFFb1GtKg8mIiSV10Pk+Apx5Cv5HXE0FBFjFd
-         mBcKO7JTtL01hhLZ1fZS1NCvxOdjjMBBtsNWOpfX5YZBHwMk1gBTbWJSv+QL0q8g7+
-         l8wbF7OMqYdBlWuKra6TviXzvJ0t41eO4UKbtk0pYQQCWNGZaYfvUlkrAi1Q8MoCyx
-         SrE9pfRwa1HzE+rSWA+KonGDS3iS20kDMFJRgmWLoYtBtBTK/NEcJs/lBGwQK36KP0
-         i2ovkD/PC/7VWmASEU2q1uz6Mny2VY99Ozh/+rw2VEtvzTYrrYrPYG010MLN3qGaEE
-         IUYzS2I7lRorw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/2019 1:43 PM, Gustavo Pimentel wrote:
-> On Wed, Apr 24, 2019 at 6:19:53, Vidya Sagar <vidyas@nvidia.com> wrote:
-> 
->> Move PCIe config space capability search API to common DesignWare file
->> as this can be used by both host and ep mode codes.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Changes from [v4]:
->> * Removed redundant APIs in pcie-designware-ep.c file after moving them
->>    to pcie-designware.c file based on Bjorn's comments.
->>
->> Changes from [v3]:
->> * Rebased to linux-next top of the tree
->>
->> Changes from [v2]:
->> * None
->>
->> Changes from [v1]:
->> * Removed dw_pcie_find_next_ext_capability() API from here and made a
->>    separate patch for that
->>
->>   .../pci/controller/dwc/pcie-designware-ep.c   | 37 +-----------------
->>   drivers/pci/controller/dwc/pcie-designware.c  | 39 +++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->>   3 files changed, 43 insertions(+), 35 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 2bf5a35c0570..65f479250087 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
->>   	__dw_pcie_ep_reset_bar(pci, bar, 0);
->>   }
->>   
->> -static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->> -			      u8 cap)
->> -{
->> -	u8 cap_id, next_cap_ptr;
->> -	u16 reg;
->> -
->> -	if (!cap_ptr)
->> -		return 0;
->> -
->> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> -	cap_id = (reg & 0x00ff);
->> -
->> -	if (cap_id > PCI_CAP_ID_MAX)
->> -		return 0;
->> -
->> -	if (cap_id == cap)
->> -		return cap_ptr;
->> -
->> -	next_cap_ptr = (reg & 0xff00) >> 8;
->> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->> -}
->> -
->> -static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
->> -{
->> -	u8 next_cap_ptr;
->> -	u16 reg;
->> -
->> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->> -	next_cap_ptr = (reg & 0x00ff);
->> -
->> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->> -}
->> -
->>   static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
->>   				   struct pci_epf_header *hdr)
->>   {
->> @@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->>   		return -ENOMEM;
->>   	}
->> -	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
->> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->>   
->> -	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
->> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
->>   
->>   	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
->>   	if (offset) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 8e0081ccf83b..ed21e861df82 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -20,6 +20,45 @@
->>   #define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
->>   #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
->>   
->> +/*
->> + * These APIs are different from standard pci_find_*capability() APIs in the
->> + * sense that former can only be used post device enumeration as they require
->> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
->> + * pointer and can be used before link up also.
->> + */
->> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->> +				  u8 cap)
->> +{
->> +	u8 cap_id, next_cap_ptr;
->> +	u16 reg;
->> +
->> +	if (!cap_ptr)
->> +		return 0;
->> +
->> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> +	cap_id = (reg & 0x00ff);
->> +
->> +	if (cap_id > PCI_CAP_ID_MAX)
->> +		return 0;
->> +
->> +	if (cap_id == cap)
->> +		return cap_ptr;
->> +
->> +	next_cap_ptr = (reg & 0xff00) >> 8;
->> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->> +}
->> +
->> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->> +{
->> +	u8 next_cap_ptr;
->> +	u16 reg;
->> +
->> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->> +	next_cap_ptr = (reg & 0x00ff);
->> +
->> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->> +}
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 9ee98ced1ef6..35160b4ce929 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -248,6 +248,8 @@ struct dw_pcie {
->>   #define to_dw_pcie_from_ep(endpoint)   \
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +
-> 
-> Can you remove this extra line space?
-In patch 06/15, I added dw_pcie_find_ext_capability() API so that they are grouped together
-(separated by a blank line) like how dw_pcie_read() and dw_pcie_write() are grouped.
 
+
+On 7.05.19 г. 10:36 ч., Andreas Schwab wrote:
+> When a user mode process accesses an address in the vmalloc area
+> do_page_fault tries to unlock the mmap semaphore when it isn't locked.
 > 
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->>   
->> -- 
->> 2.17.1
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> ---
+>  arch/riscv/mm/fault.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
+> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> index 88401d5125bc..c51878e5a66a 100644
+> --- a/arch/riscv/mm/fault.c
+> +++ b/arch/riscv/mm/fault.c
+> @@ -181,6 +181,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  	up_read(&mm->mmap_sem);
+>  	/* User mode accesses just cause a SIGSEGV */
+>  	if (user_mode(regs)) {
+> +bad_area_do_trap:
+>  		do_trap(regs, SIGSEGV, code, addr, tsk);
+>  		return;
+>  	}
+> @@ -230,7 +231,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  		int index;
+>  
+>  		if (user_mode(regs))
+> -			goto bad_area;
+> +			goto bad_area_do_trap;
+>  
+>  		/*
+>  		 * Synchronize this task's top level page-table
 > 
 
+In this case I think it will be a lot cleaner if you just duplicated the
+do_trap call. On a slightly different note - is there any reason why
+do_page_fault is such a spaghetti mess? At the very least the code under
+no_context label could go into it's own function since it just kills the
+process and never returns? Furthermore the whole vmalloc_fault just
+cries for being factored  out in a function, it's explicitly in it's own
+ block.
