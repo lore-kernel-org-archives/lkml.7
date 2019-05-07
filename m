@@ -4,47 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD96C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4319C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7B9205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75671205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208805;
-	bh=07ezoWhYpZHYmDgI6PuPhh2G7jw9bKMuMBXHQEJETHQ=;
+	s=default; t=1557208809;
+	bh=Cky+mAxpRThh75WYi0Ey42ZgD+2VmcouYKl/3nh/3dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ZhMv+Vkk8QrMBBSHCQwiWupZpkm2zn0IHcE7+PxBJ92P4VF18jFm3k3TRJ299umy
-	 8jQIBO3Y31MR4gu6vOMnySlwPxZmFrC41gAgRZ94b5G+pVWmavL4F8YFn8iTqaMPP0
-	 97DDVnsgLS4ldVSuYmdMMhBiUBnB+LQbWFNSVX2g=
+	b=oQmvsP9fjhX7lsJp/NOR0b5F42r6/HtGG1BP5MnJZrSyK6uL2tq3SyLTDHEg2ZcFy
+	 P38Q5w92u7NTyNKYS8cJTpMXeG0OJ67dmGHCYhOZu5ibcjE46x+md5ntx1qQSlMxrI
+	 VuttG7prnfBMMD97C3dVeP6WHDC1WPAHAMs6BxeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfEGGAE (ORCPT
+        id S1728100AbfEGFg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbfEGFg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:29 -0400
+        id S1728019AbfEGFgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4417420989;
-        Tue,  7 May 2019 05:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A133620B7C;
+        Tue,  7 May 2019 05:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207387;
-        bh=07ezoWhYpZHYmDgI6PuPhh2G7jw9bKMuMBXHQEJETHQ=;
+        s=default; t=1557207372;
+        bh=Cky+mAxpRThh75WYi0Ey42ZgD+2VmcouYKl/3nh/3dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dpsOP6NXDt8FB0jJEfaimhLvH6HivuzTFCms2Qry3/fVf6efPyUGXjQN/tP3cxsqO
-         Plh47GkAtG1o8QQF9SAjerznTNHGicHAdPi+143A31wyWsNv1P0blwDNUlcbwh/xbH
-         MnZ56qG8GHkwUZyHpTze3YlrV8nZPg/Ah5GMSjKo=
+        b=etIgIJmBznxiPoq2nPhpcZhpOINuV16icMNridxwCvdQDQa4kMT2VvNPEe2m0Uk/P
+         94oMjd/ml74t9802R5cnbXDqpzzMNN4HaBgYDgaH3vLdxcVLTdyE0IzDgTd1NBSAm1
+         r6iwSJ0H3iLHxbKz6S+UgzAIQuc/u7FsH+sr+IWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/81] s390/3270: fix lockdep false positive on view->lock
-Date:   Tue,  7 May 2019 01:34:50 -0400
-Message-Id: <20190507053554.30848-19-sashal@kernel.org>
+Cc:     Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/81] cfg80211: Handle WMM rules in regulatory domain intersection
+Date:   Tue,  7 May 2019 01:34:44 -0400
+Message-Id: <20190507053554.30848-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -57,122 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
+[ Upstream commit 08a75a887ee46828b54600f4bb7068d872a5edd5 ]
 
-The spinlock in the raw3270_view structure is used by con3270, tty3270
-and fs3270 in different ways. For con3270 the lock can be acquired in
-irq context, for tty3270 and fs3270 the highest context is bh.
+The support added for regulatory WMM rules did not handle
+the case of regulatory domain intersections. Fix it.
 
-Lockdep sees the view->lock as a single class and if the 3270 driver
-is used for the console the following message is generated:
-
-WARNING: inconsistent lock state
-5.1.0-rc3-05157-g5c168033979d #12 Not tainted
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
-(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
-
-Introduce a lockdep subclass for the view lock to distinguish bh from
-irq locks.
-
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Fixes: 230ebaa189af ("cfg80211: read wmm rules from regulatory database")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/char/con3270.c | 2 +-
- drivers/s390/char/fs3270.c  | 3 ++-
- drivers/s390/char/raw3270.c | 3 ++-
- drivers/s390/char/raw3270.h | 4 +++-
- drivers/s390/char/tty3270.c | 3 ++-
- 5 files changed, 10 insertions(+), 5 deletions(-)
+ net/wireless/reg.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
-index fd2146bcc0ad..e17364e13d2f 100644
---- a/drivers/s390/char/con3270.c
-+++ b/drivers/s390/char/con3270.c
-@@ -629,7 +629,7 @@ con3270_init(void)
- 		     (void (*)(unsigned long)) con3270_read_tasklet,
- 		     (unsigned long) condev->read);
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 8002ace7c9f6..8a47297ff206 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1287,6 +1287,16 @@ reg_intersect_dfs_region(const enum nl80211_dfs_regions dfs_region1,
+ 	return dfs_region1;
+ }
  
--	raw3270_add_view(&condev->view, &con3270_fn, 1);
-+	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
++static void reg_wmm_rules_intersect(const struct ieee80211_wmm_ac *wmm_ac1,
++				    const struct ieee80211_wmm_ac *wmm_ac2,
++				    struct ieee80211_wmm_ac *intersect)
++{
++	intersect->cw_min = max_t(u16, wmm_ac1->cw_min, wmm_ac2->cw_min);
++	intersect->cw_max = max_t(u16, wmm_ac1->cw_max, wmm_ac2->cw_max);
++	intersect->cot = min_t(u16, wmm_ac1->cot, wmm_ac2->cot);
++	intersect->aifsn = max_t(u8, wmm_ac1->aifsn, wmm_ac2->aifsn);
++}
++
+ /*
+  * Helper for regdom_intersect(), this does the real
+  * mathematical intersection fun
+@@ -1301,6 +1311,8 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
+ 	struct ieee80211_freq_range *freq_range;
+ 	const struct ieee80211_power_rule *power_rule1, *power_rule2;
+ 	struct ieee80211_power_rule *power_rule;
++	const struct ieee80211_wmm_rule *wmm_rule1, *wmm_rule2;
++	struct ieee80211_wmm_rule *wmm_rule;
+ 	u32 freq_diff, max_bandwidth1, max_bandwidth2;
  
- 	INIT_LIST_HEAD(&condev->freemem);
- 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
-diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
-index 16a4e8528bbc..2f9905ee047c 100644
---- a/drivers/s390/char/fs3270.c
-+++ b/drivers/s390/char/fs3270.c
-@@ -463,7 +463,8 @@ fs3270_open(struct inode *inode, struct file *filp)
+ 	freq_range1 = &rule1->freq_range;
+@@ -1311,6 +1323,10 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
+ 	power_rule2 = &rule2->power_rule;
+ 	power_rule = &intersected_rule->power_rule;
  
- 	init_waitqueue_head(&fp->wait);
- 	fp->fs_pid = get_pid(task_pid(current));
--	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
-+	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
-+			      RAW3270_VIEW_LOCK_BH);
- 	if (rc) {
- 		fs3270_free_view(&fp->view);
- 		goto out;
-diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
-index f8cd2935fbfd..63a41b168761 100644
---- a/drivers/s390/char/raw3270.c
-+++ b/drivers/s390/char/raw3270.c
-@@ -920,7 +920,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
-  * Add view to device with minor "minor".
-  */
- int
--raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
-+raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
- {
- 	unsigned long flags;
- 	struct raw3270 *rp;
-@@ -942,6 +942,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
- 		view->cols = rp->cols;
- 		view->ascebc = rp->ascebc;
- 		spin_lock_init(&view->lock);
-+		lockdep_set_subclass(&view->lock, subclass);
- 		list_add(&view->list, &rp->view_list);
- 		rc = 0;
- 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
-diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
-index 114ca7cbf889..3afaa35f7351 100644
---- a/drivers/s390/char/raw3270.h
-+++ b/drivers/s390/char/raw3270.h
-@@ -150,6 +150,8 @@ struct raw3270_fn {
- struct raw3270_view {
- 	struct list_head list;
- 	spinlock_t lock;
-+#define RAW3270_VIEW_LOCK_IRQ	0
-+#define RAW3270_VIEW_LOCK_BH	1
- 	atomic_t ref_count;
- 	struct raw3270 *dev;
- 	struct raw3270_fn *fn;
-@@ -158,7 +160,7 @@ struct raw3270_view {
- 	unsigned char *ascebc;		/* ascii -> ebcdic table */
- };
++	wmm_rule1 = &rule1->wmm_rule;
++	wmm_rule2 = &rule2->wmm_rule;
++	wmm_rule = &intersected_rule->wmm_rule;
++
+ 	freq_range->start_freq_khz = max(freq_range1->start_freq_khz,
+ 					 freq_range2->start_freq_khz);
+ 	freq_range->end_freq_khz = min(freq_range1->end_freq_khz,
+@@ -1354,6 +1370,29 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
+ 	intersected_rule->dfs_cac_ms = max(rule1->dfs_cac_ms,
+ 					   rule2->dfs_cac_ms);
  
--int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
-+int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
- int raw3270_activate_view(struct raw3270_view *);
- void raw3270_del_view(struct raw3270_view *);
- void raw3270_deactivate_view(struct raw3270_view *);
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index 5b8af2782282..81067f5bb178 100644
---- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -980,7 +980,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
- 		return PTR_ERR(tp);
++	if (rule1->has_wmm && rule2->has_wmm) {
++		u8 ac;
++
++		for (ac = 0; ac < IEEE80211_NUM_ACS; ac++) {
++			reg_wmm_rules_intersect(&wmm_rule1->client[ac],
++						&wmm_rule2->client[ac],
++						&wmm_rule->client[ac]);
++			reg_wmm_rules_intersect(&wmm_rule1->ap[ac],
++						&wmm_rule2->ap[ac],
++						&wmm_rule->ap[ac]);
++		}
++
++		intersected_rule->has_wmm = true;
++	} else if (rule1->has_wmm) {
++		*wmm_rule = *wmm_rule1;
++		intersected_rule->has_wmm = true;
++	} else if (rule2->has_wmm) {
++		*wmm_rule = *wmm_rule2;
++		intersected_rule->has_wmm = true;
++	} else {
++		intersected_rule->has_wmm = false;
++	}
++
+ 	if (!is_valid_reg_rule(intersected_rule))
+ 		return -EINVAL;
  
- 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
--			      tty->index + RAW3270_FIRSTMINOR);
-+			      tty->index + RAW3270_FIRSTMINOR,
-+			      RAW3270_VIEW_LOCK_BH);
- 	if (rc) {
- 		tty3270_free_view(tp);
- 		return rc;
 -- 
 2.20.1
 
