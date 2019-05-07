@@ -2,134 +2,121 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EFCC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EE1C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C449120C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78DC120989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MXC5lAAu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KNYFLCSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfEGIZy (ORCPT
+        id S1726506AbfEGI2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:25:54 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13467 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfEGIZy (ORCPT
+        Tue, 7 May 2019 04:28:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33534 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfEGI2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:25:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd1410d0000>; Tue, 07 May 2019 01:25:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 01:25:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 01:25:53 -0700
-Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 08:25:45 +0000
-Subject: Re: [PATCH V5 07/16] dt-bindings: PCI: designware: Add binding for
- CDM register check
-To:     Rob Herring <robh@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-8-vidyas@nvidia.com> <20190426143247.GA25107@bogus>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <031df2ca-27de-2388-5f23-078320203f5d@nvidia.com>
-Date:   Tue, 7 May 2019 13:55:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 04:28:06 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x478JPdb108465;
+        Tue, 7 May 2019 08:27:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=2q+SX5ysM+eJgpkwPBbiklVLVKN4lqt4X/eshikVH0g=;
+ b=KNYFLCSOSKep/Gp8HP7PVdp1dahEu6lCYIaFenvm93nYuYM6nw7pPJDHtSXNKaRFq+VE
+ yL5fXVDa1/lJhZ51dAhVGL7CuThevoEHR1TQSCjakRgO+/jOiAJTKR+gW3WKJhu6vKje
+ 5mP0WmAnnMKkmhE++fpWIefsN3M/iaPiuQWSk4hyNk+DROJvAWw5XPxFaUWh3v6DNLQL
+ NFobibX0/U6lhAEPRXYp/eebBuSaMmvWsSkzmEQMemNgWCZ+0Tp04rGl4SQXsHZ5+R+C
+ kG0kO62v72iYLq7nBCfG2qzx7qZ/2BsJhzWnAwFqDcjU/SoX8PitvBy8M9eWQAg0/IOW 2w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2s94b0kdxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 08:27:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x478Qxt0075221;
+        Tue, 7 May 2019 08:27:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2s94b9bk6u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 08:27:56 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x478RpNt018312;
+        Tue, 7 May 2019 08:27:52 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 May 2019 01:27:51 -0700
+Date:   Tue, 7 May 2019 11:27:44 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] Input: qt1050: fix less than zero comparison on an
+ unsigned int
+Message-ID: <20190507082744.GK2269@kadam>
+References: <20190507082135.21538-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190426143247.GA25107@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557217549; bh=wQ9iFk4m3fdncdNS9i5YNta0RWRMl3LzCyGnAnhJj9I=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MXC5lAAu50cq3hcFNtv/ibtbTWSvcfLsti/Ltt4G90H4fHzLcszsONMpsbKMU89py
-         K+yHYQJGaymZrZ77yP4ZLznqCFZmaQWJ0EL+cVWghKUsEYXv7I/m7kW0uyrDvTzNQn
-         b0A30eKLoCXb6eMa58CghegvrAlpHctPi0czTxKeLlqv98zAYugihXRX+QXA6DaiV+
-         YsnqDDvZaVFIyfmXda/ugcfBOsSKkX8zG1lv7+Xzrlpd2xBnlLDYtdBOYNbFomc1vR
-         O3fykmhmO1wPrlWc9fLP4UV65i6+iUIA7uH25j2FJEBFDc64C0fzC+nNsZnuHCmVMo
-         D0A4wPfcoQjCg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507082135.21538-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905070055
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905070055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/2019 8:02 PM, Rob Herring wrote:
-> On Wed, Apr 24, 2019 at 10:49:55AM +0530, Vidya Sagar wrote:
->> Add support to enable CDM (Configuration Dependent Module) registers check
->> for any data corruption. CDM registers include standard PCIe configuration
->> space registers, Port Logic registers and iATU and DMA registers.
->> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
->> Version 4.90a
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
->> * Added info about Port Logic and DMA registers being part of CDM
->>
->> Changes since [v1]:
->> * This is a new patch in v2 series
->>
->>   Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index 5561a1c060d0..85b872c42a9f 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -34,6 +34,11 @@ Optional properties:
->>   - clock-names: Must include the following entries:
->>   	- "pcie"
->>   	- "pcie_bus"
->> +- enable-cdm-check: This is a boolean property and if present enables
+On Tue, May 07, 2019 at 09:21:35AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> This needs a vendor prefix.
-Why only for this? Since this whole file is for Synopsys DesignWare core based PCIe IP,
-I thought there is specific prefix required. Am I wrong? Also, CDM checking is a feature
-of IP and DWC based implementations can choose either to enable this feature at hardware level
-or not. And whoever enabled it at hardware level (like Tegra194) can set this flag to
-enable corresponding software support.
+> Currently the less than zero comparison of val is always false because
+> val is an unsigned int. Fix this by making val a signed int.
+> 
+> Addresses-Coverity: ("Unsigned compared against zero")
+> Fixes: a33ff45923c8 ("Input: qt1050 - add Microchip AT42QT1050 support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/input/keyboard/qt1050.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/keyboard/qt1050.c b/drivers/input/keyboard/qt1050.c
+> index 6b1603cb7515..4debddb13972 100644
+> --- a/drivers/input/keyboard/qt1050.c
+> +++ b/drivers/input/keyboard/qt1050.c
+> @@ -222,7 +222,7 @@ static struct regmap_config qt1050_regmap_config = {
+>  
+>  static bool qt1050_identify(struct qt1050_priv *ts)
+>  {
+> -	unsigned int val;
+> +	int val;
 
-> 
->> +   automatic checking of CDM (Configuration Dependent Module) registers
->> +   for data corruption. CDM registers include standard PCIe configuration
->> +   space registers, Port Logic registers, DMA and iATU (internal Address
->> +   Translation Unit) registers.
->>   RC mode:
->>   - num-viewport: number of view ports configured in hardware. If a platform
->>     does not specify it, the driver assumes 2.
->> -- 
->> 2.17.1
->>
+This code is checking the wrong thing anyway.  It should be:
+
+	int ret;
+
+	ret = regmap_read(&val);
+	if (ret)
+		return false;
+
+regards,
+dan carpenter
 
