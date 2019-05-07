@@ -2,99 +2,280 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D2BC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5298DC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D4720656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7DE208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:27:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeeclIpS"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ByBpM4rz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfEGV0v (ORCPT
+        id S1728618AbfEGV1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:26:51 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52796 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbfEGV0v (ORCPT
+        Tue, 7 May 2019 17:27:19 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44075 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfEGV1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:26:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so425227wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:26:50 -0700 (PDT)
+        Tue, 7 May 2019 17:27:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y25so6453556oih.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:27:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CpS0acp3uuHexCCxmfsBcp2LVHuqUmGr+AfC8n1/nG8=;
-        b=LeeclIpSD2O+PfBGCoM+AsjKIueYP8u5J7Mh2a3qOtWoBkv9uMFrZ9g62I5pKh5ZvB
-         f7UQJ/g7mzm6UqS/+zBGs6H1CK+HLlO8U6el1hOzltMHIlUOHo4f1xM3fPvAum4D5J5i
-         6q8toThV1tjYHsb0Tb3P3jCrftHIuN9Kj7+Jq8IVTjv4efgoxhHdvGOsgbLkqa+Jl8YK
-         P6olw2AF91FiaKGxzHpMdwSJzBNChaEFUnKAcPQagIZrkATn4rVAqwIlea7wjq7l1/WJ
-         4/3YqmZW16fTi5J+PaDqIk3XiHmIe4X6Ba/zSkGGv+o7QcFoYjZmWxhb3moGMO5GmjSZ
-         44bw==
+        bh=Ilo8gO1PWkcUZofYMK/PQNaZ6dgV/WeRBJ4EsjHLWhY=;
+        b=ByBpM4rzcj0KLQCSJMTba88G4xlCaGSUA2kjKdZ426F15Q+rvisuUjrNKCKg64SatI
+         hGfpL9+XJAVJAd7OK5x2X7bOH8UCONoqiDVzLbqIp/IwaUKRXv8SrDPC18TUUPCHF1gK
+         2ha1HiuGirXRlCSSMKaKoHhE3E0pCkvMTucgiZDNVgY2pWXKQO4TeLkDOnsgzqC0ogLS
+         OXmlSVXRnkw9NGgqDXboFi/m4xoLMtnx/yEKBYx7gU5J+BtPxhDhIoaniVzPXH31qT27
+         CiUS/ula03FH7UD7iS0zY5et0vheHiUY5MatSWBPpGJ0F9FW8j6qp4fQGfelMW/FaD3I
+         /X3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CpS0acp3uuHexCCxmfsBcp2LVHuqUmGr+AfC8n1/nG8=;
-        b=JMZhUdrMEJoNnoxQxaCzdltqV8OoNJHiTA3yBNXfB0WHVhGv+PBREeTnYeHag3x1Jy
-         OP55asMjXIhBlxiubjFA3S1mss+hl4DlAUK4hZn7KxCA3tOuU5pnhC3pLrY3kxo6+2Qd
-         SeG8elhkfiBzANSPoJQ6mmk3GPuh8HsIb2VAnSWp0F2m0TEau5gtek4ihtis54YZ1c61
-         MGuHQZQRLVIP4vZCOQwjN4decEGw0k9zOBdypckSrzde/6ljnOiIYBDetfhwupDD8eUq
-         sRw99sJ3akqLtfMfDkSITX6c487JdaI1jQhqYT9OgRZS5Z2XTIpV0mbOhhyPJK7pmWOX
-         JbtQ==
-X-Gm-Message-State: APjAAAVn+sgKRDu3Mkoob5UnVwY6qy1WBDaBMeVWC0y2A+UW51vFlQA9
-        0bPVemCyHcSDzfSVF9aAKOWGdZNnvJ3GYNyoBgAMeL6KkzU=
-X-Google-Smtp-Source: APXvYqybBltjIktuaOWmGdahqcOnGayFyfWkyFiOAnKhh4NUIe41ZYMKvyCKjLJoxum3IrCr+iks53pYmOrWFbj/oEo=
-X-Received: by 2002:a1c:2dd2:: with SMTP id t201mr381826wmt.10.1557264409469;
- Tue, 07 May 2019 14:26:49 -0700 (PDT)
+        bh=Ilo8gO1PWkcUZofYMK/PQNaZ6dgV/WeRBJ4EsjHLWhY=;
+        b=nNTt7efYygjVssaN9urGjkrFE/e9QJpoWi0frUk4v2s9WruQ08G1ZF4VCnjbKrEvnY
+         eQCM1G0t3OiyZ0ehK6snspZ5iTjtzengRQKx+vdd5iXCk+dMk7B+MCrECZSSwggHiLtP
+         VCqK9ZF/9WZ1JmP3VHNVnx0kkAEq/9oZAkHLmzzKIM+FePhNLLc/YrPDFt8xCfsIMlI+
+         5dgoJqoCeNQXzrvI8J2ADyyIjq7RTk9isqS9wIDOJQUUeq3YwHzghSUBHQH+q8dM+owi
+         ZEud5PxDffTjJYprdCRz6WmDcNboJz4IFRtdhwvImL/nGdjgbK7ZR+9pQ+tsroogfCTw
+         TyTw==
+X-Gm-Message-State: APjAAAXhuuFlMYtxkwx3SR3oEid8iAAJBaMh7pyukOTwjj5DIych4ymD
+        yU6EpmEDodjhqn8ppurPxXEIq1fbvnmNyt3MfUwIeg==
+X-Google-Smtp-Source: APXvYqw1UieLnjdL3uGgndiZUbDSoney6ZAGnwarorW4h7jzSSrmLPgXgH79dv35ujhPqT1clUMPDGkfp9OwGUC0OOc=
+X-Received: by 2002:aca:220f:: with SMTP id b15mr361431oic.73.1557264437776;
+ Tue, 07 May 2019 14:27:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190411094944.12245-1-brgl@bgdev.pl> <20190411094944.12245-5-brgl@bgdev.pl>
-In-Reply-To: <20190411094944.12245-5-brgl@bgdev.pl>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Tue, 7 May 2019 23:26:38 +0200
-Message-ID: <CAFLxGvwb8YzNiXCXru8Tw9pxH9qoc7gAO4sk0MXK1Xmp7fm-2g@mail.gmail.com>
-Subject: Re: [RESEND PATCH 4/4] um: irq: don't set the chip for all irqs
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-um@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190507183804.5512-1-david@redhat.com> <20190507183804.5512-7-david@redhat.com>
+In-Reply-To: <20190507183804.5512-7-david@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 May 2019 14:27:07 -0700
+Message-ID: <CAPcyv4gvuBfA0gJrChaUNR-8swU2Vq-UFJA9yRtsEbf2ajf7+w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/8] mm/memory_hotplug: Remove memory block devices
+ before arch_remove_memory()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 11:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, May 7, 2019 at 11:39 AM David Hildenbrand <david@redhat.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Let's factor out removing of memory block devices, which is only
+> necessary for memory added via add_memory() and friends that created
+> memory block devices. Remove the devices before calling
+> arch_remove_memory().
 >
-> Setting a chip for an interrupt marks it as allocated. Since UM doesn't
-> support dynamic interrupt numbers (yet), it means we cannot simply
-> increase NR_IRQS and then use the free irqs between LAST_IRQ and NR_IRQS
-> with gpio-mockup or iio testing drivers as irq_alloc_descs() will fail
-> after not being able to neither find an unallocated range of interrupts
-> nor expand the range.
->
-> Only call irq_set_chip_and_handler() for irqs until LAST_IRQ.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> This finishes factoring out memory block device handling from
+> arch_add_memory() and arch_remove_memory().
 
-Just noticed that this triggers the following errors while bootup:
-Trying to reregister IRQ 11 FD 8 TYPE 0 ID           (null)
-write_sigio_irq : um_request_irq failed, err = -16
-Trying to reregister IRQ 11 FD 8 TYPE 0 ID           (null)
-write_sigio_irq : um_request_irq failed, err = -16
-VFS: Mounted root (hostfs filesystem) readonly on
+Also nice! makes it easier in the future for the "device-memory" use
+case to not avoid messing up the typical memory hotplug flow.
 
-Can you please check?
-This patch is already queued in -next. So we need to decide whether to
-revert or fix it now.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Andrew Banman <andrew.banman@hpe.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c  | 39 +++++++++++++++++++--------------------
+>  drivers/base/node.c    | 11 ++++++-----
+>  include/linux/memory.h |  2 +-
+>  include/linux/node.h   |  6 ++----
+>  mm/memory_hotplug.c    |  5 +++--
+>  5 files changed, 31 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 862c202a18ca..47ff49058d1f 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -756,32 +756,31 @@ int hotplug_memory_register(unsigned long start, unsigned long size)
+>         return ret;
+>  }
+>
+> -static int remove_memory_section(struct mem_section *section)
+> +/*
+> + * Remove memory block devices for the given memory area. Start and size
+> + * have to be aligned to memory block granularity. Memory block devices
+> + * have to be offline.
+> + */
+> +void hotplug_memory_unregister(unsigned long start, unsigned long size)
+>  {
+> +       unsigned long block_nr_pages = memory_block_size_bytes() >> PAGE_SHIFT;
+> +       unsigned long start_pfn = PFN_DOWN(start);
+> +       unsigned long end_pfn = start_pfn + (size >> PAGE_SHIFT);
+>         struct memory_block *mem;
+> +       unsigned long pfn;
+>
+> -       if (WARN_ON_ONCE(!present_section(section)))
+> -               return;
+> +       BUG_ON(!IS_ALIGNED(start, memory_block_size_bytes()));
+> +       BUG_ON(!IS_ALIGNED(size, memory_block_size_bytes()));
+
+Similar BUG_ON vs comments WARN_ON comments as the previous patch.
+
+>
+>         mutex_lock(&mem_sysfs_mutex);
+> -
+> -       /*
+> -        * Some users of the memory hotplug do not want/need memblock to
+> -        * track all sections. Skip over those.
+> -        */
+> -       mem = find_memory_block(section);
+> -       if (!mem)
+> -               goto out_unlock;
+> -
+> -       unregister_mem_sect_under_nodes(mem, __section_nr(section));
+> -
+> -       mem->section_count--;
+> -       if (mem->section_count == 0)
+> +       for (pfn = start_pfn; pfn != end_pfn; pfn += block_nr_pages) {
+> +               mem = find_memory_block(__pfn_to_section(pfn));
+> +               if (!mem)
+> +                       continue;
+> +               mem->section_count = 0;
+> +               unregister_memory_block_under_nodes(mem);
+>                 unregister_memory(mem);
+> -       else
+> -               put_device(&mem->dev);
+> -
+> -out_unlock:
+> +       }
+>         mutex_unlock(&mem_sysfs_mutex);
+>  }
+>
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 8598fcbd2a17..04fdfa99b8bc 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -801,9 +801,10 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
+>         return 0;
+>  }
+>
+> -/* unregister memory section under all nodes that it spans */
+> -int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
+> -                                   unsigned long phys_index)
+> +/*
+> + * Unregister memory block device under all nodes that it spans.
+> + */
+> +int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+>  {
+>         NODEMASK_ALLOC(nodemask_t, unlinked_nodes, GFP_KERNEL);
+>         unsigned long pfn, sect_start_pfn, sect_end_pfn;
+> @@ -816,8 +817,8 @@ int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
+>                 return -ENOMEM;
+>         nodes_clear(*unlinked_nodes);
+>
+> -       sect_start_pfn = section_nr_to_pfn(phys_index);
+> -       sect_end_pfn = sect_start_pfn + PAGES_PER_SECTION - 1;
+> +       sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
+> +       sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
+>         for (pfn = sect_start_pfn; pfn <= sect_end_pfn; pfn++) {
+>                 int nid;
+>
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index 95505fbb5f85..aa236c2a0466 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -112,7 +112,7 @@ extern void unregister_memory_notifier(struct notifier_block *nb);
+>  extern int register_memory_isolate_notifier(struct notifier_block *nb);
+>  extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
+>  int hotplug_memory_register(unsigned long start, unsigned long size);
+> -extern void unregister_memory_section(struct mem_section *);
+> +void hotplug_memory_unregister(unsigned long start, unsigned long size);
+>  extern int memory_dev_init(void);
+>  extern int memory_notify(unsigned long val, void *v);
+>  extern int memory_isolate_notify(unsigned long val, void *v);
+> diff --git a/include/linux/node.h b/include/linux/node.h
+> index 1a557c589ecb..02a29e71b175 100644
+> --- a/include/linux/node.h
+> +++ b/include/linux/node.h
+> @@ -139,8 +139,7 @@ extern int register_cpu_under_node(unsigned int cpu, unsigned int nid);
+>  extern int unregister_cpu_under_node(unsigned int cpu, unsigned int nid);
+>  extern int register_mem_sect_under_node(struct memory_block *mem_blk,
+>                                                 void *arg);
+> -extern int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
+> -                                          unsigned long phys_index);
+> +extern int unregister_memory_block_under_nodes(struct memory_block *mem_blk);
+>
+>  extern int register_memory_node_under_compute_node(unsigned int mem_nid,
+>                                                    unsigned int cpu_nid,
+> @@ -176,8 +175,7 @@ static inline int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  {
+>         return 0;
+>  }
+> -static inline int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
+> -                                                 unsigned long phys_index)
+> +static inline int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+>  {
+>         return 0;
+>  }
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 107f72952347..527fe4f9c620 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -519,8 +519,6 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
+>         if (WARN_ON_ONCE(!valid_section(ms)))
+>                 return;
+>
+> -       unregister_memory_section(ms);
+> -
+>         scn_nr = __section_nr(ms);
+>         start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
+>         __remove_zone(zone, start_pfn);
+> @@ -1844,6 +1842,9 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+>         memblock_free(start, size);
+>         memblock_remove(start, size);
+>
+> +       /* remove memory block devices before removing memory */
+> +       hotplug_memory_unregister(start, size);
+> +
+>         arch_remove_memory(nid, start, size, NULL);
+>         __release_memory_resource(start, size);
+
+Other than the BUG_ON concern you can add
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
