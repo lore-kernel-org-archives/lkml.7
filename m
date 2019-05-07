@@ -2,90 +2,179 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A573C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD395C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6F2205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D572087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557242632;
+	bh=dO7mTUjByDGN6GSIO12AxymBvd4d1sYv7pzpp4gCkcM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=K8oeKPftCVq+FYabCsPwXey3pKi5+jJPHg45m4pD94cMTe+I2u0s30yEDGL6DUeQp
+	 IND6wEq5zkI1GI6RcOPfEH+NGuxBVdjDwAZ8x90RDKVkBP9BqZ3fQbSuECWiw/MqFT
+	 b3U31HMjb8hhHKK8QxZ29+MM7CHLnPRbfYQLWvH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfEGPQw (ORCPT
+        id S1726611AbfEGPXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:16:52 -0400
-Received: from mx1.chost.de ([5.175.28.52]:53029 "EHLO mx1.chost.de"
+        Tue, 7 May 2019 11:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbfEGPQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:16:51 -0400
-Received: from vm002.chost.de ([::ffff:192.168.122.102])
-  by mx1.chost.de with SMTP; Tue, 07 May 2019 17:17:39 +0200
-  id 000000000133ACDA.000000005CD1A193.00003808
-Received: by vm002.chost.de (sSMTP sendmail emulation); Tue, 07 May 2019 17:17:38 +0200
-From:   Christoph Probst <kernel@probst.it>
-To:     linux-cifs@vger.kernel.org
-Cc:     Steve French <sfrench@samba.org>, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org, Christoph Probst <kernel@probst.it>
-Subject: [PATCH v2] cifs: fix strcat buffer overflow and reduce raciness in smb21_set_oplock_level()
-Date:   Tue,  7 May 2019 17:16:40 +0200
-Message-Id: <1557242200-26194-1-git-send-email-kernel@probst.it>
-X-Mailer: git-send-email 2.1.4
+        id S1726236AbfEGPXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:23:50 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9366B20578;
+        Tue,  7 May 2019 15:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557242629;
+        bh=dO7mTUjByDGN6GSIO12AxymBvd4d1sYv7pzpp4gCkcM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MEOLkab/mys2OmCbNNrFaBBWxiQRA8p5Xph5cSbOaf3dtJp0Y4pIinBOFJY6toD3q
+         Xo53veFn5xhtU7g2rJIDmKlEu5ktY0s3dHVC5R9PfmEaTd9qpMcYTb86rWSIA4KjmQ
+         Lkl8ZsqhAXEsvVdCvCDrQUPyfL0mNUaOmsLdkMlk=
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com, shuah <shuah@kernel.org>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1b1efa91-0523-21a9-e541-fdc3612bd117@kernel.org>
+Date:   Tue, 7 May 2019 09:23:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190507080119.GB28121@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change strcat to strncpy in the "None" case to fix a buffer overflow
-when cinode->oplock is reset to 0 by another thread accessing the same
-cinode. It is never valid to append "None" to any other message.
+On 5/7/19 2:01 AM, Greg KH wrote:
+> On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
+>> On 5/1/19 4:01 PM, Brendan Higgins wrote:
+>>> ## TLDR
+>>>
+>>> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
+>>> 5.2.
+>>>
+>>> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
+>>> we would merge through your tree when the time came? Am I remembering
+>>> correctly?
+>>>
+>>> ## Background
+>>>
+>>> This patch set proposes KUnit, a lightweight unit testing and mocking
+>>> framework for the Linux kernel.
+>>>
+>>> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+>>> it does not require installing the kernel on a test machine or in a VM
+>>> and does not require tests to be written in userspace running on a host
+>>> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
+>>> can run several dozen tests in under a second. Currently, the entire
+>>> KUnit test suite for KUnit runs in under a second from the initial
+>>> invocation (build time excluded).
+>>>
+>>> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+>>> Googletest/Googlemock for C++. KUnit provides facilities for defining
+>>> unit test cases, grouping related test cases into test suites, providing
+>>> common infrastructure for running tests, mocking, spying, and much more.
+>>
+>> As a result of the emails replying to this patch thread, I am now
+>> starting to look at kselftest.  My level of understanding is based
+>> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
+>> and a _tiny_ bit of looking at kselftest code.
+>>
+>> tl;dr; I don't really understand kselftest yet.
+>>
+>>
+>> (1) why KUnit exists
+>>
+>>> ## What's so special about unit testing?
+>>>
+>>> A unit test is supposed to test a single unit of code in isolation,
+>>> hence the name. There should be no dependencies outside the control of
+>>> the test; this means no external dependencies, which makes tests orders
+>>> of magnitudes faster. Likewise, since there are no external dependencies,
+>>> there are no hoops to jump through to run the tests. Additionally, this
+>>> makes unit tests deterministic: a failing unit test always indicates a
+>>> problem. Finally, because unit tests necessarily have finer granularity,
+>>> they are able to test all code paths easily solving the classic problem
+>>> of difficulty in exercising error handling code.
+>>
+>> (2) KUnit is not meant to replace kselftest
+>>
+>>> ## Is KUnit trying to replace other testing frameworks for the kernel?
+>>>
+>>> No. Most existing tests for the Linux kernel are end-to-end tests, which
+>>> have their place. A well tested system has lots of unit tests, a
+>>> reasonable number of integration tests, and some end-to-end tests. KUnit
+>>> is just trying to address the unit test space which is currently not
+>>> being addressed.
+>>
+>> My understanding is that the intent of KUnit is to avoid booting a kernel on
+>> real hardware or in a virtual machine.  That seems to be a matter of semantics
+>> to me because isn't invoking a UML Linux just running the Linux kernel in
+>> a different form of virtualization?
+>>
+>> So I do not understand why KUnit is an improvement over kselftest.
 
-Consolidate multiple writes to cinode->oplock to reduce raciness.
+They are in two different categories. Kselftest falls into black box
+regression test suite which is a collection of user-space tests with a
+few kernel test modules back-ending the tests in some cases.
 
-Signed-off-by: Christoph Probst <kernel@probst.it>
----
- fs/cifs/smb2ops.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Kselftest can be used by both kernel developers and users and provides
+a good way to regression test releases in test rings.
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index c36ff0d..aa61dcf 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -2917,26 +2917,28 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
- 		       unsigned int epoch, bool *purge_cache)
- {
- 	char message[5] = {0};
-+	unsigned int new_oplock = 0;
- 
- 	oplock &= 0xFF;
- 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
- 		return;
- 
--	cinode->oplock = 0;
- 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_READ_FLG;
-+		new_oplock |= CIFS_CACHE_READ_FLG;
- 		strcat(message, "R");
- 	}
- 	if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_HANDLE_FLG;
-+		new_oplock |= CIFS_CACHE_HANDLE_FLG;
- 		strcat(message, "H");
- 	}
- 	if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_WRITE_FLG;
-+		new_oplock |= CIFS_CACHE_WRITE_FLG;
- 		strcat(message, "W");
- 	}
--	if (!cinode->oplock)
--		strcat(message, "None");
-+	if (!new_oplock)
-+		strncpy(message, "None", sizeof(message));
-+
-+	cinode->oplock = new_oplock;
- 	cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
- 		 &cinode->vfs_inode);
- }
--- 
-2.1.4
+KUnit is a white box category and is a better fit as unit test framework
+for development and provides a in-kernel testing. I wouldn't view them
+one replacing the other. They just provide coverage for different areas
+of testing.
 
+I wouldn't view KUnit as something that would be easily run in test 
+rings for example.
+
+Brendan, does that sound about right?
+
+>>
+>> It seems to me that KUnit is just another piece of infrastructure that I
+>> am going to have to be familiar with as a kernel developer.  More overhead,
+>> more information to stuff into my tiny little brain.
+>>
+>> I would guess that some developers will focus on just one of the two test
+>> environments (and some will focus on both), splitting the development
+>> resources instead of pooling them on a common infrastructure.
+
+>> What am I missing?
+> 
+> kselftest provides no in-kernel framework for testing kernel code
+> specifically.  That should be what kunit provides, an "easy" way to
+> write in-kernel tests for things.
+> 
+> Brendan, did I get it right?
+thanks,
+-- Shuah
