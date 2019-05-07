@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B896EC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E2CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDB6205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8387E205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208970;
-	bh=EiAGYo1E9SxfPaS0i1ndJq2wTAwaTy0SAsYy7NBE9E4=;
+	s=default; t=1557208973;
+	bh=f0NDxdzF8Nmbe1Jkcm6mj+05ckxOunGYb1y/ulIrGn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGTcWOYtRSImjDkPtFbPTB4pNcZW/I1MQGLmKjQhAT1AS3UFZEjLBwbvN/ywIcYZ3
-	 my5Fsspg29+3BJ+UWl/2Pih3gXdbahqtllv8pMuugzHm1uLRFs7NQEjxJ/BEwwwLFT
-	 RQ7770ENdp2l0jJKtYlZhSm3ZgmAhmglNbKJoo8w=
+	b=dG70mjRaVLTn+7yPeRQ0sx0wGZzXptbgeF65Pv/T9+fnCdcG6h6nTmy9xmc8PJPZX
+	 rv0tsD5WMGG0z8BNlHBtjRB5xgui+MEgXx4+fqlbSxnuEAsx90OLfOx7xlqx2uMBZ4
+	 u3qbGasU0CZwAXdfDwdiIgQBPa03nwa4ylIDhokA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfEGFfY (ORCPT
+        id S1727073AbfEGGCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55368 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfEGFfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:20 -0400
+        id S1727787AbfEGFfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CF522087F;
-        Tue,  7 May 2019 05:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC3320C01;
+        Tue,  7 May 2019 05:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207319;
-        bh=EiAGYo1E9SxfPaS0i1ndJq2wTAwaTy0SAsYy7NBE9E4=;
+        s=default; t=1557207324;
+        bh=f0NDxdzF8Nmbe1Jkcm6mj+05ckxOunGYb1y/ulIrGn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/u0jRbRufFrj8/VqPVoaK9jwQvBxIz5i++3TqJ8jVw7skMj6LmWdEdMJRrGERbEg
-         22We8d2aEPVESKIxU1gUJasXY4ud+Z6/dn4es26aAZO9nKKWioSAdbpdGNsAEIFxZd
-         ipn9bD69NJ+5k5sLSU5OzEatxOyIsZOcyztIWvj8=
+        b=GZjohjuyLsLSlpJen/9gn05TfYwrJPFiHaDT665xtdMt+Tm4yD/nho6PPpgxS1FXo
+         a+8qNQD+OBKmFpFMhtVm0AqoxOZkltalXCMg3wIUJnvzPFljtH27F0hjqy7E0MXMK4
+         UKQ0naunr1hEp5U+jTlz6xYWcF2KhSMXjRDcogBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Gomez <dagmcr@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 83/99] spi: ST ST95HF NFC: declare missing of table
-Date:   Tue,  7 May 2019 01:32:17 -0400
-Message-Id: <20190507053235.29900-83-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 87/99] drm/sun4i: Unbind components before releasing DRM and memory
+Date:   Tue,  7 May 2019 01:32:21 -0400
+Message-Id: <20190507053235.29900-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -60,56 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gomez <dagmcr@gmail.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit d04830531d0c4a99c897a44038e5da3d23331d2f ]
+[ Upstream commit e02bc29b2cfa7806830d6da8b2322cddd67e8dfe ]
 
-Add missing <of_device_id> table for SPI driver relying on SPI
-device match since compatible is in a DT binding or in a DTS.
+Our components may still be using the DRM device driver (if only to
+access our driver's private data), so make sure to unbind them before
+the final drm_dev_put.
 
-Before this patch:
-modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
-alias:          spi:st95hf
+Also release our reserved memory after component unbind instead of
+before to match reverse creation order.
 
-After this patch:
-modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
-alias:          spi:st95hf
-alias:          of:N*T*Cst,st95hfC*
-alias:          of:N*T*Cst,st95hf
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424090413.6918-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st95hf/core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
-index 2b26f762fbc3..01acb6e53365 100644
---- a/drivers/nfc/st95hf/core.c
-+++ b/drivers/nfc/st95hf/core.c
-@@ -1074,6 +1074,12 @@ static const struct spi_device_id st95hf_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, st95hf_id);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 9a5713fa03b2..f8bf5bbec2df 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -146,10 +146,11 @@ static void sun4i_drv_unbind(struct device *dev)
+ 	drm_dev_unregister(drm);
+ 	drm_kms_helper_poll_fini(drm);
+ 	drm_mode_config_cleanup(drm);
+-	of_reserved_mem_device_release(dev);
+-	drm_dev_put(drm);
  
-+static const struct of_device_id st95hf_spi_of_match[] = {
-+        { .compatible = "st,st95hf" },
-+        { },
-+};
-+MODULE_DEVICE_TABLE(of, st95hf_spi_of_match);
+ 	component_unbind_all(dev, NULL);
++	of_reserved_mem_device_release(dev);
 +
- static int st95hf_probe(struct spi_device *nfc_spi_dev)
- {
- 	int ret;
-@@ -1260,6 +1266,7 @@ static struct spi_driver st95hf_driver = {
- 	.driver = {
- 		.name = "st95hf",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(st95hf_spi_of_match),
- 	},
- 	.id_table = st95hf_id,
- 	.probe = st95hf_probe,
++	drm_dev_put(drm);
+ }
+ 
+ static const struct component_master_ops sun4i_drv_master_ops = {
 -- 
 2.20.1
 
