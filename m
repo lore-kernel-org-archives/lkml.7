@@ -2,166 +2,223 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E40C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B53AC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB4F2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4345B2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nzBY8knp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfEGJKH (ORCPT
+        id S1726423AbfEGJNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:10:07 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:40320 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfEGJKH (ORCPT
+        Tue, 7 May 2019 05:13:12 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57340 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbfEGJNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:10:07 -0400
-Received: by mail-it1-f199.google.com with SMTP id d12so693580itl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:10:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wGj8QD5gKJW43OuUYpH6pO7J5gHO+g1GMqUge+gSVCw=;
-        b=irwaotWyBI4H0FoZPJ9qvq+74T8LcH8X3ZqRCZfQbiqVkUpmQFLh26W31Xl7H/Bx41
-         /hta7yBPEKt4q0rXg+PXjsuNlBKMMzp3BYiUtm6DQ+zl/ZYykWsDaim61YUAzW3jSgD7
-         MLJTRWSag/+356prDctobZUGed7a7gsXZsRw80UY9hEQ0GfFZCbMgKaImUJsCdieG2Gv
-         EFaCwhOm7/8K0HWbvKR8A5Qad5J4az7YLo3cJC7RMFbyd+0f341Nf8Xy+KNtEv3m6qJE
-         lZylKVzoTWAOrEoPpo+3sFAC0Tdfi4tVpf1n0TjjDGhMBI+1i0nj4jNKPKvf5J/Sn3gN
-         VHmQ==
-X-Gm-Message-State: APjAAAW29M3LEjKRX7rp/BHEIbd2aEGmoqhHE5FW+rOW7+78MoW5hUeM
-        dvUYm/63VVYv2ez7qhCzQGLe1yQFWJs5lkfUD4q1C0dkLR2v
-X-Google-Smtp-Source: APXvYqxDW5QCZU/EC3UQeUBZbnYC491FuIKbQhdZyD6oz6ReScipKY22VF2GVnlNUccnTQrfJH2EAiIxRFO/ATvrnpwvlaT00zLt
+        Tue, 7 May 2019 05:13:11 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x479BuXH003642;
+        Tue, 7 May 2019 11:12:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=OSWmrVuuFcUHBeWLjxnCf2tM/b2q7fucVTqUAzYwn6s=;
+ b=nzBY8knpfdJ1kGKaNdXZAbnUmSZj6Dhx3tukY+IqMN2WP7BYMgy/v+NWhObmJWNdno3+
+ al6KjFoR1w0UklWFG6j9B2SvbJXqkJL6mNHo2YL1RRm+J6Af3XKMH90g1tODLBF4QDN3
+ 7PVoic2fvqu3n7gS78q8sPRtktCLUYQIwV9MQhoPk0+bF8HlLcKzT9hYrtW9PUBxEDZf
+ AGRSQVy+GSx7OT6tC4b6dpFNw5uQ0B08BctSYCMTl+pezyFRo2QJR89XBi/4qUBTLJPv
+ 58zb847uLbPevDp21NYyY02vnpD9kZ8E6Xct8BPk2IsOmVMrX8r+wl8KKf/bNylE4mXw ag== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2s94cdegpx-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 07 May 2019 11:12:36 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7DB0946;
+        Tue,  7 May 2019 09:12:35 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5495318A8;
+        Tue,  7 May 2019 09:12:35 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 7 May 2019
+ 11:12:35 +0200
+Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 7 May 2019 11:12:34
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <vilhelm.gray@gmail.com>
+CC:     <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] IIO: stm32: Remove quadrature related functions from trigger driver
+Date:   Tue, 7 May 2019 11:12:24 +0200
+Message-ID: <20190507091224.17781-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-X-Received: by 2002:a24:7595:: with SMTP id y143mr7969814itc.42.1557220205903;
- Tue, 07 May 2019 02:10:05 -0700 (PDT)
-Date:   Tue, 07 May 2019 02:10:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000035c756058848954a@google.com>
-Subject: KASAN: use-after-free Read in hci_cmd_timeout
-From:   syzbot <syzbot+19a9f729f05272857487@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Quadrature feature is now hosted on it own framework.
+Remove quadrature related code from stm32-trigger driver to avoid
+code duplication and simplify the ABI.
 
-syzbot found the following crash on:
-
-HEAD commit:    83a50840 Merge tag 'seccomp-v5.1-rc8' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14b99b60a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ef1b87b455c397cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=19a9f729f05272857487
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+19a9f729f05272857487@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in hci_cmd_timeout+0x212/0x220  
-net/bluetooth/hci_core.c:2617
-Read of size 2 at addr ffff88809fa9ca08 by task kworker/1:1/22
-
-CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc7+ #94
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events hci_cmd_timeout
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
-  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
-  hci_cmd_timeout+0x212/0x220 net/bluetooth/hci_core.c:2617
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Allocated by task 8319:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
-  __do_kmalloc_node mm/slab.c:3687 [inline]
-  __kmalloc_node_track_caller+0x4e/0x70 mm/slab.c:3701
-  __kmalloc_reserve.isra.0+0x40/0xf0 net/core/skbuff.c:140
-  __alloc_skb+0x10b/0x5e0 net/core/skbuff.c:208
-  alloc_skb include/linux/skbuff.h:1058 [inline]
-  bt_skb_alloc include/net/bluetooth/bluetooth.h:339 [inline]
-  hci_prepare_cmd+0x30/0x230 net/bluetooth/hci_request.c:287
-  hci_req_add_ev+0xb0/0x210 net/bluetooth/hci_request.c:321
-  __hci_cmd_sync_ev+0xfc/0x1c0 net/bluetooth/hci_request.c:133
-  __hci_cmd_sync+0x37/0x50 net/bluetooth/hci_request.c:182
-  btintel_enter_mfg+0x2e/0x90 drivers/bluetooth/btintel.c:82
-  ag6xx_setup+0x106/0x820 drivers/bluetooth/hci_ag6xx.c:180
-  hci_uart_setup+0x1c4/0x490 drivers/bluetooth/hci_ldisc.c:418
-  hci_dev_do_open+0x78c/0x1780 net/bluetooth/hci_core.c:1450
-  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Freed by task 8319:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
-  __cache_free mm/slab.c:3499 [inline]
-  kfree+0xcf/0x230 mm/slab.c:3822
-  skb_free_head+0x93/0xb0 net/core/skbuff.c:557
-  skb_release_data+0x576/0x7a0 net/core/skbuff.c:577
-  skb_release_all+0x4d/0x60 net/core/skbuff.c:631
-  __kfree_skb net/core/skbuff.c:645 [inline]
-  kfree_skb net/core/skbuff.c:663 [inline]
-  kfree_skb+0xe8/0x390 net/core/skbuff.c:657
-  hci_dev_do_open+0xb2b/0x1780 net/bluetooth/hci_core.c:1552
-  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff88809fa9ca00
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 8 bytes inside of
-  512-byte region [ffff88809fa9ca00, ffff88809fa9cc00)
-The buggy address belongs to the page:
-page:ffffea00027ea700 count:1 mapcount:0 mapping:ffff8880aa400940 index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00023039c8 ffffea00026f9488 ffff8880aa400940
-raw: 0000000000000000 ffff88809fa9c000 0000000100000006 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809fa9c900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809fa9c980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff88809fa9ca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                       ^
-  ffff88809fa9ca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809fa9cb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ .../ABI/testing/sysfs-bus-iio-timer-stm32          | 23 ------
+ drivers/iio/trigger/stm32-timer-trigger.c          | 84 ----------------------
+ 2 files changed, 107 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+index 161c147d3c40..b7259234ad70 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
++++ b/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+@@ -91,29 +91,6 @@ Description:
+ 		When counting down the counter start from preset value
+ 		and fire event when reach 0.
+ 
+-What:		/sys/bus/iio/devices/iio:deviceX/in_count_quadrature_mode_available
+-KernelVersion:	4.12
+-Contact:	benjamin.gaignard@st.com
+-Description:
+-		Reading returns the list possible quadrature modes.
+-
+-What:		/sys/bus/iio/devices/iio:deviceX/in_count0_quadrature_mode
+-KernelVersion:	4.12
+-Contact:	benjamin.gaignard@st.com
+-Description:
+-		Configure the device counter quadrature modes:
+-		channel_A:
+-			Encoder A input servers as the count input and B as
+-			the UP/DOWN direction control input.
+-
+-		channel_B:
+-			Encoder B input serves as the count input and A as
+-			the UP/DOWN direction control input.
+-
+-		quadrature:
+-			Encoder A and B inputs are mixed to get direction
+-			and count with a scale of 0.25.
+-
+ What:		/sys/bus/iio/devices/iio:deviceX/in_count_enable_mode_available
+ KernelVersion:	4.12
+ Contact:	benjamin.gaignard@st.com
+diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+index ccf1ce653b25..a5dfe65cd9b9 100644
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -608,86 +608,6 @@ static const struct iio_enum stm32_enable_mode_enum = {
+ 	.get = stm32_get_enable_mode
+ };
+ 
+-static const char *const stm32_quadrature_modes[] = {
+-	"channel_A",
+-	"channel_B",
+-	"quadrature",
+-};
+-
+-static int stm32_set_quadrature_mode(struct iio_dev *indio_dev,
+-				     const struct iio_chan_spec *chan,
+-				     unsigned int mode)
+-{
+-	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+-
+-	regmap_update_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS, mode + 1);
+-
+-	return 0;
+-}
+-
+-static int stm32_get_quadrature_mode(struct iio_dev *indio_dev,
+-				     const struct iio_chan_spec *chan)
+-{
+-	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+-	u32 smcr;
+-	int mode;
+-
+-	regmap_read(priv->regmap, TIM_SMCR, &smcr);
+-	mode = (smcr & TIM_SMCR_SMS) - 1;
+-	if ((mode < 0) || (mode > ARRAY_SIZE(stm32_quadrature_modes)))
+-		return -EINVAL;
+-
+-	return mode;
+-}
+-
+-static const struct iio_enum stm32_quadrature_mode_enum = {
+-	.items = stm32_quadrature_modes,
+-	.num_items = ARRAY_SIZE(stm32_quadrature_modes),
+-	.set = stm32_set_quadrature_mode,
+-	.get = stm32_get_quadrature_mode
+-};
+-
+-static const char *const stm32_count_direction_states[] = {
+-	"up",
+-	"down"
+-};
+-
+-static int stm32_set_count_direction(struct iio_dev *indio_dev,
+-				     const struct iio_chan_spec *chan,
+-				     unsigned int dir)
+-{
+-	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+-	u32 val;
+-	int mode;
+-
+-	/* In encoder mode, direction is RO (given by TI1/TI2 signals) */
+-	regmap_read(priv->regmap, TIM_SMCR, &val);
+-	mode = (val & TIM_SMCR_SMS) - 1;
+-	if ((mode >= 0) || (mode < ARRAY_SIZE(stm32_quadrature_modes)))
+-		return -EBUSY;
+-
+-	return regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_DIR,
+-				  dir ? TIM_CR1_DIR : 0);
+-}
+-
+-static int stm32_get_count_direction(struct iio_dev *indio_dev,
+-				     const struct iio_chan_spec *chan)
+-{
+-	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+-	u32 cr1;
+-
+-	regmap_read(priv->regmap, TIM_CR1, &cr1);
+-
+-	return ((cr1 & TIM_CR1_DIR) ? 1 : 0);
+-}
+-
+-static const struct iio_enum stm32_count_direction_enum = {
+-	.items = stm32_count_direction_states,
+-	.num_items = ARRAY_SIZE(stm32_count_direction_states),
+-	.set = stm32_set_count_direction,
+-	.get = stm32_get_count_direction
+-};
+-
+ static ssize_t stm32_count_get_preset(struct iio_dev *indio_dev,
+ 				      uintptr_t private,
+ 				      const struct iio_chan_spec *chan,
+@@ -728,10 +648,6 @@ static const struct iio_chan_spec_ext_info stm32_trigger_count_info[] = {
+ 		.read = stm32_count_get_preset,
+ 		.write = stm32_count_set_preset
+ 	},
+-	IIO_ENUM("count_direction", IIO_SEPARATE, &stm32_count_direction_enum),
+-	IIO_ENUM_AVAILABLE("count_direction", &stm32_count_direction_enum),
+-	IIO_ENUM("quadrature_mode", IIO_SEPARATE, &stm32_quadrature_mode_enum),
+-	IIO_ENUM_AVAILABLE("quadrature_mode", &stm32_quadrature_mode_enum),
+ 	IIO_ENUM("enable_mode", IIO_SEPARATE, &stm32_enable_mode_enum),
+ 	IIO_ENUM_AVAILABLE("enable_mode", &stm32_enable_mode_enum),
+ 	IIO_ENUM("trigger_mode", IIO_SEPARATE, &stm32_trigger_mode_enum),
+-- 
+2.15.0
+
