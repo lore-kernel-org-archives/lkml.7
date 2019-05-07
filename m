@@ -2,69 +2,66 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF01C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AF9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F3820989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557199522;
-	bh=agyJXpORaqnO7sWm0VEpzZlUM0VHrPGkECLl9eYIWBA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=pgpI0ex/dMzHWkgByUljmjx5+m4RJ1Rgwhbk6GvrMdar/+AlzR3y7cMC9mBmrCfeS
-	 kQlLoo9NlycJmrVH+qH6SoNJ/+fZP19zei3PERW0jMkFo8EzsvpdybnGT0l+tvyQ7m
-	 0seNxo3VeVN8lV2u9pRYt6h5OWrsu5ig8A1JkXto=
+	by mail.kernel.org (Postfix) with ESMTP id 20C8620B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfEGDZV (ORCPT
+        id S1727215AbfEGD0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 23:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfEGDZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 23:25:04 -0400
-Subject: Re: [GIT PULL] EDAC pile for 5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557199503;
-        bh=agyJXpORaqnO7sWm0VEpzZlUM0VHrPGkECLl9eYIWBA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=X9Eu1ezTN8VLnCSzQkK60rYCWJhyi52GAoNpHr459kRDGVVBp40Py0n8OuqzSwc34
-         D3tyet7yzXOOFIhKV+GASoexUVpHpKQD0uO4/a0vBbiM2iWG4nni8f6XifV3CBQIJJ
-         ilycvGCMpLRiApjd6Hdws/4QmU/pD/8HN2PcH2h8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190506083732.GB6094@zn.tnic>
-References: <20190506083732.GB6094@zn.tnic>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190506083732.GB6094@zn.tnic>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git
- tags/edac_for_5.2
-X-PR-Tracked-Commit-Id: 8de9930a4618811edfaebc4981a9fafff2af9170
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 275b103a26e218b3d739e5ab15be6b40303a1428
-Message-Id: <155719950375.20841.17232583243112373429.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 May 2019 03:25:03 +0000
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Mon, 6 May 2019 23:26:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37612 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726866AbfEGD0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 23:26:09 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9B0F33BA8E3B6B52E5A6;
+        Tue,  7 May 2019 11:26:07 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 7 May 2019
+ 11:25:58 +0800
+Subject: Re: [PATCH v2] mm/hugetlb: Don't put_page in lock of hugetlb_lock
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     <mike.kravetz@oracle.com>, <shenkai8@huawei.com>,
+        <linfeilong@huawei.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <wangwang2@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <agl@us.ibm.com>,
+        <nacc@us.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+References: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
+ <b8ade452-2d6b-0372-32c2-703644032b47@huawei.com>
+ <20190506142001.GC31017@dhcp22.suse.cz>
+ <d11fa51f-e976-ec33-4f5b-3b26ada64306@huawei.com>
+ <20190506190731.GE31017@dhcp22.suse.cz>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <32a63fc6-add1-5556-8174-517d41aa8a2a@huawei.com>
+Date:   Tue, 7 May 2019 11:25:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
+MIME-Version: 1.0
+In-Reply-To: <20190506190731.GE31017@dhcp22.suse.cz>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 6 May 2019 10:37:32 +0200:
+> On Mon 06-05-19 23:22:08, Zhiqiang Liu wrote:
+> [...]
+>> Does adding Cc: stable mean adding Cc: <stable@vger.kernel.org>
+>> tag in the patch or Ccing stable@vger.kernel.org when sending the new mail?
+> 
+> The former. See Documentation/process/stable-kernel-rules.rst for more.
+> 
+> Thanks!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git tags/edac_for_5.2
+Thank you, Oscar Salvador and Mike Kravetz again.
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/275b103a26e218b3d739e5ab15be6b40303a1428
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
