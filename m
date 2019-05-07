@@ -2,137 +2,112 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58453C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECDDC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338062087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C465E20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfEGOm7 (ORCPT
+        id S1726803AbfEGOnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:42:59 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:51816 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726444AbfEGOm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:42:59 -0400
-Received: (qmail 2035 invoked by uid 2102); 7 May 2019 10:42:58 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 7 May 2019 10:42:58 -0400
-Date:   Tue, 7 May 2019 10:42:58 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Johan Hovold <johan@kernel.org>
-cc:     syzbot <syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com>,
-        <andreyknvl@google.com>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <mchehab@kernel.org>, <syzkaller-bugs@googlegroups.com>,
-        <wen.yang99@zte.com.cn>
-Subject: Re: general protection fault in smsusb_init_device
-In-Reply-To: <20190507083430.GD4333@localhost>
-Message-ID: <Pine.LNX.4.44L0.1905071035450.1632-100000@iolanthe.rowland.org>
+        Tue, 7 May 2019 10:43:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34606 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbfEGOnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:43:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 07:43:16 -0700
+X-ExtLoop1: 1
+Received: from asakoono-mobl.gar.corp.intel.com (HELO [10.251.159.132]) ([10.251.159.132])
+  by fmsmga005.fm.intel.com with ESMTP; 07 May 2019 07:43:15 -0700
+Subject: Re: [PATCH 1/8] soundwire: intel: filter SoundWire controller device
+ search
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190504002926.28815-1-pierre-louis.bossart@linux.intel.com>
+ <20190504002926.28815-2-pierre-louis.bossart@linux.intel.com>
+ <20190507122651.GO16052@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <47fd3ca6-6910-f101-9b63-f653cd1443f9@linux.intel.com>
+Date:   Tue, 7 May 2019 09:43:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20190507122651.GO16052@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019, Johan Hovold wrote:
 
-> On Mon, May 06, 2019 at 04:41:41PM -0400, Alan Stern wrote:
-> > On Thu, 18 Apr 2019, syzbot wrote:
-> > 
-> > > Hello,
-> > > 
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=128ec3fd200000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=53f029db71c19a47325a
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16138e67200000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128dddbf200000
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
-> > > 
-> > > usb 1-1: config 0 descriptor??
-> > > usb 1-1: string descriptor 0 read error: -71
-> > > smsusb:smsusb_probe: board id=18, interface number 0
-> > > kasan: CONFIG_KASAN_INLINE enabled
-> > > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > > general protection fault: 0000 [#1] SMP KASAN PTI
-> > > CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc5-319617-gd34f951 #4
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > > Google 01/01/2011
-> > > Workqueue: usb_hub_wq hub_event
-> > > RIP: 0010:smsusb_init_device+0x366/0x937  
-> > > drivers/media/usb/siano/smsusb.c:429
-> > 
-> > The driver assumes endpoint 1in exists, and doesn't check the existence 
-> > of the endpoints it uses.
-> > 
-> > Alan Stern
-> > 
-> > 
-> > #syz test: https://github.com/google/kasan.git usb-fuzzer
-> > 
-> >  drivers/media/usb/siano/smsusb.c |   32 +++++++++++++++++++-------------
-> >  1 file changed, 19 insertions(+), 13 deletions(-)
-> > 
-> > Index: usb-devel/drivers/media/usb/siano/smsusb.c
-> > ===================================================================
-> > --- usb-devel.orig/drivers/media/usb/siano/smsusb.c
-> > +++ usb-devel/drivers/media/usb/siano/smsusb.c
-> > @@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
-> >  	struct smsusb_device_t *dev;
-> >  	void *mdev;
-> >  	int i, rc;
-> > +	int in_maxp;
-> >  
-> >  	/* create device object */
-> >  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-> > @@ -411,6 +412,23 @@ static int smsusb_init_device(struct usb
-> >  	dev->udev = interface_to_usbdev(intf);
-> >  	dev->state = SMSUSB_DISCONNECTED;
-> >  
-> > +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
-> > +		struct usb_endpoint_descriptor *desc =
-> > +				&intf->cur_altsetting->endpoint[i].desc;
-> > +
-> > +		if (desc->bEndpointAddress & USB_DIR_IN) {
-> > +			dev->in_ep = desc->bEndpointAddress;
-> > +			in_maxp = usb_endpoint_maxp(desc);
-> > +		} else {
-> > +			dev->out_ep = desc->bEndpointAddress;
-> > +		}
-> > +	}
-> > +
-> > +	pr_debug("in_ep = %02x, out_ep = %02x\n",
-> > +		dev->in_ep, dev->out_ep);
-> > +	if (!dev->in_ep || !dev->out_ep)	/* Missing endpoints? */
-> > +		return -EINVAL;
+
+On 5/7/19 7:26 AM, Vinod Koul wrote:
+> On 03-05-19, 19:29, Pierre-Louis Bossart wrote:
+>> The convention is that the SoundWire controller device is a child of
+>> the HDAudio controller. However there can be more than one child
+>> exposed in the DSDT table, and the current namespace walk returns the
+>> last device.
+>>
+>> Add a filter and terminate early when a valid _ADR is provided,
+>> otherwise keep iterating to find the next child.
 > 
-> Looks like you're now leaking dev here, and so is the current code in
-> the later error paths.
+> So what are the other devices in DSDT here..
+
+this is what I see:
+
+Scope (HDAS)
+         {
+             Device (IDA)
+             {
+                 Name (_ADR, 0x00020001)  // _ADR: Address
+             }
+         }
+
+I thought this was nonsense but your question triggered me to look into 
+the Intel SST ACPI specs (not public I am afraid but shared with the OS 
+who shall not be named).
+Using the same source of information as below, I *believe* this is 
+HDaudio related, bits 31..16 mean HDaudio with codec SDI 2, and NodeId 1 
+for the function group. This would make sense as I believe there are two 
+codecs on the board that can be pin-strapped to boot either in HDaudio 
+or SoundWire mode- but this is a conjecture only.
+
+At any rate, we need a hardware rework and mutual exclusion between 
+HDaudio and SoundWire, so we have to ignore this one when SoundWire is 
+enabled.
+
+>> +
+>> +	/*
+>> +	 * On some Intel platforms, multiple children of the HDAS
+>> +	 * device can be found, but only one of them is the SoundWire
+>> +	 * controller. The SNDW device is always exposed with
+>> +	 * Name(_ADR, 0x40000000) so filter accordingly
+>> +	 */
+>> +	if (adr != 0x40000000)
 > 
-> Since this return value will be returned from probe, you may want to use
-> -ENXIO or -ENODEV instead of -EINVAL.
+> I do not recall if 4 corresponds to the links you have or soundwire
+> device type, is this number documented somewhere is HDA specs?
+
+I thought it was a magic number, but I did check and for once it's 
+documented and the values match the spec :-)
+I see in the ACPI docs bits 31..28 set to 4 indicate a SoundWire Link 
+Type and bits 3..0 indicate the SoundWire controller instance, the rest 
+is reserved to zero.
+
 > 
-> Looks good otherwise.
+> Also it might good to create a define for this
 
-Thanks for the review.  You're right about the memory leak (although 
-you're wrong about the later error paths: smsusb_term_device() 
-deallocates dev).  And -ENODEV does seem like a better return code.
-
-I'll update the patch as you suggest.
-
-Alan Stern
-
+I will respin this one to add the documentation above, and only filter 
+on the 4 ms-bits. Thanks for forcing me to RTFM :-)
