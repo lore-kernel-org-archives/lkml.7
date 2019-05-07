@@ -2,159 +2,102 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF89C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D276721479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557212781;
-	bh=D/iLEeRMbAo/D0nUwcRfutpVVc7O5Mnze5ezjHPRVWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=up8GUeReAQlsKFc58M5YIaep+4zXREmXr2buUzlKfZ4NDg2WCkcsjfI0JGarTh4x3
-	 Sjt3ONTCZGd1f2Hk1RBt+G1mkfLUI3ZAuxcA7HttMKhqXUX5g6FkP3JUSp1Ye6S1X2
-	 0agsP90uIvRHQO44SH/+qWsu8CKTlIKtqwCil+l4=
+	by mail.kernel.org (Postfix) with ESMTP id E61D621019
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfEGHGU (ORCPT
+        id S1726962AbfEGHGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:06:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfEGHGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:06:20 -0400
-Received: from localhost (unknown [106.200.210.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D7220989;
+        Tue, 7 May 2019 03:06:32 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:57519 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfEGHGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:06:32 -0400
+X-Originating-IP: 90.88.149.145
+Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0696C240010;
         Tue,  7 May 2019 07:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557212779;
-        bh=D/iLEeRMbAo/D0nUwcRfutpVVc7O5Mnze5ezjHPRVWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ccX/mlxqT3F1w5nzpvWHtewkd6XiNZhglmQRJ5Qc4FEl3GX7hcSqtfaN0ILHflbJK
-         swAd+9ylQaTTgARuLfKGZgkJrr/5tPG8zw1C7u0xjbg4SYsT7t9nn71iBIr9NS4uT6
-         BHvNequA6KtX1EBV8TcCX5IVzyQdJ18dxgos2J7k=
-Date:   Tue, 7 May 2019 12:36:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, amit.kucheria@linaro.org,
-        jorge.ramirez-ortiz@linaro.org, lina.iyer@linaro.org,
-        ulf.hansson@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Message-ID: <20190507070614.GF16052@vkoul-mobl>
-References: <20190506193115.20909-1-niklas.cassel@linaro.org>
- <20190507053547.GE16052@vkoul-mobl>
- <20190507065555.GB2085@tuxbook-pro>
+Date:   Tue, 7 May 2019 09:06:17 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v2] arm64: allwinner: h6: orangepi-one-plus: Add Ethernet
+ support
+Message-ID: <20190507070617.h7loqiqvznqvvprq@flea>
+References: <20190503115928.27662-1-jagan@amarulasolutions.com>
+ <20190503144651.ttqfha656dykqjzo@flea>
+ <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7mpr5huweraqfrmv"
 Content-Disposition: inline
-In-Reply-To: <20190507065555.GB2085@tuxbook-pro>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-05-19, 23:55, Bjorn Andersson wrote:
-> On Mon 06 May 22:35 PDT 2019, Vinod Koul wrote:
-> 
-> > On 06-05-19, 21:31, Niklas Cassel wrote:
-> > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > > 
-> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > @@ -31,6 +31,7 @@
-> > >  			reg = <0x100>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		CPU1: cpu@101 {
-> > > @@ -39,6 +40,7 @@
-> > >  			reg = <0x101>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		CPU2: cpu@102 {
-> > > @@ -47,6 +49,7 @@
-> > >  			reg = <0x102>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		CPU3: cpu@103 {
-> > > @@ -55,12 +58,24 @@
-> > >  			reg = <0x103>;
-> > >  			enable-method = "psci";
-> > >  			next-level-cache = <&L2_0>;
-> > > +			cpu-idle-states = <&CPU_PC>;
-> > >  		};
-> > >  
-> > >  		L2_0: l2-cache {
-> > >  			compatible = "cache";
-> > >  			cache-level = <2>;
-> > >  		};
-> > > +
-> > > +		idle-states {
-> > 
-> > Since we are trying to sort the file per address and
-> > alphabetically, it would be great if this can be moved before l2-cache
-> > :)
-> > 
-> 
-> Picked up, with the order adjusted.
-> 
-> > Other than that this lgtm
-> >  
-> 
-> I presume that lgtm == Reviewed-by...
 
-yes :-) and formally here as well..
+--7mpr5huweraqfrmv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+On Mon, May 06, 2019 at 03:03:15PM +0530, Jagan Teki wrote:
+> On Fri, May 3, 2019 at 8:16 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Fri, May 03, 2019 at 05:29:28PM +0530, Jagan Teki wrote:
+> > > Add Ethernet support for orangepi-one-plus board,
+> > >
+> > > - Ethernet port connected via RTL8211E PHY
+> > > - PHY suppiled with
+> > >   GMAC-2V5, fixed regulator with GMAC_EN pin via PD6
+> > >   GMAC-3V, which is supplied by VCC3V3-MAC via aldo2
+> > > - RGMII-RESET pin connected via PD14
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> >
+> > Your commit log should be improved. We can get those informations from
+> > the patch itself...
+>
+> Thought it was a clear commit log :)  will update anyway.
 
-> 
-> Thanks,
-> Bjorn
-> 
-> > > +			CPU_PC: pc {
-> > > +				compatible = "arm,idle-state";
-> > > +				arm,psci-suspend-param = <0x40000003>;
-> > > +				entry-latency-us = <125>;
-> > > +				exit-latency-us = <180>;
-> > > +				min-residency-us = <595>;
-> > > +				local-timer-stop;
-> > > +			};
-> > > +		};
-> > >  	};
-> > >  
-> > >  	firmware {
-> > > -- 
-> > > 2.21.0
-> > 
-> > -- 
-> > ~Vinod
+Well, yes and no. The commit log is clear indeed, but it doesn't
+provide what it's supposed to provide.
 
--- 
-~Vinod
+You shouldn't put *what* is being done by the patch. That's pretty
+easy to figure out by reading the patch itself. You have to explain
+why and how you did it, which is lacking in that case.
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--7mpr5huweraqfrmv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNEuaQAKCRDj7w1vZxhR
+xd1dAQCZ8mdMU1ntN71QprlJOvmZ6QM+Lac9lUEn0g7MW9XFtQEApmogSNh+xobJ
+9r8QAM1TQtC15u9UPFQcjEOQBoc1iww=
+=Vt2l
+-----END PGP SIGNATURE-----
+
+--7mpr5huweraqfrmv--
