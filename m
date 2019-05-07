@@ -2,177 +2,175 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EE3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008BBC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DBB21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E8A21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZlFoukS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfEGWbQ (ORCPT
+        id S1726460AbfEGWgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:31:16 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58843 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfEGWbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:31:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 15:31:15 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 07 May 2019 15:31:15 -0700
-Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
-        by linux.intel.com (Postfix) with ESMTP id 21B63580105;
-        Tue,  7 May 2019 15:31:13 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] ASoC: Intel: Skylake: Add Cometlake PCI IDs
-To:     Evan Green <evgreen@chromium.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Naveen M <naveen.m@intel.com>,
-        Sathya Prakash <sathya.prakash.m.r@intel.com>,
-        Ben Zhang <benzh@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Rakesh Ughreja <rakesh.a.ughreja@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>, Jenny TC <jenny.tc@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-References: <20190507215359.113378-1-evgreen@chromium.org>
- <20190507215359.113378-3-evgreen@chromium.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <866afac2-e457-375b-d745-88952b11d75e@linux.intel.com>
-Date:   Tue, 7 May 2019 17:31:06 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Tue, 7 May 2019 18:36:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45899 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfEGWgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 18:36:14 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n22so5494227lfe.12;
+        Tue, 07 May 2019 15:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4R5ifsup3NykhfRTLDToqK948qspJ5mN7zRILNuTmJI=;
+        b=JZlFoukSAz1HM3PmXPF5oBf51z0VlGSx/HjQHd3a4ZmMdBpmDhXnqv5naD5DGrXXXa
+         wq8pg2+ARP3oN5zqiDGOiQmkr0visLyBmCt7Cu+ZFFD48vWcZWHcsWJtq8xKhDlV5QPf
+         1TbbO70/jiMWtnMCPdOgvTse0Za9otU4wb1arqG+2yFZF8I8EvEknQbYKc4nYiz+LWOB
+         TzX3hUaSmz8qfAhFfZ2n5gBzmF1JPeau/XDeI9PnpsVfsiCoz0/5k0exyqfxtFj1zoi5
+         QBU/uUUj+3aBOjS/9p4xl80RRcTfcQl5CY9zpG0Q7XlrV2d16PUk4wl2QV1vdsGiHJlQ
+         w9TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4R5ifsup3NykhfRTLDToqK948qspJ5mN7zRILNuTmJI=;
+        b=MVSWCPlYcydqxtubzMxoy8lVyzIKAzTx1HwCc/3XmqS24IEcLyViXeh2UfVy6ax3e7
+         +CcwutzTn0jwYecPwGrR+rR8GymK98pkU2/JGGapdGO+N1ew5dpBWUv+iYGJQGt8HdCa
+         l2+IPvtdNSHWk0S6i6shMppuCGv5XkF627QCAk4Kc930xa+0z1TlpwInFWa/7JUhTg9w
+         cLcsqhJw/wj3dkX+mH7vwLMsNhD7W37fEn3qWBmyxpZCsA4edHnKK3dvIHw5TUOD7fMb
+         WEQdBWd9sMVg895IqHZS6Cj5HZpn9IkZ7OvQsR4fmWnx5P9fz7Q/P6vXbLGPAeNx/cKT
+         EdaA==
+X-Gm-Message-State: APjAAAU0AKJy11gcOn6bn7bMgSc3235IhEQda4oCZAhiBV61CBug9b7m
+        E9LYiEOKdsdhte+of0vRLcYRJUMmKJM=
+X-Google-Smtp-Source: APXvYqxOhgMqhog8aPTzNg9obMq+Vt6l/VcrUdM7E4d++XZQODhcHDy4g/pG7AG51YePERzmQ0Z9/g==
+X-Received: by 2002:ac2:5582:: with SMTP id v2mr17802681lfg.19.1557268571015;
+        Tue, 07 May 2019 15:36:11 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id r21sm3442159ljg.51.2019.05.07.15.36.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 07 May 2019 15:36:10 -0700 (PDT)
+Date:   Wed, 8 May 2019 01:36:07 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] mips: Print the kernel virtual mem layout on
+ debugging
+Message-ID: <20190507223603.ewuye6lutbb5wz2l@mobilestation>
+References: <20190503175041.7949-1-fancer.lancer@gmail.com>
+ <20190503175041.7949-4-fancer.lancer@gmail.com>
+ <20190506191419.w3qtkgcjrjjuzwmu@pburton-laptop>
 MIME-Version: 1.0
-In-Reply-To: <20190507215359.113378-3-evgreen@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190506191419.w3qtkgcjrjjuzwmu@pburton-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 4:53 PM, Evan Green wrote:
-> Add PCI IDs for Intel CometLake platforms, which from a software
-> point of view are extremely similar to Cannonlake platforms.
+Hello Paul
 
-Humm, I have mixed feelings here.
+On Mon, May 06, 2019 at 07:14:21PM +0000, Paul Burton wrote:
+> Hi Serge,
+> 
+> On Fri, May 03, 2019 at 08:50:39PM +0300, Serge Semin wrote:
+> > It is useful at least for debugging to have the kernel virtual
+> > memory layout printed at boot time so to have the full information
+> > about the booted kernel. Make the printing optional and available
+> > only when DEBUG_KERNEL config is enabled so not to leak a sensitive
+> > kernel information.
+> > 
+> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > ---
+> >  arch/mips/mm/init.c | 49 +++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> 
+> FYI the rest of the series is in mips-next, but I left this one out
+> because it gives me compile errors for 64r6el_defconfig:
+> 
+> In file included from ./include/linux/printk.h:7,
+>                  from ./include/linux/kernel.h:15,
+>                  from ./include/asm-generic/bug.h:18,
+>                  from ./arch/mips/include/asm/bug.h:42,
+>                  from ./include/linux/bug.h:5,
+>                  from arch/mips/mm/init.c:11:
+> arch/mips/mm/init.c: In function ‘mem_print_kmap_info’:
+> ./include/linux/kern_levels.h:5:18: error: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘long long unsigned int’ [-Werror=format=]
+>  #define KERN_SOH "\001"  /* ASCII Start Of Header */
+>                   ^~~~~~
+> ./include/linux/kern_levels.h:13:21: note: in expansion of macro ‘KERN_SOH’
+>  #define KERN_NOTICE KERN_SOH "5" /* normal but significant condition */
+>                      ^~~~~~~~
+> ./include/linux/printk.h:307:9: note: in expansion of macro ‘KERN_NOTICE’
+>   printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
+>          ^~~~~~~~~~~
+> arch/mips/mm/init.c:69:2: note: in expansion of macro ‘pr_notice’
+>   pr_notice("Kernel virtual memory layout:\n"
+>   ^~~~~~~~~
+> arch/mips/mm/init.c:70:39: note: format string is defined here
+>      "    lowmem  : 0x%px - 0x%px  (%4ld MB)\n"
+>                                     ~~~^
+>                                     %4lld
+> In file included from ./arch/mips/include/asm/bug.h:5,
+>                  from ./include/linux/bug.h:5,
+>                  from arch/mips/mm/init.c:11:
+> In function ‘mem_print_kmap_info’,
+>     inlined from ‘mem_init’ at arch/mips/mm/init.c:530:2:
+> ./include/linux/compiler.h:344:38: error: call to ‘__compiletime_assert_99’ declared with attribute error: BUILD_BUG_ON failed: FIXADDR_TOP < PAGE_OFFSET
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>                                       ^
+> ./include/linux/compiler.h:325:4: note: in definition of macro ‘__compiletime_assert’
+>     prefix ## suffix();    \
+>     ^~~~~~
+> ./include/linux/compiler.h:344:2: note: in expansion of macro ‘_compiletime_assert’
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>   ^~~~~~~~~~~~~~~~
+> arch/mips/mm/init.c:99:2: note: in expansion of macro ‘BUILD_BUG_ON’
+>   BUILD_BUG_ON(FIXADDR_TOP < PAGE_OFFSET);
+>   ^~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[3]: *** [scripts/Makefile.build:278: arch/mips/mm/init.o] Error 1
+> make[2]: *** [scripts/Makefile.build:489: arch/mips/mm] Error 2
+> 
+> Thanks,
+>     Paul
 
-Yes the hardware is nearly identical, with the exception of one detail 
-that's not visible to the kernel, but there is no support for DMICs with 
-the Skylake driver w/ HDaudio, and Chrome platforms are only going with 
-SOF, so is it wise to add these two CometLake platforms to the default 
-SND_SOC_INTEL_SKYLAKE selector, which is used by a number of distributions?
+Thanks for the report regarding this issue. I actually thought I tested the patch
+being buildable for 64bit systems. It turns out I didn't.(
 
-I don't mind if we add those PCI IDs and people use this driver if they 
-wish to, but it may be time for an explicit opt-in? The 
-SND_SOC_INTEL_SKYLAKE definition should even be pruned to mean SKL, APL, 
-KBL and GLK, and we can add DMI-based quirks for e.g. the Up2 board and 
-GLK Chromebooks which work with SOF.
+Should I resend the fixed patch as a separate v3 one In-Reply-to this v2 patch
+or resubmit the patchset with cover-letter and only the fixed patch being there?
 
-> 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - Add 0x06c8 for CML-H (Pierre-Louis)
-> 
->   sound/soc/intel/Kconfig                | 18 ++++++++++++++++++
->   sound/soc/intel/skylake/skl-messages.c | 16 ++++++++++++++++
->   sound/soc/intel/skylake/skl.c          | 10 ++++++++++
->   3 files changed, 44 insertions(+)
-> 
-> diff --git a/sound/soc/intel/Kconfig b/sound/soc/intel/Kconfig
-> index fc1396adde71..1ebac54b7081 100644
-> --- a/sound/soc/intel/Kconfig
-> +++ b/sound/soc/intel/Kconfig
-> @@ -110,6 +110,8 @@ config SND_SOC_INTEL_SKYLAKE
->   	select SND_SOC_INTEL_GLK
->   	select SND_SOC_INTEL_CNL
->   	select SND_SOC_INTEL_CFL
-> +	select SND_SOC_INTEL_CML_H
-> +	select SND_SOC_INTEL_CML_LP
->   	help
->             This is a backwards-compatible option to select all devices
->   	  supported by the Intel SST/Skylake driver. This option is no
-> @@ -165,6 +167,22 @@ config SND_SOC_INTEL_CFL
->   	  If you have a Intel CoffeeLake platform with the DSP
->   	  enabled in the BIOS then enable this option by saying Y or m.
->   
-> +config SND_SOC_INTEL_CML_H
-> +	tristate "CometLake-H Platforms"
-> +	depends on PCI && ACPI
-> +	select SND_SOC_INTEL_SKYLAKE_FAMILY
-> +	help
-> +	  If you have a Intel CometLake-H platform with the DSP
-> +	  enabled in the BIOS then enable this option by saying Y or m.
-> +
-> +config SND_SOC_INTEL_CML_LP
-> +	tristate "CometLake-LP Platforms"
-> +	depends on PCI && ACPI
-> +	select SND_SOC_INTEL_SKYLAKE_FAMILY
-> +	help
-> +	  If you have a Intel CometLake-LP platform with the DSP
-> +	  enabled in the BIOS then enable this option by saying Y or m.
-> +
->   config SND_SOC_INTEL_SKYLAKE_FAMILY
->   	tristate
->   	select SND_SOC_INTEL_SKYLAKE_COMMON
-> diff --git a/sound/soc/intel/skylake/skl-messages.c b/sound/soc/intel/skylake/skl-messages.c
-> index 4bf70b4429f0..df01dc952521 100644
-> --- a/sound/soc/intel/skylake/skl-messages.c
-> +++ b/sound/soc/intel/skylake/skl-messages.c
-> @@ -255,6 +255,22 @@ static const struct skl_dsp_ops dsp_ops[] = {
->   		.init_fw = cnl_sst_init_fw,
->   		.cleanup = cnl_sst_dsp_cleanup
->   	},
-> +	{
-> +		.id = 0x02c8,
-> +		.num_cores = 4,
-> +		.loader_ops = bxt_get_loader_ops,
-> +		.init = cnl_sst_dsp_init,
-> +		.init_fw = cnl_sst_init_fw,
-> +		.cleanup = cnl_sst_dsp_cleanup
-> +	},
-> +	{
-> +		.id = 0x06c8,
-> +		.num_cores = 4,
-> +		.loader_ops = bxt_get_loader_ops,
-> +		.init = cnl_sst_dsp_init,
-> +		.init_fw = cnl_sst_init_fw,
-> +		.cleanup = cnl_sst_dsp_cleanup
-> +	},
->   };
->   
->   const struct skl_dsp_ops *skl_get_dsp_ops(int pci_id)
-> diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
-> index 4ed5b7e17d44..f864f7b3df3a 100644
-> --- a/sound/soc/intel/skylake/skl.c
-> +++ b/sound/soc/intel/skylake/skl.c
-> @@ -1166,6 +1166,16 @@ static const struct pci_device_id skl_ids[] = {
->   	/* CFL */
->   	{ PCI_DEVICE(0x8086, 0xa348),
->   		.driver_data = (unsigned long)&snd_soc_acpi_intel_cnl_machines},
-> +#endif
-> +#if IS_ENABLED(CONFIG_SND_SOC_INTEL_CML_LP)
-> +	/* CML-LP */
-> +	{ PCI_DEVICE(0x8086, 0x02c8),
-> +		.driver_data = (unsigned long)&snd_soc_acpi_intel_cnl_machines},
-> +#endif
-> +#if IS_ENABLED(CONFIG_SND_SOC_INTEL_CML_H)
-> +	/* CML-H */
-> +	{ PCI_DEVICE(0x8086, 0x06c8),
-> +		.driver_data = (unsigned long)&snd_soc_acpi_intel_cnl_machines},
->   #endif
->   	{ 0, }
->   };
-> 
-
+Cheers,
+-Sergey
