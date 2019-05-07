@@ -2,52 +2,53 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496CBC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448E5C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117D2216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A01216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207591;
-	bh=RYU87FegKosZuI3aI3uRsmgKtJDRDUMRDynnQJtc/Sc=;
+	s=default; t=1557207599;
+	bh=vKWZ4BWnbyXlrZc2cSKReqfH0T75dQxJ0StJrorzd2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJPUUEjPYsNoDJkIQXI+rqzWLoOR3hvqzzIAXfNijOr7vRtrFPwdCksn6i/v6rWqc
-	 w4BlHs8fP4MR5YML59oZBDsKrjp4HSfN7oNiCyN8Zxe5aC1o7Oy2YZjM2Pl5sT1DZN
-	 IyxD30Oe0iTuVnHKPmm4yJ+960m9/c6fDhtpuqfY=
+	b=mbPmZYt9vYlTeB1o/EV9Pe3BJjpyNyJunCmlclNeexLQ+GP9+fljYk/K0/uw9cOyz
+	 Fsm2DtN9YQkVy1CyE7az2BK/GQZd14/RpZGYgMzy9MUPW8wRFjzxIWfqA33aePkkQ4
+	 lBGBtu3s5KOitqIRiV6FQiDKbfkwuFRPcNkAMzDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfEGFjt (ORCPT
+        id S1728988AbfEGFj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59270 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfEGFjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:39:45 -0400
+        id S1728955AbfEGFjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:39:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2917D205ED;
-        Tue,  7 May 2019 05:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E365C20675;
+        Tue,  7 May 2019 05:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207583;
-        bh=RYU87FegKosZuI3aI3uRsmgKtJDRDUMRDynnQJtc/Sc=;
+        s=default; t=1557207592;
+        bh=vKWZ4BWnbyXlrZc2cSKReqfH0T75dQxJ0StJrorzd2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOxMLPJoQsQnokJjCSPpa2cJ5cApct0GAbAl71k3o8bueybTZ1Pi9duX5i6jYgL73
-         daUTqvRiRKieKv1UmqbUGr13sbaG3TWZr/86rZ0Yufi6vEUctpw7TSVCmucynfzX8f
-         rbN0OJGokpUvZlaShX/EgdYayLaOiS24FaWxG8bM=
+        b=ZKw/35PxTMlp7PORDasrUhGGCvWyGfqOsQGR6YlTSySwsLocBizbr/r4qBazLPTS6
+         NFfMfDDwlaRGQJGR1zIXGeCBb6y+gXBrRrCLG9TEsWsb1IT7TBvqqeRu1k9Doer1w4
+         kq0YtvbSesdA1plu5QT+WSDd5Z9LCBnwvoDfk5n8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Miller <davem@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Punit Agrawal <punit.agrawal@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 36/95] sparc64: Make corrupted user stacks more debuggable.
-Date:   Tue,  7 May 2019 01:37:25 -0400
-Message-Id: <20190507053826.31622-36-sashal@kernel.org>
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.14 42/95] KVM: arm/arm64: Ensure only THP is candidate for adjustment
+Date:   Tue,  7 May 2019 01:37:31 -0400
+Message-Id: <20190507053826.31622-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,170 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@redhat.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
 
-[ Upstream commit 5b4fc3882a649c9411dd0dcad2ddb78e911d340e ]
+[ Upstream commit fd2ef358282c849c193aa36dadbf4f07f7dcd29b ]
 
-Right now if we get a corrupted user stack frame we do a
-do_exit(SIGILL) which is not helpful.
+PageTransCompoundMap() returns true for hugetlbfs and THP
+hugepages. This behaviour incorrectly leads to stage 2 faults for
+unsupported hugepage sizes (e.g., 64K hugepage with 4K pages) to be
+treated as THP faults.
 
-If under a debugger, this behavior causes the inferior process to
-exit.  So the register and other state cannot be examined at the time
-of the event.
+Tighten the check to filter out hugetlbfs pages. This also leads to
+consistently mapping all unsupported hugepage sizes as PTE level
+entries at stage 2.
 
-Instead, conditionally log a rate limited kernel log message and then
-force a SIGSEGV.
-
-With bits and ideas borrowed (as usual) from powerpc.
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+Reviewed-by: Suzuki Poulose <suzuki.poulose@arm.com>
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: stable@vger.kernel.org # v4.13+
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- arch/sparc/include/asm/switch_to_64.h |  3 ++-
- arch/sparc/kernel/process_64.c        | 25 +++++++++++++++++++------
- arch/sparc/kernel/rtrap_64.S          |  1 +
- arch/sparc/kernel/signal32.c          | 12 ++++++++++--
- arch/sparc/kernel/signal_64.c         |  6 +++++-
- 5 files changed, 37 insertions(+), 10 deletions(-)
+ virt/kvm/arm/mmu.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sparc/include/asm/switch_to_64.h b/arch/sparc/include/asm/switch_to_64.h
-index 4ff29b1406a9..b1d4e2e3210f 100644
---- a/arch/sparc/include/asm/switch_to_64.h
-+++ b/arch/sparc/include/asm/switch_to_64.h
-@@ -67,6 +67,7 @@ do {	save_and_clear_fpu();						\
- } while(0)
- 
- void synchronize_user_stack(void);
--void fault_in_user_windows(void);
-+struct pt_regs;
-+void fault_in_user_windows(struct pt_regs *);
- 
- #endif /* __SPARC64_SWITCH_TO_64_H */
-diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
-index 318efd784a0b..5640131e2abf 100644
---- a/arch/sparc/kernel/process_64.c
-+++ b/arch/sparc/kernel/process_64.c
-@@ -36,6 +36,7 @@
- #include <linux/sysrq.h>
- #include <linux/nmi.h>
- #include <linux/context_tracking.h>
-+#include <linux/signal.h>
- 
- #include <linux/uaccess.h>
- #include <asm/page.h>
-@@ -528,7 +529,12 @@ static void stack_unaligned(unsigned long sp)
- 	force_sig_info(SIGBUS, &info, current);
- }
- 
--void fault_in_user_windows(void)
-+static const char uwfault32[] = KERN_INFO \
-+	"%s[%d]: bad register window fault: SP %08lx (orig_sp %08lx) TPC %08lx O7 %08lx\n";
-+static const char uwfault64[] = KERN_INFO \
-+	"%s[%d]: bad register window fault: SP %016lx (orig_sp %016lx) TPC %08lx O7 %016lx\n";
-+
-+void fault_in_user_windows(struct pt_regs *regs)
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 225dc671ae31..1f4cac53b923 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1068,8 +1068,14 @@ static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
  {
- 	struct thread_info *t = current_thread_info();
- 	unsigned long window;
-@@ -541,9 +547,9 @@ void fault_in_user_windows(void)
- 		do {
- 			struct reg_window *rwin = &t->reg_window[window];
- 			int winsize = sizeof(struct reg_window);
--			unsigned long sp;
-+			unsigned long sp, orig_sp;
+ 	kvm_pfn_t pfn = *pfnp;
+ 	gfn_t gfn = *ipap >> PAGE_SHIFT;
++	struct page *page = pfn_to_page(pfn);
  
--			sp = t->rwbuf_stkptrs[window];
-+			orig_sp = sp = t->rwbuf_stkptrs[window];
- 
- 			if (test_thread_64bit_stack(sp))
- 				sp += STACK_BIAS;
-@@ -554,8 +560,16 @@ void fault_in_user_windows(void)
- 				stack_unaligned(sp);
- 
- 			if (unlikely(copy_to_user((char __user *)sp,
--						  rwin, winsize)))
-+						  rwin, winsize))) {
-+				if (show_unhandled_signals)
-+					printk_ratelimited(is_compat_task() ?
-+							   uwfault32 : uwfault64,
-+							   current->comm, current->pid,
-+							   sp, orig_sp,
-+							   regs->tpc,
-+							   regs->u_regs[UREG_I7]);
- 				goto barf;
-+			}
- 		} while (window--);
- 	}
- 	set_thread_wsaved(0);
-@@ -563,8 +577,7 @@ void fault_in_user_windows(void)
- 
- barf:
- 	set_thread_wsaved(window + 1);
--	user_exit();
--	do_exit(SIGILL);
-+	force_sig(SIGSEGV, current);
- }
- 
- asmlinkage long sparc_do_fork(unsigned long clone_flags,
-diff --git a/arch/sparc/kernel/rtrap_64.S b/arch/sparc/kernel/rtrap_64.S
-index 0b21042ab181..ad88d60bb740 100644
---- a/arch/sparc/kernel/rtrap_64.S
-+++ b/arch/sparc/kernel/rtrap_64.S
-@@ -30,6 +30,7 @@ __handle_preemption:
- 		 wrpr			%g0, RTRAP_PSTATE_IRQOFF, %pstate
- 
- __handle_user_windows:
-+		add			%sp, PTREGS_OFF, %o0
- 		call			fault_in_user_windows
- 		 wrpr			%g0, RTRAP_PSTATE, %pstate
- 		ba,pt			%xcc, __handle_preemption_continue
-diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
-index 5c572de64c74..879f8d86bc21 100644
---- a/arch/sparc/kernel/signal32.c
-+++ b/arch/sparc/kernel/signal32.c
-@@ -442,7 +442,11 @@ static int setup_frame32(struct ksignal *ksig, struct pt_regs *regs,
- 		get_sigframe(ksig, regs, sigframe_size);
- 	
- 	if (invalid_frame_pointer(sf, sigframe_size)) {
--		do_exit(SIGILL);
-+		if (show_unhandled_signals)
-+			pr_info("%s[%d] bad frame in setup_frame32: %08lx TPC %08lx O7 %08lx\n",
-+				current->comm, current->pid, (unsigned long)sf,
-+				regs->tpc, regs->u_regs[UREG_I7]);
-+		force_sigsegv(ksig->sig, current);
- 		return -EINVAL;
- 	}
- 
-@@ -573,7 +577,11 @@ static int setup_rt_frame32(struct ksignal *ksig, struct pt_regs *regs,
- 		get_sigframe(ksig, regs, sigframe_size);
- 	
- 	if (invalid_frame_pointer(sf, sigframe_size)) {
--		do_exit(SIGILL);
-+		if (show_unhandled_signals)
-+			pr_info("%s[%d] bad frame in setup_rt_frame32: %08lx TPC %08lx O7 %08lx\n",
-+				current->comm, current->pid, (unsigned long)sf,
-+				regs->tpc, regs->u_regs[UREG_I7]);
-+		force_sigsegv(ksig->sig, current);
- 		return -EINVAL;
- 	}
- 
-diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
-index 20426a1c28f2..2d0a50bde3f9 100644
---- a/arch/sparc/kernel/signal_64.c
-+++ b/arch/sparc/kernel/signal_64.c
-@@ -373,7 +373,11 @@ setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs)
- 		get_sigframe(ksig, regs, sf_size);
- 
- 	if (invalid_frame_pointer (sf)) {
--		do_exit(SIGILL);	/* won't return, actually */
-+		if (show_unhandled_signals)
-+			pr_info("%s[%d] bad frame in setup_rt_frame: %016lx TPC %016lx O7 %016lx\n",
-+				current->comm, current->pid, (unsigned long)sf,
-+				regs->tpc, regs->u_regs[UREG_I7]);
-+		force_sigsegv(ksig->sig, current);
- 		return -EINVAL;
- 	}
- 
+-	if (PageTransCompoundMap(pfn_to_page(pfn))) {
++	/*
++	 * PageTransCompoungMap() returns true for THP and
++	 * hugetlbfs. Make sure the adjustment is done only for THP
++	 * pages.
++	 */
++	if (!PageHuge(page) && PageTransCompoundMap(page)) {
+ 		unsigned long mask;
+ 		/*
+ 		 * The address we faulted on is backed by a transparent huge
 -- 
 2.20.1
 
