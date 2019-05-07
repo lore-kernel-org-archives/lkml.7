@@ -2,119 +2,120 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327F1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8741C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E5A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:28:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="o/r9IVM5"
+	by mail.kernel.org (Postfix) with ESMTP id A5F88206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfEGR2O (ORCPT
+        id S1727516AbfEGR2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:28:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37293 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfEGR2N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:28:13 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o7so8022882qtp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=EXaJJYnOhCMm1Ies7w0+ULwlGJK0FIFIMnFExUlBqmk=;
-        b=o/r9IVM5MhwMiJDJ9GVBWFCxkF0ebVK49NOcXyK3oMxdQdwXCejyZcGgqxxZbluDRm
-         TkLtTH/eX9lZ8Hmmjn3AjqvEtJOSVkbfEWlTF8X+cx3Ci0C6l/baZ/3IDmdJYLkq9Gxl
-         qNfjNfWyviSVQuJ5NI/NVbGyZcbmMWcmfOPDmg1bZcSh/1hDkQy+VnbtYiIy9KVel14o
-         Bh1AvI5Q4EXXWRlncz5nllTS/shUOyYW9YzFHkr3z+BRlktQFpIiru9Klc6AWvRe0uSa
-         0LWCXqSSHhiYrQQYtkK2F7v0nNk19iYZYDgbfam9iurl9vHv5dReP0Nx7sQLTqdLcpQS
-         XQEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=EXaJJYnOhCMm1Ies7w0+ULwlGJK0FIFIMnFExUlBqmk=;
-        b=KJiLIWWonpQFikWAtgrgOPMzNmnZQ5rB2LOwjmgiMZ40Of0jT4GUJ378+dviUfnAeZ
-         Kp+C9IY7lpJPAFUOvsIUFOSMuBEEwfS6H/xj1j63zYo+O909yideIjgLwqN51Eg/4MOb
-         cHdBxYaK8CPQSGTPaSmsExdiCzFwb4ngcWdAQLd5EQhoyGMYkPnAHyDAAeVOWrmNofwT
-         22FuRkGkTxKhGWFOB6T23AbSoHdsVfC4+QYsdT1+XYaDlM/d3IkH88lZ2TcJEaveJcBC
-         EDrK2r2StMqrHC9OlthmlMivwfGsDE3JkeTX/VI77fRkv8dPKoT8Z8nwswc5TVR5MHrU
-         tz6w==
-X-Gm-Message-State: APjAAAVmGwzwavEYoGsA6UCu+biKww7kC5/DztI1CqIf8bWdgFztrBUP
-        0x7DzDJRKkNR8V7q3lmsg3PTYg==
-X-Google-Smtp-Source: APXvYqyIrBg1/Odexc0u9Gyx6vUUNEENb9y4VJBTuXlyJ+UvZiEnf2cIcBUNxrZ//Bz917WhUaM9ew==
-X-Received: by 2002:ac8:2565:: with SMTP id 34mr28459068qtn.37.1557250092551;
-        Tue, 07 May 2019 10:28:12 -0700 (PDT)
-Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id p6sm7274766qkc.13.2019.05.07.10.28.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 07 May 2019 10:28:12 -0700 (PDT)
-Date:   Tue, 7 May 2019 10:28:03 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net] net: mvpp2: cls: Add missing NETIF_F_NTUPLE flag
-Message-ID: <20190507102803.09fcb56c@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <20190507123635.17782-1-maxime.chevallier@bootlin.com>
-References: <20190507123635.17782-1-maxime.chevallier@bootlin.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 7 May 2019 13:28:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:60692 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbfEGR2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:28:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 10:28:18 -0700
+Received: from unknown (HELO [10.232.112.171]) ([10.232.112.171])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 07 May 2019 10:28:16 -0700
+Subject: Re: [PATCH v2 4/7] nvme.h: add telemetry log page definisions
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christoph Hellwig <hch@lst.de>
+References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
+ <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
+From:   "Heitke, Kenneth" <kenneth.heitke@intel.com>
+Message-ID: <81c0d1bd-c117-3fcb-959b-4507504021dd@intel.com>
+Date:   Tue, 7 May 2019 11:28:16 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 May 2019 14:36:35 +0200, Maxime Chevallier wrote:
-> Now that the mvpp2 driver supports classification offloading, we must
-> add the NETIF_F_NTUPLE to the features list.
+
+
+On 5/7/2019 10:58 AM, Akinobu Mita wrote:
+> Copy telemetry log page definisions from nvme-cli.
 > 
-> Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
-> Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Jens Axboe <axboe@fb.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 > ---
-> Hello David,
+> * v2
+> - New patch in this version.
 > 
-> This patch applies on top of a commit 90b509b39ac9, which is in net-next
-> but hasn't made it to -net yet.
+>   include/linux/nvme.h | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
 > 
-> Thanks,
-> 
-> Maxime
-> 
->  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> index 25fbed2b8d94..1f164c893936 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -5040,8 +5040,10 @@ static int mvpp2_port_probe(struct platform_device *pdev,
->  	dev->hw_features |= features | NETIF_F_RXCSUM | NETIF_F_GRO |
->  			    NETIF_F_HW_VLAN_CTAG_FILTER;
->  
-> -	if (mvpp22_rss_is_supported())
-> +	if (mvpp22_rss_is_supported()) {
->  		dev->hw_features |= NETIF_F_RXHASH;
-> +		dev->features |= NETIF_F_NTUPLE;
+> diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+> index c40720c..5217fe4 100644
+> --- a/include/linux/nvme.h
+> +++ b/include/linux/nvme.h
+> @@ -396,6 +396,28 @@ enum {
+>   	NVME_NIDT_UUID		= 0x03,
+>   };
+>   
+> +/* Derived from 1.3a Figure 101: Get Log Page – Telemetry Host
+> + * -Initiated Log (Log Identifier 07h)
+> + */
+> +struct nvme_telemetry_log_page_hdr {
+> +	__u8    lpi; /* Log page identifier */
+> +	__u8    rsvd[4];
+> +	__u8    iee_oui[3];
+> +	__le16  dalb1; /* Data area 1 last block */
+> +	__le16  dalb2; /* Data area 2 last block */
+> +	__le16  dalb3; /* Data area 3 last block */
+> +	__u8    rsvd1[368]; /* TODO verify */
 
-Hm, why not in hw_features?
+Remove the TODO
 
-> +	}
->  
->  	if (port->pool_long->id == MVPP2_BM_JUMBO && port->id != 0) {
->  		dev->features &= ~(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM);
+> +	__u8    ctrlavail; /* Controller initiated data avail?*/
+> +	__u8    ctrldgn; /* Controller initiated telemetry Data Gen # */
+> +	__u8    rsnident[128];
+> +	/* We'll have to double fetch so we can get the header,
+> +	 * parse dalb1->3 determine how much size we need for the
+> +	 * log then alloc below. Or just do a secondary non-struct
+> +	 * allocation.
+> +	 */
 
+This comment isn't necessary. You usually can't read the entire
+telemetry log at once and the header is a fixed size. You would likely
+just read the header followed by reads of the different data areas.
+
+> +	__u8    telemetry_dataarea[0];
+> +};
+> +
+>   struct nvme_smart_log {
+>   	__u8			critical_warning;
+>   	__u8			temperature[2];
+> @@ -832,6 +854,7 @@ enum {
+>   	NVME_LOG_FW_SLOT	= 0x03,
+>   	NVME_LOG_CHANGED_NS	= 0x04,
+>   	NVME_LOG_CMD_EFFECTS	= 0x05,
+> +	NVME_LOG_TELEMETRY_CTRL	= 0x08,
+>   	NVME_LOG_ANA		= 0x0c,
+>   	NVME_LOG_DISC		= 0x70,
+>   	NVME_LOG_RESERVATION	= 0x80,
+> 
