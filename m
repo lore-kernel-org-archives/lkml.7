@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82820C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD140C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAAA205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE96020578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207577;
-	bh=UVLSvQxN4WWGLFkoue/+SE3gKBycu2NyT5o8Z1iqWxc=;
+	s=default; t=1557207581;
+	bh=Xr2lq4+YQIty+EgsKo1pDRwS9bE6NkkxmsNUf3Zmo5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I+GB3iezNkM9y8UyW4tBn0ge0YfXSgmHRRBnMdDh3dShpLFpdplqWBStR27Ywiu+o
-	 43HjW/VP0k82H3HUwMobmLjvTHZR5TvutloX/lLBWDcjqXat5F1GnoK8Q4Hy6B2/l7
-	 1ntXxTnfzBns7hCPSpMUEAukmYBcEwHtn/PqmjK0=
+	b=03WhQlnu9ncisrJUE+L2cmm7VrLpK+c/9yQ4X/RZqEdnKKP2+2KtgFhfcZT4IP++L
+	 IyslHJzu/s0xOosFwTBtjxx27eAvOsx8hiUt8iZxHx2aGy9FkWIypWt9ueLVd5H0F+
+	 anV4vUZ3zdSR7+GHY0zCpgAFi7pqkizbDbv5FqJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfEGFjg (ORCPT
+        id S1728917AbfEGFjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbfEGFja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:39:30 -0400
+        id S1728479AbfEGFjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:39:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4D8E20675;
-        Tue,  7 May 2019 05:39:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6401620578;
+        Tue,  7 May 2019 05:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207569;
-        bh=UVLSvQxN4WWGLFkoue/+SE3gKBycu2NyT5o8Z1iqWxc=;
+        s=default; t=1557207577;
+        bh=Xr2lq4+YQIty+EgsKo1pDRwS9bE6NkkxmsNUf3Zmo5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ShsIBruDJVIMP9fkDV4UgGKYVoFLyiFNmW72SPKWhZx81pZQlqs8JAxNPHGhb1KkF
-         LWI7n4+3SC6V6KH6a9zb2T/iibBwj2VohjW2dE6iUgq3UqQAxZGWnS5MQasp0dWiqA
-         86YaAAh8ysliCwZGN1lQ3pruypFtG3/z7ekGu33U=
+        b=DdH2GT6XVaGEkPOFDUxoiwY1j9h6ysCuyfRQ6rNgpIwxnHqvtOQo18wSchcQ0nmqd
+         9YattNngqtGGJtKJy9FolJv2t3AtF9anKMKzEDh398wTR5O/4Y90f0mKMjst8S8QN7
+         DavOx9pjGF8sox4CxCpAFV1KNSEOhBEuboKNK1VU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Gomez <dagmcr@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 32/95] spi: Micrel eth switch: declare missing of table
-Date:   Tue,  7 May 2019 01:37:21 -0400
-Message-Id: <20190507053826.31622-32-sashal@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 35/95] sparc64: Export __node_distance.
+Date:   Tue,  7 May 2019 01:37:24 -0400
+Message-Id: <20190507053826.31622-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,66 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gomez <dagmcr@gmail.com>
+From: "David S. Miller" <davem@davemloft.net>
 
-[ Upstream commit 2f23a2a768bee7ad2ff1e9527c3f7e279e794a46 ]
+[ Upstream commit 2b4792eaa9f553764047d157365ed8b7787751a3 ]
 
-Add missing <of_device_id> table for SPI driver relying on SPI
-device match since compatible is in a DT binding or in a DTS.
+Some drivers reference it via node_distance(), for example the
+NVME host driver core.
 
-Before this patch:
-modinfo drivers/net/phy/spi_ks8995.ko | grep alias
-alias:          spi:ksz8795
-alias:          spi:ksz8864
-alias:          spi:ks8995
+ERROR: "__node_distance" [drivers/nvme/host/nvme-core.ko] undefined!
+make[1]: *** [scripts/Makefile.modpost:92: __modpost] Error 1
 
-After this patch:
-modinfo drivers/net/phy/spi_ks8995.ko | grep alias
-alias:          spi:ksz8795
-alias:          spi:ksz8864
-alias:          spi:ks8995
-alias:          of:N*T*Cmicrel,ksz8795C*
-alias:          of:N*T*Cmicrel,ksz8795
-alias:          of:N*T*Cmicrel,ksz8864C*
-alias:          of:N*T*Cmicrel,ksz8864
-alias:          of:N*T*Cmicrel,ks8995C*
-alias:          of:N*T*Cmicrel,ks8995
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/phy/spi_ks8995.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/sparc/mm/init_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/spi_ks8995.c b/drivers/net/phy/spi_ks8995.c
-index 1e2d4f1179da..45df03673e01 100644
---- a/drivers/net/phy/spi_ks8995.c
-+++ b/drivers/net/phy/spi_ks8995.c
-@@ -162,6 +162,14 @@ static const struct spi_device_id ks8995_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, ks8995_id);
+diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+index 984e9d65ea0d..76977296dc9c 100644
+--- a/arch/sparc/mm/init_64.c
++++ b/arch/sparc/mm/init_64.c
+@@ -1383,6 +1383,7 @@ int __node_distance(int from, int to)
+ 	}
+ 	return numa_latency[from][to];
+ }
++EXPORT_SYMBOL(__node_distance);
  
-+static const struct of_device_id ks8895_spi_of_match[] = {
-+        { .compatible = "micrel,ks8995" },
-+        { .compatible = "micrel,ksz8864" },
-+        { .compatible = "micrel,ksz8795" },
-+        { },
-+ };
-+MODULE_DEVICE_TABLE(of, ks8895_spi_of_match);
-+
- static inline u8 get_chip_id(u8 val)
+ static int __init find_best_numa_node_for_mlgroup(struct mdesc_mlgroup *grp)
  {
- 	return (val >> ID1_CHIPID_S) & ID1_CHIPID_M;
-@@ -529,6 +537,7 @@ static int ks8995_remove(struct spi_device *spi)
- static struct spi_driver ks8995_driver = {
- 	.driver = {
- 		.name	    = "spi-ks8995",
-+		.of_match_table = of_match_ptr(ks8895_spi_of_match),
- 	},
- 	.probe	  = ks8995_probe,
- 	.remove	  = ks8995_remove,
 -- 
 2.20.1
 
