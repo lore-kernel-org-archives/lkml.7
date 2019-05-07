@@ -2,119 +2,76 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962AEC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788CEC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BCD2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58912206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfEGTUV (ORCPT
+        id S1726506AbfEGTVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfEGTUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:20:21 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89F5206A3;
-        Tue,  7 May 2019 19:20:17 +0000 (UTC)
-Date:   Tue, 7 May 2019 15:20:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 2/3] x86_64: Allow breakpoints to emulate call
- functions
-Message-ID: <20190507152016.77f7a3af@gandalf.local.home>
-In-Reply-To: <20190507191412.n4uhoyfwagagyfwi@treble>
-References: <20190507174227.673261270@goodmis.org>
-        <20190507174400.219947724@goodmis.org>
-        <20190507175342.fskdj2qidpao65qi@treble>
-        <20190507150153.7a5d376d@gandalf.local.home>
-        <20190507191412.n4uhoyfwagagyfwi@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 7 May 2019 15:21:07 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33158 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfEGTVG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 15:21:06 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2840B14B76657;
+        Tue,  7 May 2019 12:21:06 -0700 (PDT)
+Date:   Tue, 07 May 2019 12:21:05 -0700 (PDT)
+Message-Id: <20190507.122105.254019469250484569.davem@davemloft.net>
+To:     natechancellor@gmail.com
+Cc:     olteanv@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com,
+        ndesaulniers@google.com
+Subject: Re: [PATCH] net: dsa: sja1105: Fix status initialization in
+ sja1105_get_ethtool_stats
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190506202447.30907-1-natechancellor@gmail.com>
+References: <20190506202447.30907-1-natechancellor@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 12:21:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 14:14:12 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Mon,  6 May 2019 13:24:47 -0700
 
-> On Tue, May 07, 2019 at 03:01:53PM -0400, Steven Rostedt wrote:
-> > How's this?
-> > 
-> > -- Steve
-> > 
-> > From d29dc2e9e0275c9857932b80cebc01551b669efb Mon Sep 17 00:00:00 2001
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Date: Wed, 1 May 2019 15:11:17 +0200
-> > Subject: [PATCH] x86_64: Allow breakpoints to emulate call functions
-> > 
-> > In order to allow breakpoints to emulate call functions, they need to push
-> > the return address onto the stack. But because the breakpoint exception
-> > frame is added to the stack when the breakpoint is hit, there's no room to
-> > add the address onto the stack and return to the address of the emulated
-> > called funtion.  
+> Clang warns:
 > 
-> The 2nd sentence can probably be removed since it's technically no
-> longer true, thanks to the previous patch.
+> drivers/net/dsa/sja1105/sja1105_ethtool.c:316:39: warning: suggest
+> braces around initialization of subobject [-Wmissing-braces]
+>         struct sja1105_port_status status = {0};
+>                                              ^
+>                                              {}
+> 1 warning generated.
 > 
-> > This helper functions are added:  
+> One way to fix these warnings is to add additional braces like Clang
+> suggests; however, there has been a bit of push back from some
+> maintainers[1][2], who just prefer memset as it is unambiguous, doesn't
+> depend on a particular compiler version[3], and properly initializes all
+> subobjects. Do that here so there are no more warnings.
 > 
-> "These"
+> [1]: https://lore.kernel.org/lkml/022e41c0-8465-dc7a-a45c-64187ecd9684@amd.com/
+> [2]: https://lore.kernel.org/lkml/20181128.215241.702406654469517539.davem@davemloft.net/
+> [3]: https://lore.kernel.org/lkml/20181116150432.2408a075@redhat.com/
+> 
+> Fixes: 52c34e6e125c ("net: dsa: sja1105: Add support for ethtool port counters")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/471
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-New version:
-
-    x86_64: Allow breakpoints to emulate call functions
-    
-    In order to allow breakpoints to emulate call functions, they need to push
-    the return address onto the stack. The x86_64 int3 handler adds a small gap
-    to allow the stack to grow some. Use this gap to add the return address to
-    be able to emulate a call instruction at the breakpoint location.
-    
-    These helper functions are added:
-    
-      int3_emulate_jmp(): changes the location of the regs->ip to return there.
-    
-     (The next two are only for x86_64)
-      int3_emulate_push(): to push the address onto the gap in the stack
-      int3_emulate_call(): push the return address and change regs->ip
-
--- Steve
+Applied to net-next.
