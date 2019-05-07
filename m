@@ -2,103 +2,134 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E943C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D0C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C00820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F38B205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="puvTEdg7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fhC9+A8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfEGLcq (ORCPT
+        id S1726638AbfEGLds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:32:46 -0400
-Received: from mailrelay1-1.pub.mailoutpod1-cph3.one.com ([46.30.210.182]:51285
-        "EHLO mailrelay1-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726276AbfEGLcp (ORCPT
+        Tue, 7 May 2019 07:33:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35554 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfEGLdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:32:45 -0400
+        Tue, 7 May 2019 07:33:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t87so7943778pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=haabendal.dk; s=20140924;
-        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
-         to:from:from;
-        bh=lFL8IZmKwJqoyNss0tfJ1Sb2p+/9FnYRZqyq6BeOLTg=;
-        b=puvTEdg70iRNAavyyF4jNiJRXxF3z2FPpW+jbQNgS4Q9Oe1Kt9lBJykrPbzDf3hKxjMg41yRPxUt0
-         C8FFZZH4ucG3joNvI0sceCYCxTSkZWpKyoTlXqNGCZ9mUEjt50aqf5I1BPAJlykM5BTbhEoaQZFT0k
-         OeemWS+2tTmyFCQY=
-X-HalOne-Cookie: 07c12b20bf8977491cce9da87c47e1242f400d49
-X-HalOne-ID: d34e2284-70bb-11e9-be4a-d0431ea8a283
-Received: from localhost (unknown [193.163.1.7])
-        by mailrelay1.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
-        id d34e2284-70bb-11e9-be4a-d0431ea8a283;
-        Tue, 07 May 2019 11:32:41 +0000 (UTC)
-From:   Esben Haabendal <esben@haabendal.dk>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-serial@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device resources
-References: <20190430140416.4707-1-esben@geanix.com>
-        <20190430153736.GL9224@smile.fi.intel.com>
-        <874l6efxta.fsf@haabendal.dk>
-        <20190502104556.GS9224@smile.fi.intel.com>
-        <87pnp11112.fsf@haabendal.dk> <20190507093239.GB4529@dell>
-        <20190507093631.GC4529@dell>
-Date:   Tue, 07 May 2019 13:32:41 +0200
-In-Reply-To: <20190507093631.GC4529@dell> (Lee Jones's message of "Tue, 7 May
-        2019 10:36:31 +0100")
-Message-ID: <87woj2jy92.fsf@haabendal.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sR5BpYMQqvU33+qKoi/MmdBbUlBWeD3X1bsZEIF3QFw=;
+        b=fhC9+A8r0mSbiTlAYOPbaxaHR1YL8JghQMh+MjGsndpuB6jiMcbihqosl7SqrR9Bg4
+         eJHhAE0+cxTlbttRzHm3WxGeN6cKlprzV5wVVJNbblxJvdhzyJQSCl7//+UbdSAf6nvg
+         gCoefUxDiFmCGsr2NcvUePitEJFz5LwVkvbwB2DM6+nS1hcw6OAOZrJqlh5Rse3Glnpy
+         fEdYulBRxsoqZj4BR0KKihU330+fKteuIQyFbJeIp8MY4TtIbt4iTe2vV28NjA2yAZXf
+         DD2MiUAjg3Tj45FdV+s6ymLE7zzPNib9GR7zpj+3EOOWxxDbjd9L1OBHlSGsmJcO9T6D
+         svAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sR5BpYMQqvU33+qKoi/MmdBbUlBWeD3X1bsZEIF3QFw=;
+        b=WwUBxQ/kFnsisavlht50fImwAUb024kThg89A4zvw0YZc62Z5DCsz3asNwBz+GUxEg
+         O01+h0FYr0pVzwJEGyL9OcoA3uHPVZftuBZDWhPMR4pWGK/Sxmabh1x0dgf1yn/JGivA
+         XBNthqLVhRY8f0gsDb93dpj0K7K/MJeSCcc+EUEO6eO63jTSSMPxNt+pjuYHrByylczD
+         Z++JXy0OQBY74HGx9ZHn3aq2yf6REvXAQimN3Tw4LIzmw3DHFY4q8pJsSwd/CcoelNdg
+         KBDtSSQ2KMTaesCWnf8VB7+CsQ0kTNSFhfdtgvoNPxDkHBlAu7oWyXP6cEhm1/Lx/V+f
+         +qNw==
+X-Gm-Message-State: APjAAAWQlBscUClhMjXNBS9DN3zJHcGlx3gLp7iD26QMY1woDj2vIDF2
+        +TAjmyWW6wMjOltf1rdUt0kf
+X-Google-Smtp-Source: APXvYqyAKJZP4RUcj4/+fM77Hhrfsi/pdsboySmMz+0IE4qjVjtfRycKA+OR92PXBDkgcqkej5fGkQ==
+X-Received: by 2002:a63:5516:: with SMTP id j22mr36851432pgb.370.1557228826789;
+        Tue, 07 May 2019 04:33:46 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:99e:34fe:41ce:b81d:ca3c:de5])
+        by smtp.gmail.com with ESMTPSA id 8sm8279543pfn.158.2019.05.07.04.33.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 04:33:46 -0700 (PDT)
+Date:   Tue, 7 May 2019 17:03:39 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ezequiel@collabora.com, tom@vamrs.com, dev@vamrs.com
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Enable SPI0 and SPI4 on Rock960
+Message-ID: <20190507113339.GA309@Mani-XPS-13-9360>
+References: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
+ <3484838.jBNMtg6mRV@phil>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3484838.jBNMtg6mRV@phil>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+Hi Heiko,
 
-> On Tue, 07 May 2019, Lee Jones wrote:
->> On Thu, 02 May 2019, Esben Haabendal wrote:
->> 
->> > Could you help clarify whether or not this patch is trying to do
->> > something odd/wrong?
->> > 
->> > I might be misunderstanding Andy (probably is), but the discussion
->> > revolves around the changes I propose where I change the serial8250
->> > driver to use platform_get_resource() in favour of
->> > request_mem_region()/release_mem_region().
->> 
->> Since 'serial8250' is registered as a platform device, I don't see any
->> reason why it shouldn't have the capability to obtain its memory
->> regions from the platform_get_*() helpers.
->
-> Not sure which device you're trying to enable, but if it's booted
-> using Device Tree, you could always use 'of_serial'.
+On Tue, May 07, 2019 at 01:17:10PM +0200, Heiko Stuebner wrote:
+> Am Montag, 6. Mai 2019, 14:04:57 CEST schrieb Manivannan Sadhasivam:
+> > Enable SPI0 and SPI4 exposed on the Low and High speed expansion
+> > connectors of Rock960.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3399-rock960.dts | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+> > index 12285c51cceb..7498344d4a73 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+> > @@ -114,6 +114,18 @@
+> >  	};
+> >  };
+> >  
+> > +&spi0 {
+> > +	/* On Low speed expansion */
+> > +	label = "LS-SPI0";
+> 
+> where does the label property come from and what does it do?
+> It's not part of the rockchip-spi / general-spi binding.
+> 
 
-It is an x86_64 platform, so there is unfortunately no device tree.
+It is not part of the binding but I thought it will provide the users
+the information of the SPI bus as per the specification when they
+look into devicetree.
 
-> It does seem a little odd that the 'serial8250' IP block has been
-> incorporated into an MFD.  Which device is it you're trying to enable
-> exactly? 
+If it doesn't makes sense, I can remove that!
 
-It is a Xilinx FPGA, containing a number of different devices, including
-5 16550A UART devices (XPS 16550 UART v3.00a).  It also contains 3
-Ethernet interfaces and a number of custom IP blocks.
+Thanks,
+Mani
 
-The FPGA is connected to the CPU using PCIe, with all devices using
-parts of a big common io memory block, specified by a PCI BAR.
-
-/Esben
+> 
+> Heiko
+> 
+> > +	status = "okay";
+> > +};
+> > +
+> > +&spi4 {
+> > +	/* On High speed expansion */
+> > +	label = "HS-SPI1";
+> > +	status = "okay";
+> > +};
+> > +
+> >  &usbdrd_dwc3_0 {
+> >  	dr_mode = "otg";
+> >  };
+> > 
+> 
+> 
+> 
+> 
