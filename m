@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE47C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BE4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839992087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834B721479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207248;
-	bh=YSIJSBBHtM0WqwfXn8MlZjoSKbffyCq5FDxyImeCKYc=;
+	s=default; t=1557207251;
+	bh=2qF9GdZdYxKCS+PBNUl7a9K0jbhxpS2TlaSfCqJwF3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjsJeu318xOv3HeYP6Gf6tkiM1Wo43NywQ7uScoLG9Kzhca1Z3of3VDv4UI27J6jS
-	 XG0Z1lKDBxbGGssLPpvB1AnQBBbjY+hRLkDotjxmj/My/iGUUADXeex2FTupGSLzDG
-	 JYiblAFxJQ+RWfnZAIH+cz+dOd7Cf1gd6ckdUU4w=
+	b=o2/yrxBQIul6iM3HC3uCCtQwyXuKV+dU6M9roRB0CrQKIiJYTW2xJKDHiSBKwyERm
+	 JWNkZYJMbNCgSHAvhDk9wE2VTQTOH1MBowhTaFpEpS3cG7+2/Eci+gun3y/Qha5iYn
+	 /1s9zRVrNWYj6fenfudzuioI5iyDLwXD6RsT8C3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfEGFeH (ORCPT
+        id S1727453AbfEGFeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727411AbfEGFeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:05 -0400
+        id S1727411AbfEGFeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F32AE20B7C;
-        Tue,  7 May 2019 05:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD186206A3;
+        Tue,  7 May 2019 05:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207244;
-        bh=YSIJSBBHtM0WqwfXn8MlZjoSKbffyCq5FDxyImeCKYc=;
+        s=default; t=1557207248;
+        bh=2qF9GdZdYxKCS+PBNUl7a9K0jbhxpS2TlaSfCqJwF3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MdgDMdib5QADik8ITb9tCPLolbcaxwQATvyBsRfgrWjUy7LH3kYto16Xmp8ZCC9bj
-         tJtZQaJSMgI6qRTTxJ/PMqB17G1/TWxc+RzdVDeNjwIIgvZcZJOIwS/6LZPsdTwUzh
-         kl6t6tsX0erl7tkeDr42fQJ3vkjax+qFBJriYxuo=
+        b=L2y0DqhWVAmTNyP8fqe4grzaw+ra4K5ZSkh3BIPbOizbQn1gyzqvBPY0Uh35lLKNX
+         XtQJSexmkStJcWq6FrgsGboh+/eKIVXtWuoZ70Ey/CrCmN+qRan8rnfO1UqVtOkSUg
+         TWzlsVcRm0GUoxSOs7EvkQTdarHtNeVYbs4+JAmY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Saar Amar <saaramar@microsoft.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 46/99] KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU
-Date:   Tue,  7 May 2019 01:31:40 -0400
-Message-Id: <20190507053235.29900-46-sashal@kernel.org>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 49/99] tools lib traceevent: Fix missing equality check for strcmp
+Date:   Tue,  7 May 2019 01:31:43 -0400
+Message-Id: <20190507053235.29900-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -61,83 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liran Alon <liran.alon@oracle.com>
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-[ Upstream commit e51bfdb68725dc052d16241ace40ea3140f938aa ]
+[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
 
-Issue was discovered when running kvm-unit-tests on KVM running as L1 on
-top of Hyper-V.
+There was a missing comparison with 0 when checking if type is "s64" or
+"u64". Therefore, the body of the if-statement was entered if "type" was
+"u64" or not "s64", which made the first strcmp() redundant since if
+type is "u64", it's not "s64".
 
-When vmx_instruction_intercept unit-test attempts to run RDPMC to test
-RDPMC-exiting, it is intercepted by L1 KVM which it's EXIT_REASON_RDPMC
-handler raise #GP because vCPU exposed by Hyper-V doesn't support PMU.
-Instead of unit-test expectation to be reflected with EXIT_REASON_RDPMC.
+If type is "s64", the body of the if-statement is not entered but since
+the remainder of the function consists of if-statements which will not
+be entered if type is "s64", we will just return "val", which is
+correct, albeit at the cost of a few more calls to strcmp(), i.e., it
+will behave just as if the if-statement was entered.
 
-The reason vmx_instruction_intercept unit-test attempts to run RDPMC
-even though Hyper-V doesn't support PMU is because L1 expose to L2
-support for RDPMC-exiting. Which is reasonable to assume that is
-supported only in case CPU supports PMU to being with.
+If type is neither "s64" or "u64", the body of the if-statement will be
+entered incorrectly and "val" returned. This means that any type that is
+checked after "s64" and "u64" is handled the same way as "s64" and
+"u64", i.e., the limiting of "val" to fit in for example "s8" is never
+reached.
 
-Above issue can easily be simulated by modifying
-vmx_instruction_intercept config in x86/unittests.cfg to run QEMU with
-"-cpu host,+vmx,-pmu" and run unit-test.
+This was introduced in the kernel tree when the sources were copied from
+trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
+libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
+("Implement typecasting in parser") when the function was introduced,
+i.e., it has always behaved the wrong way.
 
-To handle issue, change KVM to expose RDPMC-exiting only when guest
-supports PMU.
+Detected by cppcheck.
 
-Reported-by: Saar Amar <saaramar@microsoft.com>
-Reviewed-by: Mihai Carabas <mihai.carabas@oracle.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/vmx.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 34499081022c..0479aee38f4d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6982,6 +6982,30 @@ static void nested_vmx_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
- 	}
- }
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 87494c7c619d..981c6ce2da2c 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2233,7 +2233,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
+ 		return val & 0xffffffff;
  
-+static bool guest_cpuid_has_pmu(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpuid_entry2 *entry;
-+	union cpuid10_eax eax;
-+
-+	entry = kvm_find_cpuid_entry(vcpu, 0xa, 0);
-+	if (!entry)
-+		return false;
-+
-+	eax.full = entry->eax;
-+	return (eax.split.version_id > 0);
-+}
-+
-+static void nested_vmx_procbased_ctls_update(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	bool pmu_enabled = guest_cpuid_has_pmu(vcpu);
-+
-+	if (pmu_enabled)
-+		vmx->nested.msrs.procbased_ctls_high |= CPU_BASED_RDPMC_EXITING;
-+	else
-+		vmx->nested.msrs.procbased_ctls_high &= ~CPU_BASED_RDPMC_EXITING;
-+}
-+
- static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7070,6 +7094,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 	if (nested_vmx_allowed(vcpu)) {
- 		nested_vmx_cr_fixed1_bits_update(vcpu);
- 		nested_vmx_entry_exit_ctls_update(vcpu);
-+		nested_vmx_procbased_ctls_update(vcpu);
- 	}
+ 	if (strcmp(type, "u64") == 0 ||
+-	    strcmp(type, "s64"))
++	    strcmp(type, "s64") == 0)
+ 		return val;
  
- 	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+ 	if (strcmp(type, "s8") == 0)
 -- 
 2.20.1
 
