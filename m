@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DF8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E568C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A7C20449
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61C620449
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:41:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Of4xHJKf";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Of4xHJKf"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BEqPgVB2";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BEqPgVB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfEGUlP (ORCPT
+        id S1727251AbfEGUlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:41:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53626 "EHLO
+        Tue, 7 May 2019 16:41:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53578 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfEGUlD (ORCPT
+        with ESMTP id S1727177AbfEGUlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:41:03 -0400
+        Tue, 7 May 2019 16:41:02 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8B9E161340; Tue,  7 May 2019 20:41:02 +0000 (UTC)
+        id BB8A56155F; Tue,  7 May 2019 20:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557261662;
-        bh=002F9M1uXlnC2wPdhqVGhnev6UAfPxBuiQkXck5+64o=;
+        s=default; t=1557261661;
+        bh=4J3+oFqRtiIZEXV5p50Ysv+YGk04XmlmMAnX8bkmscs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Of4xHJKf6u5JPbRDEeJsBCke9mYnqB+rCv9ZoJzEt5g2D4Qno8KeMz1tWZbUZMB+a
-         zYygOBp/AXYk3Uk7PCGPjPP/Oo+3Yde5FTVJh7KQC4o0JbeMF9i+cagaw8BzCZhfuy
-         hYo7JOHSpW7Wvr+8CMo4GwTQ84UuOWAU+aXrKC1k=
+        b=BEqPgVB29tV2I+1B77xet5j4Tg8/yP+TY9yvuZhEZCvJeBPtHThCeqG98HZ/JUAmc
+         D/6CEBFnQk+Lz4kI8i+wbjcZ6EAiNWfjM9Tyer+GW7mUop374SObyxMdXcKGehErkZ
+         Z1rrBN37M9fv0UiGokow+KdHJFHWCo7NC/YKGhrw=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4305D614DB;
-        Tue,  7 May 2019 20:41:01 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 20E6F6141B;
+        Tue,  7 May 2019 20:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557261662;
-        bh=002F9M1uXlnC2wPdhqVGhnev6UAfPxBuiQkXck5+64o=;
+        s=default; t=1557261661;
+        bh=4J3+oFqRtiIZEXV5p50Ysv+YGk04XmlmMAnX8bkmscs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Of4xHJKf6u5JPbRDEeJsBCke9mYnqB+rCv9ZoJzEt5g2D4Qno8KeMz1tWZbUZMB+a
-         zYygOBp/AXYk3Uk7PCGPjPP/Oo+3Yde5FTVJh7KQC4o0JbeMF9i+cagaw8BzCZhfuy
-         hYo7JOHSpW7Wvr+8CMo4GwTQ84UuOWAU+aXrKC1k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4305D614DB
+        b=BEqPgVB29tV2I+1B77xet5j4Tg8/yP+TY9yvuZhEZCvJeBPtHThCeqG98HZ/JUAmc
+         D/6CEBFnQk+Lz4kI8i+wbjcZ6EAiNWfjM9Tyer+GW7mUop374SObyxMdXcKGehErkZ
+         Z1rrBN37M9fv0UiGokow+KdHJFHWCo7NC/YKGhrw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 20E6F6141B
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -56,9 +55,9 @@ Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
         linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
         bjorn.andersson@linaro.org, dianders@chromium.org,
         Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v5 11/11] arm64: dts: qcom: setup PDC as wakeup parent for GPIOs for SDM845
-Date:   Tue,  7 May 2019 14:37:49 -0600
-Message-Id: <20190507203749.3384-12-ilina@codeaurora.org>
+Subject: [PATCH v5 10/11] arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
+Date:   Tue,  7 May 2019 14:37:48 -0600
+Message-Id: <20190507203749.3384-11-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190507203749.3384-1-ilina@codeaurora.org>
 References: <20190507203749.3384-1-ilina@codeaurora.org>
@@ -69,106 +68,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup PDC wakeup parent for TLMM for SDM845 SoC.
+Enable PDC interrupt controller for SDM845 devices. The interrupt
+controller can detect wakeup capable interrupts when the SoC is in a low
+power state.
 
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
-Changes in v3:
-	- Provide irqdomain-map for GPIOs that map to PDC
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 79 ++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 7d4b11c9314e..59da6944b106 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1105,6 +1105,85 @@
- 			#interrupt-cells = <2>;
- 			gpio-ranges = <&tlmm 0 0 150>;
- 
-+			wakeup-parent = <&pdc_intc>;
-+			irqdomain-map = <1 0 &pdc_intc 30 0>,
-+					<3 0 &pdc_intc 31 0>,
-+					<5 0 &pdc_intc 32 0>,
-+					<10 0 &pdc_intc 33 0>,
-+					<11 0 &pdc_intc 34 0>,
-+					<20 0 &pdc_intc 35 0>,
-+					<22 0 &pdc_intc 36 0>,
-+					<24 0 &pdc_intc 37 0>,
-+					<26 0 &pdc_intc 38 0>,
-+					<30 0 &pdc_intc 39 0>,
-+					<31 0 &pdc_intc 117 0>,
-+					<32 0 &pdc_intc 41 0>,
-+					<34 0 &pdc_intc 42 0>,
-+					<36 0 &pdc_intc 43 0>,
-+					<37 0 &pdc_intc 44 0>,
-+					<38 0 &pdc_intc 45 0>,
-+					<39 0 &pdc_intc 46 0>,
-+					<40 0 &pdc_intc 47 0>,
-+					<41 0 &pdc_intc 115 0>,
-+					<43 0 &pdc_intc 49 0>,
-+					<44 0 &pdc_intc 50 0>,
-+					<46 0 &pdc_intc 51 0>,
-+					<48 0 &pdc_intc 52 0>,
-+					<49 0 &pdc_intc 118 0>,
-+					<52 0 &pdc_intc 54 0>,
-+					<53 0 &pdc_intc 55 0>,
-+					<54 0 &pdc_intc 56 0>,
-+					<56 0 &pdc_intc 57 0>,
-+					<57 0 &pdc_intc 58 0>,
-+					<58 0 &pdc_intc 59 0>,
-+					<59 0 &pdc_intc 60 0>,
-+					<60 0 &pdc_intc 61 0>,
-+					<61 0 &pdc_intc 62 0>,
-+					<62 0 &pdc_intc 63 0>,
-+					<63 0 &pdc_intc 64 0>,
-+					<64 0 &pdc_intc 65 0>,
-+					<66 0 &pdc_intc 66 0>,
-+					<68 0 &pdc_intc 67 0>,
-+					<71 0 &pdc_intc 68 0>,
-+					<73 0 &pdc_intc 69 0>,
-+					<77 0 &pdc_intc 70 0>,
-+					<78 0 &pdc_intc 71 0>,
-+					<79 0 &pdc_intc 72 0>,
-+					<80 0 &pdc_intc 73 0>,
-+					<84 0 &pdc_intc 74 0>,
-+					<85 0 &pdc_intc 75 0>,
-+					<86 0 &pdc_intc 76 0>,
-+					<88 0 &pdc_intc 77 0>,
-+					<89 0 &pdc_intc 116 0>,
-+					<91 0 &pdc_intc 79 0>,
-+					<92 0 &pdc_intc 80 0>,
-+					<95 0 &pdc_intc 81 0>,
-+					<96 0 &pdc_intc 82 0>,
-+					<97 0 &pdc_intc 83 0>,
-+					<101 0 &pdc_intc 84 0>,
-+					<103 0 &pdc_intc 85 0>,
-+					<104 0 &pdc_intc 86 0>,
-+					<115 0 &pdc_intc 90 0>,
-+					<116 0 &pdc_intc 91 0>,
-+					<117 0 &pdc_intc 92 0>,
-+					<118 0 &pdc_intc 93 0>,
-+					<119 0 &pdc_intc 94 0>,
-+					<120 0 &pdc_intc 95 0>,
-+					<121 0 &pdc_intc 96 0>,
-+					<122 0 &pdc_intc 97 0>,
-+					<123 0 &pdc_intc 98 0>,
-+					<124 0 &pdc_intc 99 0>,
-+					<125 0 &pdc_intc 100 0>,
-+					<127 0 &pdc_intc 102 0>,
-+					<128 0 &pdc_intc 103 0>,
-+					<129 0 &pdc_intc 104 0>,
-+					<130 0 &pdc_intc 105 0>,
-+					<132 0 &pdc_intc 106 0>,
-+					<133 0 &pdc_intc 107 0>,
-+					<145 0 &pdc_intc 108 0>;
-+			irqdomain-map-mask = <0xff 0>;
-+			irqdomain-map-pass-thru = <0 0xff>;
-+
- 			qspi_clk: qspi-clk {
- 				pinmux {
- 					pins = "gpio95";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2d9c39033c1a..4e5e681c4b11 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -685,6 +685,7 @@ CONFIG_QCOM_SMEM=y
+ CONFIG_QCOM_SMD_RPM=y
+ CONFIG_QCOM_SMP2P=y
+ CONFIG_QCOM_SMSM=y
++CONFIG_QCOM_PDC=y
+ CONFIG_ROCKCHIP_PM_DOMAINS=y
+ CONFIG_ARCH_TEGRA_132_SOC=y
+ CONFIG_ARCH_TEGRA_210_SOC=y
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
