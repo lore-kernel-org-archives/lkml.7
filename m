@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C891CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38657C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFC820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B822214AE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207411;
-	bh=OqokL3GaFvL/RYQ0/pqR9m4PkWqMIWIuV1si0M+F5Y0=;
+	s=default; t=1557207416;
+	bh=clrPM4CFPlojpFNLi38ihxaDZv5nUbuSloyLlsDPuJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5OJ0K4U6/Jxv3Eq5UUHRPWKDcFQtnfjllZvPDCA7dA0vFR9YH4wG0iX+JT8MHgGF
-	 wfetgk+gOyeINwUMWF4jL8Mrdc+3RF8suklFHIGUZMIZJeuy6+ePqokAX/q6OCMi3D
-	 CtUH6KfMpCXHdaFsoJRzlP/aek8etUdWWMNVYNq8=
+	b=cKTwKWCMmpD9SjkIKOxySPXc36pD/+ytjonnbLBJeLnEt0L/3/Tsgqe8H4ziIlrxP
+	 wbTpzbxFr8oXMXN4DWgDCCzjSuMa1jTBRUl2VQLeO2awBavWOcTTiNKguRm+FjAdXK
+	 BhNR3bNHhmsalmutIpBuACjCO+yuKNfBTS1NuVMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfEGFgu (ORCPT
+        id S1728199AbfEGFgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:36:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbfEGFgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:44 -0400
+        id S1727387AbfEGFgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8534720989;
-        Tue,  7 May 2019 05:36:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C5A20989;
+        Tue,  7 May 2019 05:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207404;
-        bh=OqokL3GaFvL/RYQ0/pqR9m4PkWqMIWIuV1si0M+F5Y0=;
+        s=default; t=1557207411;
+        bh=clrPM4CFPlojpFNLi38ihxaDZv5nUbuSloyLlsDPuJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hg12NFCTxMnGw8M7H46nebXR062ZWawCAspZquVZEDegqtfGnK1ed+kFE68X4zygr
-         7t9AUWmHKOxYsqG1sfRb7qAQwHaRwF2EtfL/5kQ5A76yPRpdvaZr29hKdkoaqnE6E6
-         sD5wzPMTni3OZp7l9jKaz1WxQMoaNsqdPXd03SWY=
+        b=fUHL9d8l1fWkmpsHc4cSZFo0D4yZgyWpPb8BTxrFgWEcp2MNmlepSqc1hiIerq29v
+         GmiFgqhAwW1B2v9wR9gN18KIwszo5rDdxqBpF3DjZWmvsEdnyBHVRlLGazblcsudQy
+         77t/7AY0nAZV/UJvjWb3HXhijVdosTSycxW6gXRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/81] vxge: fix return of a free'd memblock on a failed dma mapping
-Date:   Tue,  7 May 2019 01:34:56 -0400
-Message-Id: <20190507053554.30848-25-sashal@kernel.org>
+Cc:     David Francis <David.Francis@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Bhawanpreet Lakha <BhawanpreetLakha@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 28/81] drm/amd/display: If one stream full updates, full update all planes
+Date:   Tue,  7 May 2019 01:34:59 -0400
+Message-Id: <20190507053554.30848-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -59,35 +64,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: David Francis <David.Francis@amd.com>
 
-[ Upstream commit 0a2c34f18c94b596562bf3d019fceab998b8b584 ]
+[ Upstream commit c238bfe0be9ef7420f7669a69e27c8c8f4d8a568 ]
 
-Currently if a pci dma mapping failure is detected a free'd
-memblock address is returned rather than a NULL (that indicates
-an error). Fix this by ensuring NULL is returned on this error case.
+[Why]
+On some compositors, with two monitors attached, VT terminal
+switch can cause a graphical issue by the following means:
 
-Addresses-Coverity: ("Use after free")
-Fixes: 528f727279ae ("vxge: code cleanup and reorganization")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There are two streams, one for each monitor. Each stream has one
+plane
+
+current state:
+	M1:S1->P1
+	M2:S2->P2
+
+The user calls for a terminal switch and a commit is made to
+change both planes to linear swizzle mode. In atomic check,
+a new dc_state is constructed with new planes on each stream
+
+new state:
+	M1:S1->P3
+	M2:S2->P4
+
+In commit tail, each stream is committed, one at a time. The first
+stream (S1) updates properly, triggerring a full update and replacing
+the state
+
+current state:
+	M1:S1->P3
+	M2:S2->P4
+
+The update for S2 comes in, but dc detects that there is no difference
+between the stream and plane in the new and current states, and so
+triggers a fast update. The fast update does not program swizzle,
+so the second monitor is corrupted
+
+[How]
+Add a flag to dc_plane_state that forces full updates
+
+When a stream undergoes a full update, set this flag on all changed
+planes, then clear it on the current stream
+
+Subsequent streams will get full updates as a result
+
+Signed-off-by: David Francis <David.Francis@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet Lakha@amd.com>
+Acked-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/neterion/vxge/vxge-config.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 19 +++++++++++++++++++
+ drivers/gpu/drm/amd/display/dc/dc.h      |  3 +++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.c b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-index bf4302e45dcd..28f765664702 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.c
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-@@ -2365,6 +2365,7 @@ static void *__vxge_hw_blockpool_malloc(struct __vxge_hw_device *devh, u32 size,
- 				dma_object->addr))) {
- 			vxge_os_dma_free(devh->pdev, memblock,
- 				&dma_object->acc_handle);
-+			memblock = NULL;
- 			goto exit;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index bb0cda727605..e3f5e5d6f0c1 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1213,6 +1213,11 @@ static enum surface_update_type det_surface_update(const struct dc *dc,
+ 		return UPDATE_TYPE_FULL;
+ 	}
+ 
++	if (u->surface->force_full_update) {
++		update_flags->bits.full_update = 1;
++		return UPDATE_TYPE_FULL;
++	}
++
+ 	type = get_plane_info_update_type(u);
+ 	elevate_update_type(&overall_type, type);
+ 
+@@ -1467,6 +1472,14 @@ void dc_commit_updates_for_stream(struct dc *dc,
  		}
  
+ 		dc_resource_state_copy_construct(state, context);
++
++		for (i = 0; i < dc->res_pool->pipe_count; i++) {
++			struct pipe_ctx *new_pipe = &context->res_ctx.pipe_ctx[i];
++			struct pipe_ctx *old_pipe = &dc->current_state->res_ctx.pipe_ctx[i];
++
++			if (new_pipe->plane_state && new_pipe->plane_state != old_pipe->plane_state)
++				new_pipe->plane_state->force_full_update = true;
++		}
+ 	}
+ 
+ 
+@@ -1510,6 +1523,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 		dc->current_state = context;
+ 		dc_release_state(old);
+ 
++		for (i = 0; i < dc->res_pool->pipe_count; i++) {
++			struct pipe_ctx *pipe_ctx = &context->res_ctx.pipe_ctx[i];
++
++			if (pipe_ctx->plane_state && pipe_ctx->stream == stream)
++				pipe_ctx->plane_state->force_full_update = false;
++		}
+ 	}
+ 	/*let's use current_state to update watermark etc*/
+ 	if (update_type >= UPDATE_TYPE_FULL)
+diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
+index 6c9990bef267..4094b4f50111 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc.h
++++ b/drivers/gpu/drm/amd/display/dc/dc.h
+@@ -505,6 +505,9 @@ struct dc_plane_state {
+ 	struct dc_plane_status status;
+ 	struct dc_context *ctx;
+ 
++	/* HACK: Workaround for forcing full reprogramming under some conditions */
++	bool force_full_update;
++
+ 	/* private to dc_surface.c */
+ 	enum dc_irq_source irq_source;
+ 	struct kref refcount;
 -- 
 2.20.1
 
