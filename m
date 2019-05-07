@@ -2,180 +2,123 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C40C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32842C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8896120578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC3E20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SR3iR6hD"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="kshwGRMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfEGNpJ (ORCPT
+        id S1726650AbfEGNri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:45:09 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53298 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfEGNpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:45:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x47Diw8m012273;
-        Tue, 7 May 2019 08:44:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557236698;
-        bh=E6////DJtGhtMBQIUz9ZeWa9IxXTY2D3IVy0VJeXBn0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SR3iR6hD6PQTcZFAHKS/lIKonY5lEBBz9JMNO/JwSCZivaqFa/AJQiXjf3Hb87o4o
-         NpV3BJK07HH0WLqSaJAYv+UQnozq1grYVP1SdREu9WZaz1J3iyFoEeA8cPcnNMeT01
-         oxrFr0d5It8Fuy+9ih+R7MNQV33neeIg8VIqvfvM=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x47DiwGF060905
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 May 2019 08:44:58 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 7 May
- 2019 08:44:57 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 7 May 2019 08:44:57 -0500
-Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x47DivCN106703;
-        Tue, 7 May 2019 08:44:57 -0500
-Subject: Re: [PATCH v3 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
- driver for SiFive SoCs
-To:     Yash Shah <yash.shah@sifive.com>
-CC:     <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        <linux-kernel@vger.kernel.org>, <aou@eecs.berkeley.edu>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-References: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
- <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
- <d36b7a74-0d08-0143-b479-45f760c347ba@ti.com>
- <CAJ2_jOFZjTNA3Nf=zNwLT+St21Q2_TPx_XYhggU=yef6LPkLdg@mail.gmail.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <ba1481d0-f21b-5b0d-e3d5-ecb9faf42407@ti.com>
-Date:   Tue, 7 May 2019 09:44:58 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAJ2_jOFZjTNA3Nf=zNwLT+St21Q2_TPx_XYhggU=yef6LPkLdg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 7 May 2019 09:47:38 -0400
+Received: from mail-eopbgr760075.outbound.protection.outlook.com ([40.107.76.75]:58662
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726295AbfEGNri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:47:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MrItdIULoaoyG6nD6rhbuYQO/rMTgTni2ROD0CXj/Uo=;
+ b=kshwGRMH1R6sAH8zQyOfZxhcpOh/6gN3vCEbsGjFxMcvS+zmrOovqmwJXxvMwZyk3bckS+ql9XocmFu5cX62xca1NWcCxnwTpFtbZg+PQHMqpsvKb9h2IVjZMbwy4rMHHDXlGyEo61cCnZuV32G2fJ9YiAjc8TnYaTGplRrsrXE=
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.40.14) by
+ DM5PR12MB1786.namprd12.prod.outlook.com (10.175.91.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Tue, 7 May 2019 13:47:35 +0000
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::11db:1b41:d1e6:c6dc]) by DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::11db:1b41:d1e6:c6dc%11]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 13:47:35 +0000
+From:   Gary R Hook <ghook@amd.com>
+To:     Qian Cai <cai@lca.pw>, "jroedel@suse.de" <jroedel@suse.de>
+CC:     "Hook, Gary" <Gary.Hook@amd.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/amd: print out "tag" in INVALID_PPR_REQUEST
+Thread-Topic: [PATCH] iommu/amd: print out "tag" in INVALID_PPR_REQUEST
+Thread-Index: AQHVA8HKhrRFrjUPUE6UqWoL4ARBq6Zfr1OA
+Date:   Tue, 7 May 2019 13:47:35 +0000
+Message-ID: <ea379dc8-dd6b-f204-0abc-7b6fe87a851b@amd.com>
+References: <20190506041106.29167-1-cai@lca.pw>
+In-Reply-To: <20190506041106.29167-1-cai@lca.pw>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN2PR01CA0049.prod.exchangelabs.com (2603:10b6:800::17) To
+ DM5PR12MB1449.namprd12.prod.outlook.com (2603:10b6:4:10::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 841f5cb7-f6b2-43b3-3a9a-08d6d2f28f49
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1786;
+x-ms-traffictypediagnostic: DM5PR12MB1786:
+x-microsoft-antispam-prvs: <DM5PR12MB17863BDF30CC4A5E359973E2FD310@DM5PR12MB1786.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:983;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(366004)(346002)(396003)(136003)(199004)(189003)(53936002)(68736007)(6512007)(256004)(229853002)(14444005)(66066001)(8676002)(81166006)(81156014)(2501003)(3846002)(26005)(71190400001)(71200400001)(476003)(36756003)(6486002)(6436002)(2616005)(446003)(11346002)(6506007)(386003)(52116002)(53546011)(99286004)(102836004)(5660300002)(7736002)(316002)(110136005)(54906003)(6116002)(486006)(305945005)(72206003)(478600001)(66446008)(186003)(14454004)(64756008)(66556008)(66476007)(2906002)(73956011)(66946007)(31686004)(76176011)(25786009)(31696002)(6246003)(4326008)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1786;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iehGFDvsKQUKjGG8k4lAush6yN+x0xMD4OPm/eLqPaZPKDhtviBdk8Qw3BDBi1FVrO6wJAcn2qZCAV5hPaUazA1roY9hs7L84RLEErbpkyX5BfghjidFWa7o+r4ORy9qFCnBOhLNw0xWt1dqaHiauZRivcq6FmmwRVMyOywJnwqwZBcuKiMMGLUZABpGlrA4EaQYO1iyxJDAMo9a/lZZH7AfQe86sEti/LSa4DcGtgktcjnTmaMSV17yrl7+pAbDfmUiaaLAqtWb7VTP8e3PliMffEe5TdB2IgvtZfK04qc7RQnrte9wz1Z5Ejx9o7CvQuZQCgsZzu4g8w3opVIG+WjMl8TfiQz79ucth4M7xda86PMgBQcOVxY9LU6cffIbYfiUuVD3rQze/r1pkuab3Ypgw3MkzRzWP3oXRgniHx8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <298EF8706C009A43B0877EC26E6790BE@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 841f5cb7-f6b2-43b3-3a9a-08d6d2f28f49
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 13:47:35.2397
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1786
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 2:48 AM, Yash Shah wrote:
-> On Mon, May 6, 2019 at 5:48 PM Andrew F. Davis <afd@ti.com> wrote:
->>
->> On 5/6/19 6:48 AM, Yash Shah wrote:
->>> The driver currently supports only SiFive FU540-C000 platform.
->>>
->>> The initial version of L2 cache controller driver includes:
->>> - Initial configuration reporting at boot up.
->>> - Support for ECC related functionality.
->>>
->>> Signed-off-by: Yash Shah <yash.shah@sifive.com>
->>> ---
->>>  arch/riscv/include/asm/sifive_l2_cache.h |  16 +++
->>>  arch/riscv/mm/Makefile                   |   1 +
->>>  arch/riscv/mm/sifive_l2_cache.c          | 175 +++++++++++++++++++++++++++++++
->>>  3 files changed, 192 insertions(+)
->>>  create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
->>>  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
->>>
->>> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
->>> new file mode 100644
->>> index 0000000..04f6748
->>> --- /dev/null
->>> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
->>> @@ -0,0 +1,16 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +/*
->>> + * SiFive L2 Cache Controller header file
->>> + *
->>> + */
->>> +
->>> +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
->>> +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
->>> +
->>> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
->>> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
->>> +
->>> +#define SIFIVE_L2_ERR_TYPE_CE 0
->>> +#define SIFIVE_L2_ERR_TYPE_UE 1
->>> +
->>> +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
->>> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
->>> index eb22ab4..1523ee5 100644
->>> --- a/arch/riscv/mm/Makefile
->>> +++ b/arch/riscv/mm/Makefile
->>> @@ -3,3 +3,4 @@ obj-y += fault.o
->>>  obj-y += extable.o
->>>  obj-y += ioremap.o
->>>  obj-y += cacheflush.o
->>> +obj-y += sifive_l2_cache.o
->>> diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
->>> new file mode 100644
->>> index 0000000..4eb6461
->>> --- /dev/null
->>> +++ b/arch/riscv/mm/sifive_l2_cache.c
->>> @@ -0,0 +1,175 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * SiFive L2 cache controller Driver
->>> + *
->>> + * Copyright (C) 2018-2019 SiFive, Inc.
->>> + *
->>> + */
-> [...]
->>> +
->>> +#ifdef CONFIG_DEBUG_FS
->>> +static struct dentry *sifive_test;
->>> +
->>> +static ssize_t l2_write(struct file *file, const char __user *data,
->>> +                     size_t count, loff_t *ppos)
->>> +{
->>> +     unsigned int val;
->>> +
->>> +     if (kstrtouint_from_user(data, count, 0, &val))
->>> +             return -EINVAL;
->>> +     if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
->>
->> I'm guessing bit 16 is the enable and the lower 8 are some kind of
->> region to enable the error? This is probably a bad interface, it looks
->> useful for testing but doesn't provide any debugging info useful for
->> running systems. Do you really want userspace to be able to do this?
-> 
-> Bit 16 selects the type of ECC error (0=data or 1=directory error).
-> The lower 8 bits toggles (corrupt) that bit index.
-> Are you suggesting to remove this debug interface altogether or you
-> want me to improve the current interface?
-> Something like providing 2 separate debugfs files for data and
-> directory errors. And create a separate 8-bit debugfs variable to
-> select the bit index to toggle.
-> 
-
-I was suggesting to remove the whole thing. I don't see it being all
-that useful, but it is up to you.
-
-Andrew
-
-> - Yash
-> 
->>
->> Andrew
->>
-> 
+T24gNS81LzE5IDExOjExIFBNLCBRaWFuIENhaSB3cm90ZToNCj4gW0NBVVRJT046IEV4dGVybmFs
+IEVtYWlsXQ0KPiANCj4gVGhlIGNvbW1pdCBlN2Y2M2ZmYzFiZjEgKCJpb21tdS9hbWQ6IFVwZGF0
+ZSBsb2dnaW5nIGluZm9ybWF0aW9uIGZvciBuZXcNCj4gZXZlbnQgdHlwZSIpIGludHJvZHVjZWQg
+YSB2YXJpYWJsZSAidGFnIiBidXQgaGFkIG5ldmVyIHVzZWQgaXQgd2hpY2gNCj4gZ2VuZXJhdGVz
+IGEgd2FybmluZyBiZWxvdywNCj4gDQo+IGRyaXZlcnMvaW9tbXUvYW1kX2lvbW11LmM6IEluIGZ1
+bmN0aW9uICdpb21tdV9wcmludF9ldmVudCc6DQo+IGRyaXZlcnMvaW9tbXUvYW1kX2lvbW11LmM6
+NTY3OjMzOiB3YXJuaW5nOiB2YXJpYWJsZSAndGFnJyBzZXQgYnV0IG5vdA0KPiB1c2VkIFstV3Vu
+dXNlZC1idXQtc2V0LXZhcmlhYmxlXQ0KPiAgICBpbnQgdHlwZSwgZGV2aWQsIHBhc2lkLCBmbGFn
+cywgdGFnOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+DQo+IHNvIGp1
+c3QgdXNlIGl0IGR1cmluZyB0aGUgbG9nZ2luZy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFFpYW4g
+Q2FpIDxjYWlAbGNhLnB3Pg0KPiAtLS0NCj4gICBkcml2ZXJzL2lvbW11L2FtZF9pb21tdS5jIHwg
+NCArKy0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FtZF9pb21tdS5jIGIvZHJpdmVy
+cy9pb21tdS9hbWRfaW9tbXUuYw0KPiBpbmRleCBmN2NkZDJhYjdmMTEuLjUyZjQxMzY5YzViMyAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pb21tdS9hbWRfaW9tbXUuYw0KPiArKysgYi9kcml2ZXJz
+L2lvbW11L2FtZF9pb21tdS5jDQo+IEBAIC02MzEsOSArNjMxLDkgQEAgc3RhdGljIHZvaWQgaW9t
+bXVfcHJpbnRfZXZlbnQoc3RydWN0IGFtZF9pb21tdSAqaW9tbXUsIHZvaWQgKl9fZXZ0KQ0KPiAg
+ICAgICAgICAgICAgICAgIHBhc2lkID0gKChldmVudFswXSA+PiAxNikgJiAweEZGRkYpDQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICgoZXZlbnRbMV0gPDwgNikgJiAweEYwMDAwKTsNCj4g
+ICAgICAgICAgICAgICAgICB0YWcgPSBldmVudFsxXSAmIDB4MDNGRjsNCj4gLSAgICAgICAgICAg
+ICAgIGRldl9lcnIoZGV2LCAiRXZlbnQgbG9nZ2VkIFtJTlZBTElEX1BQUl9SRVFVRVNUIGRldmlj
+ZT0lMDJ4OiUwMnguJXggcGFzaWQ9MHglMDV4IGFkZHJlc3M9MHglbGx4IGZsYWdzPTB4JTA0eF1c
+biIsDQo+ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgIkV2ZW50IGxvZ2dlZCBbSU5WQUxJ
+RF9QUFJfUkVRVUVTVCBkZXZpY2U9JTAyeDolMDJ4LiV4IHBhc2lkPTB4JTA1eCB0YWc9MHglMDR4
+IGFkZHJlc3M9MHglbGx4IGZsYWdzPTB4JTA0eF1cbiIsDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICBQQ0lfQlVTX05VTShkZXZpZCksIFBDSV9TTE9UKGRldmlkKSwgUENJX0ZVTkMoZGV2aWQp
+LA0KPiAtICAgICAgICAgICAgICAgICAgICAgICBwYXNpZCwgYWRkcmVzcywgZmxhZ3MpOw0KPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBwYXNpZCwgdGFnLCBhZGRyZXNzLCBmbGFncyk7DQo+ICAg
+ICAgICAgICAgICAgICAgYnJlYWs7DQo+ICAgICAgICAgIGRlZmF1bHQ6DQo+ICAgICAgICAgICAg
+ICAgICAgZGV2X2VycihkZXYsICJFdmVudCBsb2dnZWQgW1VOS05PV04gZXZlbnRbMF09MHglMDh4
+IGV2ZW50WzFdPTB4JTA4eCBldmVudFsyXT0weCUwOHggZXZlbnRbM109MHglMDh4XG4iLA0KDQpJ
+IGRpZCBtYW5hZ2UgdG8gb3Zlcmxvb2sgdGhhdCB2YXJpYWJsZSB3aGVuIEkgcG9zdGVkIHRoZSBv
+cmlnaW5hbCBwYXRjaC4gDQpCdXQgaXQgbG9va3MgdG8gbWUgbGlrZSA0MWU1OWE0MWZjNWQxIChp
+b21tdSB0cmVlKSBhbHJlYWR5IGZpeGVkIHRoaXMuLi4gDQpJJ20gbm90IHN1cmUgd2h5IGl0IG5l
+dmVyIGdvdCBwdXNoZWQgdG8gdGhlIG1haW4gdHJlZS4NCg0KZ3JoDQoNCg==
