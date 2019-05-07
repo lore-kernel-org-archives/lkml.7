@@ -2,109 +2,124 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0F3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D074C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E547205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:53:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mbgXMp/1"
+	by mail.kernel.org (Postfix) with ESMTP id 65574205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfEGOxA (ORCPT
+        id S1726589AbfEGOyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:53:00 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45026 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbfEGOw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:52:59 -0400
-Received: by mail-yw1-f68.google.com with SMTP id j4so13419344ywk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 07:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QsBH3/6csQjaE99mExw7IfFXVrloklkX9pCxbhdLh74=;
-        b=mbgXMp/1KMUq1BUS9eZLhL8CKZK/DoGo3oNSSBQJjt5C4AfCcTEo8K03NsU2Qd7zzv
-         i1JRhvOPD5EL2ftJF3As7EK4mS+lN0tF4wt28QOUQat71TEp+O+AuxHLdfo4pqZKsaEd
-         kwR2mE/Oz3X/WeLW9csTbepgqy+SZfKktXiKawhU/AxNsXlehFKBMzYpLLbfwq8wBYcz
-         C2+skA0IsJ2gBWmzmU85JpXxQZkyi8l/i5u9L8phzZl2jm+x0qtnOgKdyIOEnO/xl7tL
-         ND6f+VSi2LXKf/z2y7f+hft23H3mSAVeIp51nrNe0AOI9ArlI8ew29HZIOTIyj5ziZeU
-         T58w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QsBH3/6csQjaE99mExw7IfFXVrloklkX9pCxbhdLh74=;
-        b=tlPsVdXRtJ3E2LmIe8GHB/qRM9eykskvdEbtnuxrV8qcqef/FQunu040cHmZKD2mww
-         asUT/NTFs0kjV7F7+T3Ir821UXkywfqqhqcUAGzD/ZG7NoYeMZzHul3MuonMxBZfCjKg
-         ammwGBLoS1bBPQYUl380nwhfmw6LUOEsthysab7RcD+3Viq6SXfqZ2x40EAbj/1ckZMj
-         axJcwpN2DU8p7IwPIMDz/NXLBB/aVqk1693Hz1AllqZ2OPy1v0GJJOmeDnbP9TwKqNfL
-         cly5TqVko1i7r22+Rebr7ZaqdBBss80phj4X+T560sODhwe8gjuRySSfmcYnVtINkif2
-         52Ag==
-X-Gm-Message-State: APjAAAVdTaPXUC0vebOWvhCm4jbHUaJ/cTD8utHkx8Yr2Fw870Ws/c7l
-        97CoDrJ2EXV8IjOLPXFPAdjOCKmcJJksjjzC/WGx8g==
-X-Google-Smtp-Source: APXvYqwSOyNWaXXqAR64Yl6lra7e1M+E9ZK/56Uz24VtVymWObkhiXt0imSNWCiPDevrgTPeJxA2O5ZLVLoebp5pxmc=
-X-Received: by 2002:a25:5145:: with SMTP id f66mr20397598ybb.151.1557240778588;
- Tue, 07 May 2019 07:52:58 -0700 (PDT)
+        Tue, 7 May 2019 10:54:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35918 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfEGOyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:54:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BABA388305;
+        Tue,  7 May 2019 14:54:15 +0000 (UTC)
+Received: from prarit.khw1.lab.eng.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2818B17ADD;
+        Tue,  7 May 2019 14:54:15 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>, Jessica Yu <jeyu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+Subject: [PATCH v2] modules: Only return -EEXIST for modules that have finished loading
+Date:   Tue,  7 May 2019 10:54:13 -0400
+Message-Id: <20190507145413.16297-1-prarit@redhat.com>
 MIME-Version: 1.0
-References: <20190507044801.250396-1-dianders@chromium.org>
-In-Reply-To: <20190507044801.250396-1-dianders@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 7 May 2019 07:52:47 -0700
-Message-ID: <CABXOdTcsDU5dSAFWZBAvrOGRa+BokgKi9huGfs=fO4ObCOvnHQ@mail.gmail.com>
-Subject: Re: [PATCH] of: Add dummy for of_node_is_root if not CONFIG_OF
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 07 May 2019 14:54:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 9:48 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> We'll add a dummy to just return false.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Heiko, it would still be good to get a test of this patch from you.  I
+tested this here at Red Hat on some System Z machines.  Without the
+modification made here in v2, the systems failed to boot ~10% of the time.
+After the modification I do not see any boot failures.  I also was
+able to reproduce the boot issue with the acpi_cpufreq driver on a very
+large & fast x86 system which had closer to 100% failure rate without
+the changes in v2.  After the modification in v2 the system has rebooted
+all weekend without any issues.
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+P.
 
-> ---
->
->  include/linux/of.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 0cf857012f11..62ae5c1cafa5 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -653,6 +653,11 @@ static inline bool of_have_populated_dt(void)
->         return false;
->  }
->
-> +static inline bool of_node_is_root(const struct device_node *node)
-> +{
-> +       return false;
-> +}
-> +
->  static inline struct device_node *of_get_compatible_child(const struct device_node *parent,
->                                         const char *compatible)
->  {
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+---8<---
+
+Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+linux guests boot with repeated errors:
+
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+
+The warnings occur because the module code erroneously returns -EEXIST
+for modules that have failed to load and are in the process of being
+removed from the module list.
+
+module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+modules.dep, systemd will load edac_mce_amd for every request of
+amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+state MODULE_STATE_UNFORMED and once the module load fails and the state
+becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+executes and add_unformed_module() will erroneously return -EEXIST even
+though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+fails because of unknown symbols from edac_mce_amd.
+
+add_unformed_module() must wait to return for any case other than
+MODULE_STATE_LIVE to prevent a race between multiple loads of
+dependent modules.
+
+v2: The initial (old->state != MODULE_STATE_LIVE) change exposed an
+additional issue in the code.  wait_event_interruptible() puts each thread
+to sleep until the a module finishes loading an executes the module_wq
+workqueue.  The result is a long delay during the boot.  Switching to
+wait_event_interruptible_timeout() resolves the sleep problem.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: David Arcari <darcari@redhat.com>
+---
+ kernel/module.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/module.c b/kernel/module.c
+index 1c429d8d2d74..6c868aabaf37 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3568,12 +3568,12 @@ static int add_unformed_module(struct module *mod)
+ 	mutex_lock(&module_mutex);
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+-		if (old->state == MODULE_STATE_COMING
+-		    || old->state == MODULE_STATE_UNFORMED) {
++		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+ 			mutex_unlock(&module_mutex);
+-			err = wait_event_interruptible(module_wq,
+-					       finished_loading(mod->name));
++			err = wait_event_interruptible_timeout(module_wq,
++					       finished_loading(mod->name),
++					       HZ/1000);
+ 			if (err)
+ 				goto out_unlocked;
+ 			goto again;
+-- 
+2.18.1
+
