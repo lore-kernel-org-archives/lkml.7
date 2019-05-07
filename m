@@ -2,100 +2,209 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C06C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3770C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7297D20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557237369;
-	bh=Sv73nYWGhZw1cOvFhxh3v968yU9VwS0c9hkb5H6C49o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EC838n7Zv1vhjSR9jA5AqwBMiGwdjBrjHHO1HVmJEUjELgIPN0uhxseDPMoDTUrQ2
-	 K1BkjRxleK9lPUxN1t1v3Kmdt3idIyZF25hJL+BazkYb0KkesfPR79uMnMKHu2MoMt
-	 7DLsFByt6wqT1UJ6lp7Xw2e6hgCqx4XUk7Yr3P7I=
+	by mail.kernel.org (Postfix) with ESMTP id 98868205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfEGN4I (ORCPT
+        id S1726772AbfEGN7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbfEGN4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:56:07 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54AF5205C9;
-        Tue,  7 May 2019 13:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557237366;
-        bh=Sv73nYWGhZw1cOvFhxh3v968yU9VwS0c9hkb5H6C49o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p37yYl5Vv8wb6Q9xWjcVQnSRffvZ8HLfLPF1U27nrLMz4waYgrkTjkYq4KrRmqwCr
-         6f5+90RrekblphPiprBeAN58xP/RR7JjLYQ+p/jJIFP31LFIwJYOEhiVB3WKVP8IrH
-         qwLHeld1nV98hwAwaxED8Mg/nquLzqy1ocOoAZNg=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andreas Ziegler <andreas.ziegler@fau.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] tracing: probeevent: Fix to make the type of $comm string
-Date:   Tue,  7 May 2019 22:56:02 +0900
-Message-Id: <155723736241.9149.14582064184468574539.stgit@devnote2>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <155723732200.9149.10482668315693777743.stgit@devnote2>
-References: <155723732200.9149.10482668315693777743.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 7 May 2019 09:59:18 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50871 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfEGN7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:59:18 -0400
+X-Originating-IP: 90.88.28.253
+Received: from localhost (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id D76541C0017;
+        Tue,  7 May 2019 13:59:12 +0000 (UTC)
+Date:   Tue, 7 May 2019 15:59:12 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Frank Lee <tiny.windzz@gmail.com>, Icenowy Zheng <icenowy@aosc.io>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, lars@metafoo.de,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        robh+dt@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        pmeerw@pmeerw.net, knaack.h@gmx.de,
+        Lee Jones <lee.jones@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
+ thermal sensor
+Message-ID: <20190507135912.4lev7ly2w4drlt7s@flea>
+References: <20190503072813.2719-1-tiny.windzz@gmail.com>
+ <20190503072813.2719-2-tiny.windzz@gmail.com>
+ <20190505162215.3594f77d@archlinux>
+ <20190506122807.4u323iys74jddcet@flea>
+ <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
+ <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
+ <20190506175525.swc5u7j6ntry7v3g@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bydgprfj47ik7yub"
+Content-Disposition: inline
+In-Reply-To: <20190506175525.swc5u7j6ntry7v3g@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to make the type of $comm "string".
-If we set the other type to $comm argument, it shows
-meaningless value or wrong data. Currently probe events
-allow us to set string array type (e.g. ":string[2]"), or
-other digit types like x8 on $comm. But since clearly
-$comm is just a string data, it should not be fetched
-by other types including array.
 
-Fixes: 35abb67de744 ("tracing: expose current->comm to [ku]probe events")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- kernel/trace/trace_probe.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+--bydgprfj47ik7yub
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 4cc2d467d34c..e0d1d5353464 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -533,13 +533,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
- 			}
- 		}
- 	}
--	/*
--	 * The default type of $comm should be "string", and it can't be
--	 * dereferenced.
--	 */
--	if (!t && strcmp(arg, "$comm") == 0)
-+
-+	/* Since $comm can not be dereferred, we can find $comm by strcmp */
-+	if (strcmp(arg, "$comm") == 0) {
-+		/* The type of $comm must be "string", and not an array. */
-+		if (parg->count || (t && strcmp(t, "string")))
-+			return -EINVAL;
- 		parg->type = find_fetch_type("string");
--	else
-+	} else
- 		parg->type = find_fetch_type(t);
- 	if (!parg->type) {
- 		trace_probe_log_err(offset + (t ? (t - arg) : 0), BAD_TYPE);
+On Mon, May 06, 2019 at 07:55:25PM +0200, Ond=C5=99ej Jirman wrote:
+> On Tue, May 07, 2019 at 01:08:39AM +0800, Frank Lee wrote:
+> > On Tue, May 7, 2019 at 12:52 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+> > >
+> > > =E5=9C=A8 2019-05-06=E4=B8=80=E7=9A=84 14:28 +0200=EF=BC=8CMaxime Rip=
+ard=E5=86=99=E9=81=93=EF=BC=9A
+> > > > Hi,
+> > > >
+> > > > On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
+> > > > > On Fri,  3 May 2019 03:28:07 -0400
+> > > > > Yangtao Li <tiny.windzz@gmail.com> wrote:
+> > > > >
+> > > > > > For some SOCs, there are more than one thermal sensor, and there
+> > > > > > are
+> > > > > > currently four sensors on the A80. So we need to do some work in
+> > > > > > order
+> > > > > > to support multiple thermal sensors:
+> > > > > >
+> > > > > >   1) add sensor_count in gpadc_data.
+> > > > > >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support
+> > > > > > multiple
+> > > > > >      thermal_zone_device and distinguish between different
+> > > > > > sensors.
+> > > > > >   3) modify read temperature and initialization function.
+> > > > >
+> > > > > This comment doesn't mention the devm change. If it had it would
+> > > > > have
+> > > > > raised immediate alarm bells.
+> > > > >
+> > > > > I'm also not keen on the web of pointers that this driver is
+> > > > > steadily
+> > > > > evolving.  I can't immediately see how to reduce that complexity
+> > > > > however.
+> > > >
+> > > > So I might be responsible for that, and looking back, this has been=
+ a
+> > > > mistake.
+> > > >
+> > > > This driver was initally put together to support a controller found
+> > > > in
+> > > > older (A10 up to A31) Allwinner SoCs. This controller had an ADC
+> > > > driver that could be operated as a touchscreen controller, and was
+> > > > providing a CPU temperature sensor and a general purpose ADC.
+> > > >
+> > > > However, we already had a driver for that controller in drivers/inp=
+ut
+> > > > to report the CPU temperature, and the one in IIO was introduced to
+> > > > support the general purpose ADC (and the CPU temperature). The long
+> > > > term goal was to add the touchscreen feature as well eventually so
+> > > > that we could remove the one in drivers/input. That didn't happen.
+> > > >
+> > > > At the same time, the Allwinner hardware slowly evolved to remove t=
+he
+> > > > touchscreen and ADC features, and only keep the CPU temperature
+> > > > readout. It then evolved further on to support multiple temperatures
+> > > > (for different clusters, the GPU, and so on).
+> > > >
+> > > > So, today, we're in a situation where I was pushing everything into
+> > > > that IIO drivers since there was similiraties between all the
+> > > > generations, but the fact that we have to support so many odd cases
+> > > > (DT bindings compatibility, controllers with and without ADC, etc)
+> > > > that it becomes a real mess.
+> > > >
+> > > > And that mess isn't really used by anybody, since we want to have t=
+he
+> > > > touchscreen.
+> > > >
+> > > > There's only one SoC that is supported only by that driver, which is
+> > > > the A33 that only had a CPU temperature readout, and is still pretty
+> > > > similar to the latest SoC from Allwinner (that is supported by this
+> > > > series).
+> > > >
+> > > > I guess, for everyone's sanity and in order to not stall this
+> > > > further,
+> > > > it would just be better to create an hwmon driver for the A33 (and
+> > > > onwards, including the H6) for the SoC that just have the temperatu=
+re
+> > > > readout feature. And for the older SoC, we just keep the older driv=
+er
+> > > > under input/. Once the A33 is supported, we'll remove the driver in
+> > > > IIO (and the related bits in drivers/mfd).
+> >
+> > a hwmon driver or a thermal driver=EF=BC=9F
+> >
+> > >
+> > > I think a thermal driver is better.
+> >
+> > This is what I hope to see a few months ago.
+> >
+> > >
+> > > Other SoCs' thermal sensor drivers are all thermal drivers.
+> > >
+> > > >
+> > > > Armbian already has a driver for that they never upstreamed iirc, so
+> > > > it might be a good starting point, and we would add the support for
+> > > > the H6. How does that sound?
+> > >
+> > > I think the developer abandoned to upstream it because of the previous
+> > > problem ;-)
+> > >
+> > > Maybe it can be taken and add A33&H6 support.
+> >
+> > If OK, I am going to start some thermal driver work this weekend.  : )
+>
+> There are plenty of thermal drivers flying around, with varying levels
+> of support for various SoCs:
+>
+> - H3/H5: https://megous.com/git/linux/commit/?h=3Dths-5.1&id=3Db8e20c5da7=
+a00b3a3fa1b274fc8d5bea95872b0a
+> - A83T: https://megous.com/git/linux/commit/?h=3Dths-5.1&id=3D796dff9a946=
+fd475cc1e4bb948a723ea841c640c
+> - H6: https://megous.com/git/linux/commit/?h=3Dopi3-5.1&id=3Daeab762c19b4=
+aa228a295258c9d6b2e1f143bf86
+>
+> For H3/H5 Icenowy also tried to upstream some variant of my THS driver, w=
+ith
+> better SID/calibration data reading support.
+>
+> I'd suggest starting with the H6 driver above (as that implements the
+> calibration data readout correctly), and make it so that it can support m=
+ultiple
+> SoCs.
 
+Yeah, that seems like a good plan
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--bydgprfj47ik7yub
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNGPMAAKCRDj7w1vZxhR
+xS2VAQDOVlzfYshYqB3RzzDSqFMZPH8If+sem/QedfMd4Lyj7AD+KkQ+2ms4+Ca9
+JJceZmhL6UGhaXOTV4RQUMJQA+c6zgU=
+=DXHT
+-----END PGP SIGNATURE-----
+
+--bydgprfj47ik7yub--
