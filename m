@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0CAC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EADC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6BF206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BAE204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208138;
-	bh=V0Bzwzhga6ZuygMd0DR5+U69a8sqREB1MyEM7/MSUCs=;
+	s=default; t=1557208141;
+	bh=VRtGhhfvENSk8MY3OOpOVHVA92UpWAu95L5vA/T4aGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wN7UIoap3LGyAcuYM0M/G+OdHmqvgXCxJ7hpWlg3RyrdioEU1Hh8m9ChOT+MUwPCA
-	 M5/JAZNwGQmB/u444Dvw3oz4q8a4cU4w+uJ3csEnrRDeZcD4QdLGGwbcMGHQ8PV+ow
-	 dTa77ZLwfICtjICB3S3y6nj73NihduxfLSPbF0cY=
+	b=gXpaYhNUvr34RMZbtxDtNxa4/aIQ2GKG4Nc8d4pZNnNaH11yVqvU2fWWHo82aYIV4
+	 TvT/mo7G1TZxyMZo37WQhSA/74WDg9ZFDH0kiJGH1cAz0VTq4iHf150c8b36yHGq8z
+	 asIco6paApWBZ24J+cCTnwvsaMjRvrxDIcOE4ljE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfEGFs4 (ORCPT
+        id S1729138AbfEGFkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbfEGFkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:41 -0400
+        id S1728313AbfEGFk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59B42087F;
-        Tue,  7 May 2019 05:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F12FB20675;
+        Tue,  7 May 2019 05:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207640;
-        bh=V0Bzwzhga6ZuygMd0DR5+U69a8sqREB1MyEM7/MSUCs=;
+        s=default; t=1557207628;
+        bh=VRtGhhfvENSk8MY3OOpOVHVA92UpWAu95L5vA/T4aGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lsp3QM6did6cVGul66y5brNO6EBs/yJo22HtIyYnWnxZKI+jyZ0Bh2VYhTuzc7vgg
-         dZiKyi+B26bWQJcdttURXUYU3WOJLAi/2F+OgbIt0vSepQnvwMyH8qOsoV3IcyY68b
-         GyxO+pTflkHv15AhK0B+40brjddTxMgjel+eHnxk=
+        b=EfCLMjBfimSrl+6hRlsICl8+sTs8uGacnlQdSRvhKdM+kULeMJPYCeSKk9B/mrneO
+         58eD0ZUs6jH6A1HILb2cd0797yM9+lNvWmyQzGmdMusVQSMUtD2TcxREZWKy2WgWVB
+         fwbeSCFremyK7eijYM+Y4RbYeOLLhoocs8CAcMA0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>,
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        devicetree@vger.kernel.org, linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.14 73/95] xtensa: xtfpga.dtsi: fix dtc warnings about SPI
-Date:   Tue,  7 May 2019 01:38:02 -0400
-Message-Id: <20190507053826.31622-73-sashal@kernel.org>
+        linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 66/95] leds: pwm: silently error out on EPROBE_DEFER
+Date:   Tue,  7 May 2019 01:37:55 -0400
+Message-Id: <20190507053826.31622-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -58,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit f37598be4e3896359e87c824be57ddddc280cc3f ]
+[ Upstream commit 9aec30371fb095a0c9415f3f0146ae269c3713d8 ]
 
-Rename SPI controller node in the XTFPGA DTS to spi@...
-This fixes the following build warnings:
+When probing, if we fail to get the pwm due to probe deferal, we shouldn't
+print an error message. Just be silent in this case.
 
-arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- arch/xtensa/boot/dts/xtfpga.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/leds/leds-pwm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
-index 1090528825ec..e46ae07bab05 100644
---- a/arch/xtensa/boot/dts/xtfpga.dtsi
-+++ b/arch/xtensa/boot/dts/xtfpga.dtsi
-@@ -103,7 +103,7 @@
- 			};
- 		};
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 8d456dc6c5bf..83f9bbe57e02 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -101,8 +101,9 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+ 		led_data->pwm = devm_pwm_get(dev, led->name);
+ 	if (IS_ERR(led_data->pwm)) {
+ 		ret = PTR_ERR(led_data->pwm);
+-		dev_err(dev, "unable to request PWM for %s: %d\n",
+-			led->name, ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "unable to request PWM for %s: %d\n",
++				led->name, ret);
+ 		return ret;
+ 	}
  
--		spi0: spi-master@0d0a0000 {
-+		spi0: spi@0d0a0000 {
- 			compatible = "cdns,xtfpga-spi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
 -- 
 2.20.1
 
