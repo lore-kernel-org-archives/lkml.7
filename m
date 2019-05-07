@@ -2,97 +2,102 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A694FC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE96C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8E1208CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557265850;
-	bh=zwUU7Cwiyys6DAoOpuq7iSsRZqfkjqn6hEoJovHAlwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mZxtmy+soWqdL4Ak7oCiIBQgO29DFyT3jOQG+vm/yV/leb/MMWju/Z1/Ol5Gzb/Qe
-	 z/kqnRjgZjqc01wZlrFbiyvsn9FGkJk+YX5HEQTzIyP3fZTgvW/tjKMPKpO+3h1lZ1
-	 Lxd8FzrvHJV5/yWmodqaCkUYPK1j1nWbm4SxAASw=
+	by mail.kernel.org (Postfix) with ESMTP id D3228206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HWnloX5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfEGVut (ORCPT
+        id S1727911AbfEGVyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:50:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbfEGVut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:50:49 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A5B205C9;
-        Tue,  7 May 2019 21:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557265848;
-        bh=zwUU7Cwiyys6DAoOpuq7iSsRZqfkjqn6hEoJovHAlwE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rqnk5JzDrfY9glVqL1a7PcVtn6erwFFmSp9rNpcGHp4qUmLK6E1B00oWj5k0+NbNl
-         wZxhQXcg4F2SrSPKeFCoh46WsmySBgok6IaMTz7Qd8f4m+3Bzf61xkG03YhKehGAhe
-         1nPmbAaywKzyiSwXkobbL+yuNKnOChPtEKEzdhS4=
-Date:   Tue, 7 May 2019 14:50:46 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Joao Moreira <jmoreira@suse.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH v3 0/7] crypto: x86: Fix indirect function call casts
-Message-ID: <20190507215045.GA7528@sol.localdomain>
-References: <20190507161321.34611-1-keescook@chromium.org>
- <20190507170039.GB1399@sol.localdomain>
- <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
+        Tue, 7 May 2019 17:54:22 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43711 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727169AbfEGVyW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 17:54:22 -0400
+Received: by mail-pl1-f196.google.com with SMTP id n8so8828496plp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:54:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T8iPOh43LeF/Se1Y76x73AwSuweJCr7k4OGy4sOIQEw=;
+        b=HWnloX5ezxx1+FCdhKHjIgkqobYpi3WYwACg2K5hiq9SrdKkWWHLiShB6IYEB+SpKB
+         2jSsU9cMH80QAzcv5ZTzBNo2TyOddHfuWc+okSAz1zq3oq0b1OBiqXOJ2dfuEFEQoYZF
+         64Db0DQFhoMW1KjqVs6oA21JkkS/e+XEQ92s8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T8iPOh43LeF/Se1Y76x73AwSuweJCr7k4OGy4sOIQEw=;
+        b=BS+zWhCPkvt3m4HnJmrY3r7jr+1tGPM7qyH3fI5+15BbCVy0QBOqSgd/HzCksbAUaI
+         9fWZDutPZ1nfms2cSz8+Clv0Hm1Ube1/yQAtkaJ+tcObboO1UdyJSWj465lifmRWnRZB
+         is3bgJIc98wE1U1hNDN502qH0Hvx9+cvvVgZIfP/FFPbpS12fOZ//EIuiRMxfgadVqFf
+         q8r60KwVrsCKO+0nwGPcudYXRyMxDgTrmbI2kixmU4Onh0sU9x1GfjgRC9W5EpHHOqn4
+         ifYnKLaSByYVdT7mi8Y1AREqOvvgl3vbKvF3DRhu0DyqX31haccgHWxhrbFTXcMpFnBw
+         fgaQ==
+X-Gm-Message-State: APjAAAUFi43MLezGfIheEH9JZxLiz+xM22MX3OBhbf6jxu/UvLcq9jo+
+        yqI2cHf8m3dFXBBiMu+/4CvrDQ==
+X-Google-Smtp-Source: APXvYqymdg/V3cUAtSSzvdjSrSl09Rw6XIzWsSApCyPQBtsTfbAja4SLC0nfRvUkdcksymC3eMeAGA==
+X-Received: by 2002:a17:902:7047:: with SMTP id h7mr43645697plt.177.1557266061649;
+        Tue, 07 May 2019 14:54:21 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id 19sm36854191pfs.104.2019.05.07.14.54.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 May 2019 14:54:20 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Naveen M <naveen.m@intel.com>,
+        Sathya Prakash <sathya.prakash.m.r@intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        Rakesh Ughreja <rakesh.a.ughreja@intel.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+        Takashi Iwai <tiwai@suse.com>, Jenny TC <jenny.tc@intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jie Yang <yang.jie@linux.intel.com>
+Subject: [PATCH v2 0/2] ASoC: Intel: Add Cometlake PCI IDs
+Date:   Tue,  7 May 2019 14:53:57 -0700
+Message-Id: <20190507215359.113378-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 02:07:51PM -0700, Kees Cook wrote:
-> On Tue, May 7, 2019 at 10:00 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > Given the above, the current efforts to improve the Linux security,
-> > > and the upcoming kernel support to compilers with CFI features, this
-> > > creates macros to be used to build the needed function definitions,
-> > > to be used in camellia, cast6, serpent, twofish, and aesni.
-> >
-> > So why not change the function prototypes to be compatible with common_glue_*_t
-> > instead, rather than wrapping them with another layer of functions?  Is it
-> > because indirect calls into asm code won't be allowed with CFI?
-> 
-> I don't know why they're not that way to begin with. But given that
-> the casting was already happening, this is just moving it to a place
-> where CFI won't be angry. :)
-> 
-> > >   crypto: x86/crypto: Use new glue function macros
-> >
-> > This one should be "x86/serpent", not "x86/crypto".
-> 
-> Oops, yes, that's my typo. I'll fix for v4. Do the conversions
-> themselves look okay (the changes are pretty mechanical)? If so,
-> Herbert, do you want a v4 with the typo fix, or do you want to fix
-> that up yourself?
-> 
-> Thanks!
-> 
 
-I don't know yet.  It's difficult to read the code with 2 layers of macros.
+This small series adds PCI IDs for Cometlake platforms, for a
+dazzling audio experience.
 
-Hence why I asked why you didn't just change the prototypes to be compatible.
+Changes in v2:
+- Add CML-H ID 0x06c8 (Pierre-Louis)
+- Add 0x06c8 for CML-H (Pierre-Louis)
 
-- Eric
+Evan Green (2):
+  ASoC: SOF: Add Comet Lake PCI IDs
+  ASoC: Intel: Skylake: Add Cometlake PCI IDs
+
+ sound/soc/intel/Kconfig                | 18 +++++++++++++++
+ sound/soc/intel/skylake/skl-messages.c | 16 +++++++++++++
+ sound/soc/intel/skylake/skl.c          | 10 ++++++++
+ sound/soc/sof/intel/Kconfig            | 32 ++++++++++++++++++++++++++
+ sound/soc/sof/sof-pci-dev.c            |  8 +++++++
+ 5 files changed, 84 insertions(+)
+
+-- 
+2.20.1
+
