@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AE6C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E65216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C921216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YK0lHgPv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXFTi8/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfEGQNf (ORCPT
+        id S1727143AbfEGQNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:13:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40869 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfEGQNd (ORCPT
+        Tue, 7 May 2019 12:13:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45463 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfEGQNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:13:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d31so8544550pgl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:13:32 -0700 (PDT)
+        Tue, 7 May 2019 12:13:37 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i21so8535157pgi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+gp43cyTmmllcaxIQ4TG+re3NYn24SQSQSiXFnheSAU=;
-        b=YK0lHgPvBTxGaGSQqO4HFJaDEZwIv5jDD9OvEpbrQQzfYUrv66NNJMM58w+KVVE5iz
-         wcahnB7VrQ/QonJSfuK8icnxxboPwak1Fr0voWKNXIXx3qPouF6vMsvy53L2n2GBOz68
-         0xTJdA3WTpSAMM/2ON6ukOFJCJ9UEzXBcYdvM=
+        bh=OLFjOKOIpgl1sQZOZV5HokWwcV9dbLiuY0v43zeEmqQ=;
+        b=HXFTi8/HkXpDU2PFc2Mw/IOZVdlwyapj689DH54ZoPz+yO0undbmi8zJAEfB8418H+
+         UPifeze559M22KJpXabF8HhoZ0l0NsBloTQzNp69+H5aOtO/xkRyfk6vgtz8+nL1OJr8
+         T1SLlyLNAWEwfNz6f9yPvsndn30YAJba3tCQk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+gp43cyTmmllcaxIQ4TG+re3NYn24SQSQSiXFnheSAU=;
-        b=PpXSvO6Wsnm+phyuR6hzJr/Cbr4jhFaWLIcvQf+k642s0kqt3b7iHzkiAfZ69HLGRG
-         l1gZ2htN7yikpU0ILecbzAeY3K9pK/JwCgQvb4AH0hxMV4s2ZEKrL+5UR+CWewjB9AUJ
-         8rwSFJztpGpD3vmqNG3Q6g6AlumcKHTkzVOcYq78FE+5ZII3MafvYw5IQGJ0CAzlaGWs
-         iSD40mIrs6NITEYXZKPMld9hAfjX0T1BFUCgn0AKbLMg00QcPGQnP+OdcTi6bad6+/Bt
-         DxhSh5YWV9IxEAW+MAFYL2jsGgupn5U+ZcpR8jOmiCgdPIo879Q+Ml0osG4usndsmrE+
-         fpcg==
-X-Gm-Message-State: APjAAAW/96gw1dQYZ4Yd4YChbLdeqN7UbfN4AW75WN0ElBNiwvfE3ZYb
-        B8on1MoWXIFc25dUxK2ex1Yy0zsGMNY=
-X-Google-Smtp-Source: APXvYqyQE79jXaJB/1s0JSIR3S05BVtgFk822IDsEUqV2zTq0MIp+M48nwMFWiEW6e0RH1tlwuxUbQ==
-X-Received: by 2002:a63:117:: with SMTP id 23mr39965249pgb.34.1557245612506;
-        Tue, 07 May 2019 09:13:32 -0700 (PDT)
+        bh=OLFjOKOIpgl1sQZOZV5HokWwcV9dbLiuY0v43zeEmqQ=;
+        b=MGe9LMn+2zquAtZxrrvayqMkmsffIwtiS4rGfB6e4/EfyVUgX4Zwyj25L2VXf8Lgpu
+         4XfoY831zNq8tniaNH86y9LaEGvaoTVpLUMo8ndmSf5xhHyg2ZjHmRxfxxpXuOKdwj6x
+         t36FI75xWazESBAQDHXIcEnULJ3tPNJplAnECnzRVmkBK9cL7qo+6MVMc+LgJLFkoV/C
+         AOZhpuOruLgIxfiPblBJEG2bmYmmX3mxnKb9hohKY7dWD4pxHD+ZcJGBrlUoOOIANOFa
+         XhMXVhJ8k3jFWCyNq9nWRtV1ht8Fa0/hSa8qt2+UA0tppkmRytR0b5vnwdcn0oHE1ODN
+         CwFw==
+X-Gm-Message-State: APjAAAX/lWrYz6zk2ifqg2RGS0TcHkVzFVy0aTLddqfY4cqXuRtxLMCb
+        Wt5E+xQnhh0m6iuNKiOtf01AoA==
+X-Google-Smtp-Source: APXvYqytnwDZUzLfiiZ5lHq0t5TNqV9NlHs0qSDDmEJn3fGPAQjSkryopq9cUSFH+6iFRLtvY0rKSA==
+X-Received: by 2002:aa7:8392:: with SMTP id u18mr43242175pfm.217.1557245616548;
+        Tue, 07 May 2019 09:13:36 -0700 (PDT)
 Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id k26sm16959061pfi.136.2019.05.07.09.13.30
+        by smtp.gmail.com with ESMTPSA id v1sm7827259pgb.85.2019.05.07.09.13.32
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 09:13:30 -0700 (PDT)
+        Tue, 07 May 2019 09:13:34 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     Kees Cook <keescook@chromium.org>, Joao Moreira <jmoreira@suse.de>,
@@ -61,9 +61,9 @@ Cc:     Kees Cook <keescook@chromium.org>, Joao Moreira <jmoreira@suse.de>,
         Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-hardening@lists.openwall.com
-Subject: [PATCH v3 2/7] crypto: x86/crypto: Use new glue function macros
-Date:   Tue,  7 May 2019 09:13:16 -0700
-Message-Id: <20190507161321.34611-3-keescook@chromium.org>
+Subject: [PATCH v3 5/7] crypto: x86/cast6: Use new glue function macros
+Date:   Tue,  7 May 2019 09:13:19 -0700
+Message-Id: <20190507161321.34611-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190507161321.34611-1-keescook@chromium.org>
 References: <20190507161321.34611-1-keescook@chromium.org>
@@ -82,456 +82,171 @@ Signed-off-by: Joao Moreira <jmoreira@suse.de>
 Co-developed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/crypto/serpent_avx2_glue.c       | 65 ++++++++++-------------
- arch/x86/crypto/serpent_avx_glue.c        | 58 +++++++-------------
- arch/x86/crypto/serpent_sse2_glue.c       | 27 ++++++----
- arch/x86/include/asm/crypto/serpent-avx.h | 28 +++++-----
- 4 files changed, 80 insertions(+), 98 deletions(-)
+ arch/x86/crypto/cast6_avx_glue.c | 65 +++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/crypto/serpent_avx2_glue.c b/arch/x86/crypto/serpent_avx2_glue.c
-index 03347b16ac9d..36a0cd694792 100644
---- a/arch/x86/crypto/serpent_avx2_glue.c
-+++ b/arch/x86/crypto/serpent_avx2_glue.c
-@@ -24,18 +24,12 @@
- #define SERPENT_AVX2_PARALLEL_BLOCKS 16
+diff --git a/arch/x86/crypto/cast6_avx_glue.c b/arch/x86/crypto/cast6_avx_glue.c
+index 18965c39305e..4735cd0ef379 100644
+--- a/arch/x86/crypto/cast6_avx_glue.c
++++ b/arch/x86/crypto/cast6_avx_glue.c
+@@ -35,20 +35,20 @@
  
- /* 16-way AVX2 parallel cipher functions */
--asmlinkage void serpent_ecb_enc_16way(struct serpent_ctx *ctx, u8 *dst,
--				      const u8 *src);
--asmlinkage void serpent_ecb_dec_16way(struct serpent_ctx *ctx, u8 *dst,
--				      const u8 *src);
--asmlinkage void serpent_cbc_dec_16way(void *ctx, u128 *dst, const u128 *src);
+ #define CAST6_PARALLEL_BLOCKS 8
+ 
+-asmlinkage void cast6_ecb_enc_8way(struct cast6_ctx *ctx, u8 *dst,
+-				   const u8 *src);
+-asmlinkage void cast6_ecb_dec_8way(struct cast6_ctx *ctx, u8 *dst,
+-				   const u8 *src);
 -
--asmlinkage void serpent_ctr_16way(void *ctx, u128 *dst, const u128 *src,
--				  le128 *iv);
--asmlinkage void serpent_xts_enc_16way(struct serpent_ctx *ctx, u8 *dst,
--				      const u8 *src, le128 *iv);
--asmlinkage void serpent_xts_dec_16way(struct serpent_ctx *ctx, u8 *dst,
--				      const u8 *src, le128 *iv);
-+SERPENT_GLUE(serpent_ecb_enc_16way);
-+SERPENT_GLUE(serpent_ecb_dec_16way);
-+SERPENT_GLUE_CBC(serpent_cbc_dec_16way);
-+SERPENT_GLUE_CTR(serpent_ctr_16way);
-+SERPENT_GLUE_XTS(serpent_xts_enc_16way);
-+SERPENT_GLUE_XTS(serpent_xts_dec_16way);
+-asmlinkage void cast6_cbc_dec_8way(struct cast6_ctx *ctx, u8 *dst,
+-				   const u8 *src);
+-asmlinkage void cast6_ctr_8way(struct cast6_ctx *ctx, u8 *dst, const u8 *src,
+-			       le128 *iv);
+-
+-asmlinkage void cast6_xts_enc_8way(struct cast6_ctx *ctx, u8 *dst,
+-				   const u8 *src, le128 *iv);
+-asmlinkage void cast6_xts_dec_8way(struct cast6_ctx *ctx, u8 *dst,
+-				   const u8 *src, le128 *iv);
++#define CAST6_GLUE(func)	GLUE_CAST(func, cast6_ctx)
++#define CAST6_GLUE_CBC(func)	GLUE_CAST_CBC(func, cast6_ctx)
++#define CAST6_GLUE_CTR(func)	GLUE_CAST_CTR(func, cast6_ctx)
++#define CAST6_GLUE_XTS(func)	GLUE_CAST_XTS(func, cast6_ctx)
++
++CAST6_GLUE(__cast6_encrypt);
++CAST6_GLUE(__cast6_decrypt);
++CAST6_GLUE(cast6_ecb_enc_8way);
++CAST6_GLUE(cast6_ecb_dec_8way);
++CAST6_GLUE_CBC(cast6_cbc_dec_8way);
++CAST6_GLUE_CBC(__cast6_decrypt);
++CAST6_GLUE_CTR(cast6_ctr_8way);
++CAST6_GLUE_XTS(cast6_xts_enc_8way);
++CAST6_GLUE_XTS(cast6_xts_dec_8way);
  
- static int serpent_setkey_skcipher(struct crypto_skcipher *tfm,
- 				   const u8 *key, unsigned int keylen)
-@@ -49,13 +43,13 @@ static const struct common_glue_ctx serpent_enc = {
+ static int cast6_setkey_skcipher(struct crypto_skcipher *tfm,
+ 				 const u8 *key, unsigned int keylen)
+@@ -58,14 +58,12 @@ static int cast6_setkey_skcipher(struct crypto_skcipher *tfm,
+ 
+ static void cast6_xts_enc(void *ctx, u128 *dst, const u128 *src, le128 *iv)
+ {
+-	glue_xts_crypt_128bit_one(ctx, dst, src, iv,
+-				  GLUE_FUNC_CAST(__cast6_encrypt));
++	glue_xts_crypt_128bit_one(ctx, dst, src, iv, __cast6_encrypt_glue);
+ }
+ 
+ static void cast6_xts_dec(void *ctx, u128 *dst, const u128 *src, le128 *iv)
+ {
+-	glue_xts_crypt_128bit_one(ctx, dst, src, iv,
+-				  GLUE_FUNC_CAST(__cast6_decrypt));
++	glue_xts_crypt_128bit_one(ctx, dst, src, iv, __cast6_decrypt_glue);
+ }
+ 
+ static void cast6_crypt_ctr(void *ctx, u128 *dst, const u128 *src, le128 *iv)
+@@ -85,10 +83,10 @@ static const struct common_glue_ctx cast6_enc = {
  
  	.funcs = { {
- 		.num_blocks = 16,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_ecb_enc_16way) }
-+		.fn_u = { .ecb = serpent_ecb_enc_16way_glue }
- 	}, {
- 		.num_blocks = 8,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_ecb_enc_8way_avx) }
-+		.fn_u = { .ecb = serpent_ecb_enc_8way_avx_glue }
+ 		.num_blocks = CAST6_PARALLEL_BLOCKS,
+-		.fn_u = { .ecb = GLUE_FUNC_CAST(cast6_ecb_enc_8way) }
++		.fn_u = { .ecb = cast6_ecb_enc_8way_glue }
  	}, {
  		.num_blocks = 1,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(__serpent_encrypt) }
-+		.fn_u = { .ecb = __serpent_encrypt_glue }
+-		.fn_u = { .ecb = GLUE_FUNC_CAST(__cast6_encrypt) }
++		.fn_u = { .ecb = __cast6_encrypt_glue }
  	} }
  };
  
-@@ -65,13 +59,13 @@ static const struct common_glue_ctx serpent_ctr = {
+@@ -98,10 +96,10 @@ static const struct common_glue_ctx cast6_ctr = {
  
  	.funcs = { {
- 		.num_blocks = 16,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(serpent_ctr_16way) }
-+		.fn_u = { .ctr = serpent_ctr_16way_glue }
- 	},  {
- 		.num_blocks = 8,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(serpent_ctr_8way_avx) }
-+		.fn_u = { .ctr = serpent_ctr_8way_avx_glue }
+ 		.num_blocks = CAST6_PARALLEL_BLOCKS,
+-		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(cast6_ctr_8way) }
++		.fn_u = { .ctr = cast6_ctr_8way_glue }
  	}, {
  		.num_blocks = 1,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(__serpent_crypt_ctr) }
-+		.fn_u = { .ctr = __serpent_crypt_ctr }
+-		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(cast6_crypt_ctr) }
++		.fn_u = { .ctr = cast6_crypt_ctr }
  	} }
  };
  
-@@ -81,13 +75,13 @@ static const struct common_glue_ctx serpent_enc_xts = {
+@@ -111,10 +109,10 @@ static const struct common_glue_ctx cast6_enc_xts = {
  
  	.funcs = { {
- 		.num_blocks = 16,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_enc_16way) }
-+		.fn_u = { .xts = serpent_xts_enc_16way_glue }
- 	}, {
- 		.num_blocks = 8,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_enc_8way_avx) }
-+		.fn_u = { .xts = serpent_xts_enc_8way_avx_glue }
+ 		.num_blocks = CAST6_PARALLEL_BLOCKS,
+-		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(cast6_xts_enc_8way) }
++		.fn_u = { .xts = cast6_xts_enc_8way_glue }
  	}, {
  		.num_blocks = 1,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_enc) }
-+		.fn_u = { .xts = serpent_xts_enc }
+-		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(cast6_xts_enc) }
++		.fn_u = { .xts = cast6_xts_enc }
  	} }
  };
  
-@@ -97,13 +91,13 @@ static const struct common_glue_ctx serpent_dec = {
+@@ -124,10 +122,10 @@ static const struct common_glue_ctx cast6_dec = {
  
  	.funcs = { {
- 		.num_blocks = 16,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_ecb_dec_16way) }
-+		.fn_u = { .ecb = serpent_ecb_dec_16way_glue }
- 	}, {
- 		.num_blocks = 8,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_ecb_dec_8way_avx) }
-+		.fn_u = { .ecb = serpent_ecb_dec_8way_avx_glue }
+ 		.num_blocks = CAST6_PARALLEL_BLOCKS,
+-		.fn_u = { .ecb = GLUE_FUNC_CAST(cast6_ecb_dec_8way) }
++		.fn_u = { .ecb = cast6_ecb_dec_8way_glue }
  	}, {
  		.num_blocks = 1,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(__serpent_decrypt) }
-+		.fn_u = { .ecb = __serpent_decrypt_glue }
+-		.fn_u = { .ecb = GLUE_FUNC_CAST(__cast6_decrypt) }
++		.fn_u = { .ecb = __cast6_decrypt_glue }
  	} }
  };
  
-@@ -113,13 +107,13 @@ static const struct common_glue_ctx serpent_dec_cbc = {
+@@ -137,10 +135,10 @@ static const struct common_glue_ctx cast6_dec_cbc = {
  
  	.funcs = { {
- 		.num_blocks = 16,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(serpent_cbc_dec_16way) }
-+		.fn_u = { .cbc = serpent_cbc_dec_16way_cbc_glue }
- 	}, {
- 		.num_blocks = 8,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(serpent_cbc_dec_8way_avx) }
-+		.fn_u = { .cbc = serpent_cbc_dec_8way_avx_cbc_glue }
+ 		.num_blocks = CAST6_PARALLEL_BLOCKS,
+-		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(cast6_cbc_dec_8way) }
++		.fn_u = { .cbc = cast6_cbc_dec_8way_cbc_glue }
  	}, {
  		.num_blocks = 1,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(__serpent_decrypt) }
-+		.fn_u = { .cbc = __serpent_decrypt_cbc_glue }
+-		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(__cast6_decrypt) }
++		.fn_u = { .cbc = __cast6_decrypt_cbc_glue }
  	} }
  };
  
-@@ -129,13 +123,13 @@ static const struct common_glue_ctx serpent_dec_xts = {
+@@ -150,10 +148,10 @@ static const struct common_glue_ctx cast6_dec_xts = {
  
  	.funcs = { {
- 		.num_blocks = 16,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_dec_16way) }
-+		.fn_u = { .xts = serpent_xts_dec_16way_glue }
- 	}, {
- 		.num_blocks = 8,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_dec_8way_avx) }
-+		.fn_u = { .xts = serpent_xts_dec_8way_avx_glue }
+ 		.num_blocks = CAST6_PARALLEL_BLOCKS,
+-		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(cast6_xts_dec_8way) }
++		.fn_u = { .xts = cast6_xts_dec_8way_glue }
  	}, {
  		.num_blocks = 1,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_dec) }
-+		.fn_u = { .xts = serpent_xts_dec }
+-		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(cast6_xts_dec) }
++		.fn_u = { .xts = cast6_xts_dec }
  	} }
  };
  
-@@ -151,8 +145,7 @@ static int ecb_decrypt(struct skcipher_request *req)
+@@ -169,8 +167,7 @@ static int ecb_decrypt(struct skcipher_request *req)
  
  static int cbc_encrypt(struct skcipher_request *req)
  {
--	return glue_cbc_encrypt_req_128bit(GLUE_FUNC_CAST(__serpent_encrypt),
+-	return glue_cbc_encrypt_req_128bit(GLUE_FUNC_CAST(__cast6_encrypt),
 -					   req);
-+	return glue_cbc_encrypt_req_128bit(__serpent_encrypt_glue, req);
++	return glue_cbc_encrypt_req_128bit(__cast6_encrypt_glue, req);
  }
  
  static int cbc_decrypt(struct skcipher_request *req)
-@@ -171,8 +164,8 @@ static int xts_encrypt(struct skcipher_request *req)
- 	struct serpent_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
+@@ -215,7 +212,7 @@ static int xts_encrypt(struct skcipher_request *req)
+ 	struct cast6_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
  
- 	return glue_xts_req_128bit(&serpent_enc_xts, req,
--				   XTS_TWEAK_CAST(__serpent_encrypt),
--				   &ctx->tweak_ctx, &ctx->crypt_ctx);
-+				   __serpent_encrypt_glue, &ctx->tweak_ctx,
-+				   &ctx->crypt_ctx);
+ 	return glue_xts_req_128bit(&cast6_enc_xts, req,
+-				   XTS_TWEAK_CAST(__cast6_encrypt),
++				   __cast6_encrypt_glue,
+ 				   &ctx->tweak_ctx, &ctx->crypt_ctx);
  }
  
- static int xts_decrypt(struct skcipher_request *req)
-@@ -181,8 +174,8 @@ static int xts_decrypt(struct skcipher_request *req)
- 	struct serpent_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
+@@ -225,7 +222,7 @@ static int xts_decrypt(struct skcipher_request *req)
+ 	struct cast6_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
  
- 	return glue_xts_req_128bit(&serpent_dec_xts, req,
--				   XTS_TWEAK_CAST(__serpent_encrypt),
--				   &ctx->tweak_ctx, &ctx->crypt_ctx);
-+				   __serpent_encrypt_glue, &ctx->tweak_ctx,
-+				   &ctx->crypt_ctx);
+ 	return glue_xts_req_128bit(&cast6_dec_xts, req,
+-				   XTS_TWEAK_CAST(__cast6_encrypt),
++				   __cast6_encrypt_glue,
+ 				   &ctx->tweak_ctx, &ctx->crypt_ctx);
  }
  
- static struct skcipher_alg serpent_algs[] = {
-diff --git a/arch/x86/crypto/serpent_avx_glue.c b/arch/x86/crypto/serpent_avx_glue.c
-index 458567ecf76c..897bb3f0116d 100644
---- a/arch/x86/crypto/serpent_avx_glue.c
-+++ b/arch/x86/crypto/serpent_avx_glue.c
-@@ -35,28 +35,11 @@
- #include <asm/crypto/serpent-avx.h>
- 
- /* 8-way parallel cipher functions */
--asmlinkage void serpent_ecb_enc_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src);
- EXPORT_SYMBOL_GPL(serpent_ecb_enc_8way_avx);
--
--asmlinkage void serpent_ecb_dec_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src);
- EXPORT_SYMBOL_GPL(serpent_ecb_dec_8way_avx);
--
--asmlinkage void serpent_cbc_dec_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src);
- EXPORT_SYMBOL_GPL(serpent_cbc_dec_8way_avx);
--
--asmlinkage void serpent_ctr_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--				     const u8 *src, le128 *iv);
- EXPORT_SYMBOL_GPL(serpent_ctr_8way_avx);
--
--asmlinkage void serpent_xts_enc_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src, le128 *iv);
- EXPORT_SYMBOL_GPL(serpent_xts_enc_8way_avx);
--
--asmlinkage void serpent_xts_dec_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src, le128 *iv);
- EXPORT_SYMBOL_GPL(serpent_xts_dec_8way_avx);
- 
- void __serpent_crypt_ctr(void *ctx, u128 *dst, const u128 *src, le128 *iv)
-@@ -73,15 +56,13 @@ EXPORT_SYMBOL_GPL(__serpent_crypt_ctr);
- 
- void serpent_xts_enc(void *ctx, u128 *dst, const u128 *src, le128 *iv)
- {
--	glue_xts_crypt_128bit_one(ctx, dst, src, iv,
--				  GLUE_FUNC_CAST(__serpent_encrypt));
-+	glue_xts_crypt_128bit_one(ctx, dst, src, iv, __serpent_encrypt_glue);
- }
- EXPORT_SYMBOL_GPL(serpent_xts_enc);
- 
- void serpent_xts_dec(void *ctx, u128 *dst, const u128 *src, le128 *iv)
- {
--	glue_xts_crypt_128bit_one(ctx, dst, src, iv,
--				  GLUE_FUNC_CAST(__serpent_decrypt));
-+	glue_xts_crypt_128bit_one(ctx, dst, src, iv, __serpent_decrypt_glue);
- }
- EXPORT_SYMBOL_GPL(serpent_xts_dec);
- 
-@@ -117,10 +98,10 @@ static const struct common_glue_ctx serpent_enc = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_ecb_enc_8way_avx) }
-+		.fn_u = { .ecb = serpent_ecb_enc_8way_avx_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(__serpent_encrypt) }
-+		.fn_u = { .ecb = __serpent_encrypt_glue }
- 	} }
- };
- 
-@@ -130,10 +111,10 @@ static const struct common_glue_ctx serpent_ctr = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(serpent_ctr_8way_avx) }
-+		.fn_u = { .ctr = serpent_ctr_8way_avx_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(__serpent_crypt_ctr) }
-+		.fn_u = { .ctr = __serpent_crypt_ctr }
- 	} }
- };
- 
-@@ -143,10 +124,10 @@ static const struct common_glue_ctx serpent_enc_xts = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_enc_8way_avx) }
-+		.fn_u = { .xts = serpent_xts_enc_8way_avx_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_enc) }
-+		.fn_u = { .xts = serpent_xts_enc }
- 	} }
- };
- 
-@@ -156,10 +137,10 @@ static const struct common_glue_ctx serpent_dec = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_ecb_dec_8way_avx) }
-+		.fn_u = { .ecb = serpent_ecb_dec_8way_avx_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(__serpent_decrypt) }
-+		.fn_u = { .ecb = __serpent_decrypt_glue }
- 	} }
- };
- 
-@@ -169,10 +150,10 @@ static const struct common_glue_ctx serpent_dec_cbc = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(serpent_cbc_dec_8way_avx) }
-+		.fn_u = { .cbc = serpent_cbc_dec_8way_avx_cbc_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(__serpent_decrypt) }
-+		.fn_u = { .cbc = __serpent_decrypt_cbc_glue }
- 	} }
- };
- 
-@@ -182,10 +163,10 @@ static const struct common_glue_ctx serpent_dec_xts = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_dec_8way_avx) }
-+		.fn_u = { .xts = serpent_xts_dec_8way_avx_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .xts = GLUE_XTS_FUNC_CAST(serpent_xts_dec) }
-+		.fn_u = { .xts = serpent_xts_dec }
- 	} }
- };
- 
-@@ -201,8 +182,7 @@ static int ecb_decrypt(struct skcipher_request *req)
- 
- static int cbc_encrypt(struct skcipher_request *req)
- {
--	return glue_cbc_encrypt_req_128bit(GLUE_FUNC_CAST(__serpent_encrypt),
--					   req);
-+	return glue_cbc_encrypt_req_128bit(__serpent_encrypt_glue, req);
- }
- 
- static int cbc_decrypt(struct skcipher_request *req)
-@@ -221,8 +201,8 @@ static int xts_encrypt(struct skcipher_request *req)
- 	struct serpent_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
- 
- 	return glue_xts_req_128bit(&serpent_enc_xts, req,
--				   XTS_TWEAK_CAST(__serpent_encrypt),
--				   &ctx->tweak_ctx, &ctx->crypt_ctx);
-+			__serpent_encrypt_glue, &ctx->tweak_ctx,
-+			&ctx->crypt_ctx);
- }
- 
- static int xts_decrypt(struct skcipher_request *req)
-@@ -231,8 +211,8 @@ static int xts_decrypt(struct skcipher_request *req)
- 	struct serpent_xts_ctx *ctx = crypto_skcipher_ctx(tfm);
- 
- 	return glue_xts_req_128bit(&serpent_dec_xts, req,
--				   XTS_TWEAK_CAST(__serpent_encrypt),
--				   &ctx->tweak_ctx, &ctx->crypt_ctx);
-+			__serpent_encrypt_glue, &ctx->tweak_ctx,
-+			&ctx->crypt_ctx);
- }
- 
- static struct skcipher_alg serpent_algs[] = {
-diff --git a/arch/x86/crypto/serpent_sse2_glue.c b/arch/x86/crypto/serpent_sse2_glue.c
-index 3dafe137596a..135f6b616bc6 100644
---- a/arch/x86/crypto/serpent_sse2_glue.c
-+++ b/arch/x86/crypto/serpent_sse2_glue.c
-@@ -40,6 +40,15 @@
- #include <asm/crypto/serpent-sse2.h>
- #include <asm/crypto/glue_helper.h>
- 
-+#define SERPENT_GLUE(func)	GLUE_CAST(func, serpent_ctx)
-+#define SERPENT_GLUE_CBC(func)	GLUE_CAST_CBC(func, serpent_ctx)
-+
-+SERPENT_GLUE(__serpent_encrypt);
-+SERPENT_GLUE(__serpent_decrypt);
-+SERPENT_GLUE_CBC(__serpent_decrypt);
-+SERPENT_GLUE(serpent_enc_blk_xway);
-+SERPENT_GLUE(serpent_dec_blk_xway);
-+
- static int serpent_setkey_skcipher(struct crypto_skcipher *tfm,
- 				   const u8 *key, unsigned int keylen)
- {
-@@ -94,10 +103,10 @@ static const struct common_glue_ctx serpent_enc = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_enc_blk_xway) }
-+		.fn_u = { .ecb = serpent_enc_blk_xway_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(__serpent_encrypt) }
-+		.fn_u = { .ecb = __serpent_encrypt_glue }
- 	} }
- };
- 
-@@ -107,10 +116,10 @@ static const struct common_glue_ctx serpent_ctr = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(serpent_crypt_ctr_xway) }
-+		.fn_u = { .ctr = serpent_crypt_ctr_xway }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .ctr = GLUE_CTR_FUNC_CAST(serpent_crypt_ctr) }
-+		.fn_u = { .ctr = serpent_crypt_ctr }
- 	} }
- };
- 
-@@ -120,10 +129,10 @@ static const struct common_glue_ctx serpent_dec = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(serpent_dec_blk_xway) }
-+		.fn_u = { .ecb = serpent_dec_blk_xway_glue }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .ecb = GLUE_FUNC_CAST(__serpent_decrypt) }
-+		.fn_u = { .ecb = __serpent_decrypt_glue }
- 	} }
- };
- 
-@@ -133,10 +142,10 @@ static const struct common_glue_ctx serpent_dec_cbc = {
- 
- 	.funcs = { {
- 		.num_blocks = SERPENT_PARALLEL_BLOCKS,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(serpent_decrypt_cbc_xway) }
-+		.fn_u = { .cbc = serpent_decrypt_cbc_xway }
- 	}, {
- 		.num_blocks = 1,
--		.fn_u = { .cbc = GLUE_CBC_FUNC_CAST(__serpent_decrypt) }
-+		.fn_u = { .cbc = __serpent_decrypt_cbc_glue }
- 	} }
- };
- 
-@@ -152,7 +161,7 @@ static int ecb_decrypt(struct skcipher_request *req)
- 
- static int cbc_encrypt(struct skcipher_request *req)
- {
--	return glue_cbc_encrypt_req_128bit(GLUE_FUNC_CAST(__serpent_encrypt),
-+	return glue_cbc_encrypt_req_128bit(__serpent_encrypt_glue,
- 					   req);
- }
- 
-diff --git a/arch/x86/include/asm/crypto/serpent-avx.h b/arch/x86/include/asm/crypto/serpent-avx.h
-index db7c9cc32234..c95059be3ae6 100644
---- a/arch/x86/include/asm/crypto/serpent-avx.h
-+++ b/arch/x86/include/asm/crypto/serpent-avx.h
-@@ -15,20 +15,20 @@ struct serpent_xts_ctx {
- 	struct serpent_ctx crypt_ctx;
- };
- 
--asmlinkage void serpent_ecb_enc_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src);
--asmlinkage void serpent_ecb_dec_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src);
--
--asmlinkage void serpent_cbc_dec_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src);
--asmlinkage void serpent_ctr_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--				     const u8 *src, le128 *iv);
--
--asmlinkage void serpent_xts_enc_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src, le128 *iv);
--asmlinkage void serpent_xts_dec_8way_avx(struct serpent_ctx *ctx, u8 *dst,
--					 const u8 *src, le128 *iv);
-+#define SERPENT_GLUE(func)	GLUE_CAST(func, serpent_ctx)
-+#define SERPENT_GLUE_CBC(func)	GLUE_CAST_CBC(func, serpent_ctx)
-+#define SERPENT_GLUE_CTR(func)	GLUE_CAST_CTR(func, serpent_ctx)
-+#define SERPENT_GLUE_XTS(func)	GLUE_CAST_XTS(func, serpent_ctx)
-+
-+SERPENT_GLUE(__serpent_encrypt);
-+SERPENT_GLUE(__serpent_decrypt);
-+SERPENT_GLUE_CBC(__serpent_decrypt);
-+SERPENT_GLUE(serpent_ecb_enc_8way_avx);
-+SERPENT_GLUE(serpent_ecb_dec_8way_avx);
-+SERPENT_GLUE_CBC(serpent_cbc_dec_8way_avx);
-+SERPENT_GLUE_CTR(serpent_ctr_8way_avx);
-+SERPENT_GLUE_XTS(serpent_xts_enc_8way_avx);
-+SERPENT_GLUE_XTS(serpent_xts_dec_8way_avx);
- 
- extern void __serpent_crypt_ctr(void *ctx, u128 *dst, const u128 *src,
- 				le128 *iv);
 -- 
 2.17.1
 
