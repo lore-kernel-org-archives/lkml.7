@@ -2,132 +2,166 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F11C46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113BAC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026C021019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B3C205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USDDugBC"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="HTAWHY9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfEGRWl (ORCPT
+        id S1727452AbfEGRXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:22:41 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37477 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbfEGRWk (ORCPT
+        Tue, 7 May 2019 13:23:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43922 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfEGRXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:22:40 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 132so7315917ljj.4;
-        Tue, 07 May 2019 10:22:39 -0700 (PDT)
+        Tue, 7 May 2019 13:23:16 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z5so9943266lji.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:23:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6PNDzrjcpUnF2ox8n27775TY/wH+ql2a/Pdl5jrIFYE=;
-        b=USDDugBCti1omKMaJ+lePP2NJJOBT+kdaOAPkCwlDm/xFScLP7RKjwiA4OVbkYYsZ/
-         rB+Cets8kTZOPyUTpYJGf13gmuMdIiBUUEomgjZBYMULBx4mW2MUDtSxtls7yQyxm/x8
-         IIfFFtxJI7iSASALqypt4rmoNTeF92lJlKkPM/ZriDb/pe6763gpQmp430bcDrFSZ26o
-         5OKhmwk6QGhLN14rcQWGDs5vmrc/gzH3GEIrOW2WyF2KVb8j6l1R5LFP3ACxgI/lZ482
-         QkE2DO+hGaLN7KG1YZfEFY+DjuuHBGirKhCKJ3ZMHY4qhEH+I/zIASL3Uoep0lLI+vUX
-         6esA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=o8VtjTD6U9Es50KJbjcJKdSYXX43ladKltot7A5aRyM=;
+        b=HTAWHY9hwy56emh+CK2+bMmDxMoIxqs7yaCFxdjRv6TNrbkDzU+GpDNJiqF1S678bN
+         UVo8m3llYZNo6trwCxHMjBzX5YmAy9fwvLhUjTaYadgOK4HHBNokanXtg5eV11CSgm9D
+         EWIU2GrCrBpogPhVYdfdYf15tyQFJ3OryvjAlx6Nd2uOKscK2csV9p3CdPFCekiOrCpE
+         6Q2yA4xwAESmVD3exgUN5/In46ri/902r0wC8jaDBw/DywThbLmmTWn4p+Llicpye6lV
+         +05Yuskd31Da9OqUwP2ALzLpHpDWmN5NsxOjdjy+YfRE+MwLhG/aQ8e1MSHQBcXWZKSQ
+         x5cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6PNDzrjcpUnF2ox8n27775TY/wH+ql2a/Pdl5jrIFYE=;
-        b=KKViP/R+zaePeWKhUo/nLYpB28w3yBR9AhhZgVKJ2D1nE4c5AffFO0tkm0RGhf7CFZ
-         v9EtPNE0YUi3Anukh9eiGpFxYd2vKiFiyJiE8xoiAlJoTRtLES3zrFkyCxiirOP/IB2Q
-         WeLMQ8sGp/ZSGJt2+ONhYqi3it7QdKzlfDsWWHj2Ajpc7RLmaFNMmZ9/TlESyT4Ydb9i
-         0UVaWjnc+vSLtXrW+KPscG85MLkmw7vjDg/n8Tu5BIHQ7TP2304Coxx9gZV07+gdUoC2
-         WH1k8z2RvzB5uTad2bEKQ1B6HgIowXOqDfinnpPmvToFsy4QbvU3wIpl2IAltXI1i31r
-         jr3Q==
-X-Gm-Message-State: APjAAAXLxZQR0/EAoff1LSvoa3zLZuma7trPNJSetP4knFs92+nDZ/bz
-        7/Naa5d/cxXijwRsNxkC1pBlo3i6KLioetsJGto=
-X-Google-Smtp-Source: APXvYqwSZNtebCFzz431MrdMsGtiBpuF+nfLHauiIB2m9pngsg+jgTHyuxkhtVAXHTIHSYaJBzcdpPG+xOfr+/dpSJY=
-X-Received: by 2002:a2e:5301:: with SMTP id h1mr17664822ljb.196.1557249758675;
- Tue, 07 May 2019 10:22:38 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=o8VtjTD6U9Es50KJbjcJKdSYXX43ladKltot7A5aRyM=;
+        b=CwgLWFbnyDQNezfoFRAEIfx4GEcXHJMHHZu0k9gLjRsOwfqqXorChnx9RdoRQEBQBg
+         YdzUYt/X/hPm+FiAse8hXtc/W00bcIymJQn3YUZJgzudJTQEylVPGqTRFRRWCLqULzbB
+         FgqC57vCEJ3a/cFFaVlw622uh5l+BSgTrCHtG0/KzLhOnV9Iwjdmu+/DsZJfRyQ0Bj6r
+         hSYCJvu18Pr8MwUeBVuhl0Y3Mzy/ePQOeCyOIChWgrsC4A0DEWliXWOx9zLIggAo4pSg
+         G6FWv3vlGFp156QBIbC0ApDyiPZbcIdh6lcww7TDhSDEBp55H9diuFLwVVUEd7tzEG1s
+         5veA==
+X-Gm-Message-State: APjAAAW6jpvuH3tTaPgYnx/yC9czeSc4uS3DRgeP+aW1s2USl1EvRlVt
+        HMdl2s+9fW8aVHYymY2ikOcFLjtNaSShWHnkWsGr
+X-Google-Smtp-Source: APXvYqyIqydtKKpDZ9uwQ/0+Oi3WDAYlzeGo4LdM9WqIB/E5OzCvGAw7Mehyq+xk0Of58S8AP3H/YhKTpE2Bv/MJDsA=
+X-Received: by 2002:a2e:9350:: with SMTP id m16mr17769667ljh.38.1557249794156;
+ Tue, 07 May 2019 10:23:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190502193129.664c5b2e@gandalf.local.home> <20190502195052.0af473cf@gandalf.local.home>
- <20190503092959.GB2623@hirez.programming.kicks-ass.net> <20190503092247.20cc1ff0@gandalf.local.home>
- <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net> <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
- <20190506081951.GJ2606@hirez.programming.kicks-ass.net> <20190507085753.GO2606@hirez.programming.kicks-ass.net>
- <20190507092731.GH2650@hirez.programming.kicks-ass.net> <20190507082716.73cd5a01@gandalf.local.home>
- <20190507124131.GO2623@hirez.programming.kicks-ass.net> <20190507085417.381d96d0@gandalf.local.home>
-In-Reply-To: <20190507085417.381d96d0@gandalf.local.home>
-From:   Masami Hiramatsu <masami.hiramatsu@gmail.com>
-Date:   Wed, 8 May 2019 02:22:26 +0900
-Message-ID: <CADyE4xHw_eikPhgsVuOwpi34vF22_i0MhVaQac0bVvKZ6hLqdw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 7 May 2019 13:23:03 -0400
+Message-ID: <CAHC9VhSkOmRGvOje3HycoauPL+ZW9g9zZ3dqiPDmQTPUPnhCPg@mail.gmail.com>
+Subject: [GIT PULL] SELinux patches for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B45=E6=9C=887=E6=97=A5(=E7=81=AB) 21:54 Steven Rostedt <rostedt@=
-goodmis.org>:
->
-> On Tue, 7 May 2019 14:41:31 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > Kprobes sets the FTRACE_OPS_FL_IPMODIFY flag, thus
-> > > they can never be put at the same location that is being live patched=
-.
-> >
-> > OK, so do we want to allow kprobes that also modify regs->sp ? Because
-> > then we need to change these trampolines a bit.
-> >
-> > I'd prefer not to allow kprobes this.
->
-> I believe no kprobe changes sp, because it would have had the same
-> issues we are trying to solve now. And even though we are changing
-> things to allow it, it's not a regression to keep kprobes from doing it.
+Hi Linus,
 
-No, kprobes doesn't allow to change sp. At this moment we can't change
-"&regs->sp" since it is just a value :)
-kprobes user (e.g. function fault-injection) will change regs->ip,
-that is why kprobes sets IPMODIFY flag.
+We've got a few SELinux patches for the v5.2 merge window, the
+highlights are below:
 
-Thank you,
+- Add LSM hooks, and the SELinux implementation, for proper labeling
+of kernfs.  While we are only including the SELinux implementation
+here, the rest of the LSM folks have given the hooks a thumbs-up.
 
---=20
-Masami Hiramatsu
-mailto:masami.hiramatsu@gmail.com
+- Update the SELinux mdp (Make Dummy Policy) script to actually work
+on a modern system.
+
+- Disallow userspace to change the LSM credentials via /proc/self/attr
+when the task's credentials are already overridden.  The change was
+made in procfs because all the LSM folks agreed this was the Right
+Thing To Do and duplicating it across each LSM was going to be
+annoying.
+
+As a FYI, you will likely run into a minor merge problem with
+scripts/selinux/mdp.c due to patches sent up during the v5.1-rcX
+cycle, but it is pretty trivial to resolve (just make sure the
+kconfig.h include is included).  If you have any questions about the
+merge, you know where to find us.
+
+Please pull this for v5.2,
+-Paul
+
+--
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+ Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+   tags/selinux-pr-20190507
+
+for you to fetch changes up to 35a196bef449b5824033865b963ed9a43fb8c730:
+
+ proc: prevent changes to overridden credentials (2019-04-29 09:51:21 -0400)
+
+----------------------------------------------------------------
+selinux/stable-5.2 PR 20190507
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+     selinux: avoid uninitialized variable warning
+
+Ondrej Mosnacek (10):
+     kernfs: clean up struct kernfs_iattrs
+     kernfs: do not alloc iattrs in kernfs_xattr_get
+     selinux: try security xattr after genfs for kernfs filesystems
+     kernfs: use simple_xattrs for security attributes
+     LSM: add new hook for kernfs node initialization
+     selinux: implement the kernfs_init_security hook
+     kernfs: initialize security of newly created nodes
+     LSM: lsm_hooks.h - fix missing colon in docstring
+     selinux: remove useless assignments
+     kernfs: fix xattr name handling in LSM helpers
+
+Paul Moore (2):
+     MAINTAINERS: update SELinux file patterns
+     proc: prevent changes to overridden credentials
+
+Paulo Alcantara (1):
+     selinux: use kernel linux/socket.h for genheaders and mdp
+
+Stephen Smalley (2):
+     scripts/selinux: modernize mdp
+     scripts/selinux: fix build
+
+Tetsuo Handa (1):
+     selinux: Check address length before reading address family
+
+YueHaibing (1):
+     selinux: Make selinux_kernfs_init_security static
+
+MAINTAINERS                             |   2 +-
+fs/kernfs/dir.c                         |  24 ++--
+fs/kernfs/inode.c                       | 162 +++++++++--------------
+fs/kernfs/kernfs-internal.h             |   8 +-
+fs/kernfs/symlink.c                     |   4 +-
+fs/proc/base.c                          |   5 +
+include/linux/kernfs.h                  |  13 ++
+include/linux/lsm_hooks.h               |  13 ++
+include/linux/security.h                |   9 ++
+scripts/selinux/genheaders/genheaders.c |   1 -
+scripts/selinux/install_policy.sh       |  92 +++++++------
+scripts/selinux/mdp/Makefile            |   2 +-
+scripts/selinux/mdp/mdp.c               | 166 ++++++++++++++++++++----
+security/security.c                     |   6 +
+security/selinux/hooks.c                | 229 +++++++++++++++++++++----------
+security/selinux/include/classmap.h     |   1 +
+security/selinux/include/security.h     |   1 +
+security/selinux/netlabel.c             |  14 +-
+security/selinux/ss/services.c          |   7 +-
+19 files changed, 488 insertions(+), 271 deletions(-)
+
+-- 
+paul moore
+www.paul-moore.com
