@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C79FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD6C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB7E20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1C421530
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207530;
-	bh=iEfU6ZPCt9MjIIlaMRwGa+rdr1IuXQoK3n05WICoS5E=;
+	s=default; t=1557207540;
+	bh=GWtj5sn6eGmzf83hUA+j2TSsuO+I8LbeQZWZRL+aPgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13y6JgnhTNowZHvA5HjtTidBGOIqqTMvEgx6IqaBmDY7Sn0WIImsEv/A71T7lppS+
-	 W3wV/pJAglqZWPilUs5TiEBMWG3SnpYyzUXkZzmRTjHJ4Dnv5960p4kvb935zKedO/
-	 C+yUL+a1uclOdaBG+ivbdmTKPf2DqLY+Q/buJc2E=
+	b=jFfq6FRW8WUQqrAO2WQdoILHxH/lXfBJi1LVM9yD9nfoGESGdxU6dn8PDri0Pvs8b
+	 Idallw8SpmP0VyggAznseg4Hn28580abCLJw3vRpTK9KsTWdePVZIO3KY70qZthRFd
+	 nZ5KbWx6sOi7OmQHJBtKvRXIE1TKXYbEU3bHl+/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfEGFis (ORCPT
+        id S1727841AbfEGFi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728735AbfEGFim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:42 -0400
+        id S1728205AbfEGFiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C40F205ED;
-        Tue,  7 May 2019 05:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44C9A20578;
+        Tue,  7 May 2019 05:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207521;
-        bh=iEfU6ZPCt9MjIIlaMRwGa+rdr1IuXQoK3n05WICoS5E=;
+        s=default; t=1557207532;
+        bh=GWtj5sn6eGmzf83hUA+j2TSsuO+I8LbeQZWZRL+aPgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlt/mal9ySJNuMxVNxK+JrL3J6kD6NaNDhv39vOH4QGvQHNZHEqDjRLi8I9Oa2lTb
-         6ZWlwqG1kzcil9ntleW6Ic8WnvCCwiDIbjC1Bcin9TYcrPtd6aB3peibuKExV5MfX5
-         HfN3N1hJ9zk4Zdq2UcKkLhDqUz7xajvOon0ClkK4=
+        b=Bng8Se3XXmsuL/dpVF47O7oPGuTlWuVqFhizAI0/DWHl03f4aQPrRvfBo36xL1X2i
+         vlgttxBjeI3IM1ezo5Fp7fq4outTFlQmKm5e4PVDuxX35af9pIAhJDftfqxWfhTfV3
+         sA2eqr6Tolt9ex6I6VUg9fydBHem+Kg+pmabAM48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/95] Input: snvs_pwrkey - initialize necessary driver data before enabling IRQ
-Date:   Tue,  7 May 2019 01:37:01 -0400
-Message-Id: <20190507053826.31622-12-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/95] clocksource/drivers/oxnas: Fix OX820 compatible
+Date:   Tue,  7 May 2019 01:37:03 -0400
+Message-Id: <20190507053826.31622-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,48 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit bf2a7ca39fd3ab47ef71c621a7ee69d1813b1f97 ]
+[ Upstream commit fbc87aa0f7c429999dc31f1bac3b2615008cac32 ]
 
-SNVS IRQ is requested before necessary driver data initialized,
-if there is a pending IRQ during driver probe phase, kernel
-NULL pointer panic will occur in IRQ handler. To avoid such
-scenario, just initialize necessary driver data before enabling
-IRQ. This patch is inspired by NXP's internal kernel tree.
+The OX820 compatible is wrong is the driver, fix it.
 
-Fixes: d3dc6e232215 ("input: keyboard: imx: add snvs power key driver")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
+Reported-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/snvs_pwrkey.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/clocksource/timer-oxnas-rps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-index 7544888c4749..b8dbde746b4e 100644
---- a/drivers/input/keyboard/snvs_pwrkey.c
-+++ b/drivers/input/keyboard/snvs_pwrkey.c
-@@ -156,6 +156,9 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
-+	pdata->input = input;
-+	platform_set_drvdata(pdev, pdata);
-+
- 	error = devm_request_irq(&pdev->dev, pdata->irq,
- 			       imx_snvs_pwrkey_interrupt,
- 			       0, pdev->name, pdev);
-@@ -171,9 +174,6 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
--	pdata->input = input;
--	platform_set_drvdata(pdev, pdata);
--
- 	device_init_wakeup(&pdev->dev, pdata->wakeup);
- 
- 	return 0;
+diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
+index eed6feff8b5f..30c6f4ce672b 100644
+--- a/drivers/clocksource/timer-oxnas-rps.c
++++ b/drivers/clocksource/timer-oxnas-rps.c
+@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
+ TIMER_OF_DECLARE(ox810se_rps,
+ 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
+ TIMER_OF_DECLARE(ox820_rps,
+-		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
++		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
 -- 
 2.20.1
 
