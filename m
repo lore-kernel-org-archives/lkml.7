@@ -2,116 +2,145 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEFAC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB158C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E170205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NKcG+r6/"
+	by mail.kernel.org (Postfix) with ESMTP id C386A205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfEGJcp (ORCPT
+        id S1726892AbfEGJdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:32:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35245 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfEGJco (ORCPT
+        Tue, 7 May 2019 05:33:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47158 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfEGJdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:32:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w12so7845941wrp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=G7Dumy4AOd1vCBggiJHZKL6Nn0KP4/1BivjvxQRWHRk=;
-        b=NKcG+r6/zP79zGYJQFgwyIJuD7cMOk/77HIGMvK1mr6K0hvINAMEtSAJpXL1Bbc1wE
-         kiWtshjAD0n63GZ+InjbXUYB+y/J8xLsBihWtOfb74XrJLiQzYcRzW1y9MIbsSFtgDH+
-         3HKIAXBuy0mD5UCzu7U6GvNZBu6UKWb8YGpvDpjo2OkM0/r7ophexlilpXli02aeBkbg
-         X+Tyoz6UIB7fPDUx+yUlEA4zw4ELZAs7v85oq7yF/NB3EXsf+PxVAY9+YCocUV7/spJg
-         3DoyBOxPIbRw9zAxsHjbXC5EMqzT39QDPqSeiYAyGRrs9jMoTMk4Ad1gpSNomauuxUyg
-         mLBA==
+        Tue, 7 May 2019 05:33:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id d22so7124597ioh.14
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:33:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=G7Dumy4AOd1vCBggiJHZKL6Nn0KP4/1BivjvxQRWHRk=;
-        b=jMQGuieKFBi++QHa3DXRtzfU/CM060vyOSafYoART/xM/tUUmhyzPK6/sg8E93/n/s
-         zKnICybkgfeZZ5gM1ASx4ETPh+WfDjNoNWrVq6ZSU/Ft5miK49Qx8T1O9VnUptUi08Co
-         iH9z4YDMGE1lgTGuN6Mamq7hF+uJnoUYnVzoJABvMK5FxlZJXUYmLzKLeDwYvYI3dt49
-         a8pBzyYDvLhXfgRN3voTlZ65Y7N91zbsSCaWpP8OVRf2QHyAzAdapOymhF3g4dsedSVH
-         RqmvBbR+gijd3ug0Ynlt6S0j5+Id0zgV8TSUcPR4HcYx1MVaKxg19Icqh2AkVpN+MS94
-         ZInw==
-X-Gm-Message-State: APjAAAXP1/dhBBnrEJvNE8PWFWGRp0xk8190NNiJjxlC9xmUU9Y5IE6H
-        99La1M+6bFNvzupZ3KNG/lXiKCOOZsA=
-X-Google-Smtp-Source: APXvYqzzMke6HbKJ7MgmPbfT9g2onn2MByckb//Ing49zbvFroSoe7K25cgK8jM9yeL80ui3gBbjGQ==
-X-Received: by 2002:a5d:4642:: with SMTP id j2mr1210049wrs.268.1557221563105;
-        Tue, 07 May 2019 02:32:43 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id h24sm15794834wmb.40.2019.05.07.02.32.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 02:32:41 -0700 (PDT)
-Date:   Tue, 7 May 2019 10:32:39 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Esben Haabendal <esben@haabendal.dk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-serial@vger.kernel.org, Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
- resources
-Message-ID: <20190507093239.GB4529@dell>
-References: <20190430140416.4707-1-esben@geanix.com>
- <20190430153736.GL9224@smile.fi.intel.com>
- <874l6efxta.fsf@haabendal.dk>
- <20190502104556.GS9224@smile.fi.intel.com>
- <87pnp11112.fsf@haabendal.dk>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aOR6yJjOP+TsGwh0EcqAzW/3dMWPFOD9UXD0P5D61LU=;
+        b=MRCqB2rT/rCOXNllfFJLfMXoUtqM5Kyp36Kj/5jqM+gYgz2n8Fsu7EUFNzwmE/fsI8
+         Us/OZgykzclEln/PbEaIJRqybOUi4R31D2WlNazYBTDYeYmUdQzr4jYbs9fZZzPX8gub
+         Uia1jSNw/j8js678Cs1torh0mAW2ku0yXw8m7Mc5lbrXagsZI6bJLGKNuqGARDtYrHkn
+         eB4DjpO+PzUSDN6PaObVBL1YkypjrfdCC6HBP6vIwUOsgSqhGcTjtQaW359bPWWA+wyD
+         xIDTf1HP/M2JO6z+Nc8uWzcWRBwXHWtNdqy5w22F8x+DmDtdHreQwiO+BTWUAKeAUrHz
+         0tgg==
+X-Gm-Message-State: APjAAAUEZErlBDqONtnZ1ypxGQ86FkhDhpO81UyyB2dv64/Q9YyECD57
+        gp9qzpaRTNHSstGMa37+WitTl93liWyKJvgAVxDAeKXzDme9
+X-Google-Smtp-Source: APXvYqwPklXVVpHJNFLLY+OM48bKJ/DEGhmo5SL4yvySc+LrPCuBt5Tzi693BEoHwFHaEJKs1u161NO6xioxZVrzLdSZ++9PNpEZ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87pnp11112.fsf@haabendal.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a6b:8b49:: with SMTP id n70mr2330626iod.198.1557221585818;
+ Tue, 07 May 2019 02:33:05 -0700 (PDT)
+Date:   Tue, 07 May 2019 02:33:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000759a89058848e747@google.com>
+Subject: WARNING in __static_key_slow_dec_cpuslocked
+From:   syzbot <syzbot+a65e6ce239e4afe6c5e7@syzkaller.appspotmail.com>
+To:     ard.biesheuvel@linaro.org, bp@suse.de,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        yamada.masahiro@socionext.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 May 2019, Esben Haabendal wrote:
+Hello,
 
-> Hi Lee
-> 
-> Could you help clarify whether or not this patch is trying to do
-> something odd/wrong?
-> 
-> I might be misunderstanding Andy (probably is), but the discussion
-> revolves around the changes I propose where I change the serial8250
-> driver to use platform_get_resource() in favour of
-> request_mem_region()/release_mem_region().
+syzbot found the following crash on:
 
-Since 'serial8250' is registered as a platform device, I don't see any
-reason why it shouldn't have the capability to obtain its memory
-regions from the platform_get_*() helpers.
+HEAD commit:    a734d1f4 net: openvswitch: return an error instead of doin..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11467d84a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bcf30bdc781fc378
+dashboard link: https://syzkaller.appspot.com/bug?extid=a65e6ce239e4afe6c5e7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> In my understanding, use of platform_get_resource() is the right thing
-> to do in order to integrate properly with with MFD drivers that splits a
-> common memory resource in mfd_add_device() using the mem_base argument.
+Unfortunately, I don't have any reproducer for this crash yet.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a65e6ce239e4afe6c5e7@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+jump label: negative count!
+WARNING: CPU: 0 PID: 16038 at kernel/jump_label.c:219  
+__static_key_slow_dec_cpuslocked+0x12d/0x150 kernel/jump_label.c:219
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 16038 Comm: syz-executor.1 Not tainted 5.1.0-rc7+ #167
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:__static_key_slow_dec_cpuslocked+0x12d/0x150  
+kernel/jump_label.c:219
+Code: 84 d2 75 2d 41 8b 1c 24 31 ff 89 de e8 bc 18 e6 ff 85 db 0f 89 56 ff  
+ff ff e8 2f 17 e6 ff 48 c7 c7 00 aa 71 87 e8 01 c5 b8 ff <0f> 0b e9 3e ff  
+ff ff 4c 89 e7 e8 a4 a5 1e 00 eb c9 48 c7 c7 78 d6
+RSP: 0018:ffff88808ed07910 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 00000000ffffffff RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815afcc6 RDI: ffffed1011da0f14
+RBP: ffff88808ed07930 R08: ffff8880964bc080 R09: ffffed1015d05011
+R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffffffff8b14f560
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  __static_key_slow_dec kernel/jump_label.c:238 [inline]
+  static_key_slow_dec+0x60/0xa0 kernel/jump_label.c:252
+  udp_destroy_sock net/ipv4/udp.c:2494 [inline]
+  udp_destroy_sock+0x152/0x220 net/ipv4/udp.c:2480
+  sk_common_release+0x6d/0x330 net/core/sock.c:3151
+  udp_lib_close+0x16/0x20 include/net/udp.h:206
+  inet_release+0x105/0x1f0 net/ipv4/af_inet.c:432
+  __sock_release+0xd3/0x2b0 net/socket.c:599
+  sock_close+0x1b/0x30 net/socket.c:1267
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x90a/0x2fa0 kernel/exit.c:876
+  do_group_exit+0x135/0x370 kernel/exit.c:980
+  get_signal+0x399/0x1d50 kernel/signal.c:2577
+  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f05c42b4c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000458da9
+RDX: 0000000020000040 RSI: 0000000000008914 RDI: 0000000000000006
+RBP: 000000000073bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f05c42b56d4
+R13: 00000000004c4635 R14: 00000000004d7ec8 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
