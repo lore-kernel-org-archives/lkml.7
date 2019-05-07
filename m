@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C400C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B9B21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1347020989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207241;
-	bh=Edc69vRC5mKYb7QKWb3pJxpjsre7QfXtcHWI1l4CcIw=;
+	s=default; t=1557207245;
+	bh=eb4XH/RZms7oiIkPyrmBezPUBJP6PV/bKa9SBqpcRQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ng5QsqN5RYisYbd9n+r6RsWTezKfi4tj3DuZBOVOgUt462h3+dlcPsd+P4blDGe1L
-	 +vlsqB6kABNisqKO+DAIZZAeHNeM+2OeAMQLs+rglUbPDM1/DTdlaEZkk3BPhj5R5z
-	 u3fUHQ+dtXwovr2HLUlPjiOEE5sG2nB8o/bdI6ko=
+	b=JO6yyeWv3xbLkUq3SSWclQ1nREYgcSsHQQIK8+LK9JhjGM6rt8r0mVDjsjF7VHlYA
+	 1LpmTq48GtN+lGqjObHYspKGNXqpUZ5qF4nvYR0NUMIWjW/m4E/iZSG17WQP82aVsP
+	 +L4/n44/vqUuVYmcvFrBn1abDcf8q6ARX8p3lHUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfEGFeA (ORCPT
+        id S1727409AbfEGFeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:34:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727370AbfEGFd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:56 -0400
+        id S1727386AbfEGFeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71B7120989;
-        Tue,  7 May 2019 05:33:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2413C2087F;
+        Tue,  7 May 2019 05:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207234;
-        bh=Edc69vRC5mKYb7QKWb3pJxpjsre7QfXtcHWI1l4CcIw=;
+        s=default; t=1557207239;
+        bh=eb4XH/RZms7oiIkPyrmBezPUBJP6PV/bKa9SBqpcRQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVmCHkM7X4+AQwCt6a7cg8kE+ZLM/q6NsgD2AOfwDXzC6W7qW70rsehaE09jiIlSU
-         xC8q/16GxP/Nq0SOCWfM5t0GFH96U/NQjpqQAeIPRZoB7aD8UIvNS8EIM05wZ2ATjK
-         w/IW+PIfy0uEC3o9KjhrVBAOwGvj10fLiylvimxI=
+        b=MUpUHx7fKSltZUFC/VtiiYWPL3ymyjVcmdkhZyCUwxqShd5qp+sDm54vxX3kAU2ll
+         Sl89rrXlMa7h8FgUsvc51EkvjB1a5zVjm6trstf40KYOV5K98MnQNwW40gMFxWRC94
+         vPuOye63M8pEt8lPQewTW0/lTFy23V81YckSi6sY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Xose Vazquez Perez <xose.vazquez@gmail.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nadav Amit <namit@vmware.com>,
         Andy Lutomirski <luto@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 41/99] x86/mm: Prevent bogus warnings with "noexec=off"
-Date:   Tue,  7 May 2019 01:31:35 -0400
-Message-Id: <20190507053235.29900-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 43/99] x86/mm/tlb: Revert "x86/mm: Align TLB invalidation info"
+Date:   Tue,  7 May 2019 01:31:37 -0400
+Message-Id: <20190507053235.29900-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -66,78 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 510bb96fe5b3480b4b22d815786377e54cb701e7 ]
+[ Upstream commit 780e0106d468a2962b16b52fdf42898f2639e0a0 ]
 
-Xose Vazquez Perez reported boot warnings when NX is disabled on the kernel command line.
+Revert the following commit:
 
-__early_set_fixmap() triggers this warning:
+  515ab7c41306: ("x86/mm: Align TLB invalidation info")
 
-  attempted to set unsupported pgprot:    8000000000000163
-			       bits:      8000000000000000
-			       supported: 7fffffffffffffff
+I found out (the hard way) that under some .config options (notably L1_CACHE_SHIFT=7)
+and compiler combinations this on-stack alignment leads to a 320 byte
+stack usage, which then triggers a KASAN stack warning elsewhere.
 
-  WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgtable.h:537
-			    __early_set_fixmap+0xa2/0xff
+Using 320 bytes of stack space for a 40 byte structure is ludicrous and
+clearly not right.
 
-because it uses __default_kernel_pte_mask to mask out unsupported bits.
-
-Use __supported_pte_mask instead.
-
-Disabling NX on the command line also triggers the NX warning in the page
-table mapping check:
-
-  WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:262 note_page+0x2ae/0x650
-  ....
-
-Make the warning depend on NX set in __supported_pte_mask.
-
-Reported-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Tested-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Nadav Amit <namit@vmware.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 515ab7c41306 ("x86/mm: Align TLB invalidation info")
+Link: http://lkml.kernel.org/r/20190416080335.GM7905@worktop.programming.kicks-ass.net
+[ Minor changelog edits. ]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/dump_pagetables.c | 3 ++-
- arch/x86/mm/ioremap.c         | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/mm/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index e3cdc85ce5b6..84304626b1cb 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -259,7 +259,8 @@ static void note_wx(struct pg_state *st)
- #endif
- 	/* Account the WX pages */
- 	st->wx_pages += npages;
--	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
-+	WARN_ONCE(__supported_pte_mask & _PAGE_NX,
-+		  "x86/mm: Found insecure W+X mapping at address %pS\n",
- 		  (void *)st->start_address);
- }
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 999d6d8f0bef..9a49335e717a 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -731,7 +731,7 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ {
+ 	int cpu;
  
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 5378d10f1d31..3b76fe954978 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -825,7 +825,7 @@ void __init __early_set_fixmap(enum fixed_addresses idx,
- 	pte = early_ioremap_pte(addr);
- 
- 	/* Sanitize 'prot' against any unsupported bits: */
--	pgprot_val(flags) &= __default_kernel_pte_mask;
-+	pgprot_val(flags) &= __supported_pte_mask;
- 
- 	if (pgprot_val(flags))
- 		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
+-	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
++	struct flush_tlb_info info = {
+ 		.mm = mm,
+ 		.stride_shift = stride_shift,
+ 		.freed_tables = freed_tables,
 -- 
 2.20.1
 
