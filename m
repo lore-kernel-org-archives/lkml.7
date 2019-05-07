@@ -2,199 +2,153 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65B4C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 04:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E03AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A912721655
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 04:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEA320989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W++urFVA"
+	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="Et3+toFV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vX/Ujmru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfEGEyk (ORCPT
+        id S1726381AbfEGFAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 00:54:40 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45007 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfEGEyk (ORCPT
+        Tue, 7 May 2019 01:00:25 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:33449 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfEGFAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 00:54:40 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d3so3497313plj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 21:54:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=38RWjgCCoqTDs9WWdGrvN90MmbgyDENeZWWwktqdhr8=;
-        b=W++urFVAUjLmLOLkV3WhQSOmCHTEqyZleYLFYcJS1FJFHR9VMWwE43/CQVnp7clqZJ
-         0to4FXahT9R0KcfAE2AZ3Dx7hr2fppYi+cmSE03lpJwnqcUbFTNyJ4UDEb05UUdlSiOb
-         y3/mI3LdK44NbhX+H6KrvLW0JGYY6V9AfZyks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=38RWjgCCoqTDs9WWdGrvN90MmbgyDENeZWWwktqdhr8=;
-        b=INAoqF4tW4Y77UG14ZZkWQjmKKwjjvL19bWG1MYi64bwostl/yVEPDrns+jBq7O6C7
-         kDeWpuE94CW/WNfV9mkS8VsU7Fb1XMi+duFgCvH47sUlz2lg17C1zahF9yqZRQZ0gEk4
-         DKB9Jztpe25qvglW4yyTRytH6JKdP5Oi022DUCRYXm5C/opLvch/vihy0MT6aRXBvzq7
-         ZsSBGWnjPmt0LvMzi2sP8naHGpZAaOM1FB1Mvx8ispM8ssReZa7si8Zf6behfGOlFe48
-         9AzAW61T1ckChKENeCKqhteyPjk94PkvNmRH5zo8mfzYxypZtY6QAmIicrHalDEUkggY
-         K2pQ==
-X-Gm-Message-State: APjAAAW3i7iqykVOAivDTf/k1BB9OoA3Vabj3M6ULOke5y6wgzVgo6Tx
-        FChtOsOP6w/zeGdtyiuE2pR6uQ==
-X-Google-Smtp-Source: APXvYqx/d4EzgjZah9buZEK+LtAIbXk1JKtst2Fa3PFYVbMVoteyW6i+8kXaXNoaF1nYlrVVmSIR9Q==
-X-Received: by 2002:a17:902:2a26:: with SMTP id i35mr38742318plb.229.1557204879208;
-        Mon, 06 May 2019 21:54:39 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id 13sm14970025pfi.172.2019.05.06.21.54.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 21:54:38 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH] arm64: add support for rng-seed
-Date:   Tue,  7 May 2019 12:54:33 +0800
-Message-Id: <20190507045433.542-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 7 May 2019 01:00:25 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id DD9F124617;
+        Tue,  7 May 2019 01:00:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 07 May 2019 01:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=G
+        vpbZBgNMXflnMGNR5vyeIgEKAyxBkeV/ay2TmPZFP4=; b=Et3+toFVGj6ppxTA4
+        mSKTIKpGtysB6HCOo/tZdU6v0mrKnoXgwYnKgm59zEb5W54bewaioCC+wi5LA5dj
+        edgj3rfXUrtXILI3K64DbkOWMjREucV9lLbmwXS++RPUN01BngQXHZqhq3d1gjZq
+        7m75d3LpskrwCKNl1VhLSwo5lws4vZDfpguxI/toUv4HULULkn6mv76XW+PSNRH7
+        UzAXL59E7O/pP5rtLjCwKcVrNYa5TDyoMGvDZDZHY0ktM1sz8ARKTeB/wW18SFxK
+        v8RCK/ko7QdSbxTl3tSzyloepxW9d2lU0hViKr3UPnn+fxXiDo4QgoOyPRRsGe2P
+        sOLxw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=GvpbZBgNMXflnMGNR5vyeIgEKAyxBkeV/ay2TmPZF
+        P4=; b=vX/UjmruYxl0f/ZfiqJOWc5lHkUTSpyx+PY7aFgdDn8DpWa57gYLDGsU3
+        vZejP2fPdINS9K352z8fxtDGXbilfPwERignb3//PReLmjdcIiE7awMk2J/1iv0T
+        2FqDsl0BCTsKQHRs+f7+xNkKH+oOXAUsA+epqpdzsdnFJS1NLIRz+Rnbs+J/B+MF
+        F/2HjxDXur7+JHs7CCxU6gFybch/hdgxHOrSRGVnTKpurKFoj5ZvbJH9A56Im3an
+        k3e6ZEkYM8vU52QCjYBkitvfAJ4r5EXj+MMT36BMYiWoXuHjsb3FoXQ880bo2uVg
+        qMADu9eipoOwAi4HW9MG6s0ePQXVA==
+X-ME-Sender: <xms:5hDRXGy06cgYPrTksCd9g24UlAU_VjwCs3Ce1ZAOUTxuN4d3TcJvzg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjeelgdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjfgesthekredttderjeenucfhrhhomheprfgvthgv
+    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
+    htqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduudejrddvtddrieel
+    rddugedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpvghtvghrrdhhuhhtthgvrhgvrh
+    esfihhohdqthdrnhgvthenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:5hDRXMruXwbeRndInCQT8op3BYy15GQFq9DtQQkBd5ykq10iJNVgfw>
+    <xmx:5hDRXOfHYOJ5koGZ0o4zLu1VwxKOo0exY3yRP4JjuPeZ_lIP9BiLCg>
+    <xmx:5hDRXHrLKQ3JwWmrHeShSuDLqd9e9P5tNa7FSkY-BF9FkCTuMwm9gA>
+    <xmx:5xDRXOGZ19TrgbnRhZfdudiaMNTkIL77Hn2F_PaiVb0hHfk7-AKqlA>
+Received: from jelly (117-20-69-142.751445.bne.nbn.aussiebb.net [117.20.69.142])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E5B29103CB;
+        Tue,  7 May 2019 01:00:18 -0400 (EDT)
+Date:   Tue, 7 May 2019 15:00:29 +1000
+From:   Peter Hutterer <peter.hutterer@who-t.net>
+To:     =?utf-8?B?QsWCYcW8ZWogU3pjenlnaWXFgg==?= <spaz16@wp.pl>
+Cc:     igorkuo@gmail.com, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] HID: fix A4Tech horizontal scrolling
+Message-ID: <20190507050029.GA5197@jelly>
+References: <AO-hwJKNH7WoJV-X+egK5cJNNtxamh0L0e1er5dkiTt6KvrmSQ@mail.gmail.com>
+ <20190503202836.12127-1-spaz16@wp.pl>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190503202836.12127-1-spaz16@wp.pl>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introducing a chosen node, rng-seed, which is an 64 bytes entropy
-that can be passed to kernel called very early to increase device
-randomness. Bootloader should provide this entropy and the value is
-read from /chosen/rng-seed in DT.
+On Fri, May 03, 2019 at 10:28:36PM +0200, Błażej Szczygieł wrote:
+> Since recent high resolution scrolling changes the A4Tech driver must
+> check for the "REL_WHEEL_HI_RES" usage code.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203369
+> Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e ("HID: input: use the
+> Resolution Multiplier for high-resolution scrolling")
+> 
+> Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
+> ---
+> Changes in v2:
+> - changed commit message
+> 
+>  drivers/hid/hid-a4tech.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+> index 9428ea7cdf8a..fafb9fa558e7 100644
+> --- a/drivers/hid/hid-a4tech.c
+> +++ b/drivers/hid/hid-a4tech.c
+> @@ -38,7 +38,7 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+>  {
+>  	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+>  
+> -	if (usage->type == EV_REL && usage->code == REL_WHEEL)
+> +	if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES)
+>  		set_bit(REL_HWHEEL, *bit);
+>  
+>  	if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
+> @@ -60,7 +60,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>  	input = field->hidinput->input;
+>  
+>  	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
+> -		if (usage->type == EV_REL && usage->code == REL_WHEEL) {
+> +		if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
+>  			a4->delayed_value = value;
+>  			return 1;
+>  		}
+> @@ -77,7 +77,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>  		return 1;
+>  	}
+>  
+> -	if (usage->code == REL_WHEEL && a4->hw_wheel) {
+> +	if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
+>  		input_event(input, usage->type, REL_HWHEEL, value);
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+You'll need to send both events here, so please add:
+   		input_event(input, usage->type, REL_HWHEEL_HI_RES, value * 120);
 
----
- Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
- arch/arm64/kernel/setup.c                    |  2 ++
- drivers/of/fdt.c                             | 33 ++++++++++++++++++++
- include/linux/of_fdt.h                       |  1 +
- 4 files changed, 50 insertions(+)
+assume that wheel and wheel_hi_res are two separate event streams for the
+same axis, userspace may listen to either or both. if you only send the
+legacy event, newer userspace won't receive any scroll events as it may only
+look for the new hi-res events.
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 45e79172a646..bfd360691650 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
- the Linux EFI stub (which will populate the property itself, using
- EFI_RNG_PROTOCOL).
- 
-+rng-seed
-+-----------
-+
-+This property served as an entropy to add device randomness. It is parsed
-+as a 64 byte value, e.g.
-+
-+/ {
-+	chosen {
-+		rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
-+	};
-+};
-+
-+This random value should be provided by bootloader.
-+
- stdout-path
- -----------
- 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 413d566405d1..ade4261516dd 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
- 	early_fixmap_init();
- 	early_ioremap_init();
- 
-+	early_init_dt_rng_seed(__fdt_pointer);
-+
- 	setup_machine_fdt(__fdt_pointer);
- 
- 	parse_early_param();
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9616a1..74e2c0c80b91 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/libfdt.h>
- #include <linux/debugfs.h>
-+#include <linux/random.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
- 
-@@ -1117,6 +1118,38 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 	return 1;
- }
- 
-+extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
-+				       pgprot_t prot);
-+
-+void __init early_init_dt_rng_seed(u64 dt_phys)
-+{
-+	void *fdt;
-+	int node, size, i;
-+	fdt64_t *prop;
-+	u64 rng_seed[8];
-+
-+	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
-+	if (!fdt)
-+		return;
-+
-+	node = fdt_path_offset(fdt, "/chosen");
-+	if (node < 0)
-+		return;
-+
-+	prop = fdt_getprop_w(fdt, node, "rng-seed", &size);
-+	if (!prop || size != sizeof(u64) * 8)
-+		return;
-+
-+	for (i = 0; i < 8; i++) {
-+		rng_seed[i] = fdt64_to_cpu(*(prop + i));
-+		/* clear seed so it won't be found. */
-+		*(prop + i) = 0;
-+	}
-+	add_device_randomness(rng_seed, size);
-+
-+	return;
-+}
-+
- #ifndef MIN_MEMBLOCK_ADDR
- #define MIN_MEMBLOCK_ADDR	__pa(PAGE_OFFSET)
- #endif
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index a713e5d156d8..a4548dd6351e 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -71,6 +71,7 @@ extern uint32_t of_get_flat_dt_phandle(unsigned long node);
- 
- extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
-+extern void early_init_dt_rng_seed(u64 dt_phys);
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern int early_init_dt_scan_chosen_stdout(void);
--- 
-2.20.1
+Check with evtest/evemu/libinput record after, you should see multiples of
+120 on the hi-res axis for every legacy wheel event.
 
+Cheers,
+   Peter
+
+>  		return 1;
+>  	}
+> -- 
+> 2.21.0
+> 
