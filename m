@@ -2,155 +2,155 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62C5C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A54AC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D902053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEB82053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:58:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="I06S5IOa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E0KqgTbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfEGJ4J (ORCPT
+        id S1726634AbfEGJ6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:56:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40173 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfEGJ4J (ORCPT
+        Tue, 7 May 2019 05:58:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13774 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfEGJ6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:56:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so2135565wre.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IHeTau53rhyWfO0CEZaf8TCogPgsV/f85c5XRY2FpLM=;
-        b=I06S5IOarXEB/Rf8KhJ8SfEAoJrkDpxZTo6cDWUP6nlceF4XGWjqb6oVabXf17/jUj
-         LwuNPrwM+Whj3lIPAaHPJ3jeSY+nd7ayIM0Jii1WlRfCzjzPzgnqnLvMVdCiDu28lUcR
-         1tEx7wuMaIeQEHTxZmxuTBi7ssyBnNcxWS1lc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IHeTau53rhyWfO0CEZaf8TCogPgsV/f85c5XRY2FpLM=;
-        b=m95Ao5g0K/MpOisMPaDb42rGPncX89c0VYoGNzxFKxQsrEX7Ph33oU36zrGQ9amRef
-         5qo+j8vWam5FkaWUBrKIhxUMBuVTwmmJomj2o/O4pBhtmfle9fwxa3fPJHMe8S7ojeSj
-         Yg6c+nv4OgfzRnZ0HJwRgVbhgK/mC86zBOU4raGCbUc1kfNY0Xqw3Do27NvdbuSxfsOs
-         +TFpCpL3q7C6lCJ4lYNVrjs8boR0rgL+RT6DTuSIA1WOPUK+y/ycVncWmhGtB5UvqRVp
-         3/EB6mwZWWfIBiSCE1pMrZVThGM7FwBLr7OJDXT9DHE4cc84e+v96RxkxzKZta0VgmmI
-         OuSA==
-X-Gm-Message-State: APjAAAXs7SwBb6eFGRDCsoizSB8C0KEVMFuEai65YHISmeiwVTCi3pwd
-        g06Uf21eLnXah9Mx8E9RWU74frbF43qcR2OrwCKELA==
-X-Google-Smtp-Source: APXvYqwpyZql/DVaMZQlJQ4tp1wmaegr8/4zAmfIGvL/FFytGrVm3guHpUfKnCBrOcV6rhqM2oVmzL4885QLHRebxks=
-X-Received: by 2002:adf:fcc8:: with SMTP id f8mr21425833wrs.250.1557222966866;
- Tue, 07 May 2019 02:56:06 -0700 (PDT)
+        Tue, 7 May 2019 05:58:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd1568a0000>; Tue, 07 May 2019 02:57:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 May 2019 02:58:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 May 2019 02:58:04 -0700
+Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 09:57:59 +0000
+Subject: Re: [PATCH V5 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
+To:     Rob Herring <robh@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-12-vidyas@nvidia.com> <20190426154519.GA19329@bogus>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <c13db22f-0557-8e98-0a1d-00ee4405e6db@nvidia.com>
+Date:   Tue, 7 May 2019 15:27:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
- <1556892334-16270-4-git-send-email-srinath.mannam@broadcom.com>
- <20190506211208.GA156478@google.com> <20190507094102.GA10964@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190507094102.GA10964@e121166-lin.cambridge.arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Tue, 7 May 2019 15:25:55 +0530
-Message-ID: <CABe79T5d-H8XYmDz0463oqS6pF5X8=zi+1YSRLVASuGdjHZgXQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] PCI: iproc: Add sorted dma ranges resource entries
- to host bridge
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Eric Auger <eric.auger@redhat.com>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190426154519.GA19329@bogus>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557223050; bh=yMsBiV1fEe9A1TMMLA2KOVpdo0cNL5OaDWCKWRUAWd4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=E0KqgTbmZdwQUPOTRizQDdy3EywsHpf0ZNQ/rMVFPenqr4vkGKS9bmSfTG6rwBIk8
+         Ea2Io3f6vj7Gdq3hXuiUi9RUu2bn5qCONy0tpr6/7sC6qPgGbCYmcTiZhAQKKm8WIs
+         DO+utS9tWBXG+o3Vq/ntx5qhTKP9q+nI50yl5PduUNBKLegReyTi8J6oR/1Yem6a06
+         swD6Gn+/eAKc6A8vdqurZvej2kDFZsRaonKz25ZUcLgKTjIV27zDa7Lf/CUMz+DDVD
+         L4LPmCa17kdDUbPgdDFCOb99OidYusHCPLhppOtk6zIaLR4WVKV0WM2WvIpNz5lS51
+         Rsx9dyningPNQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On 4/26/2019 9:15 PM, Rob Herring wrote:
+> On Wed, Apr 24, 2019 at 10:49:59AM +0530, Vidya Sagar wrote:
+>> Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
+>> module instantiated one for each PCIe lane between Synopsys Designware core
+>> based PCIe IP and Universal PHY block.
+> 
+> Missing Sob.
+Done.
 
-Thank you.
+> 
+>> ---
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * Changed node label to reflect new format that includes either 'hsio' or
+>>    'nvhs' in its name to reflect which UPHY brick they belong to
+>>
+>> Changes since [v1]:
+>> * This is a new patch in v2 series
+>>
+>>   .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> new file mode 100644
+>> index 000000000000..8b543cba483b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> @@ -0,0 +1,28 @@
+>> +NVIDIA Tegra194 P2U binding
+>> +
+>> +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
+>> +Speed) each interfacing with 12 and 8 P2U instances respectively.
+>> +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
+>> +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
+>> +lane.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
+>> +- reg: Should be the physical address space and length of respective each P2U
+>> +       instance.
+>> +- reg-names: Must include the entry "ctl".
+> 
+> -names is pointless when there is only 1.
+I did it this way to make it future proof as there could be more regions that might get
+added at a later point of time.
 
-Regards,
-Srinath.
+> 
+>> +
+>> +Required properties for PHY port node:
+>> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+>> +
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+>> +
+>> +Example:
+>> +
+>> +p2u_hsio_0: p2u@3e10000 {
+> 
+> phy@...
+Done.
 
-On Tue, May 7, 2019 at 3:11 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Mon, May 06, 2019 at 04:12:08PM -0500, Bjorn Helgaas wrote:
-> > On Fri, May 03, 2019 at 07:35:34PM +0530, Srinath Mannam wrote:
-> > > The IPROC host controller allows only a subset of physical address space
-> > > as target of inbound PCI memory transactions addresses.
-> > >
-> > > PCIe devices memory transactions targeting memory regions that
-> > > are not allowed for inbound transactions in the host controller
-> > > are rejected by the host controller and cannot reach the upstream
-> > > buses.
-> > >
-> > > Firmware device tree description defines the DMA ranges that are
-> > > addressable by devices DMA transactions; parse the device tree
-> > > dma-ranges property and add its ranges to the PCI host bridge dma_ranges
-> > > list; the iova_reserve_pci_windows() call in the driver will reserve the
-> > > IOVA address ranges that are not addressable (ie memory holes in the
-> > > dma-ranges set) so that they are not allocated to PCI devices for DMA
-> > > transfers.
-> > >
-> > > All allowed address ranges are listed in dma-ranges DT parameter.
-> > >
-> > > Example:
-> > >
-> > > dma-ranges = < \
-> > >   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
-> > >   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
-> > >   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
-> > >
-> > > In the above example of dma-ranges, memory address from
-> > >
-> > > 0x0 - 0x80000000,
-> > > 0x100000000 - 0x800000000,
-> > > 0x1000000000 - 0x8000000000 and
-> > > 0x10000000000 - 0xffffffffffffffff.
-> > >
-> > > are not allowed to be used as inbound addresses.
-> > >
-> > > Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > [lorenzo.pieralisi@arm.com: updated commit log]
-> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-> > > Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 43 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > index c20fd6b..94ba5c0 100644
-> > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
-> > >     return ret;
-> > >  }
-> > >
-> > > +static int
-> > > +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-> > > +                    struct of_pci_range *range)
-> >
-> > Just FYI, I cherry-picked these commits from Lorenzo's branch to fix
-> > the formatting of this prototype to match the rest of the file, e.g.:
->
-> Thank you, I noticed too but I forgot to update it before merging
-> v6 from the list.
->
-> Thanks,
-> Lorenzo
->
-> > >  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> > > ...
-> > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+> 
+>> +	compatible = "nvidia,tegra194-p2u";
+>> +	reg = <0x03e10000 0x10000>;
+>> +	reg-names = "ctl";
+>> +
+>> +	#phy-cells = <0>;
+>> +};
+>> -- 
+>> 2.17.1
+>>
+
