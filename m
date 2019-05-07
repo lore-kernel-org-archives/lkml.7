@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE6FC46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE60C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E964C216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FC120989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209350;
-	bh=B+Svool6OKtXekRVwUUtun6ODfXF2B3SY0gk1iyt/4U=;
+	s=default; t=1557209354;
+	bh=LtL9Lu69IYXxNadhHHE5MxBPom1bl3355HqXQ65dbeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yRQ54Nauyt7x8gBS6li+Seb3QtrKJ6+LowmOx0F7aqv0ymbckSvMTLcfPcZ6eoAe/
-	 upOhKCHItdpqBojwCV9MD7dEOhTuDNAhRA0Lro2tb9MQ05tMyuykCnkpxAiA4afLj9
-	 40t5R9ev83VLpx0gVAua5y7ukV/+/2Xhc9ju6SAw=
+	b=ujJB5XrchquulMHY7I4a1vcMqF/KQri9rKnJcYwVf2f8PQHbLZo+Zxzxbe0DH5PSq
+	 q5vjqZwG7Egp6DpcFZUCsgxEsPcI6HhGwYNoYJdOOu5G2JzL3Myu7GkNCP8SeABm9c
+	 RBkxOizjb5jcMvBwZFGBvV4hHjzUAM6SvPYzMH30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfEGFcr (ORCPT
+        id S1726526AbfEGFcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbfEGFco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:32:44 -0400
+        id S1726487AbfEGFcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:32:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80881206A3;
-        Tue,  7 May 2019 05:32:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5273620B7C;
+        Tue,  7 May 2019 05:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207163;
-        bh=B+Svool6OKtXekRVwUUtun6ODfXF2B3SY0gk1iyt/4U=;
+        s=default; t=1557207162;
+        bh=LtL9Lu69IYXxNadhHHE5MxBPom1bl3355HqXQ65dbeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gf0VOXHRy8xPceIUIOydy8DO6ZE65P4Hxxt7azVI01NZu2x29RRHzKacqcUR1U7WO
-         x2bHXFrRDCyvQVMH5xCrRvBQ81NcoycQRtDlFyi1gB5M3D0GF53/OvvIoKMc7sQBYu
-         gWXj1g5mi9/Vp1wqXwQS7OY9OhJbKPrGzF1eEXSI=
+        b=LQxwEXrRDa9SNEea8OzaM7p90FwjqKvr1YaUVeDwy9xuRsuDs08rT1CwyGMjxSvQ3
+         BGjUBGpiH2fQXyEOrJr+9geISJsg3bpQNkYClaiZ2aSLLDzsXroG2ksedtTe2QQ5XU
+         gamx6OHRPpmx42VYy9CRYZ7HW0osP7WyV5yKH1BU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 04/99] acpi/nfit: Always dump _DSM output payload
-Date:   Tue,  7 May 2019 01:30:58 -0400
-Message-Id: <20190507053235.29900-4-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 03/99] iio: adc: xilinx: prevent touching unclocked h/w on remove
+Date:   Tue,  7 May 2019 01:30:57 -0400
+Message-Id: <20190507053235.29900-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -59,52 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 351f339faa308c1c1461314a18c832239a841ca0 ]
+[ Upstream commit 2e4b88f73966adead360e47621df0183586fac32 ]
 
-The dynamic-debug statements for command payload output only get emitted
-when the command is not ND_CMD_CALL. Move the output payload dumping
-ahead of the early return path for ND_CMD_CALL.
+In remove, the clock is disabled before canceling the
+delayed work. This means that the delayed work may be
+touching unclocked hardware.
 
-Fixes: 31eca76ba2fc9 ("...whitelisted dimm command marshaling mechanism")
-Reported-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fix by disabling the clock after the delayed work is
+fully canceled. This is consistent with the probe error
+path order.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/nfit/core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 4be4dc3e8aa6..38ec79bb3edd 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -563,6 +563,12 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		goto out;
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index 15e1a103f37d..1ae86e7359f7 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1320,8 +1320,8 @@ static int xadc_remove(struct platform_device *pdev)
+ 		iio_triggered_buffer_cleanup(indio_dev);
  	}
+ 	free_irq(xadc->irq, indio_dev);
+-	clk_disable_unprepare(xadc->clk);
+ 	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
++	clk_disable_unprepare(xadc->clk);
+ 	kfree(xadc->data);
+ 	kfree(indio_dev->channels);
  
-+	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
-+			cmd_name, out_obj->buffer.length);
-+	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
-+			out_obj->buffer.pointer,
-+			min_t(u32, 128, out_obj->buffer.length), true);
-+
- 	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -581,12 +587,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		return 0;
- 	}
- 
--	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
--			cmd_name, out_obj->buffer.length);
--	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
--			out_obj->buffer.pointer,
--			min_t(u32, 128, out_obj->buffer.length), true);
--
- 	for (i = 0, offset = 0; i < desc->out_num; i++) {
- 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i, buf,
- 				(u32 *) out_obj->buffer.pointer,
 -- 
 2.20.1
 
