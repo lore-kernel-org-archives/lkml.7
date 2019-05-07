@@ -2,112 +2,131 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7DFC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD792C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280B02053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA1A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557249343;
-	bh=J+tzrorskhEWR6DbA2fLSLNOi6J3SwyUd9oxVyOCX9o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TLdhuNPKA/pNTB+vPJnfXJDGqOC+2KcR8RE0fd4I5Jekp+qzRRvXorDlWvrT5BSX0
-	 ZghOJ4OnaelgUlUURvM4y7a5xZYGOaP/8W7HX361+02DdTyCo31MRgZeymlY2Pbvx6
-	 M6LZ9Xcz5f+GlNnbgmqhsjom8YTtq4goW4Xm0XsA=
+	s=default; t=1557249363;
+	bh=1tjepSiisGYS9Zw/hu0W/Biyos5/k6p+iNt0W5aPIfw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1mcgfSLct9DmkMli8BETKHcvAFjk2Ma7EWLIYxdae14pNZO8Vme/gtFn8U16NVZUJ
+	 BDmlDxD3JtV+x3V6GqkeUr9eWUHIzmkzN2AKnF3JbO3I2eOf5KqktiSktOELVg9pgk
+	 Rnz4YIIKLQf/yli+Km+SNU27o/v+z+2aAS5fdAqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfEGRPm (ORCPT
+        id S1727152AbfEGRQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:15:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34329 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfEGRPl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:15:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v18so10222168lfi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pAvQTClftltYLCbDqLCq0/xQYu65sVI0pkYjzVTBcB0=;
-        b=NsaoLR6Ao9J19zGZUHECQ1qcF7jO6hioHJJfXFH7MjyM/ZZTDUiryrhvQk2YIHQ681
-         EBOTavV5RShPc+LyF7LHGtUfsXEm9A5iJNtu5FInwxpehCTg0ugf5fdz41X0mZTg1qa6
-         tJJWZ6eAmCN37uHbershG6h8l0gVd8ZV+wf1o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pAvQTClftltYLCbDqLCq0/xQYu65sVI0pkYjzVTBcB0=;
-        b=VN6JJy+6XZYAbpgk3Zxa3QK16fElgh/4V6As5HrhmFVXtfsVMA1iZJMXehR6zvgfnk
-         PrHS41yXP8kxtb43cK5mmiojRTk3e27eKOMFYHD9LmiO2OL+Gi7ooXeUjD+77fhRgH5A
-         Mkv/Ox5kpQHxk3obfLJGdsk+C2OZJhmlUKCA9A1lZUM/iuLXUm/LjJQeduhfRNlErWJp
-         hLvA5wbXyc5bRYtJ8WoNMrESaoIKNw3nYdW46yxv568td4dVZnoSTRa/mLGQwngwr/eq
-         Sg0YXfJFs1TcDk7gcbdCy5RyVX2feYATU0/Ze8ZRXqagBPvwSlg/1IPwj6wuiaMc6EKi
-         RVeg==
-X-Gm-Message-State: APjAAAWYomzevVjdyBOeQADJEymag9MqjyE+vme780uN9qY2Upvhg1xz
-        RdD+0UwEOus+3DqCxUoXOU1gTqM23XU=
-X-Google-Smtp-Source: APXvYqzEAy/Gfn41M+3taeeF8wUpthK267x7mFokqCe0j8/93YW1B81SvhqOrx5EVK5X4rhywXKdlg==
-X-Received: by 2002:ac2:4a8c:: with SMTP id l12mr1137549lfp.53.1557249339340;
-        Tue, 07 May 2019 10:15:39 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id s26sm3263131ljj.52.2019.05.07.10.15.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 10:15:36 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id d15so15032155ljc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:15:35 -0700 (PDT)
-X-Received: by 2002:a2e:801a:: with SMTP id j26mr8769035ljg.2.1557249335169;
- Tue, 07 May 2019 10:15:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507053826.31622-1-sashal@kernel.org> <20190507053826.31622-62-sashal@kernel.org>
- <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
- <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com> <20190507170208.GF1747@sasha-vm>
-In-Reply-To: <20190507170208.GF1747@sasha-vm>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 May 2019 10:15:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
-Message-ID: <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
- pages for the full memory section
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Tue, 7 May 2019 13:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbfEGRQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:16:02 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96E9B2053B;
+        Tue,  7 May 2019 17:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557249361;
+        bh=1tjepSiisGYS9Zw/hu0W/Biyos5/k6p+iNt0W5aPIfw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tbmhMejcd6UkaxE2Uc/e+c1SOvBxCdyGipmE+RR6jxCNZznKgtg3N7SWrzmejNe2S
+         bZMTe28ufQmpnn4bWqCa625z50NVnKbbuUw22wxAqslIUJirfKKoK8urWAI8RWYkkf
+         IQDEJkiufK4HEkdxeCGE4UoiFnMz/ZaM9a7soISg=
+Date:   Wed, 8 May 2019 02:15:51 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-Id: <20190508021551.ca791c725cbddc2db541273f@kernel.org>
+In-Reply-To: <20190507231340.92b1b0665d1110f90929d878@kernel.org>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <20190502195052.0af473cf@gandalf.local.home>
+        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+        <20190503092247.20cc1ff0@gandalf.local.home>
+        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+        <20190506095631.6f71ad7c@gandalf.local.home>
+        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+        <20190506130643.62c35eeb@gandalf.local.home>
+        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
+        <20190506145745.17c59596@gandalf.local.home>
+        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
+        <20190506162915.380993f9@gandalf.local.home>
+        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
+        <20190506174511.2f8b696b@gandalf.local.home>
+        <20190507231340.92b1b0665d1110f90929d878@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 10:02 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> I got it wrong then. I'll fix it up and get efad4e475c31 in instead.
+On Tue, 7 May 2019 23:13:40 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Careful. That one had a bug too, and we have 891cb2a72d82 ("mm,
-memory_hotplug: fix off-by-one in is_pageblock_removable").
+> On Mon, 6 May 2019 17:45:11 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > If we go with Peter's patch, I can make this code much more sane, and
+> > not have to worry about having &regs->sp be at the top of the stack. I
+> > could simply, just push everything in the order of pt_regs and call the
+> > handler.
+> 
+> Hi Steve, I need to catch up with the origin of this series, but it seems
+> also good to optprobe which is doing similar trick on pt_regs. If we can
+> assume that int3 pt_regs can have a gap, optprobe can also make a gap, and
+> it can be also used for storing destination address.
 
-All of these were *horribly* and subtly buggy, and might be
-intertwined with other issues. And only trigger on a few specific
-machines where the memory map layout is just right to trigger some
-special case or other, and you have just the right config.
+Sorry, I misunderstood. I see the issue ( https://lkml.org/lkml/2019/5/1/497 )
+and solutions on the thread. If we really need to fix this trace-livepatch
+combination issue, it may be good to backport to stable trees.
+From this viewpoint, Linus's suggestion (no pt_reg changes on x86-32) seems
+to have a point.
 
-It might be best to verify with Michal Hocko. Michal?
+BTW, even though I think Peter's patch (unifying pt_regs behavior) will also
+be good for us for more general reason (not only for fixing actual issue).
 
-              Linus
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
