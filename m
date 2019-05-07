@@ -2,99 +2,90 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE65C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C46C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFF020825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FFD21019
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m3D0K/UL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfEGWOj (ORCPT
+        id S1726486AbfEGWPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:14:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22538 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfEGWOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:14:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 15:14:38 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 07 May 2019 15:14:38 -0700
-Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
-        by linux.intel.com (Postfix) with ESMTP id 58075580238;
-        Tue,  7 May 2019 15:14:37 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] ASoC: SOF: Add Comet Lake PCI IDs
-To:     Evan Green <evgreen@chromium.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Naveen M <naveen.m@intel.com>,
-        Sathya Prakash <sathya.prakash.m.r@intel.com>,
-        Ben Zhang <benzh@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-References: <20190507215359.113378-1-evgreen@chromium.org>
- <20190507215359.113378-2-evgreen@chromium.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <cb0accd5-6b0d-065a-9b54-321252862d88@linux.intel.com>
-Date:   Tue, 7 May 2019 17:14:36 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Tue, 7 May 2019 18:15:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58226 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfEGWPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 18:15:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6yspUXhtCc5m+Xrh7rQU5TbEjYHPNSoicVC5+DlX5Cg=; b=m3D0K/ULVXwGwo+zbxza8nByV
+        HEf9WGJHMR4KTMjQTaF4YfKpdbjDL16lsK5XZhKzB0WCtGd9/hvNet8KhuMG5dtPP/hGFjQq8PEby
+        b4H0zX+lTirtYPemlhvHOie8qZHguV24Smx844h0RQU+dh3Tc0toxCgkdL72+gzBHoTL9W3CB8CAy
+        MsieQdnQlttpH2w50kyEKWRqn6tOo9k+jlnxtS1taPyD7L9Og59DXvQ0iGT/6xmRTPvHkp6J+BrqA
+        FhHCFP5Crf4RpoZREsp7s/GhTeMRy5UvKBTzvxMEWXBNpf0+CmbOBoEvjS45JclARZ0DiWx0klnzV
+        7kBy1cQxQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hO8Mr-0005to-EI; Tue, 07 May 2019 22:15:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B87C920D0941D; Wed,  8 May 2019 00:15:19 +0200 (CEST)
+Date:   Wed, 8 May 2019 00:15:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     kvm-devel <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Bandan Das <bsd@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
+Message-ID: <20190507221519.GE2677@hirez.programming.kicks-ass.net>
+References: <20190507185647.GA29409@amt.cnet>
 MIME-Version: 1.0
-In-Reply-To: <20190507215359.113378-2-evgreen@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507185647.GA29409@amt.cnet>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minor nit-picks below. The Kconfig would work but select CANNONLAKE even 
-if you don't want it.
+On Tue, May 07, 2019 at 03:56:49PM -0300, Marcelo Tosatti wrote:
+> 
+> Certain workloads perform poorly on KVM compared to baremetal
+> due to baremetal's ability to perform mwait on NEED_RESCHED
+> bit of task flags (therefore skipping the IPI).
+> 
+> This patch introduces a configurable busy-wait delay before entering the
+> architecture delay routine, allowing wakeup IPIs to be skipped 
+> (if the IPI happens in that window).
+> 
+> The real-life workload which this patch improves performance
+> is SAP HANA (by 5-10%) (for which case setting idle_spin to 30 
+> is sufficient).
+> 
+> This patch improves the attached server.py and client.py example 
+> as follows:
+> 
+> Host:                           31.814230202231556
+> Guest:                          38.17718765199993       (83 %)
+> Guest, idle_spin=50us:          33.317709898000004      (95 %)
+> Guest, idle_spin=220us:         32.27826551499999       (98 %)
+> 
+> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
->   
-> +config SND_SOC_SOF_COMETLAKE_LP
-> +	tristate
-> +	select SND_SOC_SOF_CANNONLAKE
+Thanks for the CC..
 
-This should be
-select SND_SOF_SOF_HDA_COMMON
-
-> +	help
-> +	  This option is not user-selectable but automagically handled by
-> +	  'select' statements at a higher level
-> +
-> +config SND_SOC_SOF_COMETLAKE_LP_SUPPORT
-> +	bool "SOF support for CometLake-LP"
-> +	help
-> +	  This adds support for Sound Open Firmware for Intel(R) platforms
-> +	  using the Cometlake-LP processors.
-> +	  Say Y if you have such a device.
-> +	  If unsure select "N".
-> +
-> +config SND_SOC_SOF_COMETLAKE_H
-> +	tristate
-> +	select SND_SOC_SOF_CANNONLAKE
-
-This should be
-select SND_SOF_SOF_HDA_COMMON
-
-> +	help
-> +	  This option is not user-selectable but automagically handled by
-> +	  'select' statements at a higher level
-> +
-> +config SND_SOC_SOF_COMETLAKE_H_SUPPORT
-> +	bool "SOF support for CometLake-H"
-> +	help
-> +	  This adds support for Sound Open Firmware for Intel(R) platforms
-> +	  using the Cometlake-H processors.
-> +	  Say Y if you have such a device.
-> +	  If unsure select "N".
-
+NAK, this is something that should live in a virt idle governor or
+something along those lines.
