@@ -2,108 +2,106 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF39CC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F5C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E25B208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YehQViZv"
+	by mail.kernel.org (Postfix) with ESMTP id 548C420825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfEGVIH (ORCPT
+        id S1728484AbfEGVJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:08:07 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35533 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfEGVIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:08:06 -0400
-Received: by mail-vs1-f67.google.com with SMTP id s4so7135990vsl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NyT42HhZo+NoWlMcFfVHa74AFNvsodijHlMncKg590Q=;
-        b=YehQViZvLM7Lmr9d7H2oBVwOnhxc/W7ZGb3C0R7fmfvEgavSj8wr0dWjHPOIOGCXVB
-         ++EpCbZEDhD0i+6YXXoX1RK3f89W5kHuFQztGG9LtdCwHB6ZKLxVsTYZOa3dSuXWWfxY
-         9ZMhyvs5cRAiCyhMUyX4IsaE2+u2EYpSjxKnk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NyT42HhZo+NoWlMcFfVHa74AFNvsodijHlMncKg590Q=;
-        b=BHtmjqKbvlujE4xWJ/ji7L7PlK7phcppHi+Ejw+GP5FvZB+Cj15V5zDrMBX4OBy7Fo
-         Nn2v6Fy/ancLL/+vn8TY/djRecAOnCy3n9CfcjhuJ3XzrUZ0bu6vOV054aMX9T/2x3dY
-         onEWJlkseLUBh53kdI9C173lzihp9TJKLY1z8gV4ItO6GLJAu7DKojxCZk26Z1pbcgpK
-         h2P46HvmBV+d1Ng/wYKBjnNOrp3gsyMpXUi4wNslJjEIzVwn/mFC6kvTDAnKFRNa0wft
-         CRyp/fdw6EwNaO1IFaLBwEBEcBjnvn/Xc3MXk3RqPxhc5AS/YpM6J1ml1dEtjEebJV7a
-         6hIQ==
-X-Gm-Message-State: APjAAAW9rYDXpic0vuM5cq3xCKif7S2692oFpqgpgE6N/8hfafDeEPeY
-        ffKSWJ/iQ8wNjpmLBFcL51FBczyF41g=
-X-Google-Smtp-Source: APXvYqwLezLE7rqjiSlmLyRrKOxdOAzwyCQYgFZ4tlU6UUJSXJHLbGPp6/fssSgs8d1fVbTpc3svVA==
-X-Received: by 2002:a05:6102:119:: with SMTP id z25mr17856577vsq.145.1557263284942;
-        Tue, 07 May 2019 14:08:04 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id r67sm3718298vkd.39.2019.05.07.14.08.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 14:08:03 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id x78so11306067vsc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:08:03 -0700 (PDT)
-X-Received: by 2002:a67:dd95:: with SMTP id i21mr13304046vsk.48.1557263282871;
- Tue, 07 May 2019 14:08:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507161321.34611-1-keescook@chromium.org> <20190507170039.GB1399@sol.localdomain>
-In-Reply-To: <20190507170039.GB1399@sol.localdomain>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 7 May 2019 14:07:51 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
-Message-ID: <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] crypto: x86: Fix indirect function call casts
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Joao Moreira <jmoreira@suse.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 May 2019 17:09:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59632 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726582AbfEGVJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 17:09:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9D588ADCE;
+        Tue,  7 May 2019 21:09:26 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/3] MIPS: SGI-IP27 rework part2
+Date:   Tue,  7 May 2019 23:09:12 +0200
+Message-Id: <20190507210917.4691-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 10:00 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> > Given the above, the current efforts to improve the Linux security,
-> > and the upcoming kernel support to compilers with CFI features, this
-> > creates macros to be used to build the needed function definitions,
-> > to be used in camellia, cast6, serpent, twofish, and aesni.
->
-> So why not change the function prototypes to be compatible with common_glue_*_t
-> instead, rather than wrapping them with another layer of functions?  Is it
-> because indirect calls into asm code won't be allowed with CFI?
+SGI IP27 (Origin/Onyx2) and SGI IP30 (Octane) have a similair
+architecture and share some hardware (ioc3/bridge). To share
+the software parts this patchset reworks SGI IP27 interrupt
+and pci bridge code. By using features Linux gained during the
+many years since SGI IP27 code was integrated this even results
+in code reduction and IMHO cleaner code.
 
-I don't know why they're not that way to begin with. But given that
-the casting was already happening, this is just moving it to a place
-where CFI won't be angry. :)
+Tests have been done on a two module O200 (4 CPUs) and an
+Origin 2000 (8 CPUs).
 
-> >   crypto: x86/crypto: Use new glue function macros
->
-> This one should be "x86/serpent", not "x86/crypto".
+My next step in integrating SGI IP30 support is splitting ioc3eth
+into a MFD and subdevice drivers, which will be submitted soon.
 
-Oops, yes, that's my typo. I'll fix for v4. Do the conversions
-themselves look okay (the changes are pretty mechanical)? If so,
-Herbert, do you want a v4 with the typo fix, or do you want to fix
-that up yourself?
+Changes in v4:
+- moved pci-xtalk-bridge.c back to arch/mips/pci
 
-Thanks!
+Changes in v3:
+
+- dropped patches accepted by Paul
+- moved IP27 specific __phys_to_dma/__dma_to_phys into its own file
+- moved pcibios_to_node into IP27 specific file
+- moved PCI bus address resources setup out of pci-xtalk code into
+  IP27 specific code
+- dropped bit from hub_irq_data and use hwirq from irq_data
+- introduced intr_addr for setting up bridge interrupts (IP30 preperation)
+
+Changes in v2:
+
+- replaced HUB_L/HUB_S by __raw_readq/__raw_writeq
+- removed union bridge_ate
+- replaced remaing fields in slice_data by per_cpu data
+- use generic_handle_irq instead of do_IRQ
+- use hierarchy irq domain for stacking bridge and hub interrupt
+- moved __dma_to_phys/__phy_to_dma to mach-ip27/dma-direct.h
+- use dev_to_node() for pcibus_to_node() implementation
+
+Thomas Bogendoerfer (3):
+  MIPS: SGI-IP27: move IP27 specific code out of pci-ip27.c into new
+    file
+  MIPS: SGI-IP27: use generic PCI driver
+  MIPS: SGI-IP27: abstract chipset irq from bridge
+
+ arch/mips/Kconfig                          |   6 +
+ arch/mips/include/asm/mach-ip27/topology.h |  11 +-
+ arch/mips/include/asm/pci/bridge.h         |  14 +-
+ arch/mips/include/asm/sn/irq_alloc.h       |  11 +
+ arch/mips/include/asm/xtalk/xtalk.h        |   9 -
+ arch/mips/pci/Makefile                     |   2 +-
+ arch/mips/pci/ops-bridge.c                 | 302 --------------
+ arch/mips/pci/pci-ip27.c                   | 214 ----------
+ arch/mips/pci/pci-xtalk-bridge.c           | 610 +++++++++++++++++++++++++++++
+ arch/mips/sgi-ip27/Makefile                |   4 +-
+ arch/mips/sgi-ip27/ip27-init.c             |   2 +
+ arch/mips/sgi-ip27/ip27-irq.c              | 190 ++++-----
+ arch/mips/sgi-ip27/ip27-pci.c              |  30 ++
+ arch/mips/sgi-ip27/ip27-xtalk.c            |  61 ++-
+ include/linux/platform_data/xtalk-bridge.h |  22 ++
+ 15 files changed, 822 insertions(+), 666 deletions(-)
+ create mode 100644 arch/mips/include/asm/sn/irq_alloc.h
+ delete mode 100644 arch/mips/pci/ops-bridge.c
+ delete mode 100644 arch/mips/pci/pci-ip27.c
+ create mode 100644 arch/mips/pci/pci-xtalk-bridge.c
+ create mode 100644 arch/mips/sgi-ip27/ip27-pci.c
+ create mode 100644 include/linux/platform_data/xtalk-bridge.h
 
 -- 
-Kees Cook
+2.13.7
+
