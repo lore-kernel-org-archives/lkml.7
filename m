@@ -2,425 +2,154 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E28C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69881C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D10206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39584208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:19:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JB3/ofVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfEGVSg convert rfc822-to-8bit (ORCPT
+        id S1728598AbfEGVTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:18:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51040 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbfEGVSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:18:35 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0384B30832C5;
-        Tue,  7 May 2019 21:18:35 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9CFA60BF3;
-        Tue,  7 May 2019 21:18:27 +0000 (UTC)
-Date:   Tue, 7 May 2019 15:18:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, dgilbert@redhat.com,
-        cohuck@redhat.com, kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
-        berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190507151826.502be009@x1.home>
-In-Reply-To: <20190506014904.3621-1-yan.y.zhao@intel.com>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
-        <20190506014904.3621-1-yan.y.zhao@intel.com>
-Organization: Red Hat
+        Tue, 7 May 2019 17:19:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35068 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfEGVTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 17:19:33 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g24so16421630otq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3hK5kgswQ8wv2TZkCFoSuWyjsyMg02YpSTLcE/+WG/U=;
+        b=JB3/ofVKMzM47vp5cpkgsnhZ8ZoLv1EVoO9+f31886li2wtHIqmVJSjWZgBJwXVWkQ
+         BX8fXeuRngRf/Ks+w1ntTvElqYBed9sGLskf82OMafAfaVt9JAi0cGsgfLfsvJoqqDNr
+         leYUf1Qr603j9SX7YPOMJQJ/cTCjxhAKYRdtUuxeKEq3ug1IPoCPnsVf+3r99jUb+zmR
+         INxH8W2mrFhA3n0T4xrdVH8dH6T52i5DTkq3iyhP8i9MzOP7NEL5WL7OGtJR7yWG5TTZ
+         DDa00gAnvg3r1yMN6dj4XSo/K//hjnmaEZqeXhVR8JHWgv3lVtO0ckrsHunC8Zyn08k4
+         ovPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3hK5kgswQ8wv2TZkCFoSuWyjsyMg02YpSTLcE/+WG/U=;
+        b=sHLJJwl8h9Ml/Fu64lUBPj51xDcCpJJtxDOhMcc+ure/4mJdmMTityIe+SepPxX1W0
+         5eoNRwOpWxVXZo4ae7rPJyd8rtSr1JkXcHboChZdniDmBAAgyqUA/CJwqHxJsM8OBAqF
+         RSrfvAwn2OJVtXcEQ2XKnRJDz0+x75kYuT08t+B2YUmg7cQgekqFm+AJwZNCiUrLekB3
+         Z3DOJ6JMILlfJ2DWpmHEkEJ0tuMB340TKBE17s3RUiMNbqtC2AJu5TovTEkHLFDEvmy9
+         Jv5z0q41Idn7lDT7/WHn1rkleKYkni0Qbl1eK1AZOIXs76kKQ4yFCnHnWef6ZdOF0kQt
+         ajIQ==
+X-Gm-Message-State: APjAAAVuQssd8m0yhqv3xUZdUvDor+CFjfKZ54y5tFGQIdFJGXq4J+Tn
+        xQWtZU3sz+DQdpq37ynh7oMtTqj31JT5C91CTrLkgA==
+X-Google-Smtp-Source: APXvYqw7pnu1SJKRDXTAG+qXmcSugmMrCCEKA6B2yg/hWV1/XWlJZJvmUs9rNfdS4aafceF7Ulls7pnfgUmoZQnK/CQ=
+X-Received: by 2002:a9d:222c:: with SMTP id o41mr23286782ota.353.1557263973069;
+ Tue, 07 May 2019 14:19:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 07 May 2019 21:18:35 +0000 (UTC)
+References: <20190507183804.5512-1-david@redhat.com> <20190507183804.5512-6-david@redhat.com>
+In-Reply-To: <20190507183804.5512-6-david@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 May 2019 14:19:22 -0700
+Message-ID: <CAPcyv4ge1pSOopfHof4USn=7Skc-UV4Xhd_s=h+M9VXSp_p1XQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] mm/memory_hotplug: Drop MHP_MEMBLOCK_API
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 May 2019 21:49:04 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
-
-> version attribute is used to check two mdev devices' compatibility.
-> 
-> The key point of this version attribute is that it's rw.
-> User space has no need to understand internal of device version and no
-> need to compare versions by itself.
-> Compared to reading version strings from both two mdev devices being
-> checked, user space only reads from one mdev device's version attribute.
-> After getting its version string, user space writes this string into the
-> other mdev device's version attribute. Vendor driver of mdev device
-> whose version attribute being written will check device compatibility of
-> the two mdev devices for user space and return success for compatibility
-> or errno for incompatibility.
-> So two readings of version attributes + checking in user space are now
-> changed to one reading + one writing of version attributes + checking in
-> vendor driver.
-> Format and length of version strings are now private to vendor driver
-> who can define them freely.
-> 
->              __ user space
->               /\          \
->              /             \write
->             / read          \
->      ______/__           ___\|/___
->     | version |         | version |-->check compatibility
->     -----------         -----------
->     mdev device A       mdev device B
-> 
-> This version attribute is optional. If a mdev device does not provide
-> with a version attribute, this mdev device is incompatible to all other
-> mdev devices.
-> 
-> Live migration is able to take advantage of this version attribute.
-> Before user space actually starts live migration, it can first check
-> whether two mdev devices are compatible.
-> 
-> v2:
-> 1. added detailed intent and usage
-> 2. made definition of version string completely private to vendor driver
->    (Alex Williamson)
-> 3. abandoned changes to sample mdev drivers (Alex Williamson)
-> 4. mandatory --> optional (Cornelia Huck)
-> 5. added description for errno (Cornelia Huck)
-> 
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Erik Skultety <eskultet@redhat.com>
-> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> Cc: Neo Jia <cjia@nvidia.com>
-> Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> Cc: Daniel P. Berrangé <berrange@redhat.com>
-> Cc: Christophe de Dinechin <dinechin@redhat.com>
-> 
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+On Tue, May 7, 2019 at 11:38 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> No longer needed, the callers of arch_add_memory() can handle this
+> manually.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  Documentation/vfio-mediated-device.txt | 140 +++++++++++++++++++++++++
->  1 file changed, 140 insertions(+)
-> 
-> diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
-> index c3f69bcaf96e..013a764968eb 100644
-> --- a/Documentation/vfio-mediated-device.txt
-> +++ b/Documentation/vfio-mediated-device.txt
-> @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
->    |     |   |--- available_instances
->    |     |   |--- device_api
->    |     |   |--- description
-> +  |     |   |--- version
->    |     |   |--- [devices]
->    |     |--- [<type-id>]
->    |     |   |--- create
-> @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
->    |     |   |--- available_instances
->    |     |   |--- device_api
->    |     |   |--- description
-> +  |     |   |--- version
->    |     |   |--- [devices]
->    |     |--- [<type-id>]
->    |          |--- create
-> @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
->    |          |--- available_instances
->    |          |--- device_api
->    |          |--- description
-> +  |          |--- version
->    |          |--- [devices]
+>  include/linux/memory_hotplug.h | 8 --------
+>  mm/memory_hotplug.c            | 9 +++------
+>  2 files changed, 3 insertions(+), 14 deletions(-)
+>
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 2d4de313926d..2f1f87e13baa 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -128,14 +128,6 @@ extern void arch_remove_memory(int nid, u64 start, u64 size,
+>  extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
+>                            unsigned long nr_pages, struct vmem_altmap *altmap);
+>
+> -/*
+> - * Do we want sysfs memblock files created. This will allow userspace to online
+> - * and offline memory explicitly. Lack of this bit means that the caller has to
+> - * call move_pfn_range_to_zone to finish the initialization.
+> - */
+> -
+> -#define MHP_MEMBLOCK_API               (1<<0)
+> -
+>  /* reasonably generic interface to expand the physical pages */
+>  extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+>                        struct mhp_restrictions *restrictions);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e1637c8a0723..107f72952347 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -250,7 +250,7 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
+>  #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
+>
+>  static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
+> -               struct vmem_altmap *altmap, bool want_memblock)
+> +                                  struct vmem_altmap *altmap)
+>  {
+>         int ret;
+>
+> @@ -293,8 +293,7 @@ int __ref __add_pages(int nid, unsigned long phys_start_pfn,
+>         }
+>
+>         for (i = start_sec; i <= end_sec; i++) {
+> -               err = __add_section(nid, section_nr_to_pfn(i), altmap,
+> -                               restrictions->flags & MHP_MEMBLOCK_API);
+> +               err = __add_section(nid, section_nr_to_pfn(i), altmap);
+>
+>                 /*
+>                  * EEXIST is finally dealt with by ioresource collision
+> @@ -1066,9 +1065,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+>   */
+>  int __ref add_memory_resource(int nid, struct resource *res)
+>  {
+> -       struct mhp_restrictions restrictions = {
+> -               .flags = MHP_MEMBLOCK_API,
+> -       };
+> +       struct mhp_restrictions restrictions = {};
 
-I thought there was a request to make this more specific to migration
-by renaming it to something like migration_version.  Also, as an
-optional attribute, it seems the example should perhaps not add it to
-all types to illustrate that it is not required.
-
->  
->  * [mdev_supported_types]
-> @@ -246,6 +249,143 @@ Directories and files under the sysfs for Each Physical Device
->    This attribute should show the number of devices of type <type-id> that can be
->    created.
->  
-> +* version
-> +
-> +  This attribute is rw, and is optional.
-> +  It is used to check device compatibility between two mdev devices and is
-
-between two mdev devices of the same type.
-
-> +  accessed in pairs between the two mdev devices being checked.
-
-"in pairs"?
-
-> +  The intent of this attribute is to make an mdev device's version opaque to
-> +  user space, so instead of reading two mdev devices' version strings and
-
-perhaps "...instead of reading the version string of two mdev devices
-and comparing them in userspace..."
-
-> +  comparing in userspace, user space should only read one mdev device's version
-> +  attribute, and writes this version string into the other mdev device's version
-> +  attribute. Then vendor driver of mdev device whose version attribute being
-> +  written would check the incoming version string and tell user space whether
-> +  the two mdev devices are compatible via return value. That's why this
-> +  attribute is writable.
-> +
-> +  when reading this attribute, it should show device version string of
-> +  the device of type <type-id>.
-> +
-> +  This string is private to vendor driver itself. Vendor driver is able to
-> +  freely define format and length of device version string.
-> +  e.g. It can use a combination of pciid of parent device + mdev type.
-
-Can the user assume the data contents of the string is ascii
-characters?  It's good that the vendor driver defines the format and
-length, but the user probably needs some expectation bounding that
-length.  Should we define it as no larger than PATH_MAX (4096), or maybe
-NAME_MAX (255) might be more reasonable?
-
-> +
-> +  When writing a string to this attribute, vendor driver should analyze this
-> +  string and check whether the mdev device being identified by this string is
-> +  compatible with the mdev device for this attribute. vendor driver should then
-
-Compatible for what purpose?  I think this is where specifically
-calling this a migration_version potentially has value.
-
-> +  return written string's length if it regards the two mdev devices are
-> +  compatible; vendor driver should return negative errno if it regards the two
-> +  mdev devices are not compatible.
-
-IOW, the write(2) will succeed if the version is determined to be
-compatible and otherwise fail with vendor specific errno.
-
-> +
-> +  User space should treat ANY of below conditions as two mdev devices not
-> +  compatible:
-
-(0) The mdev devices are not of the same type.
-
-> +  (1) any one of the two mdev devices does not have a version attribute
-> +  (2) error when read from one mdev device's version attribute
-
-Is this intended to support that the vendor driver can supply a version
-attribute but not support migration?  TBH, this sounds like a vendor
-driver bug, but maybe it's necessary if the vendor driver could have
-some types that support migration and others that do not?  IOW, we're
-supplying the same attribute groups to all devices from a vendor, in
-which case my comment above regarding an example type without a version
-attribute might be invalid.
-
-> +  (3) error when write one mdev device's version string to the other mdev
-> +  device's version attribute
-> +
-> +  User space should regard two mdev devices compatible when ALL of below
-> +  conditions are met:
-
-(0) The mdev devices are of the same type
-
-> +  (1) success when read from one mdev device's version attribute.
-> +  (2) success when write one mdev device's version string to the other mdev
-> +  device's version attribute
-> +
-> +  Errno:
-> +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> +  devices, it should not register version attribute for this mdev device. But if
-> +  a vendor driver has already registered version attribute and it wants to claim
-> +  a mdev device incompatible to all other mdev devices, it needs to return
-> +  -ENODEV on access to this mdev device's version attribute.
-> +  If a mdev device is only incompatible to certain mdev devices, write of
-> +  incompatible mdev devices's version strings to its version attribute should
-> +  return -EINVAL;
-
-I think it's best not to define the specific errno returned for a
-specific situation, let the vendor driver decide, userspace simply
-needs to know that an errno on read indicates the device does not
-support migration version comparison and that an errno on write
-indicates the devices are incompatible or the target doesn't support
-migration versions.
-
-> +
-> +  This attribute can be taken advantage of by live migration.
-> +  If user space detects two mdev devices are compatible through version
-> +  attribute, it can start migration between the two mdev devices, otherwise it
-> +  should abort its migration attempts between the two mdev devices.
-> +
-> +  Example Usage:
-> +  case 1:
-> +  source side mdev device is of uuid 5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd,
-> +  its mdev type is i915-GVTg_V5_4. pci id of parent device is 8086-193b.
-> +  target side mdev device is if of uuid 882cc4da-dede-11e7-9180-078a62063ab1,
-> +  its mdev type is i915-GVTg_V5_4. pci id of parent device is 8086-193b.
-> +
-> +  # readlink /sys/bus/pci/devices/0000\:00\:02.0/\
-> +  5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type
-> +  ../mdev_supported_types/i915-GVTg_V5_4
-> +
-> +  # readlink /sys/bus/pci/devices/0000\:00\:02.0/\
-> +  882cc4da-dede-11e7-9180-078a62063ab1/mdev_type
-> +  ../mdev_supported_types/i915-GVTg_V5_4
-> +
-> +  (1) read source side mdev device's version.
-> +  #cat \
-> +    /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/\
-> +    mdev_type/version
-> +  8086-193b-i915-GVTg_V5_4
-
-Is this really the version information exposed in 2/2?  This is opaque,
-so of course you can add things later, but it seems short sighted not
-to even append a version 0 tag to account for software compatibility
-differences since the above only represents a parent and mdev type
-based version.
-
-> +  (2) write source side mdev device's version string into target side mdev
-> +  device's version attribute.
-> +  # echo 8086-193b-i915-GVTg_V5_4 >
-> +   /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/\
-> +  mdev_type/version
-> +  # echo $?
-> +  0
-
-TBH, there's a lot of superfluous information in this example that can
-be stripped out.  For example:
-
-"
-(1) Compare mdev types:
-
-The mdev type of an instantiated device can be read from the mdev_type
-link within the device instance in sysfs, for example:
-
-  # basename $(readlink -f /sys/bus/mdev/devices/$MDEV_UUID/mdev_type/)
-
-The mdev types available on a given host system can also be found
-through /sys/class/mdev_bus, for example:
-
-  # ls /sys/class/mdev_bus/*/mdev_supported_types/
-
-Migration is only possible between devices of the same mdev type.
-
-(2) Retrieve the mdev source version:
-
-The migration version information can either be read from the mdev_type
-link on an instantiated device:
-
-  # cat /sys/bus/mdev/devices/$UUID1/mdev_type/version
-
-Or it can be read from the mdev type definition, for example:
-
-  # cat /sys/class/mdev_bus/*/mdev_supported_types/$MDEV_TYPE/version
-
-If reading the source version generates an error, migration is not
-possible.  NB, there might be several parent devices for a given mdev
-type on a host system, each may support or expose different versions.
-Matching the specific mdev type to a parent may become important in
-such configurations.
-
-(3) Test source version at target:
-
-Given a version as outlined above, its compatibility to an instantiated
-device of the same mdev type can be tested as:
-
-  # echo $VERSION > /sys/bus/mdev/devices/$UUID2/mdev_type/version
-
-If this write fails, the source and target versions are not compatible
-or the target does not support migration.
-
-Compatibility can also be tested prior to target device creation using
-the mdev type definition for a parent device with a previously found
-matching mdev type, for example:
-
-  # echo $VERSION > /sys/class/mdev_bus/$PARENT/mdev_supported_types/$MDEV_TYPE/version
-
-Again, an error writing the version indicates that an instance of this
-mdev type would not support a migration from the provided version.
-"
-
-In particular from the provided example, the specific UUIDs, mdev
-types, parent information, and contents of the version attribute do not
-contribute to illustrating the protocol.  In fact, displaying the
-contents of the version attribute may tempt users to do comparison on
-their own, especially given how easy it is to decide the GVT-g version
-string.
-
-
-> +
-> +  in this case, user space's write to target side mdev device's version
-> +  attribute returns success to indicate the two mdev devices are compatible.
-> +
-> +  case 2:
-> +  source side mdev device is of uuid 5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd,
-> +  its mdev type is i915-GVTg_V5_4. pci id of parent device is 8086-193b.
-> +  target side mdev device is if of uuid 882cc4da-dede-11e7-9180-078a62063ab1,
-> +  its mdev type is i915-GVTg_V5_4. pci id of parent device is 8086-191b.
-> +
-> +  # readlink /sys/bus/pci/devices/0000\:00\:02.0/\
-> +  5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type
-> +  ../mdev_supported_types/i915-GVTg_V5_4
-> +
-> +  # readlink /sys/bus/pci/devices/0000\:00\:02.0/\
-> +  882cc4da-dede-11e7-9180-078a62063ab1/mdev_type
-> +  ../mdev_supported_types/i915-GVTg_V5_4
-> +
-> +  (1) read source side mdev device's version.
-> +  #cat \
-> +    /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/\
-> +    mdev_type/version
-> +  8086-193b-i915-GVTg_V5_4
-> +
-> +  (2) write source side mdev device's version string into target side mdev
-> +  device's version attribute.
-> +  # echo 8086-193b-i915-GVTg_V5_4 >
-> +   /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/\
-> +  mdev_type/version
-> +  -bash: echo: write error: Invalid argument
-> +
-> +  in this case, user space's write to target side mdev device's version
-> +  attribute returns error to indicate the two mdev devices are incompatible.
-> +  (incompatible because pci ids of the two mdev devices' parent devices are
-> +  different).
-> +
-> +  case 3:
-> +  source side mdev device is of uuid 5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd,
-> +  its mdev type is i915-GVTg_V5_4. pci id of parent device is 8086-193b.
-> +  But vendor driver does not provide version attribute for this device.
-> +
-> +  (1) read source side mdev device's version.
-> +  #cat \
-> +    /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/\
-> +    mdev_type/version
-> +  cat: '/sys/bus/pci/devices/0000:00:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/\
-> +  mdev_type/version': No such file or directory
-> +
-> +  in this case, user space reads source side mdev device's version attribute
-> +  which does not exist however. user space regards the two mdev devices as not
-> +  compatible and will not start migration between the two mdev devices.
-> +
-> +
-
-This is far too long for description and examples, it's not this
-complicated.  Thanks,
-
-Alex
-
->  * [device]
->  
->    This directory contains links to the devices of type <type-id> that have been
-
+With mhp_restrictions.flags no longer needed, can we drop
+mhp_restrictions and just go back to a plain @altmap argument?
