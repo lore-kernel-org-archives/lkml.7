@@ -2,167 +2,191 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876E5C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD62C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B58B20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299B120675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfEGKwY (ORCPT
+        id S1726683AbfEGKxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:52:24 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49976 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfEGKwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:52:24 -0400
+        Tue, 7 May 2019 06:53:40 -0400
+Received: from foss.arm.com ([217.140.101.70]:50018 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfEGKxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:53:40 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35C2C374;
-        Tue,  7 May 2019 03:52:23 -0700 (PDT)
-Received: from [10.37.12.89] (unknown [10.37.12.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D85883F5AF;
-        Tue,  7 May 2019 03:52:19 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     julien.thierry@arm.com, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        christoffer.dall@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org
-References: <20190426143740.31973-1-julien.grall@arm.com>
- <20190426143740.31973-4-julien.grall@arm.com>
- <20190426145232.GK3567@e103592.cambridge.arm.com>
- <322340c7-0c97-76f8-8ab8-875040b4459c@arm.com>
- <20190426153114.GL3567@e103592.cambridge.arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <4fddb4e5-6691-c393-d7f8-15cfc6fe7c4d@arm.com>
-Date:   Tue, 7 May 2019 11:52:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190426153114.GL3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C381A374;
+        Tue,  7 May 2019 03:53:39 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8F5DD3F5AF;
+        Tue,  7 May 2019 03:53:38 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        rjw@rjwysocki.net, mathieu.poirier@linaro.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v3 00/30] coresight: Support for ACPI bindings
+Date:   Tue,  7 May 2019 11:52:27 +0100
+Message-Id: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+This series adds the support for CoreSight devices on ACPI based
+platforms. The device connections are encoded as _DSD graph property[0],
+with CoreSight specific extensions to indicate the direction of data
+flow as described in [1]. Components attached to CPUs are listed
+as child devices of the corresponding CPU, removing explicit links
+to the CPU like we do in the DT.
 
-On 4/26/19 4:31 PM, Dave Martin wrote:
-> On Fri, Apr 26, 2019 at 04:06:02PM +0100, Julien Grall wrote:
->> Hi,
->>
->> On 26/04/2019 15:52, Dave Martin wrote:
->>> On Fri, Apr 26, 2019 at 03:37:40PM +0100, Julien Grall wrote:
->>>> When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
->>>> the kernel may be able to use FPSIMD/SVE. This is for instance the case
->>>> for crypto code.
->>>>
->>>> Any use of FPSIMD/SVE in the kernel are clearly marked by using the
->>>> function kernel_neon_{begin, end}. Furthermore, this can only be used
->>>> when may_use_simd() returns true.
->>>>
->>>> The current implementation of may_use_simd() allows softirq to use
->>>> FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
->>>> When in use, softirqs usually fall back to a software method.
->>>>
->>>> At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
->>>> when touching the FPSIMD/SVE context. This has the drawback to disable
->>>> all softirqs even if they are not using FPSIMD/SVE.
->>>>
->>>> Since a softirq is supposed to check may_use_simd() anyway before
->>>> attempting to use FPSIMD/SVE, there is limited reason to keep softirq
->>>> disabled when touching the FPSIMD/SVE context. Instead, we can simply
->>>> disable preemption and mark the FPSIMD/SVE context as in use by setting
->>>> CPU's kernel_neon_busy flag.
->>>
->>> fpsimd_context_busy?
->>
->> Yes.
->>
->>>
->>>> Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
->>>> area using FPSIMD/SVE context and uses them in replacement of
->>>
->>> Paragraph mangled during edit?
->>
->> Possibly, I will update it.
->>
->>>
->>> -> "are introduced ... and they are used to replace ..."
->>>
->>>> local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
->>>> also re-implemented to use the new helpers.
->>>>
->>>> Additionally, double-underscored versions of the helpers are provided to
->>>> be used in function called with interrupt masked. They are used for
->>>> sanity and also help to mark place where the FPSIMD context can be
->>>> manipulate freely.
->>>
->>> For the benefit of other readers, this should be more explicit.  Also,
->>> the distinction between the normal and __ helpers is that the latter
->>> can be caller with preemption disabled.
->>>
->>> To clarify the impact, we can say something like
->>>
->>> "These are only relevant on paths where irqs are disabled anyway, so
->>> they are not needed for correctness in the current code. Let's use them
->>> anyway though: this marks the critical sections clearly and will help
->>> to avoid mistakes during future maintenance."
->>
->> How about the following commit message?
->>
->>      arm64/fpsimd: Don't disable softirq when touching FPSIMD/SVE state
->>
->>      When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
->>      the kernel may be able to use FPSIMD/SVE. This is for instance the case
->>      for crypto code.
->>
->>      Any use of FPSIMD/SVE in the kernel are clearly marked by using the
->>      function kernel_neon_{begin, end}. Furthermore, this can only be used
->>      when may_use_simd() returns true.
->>
->>      The current implementation of may_use_simd() allows softirq to use
->>      FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
->>      When in use, softirqs usually fall back to a software method.
->>
->>      At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
->>      when touching the FPSIMD/SVE context. This has the drawback to disable
->>      all softirqs even if they are not using FPSIMD/SVE.
->>
->>      Since a softirq is supposed to check may_use_simd() anyway before
->>      attempting to use FPSIMD/SVE, there is limited reason to keep softirq
->>      disabled when touching the FPSIMD/SVE context. Instead, we can simply
->>      disable preemption and mark the FPSIMD/SVE context as in use by setting
->>      CPU's fpsimd_context_busy flag.
->>
->>      Two new helpers {get, put}_cpu_fpsimd_context are introduced to mark
->>      the area using FPSIMD/SVE context and they are used to replace
->>      local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
->>      also re-implemented to use the new helpers.
->>
->>      Additionally, double-underscored versions of the helpers are provided to
->>      called when preemption is already disabled. These are only relevant on
->>      paths where irqs are disabled anyway, so they are not needed for
->>      correctness in the current code. Let's use them anyway though: this
->>      marks critical sections clearly and will help to avoid mistakes during
->>      future maintenance.
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-> 
-> (For the diff as well as the commit message, obviously.)
 
-Thank you! I will resend the series once rc1 has been cut.
+The majority of the series cleans up the driver and prepares the subsystem
+for platform agnostic firwmare probing, naming scheme, searching etc.
 
-Cheers,
+We introduce platform independent helpers to parse the platform supplied
+information. Thus we rename the platform handling code from:
+	of_coresight.c  => coresight-platform.c
+
+The CoreSight driver creates shadow devices that appear on the Coresight
+bus, in addition to the real devices (e.g, AMBA bus devices). The name
+of these devices match the real device. This makes the device name
+a bit cryptic for ACPI platform. So this series also introduces a generic
+platform agnostic device naming scheme for the shadow Coresight devices.
+Towards this we also make changes to the way we lookup devices to resolve
+the connections, as we can't use the names to identify the devices. So,
+we use the "fwnode_handle" of the real device for the device lookups.
+Towards that we clean up the drivers to keep track of the "CoreSight"
+device rather than the "real" device. However, all real operations,
+like DMA allocation, Power management etc. must be performed on
+the real device which is the parent of the shadow device.
+
+Finally we add the support for parsing the ACPI platform data. The power
+management support is missing in the ACPI (and this is not specific to
+CoreSight). The firmware must ensure that the respective power domains
+are turned on.
+
+Applies on Mathieu's coresight/next tree.
+
+Tested on a Juno-r0 board with ACPI bindings patch (Patch 31/30) added on
+top of [2]. You would need to make sure that the debug power domain is
+turned on before the Linux kernel boots. (e.g, connect the DS-5 to the
+Juno board while at UEFI). arm32 code is only compile tested.
+
+[0] ACPI Device Graphs using _DSD (Not available online yet, approved but
+    awaiting publish and eventually should be linked at).
+    https://uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm
+[1] https://developer.arm.com/docs/den0067/latest/acpi-for-coresighttm-10-platform-design-document
+[2] https://github.com/tianocore/edk2-platforms.git
+
+Changes since v2:
+ - Fix the symlink name for ETM devices under cs_etm PMU (Patch by Mathieu)
+ - Drop patches merged already in the tree.
+ - Add the tags from Mathieu
+ - More documentation with examples of ACPI graph in ACPI bindings support.
+ - Fix ETM4 error return path (Mathieu)
+ - Drop the patches exposing device links via sysfs, to be posted as separate
+   series.
+ - Drop the generic helper for device search by fwnode for a better cleanup
+   later.
+ - Split the ACPI bindings support patch for AMBA and platform devices.
+ - Return integer error for <platform>_get_platform_data() helpers.
+ - Fix comment about the return code for acpi_get_coresight_cpu().
+ - Ensure we don't have devices part of multiple graphs (Mathieu).
+
+Changes since v1:
+
+ [ http://lists.infradead.org/pipermail/linux-arm-kernel/2019-March/639963.html ]
+
+  - Dropped the replicator driver merge changes as they were pulled already.
+  - Cleanups for Power management in the drivers.
+  - Reuse platform description for connection information. Also introduce
+    routines to clean up the platform description to make sure we drop
+    the references (fwnode_handle).
+  - Add RFC patches for exposing the device-links via sysfs.
+  - Drop tracking the device in favour of coresight_device.
+  - Name etb10 as "etb"
+  - Fix other comments in v1.
+  - Use a generic helper for searching with fwnode_handle rather than adding
+    one for CoreSight.
+
+
+Mathieu Poirier (1):
+  coresight: Use coresight device names for sinks in PMU attribute
+
+Suzuki K Poulose (29):
+  coresight: funnel: Clean up device book keeping
+  coresight: replicator: Cleanup device tracking
+  coresight: tmc: Clean up device specific data
+  coresight: catu: Cleanup device specific data
+  coresight: tpiu: Clean up device specific data
+  coresight: stm: Cleanup device specific data
+  coresight: etm: Clean up device specific data
+  coresight: etb10: Clean up device specific data
+  coresight: Rename of_coresight to coresight-platform
+  coresight: etm3x: Rearrange cp14 access detection
+  coresight: stm: Rearrange probing the stimulus area
+  coresight: tmc-etr: Rearrange probing default buffer size
+  coresight: platform: Make memory allocation helper generic
+  coresight: Make sure device uses DT for obsolete compatible check
+  coresight: Introduce generic platform data helper
+  coresight: Make device to CPU mapping generic
+  coresight: Remove cpu field from platform data
+  coresight: Remove name from platform description
+  coresight: Cleanup coresight_remove_conns
+  coresight: Reuse platform data structure for connection tracking
+  coresight: Rearrange platform data probing
+  coresight: Add support for releasing platform specific data
+  coresight: platform: Use fwnode handle for device search
+  coresight: Use fwnode handle instead of device names
+  coresight: Use platform agnostic names
+  coresight: stm: ACPI support for parsing stimulus base
+  coresight: Support for ACPI bindings
+  coresight: acpi: Support for AMBA components
+  coresight: acpi: Support for platform devices
+
+ drivers/acpi/acpi_amba.c                           |   9 +
+ drivers/hwtracing/coresight/Makefile               |   3 +-
+ drivers/hwtracing/coresight/coresight-catu.c       |  40 +-
+ drivers/hwtracing/coresight/coresight-catu.h       |   1 -
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  |   3 +-
+ drivers/hwtracing/coresight/coresight-etb10.c      |  51 +-
+ drivers/hwtracing/coresight/coresight-etm-perf.c   |   8 +-
+ drivers/hwtracing/coresight/coresight-etm.h        |   6 +-
+ .../hwtracing/coresight/coresight-etm3x-sysfs.c    |  12 +-
+ drivers/hwtracing/coresight/coresight-etm3x.c      |  45 +-
+ drivers/hwtracing/coresight/coresight-etm4x.c      |  37 +-
+ drivers/hwtracing/coresight/coresight-etm4x.h      |   2 -
+ drivers/hwtracing/coresight/coresight-funnel.c     |  35 +-
+ drivers/hwtracing/coresight/coresight-platform.c   | 810 +++++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-priv.h       |   4 +
+ drivers/hwtracing/coresight/coresight-replicator.c |  42 +-
+ drivers/hwtracing/coresight/coresight-stm.c        | 118 ++-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c    |   9 +-
+ drivers/hwtracing/coresight/coresight-tmc-etr.c    |  44 +-
+ drivers/hwtracing/coresight/coresight-tmc.c        |  96 +--
+ drivers/hwtracing/coresight/coresight-tmc.h        |   2 -
+ drivers/hwtracing/coresight/coresight-tpiu.c       |  24 +-
+ drivers/hwtracing/coresight/coresight.c            | 164 ++++-
+ drivers/hwtracing/coresight/of_coresight.c         | 297 --------
+ include/linux/coresight.h                          |  61 +-
+ 25 files changed, 1332 insertions(+), 591 deletions(-)
+ create mode 100644 drivers/hwtracing/coresight/coresight-platform.c
+ delete mode 100644 drivers/hwtracing/coresight/of_coresight.c
+
+ACPI bindings for Juno-r0 (applies on [2] above)
+
+Suzuki K Poulose (1):
+  edk2-platform: juno: Update ACPI CoreSight Bindings
+
+ Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl | 241 +++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
 
 -- 
-Julien Grall
+2.7.4
