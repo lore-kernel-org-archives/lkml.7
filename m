@@ -2,73 +2,116 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17479C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5084C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73A3204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E39820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfEGJF5 (ORCPT
+        id S1726438AbfEGJHv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:05:57 -0400
-Received: from foss.arm.com ([217.140.101.70]:47416 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbfEGJF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:05:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DE3B374;
-        Tue,  7 May 2019 02:05:57 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 868BD3F238;
-        Tue,  7 May 2019 02:05:55 -0700 (PDT)
-Date:   Tue, 7 May 2019 10:05:50 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/25] arm64/iommu: handle non-remapped addresses in
- ->mmap and ->get_sgtable
-Message-ID: <20190507090550.GA16148@fuggles.cambridge.arm.com>
-References: <20190430105214.24628-1-hch@lst.de>
- <20190430105214.24628-2-hch@lst.de>
- <20190503113352.GA55449@arrakis.emea.arm.com>
- <20190507063720.GB28147@lst.de>
+        Tue, 7 May 2019 05:07:51 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38890 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfEGJHu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:07:50 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v9so2115025vse.5;
+        Tue, 07 May 2019 02:07:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8lThRAo28vQwCl4DV4/hRXs4pusVcLZ06vXVXU+ReNg=;
+        b=UApIQqVvCdCdwez208QOX/KvpZdg45Aw0SyxZfCSaIKvmTC3Ti92Vq/UATMBa5SBu0
+         aVW7JcE570usIfzi+EPhs6sES83dCX9JdSYqlMIgYmEWEZsWJ5pXlpBz2amqrOqKmn2S
+         HRCKgtsXudML+kN1HaP80O+jVUcisFVihF4Tm7kZvmSNHnEV8YqrMFa7sW69rmvFKXxq
+         I6WGi8bLazGmTgL0CMoJdGpH8sZWKbkugn22iU/ZleACG/dEdE/qGqK5ddMFUT3oZCSU
+         00uw5rwkoi8GboV2rX2qPUyuKgB9cOnkl4Jm3FRCvyDKwxinyWXBlvF4/wBgIMqscTxB
+         kBTg==
+X-Gm-Message-State: APjAAAUheCQC4ZgSDlgnc5srBkUJAB+BMsNuBYUBsDbZ7vV/0EFOmtcR
+        g+RR9/U/tsRKERARt6wI2blc7Fgu1o84vm3y1KY=
+X-Google-Smtp-Source: APXvYqyd0GOgX82w7/Ps0Lm4sBbfBrQV34Mg2L46fkooG6+5Z29jjbCP+ChBPEI7uLyAXz7jM3WBzg+6K0S1grth8pg=
+X-Received: by 2002:a67:8e03:: with SMTP id q3mr15845324vsd.152.1557220063399;
+ Tue, 07 May 2019 02:07:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507063720.GB28147@lst.de>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+References: <1557177887-30446-1-git-send-email-ynezz@true.cz>
+In-Reply-To: <1557177887-30446-1-git-send-email-ynezz@true.cz>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 May 2019 11:07:31 +0200
+Message-ID: <CAMuHMdVra2h00OUCxZ1s=ExpkgkN_SGZdUtdohBapjNHf6hesQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/4] of_get_mac_address ERR_PTR fixes
+To:     =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>
+Cc:     netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 08:37:20AM +0200, Christoph Hellwig wrote:
-> On Fri, May 03, 2019 at 12:33:53PM +0100, Catalin Marinas wrote:
-> > On Tue, Apr 30, 2019 at 06:51:50AM -0400, Christoph Hellwig wrote:
-> > > DMA allocations that can't sleep may return non-remapped addresses, but
-> > > we do not properly handle them in the mmap and get_sgtable methods.
-> > > Resolve non-vmalloc addresses using virt_to_page to handle this corner
-> > > case.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> > 
-> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> 
-> Given that this is a bug fix mostly separate from the rest of the
-> series - do you want to pick it up for 5.2 and maybe add a Cc for
-> stable?
+Hi Petr,
 
-Sure thing; I'll probably send it after -rc1 unless we get some other fixes
-in during the merge window.
+On Mon, May 6, 2019 at 11:25 PM Petr Štetiar <ynezz@true.cz> wrote:
+> this patch series is an attempt to fix the mess, I've somehow managed to
+> introduce.
+>
+> First patch in this series is defacto v5 of the previous 05/10 patch in the
+> series, but since the v4 of this 05/10 patch wasn't picked up by the
+> patchwork for some unknown reason, this patch wasn't applied with the other
+> 9 patches in the series, so I'm resending it as a separate patch of this
+> fixup series again.
+>
+> Second patch is a result of this rebase against net-next tree, where I was
+> checking again all current users of of_get_mac_address and found out, that
+> there's new one in DSA, so I've converted this user to the new ERR_PTR
+> encoded error value as well.
+>
+> Third patch which was sent as v5 wasn't considered for merge, but I still
+> think, that we need to check for possible NULL value, thus current IS_ERR
+> check isn't sufficient and we need to use IS_ERR_OR_NULL instead.
+>
+> Fourth patch fixes warning reported by kbuild test robot.
+>
+> Cheers,
+>
+> Petr
+>
+> Petr Štetiar (4):
+>   net: ethernet: support of_get_mac_address new ERR_PTR error
 
-Will
+I didn't receive the patch through email, but patchwork does have it:
+https://patchwork.ozlabs.org/patch/1096054/
+
+This fixes the crash ("Unable to handle kernel paging request atvirtual
+address fffffffe") I'm seeing with sh_eth on r8a7791/koelsch, so
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
