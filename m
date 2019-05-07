@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F45C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4776FC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45174206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED2B205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207443;
-	bh=efpHn4m64aRmIG8Ho3bO05HGeD7Ch6SwODEt2GQH0Zw=;
+	s=default; t=1557207451;
+	bh=XUpeAAX8vOQrbK/u6ko9Ts+71HRnrd26OkGJA8E5MEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUAf/THU/TqbEe5DGTEyX/3w38D/J1wNluM0yQGDtscpi8lVoPgCBhtjMaMfqYy30
-	 T9iY1bFIwMMKBhkymT53KHzVDZeQhx4DftvPbQ+HGzftXLpJluETg+dCectZ3XmOuz
-	 ddLZbyqcm0tDbBidLA0VRd5MgIUZWe/dhgel5bDc=
+	b=q3qmAddJ+Bm9GCbA9zstgD++7Ogk6TfbdtKv8zTIifOHLZV0BmpUBDUa32B3Q4BA1
+	 LGOm23Ok3SDMkjJwXvMqYGPRy02LbwBfYP1JjvubBBXI6327iPvKWp6wpxtBrulcmC
+	 tRq1Md2b2+Yo0QGoOcc1c8eeMXEru97JA9sLkHi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbfEGFhV (ORCPT
+        id S1727528AbfEGFh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:37:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727717AbfEGFhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:18 -0400
+        id S1728335AbfEGFh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E5220675;
-        Tue,  7 May 2019 05:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89BF320675;
+        Tue,  7 May 2019 05:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207437;
-        bh=efpHn4m64aRmIG8Ho3bO05HGeD7Ch6SwODEt2GQH0Zw=;
+        s=default; t=1557207446;
+        bh=XUpeAAX8vOQrbK/u6ko9Ts+71HRnrd26OkGJA8E5MEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZx8lgkbx4NB+UpBGAsQPXGPX7AkNolIhal2/KzSLdkJSg/2i/v+e9JcrND+tGlwc
-         Sc9nRIsHK9rGIhWHU/7V0WAXZye4oEtxC0yHlVw3pNSaiPMlUHzay0+VQAWSEKStvl
-         jC6w7gD9klNHIQ1m+RWT7Xr35VrOLaM/57yWLBD0=
+        b=bCvqNPskS+LEVpQpc8/SfKzVkXgVS6vtC3yY9/Jco4u/miFbZCmv1ITVD+MankC5n
+         g0ULmgVLT54q8G3/jOKfgpkxihCCXismxJ556J4PKgn9DjU0SZf4iczNKWMqvT6fBZ
+         x4+yIoKM8nSa0f4sWNKCTrm8QXJw/TrHbpy9P+EQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 42/81] init: initialize jump labels before command line option parsing
-Date:   Tue,  7 May 2019 01:35:13 -0400
-Message-Id: <20190507053554.30848-42-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 45/81] netfilter: ctnetlink: don't use conntrack/expect object addresses as id
+Date:   Tue,  7 May 2019 01:35:16 -0400
+Message-Id: <20190507053554.30848-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -66,79 +61,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
+[ Upstream commit 3c79107631db1f7fd32cf3f7368e4672004a3010 ]
 
-When a module option, or core kernel argument, toggles a static-key it
-requires jump labels to be initialized early.  While x86, PowerPC, and
-ARM64 arrange for jump_label_init() to be called before parse_args(),
-ARM does not.
+else, we leak the addresses to userspace via ctnetlink events
+and dumps.
 
-  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-  page_alloc_shuffle+0x12c/0x1ac
-  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-  before call to jump_label_init()
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted
-  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
-  Hardware name: ARM Integrator/CP (Device Tree)
-  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
-  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
-  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
-  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
-  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
-  (page_alloc_shuffle+0x12c/0x1ac)
-  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
-  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
-  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+Compute an ID on demand based on the immutable parts of nf_conn struct.
 
-Move the fallback call to jump_label_init() to occur before
-parse_args().
+Another advantage compared to using an address is that there is no
+immediate re-use of the same ID in case the conntrack entry is freed and
+reallocated again immediately.
 
-The redundant calls to jump_label_init() in other archs are left intact
-in case they have static key toggling use cases that are even earlier
-than option parsing.
-
-Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Guenter Roeck <groeck@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Russell King <rmk@armlinux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3583240249ef ("[NETFILTER]: nf_conntrack_expect: kill unique ID")
+Fixes: 7f85f914721f ("[NETFILTER]: nf_conntrack: kill unique ID")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- init/main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/netfilter/nf_conntrack.h |  2 ++
+ net/netfilter/nf_conntrack_core.c    | 35 ++++++++++++++++++++++++++++
+ net/netfilter/nf_conntrack_netlink.c | 34 +++++++++++++++++++++++----
+ 3 files changed, 66 insertions(+), 5 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index e083fac08aed..020972fed117 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -568,6 +568,8 @@ asmlinkage __visible void __init start_kernel(void)
- 	page_alloc_init();
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 7e012312cd61..f45141bdbb83 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -313,6 +313,8 @@ struct nf_conn *nf_ct_tmpl_alloc(struct net *net,
+ 				 gfp_t flags);
+ void nf_ct_tmpl_free(struct nf_conn *tmpl);
  
- 	pr_notice("Kernel command line: %s\n", boot_command_line);
-+	/* parameters may set static keys */
-+	jump_label_init();
- 	parse_early_param();
- 	after_dashes = parse_args("Booting kernel",
- 				  static_command_line, __start___param,
-@@ -577,8 +579,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
- 			   NULL, set_init_arg);
++u32 nf_ct_get_id(const struct nf_conn *ct);
++
+ static inline void
+ nf_ct_set(struct sk_buff *skb, struct nf_conn *ct, enum ip_conntrack_info info)
+ {
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 9a249478abf2..27eff89fad01 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -25,6 +25,7 @@
+ #include <linux/slab.h>
+ #include <linux/random.h>
+ #include <linux/jhash.h>
++#include <linux/siphash.h>
+ #include <linux/err.h>
+ #include <linux/percpu.h>
+ #include <linux/moduleparam.h>
+@@ -424,6 +425,40 @@ nf_ct_invert_tuple(struct nf_conntrack_tuple *inverse,
+ }
+ EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
  
--	jump_label_init();
--
- 	/*
- 	 * These use large bootmem allocations and must precede
- 	 * kmem_cache_init()
++/* Generate a almost-unique pseudo-id for a given conntrack.
++ *
++ * intentionally doesn't re-use any of the seeds used for hash
++ * table location, we assume id gets exposed to userspace.
++ *
++ * Following nf_conn items do not change throughout lifetime
++ * of the nf_conn after it has been committed to main hash table:
++ *
++ * 1. nf_conn address
++ * 2. nf_conn->ext address
++ * 3. nf_conn->master address (normally NULL)
++ * 4. tuple
++ * 5. the associated net namespace
++ */
++u32 nf_ct_get_id(const struct nf_conn *ct)
++{
++	static __read_mostly siphash_key_t ct_id_seed;
++	unsigned long a, b, c, d;
++
++	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
++
++	a = (unsigned long)ct;
++	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
++	c = (unsigned long)ct->ext;
++	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
++				   &ct_id_seed);
++#ifdef CONFIG_64BIT
++	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
++#else
++	return siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &ct_id_seed);
++#endif
++}
++EXPORT_SYMBOL_GPL(nf_ct_get_id);
++
+ static void
+ clean_from_lists(struct nf_conn *ct)
+ {
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 036207ecaf16..47e5a076522d 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -29,6 +29,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
+ #include <linux/slab.h>
++#include <linux/siphash.h>
+ 
+ #include <linux/netfilter.h>
+ #include <net/netlink.h>
+@@ -487,7 +488,9 @@ static int ctnetlink_dump_ct_synproxy(struct sk_buff *skb, struct nf_conn *ct)
+ 
+ static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
+ {
+-	if (nla_put_be32(skb, CTA_ID, htonl((unsigned long)ct)))
++	__be32 id = (__force __be32)nf_ct_get_id(ct);
++
++	if (nla_put_be32(skb, CTA_ID, id))
+ 		goto nla_put_failure;
+ 	return 0;
+ 
+@@ -1275,8 +1278,9 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
+ 	}
+ 
+ 	if (cda[CTA_ID]) {
+-		u_int32_t id = ntohl(nla_get_be32(cda[CTA_ID]));
+-		if (id != (u32)(unsigned long)ct) {
++		__be32 id = nla_get_be32(cda[CTA_ID]);
++
++		if (id != (__force __be32)nf_ct_get_id(ct)) {
+ 			nf_ct_put(ct);
+ 			return -ENOENT;
+ 		}
+@@ -2675,6 +2679,25 @@ static int ctnetlink_exp_dump_mask(struct sk_buff *skb,
+ 
+ static const union nf_inet_addr any_addr;
+ 
++static __be32 nf_expect_get_id(const struct nf_conntrack_expect *exp)
++{
++	static __read_mostly siphash_key_t exp_id_seed;
++	unsigned long a, b, c, d;
++
++	net_get_random_once(&exp_id_seed, sizeof(exp_id_seed));
++
++	a = (unsigned long)exp;
++	b = (unsigned long)exp->helper;
++	c = (unsigned long)exp->master;
++	d = (unsigned long)siphash(&exp->tuple, sizeof(exp->tuple), &exp_id_seed);
++
++#ifdef CONFIG_64BIT
++	return (__force __be32)siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &exp_id_seed);
++#else
++	return (__force __be32)siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &exp_id_seed);
++#endif
++}
++
+ static int
+ ctnetlink_exp_dump_expect(struct sk_buff *skb,
+ 			  const struct nf_conntrack_expect *exp)
+@@ -2722,7 +2745,7 @@ ctnetlink_exp_dump_expect(struct sk_buff *skb,
+ 	}
+ #endif
+ 	if (nla_put_be32(skb, CTA_EXPECT_TIMEOUT, htonl(timeout)) ||
+-	    nla_put_be32(skb, CTA_EXPECT_ID, htonl((unsigned long)exp)) ||
++	    nla_put_be32(skb, CTA_EXPECT_ID, nf_expect_get_id(exp)) ||
+ 	    nla_put_be32(skb, CTA_EXPECT_FLAGS, htonl(exp->flags)) ||
+ 	    nla_put_be32(skb, CTA_EXPECT_CLASS, htonl(exp->class)))
+ 		goto nla_put_failure;
+@@ -3027,7 +3050,8 @@ static int ctnetlink_get_expect(struct net *net, struct sock *ctnl,
+ 
+ 	if (cda[CTA_EXPECT_ID]) {
+ 		__be32 id = nla_get_be32(cda[CTA_EXPECT_ID]);
+-		if (ntohl(id) != (u32)(unsigned long)exp) {
++
++		if (id != nf_expect_get_id(exp)) {
+ 			nf_ct_expect_put(exp);
+ 			return -ENOENT;
+ 		}
 -- 
 2.20.1
 
