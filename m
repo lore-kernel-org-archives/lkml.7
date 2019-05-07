@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226ECC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A5BC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16452087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5692087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209264;
-	bh=ELeThrmNFHcLWssUk4KzYslzDNaYvFVj1cK3oWt+ibU=;
+	s=default; t=1557209275;
+	bh=m1p7UAVOnxe5IJuYFEQD7MknEjc4Qh9Zt5HfCqgINBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ty7Cc+KBgkZ1L1toRHpIJ8xCeBJio/Iozwp1Nh4PRgiXzv25nc4cy33H+gV4pGmm8
-	 IStcqyLgSoPnKlHWvWzAQt6NCoEvuZ1w5JdUjaAa3WKss93gvYtgW81GVJuiYrmZ8t
-	 mhxvKMk4lrjYBSlWWAxM8A6gicUzZpxiPVDVs1ew=
+	b=m7yQFULselDsT0XkLStcslwh2ep+8ZCQxfZJnrwy76NRxfzziUo07d6b5dNWpAuEL
+	 32Gmq8oSfnWQ0BdoX4UPJxHsvrAbsJQpWgLDO3VF2sRFWdQRFSvDzsz9PzFIUTQmAR
+	 7c8IoI6+h4kGydzt0zjziSzLVlGO1zn8zTsYkv+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfEGFdZ (ORCPT
+        id S1726714AbfEGFdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:33:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbfEGFdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:23 -0400
+        id S1726678AbfEGFc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:32:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8B2206A3;
-        Tue,  7 May 2019 05:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D0EC20B7C;
+        Tue,  7 May 2019 05:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207202;
-        bh=ELeThrmNFHcLWssUk4KzYslzDNaYvFVj1cK3oWt+ibU=;
+        s=default; t=1557207178;
+        bh=m1p7UAVOnxe5IJuYFEQD7MknEjc4Qh9Zt5HfCqgINBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZuaY+Jucz6170Lb6ZSeSXRfhDC+dgBKPz0DrS+5AxvkeCLQNvZu3X8Tt6Cm9b711C
-         uwt04DAUqICRZ9D8o3Bn/9uR3Zl0OFngNsKisanInliEgs/oWawH7vbHLlh96sMM7W
-         jh4uLfr3EzNnM17o3p/jIAMickrHbiQmYgZ0WCp0=
+        b=K9q9Kdy1kj5wyAVFwhYUOY49ESca3IW8q02TeT8Se2ttNEbA4OgH3mBezhXKKexR7
+         CrmpIrtYN5iTlt42j72RAENVu+us7HRr6MG3dfXE7cUuXlLiVf0NbYZ+LNSQAdNkd/
+         1uLf0MwIhxfIV0WgJr25rrJCHzxuJzlrY4n8pUxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Leung <martin.leung@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Joshua Aberback <Joshua.Aberback@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 23/99] drm/amd/display: extending AUX SW Timeout
-Date:   Tue,  7 May 2019 01:31:17 -0400
-Message-Id: <20190507053235.29900-23-sashal@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.0 16/99] libnvdimm/security: provide fix for secure-erase to use zero-key
+Date:   Tue,  7 May 2019 01:31:10 -0400
+Message-Id: <20190507053235.29900-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -62,76 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Leung <martin.leung@amd.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit f4bbebf8e7eb4d294b040ab2d2ba71e70e69b930 ]
+[ Upstream commit 037c8489ade669e0f09ad40d5b91e5e1159a14b1 ]
 
-[Why]
-AUX takes longer to reply when using active DP-DVI dongle on some asics
-resulting in up to 2000+ us edid read (timeout).
+Add a zero key in order to standardize hardware that want a key of 0's to
+be passed. Some platforms defaults to a zero-key with security enabled
+rather than allow the OS to enable the security. The zero key would allow
+us to manage those platform as well. This also adds a fix to secure erase
+so it can use the zero key to do crypto erase. Some other security commands
+already use zero keys. This introduces a standard zero-key to allow
+unification of semantics cross nvdimm security commands.
 
-[How]
-1. Adjust AUX poll to match spec
-2. Extend the SW timeout. This does not affect normal
-operation since we exit the loop as soon as AUX acks.
-
-Signed-off-by: Martin Leung <martin.leung@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Joshua Aberback <Joshua.Aberback@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 9 ++++++---
- drivers/gpu/drm/amd/display/dc/dce/dce_aux.h | 6 +++---
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/nvdimm/security.c        | 17 ++++++++++++-----
+ tools/testing/nvdimm/test/nfit.c | 11 +++++++++--
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-index aaeb7faac0c4..e0fff5744b5f 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-@@ -189,6 +189,12 @@ static void submit_channel_request(
- 				1,
- 				0);
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index f8bb746a549f..6bea6852bf27 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -22,6 +22,8 @@ static bool key_revalidate = true;
+ module_param(key_revalidate, bool, 0444);
+ MODULE_PARM_DESC(key_revalidate, "Require key validation at init.");
+ 
++static const char zero_key[NVDIMM_PASSPHRASE_LEN];
++
+ static void *key_data(struct key *key)
+ {
+ 	struct encrypted_key_payload *epayload = dereference_key_locked(key);
+@@ -286,8 +288,9 @@ int nvdimm_security_erase(struct nvdimm *nvdimm, unsigned int keyid,
+ {
+ 	struct device *dev = &nvdimm->dev;
+ 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
+-	struct key *key;
++	struct key *key = NULL;
+ 	int rc;
++	const void *data;
+ 
+ 	/* The bus lock should be held at the top level of the call stack */
+ 	lockdep_assert_held(&nvdimm_bus->reconfig_mutex);
+@@ -319,11 +322,15 @@ int nvdimm_security_erase(struct nvdimm *nvdimm, unsigned int keyid,
+ 		return -EOPNOTSUPP;
  	}
-+
-+	REG_UPDATE(AUX_INTERRUPT_CONTROL, AUX_SW_DONE_ACK, 1);
-+
-+	REG_WAIT(AUX_SW_STATUS, AUX_SW_DONE, 0,
-+				10, aux110->timeout_period/10);
-+
- 	/* set the delay and the number of bytes to write */
  
- 	/* The length include
-@@ -241,9 +247,6 @@ static void submit_channel_request(
- 		}
- 	}
+-	key = nvdimm_lookup_user_key(nvdimm, keyid, NVDIMM_BASE_KEY);
+-	if (!key)
+-		return -ENOKEY;
++	if (keyid != 0) {
++		key = nvdimm_lookup_user_key(nvdimm, keyid, NVDIMM_BASE_KEY);
++		if (!key)
++			return -ENOKEY;
++		data = key_data(key);
++	} else
++		data = zero_key;
  
--	REG_UPDATE(AUX_INTERRUPT_CONTROL, AUX_SW_DONE_ACK, 1);
--	REG_WAIT(AUX_SW_STATUS, AUX_SW_DONE, 0,
--				10, aux110->timeout_period/10);
- 	REG_UPDATE(AUX_SW_CONTROL, AUX_SW_GO, 1);
- }
+-	rc = nvdimm->sec.ops->erase(nvdimm, key_data(key), pass_type);
++	rc = nvdimm->sec.ops->erase(nvdimm, data, pass_type);
+ 	dev_dbg(dev, "key: %d erase%s: %s\n", key_serial(key),
+ 			pass_type == NVDIMM_MASTER ? "(master)" : "(user)",
+ 			rc == 0 ? "success" : "fail");
+diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
+index b579f962451d..cad719876ef4 100644
+--- a/tools/testing/nvdimm/test/nfit.c
++++ b/tools/testing/nvdimm/test/nfit.c
+@@ -225,6 +225,8 @@ static struct workqueue_struct *nfit_wq;
  
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h
-index f7caab85dc80..2c6f50b4245a 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h
-@@ -69,11 +69,11 @@ enum {	/* This is the timeout as defined in DP 1.2a,
- 	 * at most within ~240usec. That means,
- 	 * increasing this timeout will not affect normal operation,
- 	 * and we'll timeout after
--	 * SW_AUX_TIMEOUT_PERIOD_MULTIPLIER * AUX_TIMEOUT_PERIOD = 1600usec.
-+	 * SW_AUX_TIMEOUT_PERIOD_MULTIPLIER * AUX_TIMEOUT_PERIOD = 2400usec.
- 	 * This timeout is especially important for
--	 * resume from S3 and CTS.
-+	 * converters, resume from S3, and CTS.
- 	 */
--	SW_AUX_TIMEOUT_PERIOD_MULTIPLIER = 4
-+	SW_AUX_TIMEOUT_PERIOD_MULTIPLIER = 6
- };
- struct aux_engine_dce110 {
- 	struct aux_engine base;
+ static struct gen_pool *nfit_pool;
+ 
++static const char zero_key[NVDIMM_PASSPHRASE_LEN];
++
+ static struct nfit_test *to_nfit_test(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+@@ -1059,8 +1061,7 @@ static int nd_intel_test_cmd_secure_erase(struct nfit_test *t,
+ 	struct device *dev = &t->pdev.dev;
+ 	struct nfit_test_sec *sec = &dimm_sec_info[dimm];
+ 
+-	if (!(sec->state & ND_INTEL_SEC_STATE_ENABLED) ||
+-			(sec->state & ND_INTEL_SEC_STATE_FROZEN)) {
++	if (sec->state & ND_INTEL_SEC_STATE_FROZEN) {
+ 		nd_cmd->status = ND_INTEL_STATUS_INVALID_STATE;
+ 		dev_dbg(dev, "secure erase: wrong security state\n");
+ 	} else if (memcmp(nd_cmd->passphrase, sec->passphrase,
+@@ -1068,6 +1069,12 @@ static int nd_intel_test_cmd_secure_erase(struct nfit_test *t,
+ 		nd_cmd->status = ND_INTEL_STATUS_INVALID_PASS;
+ 		dev_dbg(dev, "secure erase: wrong passphrase\n");
+ 	} else {
++		if (!(sec->state & ND_INTEL_SEC_STATE_ENABLED)
++				&& (memcmp(nd_cmd->passphrase, zero_key,
++					ND_INTEL_PASSPHRASE_SIZE) != 0)) {
++			dev_dbg(dev, "invalid zero key\n");
++			return 0;
++		}
+ 		memset(sec->passphrase, 0, ND_INTEL_PASSPHRASE_SIZE);
+ 		memset(sec->master_passphrase, 0, ND_INTEL_PASSPHRASE_SIZE);
+ 		sec->state = 0;
 -- 
 2.20.1
 
