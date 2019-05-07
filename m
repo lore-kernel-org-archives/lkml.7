@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF32C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B8B214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B9B21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207237;
-	bh=1by+GoL9pOxiZZ6k7a2kqSUKTIfStabNYt7FXouFx5o=;
+	s=default; t=1557207241;
+	bh=Edc69vRC5mKYb7QKWb3pJxpjsre7QfXtcHWI1l4CcIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkPS5qMrwb6LXZ7k5VLvxgQZzztw/B82XLvFnHwkMMaM+ij3JyrGE49WqWvTmpnnP
-	 zg2ajBXCFq8oE8WChVeAJ9LPPck5WRMKNICuqOtwVKwIBfE/QIXCqvUsuCnDR8eifq
-	 98YLGMSUBojC7V842LVM8vTcuP57iNhrZVAGAgD4=
+	b=Ng5QsqN5RYisYbd9n+r6RsWTezKfi4tj3DuZBOVOgUt462h3+dlcPsd+P4blDGe1L
+	 +vlsqB6kABNisqKO+DAIZZAeHNeM+2OeAMQLs+rglUbPDM1/DTdlaEZkk3BPhj5R5z
+	 u3fUHQ+dtXwovr2HLUlPjiOEE5sG2nB8o/bdI6ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfEGFd4 (ORCPT
+        id S1727392AbfEGFeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53744 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727357AbfEGFdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:53 -0400
+        id S1727370AbfEGFd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF4C4206A3;
-        Tue,  7 May 2019 05:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B7120989;
+        Tue,  7 May 2019 05:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207233;
-        bh=1by+GoL9pOxiZZ6k7a2kqSUKTIfStabNYt7FXouFx5o=;
+        s=default; t=1557207234;
+        bh=Edc69vRC5mKYb7QKWb3pJxpjsre7QfXtcHWI1l4CcIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xmc+BhhKed8yCeGlp+QFKM6KlIxenMuONF5pEW37Sdf0/QqdBCt7kzuAf+yu0Pazv
-         +RHQ5Io+T9ZMQGSX5M5q0H599LGaDwloQe48oj8GfrLw4AauqKi2ArTyshPC0ZeUG9
-         /omAt18tCARTalZzsPseNnJA77pW2eybarWuVC+s=
+        b=EVmCHkM7X4+AQwCt6a7cg8kE+ZLM/q6NsgD2AOfwDXzC6W7qW70rsehaE09jiIlSU
+         xC8q/16GxP/Nq0SOCWfM5t0GFH96U/NQjpqQAeIPRZoB7aD8UIvNS8EIM05wZ2ATjK
+         w/IW+PIfy0uEC3o9KjhrVBAOwGvj10fLiylvimxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Xose Vazquez Perez <xose.vazquez@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Rik van Riel <riel@surriel.com>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 40/99] x86/build/lto: Fix truncated .bss with -fdata-sections
-Date:   Tue,  7 May 2019 01:31:34 -0400
-Message-Id: <20190507053235.29900-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 41/99] x86/mm: Prevent bogus warnings with "noexec=off"
+Date:   Tue,  7 May 2019 01:31:35 -0400
+Message-Id: <20190507053235.29900-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -65,52 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 6a03469a1edc94da52b65478f1e00837add869a3 ]
+[ Upstream commit 510bb96fe5b3480b4b22d815786377e54cb701e7 ]
 
-With CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y, we compile the kernel with
--fdata-sections, which also splits the .bss section.
+Xose Vazquez Perez reported boot warnings when NX is disabled on the kernel command line.
 
-The new section, with a new .bss.* name, which pattern gets missed by the
-main x86 linker script which only expects the '.bss' name. This results
-in the discarding of the second part and a too small, truncated .bss
-section and an unhappy, non-working kernel.
+__early_set_fixmap() triggers this warning:
 
-Use the common BSS_MAIN macro in the linker script to properly capture
-and merge all the generated BSS sections.
+  attempted to set unsupported pgprot:    8000000000000163
+			       bits:      8000000000000000
+			       supported: 7fffffffffffffff
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+  WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgtable.h:537
+			    __early_set_fixmap+0xa2/0xff
+
+because it uses __default_kernel_pte_mask to mask out unsupported bits.
+
+Use __supported_pte_mask instead.
+
+Disabling NX on the command line also triggers the NX warning in the page
+table mapping check:
+
+  WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:262 note_page+0x2ae/0x650
+  ....
+
+Make the warning depend on NX set in __supported_pte_mask.
+
+Reported-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Tested-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kees Cook <keescook@chromium.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190415164956.124067-1-samitolvanen@google.com
-[ Extended the changelog. ]
+Cc: Rik van Riel <riel@surriel.com>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/dump_pagetables.c | 3 ++-
+ arch/x86/mm/ioremap.c         | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index ee3b5c7d662e..c45214c44e61 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -362,7 +362,7 @@ SECTIONS
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		__bss_start = .;
- 		*(.bss..page_aligned)
--		*(.bss)
-+		*(BSS_MAIN)
- 		BSS_DECRYPTED
- 		. = ALIGN(PAGE_SIZE);
- 		__bss_stop = .;
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index e3cdc85ce5b6..84304626b1cb 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -259,7 +259,8 @@ static void note_wx(struct pg_state *st)
+ #endif
+ 	/* Account the WX pages */
+ 	st->wx_pages += npages;
+-	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
++	WARN_ONCE(__supported_pte_mask & _PAGE_NX,
++		  "x86/mm: Found insecure W+X mapping at address %pS\n",
+ 		  (void *)st->start_address);
+ }
+ 
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 5378d10f1d31..3b76fe954978 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -825,7 +825,7 @@ void __init __early_set_fixmap(enum fixed_addresses idx,
+ 	pte = early_ioremap_pte(addr);
+ 
+ 	/* Sanitize 'prot' against any unsupported bits: */
+-	pgprot_val(flags) &= __default_kernel_pte_mask;
++	pgprot_val(flags) &= __supported_pte_mask;
+ 
+ 	if (pgprot_val(flags))
+ 		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
 -- 
 2.20.1
 
