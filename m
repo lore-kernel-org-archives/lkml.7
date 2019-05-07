@@ -3,155 +3,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C05C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A794CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E38A20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733AB20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vd+mQzVN"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="rI22+WbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfEGJRi (ORCPT
+        id S1727215AbfEGJRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:17:38 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33784 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbfEGJRh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:17:37 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190507091735euoutp01e884c1096c8e1f525cbc4a2463211935~cW__Kr4Nu1941919419euoutp01j
-        for <linux-kernel@vger.kernel.org>; Tue,  7 May 2019 09:17:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190507091735euoutp01e884c1096c8e1f525cbc4a2463211935~cW__Kr4Nu1941919419euoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557220655;
-        bh=eC9RKKUhFBEdPO3sH6QeAj7KbWtJ/CGboccWZibZgX8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=vd+mQzVNEUXzScrjvvZm4pnl6yphua3RRpQ0rNUFT5DZQhQSVmjA/ma6U1JG1TBHV
-         94BM9r+ojyoIPuKNYgFI78X8Nxyf6eSj7h7nc2N1GbyLck4DcHaxNp1q34t8OMpemg
-         c3rW9PM94c9oe75axl6/lmmoEu8JLFH2gxA86LXA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190507091734eucas1p22e5ac264e405a085172e7e99cf7e69e3~cW_9YScXm1524515245eucas1p2S;
-        Tue,  7 May 2019 09:17:34 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0D.82.04325.E2D41DC5; Tue,  7
-        May 2019 10:17:34 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190507091733eucas1p22eb2b950569e82bc947d628292c2e0e4~cW_8ZVmns1522515225eucas1p2P;
-        Tue,  7 May 2019 09:17:33 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190507091733eusmtrp274614b2df408d26303169fd1a9db22a3~cW_8LTpdq1581815818eusmtrp2d;
-        Tue,  7 May 2019 09:17:33 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-c2-5cd14d2e2169
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E0.39.04146.D2D41DC5; Tue,  7
-        May 2019 10:17:33 +0100 (BST)
-Received: from [106.120.50.25] (unknown [106.120.50.25]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190507091732eusmtip177e46be4523d9745c5be7c7caeb63838~cW_7wRE993014030140eusmtip1j;
-        Tue,  7 May 2019 09:17:32 +0000 (GMT)
-Subject: Re: [PATCH] usb: dwc2: Force 8bit UTMI width for Samsung Exynos
- SoCs
-To:     Markus Reichl <m.reichl@fivetechno.de>, linux-usb@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jules Maselbas <jmaselbas@kalray.eu>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <eefff244-f311-e59e-d914-9a18b5a21620@samsung.com>
-Date:   Tue, 7 May 2019 11:17:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <39c7b687-449e-5e89-4c70-527d4e779fd9@fivetechno.de>
-Content-Transfer-Encoding: 7bit
+        Tue, 7 May 2019 05:17:44 -0400
+Received: from mail-eopbgr10131.outbound.protection.outlook.com ([40.107.1.131]:21253
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726607AbfEGJRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:17:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4xRPiGxR2SFsjMcx5LRpqB/hjoOxiQsglEUtFXdxcb4=;
+ b=rI22+WbJgtVBPAsp40G8scs90i4oV3o8Gev8ags4WrXt/87/vfe6wCFPobRxKgkTLHgLC5TvNsX3KuL3Hx/9LjhoOCRYSBuoIPwROx7ZVtOh3nDb131XwuRQuxUUgJczjnyxQ1UjjY+v86p75+m/CgJDiDXoKgHP99Pbi6CxBa4=
+Received: from AM0PR02MB4563.eurprd02.prod.outlook.com (20.178.17.97) by
+ AM0PR02MB4945.eurprd02.prod.outlook.com (20.178.82.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.12; Tue, 7 May 2019 09:17:38 +0000
+Received: from AM0PR02MB4563.eurprd02.prod.outlook.com
+ ([fe80::59ed:e49a:eab8:168f]) by AM0PR02MB4563.eurprd02.prod.outlook.com
+ ([fe80::59ed:e49a:eab8:168f%3]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 09:17:38 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Peter Korsgaard <peter.korsgaard@barco.com>
+CC:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] i2c-mux-gpio: Split plat- and dt-specific code up
+Thread-Topic: [PATCH v2 0/3] i2c-mux-gpio: Split plat- and dt-specific code up
+Thread-Index: AQHU+72aZ5zENFrBHEyfsmLiopyjOKZfb6IAgAAETIA=
+Date:   Tue, 7 May 2019 09:17:38 +0000
+Message-ID: <689e1a7b-8544-6bbf-2fa1-a5845895a917@axentia.se>
+References: <20190424123414.25311-1-fancer.lancer@gmail.com>
+ <20190425232028.9333-1-fancer.lancer@gmail.com>
+ <20190507090210.hn6vgcjg2q6tysbp@mobilestation>
+In-Reply-To: <20190507090210.hn6vgcjg2q6tysbp@mobilestation>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDKsWRmVeSWpSXmKPExsWy7djP87p6vhdjDKa8ErfYOGM9q8X8m0kW
-        jb/2slvMmnGa1eL8+Q3sFpd3zWGzmHF+H5PFomWtzBYvj/xgdOD0uHWn3uP0+puMHptWdbJ5
-        zDsZ6NG3ZRWjx5b9nxk9Pm+SC2CP4rJJSc3JLEst0rdL4MroWPOSreAsb8X1w5NZGhi/c3Ux
-        cnJICJhIHNqyiaWLkYtDSGAFo8Sn9r3sEM4XRolpi+4yglQJCXxmlNgz3Ram4/apFqii5YwS
-        l7v/M0M4bxkl3nx4ywRSJSzgL3Fsxw6whIhAB6PExvc7wJYwCzxklPja18QCUsUmYCjR9baL
-        DcTmFbCTWP8RZC4nB4uAisSF6Y+Bujk4RAViJBZ9hioRlDg58wlYK6eAo8Tdp39YQWxmAXmJ
-        7W/nMEPY4hK3nsxnAtklIXCJXWLiqSWsIHMkBFwkPn7MgnhBWOLV8S3sELaMxP+dMPXNjBIP
-        z61lh3B6gH5rmsEIUWUtcfj4RbBBzAKaEut36UOEHSWWLexlhJjPJ3HjrSDEDXwSk7ZNZ4YI
-        80p0tAlBVKtJzDq+Dm7twQuXmCcwKs1C8tksJN/MQvLNLIS9CxhZVjGKp5YW56anFhvnpZbr
-        FSfmFpfmpesl5+duYgSmqdP/jn/dwbjvT9IhRgEORiUe3glOF2KEWBPLiitzDzFKcDArifAm
-        PjsXI8SbklhZlVqUH19UmpNafIhRmoNFSZy3muFBtJBAemJJanZqakFqEUyWiYNTqoHxXJ2S
-        u4ZldcukzvpFp95+vZTVdqnC9tlC8242pQlXGyTFum/2dddzLuvsTN18f5PYHKcr2/dvEvAL
-        P69V88hyy9O3j+bU+vRU7fx/SyfkmMqGE686ucuv3LrXp3KjSC9IuCPu3U2R4PeH2l32sK58
-        qpjPmJSoo/LOcn6X6fHPQWU3J69M/z5NiaU4I9FQi7moOBEASH/kU08DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7q6vhdjDE6/FrfYOGM9q8X8m0kW
-        jb/2slvMmnGa1eL8+Q3sFpd3zWGzmHF+H5PFomWtzBYvj/xgdOD0uHWn3uP0+puMHptWdbJ5
-        zDsZ6NG3ZRWjx5b9nxk9Pm+SC2CP0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7Uy
-        MlXSt7NJSc3JLEst0rdL0MvoWPOSreAsb8X1w5NZGhi/c3UxcnJICJhI3D7Vwt7FyMUhJLCU
-        UeLlvklsEAkZiZPTGlghbGGJP9e62CCKXjNKnH7/gAUkISzgK7G85z0LSEJEoINR4syao8wg
-        DrPAQ0aJC00/oOa+ZZRomryEHaSFTcBQouttF9gOXgE7ifUfW8DiLAIqEhemP2YGsUUFYiRO
-        TN3CDlEjKHFy5hOwdZwCjhJ3n/4Bu4lZwExi3uaHzBC2vMT2t3OgbHGJW0/mM01gFJqFpH0W
-        kpZZSFpmIWlZwMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzA6tx37uXkH46WNwYcYBTgY
-        lXh4H9heiBFiTSwrrsw9xCjBwawkwpv47FyMEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucD
-        E0deSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGledn5KOljm0r
-        860S3nvs0ZO1U3nqpRf/iP42dfKRqad4JD7PWW6uPCF7klGzqM3lpy3++rc2775sYPeSt0j+
-        4b5VHT3vLhz9fWjaRpHbb1/2M/X8eiq9q4KtW1ClZFbL4/jvDi8clu7v2ia978lSkxm+oitX
-        n52qnToz9JfQz0txk1+db3nj/UKJpTgj0VCLuag4EQBk1dOw5AIAAA==
-X-CMS-MailID: 20190507091733eucas1p22eb2b950569e82bc947d628292c2e0e4
-X-Msg-Generator: CA
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1P18901CA0006.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:3:8b::16) To AM0PR02MB4563.eurprd02.prod.outlook.com
+ (2603:10a6:208:ec::33)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b22686ab-d88d-43a6-b739-08d6d2ccd93e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:AM0PR02MB4945;
+x-ms-traffictypediagnostic: AM0PR02MB4945:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <AM0PR02MB49452F4E63A35700CD337073BC310@AM0PR02MB4945.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(39830400003)(366004)(396003)(189003)(199004)(51914003)(3846002)(53936002)(446003)(11346002)(4326008)(305945005)(66066001)(6246003)(68736007)(65806001)(2906002)(65956001)(102836004)(508600001)(476003)(65826007)(36756003)(64126003)(74482002)(14444005)(256004)(2616005)(31686004)(486006)(5660300002)(99286004)(6486002)(6436002)(7736002)(186003)(52116002)(25786009)(229853002)(53546011)(6506007)(966005)(81156014)(81166006)(386003)(8676002)(8936002)(26005)(6116002)(71200400001)(71190400001)(58126008)(110136005)(54906003)(316002)(73956011)(66946007)(66446008)(66556008)(66476007)(64756008)(31696002)(14454004)(6306002)(86362001)(6512007)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR02MB4945;H:AM0PR02MB4563.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gq6lCpl54+Ax0PkM7MW4DVja6cOCwQgg70AvYaGHJS3UvHuVtAefaa4SsuXcRfd5qe1RALc9XPtmfWVqw48Kj4ANWNRs+IXeQyueAlUEzQvIDVLPxSPSIYvO51ovaAnHJHsX4+8LCcBmtYv30cwifoA1Mon+MHLZfpwUqn3bfODv714BobdjB6cCTSFn8MGlu69l1/Tv8Y0rmJ4oQcC7kOzgdez/yz+Rq+Tj6WZMH1s33GWfnnixWvZCLaca1YDdobP2Eqlk44QZyRGF8dy5i9VlmvUHQqT6MS2g/FuxbPJGaCjOaacfmcH6Cb7oW8jJaSM7Nm7D1iTugAAaCjWWrZRD+fMFPm0xf0RTUvcon+EU0AY2AkhtNk6UXoXOEJMHyNTctedP+fv9TwZfA5GeTYw0kBwLeFVvscBIz6KQma0=
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190506130052eucas1p25afd4e15648e9efc6fd011e46081fbea
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190506130052eucas1p25afd4e15648e9efc6fd011e46081fbea
-References: <20190503204958.GA12532@kozik-lap>
-        <CGME20190506130052eucas1p25afd4e15648e9efc6fd011e46081fbea@eucas1p2.samsung.com>
-        <20190506130046.20898-1-m.szyprowski@samsung.com>
-        <39c7b687-449e-5e89-4c70-527d4e779fd9@fivetechno.de>
+Content-ID: <CEFCC296A803D44186FE37F4BF1C9B9C@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: b22686ab-d88d-43a6-b739-08d6d2ccd93e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 09:17:38.2499
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB4945
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-On 2019-05-07 10:12, Markus Reichl wrote:
-> Hi Marek,
->
-> your patch did not help on stable v5.1
->
-> [    3.255963] samsung-usb2-phy 125b0000.exynos-usbphy: 125b0000.exynos-usbphy supply vbus not found, using dummy regulator
-> [    4.044547] usbcore: registered new interface driver smsc95xx
-> [    4.112261] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.01
-> [    4.120363] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-> [    4.127560] usb usb1: Product: EHCI Host Controller
-> [    4.132415] usb usb1: Manufacturer: Linux 5.1.0-00005-geb4efae48eb5 ehci_hcd
-> [    4.139446] usb usb1: SerialNumber: 12580000.ehci
-> [    4.183056] usb3503 0-0008: switched to HUB mode
-> [    4.183121] usb3503 0-0008: usb3503_probe: probed in hub mode
-> [    4.488344] usb 1-2: new high-speed USB device number 2 using exynos-ehci
-> [    4.675605] usb 1-2: New USB device found, idVendor=0424, idProduct=3503, bcdDevice=a1.a0
-> [    4.678166] usb 1-2: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> [    4.686140] usb 1-2: skipping disabled interface 0
->
-> root@odroid-x2:~# lsusb
-> Bus 001 Device 002: ID 0424:3503 Standard Microsystems Corp.
-> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-
-This patch fixes the issue introduced by "usb: dwc2: gadget: Replace 
-phyif with phy_utmi_width" commit, which is queued only to linux-next so 
-far. Stable v5.1 doesn't include it, so the fix doesn't change anything 
-on v5.1.
-
-I've checked and OdroidU3 works fine with v5.1 release, but X2 fails to 
-detect USB devices. I will investigate this in a few minutes...
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+T24gMjAxOS0wNS0wNyAxMTowMiwgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+IEhlbGxvIGZvbGtzLA0K
+PiANCj4gQW55IHVwZGF0ZXMgb24gdGhpcyBwYXRjaHNldCBzdGF0dXM/IEkgaGF2ZW4ndCBnb3Qg
+YW55IGNvbW1lbnQgb24gdjIsIGJ1dA0KPiBpbnN0ZWFkIGEgbm90aWZpY2F0aW9uIGFib3V0IHRo
+ZSBzdGF0dXMgY2hhbmdlIHdhcyBzZW50IHRvIG1lOg0KPiANCj4+ICogbGludXgtaTJjOiBbdjIs
+MS8zXSBpMmMtbXV4LWdwaW86IFVucGluIGEgcGxhdGZvcm0tYmFzZWQgZGV2aWNlIGluaXRpYWxp
+emF0aW9uDQo+PiAgICAgLSBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTA5MTEy
+MC8NCj4+ICAgICAtIGZvcjogTGludXggSTJDIGRldmVsb3BtZW50DQo+PiAgICB3YXM6IE5ldw0K
+Pj4gICAgbm93OiBTdXBlcnNlZGVkDQo+Pg0KPj4gKiBsaW51eC1pMmM6IFt2MiwyLzNdIGkyYy1t
+dXgtZ3BpbzogVW5waW4gdGhlIHBsYXRmb3JtLXNwZWNpZmljIEdQSU9zIHJlcXVlc3QgY29kZQ0K
+Pj4gICAgIC0gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwOTExMjIvDQo+PiAg
+ICAgLSBmb3I6IExpbnV4IEkyQyBkZXZlbG9wbWVudA0KPj4gICAgd2FzOiBOZXcNCj4+ICAgIG5v
+dzogU3VwZXJzZWRlZA0KPj4NCj4+ICogbGludXgtaTJjOiBbdjIsMy8zXSBpMmMtbXV4LWdwaW86
+IENyZWF0ZSBvZi1iYXNlZCBHUElPcyByZXF1ZXN0IG1ldGhvZA0KPj4gICAgIC0gaHR0cDovL3Bh
+dGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwOTExMjEvDQo+PiAgICAgLSBmb3I6IExpbnV4IEky
+QyBkZXZlbG9wbWVudA0KPj4gICAgd2FzOiBOZXcNCj4+ICAgIG5vdzogU3VwZXJzZWRlZA0KPiAN
+Cj4gSSBtYXkgbWlzdW5kZXJzdGFuZCBzb21ldGhpbmcsIGJ1dCBob3cgY29tZSB0aGUgdjIgcGF0
+Y2hzZXQgc3dpdGNoZWQgdG8gYmUgc3VwZXJzZWRlZA0KPiB3aGlsZSBpdCBpcyB0aGUgbGFzdCBw
+YXRjaHNldCB2ZXJzaW9uIEkndmUgc2VudD8NCg0KVGhhdCB3YXMgbXkgbWlzdGFrZS4gUGF0Y2h3
+b3JrIGdvdCBjb25mdXNlZCB3aGVuIHYyIHdhcyBzZW50IGFzIGEgcmVwbHkgdG8NCnNvbWV0aGlu
+ZyBpbiB0aGUgdjEgdHJlZSwgYW5kIG1hcmtlZCBhbGwgOCBwYXRjaGVzIGFzICJ2MiIuIFRoZW4g
+SSBpbiB0dXJuDQpnb3QgY29uZnVzZWQgYnkgdGhhdCwgYW5kIGNoYW5nZWQgc3RhdHVzIG9uIHRo
+ZSB3cm9uZyBzZXQuIFNvcnJ5IQ0KDQpTbywgdGhhbmtzIGZvciB0aGUgaGVhZHMgdXAsIGl0IHNo
+b3VsZCBiZSBmaXhlZCBub3cuDQoNCkFzIGZvciBjb21tZW50cyBvbiB0aGUgcGF0Y2hlcywgSSdt
+IHBlcnNvbmFsbHkgYnVyaWVkIGluIHdvcmsgYW5kIG90aGVycw0KbWF5IGhhdmUgdGhlIG1lcmdl
+IHdpbmRvdyB0byBmb2N1cyBvbi4uLg0KDQpDaGVlcnMsDQpQZXRlcg0K
