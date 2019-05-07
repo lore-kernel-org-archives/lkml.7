@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB784C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865B5C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F577205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EFC205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209174;
-	bh=03GaiAtYzY09njXPIqenCXIBIX9FGb+c3b6xKyYkjRU=;
+	s=default; t=1557209183;
+	bh=OkguQ2WeWIjVh6M1SZeupriyFW1SzIcqKq+Ry66EB7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUxRlb1USej3T76a3PXPTC3myiDCxcJIdFVv1sLrvpterVv4XcmGS2aAws6Wu94L8
-	 ArawGpTw6GFLS1BRnOAdC062SA3v4rKELCY+KEza0UnMgY1etL2+9Q1+2lTgOG+GEE
-	 xdhhvE3CSSRaKSOu33kXk2al3BK71SKyBb6cnvd0=
+	b=trd26h8gu0yyjXhYPujXO+xLc1cURV4tvAxBx3QBzzBzU0+rMtKe/nhhqYedpptQk
+	 qHh+8gglD6nFNptBjvQhPr1Hz0eowMAI7Mpvv+85DfNVtNe7THbjfyrVny6Fu8wDKw
+	 qIzY/UqmfuvegMx8lWZk3ytAHK9GUxEnWV6LQK4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfEGGGM (ORCPT
+        id S1726969AbfEGGGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53858 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfEGFd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:58 -0400
+        id S1727316AbfEGFdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52EAD214AE;
-        Tue,  7 May 2019 05:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B9220C01;
+        Tue,  7 May 2019 05:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207237;
-        bh=03GaiAtYzY09njXPIqenCXIBIX9FGb+c3b6xKyYkjRU=;
+        s=default; t=1557207230;
+        bh=OkguQ2WeWIjVh6M1SZeupriyFW1SzIcqKq+Ry66EB7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2gcApx2NM3iSQV/DVtvZwGi59OZZN1yWU8+8z8SGrkfIiKEj+KLgSC34WE10Nco1
-         85plcTIuKicIfdY39qTYUcs6ObvcrVRQTYeSZEypNUDw3+Sn1cINIPD2MW44qhbl+c
-         bJuRYtTaGJX771FRSNdjCC+8yAqEVsLHWSZD9pN4=
+        b=iwlGZ6aOB4E0OoCXB9jNaifvsvP+Hhgxoe/NyAT/Z6YmOtyA16h4Vzkx51ThWAqu/
+         a8N6IPsr3TYomdZHz1qDkrRmbTbTJUukSLrV2pPa6BG4Snwp7wjj0dtS+TfMi/O5Nv
+         Xq4n/PtSUoPfJPgAOA9qaAdP88KXZ/EgHydY+obc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux@endlessm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 42/99] x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
-Date:   Tue,  7 May 2019 01:31:36 -0400
-Message-Id: <20190507053235.29900-42-sashal@kernel.org>
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Christian Rund <Christian.Rund@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 39/99] s390/pkey: add one more argument space for debug feature entry
+Date:   Tue,  7 May 2019 01:31:33 -0400
+Message-Id: <20190507053235.29900-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -66,102 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-[ Upstream commit 0082517fa4bce073e7cf542633439f26538a14cc ]
+[ Upstream commit 6b1f16ba730d4c0cda1247568c3a1bf4fa3a2f2f ]
 
-Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
-shutdown process, but then it hangs in BIOS POST with a black screen.
+The debug feature entries have been used with up to 5 arguents
+(including the pointer to the format string) but there was only
+space reserved for 4 arguemnts. So now the registration does
+reserve space for 5 times a long value.
 
-The problem is intermittent - at some points it has appeared related to
-Secure Boot settings or different kernel builds, but ultimately we have
-not been able to identify the exact conditions that trigger the issue to
-come and go.
+This fixes a sometime appearing weired value as the last
+value of an debug feature entry like this:
 
-Besides, the EFI mode cannot be disabled in the BIOS of this model.
+... pkey_sec2protkey zcrypt_send_cprb (cardnr=10 domain=12)
+   failed with errno -2143346254
 
-However, after extensive testing, we observe that using the EFI reboot
-method reliably avoids the issue in all cases.
-
-So add a boot time quirk to use EFI reboot on such systems.
-
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux@endlessm.com
-Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
-[ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Reported-by: Christian Rund <Christian.Rund@de.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
- include/linux/efi.h      |  7 ++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ drivers/s390/crypto/pkey_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 725624b6c0c0..8fd3cedd9acc 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
- 	return 0;
- }
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index 2f92bbed4bf6..097e890e0d6d 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -51,7 +51,8 @@ static debug_info_t *debug_info;
  
-+/*
-+ * Some machines don't handle the default ACPI reboot method and
-+ * require the EFI reboot method:
-+ */
-+static int __init set_efi_reboot(const struct dmi_system_id *d)
-+{
-+	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
-+		reboot_type = BOOT_EFI;
-+		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
-+	}
-+	return 0;
-+}
-+
- void __noreturn machine_real_restart(unsigned int type)
+ static void __init pkey_debug_init(void)
  {
- 	local_irq_disable();
-@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
- 		},
- 	},
-+	{	/* Handle reboot issue on Acer TravelMate X514-51T */
-+		.callback = set_efi_reboot,
-+		.ident = "Acer TravelMate X514-51T",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
-+		},
-+	},
- 
- 	/* Apple */
- 	{	/* Handle problems with rebooting on Apple MacBook5 */
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index a86485ac7c87..de05a4302529 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1598,7 +1598,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
- 			   struct screen_info *si, efi_guid_t *proto,
- 			   unsigned long size);
- 
--bool efi_runtime_disabled(void);
-+#ifdef CONFIG_EFI
-+extern bool efi_runtime_disabled(void);
-+#else
-+static inline bool efi_runtime_disabled(void) { return true; }
-+#endif
-+
- extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
- 
- enum efi_secureboot_mode {
+-	debug_info = debug_register("pkey", 1, 1, 4 * sizeof(long));
++	/* 5 arguments per dbf entry (including the format string ptr) */
++	debug_info = debug_register("pkey", 1, 1, 5 * sizeof(long));
+ 	debug_register_view(debug_info, &debug_sprintf_view);
+ 	debug_set_level(debug_info, 3);
+ }
 -- 
 2.20.1
 
