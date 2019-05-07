@@ -2,121 +2,76 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F793C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A00C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D993F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sb4uWI6E"
+	by mail.kernel.org (Postfix) with ESMTP id DACA520675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557250823;
+	bh=B7xuS+MeONWbjBVsnApHHBG5Z9A/6DoQrJhZdwwwcv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DbDQxchi+VO90h7wf7S9UbJel09yVckYNl5W4wwoFq0gDpsfLsvsoV6gc8ichkVsN
+	 28swUqPs3Gixgd9ARXXYGAiQYHQyUHP4iyIJjevku3tmKuG9ueizGQZqK3Sz6dKRKl
+	 yPrJ2mcK96L75A6wxVEdi+QqQRhgy1HsCyQpyS18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfEGRix (ORCPT
+        id S1727355AbfEGRkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:38:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48376 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGRiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:38:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JOIMQ2PwgSE1LhNwkWDe6YdOB+QHfRQcSFVAFTagnHc=; b=sb4uWI6EOfMhfhDCgpKA1PsTt
-        7AhxjT2DW9CBAQi3QL28CeYK4IdpuEgwnbOH7iFySchxnUvQeMB5XWF7okxzl8rcTv0UfkZqZIZgP
-        +VTGovbm0Nrgrhzot5tqQS7B4Qz5sOAs5QQoT9WLkUcOLm2z4uZ3WVDfGMg+E494qMmCmHSh9IhuK
-        sCNzI0WjeVto0407AhNmb4eni+BMJHFALTFvTKoxt5Ak7fwsvdcvfxHIA2gN82rLNcp70nc8lx6Ul
-        WqJH7yyS5UnLJnUXruUW0UaNb0SzWWtj6c+cT1YIoPCqOJE6YuoYPdPLam2cVWhhRBfmZksBl7MfW
-        KDVqGkpcA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hO42w-0000jD-Rr; Tue, 07 May 2019 17:38:31 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 12157207E85C5; Tue,  7 May 2019 19:38:29 +0200 (CEST)
-Date:   Tue, 7 May 2019 19:38:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-Message-ID: <20190507173829.GY2606@hirez.programming.kicks-ass.net>
-References: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
- <20190506225819.11756974@oasis.local.home>
- <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
- <20190506232158.13c9123b@oasis.local.home>
- <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
- <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
- <20190507111227.1d4268d7@gandalf.local.home>
- <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
- <20190507163440.GV2606@hirez.programming.kicks-ass.net>
- <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
+        Tue, 7 May 2019 13:40:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfEGRkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:40:22 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F94205C9;
+        Tue,  7 May 2019 17:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557250822;
+        bh=B7xuS+MeONWbjBVsnApHHBG5Z9A/6DoQrJhZdwwwcv4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eEUAnM28KJ0goBJyq3TXivl4F3BvbHxfLjWdGtxc84MGwBn0buh/1hbVEK68ShrR4
+         TraYZ0TXDs70U6a5TYrdlVWX9NlUKdDJiIS+bd7N8rn6qNCAqEPIXUvy8JBaSgHDP4
+         ghs3iJweOwSl/NGjSoucgORRmjjxtcbCyc7RJQ2o=
+Date:   Tue, 7 May 2019 13:40:20 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@microsoft.com, thiruan@microsoft.com,
+        bryankel@microsoft.com
+Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
+Message-ID: <20190507174020.GH1747@sasha-vm>
+References: <20190415155636.32748-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
+In-Reply-To: <20190415155636.32748-1-sashal@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 10:08:50AM -0700, Linus Torvalds wrote:
-> On Tue, May 7, 2019 at 9:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Would you consider my approach later on, under the guise of unification?
-> 
-> WHY?
-> 
-> The *only* advantage of your patch is that trivial "look up kernel stack" macro.
-> 
-> Seriously. There's absolutely nothing else.
+On Mon, Apr 15, 2019 at 11:56:34AM -0400, Sasha Levin wrote:
+>From: "Sasha Levin (Microsoft)" <sashal@kernel.org>
+>
+>Changes since v2:
+>
+> - Drop the devicetree bindings patch (we don't add any new ones).
+> - More code cleanups based on Jason Gunthorpe's review.
+>
+>Sasha Levin (2):
+>  ftpm: firmware TPM running in TEE
+>  ftpm: add documentation for ftpm driver
 
-The ftrace_regs_caller, the kprobe tramplines, the unwinder, they all
-have 'funny' bits because pt_regs isn't 'right'.
+Ping? Does anyone have any objections to this?
 
-> So the whole "let's clean up x86-32 to look like x86-64, which got
-> things right" is to me a completely bogus argument. x86-64 got the
-> "yes, push ss/sp unconditionally" part right, but got a lot of other
-> things horribly wrong. So this is all just one small detail that
-> differs, across two architectures that are similar but have very
-> different warts.
-
-It's a detail that leaks into the C code. Yes SWAPGS is horrible crap,
-but C code doesn't much care. The partial pt_regs thing otoh comes up a
-fair number of times.
-
-Anyway; I think we're at the point where we'll have to agree to
-disagree (or maybe slightly past it).
+--
+Thanks,
+Sasha
