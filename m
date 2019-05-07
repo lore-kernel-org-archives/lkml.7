@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DEFC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E087C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ACA20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54B720578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208022;
-	bh=Odb2wR9MNZJs0FIio80DYt0+uYiHzp7oyXcT0w/Xpj0=;
+	s=default; t=1557208035;
+	bh=8+YtWPnbUFWPN/iXi/LHn7xtcTeGo8pWKdfVgK4GiBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2E8dcyEQ3HKbZppdCi0c1B/52bJig0kA5KuczHIMYUL8v22CBRSNeHDFUNB1wCpa
-	 a9GDlTkCLeuthgFVwgX8kmrW58inYN/LphDb4ObYGGHPLFGQfsOFqGuTyCmdSSEEvO
-	 ztiM4/UXz7eVsmSHFj5ozbUytwGYBHZ7SafrNmMk=
+	b=CGT8QtqatLThCYwt9uKYV5/A9clp/62zczGa4F9YqMKkLzSrOrWeG9jCHqh//19j+
+	 o5GGkrmcs7vYsP3dXPmziJ3BhZkurZeRwwuqAhJR/CCHjRKkwqu+eyFhLUZx3IoLmn
+	 3PQOyxxk+C6VAIqJTdp32Ucy7XxDgYXc8BjI5jZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbfEGFrB (ORCPT
+        id S1729386AbfEGFrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:47:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfEGFlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:19 -0400
+        id S1729300AbfEGFlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C37420675;
-        Tue,  7 May 2019 05:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4545E2087F;
+        Tue,  7 May 2019 05:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207678;
-        bh=Odb2wR9MNZJs0FIio80DYt0+uYiHzp7oyXcT0w/Xpj0=;
+        s=default; t=1557207676;
+        bh=8+YtWPnbUFWPN/iXi/LHn7xtcTeGo8pWKdfVgK4GiBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eXQQIj1Fms6AdgrAYjksDGcnqqI9klbCik1Ek4Pq5PcU9ih2DV9c/rpxcgHz96BC1
-         CqpE0ZPqiZ/9aDraJCTO7MIh238qyzbUUIawM9GBLxDKxPW/iyuGjcR6dVge2Fio60
-         qDMjzypBqzItocgT5RhZxcI6+dcXELVAu2QaXR00=
+        b=vrPYhCXnPtGPNM96J5T9s9AAgsES+9Pmyspum+0+olVfdJBtvytor2xRh8NmD8f5/
+         xmLVhCgPoal7vy63ZB+SQlLwzB6ltvKgls0pVjL+hFdE48qyFRzZ3AepMJSLULIjs9
+         2j4i13wH9IIcUW4xcIe+g+q3mrC7Mru9WO5zUPC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 93/95] NFC: nci: Add some bounds checking in nci_hci_cmd_received()
-Date:   Tue,  7 May 2019 01:38:22 -0400
-Message-Id: <20190507053826.31622-93-sashal@kernel.org>
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 92/95] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
+Date:   Tue,  7 May 2019 01:38:21 -0400
+Message-Id: <20190507053826.31622-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,55 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit d7ee81ad09f072eab1681877fc71ec05f9c1ae92 ]
+[ Upstream commit b442fed1b724af0de087912a5718ddde1b87acbb ]
 
-This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
-corruption when handling SHDLC I-Frame commands").
+The workqueue is used to periodically update the networking stack about
+activity / statistics of various objects such as neighbours and TC
+actions.
 
-I'm not totally sure, but I think that commit description may have
-overstated the danger.  I was under the impression that this data came
-from the firmware?  If you can't trust your networking firmware, then
-you're already in trouble.
+It should not be called as part of memory reclaim path, so remove the
+WQ_MEM_RECLAIM flag.
 
-Anyway, these days we add bounds checking where ever we can and we call
-it kernel hardening.  Better safe than sorry.
-
-Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 3d5479e92087 ("mlxsw: core: Remove deprecated create_workqueue")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- net/nfc/nci/hci.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
-index ddfc52ac1f9b..c0d323b58e73 100644
---- a/net/nfc/nci/hci.c
-+++ b/net/nfc/nci/hci.c
-@@ -312,6 +312,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
- 		create_info = (struct nci_hci_create_pipe_resp *)skb->data;
- 		dest_gate = create_info->dest_gate;
- 		new_pipe = create_info->pipe;
-+		if (new_pipe >= NCI_HCI_MAX_PIPES) {
-+			status = NCI_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index 33262c09c703..fad26046e159 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1812,7 +1812,7 @@ static int __init mlxsw_core_module_init(void)
+ {
+ 	int err;
  
- 		/* Save the new created pipe and bind with local gate,
- 		 * the description for skb->data[3] is destination gate id
-@@ -336,6 +340,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
- 			goto exit;
- 		}
- 		delete_info = (struct nci_hci_delete_pipe_noti *)skb->data;
-+		if (delete_info->pipe >= NCI_HCI_MAX_PIPES) {
-+			status = NCI_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
- 
- 		ndev->hci_dev->pipes[delete_info->pipe].gate =
- 						NCI_HCI_INVALID_GATE;
+-	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
++	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, 0, 0);
+ 	if (!mlxsw_wq)
+ 		return -ENOMEM;
+ 	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
 -- 
 2.20.1
 
