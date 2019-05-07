@@ -2,70 +2,99 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBC9C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673E4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1A0205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A92C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557250547;
+	bh=QpGCIYI22OmPrtKNZByqkY/eP0ucnMsjEQvSLHbvg1k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vLRdIJo1mu05hBSQkYcxs3XjG0EMMc80VEEwUDS+p0XzBFCYvjz+DlupU7l7CsCe0
+	 UgQ+iX2+G7AEKLlXF/gzHsW2iFYxW9rxzWyC1VLbzRBhp/QI+Vry/BcnWDDnW6sUZE
+	 DKhEX/xsZKeuvkUrHqROhOpI41CnrudHR3DkeJtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfEGRfb (ORCPT
+        id S1727486AbfEGRfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:35:31 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61243 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbfEGRfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:35:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 10:35:29 -0700
-Received: from unknown (HELO [10.232.112.171]) ([10.232.112.171])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 07 May 2019 10:35:28 -0700
-Subject: Re: [PATCH v2 3/7] devcoredump: allow to create several coredump
- files in one device
-To:     Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christoph Hellwig <hch@lst.de>
-References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
- <1557248314-4238-4-git-send-email-akinobu.mita@gmail.com>
-From:   "Heitke, Kenneth" <kenneth.heitke@intel.com>
-Message-ID: <aced1953-4ea2-c8b1-9ee9-068e92ae1f8a@intel.com>
-Date:   Tue, 7 May 2019 11:35:28 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 13:35:46 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34387 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbfEGRfp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:35:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id s7so9662103ljh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ffMscuu3PUeSeZb5tEXYoJU5cfVCzk2YToQl4OvjLZo=;
+        b=H36Gpb50r9djkhKtwQe3VJpRaLJw/NGSVDsmjM54fy8tMa/SUIs7pLVJp581T7Ys20
+         8jaYXH5Sh569s93/hVFiq5rZNQH56hFJ256xdH0tmNKP7Bczg/VWm64TU4aXNw+s8jYx
+         QPwg4iTwOqo5JQRRyAhG7MhENuqZqg3/ZjtCY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ffMscuu3PUeSeZb5tEXYoJU5cfVCzk2YToQl4OvjLZo=;
+        b=avoNHA8uhHsme46qtZNDJqubeUWlcYtKDXP5vXpfKMhn8xXrQ1zk98+3UAjbtSMQNJ
+         /VNV88i1IZeWVD7r1744jiyEMa6/dS3wZouzpZ/l18Su52ZOVWzXi72/NBE0hD0MFLQg
+         Ck7+gl23bzuQ+uchjBOc0ED4wd74BcNnLLUHU+Wl8TDdpZ/+r8xgRn5kpESWPRpTaP9s
+         sj/eRQe/PSl2YldGZtRjlkps695ZjW9HC214ogXxXmMtSB957QjbeEebzOHHIT4Pj4HU
+         ycE0PziYJzgMGKgP4wJVGjDFNYTHWv56rEesGN+ShTTcMZnfJ3vTkyv4gPQlyk+lDMib
+         pIzg==
+X-Gm-Message-State: APjAAAUguZsQg4bkHafTkhYgKEcYWKyfthChkSHoQ6vyA2d/WvQeDia+
+        fR0lfPdqEvxdiCJqbDT91i/dPV3S5gI=
+X-Google-Smtp-Source: APXvYqwFJpJXFt96v/SD14kBNrxVfKAZLRK1VmtiPPnMg+AnbG9Y4epOcpzSkLsERghqOkMKe6tTBA==
+X-Received: by 2002:a2e:9d12:: with SMTP id t18mr18474297lji.163.1557250543289;
+        Tue, 07 May 2019 10:35:43 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id a6sm538720lfi.89.2019.05.07.10.35.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 10:35:42 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id d8so12449469lfb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:35:42 -0700 (PDT)
+X-Received: by 2002:ac2:43cf:: with SMTP id u15mr17155883lfl.67.1557250541931;
+ Tue, 07 May 2019 10:35:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1557248314-4238-4-git-send-email-akinobu.mita@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190507132632.GB26655@zn.tnic>
+In-Reply-To: <20190507132632.GB26655@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 May 2019 10:35:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh4Cjb1qDj_VRW9W4d4n9WLksgMKF-roG8eCk_O0ZaEEg@mail.gmail.com>
+Message-ID: <CAHk-=wh4Cjb1qDj_VRW9W4d4n9WLksgMKF-roG8eCk_O0ZaEEg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86 FPU changes for 5.2
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Rik van Riel <riel@surriel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 7, 2019 at 6:26 AM Borislav Petkov <bp@suse.de> wrote:
+>
+> This branch contains work started by Rik van Riel and brought to
+> fruition by Sebastian Andrzej Siewior with the main goal to optimize
+> when to load FPU registers: only when returning to userspace and not on
+> every context switch (while the task remains in the kernel).
 
+I love this and we should have done it long ago, but I also worry that
+every time we've messed with the FP state, we've had interesting bugs.
+Which is obviously why we didn't do this long ago.
 
-On 5/7/2019 10:58 AM, Akinobu Mita wrote:
-> @@ -292,6 +309,12 @@ void dev_coredumpm(struct device *dev, struct module *owner,
->   	if (device_add(&devcd->devcd_dev))
->   		goto put_device;
->   
-> +	for (i = 0; i < devcd->num_files; i++) {
-> +		if (device_create_bin_file(&devcd->devcd_dev,
-> +					   &devcd->files[i].bin_attr))
-> +			/* nothing - some files will be missing */;
+Has this gone through lots of testing, particularly with things like
+FP signal handling and old machines that don't necessarily have
+anything but the most basic FP state (ie Pentium class etc)?
 
-Is the conditional necessary if you aren't going to do anything?
+I've pulled it, but I'd still like to feel safer about it after-the-fact ;)
 
-> +	}
-> +
->   	if (sysfs_create_link(&devcd->devcd_dev.kobj, &dev->kobj,
->   			      "failing_device"))
->   		/* nothing - symlink will be missing */;
+               Linus
