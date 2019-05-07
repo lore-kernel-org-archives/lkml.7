@@ -2,140 +2,137 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B08C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1FEC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A462053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A098620656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557249058;
+	bh=t7oPL7+XtQXXNlhx6KWpb7a1UJh20zGUTTFFX28Ujv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zSqHMjGQFaH/aZD9JpOV+QgCzMb7N/LiDjta2JTVxXI8K3LkT9ngfu1KkEzAjS78w
+	 R59hzetBJwH2kexgXVkmQctTfD4+JCy2IoFtzKFPhxT+RxJxNuKW1qD2FfQkm77Lg3
+	 +5j5d/MyUrqKQJ2UfXjYEABcjXsuPjT0StNln0pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfEGRKq (ORCPT
+        id S1727356AbfEGRK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:10:46 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47114 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726225AbfEGRKp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:10:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TR7KsnZ_1557249036;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TR7KsnZ_1557249036)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 08 May 2019 01:10:41 +0800
-Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
- eligibility
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
-References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190423175252.GP25106@dhcp22.suse.cz>
- <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
- <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
- <20190507104709.GP31017@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <ec8a65c7-9b0b-9342-4854-46c732c99390@linux.alibaba.com>
-Date:   Tue, 7 May 2019 10:10:33 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 7 May 2019 13:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbfEGRK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:10:57 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBCB2053B;
+        Tue,  7 May 2019 17:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557249056;
+        bh=t7oPL7+XtQXXNlhx6KWpb7a1UJh20zGUTTFFX28Ujv8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GJi99P5EzigoVE+Iz8ZOlxsWyF6MZllOO/ey/RUg/c+WwyhRo5+kqXTPrT6lYC4N1
+         VYulctKYesSoazDsetXpUWrhNjPqGI17oZBwQqXGCAzbNOxaOVLphAhL2HUHQo2k2p
+         BejCtt5kMOa692Qlr3TG2GX9L7U98vUBaUCUEpZA=
+Date:   Tue, 7 May 2019 22:40:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        orito.takao@socionext.com, sugaya.taichi@socionext.com,
+        kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org,
+        masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dmaengine: milbeaut: Add Milbeaut AXI DMA controller
+Message-ID: <20190507171042.GS16052@vkoul-mobl>
+References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com>
+ <1553487314-9185-3-git-send-email-kasai.kazuhiro@socionext.com>
+ <20190426114629.GU28103@vkoul-mobl>
+ <20190507053924.GA3359@ubuntu>
 MIME-Version: 1.0
-In-Reply-To: <20190507104709.GP31017@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507053924.GA3359@ubuntu>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07-05-19, 14:39, Kazuhiro Kasai wrote:
+> On Fri, Apr 26, 2019 at 17:16 +0530, Vinod Koul wrote:
+> > On 25-03-19, 13:15, Kazuhiro Kasai wrote:
 
+> > > +struct m10v_dma_chan {
+> > > +	struct dma_chan chan;
+> > > +	struct m10v_dma_device *mdmac;
+> > > +	void __iomem *regs;
+> > > +	int irq;
+> > > +	struct m10v_dma_desc mdesc;
+> >
+> > So there is a *single* descriptor? Not a list??
+> 
+> Yes, single descriptor.
 
-On 5/7/19 3:47 AM, Michal Hocko wrote:
-> [Hmm, I thought, Hugh was CCed]
->
-> On Mon 06-05-19 16:37:42, Yang Shi wrote:
->>
->> On 4/28/19 12:13 PM, Yang Shi wrote:
->>>
->>> On 4/23/19 10:52 AM, Michal Hocko wrote:
->>>> On Wed 24-04-19 00:43:01, Yang Shi wrote:
->>>>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
->>>>> for each
->>>>> vma") introduced THPeligible bit for processes' smaps. But, when
->>>>> checking
->>>>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
->>>>> called to override the result from shmem_huge_enabled().  It may result
->>>>> in the anonymous vma's THP flag override shmem's.  For example,
->>>>> running a
->>>>> simple test which create THP for shmem, but with anonymous THP
->>>>> disabled,
->>>>> when reading the process's smaps, it may show:
->>>>>
->>>>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
->>>>> Size:               4096 kB
->>>>> ...
->>>>> [snip]
->>>>> ...
->>>>> ShmemPmdMapped:     4096 kB
->>>>> ...
->>>>> [snip]
->>>>> ...
->>>>> THPeligible:    0
->>>>>
->>>>> And, /proc/meminfo does show THP allocated and PMD mapped too:
->>>>>
->>>>> ShmemHugePages:     4096 kB
->>>>> ShmemPmdMapped:     4096 kB
->>>>>
->>>>> This doesn't make too much sense.  The anonymous THP flag should not
->>>>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
->>>>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
->>>>> dax vma check since we already checked if the vma is shmem already.
->>>> Kirill, can we get a confirmation that this is really intended behavior
->>>> rather than an omission please? Is this documented? What is a global
->>>> knob to simply disable THP system wise?
->>> Hi Kirill,
->>>
->>> Ping. Any comment?
->> Talked with Kirill at LSFMM, it sounds this is kind of intended behavior
->> according to him. But, we all agree it looks inconsistent.
->>
->> So, we may have two options:
->>      - Just fix the false negative issue as what the patch does
->>      - Change the behavior to make it more consistent
->>
->> I'm not sure whether anyone relies on the behavior explicitly or implicitly
->> or not.
-> Well, I would be certainly more happy with a more consistent behavior.
-> Talked to Hugh at LSFMM about this and he finds treating shmem objects
-> separately from the anonymous memory. And that is already the case
-> partially when each mount point might have its own setup. So the primary
-> question is whether we need a one global knob to controll all THP
-> allocations. One argument to have that is that it might be helpful to
-> for an admin to simply disable source of THP at a single place rather
-> than crawling over all shmem mount points and remount them. Especially
-> in environments where shmem points are mounted in a container by a
-> non-root. Why would somebody wanted something like that? One example
-> would be to temporarily workaround high order allocations issues which
-> we have seen non trivial amount of in the past and we are likely not at
-> the end of the tunel.
+And why is that, you can create a list and keep getting descriptors and
+issue them to hardware and get better pref!
 
-Shmem has a global control for such use. Setting shmem_enabled to 
-"force" or "deny" would enable or disable THP for shmem globally, 
-including non-fs objects, i.e. memfd, SYS V shmem, etc.
+> > > +static dma_cookie_t m10v_xdmac_tx_submit(struct dma_async_tx_descriptor *txd)
+> > > +{
+> > > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(txd->chan);
+> > > +	dma_cookie_t cookie;
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&mchan->lock, flags);
+> > > +	cookie = dma_cookie_assign(txd);
+> > > +	spin_unlock_irqrestore(&mchan->lock, flags);
+> > > +
+> > > +	return cookie;
+> >
+> > sounds like vchan_tx_submit() i think you can use virt-dma layer and then
+> > get rid of artificial limit in driver and be able to queue up the txn on
+> > dmaengine.
+> 
+> OK, I will try to use virt-dma layer in next version.
 
->
-> That being said I would be in favor of treating the global sysfs knob to
-> be global for all THP allocations. I will not push back on that if there
-> is a general consensus that shmem and fs in general are a different
-> class of objects and a single global control is not desirable for
-> whatever reasons.
+And you will get lists to manage descriptor for free! so you can use
+that to support multiple txns as well!
 
-OK, we need more inputs from Kirill, Hugh and other folks.
+> > > +static struct dma_async_tx_descriptor *
+> > > +m10v_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+> > > +			   dma_addr_t src, size_t len, unsigned long flags)
+> > > +{
+> > > +	struct m10v_dma_chan *mchan = to_m10v_dma_chan(chan);
+> > > +
+> > > +	dma_async_tx_descriptor_init(&mchan->mdesc.txd, chan);
+> > > +	mchan->mdesc.txd.tx_submit = m10v_xdmac_tx_submit;
+> > > +	mchan->mdesc.txd.callback = NULL;
+> > > +	mchan->mdesc.txd.flags = flags;
+> > > +	mchan->mdesc.txd.cookie = -EBUSY;
+> > > +
+> > > +	mchan->mdesc.len = len;
+> > > +	mchan->mdesc.src = src;
+> > > +	mchan->mdesc.dst = dst;
+> > > +
+> > > +	return &mchan->mdesc.txd;
+> >
+> > So you support single descriptor and dont check if this has been already
+> > configured. So I guess this has been tested by doing txn one at a time
+> > and not submitted bunch of txn and wait for them to complete. Please fix
+> > that to really enable dmaengine capabilities.
+> 
+> Thank you for advice. I want to fix it and I have 2 questions.
+> 
+> 1. Does virt-dma layer help to fix this?
 
->
-> Kirill, Hugh othe folks?
+Yes
 
+> 2. Can dmatest test that dmaengine capabilities?
+
+Yes for memcpy operations, see Documentation/driver-api/dmaengine/dmatest.rst
+
+-- 
+~Vinod
