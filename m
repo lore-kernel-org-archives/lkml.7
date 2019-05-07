@@ -2,92 +2,116 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFF3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46098C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE1220C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160AC205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfEGXpJ (ORCPT
+        id S1726503AbfEGXsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 19:45:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58426 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfEGXpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 19:45:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E966F8764B;
-        Tue,  7 May 2019 23:45:08 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E05921001E99;
-        Tue,  7 May 2019 23:45:04 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 5A2AA10517B;
-        Tue,  7 May 2019 20:44:49 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x47Nij80006291;
-        Tue, 7 May 2019 20:44:45 -0300
-Date:   Tue, 7 May 2019 20:44:45 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kvm-devel <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Bandan Das <bsd@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
-Message-ID: <20190507234445.GA6185@amt.cnet>
-References: <20190507185647.GA29409@amt.cnet>
- <20190507221519.GE2677@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507221519.GE2677@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 07 May 2019 23:45:09 +0000 (UTC)
+        Tue, 7 May 2019 19:48:06 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32812 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfEGXsF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 19:48:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z28so9481108pfk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 16:48:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Xc5yB1zQ65A+bT/TEX7kwPlOeoH820lrDziLp7lmLpk=;
+        b=NNe1TYzncf2AzJ0ANuIPs+/B/sGFXzx9ZtetP75ixWFN1g73WWCQsjLBMPTvdEYvLO
+         tX/XlX79o1ME8k7O04p7kWDMkbPfZq9XG9JKK8C21ftS65DxtitCuGJZMl9gi3SCnuXS
+         FFTzfvwEPYHQ9BeX4Ee5p5Ug+J77MucHPsUGi4L3RAok0kPD2FeF7sVp3nkTEJyZ3LLs
+         SLh5K2q/EXWx8kVH2fwvY/QR/TuIAo4Vs8ovKbvkiW+ghiiELlUxt7Ern4btQfDDq/Mu
+         PPGParDYvKTdQJgPxPobFIfByzYEcu3oS7m984k8t+ktDDpv4yXasLxKZHqw+3Bg1D4f
+         1zzg==
+X-Gm-Message-State: APjAAAX+Va/1Id69m8b35v51rVVd2JPGzoWV4hEwntqEqlPc1w2T3dwZ
+        eYZABFoNO/Dy7hH5Jt3y6nIAHMjXY1o=
+X-Google-Smtp-Source: APXvYqzxi+8s0kTgdE3wx6h+YyLz1JxmMhnAT4Dvn0eloXEXtiTyplpknHAhK/JvQQI++cJkR2huwA==
+X-Received: by 2002:aa7:8186:: with SMTP id g6mr45461551pfi.126.1557272884660;
+        Tue, 07 May 2019 16:48:04 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id q17sm35869266pfi.185.2019.05.07.16.48.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 16:48:03 -0700 (PDT)
+Date:   Tue, 07 May 2019 16:48:03 -0700 (PDT)
+X-Google-Original-Date: Tue, 07 May 2019 16:27:44 PDT (-0700)
+Subject:     Re: [PATCH] riscv: fix locking violation in page fault handler
+In-Reply-To: <mvm5zqmu35d.fsf@suse.de>
+CC:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     schwab@suse.de
+Message-ID: <mhng-56794b7f-6cd4-4eb9-a962-83ad256ed3cd@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 12:15:19AM +0200, Peter Zijlstra wrote:
-> On Tue, May 07, 2019 at 03:56:49PM -0300, Marcelo Tosatti wrote:
-> > 
-> > Certain workloads perform poorly on KVM compared to baremetal
-> > due to baremetal's ability to perform mwait on NEED_RESCHED
-> > bit of task flags (therefore skipping the IPI).
-> > 
-> > This patch introduces a configurable busy-wait delay before entering the
-> > architecture delay routine, allowing wakeup IPIs to be skipped 
-> > (if the IPI happens in that window).
-> > 
-> > The real-life workload which this patch improves performance
-> > is SAP HANA (by 5-10%) (for which case setting idle_spin to 30 
-> > is sufficient).
-> > 
-> > This patch improves the attached server.py and client.py example 
-> > as follows:
-> > 
-> > Host:                           31.814230202231556
-> > Guest:                          38.17718765199993       (83 %)
-> > Guest, idle_spin=50us:          33.317709898000004      (95 %)
-> > Guest, idle_spin=220us:         32.27826551499999       (98 %)
-> > 
-> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
-> 
-> Thanks for the CC..
-> 
-> NAK, this is something that should live in a virt idle governor or
-> something along those lines.
+On Tue, 07 May 2019 00:36:46 PDT (-0700), schwab@suse.de wrote:
+> When a user mode process accesses an address in the vmalloc area
+> do_page_fault tries to unlock the mmap semaphore when it isn't locked.
+>
+> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> ---
+>  arch/riscv/mm/fault.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> index 88401d5125bc..c51878e5a66a 100644
+> --- a/arch/riscv/mm/fault.c
+> +++ b/arch/riscv/mm/fault.c
+> @@ -181,6 +181,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  	up_read(&mm->mmap_sem);
+>  	/* User mode accesses just cause a SIGSEGV */
+>  	if (user_mode(regs)) {
+> +bad_area_do_trap:
+>  		do_trap(regs, SIGSEGV, code, addr, tsk);
+>  		return;
+>  	}
+> @@ -230,7 +231,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  		int index;
+>
+>  		if (user_mode(regs))
+> -			goto bad_area;
+> +			goto bad_area_do_trap;
+>
+>  		/*
+>  		 * Synchronize this task's top level page-table
 
-Ok, makes sense, will rework the patch!
+I got lost with all the gotos, I think something like this is cleaner
 
+    diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+    index 26293bc053a8..cec8be9e2d6a 100644
+    --- a/arch/riscv/mm/fault.c
+    +++ b/arch/riscv/mm/fault.c
+    @@ -229,8 +229,9 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+                    pte_t *pte_k;
+                    int index;
+    
+    +               /* User mode accesses just cause a SIGSEGV */
+                    if (user_mode(regs))
+    -                       goto bad_area;
+    +                       return do_trap(regs, SIGSEGV, code, addr, tsk);
+    
+                    /*
+                     * Synchronize this task's top level page-table
 
+Unless anyone has a better idea?
+
+Either way:
+
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+
+LMK if you, or anyone else, has a preference.  I'm assuming this will go in
+through my tree, so I've picked up my version for now :)
