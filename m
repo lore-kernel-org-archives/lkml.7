@@ -2,117 +2,265 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0B6C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B571AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3FC20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721F421479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfEGJS4 (ORCPT
+        id S1726658AbfEGJUR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:18:56 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:24750 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726736AbfEGJS4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:18:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-180-vfktmACVNDKgwMnn5zucnQ-1; Tue, 07 May 2019 10:18:52 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 7 May 2019 10:18:51 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 7 May 2019 10:18:51 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Peter Zijlstra' <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Nicolai Stange" <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: RE: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-Thread-Topic: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Thread-Index: AQHVBLOOpe57oOoUm0iPpfi6TWW3V6ZfXgyA
-Date:   Tue, 7 May 2019 09:18:51 +0000
-Message-ID: <b34aa38bdfe84263bc20b60761bf6005@AcuMS.aculab.com>
-References: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
- <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
- <20190502185225.0cdfc8bc@gandalf.local.home>
- <20190502193129.664c5b2e@gandalf.local.home>
- <20190502195052.0af473cf@gandalf.local.home>
- <20190503092959.GB2623@hirez.programming.kicks-ass.net>
- <20190503092247.20cc1ff0@gandalf.local.home>
- <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
- <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
- <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
- <20190507085753.GO2606@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190507085753.GO2606@hirez.programming.kicks-ass.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 7 May 2019 05:20:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53924 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfEGJUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:20:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4031309703F;
+        Tue,  7 May 2019 09:20:15 +0000 (UTC)
+Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7803611DC;
+        Tue,  7 May 2019 09:19:56 +0000 (UTC)
+Date:   Tue, 7 May 2019 11:19:54 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190507111954.43d477c3.cohuck@redhat.com>
+In-Reply-To: <20190506014904.3621-1-yan.y.zhao@intel.com>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+        <20190506014904.3621-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-X-MC-Unique: vfktmACVNDKgwMnn5zucnQ-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 07 May 2019 09:20:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGV0ZXIgWmlqbHN0cmENCj4gU2VudDogMDcgTWF5IDIwMTkgMDk6NTgNCi4uLg0KPiAr
-CS8qDQo+ICsJICogV2hlbiB3ZSdyZSBoZXJlIGZyb20ga2VybmVsIG1vZGU7IHRoZSAoZXhjZXB0
-aW9uKSBzdGFjayBsb29rcyBsaWtlOg0KPiArCSAqDQo+ICsJICogNCo0KCVlc3ApIC0gPHByZXZp
-b3VzIGNvbnRleHQ+DQo+ICsJICogMyo0KCVlc3ApIC0gZmxhZ3MNCj4gKwkgKiAyKjQoJWVzcCkg
-LSBjcw0KPiArCSAqIDEqNCglZXNwKSAtIGlwDQo+ICsJICogMCo0KCVlc3ApIC0gb3JpZ19lYXgN
-Cg0KQW0gSSByaWdodCBpbiB0aGlua2luZyB0aGF0IHRoaXMgaXMgdGhlIG9ubHkgJ0lOVDMnIHN0
-YWNrIGZyYW1lIHRoYXQNCm5lZWRzIHRvIGJlICdmaWRkbGVkJyB3aXRoPw0KQW5kIHRoYXQgdGhl
-ICdlbXVsYXRlIGEgY2FsbCBpbnN0cnVjdGlvbicgaGFzIHZlcmlmaWVkIHRoYXQgaXMgdGhlIGNh
-c2U/Pw0KU28gdGhlICVjcyBpcyBhbHdheXMgdGhlIGtlcm5lbCAlY3MuDQoNCklmIHRoZSAnY2Fs
-bCB0YXJnZXQnIGFkZHJlc3MgaXMgc2F2ZWQgaW4gYSBwZXItY3B1IGxvY2F0aW9uIGl0IG91Z2h0
-DQp0byBiZSBwb3NzaWJsZSB0byBnZXQgdGhlIGNvZGUgdGhhdCByZXR1cm5zIGZyb20gdGhlIElO
-VDMgd2l0aCB0aGUNCmNhbGwgdGFyZ2V0IGFkZHJlc3MgKG9yIHplcm8pIGluICVheC4NCklmIG5v
-bi16ZXJvLCBpbnN0ZWFkIG9mICdwb3AgJWF4OyBpcmV0JyBleGVjdXRlOg0KCXhjaGcgJWVheCwg
-NCglZXNwKSAgIC0gc3dhcCBmdW5jdGlvbiBhZGRyZXNzIGFuZCBjYWxsZXJzIGlwDQoJcHVzaCAx
-MiglZXNwKSAgICAgICAgLSBvbGQgZmxhZ3MNCgltb3YgIDE0KCVlc3ApLCVlYXggICAtIGNhbGxl
-cnMgYWRkcmVzcyBvdmVyIGZsYWdzDQoJcG9wZiAgICAgICAgICAgICAgICAgLSBlbmFibGVzIGlu
-dGVycnVwdHMgKGV0YykNCglwb3AgICVlYXgNCglyZXRmICAgICAgICAgICAgICAgICAtIEp1bXAg
-dG8gY2FsbGVkIGZ1bmN0aW9uIGFuZCByZW1vdmUgJWNzDQoNCk5vdGhpbmcgZWxzZSBuZWVkcyB0
-byBiZSBtb3ZlZC4NCg0KCURhdmlkDQoNCgkNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
-aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
-DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Sun,  5 May 2019 21:49:04 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
+> version attribute is used to check two mdev devices' compatibility.
+> 
+> The key point of this version attribute is that it's rw.
+> User space has no need to understand internal of device version and no
+> need to compare versions by itself.
+> Compared to reading version strings from both two mdev devices being
+> checked, user space only reads from one mdev device's version attribute.
+> After getting its version string, user space writes this string into the
+> other mdev device's version attribute. Vendor driver of mdev device
+> whose version attribute being written will check device compatibility of
+> the two mdev devices for user space and return success for compatibility
+> or errno for incompatibility.
+
+I'm still missing a bit _what_ is actually supposed to be
+compatible/incompatible. I'd assume some internal state descriptions
+(even if this is not actually limited to migration).
+
+> So two readings of version attributes + checking in user space are now
+> changed to one reading + one writing of version attributes + checking in
+> vendor driver.
+
+I'm not sure that needs to go into the patch description (sounds like
+it is rather a change log?)
+
+> Format and length of version strings are now private to vendor driver
+> who can define them freely.
+
+Same here; simply drop the 'now'?
+
+> 
+>              __ user space
+>               /\          \
+>              /             \write
+>             / read          \
+>      ______/__           ___\|/___
+>     | version |         | version |-->check compatibility
+>     -----------         -----------
+>     mdev device A       mdev device B
+> 
+> This version attribute is optional. If a mdev device does not provide
+> with a version attribute, this mdev device is incompatible to all other
+> mdev devices.
+
+Again, I'd like an explanation here what kind of compatibility we're
+talking about.
+
+> 
+> Live migration is able to take advantage of this version attribute.
+> Before user space actually starts live migration, it can first check
+> whether two mdev devices are compatible.
+> 
+> v2:
+> 1. added detailed intent and usage
+> 2. made definition of version string completely private to vendor driver
+>    (Alex Williamson)
+> 3. abandoned changes to sample mdev drivers (Alex Williamson)
+> 4. mandatory --> optional (Cornelia Huck)
+> 5. added description for errno (Cornelia Huck)
+
+This changelog should go below the ---, so that it does not actually
+show up in the patch description later :)
+
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> Cc: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> Cc: Daniel P. Berrangé <berrange@redhat.com>
+> Cc: Christophe de Dinechin <dinechin@redhat.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  Documentation/vfio-mediated-device.txt | 140 +++++++++++++++++++++++++
+>  1 file changed, 140 insertions(+)
+> 
+> diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+> index c3f69bcaf96e..013a764968eb 100644
+> --- a/Documentation/vfio-mediated-device.txt
+> +++ b/Documentation/vfio-mediated-device.txt
+> @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+>    |     |   |--- available_instances
+>    |     |   |--- device_api
+>    |     |   |--- description
+> +  |     |   |--- version
+>    |     |   |--- [devices]
+>    |     |--- [<type-id>]
+>    |     |   |--- create
+> @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+>    |     |   |--- available_instances
+>    |     |   |--- device_api
+>    |     |   |--- description
+> +  |     |   |--- version
+>    |     |   |--- [devices]
+>    |     |--- [<type-id>]
+>    |          |--- create
+> @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+>    |          |--- available_instances
+>    |          |--- device_api
+>    |          |--- description
+> +  |          |--- version
+>    |          |--- [devices]
+>  
+>  * [mdev_supported_types]
+> @@ -246,6 +249,143 @@ Directories and files under the sysfs for Each Physical Device
+>    This attribute should show the number of devices of type <type-id> that can be
+>    created.
+>  
+> +* version
+> +
+> +  This attribute is rw, and is optional.
+> +  It is used to check device compatibility between two mdev devices and is
+> +  accessed in pairs between the two mdev devices being checked.
+> +  The intent of this attribute is to make an mdev device's version opaque to
+> +  user space, so instead of reading two mdev devices' version strings and
+> +  comparing in userspace, user space should only read one mdev device's version
+> +  attribute, and writes this version string into the other mdev device's version
+> +  attribute. Then vendor driver of mdev device whose version attribute being
+> +  written would check the incoming version string and tell user space whether
+> +  the two mdev devices are compatible via return value. That's why this
+> +  attribute is writable.
+
+I would reword this a bit:
+
+"This attribute provides a way to check device compatibility between
+two mdev devices from userspace. The intended usage is for userspace to
+read the version attribute from one mdev device and then writing that
+value to the version attribute of the other mdev device. The second
+mdev device indicates compatibility via the return code of the write
+operation. This makes compatibility between mdev devices completely
+vendor-defined and opaque to userspace."
+
+We still should explain _what_ compatibility we're talking about here,
+though.
+
+> +
+> +  when reading this attribute, it should show device version string of
+> +  the device of type <type-id>.
+> +
+> +  This string is private to vendor driver itself. Vendor driver is able to
+> +  freely define format and length of device version string.
+> +  e.g. It can use a combination of pciid of parent device + mdev type.
+> +
+> +  When writing a string to this attribute, vendor driver should analyze this
+> +  string and check whether the mdev device being identified by this string is
+> +  compatible with the mdev device for this attribute. vendor driver should then
+> +  return written string's length if it regards the two mdev devices are
+> +  compatible; vendor driver should return negative errno if it regards the two
+> +  mdev devices are not compatible.
+> +
+> +  User space should treat ANY of below conditions as two mdev devices not
+> +  compatible:
+> +  (1) any one of the two mdev devices does not have a version attribute
+> +  (2) error when read from one mdev device's version attribute
+
+s/read/reading/
+
+> +  (3) error when write one mdev device's version string to the other mdev
+
+s/write/writing/
+
+> +  device's version attribute
+> +
+> +  User space should regard two mdev devices compatible when ALL of below
+> +  conditions are met:
+> +  (1) success when read from one mdev device's version attribute.
+
+s/read/reading/
+
+> +  (2) success when write one mdev device's version string to the other mdev
+
+s/write/writing/
+
+> +  device's version attribute
+> +
+> +  Errno:
+> +  If vendor driver wants to claim a mdev device incompatible to all other mdev
+
+"If the vendor driver wants to designate a mdev device..."
+
+> +  devices, it should not register version attribute for this mdev device. But if
+> +  a vendor driver has already registered version attribute and it wants to claim
+> +  a mdev device incompatible to all other mdev devices, it needs to return
+> +  -ENODEV on access to this mdev device's version attribute.
+> +  If a mdev device is only incompatible to certain mdev devices, write of
+> +  incompatible mdev devices's version strings to its version attribute should
+> +  return -EINVAL;
+
+
+Maybe put the defined return code into a bulleted list instead? But
+this looks reasonable as well.
+
+> +
+> +  This attribute can be taken advantage of by live migration.
+> +  If user space detects two mdev devices are compatible through version
+> +  attribute, it can start migration between the two mdev devices, otherwise it
+> +  should abort its migration attempts between the two mdev devices.
+
+(...)
