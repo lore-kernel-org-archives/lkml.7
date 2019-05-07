@@ -2,129 +2,199 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57637C04AAE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921E9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2750620835
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ZRB9fBjM"
+	by mail.kernel.org (Postfix) with ESMTP id 6325C20835
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfEGAuP (ORCPT
+        id S1726560AbfEGAul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 20:50:15 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:23406 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfEGAuP (ORCPT
+        Mon, 6 May 2019 20:50:41 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38134 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfEGAul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 20:50:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1557190215; x=1588726215;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gaTToYrYt6I9SvIYk6GVO8CEXs+H6f8hXxyYKOJG7lc=;
-  b=ZRB9fBjM+ZNSTVKV8xnGT+At6Xq6A7mofguWIb0MCvSQlt9TftoJQrQT
-   s5JXv9aD4Sw5HQ05sYQXMopjMSr6X+6uhAxQPP27mNuuXrEAb2GPGKwRL
-   b+kk8xI6BI//eGo63p3N9epoY8qzDaHGaNYazc27fvje4DoKAHZj7ybxH
-   sV37WRwokYwxiVU1KygX6mGUltTLkiwh+hg/78G/lni/VFtSYzDDRJXG4
-   2Ik2PsQZg/l3crUIl9g5QefUkGT0kCUXL1lst/bTg8+bZEvPC7QLCVfTR
-   pBlNluSgLG8c928vPY/nSnLGpnck4lR5L7T7BVwElnaKvMkSa8v0uGtFm
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,440,1549900800"; 
-   d="scan'208";a="109370139"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 07 May 2019 08:50:15 +0800
-IronPort-SDR: JiI+MVqZZGUc8sMb36ctON3YuIoPWk2zGaFRZ42AMAvJLNQcaZVrhsfG9vVQm+L+BQS3Tk+q79
- oJHk0X2DNXgW77vznsNPK3gCqERqY/JcVNj86PO/WC/QXyy9BRT6XIiNohKFWgqponXQSryhhe
- rSp4H0V3kzOgK6n/KeYt64Ciz/BWS61gXP+VBuLDKWI2m6Ja60c4YX8XahO6NjKgENM8cpxj8/
- dnqsD6x+8SCaWCKnn2Ce0xZdbSr/kKuyuuHc+4BkC8J7EFe8OcQnVTDHgoYHEh1ti5E79K+vOP
- fprkxy3m4QoyWy0tRM/mKlrn
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 06 May 2019 17:28:30 -0700
-IronPort-SDR: zDSZycrSkej1TvMSwsQxAWimbp8Ywg7lOHD2izeELWDUuhtCeHDHHVJ+yacnNk4nbwhtk1gIf5
- JqavRRC+derPRozHe8v1yVD2BzW8eCvdFlJ9M1AEv/lBcsniFTwqUtJv8vkRCO6bXIdL42en1W
- J1FKw3KHl+lI82diuP8GfgQgEF6oMRAdoXpZNGNdY9IPPQ4g+gDNd/wxxC1Gz0EpZLCtisWojK
- qnoFtfqljHwDNrpPrr/g+COy0tocTk/Mf5DbpDs8YxPeYVsMZcQ0z7MP6/Kf6Vv4cfEQRVcdyQ
- frc=
-Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
-  by uls-op-cesaip01.wdc.com with ESMTP; 06 May 2019 17:50:14 -0700
-Subject: Re: [U-Boot] [v4 PATCH] RISCV: image: Add booti support
-To:     Tom Rini <trini@konsulko.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Karsten Merker <merker@debian.org>, linux-kernel@vger.kernel.org,
-        Alexander Graf <agraf@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Joe Hershberger <joe.hershberger@ni.com>,
-        Lukas Auer <lukas.auer@aisec.fraunhofer.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rick Chen <rick@andestech.com>, Simon Glass <sjg@chromium.org>,
-        u-boot@lists.denx.de
-References: <20190506181134.9575-1-atish.patra@wdc.com>
- <251ea152-6407-02e2-076c-7ee377f6181d@gmx.de>
- <20190506203956.ty6gkmhm4dlylld4@excalibur.cnev.de>
- <d1c63af6-e1e0-4ec3-e97a-4c3e9ec11623@gmx.de>
- <20190506212709.GD31207@bill-the-cat>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <0aa4327d-d9b1-b3ef-5882-01411392b75b@wdc.com>
-Date:   Mon, 6 May 2019 17:50:11 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 6 May 2019 20:50:41 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hNoJZ-0001mR-Tw; Tue, 07 May 2019 00:50:38 +0000
+Date:   Tue, 7 May 2019 01:50:37 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [git pull] vfs.git pile 1: ->free_inode() series
+Message-ID: <20190507005037.GF23075@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190506212709.GD31207@bill-the-cat>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 2:27 PM, Tom Rini wrote:
-> On Mon, May 06, 2019 at 11:10:57PM +0200, Heinrich Schuchardt wrote:
->> On 5/6/19 10:39 PM, Karsten Merker wrote:
->>> On Mon, May 06, 2019 at 10:06:39PM +0200, Heinrich Schuchardt wrote:
->>>> On 5/6/19 8:11 PM, Atish Patra wrote:
->>>>> This patch adds booti support for RISC-V Linux kernel. The existing
->>>>> bootm method will also continue to work as it is.
->>> [...]
->>>>> +	"boot arm64/riscv Linux Image image from memory", booti_help_text
->>>>
->>>> %s/Image image/image/
->>>>
->>>> "arm64/riscv" is distracting. If I am on RISC-V I cannot boot an ARM64
->>>> image here. Remove the reference to the architecture, please.
->>>
->>> Hello,
->>>
->>> I'm not sure about the last point - ISTR (please correct me if my
->>> memory betrays me here) that an arm64 U-Boot can in principle be
->>> used to boot either an arm64 or an armv7 kernel, but the commands
->>> are different in those cases (booti for an arm64 "Image" format
->>> kernel and bootz for an armv7 "zImage" format kernel), so having
->>> the information which kernel format is supported by the
->>> respective commands appears useful to me.  If the arm64 kernel
->>> image format would have a distinctive name (like "zImage" on
->>> armv7 or "bzImage" on x86) that would be less problematic, but
->>> with the confusion potential of "boot a Linux Image" (as in the
->>> arm64/riscv-specific "Image" format) vs "boot a Linux image" (as
->>> in generally some form of kernel image), I think explicitly
->>> mentioning the supported architectures makes sense.
->>
->> In this case you have to ensure that only the *supported* architectures
->> are mentioned. RISC-V is not supported on ARM64.
-> 
-> The help should be re-worded to be both architecture agnostic and clear
-> that it is for the Linux Kernel 'Image' format images.
-> 
-Done.
+	Introduction of separate method for RCU-delayed
+part of ->destroy_inode() (if any).  Pretty much as posted,
+except that destroy_inode() stashes ->free_inode into the
+victim (anon-unioned with ->i_fops) before scheduling
+i_callback() and the last two patches (sockfs conversion
+and folding struct socket_wq into struct socket) are
+excluded  - that pair should go through netdev once
+davem reopens his tree.
 
-Regards,
-Atish
+	Sat in -next in that form for a while.
+
+The following changes since commit f51dcd0f621caac5380ce90fbbeafc32ce4517ae:
+
+  apparmorfs: fix use-after-free on symlink traversal (2019-04-10 14:04:34 -0400)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.icache
+
+for you to fetch changes up to f276ae0dd6d0b5bfbcb51178a63f06dc035f4cc4:
+
+  orangefs: make use of ->free_inode() (2019-05-01 22:43:27 -0400)
+
+----------------------------------------------------------------
+Al Viro (59):
+      Merge branch 'fixes' into work.icache
+      new inode method: ->free_inode()
+      spufs: switch to ->free_inode()
+      erofs: switch to ->free_inode()
+      9p: switch to ->free_inode()
+      adfs: switch to ->free_inode()
+      affs: switch to ->free_inode()
+      befs: switch to ->free_inode()
+      bfs: switch to ->free_inode()
+      bdev: switch to ->free_inode()
+      cifs: switch to ->free_inode()
+      debugfs: switch to ->free_inode()
+      efs: switch to ->free_inode()
+      ext2: switch to ->free_inode()
+      f2fs: switch to ->free_inode()
+      fat: switch to ->free_inode()
+      freevxfs: switch to ->free_inode()
+      gfs2: switch to ->free_inode()
+      hfs: switch to ->free_inode()
+      hfsplus: switch to ->free_inode()
+      hostfs: switch to ->free_inode()
+      hpfs: switch to ->free_inode()
+      isofs: switch to ->free_inode()
+      jffs2: switch to ->free_inode()
+      minix: switch to ->free_inode()
+      nfs{,4}: switch to ->free_inode()
+      nilfs2: switch to ->free_inode()
+      dlmfs: switch to ->free_inode()
+      ocfs2: switch to ->free_inode()
+      openpromfs: switch to ->free_inode()
+      procfs: switch to ->free_inode()
+      qnx4: switch to ->free_inode()
+      qnx6: switch to ->free_inode()
+      reiserfs: convert to ->free_inode()
+      romfs: convert to ->free_inode()
+      squashfs: switch to ->free_inode()
+      ubifs: switch to ->free_inode()
+      udf: switch to ->free_inode()
+      sysv: switch to ->free_inode()
+      coda: switch to ->free_inode()
+      ufs: switch to ->free_inode()
+      mqueue: switch to ->free_inode()
+      bpf: switch to ->free_inode()
+      rpcpipe: switch to ->free_inode()
+      apparmor: switch to ->free_inode()
+      securityfs: switch to ->free_inode()
+      ntfs: switch to ->free_inode()
+      dax: make use of ->free_inode()
+      afs: switch to use of ->free_inode()
+      btrfs: use ->free_inode()
+      ceph: use ->free_inode()
+      ecryptfs: make use of ->free_inode()
+      ext4: make use of ->free_inode()
+      fuse: switch to ->free_inode()
+      jfs: switch to ->free_inode()
+      overlayfs: make use of ->free_inode()
+      hugetlb: make use of ->free_inode()
+      shmem: make use of ->free_inode()
+      orangefs: make use of ->free_inode()
+
+ Documentation/filesystems/Locking         |  2 ++
+ Documentation/filesystems/porting         | 25 ++++++++++++++
+ arch/powerpc/platforms/cell/spufs/inode.c | 10 ++----
+ drivers/dax/super.c                       |  7 ++--
+ drivers/staging/erofs/super.c             | 10 ++----
+ fs/9p/v9fs_vfs.h                          |  2 +-
+ fs/9p/vfs_inode.c                         | 10 ++----
+ fs/9p/vfs_super.c                         |  4 +--
+ fs/adfs/super.c                           | 10 ++----
+ fs/affs/super.c                           | 10 ++----
+ fs/afs/super.c                            |  9 +++--
+ fs/befs/linuxvfs.c                        | 12 ++-----
+ fs/bfs/inode.c                            | 10 ++----
+ fs/block_dev.c                            | 14 ++------
+ fs/btrfs/ctree.h                          |  1 +
+ fs/btrfs/inode.c                          |  7 ++--
+ fs/btrfs/super.c                          |  1 +
+ fs/ceph/inode.c                           |  5 +--
+ fs/ceph/super.c                           |  1 +
+ fs/ceph/super.h                           |  1 +
+ fs/cifs/cifsfs.c                          | 12 ++-----
+ fs/coda/inode.c                           | 10 ++----
+ fs/debugfs/inode.c                        | 10 ++----
+ fs/ecryptfs/super.c                       |  5 ++-
+ fs/efs/super.c                            | 10 ++----
+ fs/ext2/super.c                           | 10 ++----
+ fs/ext4/super.c                           |  5 ++-
+ fs/f2fs/super.c                           | 10 ++----
+ fs/fat/inode.c                            | 10 ++----
+ fs/freevxfs/vxfs_super.c                  | 11 ++----
+ fs/fuse/inode.c                           | 24 ++++++-------
+ fs/gfs2/super.c                           | 12 ++-----
+ fs/hfs/super.c                            | 10 ++----
+ fs/hfsplus/super.c                        | 13 ++-----
+ fs/hostfs/hostfs_kern.c                   | 10 ++----
+ fs/hpfs/super.c                           | 10 ++----
+ fs/hugetlbfs/inode.c                      |  5 ++-
+ fs/inode.c                                | 56 +++++++++++++++++++------------
+ fs/isofs/inode.c                          | 10 ++----
+ fs/jffs2/super.c                          | 10 ++----
+ fs/jfs/inode.c                            | 13 +++++++
+ fs/jfs/super.c                            | 24 ++-----------
+ fs/minix/inode.c                          | 10 ++----
+ fs/nfs/inode.c                            | 10 ++----
+ fs/nfs/internal.h                         |  2 +-
+ fs/nfs/nfs4super.c                        |  2 +-
+ fs/nfs/super.c                            |  2 +-
+ fs/nilfs2/nilfs.h                         |  2 --
+ fs/nilfs2/super.c                         | 11 ++----
+ fs/ntfs/inode.c                           | 17 +++-------
+ fs/ntfs/inode.h                           |  2 +-
+ fs/ntfs/super.c                           |  2 +-
+ fs/ocfs2/dlmfs/dlmfs.c                    | 10 ++----
+ fs/ocfs2/super.c                          | 12 ++-----
+ fs/openpromfs/inode.c                     | 10 ++----
+ fs/orangefs/super.c                       |  9 ++---
+ fs/overlayfs/super.c                      | 13 ++++---
+ fs/proc/inode.c                           | 10 ++----
+ fs/qnx4/inode.c                           | 12 ++-----
+ fs/qnx6/inode.c                           | 12 ++-----
+ fs/reiserfs/super.c                       | 10 ++----
+ fs/romfs/super.c                          | 11 ++----
+ fs/squashfs/super.c                       | 11 ++----
+ fs/sysv/inode.c                           | 10 ++----
+ fs/ubifs/super.c                          | 10 ++----
+ fs/udf/super.c                            | 10 ++----
+ fs/ufs/super.c                            | 10 ++----
+ include/linux/fs.h                        |  6 +++-
+ ipc/mqueue.c                              | 10 ++----
+ kernel/bpf/inode.c                        | 10 ++----
+ mm/shmem.c                                |  5 ++-
+ net/sunrpc/rpc_pipe.c                     | 11 ++----
+ security/apparmor/apparmorfs.c            | 10 ++----
+ security/inode.c                          | 10 ++----
+ 74 files changed, 230 insertions(+), 493 deletions(-)
