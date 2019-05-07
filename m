@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8467C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18692C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F811205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4DC205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209144;
-	bh=7/mtC7Ba7ycSvP1hl8RMihDYeDNslaXhlLtrjI31ik0=;
+	s=default; t=1557209147;
+	bh=MNlaOp58lREvSwWjRtLUes/DZFyGYNHZNIS4RhI6RfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zxwMJmlufp227+SI/CxDg7z/yQeO+AQwmDOqZr5wMvA0cy/ChGAVoZXT3MQjaS8xz
-	 tHseBy8r001V8WMYbbWOFxxreyKR14/HOp4FSh98usiNyq/dUd7IqapnLvyFJcxpnT
-	 T7GOoOzkIoei2HMtidfhf7FwO8A9gHw0iPS6/9og=
+	b=BLH6hCfPHJFJlMSDulhwMs17wICEEsR9KFwWMylDi9iLjlI8dQqqNg0q87YrCBDou
+	 k3GMdQAsFSNBwHxO3MYzATV2QtvoAX3qs1obtuAiyJrbZOjaDox2PZWlUDRhO5Tdw2
+	 6AbETsCs5N/mcyPiH+8dsiwX1rvMkkZSreL+MHlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfEGFeG (ORCPT
+        id S1726808AbfEGGFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53942 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbfEGFeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:03 -0400
+        id S1727419AbfEGFeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8470206A3;
-        Tue,  7 May 2019 05:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7329C21479;
+        Tue,  7 May 2019 05:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207242;
-        bh=7/mtC7Ba7ycSvP1hl8RMihDYeDNslaXhlLtrjI31ik0=;
+        s=default; t=1557207245;
+        bh=MNlaOp58lREvSwWjRtLUes/DZFyGYNHZNIS4RhI6RfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tlxQEdrbDFIAb8rXol9JXU2wxJ8hXYUFfRDOmVoSC7x0kfrvzqXTHNnYnJIy2W9Y8
-         jUuwzb4bx3ms2zchChXCKJ8Kkoale/Ug1BDHYzDUrWWrNhqhV/BPLw/Ei8fNQLOjHv
-         Rjau6/djN31HBtWqItkzAfpKw6CCMQxrzOgJopj0=
+        b=CMDbeNzsAWo2b4TyP0WzAitrS261kOLPkPe9WprGS/oct3LG/GzT7WF5suug6irS6
+         /q+YNsl4LtEBPVHrgzEpJ5ieH644jeTgLDG7v0F95v/P33h1smPogblrC7KBHQgvyn
+         e03Fw9IKFRx0UpQCZLF80Ce+Z0wSPmHPbhMLYEqA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 45/99] KVM: x86: Raise #GP when guest vCPU do not support PMU
-Date:   Tue,  7 May 2019 01:31:39 -0400
-Message-Id: <20190507053235.29900-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 47/99] KVM: fix spectrev1 gadgets
+Date:   Tue,  7 May 2019 01:31:41 -0400
+Message-Id: <20190507053235.29900-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -59,40 +57,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liran Alon <liran.alon@oracle.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 672ff6cff80ca43bf3258410d2b887036969df5f ]
+[ Upstream commit 1d487e9bf8ba66a7174c56a0029c54b1eca8f99c ]
 
-Before this change, reading a VMware pseduo PMC will succeed even when
-PMU is not supported by guest. This can easily be seen by running
-kvm-unit-test vmware_backdoors with "-cpu host,-pmu" option.
+These were found with smatch, and then generalized when applicable.
 
-Reviewed-by: Mihai Carabas <mihai.carabas@oracle.com>
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/pmu.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/lapic.c     |  4 +++-
+ include/linux/kvm_host.h | 10 ++++++----
+ virt/kvm/irqchip.c       |  5 +++--
+ virt/kvm/kvm_main.c      |  6 ++++--
+ 4 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 58ead7db71a3..e39741997893 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -281,9 +281,13 @@ static int kvm_pmu_rdpmc_vmware(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 4b6c2da7265c..e196e187d2f1 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -138,6 +138,7 @@ static inline bool kvm_apic_map_get_logical_dest(struct kvm_apic_map *map,
+ 		if (offset <= max_apic_id) {
+ 			u8 cluster_size = min(max_apic_id - offset + 1, 16U);
+ 
++			offset = array_index_nospec(offset, map->max_apic_id + 1);
+ 			*cluster = &map->phys_map[offset];
+ 			*mask = dest_id & (0xffff >> (16 - cluster_size));
+ 		} else {
+@@ -900,7 +901,8 @@ static inline bool kvm_apic_map_get_dest_lapic(struct kvm *kvm,
+ 		if (irq->dest_id > map->max_apic_id) {
+ 			*bitmap = 0;
+ 		} else {
+-			*dst = &map->phys_map[irq->dest_id];
++			u32 dest_id = array_index_nospec(irq->dest_id, map->max_apic_id + 1);
++			*dst = &map->phys_map[dest_id];
+ 			*bitmap = 1;
+ 		}
+ 		return true;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index cf761ff58224..e41503b2c5a1 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -28,6 +28,7 @@
+ #include <linux/irqbypass.h>
+ #include <linux/swait.h>
+ #include <linux/refcount.h>
++#include <linux/nospec.h>
+ #include <asm/signal.h>
+ 
+ #include <linux/kvm.h>
+@@ -492,10 +493,10 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
+ 
+ static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
  {
- 	bool fast_mode = idx & (1u << 31);
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct kvm_pmc *pmc;
- 	u64 ctr_val;
- 
-+	if (!pmu->version)
-+		return 1;
+-	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu, in case
+-	 * the caller has read kvm->online_vcpus before (as is the case
+-	 * for kvm_for_each_vcpu, for example).
+-	 */
++	int num_vcpus = atomic_read(&kvm->online_vcpus);
++	i = array_index_nospec(i, num_vcpus);
 +
- 	if (is_vmware_backdoor_pmc(idx))
- 		return kvm_pmu_rdpmc_vmware(vcpu, idx, data);
++	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
+ 	smp_rmb();
+ 	return kvm->vcpus[i];
+ }
+@@ -579,6 +580,7 @@ void kvm_put_kvm(struct kvm *kvm);
  
+ static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
+ {
++	as_id = array_index_nospec(as_id, KVM_ADDRESS_SPACE_NUM);
+ 	return srcu_dereference_check(kvm->memslots[as_id], &kvm->srcu,
+ 			lockdep_is_held(&kvm->slots_lock) ||
+ 			!refcount_read(&kvm->users_count));
+diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
+index b1286c4e0712..0bd0683640bd 100644
+--- a/virt/kvm/irqchip.c
++++ b/virt/kvm/irqchip.c
+@@ -144,18 +144,19 @@ static int setup_routing_entry(struct kvm *kvm,
+ {
+ 	struct kvm_kernel_irq_routing_entry *ei;
+ 	int r;
++	u32 gsi = array_index_nospec(ue->gsi, KVM_MAX_IRQ_ROUTES);
+ 
+ 	/*
+ 	 * Do not allow GSI to be mapped to the same irqchip more than once.
+ 	 * Allow only one to one mapping between GSI and non-irqchip routing.
+ 	 */
+-	hlist_for_each_entry(ei, &rt->map[ue->gsi], link)
++	hlist_for_each_entry(ei, &rt->map[gsi], link)
+ 		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
+ 			return -EINVAL;
+ 
+-	e->gsi = ue->gsi;
++	e->gsi = gsi;
+ 	e->type = ue->type;
+ 	r = kvm_set_routing_entry(kvm, e, ue);
+ 	if (r)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index b4f2d892a1d3..ff68b07e94e9 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2974,12 +2974,14 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	struct kvm_device_ops *ops = NULL;
+ 	struct kvm_device *dev;
+ 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
++	int type;
+ 	int ret;
+ 
+ 	if (cd->type >= ARRAY_SIZE(kvm_device_ops_table))
+ 		return -ENODEV;
+ 
+-	ops = kvm_device_ops_table[cd->type];
++	type = array_index_nospec(cd->type, ARRAY_SIZE(kvm_device_ops_table));
++	ops = kvm_device_ops_table[type];
+ 	if (ops == NULL)
+ 		return -ENODEV;
+ 
+@@ -2994,7 +2996,7 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	dev->kvm = kvm;
+ 
+ 	mutex_lock(&kvm->lock);
+-	ret = ops->create(dev, cd->type);
++	ret = ops->create(dev, type);
+ 	if (ret < 0) {
+ 		mutex_unlock(&kvm->lock);
+ 		kfree(dev);
 -- 
 2.20.1
 
