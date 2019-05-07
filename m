@@ -2,119 +2,228 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A794CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD886C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733AB20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="rI22+WbJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9D71820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfEGJRo (ORCPT
+        id S1726842AbfEGJSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:17:44 -0400
-Received: from mail-eopbgr10131.outbound.protection.outlook.com ([40.107.1.131]:21253
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726607AbfEGJRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:17:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4xRPiGxR2SFsjMcx5LRpqB/hjoOxiQsglEUtFXdxcb4=;
- b=rI22+WbJgtVBPAsp40G8scs90i4oV3o8Gev8ags4WrXt/87/vfe6wCFPobRxKgkTLHgLC5TvNsX3KuL3Hx/9LjhoOCRYSBuoIPwROx7ZVtOh3nDb131XwuRQuxUUgJczjnyxQ1UjjY+v86p75+m/CgJDiDXoKgHP99Pbi6CxBa4=
-Received: from AM0PR02MB4563.eurprd02.prod.outlook.com (20.178.17.97) by
- AM0PR02MB4945.eurprd02.prod.outlook.com (20.178.82.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Tue, 7 May 2019 09:17:38 +0000
-Received: from AM0PR02MB4563.eurprd02.prod.outlook.com
- ([fe80::59ed:e49a:eab8:168f]) by AM0PR02MB4563.eurprd02.prod.outlook.com
- ([fe80::59ed:e49a:eab8:168f%3]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 09:17:38 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Peter Korsgaard <peter.korsgaard@barco.com>
-CC:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] i2c-mux-gpio: Split plat- and dt-specific code up
-Thread-Topic: [PATCH v2 0/3] i2c-mux-gpio: Split plat- and dt-specific code up
-Thread-Index: AQHU+72aZ5zENFrBHEyfsmLiopyjOKZfb6IAgAAETIA=
-Date:   Tue, 7 May 2019 09:17:38 +0000
-Message-ID: <689e1a7b-8544-6bbf-2fa1-a5845895a917@axentia.se>
-References: <20190424123414.25311-1-fancer.lancer@gmail.com>
- <20190425232028.9333-1-fancer.lancer@gmail.com>
- <20190507090210.hn6vgcjg2q6tysbp@mobilestation>
-In-Reply-To: <20190507090210.hn6vgcjg2q6tysbp@mobilestation>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1P18901CA0006.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:3:8b::16) To AM0PR02MB4563.eurprd02.prod.outlook.com
- (2603:10a6:208:ec::33)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b22686ab-d88d-43a6-b739-08d6d2ccd93e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:AM0PR02MB4945;
-x-ms-traffictypediagnostic: AM0PR02MB4945:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <AM0PR02MB49452F4E63A35700CD337073BC310@AM0PR02MB4945.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(39830400003)(366004)(396003)(189003)(199004)(51914003)(3846002)(53936002)(446003)(11346002)(4326008)(305945005)(66066001)(6246003)(68736007)(65806001)(2906002)(65956001)(102836004)(508600001)(476003)(65826007)(36756003)(64126003)(74482002)(14444005)(256004)(2616005)(31686004)(486006)(5660300002)(99286004)(6486002)(6436002)(7736002)(186003)(52116002)(25786009)(229853002)(53546011)(6506007)(966005)(81156014)(81166006)(386003)(8676002)(8936002)(26005)(6116002)(71200400001)(71190400001)(58126008)(110136005)(54906003)(316002)(73956011)(66946007)(66446008)(66556008)(66476007)(64756008)(31696002)(14454004)(6306002)(86362001)(6512007)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR02MB4945;H:AM0PR02MB4563.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gq6lCpl54+Ax0PkM7MW4DVja6cOCwQgg70AvYaGHJS3UvHuVtAefaa4SsuXcRfd5qe1RALc9XPtmfWVqw48Kj4ANWNRs+IXeQyueAlUEzQvIDVLPxSPSIYvO51ovaAnHJHsX4+8LCcBmtYv30cwifoA1Mon+MHLZfpwUqn3bfODv714BobdjB6cCTSFn8MGlu69l1/Tv8Y0rmJ4oQcC7kOzgdez/yz+Rq+Tj6WZMH1s33GWfnnixWvZCLaca1YDdobP2Eqlk44QZyRGF8dy5i9VlmvUHQqT6MS2g/FuxbPJGaCjOaacfmcH6Cb7oW8jJaSM7Nm7D1iTugAAaCjWWrZRD+fMFPm0xf0RTUvcon+EU0AY2AkhtNk6UXoXOEJMHyNTctedP+fv9TwZfA5GeTYw0kBwLeFVvscBIz6KQma0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CEFCC296A803D44186FE37F4BF1C9B9C@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 7 May 2019 05:18:04 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:55720 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726505AbfEGJSD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:18:03 -0400
+Received: from [85.158.142.200] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id BB/A7-24742-84D41DC5; Tue, 07 May 2019 09:18:00 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRWlGSWpSXmKPExsUyo1hfUtfd92K
+  MwYEpBhbH2p6wWzQvXs9mcXnXHDaLRctamR1YPDat6mTz2D93DbvH501yAcxRrJl5SfkVCawZ
+  Z7dNYyw4qVXx7dpJpgbGpSpdjFwcQgJrGCU2vX/L2sXIwcEmoCvRdce0i5GTQ0RAXmLW24uMI
+  DXMAvMZJY41djCDJIQFrCT6n21gB7FZBFQkfp78zQhi8wo4Six9tBusRkJATuLmuU5miLigxM
+  mZT1hAbGYBCYmDL14wg+wSEpCVOHopFqJcQeLslomMExh5ZiHpmIWkYwEj0ypGi6SizPSMktz
+  EzBxdQwMDXUNDY11TXWNjvcQq3SS91FLd5NS8kqJEoKReYnmxXnFlbnJOil5easkmRmDQpRSy
+  Ku5gnLM8/RCjJAeTkiiviP3FGCG+pPyUyozE4oz4otKc1OJDjDIcHEoSvHXeQDnBotT01Iq0z
+  Bxg+MOkJTh4lER440HSvMUFibnFmekQqVOMilLivNwgCQGQREZpHlwbLOYuMcpKCfMyMjAwCP
+  EUpBblZpagyr9iFOdgVBLmrQKZwpOZVwI3/RXQYiagxfM6zoEsLklESEk1MMrX7an8zrRCQeH
+  TYp1r0n62wQ3fRJ7d3TfRzO7uTM5OFUX/0v5Vy0/xeb4Kzjz13Oj3BX1xh1/ypi8scvWXWE89
+  Ys2bZ3HcbXFC/bmgzkMN3feuGG9RMn7PcCIjR+mB7fJAwdtvyl0OyLin6ZcrrJ8ruVCQizfh/
+  bzgR0/99u3edszk03N/byWW4oxEQy3mouJEANHTAp60AgAA
+X-Env-Sender: cst@phaseone.com
+X-Msg-Ref: server-22.tower-245.messagelabs.com!1557220679!5904377!1
+X-Originating-IP: [152.115.47.25]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 978 invoked from network); 7 May 2019 09:17:59 -0000
+Received: from unknown (HELO Exchange2.phaseone.com) (152.115.47.25)
+  by server-22.tower-245.messagelabs.com with AES256-SHA encrypted SMTP; 7 May 2019 09:17:59 -0000
+Received: from cstu16.phaseone.com (172.16.2.207) by Exchange2.phaseone.com
+ (172.16.1.180) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 7 May
+ 2019 11:17:58 +0200
+From:   "Claus H. Stovgaard" <cst@phaseone.com>
+To:     <linux-usb@vger.kernel.org>
+CC:     "Claus H. Stovgaard" <cst@phaseone.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: gadget: configfs: Add lpm_Ux_disable
+Date:   Tue, 7 May 2019 11:09:43 +0200
+Message-ID: <1557220655-123090-1-git-send-email-cst@phaseone.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: b22686ab-d88d-43a6-b739-08d6d2ccd93e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 09:17:38.2499
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB4945
+Content-Type: text/plain
+X-Originating-IP: [172.16.2.207]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0wNyAxMTowMiwgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+IEhlbGxvIGZvbGtzLA0K
-PiANCj4gQW55IHVwZGF0ZXMgb24gdGhpcyBwYXRjaHNldCBzdGF0dXM/IEkgaGF2ZW4ndCBnb3Qg
-YW55IGNvbW1lbnQgb24gdjIsIGJ1dA0KPiBpbnN0ZWFkIGEgbm90aWZpY2F0aW9uIGFib3V0IHRo
-ZSBzdGF0dXMgY2hhbmdlIHdhcyBzZW50IHRvIG1lOg0KPiANCj4+ICogbGludXgtaTJjOiBbdjIs
-MS8zXSBpMmMtbXV4LWdwaW86IFVucGluIGEgcGxhdGZvcm0tYmFzZWQgZGV2aWNlIGluaXRpYWxp
-emF0aW9uDQo+PiAgICAgLSBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTA5MTEy
-MC8NCj4+ICAgICAtIGZvcjogTGludXggSTJDIGRldmVsb3BtZW50DQo+PiAgICB3YXM6IE5ldw0K
-Pj4gICAgbm93OiBTdXBlcnNlZGVkDQo+Pg0KPj4gKiBsaW51eC1pMmM6IFt2MiwyLzNdIGkyYy1t
-dXgtZ3BpbzogVW5waW4gdGhlIHBsYXRmb3JtLXNwZWNpZmljIEdQSU9zIHJlcXVlc3QgY29kZQ0K
-Pj4gICAgIC0gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwOTExMjIvDQo+PiAg
-ICAgLSBmb3I6IExpbnV4IEkyQyBkZXZlbG9wbWVudA0KPj4gICAgd2FzOiBOZXcNCj4+ICAgIG5v
-dzogU3VwZXJzZWRlZA0KPj4NCj4+ICogbGludXgtaTJjOiBbdjIsMy8zXSBpMmMtbXV4LWdwaW86
-IENyZWF0ZSBvZi1iYXNlZCBHUElPcyByZXF1ZXN0IG1ldGhvZA0KPj4gICAgIC0gaHR0cDovL3Bh
-dGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwOTExMjEvDQo+PiAgICAgLSBmb3I6IExpbnV4IEky
-QyBkZXZlbG9wbWVudA0KPj4gICAgd2FzOiBOZXcNCj4+ICAgIG5vdzogU3VwZXJzZWRlZA0KPiAN
-Cj4gSSBtYXkgbWlzdW5kZXJzdGFuZCBzb21ldGhpbmcsIGJ1dCBob3cgY29tZSB0aGUgdjIgcGF0
-Y2hzZXQgc3dpdGNoZWQgdG8gYmUgc3VwZXJzZWRlZA0KPiB3aGlsZSBpdCBpcyB0aGUgbGFzdCBw
-YXRjaHNldCB2ZXJzaW9uIEkndmUgc2VudD8NCg0KVGhhdCB3YXMgbXkgbWlzdGFrZS4gUGF0Y2h3
-b3JrIGdvdCBjb25mdXNlZCB3aGVuIHYyIHdhcyBzZW50IGFzIGEgcmVwbHkgdG8NCnNvbWV0aGlu
-ZyBpbiB0aGUgdjEgdHJlZSwgYW5kIG1hcmtlZCBhbGwgOCBwYXRjaGVzIGFzICJ2MiIuIFRoZW4g
-SSBpbiB0dXJuDQpnb3QgY29uZnVzZWQgYnkgdGhhdCwgYW5kIGNoYW5nZWQgc3RhdHVzIG9uIHRo
-ZSB3cm9uZyBzZXQuIFNvcnJ5IQ0KDQpTbywgdGhhbmtzIGZvciB0aGUgaGVhZHMgdXAsIGl0IHNo
-b3VsZCBiZSBmaXhlZCBub3cuDQoNCkFzIGZvciBjb21tZW50cyBvbiB0aGUgcGF0Y2hlcywgSSdt
-IHBlcnNvbmFsbHkgYnVyaWVkIGluIHdvcmsgYW5kIG90aGVycw0KbWF5IGhhdmUgdGhlIG1lcmdl
-IHdpbmRvdyB0byBmb2N1cyBvbi4uLg0KDQpDaGVlcnMsDQpQZXRlcg0K
+When combining dwc3 with an redriver for a USB Type-C device solution, it
+sometimes have problems with leaving U1/U2 for certain hosts, resulting in
+link training errors and reconnects. This create an interface via
+configfs for disabling U1/U2, enabling a workaround for devices based on
+dwc3.
+
+Signed-off-by: Claus H. Stovgaard <cst@phaseone.com>
+---
+ drivers/usb/dwc3/ep0.c        |  9 ++++++-
+ drivers/usb/gadget/configfs.c | 56 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/gadget.h    |  6 ++++-
+ 3 files changed, 69 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+index 8efde17..5b2d26b 100644
+--- a/drivers/usb/dwc3/ep0.c
++++ b/drivers/usb/dwc3/ep0.c
+@@ -379,6 +379,8 @@ static int dwc3_ep0_handle_u1(struct dwc3 *dwc, enum usb_device_state state,
+ 	if ((dwc->speed != DWC3_DSTS_SUPERSPEED) &&
+ 			(dwc->speed != DWC3_DSTS_SUPERSPEED_PLUS))
+ 		return -EINVAL;
++	if (dwc->gadget_driver->lpm_U1_disable)
++		return -EINVAL;
+ 
+ 	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+ 	if (set)
+@@ -401,6 +403,8 @@ static int dwc3_ep0_handle_u2(struct dwc3 *dwc, enum usb_device_state state,
+ 	if ((dwc->speed != DWC3_DSTS_SUPERSPEED) &&
+ 			(dwc->speed != DWC3_DSTS_SUPERSPEED_PLUS))
+ 		return -EINVAL;
++	if (dwc->gadget_driver->lpm_U2_disable)
++		return -EINVAL;
+ 
+ 	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+ 	if (set)
+@@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
+ 			 * nothing is pending from application.
+ 			 */
+ 			reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+-			reg |= (DWC3_DCTL_ACCEPTU1ENA | DWC3_DCTL_ACCEPTU2ENA);
++			if (!dwc->gadget_driver->lpm_U1_disable)
++				reg |= DWC3_DCTL_ACCEPTU1ENA;
++			if (!dwc->gadget_driver->lpm_U2_disable)
++				reg |= DWC3_DCTL_ACCEPTU2ENA;
+ 			dwc3_writel(dwc->regs, DWC3_DCTL, reg);
+ 		}
+ 		break;
+diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
+index 0251299..2ee9d10 100644
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -229,6 +229,56 @@ static ssize_t gadget_dev_desc_bcdUSB_store(struct config_item *item,
+ 	return len;
+ }
+ 
++static ssize_t gadget_dev_desc_lpm_U1_disable_show(struct config_item *item,
++		char *page)
++{
++	struct gadget_info *gi = to_gadget_info(item);
++
++	return sprintf(page, "%d\n",
++		       gi->composite.gadget_driver.lpm_U1_disable);
++}
++
++static ssize_t gadget_dev_desc_lpm_U1_disable_store(struct config_item *item,
++		const char *page, size_t len)
++{
++	struct gadget_info *gi = to_gadget_info(item);
++	bool disable;
++	int ret;
++
++	ret = strtobool(page, &disable);
++	if (!ret) {
++		gi->composite.gadget_driver.lpm_U1_disable = disable;
++		ret = len;
++	}
++
++	return ret;
++}
++
++static ssize_t gadget_dev_desc_lpm_U2_disable_show(struct config_item *item,
++		char *page)
++{
++	struct gadget_info *gi = to_gadget_info(item);
++
++	return sprintf(page, "%d\n",
++		       gi->composite.gadget_driver.lpm_U2_disable);
++}
++
++static ssize_t gadget_dev_desc_lpm_U2_disable_store(struct config_item *item,
++		const char *page, size_t len)
++{
++	struct gadget_info *gi = to_gadget_info(item);
++	bool disable;
++	int ret;
++
++	ret = strtobool(page, &disable);
++	if (!ret) {
++		gi->composite.gadget_driver.lpm_U2_disable = disable;
++		ret = len;
++	}
++
++	return ret;
++}
++
+ static ssize_t gadget_dev_desc_UDC_show(struct config_item *item, char *page)
+ {
+ 	char *udc_name = to_gadget_info(item)->composite.gadget_driver.udc_name;
+@@ -299,6 +349,8 @@ CONFIGFS_ATTR(gadget_dev_desc_, idVendor);
+ CONFIGFS_ATTR(gadget_dev_desc_, idProduct);
+ CONFIGFS_ATTR(gadget_dev_desc_, bcdDevice);
+ CONFIGFS_ATTR(gadget_dev_desc_, bcdUSB);
++CONFIGFS_ATTR(gadget_dev_desc_, lpm_U1_disable);
++CONFIGFS_ATTR(gadget_dev_desc_, lpm_U2_disable);
+ CONFIGFS_ATTR(gadget_dev_desc_, UDC);
+ 
+ static struct configfs_attribute *gadget_root_attrs[] = {
+@@ -310,6 +362,8 @@ static struct configfs_attribute *gadget_root_attrs[] = {
+ 	&gadget_dev_desc_attr_idProduct,
+ 	&gadget_dev_desc_attr_bcdDevice,
+ 	&gadget_dev_desc_attr_bcdUSB,
++	&gadget_dev_desc_attr_lpm_U1_disable,
++	&gadget_dev_desc_attr_lpm_U2_disable,
+ 	&gadget_dev_desc_attr_UDC,
+ 	NULL,
+ };
+@@ -1408,6 +1462,8 @@ static const struct usb_gadget_driver configfs_driver_template = {
+ 		.name		= "configfs-gadget",
+ 	},
+ 	.match_existing_only = 1,
++	.lpm_U1_disable = 0,
++	.lpm_U2_disable = 0,
+ };
+ 
+ static struct config_group *gadgets_make(
+diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+index 7595056..25fe72b 100644
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -619,7 +619,9 @@ static inline int usb_gadget_activate(struct usb_gadget *gadget)
+  *	this driver will be bound to any available UDC.
+  * @pending: UDC core private data used for deferred probe of this driver.
+  * @match_existing_only: If udc is not found, return an error and don't add this
+- *      gadget driver to list of pending driver
++ *      gadget driver to list of pending driver.
++ * @lpm_U1_disable: Instruct the UDC to disable U1 if possible.
++ * @lpm_U2_disable: Instruct the UDC to disable U2 if possible.
+  *
+  * Devices are disabled till a gadget driver successfully bind()s, which
+  * means the driver will handle setup() requests needed to enumerate (and
+@@ -684,6 +686,8 @@ struct usb_gadget_driver {
+ 	char			*udc_name;
+ 	struct list_head	pending;
+ 	unsigned                match_existing_only:1;
++	unsigned		lpm_U1_disable:1;
++	unsigned		lpm_U2_disable:1;
+ };
+ 
+ 
+-- 
+2.7.4
+
