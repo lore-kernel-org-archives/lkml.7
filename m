@@ -2,140 +2,237 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E98FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FF5C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7A620835
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E3A20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfEGAFA (ORCPT
+        id S1726473AbfEGAKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 20:05:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726400AbfEGAE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 20:04:59 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4702GYK005105
-        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 20:04:58 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2saujq7nts-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 20:04:58 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 7 May 2019 01:04:57 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 May 2019 01:04:53 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4704qw327984092
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 May 2019 00:04:52 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DB21B2072;
-        Tue,  7 May 2019 00:04:52 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19F2FB205F;
-        Tue,  7 May 2019 00:04:52 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 May 2019 00:04:52 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 89AFB16C5DD3; Mon,  6 May 2019 17:04:53 -0700 (PDT)
-Date:   Mon, 6 May 2019 17:04:53 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc/rcu: Correct field_count field naming in examples
-Reply-To: paulmck@linux.ibm.com
-References: <20190505020328.165839-1-joel@joelfernandes.org>
+        Mon, 6 May 2019 20:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfEGAKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 20:10:20 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3309E206BF;
+        Tue,  7 May 2019 00:10:16 +0000 (UTC)
+Date:   Mon, 6 May 2019 20:10:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190506201014.484e7b65@oasis.local.home>
+In-Reply-To: <CAHk-=wje38dbYFGNw0y==zd7Zo_4s2WOQjWaBDyr24RCdK2EPQ@mail.gmail.com>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <20190503092247.20cc1ff0@gandalf.local.home>
+        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+        <20190506095631.6f71ad7c@gandalf.local.home>
+        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+        <20190506130643.62c35eeb@gandalf.local.home>
+        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
+        <20190506145745.17c59596@gandalf.local.home>
+        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
+        <20190506162915.380993f9@gandalf.local.home>
+        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
+        <20190506174511.2f8b696b@gandalf.local.home>
+        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
+        <CAHk-=wje38dbYFGNw0y==zd7Zo_4s2WOQjWaBDyr24RCdK2EPQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190505020328.165839-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19050700-0072-0000-0000-000004289D4B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011062; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01199625; UDB=6.00629371; IPR=6.00980501;
- MB=3.00026763; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-07 00:04:55
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050700-0073-0000-0000-00004C1EC4B0
-Message-Id: <20190507000453.GB3923@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060181
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 10:03:10PM -0400, Joel Fernandes (Google) wrote:
-> I believe this field should be called field_count instead of file_count.
-> Correct the doc with the same.
+On Mon, 6 May 2019 15:31:57 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Mon, May 6, 2019 at 3:06 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Why are you emulating something different than what you are rewriting?  
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-But if we are going to update this, why not update it with the current
-audit_filter_task(), audit_del_rule(), and audit_add_rule() code?
-
-Hmmm...  One reason is that some of them have changed beyond recognition.
-
-And this example code predates v2.6.12.  ;-)
-
-So good eyes, but I believe that this really does reflect the ancient
-code...
-
-On the other hand, would you have ideas for more modern replacement
-examples?
-
-							Thanx, Paul
-
-> ---
->  Documentation/RCU/listRCU.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Side note: I'm also finding another bug on the ftrace side, which is a
+> simple race condition.
 > 
-> diff --git a/Documentation/RCU/listRCU.txt b/Documentation/RCU/listRCU.txt
-> index adb5a3782846..190e666fc359 100644
-> --- a/Documentation/RCU/listRCU.txt
-> +++ b/Documentation/RCU/listRCU.txt
-> @@ -175,7 +175,7 @@ otherwise, the added fields would need to be filled in):
->  		list_for_each_entry(e, list, list) {
->  			if (!audit_compare_rule(rule, &e->rule)) {
->  				e->rule.action = newaction;
-> -				e->rule.file_count = newfield_count;
-> +				e->rule.field_count = newfield_count;
->  				write_unlock(&auditsc_lock);
->  				return 0;
->  			}
-> @@ -204,7 +204,7 @@ RCU ("read-copy update") its name.  The RCU code is as follows:
->  					return -ENOMEM;
->  				audit_copy_rule(&ne->rule, &e->rule);
->  				ne->rule.action = newaction;
-> -				ne->rule.file_count = newfield_count;
-> +				ne->rule.field_count = newfield_count;
->  				list_replace_rcu(&e->list, &ne->list);
->  				call_rcu(&e->rcu, audit_free_rule);
->  				return 0;
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
+> In particular, the logic with 'modifying_ftrace_code' is fundamentally racy.
 > 
+> What can happen is that on one CPU we rewrite one instruction:
+> 
+>         ftrace_update_func = ip;
+>         /* Make sure the breakpoints see the ftrace_update_func update */
+>         smp_wmb();
+> 
+>         /* See comment above by declaration of modifying_ftrace_code */
+>         atomic_inc(&modifying_ftrace_code);
+> 
+>         ret = ftrace_modify_code(ip, old, new);
+> 
+>         atomic_dec(&modifying_ftrace_code);
+> 
+>    but then another CPU hits the 'int3' while the modification is
+> going on, and takes the fault.
+> 
+> The fault handler does that
+> 
+>         if (unlikely(atomic_read(&modifying_ftrace_code))..
+> 
+> and sees that "yes, it's in the middle of modifying the ftrace code",
+> and calls ftrace_int3_handler().  All good and "obviously correct" so
+> far, no?
+> 
+> HOWEVER. It's actually buggy. Because in the meantime, the CPU that
+> was rewriting instructions has finished, and decrements the
+> modifying_ftrace_code, which doesn't hurt us (because we already saw
+> that the int3 was due to the modification.
+
+But the CPU that was rewriting instructions does a run_sync() after
+removing the int3:
+
+static void run_sync(void)
+{
+	int enable_irqs;
+
+	/* No need to sync if there's only one CPU */
+	if (num_online_cpus() == 1)
+		return;
+
+	enable_irqs = irqs_disabled();
+
+	/* We may be called with interrupts disabled (on bootup). */
+	if (enable_irqs)
+		local_irq_enable();
+	on_each_cpu(do_sync_core, NULL, 1);
+	if (enable_irqs)
+		local_irq_disable();
+}
+
+Which sends an IPI to all CPUs to make sure they no longer see the int3.
+
+> 
+> BUT! There are two different races here:
+> 
+>  (a) maybe the fault handling was slow, and we saw the 'int3' and took
+> the fault, but the modifying CPU had already finished, so that
+> atomic_read(&modifying_ftrace_code) didn't actually trigger at all.
+> 
+>  (b) maybe the int3-faulting CPU *did* see the proper value of
+> modifying_ftrace_code, but the modifying CPU went on and started
+> *another* modification, and has changed ftrace_update_func in the
+> meantime, so now the int3 handling is looking at the wrong values!
+> 
+> In the case of (a), we'll die with an oops due to the inexplicable
+> 'int3' we hit. And in the case of (b) we'll be fixing up using the
+> wrong address.
+> 
+> Things like this is why I'm wondering how much of the problems are due
+> to the entry code, and how much of it is due to simply races and
+> timing differences?
+> 
+> Again, I don't actually know the ftrace code, and maybe I'm missing
+> something, but this really looks like _another_ fundamental bug.
+> 
+> The way to handle that modifying_ftrace_code thing is most likely by
+> using a sequence counter. For example, one way to actually do some
+> thing like this might be
+> 
+>         ftrace_update_func = ip;
+>         ftrace_update_target = func;
+>         smp_wmb();
+>         atomic_inc(&modifying_ftrace_head);
+> 
+>         ret = ftrace_modify_code(ip, old, new);
+> 
+>         atomic_inc(&modifying_ftrace_tail);
+>         smp_wmb();
+> 
+> and now the int3 code could do something like
+> 
+>         int head, tail;
+> 
+>         head = atomic_read(&modifying_ftrace_head);
+>         smp_rmb();
+>         tail = atomic_read(&modifying_ftrace_tail);
+> 
+>         /* Are we still in the process of modification? */
+>         if (unlikely(head != tail+1))
+>                 return 0;
+> 
+>         ip = ftrace_update_func;
+>         func = ftrace_update_target;
+>         smp_rmb();
+>         /* Need to re-check that the above two values are consistent
+> and we didn't exit */
+>         if (atomic_read(&modifying_ftrace_tail) != tail)
+>                 return 0;
+> 
+>         *pregs int3_emulate_call(regs, ip, func);
+>         return 1;
+> 
+> although it probably really would be better to use a seqcount instead
+> of writing it out like the above.
+> 
+> NOTE! The above only fixes the (b) race. The (a) race is probably best
+> handled by actually checking if the 'int3' instruction is still there
+> before dying.
+> 
+> Again, maybe there's something I'm missing, but having looked at that
+> patch now what feels like a million times, I'm finding more worrisome
+> things in the ftrace code than in the kernel entry code..
+
+I think you are missing the run_sync() which is the heavy hammer to
+make sure all CPUs are in sync. And this is done at each stage:
+
+	add int3
+	run_sync();
+	update call cite outside of int3
+	run_sync()
+	remove int3
+	run_sync()
+
+HPA said that the last run_sync() isn't needed, but I kept it because I
+wanted to make sure. Looks like your analysis shows that it is needed.
+
+-- Steve
 
