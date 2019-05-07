@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A376C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47652C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D240020578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C1720578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207949;
-	bh=Rh191pEYYJDCVY4BQyz41VTbFjG7qXDROii6NgjuXsI=;
+	s=default; t=1557207953;
+	bh=kpd7/k7r6GpIU1KFTkia1a6/RVNXjvMllUA/yCz3gjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDq5nW7HpXXTup0BR+D+8nSeCoWsbuKCSrG+dG+aKLy9Awut0/SbL68sW5w8TZWDM
-	 7FMhnmiC7ZWiuB4BKs6KS0glmvA1kzq520MXKUiOb1g4NyBXuxcJ7uZGgf694vyNYg
-	 xE9on4TjxGrBeCxSr/cSnANk2xPOWJLaXzjrW964=
+	b=J0FJb/xHccLIoJIFDgiiog9+HlvN3LH2blwMGdgElCyXNHmhGXrsEQtvCdySD5ud/
+	 gsD8bg3VJ9UgljneWU2N799pIerhpFPCVaa6S5QLtWrn1NYEiO8lhKdrd8OAVZisWh
+	 ZdAwXQgy3J5XlWFJrxOP0utt2XpXMszUc2Ejm7C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbfEGFlz (ORCPT
+        id S1729424AbfEGFlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728239AbfEGFlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728531AbfEGFlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 May 2019 01:41:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E89020B7C;
-        Tue,  7 May 2019 05:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B98C920675;
+        Tue,  7 May 2019 05:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207710;
-        bh=Rh191pEYYJDCVY4BQyz41VTbFjG7qXDROii6NgjuXsI=;
+        s=default; t=1557207709;
+        bh=kpd7/k7r6GpIU1KFTkia1a6/RVNXjvMllUA/yCz3gjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ev3EZk99lWU1cylE6oYNGYsm68odIcCSe4NNR71f5xAcIt3KkllmAdGQfQReg3tqn
-         xvczptEP+OSiwln+N+6pE/MtjoJOSnw8HifFp1KmG36WyVxa6CEEqOPHG8eYkZhcga
-         z6VSA1m5XKp8JXvbS/2OHPeWAyzrkj84RRZWuZ2M=
+        b=WalPEDxiwuc97XY7zoNqWvyBY9SfCV0YQuY5qG6rQ2QaWFhY2kCS0Ux3BEFYzfwES
+         36VGpwZFiCLn/EuoiDMfcAZRJ5iesaIHiCLWNvvv2+In6xDJC/+2t8gL070zfIKSZp
+         0z9+wEPRah77F8ASYaC03zDZJHNdptLLJHXER91w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/25] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
-Date:   Tue,  7 May 2019 01:41:10 -0400
-Message-Id: <20190507054123.32514-13-sashal@kernel.org>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux@endlessm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 12/25] x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
+Date:   Tue,  7 May 2019 01:41:09 -0400
+Message-Id: <20190507054123.32514-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -58,50 +66,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
+[ Upstream commit 0082517fa4bce073e7cf542633439f26538a14cc ]
 
-In __apic_accept_irq() interface trig_mode is int and actually on some code
-paths it is set above u8:
+Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
+shutdown process, but then it hangs in BIOS POST with a black screen.
 
-kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
-is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
-(1 << 15) & e->msi.data
+The problem is intermittent - at some points it has appeared related to
+Secure Boot settings or different kernel builds, but ultimately we have
+not been able to identify the exact conditions that trigger the issue to
+come and go.
 
-kvm_apic_local_deliver sets it to reg & (1 << 15).
+Besides, the EFI mode cannot be disabled in the BIOS of this model.
 
-Fix the immediate issue by making 'tm' into u16. We may also want to adjust
-__apic_accept_irq() interface and use proper sizes for vector, level,
-trig_mode but this is not urgent.
+However, after extensive testing, we observe that using the EFI reboot
+method reliably avoids the issue in all cases.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+So add a boot time quirk to use EFI reboot on such systems.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux@endlessm.com
+Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
+[ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
+ include/linux/efi.h      |  7 ++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index 0a6cc6754ec5..ea618b713b6f 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -434,13 +434,13 @@ TRACE_EVENT(kvm_apic_ipi,
- );
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 4a12362a194a..c55b11fe8e9f 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -82,6 +82,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
+ 	return 0;
+ }
  
- TRACE_EVENT(kvm_apic_accept_irq,
--	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
-+	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
- 	    TP_ARGS(apicid, dm, tm, vec),
++/*
++ * Some machines don't handle the default ACPI reboot method and
++ * require the EFI reboot method:
++ */
++static int __init set_efi_reboot(const struct dmi_system_id *d)
++{
++	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
++		reboot_type = BOOT_EFI;
++		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
++	}
++	return 0;
++}
++
+ void __noreturn machine_real_restart(unsigned int type)
+ {
+ 	local_irq_disable();
+@@ -167,6 +180,14 @@ static struct dmi_system_id __initdata reboot_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
+ 		},
+ 	},
++	{	/* Handle reboot issue on Acer TravelMate X514-51T */
++		.callback = set_efi_reboot,
++		.ident = "Acer TravelMate X514-51T",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
++		},
++	},
  
- 	TP_STRUCT__entry(
- 		__field(	__u32,		apicid		)
- 		__field(	__u16,		dm		)
--		__field(	__u8,		tm		)
-+		__field(	__u16,		tm		)
- 		__field(	__u8,		vec		)
- 	),
+ 	/* Apple */
+ 	{	/* Handle problems with rebooting on Apple MacBook5 */
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 80b1b8faf503..e6711bf9f0d1 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1433,7 +1433,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
+ 			   struct screen_info *si, efi_guid_t *proto,
+ 			   unsigned long size);
  
+-bool efi_runtime_disabled(void);
++#ifdef CONFIG_EFI
++extern bool efi_runtime_disabled(void);
++#else
++static inline bool efi_runtime_disabled(void) { return true; }
++#endif
++
+ extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
+ 
+ /*
 -- 
 2.20.1
 
