@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DD2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98733C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42669206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AA021530
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207521;
-	bh=1om1prPh/fUxiWVH5sCRHqUzZnE611qvGwpyoSgJVEc=;
+	s=default; t=1557207525;
+	bh=TFdJyvUjJpEhPvCZZANtbgOwSBX7ybxA106rFtdE+g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2USuMdz4mdPGs5a4dFs8NVVwApPhTM9VPqwCCOs+DYBUghe3D5dxzLwe9WJkSyeW
-	 myDM5mfg2AIkYWJ6aJSVOSRi34Qvwf21wTmu8eqd9n9gm17N2KNx7pziI/q+LYEDa9
-	 GetdMy8qLuCji6H4DMWx4tA3kbj09GI4kh08+n1A=
+	b=NMwmqoWpA1eanCi6D2dTz0j/lbY0Ow8sKktbw/D8nhdE9t8uG+2VKBDk6Cgplz3jb
+	 +ulF2gWK7lY1+zX/moyopzV8IqVoxBQXFbCCu+BHpYigiiMZYPx/L/ryQfRa4FUSHr
+	 Yrdi1NQh/HWLZuiaLGsJaBFL0LzZUrO3DUxe2AI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfEGFik (ORCPT
+        id S1728196AbfEGFio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728700AbfEGFig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:36 -0400
+        id S1728714AbfEGFik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E26206A3;
-        Tue,  7 May 2019 05:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE300206A3;
+        Tue,  7 May 2019 05:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207515;
-        bh=1om1prPh/fUxiWVH5sCRHqUzZnE611qvGwpyoSgJVEc=;
+        s=default; t=1557207519;
+        bh=TFdJyvUjJpEhPvCZZANtbgOwSBX7ybxA106rFtdE+g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRUe76/7hGH1LR6J45N2+rBurE7SdWP9xR8u6cZbIRPxErZHYpIVeGE5qIPh2g+h4
-         Xgzk7RcB2W9yPEtyfNTrd9/HE9+RTs52m489lQEpUwwuFIh4DQtTDVV4/1bGc/3IG2
-         nFSaA4BjLGkBwwal6kJjd0xp1BSSfFwkNZix+/1E=
+        b=ecZH/Q+UBk0Gbyg73RUtbmAHr+bY9yLGke3sTegzHeCCJ3omx/yE2NkxhvoCeByC7
+         T2Q2DAKmZMh6nTtYVK/g+m0fc+iqAQWTUwcCddAtUhCFhxRIqP8I0Mm3njv958QkL5
+         EKeOjIVjIeB4N//+7heksEhgjanDhBXUW7MBYhSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
+Cc:     Sunil Dutt <usdutt@codeaurora.org>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/95] mac80211: fix unaligned access in mesh table hash function
-Date:   Tue,  7 May 2019 01:36:57 -0400
-Message-Id: <20190507053826.31622-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/95] nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
+Date:   Tue,  7 May 2019 01:37:00 -0400
+Message-Id: <20190507053826.31622-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,33 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Sunil Dutt <usdutt@codeaurora.org>
 
-[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
+[ Upstream commit d6db02a88a4aaa1cd7105137c67ddec7f3bdbc05 ]
 
-The pointer to the last four bytes of the address is not guaranteed to be
-aligned, so we need to use __get_unaligned_cpu32 here
+This commit adds NL80211_FLAG_CLEAR_SKB flag to other NL commands
+that carry key data to ensure they do not stick around on heap
+after the SKB is freed.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Also introduced this flag for NL80211_CMD_VENDOR as there are sub
+commands which configure the keys.
+
+Signed-off-by: Sunil Dutt <usdutt@codeaurora.org>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_pathtbl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/nl80211.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 1ce068865629..130022091205 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
- static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
- {
- 	/* Use last four bytes of hw addr as hash index */
--	return jhash_1word(*(u32 *)(addr+2), seed);
-+	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
- }
- 
- static const struct rhashtable_params mesh_rht_params = {
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 46e9812d13c0..c1a2ad050e61 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -12761,7 +12761,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DEAUTHENTICATE,
+@@ -12812,7 +12813,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_UPDATE_CONNECT_PARAMS,
+@@ -12820,7 +12822,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DISCONNECT,
+@@ -12849,7 +12852,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DEL_PMKSA,
+@@ -13201,7 +13205,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_WIPHY |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_SET_QOS_MAP,
+@@ -13256,7 +13261,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.doit = nl80211_set_pmk,
+ 		.policy = nl80211_policy,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DEL_PMK,
 -- 
 2.20.1
 
