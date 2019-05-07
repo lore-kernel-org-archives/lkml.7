@@ -7,37 +7,36 @@ X-Spam-Status: No, score=-12.4 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B25C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37892C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8112A204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0327920825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfEGXar (ORCPT
+        id S1726476AbfEGXcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 19:30:47 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41862 "EHLO
+        Tue, 7 May 2019 19:32:13 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:42137 "EHLO
         outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726091AbfEGXar (ORCPT
+        with ESMTP id S1726276AbfEGXcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 19:30:47 -0400
+        Tue, 7 May 2019 19:32:12 -0400
 Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
         (authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x47NUgJk013851
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x47NW8Nx014155
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 May 2019 19:30:43 -0400
+        Tue, 7 May 2019 19:32:09 -0400
 Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 55148420024; Tue,  7 May 2019 19:30:42 -0400 (EDT)
-Date:   Tue, 7 May 2019 19:30:42 -0400
+        id 1CE9A420024; Tue,  7 May 2019 19:32:08 -0400 (EDT)
+Date:   Tue, 7 May 2019 19:32:08 -0400
 From:   "Theodore Ts'o" <tytso@mit.edu>
 To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org
-Subject: [GIT PULL] fscrypt updates for 5.2
-Message-ID: <20190507233042.GA28476@mit.edu>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] random changes for 5.2
+Message-ID: <20190507233208.GA28817@mit.edu>
 Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -53,45 +52,40 @@ The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt_for_linus
+  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/random.git tags/random_for_linus
 
-for you to fetch changes up to 2c58d548f5706d085c4b009f6abb945220460632:
+for you to fetch changes up to b7d5dc21072cda7124d13eae2aefb7343ef94197:
 
-  fscrypt: cache decrypted symlink target in ->i_link (2019-04-17 12:43:29 -0400)
-
-----------------------------------------------------------------
-Clean up fscrypt's dcache revalidation support, and other
-miscellaneous cleanups.
+  random: add a spinlock_t to struct batched_entropy (2019-04-20 00:09:56 -0400)
 
 ----------------------------------------------------------------
-Eric Biggers (10):
-      fscrypt: drop inode argument from fscrypt_get_ctx()
-      fscrypt: remove WARN_ON_ONCE() when decryption fails
-      fscrypt: use READ_ONCE() to access ->i_crypt_info
-      fscrypt: clean up and improve dentry revalidation
-      fscrypt: fix race allowing rename() and link() of ciphertext dentries
-      fs, fscrypt: clear DCACHE_ENCRYPTED_NAME when unaliasing directory
-      fscrypt: only set dentry_operations on ciphertext dentries
-      fscrypt: fix race where ->lookup() marks plaintext dentry as ciphertext
-      vfs: use READ_ONCE() to access ->i_link
-      fscrypt: cache decrypted symlink target in ->i_link
+Initialize the random driver earler; fix CRNG initialization when we
+trust the CPU's RNG on NUMA systems; other miscellaneous cleanups and
+fixes.
 
- fs/crypto/bio.c         |  8 +++-----
- fs/crypto/crypto.c      | 74 ++++++++++++++++++++++++++++++++++-------------------------------------
- fs/crypto/fname.c       |  5 +++--
- fs/crypto/hooks.c       | 68 +++++++++++++++++++++++++++++++++++++++++++++++++----------------
- fs/crypto/keyinfo.c     | 25 ++++++++++++++++++++++--
- fs/crypto/policy.c      |  6 +++---
- fs/dcache.c             |  2 ++
- fs/ext4/ext4.h          | 62 ++++++++++++++++++++++++++++++++++++++++++++---------------
- fs/ext4/namei.c         | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------
- fs/ext4/readpage.c      |  2 +-
- fs/ext4/super.c         |  3 +++
- fs/f2fs/namei.c         | 17 ++++++++++-------
- fs/f2fs/super.c         |  3 +++
- fs/namei.c              |  4 ++--
- fs/ubifs/dir.c          |  8 +++-----
- fs/ubifs/super.c        |  3 +++
- include/linux/dcache.h  |  2 +-
- include/linux/fscrypt.h | 74 ++++++++++++++++++++++++++++++++++++++++++++++++++---------------------
- 18 files changed, 298 insertions(+), 144 deletions(-)
+----------------------------------------------------------------
+George Spelvin (1):
+      random: document get_random_int() family
+
+Jon DeVree (1):
+      random: fix CRNG initialization when random.trust_cpu=1
+
+Kees Cook (1):
+      random: move rand_initialize() earlier
+
+Rasmus Villemoes (3):
+      drivers/char/random.c: constify poolinfo_table
+      drivers/char/random.c: remove unused stuct poolinfo::poolbits
+      drivers/char/random.c: make primary_crng static
+
+Sebastian Andrzej Siewior (1):
+      random: add a spinlock_t to struct batched_entropy
+
+Theodore Ts'o (1):
+      random: only read from /dev/random after its pool has received 128 bits
+
+ drivers/char/random.c         | 199 +++++++++++++++++++++++++++++++++++++++++++++---------------------
+ include/linux/random.h        |   1 +
+ include/trace/events/random.h |  13 ++---
+ init/main.c                   |  21 ++++---
+ 4 files changed, 156 insertions(+), 78 deletions(-)
