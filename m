@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48BAC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F84C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE502087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E052087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207704;
-	bh=hAkedv8ncJh3ZLvU3K8GFMeIbnShY2HBpZ3zEHuytT4=;
+	s=default; t=1557207709;
+	bh=K50RQ7mBbjtVz3H8uQ3WwApUjgW4lrwjgKlVswcS0uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPnqoeBt9+PziKqOYT31QGS8C91G7bbPld+hbNYavUKXXK8W7i3C/1VOy73n4N3wS
-	 hS2NAVZasGVCZItYdnfNtkmRtYrdPcpTnULnkvF1GMBRVVEpgwrnpIdZICaLHasHuT
-	 D8EWRMzDwVAObGal71QQyUFdVku1qfqtnqIsAhvc=
+	b=JMQ9vhwvXz+RuxuO9BJulD4F/0TImtkCmXGdD7+UfVQ2Az3Ia4nc22VmbySzwirrp
+	 9Ttaj5DbYzt+tK/CABUilkYpqZLli1uV/kqfJ2I82rSaxpE7lzyJc1Dk+4KWrhnMdZ
+	 TTH8Y89pdRsiVOhDLR8xq/aoYqK+m0UywxqhD8vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbfEGFli (ORCPT
+        id S1729405AbfEGFls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729346AbfEGFld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:33 -0400
+        id S1728810AbfEGFlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87224205ED;
-        Tue,  7 May 2019 05:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E48C20675;
+        Tue,  7 May 2019 05:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207693;
-        bh=hAkedv8ncJh3ZLvU3K8GFMeIbnShY2HBpZ3zEHuytT4=;
+        s=default; t=1557207704;
+        bh=K50RQ7mBbjtVz3H8uQ3WwApUjgW4lrwjgKlVswcS0uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElNp9zndsd0q09dBEwipZ8Nk/iVIOb9ra4dbyZ6Djp5O0hu8cSam98eQPzrs0rmxK
-         SQMAH5sPwVcZteOiiu+ZbD5I12QIwlpsWRgVufPWBHhB/7snzF1l8GnGq/2gc8eNWT
-         14g2JZNKAvGKdOSLwd5+r6ZtJ+QYaIRasshP5Qk4=
+        b=ZKgCs8Dsm3U9sCaZ8I244rlOA9ENgG58gGbo6ELMJ30rhXXbqRqtzcBDA8UdxYdYu
+         hlDhj9M/n3m6zCTApSr4PWwJ3fwf2plMabalADAcE4a2ueXxUIESNtgVk21VftB4zO
+         NANLDH2KUsL0Pmt6UOLGpd4yc4e0HKAIReTNt0hI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/25] mac80211: fix unaligned access in mesh table hash function
-Date:   Tue,  7 May 2019 01:41:05 -0400
-Message-Id: <20190507054123.32514-8-sashal@kernel.org>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/25] s390/3270: fix lockdep false positive on view->lock
+Date:   Tue,  7 May 2019 01:41:07 -0400
+Message-Id: <20190507054123.32514-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -60,33 +57,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
+[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
 
-The pointer to the last four bytes of the address is not guaranteed to be
-aligned, so we need to use __get_unaligned_cpu32 here
+The spinlock in the raw3270_view structure is used by con3270, tty3270
+and fs3270 in different ways. For con3270 the lock can be acquired in
+irq context, for tty3270 and fs3270 the highest context is bh.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Lockdep sees the view->lock as a single class and if the 3270 driver
+is used for the console the following message is generated:
+
+WARNING: inconsistent lock state
+5.1.0-rc3-05157-g5c168033979d #12 Not tainted
+--------------------------------
+inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
+(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
+
+Introduce a lockdep subclass for the view lock to distinguish bh from
+irq locks.
+
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_pathtbl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/char/con3270.c | 2 +-
+ drivers/s390/char/fs3270.c  | 3 ++-
+ drivers/s390/char/raw3270.c | 3 ++-
+ drivers/s390/char/raw3270.h | 4 +++-
+ drivers/s390/char/tty3270.c | 3 ++-
+ 5 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 197753ad50b4..8c17d498df30 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
- static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
- {
- 	/* Use last four bytes of hw addr as hash index */
--	return jhash_1word(*(u32 *)(addr+2), seed);
-+	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
- }
+diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
+index 285b4006f44b..5d5e78afde88 100644
+--- a/drivers/s390/char/con3270.c
++++ b/drivers/s390/char/con3270.c
+@@ -628,7 +628,7 @@ con3270_init(void)
+ 		     (void (*)(unsigned long)) con3270_read_tasklet,
+ 		     (unsigned long) condev->read);
  
- static const struct rhashtable_params mesh_rht_params = {
+-	raw3270_add_view(&condev->view, &con3270_fn, 1);
++	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
+ 
+ 	INIT_LIST_HEAD(&condev->freemem);
+ 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
+diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
+index 85eca1cef063..04a6810a4298 100644
+--- a/drivers/s390/char/fs3270.c
++++ b/drivers/s390/char/fs3270.c
+@@ -462,7 +462,8 @@ fs3270_open(struct inode *inode, struct file *filp)
+ 
+ 	init_waitqueue_head(&fp->wait);
+ 	fp->fs_pid = get_pid(task_pid(current));
+-	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
++	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		fs3270_free_view(&fp->view);
+ 		goto out;
+diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
+index a2da898ce90f..1ebf632e327b 100644
+--- a/drivers/s390/char/raw3270.c
++++ b/drivers/s390/char/raw3270.c
+@@ -919,7 +919,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
+  * Add view to device with minor "minor".
+  */
+ int
+-raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
++raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
+ {
+ 	unsigned long flags;
+ 	struct raw3270 *rp;
+@@ -941,6 +941,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
+ 		view->cols = rp->cols;
+ 		view->ascebc = rp->ascebc;
+ 		spin_lock_init(&view->lock);
++		lockdep_set_subclass(&view->lock, subclass);
+ 		list_add(&view->list, &rp->view_list);
+ 		rc = 0;
+ 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
+diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
+index 56519cbb165c..7577d7d0ad48 100644
+--- a/drivers/s390/char/raw3270.h
++++ b/drivers/s390/char/raw3270.h
+@@ -149,6 +149,8 @@ struct raw3270_fn {
+ struct raw3270_view {
+ 	struct list_head list;
+ 	spinlock_t lock;
++#define RAW3270_VIEW_LOCK_IRQ	0
++#define RAW3270_VIEW_LOCK_BH	1
+ 	atomic_t ref_count;
+ 	struct raw3270 *dev;
+ 	struct raw3270_fn *fn;
+@@ -157,7 +159,7 @@ struct raw3270_view {
+ 	unsigned char *ascebc;		/* ascii -> ebcdic table */
+ };
+ 
+-int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
++int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
+ int raw3270_activate_view(struct raw3270_view *);
+ void raw3270_del_view(struct raw3270_view *);
+ void raw3270_deactivate_view(struct raw3270_view *);
+diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+index 272cb6cd1b2a..6dd6f9ff7de5 100644
+--- a/drivers/s390/char/tty3270.c
++++ b/drivers/s390/char/tty3270.c
+@@ -978,7 +978,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
+ 		return PTR_ERR(tp);
+ 
+ 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
+-			      tty->index + RAW3270_FIRSTMINOR);
++			      tty->index + RAW3270_FIRSTMINOR,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		tty3270_free_view(tp);
+ 		return rc;
 -- 
 2.20.1
 
