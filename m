@@ -6,153 +6,107 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71BFC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62062C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C329E2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40256205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfEGLZ3 (ORCPT
+        id S1726473AbfEGL3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:25:29 -0400
-Received: from foss.arm.com ([217.140.101.70]:51482 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfEGLZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:25:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAE0B374;
-        Tue,  7 May 2019 04:25:27 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCE833F5AF;
-        Tue,  7 May 2019 04:25:24 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:25:22 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v8 08/16] sched/core: uclamp: Set default clamps for RT
- tasks
-Message-ID: <20190507112522.g2gaydwfkczb33je@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-9-patrick.bellasi@arm.com>
- <CAJuCfpH9E2Khc1WP8MZgLK+yF7GgwW29ECES4hqPN3jaB34RqA@mail.gmail.com>
+        Tue, 7 May 2019 07:29:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44240 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725843AbfEGL3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 07:29:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4D460ABF1;
+        Tue,  7 May 2019 11:29:51 +0000 (UTC)
+Date:   Tue, 7 May 2019 13:29:50 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+Message-ID: <20190507112950.wejw6nmfwzmm3vaf@pathway.suse.cz>
+References: <20190430091049.30413-1-pmladek@suse.com>
+ <20190430091049.30413-2-pmladek@suse.com>
+ <20190507004032.2fgddlsycyypqdsn@treble>
+ <20190507014332.l5pmvjyfropaiui2@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpH9E2Khc1WP8MZgLK+yF7GgwW29ECES4hqPN3jaB34RqA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190507014332.l5pmvjyfropaiui2@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-Apr 16:07, Suren Baghdasaryan wrote:
-> On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> >
-> > By default FAIR tasks start without clamps, i.e. neither boosted nor
-> > capped, and they run at the best frequency matching their utilization
-> > demand.  This default behavior does not fit RT tasks which instead are
-> > expected to run at the maximum available frequency, if not otherwise
-> > required by explicitly capping them.
-> >
-> > Enforce the correct behavior for RT tasks by setting util_min to max
-> > whenever:
-> >
-> >  1. the task is switched to the RT class and it does not already have a
-> >     user-defined clamp value assigned.
-> >
-> >  2. an RT task is forked from a parent with RESET_ON_FORK set.
-> >
-> > NOTE: utilization clamp values are cross scheduling class attributes and
-> > thus they are never changed/reset once a value has been explicitly
-> > defined from user-space.
-> >
-> > Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > ---
-> >  kernel/sched/core.c | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index bdebdabe9bc4..71c9dd6487b1 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -1042,6 +1042,28 @@ static int uclamp_validate(struct task_struct *p,
-> >  static void __setscheduler_uclamp(struct task_struct *p,
-> >                                   const struct sched_attr *attr)
-> >  {
-> > +       unsigned int clamp_id;
-> > +
-> > +       /*
-> > +        * On scheduling class change, reset to default clamps for tasks
-> > +        * without a task-specific value.
-> > +        */
-> > +       for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
-> > +               struct uclamp_se *uc_se = &p->uclamp_req[clamp_id];
-> > +               unsigned int clamp_value = uclamp_none(clamp_id);
-> > +
-> > +               /* Keep using defined clamps across class changes */
-> > +               if (uc_se->user_defined)
-> > +                       continue;
-> > +
-> > +               /* By default, RT tasks always get 100% boost */
-> > +               if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > +                       clamp_value = uclamp_none(UCLAMP_MAX);
-> > +
-> > +               uc_se->bucket_id = uclamp_bucket_id(clamp_value);
-> > +               uc_se->value = clamp_value;
+On Mon 2019-05-06 20:43:32, Josh Poimboeuf wrote:
+> On Mon, May 06, 2019 at 07:40:32PM -0500, Josh Poimboeuf wrote:
+> > On Tue, Apr 30, 2019 at 11:10:48AM +0200, Petr Mladek wrote:
+> > > WARN_ON_ONCE() could not be called safely under rq lock because
+> > > of console deadlock issues. Fortunately, there is another check
+> > > for the reliable stacktrace support in klp_enable_patch().
+> > > 
+> > > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > > ---
+> > >  kernel/livepatch/transition.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> > > index 9c89ae8b337a..8e0274075e75 100644
+> > > --- a/kernel/livepatch/transition.c
+> > > +++ b/kernel/livepatch/transition.c
+> > > @@ -263,8 +263,15 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+> > >  	trace.nr_entries = 0;
+> > >  	trace.max_entries = MAX_STACK_ENTRIES;
+> > >  	trace.entries = entries;
+> > > +
+> > >  	ret = save_stack_trace_tsk_reliable(task, &trace);
+> > > -	WARN_ON_ONCE(ret == -ENOSYS);
+> > > +	/*
+> > > +	 * pr_warn() under task rq lock might cause a deadlock.
+> > > +	 * Fortunately, missing reliable stacktrace support has
+> > > +	 * already been handled when the livepatch was enabled.
+> > > +	 */
+> > > +	if (ret == -ENOSYS)
+> > > +		return ret;
+> > 
+> > I find the comment to be a bit wordy and confusing (and vague).
+
+Then please provide a better one. I have no idea what might make
+you happy and am not interested into an endless disputing.
+
+> > Also this check is effectively the same as the klp_have_reliable_stack()
+> > check which is done in kernel/livepatch/core.c.  So I think it would be
+> > clearer and more consistent if the same check is done here:
+> > 
+> > 	if (!klp_have_reliable_stack())
+> > 		return -ENOSYS;
+
+Huh, it smells with over engineering to me.
+
+> > 	ret = save_stack_trace_tsk_reliable(task, &trace);
+> > 
+> > 	[ no need to check ret for ENOSYS here ]
+> > 
+> > Then, IMO, no comment is needed.
 > 
-> Is it possible for p->uclamp_req[UCLAMP_MAX].value to be less than
-> uclamp_none(UCLAMP_MAX) for this RT task? If that's a possibility then
-> I think we will end up with a case of
->   p->uclamp_req[UCLAMP_MIN].value > p->uclamp_req[UCLAMP_MAX].value
-> after these assignments are done.
-> 
+> BTW, if you agree with this approach then we can leave the
+> WARN_ON_ONCE() in save_stack_trace_tsk_reliable() after all.
 
-The util_max for an RT task can be less then uclamp_none(UCLAMP_MAX),
-however, requesting a task specific util_max which is smaller then the
-current util_min will fail in:
+I really like the removal of the WARN_ON_ONCE(). I consider
+it an old fashioned way used when people are lazy to handle
+errors. It might make sense when the backtrace helps to locate
+the context but the context is well known here. Finally,
+WARN() should be used with care. It might cause reboot
+with panic_on_warn.
 
-   __sched_setscheduler()
-      uclamp_validate()
-
-since we only allow util_min <= util_max for all task specific values.
-
-> > +       }
-> > +
-> >         if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
-> >                 return;
-> >
-> > @@ -1077,6 +1099,10 @@ static void uclamp_fork(struct task_struct *p)
-> >         for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
-> >                 unsigned int clamp_value = uclamp_none(clamp_id);
-> >
-> > +               /* By default, RT tasks always get 100% boost */
-> > +               if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > +                       clamp_value = uclamp_none(UCLAMP_MAX);
-> > +
-> >                 p->uclamp_req[clamp_id].user_defined = false;
-> >                 p->uclamp_req[clamp_id].value = clamp_value;
-> >                 p->uclamp_req[clamp_id].bucket_id = uclamp_bucket_id(clamp_value);
-> > --
-> > 2.20.1
-> >
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Best Regards,
+Petr
