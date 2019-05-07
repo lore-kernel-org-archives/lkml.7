@@ -2,120 +2,191 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A148EC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0ADC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6CC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD402053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfEGJwx (ORCPT
+        id S1727106AbfEGJw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:52:53 -0400
-Received: from foss.arm.com ([217.140.101.70]:48826 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbfEGJwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:52:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69D47374;
-        Tue,  7 May 2019 02:52:52 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF3AB3F5AF;
-        Tue,  7 May 2019 02:52:48 -0700 (PDT)
-Date:   Tue, 7 May 2019 10:52:42 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190507095242.GA17052@fuggles.cambridge.arm.com>
-References: <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
- <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
- <20190505132949.GB3076@localhost>
- <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
- <20190505155223.GA4976@localhost>
- <20190505180313.GA80924@google.com>
- <20190506183506.GD2875@brain-police>
- <20190506205807.GA223956@google.com>
- <20190506215737.cuugrrxbhkp2uknn@e107158-lin.cambridge.arm.com>
+        Tue, 7 May 2019 05:52:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36866 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbfEGJw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:52:58 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A7E7D28071E
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-pm@vger.kernel.org, sre@kernel.org
+Cc:     Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
+        rjw@rjwysocki.net, gwendal@chromium.org,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
+        kernel@collabora.com, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH v4 1/2] power: supply: add input power and voltage limit properties
+Date:   Tue,  7 May 2019 11:52:47 +0200
+Message-Id: <20190507095248.17915-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506215737.cuugrrxbhkp2uknn@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:57:37PM +0100, Qais Yousef wrote:
-> On 05/06/19 16:58, Joel Fernandes wrote:
-> > > If you're trying to dereference a pointer to userspace using
-> > > probe_kernel_read(), that clearly isn't going to work.
-> > 
-> > Ok. Thanks for confirming as well. The existing code has this bug and these
-> > patches fix it.
-> 
-> 5.1-rc7 and 4.9.173 stable both managed to read the path in do_sys_open() on my
-> Juno-r2 board using the defconfig in the tree.
+For thermal management strategy you might be interested on limit the
+input power for a power supply. We already have current limit but
+basically what we probably want is to limit power. So, introduce the
+input_power_limit property.
 
-That's not surprising: Juno-r2 only features v8.0 CPUs, so doesn't have PAN
-or UAO capabilities. The SoC Joel is talking about is 8.2, so has both of
-those.
+Although the common use case is limit the input power, in some
+specific cases it is the voltage that is problematic (i.e some regulators
+have different efficiencies at higher voltage resulting in more heat).
+So introduce also the input_voltage_limit property.
 
-Here's some background which might help...
+This happens in one Chromebook and is used on the Pixel C's thermal
+management strategy to effectively limit the input power to 5V 3A when
+the screen is on. When the screen is on, the display, the CPU, and the GPU
+all contribute more heat to the system than while the screen is off, and
+we made a tradeoff to throttle the charger in order to give more of the
+thermal budget to those other components.
 
-PAN (Privileged Access Never) prevents the kernel from inadvertently
-accessing userspace and will cause a page (permission) fault if such an
-access is made outside of the standard uaccess routines. This means that
-in those routines (e.g. get_user()) we have to toggle the PAN state in the
-same way that x86 toggles SMAP. This can be expensive and was part of the
-motivation for the adoption of things like unsafe_get_user() on x86.
+So there's nothing fundamentally broken about the hardware that would
+cause the Pixel C to malfunction if we were charging at 9V or 12V instead
+of 5V when the screen is on, i.e. if userspace doesn't change this.
 
-On arm64, we have a set of so-called "translated" memory access instructions
-which can be used to perform unprivileged accesses to userspace from within
-the kernel even when PAN is enabled. Using these special instructions (e.g.
-LDTR) in our uaccess routines can therefore remove the need to toggle PAN.
-Sounds great, right? Well, that all falls apart when the uaccess routines
-are used on kernel addresses as in probe_kernel_read() because they will
-fault when trying to dereference a kernel pointer.
+What would happen is that you wouldn't meet Google's skin temperature
+targets on the system if the charger was allowed to run at 9V or 12V with
+the screen on.
 
-The answer is UAO (User Access Override). When UAO is set, the translated
-memory access instructions behave the same as non-translated accesses.
-Therefore we can toggle UAO in set_fs() so that it is set when we're using
-KERNEL_DS and cleared when we're using USER_DS.
+For folks hacking on Pixel Cs (which is now outside of Google's official
+support window for Android) and customizing their own kernel and userspace
+this would be acceptable, but we wanted to expose this feature in the
+power supply properties because the feature does exist in the Emedded
+Controller firmware of the Pixel C and all of Google's Chromebooks with
+USB-C made since 2015 in case someone running an up to date kernel wanted
+to limit the charging power for thermal or other reasons.
 
-The side-effect of this is that when KERNEL_DS is set on a system that
-implements both PAN and UAO, passing a user pointer to our uaccess routines
-will return -EFAULT. In other words, set_fs() can be thought of as a
-selector between the kernel and user address spaces, which are distinct.
+This patch exposes a new property, similar to input current limit, to
+re-configure the maximum voltage from the external supply at runtime
+based on system-level knowledge or user input.
 
-Joel -- does disabling UAO in your .config "fix" the issue? If so, feel
-free to use some of the above text in a commit message if it helps to
-justify your change.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+---
 
-Cheers,
+Changes in v4:
+- Add also input_power_limit.
 
-Will
+Changes in v3:
+- Improve commit log and documentation with Benson comments.
+
+Changes in v2:
+- Document the new property in ABI/testing/sysfs-class-power.
+- Add the Reviewed-by Guenter Roeck tag.
+
+ Documentation/ABI/testing/sysfs-class-power | 32 +++++++++++++++++++++
+ Documentation/power/power_supply_class.txt  |  4 +++
+ drivers/power/supply/power_supply_sysfs.c   |  2 ++
+ include/linux/power_supply.h                |  2 ++
+ 4 files changed, 40 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index 5e23e22dce1b..962a27a1daf8 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -331,10 +331,42 @@ Description:
+ 		supply. Normally this is configured based on the type of
+ 		connection made (e.g. A configured SDP should output a maximum
+ 		of 500mA so the input current limit is set to the same value).
++		Use preferably input_power_limit, and for problems that can be
++		solved using power limit use input_current_limit.
+ 
+ 		Access: Read, Write
+ 		Valid values: Represented in microamps
+ 
++What:		/sys/class/power_supply/<supply_name>/input_voltage_limit
++Date:		May 2019
++Contact:	linux-pm@vger.kernel.org
++Description:
++		This entry configures the incoming VBUS voltage limit currently
++		set in the supply. Normally this is configured based on
++		system-level knowledge or user input (e.g. This is part of the
++		Pixel C's thermal management strategy to effectively limit the
++		input power to 5V when the screen is on to meet Google's skin
++		temperature targets). Note that this feature should not be
++		used for safety critical things.
++		Use preferably input_power_limit, and for problems that can be
++		solved using power limit use input_voltage_limit.
++
++		Access: Read, Write
++		Valid values: Represented in microvolts
++
++What:		/sys/class/power_supply/<supply_name>/input_power_limit
++Date:		May 2019
++Contact:	linux-pm@vger.kernel.org
++Description:
++		This entry configures the incoming power limit currently set
++		in the supply. Normally this is configured based on
++		system-level knowledge or user input. Use preferably this
++		feature to limit the incoming power and use current/voltage
++		limit only for problems that can be solved using power limit.
++
++		Access: Read, Write
++		Valid values: Represented in microwatts
++
+ What:		/sys/class/power_supply/<supply_name>/online,
+ Date:		May 2007
+ Contact:	linux-pm@vger.kernel.org
+diff --git a/Documentation/power/power_supply_class.txt b/Documentation/power/power_supply_class.txt
+index 300d37896e51..1e3c705111db 100644
+--- a/Documentation/power/power_supply_class.txt
++++ b/Documentation/power/power_supply_class.txt
+@@ -137,6 +137,10 @@ power supply object.
+ 
+ INPUT_CURRENT_LIMIT - input current limit programmed by charger. Indicates
+ the current drawn from a charging source.
++INPUT_VOLTAGE_LIMIT - input voltage limit programmed by charger. Indicates
++the voltage limit from a charging source.
++INPUT_POWER_LIMIT - input power limit programmed by charger. Indicates
++the power limit from a charging source.
+ 
+ CHARGE_CONTROL_LIMIT - current charge control limit setting
+ CHARGE_CONTROL_LIMIT_MAX - maximum charge control limit setting
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index 5358a80d854f..860db617d241 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -275,6 +275,8 @@ static struct device_attribute power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(charge_control_limit),
+ 	POWER_SUPPLY_ATTR(charge_control_limit_max),
+ 	POWER_SUPPLY_ATTR(input_current_limit),
++	POWER_SUPPLY_ATTR(input_voltage_limit),
++	POWER_SUPPLY_ATTR(input_power_limit),
+ 	POWER_SUPPLY_ATTR(energy_full_design),
+ 	POWER_SUPPLY_ATTR(energy_empty_design),
+ 	POWER_SUPPLY_ATTR(energy_full),
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 2f9c201a54d1..ba135a5d8996 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -122,6 +122,8 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+ 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
++	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
++	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
+ 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
+ 	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
+ 	POWER_SUPPLY_PROP_ENERGY_FULL,
+-- 
+2.20.1
+
