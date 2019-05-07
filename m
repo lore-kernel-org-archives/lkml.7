@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019F5C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422C7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2B020578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122B42087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207663;
-	bh=1ldGnMoVIE7IfFksfZrcv0xOBczTvmrB4Lnn1lZl4ws=;
+	s=default; t=1557207667;
+	bh=pBvqJq9KybAlgRuI+BIKTZnJZ7Dwrfn+zeyx2dxlZIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QhkjlRjSF+GhS8Kk9rCj8ugtFAuWcNyFAaquUyJVQbLPn2Aj0mgmjMfys3vCR5jhI
-	 xITu7krd7aAztOG0sHRwGMiPJQ0uRwK5GJetz+bILwUMkrZ17oEG/bLDMj25MqSxGu
-	 /5S169yIrbYQuEnsAUfkMKkzCvqm4NH8DKC1MH4U=
+	b=GcgEaIaw7MVcxBsZ35DK7dcaNRJp1yjzsUnqDtZ9hp7WidK7xBgszScueV16uxP+b
+	 plnLyOAsIpZW6iLxCAf863q/Qw9hZUA93UmfmJeFdSvwoeplp1yYfUWuh49597MoH/
+	 QtsSOQENJ5lFPJlLdzHk6ZJeWcUPl6v/PYjMUUdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfEGFlC (ORCPT
+        id S1728095AbfEGFlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60426 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729249AbfEGFk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:58 -0400
+        id S1725926AbfEGFk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AF52087F;
-        Tue,  7 May 2019 05:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 520B521655;
+        Tue,  7 May 2019 05:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207657;
-        bh=1ldGnMoVIE7IfFksfZrcv0xOBczTvmrB4Lnn1lZl4ws=;
+        s=default; t=1557207659;
+        bh=pBvqJq9KybAlgRuI+BIKTZnJZ7Dwrfn+zeyx2dxlZIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VGPSZrDyvWWtQbWcZmKQMw7Urg1U3p72VXFB2u2VXt8xVWhk3xSwAKJYLm9Jl+sLY
-         78HkcdI8+BVpqRld+BBkUpVOVdmE/oPUIczUfMbgaFQrdH6eWwh0kqm8LNUPAls7fh
-         KSZtK0CmsUt/w+lT8gFR8lFZZkP+bGYJvw67VCW0=
+        b=T42delRmi2wBgbDfyxBMZ6WZzE5ry98vfjZiuseRezLA93j6WOx0cXskBkpBncmIR
+         6XuXkJNZWqg//23ppKb/9cXh8WKDtfVZMEsTr4kqY2AaC0SlVcwUPVv1jKsDrDGluv
+         fkCs77r+dFZk8owF7pC2EDh72mmeaA8St3H/LL0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Damian Kos <dkos@cadence.com>, Heiko Stuebner <heiko@sntech.de>,
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 82/95] drm/rockchip: fix for mailbox read validation.
-Date:   Tue,  7 May 2019 01:38:11 -0400
-Message-Id: <20190507053826.31622-82-sashal@kernel.org>
+        linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 83/95] cifs: fix memory leak in SMB2_read
+Date:   Tue,  7 May 2019 01:38:12 -0400
+Message-Id: <20190507053826.31622-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -59,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damian Kos <dkos@cadence.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit e4056bbb6719fe713bfc4030ac78e8e97ddf7574 ]
+[ Upstream commit 05fd5c2c61732152a6bddc318aae62d7e436629b ]
 
-This is basically the same fix as in
-commit fa68d4f8476b ("drm/rockchip: fix for mailbox read size")
-but for cdn_dp_mailbox_validate_receive function.
+Commit 088aaf17aa79300cab14dbee2569c58cfafd7d6e introduced a leak where
+if SMB2_read() returned an error we would return without freeing the
+request buffer.
 
-See patchwork.kernel.org/patch/10671981/ for details.
-
-Signed-off-by: Damian Kos <dkos@cadence.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/1542640463-18332-1-git-send-email-dkos@cadence.com
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/gpu/drm/rockchip/cdn-dp-reg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/rockchip/cdn-dp-reg.c b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
-index 0ed7e91471f6..4df201d21f27 100644
---- a/drivers/gpu/drm/rockchip/cdn-dp-reg.c
-+++ b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
-@@ -113,7 +113,7 @@ static int cdp_dp_mailbox_write(struct cdn_dp_device *dp, u8 val)
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index fd2d199dd413..7936eac5a38a 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -2699,6 +2699,7 @@ SMB2_read(const unsigned int xid, struct cifs_io_parms *io_parms,
+ 			cifs_dbg(VFS, "Send error in read = %d\n", rc);
+ 		}
+ 		free_rsp_buf(resp_buftype, rsp_iov.iov_base);
++		cifs_small_buf_release(req);
+ 		return rc == -ENODATA ? 0 : rc;
+ 	}
  
- static int cdn_dp_mailbox_validate_receive(struct cdn_dp_device *dp,
- 					   u8 module_id, u8 opcode,
--					   u8 req_size)
-+					   u16 req_size)
- {
- 	u32 mbox_size, i;
- 	u8 header[4];
 -- 
 2.20.1
 
