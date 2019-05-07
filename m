@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B85FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F94C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F94E2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FEE2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208533;
-	bh=PKfrynBKEvM/PKeZRU7lV68wr5wLDaGH2t074wvcoTY=;
+	s=default; t=1557208539;
+	bh=B6iueZ9ELunyyvdefA9NQH9x0Ito6YxBuJuqjpDH2I4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAwVo8VgM2EWwC8nw4hV4XYpvDWyuA1/SY01IcEwfv2xdne2rNVrjy3vhPOVfS9oZ
-	 u4WLoFc2ueS7IMrYIMZWZibVbcaie0CD6lrO0Yuvz0X632eSfoL6H2VjjU14iq0v8i
-	 7ZSUqhvPoBkAEazTkkH2MHwkQB37xkmqqKuaiJSo=
+	b=JwM1YVKdCla9vQXdDhwkN1Odp0km3uMylNQkop5jayy0Cy0O/ARarMtWqR29aLhrL
+	 7m1Ewo4SRXUfKMJ7YYMRVSzwbLJa6hbwrVAFGhN//fyQ7ZxLmRMyJL9ZiChhcCi90d
+	 iJAwoD9iDlblnFqmDG3gVCmC7uKRQRhfBaHOaXZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfEGFiN (ORCPT
+        id S1728638AbfEGFzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfEGFiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:07 -0400
+        id S1728537AbfEGFiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B862220578;
-        Tue,  7 May 2019 05:38:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6834820578;
+        Tue,  7 May 2019 05:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207486;
-        bh=PKfrynBKEvM/PKeZRU7lV68wr5wLDaGH2t074wvcoTY=;
+        s=default; t=1557207490;
+        bh=B6iueZ9ELunyyvdefA9NQH9x0Ito6YxBuJuqjpDH2I4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0K2i3p/3Jut5GrBZ83+IuBvUHoVXfhhhghlUjwDb3u2G7r1soClxIJA90c3XsJ3ni
-         bn50ACV5gS/ezhdPc8UnWWgchqxRTqncmYZEnQUn2wCI/EGJBgD8RzmukQQEFLgeLt
-         93SEBlUe8S6XRRJk3WzG2zxI/HSBOWGfDhmEcki8=
+        b=jjPwiNUd3C3LfmrR2p56s7ChbuCrVcAuHtcYFm3R1nc6B5+uTk+VOfzF/bts23wVX
+         W5AazCxAEfpQKMUBnvTc8aOn8UPPaA+PyUZJUBsFsEGN7sYg7T9OB9W4WIaNpb6mh6
+         lkKgjKZ4zZMwtRvbQjdiq/wC6I888nsZB7mrx1ec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Alex Kushnarov <alexanderk@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 70/81] netfilter: nf_tables: use-after-free in dynamic operations
-Date:   Tue,  7 May 2019 01:35:41 -0400
-Message-Id: <20190507053554.30848-70-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 73/81] mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
+Date:   Tue,  7 May 2019 01:35:44 -0400
+Message-Id: <20190507053554.30848-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -61,53 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 3f3a390dbd59d236f62cff8e8b20355ef7069e3d ]
+[ Upstream commit d4d0e40977ac450f32f2db5e4d8e23c9d2578899 ]
 
-Smatch reports:
+The driver cannot guarantee in the prepare phase that it will be able to
+write an MDB entry to the device. In case the driver returned success
+during the prepare phase, but then failed to add the entry in the commit
+phase, a WARNING [1] will be generated by the switchdev core.
 
-       net/netfilter/nf_tables_api.c:2167 nf_tables_expr_destroy()
-        error: dereferencing freed memory 'expr->ops'
+Fix this by doing the work in the prepare phase instead.
 
-net/netfilter/nf_tables_api.c
-    2162 static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
-    2163                                   struct nft_expr *expr)
-    2164 {
-    2165        if (expr->ops->destroy)
-    2166                expr->ops->destroy(ctx, expr);
-                                                ^^^^
---> 2167        module_put(expr->ops->type->owner);
-                           ^^^^^^^^^
-    2168 }
+[1]
+[  358.544486] swp12s0: Commit of object (id=2) failed.
+[  358.550061] WARNING: CPU: 0 PID: 30 at net/switchdev/switchdev.c:281 switchdev_port_obj_add_now+0x9b/0xe0
+[  358.560754] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted 5.0.0-custom-13382-gf2449babf221 #1350
+[  358.570472] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  358.580582] Workqueue: events switchdev_deferred_process_work
+[  358.587001] RIP: 0010:switchdev_port_obj_add_now+0x9b/0xe0
+...
+[  358.614109] RSP: 0018:ffffa6b900d6fe18 EFLAGS: 00010286
+[  358.619943] RAX: 0000000000000000 RBX: ffff8b00797ff000 RCX: 0000000000000000
+[  358.627912] RDX: ffff8b00b7a1d4c0 RSI: ffff8b00b7a152e8 RDI: ffff8b00b7a152e8
+[  358.635881] RBP: ffff8b005c3f5bc0 R08: 000000000000022b R09: 0000000000000000
+[  358.643850] R10: 0000000000000000 R11: ffffa6b900d6fcc8 R12: 0000000000000000
+[  358.651819] R13: dead000000000100 R14: ffff8b00b65a23c0 R15: 0ffff8b00b7a2200
+[  358.659790] FS:  0000000000000000(0000) GS:ffff8b00b7a00000(0000) knlGS:0000000000000000
+[  358.668820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  358.675228] CR2: 00007f00aad90de0 CR3: 00000001ca80d000 CR4: 00000000001006f0
+[  358.683188] Call Trace:
+[  358.685918]  switchdev_port_obj_add_deferred+0x13/0x60
+[  358.691655]  switchdev_deferred_process+0x6b/0xf0
+[  358.696907]  switchdev_deferred_process_work+0xa/0x10
+[  358.702548]  process_one_work+0x1f5/0x3f0
+[  358.707022]  worker_thread+0x28/0x3c0
+[  358.711099]  ? process_one_work+0x3f0/0x3f0
+[  358.715768]  kthread+0x10d/0x130
+[  358.719369]  ? __kthread_create_on_node+0x180/0x180
+[  358.724815]  ret_from_fork+0x35/0x40
 
-Smatch says there are three functions which free expr->ops.
-
-Fixes: b8e204006340 ("netfilter: nft_compat: use .release_ops and remove list of extension")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 3a49b4fde2a1 ("mlxsw: Adding layer 2 multicast support")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- net/netfilter/nf_tables_api.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index f272f9538c44..ef7ff13a7b99 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2113,9 +2113,11 @@ static int nf_tables_newexpr(const struct nft_ctx *ctx,
- static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
- 				   struct nft_expr *expr)
- {
-+	const struct nft_expr_type *type = expr->ops->type;
-+
- 	if (expr->ops->destroy)
- 		expr->ops->destroy(ctx, expr);
--	module_put(expr->ops->type->owner);
-+	module_put(type->owner);
- }
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+index af673abdb482..a4f237f815d1 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -1585,7 +1585,7 @@ static int mlxsw_sp_port_mdb_add(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	u16 fid_index;
+ 	int err = 0;
  
- struct nft_expr *nft_expr_init(const struct nft_ctx *ctx,
+-	if (switchdev_trans_ph_prepare(trans))
++	if (switchdev_trans_ph_commit(trans))
+ 		return 0;
+ 
+ 	bridge_port = mlxsw_sp_bridge_port_find(mlxsw_sp->bridge, orig_dev);
 -- 
 2.20.1
 
