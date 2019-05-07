@@ -6,45 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADCAC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE6FC46460
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08D220675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E964C216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209346;
-	bh=sw2etluuU/zmVe92Uj2XTHpP+tbisLk0ukAhe3FuuwM=;
+	s=default; t=1557209350;
+	bh=B+Svool6OKtXekRVwUUtun6ODfXF2B3SY0gk1iyt/4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dsa99LX2SQaO+vrQi1Rba5mJ4b4noNytPX7LLzOhYemf2wWdd4O7sN9vrx1kF1xOB
-	 IMwnkmOEsLSY7M9lQArC+h8x+tbxWvUq6/BrUbIRCErCO8l7D+Ka0+GSWtspbVf3/E
-	 rzSWOMWtNHe52wb9kbBVuziU7FGRSUIoO629945M=
+	b=yRQ54Nauyt7x8gBS6li+Seb3QtrKJ6+LowmOx0F7aqv0ymbckSvMTLcfPcZ6eoAe/
+	 upOhKCHItdpqBojwCV9MD7dEOhTuDNAhRA0Lro2tb9MQ05tMyuykCnkpxAiA4afLj9
+	 40t5R9ev83VLpx0gVAua5y7ukV/+/2Xhc9ju6SAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfEGGJE (ORCPT
+        id S1726549AbfEGFcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfEGFcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:32:48 -0400
+        id S1726503AbfEGFco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:32:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C31BE2087F;
-        Tue,  7 May 2019 05:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80881206A3;
+        Tue,  7 May 2019 05:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207167;
-        bh=sw2etluuU/zmVe92Uj2XTHpP+tbisLk0ukAhe3FuuwM=;
+        s=default; t=1557207163;
+        bh=B+Svool6OKtXekRVwUUtun6ODfXF2B3SY0gk1iyt/4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pr857ClQ92Xc074tdtMh7uCEK/hGlTH2tpKeFuxQX+Z+4xY5rRgzNuToad/0dO36U
-         BoTWIu6BRzpeo3+KSjtfa36DkSGhfyIMGLblxhJgAKeDcYSrg6k3cbNnQEN25oQLxU
-         CpzmUODqenT8gGVHOrL1WDDSUyhXOYVQNdVOFMIY=
+        b=Gf0VOXHRy8xPceIUIOydy8DO6ZE65P4Hxxt7azVI01NZu2x29RRHzKacqcUR1U7WO
+         x2bHXFrRDCyvQVMH5xCrRvBQ81NcoycQRtDlFyi1gB5M3D0GF53/OvvIoKMc7sQBYu
+         gWXj1g5mi9/Vp1wqXwQS7OY9OhJbKPrGzF1eEXSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 08/99] HID: input: add mapping for "Toggle Display" key
-Date:   Tue,  7 May 2019 01:31:02 -0400
-Message-Id: <20190507053235.29900-8-sashal@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 04/99] acpi/nfit: Always dump _DSM output payload
+Date:   Tue,  7 May 2019 01:30:58 -0400
+Message-Id: <20190507053235.29900-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -57,39 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit c01908a14bf735b871170092807c618bb9dae654 ]
+[ Upstream commit 351f339faa308c1c1461314a18c832239a841ca0 ]
 
-According to HUT 1.12 usage 0xb5 from the generic desktop page is reserved
-for switching between external and internal display, so let's add the
-mapping.
+The dynamic-debug statements for command payload output only get emitted
+when the command is not ND_CMD_CALL. Move the output payload dumping
+ahead of the early return path for ND_CMD_CALL.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 31eca76ba2fc9 ("...whitelisted dimm command marshaling mechanism")
+Reported-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/acpi/nfit/core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index a985d55e3510..e2b933972465 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -677,6 +677,14 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 			break;
- 		}
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index 4be4dc3e8aa6..38ec79bb3edd 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -563,6 +563,12 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+ 		goto out;
+ 	}
  
-+		if ((usage->hid & 0xf0) == 0xb0) {	/* SC - Display */
-+			switch (usage->hid & 0xf) {
-+			case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
-+			default: goto ignore;
-+			}
-+			break;
-+		}
++	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
++			cmd_name, out_obj->buffer.length);
++	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
++			out_obj->buffer.pointer,
++			min_t(u32, 128, out_obj->buffer.length), true);
 +
- 		/*
- 		 * Some lazy vendors declare 255 usages for System Control,
- 		 * leading to the creation of ABS_X|Y axis and too many others.
+ 	if (call_pkg) {
+ 		call_pkg->nd_fw_size = out_obj->buffer.length;
+ 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
+@@ -581,12 +587,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+ 		return 0;
+ 	}
+ 
+-	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
+-			cmd_name, out_obj->buffer.length);
+-	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
+-			out_obj->buffer.pointer,
+-			min_t(u32, 128, out_obj->buffer.length), true);
+-
+ 	for (i = 0, offset = 0; i < desc->out_num; i++) {
+ 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i, buf,
+ 				(u32 *) out_obj->buffer.pointer,
 -- 
 2.20.1
 
