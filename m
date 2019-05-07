@@ -2,159 +2,172 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE09DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5F4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5582054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4622054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208478;
-	bh=T1lFngWDo2uXq8zx/zlRw0MCtf9yDbV/wl8t0Mgby4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HTIBQQPJQoSyktJBU6ChwRsp8RsMYbnAsoPZ+WGEZiasq+cwUnEfz6ilxIYUFii5+
-	 +ung0I+Po2IvmCTho7ME95wblO6A1ZaCVq5L0q1tB9NCcdiFTC6+so1YL123jbAVEm
-	 LyEQy7+YitYih1PiicXyVv4JE2mK/i8qexDw/8c8=
+	s=default; t=1557208487;
+	bh=0qLDQG2dEzKFI0K8asHKsuplvGA4JtTtp2n0OVKYdXQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tI/73HBeheYb/lXfVlYCAOp3E2dERmDBf7xdme3N8AWZa93JEaSoGqLKHQTpajXep
+	 3Y0D8AynP17R3Pq4/GepP8c46TMRGYE+0M4rOMV+wDa2Zh89fpsiLwMZqUybYneCzg
+	 v+9tojP8CkdWO+HleDDfmqm+21GFlIHM7p+oE20M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfEGFyh (ORCPT
+        id S1728946AbfEGFyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39274 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfEGFyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:54:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728650AbfEGFiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8DE920825;
-        Tue,  7 May 2019 05:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE51320578;
+        Tue,  7 May 2019 05:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557208475;
-        bh=T1lFngWDo2uXq8zx/zlRw0MCtf9yDbV/wl8t0Mgby4M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PcsGyPByjN2k4OHTjJPuELvY5crdqPjZLkS+AZVI0SPsnXJRellVmW3Cq3v8Oibc5
-         KwQZKOoa+HCeZ9X5f3CKUIDSrlevlpMJY7eQioIQC3oPaSF+FJZMAsx7AonxU6WTYS
-         o5o7T18Rhxwge0jmLOVbbue0W2w/QA82aVwJc/To=
-Date:   Tue, 7 May 2019 07:54:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
- master(s)
-Message-ID: <20190507055432.GB17986@kroah.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
- <20190504065242.GA9770@kroah.com>
- <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
- <20190507052732.GD16052@vkoul-mobl>
+        s=default; t=1557207504;
+        bh=0qLDQG2dEzKFI0K8asHKsuplvGA4JtTtp2n0OVKYdXQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b+iVx1/lzQAbDVHsK4jnSqbGWF1y9vRFWTu3vC6QTM38RBANWnt8JQMau0IOeCiXi
+         cgrXTif8Wj30OwZbP24zC91MBstSdE2kdTro8P0pN86PcgxBEOoLCnbxb/Bom2Lhfr
+         37E9H2pRI8aTwmFjw+osh7L2lG5SzaVWYMXbmA6A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.19 81/81] x86/kprobes: Avoid kretprobe recursion bug
+Date:   Tue,  7 May 2019 01:35:52 -0400
+Message-Id: <20190507053554.30848-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
+References: <20190507053554.30848-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507052732.GD16052@vkoul-mobl>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 10:57:32AM +0530, Vinod Koul wrote:
-> On 06-05-19, 21:24, Pierre-Louis Bossart wrote:
-> > 
-> > > > +int sdw_sysfs_bus_init(struct sdw_bus *bus)
-> > > > +{
-> > > > +	struct sdw_master_sysfs *master;
-> > > > +	int err;
-> > > > +
-> > > > +	if (bus->sysfs) {
-> > > > +		dev_err(bus->dev, "SDW sysfs is already initialized\n");
-> > > > +		return -EIO;
-> > > > +	}
-> > > > +
-> > > > +	master = kzalloc(sizeof(*master), GFP_KERNEL);
-> > > > +	if (!master)
-> > > > +		return -ENOMEM;
-> > > 
-> > > Why are you creating a whole new device to put all of this under?  Is
-> > > this needed?  What will the sysfs tree look like when you do this?  Why
-> > > can't the "bus" device just get all of these attributes and no second
-> > > device be created?
-> > 
-> > I tried a quick hack and indeed we could simplify the code with something as
-> > simple as:
-> > 
-> > [attributes omitted]
-> > 
-> > static const struct attribute_group sdw_master_node_group = {
-> > 	.attrs = master_node_attrs,
-> > 	.name = "mipi-disco"
-> > };
-> > 
-> > int sdw_sysfs_bus_init(struct sdw_bus *bus)
-> > {
-> > 	return sysfs_create_group(&bus->dev->kobj, &sdw_master_node_group);
-> > }
-> > 
-> > void sdw_sysfs_bus_exit(struct sdw_bus *bus)
-> > {
-> > 	sysfs_remove_group(&bus->dev->kobj, &sdw_master_node_group);	
-> > }
-> > 
-> > which gives me a simpler structure and doesn't require additional
-> > pretend-devices:
-> > 
-> > /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# ls
-> > clock_gears
-> > /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# more clock_gears
-> > 8086
-> > 
-> > The issue I have is that for the _show() functions, I don't see a way to go
-> > from the device argument to bus. In the example above I forced the output
-> > but would need a helper.
-> > 
-> > static ssize_t clock_gears_show(struct device *dev,
-> > 				struct device_attribute *attr, char *buf)
-> > {
-> > 	struct sdw_bus *bus; // this is what I need to find from dev
-> > 	ssize_t size = 0;
-> > 	int i;
-> > 
-> > 	return sprintf(buf, "%d \n", 8086);
-> > }
-> > 
-> > my brain is starting to fry, but I don't see how container_of() would work
-> > here since the bus structure contains a pointer to the device. I don't also
-> > see a way to check for all devices for the bus_type soundwire.
-> > For the slaves we do have a macro based on container_of(), so wondering if
-> > we made a mistake in the bus definition? Vinod, any thoughts?
-> 
-> yeah I dont recall a way to get bus fed into create_group, I did look at
-> the other examples back then and IIRC and most of them were using a
-> global to do the trick (I didn't want to go down that route).
-> 
-> I think that was the reason I wrote it this way...
-> 
-> BTW if you do use psedo-device you can create your own struct foo which
-> embeds device and then then you can use container approach to get foo
-> (and foo contains bus as a member).
-> 
-> Greg, any thoughts?
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Why would you have "bus" attributes on a device?  I don't think you are
-using "bus" here like the driver model uses the term "bus", right?
+[ Upstream commit b191fa96ea6dc00d331dcc28c1f7db5e075693a0 ]
 
-What are you really trying to show here?
+Avoid kretprobe recursion loop bg by setting a dummy
+kprobes to current_kprobe per-CPU variable.
 
-And if you need to know the bus pointer from the device, why don't you
-have a pointer to it in your device-specific structure?
+This bug has been introduced with the asm-coded trampoline
+code, since previously it used another kprobe for hooking
+the function return placeholder (which only has a nop) and
+trampoline handler was called from that kprobe.
 
-thanks,
+This revives the old lost kprobe again.
 
-greg k-h
+With this fix, we don't see deadlock anymore.
+
+And you can see that all inner-called kretprobe are skipped.
+
+  event_1                                  235               0
+  event_2                                19375           19612
+
+The 1st column is recorded count and the 2nd is missed count.
+Above shows (event_1 rec) + (event_2 rec) ~= (event_2 missed)
+(some difference are here because the counter is racy)
+
+Reported-by: Andrea Righi <righi.andrea@gmail.com>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
+Link: http://lkml.kernel.org/r/155094064889.6137.972160690963039.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ arch/x86/kernel/kprobes/core.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index acb901b43ce4..544bc2dfe408 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -749,11 +749,16 @@ asm(
+ NOKPROBE_SYMBOL(kretprobe_trampoline);
+ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+ 
++static struct kprobe kretprobe_kprobe = {
++	.addr = (void *)kretprobe_trampoline,
++};
++
+ /*
+  * Called from kretprobe_trampoline
+  */
+ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ {
++	struct kprobe_ctlblk *kcb;
+ 	struct kretprobe_instance *ri = NULL;
+ 	struct hlist_head *head, empty_rp;
+ 	struct hlist_node *tmp;
+@@ -763,6 +768,17 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ 	void *frame_pointer;
+ 	bool skipped = false;
+ 
++	preempt_disable();
++
++	/*
++	 * Set a dummy kprobe for avoiding kretprobe recursion.
++	 * Since kretprobe never run in kprobe handler, kprobe must not
++	 * be running at this point.
++	 */
++	kcb = get_kprobe_ctlblk();
++	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
++	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+@@ -838,10 +854,9 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+ 			__this_cpu_write(current_kprobe, &ri->rp->kp);
+-			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
+ 			ri->ret_addr = correct_ret_addr;
+ 			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, NULL);
++			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+ 		}
+ 
+ 		recycle_rp_inst(ri, &empty_rp);
+@@ -857,6 +872,9 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ 
+ 	kretprobe_hash_unlock(current, &flags);
+ 
++	__this_cpu_write(current_kprobe, NULL);
++	preempt_enable();
++
+ 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+ 		hlist_del(&ri->hlist);
+ 		kfree(ri);
+-- 
+2.20.1
+
