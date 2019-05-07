@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875A7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765F820989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A77A20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207368;
-	bh=iwmFc9rNcIAS4U1bgzBOCzOEb8MZkvFDijGUNOcGkG4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HwqH9n6CcQgfJONEifVI7dXFH7NCWMPkks9dslWAdNCAe4QrF01UbeBrPy028trfa
-	 Bxc6mPIv+d8gFFp/o74x/4OOnOvFIukiwONA9WL3sTQKKu7fF4tMk+w847U1i7Uv87
-	 L0kCSc2YQGvyr7NUn0XOoEUfLqTgdyTE3jVQRa84=
+	s=default; t=1557207374;
+	bh=04+H7tAcyTcU3efSeVUF1MlRI7bBn95vlABvd6Ykrio=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=li7GvazcK0t3rzcevqdl0RfnHwQdLQGVc8LyrK2SCvwCjT4S+RhWbN8yl12Q+vKZf
+	 A1YhKdZw1XqkuLuhXgIrYZvjGsF5gY1K0cKFWkqrmV6On/RQmKPYr4Qiitdz6hf1mz
+	 sTzyg4t0oNeU7ReAhWLkUdC6avUXG5lDZxOHrxBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfEGFgG (ORCPT
+        id S1727592AbfEGFgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55924 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbfEGFf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:56 -0400
+        id S1727457AbfEGFgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9662F2087F;
-        Tue,  7 May 2019 05:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE57A20989;
+        Tue,  7 May 2019 05:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207356;
-        bh=iwmFc9rNcIAS4U1bgzBOCzOEb8MZkvFDijGUNOcGkG4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fVGyMbhklKm5vEF3r2NpT5NsYzgdjgHZmOK05gjyV0k87LFu8DP2xjH7EyFefMLYv
-         a6nLExUYuZ0n8ITsTI8E5K1/JkJr1UJTFffx7MiyKM0fntR51rynOnnMrWRj7oK7mB
-         beT2ne0qHacGWdxmlcS86CiyXxjHb3gjx0UPaw8I=
+        s=default; t=1557207364;
+        bh=04+H7tAcyTcU3efSeVUF1MlRI7bBn95vlABvd6Ykrio=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eo8qSx9irG4k9ovJWRu1je0TlAyB6CoXFJIjyZXh1uxR06Nj50Bise88EpX9tF/UL
+         8lXu7qTm/qm33DBiS/SLBLwS7xd1Pzl5ktdksxiEA6GQlPN4bVaObdEJdwjq0XzGG0
+         oXDjGIalKkUfRa97tSqWmpkcUIH3+OHggovcYW48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/81] iio: adc: xilinx: fix potential use-after-free on remove
-Date:   Tue,  7 May 2019 01:34:32 -0400
-Message-Id: <20190507053554.30848-1-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/81] HID: input: add mapping for Expose/Overview key
+Date:   Tue,  7 May 2019 01:34:37 -0400
+Message-Id: <20190507053554.30848-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
+References: <20190507053554.30848-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,38 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
+[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
 
-When cancel_delayed_work() returns, the delayed work may still
-be running. This means that the core could potentially free
-the private structure (struct xadc) while the delayed work
-is still using it. This is a potential use-after-free.
+According to HUTRR77 usage 0x29f from the consumer page is reserved for
+the Desktop application to present all running user’s application windows.
+Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
+add the mapping.
 
-Fix by calling cancel_delayed_work_sync(), which waits for
-any residual work to finish before returning.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/xilinx-xadc-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index 3f6be5ac049a..1960694e8007 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1320,7 +1320,7 @@ static int xadc_remove(struct platform_device *pdev)
- 	}
- 	free_irq(xadc->irq, indio_dev);
- 	clk_disable_unprepare(xadc->clk);
--	cancel_delayed_work(&xadc->zynq_unmask_work);
-+	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	kfree(xadc->data);
- 	kfree(indio_dev->channels);
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index a3916e58dbf5..150b14623749 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1025,6 +1025,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
+ 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
  
++		case 0x29f: map_key_clear(KEY_SCALE);		break;
++
+ 		default: map_key_clear(KEY_UNKNOWN);
+ 		}
+ 		break;
 -- 
 2.20.1
 
