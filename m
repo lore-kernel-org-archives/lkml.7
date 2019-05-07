@@ -2,119 +2,72 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F49C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF4DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B383C205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XIclaN92"
+	by mail.kernel.org (Postfix) with ESMTP id F40DE205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfEGNQ0 (ORCPT
+        id S1726758AbfEGNQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:16:26 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:42890 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbfEGNQZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:16:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1557234985; x=1588770985;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=vtM2skgsxi9Gv7Bo3dFoB+dFGHiVfYzMzSQu+Q1/iEY=;
-  b=XIclaN92i4i1HYfoLPff3hCKUjN0G/sounJcyEAH/9t/5MKaEB1918F2
-   H637Ky9Na3j6WCKKXBazk5FgFNDEaSd9jhj1kJmiABc7HdPOjVrbbH7DI
-   6n1IAUP5h6+3j2KR+ZCAmFaHbOlsm2fyrAT458gaPJM6Q0Q/0V+ATZLwL
-   A=;
-X-IronPort-AV: E=Sophos;i="5.60,441,1549929600"; 
-   d="scan'208";a="673044317"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 07 May 2019 13:16:22 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x47DGELP025809
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 7 May 2019 13:16:20 GMT
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 7 May 2019 13:16:19 +0000
-Received: from 38f9d35ad2cf.ant.amazon.com (10.28.86.127) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 7 May 2019 13:16:17 +0000
-Subject: Re: [PATCH] svm/avic: Do not send AVIC doorbell to self
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-References: <1556890721-9613-1-git-send-email-suravee.suthikulpanit@amd.com>
-From:   "Graf, Alexander" <graf@amazon.com>
-Message-ID: <ca64dd06-df77-050a-92ff-5d5448382390@amazon.com>
-Date:   Tue, 7 May 2019 15:16:15 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556890721-9613-1-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.86.127]
-X-ClientProxiedBy: EX13MTAUEA001.ant.amazon.com (10.43.61.82) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+        Tue, 7 May 2019 09:16:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45965 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbfEGNQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:16:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 06:16:42 -0700
+X-ExtLoop1: 1
+Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
+  by orsmga001.jf.intel.com with ESMTP; 07 May 2019 06:16:42 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] perf vendor events intel: Add uncore_upi JSON support
+Date:   Tue,  7 May 2019 06:16:31 -0700
+Message-Id: <1557234991-130456-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.05.19 15:38, Suthikulpanit, Suravee wrote:
-> AVIC doorbell is used to notify a running vCPU that interrupts
-> has been injected into the vCPU AVIC backing page. Current logic
-> checks only if a VCPU is running before sending a doorbell.
-> However, the doorbell is not necessary if the destination
-> CPU is itself.
-> 
-> Add logic to check currently running CPU before sending doorbell.
-> 
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Reviewed-by: Alexander Graf <graf@amazon.com>
+Perf cannot parse UPI events.
 
-> ---
->   arch/x86/kvm/svm.c | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 122788f..4bbf6fc 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5283,10 +5283,13 @@ static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
->   	kvm_lapic_set_irr(vec, vcpu->arch.apic);
->   	smp_mb__after_atomic();
->   
-> -	if (avic_vcpu_is_running(vcpu))
-> -		wrmsrl(SVM_AVIC_DOORBELL,
-> -		       kvm_cpu_get_apicid(vcpu->cpu));
-> -	else
-> +	if (avic_vcpu_is_running(vcpu)) { > +		int cpuid = vcpu->cpu;
-> +
-> +		if (cpuid != get_cpu())
+    #perf stat -e UPI_DATA_BANDWIDTH_TX
+    event syntax error: 'UPI_DATA_BANDWIDTH_TX'
+                     \___ parser error
+    Run 'perf list' for a list of valid events
 
-Tiny nitpick: What would keep you from checking vcpu->cpu directly here?
+The JSON lists call the box UPI LL, while perf calls it upi.
+Add conversion support to json to convert the unit properly.
 
-Alex
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/pmu-events/jevents.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +			wrmsrl(SVM_AVIC_DOORBELL, kvm_cpu_get_apicid(cpuid));
-> +		put_cpu();
-> +	} else
->   		kvm_vcpu_wake_up(vcpu);
->   }
->   
-> 
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 68c92bb..daaea50 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -235,6 +235,7 @@ static struct map {
+ 	{ "iMPH-U", "uncore_arb" },
+ 	{ "CPU-M-CF", "cpum_cf" },
+ 	{ "CPU-M-SF", "cpum_sf" },
++	{ "UPI LL", "uncore_upi" },
+ 	{}
+ };
+ 
+-- 
+2.7.4
 
