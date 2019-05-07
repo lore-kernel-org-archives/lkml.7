@@ -2,179 +2,120 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC4BC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A148EC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAB3204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6CC2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfEGJw2 (ORCPT
+        id S1727005AbfEGJwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:52:28 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:8473 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726063AbfEGJw2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:52:28 -0400
-X-UUID: 703808d8e3e34ab59b7730dc354c3c30-20190507
-X-UUID: 703808d8e3e34ab59b7730dc354c3c30-20190507
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1425543058; Tue, 07 May 2019 17:52:18 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 7 May 2019 17:52:15 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 7 May 2019 17:52:15 +0800
-Message-ID: <1557222735.3498.11.camel@mtksdaap41>
-Subject: Re: [v2 1/5] drm/mediatek: move mipi_dsi_host_register to probe
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Tue, 7 May 2019 17:52:15 +0800
-In-Reply-To: <20190416060501.76276-2-jitao.shi@mediatek.com>
-References: <20190416060501.76276-1-jitao.shi@mediatek.com>
-         <20190416060501.76276-2-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 7 May 2019 05:52:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:48826 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbfEGJwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:52:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69D47374;
+        Tue,  7 May 2019 02:52:52 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF3AB3F5AF;
+        Tue,  7 May 2019 02:52:48 -0700 (PDT)
+Date:   Tue, 7 May 2019 10:52:42 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org,
+        Michal Gregorczyk <michalgr@live.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
+Message-ID: <20190507095242.GA17052@fuggles.cambridge.arm.com>
+References: <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
+ <20190503134935.GA253329@google.com>
+ <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
+ <20190505132949.GB3076@localhost>
+ <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
+ <20190505155223.GA4976@localhost>
+ <20190505180313.GA80924@google.com>
+ <20190506183506.GD2875@brain-police>
+ <20190506205807.GA223956@google.com>
+ <20190506215737.cuugrrxbhkp2uknn@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506215737.cuugrrxbhkp2uknn@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
-
-On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
-> DSI panel driver need attach function which is inculde in
-> mipi_dsi_host_ops.
+On Mon, May 06, 2019 at 10:57:37PM +0100, Qais Yousef wrote:
+> On 05/06/19 16:58, Joel Fernandes wrote:
+> > > If you're trying to dereference a pointer to userspace using
+> > > probe_kernel_read(), that clearly isn't going to work.
+> > 
+> > Ok. Thanks for confirming as well. The existing code has this bug and these
+> > patches fix it.
 > 
-> If mipi_dsi_host_register is not in probe, dsi panel will
-> probe fail or more delay.
+> 5.1-rc7 and 4.9.173 stable both managed to read the path in do_sys_open() on my
+> Juno-r2 board using the defconfig in the tree.
 
-I think this patch just prevent delay, not to prevent dsi panel probe
-fail. In [1], you mention mipi_dsi_attach() is called in
-panel_simple_dsi_probe(), but panel_simple_dsi_probe() is trigger by
-mipi_dsi_host_register(), so the probe would success.
+That's not surprising: Juno-r2 only features v8.0 CPUs, so doesn't have PAN
+or UAO capabilities. The SoC Joel is talking about is 8.2, so has both of
+those.
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/panel/panel-simple.c?h=v5.0-rc6#n2987
+Here's some background which might help...
 
+PAN (Privileged Access Never) prevents the kernel from inadvertently
+accessing userspace and will cause a page (permission) fault if such an
+access is made outside of the standard uaccess routines. This means that
+in those routines (e.g. get_user()) we have to toggle the PAN state in the
+same way that x86 toggles SMAP. This can be expensive and was part of the
+motivation for the adoption of things like unsafe_get_user() on x86.
 
-> 
-> So move the mipi_dsi_host_register to probe from bind.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 50 ++++++++++++++++++------------
->  1 file changed, 30 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index b00eb2d2e086..6c4ac37f983d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->  		return ret;
->  	}
->  
-> -	ret = mipi_dsi_host_register(&dsi->host);
-> -	if (ret < 0) {
-> -		dev_err(dev, "failed to register DSI host: %d\n", ret);
-> -		goto err_ddp_comp_unregister;
-> -	}
-> -
->  	ret = mtk_dsi_create_conn_enc(drm, dsi);
->  	if (ret) {
->  		DRM_ERROR("Encoder create failed with %d\n", ret);
-> @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->  	return 0;
->  
->  err_unregister:
-> -	mipi_dsi_host_unregister(&dsi->host);
-> -err_ddp_comp_unregister:
->  	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
->  	return ret;
->  }
-> @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  
->  	dsi->host.ops = &mtk_dsi_ops;
->  	dsi->host.dev = dev;
-> +	dsi->dev = dev;
+On arm64, we have a set of so-called "translated" memory access instructions
+which can be used to perform unprivileged accesses to userspace from within
+the kernel even when PAN is enabled. Using these special instructions (e.g.
+LDTR) in our uaccess routines can therefore remove the need to toggle PAN.
+Sounds great, right? Well, that all falls apart when the uaccess routines
+are used on kernel addresses as in probe_kernel_read() because they will
+fault when trying to dereference a kernel pointer.
 
-Why do this?
+The answer is UAO (User Access Override). When UAO is set, the translated
+memory access instructions behave the same as non-translated accesses.
+Therefore we can toggle UAO in set_fs() so that it is set when we're using
+KERNEL_DS and cleared when we're using USER_DS.
 
-Regards,
-CK
+The side-effect of this is that when KERNEL_DS is set on a system that
+implements both PAN and UAO, passing a user pointer to our uaccess routines
+will return -EFAULT. In other words, set_fs() can be thought of as a
+selector between the kernel and user address spaces, which are distinct.
 
-> +	ret = mipi_dsi_host_register(&dsi->host);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register DSI host: %d\n", ret);
-> +		return ret;
-> +	}
->  
->  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
->  					  &dsi->panel, &dsi->bridge);
->  	if (ret)
-> -		return ret;
-> +		goto err_unregister_host;
->  
->  	dsi->engine_clk = devm_clk_get(dev, "engine");
->  	if (IS_ERR(dsi->engine_clk)) {
->  		ret = PTR_ERR(dsi->engine_clk);
->  		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	dsi->digital_clk = devm_clk_get(dev, "digital");
->  	if (IS_ERR(dsi->digital_clk)) {
->  		ret = PTR_ERR(dsi->digital_clk);
->  		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	dsi->hs_clk = devm_clk_get(dev, "hs");
->  	if (IS_ERR(dsi->hs_clk)) {
->  		ret = PTR_ERR(dsi->hs_clk);
->  		dev_err(dev, "Failed to get hs clock: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+Joel -- does disabling UAO in your .config "fix" the issue? If so, feel
+free to use some of the above text in a commit message if it helps to
+justify your change.
 
+Cheers,
 
-
+Will
