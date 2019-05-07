@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9025DC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F016B20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E3620675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208910;
-	bh=b6nEX9JyoFG3leregqh5qsp2VIYU9nfUcat7IvLJ+Ic=;
+	s=default; t=1557208919;
+	bh=n2l7YfpgID2UQ6/kBqlqEoPn+qsA5W25cTlr72n7AkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B3886tftmjnaH02XZmfI9I6CJZneGfWXp8pNhIsCiz/5EZROmBLEYCmp0VlPMfkrq
-	 sEcwJ04vnJqUrST+3HtiIrFXf/at8thqTVLuF7CZjRDY4ZlYFw1BIYErDJtH5trgn3
-	 FS4r285oOZVuHOZPeYGz4jnK6QNlslPq+emqNRzY=
+	b=P8RA2cANxJEOyzd5Q/jHJtRuUwv1Bz2eOOsnHW2Auwcuz5DawrsIKZtgWDhrpyL8i
+	 kojnXA3vDA7xrxLA6iqQUO9qiXmHF3Jntx/28zFAw1hvsEP4Ho0tw39iTCmR1X3YNV
+	 mYbUmd6uRkI2m0J40FH/B6F4Fsg3daCqFJGGwWB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfEGGBs (ORCPT
+        id S1727924AbfEGFfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:01:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55972 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727407AbfEGFf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:59 -0400
+        id S1727388AbfEGFfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 223CD20B7C;
-        Tue,  7 May 2019 05:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B262087F;
+        Tue,  7 May 2019 05:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207358;
-        bh=b6nEX9JyoFG3leregqh5qsp2VIYU9nfUcat7IvLJ+Ic=;
+        s=default; t=1557207345;
+        bh=n2l7YfpgID2UQ6/kBqlqEoPn+qsA5W25cTlr72n7AkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F92IoYb766qNEaLrlBicRomfGCN/iUS99IE6DpS74xsjyDizd+p3pEBZKviwtrbyy
-         WBVnKEBdHMyHDa2QKmP8gy297nv+2GL5Bx5HjF85U1S+3WMcHd04zZgoLdTF3BtOeD
-         68M+4y6cDrx441TyYeWwmjN19qCiclxElt9JoZYY=
+        b=CF+GF1/q3x5rDM5iYMSMNeyVMf3XpCXPEbr8KJ+is25IesMZLSjEP4tziJzWPty8U
+         V8nwPdtpeWYZ3Edb6RdwOSLWrCkm0gasNAQGxdm3TF6bcwWY8tmZnqhDcKzbakO7o4
+         jBx+7hG0BszW8r+r98tZalP/r8FfjZbjqCWaI/08=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/81] iio: adc: xilinx: fix potential use-after-free on probe
-Date:   Tue,  7 May 2019 01:34:33 -0400
-Message-Id: <20190507053554.30848-2-sashal@kernel.org>
+Cc:     John Hurley <john.hurley@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 97/99] net: sched: fix cleanup NULL pointer exception in act_mirr
+Date:   Tue,  7 May 2019 01:32:31 -0400
+Message-Id: <20190507053235.29900-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
-References: <20190507053554.30848-1-sashal@kernel.org>
+In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
+References: <20190507053235.29900-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,40 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: John Hurley <john.hurley@netronome.com>
 
-[ Upstream commit 862e4644fd2d7df8998edc65e0963ea2f567bde9 ]
+[ Upstream commit 064c5d6881e897077639e04973de26440ee205e6 ]
 
-If probe errors out after request_irq(), its error path
-does not explicitly cancel the delayed work, which may
-have been scheduled by the interrupt handler.
+A new mirred action is created by the tcf_mirred_init function. This
+contains a list head struct which is inserted into a global list on
+successful creation of a new action. However, after a creation, it is
+still possible to error out and call the tcf_idr_release function. This,
+in turn, calls the act_mirr cleanup function via __tcf_idr_release and
+__tcf_action_put. This cleanup function tries to delete the list entry
+which is as yet uninitialised, leading to a NULL pointer exception.
 
-This means the delayed work may still be running when
-the core frees the private structure (struct xadc).
-This is a potential use-after-free.
+Fix this by initialising the list entry on creation of a new action.
 
-Fix by inserting cancel_delayed_work_sync() in the probe
-error path.
+Bug report:
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+PGD 8000000840c73067 P4D 8000000840c73067 PUD 858dcc067 PMD 0
+Oops: 0002 [#1] SMP PTI
+CPU: 32 PID: 5636 Comm: handler194 Tainted: G           OE     5.0.0+ #186
+Hardware name: Dell Inc. PowerEdge R730/0599V5, BIOS 1.3.6 06/03/2015
+RIP: 0010:tcf_mirred_release+0x42/0xa7 [act_mirred]
+Code: f0 90 39 c0 e8 52 04 57 c8 48 c7 c7 b8 80 39 c0 e8 94 fa d4 c7 48 8b 93 d0 00 00 00 48 8b 83 d8 00 00 00 48 c7 c7 f0 90 39 c0 <48> 89 42 08 48 89 10 48 b8 00 01 00 00 00 00 ad de 48 89 83 d0 00
+RSP: 0018:ffffac4aa059f688 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff9dcd1b214d00 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff9dcd1fa165f8 RDI: ffffffffc03990f0
+RBP: ffff9dccf9c7af80 R08: 0000000000000a3b R09: 0000000000000000
+R10: ffff9dccfa11f420 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff9dcd16b433c0 R14: ffff9dcd1b214d80 R15: 0000000000000000
+FS:  00007f441bfff700(0000) GS:ffff9dcd1fa00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000008 CR3: 0000000839e64004 CR4: 00000000001606e0
+Call Trace:
+tcf_action_cleanup+0x59/0xca
+__tcf_action_put+0x54/0x6b
+__tcf_idr_release.cold.33+0x9/0x12
+tcf_mirred_init.cold.20+0x22e/0x3b0 [act_mirred]
+tcf_action_init_1+0x3d0/0x4c0
+tcf_action_init+0x9c/0x130
+tcf_exts_validate+0xab/0xc0
+fl_change+0x1ca/0x982 [cls_flower]
+tc_new_tfilter+0x647/0x8d0
+? load_balance+0x14b/0x9e0
+rtnetlink_rcv_msg+0xe3/0x370
+? __switch_to_asm+0x40/0x70
+? __switch_to_asm+0x34/0x70
+? _cond_resched+0x15/0x30
+? __kmalloc_node_track_caller+0x1d4/0x2b0
+? rtnl_calcit.isra.31+0xf0/0xf0
+netlink_rcv_skb+0x49/0x110
+netlink_unicast+0x16f/0x210
+netlink_sendmsg+0x1df/0x390
+sock_sendmsg+0x36/0x40
+___sys_sendmsg+0x27b/0x2c0
+? futex_wake+0x80/0x140
+? do_futex+0x2b9/0xac0
+? ep_scan_ready_list.constprop.22+0x1f2/0x210
+? ep_poll+0x7a/0x430
+__sys_sendmsg+0x47/0x80
+do_syscall_64+0x55/0x100
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 4e232818bd32 ("net: sched: act_mirred: remove dependency on rtnl lock")
+Signed-off-by: John Hurley <john.hurley@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/iio/adc/xilinx-xadc-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sched/act_mirred.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index 1960694e8007..15e1a103f37d 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1290,6 +1290,7 @@ static int xadc_probe(struct platform_device *pdev)
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index c8cf4d10c435..971dc03304f4 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -159,6 +159,9 @@ static int tcf_mirred_init(struct net *net, struct nlattr *nla,
+ 	}
+ 	m = to_mirred(*a);
  
- err_free_irq:
- 	free_irq(xadc->irq, indio_dev);
-+	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- err_clk_disable_unprepare:
- 	clk_disable_unprepare(xadc->clk);
- err_free_samplerate_trigger:
++	if (ret == ACT_P_CREATED)
++		INIT_LIST_HEAD(&m->tcfm_list);
++
+ 	spin_lock_bh(&m->tcf_lock);
+ 	m->tcf_action = parm->action;
+ 	m->tcfm_eaction = parm->eaction;
 -- 
 2.20.1
 
