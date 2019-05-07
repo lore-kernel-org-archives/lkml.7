@@ -2,119 +2,111 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02FFC04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B76C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD7A20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjfr/fPM"
+	by mail.kernel.org (Postfix) with ESMTP id 9133120C01
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfEHAHr (ORCPT
+        id S1726543AbfEHAJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:07:47 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45310 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfEHAHr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:07:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a5so4026562pls.12;
-        Tue, 07 May 2019 17:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HN68pgSokYWWKvinzUgVn1U1SddKsTL2kSGU6FODjf0=;
-        b=bjfr/fPM+0H2SZXbx6TNp/DGV4zpmnTRSn1alUqvoJbctyEYK6nmlvvdUUTHsmHSz9
-         +OhxAnrdDt0lh0w95+rJlQEFnQom0c4jDAAyl6H8reZeWtIpMV7unEF85hkm5THnttQI
-         7mhELEV19lyG1oN/qF0Xthd2xh/7XBVJ1weoiskLIfrIrC5lBIYI6ppzS3nhsGaPVQox
-         NaCZ1z/n+LANnboGjkUN1wnXjfxF/Q3Y4udAakxJDj3koat7LrHTBwG2ZuRQJfacDbAT
-         BSPkOG6okSgfpuaZ6f4GxEbwC/kY3xFbxQ6zK4lMSNNMWQDjQDH5AIRvXVVpSCKN4hsB
-         Y9FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HN68pgSokYWWKvinzUgVn1U1SddKsTL2kSGU6FODjf0=;
-        b=BGmXHnI7XVSAk0XZK1Btie3FXjC8VPpMJSpIYtcUi9tHKPRzsSF6fkx6kEf8hHFTfw
-         oseo1xSMXMqmAHIDocsgf6eGFmO83Nh/OmNY1bDvUMMY67mOhXkw3VWz8Dl8LXJlgNip
-         rQBQYPUmvpun53hcskcM3S8qGp0R8ftgGqlBVd0Ly/rV7jlPOqq81wywm5QHO7lqF53y
-         3NPehbpQdXdE7oa3+1oaPuUUYNc8mP77Jm+ZMLdNXXTTZER9lGwwnQ6PrBDf3u2RUGFq
-         4FHtcIRJrB5dvMPMCN81FtWicsy/PWBIIDkdta1ggRraeJxIjYyWHKcS+oK++VmhQ3I0
-         nmWQ==
-X-Gm-Message-State: APjAAAXairzAIr/b6v/e2Ik2MobrKJYHfOIzENPrzu9gnldq/GjfIz4G
-        DALGMGdnWmQUhzhg9/YGxbE=
-X-Google-Smtp-Source: APXvYqwfTg2fF7e7jMIli0z/0adeHhQWjX/dtytTySV8YZfOK/KeUo9PmzbmXzrbi1jkW3Ra3vv5JQ==
-X-Received: by 2002:a17:902:2927:: with SMTP id g36mr41998203plb.6.1557274066589;
-        Tue, 07 May 2019 17:07:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r18sm19170613pfd.89.2019.05.07.17.07.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 17:07:45 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: fix watchdog_pretimeout.c build error when no
- default gov. is set
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-References: <ec5a2b04-2649-e527-bcfd-4e708808e681@infradead.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <aace995d-a076-2fc5-8456-1e2638e4faa6@roeck-us.net>
-Date:   Tue, 7 May 2019 17:07:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 20:09:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9079 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbfEHAJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:09:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 17:09:45 -0700
+X-ExtLoop1: 1
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga004.fm.intel.com with ESMTP; 07 May 2019 17:09:46 -0700
+Subject: [PATCH v2 0/6] mm/devm_memremap_pages: Fix page release race
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>,
+        =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-mm@kvack.org
+Date:   Tue, 07 May 2019 16:55:59 -0700
+Message-ID: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-In-Reply-To: <ec5a2b04-2649-e527-bcfd-4e708808e681@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 4:33 PM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix build error when
-> CONFIG_WATCHDOG_PRETIMEOUT_GOV=y
-> # CONFIG_WATCHDOG_PRETIMEOUT_GOV_NOOP is not set
-> # CONFIG_WATCHDOG_PRETIMEOUT_GOV_PANIC is not set
-> 
-> Fixes this build error:
-> 
-> ../drivers/watchdog/watchdog_pretimeout.c: In function ‘watchdog_register_governor’:
-> ../drivers/watchdog/watchdog_pretimeout.c:139:26: error: ‘WATCHDOG_PRETIMEOUT_DEFAULT_GOV’ undeclared (first use in this function)
->    if (!strncmp(gov->name, WATCHDOG_PRETIMEOUT_DEFAULT_GOV,
-> 
+Changes since v1 [1]:
+- Fix a NULL-pointer deref crash in pci_p2pdma_release() (Logan)
 
-Ah, I knew I missed something. The following would be a better fix,
-though, since it enforces that at least one pretimeout governor is enabled
-(matching the old code):
+- Refresh the p2pdma patch headers to match the format of other p2pdma
+  patches (Bjorn)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index e19960ace0c0..4a3461afa96f 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -71,6 +71,12 @@ config WATCHDOG_PRETIMEOUT_GOV
-         help
-           The option allows to select watchdog pretimeout governors.
+- Collect Ira's reviewed-by
 
-+config WATCHDOG_PRETIMEOUT_GOV_SEL
-+       tristate
-+       depends on WATCHDOG_PRETIMEOUT_GOV
-+       default m
-+       select WATCHDOG_PRETIMEOUT_GOV_PANIC if WATCHDOG_PRETIMEOUT_GOV_NOOP=n
-+
-  if WATCHDOG_PRETIMEOUT_GOV
+[1]: https://lore.kernel.org/lkml/155387324370.2443841.574715745262628837.stgit@dwillia2-desk3.amr.corp.intel.com/
 
-Can you send v2 with the above, or do you want me to send it and give you credit ?
+---
 
-Thanks,
-Guenter
+Logan audited the devm_memremap_pages() shutdown path and noticed that
+it was possible to proceed to arch_remove_memory() before all
+potential page references have been reaped.
+
+Introduce a new ->cleanup() callback to do the work of waiting for any
+straggling page references and then perform the percpu_ref_exit() in
+devm_memremap_pages_release() context.
+
+For p2pdma this involves some deeper reworks to reference count
+resources on a per-instance basis rather than a per pci-device basis. A
+modified genalloc api is introduced to convey a driver-private pointer
+through gen_pool_{alloc,free}() interfaces. Also, a
+devm_memunmap_pages() api is introduced since p2pdma does not
+auto-release resources on a setup failure.
+
+The dax and pmem changes pass the nvdimm unit tests, and the p2pdma
+changes should now pass testing with the pci_p2pdma_release() fix.
+Jérôme, how does this look for HMM?
+
+In general, I think these patches / fixes are suitable for v5.2-rc1 or
+v5.2-rc2, and since they touch kernel/memremap.c, and other various
+pieces of the core, they should go through the -mm tree. These patches
+merge cleanly with the current state of -next, pass the nvdimm unit
+tests, and are exposed to the 0day robot with no issues reported
+(https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending).
+
+---
+
+Dan Williams (6):
+      drivers/base/devres: Introduce devm_release_action()
+      mm/devm_memremap_pages: Introduce devm_memunmap_pages
+      PCI/P2PDMA: Fix the gen_pool_add_virt() failure path
+      lib/genalloc: Introduce chunk owners
+      PCI/P2PDMA: Track pgmap references per resource, not globally
+      mm/devm_memremap_pages: Fix final page put race
+
+
+ drivers/base/devres.c             |   24 +++++++-
+ drivers/dax/device.c              |   13 +---
+ drivers/nvdimm/pmem.c             |   17 ++++-
+ drivers/pci/p2pdma.c              |  115 +++++++++++++++++++++++--------------
+ include/linux/device.h            |    1 
+ include/linux/genalloc.h          |   55 ++++++++++++++++--
+ include/linux/memremap.h          |    8 +++
+ kernel/memremap.c                 |   23 ++++++-
+ lib/genalloc.c                    |   51 ++++++++--------
+ mm/hmm.c                          |   14 +----
+ tools/testing/nvdimm/test/iomap.c |    2 +
+ 11 files changed, 217 insertions(+), 106 deletions(-)
