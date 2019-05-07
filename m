@@ -2,160 +2,87 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20240C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BAA2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D99120825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfEGLNx (ORCPT
+        id S1726553AbfEGLRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:13:53 -0400
-Received: from foss.arm.com ([217.140.101.70]:51200 "EHLO foss.arm.com"
+        Tue, 7 May 2019 07:17:14 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34362 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726337AbfEGLNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:13:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA8A8374;
-        Tue,  7 May 2019 04:13:52 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1F3D3F5AF;
-        Tue,  7 May 2019 04:13:49 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:13:47 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v8 06/16] sched/core: uclamp: Extend sched_setattr() to
- support utilization clamping
-Message-ID: <20190507111347.4ivnjwbymsf7i3e6@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-7-patrick.bellasi@arm.com>
- <CAJuCfpH3htcr3xB_Y4nr7HXCdQd1hOdOAXbtZJB1SOt7Of_qbw@mail.gmail.com>
+        id S1726145AbfEGLRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 07:17:14 -0400
+Received: from we0048.dip.tu-dresden.de ([141.76.176.48] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hNy5v-00084m-35; Tue, 07 May 2019 13:17:11 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ezequiel@collabora.com, tom@vamrs.com, dev@vamrs.com
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Enable SPI0 and SPI4 on Rock960
+Date:   Tue, 07 May 2019 13:17:10 +0200
+Message-ID: <3484838.jBNMtg6mRV@phil>
+In-Reply-To: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
+References: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpH3htcr3xB_Y4nr7HXCdQd1hOdOAXbtZJB1SOt7Of_qbw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-Apr 15:26, Suren Baghdasaryan wrote:
-> On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-
-[...]
-
-> > Do not allow to change sched class specific params and non class
-> > specific params (i.e. clamp values) at the same time.  This keeps things
-> > simple and still works for the most common cases since we are usually
-> > interested in just one of the two actions.
+Am Montag, 6. Mai 2019, 14:04:57 CEST schrieb Manivannan Sadhasivam:
+> Enable SPI0 and SPI4 exposed on the Low and High speed expansion
+> connectors of Rock960.
 > 
-> Sorry, I can't find where you are checking to eliminate the
-> possibility of simultaneous changes to both sched class specific
-> params and non class specific params... Am I too tired or they are
-> indeed missing?
-
-No, you right... that limitation has been removed in v8 :)
-
-I'll remove the above paragraph in v9, thanks for spotting it.
-
-[...]
-
-> > +static int uclamp_validate(struct task_struct *p,
-> > +                          const struct sched_attr *attr)
-> > +{
-> > +       unsigned int lower_bound = p->uclamp_req[UCLAMP_MIN].value;
-> > +       unsigned int upper_bound = p->uclamp_req[UCLAMP_MAX].value;
-> > +
-> > +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN)
-> > +               lower_bound = attr->sched_util_min;
-> > +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX)
-> > +               upper_bound = attr->sched_util_max;
-> > +
-> > +       if (lower_bound > upper_bound)
-> > +               return -EINVAL;
-> > +       if (upper_bound > SCHED_CAPACITY_SCALE)
-> > +               return -EINVAL;
-> > +
-> > +       return 0;
-> > +}
-
-[...]
-
-> >  static void uclamp_fork(struct task_struct *p)
-> >  {
-> >         unsigned int clamp_id;
-> > @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
-> >  #else /* CONFIG_UCLAMP_TASK */
-> >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
-> >  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
-> > +static inline int uclamp_validate(struct task_struct *p,
-> > +                                 const struct sched_attr *attr)
-> > +{
-> > +       return -ENODEV;
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-rock960.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> ENOSYS might be more appropriate?
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+> index 12285c51cceb..7498344d4a73 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+> @@ -114,6 +114,18 @@
+>  	};
+>  };
+>  
+> +&spi0 {
+> +	/* On Low speed expansion */
+> +	label = "LS-SPI0";
 
-Yep, agree, thanks!
+where does the label property come from and what does it do?
+It's not part of the rockchip-spi / general-spi binding.
 
+
+Heiko
+
+> +	status = "okay";
+> +};
+> +
+> +&spi4 {
+> +	/* On High speed expansion */
+> +	label = "HS-SPI1";
+> +	status = "okay";
+> +};
+> +
+>  &usbdrd_dwc3_0 {
+>  	dr_mode = "otg";
+>  };
 > 
-> > +}
-> > +static void __setscheduler_uclamp(struct task_struct *p,
-> > +                                 const struct sched_attr *attr) { }
-> >  static inline void uclamp_fork(struct task_struct *p) { }
-> >  static inline void init_uclamp(void) { }
-> >  #endif /* CONFIG_UCLAMP_TASK */
-> > @@ -4424,6 +4475,13 @@ static void __setscheduler_params(struct task_struct *p,
-> >  static void __setscheduler(struct rq *rq, struct task_struct *p,
-> >                            const struct sched_attr *attr, bool keep_boost)
-> >  {
-> > +       /*
-> > +        * If params can't change scheduling class changes aren't allowed
-> > +        * either.
-> > +        */
-> > +       if (attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)
-> > +               return;
-> > +
-> >         __setscheduler_params(p, attr);
-> >
-> >         /*
-> > @@ -4561,6 +4619,13 @@ static int __sched_setscheduler(struct task_struct *p,
-> >                         return retval;
-> >         }
-> >
-> > +       /* Update task specific "requested" clamps */
-> > +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) {
-> > +               retval = uclamp_validate(p, attr);
-> > +               if (retval)
-> > +                       return retval;
-> > +       }
-> > +
-> >         /*
-> >          * Make sure no PI-waiters arrive (or leave) while we are
-> >          * changing the priority of the task:
 
-[...]
 
--- 
-#include <best/regards.h>
 
-Patrick Bellasi
+
