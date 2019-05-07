@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F69C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AFDC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3A3205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A70205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208058;
-	bh=/YVfN5m3TiLOc9QdPjsjom+hIeqD18FjHyZtXKACgTA=;
+	s=default; t=1557208074;
+	bh=2TFotMoJogSz8cQ3D94lytrYGs0Rm9Nw/CN5qSOhZb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSKOJDgtP9KDLz5cxAlDh7lfS6tIyQ++iEWaCBfFEqS0J2jQS0Urem+6gjRqJEIru
-	 xpw8FXZA0WHKrtRDApXMWmfNbHxz4Wk8gXeaq36+mUBmCGtNvJkYlvN4/PsouHMapN
-	 p27Qlx0GbEYajmf2KsO4J/V6icf+kc9q9q6LArGo=
+	b=SkXNugDF4Q/1ltsemOw6tspSGb857oOIb1sCYVXnBOpxaSd2F/1nBiUyoeROABvpS
+	 Z9j+Lmbt7vQC/fbLaGWsBt8ZsK36NsxrZSIGkZZSWMv8PjGa/uhyopdyVUlRwpjWGQ
+	 MsCtD3afuAkB876n9/jCxJid07Wk/7rR8NOPCGw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbfEGFrg (ORCPT
+        id S1729285AbfEGFrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60736 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfEGFlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:14 -0400
+        id S1725926AbfEGFlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF903206A3;
-        Tue,  7 May 2019 05:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E77A205ED;
+        Tue,  7 May 2019 05:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207673;
-        bh=/YVfN5m3TiLOc9QdPjsjom+hIeqD18FjHyZtXKACgTA=;
+        s=default; t=1557207666;
+        bh=2TFotMoJogSz8cQ3D94lytrYGs0Rm9Nw/CN5qSOhZb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDfCoIhY3wSWuE8kzImDfBL5PudB0+9Orhv9Zcqn2vjwwqO7MSMdmm7/PVkfPgQBa
-         XkBLGrlkr1OE53uRJQNG2JagxBrD7a5brWwITJajO3ul/5b8PCxKs+uKmQyRZ86UGx
-         r3uL8HhDB7CNHaUo8ka6ICSuUsOaIYjnWiDLvrUk=
+        b=KlibZBCjGXCiAQMN7k8jLO1P42YBSm6W9M9i/ST6071ICpgJMfBoWtQ4BmUcT+NTl
+         PKIUTVA/ldry5bza0s38snUXrfuXSVox99PFDP914tgjYYHxiDx3nsPKeJxCaaboii
+         DrWRqRlSYHQZF87Gmpoozv206Aa2scijs7ZcJn/M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+Cc:     Jun Xiao <xiaojun2@hisilicon.com>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 90/95] mlxsw: core: Do not use WQ_MEM_RECLAIM for EMAD workqueue
-Date:   Tue,  7 May 2019 01:38:19 -0400
-Message-Id: <20190507053826.31622-90-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 85/95] net: hns: Fix WARNING when hns modules installed
+Date:   Tue,  7 May 2019 01:38:14 -0400
+Message-Id: <20190507053826.31622-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,39 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Jun Xiao <xiaojun2@hisilicon.com>
 
-[ Upstream commit a8c133b06183c529c51cd0d54eb57d6b7078370c ]
+[ Upstream commit c77804be53369dd4c15bfc376cf9b45948194cab ]
 
-The EMAD workqueue is used to handle retransmission of EMAD packets that
-contain configuration data for the device's firmware.
+Commit 308c6cafde01 ("net: hns: All ports can not work when insmod hns ko
+after rmmod.") add phy_stop in hns_nic_init_phy(), In the branch of "net",
+this method is effective, but in the branch of "net-next", it will cause
+a WARNING when hns modules loaded, reference to commit 2b3e88ea6528 ("net:
+phy: improve phy state checking"):
 
-Given the workers need to allocate these packets and that the code is
-not called as part of memory reclaim path, remove the WQ_MEM_RECLAIM
-flag.
+[10.092168] ------------[ cut here ]------------
+[10.092171] called from state READY
+[10.092189] WARNING: CPU: 4 PID: 1 at ../drivers/net/phy/phy.c:854
+                phy_stop+0x90/0xb0
+[10.092192] Modules linked in:
+[10.092197] CPU: 4 PID:1 Comm:swapper/0 Not tainted 4.20.0-rc7-next-20181220 #1
+[10.092200] Hardware name: Huawei TaiShan 2280 /D05, BIOS Hisilicon D05 UEFI
+                16.12 Release 05/15/2017
+[10.092202] pstate: 60000005 (nZCv daif -PAN -UAO)
+[10.092205] pc : phy_stop+0x90/0xb0
+[10.092208] lr : phy_stop+0x90/0xb0
+[10.092209] sp : ffff00001159ba90
+[10.092212] x29: ffff00001159ba90 x28: 0000000000000007
+[10.092215] x27: ffff000011180068 x26: ffff0000110a5620
+[10.092218] x25: ffff0000113b6000 x24: ffff842f96dac000
+[10.092221] x23: 0000000000000000 x22: 0000000000000000
+[10.092223] x21: ffff841fb8425e18 x20: ffff801fb3a56438
+[10.092226] x19: ffff801fb3a56000 x18: ffffffffffffffff
+[10.092228] x17: 0000000000000000 x16: 0000000000000000
+[10.092231] x15: ffff00001122d6c8 x14: ffff00009159b7b7
+[10.092234] x13: ffff00001159b7c5 x12: ffff000011245000
+[10.092236] x11: 0000000005f5e0ff x10: ffff00001159b750
+[10.092239] x9 : 00000000ffffffd0 x8 : 0000000000000465
+[10.092242] x7 : ffff0000112457f8 x6 : ffff0000113bd7ce
+[10.092245] x5 : 0000000000000000 x4 : 0000000000000000
+[10.092247] x3 : 00000000ffffffff x2 : ffff000011245828
+[10.092250] x1 : 4b5860bd05871300 x0 : 0000000000000000
+[10.092253] Call trace:
+[10.092255]  phy_stop+0x90/0xb0
+[10.092260]  hns_nic_init_phy+0xf8/0x110
+[10.092262]  hns_nic_try_get_ae+0x4c/0x3b0
+[10.092264]  hns_nic_dev_probe+0x1fc/0x480
+[10.092268]  platform_drv_probe+0x50/0xa0
+[10.092271]  really_probe+0x1f4/0x298
+[10.092273]  driver_probe_device+0x58/0x108
+[10.092275]  __driver_attach+0xdc/0xe0
+[10.092278]  bus_for_each_dev+0x74/0xc8
+[10.092280]  driver_attach+0x20/0x28
+[10.092283]  bus_add_driver+0x1b8/0x228
+[10.092285]  driver_register+0x60/0x110
+[10.092288]  __platform_driver_register+0x40/0x48
+[10.092292]  hns_nic_dev_driver_init+0x18/0x20
+[10.092296]  do_one_initcall+0x5c/0x180
+[10.092299]  kernel_init_freeable+0x198/0x240
+[10.092303]  kernel_init+0x10/0x108
+[10.092306]  ret_from_fork+0x10/0x18
+[10.092308] ---[ end trace 1396dd0278e397eb ]---
 
-Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+This WARNING occurred because of calling phy_stop before phy_start.
+
+The root cause of the problem in commit '308c6cafde01' is:
+
+Reference to hns_nic_init_phy, the flag phydev->supported is changed after
+phy_connect_direct. The flag phydev->supported is 0x6ff when hns modules is
+loaded, so will not change Fiber Port power(Reference to marvell.c), which
+is power on at default.
+Then the flag phydev->supported is changed to 0x6f, so Fiber Port power is
+off when removing hns modules.
+When hns modules installed again, the flag phydev->supported is default
+value 0x6ff, so will not change Fiber Port power(now is off), causing mac
+link not up problem.
+
+So the solution is change phy flags before phy_connect_direct.
+
+Fixes: 308c6cafde01 ("net: hns: All ports can not work when insmod hns ko after rmmod.")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index cced009da869..070fd3f7fadf 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -600,7 +600,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
- 	if (!(mlxsw_core->bus->features & MLXSW_BUS_F_TXRX))
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index d30c28fba249..7f14f06e868a 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -1269,6 +1269,12 @@ int hns_nic_init_phy(struct net_device *ndev, struct hnae_handle *h)
+ 	if (!h->phy_dev)
  		return 0;
  
--	emad_wq = alloc_workqueue("mlxsw_core_emad", WQ_MEM_RECLAIM, 0);
-+	emad_wq = alloc_workqueue("mlxsw_core_emad", 0, 0);
- 	if (!emad_wq)
- 		return -ENOMEM;
- 	mlxsw_core->emad_wq = emad_wq;
++	phy_dev->supported &= h->if_support;
++	phy_dev->advertising = phy_dev->supported;
++
++	if (h->phy_if == PHY_INTERFACE_MODE_XGMII)
++		phy_dev->autoneg = false;
++
+ 	if (h->phy_if != PHY_INTERFACE_MODE_XGMII) {
+ 		phy_dev->dev_flags = 0;
+ 
+@@ -1280,15 +1286,6 @@ int hns_nic_init_phy(struct net_device *ndev, struct hnae_handle *h)
+ 	if (unlikely(ret))
+ 		return -ENODEV;
+ 
+-	phy_dev->supported &= h->if_support;
+-	phy_dev->advertising = phy_dev->supported;
+-
+-	if (h->phy_if == PHY_INTERFACE_MODE_XGMII)
+-		phy_dev->autoneg = false;
+-
+-	if (h->phy_if == PHY_INTERFACE_MODE_SGMII)
+-		phy_stop(phy_dev);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
