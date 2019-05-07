@@ -2,136 +2,279 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86850C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78238C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5780E20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:56:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KpxrKWes"
+	by mail.kernel.org (Postfix) with ESMTP id 40CC820578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbfEGM4d (ORCPT
+        id S1726751AbfEGM4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:56:33 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:48121 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfEGM4d (ORCPT
+        Tue, 7 May 2019 08:56:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60754 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726000AbfEGM4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:56:33 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190507125631euoutp02e6b6639ad8400dbe5083f21c39356db9~cZ_IC4Gj02423324233euoutp02g;
-        Tue,  7 May 2019 12:56:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190507125631euoutp02e6b6639ad8400dbe5083f21c39356db9~cZ_IC4Gj02423324233euoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557233791;
-        bh=xUjT1aKwWvPSI6nVT4VtoO7jy++v6QMY5/tvZAbO3t0=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=KpxrKWesAN50VLLKddrB9PB3wK4lTEW97WTVdo4ZTKJmXtFtcIstb3G2B4L1lxfYT
-         GhxnsbIwUfaB+jfYRKUDOPiJ4jJXPqzggWW0SjMrAamPbofNUKq6ZAEaljvKtSKUu6
-         hwaBO001G6X7CgSSd10NADcLzj6RDZmuLO1yDcz0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190507125631eucas1p145b5499a857fcf20e1c4429f28bede47~cZ_HoxoSf1873518735eucas1p1i;
-        Tue,  7 May 2019 12:56:31 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id DA.04.04325.E7081DC5; Tue,  7
-        May 2019 13:56:30 +0100 (BST)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190507125630eucas1p1c5fd171a8dc2a6b8eb9dd317fe245f0c~cZ_GuytwV1097010970eucas1p1Y;
-        Tue,  7 May 2019 12:56:30 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-46-5cd1807e2c82
-Received: from eusync1.samsung.com ( [203.254.199.211]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D6.B6.04140.E7081DC5; Tue,  7
-        May 2019 13:56:30 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local ([106.120.51.73]) by
-        eusync1.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
-        (built May  5 2014)) with ESMTPA id <0PR4001CRXA2KE30@eusync1.samsung.com>;
-        Tue, 07 May 2019 13:56:30 +0100 (BST)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mans Rullgard <mans@mansr.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] usb: core: verify devicetree nodes for disabled interfaces
-Date:   Tue, 07 May 2019 14:56:15 +0200
-Message-id: <20190507125615.9381-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7djPc7p1DRdjDH7OMbLYOGM9q0Xz4vVs
-        FufPb2C3uLxrDpvFjPP7mCwWLWtltnh55Aejxdojd9ktfjyczuTA6XHrTr3HplWdbB77565h
-        93hz+hS7R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGWcb57JVHCcr+J0607WBsYVPF2MnBwS
-        AiYS7/u/sYDYQgIrGCWubGPuYuQCsj8zSmz4MY0dpqhh9ktGiMQyRokZb1tZIJz/jBKrt24A
-        q2ITMJToetvFBmKLCCRIHNn8nhnEZhboZpL4skwAxBYW8JY4t/0M2DoWAVWJDdvWMoLYvAI2
-        Eq0bPjNCbJOXWL3hANgZEgKNbBLTDs1kgUi4SFx88BeqSEbi8uRuFoiiZkaJh+fWskM4PYwS
-        l5tmQFVZSxw+fpEV4gw+iUnbpgON5QCK80p0tAlBlHhI9B7+AhYWEoiV2LY1aAKj+AJGhlWM
-        4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBsXb63/GvOxj3/Uk6xCjAwajEw/ui4GKMEGti
-        WXFl7iFGCQ5mJRHexGfnYoR4UxIrq1KL8uOLSnNSiw8xSnOwKInzVjM8iBYSSE8sSc1OTS1I
-        LYLJMnFwSjUw8rjcLf7UX8r5LmWDZkz1aWbujXfuCuxe9njPt0cJR9Y/qio4U/7RZt1kS9sz
-        s+4/2zfperKqSeIZ9dkSDycKfeuYesv5dMyhVQvOBa3N5w46/f7ArcsZW/SfdneK3L6kv+RQ
-        wVXhRuv+oO/n11qlnBcy8+L7cMj90W222jlaNw7+9JgiKXhsrb0SS3FGoqEWc1FxIgCcaiYm
-        sQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLJMWRmVeSWpSXmKPExsVy+t/xy7p1DRdjDL6dYLPYOGM9q0Xz4vVs
-        FufPb2C3uLxrDpvFjPP7mCwWLWtltnh55Aejxdojd9ktfjyczuTA6XHrTr3HplWdbB77565h
-        93hz+hS7R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGWcb57JVHCcr+J0607WBsYVPF2MnBwS
-        AiYSDbNfMoLYQgJLGCUmPbLqYuQCshuZJFb+nMQGkmATMJToetsFZosIJEgsebuZHaSIWaCb
-        SaK56TcrSEJYwFvi3PYzLCA2i4CqxIZta8Gm8grYSLRu+MwIsU1eYvWGA8wTGLkWMDKsYhRJ
-        LS3OTc8tNtIrTswtLs1L10vOz93ECAyUbcd+btnB2PUu+BCjAAejEg/vi4KLMUKsiWXFlbmH
-        GCU4mJVEeBOfnYsR4k1JrKxKLcqPLyrNSS0+xCjNwaIkztshcDBGSCA9sSQ1OzW1ILUIJsvE
-        wSnVwNgQdtXALI491JP9TPHPh+Hya5jCZultFT7YuIp5H8sUY+lTO+doTOx3ZDm735hD9vrX
-        5Kf3drV1cxkzfC7UyXNzNb88Y6trxv43KwVlbnQszFh18hjL0eULSw66fDwY7Xgj9J2QqfWr
-        hsf361ZNvv79n+/mzck3+N8fqWgQvhsgF/dlwvSr+ZlKLMUZiYZazEXFiQBdkFXGEAIAAA==
-X-CMS-MailID: 20190507125630eucas1p1c5fd171a8dc2a6b8eb9dd317fe245f0c
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190507125630eucas1p1c5fd171a8dc2a6b8eb9dd317fe245f0c
-References: <CGME20190507125630eucas1p1c5fd171a8dc2a6b8eb9dd317fe245f0c@eucas1p1.samsung.com>
+        Tue, 7 May 2019 08:56:36 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47Csh8j057967
+        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 08:56:34 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sb90t4day-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:56:34 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 7 May 2019 13:56:32 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 May 2019 13:56:28 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47CuRex32702710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 May 2019 12:56:27 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A01EFA405B;
+        Tue,  7 May 2019 12:56:27 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18537A4054;
+        Tue,  7 May 2019 12:56:26 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 May 2019 12:56:25 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 07 May 2019 15:56:25 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     linux-alpha@vger.kernel.org
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Meelis Roos <mroos@linux.ee>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [RFC/RFT PATCH] alpha: switch from DISCONTIGMEM to SPARSEMEM
+Date:   Tue,  7 May 2019 15:56:24 +0300
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19050712-0020-0000-0000-0000033A2C69
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050712-0021-0000-0000-0000218CC828
+Message-Id: <1557233784-3301-1-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
-add support for disabling given USB device interface by adding nodes to
-the USB host controller device. The mentioned commit however identifies
-the given USB interface node only by the 'reg' property in the host
-controller children nodes and then checks for their the 'status'. The USB
-device interface nodes however also has to have a 'compatible' property as
-described in Documentation/devicetree/bindings/usb/usb-device.txt. This is
-important, because USB host controller might have child-nodes for other
-purposes. For example, Exynos EHCI and OHCI drivers already define
-child-nodes for each physical root hub port and assigns respective PHY
-controller and parameters for them. This conflicts with the proposed
-approach and verifying for the presence of the compatible property fixes
-this issue without changing the devicetree bindings and the way the PHY
-controllers are handled by Exynos EHCI/OHCI drivers.
+Enable SPARSEMEM support on alpha and deprecate DISCONTIGMEM.
 
-Reported-by: Markus Reichl <m.reichl@fivetechno.de>
-Fixes: 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+The required changes are mostly around moving duplicated definitions of
+page access and address conversion macros to a common place and making sure
+they are available for all memory models.
+
+The DISCONTINGMEM support is marked as BROKEN an will be removed in a
+couple of releases.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- drivers/usb/core/message.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/alpha/Kconfig                 |  8 ++++++++
+ arch/alpha/include/asm/mmzone.h    | 17 ++---------------
+ arch/alpha/include/asm/page.h      |  7 ++++---
+ arch/alpha/include/asm/pgtable.h   | 12 +++++-------
+ arch/alpha/include/asm/sparsemem.h | 22 ++++++++++++++++++++++
+ arch/alpha/kernel/setup.c          |  2 ++
+ 6 files changed, 43 insertions(+), 25 deletions(-)
+ create mode 100644 arch/alpha/include/asm/sparsemem.h
 
-diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
-index 82239f27c4cc..cd455c4add25 100644
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -2007,6 +2007,7 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
- 		struct usb_interface *intf = cp->interface[i];
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index 584a6e1..6be7bec 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -36,6 +36,7 @@ config ALPHA
+ 	select ODD_RT_SIGACTION
+ 	select OLD_SIGSUSPEND
+ 	select CPU_NO_EFFICIENT_FFS if !ALPHA_EV67
++	select SPARSEMEM_STATIC if SPARSEMEM
+ 	help
+ 	  The Alpha is a 64-bit general-purpose processor designed and
+ 	  marketed by the Digital Equipment Corporation of blessed memory,
+@@ -554,12 +555,19 @@ config NR_CPUS
  
- 		if (intf->dev.of_node &&
-+		    of_device_is_compatible(intf->dev.of_node, NULL) &&
- 		    !of_device_is_available(intf->dev.of_node)) {
- 			dev_info(&dev->dev, "skipping disabled interface %d\n",
- 				 intf->cur_altsetting->desc.bInterfaceNumber);
+ config ARCH_DISCONTIGMEM_ENABLE
+ 	bool "Discontiguous Memory Support"
++	depends on BROKEN
+ 	help
+ 	  Say Y to support efficient handling of discontiguous physical memory,
+ 	  for architectures which are either NUMA (Non-Uniform Memory Access)
+ 	  or have huge holes in the physical address space for other reasons.
+ 	  See <file:Documentation/vm/numa.rst> for more.
+ 
++config ARCH_SPARSEMEM_ENABLE
++	bool "Sparse Memory Support"
++	help
++	  Say Y to support efficient handling of discontiguous physical memory,
++	  for systems that have huge holes in the physical address space.
++
+ config NUMA
+ 	bool "NUMA Support (EXPERIMENTAL)"
+ 	depends on DISCONTIGMEM && BROKEN
+diff --git a/arch/alpha/include/asm/mmzone.h b/arch/alpha/include/asm/mmzone.h
+index 889b5d3..8664460 100644
+--- a/arch/alpha/include/asm/mmzone.h
++++ b/arch/alpha/include/asm/mmzone.h
+@@ -6,9 +6,9 @@
+ #ifndef _ASM_MMZONE_H_
+ #define _ASM_MMZONE_H_
+ 
+-#include <asm/smp.h>
++#ifdef CONFIG_DISCONTIGMEM
+ 
+-struct bootmem_data_t; /* stupid forward decl. */
++#include <asm/smp.h>
+ 
+ /*
+  * Following are macros that are specific to this numa platform.
+@@ -47,8 +47,6 @@ PLAT_NODE_DATA_LOCALNR(unsigned long p, int n)
+ }
+ #endif
+ 
+-#ifdef CONFIG_DISCONTIGMEM
+-
+ /*
+  * Following are macros that each numa implementation must define.
+  */
+@@ -70,12 +68,6 @@ PLAT_NODE_DATA_LOCALNR(unsigned long p, int n)
+ /* XXX: FIXME -- nyc */
+ #define kern_addr_valid(kaddr)	(0)
+ 
+-#define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+-
+-#define pmd_page(pmd)		(pfn_to_page(pmd_val(pmd) >> 32))
+-#define pgd_page(pgd)		(pfn_to_page(pgd_val(pgd) >> 32))
+-#define pte_pfn(pte)		(pte_val(pte) >> 32)
+-
+ #define mk_pte(page, pgprot)						     \
+ ({								 	     \
+ 	pte_t pte;                                                           \
+@@ -98,16 +90,11 @@ PLAT_NODE_DATA_LOCALNR(unsigned long p, int n)
+ 	__xx;                                                           \
+ })
+ 
+-#define page_to_pa(page)						\
+-	(page_to_pfn(page) << PAGE_SHIFT)
+-
+ #define pfn_to_nid(pfn)		pa_to_nid(((u64)(pfn) << PAGE_SHIFT))
+ #define pfn_valid(pfn)							\
+ 	(((pfn) - node_start_pfn(pfn_to_nid(pfn))) <			\
+ 	 node_spanned_pages(pfn_to_nid(pfn)))					\
+ 
+-#define virt_addr_valid(kaddr)	pfn_valid((__pa(kaddr) >> PAGE_SHIFT))
+-
+ #endif /* CONFIG_DISCONTIGMEM */
+ 
+ #endif /* _ASM_MMZONE_H_ */
+diff --git a/arch/alpha/include/asm/page.h b/arch/alpha/include/asm/page.h
+index f3fb284..f89eef3 100644
+--- a/arch/alpha/include/asm/page.h
++++ b/arch/alpha/include/asm/page.h
+@@ -83,12 +83,13 @@ typedef struct page *pgtable_t;
+ 
+ #define __pa(x)			((unsigned long) (x) - PAGE_OFFSET)
+ #define __va(x)			((void *)((unsigned long) (x) + PAGE_OFFSET))
+-#ifndef CONFIG_DISCONTIGMEM
++
+ #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
++#define virt_addr_valid(kaddr)	pfn_valid((__pa(kaddr) >> PAGE_SHIFT))
+ 
++#ifdef CONFIG_FLATMEM
+ #define pfn_valid(pfn)		((pfn) < max_mapnr)
+-#define virt_addr_valid(kaddr)	pfn_valid(__pa(kaddr) >> PAGE_SHIFT)
+-#endif /* CONFIG_DISCONTIGMEM */
++#endif /* CONFIG_FLATMEM */
+ 
+ #define VM_DATA_DEFAULT_FLAGS		(VM_READ | VM_WRITE | VM_EXEC | \
+ 					 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
+index 89c2032..83a0487 100644
+--- a/arch/alpha/include/asm/pgtable.h
++++ b/arch/alpha/include/asm/pgtable.h
+@@ -203,10 +203,10 @@ extern unsigned long __zero_page(void);
+  * Conversion functions:  convert a page and protection to a page entry,
+  * and a page entry and page directory to the page they refer to.
+  */
+-#ifndef CONFIG_DISCONTIGMEM
+-#define page_to_pa(page)	(((page) - mem_map) << PAGE_SHIFT)
+-
++#define page_to_pa(page)	(page_to_pfn(page) << PAGE_SHIFT)
+ #define pte_pfn(pte)	(pte_val(pte) >> 32)
++
++#ifndef CONFIG_DISCONTIGMEM
+ #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
+ #define mk_pte(page, pgprot)						\
+ ({									\
+@@ -236,10 +236,8 @@ pmd_page_vaddr(pmd_t pmd)
+ 	return ((pmd_val(pmd) & _PFN_MASK) >> (32-PAGE_SHIFT)) + PAGE_OFFSET;
+ }
+ 
+-#ifndef CONFIG_DISCONTIGMEM
+-#define pmd_page(pmd)	(mem_map + ((pmd_val(pmd) & _PFN_MASK) >> 32))
+-#define pgd_page(pgd)	(mem_map + ((pgd_val(pgd) & _PFN_MASK) >> 32))
+-#endif
++#define pmd_page(pmd)	(pfn_to_page(pmd_val(pmd) >> 32))
++#define pgd_page(pgd)	(pfn_to_page(pgd_val(pgd) >> 32))
+ 
+ extern inline unsigned long pgd_page_vaddr(pgd_t pgd)
+ { return PAGE_OFFSET + ((pgd_val(pgd) & _PFN_MASK) >> (32-PAGE_SHIFT)); }
+diff --git a/arch/alpha/include/asm/sparsemem.h b/arch/alpha/include/asm/sparsemem.h
+new file mode 100644
+index 0000000..3e3fdd3
+--- /dev/null
++++ b/arch/alpha/include/asm/sparsemem.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ALPHA_SPARSEMEM_H
++#define _ASM_ALPHA_SPARSEMEM_H
++
++#ifdef CONFIG_SPARSEMEM
++
++/*
++ * The section size matches the minimal possible size of a NUMA node,
++ * which is 16G on Marvel
++ */
++#define SECTION_SIZE_BITS	34
++
++/*
++ * According to "Alpha Architecture Reference Manual" physical
++ * addresses are at most 48 bits.
++ * https://download.majix.org/dec/alpha_arch_ref.pdf
++ */
++#define MAX_PHYSMEM_BITS	48
++
++#endif /* CONFIG_SPARSEMEM */
++
++#endif /* _ASM_ALPHA_SPARSEMEM_H */
+diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
+index 5d4c76a..7e4dc23 100644
+--- a/arch/alpha/kernel/setup.c
++++ b/arch/alpha/kernel/setup.c
+@@ -635,6 +635,8 @@ setup_arch(char **cmdline_p)
+ 	/* Find our memory.  */
+ 	setup_memory(kernel_end);
+ 	memblock_set_bottom_up(true);
++	memblocks_present();
++	sparse_init();
+ 
+ 	/* First guess at cpu cache sizes.  Do this before init_arch.  */
+ 	determine_cpu_caches(cpu->type);
 -- 
-2.17.1
+2.7.4
 
