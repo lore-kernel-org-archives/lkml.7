@@ -2,95 +2,123 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C0C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E61C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833E7204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1495204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557221913;
+	bh=7mmLPceYshJyBPhoerI7n17nMueBfNMFKwSt8qalIkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t+VQ+eZX5tQc+htLO5rfaLoX+8WVPGQESU2e6IqWlzpBNIEft2HOJGWE5oaK+ngNn
+	 tVdVL5FzUuB3YGTm55Me0Yza1/pGf5p0zva8Luz7Xm6tV2LVNPTyzjz88XYwEXZRJ2
+	 5WsZ46I0+VwBY+WA0SPPTpODwJ/GqoqteTB8y4DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfEGJhP (ORCPT
+        id S1726663AbfEGJic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:37:15 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.3]:59407 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726286AbfEGJhO (ORCPT
+        Tue, 7 May 2019 05:38:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36487 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfEGJic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:37:14 -0400
-Received: from [85.158.142.103] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-a.eu-central-1.aws.symcld.net id 68/81-19557-7C151DC5; Tue, 07 May 2019 09:37:11 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRWlGSWpSXmKPExsUyo1hfUvd44MU
-  Ygw33NSw6D5xhtzjW9oTdonnxejaLy7vmsFksWtbK7MDqsWlVJ5vH/rlr2D0+b5Lz2Pv5N0sA
-  SxRrZl5SfkUCa8aBFT8ZCz6wVdy5e5ipgfEZaxcjF4eQwBpGid+/frB3MXJy8AqYSMx+8okFx
-  BYWsJPoXraCrYuRg4NNQFei644pSFhEQF5i1tuLjCA2s8AGRolFG8tAbBYBFYmnuyaDxTkFnC
-  Q61k9lBWkVEnCUOHdFA6JcU6J1+2+wTRICGhIbbh5jgtgqKHFy5hMWiBp5ieats5khWmUljl6
-  KhShXkDi7ZSIjhJ0kca7vCtsERoFZSKbOQjJpFpJJCxiZVzFaJhVlpmeU5CZm5ugaGhjoGhoa
-  6xrpGpqb6SVW6SbqpZbqJqfmlRQlAmX1EsuL9Yorc5NzUvTyUks2MQLDP6WQacMOxmcL0w8xS
-  nIwKYnyithfjBHiS8pPqcxILM6ILyrNSS0+xCjDwaEkwbszACgnWJSanlqRlpkDjESYtAQHj5
-  II73KQNG9xQWJucWY6ROoUoy5H38Znc5mFWPLy81KlxHnFQIoEQIoySvPgRsCSwiVGWSlhXkY
-  GBgYhnoLUotzMElT5V4ziHIxKwrxnQKbwZOaVwG16BXQEE9AR8zrOgRxRkoiQkmpgtPd9o2us
-  OXlX4lOnownJZv9rnhScLjlaZpM9odbz2ru4Y/KedkI/FvZcfe/71PV4a9Xx7R0X7nx/+WE9m
-  9BiPa41/Lobk6fnFr06strAJ0g4nl037Py78OnPf7kr6rIpNd+PYfYJ2npavFQtk2OGxJS6zU
-  tnmTE7CyrtbBF58dLEIedWUZm9EktxRqKhFnNRcSIA5H11sAUDAAA=
-X-Env-Sender: cst@phaseone.com
-X-Msg-Ref: server-24.tower-228.messagelabs.com!1557221831!6022338!1
-X-Originating-IP: [152.115.47.25]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 23581 invoked from network); 7 May 2019 09:37:11 -0000
-Received: from unknown (HELO Exchange2.phaseone.com) (152.115.47.25)
-  by server-24.tower-228.messagelabs.com with AES256-SHA encrypted SMTP; 7 May 2019 09:37:11 -0000
-Received: from cstu16.phaseone.com (172.16.2.207) by Exchange2.phaseone.com
- (172.16.1.180) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 7 May
- 2019 11:37:10 +0200
-Message-ID: <1557221830.114189.8.camel@phaseone.com>
-Subject: Re: [PATCH] usb: gadget: configfs: Add lpm_Ux_disable
-From:   "Claus H. Stovgaard" <cst@phaseone.com>
-To:     <linux-usb@vger.kernel.org>
-CC:     Felipe Balbi <balbi@kernel.org>,
+        Tue, 7 May 2019 05:38:32 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z1so1478748ljb.3;
+        Tue, 07 May 2019 02:38:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tc6IIAjzg9ip1EiDB2DwT04Nip0LdOfWWuVFTByFfgo=;
+        b=UDognZTYXEUniKF86MKUW8+deTu3dwQfNsGJvCJW5jdCXBggyLyUuPIM1P62MEc7IC
+         geaY9U+nG+LjyYH9PRrTmtunVmzCvoqdOsEWSbqSy8hdSlvXX6uPUqOf/Ucp0dXRCsb9
+         qQBQnWxrM4Uj0N5AIT6UKedAFp2Q9Eeg2E1XyZk+LEca9MRdsJaWMqRE27lSQo7BFNKc
+         rjXkrgTD1TzOG74F3Aguy+KzlZUl/qDUKi9Taj27YxdkrQYz6rC6vOe2YKyKd2q692/m
+         sbNm/Ao4v2ExhfUpmiHiYFaOX2BJhOGuvsQ4CDj0XlHiFpw8dcCqn9NGFpHP4K7YSIsF
+         IVzw==
+X-Gm-Message-State: APjAAAUgLIPLvG2DTC8AOR/v/6Y7D77YK2yZcSMy5Fp5UAZ0eekKavav
+        Q/GGvtKfMDXcUkWEngqbnws=
+X-Google-Smtp-Source: APXvYqybeeeYP4hHflBw+LYg1ipaMT1I4IYHEpl2+FiWwNASLJPLex61menqwVWecLyO5n2BV7l1jA==
+X-Received: by 2002:a2e:85d2:: with SMTP id h18mr16296224ljj.128.1557221910203;
+        Tue, 07 May 2019 02:38:30 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id z3sm3060282ljg.78.2019.05.07.02.38.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 02:38:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hNwYP-0007Of-Jw; Tue, 07 May 2019 11:38:29 +0200
+Date:   Tue, 7 May 2019 11:38:29 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     Johan Hovold <johan@kernel.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Anurag Kumar Vulisha" <anurag.kumar.vulisha@xilinx.com>
-Date:   Tue, 7 May 2019 11:37:10 +0200
-In-Reply-To: <1557220655-123090-1-git-send-email-cst@phaseone.com>
-References: <1557220655-123090-1-git-send-email-cst@phaseone.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
+Message-ID: <20190507093829.GF4333@localhost>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-4-tobin@kernel.org>
+ <20190502073823.GQ26546@localhost>
+ <20190502082539.GB18363@eros.localdomain>
+ <20190502083922.GR26546@localhost>
+ <20190503014015.GC7416@eros.localdomain>
+ <20190503075607.GC26546@localhost>
+ <20190506230035.GA29554@eros.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.16.2.207]
-X-ClientProxiedBy: Exchange3.phaseone.com (172.16.1.184) To
- Exchange2.phaseone.com (172.16.1.180)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506230035.GA29554@eros.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-07 at 11:09 +0200, Claus H. Stovgaard wrote:
-> When combining dwc3 with an redriver for a USB Type-C device
-> solution, it
-> sometimes have problems with leaving U1/U2 for certain hosts,
-> resulting in
-> link training errors and reconnects. This create an interface via
-> configfs for disabling U1/U2, enabling a workaround for devices based
-> on
-> dwc3.
+On Tue, May 07, 2019 at 09:00:35AM +1000, Tobin C. Harding wrote:
+> On Fri, May 03, 2019 at 09:56:07AM +0200, Johan Hovold wrote:
+
+> > This isn't about any particular subsystem, but more the tendency of
+> > people to make up random rules and try to to force it on others. It's
+> > churn, and also makes things like code forensics and backports harder
+> > for no good reason.
 > 
+> Points noted.
+> 
+> > Both capitalisation styles are about as common for the function
+> > description judging from a quick grep, but only 10% or so use a full
+> > stop ('.'). And forcing the use of sentence case and full stop for
+> > things like
+> > 
+> > 	/**
+> > 	 * maar_init() - Initialise MAARs.
+> > 
+> > or
+> > 
+> > 	* @instr: Operational instruction.
+> > 
+> > would be not just ugly, but wrong (as these are not independent
+> > clauses).
+> 
+> You are correct here.
 
-Sorry messed up a bit with a missing cover letter.
-This feature relates to Anurag patch [1] and a thread [2] from earlier 
+Actually, I may have been wrong about the first example (imperative),
+but the second still stands.
 
-Where Anurags patch focus on setting U1/U2 latency in the BOS
-descriptor from the devicetree, this patch focuses on having a configfs
-interface for forcing the UDC (here the dwc3) to not enable U1/U2 and
-reject the SET_SEL(U1/U2).
+> Thanks for taking the time to flesh out your argument Johan, I am now in
+> agreement with you :)
 
-Looking forward to input.
+Good to hear! :)
 
-[1] https://www.spinics.net/lists/linux-usb/msg179732.html
-[2] https://www.spinics.net/lists/linux-usb/msg179393.html
-
+Johan
