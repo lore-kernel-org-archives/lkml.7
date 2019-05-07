@@ -2,97 +2,100 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD0FC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CDFC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D17920B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XmdKw5pg"
+	by mail.kernel.org (Postfix) with ESMTP id EA4692087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfEGOa7 (ORCPT
+        id S1726795AbfEGObc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:30:59 -0400
-Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:20390
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726486AbfEGOa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:30:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lcdTtV4/0P6asI0qpvDWF/8dw22r1KZHYyB5RTRVHIk=;
- b=XmdKw5pgBxBz0hpj2Dl6ulhkqjgFFskqwoFU83QXvVfYyqowngYoJwrdzqhMwtZQyWDobUDC6mrjY3IrBvekLRwuLob+i4BmtQeNafRDUEETpp7dXCHsLFp0nViEVyECjxzpsGnZQa88tfb/Mpa1boFqUSgTPNzb51U1Trkafac=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2767.eurprd04.prod.outlook.com (10.172.255.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Tue, 7 May 2019 14:30:54 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::484c:ab68:81c4:51be]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::484c:ab68:81c4:51be%5]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 14:30:54 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: caam: fix caam_dump_sg that iterates through
- scatterlist
-Thread-Topic: [PATCH] crypto: caam: fix caam_dump_sg that iterates through
- scatterlist
-Thread-Index: AQHVBNn6GEV29oSxMECW3IgR0b6OeQ==
-Date:   Tue, 7 May 2019 14:30:54 +0000
-Message-ID: <VI1PR0402MB34850C42222FF3339BF010D598310@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1557236223-31492-1-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f95abf46-1ed5-4c8b-3d3a-08d6d2f89cf0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2767;
-x-ms-traffictypediagnostic: VI1PR0402MB2767:
-x-microsoft-antispam-prvs: <VI1PR0402MB27677136BA3CCA2A3CAF39E398310@VI1PR0402MB2767.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(366004)(39860400002)(199004)(189003)(8676002)(229853002)(305945005)(7736002)(71200400001)(71190400001)(478600001)(110136005)(66946007)(44832011)(53936002)(66066001)(74316002)(4326008)(8936002)(64756008)(66476007)(66556008)(66446008)(9686003)(54906003)(81156014)(6436002)(25786009)(55016002)(558084003)(86362001)(2906002)(81166006)(52536014)(73956011)(3846002)(6116002)(76176011)(76116006)(102836004)(446003)(256004)(14454004)(68736007)(26005)(5660300002)(186003)(6506007)(476003)(33656002)(6246003)(486006)(53546011)(316002)(7696005)(99286004)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2767;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C7UmxV1O8yfey3mDkJrjH9LP5ub+QutwFvgvexdTe27MlYu/ojKYHVXBZyZUro+riRr1ioAYmq42AOo28EZf81NjyPl5kIi7FXlcLUdDH5zAp9XdxTFObE5H2tb0JM8/rr8pw18OaCU7KctV56g5iaZsDt+HeAkUFCbClOPDSt2lDUs5iLC9f1BzvwjgY7moNwe90kojXJHWDtEq34zr7oIVuZoFjE867X+0WlJwcvPR5tSP4tNZlQIVqG9W0G75OndAjPuJElpMWS3zy9MvF7kCxtp1kmHqFhK/86y7FRsWHZarVbbGoO66HfVnc0mLVFPeEbO3WwhkOni4xBOl4ru2g2buqgruWRjJrGfVGKlHN5icvafkTKQ48nqHlcPHHdv9IYXzQony0yhHI1vay628ZgTTEWNqsO+5lEhwTtI=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 May 2019 10:31:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56028 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbfEGObc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:31:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE06680D;
+        Tue,  7 May 2019 07:31:31 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ECE73F5C1;
+        Tue,  7 May 2019 07:31:29 -0700 (PDT)
+Date:   Tue, 7 May 2019 15:31:27 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     luca abeni <luca.abeni@santannapisa.it>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC PATCH 1/6] sched/dl: Improve deadline admission control for
+ asymmetric CPU capacities
+Message-ID: <20190507143125.cjfhdxngcugqmko3@queper01-lin>
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+ <20190506044836.2914-2-luca.abeni@santannapisa.it>
+ <20190507134850.yreebscc3zigfmtd@queper01-lin>
+ <20190507162523.6a405d48@nowhere>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f95abf46-1ed5-4c8b-3d3a-08d6d2f89cf0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 14:30:54.4444
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2767
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507162523.6a405d48@nowhere>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/2019 4:37 PM, Iuliana Prodan wrote:=0A=
-> Fix caam_dump_sg by correctly determining the next scatterlist=0A=
-> entry in the list.=0A=
-> =0A=
-> Fixes: 5ecf8ef9103c ("crypto: caam - fix sg dump")=0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Tuesday 07 May 2019 at 16:25:23 (+0200), luca abeni wrote:
+> On Tue, 7 May 2019 14:48:52 +0100
+> Quentin Perret <quentin.perret@arm.com> wrote:
+> 
+> > Hi Luca,
+> > 
+> > On Monday 06 May 2019 at 06:48:31 (+0200), Luca Abeni wrote:
+> > > diff --git a/drivers/base/arch_topology.c
+> > > b/drivers/base/arch_topology.c index edfcf8d982e4..646d6d349d53
+> > > 100644 --- a/drivers/base/arch_topology.c
+> > > +++ b/drivers/base/arch_topology.c
+> > > @@ -36,6 +36,7 @@ DEFINE_PER_CPU(unsigned long, cpu_scale) =
+> > > SCHED_CAPACITY_SCALE; 
+> > >  void topology_set_cpu_scale(unsigned int cpu, unsigned long
+> > > capacity) {
+> > > +	topology_update_cpu_capacity(cpu, per_cpu(cpu_scale, cpu),
+> > > capacity);  
+> > 
+> > Why is that one needed ? Don't you end up re-building the sched
+> > domains after this anyways ?
+> 
+> If I remember correctly, this function was called at boot time when the
+> capacities are assigned to the CPU cores.
+> 
+> I do not remember if the sched domain was re-built after this call, but
+> I admit I do not know this part of the kernel very well...
+
+Right and things moved recently in this area, see bb1fbdd3c3fd
+("sched/topology, drivers/base/arch_topology: Rebuild the sched_domain
+hierarchy when capacities change")
+
+> This achieved the effect of correctly setting up the "rd_capacity"
+> field, but I do not know if there is a better/simpler way to achieve
+> the same result :)
+
+OK, that's really an implementation detail, so no need to worry too
+much about it at the RFC stage I suppose :-)
+
+Thanks,
+Quentin
