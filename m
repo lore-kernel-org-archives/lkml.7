@@ -2,104 +2,109 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E6C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95422054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557248166;
-	bh=wyEBL3ZJZ1DHklFqoCMNk1sus7XQWAQ2cNRZbwv9ybk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CQF0PJxrhu6avQSBIsw24/rPlriGu1ylpgomRmVr9OzfpKxEjjvFc/KvGT4TSb2TQ
-	 B10WsU4tTOPxJSvrHEjNjH4/gJIbP7Ux/07bMJUplCZpgsbqtVUtptAe+Lyjmzu+VT
-	 r5mDsWPKoRz7CG0/kKJLhf7+m9FbSyxNPxW7DC/k=
+	by mail.kernel.org (Postfix) with ESMTP id 30F552054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fvP0O3tZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfEGQ4F (ORCPT
+        id S1727212AbfEGQ4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:56:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42629 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfEGQ4E (ORCPT
+        Tue, 7 May 2019 12:56:20 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46480 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfEGQ4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:56:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so12847706oig.9;
-        Tue, 07 May 2019 09:56:03 -0700 (PDT)
+        Tue, 7 May 2019 12:56:19 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h21so14932687ljk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=esZbZU1pgP8duus3WEzDEySF+/YyqE39bcTa0BgZfHg=;
+        b=fvP0O3tZ7ZjnILeoVNXqpBW5oInlJpRKtMsHavAo8Xz6rGRg89S6GZWi4pGffqfCFg
+         oatIXFLAoC9CKwk1ym8unSGXwAYeKchgsJsEKUm2XnsjPb9LqnjMjeafzahNU3X/YERf
+         pCPdN8c31gCwwkI7LCI3zaZ1cxosDpm3CpW9c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GHBrVv53KHjD9Lzdqkki/7g03N+HBCIm+A+C+qlOgKo=;
-        b=mqY2BnbdJABDw2h5KE3+uHtDikSOmkEHT9HaDHwWgEkC39D2xuZOX9VxbrnHbKzxGB
-         bx8lVw1QLQ3zC9sKHKQP0HBhsAOFnSpMX6KvFLRZFV1m66cxUj9Oj1KrJXVjYYjuJDrc
-         ZjrotSLai0pfrQBPHehMiHZxFdIpqR1c1z+eVgBccSkiTLhjUkM5+lyZFn3sKXUMVzcW
-         3VWPkO33ezgB7g6Yo9HZCBL3BNNCNmU2wdoz69Reu1MzKCe6eQzAnuuGzL5QjuZo5uZF
-         icxAD9bwOWQNmnpPr6ErWIAgROmCsJ9skNd9IEBdI5Kahm8AZrqu4J8ltolYN1kqEuga
-         N4sw==
-X-Gm-Message-State: APjAAAV9XVukoQ8nekF+wVNgIoBG0EjxITU11Ewm+N0K6C33laNpV5ai
-        8rfXEB/v0oYiQ+aSwdXQ4A==
-X-Google-Smtp-Source: APXvYqziy0dt5yKxPRpC/WI0aEFVwLEYWl2rCLc0y89G5wpDrqyJ0QCVbRi5gzlBoihgjYMXAFGgkQ==
-X-Received: by 2002:aca:db45:: with SMTP id s66mr824655oig.59.1557248162731;
-        Tue, 07 May 2019 09:56:02 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n3sm5590234oia.46.2019.05.07.09.56.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 09:56:01 -0700 (PDT)
-Date:   Tue, 7 May 2019 11:56:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add i.mx6ul/6sx
-  compatible name
-Message-ID: <20190507165601.GA17194@bogus>
-References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
- <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=esZbZU1pgP8duus3WEzDEySF+/YyqE39bcTa0BgZfHg=;
+        b=ZM49TvrxVp0fo7p1rpTGvIp49sWtbFGNgpCv45oMa4lukr75T7C8/aX0vtUfw3h8ak
+         TQfXKKcVqiuGoAUAePP0KtUfjY74cekAbQ4lTSa7MKObUDgCVUDhQ5MztLACLlfmaN2F
+         h0BNnRSf0HXhuZL5C8HUJMIvOF+PUa0S6YsC/Oxu066UGPISywvo55eQHM4xgaoaBJRx
+         YhzkIS1JOcZVHxYHqOeiWJenjKtTZAUHaJqiYttVnphiA6pg+j9ZUI+gIIMwn3U9ZqPA
+         PwbXFKXUVyOaVWJecgo5YpBxDmd9dyumGGeMC1PGMqzqx1QPTZXjkoM3SFlUkgH0w0ye
+         g2wA==
+X-Gm-Message-State: APjAAAWubI4B0fhyBhLomX+RMHZk06VnkHGwjP6h2IcDs4eqwNF3nbeD
+        8JdaSRYOHf1PM4QP7xOKlMxDPGVRrKw=
+X-Google-Smtp-Source: APXvYqyjTyZJ9aqAMxg5NK8qmc096hrVJYTZ0SiDoU4UhcV8+pO0itJeTJYFn2mbNW+2mq2jcrtSrA==
+X-Received: by 2002:a2e:3c06:: with SMTP id j6mr16326190lja.99.1557247694175;
+        Tue, 07 May 2019 09:48:14 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id j19sm3466097lfm.29.2019.05.07.09.48.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 09:48:12 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id d8so12344223lfb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:48:12 -0700 (PDT)
+X-Received: by 2002:ac2:54b7:: with SMTP id w23mr821657lfk.139.1557247692296;
+ Tue, 07 May 2019 09:48:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190503174730.245762-1-dianders@chromium.org>
+ <CA+ASDXOkHxYumCBv-T0gxTjdMVTu-c=33Lk-0TUgJ3WGUn2DVQ@mail.gmail.com> <CAD=FV=UKTDFwq3PSdpPmShRcOtZaH1mU=2H-ynoG4VooV=rKVQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=UKTDFwq3PSdpPmShRcOtZaH1mU=2H-ynoG4VooV=rKVQ@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 7 May 2019 09:48:00 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMOmD+Wp5wfWU_1m+eEKhGTz62Ru1TJhH7Cea_CKa9PHw@mail.gmail.com>
+Message-ID: <CA+ASDXMOmD+Wp5wfWU_1m+eEKhGTz62Ru1TJhH7Cea_CKa9PHw@mail.gmail.com>
+Subject: Re: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 09:16:38 +0000, Robin Gong wrote:
-> Add i.mx6ul and i.mx6sx compatible name.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Tue, May 7, 2019 at 9:25 AM Doug Anderson <dianders@chromium.org> wrote:
+> On Mon, May 6, 2019 at 2:40 PM Brian Norris <briannorris@chromium.org> wrote:
+> > The last part of the sentence technically isn't true -- the original
+> > bindings (notably, with no DT maintainer Reviewed-by) didn't specify
+> > where such a node should be found:
+> >
+> > 35da60941e44 pstore/ram: add Device Tree bindings
+> >
+> > so child-of-root used to be a valid location. But anyway, this code is
+> > just part of a heuristic for "old DT" (where later bindings clarified
+> > this), so it still seems valid.
+>
+> I agree that it was unclear in the past, but it is true that being
+> under the root node is not according to the _current_ upstream
+> bindings, right?  ;-)
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Sure, I suppose. Although, given the general ABI policy around DT, it
+seems to me that something that was "according to" an old binding
+cannot really be made "no longer" according to the binding. It can be
+discouraged, and removed from new DTs, but it doesn't really become
+*wrong*.
 
-If a tag was not added on purpose, please state why and what changed.
+But our DT was definitely *not* according to even the (un-reviewed)
+merged binding. So I'm mostly mincing words here.
+
+Brian
