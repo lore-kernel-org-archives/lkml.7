@@ -2,227 +2,100 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B83C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2067C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266C820989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E7820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjALlnw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfEGKyY (ORCPT
+        id S1727345AbfEGKyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:54:24 -0400
-Received: from foss.arm.com ([217.140.101.70]:50322 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbfEGKyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:54:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FEB61993;
-        Tue,  7 May 2019 03:54:17 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3CDFB3F5AF;
-        Tue,  7 May 2019 03:54:16 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        rjw@rjwysocki.net, mathieu.poirier@linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v3 25/30] coresight: Use fwnode handle instead of device names
-Date:   Tue,  7 May 2019 11:52:52 +0100
-Message-Id: <1557226378-10131-26-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
-References: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
+        Tue, 7 May 2019 06:54:46 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44813 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbfEGKyX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:54:23 -0400
+Received: by mail-lj1-f193.google.com with SMTP id c6so8460734lji.11;
+        Tue, 07 May 2019 03:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GCAhg11SRp6Hew9zFemJx8a1BnYPfIc90dC9LSkimJg=;
+        b=TjALlnw4nsc9u8UJAhsZ1uBY5MpOfYYFHDH9mn1SZIL22WxRUXNdnNDBKfloMxs27a
+         zkktcwu/Sx6rAtgYRy+jjbrFEiebWtpPakYRhHYSNwUjqg7hkjBxrywE0qdj+bs5mwqT
+         mAGORk3CLwMloH9BP4lzzaQuXR9JlzO+Kj8q69ccRd2MiUz3z35BBRqAAtUo4zi4smZI
+         MabzDOCr9zz3P4SlWcmyucv0ihFJpbiG3KUU5uh85AnttvSQVcs4Nu1Ynf9ze8oNrxGs
+         bmUy+Q8EEcR0F1vtMfz5/KTQoCKVgobaHPF78FJw1bkxm28K/RTEI8P+B2dIY2YPQEXE
+         KveQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GCAhg11SRp6Hew9zFemJx8a1BnYPfIc90dC9LSkimJg=;
+        b=UjTfRNP0bSxwd16ykzvWUM2gDEVu7Bd/P9qKzPynxqq3UPWFMZpIJjcN3Iai58yiej
+         QFgUFqSW6jWBuYx3MqghrLHhwJkd4p9oMcW22gyyAtl1MpyIbGCR3IjZOEQLdVmXU/xL
+         5TEYC831cpjyZKTa655CRMvCAQ0DhYwTmoNs7KzKWtBPeGD8l4/Ls+ZGcOAgFblUiUB4
+         jG8qT9SkRGd7O8RSafKB6YstykzbXncj2c0CKEDhf39v+QIjK4Zgl/h/tjaOGa5WGaoi
+         HEG8grlTQO6V63YdmBe/bh8F9PdFGvyxukZivCvetXLPEGtjWrQWEhgff/CB0l3XveHP
+         4feA==
+X-Gm-Message-State: APjAAAWZq9PSDd++ImkaYk8IE83xSq3b/76GXIFFpiF7JO5kl2puCg1B
+        br/0nnVrKr6/ay7eucC/g40PCvYP2+jz5U+0/pM=
+X-Google-Smtp-Source: APXvYqzra4CeE9doUIEh8YRPLjXBNgdVF2kc5zUdswNRrUeYL/COm0wsOIKOaERd5W+viBb0m/EIk30lew/cjlBl89s=
+X-Received: by 2002:a2e:97d8:: with SMTP id m24mr16824476ljj.192.1557226462187;
+ Tue, 07 May 2019 03:54:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1557215047.git.agx@sigxcpu.org> <5817853945e1c707f641ae22458a0f27aa25949e.1557215047.git.agx@sigxcpu.org>
+In-Reply-To: <5817853945e1c707f641ae22458a0f27aa25949e.1557215047.git.agx@sigxcpu.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 7 May 2019 07:54:27 -0300
+Message-ID: <CAOMZO5Dn7yHC-NEBd0egHtXu8R4Zg=GNrvXR-RoHH6t9pqq_rA@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: phy: Add documentation for mixel dphy
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Johan Hovold <johan@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We rely on the device names to find a CoreSight device on the
-coresight bus. The device name however is obtained from the platform,
-which is bound to the real platform/amba device. As we are about
-to use different naming scheme for the coresight devices, we can't
-rely on the platform device name to find the corresponding
-coresight device. Instead we use the platform agnostic
-"fwnode handle" of the parent device to find the devices.
-We also reuse the same fwnode as the parent for the Coresight
-device we create.
+On Tue, May 7, 2019 at 4:47 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+>
+> Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
+>
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight-platform.c | 14 +++++---
- drivers/hwtracing/coresight/coresight-priv.h     |  6 ++--
- drivers/hwtracing/coresight/coresight.c          | 42 +++++++++++++++++++-----
- include/linux/coresight.h                        |  4 +--
- 4 files changed, 49 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 4394095..49112a5 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -36,7 +36,7 @@ static int coresight_alloc_conns(struct device *dev,
- 	return 0;
- }
- 
--static int coresight_device_fwnode_match(struct device *dev, void *fwnode)
-+int coresight_device_fwnode_match(struct device *dev, void *fwnode)
- {
- 	return dev_fwnode(dev) == fwnode;
- }
-@@ -219,9 +219,15 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		}
- 
- 		conn->outport = endpoint.port;
--		conn->child_name = devm_kstrdup(dev,
--						dev_name(rdev),
--						GFP_KERNEL);
-+		/*
-+		 * Hold the refcount to the target device. This could be
-+		 * released via:
-+		 * 1) coresight_release_platform_data() if the probe fails or
-+		 *    this device is unregistered.
-+		 * 2) While removing the target device via
-+		 *    coresight_remove_match()
-+		 */
-+		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
- 		conn->child_port = rendpoint.port;
- 		/* Connection record updated */
- 		ret = 1;
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index c216421..8b07fe5 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -200,8 +200,8 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
- 	return 0;
- }
- 
--static inline void
--coresight_release_platform_data(struct coresight_platform_data *pdata)
--{}
-+void coresight_release_platform_data(struct coresight_platform_data *pdata);
-+
-+int coresight_device_fwnode_match(struct device *dev, void *fwnode);
- 
- #endif
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 526141c..c9c8a8c 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -978,6 +978,7 @@ static void coresight_device_release(struct device *dev)
- {
- 	struct coresight_device *csdev = to_coresight_device(dev);
- 
-+	fwnode_handle_put(csdev->dev.fwnode);
- 	kfree(csdev->refcnt);
- 	kfree(csdev);
- }
-@@ -1009,13 +1010,11 @@ static int coresight_orphan_match(struct device *dev, void *data)
- 		/* We have found at least one orphan connection */
- 		if (conn->child_dev == NULL) {
- 			/* Does it match this newly added device? */
--			if (conn->child_name &&
--			    !strcmp(dev_name(&csdev->dev), conn->child_name)) {
-+			if (conn->child_fwnode ==  csdev->dev.fwnode)
- 				conn->child_dev = csdev;
--			} else {
-+			else
- 				/* This component still has an orphan */
- 				still_orphan = true;
--			}
- 		}
- 	}
- 
-@@ -1047,9 +1046,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
- 		struct coresight_connection *conn = &csdev->pdata->conns[i];
- 		struct device *dev = NULL;
- 
--		if (conn->child_name)
--			dev = bus_find_device_by_name(&coresight_bustype, NULL,
--						      conn->child_name);
-+		dev = bus_find_device(&coresight_bustype, NULL,
-+				      (void *)conn->child_fwnode,
-+				      coresight_device_fwnode_match);
- 		if (dev) {
- 			conn->child_dev = to_coresight_device(dev);
- 			/* and put reference from 'bus_find_device()' */
-@@ -1084,9 +1083,15 @@ static int coresight_remove_match(struct device *dev, void *data)
- 		if (conn->child_dev == NULL)
- 			continue;
- 
--		if (!strcmp(dev_name(&csdev->dev), conn->child_name)) {
-+		if (csdev->dev.fwnode == conn->child_fwnode) {
- 			iterator->orphan = true;
- 			conn->child_dev = NULL;
-+			/*
-+			 * Drop the reference to the handle for the remote
-+			 * device acquired in parsing the connections from
-+			 * platform data.
-+			 */
-+			fwnode_handle_put(conn->child_fwnode);
- 			/* No need to continue */
- 			break;
- 		}
-@@ -1166,6 +1171,22 @@ static int __init coresight_init(void)
- }
- postcore_initcall(coresight_init);
- 
-+/*
-+ * coresight_release_platform_data: Release references to the devices connected
-+ * to the output port of this device.
-+ */
-+void coresight_release_platform_data(struct coresight_platform_data *pdata)
-+{
-+	int i;
-+
-+	for (i = 0; i < pdata->nr_outport; i++) {
-+		if (pdata->conns[i].child_fwnode) {
-+			fwnode_handle_put(pdata->conns[i].child_fwnode);
-+			pdata->conns[i].child_fwnode = 0;
-+		}
-+	}
-+}
-+
- struct coresight_device *coresight_register(struct coresight_desc *desc)
- {
- 	int ret;
-@@ -1210,6 +1231,11 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 	csdev->dev.parent = desc->dev;
- 	csdev->dev.release = coresight_device_release;
- 	csdev->dev.bus = &coresight_bustype;
-+	/*
-+	 * Hold the reference to our parent device. This will be
-+	 * dropped only in coresight_device_release().
-+	 */
-+	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
- 	dev_set_name(&csdev->dev, "%s", desc->name);
- 
- 	ret = device_register(&csdev->dev);
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index b67d507..b40544b 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -126,15 +126,15 @@ struct coresight_desc {
- /**
-  * struct coresight_connection - representation of a single connection
-  * @outport:	a connection's output port number.
-- * @chid_name:	remote component's name.
-  * @child_port:	remote component's port number @output is connected to.
-+ * @chid_fwnode: remote component's fwnode handle.
-  * @child_dev:	a @coresight_device representation of the component
- 		connected to @outport.
-  */
- struct coresight_connection {
- 	int outport;
--	const char *child_name;
- 	int child_port;
-+	struct fwnode_handle *child_fwnode;
- 	struct coresight_device *child_dev;
- };
- 
--- 
-2.7.4
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
