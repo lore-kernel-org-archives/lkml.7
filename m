@@ -2,174 +2,114 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A296C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C570DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA64920675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CA0206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oShkY9Uo"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Jiw/RLfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfEGSqy (ORCPT
+        id S1727408AbfEGSxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:46:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45756 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfEGSqy (ORCPT
+        Tue, 7 May 2019 14:53:17 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:56418 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbfEGSxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:46:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so9092600pfi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 11:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4K5qiK9vhvmIkn3WHoZK0319QLRlU1KUu0cyFne4DWs=;
-        b=oShkY9UoCOJkw+8F+fqEj0Uc9/qHLI+6lOnZ4PmArGpPVfAWOwp3l2pki4mxeVWr2v
-         i1/BoCJUiP6IE2hEuHGlPnMC2JT+4iJRQSX+1ftuSwgMBqfHGrHwZeWN1F1lzM9bGAbB
-         BpTytT+gqKFiY+9K8QRJWzSXFZlayvNxFar7o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4K5qiK9vhvmIkn3WHoZK0319QLRlU1KUu0cyFne4DWs=;
-        b=S3sIQhifUBWnSnYSGeerCOTnKLR7x0KARgd6H8MeDMZfEzuMHgtB07ae9T2CnfTU/7
-         hojahCw5DMCSAdNvTcyw/gFatgOnWDRbgVKPgl6/u63CQ/P664GAc7nohw7DiRfRO8gu
-         hSMev5GYxDJ3qDU7zQYtNfsZ4gwMvmQtW1YyFsAHlRfONqJiSlDcSdkQZQUE8fr0ehZP
-         n3QVb229qS97a9J/uWCUuaFaeYLJKgo9SEhFJ5I/iTFrTCfEN38kdHPdN1Nfhnkffhcm
-         b2wyC823c0qrIOicUP7NSoer5KzR8fXF5L89Ag8vGL/fYplcEnHL5GYnkkY7kl5CUAkt
-         IjLA==
-X-Gm-Message-State: APjAAAWRkOx1dFQHpe+06n1NZELy4tvkfgLMc80CISpPFtWjRRcgMpj5
-        rmde6JRVXzB6+vt4sM10/hw0Jg==
-X-Google-Smtp-Source: APXvYqxrkWfI22GqtapHzGjSfBpzNe8seCozjCeX6zOdjbNwchSvGqdEtYr/uKJ7o2QPp+DNkaVTXQ==
-X-Received: by 2002:a63:ee15:: with SMTP id e21mr41892839pgi.180.1557254813331;
-        Tue, 07 May 2019 11:46:53 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p67sm31662140pfi.123.2019.05.07.11.46.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 11:46:52 -0700 (PDT)
-Date:   Tue, 7 May 2019 14:46:50 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tue, 7 May 2019 14:53:17 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A6E6AC01D6;
+        Tue,  7 May 2019 18:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557255190; bh=/bJFOGwRieHqxEusettdT/vBPglvJRx+y/MLRwTz3z8=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=Jiw/RLfu/a1ikO29cRvv/45GwgPj5oMh3IWjlQKvhGJ9QNo4VVwckP5PPx6SZ7cla
+         lVC7UZCavTOkDn5wUPEFTlPG3OksdhEdWm6Cfzjyp3DfJQ8irqtmvUxVI/1cPixwRl
+         o68c0x1GAxuHb0DjIMru83atf19Un2Kq1tXn0N/2NaQNNRxYlno63CsiqtDTT3W/Pf
+         uCrVw0/VHZOyPHRBpYIbdOuWeBTJP8gUoOw1NzlzrO5q3IG3WUwxMYdis7XSMWhJGl
+         qNd8sKVQjpPAgU/bcRNEipjtp11r3RUOlHSCNfYVD7b80M0kXhNR501x7l8WYb7dWZ
+         xowRUPQ9H+F2A==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id CC435A0084;
+        Tue,  7 May 2019 18:53:15 +0000 (UTC)
+Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
+ US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
+ 7 May 2019 11:53:15 -0700
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     "Claus H. Stovgaard" <cst@phaseone.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+CC:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Daniel Colascione <dancol@google.com>,
-        Todd Kjos <tkjos@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Martijn Coenen <maco@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190507184650.GA139364@google.com>
-References: <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
- <20190319231020.tdcttojlbmx57gke@brauner.io>
- <20190320015249.GC129907@google.com>
- <20190507021622.GA27300@sultan-box.localdomain>
- <20190507070430.GA24150@kroah.com>
- <20190507072721.GA4364@sultan-box.localdomain>
- <20190507074334.GB26478@kroah.com>
- <20190507081236.GA1531@sultan-box.localdomain>
- <20190507105826.oi6vah6x5brt257h@brauner.io>
- <CAJuCfpFeOVzDUq5O_cVgVGjonWDWjVVR192On6eB5gf==_uPKw@mail.gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: Re: [PATCH] usb: gadget: configfs: Add lpm_Ux_disable
+Thread-Topic: [PATCH] usb: gadget: configfs: Add lpm_Ux_disable
+Thread-Index: AQHVBLXbiuLSRZBxxUeout6SXcNukg==
+Date:   Tue, 7 May 2019 18:53:15 +0000
+Message-ID: <30102591E157244384E984126FC3CB4F639E9057@us01wembx1.internal.synopsys.com>
+References: <1557220655-123090-1-git-send-email-cst@phaseone.com>
+ <1557221830.114189.8.camel@phaseone.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.13.184.19]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFeOVzDUq5O_cVgVGjonWDWjVVR192On6eB5gf==_uPKw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:28:47AM -0700, Suren Baghdasaryan wrote:
-> From: Christian Brauner <christian@brauner.io>
-> Date: Tue, May 7, 2019 at 3:58 AM
-> To: Sultan Alsawaf
-> Cc: Greg Kroah-Hartman, open list:ANDROID DRIVERS, Daniel Colascione,
-> Todd Kjos, Kees Cook, Peter Zijlstra, Martijn Coenen, LKML, Tim
-> Murray, Michal Hocko, Suren Baghdasaryan, linux-mm, Arve Hjønnevåg,
-> Ingo Molnar, Steven Rostedt, Oleg Nesterov, Joel Fernandes, Andy
-> Lutomirski, kernel-team
-> 
-> > On Tue, May 07, 2019 at 01:12:36AM -0700, Sultan Alsawaf wrote:
-> > > On Tue, May 07, 2019 at 09:43:34AM +0200, Greg Kroah-Hartman wrote:
-> > > > Given that any "new" android device that gets shipped "soon" should be
-> > > > using 4.9.y or newer, is this a real issue?
-> > >
-> > > It's certainly a real issue for those who can't buy brand new Android devices
-> > > without software bugs every six months :)
-> > >
-> 
-> Hi Sultan,
-> Looks like you are posting this patch for devices that do not use
-> userspace LMKD solution due to them using older kernels or due to
-> their vendors sticking to in-kernel solution. If so, I see couple
-> logistical issues with this patch. I don't see it being adopted in
-> upstream kernel 5.x since it re-implements a deprecated mechanism even
-> though vendors still use it. Vendors on the other hand, will not adopt
-> it until you show evidence that it works way better than what
-> lowmemorykilled driver does now. You would have to provide measurable
-> data and explain your tests before they would consider spending time
-> on this.
-> On the implementation side I'm not convinced at all that this would
-> work better on all devices and in all circumstances. We had cases when
-> a new mechanism would show very good results until one usecase
-> completely broke it. Bulk killing of processes that you are doing in
-> your patch was a very good example of such a decision which later on
-> we had to rethink. That's why baking these policies into kernel is
-> very problematic. Another problem I see with the implementation that
-> it ties process killing with the reclaim scan depth. It's very similar
-> to how vmpressure works and vmpressure in my experience is very
-> unpredictable.
-
-Yeah it does seem conceptually similar, good point.
- 
-> > > Regardless, even if PSI were backported, a full-fledged LMKD using it has yet to
-> > > be made, so it wouldn't be of much use now.
-> >
-> > This is work that is ongoing and requires kernel changes to make it
-> > feasible. One of the things that I have been working on for quite a
-> > while is the whole file descriptor for processes thing that is important
-> > for LMKD (Even though I never thought about this use-case when I started
-> > pitching this.). Joel and Daniel have joined in and are working on
-> > making LMKD possible.
-> > What I find odd is that every couple of weeks different solutions to the
-> > low memory problem are pitched. There is simple_lkml, there is LMKD, and
-> > there was a patchset that wanted to speed up memory reclaim at process
-> > kill-time by adding a new flag to the new pidfd_send_signal() syscall.
-> > That all seems - though related - rather uncoordinated.
-> 
-> I'm not sure why pidfd_wait and expedited reclaim is seen as
-> uncoordinated effort. All of them are done to improve userspace LMKD.
-
-Christian, pidfd_wait and expedited reclaim are both coordinated efforts and
-solve different problems related to LMK. simple_lmk is entirely different
-effort that we already hesitated about when it was first posted, now we
-hesitate again due to the issues Suren and others mentioned.
-
-I think it is a better idea for Sultan to spend his time on using/improving
-PSI/LMKd than spending it on the simple_lmk. It could also be a good topic to
-discuss in the Android track of the Linux plumbers conference.
-
-thanks,
-
- - Joel
-
+Hi Claus,=0A=
+=0A=
+Claus H. Stovgaard wrote:=0A=
+> On Tue, 2019-05-07 at 11:09 +0200, Claus H. Stovgaard wrote:=0A=
+>> When combining dwc3 with an redriver for a USB Type-C device=0A=
+>> solution, it=0A=
+>> sometimes have problems with leaving U1/U2 for certain hosts,=0A=
+>> resulting in=0A=
+>> link training errors and reconnects. This create an interface via=0A=
+>> configfs for disabling U1/U2, enabling a workaround for devices based=0A=
+>> on=0A=
+>> dwc3.=0A=
+>>=0A=
+> Sorry messed up a bit with a missing cover letter.=0A=
+> This feature relates to Anurag patch [1] and a thread [2] from earlier =
+=0A=
+>=0A=
+> Where Anurags patch focus on setting U1/U2 latency in the BOS=0A=
+> descriptor from the devicetree, this patch focuses on having a configfs=
+=0A=
+> interface for forcing the UDC (here the dwc3) to not enable U1/U2 and=0A=
+> reject the SET_SEL(U1/U2).=0A=
+>=0A=
+> Looking forward to input.=0A=
+>=0A=
+> [1] https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__www.spinics.ne=
+t_lists_linux-2Dusb_msg179732.html&d=3DDwIDaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=
+=3Du9FYoxKtyhjrGFcyixFYqTjw1ZX0VsG2d8FCmzkTY-w&m=3DwKdyWmYpbW791LAm7rYwvFYx=
+5E0bjENyXZzHvK4vyFo&s=3Des7kki6iuLJUp2rJnzP9alXKyfJPNSfyxTVCKKDd_rQ&e=3D=0A=
+> [2] https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__www.spinics.ne=
+t_lists_linux-2Dusb_msg179393.html&d=3DDwIDaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=
+=3Du9FYoxKtyhjrGFcyixFYqTjw1ZX0VsG2d8FCmzkTY-w&m=3DwKdyWmYpbW791LAm7rYwvFYx=
+5E0bjENyXZzHvK4vyFo&s=3DcFTmO9wPf7b6TZxFUAAIJM0Z_wM1ttNIc1rct0uR6co&e=3D=0A=
+>=0A=
+>=0A=
+=0A=
+I'm not sure who will submit the patch to make change to DWC3 for=0A=
+disabling U1/U2 (Anurag or you), but can you split your patch between=0A=
+dwc3 and configfs.=0A=
+=0A=
+Thanks,=0A=
+Thinh=0A=
