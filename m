@@ -2,89 +2,129 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B536AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DC4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BBB20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A615A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfEGKeh (ORCPT
+        id S1726687AbfEGKiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:34:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39251 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfEGKeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:34:37 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hNxQh-0001mq-1y; Tue, 07 May 2019 10:34:35 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH][next] net: dsa: sja1105: fix check on while loop exit
-Date:   Tue,  7 May 2019 11:34:34 +0100
-Message-Id: <20190507103434.16174-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 7 May 2019 06:38:51 -0400
+Received: from foss.arm.com ([217.140.101.70]:49674 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbfEGKiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:38:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B637374;
+        Tue,  7 May 2019 03:38:50 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21333F5AF;
+        Tue,  7 May 2019 03:38:47 -0700 (PDT)
+Date:   Tue, 7 May 2019 11:38:45 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
+Subject: Re: [PATCH v8 04/16] sched/core: uclamp: Add system default clamps
+Message-ID: <20190507103845.tejg55wfsu3l3jwh@e110439-lin>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-5-patrick.bellasi@arm.com>
+ <CAJuCfpGcN-CWCoo16_xKzohUbBTCY3W5D1E8izhA8wtEjCtF+Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpGcN-CWCoo16_xKzohUbBTCY3W5D1E8izhA8wtEjCtF+Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 17-Apr 17:51, Suren Baghdasaryan wrote:
+> On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
 
-The while-loop exit condition check is not correct; the
-loop should continue if the returns from the function calls are
-negative or the CRC status returns are invalid.  Currently it
-is ignoring the returns from the function calls.  Fix this by
-removing the status return checks and only break from the loop
-at the very end when we know that all the success condtions have
-been met.
+[...]
 
-Kudos to Dan Carpenter for describing the correct fix.
+> > +/*
+> > + * The effective clamp bucket index of a task depends on, by increasing
+> > + * priority:
+> > + * - the task specific clamp value, when explicitly requested from userspace
+> > + * - the system default clamp value, defined by the sysadmin
+> > + */
+> > +static inline struct uclamp_se
+> > +uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+> > +{
+> > +       struct uclamp_se uc_req = p->uclamp_req[clamp_id];
+> > +       struct uclamp_se uc_max = uclamp_default[clamp_id];
+> > +
+> > +       /* System default restrictions always apply */
+> > +       if (unlikely(uc_req.value > uc_max.value))
+> > +               return uc_max;
+> > +
+> > +       return uc_req;
+> > +}
+> > +
+> > +static inline unsigned int
+> > +uclamp_eff_bucket_id(struct task_struct *p, unsigned int clamp_id)
+> 
+> This function is not used anywhere AFAIKT.
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+Right, this is the dual of uclamp_eff_value() but, since we don't
+actually use it in the corrent code, let's remove it and keep only the
+latter.
 
-V2: Discard my broken origina fix. Use correct fix as described by
-    Dan Carpenter.
----
- drivers/net/dsa/sja1105/sja1105_spi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> uclamp_eff_bucket_id() and
+> uclamp_eff_value() look very similar, maybe they can be combined into
+> one function returning struct uclamp_se?
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
-index 244a94ccfc18..40ac696adf63 100644
---- a/drivers/net/dsa/sja1105/sja1105_spi.c
-+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
-@@ -465,9 +465,11 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
- 			dev_err(dev, "Switch reported that configuration is "
- 				"invalid, retrying...\n");
- 			continue;
-+
- 		}
--	} while (--retries && (status.crcchkl == 1 || status.crcchkg == 1 ||
--		 status.configs == 0 || status.ids == 1));
-+		/* Success! */
-+		break;
-+	} while (--retries);
- 
- 	if (!retries) {
- 		rc = -EIO;
+I would prefer not since at the callsites of uclamp_eff_value() we
+actually need just the value.
+
+> > +{
+> > +       struct uclamp_se uc_eff;
+> > +
+> > +       /* Task currently refcounted: use back-annotated (effective) bucket */
+> > +       if (p->uclamp[clamp_id].active)
+> > +               return p->uclamp[clamp_id].bucket_id;
+> > +
+> > +       uc_eff = uclamp_eff_get(p, clamp_id);
+> > +
+> > +       return uc_eff.bucket_id;
+> > +}
+> > +
+> > +unsigned int uclamp_eff_value(struct task_struct *p, unsigned int clamp_id)
+> > +{
+> > +       struct uclamp_se uc_eff;
+> > +
+> > +       /* Task currently refcounted: use back-annotated (effective) value */
+> > +       if (p->uclamp[clamp_id].active)
+> > +               return p->uclamp[clamp_id].value;
+> > +
+> > +       uc_eff = uclamp_eff_get(p, clamp_id);
+> > +
+> > +       return uc_eff.value;
+> > +}
+> > +
+
 -- 
-2.20.1
+#include <best/regards.h>
 
+Patrick Bellasi
