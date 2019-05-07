@@ -2,89 +2,78 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCCAC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20D8C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87211205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DC0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lv9eHU/Y"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jznAwWaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfEGRg5 (ORCPT
+        id S1727498AbfEGRhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:36:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47702 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfEGRg5 (ORCPT
+        Tue, 7 May 2019 13:37:15 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44188 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGRhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:36:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=clVmOpDd5LzvkH+bJWwETDAH6oZsPTXJW+h72BQ3YmA=; b=Lv9eHU/YCnEEcZbzOeCcafBMF
-        OswjYy2ZYStFugMU0UuKCzCEoJL1SeV8aIwcRB9okQqJ9hF87xa9smgAI1nlogUPWbQt2/csogLsh
-        klr5i5nLmuZlcA3EdxtfOlQsI/rKdwxGZAQBVMngU6fNViPjUE0ZjFowgSXAg8QafQF6y/1aUavH0
-        DUg3anwUIkMdltSZOAIXMEjLKzAr+mCBhyHfLIPctmeSOWVj0/hAbr7k51DT5uC3RrDFnyzw4TvKi
-        S0nHugtqx5JMKIFWALxBGRckiMkHDJtdM0Xq80o6t5HYCsbAMDW/hJD8IlHtxEyO7TF0+zvLtkShr
-        WlE47EP3Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hO41Q-0000Zl-4S; Tue, 07 May 2019 17:36:56 +0000
-Date:   Tue, 7 May 2019 10:36:55 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
- pages for the full memory section
-Message-ID: <20190507173655.GA1403@bombadil.infradead.org>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-62-sashal@kernel.org>
- <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
- <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
- <20190507170208.GF1747@sasha-vm>
- <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
- <20190507171806.GG1747@sasha-vm>
- <20190507173224.GS31017@dhcp22.suse.cz>
+        Tue, 7 May 2019 13:37:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y25so5943259oih.11;
+        Tue, 07 May 2019 10:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A7rFP5HCgHx8H7Ab1m4RlZcKeQpsRgTbpXa86ApVmL4=;
+        b=jznAwWaz1+h6XkFSKPJ8JUuHKDtojrwc1VIMQUkbeOnuLfA04Bh4drUJSQVjwTRLLK
+         tpRN+k80EUcAFYURp8kW6oIR6A7W/dABaQ+vHCvB+PBXmOXDBhK4TtRl1bmNrxWvB/kQ
+         tsfPhOzDtvNjrgONOygJhsfxDqEQe/D02brPS/tPrvZhd/A0IhuZWBSo2NWyBjk05XGU
+         NzDxQUu9u67atekXYBHBMIK24wDmPrRaiI9jj8ftvAEcOsSmg8vhcWkWr/stardW5fVp
+         Vdus8drJXa3uTlzkuSzGRWOW0+JRuUUS1Q6mRqMeHN56P0g2dZX9+XlNjy34VwmGcZYG
+         NyaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A7rFP5HCgHx8H7Ab1m4RlZcKeQpsRgTbpXa86ApVmL4=;
+        b=rHp5riBXEMfbr8707j+M8QZtsRdDbracgqD9NV8N+3ER+fAfrJjQROsV1kIAU8iFcu
+         4yyZk246rPC0lPvmqyQ2kk6m0A30oEYsbk4dIpgCHuUjaimLtClxl9ozB1JqX+UI5dzZ
+         PfbZwaYBTgfRULkBfT2thoOh9NjxFXEvaeCbuuwu6LuUD9Uidt9Z2BtjpRKilbwsAiFT
+         0NOAtfnsf585+0eenQr2N0L7Ta29jMYdlWfqqf5PubYByFfYVzK4DJB6EIz0TfBlCR+h
+         U9l9m31oPRpBKVth5BfRuKMcas0fMazXlvkvpwqJCq4SYZYuDxqGFCUXOmhgeC81PANM
+         oxbg==
+X-Gm-Message-State: APjAAAUK1r8qQCSem+10FdoRsyhMGz9AoIAF1kt/VO4MR5w9THcV1+1j
+        Yj7ssJqgGMhKKTaGqXfx8TGUA+wYSNvsLRViPXs=
+X-Google-Smtp-Source: APXvYqzovDy0Mb8VNCrV2ND+CU4kL4rfD7/PRqoAPGA9ilH4XNAxUQq05LTuTGAWxinmXAUUJyzTdAUM2/wiGQGZAE0=
+X-Received: by 2002:aca:bdc4:: with SMTP id n187mr910881oif.140.1557250633841;
+ Tue, 07 May 2019 10:37:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507173224.GS31017@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-2-glaroque@baylibre.com>
+In-Reply-To: <20190507115726.23714-2-glaroque@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 7 May 2019 19:37:02 +0200
+Message-ID: <CAFBinCDXrr9gCsAu_H0LQec-k25YA3vo7zf4n5Nbzh=QKoKizA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp'
+ property
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 07:32:24PM +0200, Michal Hocko wrote:
-> On Tue 07-05-19 13:18:06, Sasha Levin wrote:
-> > Michal, is there a testcase I can plug into kselftests to make sure we
-> > got this right (and don't regress)? We care a lot about memory hotplug
-> > working right.
-> 
-> As said in other email. The memory hotplug tends to work usually. It
-> takes unexpected memory layouts which trigger corner cases. This makes
-> testing really hard.
-
-Can we do something with qemu?  Is it flexible enough to hotplug memory
-at the right boundaries?
+On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> This property allow drive-strength parameter in uA instead of mA.
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
