@@ -2,121 +2,260 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF53C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F089DC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7135206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557260274;
-	bh=Zp/rnTfJkpJZNmoGs+xBSvXnImnrSx0zg7++B1WSdz8=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=vM9nX99ooWOCWdW/5V21Qpz68QBHzideRN2uHejtieJEOTC7vLem/Uc3y3Yf/YaST
-	 G87W05KyqsuuaXIAln11f8BKb3/R9do5qkdXWqiJRXbf5gKklXgmvchX+dQonKcTsF
-	 19i23wtGDtW4Hn17PANfyy4UaGUB93S3QvSchhVE=
+	by mail.kernel.org (Postfix) with ESMTP id C0386206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="SRtwe796"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfEGURx (ORCPT
+        id S1726963AbfEGUSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfEGURw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:17:52 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9EC20675;
-        Tue,  7 May 2019 20:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557260271;
-        bh=Zp/rnTfJkpJZNmoGs+xBSvXnImnrSx0zg7++B1WSdz8=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=wpdR9llHaGX6478IU1bK4g5PgQ41VfPDmGa02s8bbErr25gTi/YY3ft5eWwqdZ6sv
-         t+PVm5NU/PTcy6AEvXpIP9ADhatNWb2Fbd+geG2mTQlXY6i5VBtXyTgL8KZ7skYkpE
-         tdoIrsWbWRGrNjq4uPobzwYdg0Dr8cuk1MCwHXDI=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 7 May 2019 16:18:23 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35992 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfEGUSW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:18:22 -0400
+Received: by mail-qk1-f194.google.com with SMTP id c14so2630451qke.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E+94DeG/Cjai3KQu1dmx6FwycC/IR8RFjQ6FJQvgySI=;
+        b=SRtwe796Ln1mTAv6ShT7et5/HBB6sOe4yG9tHm7VTvE+o58ZESHA8b8IOntpBfrcc8
+         1u7MIisiP/wBui5dpMwAYrQVz09DCYyzBhagjwiynOiL4k5GYo9QPvRAdI46mryDFcjM
+         +6U8+v7Cc1DJOhsUvN2s6wAKqQBcnCeCU+jdWN1CiZ9cYDZD///tjCQUBK6Rs23aB+VF
+         CsdlSMCAn+T/JfNUd581Ix0iyZAXDkAXxSYa+7NPZzvAZA1rU9+rAjE9IRfAKb/43ARy
+         6H7+GYPjhDUPF0tShoFBE6X1aMB0Q/vCGD0Au6dOm4idRG78J2a2KDYTeRaeVxfA0Bur
+         hwYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E+94DeG/Cjai3KQu1dmx6FwycC/IR8RFjQ6FJQvgySI=;
+        b=Y/DNOfUqnvKEubsMnMjfDiI/1EobYnEm2yQrgEm3ltuYrxlviJ+Mw5gF2FzxBjwDv5
+         v+ujIFg0EWx7X93twNZFX+xDwHs0RhtA4rBFxVHfGgfwh3TM5dj5aodt8N1uhlFWvx8S
+         z0LXLluGFxrIjGFEnf6OA834e2LiAwrV8OH1AljPP7DCXEXGwiEFLDN2+6MI7/R6Zq7S
+         /i7ukdF3x5iFdMZC5MRW32CY+dYHtXswsRhHDoV0mROaYH/SFOa+XYHJhRZApj08AmgI
+         42nlGIQIhqBpiQgGsgvhkgbQdignUg/phDDHx2Wf/NxV/xbLzvrpu4CG1qs9pCaEqqQM
+         j9pw==
+X-Gm-Message-State: APjAAAU6MhpUL4tJ7EpBszFzvW2Ekk8gE1hRWn2uTytj6j12TBrFI+0j
+        avcJWQyMcY+yLhrW6lFQjDZDhQ==
+X-Google-Smtp-Source: APXvYqx9XMRCil7J0ZbdY48pPd3nYGBEXSKh037S2lHSoBcl6eE/1OgpwKKtmnr0KppO1wFSMqLQmA==
+X-Received: by 2002:a37:9cd5:: with SMTP id f204mr12747236qke.75.1557260301063;
+        Tue, 07 May 2019 13:18:21 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id 3sm2248680qtm.37.2019.05.07.13.18.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 13:18:20 -0700 (PDT)
+Date:   Tue, 7 May 2019 16:18:19 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
+        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@google.com>,
+        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        eric@anholt.net, robdclark@gmail.com,
+        amd-gfx@lists.freedesktop.org,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 5/5] drm: don't block fb changes for async plane
+ updates
+Message-ID: <20190507201819.GI17077@art_vandelay>
+References: <20190314002027.7833-1-helen.koike@collabora.com>
+ <20190314002027.7833-6-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
-References: <20190429150135.15070-1-hdegoede@redhat.com> <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com> <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com> <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com> <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Semyon Verchenko <semverchenko@factor-ts.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Message-ID: <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Tue, 07 May 2019 13:17:50 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314002027.7833-6-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Hans de Goede (2019-05-06 08:05:42)
-> Hi,
->=20
-> On 06-05-19 16:59, Andy Shevchenko wrote:
-> > On Mon, May 6, 2019 at 5:47 PM Hans de Goede <hdegoede@redhat.com> wrot=
-e:
-> >>
-> >> Hi,
-> >>
-> >> On 06-05-19 14:38, Andy Shevchenko wrote:
-> >>> On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> w=
-rote:
-> >>>>
-> >>>> The Lex 3I380D industrial PC has 4 ethernet controllers on board
-> >>>> which need pmc_plt_clk0 - 3 to function, add it to the critclk_syste=
-ms
-> >>>> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the cloc=
-ks
-> >>>> as CLK_CRITICAL and they will not get turned off.
-> >>>>
-> >>>
-> >>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >>> supposedly to go via CLK tree.
-> >>>
-> >>> P.S. If you want it through PDx86, I need immutable branch / tag from=
- CLK.
-> >>
-> >> Stephen added the patches this depends on to his fixes branch, so they
-> >> are in the 5.1 / Torvald's master branch, since we are now in the 5.2 =
-merge
-> >> window, you should be able to cleanly apply this directly.
-> >=20
-> > We don't do back merges, so, our base is v5.1-rc1. Does it mean the
-> > commit in question is in v5.1-rc1?
-> > AFAICS it was appeared in v5.1-rc5.
->=20
-> Ah, I see, my bad.
->=20
-> Stephen can you pick up this patch and the
-> "[PATCH 1/1] Add several Beckhoff Automation boards to critclk_systems DM=
-I table"
-> patch then?
->=20
+On Wed, Mar 13, 2019 at 09:20:26PM -0300, Helen Koike wrote:
+> In the case of a normal sync update, the preparation of framebuffers (be
+> it calling drm_atomic_helper_prepare_planes() or doing setups with
+> drm_framebuffer_get()) are performed in the new_state and the respective
+> cleanups are performed in the old_state.
+> 
+> In the case of async updates, the preparation is also done in the
+> new_state but the cleanups are done in the new_state (because updates
+> are performed in place, i.e. in the current state).
+> 
+> The current code blocks async udpates when the fb is changed, turning
+> async updates into sync updates, slowing down cursor updates and
+> introducing regressions in igt tests with errors of type:
+> 
+> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+> expect to complete approximately 15360 updates, with the threshold set
+> at 7680"
+> 
+> Fb changes in async updates were prevented to avoid the following scenario:
+> 
+> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
+> Where we have a single call to prepare fb2 but double cleanup call to fb2.
+> 
+> To solve the above problems, instead of blocking async fb changes, we
+> place the old framebuffer in the new_state object, so when the code
+> performs cleanups in the new_state it will cleanup the old_fb and we
+> will have the following scenario instead:
+> 
+> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
+> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
+> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+> 
+> Where calls to prepare/cleanup are balanced.
+> 
+> Cc: <stable@vger.kernel.org> # v4.14+
 
-I guess this is urgent? I'm lost why Andy can't apply the patch and
-merge it up to Linus. I don't maintain this driver here, and even if
-there's a cross tree dependency I don't understand why a base of
-v5.1-rc1 is limiting abilities to apply patches.
+I'm not convinced this should be cc: stable, seems more in the improvement
+category than a bug fix.
 
-I'd think that if an "immutable branch" was all that was required you
-could 'git checkout 7c2e07130090ae001a97a6b65597830d6815e93e' and then
-apply the patch there and merge it all up into the PDx86 tree. In the
-end, when sending the PR to Linus the already merged changes won't show
-up in the diff because it's all been merged already on the other side.
+> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+> 
+> ---
+> Hello,
+> 
+> I added a TODO in drm_atomic_helper_async_commit() regarding doing a
+> full state swap(), Boris and Nicholas, let me know if this is ok and if
+> I can keep your Reviewed-by tags)
+> 
+> As mentioned in the cover letter, I tested in almost all platforms with
+> igt plane_cursor_legacy and kms_cursor_legacy and I didn't see any
+> regressions. But I couldn't test on MSM and AMD because I don't have
+> the hardware I would appreciate if anyone could help me testing those.
+> 
+> Thanks!
+> Helen
+> 
+> Changes in v3:
+> - Add Reviewed-by tags
+> - Add TODO in drm_atomic_helper_async_commit()
+> 
+> Changes in v2:
+> - Change the order of the patch in the series, add this as the last one.
+> - Add documentation
+> - s/ballanced/balanced
+> 
+>  drivers/gpu/drm/drm_atomic_helper.c      | 22 ++++++++++++----------
+>  include/drm/drm_modeset_helper_vtables.h |  5 +++++
+>  2 files changed, 17 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 2453678d1186..de5812c362b5 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
+>  	    old_plane_state->crtc != new_plane_state->crtc)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
+> -	 * the new_plane_state for async updates we need to block framebuffer
+> -	 * changes. This prevents use of a fb that's been cleaned up and
+> -	 * double cleanups from occuring.
+> -	 */
+> -	if (old_plane_state->fb != new_plane_state->fb)
+> -		return -EINVAL;
+> -
+>  	funcs = plane->helper_private;
+>  	if (!funcs->atomic_async_update)
+>  		return -EINVAL;
+> @@ -1647,6 +1638,8 @@ EXPORT_SYMBOL(drm_atomic_helper_async_check);
+>   * drm_atomic_async_check() succeeds. Async commits are not supposed to swap
+>   * the states like normal sync commits, but just do in-place changes on the
+>   * current state.
+> + *
+> + * TODO: Implement full swap instead of doing in-place changes.
+>   */
+>  void drm_atomic_helper_async_commit(struct drm_device *dev,
+>  				    struct drm_atomic_state *state)
+> @@ -1657,6 +1650,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+>  	int i;
+>  
+>  	for_each_new_plane_in_state(state, plane, plane_state, i) {
+> +		struct drm_framebuffer *new_fb = plane_state->fb;
+> +		struct drm_framebuffer *old_fb = plane->state->fb;
+> +
+>  		funcs = plane->helper_private;
+>  		funcs->atomic_async_update(plane, plane_state);
+>  
+> @@ -1665,11 +1661,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+>  		 * plane->state in-place, make sure at least common
+>  		 * properties have been properly updated.
+>  		 */
+> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
+> +		WARN_ON_ONCE(plane->state->fb != new_fb);
+>  		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
+>  		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
+>  		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
+>  		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
+> +
+> +		/*
+> +		 * Make sure the FBs have been swapped so that cleanups in the
+> +		 * new_state performs a cleanup in the old FB.
+> +		 */
+> +		WARN_ON_ONCE(plane_state->fb != old_fb);
+>  	}
+>  }
+>  EXPORT_SYMBOL(drm_atomic_helper_async_commit);
+> diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+> index cfb7be40bed7..ce582e8e8f2f 100644
+> --- a/include/drm/drm_modeset_helper_vtables.h
+> +++ b/include/drm/drm_modeset_helper_vtables.h
+> @@ -1174,6 +1174,11 @@ struct drm_plane_helper_funcs {
+>  	 * current one with the new plane configurations in the new
+>  	 * plane_state.
+>  	 *
+> +	 * Drivers should also swap the framebuffers between plane state
 
-Either way, I'm going to send off the clk PR real soon so this may need
-to wait until after the merge window, or if it's really urgent I could
-send a fixes branch before the merge window closes next week.
+Perhaps add "current" before plane state and then after add "(&drm_plane.state)"
+so it's more clear what you're referring to here?
 
+> +	 * and new_state. This is required because prepare and cleanup calls
+> +	 * are performed on the new_state object, then to cleanup the old
+> +	 * framebuffer, it needs to be placed inside the new_state object.
+
+I'd change this bit to:
+
+        * This is required since cleanup for async commits is performed on
+        * the new state, rather than old state like for traditional commits.
+        * Since we want to give up the reference on the current (old) fb instead
+        * of our brand new one, swap them in the driver during the async commit.
+
+> +	 *
+>  	 * FIXME:
+>  	 *  - It only works for single plane updates
+>  	 *  - Async Pageflips are not supported yet
+> -- 
+> 2.20.1
+> 
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
