@@ -2,260 +2,91 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF02C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4662C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8332054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07EE2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfEGS5V (ORCPT
+        id S1727543AbfEGS53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:57:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56344 "EHLO mx1.redhat.com"
+        Tue, 7 May 2019 14:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfEGS5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:57:21 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727346AbfEGS52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 14:57:28 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A0C2A3082E51;
-        Tue,  7 May 2019 18:57:20 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-11.gru2.redhat.com [10.97.112.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C41F1837C;
-        Tue,  7 May 2019 18:57:18 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 53394105182;
-        Tue,  7 May 2019 15:56:59 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x47IusZB029563;
-        Tue, 7 May 2019 15:56:54 -0300
-Date:   Tue, 7 May 2019 15:56:49 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     kvm-devel <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F14220578;
+        Tue,  7 May 2019 18:57:25 +0000 (UTC)
+Date:   Tue, 7 May 2019 14:57:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
         Ingo Molnar <mingo@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Bandan Das <bsd@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH] sched: introduce configurable delay before entering idle
-Message-ID: <20190507185647.GA29409@amt.cnet>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/3] x86_64: Add gap to int3 to allow for call
+ emulation
+Message-ID: <20190507145724.132dc8ec@gandalf.local.home>
+In-Reply-To: <20190507175655.u3kcvedpfao4rchj@treble>
+References: <20190507174227.673261270@goodmis.org>
+        <20190507174400.064350937@goodmis.org>
+        <20190507175655.u3kcvedpfao4rchj@treble>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 07 May 2019 18:57:20 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, 7 May 2019 12:56:55 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
 
-Certain workloads perform poorly on KVM compared to baremetal
-due to baremetal's ability to perform mwait on NEED_RESCHED
-bit of task flags (therefore skipping the IPI).
+> > +	.if \create_gap == 1
+> > +	/*
+> > +	 * If coming from kernel space, create a 6-word gap to allow the static
+> > +	 * call #BP handler to emulate a call instruction.  
+> 
+> Might as well refer to it as the int3 handler, since that's what the
+> rest of the code calls it.  Also, no static calls yet :-)  So:
+> 
+> s/static call #BP handler/int3 handler/
+> 
 
-This patch introduces a configurable busy-wait delay before entering the
-architecture delay routine, allowing wakeup IPIs to be skipped 
-(if the IPI happens in that window).
+Done.
 
-The real-life workload which this patch improves performance
-is SAP HANA (by 5-10%) (for which case setting idle_spin to 30 
-is sufficient).
-
-This patch improves the attached server.py and client.py example 
-as follows:
-
-Host:                           31.814230202231556
-Guest:                          38.17718765199993       (83 %)
-Guest, idle_spin=50us:          33.317709898000004      (95 %)
-Guest, idle_spin=220us:         32.27826551499999       (98 %)
-
-Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
-
----
- kernel/sched/idle.c |   86 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
-
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index f5516bae0c1b..bca7656a7ea0 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -216,6 +216,29 @@ static void cpuidle_idle_call(void)
- 	rcu_idle_exit();
- }
- 
-+static unsigned int spin_before_idle_us;
-
-+static void do_spin_before_idle(void)
-+{
-+	ktime_t now, end_spin;
-+
-+	now = ktime_get();
-+	end_spin = ktime_add_ns(now, spin_before_idle_us*1000);
-+
-+	rcu_idle_enter();
-+	local_irq_enable();
-+	stop_critical_timings();
-+
-+	do {
-+		cpu_relax();
-+		now = ktime_get();
-+	} while (!tif_need_resched() && ktime_before(now, end_spin));
-+
-+	start_critical_timings();
-+	rcu_idle_exit();
-+	local_irq_disable();
-+}
-+
- /*
-  * Generic idle loop implementation
-  *
-@@ -259,6 +282,8 @@ static void do_idle(void)
- 			tick_nohz_idle_restart_tick();
- 			cpu_idle_poll();
- 		} else {
-+			if (spin_before_idle_us)
-+				do_spin_before_idle();
- 			cpuidle_idle_call();
- 		}
- 		arch_cpu_idle_exit();
-@@ -465,3 +490,64 @@ const struct sched_class idle_sched_class = {
- 	.switched_to		= switched_to_idle,
- 	.update_curr		= update_curr_idle,
- };
-+
-+
-+static ssize_t store_idle_spin(struct kobject *kobj,
-+			       struct kobj_attribute *attr,
-+			       const char *buf, size_t count)
-+{
-+	unsigned int val;
-+
-+	if (kstrtouint(buf, 10, &val) < 0)
-+		return -EINVAL;
-+
-+	if (val > USEC_PER_SEC)
-+		return -EINVAL;
-+
-+	spin_before_idle_us = val;
-+	return count;
-+}
-+
-+static ssize_t show_idle_spin(struct kobject *kobj,
-+			      struct kobj_attribute *attr,
-+			      char *buf)
-+{
-+	ssize_t ret;
-+
-+	ret = sprintf(buf, "%d\n", spin_before_idle_us);
-+
-+	return ret;
-+}
-+
-+static struct kobj_attribute idle_spin_attr =
-+	__ATTR(idle_spin, 0644, show_idle_spin, store_idle_spin);
-+
-+static struct attribute *sched_attrs[] = {
-+	&idle_spin_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group sched_attr_group = {
-+	.attrs = sched_attrs,
-+};
-+
-+static struct kobject *sched_kobj;
-+
-+static int __init sched_sysfs_init(void)
-+{
-+	int error;
-+
-+	sched_kobj = kobject_create_and_add("sched", kernel_kobj);
-+	if (!sched_kobj)
-+		return -ENOMEM;
-+
-+	error = sysfs_create_group(sched_kobj, &sched_attr_group);
-+	if (error)
-+		goto err;
-+	return 0;
-+
-+err:
-+	kobject_put(sched_kobj);
-+	return error;
-+}
-+postcore_initcall(sched_sysfs_init);
-
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="client.py"
-
-#!/bin/python3
-
-import socket
-import sys
-import struct, fcntl, os
-import os, errno, time
-import time
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-server_address = ('127.0.0.1', 999)
-print ("connecting to 127.0.0.1")
-sock.connect(server_address)
-
-nr_writes = 0
-
-start_time = time.clock_gettime(time.CLOCK_MONOTONIC)
-
-while nr_writes < 90000:
-	data = sock.recv(4096)
-	if len(data) == 0:
-		print("connection closed!\n");
-		exit(0);
-	# sleep 20us
-	time.sleep(20/1000000)
-	sock.send(data)
-	nr_writes = nr_writes+1
-
-end_time = time.clock_gettime(time.CLOCK_MONOTONIC)
-delta = end_time - start_time
-print(delta)
-
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="server.py"
-
-#!/bin/python3
-
-import socket
-import sys
-import struct, fcntl, os
-import os, errno, time
-import time
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(('127.0.0.1', 999))
-sock.listen(10)
-conn, addr = sock.accept()
-
-nr_written=0
-while 1:
-	conn.sendall(b"a response line of text")
-	data = conn.recv(1024)
-	if not data:
-        	break
-	# sleep 200us
-	time.sleep(200/1000000)
-	nr_written = nr_written+1
-
---lrZ03NoBR/3+SXJZ--
+-- Steve
