@@ -2,57 +2,98 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3117EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C115EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C34820835
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0B920856
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfEGAiM (ORCPT
+        id S1726527AbfEGAkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 20:38:12 -0400
-Received: from rcdn-iport-3.cisco.com ([173.37.86.74]:47884 "EHLO
-        rcdn-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfEGAiI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 20:38:08 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BRBADz0tBc/5JdJa1lHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBZQKCD4FttCgQhG0CghMjOQUNAQMBAQQBAQIBAm0ohUsGeRBRVwYBgzS?=
- =?us-ascii?q?CC61+hTeDOoFFgTIBhneEVheBf4ERjXYEiweIRpNvCYILVpFnJ26BEQGTUIw?=
- =?us-ascii?q?flRmBZyCBVjMaCBsVggiBIJBwHwOTCgEB?=
-X-IronPort-AV: E=Sophos;i="5.60,439,1549929600"; 
-   d="scan'208";a="544226930"
-Received: from rcdn-core-10.cisco.com ([173.37.93.146])
-  by rcdn-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 07 May 2019 00:37:45 +0000
-Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
-        by rcdn-core-10.cisco.com (8.15.2/8.15.2) with ESMTP id x470bjOF019352;
-        Tue, 7 May 2019 00:37:45 GMT
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, mika.westerberg@linux.intel.com,
-        wsa@the-dreams.de, Andrew Morton <akpm@linux-foundation.org>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH RFC v2 net-next] Enable SFP support on ACPI
-Date:   Mon,  6 May 2019 17:35:55 -0700
-Message-Id: <20190507003557.40648-1-ruslan@babayev.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190505220524.37266-2-ruslan@babayev.com>
-References: <20190505220524.37266-2-ruslan@babayev.com>
-Reply-To: 20190505220524.37266-2-ruslan@babayev.com
-X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
-X-Outbound-Node: rcdn-core-10.cisco.com
+        Mon, 6 May 2019 20:40:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48104 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfEGAkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 20:40:39 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F02F859468;
+        Tue,  7 May 2019 00:40:38 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 403B1611CF;
+        Tue,  7 May 2019 00:40:34 +0000 (UTC)
+Date:   Mon, 6 May 2019 19:40:32 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+Message-ID: <20190507004032.2fgddlsycyypqdsn@treble>
+References: <20190430091049.30413-1-pmladek@suse.com>
+ <20190430091049.30413-2-pmladek@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190430091049.30413-2-pmladek@suse.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 07 May 2019 00:40:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 30, 2019 at 11:10:48AM +0200, Petr Mladek wrote:
+> WARN_ON_ONCE() could not be called safely under rq lock because
+> of console deadlock issues. Fortunately, there is another check
+> for the reliable stacktrace support in klp_enable_patch().
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  kernel/livepatch/transition.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> index 9c89ae8b337a..8e0274075e75 100644
+> --- a/kernel/livepatch/transition.c
+> +++ b/kernel/livepatch/transition.c
+> @@ -263,8 +263,15 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+>  	trace.nr_entries = 0;
+>  	trace.max_entries = MAX_STACK_ENTRIES;
+>  	trace.entries = entries;
+> +
+>  	ret = save_stack_trace_tsk_reliable(task, &trace);
+> -	WARN_ON_ONCE(ret == -ENOSYS);
+> +	/*
+> +	 * pr_warn() under task rq lock might cause a deadlock.
+> +	 * Fortunately, missing reliable stacktrace support has
+> +	 * already been handled when the livepatch was enabled.
+> +	 */
+> +	if (ret == -ENOSYS)
+> +		return ret;
 
-Change V2:
-- Added more ACPI device details in the commit message.
+I find the comment to be a bit wordy and confusing (and vague).
+
+Also this check is effectively the same as the klp_have_reliable_stack()
+check which is done in kernel/livepatch/core.c.  So I think it would be
+clearer and more consistent if the same check is done here:
+
+	if (!klp_have_reliable_stack())
+		return -ENOSYS;
+
+	ret = save_stack_trace_tsk_reliable(task, &trace);
+
+	[ no need to check ret for ENOSYS here ]
+
+Then, IMO, no comment is needed.
+
+-- 
+Josh
