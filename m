@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E49C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC0EC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2882420675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFE820675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209246;
-	bh=aOZj36Ff2NYl8WpZPWLGsNfaoe7Tvd0HAD3zK15Sy94=;
+	s=default; t=1557209255;
+	bh=GWtj5sn6eGmzf83hUA+j2TSsuO+I8LbeQZWZRL+aPgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNhR3MS3kNKcq++vGsA18UlVbWd+d7bUCtPb7zM4+g9MQw5/4Dk4ZgLrkwi3UvFL6
-	 XrPCpBrjzjtSnctnWNihN1Ls9rjQOVo9wIIQVijtJUluXP3QlcQgYKB/nV0jIw9vrI
-	 Bte5jo9XjbwGTMmD9sN6yRAnT0ltdL1l08irgYYY=
+	b=ERolt9255/9vDS87O/E/YzGYS3ufIyF1MkwgTPPCsBwoOnHejSlRINpLLzPuEN59d
+	 YimRQ702XrC7jOJyMqDMHt9JZJGFX7Vn3VSzcDnBwMmE78jyzC/57SDyvRCswV6p/6
+	 ZqiMM8xW84u+WCY8FsZv1P8rbWIdr/JXIdRx0CgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfEGGHY (ORCPT
+        id S1726948AbfEGFd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53494 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbfEGFde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:34 -0400
+        id S1726858AbfEGFdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 217EF214AE;
-        Tue,  7 May 2019 05:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 459B1206A3;
+        Tue,  7 May 2019 05:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207213;
-        bh=aOZj36Ff2NYl8WpZPWLGsNfaoe7Tvd0HAD3zK15Sy94=;
+        s=default; t=1557207205;
+        bh=GWtj5sn6eGmzf83hUA+j2TSsuO+I8LbeQZWZRL+aPgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vg93EXEIMsbUwEISVZP6cJZJn3E0VFQe7Oj2fUbEI+UABXym6I2CYiBWuvZKH8Xm+
-         T54Mpg03QX6w7S5hrDjtJCNlESBx2Iju1NDjxGHBNiGQMc3yUjSkfc0VfEBXWGX6ZW
-         ku/+v3xy0u72GbTE+vM2Ex2ElPtSWndShDoiIUSg=
+        b=rn3VsNCGxGQ3I90nR7D2R3OJ5ZmcM+2dsX4PhHhNTwAF3xWreNxzogEeTrnuX5llk
+         bozLUI2urHxo1Druy+n5/bnkfxnecwNm+uOH41j8HbFG6eAhgaQ4lvG9lGiuUhS+fm
+         bhJ3QW8jvEH1f1NmhwVasEmqvAZZ9+nCNYRd4+BA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 29/99] vxge: fix return of a free'd memblock on a failed dma mapping
-Date:   Tue,  7 May 2019 01:31:23 -0400
-Message-Id: <20190507053235.29900-29-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 25/99] clocksource/drivers/oxnas: Fix OX820 compatible
+Date:   Tue,  7 May 2019 01:31:19 -0400
+Message-Id: <20190507053235.29900-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -59,35 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 0a2c34f18c94b596562bf3d019fceab998b8b584 ]
+[ Upstream commit fbc87aa0f7c429999dc31f1bac3b2615008cac32 ]
 
-Currently if a pci dma mapping failure is detected a free'd
-memblock address is returned rather than a NULL (that indicates
-an error). Fix this by ensuring NULL is returned on this error case.
+The OX820 compatible is wrong is the driver, fix it.
 
-Addresses-Coverity: ("Use after free")
-Fixes: 528f727279ae ("vxge: code cleanup and reorganization")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
+Reported-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/neterion/vxge/vxge-config.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clocksource/timer-oxnas-rps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.c b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-index 7cde387e5ec6..51cd57ab3d95 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.c
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-@@ -2366,6 +2366,7 @@ static void *__vxge_hw_blockpool_malloc(struct __vxge_hw_device *devh, u32 size,
- 				dma_object->addr))) {
- 			vxge_os_dma_free(devh->pdev, memblock,
- 				&dma_object->acc_handle);
-+			memblock = NULL;
- 			goto exit;
- 		}
- 
+diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
+index eed6feff8b5f..30c6f4ce672b 100644
+--- a/drivers/clocksource/timer-oxnas-rps.c
++++ b/drivers/clocksource/timer-oxnas-rps.c
+@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
+ TIMER_OF_DECLARE(ox810se_rps,
+ 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
+ TIMER_OF_DECLARE(ox820_rps,
+-		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
++		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
 -- 
 2.20.1
 
