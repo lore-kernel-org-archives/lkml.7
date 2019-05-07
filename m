@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AE1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE71C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E89020675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBBA206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207717;
-	bh=qm8Ex9AGsC+t/GLszQQgwZ1m4iS2AJpwcLZV8OwnAXk=;
+	s=default; t=1557207719;
+	bh=EeweU7KN0thjbcp3p3WpOiOyEY0kec7MTh9ej1lnmHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNMStw/aKGi0ApwNOmWGskEgK65CWJQhgCppTrz9KBMGphyudIqJ7UB7y0frZyVSe
-	 7gj6K4Y9NjJlHE6YaEDzcYCLJrFuOJkCh0e0AG8iaqAiAgTFFT/glhNIQgUm9xq0WU
-	 /g4flTKtr0Y6wEwRkrHnkqxdsDaXPKBuey9OCBX8=
+	b=SM7CzzTRJioebfIrP91FtoaPV58/qAYOei5U9748z63IPI/4gfQawdSl/ryahUsCo
+	 pNVFN6ebnxJAOQ17ZXhlCzlrEVusq5YWQSYwtXV31aUlUA+4vFjBm1421NfwUxFK/D
+	 o4aJ+VmkImx7uSFtp0LLWVmFuKj68VVB2+SWq78A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfEGFl4 (ORCPT
+        id S1728894AbfEGFl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32898 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:41:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbfEGFlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:47 -0400
+        id S1729436AbfEGFl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98C712087F;
-        Tue,  7 May 2019 05:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08CC4216C4;
+        Tue,  7 May 2019 05:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207706;
-        bh=qm8Ex9AGsC+t/GLszQQgwZ1m4iS2AJpwcLZV8OwnAXk=;
+        s=default; t=1557207715;
+        bh=EeweU7KN0thjbcp3p3WpOiOyEY0kec7MTh9ej1lnmHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vndG6q1xPi51hC4ZeNiwp4njFz8GEgX4rVNuhCViurFxN2+LLP99IFYoVL4OZ7Que
-         VwbytqgD+JvCc0BpIdRJ04yZU4vG23wPS/N8wZuvtl6efzJ2KHZeqwlDcHP0VTHhBd
-         8rJ1Fhm1vjSkjyR2lwsG384UQAFwB0nUmCMAX/m8=
+        b=pIOe8AcGGhp/pWdEy0XXYrTvsgJxuRWVDQD4eXhKKNryxM/kp64lY58bNbfoQ2vXh
+         0oMIiE2/SjpxuQOwtmupDjfAIxvDh+UycI6r+r04KeF5px4AllQmTl7C7bTSLpHjNM
+         2QbCcqBKw8tSLVgo6n/BmnriRAvg+gTVsyur6854=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/25] mISDN: Check address length before reading address family
-Date:   Tue,  7 May 2019 01:41:08 -0400
-Message-Id: <20190507054123.32514-11-sashal@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 15/25] init: initialize jump labels before command line option parsing
+Date:   Tue,  7 May 2019 01:41:12 -0400
+Message-Id: <20190507054123.32514-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -59,37 +66,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit 238ffdc49ef98b15819cfd5e3fb23194e3ea3d39 ]
+[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-KMSAN will complain if valid address length passed to bind() is shorter
-than sizeof("struct sockaddr_mISDN"->family) bytes.
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early.  While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+
+Move the fallback call to jump_label_init() to occur before
+parse_args().
+
+The redundant calls to jump_label_init() in other archs are left intact
+in case they have static key toggling use cases that are even earlier
+than option parsing.
+
+Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Guenter Roeck <groeck@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Russell King <rmk@armlinux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/mISDN/socket.c | 4 ++--
+ init/main.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
-index 99e5f9751e8b..f96b8f2bdf74 100644
---- a/drivers/isdn/mISDN/socket.c
-+++ b/drivers/isdn/mISDN/socket.c
-@@ -712,10 +712,10 @@ base_sock_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 	struct sock *sk = sock->sk;
- 	int err = 0;
+diff --git a/init/main.c b/init/main.c
+index 3c7f71d8e704..148843e627a0 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -516,6 +516,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
  
--	if (!maddr || maddr->family != AF_ISDN)
-+	if (addr_len < sizeof(struct sockaddr_mISDN))
- 		return -EINVAL;
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -525,8 +527,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
  
--	if (addr_len < sizeof(struct sockaddr_mISDN))
-+	if (!maddr || maddr->family != AF_ISDN)
- 		return -EINVAL;
- 
- 	lock_sock(sk);
+-	jump_label_init();
+-
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 -- 
 2.20.1
 
