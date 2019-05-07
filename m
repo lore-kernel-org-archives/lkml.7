@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D51C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A70AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60AF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DABF205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208990;
-	bh=nUE/tGG4Eiqp4QbhmubyW9/DNF8bdzhhE8jZr+0HMOc=;
+	s=default; t=1557208998;
+	bh=cPZo9AmpcZJ5rukK0yocOfPyUIQc/OAjyydpmRqxFf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sa3IpRpIK/9CTI8x7nX2YhRfBXa0xBJDbe48C14McYX128el1IwXdiJh7RqULmhU4
-	 y326V1dl4D35xfgWnHhy0psTY5xu1fP6stKNqyxB7SXEdrjvHmsoJqYgtkmEKZJqzO
-	 JmneUOrkkQgyv4FfRSHi2wS1IMBbPWKb3XjNbqO8=
+	b=B0WJKNqL7SjJnPsyElnAI07CgnV1FzSKzlvpDneX2V3X6W/KsxN9S0lxxM/Vj2Rb7
+	 vovADzJg64Pz++mOE2CuziWXGJh1LrUcKXixA+uN7MXnxjfmU9gPjYkWWfeFlArZCp
+	 Le5MwFABOh+lE1nzu2Esh5aUAtYc+RSclDevuWUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfEGGDJ (ORCPT
+        id S1727097AbfEGGDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:03:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfEGFfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:21 -0400
+        id S1727734AbfEGFfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA9C220C01;
-        Tue,  7 May 2019 05:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEF8821726;
+        Tue,  7 May 2019 05:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207320;
-        bh=nUE/tGG4Eiqp4QbhmubyW9/DNF8bdzhhE8jZr+0HMOc=;
+        s=default; t=1557207310;
+        bh=cPZo9AmpcZJ5rukK0yocOfPyUIQc/OAjyydpmRqxFf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w6E9I6GjbqEh7ScuU0qFOGvDOk7MMkbJAdMldd7Bn1T370ojVo4p5J7FlqEm7r5PK
-         nidyQgghU+dtIrj0yMyNbL/MbTivS+8jwNONDjGW8nUFj1X4KJU/ujUP8j0KYChuBg
-         W9UYxQU4zyiFh7UkL8/I5IUaxfKBwwLVYV7SCnVQ=
+        b=e2ye/7gbELg8KEuF43Z6q4gtdla6VcKepFP0VJ2F1bFLX373KiN0Oq390rnz82E1s
+         aMHu/5yYkCC3srBA9ECIhQCw/oskiTMW8K22bxKvP+XO0/vldYhCfJZZJXwG9xiYgV
+         ewX2u4GW5LdBsyP8haOUhTdu8WIVPddgS07YVsUw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Layton <jlayton@kernel.org>, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 84/99] ceph: handle the case where a dentry has been renamed on outstanding req
-Date:   Tue,  7 May 2019 01:32:18 -0400
-Message-Id: <20190507053235.29900-84-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 79/99] drm/imx: don't skip DP channel disable for background plane
+Date:   Tue,  7 May 2019 01:32:13 -0400
+Message-Id: <20190507053235.29900-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -59,61 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 4b8222870032715f9d995f3eb7c7acd8379a275d ]
+[ Upstream commit 7bcde275eb1d0ac8793c77c7e666a886eb16633d ]
 
-It's possible for us to issue a lookup to revalidate a dentry
-concurrently with a rename. If done in the right order, then we could
-end up processing dentry info in the reply that no longer reflects the
-state of the dentry.
+In order to make sure that the plane color space gets reset correctly.
 
-If req->r_dentry->d_name differs from the one in the trace, then just
-ignore the trace in the reply. We only need to do this however if the
-parent's i_rwsem is not held.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 9d1f34d46627..5880ee20ada4 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -1152,6 +1152,19 @@ static int splice_dentry(struct dentry **pdn, struct inode *in)
- 	return 0;
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 058b53c0aa7e..1bb3e598cb84 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -70,7 +70,7 @@ static void ipu_crtc_disable_planes(struct ipu_crtc *ipu_crtc,
+ 	if (disable_partial)
+ 		ipu_plane_disable(ipu_crtc->plane[1], true);
+ 	if (disable_full)
+-		ipu_plane_disable(ipu_crtc->plane[0], false);
++		ipu_plane_disable(ipu_crtc->plane[0], true);
  }
  
-+static int d_name_cmp(struct dentry *dentry, const char *name, size_t len)
-+{
-+	int ret;
-+
-+	/* take d_lock to ensure dentry->d_name stability */
-+	spin_lock(&dentry->d_lock);
-+	ret = dentry->d_name.len - len;
-+	if (!ret)
-+		ret = memcmp(dentry->d_name.name, name, len);
-+	spin_unlock(&dentry->d_lock);
-+	return ret;
-+}
-+
- /*
-  * Incorporate results into the local cache.  This is either just
-  * one inode, or a directory, dentry, and possibly linked-to inode (e.g.,
-@@ -1401,7 +1414,8 @@ int ceph_fill_trace(struct super_block *sb, struct ceph_mds_request *req)
- 		err = splice_dentry(&req->r_dentry, in);
- 		if (err < 0)
- 			goto done;
--	} else if (rinfo->head->is_dentry) {
-+	} else if (rinfo->head->is_dentry &&
-+		   !d_name_cmp(req->r_dentry, rinfo->dname, rinfo->dname_len)) {
- 		struct ceph_vino *ptvino = NULL;
- 
- 		if ((le32_to_cpu(rinfo->diri.in->cap.caps) & CEPH_CAP_FILE_SHARED) ||
+ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
 -- 
 2.20.1
 
