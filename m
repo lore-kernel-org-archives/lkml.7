@@ -2,103 +2,140 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AADC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B08C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A82F2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557248976;
-	bh=/ufN0mdJkCaOxfB3r9p0XlJxfbm4UMXWNlFtPzQwDDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZoZXHj5GpLZv+me7GqSKBPEqOsS8wq7BLId7+EIRIAdM/oM0G81NA/i4V1Ifraj+V
-	 PwBL3RvmBGHPl1BBng/oWSCylXF9W+bUv2y8hNhXsS+7TfcLFtf6RkVAP6ZO78Uwcd
-	 efdJYKGjKThy3/6CnIgF4C6lgJNdwc72OPWYfEVk=
+	by mail.kernel.org (Postfix) with ESMTP id E7A462053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfEGRJf (ORCPT
+        id S1727298AbfEGRKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:09:35 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38522 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfEGRJf (ORCPT
+        Tue, 7 May 2019 13:10:46 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47114 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726225AbfEGRKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:09:35 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u199so4992026oie.5;
-        Tue, 07 May 2019 10:09:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xz8Tv2wS4rvBFAit4Ups9uLGu7qqwKS1nVvm7tnguMs=;
-        b=Oq6wwkmbwunfuAUlryV8QEFsLgPQhTWfu9f9Pu+NOAau2HYI7GTKbP525w++8XJUFP
-         lYQadafsnVSC4DjfvROuYuNkct2UUQAn4vYhu2TANpy8hEMieENSrBOsHPUeASjtK0+L
-         rJmTvCz5pvHDGeMHJZUG7DC7RpsTDEgtgdaYPpEqrp1iGQ/IYe7BbRhtG6EpwaGmCoGM
-         suVqKIA4eee/qlfHnYemI7MHfFIrmYoWD4WQ2jiBTxwb3eqGSk+YTr4STJNTRgL/ddEw
-         DqeFGneiwzDlRsjd0wNKwjcaiE2N43LbUifEKM5YbgtdDn0n+1/yq2qkXfK6q50ju1Kk
-         VGnw==
-X-Gm-Message-State: APjAAAWUH50uTPzyon5uaDixvALKAevuO2XerR12J8MAWTJ2k0yh7+qK
-        A4aQ0QDO19h9nADnBDWY5g==
-X-Google-Smtp-Source: APXvYqw6hBDm8Eza1B3bub9eXvOsE9+C0443/C9azP6hZmzYu4gfI63PV1LLa/Wy+pDkmqZYVmW/tw==
-X-Received: by 2002:aca:ef8a:: with SMTP id n132mr890085oih.98.1557248974374;
-        Tue, 07 May 2019 10:09:34 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q124sm5979753oia.13.2019.05.07.10.09.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 10:09:33 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:09:32 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
-        Libin Yang <lbyang@marvell.com>,
-        Albert Wang <twang13@marvell.com>,
-        jacopo mondi <jacopo@jmondi.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v5 01/10] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-Message-ID: <20190507170932.GA6587@bogus>
-References: <20190505140031.9636-1-lkundrak@v3.sk>
- <20190505140031.9636-2-lkundrak@v3.sk>
+        Tue, 7 May 2019 13:10:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TR7KsnZ_1557249036;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TR7KsnZ_1557249036)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 08 May 2019 01:10:41 +0800
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+ <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
+ <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
+ <20190507104709.GP31017@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <ec8a65c7-9b0b-9342-4854-46c732c99390@linux.alibaba.com>
+Date:   Tue, 7 May 2019 10:10:33 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190505140031.9636-2-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190507104709.GP31017@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 May 2019 16:00:22 +0200, Lubomir Rintel wrote:
-> Add Marvell MMP2 camera host interface.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v4:
-> - s/Nust/Must/
-> - Documented required endpoint properties; bus-type, hsync-active,
->   vsync-active and pclk-sample.
-> 
-> Changes since v3:
-> - Dropped the video-interfaces.txt reference
-> - Clarify "clocks", "clock-names" and "clock-output-names" descriptions
-> - Refer to other documentation by full path
-> 
-> Changes since v2:
-> - Added #clock-cells, clock-names, port
-> 
->  .../bindings/media/marvell,mmp2-ccic.txt      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On 5/7/19 3:47 AM, Michal Hocko wrote:
+> [Hmm, I thought, Hugh was CCed]
+>
+> On Mon 06-05-19 16:37:42, Yang Shi wrote:
+>>
+>> On 4/28/19 12:13 PM, Yang Shi wrote:
+>>>
+>>> On 4/23/19 10:52 AM, Michal Hocko wrote:
+>>>> On Wed 24-04-19 00:43:01, Yang Shi wrote:
+>>>>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
+>>>>> for each
+>>>>> vma") introduced THPeligible bit for processes' smaps. But, when
+>>>>> checking
+>>>>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+>>>>> called to override the result from shmem_huge_enabled().  It may result
+>>>>> in the anonymous vma's THP flag override shmem's.  For example,
+>>>>> running a
+>>>>> simple test which create THP for shmem, but with anonymous THP
+>>>>> disabled,
+>>>>> when reading the process's smaps, it may show:
+>>>>>
+>>>>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+>>>>> Size:               4096 kB
+>>>>> ...
+>>>>> [snip]
+>>>>> ...
+>>>>> ShmemPmdMapped:     4096 kB
+>>>>> ...
+>>>>> [snip]
+>>>>> ...
+>>>>> THPeligible:    0
+>>>>>
+>>>>> And, /proc/meminfo does show THP allocated and PMD mapped too:
+>>>>>
+>>>>> ShmemHugePages:     4096 kB
+>>>>> ShmemPmdMapped:     4096 kB
+>>>>>
+>>>>> This doesn't make too much sense.  The anonymous THP flag should not
+>>>>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+>>>>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+>>>>> dax vma check since we already checked if the vma is shmem already.
+>>>> Kirill, can we get a confirmation that this is really intended behavior
+>>>> rather than an omission please? Is this documented? What is a global
+>>>> knob to simply disable THP system wise?
+>>> Hi Kirill,
+>>>
+>>> Ping. Any comment?
+>> Talked with Kirill at LSFMM, it sounds this is kind of intended behavior
+>> according to him. But, we all agree it looks inconsistent.
+>>
+>> So, we may have two options:
+>>      - Just fix the false negative issue as what the patch does
+>>      - Change the behavior to make it more consistent
+>>
+>> I'm not sure whether anyone relies on the behavior explicitly or implicitly
+>> or not.
+> Well, I would be certainly more happy with a more consistent behavior.
+> Talked to Hugh at LSFMM about this and he finds treating shmem objects
+> separately from the anonymous memory. And that is already the case
+> partially when each mount point might have its own setup. So the primary
+> question is whether we need a one global knob to controll all THP
+> allocations. One argument to have that is that it might be helpful to
+> for an admin to simply disable source of THP at a single place rather
+> than crawling over all shmem mount points and remount them. Especially
+> in environments where shmem points are mounted in a container by a
+> non-root. Why would somebody wanted something like that? One example
+> would be to temporarily workaround high order allocations issues which
+> we have seen non trivial amount of in the past and we are likely not at
+> the end of the tunel.
+
+Shmem has a global control for such use. Setting shmem_enabled to 
+"force" or "deny" would enable or disable THP for shmem globally, 
+including non-fs objects, i.e. memfd, SYS V shmem, etc.
+
+>
+> That being said I would be in favor of treating the global sysfs knob to
+> be global for all THP allocations. I will not push back on that if there
+> is a general consensus that shmem and fs in general are a different
+> class of objects and a single global control is not desirable for
+> whatever reasons.
+
+OK, we need more inputs from Kirill, Hugh and other folks.
+
+>
+> Kirill, Hugh othe folks?
+
