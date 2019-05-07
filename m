@@ -2,99 +2,89 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBB0C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19856C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7C52087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ti0HEmX/"
+	by mail.kernel.org (Postfix) with ESMTP id EA3F520B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfEGHzC (ORCPT
+        id S1726871AbfEGH6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:55:02 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63656 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726103AbfEGHzB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:55:01 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x477jvb0032724;
-        Tue, 7 May 2019 09:54:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=AlqiG9FZWPVqrG1oTH9valNYZcTMSDs6ZUsTY9A5bUw=;
- b=Ti0HEmX/Gtmc7eCiXXBV2n0s7AmSiaiCChqHmOXaBN6wH1n1ZUQTt3mQjjK42gmhKBaj
- 8yvPTkc4uSNe/Z22Jm/bGrz2R9H+56hOXzzxcqZr6lWcIKVrVsiYkZjo8bW4+/npS2lp
- HWQwmH17XuvJPb+tXAr7iHHA+9jSsPtEYnYLNOVjw0LV31/tFEqwfEubmiXsZVvk114r
- Y3lwoLqp2HSfPbHd07xDPeeKNx81/2k5+cI64P9G8pudwSEWG+8KvG6MTzvT9aeSrEa/
- We4h2f1WHeHtlcOq4XWoc1bTZrTm98K3rno4T7vNn/yoktwGObaZUFrVj6J4nnd70oru LQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2s94cde0yv-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 07 May 2019 09:54:44 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F1BDD3F;
-        Tue,  7 May 2019 07:54:42 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A55561490;
-        Tue,  7 May 2019 07:54:42 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 7 May 2019
- 09:54:42 +0200
-Received: from localhost (10.201.20.5) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 7 May 2019 09:54:42 +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] dmaengine: stm32-dma: Fix redundant call to platform_get_irq
-Date:   Tue, 7 May 2019 09:54:41 +0200
-Message-ID: <1557215681-18541-1-git-send-email-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 7 May 2019 03:58:05 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8399 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbfEGH6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:58:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 00:58:04 -0700
+X-ExtLoop1: 1
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
+  by FMSMGA003.fm.intel.com with ESMTP; 07 May 2019 00:57:59 -0700
+Subject: Re: [PATCH v4 1/1] usb: xhci: Add Clear_TT_Buffer
+To:     Alan Stern <stern@rowland.harvard.edu>, Jim Lin <jilin@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, mathias.nyman@intel.com,
+        hminas@synopsys.com, kai.heng.feng@canonical.com,
+        drinkcat@chromium.org, prime.zeng@hisilicon.com, malat@debian.org,
+        nsaenzjulienne@suse.de, jflat@chromium.org,
+        linus.walleij@linaro.org, clabbe@baylibre.com,
+        colin.king@canonical.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <Pine.LNX.4.44L0.1905061053550.1585-100000@iolanthe.rowland.org>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <9ea9fd3e-cf1a-9015-6d21-377c2fd41e66@linux.intel.com>
+Date:   Tue, 7 May 2019 11:00:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.5]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_04:,,
- signatures=0
+In-Reply-To: <Pine.LNX.4.44L0.1905061053550.1585-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit c6504be53972 ("dmaengine: stm32-dma: Fix unsigned variable compared
-with zero") duplicated the call to platform_get_irq.
-So remove the first call to platform_get_irq.
+On 6.5.2019 17.57, Alan Stern wrote:
+> On Mon, 6 May 2019, Jim Lin wrote:
+> 
+>> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
+>> processing for full-/low-speed endpoints connected via a TT, the host
+>> software must use the Clear_TT_Buffer request to the TT to ensure
+>> that the buffer is not in the busy state".
+>>
+>> In our case, a full-speed speaker (ConferenceCam) is behind a high-
+>> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
+>> request we may continue to get STALL with the folllowing requests,
+>> like Set_Interface.
+>>
+>> Here we add Clear_TT_Buffer for the following Set_Interface requests
+>> to get ACK successfully.
+>>
+>> Originally usb_hub_clear_tt_buffer uses urb->dev->devnum as device
+>> address while sending Clear_TT_Buffer command, but this doesn't work
+>> for XHCI.
+> 
+> Why doesn't it work for xHCI?  Clear-TT-Buffer is part of the USB 2.0
+> spec; it should work exactly the same for xHCI as for a USB-2.0 host
+> controller.
+> 
+> Alan Stern
+> 
 
-Fixes: c6504be53972 ("dmaengine: stm32-dma: Fix unsigned variable compared with zero")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/dma/stm32-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+For other host controllers udev->devnum is the same as the address of the
+usb device, chosen and set by usb core.
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 88d9c6c..67fdd02 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -1366,7 +1366,6 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < STM32_DMA_MAX_CHANNELS; i++) {
- 		chan = &dmadev->chan[i];
--		chan->irq = platform_get_irq(pdev, i);
- 		ret = platform_get_irq(pdev, i);
- 		if (ret < 0)  {
- 			if (ret != -EPROBE_DEFER)
--- 
-2.7.4
+With xHC the controller hardware assigns the address, and won't be the same as
+devnum.
 
+The Clear-TT-Buffer request sent to the hub includes the address of the LS/FS
+child device in wValue field. usb_hub_clear_tt_buffer() uses udev->devnum to set the
+address wValue. This won't work for devices connected to xHC
+    
+-Mathias
