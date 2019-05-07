@@ -2,103 +2,73 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C9CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8D8C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C92120578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557242674;
-	bh=ToU2kpbHG/+to4t9z5CCHvUa2rGkhrtoLNWhIuujHvc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wHn3hdYBgO66jbGyqg49LQGT5yBc9qA0ouP05pC6huptpBKt0LuRZi3Kk4E3BMAoG
-	 s8iXrkY4QBtuf2b1C950u/spMFkvnJ68SIXiphpdMSXVghBoXorwPKCnWvKzAuL29m
-	 YAMODbAMBvzQIo4jtpNWxEEckphzfYwVS2xfegUM=
+	by mail.kernel.org (Postfix) with ESMTP id 75BA02087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:24:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="q3WfvQiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfEGPYd (ORCPT
+        id S1726747AbfEGPYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54794 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 11:24:54 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57396 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfEGPYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:24:32 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CC820578;
-        Tue,  7 May 2019 15:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557242671;
-        bh=ToU2kpbHG/+to4t9z5CCHvUa2rGkhrtoLNWhIuujHvc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=1Mf7MCIqg/t7D00A8YxZvqyEX8dx7zQBve9p64kOHhbjGQT3TSgy3BJz4Fjin9Z57
-         1B30hGaWj7MxqnYe/mcMnJYiLTfB+bLCHjRqbTuHo70ezcx6pzufAZOtCZf8RKDXDI
-         jlchPPn977yqX1EDeWrKohTEcmJGGUVPD4zfZt5M=
-Date:   Tue, 7 May 2019 08:24:30 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
-        rpeterso@redhat.com, cluster-devel@redhat.com
-Subject: [GIT PULL] iomap: cleanups and enhancements for 5.2
-Message-ID: <20190507152430.GB1473023@magnolia>
+        id S1726236AbfEGPYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:24:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FtjyM26XsYTblD9NmW/RCrjv8PwkOYDcOPzujGk6vtk=; b=q3WfvQiY7Z7At64kvXI0x7gNhh
+        wqXcJUShVLJJ9CiVFG7L1C7yV7cKTnnehPkjG2mKfL9z+ZBEZrvnleMapbQEJn2eS90kzKh1iX3dI
+        rXHcdqjK+RlZn3uF3/YVSCVf8zqAudqKeN1R/RV9vjMkwTuQ9hfdSTmEzOujD29gXTxY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hO1xR-00019y-TJ; Tue, 07 May 2019 17:24:41 +0200
+Date:   Tue, 7 May 2019 17:24:41 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 v2 1/3] dt-bindings: i2c: extend existing opencore
+ bindings.
+Message-ID: <20190507152441.GC25013@lunn.ch>
+References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+ <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+> +or
+> +	/*
+> +	  An Opencore based I2C node in FU540-C000 chip from SiFive
+> +	  This chip has a hardware erratum for broken IRQ
+> +	  so it's recommended not to define interrupt in the device node
+> +	*/
+> +	i2c@10030000 {
+> +			compatible = "sifive,i2c0","sifive,fu540-c000-i2c";
 
-Here are some patches for the iomap code for 5.2.  Nothing particularly
-exciting here, just adding some callouts for gfs2 and cleaning a few
-things.  It merges cleanly against this morning's HEAD and survived an
-overnight run of xfstests.  Let me know if you run into anything weird.
+The most specific compatible comes first.
 
---D
+You also need to be forward thinking. The next revision of the silicon
+could have the bug fixed. You can then use plain "sifive,i2c0" to
+indicate just polling is needed, not bug workaround. But for that to
+work, you need "sifive,fu540-c000-i2c" first.
 
-The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
-
-  Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.2-merge-2
-
-for you to fetch changes up to cbbf4c0be8a725f08153949f45a85b2adafbbbd3:
-
-  iomap: move iomap_read_inline_data around (2019-05-01 20:16:40 -0700)
-
-----------------------------------------------------------------
-Changes for Linux 5.2:
-- Add some extra hooks to the iomap buffered write path to enable gfs2
-  journalled writes.
-- SPDX conversion
-- Various refactoring.
-
-----------------------------------------------------------------
-Andreas Gruenbacher (3):
-      fs: Turn __generic_write_end into a void function
-      iomap: Fix use-after-free error in page_done callback
-      iomap: Add a page_prepare callback
-
-Christoph Hellwig (3):
-      iomap: convert to SPDX identifier
-      iomap: Clean up __generic_write_end calling
-      iomap: move iomap_read_inline_data around
-
- fs/buffer.c           |   8 ++--
- fs/gfs2/bmap.c        |  15 +++++---
- fs/internal.h         |   2 +-
- fs/iomap.c            | 105 +++++++++++++++++++++++++++-----------------------
- include/linux/iomap.h |  22 ++++++++---
- 5 files changed, 88 insertions(+), 64 deletions(-)
+      Andrew
