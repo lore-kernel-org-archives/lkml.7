@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EE1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A996DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E79820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64ED020675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208948;
-	bh=oxyX3hjJz+OABeVAQr1I6dRhgr5IRIY6tXqYrzy3+hs=;
+	s=default; t=1557208962;
+	bh=B6Ib1DbM2W/TAMM0LH1WLtMkYekyJiCmf9YXS4kH7h0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XKpohm9cDsvmut340FSUWPrAnlNQxIdmhUxeq2q2MMMXnFj2bkZk57Lkv6LY01R+K
-	 9Q5KYDhZdvPs1sg/VRvc6ryNsJdmjiX3u4aOCY5VyqdOsighKvCwT4yO87/oSHd16M
-	 OUVBb/9m3qh6OphzMmG/mT+/TcTivQQmpWfQH3T8=
+	b=T3f5RXDTdJ2yKo1tmLBMSBwvfnwb+EZkJ5PUf6+9dQufcUrBHHuvZL7FzDaLFW61k
+	 yP4cLHfOJdacyssljfu8x1bNFmOELZ5itAjiMMB3TQ/52Rw6Z6NnNHyGglR9+YEbB8
+	 Sil6yGyH5OYMbI3xhQAqon6PzSBj/LXiVWoSRt5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfEGGC1 (ORCPT
+        id S1727059AbfEGGCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfEGFfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:34 -0400
+        id S1727805AbfEGFf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 536C52087F;
-        Tue,  7 May 2019 05:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A722087F;
+        Tue,  7 May 2019 05:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207333;
-        bh=oxyX3hjJz+OABeVAQr1I6dRhgr5IRIY6tXqYrzy3+hs=;
+        s=default; t=1557207327;
+        bh=B6Ib1DbM2W/TAMM0LH1WLtMkYekyJiCmf9YXS4kH7h0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njAbU8bpf4iUcCS1n68q2AN6mJChhKzjRUpQEfLc4fGCFrPKhcySf9+eT3xdqFIlA
-         LCJRnrqoIJLcm4DM+EGq7dRrBAAFl+StnGQEEb2IHoWG3yQMSZ9EkEWCV7QRNjr25h
-         gUjZtnX4nXwblExHgulJmomNfkGKOS1mldBKHBSs=
+        b=pPY+I2pVIuGFbYUuaIsUQllybyPcgUAGB2c5B11k59d/i8It3BNzCfCJWuXLowoG/
+         oeXFczS+wohHGLvSL7EQSRvv72OwyOIB50hWQ/0wnjz8V4uDLYdkhYVkWDTpoVajYb
+         Tr3KOxGRyzOSjVQ9I9Hi+SiRTNg3ECCn41jBJpy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 92/99] btrfs: Switch memory allocations in async csum calculation path to kvmalloc
-Date:   Tue,  7 May 2019 01:32:26 -0400
-Message-Id: <20190507053235.29900-92-sashal@kernel.org>
+Cc:     Jacky Bai <ping.bai@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 88/99] Input: snvs_pwrkey - make it depend on ARCH_MXC
+Date:   Tue,  7 May 2019 01:32:22 -0400
+Message-Id: <20190507053235.29900-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -58,104 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Jacky Bai <ping.bai@nxp.com>
 
-[ Upstream commit a3d46aea46f99d134b4e0726e4826b824c3e5980 ]
+[ Upstream commit f06eba72274788db6a43012a05a99915c0283aef ]
 
-Recent multi-page biovec rework allowed creation of bios that can span
-large regions - up to 128 megabytes in the case of btrfs. OTOH btrfs'
-submission path currently allocates a contiguous array to store the
-checksums for every bio submitted. This means we can request up to
-(128mb / BTRFS_SECTOR_SIZE) * 4 bytes + 32bytes of memory from kmalloc.
-On busy systems with possibly fragmented memory said kmalloc can fail
-which will trigger BUG_ON due to improper error handling IO submission
-context in btrfs.
+The SNVS power key is not only used on i.MX6SX and i.MX7D, it is also
+used by i.MX6UL and NXP's latest ARMv8 based i.MX8M series SOC. So
+update the config dependency to use ARCH_MXC, and add the COMPILE_TEST
+too.
 
-Until error handling is improved or bios in btrfs limited to a more
-manageable size (e.g. 1m) let's use kvmalloc to fallback to vmalloc for
-such large allocations. There is no hard requirement that the memory
-allocated for checksums during IO submission has to be contiguous, but
-this is a simple fix that does not require several non-contiguous
-allocations.
-
-For small writes this is unlikely to have any visible effect since
-kmalloc will still satisfy allocation requests as usual. For larger
-requests the code will just fallback to vmalloc.
-
-We've performed evaluation on several workload types and there was no
-significant difference kmalloc vs kvmalloc.
-
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c    | 15 +++++++++++----
- fs/btrfs/ordered-data.c |  3 ++-
- 2 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/input/keyboard/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index 920bf3b4b0ef..cccc75d15970 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/pagemap.h>
- #include <linux/highmem.h>
-+#include <linux/sched/mm.h>
- #include "ctree.h"
- #include "disk-io.h"
- #include "transaction.h"
-@@ -427,9 +428,13 @@ blk_status_t btrfs_csum_one_bio(struct inode *inode, struct bio *bio,
- 	unsigned long this_sum_bytes = 0;
- 	int i;
- 	u64 offset;
-+	unsigned nofs_flag;
-+
-+	nofs_flag = memalloc_nofs_save();
-+	sums = kvzalloc(btrfs_ordered_sum_size(fs_info, bio->bi_iter.bi_size),
-+		       GFP_KERNEL);
-+	memalloc_nofs_restore(nofs_flag);
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index a878351f1643..52d7f55fca32 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -420,7 +420,7 @@ config KEYBOARD_MPR121
  
--	sums = kzalloc(btrfs_ordered_sum_size(fs_info, bio->bi_iter.bi_size),
--		       GFP_NOFS);
- 	if (!sums)
- 		return BLK_STS_RESOURCE;
- 
-@@ -472,8 +477,10 @@ blk_status_t btrfs_csum_one_bio(struct inode *inode, struct bio *bio,
- 
- 				bytes_left = bio->bi_iter.bi_size - total_bytes;
- 
--				sums = kzalloc(btrfs_ordered_sum_size(fs_info, bytes_left),
--					       GFP_NOFS);
-+				nofs_flag = memalloc_nofs_save();
-+				sums = kvzalloc(btrfs_ordered_sum_size(fs_info,
-+						      bytes_left), GFP_KERNEL);
-+				memalloc_nofs_restore(nofs_flag);
- 				BUG_ON(!sums); /* -ENOMEM */
- 				sums->len = bytes_left;
- 				ordered = btrfs_lookup_ordered_extent(inode,
-diff --git a/fs/btrfs/ordered-data.c b/fs/btrfs/ordered-data.c
-index 6fde2b2741ef..45e3cfd1198b 100644
---- a/fs/btrfs/ordered-data.c
-+++ b/fs/btrfs/ordered-data.c
-@@ -6,6 +6,7 @@
- #include <linux/slab.h>
- #include <linux/blkdev.h>
- #include <linux/writeback.h>
-+#include <linux/sched/mm.h>
- #include "ctree.h"
- #include "transaction.h"
- #include "btrfs_inode.h"
-@@ -442,7 +443,7 @@ void btrfs_put_ordered_extent(struct btrfs_ordered_extent *entry)
- 			cur = entry->list.next;
- 			sum = list_entry(cur, struct btrfs_ordered_sum, list);
- 			list_del(&sum->list);
--			kfree(sum);
-+			kvfree(sum);
- 		}
- 		kmem_cache_free(btrfs_ordered_extent_cache, entry);
- 	}
+ config KEYBOARD_SNVS_PWRKEY
+ 	tristate "IMX SNVS Power Key Driver"
+-	depends on SOC_IMX6SX || SOC_IMX7D
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on OF
+ 	help
+ 	  This is the snvs powerkey driver for the Freescale i.MX application
 -- 
 2.20.1
 
