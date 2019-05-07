@@ -2,190 +2,195 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB088C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECB3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D257205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="HBxCcCtH"
+	by mail.kernel.org (Postfix) with ESMTP id 92B1221479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557231672;
+	bh=AGYkrEj2uxk4UWcYj5hJT4ocZ0MX1hx3P87PhI15ZXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XEvt93tzD6+s91TZyES/Ea5T9OAjw0pbxD/RCK5S2CmX2qalRCOTi9/0zLeLMIVuW
+	 NlpfVZMq3YxHq4TnSTgMF8+ToMuAkm5M3kJdZ+fHW30LT8mEm/g5tT/8vsQLsybhnl
+	 XbHyGHWqyKYvOyJ7fVkiM0BIA7UfKzZz7kHMkung=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfEGMUd (ORCPT
+        id S1726594AbfEGMVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:20:33 -0400
-Received: from node.akkea.ca ([192.155.83.177]:50710 "EHLO node.akkea.ca"
+        Tue, 7 May 2019 08:21:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbfEGMUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:20:33 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 749404E204B; Tue,  7 May 2019 12:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1557231632; bh=uNQSdULdLhLXke+sVh9CJSn8ILWLrlBcNdJ0iCE+fHg=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=HBxCcCtHYigQMIa+28XmuqqpJnFns+o8aJFMkt0DsO17Oafu8ciamepG/5uLSR3s0
-         FZV9VUzZ2IG2AQTGwM2DUsUVaw4vkvvQfoK46fXFsDlvfT4dh/d29x6AEmStyzqvgr
-         LgI5nfUvntOUGyWtYTcxCdwHnVozqZWNva6mO0VI=
-To:     Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] usb: typec: tcpm: Add functions to read the VBUS  voltage
-X-PHP-Originating-Script: 1000:rcube.php
+        id S1725858AbfEGMVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:21:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 326C1205ED;
+        Tue,  7 May 2019 12:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557231669;
+        bh=AGYkrEj2uxk4UWcYj5hJT4ocZ0MX1hx3P87PhI15ZXM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tojakutQbyKkgVrhxp/DED5mzzPfcAHNxVtUCrrvxOHZiVyr/rUMEKYCy/SGEEOkL
+         ENhJIHzuORYDeGzGqGSPCid/tbPKEmYheiTe7W6hRJ8MiaVeEQkQRiiEvyxAiFZjUg
+         lPPHP6wFfjD4w8kFE5TIkK33w4GgUYw3wMIMrPc8=
+Date:   Tue, 7 May 2019 14:21:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dragan Cvetic <draganc@xilinx.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Message-ID: <20190507122106.GA7873@kroah.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190504075502.GA11133@kroah.com>
+ <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190506123425.GA26360@kroah.com>
+ <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190507093941.GC20355@kroah.com>
+ <BL0PR02MB568148AD27F3FE86D168BDF9CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 07 May 2019 06:20:32 -0600
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <groeck7@gmail.com>
-In-Reply-To: <20190506162049.GA26804@roeck-us.net>
-References: <20190506140830.25376-1-angus@akkea.ca>
- <20190506140830.25376-3-angus@akkea.ca>
- <20190506162049.GA26804@roeck-us.net>
-Message-ID: <0c8b8a38c50f0d80276bd6d2a443fc82@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR02MB568148AD27F3FE86D168BDF9CB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-06 10:20, Guenter Roeck wrote:
-> On Mon, May 06, 2019 at 08:08:29AM -0600, Angus Ainslie (Purism) wrote:
->> Put some diagnostics in the tcpm log when there's an over
->> or under voltage situation.
->> 
->> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+On Tue, May 07, 2019 at 11:55:42AM +0000, Dragan Cvetic wrote:
 > 
-> Subject is missing 'tcpci'.
 > 
->> ---
->>  drivers/usb/typec/tcpm/tcpci.c | 44 
->> ++++++++++++++++++++++++++++++++++
->>  1 file changed, 44 insertions(+)
->> 
->> diff --git a/drivers/usb/typec/tcpm/tcpci.c 
->> b/drivers/usb/typec/tcpm/tcpci.c
->> index c1f7073a56de..c6e0e48b9a2a 100644
->> --- a/drivers/usb/typec/tcpm/tcpci.c
->> +++ b/drivers/usb/typec/tcpm/tcpci.c
->> @@ -261,6 +261,39 @@ static int tcpci_set_pd_rx(struct tcpc_dev *tcpc, 
->> bool enable)
->>  	return 0;
->>  }
->> 
->> +static int tcpci_get_vbus_voltage(struct tcpc_dev *tcpc)
->> +{
->> +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
->> +	u16 vbus_reg;
->> +	unsigned int vbus_voltage;
->> +	int ret, scale;
->> +
->> +	ret = tcpci_read16(tcpci, TCPC_VBUS_VOLTAGE, &vbus_reg);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	vbus_voltage = vbus_reg & 0x3f;
->> +	switch ((ret >> 10) & 3) {
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Tuesday 7 May 2019 10:40
+> > To: Dragan Cvetic <draganc@xilinx.com>
+> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > 
+> > On Tue, May 07, 2019 at 08:48:41AM +0000, Dragan Cvetic wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > Sent: Monday 6 May 2019 13:34
+> > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > >
+> > > > On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
+> > > > >
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > > Sent: Saturday 4 May 2019 08:55
+> > > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > > > >
+> > > > > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+> > > > > > > Hi Greg,
+> > > > > > >
+> > > > > > > Please find my inline comments below,
+> > > > > > >
+> > > > > > > Regards
+> > > > > > > Dragan
+> > > > > > >
+> > > > > > > > -----Original Message-----
+> > > > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > > > > Sent: Thursday 2 May 2019 18:20
+> > > > > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > > > > > >
+> > > > > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
+> > > > > > > > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > > > > > > > +#define DRIVER_VERSION "0.3"
+> > > > > > > >
+> > > > > > > > Version means nothing with the driver in the kernel tree, please remove
+> > > > > > > > it.
+> > > > > > >
+> > > > > > > Will be removed. Thank you.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > > > > > > >
+> > > > > > > > Why this number?  Why limit yourself to any number?
+> > > > > > > >
+> > > > > > >
+> > > > > > > There can be max 8 devices for this driver. I'll change to 8.
+> > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +static struct class *xsdfec_class;
+> > > > > > > >
+> > > > > > > > Do you really need your own class?
+> > > > > > >
+> > > > > > > When writing a character device driver, my goal is to create and register an instance
+> > > > > > > of that structure associated with a struct file_operations, exposing a set of operations
+> > > > > > > to the user-space. One of the steps to make this goal is Create a class for a devices,
+> > > > > > > visible in /sys/class/.
+> > > > > >
+> > > > > > Why do you need a class?  Again, why not just use the misc_device api,
+> > > > > > that seems much more relevant here and will make the code a lot simpler.
+> > > > > >
+> > > > >
+> > > > > The driver can have 8 devices in SoC plus more in Programming Logic.
+> > > > > It looked logical to group them under the same MAJOR, although they
+> > > > > are independent of each other.  Is this argument strong enough to use
+> > > > > class?
+> > > >
+> > > > Not really :)
+> > > >
+> > > > 8 devices is pretty small.  What tool will be trying to talk to all of
+> > > > these devices and how was it going to find out what devices were in the
+> > > > system?
+> > > >
+> > >
+> > > These devices are Forward Error Correction encoder/decoder
+> > > and will be part of the RF communication chain. They will be included
+> > > in the system through DT. Also, described in DT.
+> > 
+> > Userspace doesn't mess with DT.
+> > 
+> > I am asking what userspace tool/program is going to be interacting with
+> > these devices through your now-custom api you are creating.  Do you have
+> > a link to that software, and how is that code doing the "determine what
+> > device nodes are associated with what devices" logic?
+> > 
 > 
-> Did you test this code ?
-> 
+> Example code is not public yet, sorry.
 
-It turned out this wasn't how the device was failing so the code path 
-never got executed. I'll figure out how to get it to run before v2.
+Ok, then I think we need to wait for that to get this merged at the
+minimum, don't you agree?  Otherwise how do we even know that any of
+these codepaths are tested?
 
->> +	case 0:
->> +		scale = 1;
->> +		break;
->> +	case 1:
->> +		scale = 2;
->> +		break;
->> +	case 2:
->> +		scale = 4;
->> +		break;
->> +	case 3:
->> +		tcpm_log(tcpci->port, "invalid VBUS scale");
->> +		return -1;
+> The index number in the device name
+> is a link to device, see snippet from the example code:
 > 
-> Any special reason for not using standard error codes ?
-> The code above does, meaning this is a hardcodesd -EPERM, which doesn't
-> really make any sense.
+> #define FEC_DEC  "/dev/xsdfec0"
+> dec_fd = open_xsdfec(FEC_DEC);
 > 
+> The index number corresponds to the device order in DT.
 
-Ok I'll find a better return value.
+So that implies you don't need a class at all, right?
 
->> +	}
->> +
->> +	if (scale != 1)
->> +		vbus_voltage *= scale;
-> 
-> I don't immediately see why this is better than, say,
-> 
-> 	scale = (vbus_reg >> 10) & 3;
-> 	if (scale == 3)
-> 		return -Esomething;	// -EPROTO, maybe
-> 	return vbus_voltage << scale;
-> 
+thanks,
 
-That looks more concise than what I can up with.
-
->> +
->> +	return vbus_voltage;
->> +}
->> +
->>  static int tcpci_get_vbus(struct tcpc_dev *tcpc)
->>  {
->>  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
->> @@ -463,6 +496,17 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
->>  	else if (status & TCPC_ALERT_TX_FAILED)
->>  		tcpm_pd_transmit_complete(tcpci->port, TCPC_TX_FAILED);
->> 
->> +	if (status & (TCPC_ALERT_V_ALARM_LO | TCPC_ALERT_V_ALARM_HI)) {
->> +		int ret;
->> +
->> +		ret = tcpci_get_vbus_voltage(&tcpci->tcpc);
->> +
-> Unnecessary empty line.
-> 
->> +		if (IS_ERR(ret))
->> +			tcpm_log(tcpci->port, "Can't read VBUS voltage");
-> 
-> VBUS_VOLTAGE is an optional register. This is not an error. Besides, 
-> the
-> message doesn't match the event and is useless.
-> 
->> +		else
->> +			tcpm_log(tcpci->port, "Invalid VBUS voltage %d", ret);
-> 
-> Displaying a raw number without context is not very useful.
-> 'ret' is the voltage in multiples of 25mV. Besides, the error is that a 
-> low
-> or high voltage was detected. That doesn't mean the voltage is still 
-> invalid.
-> The error message should reflect that situation. Something like
-> 
-> 		"VBUS {low, high} detected, VBUS=x.yy V"
-> 
-> would be much more useful (with VBUS=x.yy being optional).
-> 
-> Also, please no tcpm log. The tcpci driver needs to implement
-> its own logging if that is desired.
-> 
-
-Ok I'll clear up the logging.
-
->> +	}
->> +
->>  	return IRQ_HANDLED;
->>  }
->>  EXPORT_SYMBOL_GPL(tcpci_irq);
->> --
->> 2.17.1
->> 
-
+greg k-h
