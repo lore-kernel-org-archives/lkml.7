@@ -2,99 +2,89 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673E4C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCCAC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A92C205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557250547;
-	bh=QpGCIYI22OmPrtKNZByqkY/eP0ucnMsjEQvSLHbvg1k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vLRdIJo1mu05hBSQkYcxs3XjG0EMMc80VEEwUDS+p0XzBFCYvjz+DlupU7l7CsCe0
-	 UgQ+iX2+G7AEKLlXF/gzHsW2iFYxW9rxzWyC1VLbzRBhp/QI+Vry/BcnWDDnW6sUZE
-	 DKhEX/xsZKeuvkUrHqROhOpI41CnrudHR3DkeJtk=
+	by mail.kernel.org (Postfix) with ESMTP id 87211205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:36:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lv9eHU/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfEGRfq (ORCPT
+        id S1727458AbfEGRg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:35:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34387 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfEGRfp (ORCPT
+        Tue, 7 May 2019 13:36:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47702 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbfEGRg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:35:45 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s7so9662103ljh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ffMscuu3PUeSeZb5tEXYoJU5cfVCzk2YToQl4OvjLZo=;
-        b=H36Gpb50r9djkhKtwQe3VJpRaLJw/NGSVDsmjM54fy8tMa/SUIs7pLVJp581T7Ys20
-         8jaYXH5Sh569s93/hVFiq5rZNQH56hFJ256xdH0tmNKP7Bczg/VWm64TU4aXNw+s8jYx
-         QPwg4iTwOqo5JQRRyAhG7MhENuqZqg3/ZjtCY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ffMscuu3PUeSeZb5tEXYoJU5cfVCzk2YToQl4OvjLZo=;
-        b=avoNHA8uhHsme46qtZNDJqubeUWlcYtKDXP5vXpfKMhn8xXrQ1zk98+3UAjbtSMQNJ
-         /VNV88i1IZeWVD7r1744jiyEMa6/dS3wZouzpZ/l18Su52ZOVWzXi72/NBE0hD0MFLQg
-         Ck7+gl23bzuQ+uchjBOc0ED4wd74BcNnLLUHU+Wl8TDdpZ/+r8xgRn5kpESWPRpTaP9s
-         sj/eRQe/PSl2YldGZtRjlkps695ZjW9HC214ogXxXmMtSB957QjbeEebzOHHIT4Pj4HU
-         ycE0PziYJzgMGKgP4wJVGjDFNYTHWv56rEesGN+ShTTcMZnfJ3vTkyv4gPQlyk+lDMib
-         pIzg==
-X-Gm-Message-State: APjAAAUguZsQg4bkHafTkhYgKEcYWKyfthChkSHoQ6vyA2d/WvQeDia+
-        fR0lfPdqEvxdiCJqbDT91i/dPV3S5gI=
-X-Google-Smtp-Source: APXvYqwFJpJXFt96v/SD14kBNrxVfKAZLRK1VmtiPPnMg+AnbG9Y4epOcpzSkLsERghqOkMKe6tTBA==
-X-Received: by 2002:a2e:9d12:: with SMTP id t18mr18474297lji.163.1557250543289;
-        Tue, 07 May 2019 10:35:43 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id a6sm538720lfi.89.2019.05.07.10.35.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 10:35:42 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id d8so12449469lfb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:35:42 -0700 (PDT)
-X-Received: by 2002:ac2:43cf:: with SMTP id u15mr17155883lfl.67.1557250541931;
- Tue, 07 May 2019 10:35:41 -0700 (PDT)
+        Tue, 7 May 2019 13:36:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=clVmOpDd5LzvkH+bJWwETDAH6oZsPTXJW+h72BQ3YmA=; b=Lv9eHU/YCnEEcZbzOeCcafBMF
+        OswjYy2ZYStFugMU0UuKCzCEoJL1SeV8aIwcRB9okQqJ9hF87xa9smgAI1nlogUPWbQt2/csogLsh
+        klr5i5nLmuZlcA3EdxtfOlQsI/rKdwxGZAQBVMngU6fNViPjUE0ZjFowgSXAg8QafQF6y/1aUavH0
+        DUg3anwUIkMdltSZOAIXMEjLKzAr+mCBhyHfLIPctmeSOWVj0/hAbr7k51DT5uC3RrDFnyzw4TvKi
+        S0nHugtqx5JMKIFWALxBGRckiMkHDJtdM0Xq80o6t5HYCsbAMDW/hJD8IlHtxEyO7TF0+zvLtkShr
+        WlE47EP3Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hO41Q-0000Zl-4S; Tue, 07 May 2019 17:36:56 +0000
+Date:   Tue, 7 May 2019 10:36:55 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
+ pages for the full memory section
+Message-ID: <20190507173655.GA1403@bombadil.infradead.org>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-62-sashal@kernel.org>
+ <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
+ <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
+ <20190507170208.GF1747@sasha-vm>
+ <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
+ <20190507171806.GG1747@sasha-vm>
+ <20190507173224.GS31017@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190507132632.GB26655@zn.tnic>
-In-Reply-To: <20190507132632.GB26655@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 May 2019 10:35:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh4Cjb1qDj_VRW9W4d4n9WLksgMKF-roG8eCk_O0ZaEEg@mail.gmail.com>
-Message-ID: <CAHk-=wh4Cjb1qDj_VRW9W4d4n9WLksgMKF-roG8eCk_O0ZaEEg@mail.gmail.com>
-Subject: Re: [GIT PULL] x86 FPU changes for 5.2
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507173224.GS31017@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 6:26 AM Borislav Petkov <bp@suse.de> wrote:
->
-> This branch contains work started by Rik van Riel and brought to
-> fruition by Sebastian Andrzej Siewior with the main goal to optimize
-> when to load FPU registers: only when returning to userspace and not on
-> every context switch (while the task remains in the kernel).
+On Tue, May 07, 2019 at 07:32:24PM +0200, Michal Hocko wrote:
+> On Tue 07-05-19 13:18:06, Sasha Levin wrote:
+> > Michal, is there a testcase I can plug into kselftests to make sure we
+> > got this right (and don't regress)? We care a lot about memory hotplug
+> > working right.
+> 
+> As said in other email. The memory hotplug tends to work usually. It
+> takes unexpected memory layouts which trigger corner cases. This makes
+> testing really hard.
 
-I love this and we should have done it long ago, but I also worry that
-every time we've messed with the FP state, we've had interesting bugs.
-Which is obviously why we didn't do this long ago.
-
-Has this gone through lots of testing, particularly with things like
-FP signal handling and old machines that don't necessarily have
-anything but the most basic FP state (ie Pentium class etc)?
-
-I've pulled it, but I'd still like to feel safer about it after-the-fact ;)
-
-               Linus
+Can we do something with qemu?  Is it flexible enough to hotplug memory
+at the right boundaries?
