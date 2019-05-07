@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B62C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE682C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DFD20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8689E20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207801;
-	bh=9WXawZNnulOTgBEcYcDCkjcBWrkrOS5qKpa52igguuQ=;
+	s=default; t=1557207808;
+	bh=rVSya5QCW5mY+ThgI+l4OR8ZblKeKEonGB7uEyCGGgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EsivlOOWKokHABI6xjC4eTgk3hoe6iOPbD63N6XZsHxltwFLewV7UJ3H2ecqaK9CX
-	 zBViXnYRhnWCNz/oH1hukFub8xWUzCHJDSOlj59BbRD1cAVfKL1P2/HJCulTdQ2gNi
-	 +qTbakzUPbEmsmwUjXKPE+kVl3OzUdd69flNc/R8=
+	b=nR1wvIy6lnCEMViOYmO1uqvzU4wLzM+4EAM8w8iSEhxPvW6XtTjETvXL2yNMC+yXS
+	 t0vuTe4pjf5xWB+lZasJVDnG6p6M1dBDlK5FmkO3ox4ryuACk0WCuYUOAMKS19P7Qj
+	 bLKAYdguv1qOXHI0WHNKoIWWufdxMozsf5AyqInI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfEGFnP (ORCPT
+        id S1728998AbfEGFnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33834 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbfEGFnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:43:06 -0400
+        id S1729688AbfEGFnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:43:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAFD7205ED;
-        Tue,  7 May 2019 05:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EDA120675;
+        Tue,  7 May 2019 05:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207786;
-        bh=9WXawZNnulOTgBEcYcDCkjcBWrkrOS5qKpa52igguuQ=;
+        s=default; t=1557207780;
+        bh=rVSya5QCW5mY+ThgI+l4OR8ZblKeKEonGB7uEyCGGgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uMfDNDQbUDyl5OjznW4pKlWklu4rLVWnvoDtG6Y/nadjt1YFn8RWk4HZqlxw286PR
-         m40BY7L81Ei7Crpmp0Uzx0qvWJ4iH6hdnqSjpBdH3Fb0/MufY2N5VDzFUbJnucfett
-         +PRRmFZwLpfKn6uWVdRRzbesAasQLfK6WZrJHoak=
+        b=OUZd8sxIa9GuBxslYle7iB7BaHFMfhpukXfMWEmm09UFZosUX3PsIupCXt52yL+ff
+         L6f2r0jZs7n0yNwMKERXKthiPyjCjEQoLAYvTSP55IQ8L13YioONyEdqpey4Gk+BtQ
+         PLPFJVOQjhJEIyyn2JP2ag9kaIvFlcBO9ivPMNhE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 07/10] init: initialize jump labels before command line option parsing
-Date:   Tue,  7 May 2019 01:42:43 -0400
-Message-Id: <20190507054247.537-7-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 05/10] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
+Date:   Tue,  7 May 2019 01:42:41 -0400
+Message-Id: <20190507054247.537-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054247.537-1-sashal@kernel.org>
 References: <20190507054247.537-1-sashal@kernel.org>
@@ -66,79 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
+[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
 
-When a module option, or core kernel argument, toggles a static-key it
-requires jump labels to be initialized early.  While x86, PowerPC, and
-ARM64 arrange for jump_label_init() to be called before parse_args(),
-ARM does not.
+In __apic_accept_irq() interface trig_mode is int and actually on some code
+paths it is set above u8:
 
-  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-  page_alloc_shuffle+0x12c/0x1ac
-  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-  before call to jump_label_init()
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted
-  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
-  Hardware name: ARM Integrator/CP (Device Tree)
-  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
-  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
-  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
-  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
-  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
-  (page_alloc_shuffle+0x12c/0x1ac)
-  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
-  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
-  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
+is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
+(1 << 15) & e->msi.data
 
-Move the fallback call to jump_label_init() to occur before
-parse_args().
+kvm_apic_local_deliver sets it to reg & (1 << 15).
 
-The redundant calls to jump_label_init() in other archs are left intact
-in case they have static key toggling use cases that are even earlier
-than option parsing.
+Fix the immediate issue by making 'tm' into u16. We may also want to adjust
+__apic_accept_irq() interface and use proper sizes for vector, level,
+trig_mode but this is not urgent.
 
-Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Guenter Roeck <groeck@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Russell King <rmk@armlinux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- init/main.c | 4 ++--
+ arch/x86/kvm/trace.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index 32940a68ea48..6235c0bed3da 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -539,6 +539,8 @@ asmlinkage __visible void __init start_kernel(void)
- 	page_alloc_init();
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 6b06ab8748dd..005a5b8d5628 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -415,13 +415,13 @@ TRACE_EVENT(kvm_apic_ipi,
+ );
  
- 	pr_notice("Kernel command line: %s\n", boot_command_line);
-+	/* parameters may set static keys */
-+	jump_label_init();
- 	parse_early_param();
- 	after_dashes = parse_args("Booting kernel",
- 				  static_command_line, __start___param,
-@@ -548,8 +550,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
- 			   set_init_arg);
+ TRACE_EVENT(kvm_apic_accept_irq,
+-	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
++	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
+ 	    TP_ARGS(apicid, dm, tm, vec),
  
--	jump_label_init();
--
- 	/*
- 	 * These use large bootmem allocations and must precede
- 	 * kmem_cache_init()
+ 	TP_STRUCT__entry(
+ 		__field(	__u32,		apicid		)
+ 		__field(	__u16,		dm		)
+-		__field(	__u8,		tm		)
++		__field(	__u16,		tm		)
+ 		__field(	__u8,		vec		)
+ 	),
+ 
 -- 
 2.20.1
 
