@@ -2,145 +2,95 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE1AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481E6C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB9520825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109E820825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="H/VtEJDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfEGMEB (ORCPT
+        id S1726603AbfEGMEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:04:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50454 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfEGMEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:04:01 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C57FA81F19;
-        Tue,  7 May 2019 12:03:56 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74F631A7D9;
-        Tue,  7 May 2019 12:03:52 +0000 (UTC)
-Date:   Tue, 7 May 2019 07:03:50 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
- reliable stacktrace support
-Message-ID: <20190507120350.gpazr6xivzwvd3az@treble>
-References: <20190430091049.30413-1-pmladek@suse.com>
- <20190430091049.30413-2-pmladek@suse.com>
- <20190507004032.2fgddlsycyypqdsn@treble>
- <20190507014332.l5pmvjyfropaiui2@treble>
- <20190507112950.wejw6nmfwzmm3vaf@pathway.suse.cz>
+        Tue, 7 May 2019 08:04:37 -0400
+Received: from mailrelay4-1.pub.mailoutpod1-cph3.one.com ([46.30.210.185]:44846
+        "EHLO mailrelay4-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726329AbfEGMEh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:04:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=c2VlK3MM/wgPOjvoDCLj1og4pjEnPybpBDaxjchOxpE=;
+        b=H/VtEJDAcgCLvhq48Kp5YfMM8XwcJvQ7PdURzx7A7qDlg5fuiwSrykpzCJ72NPSUsaKenNEYSGAmf
+         eqfzULm/WvNyD91pOl+iQ48hraRQxX+zP68Zjo+lXCi90RffXgLrFexURbl1OiOSbA72hqhhYuCPPc
+         IancKGmZ39YCTSnE=
+X-HalOne-Cookie: 28a63f102c7a92420db1d78ee04f8d6f20dc165c
+X-HalOne-ID: 47378af4-70c0-11e9-a343-d0431ea8bb10
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 47378af4-70c0-11e9-a343-d0431ea8bb10;
+        Tue, 07 May 2019 12:04:34 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD function
+References: <20190426084038.6377-1-esben@geanix.com>
+        <20190426084038.6377-3-esben@geanix.com> <20190507114905.GB29524@dell>
+Date:   Tue, 07 May 2019 14:04:34 +0200
+In-Reply-To: <20190507114905.GB29524@dell> (Lee Jones's message of "Tue, 7 May
+        2019 12:49:05 +0100")
+Message-ID: <87o94ejwrx.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190507112950.wejw6nmfwzmm3vaf@pathway.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 07 May 2019 12:04:01 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:29:50PM +0200, Petr Mladek wrote:
-> On Mon 2019-05-06 20:43:32, Josh Poimboeuf wrote:
-> > On Mon, May 06, 2019 at 07:40:32PM -0500, Josh Poimboeuf wrote:
-> > > On Tue, Apr 30, 2019 at 11:10:48AM +0200, Petr Mladek wrote:
-> > > > WARN_ON_ONCE() could not be called safely under rq lock because
-> > > > of console deadlock issues. Fortunately, there is another check
-> > > > for the reliable stacktrace support in klp_enable_patch().
-> > > > 
-> > > > Signed-off-by: Petr Mladek <pmladek@suse.com>
-> > > > ---
-> > > >  kernel/livepatch/transition.c | 9 ++++++++-
-> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-> > > > index 9c89ae8b337a..8e0274075e75 100644
-> > > > --- a/kernel/livepatch/transition.c
-> > > > +++ b/kernel/livepatch/transition.c
-> > > > @@ -263,8 +263,15 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
-> > > >  	trace.nr_entries = 0;
-> > > >  	trace.max_entries = MAX_STACK_ENTRIES;
-> > > >  	trace.entries = entries;
-> > > > +
-> > > >  	ret = save_stack_trace_tsk_reliable(task, &trace);
-> > > > -	WARN_ON_ONCE(ret == -ENOSYS);
-> > > > +	/*
-> > > > +	 * pr_warn() under task rq lock might cause a deadlock.
-> > > > +	 * Fortunately, missing reliable stacktrace support has
-> > > > +	 * already been handled when the livepatch was enabled.
-> > > > +	 */
-> > > > +	if (ret == -ENOSYS)
-> > > > +		return ret;
-> > > 
-> > > I find the comment to be a bit wordy and confusing (and vague).
-> 
-> Then please provide a better one. I have no idea what might make
-> you happy and am not interested into an endless disputing.
+Lee Jones <lee.jones@linaro.org> writes:
 
-Something like this would be clearer:
+> On Fri, 26 Apr 2019, Esben Haabendal wrote:
+>
+>> The serial8250-mfd driver is for adding 8250/16550 UART ports as functions
+>> to an MFD driver.
+>> 
+>> When calling mfd_add_device(), platform_data should be a pointer to a
+>> struct plat_serial8250_port, with proper settings like .flags, .type,
+>> .iotype, .regshift and .uartclk.  Memory (or ioport) and IRQ should be
+>> passed as cell resources.
+>
+> What?  No, please!
+>
+> If you *must* create a whole driver just to be able to use
+> platform_*() helpers (which I don't think you should), then please
+> call it something else.  This doesn't have anything to do with MFD.
 
-	if (ret == -ENOSYS) {
-		/*
-		 * This arch doesn't support reliable stack tracing.  No
-		 * need to print a warning; that has already been done
-		 * by klp_enable_patch().
-		 */
-		return ret;
-	}
+True.
 
-But my next point was that changing the code would be even better than
-fixing the comment.
+I really don't think it is a good idea to create a whole driver just to
+be able to use platform_get_*() helpers.  And if I am forced to do this,
+because I am unable to convince Andy to improve the standard serial8250
+driver to support that, it should be called MFD.  The driver would be
+generally usable for all usecases where platform_get_*() works.
 
-> > > Also this check is effectively the same as the klp_have_reliable_stack()
-> > > check which is done in kernel/livepatch/core.c.  So I think it would be
-> > > clearer and more consistent if the same check is done here:
-> > > 
-> > > 	if (!klp_have_reliable_stack())
-> > > 		return -ENOSYS;
-> 
-> Huh, it smells with over engineering to me.
+I don't have any idea what to call such a driver.  It really would just
+be a fork of the current serial8250 driver, just allowing use of
+platform_get_*(), supporting exactly the same hardware.
 
-How so?  It makes the code more readable and the generated code should
-be much better because it becomes a build-time check.
+I am still hoping that we can find a way to improve serial8250 to be
+usable in these cases.
 
-But I think Miroslav's suggestion to revert 1d98a69e5cef would be even
-better.
-
-> > > 	ret = save_stack_trace_tsk_reliable(task, &trace);
-> > > 
-> > > 	[ no need to check ret for ENOSYS here ]
-> > > 
-> > > Then, IMO, no comment is needed.
-> > 
-> > BTW, if you agree with this approach then we can leave the
-> > WARN_ON_ONCE() in save_stack_trace_tsk_reliable() after all.
-> 
-> I really like the removal of the WARN_ON_ONCE(). I consider
-> it an old fashioned way used when people are lazy to handle
-> errors. It might make sense when the backtrace helps to locate
-> the context but the context is well known here. Finally,
-> WARN() should be used with care. It might cause reboot
-> with panic_on_warn.
-
-The warning makes the function consistent with the other weak functions
-in stacktrace.c and clarifies that it should never be called unless an
-arch has misconfigured something.  And if we aren't even checking the
-specific ENOSYS error as I proposed then this warning would make the
-error more obvious.
-
--- 
-Josh
+/Esben
