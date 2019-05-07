@@ -2,150 +2,142 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AAAC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414F1C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934692053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F892053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:31:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyO3r8Sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEGN0k (ORCPT
+        id S1726563AbfEGNbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:26:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38144 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726321AbfEGN0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:26:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7384DADF0;
-        Tue,  7 May 2019 13:26:38 +0000 (UTC)
-Date:   Tue, 7 May 2019 15:26:32 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] x86 FPU changes for 5.2
-Message-ID: <20190507132632.GB26655@zn.tnic>
+        Tue, 7 May 2019 09:31:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35993 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfEGNbJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:31:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v80so8684214pfa.3;
+        Tue, 07 May 2019 06:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pDfPW38KIL1dpHg7F2t1sYsKkAGlXFceYNzNKtg9UBI=;
+        b=cyO3r8SjaSPvRgAnIrHKGrO5McmBXE+WgNeJJg+p7LUXjuglPx0pTYyxK9DRLM7qQL
+         X+hnR2TsuMoSzC4XtSsRT4AYHD0Ace+teIBTvnvx+CTZp0a5HCsjLsHHLIMko8qMDNGc
+         onbOQHHwLlaF7lk76q1lBaV9YtcJ+vr/Sq2Ittup/KNS/N/f8JchuewoPlD0KOyFraRN
+         vUaADbkBjER77QoaMv2SazHjGquXwLSynG0QyGmBp14oyb/FwiPW51cXQMpJOOSPnyBs
+         63qr5wtgj3PeIe8g14L4uCkqslg94SEQSzNqPxbwsiqCxZe4pjAqeuGtDWaWlvoeZHqr
+         5T4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pDfPW38KIL1dpHg7F2t1sYsKkAGlXFceYNzNKtg9UBI=;
+        b=HhkDz+/vfWCbOafvFt46PyhPPHDaHIVyq26Zi/Gvf5ls2fo/f8BbBWtKp+Akbjx++P
+         KpMtI1uzR61d07kqF2vX2BP2ZLxul8QYjqW5QbH24Ixy4xGE9Z87wDijdZBCM11psUaw
+         zn/Ohj5GS3gyG7ynMkVVt860lUa7nSk4wY7LTK24UuW//jkbpT+d8qfpcFjieazp5nra
+         EpQVm6fpy2jU4myV8Wu5+phJDsSJQi6kku9EJh7JMJDoP4+xBAMYqZjGbn4qtDg9DlbG
+         tHtr8+vCgN7V8UcxijJzipItBGCebQ//csMKPEOXFtC1Y/8k/+xRGOl5jeVVh1NGUo66
+         oXcQ==
+X-Gm-Message-State: APjAAAUKF/6c5ciO9/J2pL7mSDTGBAFmawm6KrkuULre27po74rZl255
+        cpfoKIPAxhVAi5Jot7JNIOPGkfXi
+X-Google-Smtp-Source: APXvYqzq+Z/Wj+qUOgwRvo3HHKRynDEDgnsJskGpr7/iplM2VPRNaEbMdqqGJgcNsTpPQurrvC4Eog==
+X-Received: by 2002:aa7:8096:: with SMTP id v22mr41241600pff.94.1557235868496;
+        Tue, 07 May 2019 06:31:08 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o5sm34369209pfa.135.2019.05.07.06.31.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 06:31:07 -0700 (PDT)
+Subject: Re: [PATCH 1/2] firmware: arm_scmi: Fetch and store sensor scale
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>
+References: <20190506224109.9357-1-f.fainelli@gmail.com>
+ <20190506224109.9357-2-f.fainelli@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <84470f47-4e65-80c4-d378-9b83b7f487fb@roeck-us.net>
+Date:   Tue, 7 May 2019 06:31:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190506224109.9357-2-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 5/6/19 3:41 PM, Florian Fainelli wrote:
+> In preparation for dealing with scales within the SCMI HWMON driver,
+> fetch and store the sensor unit scale into the scmi_sensor_info
+> structure.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>   drivers/firmware/arm_scmi/sensors.c | 7 ++++++-
+>   include/linux/scmi_protocol.h       | 1 +
+>   2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+> index b53d5cc9c9f6..f324f0a13ebe 100644
+> --- a/drivers/firmware/arm_scmi/sensors.c
+> +++ b/drivers/firmware/arm_scmi/sensors.c
+> @@ -33,7 +33,8 @@ struct scmi_msg_resp_sensor_description {
+>   #define NUM_TRIP_POINTS(x)	(((x) >> 4) & 0xff)
+>   		__le32 attributes_high;
+>   #define SENSOR_TYPE(x)		((x) & 0xff)
+> -#define SENSOR_SCALE(x)		(((x) >> 11) & 0x3f)
+> +#define SENSOR_SCALE_MASK	0x3f
+> +#define SENSOR_SCALE(x)		(((x) >> 11) & SENSOR_SCALE_MASK)
+>   #define SENSOR_UPDATE_SCALE(x)	(((x) >> 22) & 0x1f)
+>   #define SENSOR_UPDATE_BASE(x)	(((x) >> 27) & 0x1f)
+>   		    u8 name[SCMI_MAX_STR_SIZE];
+> @@ -140,6 +141,10 @@ static int scmi_sensor_description_get(const struct scmi_handle *handle,
+>   			s = &si->sensors[desc_index + cnt];
+>   			s->id = le32_to_cpu(buf->desc[cnt].id);
+>   			s->type = SENSOR_TYPE(attrh);
+> +			s->scale = SENSOR_SCALE(attrh);
+> +			/* Sign extend to a full u8 */
+> +			if (s->scale & ((SENSOR_SCALE_MASK + 1) >> 1))
 
-please pull the latest x86-fpu-for-linus tree from:
+The logic here is quite confusing. I think it would be better to define,
+say, SENSOR_SCALE_SIGN and use it.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
+> +				s->scale |= GENMASK(7, 6);
+>   			strlcpy(s->name, buf->desc[cnt].name, SCMI_MAX_STR_SIZE);
+>   		}
+>   
+> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+> index 3105055c00a7..7746f171f108 100644
+> --- a/include/linux/scmi_protocol.h
+> +++ b/include/linux/scmi_protocol.h
+> @@ -144,6 +144,7 @@ struct scmi_power_ops {
+>   struct scmi_sensor_info {
+>   	u32 id;
+>   	u8 type;
+> +	u8 scale;
 
-This branch contains work started by Rik van Riel and brought to
-fruition by Sebastian Andrzej Siewior with the main goal to optimize
-when to load FPU registers: only when returning to userspace and not on
-every context switch (while the task remains in the kernel).
+Why not s8 if this is a signed value ?
 
-In addition, this optimization makes kernel_fpu_begin() cheaper by
-requiring registers saving only on the first invocation and skipping
-that in following ones.
+Thanks,
+Guenter
 
-What is more, this series cleans up and streamlines many aspects of the
-already complex FPU code, hopefully making it more palatable for future
-improvements and simplifications.
+>   	char name[SCMI_MAX_STR_SIZE];
+>   };
+>   
+> 
 
-Finally, there's a __user annotations fix from Jann Horn.
-
-Thx.
-
----
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
-
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
-
-for you to fetch changes up to d9c9ce34ed5c892323cbf5b4f9a4c498e036316a:
-
-  x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails (2019-05-06 09:49:40 +0200)
-
-----------------------------------------------------------------
-Jann Horn (1):
-      x86/fpu: Fix __user annotations
-
-Rik van Riel (5):
-      x86/fpu: Add an __fpregs_load_activate() internal helper
-      x86/fpu: Eager switch PKRU state
-      x86/fpu: Always store the registers in copy_fpstate_to_sigframe()
-      x86/fpu: Prepare copy_fpstate_to_sigframe() for TIF_NEED_FPU_LOAD
-      x86/fpu: Defer FPU state load until return to userspace
-
-Sebastian Andrzej Siewior (23):
-      x86/fpu: Remove fpu->initialized usage in __fpu__restore_sig()
-      x86/fpu: Remove fpu__restore()
-      x86/fpu: Remove preempt_disable() in fpu__clear()
-      x86/fpu: Always init the state in fpu__clear()
-      x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
-      x86/fpu: Don't save fxregs for ia32 frames in copy_fpstate_to_sigframe()
-      x86/fpu: Remove fpu->initialized
-      x86/fpu: Remove user_fpu_begin()
-      x86/fpu: Make __raw_xsave_addr() use a feature number instead of mask
-      x86/fpu: Use a feature number instead of mask in two more helpers
-      x86/pkeys: Provide *pkru() helpers
-      x86/fpu: Only write PKRU if it is different from current
-      x86/pkeys: Don't check if PKRU is zero before writing it
-      x86/entry: Add TIF_NEED_FPU_LOAD
-      x86/fpu: Update xstate's PKRU value on write_pkru()
-      x86/fpu: Inline copy_user_to_fpregs_zeroing()
-      x86/fpu: Restore from kernel memory on the 64-bit path too
-      x86/fpu: Merge the two code paths in __fpu__restore_sig()
-      x86/fpu: Add a fastpath to __fpu__restore_sig()
-      x86/fpu: Add a fastpath to copy_fpstate_to_sigframe()
-      x86/fpu: Restore regs in copy_fpstate_to_sigframe() in order to use the fastpath
-      x86/pkeys: Add PKRU value to init_fpstate
-      x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails
-
- Documentation/preempt-locking.txt    |   1 -
- arch/x86/entry/common.c              |  10 +-
- arch/x86/ia32/ia32_signal.c          |  17 ++-
- arch/x86/include/asm/fpu/api.h       |  31 ++++++
- arch/x86/include/asm/fpu/internal.h  | 133 +++++++++++++++++------
- arch/x86/include/asm/fpu/signal.h    |   2 +-
- arch/x86/include/asm/fpu/types.h     |   9 --
- arch/x86/include/asm/fpu/xstate.h    |   8 +-
- arch/x86/include/asm/pgtable.h       |  29 ++++-
- arch/x86/include/asm/special_insns.h |  19 +++-
- arch/x86/include/asm/thread_info.h   |   2 +
- arch/x86/include/asm/trace/fpu.h     |  13 +--
- arch/x86/kernel/cpu/common.c         |   5 +
- arch/x86/kernel/fpu/core.c           | 195 ++++++++++++++++-----------------
- arch/x86/kernel/fpu/init.c           |   2 -
- arch/x86/kernel/fpu/regset.c         |  24 ++---
- arch/x86/kernel/fpu/signal.c         | 202 ++++++++++++++++++++++-------------
- arch/x86/kernel/fpu/xstate.c         |  42 ++++----
- arch/x86/kernel/process.c            |   2 +-
- arch/x86/kernel/process_32.c         |  11 +-
- arch/x86/kernel/process_64.c         |  11 +-
- arch/x86/kernel/signal.c             |  21 ++--
- arch/x86/kernel/traps.c              |   2 +-
- arch/x86/kvm/vmx/vmx.c               |   2 +-
- arch/x86/kvm/x86.c                   |  48 +++++----
- arch/x86/math-emu/fpu_entry.c        |   3 -
- arch/x86/mm/mpx.c                    |   6 +-
- arch/x86/mm/pkeys.c                  |  21 ++--
- 28 files changed, 512 insertions(+), 359 deletions(-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
