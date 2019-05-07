@@ -4,59 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3FFC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FD9C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E26720578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0F0205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207992;
-	bh=Oj2v2buur2eU7P4+bPDv0if7rp7WFxj8ACGboeyinH4=;
+	s=default; t=1557207995;
+	bh=67S5tV4GKwwuUPmJNEf0QgRjkdt2K7cMwGQp1N8iaBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I6RD2vQXYspsChkJIEHY/PWZcq9ZwN9598oJTeVLFFbj32nHLQCqTtElM25y39qwU
-	 p+3+bfvS0TDMDg7TBAIg/N10sLA2wLCgEqrLq7ieUoHnsTllvuxtTvxtnZCKVHZ41v
-	 Oq9oV6sLnZEznIgrK2C/z3Ijjd4exptLRIk1YWT4=
+	b=wBPuqB3vzOQpr82suBCbph00xcYIxBx24GnQM25Wj+49W6vXE6XzX5PfYzn57BRIm
+	 9YDlndfTrQYmuk5xYSAPwdYpyzrYzQ3uCE5Ig4f8g4aujaMgbfsujC3/caiScLj/Qs
+	 BBXsvezKqdg4DfjWJpIPpiliX6rX4THC6gAEhtKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfEGFl1 (ORCPT
+        id S1729216AbfEGFqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbfEGFlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:23 -0400
+        id S1729332AbfEGFl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D56352087F;
-        Tue,  7 May 2019 05:41:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F1A8214AE;
+        Tue,  7 May 2019 05:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207682;
-        bh=Oj2v2buur2eU7P4+bPDv0if7rp7WFxj8ACGboeyinH4=;
+        s=default; t=1557207687;
+        bh=67S5tV4GKwwuUPmJNEf0QgRjkdt2K7cMwGQp1N8iaBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCB/lpus75u8l8453zL3prgzsMXUbPzyBuwGc1nGJThPYuBq51dz90PSTXsIhBTLj
-         1KqO3CezbxRSmvoK+/B2L6eDqbCl8GWpSRKwQ/nH2m5UrKqI7ibQtGlRQc+rHDs/Z3
-         dgdJnw8GmHhitZm/BG1Ox+c9k3IVmDvRtPADS+us=
+        b=WV6jnaUJgYve6RvCtl5mDHZbtpi/Paqrif+r4rf88bs8R8a376SDPOdmSlYoeXI4G
+         h2/HdLHmicnfsEgNBFTfPiXhQalisIC4wY4LZPHo0na+F50APd7Hg6DRg0GRnVbB7n
+         HU3dazLsx054GavI+2XndDXN7uHfNs4Gv7LqNhk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH AUTOSEL 4.14 95/95] x86/kprobes: Avoid kretprobe recursion bug
-Date:   Tue,  7 May 2019 01:38:24 -0400
-Message-Id: <20190507053826.31622-95-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/25] HID: input: add mapping for Expose/Overview key
+Date:   Tue,  7 May 2019 01:41:00 -0400
+Message-Id: <20190507054123.32514-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
-References: <20190507053826.31622-1-sashal@kernel.org>
+In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
+References: <20190507054123.32514-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,109 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit b191fa96ea6dc00d331dcc28c1f7db5e075693a0 ]
+[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
 
-Avoid kretprobe recursion loop bg by setting a dummy
-kprobes to current_kprobe per-CPU variable.
+According to HUTRR77 usage 0x29f from the consumer page is reserved for
+the Desktop application to present all running user’s application windows.
+Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
+add the mapping.
 
-This bug has been introduced with the asm-coded trampoline
-code, since previously it used another kprobe for hooking
-the function return placeholder (which only has a nop) and
-trampoline handler was called from that kprobe.
-
-This revives the old lost kprobe again.
-
-With this fix, we don't see deadlock anymore.
-
-And you can see that all inner-called kretprobe are skipped.
-
-  event_1                                  235               0
-  event_2                                19375           19612
-
-The 1st column is recorded count and the 2nd is missed count.
-Above shows (event_1 rec) + (event_2 rec) ~= (event_2 missed)
-(some difference are here because the counter is racy)
-
-Reported-by: Andrea Righi <righi.andrea@gmail.com>
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
-Link: http://lkml.kernel.org/r/155094064889.6137.972160690963039.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kprobes/core.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 56cf6c263254..9d7bb8de2917 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -744,11 +744,16 @@ asm(
- NOKPROBE_SYMBOL(kretprobe_trampoline);
- STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index fc7ada26457e..d31725c4e7b1 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -932,6 +932,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
+ 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
  
-+static struct kprobe kretprobe_kprobe = {
-+	.addr = (void *)kretprobe_trampoline,
-+};
++		case 0x29f: map_key_clear(KEY_SCALE);		break;
 +
- /*
-  * Called from kretprobe_trampoline
-  */
- __visible __used void *trampoline_handler(struct pt_regs *regs)
- {
-+	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
- 	struct hlist_node *tmp;
-@@ -758,6 +763,17 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 	void *frame_pointer;
- 	bool skipped = false;
- 
-+	preempt_disable();
-+
-+	/*
-+	 * Set a dummy kprobe for avoiding kretprobe recursion.
-+	 * Since kretprobe never run in kprobe handler, kprobe must not
-+	 * be running at this point.
-+	 */
-+	kcb = get_kprobe_ctlblk();
-+	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-+	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
-@@ -833,10 +849,9 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
- 			__this_cpu_write(current_kprobe, &ri->rp->kp);
--			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
- 			ri->ret_addr = correct_ret_addr;
- 			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, NULL);
-+			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+ 		default: map_key_clear(KEY_UNKNOWN);
  		}
- 
- 		recycle_rp_inst(ri, &empty_rp);
-@@ -852,6 +867,9 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 
- 	kretprobe_hash_unlock(current, &flags);
- 
-+	__this_cpu_write(current_kprobe, NULL);
-+	preempt_enable();
-+
- 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
- 		hlist_del(&ri->hlist);
- 		kfree(ri);
+ 		break;
 -- 
 2.20.1
 
