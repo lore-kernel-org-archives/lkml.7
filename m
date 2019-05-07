@@ -2,120 +2,97 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE19C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716A2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E784206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J842SbsU";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BP4m2EGt"
+	by mail.kernel.org (Postfix) with ESMTP id 469A1206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557256724;
+	bh=67tnEF9PjYK24nykxEO2iZX5wFuosHz9Vizdyl+/cPw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mkgd7oftdfn+R2Mac+jtVVJxKDoIpP7fmJpJ0KEBR/vaY59iRxUFowkvEEdISnveZ
+	 KV/tTCaNbzKEBZIYI+4IsHxoBxDz07a8z2lRp2UNkSOgmLFL1QpGwhYlanm9y/tRcV
+	 qkksk0liSY7JAHTNns+veS64Jlc+hb64+T0bX5+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfEGTSg (ORCPT
+        id S1726684AbfEGTSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:18:36 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50268 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfEGTSX (ORCPT
+        Tue, 7 May 2019 15:18:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41378 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfEGTSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 May 2019 15:18:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D322E61340; Tue,  7 May 2019 19:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557256701;
-        bh=WmAf8oFe6jYa0ZDJBfWK83oRQDbYixmX8SwEtCrRmRo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J842SbsUNGi43C0ZcefrYcJAiKXgRAnvHSM0h2ZOqg8w+7YClM78psIZJAGY3upmp
-         q7JVB7RHaUL40Rj47pWB7X7NyTx1QzB8GtFzoMHEXCxFBsHysxQQyXiA69WfLNzi6w
-         JDYnTGF+al7zS/gEi+RBS9Ru3ERax3UiARkP9DIY=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0104B6122D;
-        Tue,  7 May 2019 19:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557256699;
-        bh=WmAf8oFe6jYa0ZDJBfWK83oRQDbYixmX8SwEtCrRmRo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BP4m2EGtwQ8mxr/7UXXTDo0zZpiO9oFVEL2ql5XL1QYVf9ODAftOh7G6S6cqnbSaq
-         TeTOu6iI9vOdnEEztUWhRqh8oD6Q69YQwxA7RTMhQJ0rJ7mlCvcEd+p0bT+btJU8C8
-         DLcJTnL0Ih4V7/1pLLW3Cdw515RoChoUMRR0JL2k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0104B6122D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Bruce Wang <bzwang@chromium.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 2/3] drm/msm/dpu: Avoid a null de-ref while recovering from kms init fail
-Date:   Tue,  7 May 2019 13:18:10 -0600
-Message-Id: <1557256691-25798-3-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557256691-25798-1-git-send-email-jcrouse@codeaurora.org>
-References: <1557256691-25798-1-git-send-email-jcrouse@codeaurora.org>
+Received: by mail-lj1-f193.google.com with SMTP id k8so15334106lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 12:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FtF42CqL123SSRl10dCYLKTcv2hhlfrc0BUh3e4ZyQA=;
+        b=MDNkFF5/XrluyqCwIMfLlVttmyMxCjmI2wG7YwAycEXZCEOWsEc2x6MssI+Rlbi/iu
+         yQsVKdRqLbBtdsbUldIBJx0z/BfyC9QXVCs0johj7JFgnda+gRiZW//uOT35LvQueJfP
+         e5w65jeDG6ogGawBTKsmIemyIVj87dZWPIMVg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FtF42CqL123SSRl10dCYLKTcv2hhlfrc0BUh3e4ZyQA=;
+        b=rbGSGeK1GHprd1kQ8X/LBLS0ntNqDnmtzLEuBd7qe3W/19HxrzWSRr5uPD/A9kef9k
+         f9NuCouAvvDT6xWH48gyhhfEGgcNmDhwvmlLZo/LrebUVTpdRkj4xzU+h+oL0Gf85WDH
+         +WqXkS2VHkEcGuO1XIHWBcmlI6veumT9eOabSv2biXVbTNZfy9S8bDGLmxoaqOB1QY2h
+         E+o9y7UOpEtY1VbtBv6L9gnLuXmyBH1+sK7kIyMdSx6e9mzu5O56NpErzPtlRuJAsB7O
+         XtYd6nIJ1MXkbepA+rUcgHuUNEYJxbUon9YKe1+o+dZdF1BZoEJn1onN7jnUvDW0pMBi
+         1dpw==
+X-Gm-Message-State: APjAAAU71XYxO9xNKv0wKCVA6tiwaMhxYnXN2QAgyQuRFNa4/KXHoGIi
+        xHwr2NotN1Fjh8u9A34H920KrjSs8uM=
+X-Google-Smtp-Source: APXvYqygigNN+qGC8QLLdpZ4FE/dv77DwgnXlm+D0yJLHUu3IAmgbl5P4fUFHehwCmUVC/rsDIENgA==
+X-Received: by 2002:a2e:89c8:: with SMTP id c8mr18882082ljk.73.1557256700856;
+        Tue, 07 May 2019 12:18:20 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id g8sm3661958lfg.4.2019.05.07.12.18.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 12:18:20 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id u21so6219725lja.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 12:18:19 -0700 (PDT)
+X-Received: by 2002:a2e:9044:: with SMTP id n4mr3212578ljg.94.1557256699430;
+ Tue, 07 May 2019 12:18:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1557162679.git.kirr@nexedi.com> <CAHk-=wg1tFzcaX2v9Z91vPJiBR486ddW5MtgDL02-fOen2F0Aw@mail.gmail.com>
+ <20190507190939.GA12729@deco.navytux.spb.ru>
+In-Reply-To: <20190507190939.GA12729@deco.navytux.spb.ru>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 May 2019 12:18:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgWusqMfU25eBofgBHVSrQaVxr-EwCPCWcBaFMjzf_=Cg@mail.gmail.com>
+Message-ID: <CAHk-=wgWusqMfU25eBofgBHVSrQaVxr-EwCPCWcBaFMjzf_=Cg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] stream_open bits for Linux 5.2
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@denx.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the failure path for dpu_kms_init() it is possible to get to the MMU
-destroy function with uninitialized MMU structs. Check for NULl and skip
-if needed.
+On Tue, May 7, 2019 at 12:09 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+>
+> I've pushed corresponding gpg-signed tag (stream_open-5.2) to my tree. I
+> did not go the gpg way initially because we do not have a gpg-trust
+> relation established and so I thought that signing was useless.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Ok, since I hadn't pushed out my pull yet, I just re-did it with your
+signature, so that the key is visible in the git tree.
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index 885bf88..1beaf29 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -56,7 +56,7 @@ static const char * const iommu_ports[] = {
- #define DPU_DEBUGFS_HWMASKNAME "hw_log_mask"
- 
- static int dpu_kms_hw_init(struct msm_kms *kms);
--static int _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms);
-+static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms);
- 
- static unsigned long dpu_iomap_size(struct platform_device *pdev,
- 				    const char *name)
-@@ -725,17 +725,20 @@ static const struct msm_kms_funcs kms_funcs = {
- #endif
- };
- 
--static int _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
-+static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
- {
- 	struct msm_mmu *mmu;
- 
-+	if (!dpu_kms->base.aspace)
-+		return;
-+
- 	mmu = dpu_kms->base.aspace->mmu;
- 
- 	mmu->funcs->detach(mmu, (const char **)iommu_ports,
- 			ARRAY_SIZE(iommu_ports));
- 	msm_gem_address_space_put(dpu_kms->base.aspace);
- 
--	return 0;
-+	dpu_kms->base.aspace = NULL;
- }
- 
- static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
--- 
-2.7.4
-
+                   Linus
