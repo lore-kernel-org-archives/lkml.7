@@ -2,166 +2,174 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF64C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A296C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8EF206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA64920675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oShkY9Uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfEGSqs (ORCPT
+        id S1727469AbfEGSqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:46:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:23077 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfEGSqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:46:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 11:46:47 -0700
-X-ExtLoop1: 1
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga006.jf.intel.com with ESMTP; 07 May 2019 11:46:47 -0700
-Received: from orsmsx122.amr.corp.intel.com ([169.254.11.68]) by
- ORSMSX110.amr.corp.intel.com ([169.254.10.28]) with mapi id 14.03.0415.000;
- Tue, 7 May 2019 11:46:46 -0700
-From:   "Schmauss, Erik" <erik.schmauss@intel.com>
-To:     Gabriel C <nix.or.die@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Tue, 7 May 2019 14:46:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45756 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfEGSqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 14:46:54 -0400
+Received: by mail-pf1-f195.google.com with SMTP id e24so9092600pfi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 11:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4K5qiK9vhvmIkn3WHoZK0319QLRlU1KUu0cyFne4DWs=;
+        b=oShkY9UoCOJkw+8F+fqEj0Uc9/qHLI+6lOnZ4PmArGpPVfAWOwp3l2pki4mxeVWr2v
+         i1/BoCJUiP6IE2hEuHGlPnMC2JT+4iJRQSX+1ftuSwgMBqfHGrHwZeWN1F1lzM9bGAbB
+         BpTytT+gqKFiY+9K8QRJWzSXFZlayvNxFar7o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4K5qiK9vhvmIkn3WHoZK0319QLRlU1KUu0cyFne4DWs=;
+        b=S3sIQhifUBWnSnYSGeerCOTnKLR7x0KARgd6H8MeDMZfEzuMHgtB07ae9T2CnfTU/7
+         hojahCw5DMCSAdNvTcyw/gFatgOnWDRbgVKPgl6/u63CQ/P664GAc7nohw7DiRfRO8gu
+         hSMev5GYxDJ3qDU7zQYtNfsZ4gwMvmQtW1YyFsAHlRfONqJiSlDcSdkQZQUE8fr0ehZP
+         n3QVb229qS97a9J/uWCUuaFaeYLJKgo9SEhFJ5I/iTFrTCfEN38kdHPdN1Nfhnkffhcm
+         b2wyC823c0qrIOicUP7NSoer5KzR8fXF5L89Ag8vGL/fYplcEnHL5GYnkkY7kl5CUAkt
+         IjLA==
+X-Gm-Message-State: APjAAAWRkOx1dFQHpe+06n1NZELy4tvkfgLMc80CISpPFtWjRRcgMpj5
+        rmde6JRVXzB6+vt4sM10/hw0Jg==
+X-Google-Smtp-Source: APXvYqxrkWfI22GqtapHzGjSfBpzNe8seCozjCeX6zOdjbNwchSvGqdEtYr/uKJ7o2QPp+DNkaVTXQ==
+X-Received: by 2002:a63:ee15:: with SMTP id e21mr41892839pgi.180.1557254813331;
+        Tue, 07 May 2019 11:46:53 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id p67sm31662140pfi.123.2019.05.07.11.46.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 11:46:52 -0700 (PDT)
+Date:   Tue, 7 May 2019 14:46:50 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Daniel Colascione <dancol@google.com>,
+        Todd Kjos <tkjos@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Martijn Coenen <maco@android.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Moore, Robert" <robert.moore@intel.com>
-Subject: RE: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG
- being set
-Thread-Topic: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG
- being set
-Thread-Index: AQHVBGRFH2iPoaZGrUKM6INtXuK3nKZfsfkAgAAIwICAABFWAIAAEDuAgAAkt+A=
-Date:   Tue, 7 May 2019 18:46:46 +0000
-Message-ID: <CF6A88132359CE47947DB4C6E1709ED53C5A9EBD@ORSMSX122.amr.corp.intel.com>
-References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
- <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com>
- <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
- <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
- <CAEJqkgiB7woieNZ-vVm7x-GzVrqGpJWLXOM9JpSUgPgE7eA6gA@mail.gmail.com>
-In-Reply-To: <CAEJqkgiB7woieNZ-vVm7x-GzVrqGpJWLXOM9JpSUgPgE7eA6gA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzEzZjYwZTgtYjExMi00OTZkLWJhNDItN2MyYWZkNjU0Nzc1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUDVlM2VkZDVURjlmaGY3OFA1ZFcwNXdIckZGbWdiZk1IQ2l3RVZibmxVQVwvWHI2V1wvMTc2aEJReGxISUFYYXplIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        kernel-team <kernel-team@android.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190507184650.GA139364@google.com>
+References: <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <20190507021622.GA27300@sultan-box.localdomain>
+ <20190507070430.GA24150@kroah.com>
+ <20190507072721.GA4364@sultan-box.localdomain>
+ <20190507074334.GB26478@kroah.com>
+ <20190507081236.GA1531@sultan-box.localdomain>
+ <20190507105826.oi6vah6x5brt257h@brauner.io>
+ <CAJuCfpFeOVzDUq5O_cVgVGjonWDWjVVR192On6eB5gf==_uPKw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpFeOVzDUq5O_cVgVGjonWDWjVVR192On6eB5gf==_uPKw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2FicmllbCBDIFttYWls
-dG86bml4Lm9yLmRpZUBnbWFpbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIE1heSA3LCAyMDE5IDI6
-MzMgQU0NCj4gVG86IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz4NCj4gQ2M6
-IEFDUEkgRGV2ZWwgTWFsaW5nIExpc3QgPGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnPjsgTEtN
-TCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBTY2htYXVzcywgRXJpayA8ZXJp
-ay5zY2htYXVzc0BpbnRlbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbS2VybmVsIDUuMV0gQUNQSV9E
-RUJVRyBtZXNzYWdlcyB3aXRob3V0DQo+IENPTkZJR19BQ1BJX0RFQlVHIGJlaW5nIHNldA0KPiAN
-Cj4gQW0gRGkuLCA3LiBNYWkgMjAxOSB1bSAxMDozNSBVaHIgc2NocmllYiBSYWZhZWwgSi4gV3lz
-b2NraQ0KPiA8cmFmYWVsQGtlcm5lbC5vcmc+Og0KPiA+DQo+ID4gT24gVHVlLCBNYXkgNywgMjAx
-OSBhdCA5OjMxIEFNIEdhYnJpZWwgQyA8bml4Lm9yLmRpZUBnbWFpbC5jb20+IHdyb3RlOg0KPiA+
-ID4NCj4gPiA+IEFtIERpLiwgNy4gTWFpIDIwMTkgdW0gMDk6MDEgVWhyIHNjaHJpZWIgUmFmYWVs
-IEouIFd5c29ja2kNCj4gPHJhZmFlbEBrZXJuZWwub3JnPjoNCj4gPiA+ID4NCj4gPiA+ICBIZWxs
-byBSYWZhZWwgLCAgRXJpaw0KPiA+ID4NCj4gPiA+ID4gK0VyaWsNCj4gPiA+ID4NCj4gPiA+ID4g
-T24gVHVlLCBNYXkgNywgMjAxOSBhdCAxOjMzIEFNIEdhYnJpZWwgQyA8bml4Lm9yLmRpZUBnbWFp
-bC5jb20+DQo+IHdyb3RlOg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSGVsbG8sDQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiB3aGlsZSB0ZXN0aW5nIGtlcm5lbC01LjEgSSBnZXQgb24gb25lIG9mIG15IExl
-bm92byBMYXB0b3BzIHZlcnkNCj4gPiA+ID4gPiBzdHJhbmdlICdBQ1BJIERlYnVnOicgbWVzc2Fn
-ZXMuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBBZnRlciBzb21lIGdyZXBwaW5nIEkgcmVhbGl6ZWQg
-dGhlc2UgYXJlIERlYnVnIG1lc3NhZ2VzIGZyb20NCj4gPiA+ID4gPiBEU0RUICwgaG93ZXZlciBt
-eSBrZXJuZWwgZG9lcyBub3QgaGF2ZSBBQ1BJX0RFQlVHIGVuYWJsZWQuDQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiBJIGZvdW5kIG91dCB0aGUgbW9kdWxlIHRyaWdnZXJpbmcgdGhpcywgb24gdGhpcyBM
-YXB0b3AgaXMNCj4gPiA+ID4gPiBpZGVhcGFkX2xhcHRvcCAsIGJ1dCBsb29raW5nIGF0IHRoZSBj
-b2RlIEkgY2Fubm90IHNlZSB3aGF0IHdvdWxkDQo+ID4gPiA+ID4gY2F1c2VzIHRoYXQuDQo+ID4g
-PiA+ID4NCj4gPiA+ID4gPiBBbHNvIG9uIHRoZSBzYW1lIExhcHRvcCB3aXRoIGFueSA1LjAuWCBr
-ZXJuZWxzIEkgY2Fubm90IHNlZSB0aGVzZS4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gfiQgZ3JlcCAtaSBBQ1BJX0RFQlVHIC9ib290L2NvbmZpZy01LjEtZncxICMNCj4gPiA+ID4g
-PiBDT05GSUdfQUNQSV9ERUJVR0dFUiBpcyBub3Qgc2V0ICMgQ09ORklHX0FDUElfREVCVUcgaXMg
-bm90DQo+IHNldCAjDQo+ID4gPiA+ID4gQ09ORklHX1RISU5LUEFEX0FDUElfREVCVUdGQUNJTElU
-SUVTIGlzIG5vdCBzZXQgIw0KPiA+ID4gPiA+IENPTkZJR19USElOS1BBRF9BQ1BJX0RFQlVHIGlz
-IG5vdCBzZXQNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC4uIGRtZXNnIC4uDQo+ID4gPiA+ID4gLi4u
-DQo+ID4gPiA+ID4gWyAgIDY4LjAyMDgxMl0gY2FsbGluZyAgaWRlYXBhZF9hY3BpX2RyaXZlcl9p
-bml0KzB4MC8weDEwMDANCj4gPiA+ID4gPiBbaWRlYXBhZF9sYXB0b3BdIEAgMTMyMg0KPiA+ID4g
-PiA+IFsgICA2OC4wMjY3MDhdIGlucHV0OiBJZGVhcGFkIGV4dHJhIGJ1dHRvbnMgYXMNCj4gPiA+
-ID4gPg0KPiAvZGV2aWNlcy9wY2kwMDAwOjAwLzAwMDA6MDA6MWYuMC9QTlAwQzA5OjAwL1ZQQzIw
-MDQ6MDAvaW5wdXQvaW5wdXQxNg0KPiA+ID4gPiA+IFsgICA2OC4wMzgyMzZdIEFDUEkgRGVidWc6
-ICAiPT09PT1RVUVSWV82ND09PT09Ig0KPiA+ID4gPiA+IFsgICA2OC4wNTAyMzJdIEFDUEkgRGVi
-dWc6ICAiPT09PT1RVUVSWV82NT09PT09Ig0KPiA+ID4gPiA+IFsgICA2OC4wNjAyMThdIEFDUEkg
-RGVidWc6ICAiPT09PT1RVUVSWV82ND09PT09Ig0KPiA+ID4gPiA+IFsgICA2OC4wOTIyMTZdIHBy
-b2JlIG9mIFZQQzIwMDQ6MDAgcmV0dXJuZWQgMSBhZnRlciA3MTM4NiB1c2Vjcw0KPiA+ID4gPiA+
-IFsgICA2OC4wOTIyNDVdIGluaXRjYWxsIGlkZWFwYWRfYWNwaV9kcml2ZXJfaW5pdCsweDAvMHgx
-MDAwDQo+ID4gPiA+ID4gW2lkZWFwYWRfbGFwdG9wXSByZXR1cm5lZCAwIGFmdGVyIDY5NzUxIHVz
-ZWNzc2cNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC4uLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhl
-c2UgPT09PT1RVUVSWV9YWD09PT09IG1lc3NhZ2VzIGFyZSBmcm9tIERTRFQ6DQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiB+L2FjcGkkIGdyZXAgUVVFUlkgZHNkdC5kc2wNCj4gPiA+ID4gPiAgICAgICAg
-ICAgICAgICBEZWJ1ZyA9ICI9PT09PVFVRVJZXzExPT09PT0iDQo+ID4gPiA+ID4gICAgICAgICAg
-ICAgICAgRGVidWcgPSAiPT09PT1RVUVSWV8xMj09PT09Ig0KPiA+ID4gPiA+ICAgICAgICAgICAg
-ICAgIERlYnVnID0gIj09PT09UVVFUllfMjQ9PT09PSINCj4gPiA+ID4gPiAgICAgICAgICAgICAg
-ICBEZWJ1ZyA9ICI9PT09PVFVRVJZXzI1PT09PT0iDQo+ID4gPiA+ID4gICAgICAgICAgICAgICAg
-RGVidWcgPSAiPT09PT1RVUVSWV8zNz09PT09Ig0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgIERl
-YnVnID0gIj09PT09UVVFUllfMzg9PT09PSINCj4gPiA+ID4gPiAgICAgICAgICAgICAgICBEZWJ1
-ZyA9ICI9PT09PVFVRVJZXzY0PT09PT0iDQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgRGVidWcg
-PSAiPT09PT1RVUVSWV82NT09PT09Ig0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gQWxzbyB0aGlzIGlz
-IHRoZSBjb2RlIGZyb20gRFNEVCBmb3IgUVVFUlkgNjQgYW5kIDY1Og0KPiA+ID4gPiA+DQo+ID4g
-PiA+ID4gLi4uDQo+ID4gPiA+ID4gICAgICAgICAgICAgTWV0aG9kIChfUTY0LCAwLCBOb3RTZXJp
-YWxpemVkKSAgLy8gX1F4eDogRUMgUXVlcnkNCj4gPiA+ID4gPiAgICAgICAgICAgIHsNCj4gPiA+
-ID4gPiAgICAgICAgICAgICAgICBEZWJ1ZyA9ICI9PT09PVFVRVJZXzY0PT09PT0iDQo+ID4gPiA+
-ID4gICAgICAgICAgICAgICAgSWYgKChPU1lTID09IDB4MDdEOSkpDQo+ID4gPiA+ID4gICAgICAg
-ICAgICAgICAgew0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICBJZiAoKChXTEVYID09IE9u
-ZSkgJiAoV0xBVCA9PSBPbmUpKSkNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgew0KPiA+
-ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgU0dPViAoMHgwMjA0MDAwNSwgT25lKQ0KPiA+
-ID4gPiA+ICAgICAgICAgICAgICAgICAgICB9DQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgICAg
-IEVsc2UNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgew0KPiA+ID4gPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgU0dPViAoMHgwMjA0MDAwNSwgWmVybykNCj4gPiA+ID4gPiAgICAgICAg
-ICAgICAgICAgICAgfQ0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgIH0NCj4gPiA+ID4gPiAgICAg
-ICAgICAgIH0NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICAgICAgICAgICAgTWV0aG9kIChfUTY1LCAw
-LCBOb3RTZXJpYWxpemVkKSAgLy8gX1F4eDogRUMgUXVlcnkNCj4gPiA+ID4gPiAgICAgICAgICAg
-IHsNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICBEZWJ1ZyA9ICI9PT09PVFVRVJZXzY1PT09PT0i
-DQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgSWYgKChPU1lTID09IDB4MDdEOSkpDQo+ID4gPiA+
-ID4gICAgICAgICAgICAgICAgew0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICBJZiAoKChC
-VEVYID09IE9uZSkgJiAoQlRBVCA9PSBPbmUpKSkNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAg
-ICAgew0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgU0dPViAoMHgwMjAyMDAwQiwg
-T25lKQ0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICB9DQo+ID4gPiA+ID4gICAgICAgICAg
-ICAgICAgICAgIEVsc2UNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgew0KPiA+ID4gPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgU0dPViAoMHgwMjAyMDAwQiwgWmVybykNCj4gPiA+ID4g
-PiAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgIH0NCj4gPiA+
-ID4gPiAgICAgICAgICAgIH0NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC4uLg0KPiA+ID4gPiA+DQo+
-ID4gPiA+ID4NCj4gPiA+ID4gPiBBbnkgaWRlYSB3aGF0IHdvdWxkIGNhdXNlIHRoaXMgPw0KPiA+
-ID4NCj4gPiA+IEkgdGhpbmsgSSBmb3VuZCB3aGF0IGlzIGNhdXNpbmcgdGhhdC4NCj4gPiA+DQo+
-ID4gPiBDb21taXQgYWE5YWFhNGQ2MWMwMDQ4ZDNmYWFkMDU2ODkzY2Q3ODYwYmJjMDg0YyBpcyBt
-b3ZpbmcNCj4gZGVmaW5pdGlvbg0KPiA+ID4gb2YgTGludXgncyAgQUNQSV9ERUJVR19ERUZBVUxU
-IHRvIGluY3VkZS9hY3BpL3BsYXRmb3JtL2FjbGludXguaCAsDQo+ID4gPiBob3dldmVyIGluY2x1
-ZGUvYWNwaS9hY3BpLmggZGlkbid0IGdvdCB1cGRhdGVkIGFuZA0KPiA+ID4gQUNQSV9ERUJVR19E
-RUZBVUxUIG5vdyBiZWluZyBhbHdheXMgZGVmaW5lZCBhcyAgKEFDUElfTFZfSU5JVCB8DQo+ID4g
-PiBBQ1BJX0xWX0RFQlVHX09CSkVDVCB8IEFDUElfTFZfRVZBTFVBVElPTiB8IEFDUElfTFZfUkVQ
-QUlSKQ0KPiA+DQo+ID4gSSdtIG5vdCBzdXJlIHdoYXQgeW91IG1lYW4gYnkgdGhpcy4NCj4gPg0K
-PiA+IGluY2x1ZGUvYWNwaS9hY3BpLmggc2hvdWxkIGdldCB0aGUgcmlnaHQgZGVmaW5pdGlvbnMg
-dGhyb3VnaA0KPiA+IGluY2x1ZGUvYWNwaS9wbGF0Zm9ybS9hY2Vudi5oIGFuZCBpbmNsdWRlL2Fj
-cGkvYWNvdXRwdXQuaCB0aGF0IGFyZQ0KPiA+IGluY2x1ZGVkIGJ5IGl0Lg0KPiA+DQo+IA0KPiBI
-bW0geWVzIHNob3VsZCAsIEkgbWlzc2VkIHRoYXQgaW5jbHVkZS4gSG93ZXZlciBpdCBkb2VzIG5v
-dCB3b3JrLg0KPiANCj4gSSd2ZSBqdXN0IHB1dCBiYWNrIG9sZCBjb2RlIGJhY2sgaW50byBkcml2
-ZXJzL2FjcGkvYnVzLmMgdG8gdGVzdCBhbmQgYWxsIHdvcmtpbmcNCj4gbm93IGZpbmUgd2l0aG91
-dCBhbnkgb3RoZXIgY2hhbmdlcy4NCj4gDQo+ID4gSXQgbG9va3MgbGlrZSBpbmN1ZGUvYWNwaS9w
-bGF0Zm9ybS9hY2xpbnV4LmggaGFzIG5vdCBiZWVuIGluY2x1ZGVkIGJ5DQo+ID4gaW5jbHVkZS9h
-Y3BpL3BsYXRmb3JtL2FjZW52LmggZm9yIHNvbWUgcmVhc29uIHdoZW4gYnVpbGRpbmcgdGhpcw0K
-PiA+IG1vZHVsZS4NCj4gDQo+IElmIHRoaXMgb25lIGdldHRpbmcgaXQgd3JvbmcgYWxsIHdpbGwg
-ZG8gc28gLCB0aGV5IGFsbCBqdXN0IGluY2x1ZGUgPGxpbnV4L2FjcGkuaD4uDQo+IA0KPiBQcm9i
-YWJseSBub3Qgc28gbXVjaCB1c2VycyB3aWxsIG5vdGljZSB0aGF0ICwgSSBqdXN0IGRpZCBiZWNh
-dXNlIG15IEJJT1MNCj4gdmVuZG9yIGZvcmdvdCBERUJVRyBhcm91bmQuDQoNCkRvIHlvdSBzdGls
-bCBnZXQgdGhpcyBpc3N1ZSBhZnRlciBkb2luZyBtYWtlIGNsZWFuIGFuZCByZWJ1aWxkaW5nIHlv
-dXIga2VybmVsPw0K
+On Tue, May 07, 2019 at 09:28:47AM -0700, Suren Baghdasaryan wrote:
+> From: Christian Brauner <christian@brauner.io>
+> Date: Tue, May 7, 2019 at 3:58 AM
+> To: Sultan Alsawaf
+> Cc: Greg Kroah-Hartman, open list:ANDROID DRIVERS, Daniel Colascione,
+> Todd Kjos, Kees Cook, Peter Zijlstra, Martijn Coenen, LKML, Tim
+> Murray, Michal Hocko, Suren Baghdasaryan, linux-mm, Arve Hjønnevåg,
+> Ingo Molnar, Steven Rostedt, Oleg Nesterov, Joel Fernandes, Andy
+> Lutomirski, kernel-team
+> 
+> > On Tue, May 07, 2019 at 01:12:36AM -0700, Sultan Alsawaf wrote:
+> > > On Tue, May 07, 2019 at 09:43:34AM +0200, Greg Kroah-Hartman wrote:
+> > > > Given that any "new" android device that gets shipped "soon" should be
+> > > > using 4.9.y or newer, is this a real issue?
+> > >
+> > > It's certainly a real issue for those who can't buy brand new Android devices
+> > > without software bugs every six months :)
+> > >
+> 
+> Hi Sultan,
+> Looks like you are posting this patch for devices that do not use
+> userspace LMKD solution due to them using older kernels or due to
+> their vendors sticking to in-kernel solution. If so, I see couple
+> logistical issues with this patch. I don't see it being adopted in
+> upstream kernel 5.x since it re-implements a deprecated mechanism even
+> though vendors still use it. Vendors on the other hand, will not adopt
+> it until you show evidence that it works way better than what
+> lowmemorykilled driver does now. You would have to provide measurable
+> data and explain your tests before they would consider spending time
+> on this.
+> On the implementation side I'm not convinced at all that this would
+> work better on all devices and in all circumstances. We had cases when
+> a new mechanism would show very good results until one usecase
+> completely broke it. Bulk killing of processes that you are doing in
+> your patch was a very good example of such a decision which later on
+> we had to rethink. That's why baking these policies into kernel is
+> very problematic. Another problem I see with the implementation that
+> it ties process killing with the reclaim scan depth. It's very similar
+> to how vmpressure works and vmpressure in my experience is very
+> unpredictable.
+
+Yeah it does seem conceptually similar, good point.
+ 
+> > > Regardless, even if PSI were backported, a full-fledged LMKD using it has yet to
+> > > be made, so it wouldn't be of much use now.
+> >
+> > This is work that is ongoing and requires kernel changes to make it
+> > feasible. One of the things that I have been working on for quite a
+> > while is the whole file descriptor for processes thing that is important
+> > for LMKD (Even though I never thought about this use-case when I started
+> > pitching this.). Joel and Daniel have joined in and are working on
+> > making LMKD possible.
+> > What I find odd is that every couple of weeks different solutions to the
+> > low memory problem are pitched. There is simple_lkml, there is LMKD, and
+> > there was a patchset that wanted to speed up memory reclaim at process
+> > kill-time by adding a new flag to the new pidfd_send_signal() syscall.
+> > That all seems - though related - rather uncoordinated.
+> 
+> I'm not sure why pidfd_wait and expedited reclaim is seen as
+> uncoordinated effort. All of them are done to improve userspace LMKD.
+
+Christian, pidfd_wait and expedited reclaim are both coordinated efforts and
+solve different problems related to LMK. simple_lmk is entirely different
+effort that we already hesitated about when it was first posted, now we
+hesitate again due to the issues Suren and others mentioned.
+
+I think it is a better idea for Sultan to spend his time on using/improving
+PSI/LMKd than spending it on the simple_lmk. It could also be a good topic to
+discuss in the Android track of the Linux plumbers conference.
+
+thanks,
+
+ - Joel
+
