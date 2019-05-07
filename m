@@ -2,113 +2,113 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B71C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129A5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008CA20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD17C20835
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 03:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qnU27xfl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RBTacOCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfEGDCk (ORCPT
+        id S1726901AbfEGDCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 23:02:40 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:58979 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfEGDCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 23:02:40 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x4732XTi030985;
-        Tue, 7 May 2019 12:02:33 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4732XTi030985
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557198154;
-        bh=UOVlLy/wVLqCQ3IZ+Xag1tGC9ICcteYP+5Dq8Jc65YI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qnU27xfl2yzx44U8NaR8OU7ABPcGyNqa7uFJGGZjX9cXCokLckUcXX9ZuDz//UxXN
-         GOE+EqtXEFxSinlaoVXqcYz3BxOzUAVwRjFqi+71qtK1ykNrrU2/2px/kd7rAQZk5a
-         cGVPc4u5sQn97E4BHufZBrNvAvMHoN/aTEd2RP8iT7qGrLY3GOalcyX5+Q+5+m7I4i
-         Ciqcg93DefrJEPE+kqoOatuYoxYfOqa3dl0Bfa+EQXj8uH9fAsOkDjJZBmS3nNUSDq
-         thuQiTpbPA3RTc1Mw3Lurq09bPBvSTWKLc4HAGtWAC391uBYOZJ5pdEvOSntRCuch6
-         VnKPqTXdVqTqQ==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id s80so3686018vke.6;
-        Mon, 06 May 2019 20:02:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAXEN7lThhOqdEBEK60RCocds4BkqIZKURmp88mUaleCPmLzsTmg
-        jrwVMMW9RQtE6mhDddHi4LCbgRRqj31MYWENHSA=
-X-Google-Smtp-Source: APXvYqwZFmp6rx95CPF6ap2Yd8GVckWMHJtSP4IT1kInt+74f9qNDrEMuC5mHVSMzYfllgArBDaTWG+xaTomfNEtkuA=
-X-Received: by 2002:a1f:b297:: with SMTP id b145mr15295623vkf.74.1557198152590;
- Mon, 06 May 2019 20:02:32 -0700 (PDT)
+        Mon, 6 May 2019 23:02:51 -0400
+Received: from mail-eopbgr10080.outbound.protection.outlook.com ([40.107.1.80]:10814
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726346AbfEGDCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 23:02:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=saxqos/nQDJQsNSHnss4DxFfxmLYJwOdkuVt9kRLtKI=;
+ b=RBTacOCkkDIBwkZMccViSTq8vS2sSBUDdxM+JhI2X2j7Gg0xyNNDt3+LoNbyiKlQKDmCW/BTprFm25RO4/t3cFhj7HNwlrmpw4ZpdOu6eCJx8ahi73ZBy7F1VmZonb1fkyJDya+oLl1C9XYMxXCX6mbnVWvSVU35B9H7NfL16i0=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3754.eurprd04.prod.outlook.com (52.134.67.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Tue, 7 May 2019 03:02:45 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 03:02:45 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] ARM: dts: imx6ul: add clock-frequency to CPU node
+Thread-Topic: [PATCH] ARM: dts: imx6ul: add clock-frequency to CPU node
+Thread-Index: AQHVBIFYqIWZIuwvrU2KnaxGQFBgOQ==
+Date:   Tue, 7 May 2019 03:02:45 +0000
+Message-ID: <1557197868-6963-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0040.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::28) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c20c8842-c5ee-4aef-245e-08d6d2987a77
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3754;
+x-ms-traffictypediagnostic: DB3PR0402MB3754:
+x-microsoft-antispam-prvs: <DB3PR0402MB3754CDDA57C6E4FC697AB798F5310@DB3PR0402MB3754.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(346002)(366004)(39860400002)(199004)(189003)(2906002)(102836004)(478600001)(386003)(6506007)(99286004)(5660300002)(66066001)(486006)(2501003)(305945005)(86362001)(52116002)(2201001)(3846002)(6116002)(4744005)(68736007)(14454004)(6436002)(8936002)(53936002)(7736002)(25786009)(6486002)(66476007)(73956011)(66946007)(66556008)(64756008)(66446008)(4326008)(186003)(316002)(50226002)(256004)(26005)(36756003)(476003)(2616005)(6512007)(14444005)(71190400001)(110136005)(71200400001)(8676002)(81166006)(81156014)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3754;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Q58S0t6lLK8acWWH0KWoR8NWY3ZFrWOpZKRsULrvWK+FYCgV0eegaR5cm5tAGS+5lWfW1Qt5YjAKeg9Pc5FFVTp1pWA3P2+4S2Qd7iG68Z5uyF4jQGMiwxTZUo2vOHMJElBg6vI6vSB2EyjbKqs/Sgj6VihFibdyZ9l0d6sNwG5keAlhyDI0D6nf6je7jlu840bc44qSFmmtHN8zvf1eISruR6jFDj75BMGuC0mzKCA1olmPug4FSVhlWSbX6qvhh5WWA23fe4jzZMLDaLMMvcCh/mDWrtMObbc4c9p4iqye8jYJ9T+QNPGJp/hmFvOvslLJ3uatlG3+c27/Rs4IOUUfLMyfsved7tbXBCpfThEFKfBgTMad9o3hN7ahSAaQChHkJWzzJlhcovcNF9CFLtM2FmGlIw/n1z3rotqeagQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1552234395-7699-1-git-send-email-yamada.masahiro@socionext.com> <84db9131-5498-d2d5-a984-11079e3c2a6e@gmail.com>
-In-Reply-To: <84db9131-5498-d2d5-a984-11079e3c2a6e@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 7 May 2019 12:01:56 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARLOvginNm-YCUtqju4J=oqU5TTjt0GxPh+Y-KV-jV-PA@mail.gmail.com>
-Message-ID: <CAK7LNARLOvginNm-YCUtqju4J=oqU5TTjt0GxPh+Y-KV-jV-PA@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: fix 'Save As' menu of xconfig
-To:     Robert Gadsdon <rhgadsdon@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c20c8842-c5ee-4aef-245e-08d6d2987a77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 03:02:45.6328
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3754
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 4:10 AM Robert Gadsdon <rhgadsdon@gmail.com> wrote:
->
-> On 03/10/2019 09:13 AM, Masahiro Yamada wrote:
-> > The 'Save As' menu of xconfig is not working; it always saves the
-> > kernel configuration into the default file irrespective of the file
-> > chosen in the dialog box.
-> >
-> > The 'Save' menu always writes into the default file, but it would
-> > make more sense to write into the file previously chosen by 'Load'
-> > or 'Save As'.
-> >
-> > Signed-off-by: Masahiro Yamada<yamada.masahiro@socionext.com>
-> > ---
->
-> The 'save as' may be used for out-of-tree kernel config saves, but the
-> default 'save' should always save to the in-tree .config file, as before
-> (and for the past 10+ years..)  If the kernel config was loaded from an
-> out-of-tree location, it now saves back to that out-of-tree location,
-> which is useless for the kernel compile..
-
-
-I think it is quite natural that
-"save" overwrites the file being edited.
-
-And, that is how the 'save' of menuconfig/nconfig works.
-
-
-> I have always kept my hardware/system-specific kernel configs
-> out-of-tree, and then applied them in-tree before compiling.
->
-> Now, I have to use 'save as' and type in the entire in-tree path
-> (/usr/src/linux-5.1/.config) each time, in order to apply the specific
-> config to the kernel, ready for compilation.
-
-
-It is easy to do it without using xconfig.
-
-cp /your/custom/config .config
-
-
-
-
-> Robert Gadsdon.
-> rglinuxtech.com
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+QWRkIGNsb2NrLWZyZXF1ZW5jeSBwcm9wZXJ0eSB0byBDUFUgbm9kZS4gQXZvaWRzIHdhcm5pbmdz
+IGxpa2UNCiIvY3B1cy9jcHVAMCBtaXNzaW5nIGNsb2NrLWZyZXF1ZW5jeSBwcm9wZXJ0eSIgZm9y
+ICJhcm0sY29ydGV4LWE3Ii4NCg0KU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1
+YW5nQG54cC5jb20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSAgfCAxICsN
+CiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLmR0c2kgfCAxICsNCiAyIGZpbGVzIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVs
+LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KaW5kZXggYmJmMDEwYy4uZmMz
+ODhiOCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpDQorKysgYi9h
+cmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQ0KQEAgLTU5LDYgKzU5LDcgQEANCiAJCQljb21w
+YXRpYmxlID0gImFybSxjb3J0ZXgtYTciOw0KIAkJCWRldmljZV90eXBlID0gImNwdSI7DQogCQkJ
+cmVnID0gPDA+Ow0KKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDw2OTYwMDAwMDA+Ow0KIAkJCWNsb2Nr
+LWxhdGVuY3kgPSA8NjEwMzY+OyAvKiB0d28gQ0xLMzIgcGVyaW9kcyAqLw0KIAkJCSNjb29saW5n
+LWNlbGxzID0gPDI+Ow0KIAkJCW9wZXJhdGluZy1wb2ludHMgPSA8DQpkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnVsbC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC5k
+dHNpDQppbmRleCAyMmU0YTMwLi43MjdiOTJmIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsbC5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLmR0c2kNCkBA
+IC0xMiw2ICsxMiw3IEBADQogL2RlbGV0ZS1ub2RlLyAmY3J5cHRvOw0KIA0KICZjcHUwIHsNCisJ
+Y2xvY2stZnJlcXVlbmN5ID0gPDkwMDAwMDAwMD47DQogCW9wZXJhdGluZy1wb2ludHMgPSA8DQog
+CQkvKiBrSHoJdVYgKi8NCiAJCTkwMDAwMAkxMjc1MDAwDQotLSANCjIuNy40DQoNCg==
