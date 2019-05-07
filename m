@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF12C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D5FC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C2A20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB25205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209074;
-	bh=LYINEmL7/9XMxTSY+QvyvsKaRCIbSzq6tTNZHJQ6LAo=;
+	s=default; t=1557209098;
+	bh=oXIr1mm3+pichJjL+9iVnU0mTDTTZQqC5fQkWc/FwsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QW+71d+AzIQ1jJvP+w2zP35DGEVmu6mQSBhBLldxxpRjpL6E0JxEAg39ezuOI2boc
-	 nxBfgPbSv2PQE2GO7UsG26uTvpKH9AYWzQFXU/TLzvp+GAD+GHHDfVZ/4KwCL8bHxH
-	 w9O07sAmxabPeXEVomJBWEruXWHHJjAM561fzyuU=
+	b=ZCi9wfvBs5VU+A3/1bBvFo9VAOSvOSiYEaWPn9C+o4d6ME5FNmVLapOa983syDDQc
+	 f6hhixIJLqG2ugMu8W51B0l4x5uXdZQNi2IIzNL1N+aZbHyNePukoV/l/hnedoIyHi
+	 LnONJyZkuMja1UUgeNpD3UCXPQ1N8Q7LdQQuIRBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfEGGEd (ORCPT
+        id S1726680AbfEGGE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:04:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfEGFem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:42 -0400
+        id S1727522AbfEGFeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1015C2087F;
-        Tue,  7 May 2019 05:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BFED20B7C;
+        Tue,  7 May 2019 05:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207280;
-        bh=LYINEmL7/9XMxTSY+QvyvsKaRCIbSzq6tTNZHJQ6LAo=;
+        s=default; t=1557207263;
+        bh=oXIr1mm3+pichJjL+9iVnU0mTDTTZQqC5fQkWc/FwsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFLoPvYloJ466M+id1DIZiH/B0KNd7q69H6Y8KIYswicM9vZ/jY7BR0iikdED8PYl
-         lY2aIz2gSDn4kzd+CqIG1SmjW8uILzzMb0j1BgenqM+91GfTPtezH1bPRwaw00WeQJ
-         xL0yS5flbtdjl2LEcNVqTnr7Y02pIVuKpB2byGdg=
+        b=AZclECnsY76yV+4pSX8M9VuXUDZJlS6Pz+40P6Mf3s1hLCDJCcP/x4JsUDpy9gOYJ
+         ZPGWegaNJtqV7DVTNiAXlyS5LUNdU1FcHbFv1NC/sHVYwau2rnLsvAuG1nLqbDNSHi
+         Ii2/oEWAYydoU2bBnQpPhRMJriNdtg+5tgQJghi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 63/99] netfilter: ctnetlink: don't use conntrack/expect object addresses as id
-Date:   Tue,  7 May 2019 01:31:57 -0400
-Message-Id: <20190507053235.29900-63-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 57/99] mm/hotplug: treat CMA pages as unmovable
+Date:   Tue,  7 May 2019 01:31:51 -0400
+Message-Id: <20190507053235.29900-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -61,176 +62,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 3c79107631db1f7fd32cf3f7368e4672004a3010 ]
+[ Upstream commit 1a9f219157b22d0ffb340a9c5f431afd02cd2cf3 ]
 
-else, we leak the addresses to userspace via ctnetlink events
-and dumps.
+has_unmovable_pages() is used by allocating CMA and gigantic pages as
+well as the memory hotplug.  The later doesn't know how to offline CMA
+pool properly now, but if an unused (free) CMA page is encountered, then
+has_unmovable_pages() happily considers it as a free memory and
+propagates this up the call chain.  Memory offlining code then frees the
+page without a proper CMA tear down which leads to an accounting issues.
+Moreover if the same memory range is onlined again then the memory never
+gets back to the CMA pool.
 
-Compute an ID on demand based on the immutable parts of nf_conn struct.
+State after memory offline:
 
-Another advantage compared to using an address is that there is no
-immediate re-use of the same ID in case the conntrack entry is freed and
-reallocated again immediately.
+ # grep cma /proc/vmstat
+ nr_free_cma 205824
 
-Fixes: 3583240249ef ("[NETFILTER]: nf_conntrack_expect: kill unique ID")
-Fixes: 7f85f914721f ("[NETFILTER]: nf_conntrack: kill unique ID")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+ # cat /sys/kernel/debug/cma/cma-kvm_cma/count
+ 209920
+
+Also, kmemleak still think those memory address are reserved below but
+have already been used by the buddy allocator after onlining.  This
+patch fixes the situation by treating CMA pageblocks as unmovable except
+when has_unmovable_pages() is called as part of CMA allocation.
+
+  Offlined Pages 4096
+  kmemleak: Cannot insert 0xc000201f7d040008 into the object search tree (overlaps existing)
+  Call Trace:
+    dump_stack+0xb0/0xf4 (unreliable)
+    create_object+0x344/0x380
+    __kmalloc_node+0x3ec/0x860
+    kvmalloc_node+0x58/0x110
+    seq_read+0x41c/0x620
+    __vfs_read+0x3c/0x70
+    vfs_read+0xbc/0x1a0
+    ksys_read+0x7c/0x140
+    system_call+0x5c/0x70
+  kmemleak: Kernel memory leak detector disabled
+  kmemleak: Object 0xc000201cc8000000 (size 13757317120):
+  kmemleak:   comm "swapper/0", pid 0, jiffies 4294937297
+  kmemleak:   min_count = -1
+  kmemleak:   count = 0
+  kmemleak:   flags = 0x5
+  kmemleak:   checksum = 0
+  kmemleak:   backtrace:
+       cma_declare_contiguous+0x2a4/0x3b0
+       kvm_cma_reserve+0x11c/0x134
+       setup_arch+0x300/0x3f8
+       start_kernel+0x9c/0x6e8
+       start_here_common+0x1c/0x4b0
+  kmemleak: Automatic memory scanning thread ended
+
+[cai@lca.pw: use is_migrate_cma_page() and update commit log]
+  Link: http://lkml.kernel.org/r/20190416170510.20048-1-cai@lca.pw
+Link: http://lkml.kernel.org/r/20190413002623.8967-1-cai@lca.pw
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/nf_conntrack.h |  2 ++
- net/netfilter/nf_conntrack_core.c    | 35 ++++++++++++++++++++++++++++
- net/netfilter/nf_conntrack_netlink.c | 34 +++++++++++++++++++++++----
- 3 files changed, 66 insertions(+), 5 deletions(-)
+ mm/page_alloc.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
-index 249d0a5b12b8..63fd47e924b9 100644
---- a/include/net/netfilter/nf_conntrack.h
-+++ b/include/net/netfilter/nf_conntrack.h
-@@ -318,6 +318,8 @@ struct nf_conn *nf_ct_tmpl_alloc(struct net *net,
- 				 gfp_t flags);
- void nf_ct_tmpl_free(struct nf_conn *tmpl);
- 
-+u32 nf_ct_get_id(const struct nf_conn *ct);
-+
- static inline void
- nf_ct_set(struct sk_buff *skb, struct nf_conn *ct, enum ip_conntrack_info info)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 318ef6ccdb3b..eedb57f9b40b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7945,7 +7945,10 @@ void *__init alloc_large_system_hash(const char *tablename,
+ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 			 int migratetype, int flags)
  {
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 9dd4c2048a2b..1982faf21ebb 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -25,6 +25,7 @@
- #include <linux/slab.h>
- #include <linux/random.h>
- #include <linux/jhash.h>
-+#include <linux/siphash.h>
- #include <linux/err.h>
- #include <linux/percpu.h>
- #include <linux/moduleparam.h>
-@@ -424,6 +425,40 @@ nf_ct_invert_tuple(struct nf_conntrack_tuple *inverse,
+-	unsigned long pfn, iter, found;
++	unsigned long found;
++	unsigned long iter = 0;
++	unsigned long pfn = page_to_pfn(page);
++	const char *reason = "unmovable page";
+ 
+ 	/*
+ 	 * TODO we could make this much more efficient by not checking every
+@@ -7955,17 +7958,20 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 	 * can still lead to having bootmem allocations in zone_movable.
+ 	 */
+ 
+-	/*
+-	 * CMA allocations (alloc_contig_range) really need to mark isolate
+-	 * CMA pageblocks even when they are not movable in fact so consider
+-	 * them movable here.
+-	 */
+-	if (is_migrate_cma(migratetype) &&
+-			is_migrate_cma(get_pageblock_migratetype(page)))
+-		return false;
++	if (is_migrate_cma_page(page)) {
++		/*
++		 * CMA allocations (alloc_contig_range) really need to mark
++		 * isolate CMA pageblocks even when they are not movable in fact
++		 * so consider them movable here.
++		 */
++		if (is_migrate_cma(migratetype))
++			return false;
++
++		reason = "CMA page";
++		goto unmovable;
++	}
+ 
+-	pfn = page_to_pfn(page);
+-	for (found = 0, iter = 0; iter < pageblock_nr_pages; iter++) {
++	for (found = 0; iter < pageblock_nr_pages; iter++) {
+ 		unsigned long check = pfn + iter;
+ 
+ 		if (!pfn_valid_within(check))
+@@ -8045,7 +8051,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ unmovable:
+ 	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+ 	if (flags & REPORT_FAILURE)
+-		dump_page(pfn_to_page(pfn+iter), "unmovable page");
++		dump_page(pfn_to_page(pfn + iter), reason);
+ 	return true;
  }
- EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
  
-+/* Generate a almost-unique pseudo-id for a given conntrack.
-+ *
-+ * intentionally doesn't re-use any of the seeds used for hash
-+ * table location, we assume id gets exposed to userspace.
-+ *
-+ * Following nf_conn items do not change throughout lifetime
-+ * of the nf_conn after it has been committed to main hash table:
-+ *
-+ * 1. nf_conn address
-+ * 2. nf_conn->ext address
-+ * 3. nf_conn->master address (normally NULL)
-+ * 4. tuple
-+ * 5. the associated net namespace
-+ */
-+u32 nf_ct_get_id(const struct nf_conn *ct)
-+{
-+	static __read_mostly siphash_key_t ct_id_seed;
-+	unsigned long a, b, c, d;
-+
-+	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
-+
-+	a = (unsigned long)ct;
-+	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
-+	c = (unsigned long)ct->ext;
-+	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
-+				   &ct_id_seed);
-+#ifdef CONFIG_64BIT
-+	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
-+#else
-+	return siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &ct_id_seed);
-+#endif
-+}
-+EXPORT_SYMBOL_GPL(nf_ct_get_id);
-+
- static void
- clean_from_lists(struct nf_conn *ct)
- {
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index 1213beb5a714..36619ad8ab8c 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -29,6 +29,7 @@
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
- #include <linux/slab.h>
-+#include <linux/siphash.h>
- 
- #include <linux/netfilter.h>
- #include <net/netlink.h>
-@@ -485,7 +486,9 @@ static int ctnetlink_dump_ct_synproxy(struct sk_buff *skb, struct nf_conn *ct)
- 
- static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
- {
--	if (nla_put_be32(skb, CTA_ID, htonl((unsigned long)ct)))
-+	__be32 id = (__force __be32)nf_ct_get_id(ct);
-+
-+	if (nla_put_be32(skb, CTA_ID, id))
- 		goto nla_put_failure;
- 	return 0;
- 
-@@ -1286,8 +1289,9 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
- 	}
- 
- 	if (cda[CTA_ID]) {
--		u_int32_t id = ntohl(nla_get_be32(cda[CTA_ID]));
--		if (id != (u32)(unsigned long)ct) {
-+		__be32 id = nla_get_be32(cda[CTA_ID]);
-+
-+		if (id != (__force __be32)nf_ct_get_id(ct)) {
- 			nf_ct_put(ct);
- 			return -ENOENT;
- 		}
-@@ -2694,6 +2698,25 @@ static int ctnetlink_exp_dump_mask(struct sk_buff *skb,
- 
- static const union nf_inet_addr any_addr;
- 
-+static __be32 nf_expect_get_id(const struct nf_conntrack_expect *exp)
-+{
-+	static __read_mostly siphash_key_t exp_id_seed;
-+	unsigned long a, b, c, d;
-+
-+	net_get_random_once(&exp_id_seed, sizeof(exp_id_seed));
-+
-+	a = (unsigned long)exp;
-+	b = (unsigned long)exp->helper;
-+	c = (unsigned long)exp->master;
-+	d = (unsigned long)siphash(&exp->tuple, sizeof(exp->tuple), &exp_id_seed);
-+
-+#ifdef CONFIG_64BIT
-+	return (__force __be32)siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &exp_id_seed);
-+#else
-+	return (__force __be32)siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &exp_id_seed);
-+#endif
-+}
-+
- static int
- ctnetlink_exp_dump_expect(struct sk_buff *skb,
- 			  const struct nf_conntrack_expect *exp)
-@@ -2741,7 +2764,7 @@ ctnetlink_exp_dump_expect(struct sk_buff *skb,
- 	}
- #endif
- 	if (nla_put_be32(skb, CTA_EXPECT_TIMEOUT, htonl(timeout)) ||
--	    nla_put_be32(skb, CTA_EXPECT_ID, htonl((unsigned long)exp)) ||
-+	    nla_put_be32(skb, CTA_EXPECT_ID, nf_expect_get_id(exp)) ||
- 	    nla_put_be32(skb, CTA_EXPECT_FLAGS, htonl(exp->flags)) ||
- 	    nla_put_be32(skb, CTA_EXPECT_CLASS, htonl(exp->class)))
- 		goto nla_put_failure;
-@@ -3046,7 +3069,8 @@ static int ctnetlink_get_expect(struct net *net, struct sock *ctnl,
- 
- 	if (cda[CTA_EXPECT_ID]) {
- 		__be32 id = nla_get_be32(cda[CTA_EXPECT_ID]);
--		if (ntohl(id) != (u32)(unsigned long)exp) {
-+
-+		if (id != nf_expect_get_id(exp)) {
- 			nf_ct_expect_put(exp);
- 			return -ENOENT;
- 		}
 -- 
 2.20.1
 
