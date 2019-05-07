@@ -2,181 +2,101 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40A8C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6C8C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EC120825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="wmv/7GCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 697C320825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfEGOsu (ORCPT
+        id S1726578AbfEGOtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:48:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37022 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbfEGOst (ORCPT
+        Tue, 7 May 2019 10:49:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33887 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbfEGOtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:48:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so8433172pgc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 07:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=WzezD33BMd1lMmbzTwPzPdqm4AKLM8U8TugyOVRuE80=;
-        b=wmv/7GCZi5CeIq7FJsrMGAWH5gOvg8rDEOeHyrJ4YFduj3v5gFwLwT+o9ian/HZCG9
-         FA6qRrQ1LZwAxz/xX9VRlJ1TSjE19h7dJis+ndpNxYlo5Cdc0aoWNsp6c9l8ryzmY0N8
-         zDR3wXMjdCZSwYjV87Z+bFgYJbJNG/CadhqSR8Vjqm4hIHTpprDhAOIdPcdDzBJfsR6l
-         N2fh7KHJks0GJNvnw928sPavtpOMW6bxb9SKQJtjM+jWv+QcKHUbN/VSBbkWNKaSG8dH
-         5Lmy2biU8H1Jc7jBGp09G6ZcdMoOaudatzgGTW8qtpXBK2MauBFkFaDqPUqo6q0IgBpN
-         0oaQ==
+        Tue, 7 May 2019 10:49:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so12451883wrq.1;
+        Tue, 07 May 2019 07:49:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=WzezD33BMd1lMmbzTwPzPdqm4AKLM8U8TugyOVRuE80=;
-        b=B0oPoiPtuxrCtJBYqIf2UcbQN7I/hPTFF+/hSiaXWHf08CbCkIh4pD1rSBmaSK3j3k
-         eXBtZi6k9DpexP9r5+cm8AYjiktkQb3o5M8F5yZcysm5sHrJpSSBH6UToqg+byrXSwKq
-         oF2dDx5OdJcf1cI3Lkz0apxoAqaRB7vBHbiBuB/9DnS8YzivWhzt4HHzMAAIy9XIsEym
-         raU072Dx9AVKGfDGcvSxZPwJrJz24wfeWtsMKlR9NX8MW+UDfSPojUgHWnBMGMEzQF/B
-         6HJnnxKi5A6+cJs6jPVhuU+4SaztvC2+p+WYE45Xez1h+tNZ2mySVw31EXrXVzCwUq9w
-         MyXw==
-X-Gm-Message-State: APjAAAXc5yVYhc33j24Ew2coMOODljrHz6aa0PNKB+3Fstb6NCRvMpUk
-        eG1z6mj+23MXY7tD6PtSRBB9KQ==
-X-Google-Smtp-Source: APXvYqyT5gbOV/5NFXoVfR57SO0fxUbRroCIAZBQeDN1/S9mWSMEvPm3+p6EIlRPBOiywaqRybSG8Q==
-X-Received: by 2002:a65:6554:: with SMTP id a20mr40715795pgw.284.1557240528817;
-        Tue, 07 May 2019 07:48:48 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:39d2:a63b:3c03:79ae? ([2601:646:c200:1ef2:39d2:a63b:3c03:79ae])
-        by smtp.gmail.com with ESMTPSA id 129sm18934352pff.140.2019.05.07.07.48.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 07:48:46 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
-Date:   Tue, 7 May 2019 07:48:45 -0700
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <48BDF7B6-252B-4D29-9116-844363010BC0@amacapital.net>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
- <20190503092247.20cc1ff0@gandalf.local.home> <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
- <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
- <20190506081951.GJ2606@hirez.programming.kicks-ass.net> <20190506095631.6f71ad7c@gandalf.local.home>
- <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
- <20190506130643.62c35eeb@gandalf.local.home> <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
- <20190506145745.17c59596@gandalf.local.home> <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
- <20190506162915.380993f9@gandalf.local.home> <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
- <20190506174511.2f8b696b@gandalf.local.home> <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
- <20190506210416.2489a659@oasis.local.home> <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
- <20190506215353.14a8ef78@oasis.local.home> <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HYpLsdPWfoBOLPoyyFo9Rla4dC8XU3P9MTPhnbUzRMo=;
+        b=LDp9gPhD6blPTq81jKuLLCmuwocP0b66ePHxNX/ufkki53Bkb3zmQokSdfYZa3jCWS
+         +3t6fcvTPLBn5vZLsDvxup2RKqNCXYacDGNngH0Qy7hktcYozwa3t8pXsG/fqZPFq8qn
+         qdxQvAH2MqPrXlBFf8THiRSg1O8OzTEESmgE6sp8pXz8xbKE8gCGlTXcXmIUQ48OUr2Q
+         cw1BT/jtODHepG39zrwBBxFJyO3Gp+837henAZBKiK26vkrDK7cSZ0gKMvB+uRD4Oblt
+         fJlzcTkfF1OE3/VnyEGw4zj4Aybg96OEsf7qPRDrqMK5rPrx6tqXgsaVF6YU1RlcuV4e
+         ZK7g==
+X-Gm-Message-State: APjAAAXAs7sXXAJXwNOh7OKAOQ1W4CZP4GyDTYaJwBsGFcdlyRj1V6Sb
+        47F7zKfpDI2SgX4Tv7rjQvJfZAU2
+X-Google-Smtp-Source: APXvYqydDpwYAQDLUOu4ySTqyHRcELODhmE/VJzC+qrWhORcPrUcy6y3Lz308IlnBl79Wrhc06EYPw==
+X-Received: by 2002:a5d:424a:: with SMTP id s10mr11462236wrr.327.1557240588310;
+        Tue, 07 May 2019 07:49:48 -0700 (PDT)
+Received: from oberon.eng.vmware.com ([146.247.46.5])
+        by smtp.gmail.com with ESMTPSA id v1sm13536800wrd.47.2019.05.07.07.49.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 07:49:47 -0700 (PDT)
+From:   Tzvetomir Stoyanov <tstoyanov@vmware.com>
+To:     rostedt@goodmis.org
+Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tom.zanussi@linux.intel.com
+Subject: [PATCH v2] Documentation/trace: Add clarification how histogram onmatch works
+Date:   Tue,  7 May 2019 17:49:46 +0300
+Message-Id: <20190507144946.7998-1-tstoyanov@vmware.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current trace documentation, the section describing histogram's "onmatch"
+is not straightforward enough about how this action is applied. It is not
+clear what criteria are used to "match" both events. A short note is added,
+describing what exactly is compared in order to match the events.
 
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+---
+ Documentation/trace/histogram.txt | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
->> On May 6, 2019, at 7:22 PM, Linus Torvalds <torvalds@linux-foundation.org=
-> wrote:
->>=20
->> On Mon, May 6, 2019 at 6:53 PM Steven Rostedt <rostedt@goodmis.org> wrote=
-:
->>=20
->> Also, I figured just calling ftrace_regs_caller() was simpler then
->> having that int3 handler do the hash look ups to determine what handler
->> it needs to call.
->=20
-> So what got me looking at this - and the races (that didn't turn out
-> to be races) - and why I really hate it, is because of the whole
-> notion of "atomic state".
->=20
-> Running an "int3" handler (when the int3 is in the kernel) is in some
-> sense "atomic". There is the state in the caller, of course, and
-> there's the state that the int3 handler has, but you can *mostly*
-> think of the two as independent.
->=20
-> In particular, if the int3 handler doesn't ever enable interrupts, and
-> if it doesn't need to do any stack switches, the int3 handler part
-> looks "obvious". It can be interrupted by NMI, but it can't be
-> interrupted (for example) by the cross-cpu IPI.
->=20
-> That was at least the mental model I was going for.
->=20
-> Similarly, the "caller" side mostly looks obvious too. If we don't
-> take an int3, none of this matter, and if we *do* take an int3, if we
-> can at least make it "atomic" wrt the rewriter (before or after
-> state), it should be easy to think about.
->=20
-> One of the things I was thinking of doing, for example, was to simply
-> make the call emulation do a "load four bytes from the instruction
-> stream, and just use that as the emulation target offset".
->=20
-> Why would that matter?
->=20
-> We do *not* have very strict guarantees for D$-vs-I$ coherency on x86,
-> but we *do* have very strict guarantees for D$-vs-D$ coherency. And so
-> we could use the D$ coherency to give us atomicity guarantees for
-> loading and storing the instruction offset for instruction emulation,
-> in ways we can *not* use the D$-to-I$ guarantees and just executing it
-> directly.
->=20
-> So while we still need those nasty IPI's to guarantee the D$-vs-I$
-> coherency in the "big picture" model and to get the serialization with
-> the actual 'int3' exception right, we *could* just do all the other
-> parts of the instruction emulation using the D$ coherency.
->=20
-> So we could do the actual "call offset" write with a single atomic
-> 4-byte locked cycle (just use "xchg" to write - it's always locked).
-> And similarly we could do the call offset *read* with a single locked
-> cycle (cmpxchg with a 0 value, for example). It would be atomic even
-> if it crosses a cacheline boundary.
+diff --git a/Documentation/trace/histogram.txt b/Documentation/trace/histogram.txt
+index 7ffea6aa22e3..d97f0530a731 100644
+--- a/Documentation/trace/histogram.txt
++++ b/Documentation/trace/histogram.txt
+@@ -1863,7 +1863,10 @@ hist trigger specification.
+ 
+     The 'matching.event' specification is simply the fully qualified
+     event name of the event that matches the target event for the
+-    onmatch() functionality, in the form 'system.event_name'.
++    onmatch() functionality, in the form 'system.event_name'. Histogram
++    keys of both events are compared to find if events match. In the case
++    multiple histogram keys are used, both events must have the same
++    number of keys, and the keys must match in the same order.
+ 
+     Finally, the number and type of variables/fields in the 'param
+     list' must match the number and types of the fields in the
+@@ -1920,9 +1923,10 @@ hist trigger specification.
+ 	    /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+ 
+     Then, when the corresponding thread is actually scheduled onto the
+-    CPU by a sched_switch event, calculate the latency and use that
+-    along with another variable and an event field to generate a
+-    wakeup_latency synthetic event:
++    CPU by a sched_switch event (where the sched_waking key	"saved_pid"
++    matches the sched_switch key "next_pid"), calculate the latency and
++    use that along with another variable and an event field to generate
++    a wakeup_latency synthetic event:
+ 
+     # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0:\
+             onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,\
+-- 
+2.21.0
 
-I don=E2=80=99t quite get how this could work.  Suppose we start with a five=
--byte NOP (0F 1F ...).  Then we change the first byte to INT3 (CC).  Now we c=
-an atomically change the other four bytes, but the INT3 could happen first. I=
- suppose that we could treat 1F 00 00 00 or similar as a known-bogus call ta=
-rget, but that seems dangerous.
-
-IOW I think your trick only works if the old and new states are CALL, but we=
- don=E2=80=99t know that until we=E2=80=99ve looked up the record, at which p=
-oint we can just use the result of the lookup.
-
-An I missing something clever?  IMO it=E2=80=99s a bummer that there isn=E2=80=
-=99t a way to turn NOP into CALL by changing only one byte.
