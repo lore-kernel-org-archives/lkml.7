@@ -2,140 +2,150 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A0CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AAAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C182053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gVNh+gdZ"
+	by mail.kernel.org (Postfix) with ESMTP id 934692053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfEGNY4 (ORCPT
+        id S1726513AbfEGN0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:24:56 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59428 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfEGNYz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:24:55 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190507132446euoutp02c8ce8d7f6fecc2c873e7994d8b690c24~caWy_EQT60769007690euoutp02k
-        for <linux-kernel@vger.kernel.org>; Tue,  7 May 2019 13:24:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190507132446euoutp02c8ce8d7f6fecc2c873e7994d8b690c24~caWy_EQT60769007690euoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557235486;
-        bh=HePsI2obF6bYrams1J31uq3qDheNx0jPg7cbk18CcCo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gVNh+gdZP8JjL6KEk/sofaf92S2jaBESPYs7IhzM7dlD+BgqGGsb3lpSkmfsZavBP
-         OweODdkZt3q69D1IKxStAYeBcoJZHk5yQ6iKWlrJmcg4MBtplp/MMefhwmRv9lHSfE
-         cBa8Uu9eftmkrlqa7CHJ0Xxvd3qOW7+KTntymA3c=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190507132446eucas1p276c1b2db5552552d991f368747316488~caWyKfuMs1887718877eucas1p21;
-        Tue,  7 May 2019 13:24:46 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id F5.3A.04377.D1781DC5; Tue,  7
-        May 2019 14:24:45 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190507132445eucas1p12fed4a0cdc75e8f5343b450bf1893c54~caWxVbC6C1246812468eucas1p11;
-        Tue,  7 May 2019 13:24:45 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190507132444eusmtrp17aa7a507c83e6e2dfe5747c7b1b08091~caWxHRTcE2518525185eusmtrp1Z;
-        Tue,  7 May 2019 13:24:44 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-01-5cd1871d0c78
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 4A.BA.04140.C1781DC5; Tue,  7
-        May 2019 14:24:44 +0100 (BST)
-Received: from amdc2143 (unknown [106.120.51.59]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190507132444eusmtip102380f308f9d3546384b476e83d2801e~caWwssKF41198511985eusmtip16;
-        Tue,  7 May 2019 13:24:44 +0000 (GMT)
-Message-ID: <d071578df35b11b858752f014f4ae5923b61be49.camel@samsung.com>
-Subject: Re: [PATCH] extensions: libxt_owner: Add complementary groups
- option
-From:   Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukasz Pawelczyk <havner@gmail.com>
-Date:   Tue, 07 May 2019 15:24:43 +0200
-In-Reply-To: <20190505225930.w4bcrlsgzq7cipvg@salvia>
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 7 May 2019 09:26:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38144 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726321AbfEGN0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:26:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7384DADF0;
+        Tue,  7 May 2019 13:26:38 +0000 (UTC)
+Date:   Tue, 7 May 2019 15:26:32 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Rik van Riel <riel@surriel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] x86 FPU changes for 5.2
+Message-ID: <20190507132632.GB26655@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djP87qy7RdjDC6dNbD4u7Od2WLO+RYW
-        i229qxkt/r/WsbjcN43Z4vKuOWwWxxaIWUxYd4rFYvqbq8wOnB6nmzayeGxZeZPJY+esu+we
-        b3+fYPI49H0Bq8fnTXIBbFFcNimpOZllqUX6dglcGVu/rmUvaGCtWPwnroHxF3MXIyeHhICJ
-        xM7pz9m7GLk4hARWMEp8/bOTFcL5wijxdsdkJpAqIYHPjBLrZ4vBdKy8PpEFomg5o8SV+Y2M
-        EM4zRol16/6BzeUV8JB4On85WLewgL9E6+kjYHE2AQOJ7xf2gtkiAtoS7TdawSYxC0xnkrhz
-        q50NJMEioCrxoP8CK4jNKWAq8evTN7AGUQFdiRsbnrFBLBCUODnzCQuIzSwgL7H97RxmkEES
-        AtvYJWbO2soGcauLxOwPlxghbGGJV8e3sEPYMhKnJ/cANXMA2dUSJ89UQPR2MEpsfDEbqt5a
-        4vOkLcwgNcwCmhLrd+lDhB0lpvadYYVo5ZO48VYQ4gQ+iUnbpjNDhHklOtqEIKpVJV7vgRko
-        LfHxz16oAzwkek4dYJzAqDgLyTOzkDwzC2HvAkbmVYziqaXFuempxUZ5qeV6xYm5xaV56XrJ
-        +bmbGIEp6PS/4192MO76k3SIUYCDUYmH90XBxRgh1sSy4srcQ4wSHMxKIryJz87FCPGmJFZW
-        pRblxxeV5qQWH2KU5mBREuetZngQLSSQnliSmp2aWpBaBJNl4uCUamCMbvVtrthXYPVHc+/6
-        k8Uc/n+mPYp6K7h9++uElG3rvGoZJbNX1Nn3H7A3uKF1T95lMVt+lWcg+/+scK8bn9x//zz3
-        JWXHhf+8Rzk1omct9HV0dVyb+aF1Znv1w6US03/p9La0n/JYrGv5wlp5155X9tnK6dVq6W+V
-        /KLn6i73vuv179+Tx8lKLMUZiYZazEXFiQCCSFnPPQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xu7oy7RdjDL5eMrf4u7Od2WLO+RYW
-        i229qxkt/r/WsbjcN43Z4vKuOWwWxxaIWUxYd4rFYvqbq8wOnB6nmzayeGxZeZPJY+esu+we
-        b3+fYPI49H0Bq8fnTXIBbFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2
-        NimpOZllqUX6dgl6GVu/rmUvaGCtWPwnroHxF3MXIyeHhICJxMrrE1m6GLk4hASWMkq8W3OL
-        FSIhLXH8wEIoW1jiz7UuNoiiJ4wSiyfNYAFJ8Ap4SDydv5wJxBYW8JXYM/8/WJxNwEDi+4W9
-        YBtEBLQl2m+0gm1gFpjOJHFmznawIhYBVYkH/RfANnAKmEr8+vSNGWLDfkaJS+tesoMkmAU0
-        JVq3/wazRQV0JW5seMYGsVlQ4uTMJywQNfIS29/OYZ7AKDgLScssJGWzkJQtYGRexSiSWlqc
-        m55bbKRXnJhbXJqXrpecn7uJERhh24793LKDsetd8CFGAQ5GJR7eFwUXY4RYE8uKK3MPMUpw
-        MCuJ8CY+OxcjxJuSWFmVWpQfX1Sak1p8iNEU6KOJzFKiyfnA6M8riTc0NTS3sDQ0NzY3NrNQ
-        EuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cB4ZIme4QYbuRVtLJx+1yJvtMgevb87xbJBIVv9
-        9DTnhL33FgkJc27azH/27sF9s3lF2NxVj7NoS8+0s3DYsIcz+lC0aJGB5tYQzzy1o9kPMyfd
-        Obs+OHDxpbk392t25nFENYTGaTmxHlnTI/WVK61/1sIq49e9C/98X5G5v+HNr9LOHf/5npQp
-        sRRnJBpqMRcVJwIAoFjKicYCAAA=
-X-CMS-MailID: 20190507132445eucas1p12fed4a0cdc75e8f5343b450bf1893c54
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190426160306eucas1p1a0c8ec9783cc78db7381582a70d6de10
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190426160306eucas1p1a0c8ec9783cc78db7381582a70d6de10
-References: <CGME20190426160306eucas1p1a0c8ec9783cc78db7381582a70d6de10@eucas1p1.samsung.com>
-        <20190426160257.4139-1-l.pawelczyk@samsung.com>
-        <20190505225930.w4bcrlsgzq7cipvg@salvia>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-06 at 00:59 +0200, Pablo Neira Ayuso wrote:
-> On Fri, Apr 26, 2019 at 06:02:57PM +0200, Lukasz Pawelczyk wrote:
-> > The --compl-groups option causes GIDs specified with --gid-owner to
-> > be
-> > also checked in the complementary groups of a process.
-> 
-> Please, could you also update manpage?
+Hi Linus,
 
-Will do. iptables-extensions(8) I presume? Anything else?
+please pull the latest x86-fpu-for-linus tree from:
 
-> BTW, I think you refer to _supplementary_ groups, right? Existing
-> documentation uses this term.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
 
-Yes, that's correct, my bad. I'll send the updated patches.
+This branch contains work started by Rik van Riel and brought to
+fruition by Sebastian Andrzej Siewior with the main goal to optimize
+when to load FPU registers: only when returning to userspace and not on
+every context switch (while the task remains in the kernel).
 
-Thanks.
+In addition, this optimization makes kernel_fpu_begin() cheaper by
+requiring registers saving only on the first invocation and skipping
+that in following ones.
 
+What is more, this series cleans up and streamlines many aspects of the
+already complex FPU code, hopefully making it more palatable for future
+improvements and simplifications.
+
+Finally, there's a __user annotations fix from Jann Horn.
+
+Thx.
+
+---
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
+
+for you to fetch changes up to d9c9ce34ed5c892323cbf5b4f9a4c498e036316a:
+
+  x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails (2019-05-06 09:49:40 +0200)
+
+----------------------------------------------------------------
+Jann Horn (1):
+      x86/fpu: Fix __user annotations
+
+Rik van Riel (5):
+      x86/fpu: Add an __fpregs_load_activate() internal helper
+      x86/fpu: Eager switch PKRU state
+      x86/fpu: Always store the registers in copy_fpstate_to_sigframe()
+      x86/fpu: Prepare copy_fpstate_to_sigframe() for TIF_NEED_FPU_LOAD
+      x86/fpu: Defer FPU state load until return to userspace
+
+Sebastian Andrzej Siewior (23):
+      x86/fpu: Remove fpu->initialized usage in __fpu__restore_sig()
+      x86/fpu: Remove fpu__restore()
+      x86/fpu: Remove preempt_disable() in fpu__clear()
+      x86/fpu: Always init the state in fpu__clear()
+      x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
+      x86/fpu: Don't save fxregs for ia32 frames in copy_fpstate_to_sigframe()
+      x86/fpu: Remove fpu->initialized
+      x86/fpu: Remove user_fpu_begin()
+      x86/fpu: Make __raw_xsave_addr() use a feature number instead of mask
+      x86/fpu: Use a feature number instead of mask in two more helpers
+      x86/pkeys: Provide *pkru() helpers
+      x86/fpu: Only write PKRU if it is different from current
+      x86/pkeys: Don't check if PKRU is zero before writing it
+      x86/entry: Add TIF_NEED_FPU_LOAD
+      x86/fpu: Update xstate's PKRU value on write_pkru()
+      x86/fpu: Inline copy_user_to_fpregs_zeroing()
+      x86/fpu: Restore from kernel memory on the 64-bit path too
+      x86/fpu: Merge the two code paths in __fpu__restore_sig()
+      x86/fpu: Add a fastpath to __fpu__restore_sig()
+      x86/fpu: Add a fastpath to copy_fpstate_to_sigframe()
+      x86/fpu: Restore regs in copy_fpstate_to_sigframe() in order to use the fastpath
+      x86/pkeys: Add PKRU value to init_fpstate
+      x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails
+
+ Documentation/preempt-locking.txt    |   1 -
+ arch/x86/entry/common.c              |  10 +-
+ arch/x86/ia32/ia32_signal.c          |  17 ++-
+ arch/x86/include/asm/fpu/api.h       |  31 ++++++
+ arch/x86/include/asm/fpu/internal.h  | 133 +++++++++++++++++------
+ arch/x86/include/asm/fpu/signal.h    |   2 +-
+ arch/x86/include/asm/fpu/types.h     |   9 --
+ arch/x86/include/asm/fpu/xstate.h    |   8 +-
+ arch/x86/include/asm/pgtable.h       |  29 ++++-
+ arch/x86/include/asm/special_insns.h |  19 +++-
+ arch/x86/include/asm/thread_info.h   |   2 +
+ arch/x86/include/asm/trace/fpu.h     |  13 +--
+ arch/x86/kernel/cpu/common.c         |   5 +
+ arch/x86/kernel/fpu/core.c           | 195 ++++++++++++++++-----------------
+ arch/x86/kernel/fpu/init.c           |   2 -
+ arch/x86/kernel/fpu/regset.c         |  24 ++---
+ arch/x86/kernel/fpu/signal.c         | 202 ++++++++++++++++++++++-------------
+ arch/x86/kernel/fpu/xstate.c         |  42 ++++----
+ arch/x86/kernel/process.c            |   2 +-
+ arch/x86/kernel/process_32.c         |  11 +-
+ arch/x86/kernel/process_64.c         |  11 +-
+ arch/x86/kernel/signal.c             |  21 ++--
+ arch/x86/kernel/traps.c              |   2 +-
+ arch/x86/kvm/vmx/vmx.c               |   2 +-
+ arch/x86/kvm/x86.c                   |  48 +++++----
+ arch/x86/math-emu/fpu_entry.c        |   3 -
+ arch/x86/mm/mpx.c                    |   6 +-
+ arch/x86/mm/pkeys.c                  |  21 ++--
+ 28 files changed, 512 insertions(+), 359 deletions(-)
 
 -- 
-Lukasz Pawelczyk
-Samsung R&D Institute Poland
-Samsung Electronics
+Regards/Gruss,
+    Boris.
 
-
-
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
