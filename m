@@ -2,115 +2,142 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43997C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43E6C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1321721479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557215019;
-	bh=MFdZ/EgpyfY0kwMJXZf/qyVBEWcoQTA3dkpraEXQxMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rqsOdysynx1auBw8nVZUjNd+SWr4tt2P4i5RXXy5gUdlwwDVPs8k/MTDjITPO7nsD
-	 ghl4HyFdoRkZT5R8A/wAkaC5xn8Z4sCtHaEwA0Gz8ah64xIwAi+d+cDgo1JdaCvuVi
-	 iW3ZUx7JcIxQbe1ZwNIaTu3oqrxjauV6qPBC2si8=
+	by mail.kernel.org (Postfix) with ESMTP id A454E21019
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JLdg7pIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfEGHni (ORCPT
+        id S1726927AbfEGHnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfEGHnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:43:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B243120989;
-        Tue,  7 May 2019 07:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557215017;
-        bh=MFdZ/EgpyfY0kwMJXZf/qyVBEWcoQTA3dkpraEXQxMo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2MVgXQNq38tiYvMcy6xa99VJq5jg23ZnqHpAEu4onk5dmCkIOFH9x1lLwuj6OOiJ2
-         sewqDcBYKlyNG65ez+rwXLx6PYzSMdFiHCNVzxgbw++r7k2T6KOScNLiActm7KzU+m
-         xAvWpbDF7QlCx3RNDlId5RsJEh+Nfm1FJlhwRxwU=
-Date:   Tue, 7 May 2019 09:43:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Daniel Colascione <dancol@google.com>,
-        Todd Kjos <tkjos@android.com>,
-        Kees Cook <keescook@chromium.org>,
+        Tue, 7 May 2019 03:43:43 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60010 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726646AbfEGHnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:43:42 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x477gQ0j009126
+        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 00:43:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=HrriWwfar/cqZaaUGwGANAIElSRGz9DcwdSYi/eEil4=;
+ b=JLdg7pIQoJ/ZcRT7+RjkpopBQvOIKwRm0HDw9TVXI1gX4tpMDF0ZpZNSPS0H3vYzvnYU
+ jxHmilBasS+9YV7f9KVLBt2OnCo5F4+AREhS8VVpRSgcp7r3byGBVdb+Ri68nIrV/g+E
+ AkKvGEZvO8TFnN81HrXIWxtqjoZ4072ryVs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sb2e80pr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 00:43:41 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 7 May 2019 00:43:40 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 1A25C62E2FE0; Tue,  7 May 2019 00:43:34 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>
+CC:     Song Liu <songliubraving@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Martijn Coenen <maco@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        kernel-team <kernel-team@android.com>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190507074334.GB26478@kroah.com>
-References: <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
- <20190318002949.mqknisgt7cmjmt7n@brauner.io>
- <20190318235052.GA65315@google.com>
- <20190319221415.baov7x6zoz7hvsno@brauner.io>
- <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
- <20190319231020.tdcttojlbmx57gke@brauner.io>
- <20190320015249.GC129907@google.com>
- <20190507021622.GA27300@sultan-box.localdomain>
- <20190507070430.GA24150@kroah.com>
- <20190507072721.GA4364@sultan-box.localdomain>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] perf: allow non-privileged uprobe for user processes
+Date:   Tue, 7 May 2019 00:43:15 -0700
+Message-ID: <20190507074315.3337668-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507072721.GA4364@sultan-box.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070051
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 12:27:21AM -0700, Sultan Alsawaf wrote:
-> On Tue, May 07, 2019 at 09:04:30AM +0200, Greg Kroah-Hartman wrote:
-> > Um, why can't "all" Android devices take the same patches that the Pixel
-> > phones are using today?  They should all be in the public android-common
-> > kernel repositories that all Android devices should be syncing with on a
-> > weekly/monthly basis anyway, right?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Hi Greg,
-> 
-> I only see PSI present in the android-common kernels for 4.9 and above. The vast
-> majority of Android devices do not run a 4.9+ kernel. It seems unreasonable to
-> expect OEMs to toil with backporting PSI themselves to get decent memory
-> management.
+Currently, non-privileged user could only use uprobe with
 
-Given that any "new" android device that gets shipped "soon" should be
-using 4.9.y or newer, is this a real issue?
+    kernel.perf_event_paranoid = -1
 
-And if it is, I'm sure that asking for those patches to be backported to
-4.4.y would be just fine, have you asked?
+However, setting perf_event_paranoid to -1 leaks other users' processes to
+non-privileged uprobes.
 
-Note that I know of Android Go devices, running 3.18.y kernels, do NOT
-use the in-kernel memory killer, but instead use the userspace solution
-today.  So trying to get another in-kernel memory killer solution added
-anywhere seems quite odd.
+To introduce proper permission control of uprobes, we are building the
+following system:
+  A daemon with CAP_SYS_ADMIN is in charge to create uprobes via tracefs;
+  Users asks the daemon to create uprobes;
+  Then user can attach uprobe only to processes owned by the user.
 
-thanks,
+This patch allows non-privileged user to attach uprobe to processes owned
+by the user.
 
-greg k-h
+The following example shows how to use uprobe with non-privileged user.
+This is based on Brendan's blog post [1]
+
+1. Create uprobe with root:
+  sudo perf probe -x 'readline%return +0($retval):string'
+
+2. Then non-root user can use the uprobe as:
+  perf record -vvv -e probe_bash:readline__return -p <pid> sleep 20
+  perf script
+
+[1] http://www.brendangregg.com/blog/2015-06-28/linux-ftrace-uprobe.html
+
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+---
+ kernel/events/core.c        | 5 +++--
+ kernel/trace/trace_uprobe.c | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index abbd4b3b96c2..0508774d82e4 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8532,9 +8532,10 @@ static int perf_tp_event_match(struct perf_event *event,
+ 	if (event->hw.state & PERF_HES_STOPPED)
+ 		return 0;
+ 	/*
+-	 * All tracepoints are from kernel-space.
++	 * All tracepoints except uprobes are from kernel-space.
+ 	 */
+-	if (event->attr.exclude_kernel)
++	if (event->attr.exclude_kernel &&
++	    ((event->tp_event->flags & TRACE_EVENT_FL_UPROBE) == 0))
+ 		return 0;
+ 
+ 	if (!perf_tp_filter_match(event, data))
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index be78d99ee6bc..bfd3040b4cfb 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1304,7 +1304,7 @@ static inline void init_trace_event_call(struct trace_uprobe *tu,
+ 	call->event.funcs = &uprobe_funcs;
+ 	call->class->define_fields = uprobe_event_define_fields;
+ 
+-	call->flags = TRACE_EVENT_FL_UPROBE;
++	call->flags = TRACE_EVENT_FL_UPROBE | TRACE_EVENT_FL_CAP_ANY;
+ 	call->class->reg = trace_uprobe_register;
+ 	call->data = tu;
+ }
+-- 
+2.17.1
+
