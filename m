@@ -2,200 +2,123 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F7FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225F7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD0E20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FEE20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:40:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="P0NmBCU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfEGPi4 (ORCPT
+        id S1726839AbfEGPkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:38:56 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35245 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfEGPiz (ORCPT
+        Tue, 7 May 2019 11:40:42 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45559 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfEGPkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:38:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p26so1311986edr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:38:54 -0700 (PDT)
+        Tue, 7 May 2019 11:40:41 -0400
+Received: by mail-ot1-f65.google.com with SMTP id a10so15336587otl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eDjq30ddseBaIw6socWxfPv6NTtk+5QW4X1Ug5iEyJk=;
+        b=P0NmBCU8zUOfaF8xaYZsuZ8crvxFB33fl7wDNB9MZv5fgE9bufZ9uXOFacVBRIyhyk
+         7jy7cEut0ZZu1RaoDtrr50BVaB/CX/skGeBOtXxoGAGKW89ZemgDpFwl6g0BCyZNTY71
+         c96Bv/+lzcoe4YYcd5EMePUR4gTK7GrAqK6itLr2obeqWzYKb3Dql3mDDHzIv1x+/JnT
+         zIvYGvdBDonXfV8sEZV0PvMIvA63l1OoRV+8kWQPCfuhVRSXMOb+jYMxWFhFzCGAXSHH
+         RES21PeWYeTfPIbRNgVP3JVS3PVW0F6JNq0X1vpUrTbfXgSQ4Ev5ZlVumch1kGRMghci
+         mHRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lhOeBJyYPj/2xFqOsRFr3svYvc4ZmMF8TMLQhzpX+Nk=;
-        b=JTIqm1N74RqhSiE040bcKECKjy4go164nHISGqAqGFe31VrxXZrJqDawYtY+PO74HL
-         psOBLRamyO9j5Da45Hmd5C7jpStbQ2BDjh2DrjpgBUJsiXuxfxYPWKrKEhnhjO/VZKEG
-         MqQqCwCZffvRPQNzr21YlX0znJQ4utoGXrHvDwV+yEYcrJhshfpr66Q10wZeoXeVi68H
-         k9IMdNcynsiXfYsfkyrImtt4XmLxlnet88g1VIBKen/LfE7rK4552WTnlMjdIKS+pArI
-         9OfVnM8t9z/sCbKL/O9zxeJ1TOGXJFLzxYii28s2D82AE5Etkf5cZLxU35V47/o1AKwC
-         Z29Q==
-X-Gm-Message-State: APjAAAXz1AUEi4HKpnKstgUlCV3zSYduhztD4i0gr5DZLuaLFuMESKv5
-        9+DYdlM6EdfpdJ1I26IKP7ifow==
-X-Google-Smtp-Source: APXvYqzqRVjvsHYPB7HNahla42M8BPHt/LdhjXouCI2RW5NMjuN35WYNIXfQpz7wBSkBhLyfV5FXaw==
-X-Received: by 2002:a50:97d2:: with SMTP id f18mr33311946edb.130.1557243533683;
-        Tue, 07 May 2019 08:38:53 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id a61sm4240118edf.8.2019.05.07.08.38.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 08:38:52 -0700 (PDT)
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-To:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Victor Bravo <1905@spmblk.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-References: <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <20190506090609.msudhncj7e5vdtzw@localhost>
- <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
- <20190506102032.3ximjecado4mz62j@localhost>
- <fb07ae01-4cca-98e7-1c2d-dfdf44909900@redhat.com>
- <87d0kvvkej.fsf@codeaurora.org> <20190506152441.ifjcdi73elxuq5it@localhost>
- <3f3cca6e-50b7-c61d-4a62-26ce508af9e7@redhat.com>
- <95cd81ea-3970-92de-7983-5c1919e2bbd9@broadcom.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <02a6dc11-7def-7d72-4640-d9d42ccec47c@redhat.com>
-Date:   Tue, 7 May 2019 17:38:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eDjq30ddseBaIw6socWxfPv6NTtk+5QW4X1Ug5iEyJk=;
+        b=HVeoP8TO99ChI2gNQ2g+ky2j8VOpU3s7xIToLIMAVf+wwmuK0Ma2HlGciKuFH3IDbv
+         suicEEF64RsZiomrxDqW0imxUhqayBzlgXksE+3eaNYDTfUtMCt7TXueJICDpBrhMEt4
+         KoHw90UHjLO2Tj5gwiYgJJjW0l/Pza7D40PcDrVHRm3+BfXWzFK1d5Exg+IZmcCw35FD
+         wlBTtDBi8uX2TfEpIjGvUv68bRKFsaBoo1DgxONwYTnu+0iBgzHLAH8WAmcmuyYd4leb
+         1PxmZnPNeJz95uvWJBJQzRV25QzzWX9Pcf07Xf6G9MSSaUn0LjKjtEvD0veYk41cXr3b
+         KLfg==
+X-Gm-Message-State: APjAAAU42cHv+Yw/9Ic0AFi5WoPfjkrlu3vuKh6aOgg+XjlBA7tsRirF
+        WtUFE+58uaRYmQC7WuFaPapczIQgNGB57Mm0+teH/Q==
+X-Google-Smtp-Source: APXvYqxgIWANkc/KHq9kAogc8tqlkqRrOccsWEIKbqAeeZcNH5LiQg3MPoGwMh9hdCCYG0LuKCXgqpIi0akzNLzuZFI=
+X-Received: by 2002:a9d:222c:: with SMTP id o41mr22033787ota.353.1557243640877;
+ Tue, 07 May 2019 08:40:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <95cd81ea-3970-92de-7983-5c1919e2bbd9@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190426050039.17460-1-pagupta@redhat.com> <20190426050039.17460-4-pagupta@redhat.com>
+In-Reply-To: <20190426050039.17460-4-pagupta@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 May 2019 08:40:30 -0700
+Message-ID: <CAPcyv4hRdvypEj4LBTMfUFm80BdpRYbOugrkkj-3Kk_LErXPqQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] libnvdimm: add dax_dev sync flag
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        jmoyer <jmoyer@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Apr 25, 2019 at 10:02 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+>
+> This patch adds 'DAXDEV_SYNC' flag which is set
+> for nd_region doing synchronous flush. This later
+> is used to disable MAP_SYNC functionality for
+> ext4 & xfs filesystem for devices don't support
+> synchronous flush.
+>
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+[..]
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index 0dd316a74a29..c97fc0cc7167 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -7,6 +7,9 @@
+>  #include <linux/radix-tree.h>
+>  #include <asm/pgtable.h>
+>
+> +/* Flag for synchronous flush */
+> +#define DAXDEV_F_SYNC true
 
-On 06-05-19 21:30, Arend Van Spriel wrote:
-> + Luis (for real this time)
-> 
-> On 5/6/2019 6:05 PM, Hans de Goede wrote:
->> Hi,
->>
->> On 06-05-19 17:24, Victor Bravo wrote:
->>> On Mon, May 06, 2019 at 03:26:28PM +0300, Kalle Valo wrote:
->>>> Hans de Goede <hdegoede@redhat.com> writes:
->>>>
->>>>> If we're going to do some filtering, then I suggest we play it safe and also
->>>>> disallow other chars which may be used as a separator somewhere, specifically
->>>>> ':' and ','.
->>>>>
->>>>> Currently upstream linux-firmware has these files which rely on the DMI
->>>>> matching:
->>>>>
->>>>> brcmfmac4330-sdio.Prowise-PT301.txt
->>>>> brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt
->>>>> brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt
->>>>>
->>>>> The others are either part of the DMI override table for devices with unsuitable
->>>>> DMI strings like "Default String"; or are device-tree based.
->>>>>
->>>>> So as long as we don't break those 3 (or break the ONDA one but get a symlink
->>>>> in place) we can sanitize a bit more then just non-printable and '/'.
->>>>>
->>>>> Kalle, Arend, what is your opinion on this?
->>>>>
->>>>> Note I do not expect the ONDA V80 Plus to have a lot of Linux users,
->>>>> but it definitely has some.
->>>>
->>>> To me having spaces in filenames is a bad idea, but on the other hand we
->>>> do have the "don't break existing setups" rule, so it's not so simple. I
->>>> vote for not allowing spaces, I think that's the best for the long run,
->>>> but don't know what Arend thinks.
-> 
-> Hi,
-> 
-> Had a day off today so I did see some of the discussion, but was not able to chime in until now.
-> 
-> To be honest I always disliked spaces in filenames, but that does not necessarily make it a bad idea. What I would like to know is why built-in firmware can not deal with spaces in the firmware file names. I think Hans mentioned it in the thread and it crossed my mind as well last night. From driver perspective, being brcmfmac or any other for that matter, there is only one API to request firmware and in my opinion it should behave the same no matter where the firmware is coming from. I would prefer to fix that for built-in firmware, but we need to understand where this limitation is coming 
-> from. Hopefully Luis can elaborate on that.
-
-Ok.
-
-
->>> I have found a fresh judicate on this:
->>> https://lkml.org/lkml/2018/12/22/221
->>>
->>> It seems clear that we have to support at least spaces for some time
->>> (maybe wih separate config option which will be deprecated but on by
->>> defaut until old files are considered gone).
->>
->> Ah that issue, well that is not really comparable in that case a lot of
->> peoples setups were completely broken by that commit and it was a
->> quite surprising behavior change in a userspace facing API.
->>
->> The nvram loading path already does 2 tries, I really don't want to
->> unnecessary complicate it with a third try.
->>
->> The Onda V80 Plus is a X86 based Windows / Android dual boot tablet,
->> as said before I do not expect a ton of users to be running regular
->> Linux on it.
->>
->> Given Kalle's clear preference for getting rid of the spaces lets
->> just do that. But first we must get a symlink added to linux-firmware
->> using the name with the _, newer kernels requiring a newer linux-firmware
->> to match is not unheard of AFAIK, so combined with the limited amount
->> of users I think this is a reasonable compromise.
-> 
-> Right. In the brcm folder we have bcm4329-fullmac-4.bin for older kernels and brcmfmac4329-sdio.bin for later kernels when we switched to stricter firmware naming convention.
-> 
->> Kalle, do you agree with getting the symlink added to linux-firmware
->> ASAP as a fix for the V80 Plus issue; or do you want to see a fallback
->> to the un-cleaned name as you suggested before ?
-> 
-> How many releases have an issue and how many V80 Plus users running regular linux are actually using built-in firmware. And is it really a regression for them? Not saying it does not require fixing. However, as stated above I would prefer to fix the built-in firmware limitation if possible and backport that fix if it is only a few kernel releases provided stable allows such a backport.
-
-The issue is not V80 Plus users running regular linux with built-in firmware.
-The issue is that the 5.0+ kernel + a new enough linux-firmware will just
-work on the V80 Plus, since linux-firmware contains a nvram file for the V80 Plus,
-with the space in the name.
-
-So if we replace the space with an _ then things will stop working for those
-users. But we can avoid this by adding a compat symlink to linux-firmware, then
-users will require a new linux-firmware together with the new kernel, but that
-is not unheard of.
-
-As for how many users / releases. Users who have a fresh Fedora 30 install or
-a fresh install of a rolling-release distro may rely on things working ootb.
-
-Users with an older Linux install will have manually added the nvram using
-the non board specific name to get things to work, so I expect things to
-stay working for them.
-
-So taking the group of people putting regular Linux on a V80 Plus
-and then taking the cross-section of the group with users with a very recent
-install, I expect the amount of affected users to be very small and both
-Fedora and rolling-release updates update linux-firmware regularly.
-
-So IMHO we should be fine with the sanitizing of the DMI strings, combined
-with pushing a compat patch to linux-firmware.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Regards,
-> Arend
+I'd feel better, i.e. it reads more canonically, if this was defined
+as (1UL << 0) and the argument to alloc_dax() was changed to 'unsigned
+long flags' rather than a bool.
