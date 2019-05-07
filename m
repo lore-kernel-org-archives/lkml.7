@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451D3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD4DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0872B21530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358D2205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207729;
-	bh=tw/ZK2MiLfteMwogSB2X8LZjAsBVawNDkiDoHhMj7O0=;
+	s=default; t=1557207733;
+	bh=AZ5Ar9ZLkTYvWcpplQsll17KB+cBdl4SrsNNoRj6am4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUtiG51v32ZfZ2IsvfyEZsz+w/KkeJU1d85MOY38qYYQYCeuPRR/Gx8V99H4wts3U
-	 t5X/2KLNaVfOZC+gWiMchIty/CapnlzhzvqIjMQZ9WGAqyJAeFYR9d3w0TeIexeRUA
-	 ZrzSdhdodmVryyfodblMDUOhyZexvFYAj0SHB9ws=
+	b=Bq4pfKhKnkmlWsiLp06wK+GyNDbBiQlRGXfKjrb7jZahNL7NKOCQc2EO/Rimz1Ei7
+	 3sWCjasVRBnS3Qw66qHM30xqne43pGblZy6UbPWr+vp44cylrgbgavxO+YL2JUosEg
+	 yyV51LV3cnay9/N02h4SU8fkr2QYosUyTUptqQzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfEGFmI (ORCPT
+        id S1729488AbfEGFmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33088 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbfEGFmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:42:03 -0400
+        id S1727556AbfEGFmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:42:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCAF206A3;
-        Tue,  7 May 2019 05:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F32205ED;
+        Tue,  7 May 2019 05:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207723;
-        bh=tw/ZK2MiLfteMwogSB2X8LZjAsBVawNDkiDoHhMj7O0=;
+        s=default; t=1557207728;
+        bh=AZ5Ar9ZLkTYvWcpplQsll17KB+cBdl4SrsNNoRj6am4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OjrjMFZWVccPmTOpzqp0uZm7NwmQoBbR6n/AUGAywMsaqc7OUFcj0W5uXceu7YKA5
-         LaVSLpYW6wJuLMKqgiq2iUEH4tUcPPPn9DwloKSx+6iI7pGbZ2X6vTpJTGZ3IvwhXa
-         VlryTcPkqbUMVGeoR6o1UQVH3zx4DVkeRHOChkn8=
+        b=Hz1abWE+NwKxFbdbUlVZB0Js/MXkw9aN2YX/Ky/14eBSuTtiRuh2t1MAdFhKx0IIE
+         aqDBbLlc2GTPQSZ47+UE+RkSCAL7EcBJqP98h74SbGRRn/mKeBqprNiEFoqp+wtiLF
+         HJzhprT1mrq9WA2jX2Hd4PC39b/p7QUU8K3mJW8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Anastasov <ja@ssi.bg>, Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: [PATCH AUTOSEL 4.9 17/25] ipvs: do not schedule icmp errors from tunnels
-Date:   Tue,  7 May 2019 01:41:14 -0400
-Message-Id: <20190507054123.32514-17-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 20/25] drm/sun4i: Set device driver data at bind time for use in unbind
+Date:   Tue,  7 May 2019 01:41:17 -0400
+Message-Id: <20190507054123.32514-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -61,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 0261ea1bd1eb0da5c0792a9119b8655cf33c80a3 ]
+[ Upstream commit 02b92adbe33e6dbd15dc6e32540b22f47c4ff0a2 ]
 
-We can receive ICMP errors from client or from
-tunneling real server. While the former can be
-scheduled to real server, the latter should
-not be scheduled, they are decapsulated only when
-existing connection is found.
+Our sun4i_drv_unbind gets the drm device using dev_get_drvdata.
+However, that driver data is never set in sun4i_drv_bind.
 
-Fixes: 6044eeffafbe ("ipvs: attempt to schedule icmp packets")
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Set it there to avoid getting a NULL pointer at unbind time.
+
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-3-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index fd186b011a99..8475e8692ff0 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -1643,7 +1643,7 @@ ip_vs_in_icmp(struct netns_ipvs *ipvs, struct sk_buff *skb, int *related,
- 	if (!cp) {
- 		int v;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 97828faf2a1f..d58991b06a47 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -137,6 +137,8 @@ static int sun4i_drv_bind(struct device *dev)
+ 		ret = -ENOMEM;
+ 		goto free_drm;
+ 	}
++
++	dev_set_drvdata(dev, drm);
+ 	drm->dev_private = drv;
  
--		if (!sysctl_schedule_icmp(ipvs))
-+		if (ipip || !sysctl_schedule_icmp(ipvs))
- 			return NF_ACCEPT;
- 
- 		if (!ip_vs_try_to_schedule(ipvs, AF_INET, skb, pd, &v, &cp, &ciph))
+ 	drm_vblank_init(drm, 1);
 -- 
 2.20.1
 
