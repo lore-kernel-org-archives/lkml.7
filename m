@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4100C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A89C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87C8216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE94214AE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207607;
-	bh=cRV3ZI6rFtbhhrGibaa5WePGHbpNxqpBN/bzCT3qLso=;
+	s=default; t=1557207611;
+	bh=mybmYd28yC+E0RdWF+IdtO+ykCH8Uoyv3hzAE4MP8r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LozAL5KOqmkcM6IFVxASCTyLr7racKawbnRz6vHNnHwJJ2KvOV2qQ40m5/U+hhkgW
-	 fC0Pyy0uOGPRZWmxX/rJdmcqIpfMy/rteMio84RXADtZu+64kP5EsnflqAWEZSx1ui
-	 KV8su68wG00kIntAKoMvkHd9hHpb4I2WVL29iHzE=
+	b=DkeC+p3v7mut5qGBQeihebq6Vt21jX/sMGVzm3lnwU8HWEO7e8fyFNPtMDnqfAV/U
+	 iOYK+jpVcMROiRlf5ugYNZ0Icpy79OMYvcfoH/Lnyez1UfjXWE4S4oL6bffStg1jZZ
+	 NMEPiSmRVRd3UXathum+BjjmcoyTe+xTQJ2IYp5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfEGFkG (ORCPT
+        id S1729031AbfEGFkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59436 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbfEGFj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:39:56 -0400
+        id S1728214AbfEGFkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DC4C21655;
-        Tue,  7 May 2019 05:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B0B216C8;
+        Tue,  7 May 2019 05:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207596;
-        bh=cRV3ZI6rFtbhhrGibaa5WePGHbpNxqpBN/bzCT3qLso=;
+        s=default; t=1557207605;
+        bh=mybmYd28yC+E0RdWF+IdtO+ykCH8Uoyv3hzAE4MP8r8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUMpvl0OXr8TR/ktGPVxlc2esU24OxAa0cGjRv9LTHjuhyyDsjA6S9fKmOX7/kTlo
-         SzKMoVWVnl0RTrgarKwMs0yZ63PEfJu/86rNE4CQQL6mSmuEmz7EEr8cqZvPLLNTx7
-         hq7UFI2C4jFP/aoMGHho+NbTLqPxi4CSE0oibCKg=
+        b=iYQLF4/eZXZwTdnl7agelMIGS/gAJI1Z2vm+TwAVpY6Hj8a6kll6pZ+RkI+f8K94t
+         /flh3XIYBxwNiEXMKFznRJnhNra2IG+ULajaZ+U8T0xchGDo4m0e+ZpbHA/0Lz3Ejw
+         cJxrP/BM8Tnjr4jr4nGIrEIQblY3Sz4BhjVZ/LD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+Cc:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <alexander.levin@microsoft.com>,
         linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 45/95] media: adv7604: when the EDID is cleared, unconfigure CEC as well
-Date:   Tue,  7 May 2019 01:37:34 -0400
-Message-Id: <20190507053826.31622-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 52/95] media: ov5640: fix auto controls values when switching to manual mode
+Date:   Tue,  7 May 2019 01:37:41 -0400
+Message-Id: <20190507053826.31622-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,37 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
 
-[ Upstream commit e7da89926f6dc6cf855f5ffdf79ef99a1b115ca7 ]
+[ Upstream commit a8f438c684eaa4cbe6c98828eb996d5ec53e24fb ]
 
-When there is no EDID the CEC adapter should be unconfigured as
-well. So call cec_phys_addr_invalidate() when this happens.
+When switching from auto to manual mode, V4L2 core is calling
+g_volatile_ctrl() in manual mode in order to get the manual initial value.
+Remove the manual mode check/return to not break this behaviour.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: <stable@vger.kernel.org>      # for v4.18 and up
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Tested-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/media/i2c/adv7604.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov5640.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index d2108aad3c65..26c3ec573a56 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -2295,8 +2295,10 @@ static int adv76xx_set_edid(struct v4l2_subdev *sd, struct v4l2_edid *edid)
- 		state->aspect_ratio.numerator = 16;
- 		state->aspect_ratio.denominator = 9;
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 0366c8dc6ecf..acf5c8a55bbd 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -1900,16 +1900,12 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
  
--		if (!state->edid.present)
-+		if (!state->edid.present) {
- 			state->edid.blocks = 0;
-+			cec_phys_addr_invalidate(state->cec_adap);
-+		}
- 
- 		v4l2_dbg(2, debug, sd, "%s: clear EDID pad %d, edid.present = 0x%x\n",
- 				__func__, edid->pad, state->edid.present);
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_AUTOGAIN:
+-		if (!ctrl->val)
+-			return 0;
+ 		val = ov5640_get_gain(sensor);
+ 		if (val < 0)
+ 			return val;
+ 		sensor->ctrls.gain->val = val;
+ 		break;
+ 	case V4L2_CID_EXPOSURE_AUTO:
+-		if (ctrl->val == V4L2_EXPOSURE_MANUAL)
+-			return 0;
+ 		val = ov5640_get_exposure(sensor);
+ 		if (val < 0)
+ 			return val;
 -- 
 2.20.1
 
