@@ -2,85 +2,60 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FCFC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554DAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD7D2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C112087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfEGGfw (ORCPT
+        id S1726611AbfEGGgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:35:52 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:41708 "EHLO mxhk.zte.com.cn"
+        Tue, 7 May 2019 02:36:39 -0400
+Received: from verein.lst.de ([213.95.11.211]:57698 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbfEGGfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 02:35:52 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 2B8AFE1BE5E61E24B8E3;
-        Tue,  7 May 2019 14:35:50 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x476ZbcW041399;
-        Tue, 7 May 2019 14:35:37 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019050714354990-10077385 ;
-          Tue, 7 May 2019 14:35:49 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     pbonzini@redhat.com
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn
-Subject: [PATCH] [next] KVM: lapic: allow setting apic debug dynamically
-Date:   Tue, 7 May 2019 14:37:33 +0800
-Message-Id: <1557211053-17275-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-05-07 14:35:49,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-05-07 14:35:32,
-        Serialize complete at 2019-05-07 14:35:32
-X-MAIL: mse-fl1.zte.com.cn x476ZbcW041399
+        id S1726313AbfEGGgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 02:36:39 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 0A8B967358; Tue,  7 May 2019 08:36:19 +0200 (CEST)
+Date:   Tue, 7 May 2019 08:36:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        Michal Simek <monstr@monstr.eu>, linux-mips@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 2/7] au1100fb: fix DMA API abuse
+Message-ID: <20190507063618.GA28147@lst.de>
+References: <20190430110032.25301-1-hch@lst.de> <CGME20190430110118epcas2p24019c7551331cc6390e5b5e07b381dd9@epcas2p2.samsung.com> <20190430110032.25301-3-hch@lst.de> <7a63eeae-4ec3-c82e-c497-8adc7bcb3cea@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a63eeae-4ec3-c82e-c497-8adc7bcb3cea@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many functions invoke apic_debug(), which is defined
-as a null function by default, and that's incovenient for debuging
-lapic.
+On Mon, May 06, 2019 at 03:49:35PM +0200, Bartlomiej Zolnierkiewicz wrote:
+> 
+> On 04/30/2019 01:00 PM, Christoph Hellwig wrote:
+> > Virtual addresses return from dma(m)_alloc_coherent are opaque in what
+> > backs then, and drivers must not poke into them.  Switch the driver
+> > to use the generic DMA API mmap helper to avoid these games.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-This patch allows setting apic debug according to add a apic_dbg
-parameter of kvm.
-
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- arch/x86/kvm/lapic.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 9bf70cf..4d8f10f 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -54,8 +54,13 @@
- #define PRIu64 "u"
- #define PRIo64 "o"
- 
-+static int apic_dbg;
-+module_param(apic_dbg, bool, 0644);
-+
- /* #define apic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg) */
--#define apic_debug(fmt, arg...) do {} while (0)
-+#define apic_debug(fmt, arg...) do {  if (apic_dbg)   \
-+	printk(KERN_DEBUG fmt, ##arg);    \
-+} while (0)
- 
- /* 14 is the version for Xeon and Pentium 8.4.8*/
- #define APIC_VERSION			(0x14UL | ((KVM_APIC_LVT_NUM - 1) << 16))
--- 
-1.8.3.1
-
+Given this actually fixes issues with the current driver, what do you
+think of taking it for 5.2 through your tree?  Also au1200fb has
+basically the same issues, just without abusing the CAC_ADDR helper,
+I could send you a patch for that one as well.
