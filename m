@@ -2,70 +2,85 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF1BC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F33CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9D120825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195AB206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfEGMdA (ORCPT
+        id S1726545AbfEGMgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:33:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55620 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726206AbfEGMc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:32:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3E064AE14;
-        Tue,  7 May 2019 12:32:58 +0000 (UTC)
-Date:   Tue, 7 May 2019 14:32:57 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] livepatch: Remove custom kobject state handling
-In-Reply-To: <20190503132625.23442-2-pmladek@suse.com>
-Message-ID: <alpine.LSU.2.21.1905071355430.7486@pobox.suse.cz>
-References: <20190503132625.23442-1-pmladek@suse.com> <20190503132625.23442-2-pmladek@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 7 May 2019 08:36:47 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:39069 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfEGMgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:36:46 -0400
+X-Originating-IP: 90.88.149.145
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1287A1BF218;
+        Tue,  7 May 2019 12:36:41 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH net] net: mvpp2: cls: Add missing NETIF_F_NTUPLE flag
+Date:   Tue,  7 May 2019 14:36:35 +0200
+Message-Id: <20190507123635.17782-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 May 2019, Petr Mladek wrote:
+Now that the mvpp2 driver supports classification offloading, we must
+add the NETIF_F_NTUPLE to the features list.
 
-> kobject_init() always succeeds and sets the reference count to 1.
-> It allows to always free the structures via kobject_put() and
-> the related release callback.
-> 
-> Note that the custom kobject state handling was used only
-> because we did not know that kobject_put() can and actually
-> should get called even when kobject_init_and_add() fails.
-> 
-> The patch should not change the existing behavior.
+Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
+Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+Hello David,
 
-Pity that the changelog does not describe the change from 
-kobject_init_and_add() to two-stage kobject init (separate kobject_init() 
-and kobject_add()).
+This patch applies on top of a commit 90b509b39ac9, which is in net-next
+but hasn't made it to -net yet.
 
-Petr changed it, because now each member of new dynamic lists (created in 
-klp_init_patch_early()) is initialized with kobject_init(), so we do not 
-have to worry about calling kobject_put() (this is slightly different from 
-kobj_added).
+Thanks,
 
-It would also be possible to retain kobject_init_and_add() and move it to 
-klp_init_patch_early(), but it would be uglier in my opinion.
+Maxime
 
-Miroslav
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 25fbed2b8d94..1f164c893936 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -5040,8 +5040,10 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+ 	dev->hw_features |= features | NETIF_F_RXCSUM | NETIF_F_GRO |
+ 			    NETIF_F_HW_VLAN_CTAG_FILTER;
+ 
+-	if (mvpp22_rss_is_supported())
++	if (mvpp22_rss_is_supported()) {
+ 		dev->hw_features |= NETIF_F_RXHASH;
++		dev->features |= NETIF_F_NTUPLE;
++	}
+ 
+ 	if (port->pool_long->id == MVPP2_BM_JUMBO && port->id != 0) {
+ 		dev->features &= ~(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM);
+-- 
+2.20.1
+
