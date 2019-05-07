@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882F4C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12827C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A94E206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E692054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557249609;
-	bh=r655pN5fozXnGz64v9/ltLkTFF7ZA/0LxeNPU/6u6fk=;
+	s=default; t=1557249610;
+	bh=t9O2eKSF+zDivq1waaSuJAKn2KvU3HkDABeNSg8XkJk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=sBg/gYq4/10QuEO2MnH+76rMaX3iX8erKU78Zu3H4lhmOZRVYzl+JMJ5G6EaHU9fd
-	 9wVYrxs0A5BptHu0yELwIpaOnI5GEKiLbIabdgrow8d8ZFRPbESQ7gbMD8cGQ8q9bu
-	 u/8gqx2+nNHS7UZa1vZ33Wo/HXe+iCqb8b+l00GE=
+	b=b/wPCTFZiydhJmgEDEx0mNpZA/Jklbwa9B5Edcd3nAGY1eVjo/MAixZJGDasXLziC
+	 oJ84/oq8sIVKLtWaHCav3a1p9eBkXdDggOSUfQIxjlDmzPP+myc4FTUhVQ3cVQ+vED
+	 4Oh/ChotBITJ7Jw2lbMG00498nUaXEhVxZM6BRrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfEGRUI (ORCPT
+        id S1727463AbfEGRUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 13:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfEGRUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:20:07 -0400
-Subject: Re: [GIT PULL] HID for 5.2
+        id S1727444AbfEGRUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:20:08 -0400
+Subject: Re: [GIT PULL] livepatching for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557249606;
-        bh=r655pN5fozXnGz64v9/ltLkTFF7ZA/0LxeNPU/6u6fk=;
+        s=default; t=1557249607;
+        bh=t9O2eKSF+zDivq1waaSuJAKn2KvU3HkDABeNSg8XkJk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=voBI5q1ht2pg2hKa0ycy3H9L5nr5g5U1znZ3UE3OoRr2Fd1fKDNuQEO6Zo2Jy6qLH
-         +jnfiJf6mQXFjxbSGV7zygAXyOoDE4Nqg/IlVyLR4l6JEokXHhMGa9sA3uzuxHC1g4
-         MGyUOfDbnC0GMxHG6gA1kerzmUwdU/dIgqy445WY=
+        b=a0eEB/H8jCyUqfxQKWGbvDScpD4de46m5hTN7c6u26RQ+ZJ6VHTirMWyS4qR0PZzc
+         uim1j48DUNvZCxF+iFIzHNCPxY0NMFGWwQQ/T6CJhFCbwj9+DUb2iQHqZKmmWeoGwC
+         +VnJP28Pqbrv50NLhtY34RSOgnDK8XvPx9TyzlQA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <nycvar.YFH.7.76.1905061547380.17054@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1905061547380.17054@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1905061556400.17054@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905061556400.17054@cbobk.fhfr.pm>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1905061547380.17054@cbobk.fhfr.pm>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
-X-PR-Tracked-Commit-Id: 63b6f0b827d6b40e53bac5abc8150fa117d27bec
+X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1905061556400.17054@cbobk.fhfr.pm>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
+ for-linus
+X-PR-Tracked-Commit-Id: 1efbd99ed41db9ddc3ae7e189934c62e9dbe55c4
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b4dd05dee0dbd16afdbba83b698a7110c687be2d
-Message-Id: <155724960515.23705.13002310109191380642.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 May 2019 17:20:05 +0000
+X-PR-Merge-Commit-Id: 573de2a6e844cb230c4483833f29b8344a6a17cc
+Message-Id: <155724960792.23705.9549107939395279414.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 May 2019 17:20:07 +0000
 To:     Jiri Kosina <jikos@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 6 May 2019 16:03:43 +0200 (CEST):
+The pull request you sent on Mon, 6 May 2019 16:04:19 +0200 (CEST):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b4dd05dee0dbd16afdbba83b698a7110c687be2d
+https://git.kernel.org/torvalds/c/573de2a6e844cb230c4483833f29b8344a6a17cc
 
 Thank you!
 
