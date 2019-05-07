@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC0C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EECC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE8821530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA05C20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207419;
-	bh=5DznuNw7z9PLodnnVnROMbB57oFbzwhOIyEtlUp36dI=;
+	s=default; t=1557207428;
+	bh=zJhVGAHI5Kw8u/AG5Kr1IN+ZyDZvVSC27tEtw+tKAgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zJS91PCYP6NHSE2mIs/FFKgT6hZ6noiJo+DogUyR4BGgRq4ocryGLv3IwOuw3+nOX
-	 yCXoIaKBDaD7pB9g4LJhf657thG+rqPB37p6ccFOOZYQyPLtgtdhyWT5XbyW1kRJ28
-	 Z9jz5KM1v8bgpaHBt2HieCKzWzxbodjUK2nNYHEc=
+	b=cEgRw2x546RTXWHTgoPg1/HnsrC5YVW9tJzUYF3Pwf+ehQqKWRqcePNlmAtbOxtAv
+	 RItFPjIY/6f6blSpSkXQG06LoOu/U8fYJK6daIYtsWKYXiUfph1F+D0m9hVCGApcws
+	 j2r3gcI3QqeXlMz8HYVtnjWJCZNv8RaGuTDu4EO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfEGFg6 (ORCPT
+        id S1728259AbfEGFhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:36:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfEGFgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:53 -0400
+        id S1728224AbfEGFhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23CC214C6;
-        Tue,  7 May 2019 05:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F42216B7;
+        Tue,  7 May 2019 05:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207412;
-        bh=5DznuNw7z9PLodnnVnROMbB57oFbzwhOIyEtlUp36dI=;
+        s=default; t=1557207422;
+        bh=zJhVGAHI5Kw8u/AG5Kr1IN+ZyDZvVSC27tEtw+tKAgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tugsefIhg0d8tgBLPaFGKJqyt669v7FaCiuKL0vnlz6MN7QFyTfvyOdkGIkPNoepj
-         vRgu3xgzG1IT1cCwVOWWQoX3pRMFViv7DCnjkzlEN4Q205DIidWiwOwP7w7Xy47rQa
-         wfeB/HX9qE+bGzACuXhjeCUJyWSrEFHagL1jH/oY=
+        b=jusYT1y/E+HfDmNeknaV+GykShEzC5j0JYtV+Mg1VZ/YjGDfECdERGlQXgNX5m2Pj
+         4J7PXRjSyHxw7uPSEfQE3Pz6Iev67NMlbKj6lyDr48o2+TPY2swTp9lG7PtqVlThsL
+         osL1wYdYkzvfYca+pZ1inxl1znFKnpMMlDxq/ycI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Christian Rund <Christian.Rund@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 29/81] s390/pkey: add one more argument space for debug feature entry
-Date:   Tue,  7 May 2019 01:35:00 -0400
-Message-Id: <20190507053554.30848-29-sashal@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 34/81] KVM: fix spectrev1 gadgets
+Date:   Tue,  7 May 2019 01:35:05 -0400
+Message-Id: <20190507053554.30848-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -59,43 +57,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 6b1f16ba730d4c0cda1247568c3a1bf4fa3a2f2f ]
+[ Upstream commit 1d487e9bf8ba66a7174c56a0029c54b1eca8f99c ]
 
-The debug feature entries have been used with up to 5 arguents
-(including the pointer to the format string) but there was only
-space reserved for 4 arguemnts. So now the registration does
-reserve space for 5 times a long value.
+These were found with smatch, and then generalized when applicable.
 
-This fixes a sometime appearing weired value as the last
-value of an debug feature entry like this:
-
-... pkey_sec2protkey zcrypt_send_cprb (cardnr=10 domain=12)
-   failed with errno -2143346254
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reported-by: Christian Rund <Christian.Rund@de.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/pkey_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kvm/lapic.c     |  4 +++-
+ include/linux/kvm_host.h | 10 ++++++----
+ virt/kvm/irqchip.c       |  5 +++--
+ virt/kvm/kvm_main.c      |  6 ++++--
+ 4 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 1b4001e0285f..b16344479959 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -45,7 +45,8 @@ static debug_info_t *debug_info;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 3692de84c420..d2f5aa220355 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -133,6 +133,7 @@ static inline bool kvm_apic_map_get_logical_dest(struct kvm_apic_map *map,
+ 		if (offset <= max_apic_id) {
+ 			u8 cluster_size = min(max_apic_id - offset + 1, 16U);
  
- static void __init pkey_debug_init(void)
++			offset = array_index_nospec(offset, map->max_apic_id + 1);
+ 			*cluster = &map->phys_map[offset];
+ 			*mask = dest_id & (0xffff >> (16 - cluster_size));
+ 		} else {
+@@ -896,7 +897,8 @@ static inline bool kvm_apic_map_get_dest_lapic(struct kvm *kvm,
+ 		if (irq->dest_id > map->max_apic_id) {
+ 			*bitmap = 0;
+ 		} else {
+-			*dst = &map->phys_map[irq->dest_id];
++			u32 dest_id = array_index_nospec(irq->dest_id, map->max_apic_id + 1);
++			*dst = &map->phys_map[dest_id];
+ 			*bitmap = 1;
+ 		}
+ 		return true;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 23c242a7ac52..30efb3663892 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -28,6 +28,7 @@
+ #include <linux/irqbypass.h>
+ #include <linux/swait.h>
+ #include <linux/refcount.h>
++#include <linux/nospec.h>
+ #include <asm/signal.h>
+ 
+ #include <linux/kvm.h>
+@@ -491,10 +492,10 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
+ 
+ static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
  {
--	debug_info = debug_register("pkey", 1, 1, 4 * sizeof(long));
-+	/* 5 arguments per dbf entry (including the format string ptr) */
-+	debug_info = debug_register("pkey", 1, 1, 5 * sizeof(long));
- 	debug_register_view(debug_info, &debug_sprintf_view);
- 	debug_set_level(debug_info, 3);
+-	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu, in case
+-	 * the caller has read kvm->online_vcpus before (as is the case
+-	 * for kvm_for_each_vcpu, for example).
+-	 */
++	int num_vcpus = atomic_read(&kvm->online_vcpus);
++	i = array_index_nospec(i, num_vcpus);
++
++	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
+ 	smp_rmb();
+ 	return kvm->vcpus[i];
  }
+@@ -578,6 +579,7 @@ void kvm_put_kvm(struct kvm *kvm);
+ 
+ static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
+ {
++	as_id = array_index_nospec(as_id, KVM_ADDRESS_SPACE_NUM);
+ 	return srcu_dereference_check(kvm->memslots[as_id], &kvm->srcu,
+ 			lockdep_is_held(&kvm->slots_lock) ||
+ 			!refcount_read(&kvm->users_count));
+diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
+index b1286c4e0712..0bd0683640bd 100644
+--- a/virt/kvm/irqchip.c
++++ b/virt/kvm/irqchip.c
+@@ -144,18 +144,19 @@ static int setup_routing_entry(struct kvm *kvm,
+ {
+ 	struct kvm_kernel_irq_routing_entry *ei;
+ 	int r;
++	u32 gsi = array_index_nospec(ue->gsi, KVM_MAX_IRQ_ROUTES);
+ 
+ 	/*
+ 	 * Do not allow GSI to be mapped to the same irqchip more than once.
+ 	 * Allow only one to one mapping between GSI and non-irqchip routing.
+ 	 */
+-	hlist_for_each_entry(ei, &rt->map[ue->gsi], link)
++	hlist_for_each_entry(ei, &rt->map[gsi], link)
+ 		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
+ 			return -EINVAL;
+ 
+-	e->gsi = ue->gsi;
++	e->gsi = gsi;
+ 	e->type = ue->type;
+ 	r = kvm_set_routing_entry(kvm, e, ue);
+ 	if (r)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 6a79df88b546..e909d9907b50 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2887,12 +2887,14 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	struct kvm_device_ops *ops = NULL;
+ 	struct kvm_device *dev;
+ 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
++	int type;
+ 	int ret;
+ 
+ 	if (cd->type >= ARRAY_SIZE(kvm_device_ops_table))
+ 		return -ENODEV;
+ 
+-	ops = kvm_device_ops_table[cd->type];
++	type = array_index_nospec(cd->type, ARRAY_SIZE(kvm_device_ops_table));
++	ops = kvm_device_ops_table[type];
+ 	if (ops == NULL)
+ 		return -ENODEV;
+ 
+@@ -2907,7 +2909,7 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	dev->kvm = kvm;
+ 
+ 	mutex_lock(&kvm->lock);
+-	ret = ops->create(dev, cd->type);
++	ret = ops->create(dev, type);
+ 	if (ret < 0) {
+ 		mutex_unlock(&kvm->lock);
+ 		kfree(dev);
 -- 
 2.20.1
 
