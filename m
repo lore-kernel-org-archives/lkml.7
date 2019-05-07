@@ -2,227 +2,121 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D334C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FDEC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F150621019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="b2JJ0uEZ";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="qG5cIp18"
+	by mail.kernel.org (Postfix) with ESMTP id 70C6C21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557212675;
+	bh=hNi2vt1qB3b6X3N9lBhgsKLvokmDdrvsjVx/J28EZ90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T+JUsFBulf5bQwXXWhZk0GNGsG5Up72K1vKzw3C4TgzQKopiyZwWr70kOQO7BLhqb
+	 8FKrKQSTwJXQ6+xpGwx+ujEWxt2qOi6YlxO2FuX5r2Twfbcfp6BIRRW6X366NlGdJY
+	 EUetvAehNDJR3vE4yMaEwJk7u1A6tePU1dQD/f/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfEGHEX (ORCPT
+        id S1726799AbfEGHEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:04:23 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:53150 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726253AbfEGHEW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:04:22 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 7 May 2019 03:04:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfEGHEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:04:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9E1BAC01EB;
-        Tue,  7 May 2019 07:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557212656; bh=EgwbqrIDlOKeOpANBxfoAqWMx9vfzjNf1QWR72jjXzg=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=b2JJ0uEZpxwV/ZjimVefsw3vtZg+1oHCx6CFwFOjKCqnX0hLIBj4+P1+e1jcvrI2D
-         VHmYbSe+CfQIsHuolJC7IArw9+mBIEACwZN1oM7h2Io/0ZnKGiWYkIVjfxYb/I/Qgm
-         4txVHCjqylH3NA7+w/8ZAQ7+piyWJnp+BjJYJO9o9BlY9FOJfcVNooPhOSXi0sk9xi
-         lik5E1IunEivBu8O8haYnFuL9mJZ5zYfpWV5q/azWx/wWdb/gqSzKGSqn3KP/uIoCQ
-         2aJWBxLlubPiDY8i/eEz0aucBqlopgc1V/7L6RRg3M5lMCtIPe2iVzz6IoPvh1ZOKs
-         eppF4ZH5vDICA==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 77429A005D;
-        Tue,  7 May 2019 07:04:18 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 7 May 2019 00:04:18 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 7 May 2019 00:04:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=coMxPQlhqRphxm2/E3dz+12hZDp8AK8mRhYjpV2DRM8=;
- b=qG5cIp18MbjoTMhIBvWXfOqjdtiNIUvOUM5I+M6k+orJZFhDvSQirz4PNYjANH51oE0EliEfMkbT2aMViL6CXg/PZDPQS+9RJSEXoXr562cyXVTtI3VDA6r3U2sdd4MRmFZViWQBEmgvrBQM87B/4ljd4emexaBK7VAniJbLoPU=
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
- CY4PR1201MB0071.namprd12.prod.outlook.com (10.172.79.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Tue, 7 May 2019 07:04:14 +0000
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::ac77:1c39:d9eb:ee9a]) by CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::ac77:1c39:d9eb:ee9a%4]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 07:04:14 +0000
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Laight <David.Laight@aculab.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: RE: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to
- ARCH_KMALLOC_MINALIGN
-Thread-Topic: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to
- ARCH_KMALLOC_MINALIGN
-Thread-Index: AQHVBJd3onwrWwkS2UueAl57c5ZJEaZfKNsAgAATBJA=
-Date:   Tue, 7 May 2019 07:04:13 +0000
-Message-ID: <CY4PR1201MB01200B5B52E39A88D8D3FDDDA1310@CY4PR1201MB0120.namprd12.prod.outlook.com>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-72-sashal@kernel.org>
- <20190507055214.GA17986@kroah.com>
-In-Reply-To: <20190507055214.GA17986@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abrodkin@synopsys.com; 
-x-originating-ip: [198.182.37.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6d4e5240-4851-49f8-6bb1-08d6d2ba369d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR1201MB0071;
-x-ms-traffictypediagnostic: CY4PR1201MB0071:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY4PR1201MB0071D44CC32E9AE1A23DD977A1310@CY4PR1201MB0071.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:126;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(39850400004)(346002)(136003)(396003)(13464003)(189003)(199004)(6306002)(6436002)(76176011)(66556008)(66476007)(66446008)(66946007)(14454004)(53936002)(256004)(102836004)(64756008)(26005)(229853002)(66066001)(14444005)(4326008)(561944003)(6246003)(9686003)(33656002)(55016002)(53546011)(186003)(7736002)(74316002)(305945005)(6506007)(7696005)(86362001)(446003)(7416002)(73956011)(3846002)(76116006)(6116002)(71190400001)(2906002)(8676002)(81156014)(8936002)(81166006)(54906003)(68736007)(316002)(110136005)(25786009)(966005)(478600001)(476003)(99286004)(11346002)(71200400001)(52536014)(486006)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0071;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CJgi+3NK0BxPX1lgwrovb2wieQILsxdeB+q4gDn49HWQuGlIputy7eaHmpiwnPClHWTm2q67wxDbAB+CcWhFdurxV9e2HOGjEmoEoEjfc/mvmkx3OtnPt00A2LsVpw/NEBdb9aSzAVHBcUqfIy7pmzCU10QjH/95cXTDj0DL/W1y7vapMguLuRyyI6NV5E1+l+gG1Gs5MhsBYPjsexq3hgP3hUmIpqgtrwaDjrJZG1dvDF7qKFStoWn+UKI3rH0/BU10hlmtyXVdKGm8BRJ29FWBXAUhoTINoeUOkCR88/zEmUOubZMK1r7ZC9sEDh2q1pkjbjtnaPMrv5IEc55Ij6AB/s08sHX4TtEdM0AGHJSPCb9u86bRB5nBtfU1iXHzts0CjSF0xds9RBknl0SBYA0HDhcDGqN0nYOL6Bem8JY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A59721019;
+        Tue,  7 May 2019 07:04:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557212673;
+        bh=hNi2vt1qB3b6X3N9lBhgsKLvokmDdrvsjVx/J28EZ90=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1NwSfNdiJdTpK3PxZVb09tk48+2+AXcgrQl+ONIUsuxrfaxWSH5EVRvzyWG0q5iZK
+         GoU2xj/aHaJYSzTAqERyT8jaORLr94yQ1si1oFuQ21nMGXDmmeQt8N0QaISagR8JcU
+         YXN8lw0eZwmxKlwz0uu4QBqj9nvLINBiTWHmBxHY=
+Date:   Tue, 7 May 2019 09:04:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Daniel Colascione <dancol@google.com>,
+        kernel-team <kernel-team@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Martijn Coenen <maco@android.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190507070430.GA24150@kroah.com>
+References: <20190317015306.GA167393@google.com>
+ <20190317114238.ab6tvvovpkpozld5@brauner.io>
+ <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
+ <20190318002949.mqknisgt7cmjmt7n@brauner.io>
+ <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io>
+ <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <20190507021622.GA27300@sultan-box.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d4e5240-4851-49f8-6bb1-08d6d2ba369d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 07:04:14.0039
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0071
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507021622.GA27300@sultan-box.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Mon, May 06, 2019 at 07:16:22PM -0700, Sultan Alsawaf wrote:
+> This is a complete low memory killer solution for Android that is small
+> and simple. Processes are killed according to the priorities that
+> Android gives them, so that the least important processes are always
+> killed first. Processes are killed until memory deficits are satisfied,
+> as observed from kswapd struggling to free up pages. Simple LMK stops
+> killing processes when kswapd finally goes back to sleep.
+> 
+> The only tunables are the desired amount of memory to be freed per
+> reclaim event and desired frequency of reclaim events. Simple LMK tries
+> to free at least the desired amount of memory per reclaim and waits
+> until all of its victims' memory is freed before proceeding to kill more
+> processes.
+> 
+> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> ---
+> Hello everyone,
+> 
+> I've addressed some of the concerns that were brought up with the first version
+> of the Simple LMK patch. I understand that a kernel-based solution like this
+> that contains policy decisions for a specific userspace is not the way to go,
+> but the Android ecosystem still has a pressing need for a low memory killer that
+> works well.
+> 
+> Most Android devices still use the ancient and deprecated lowmemorykiller.c
+> kernel driver; Simple LMK seeks to replace that, at the very least until PSI and
+> a userspace daemon utilizing PSI are ready for *all* Android devices, and not
+> just the privileged Pixel phone line.
 
-> -----Original Message-----
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Sent: Tuesday, May 7, 2019 8:52 AM
-> To: Sasha Levin <sashal@kernel.org>
-> Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Alexey Brodkin =
-<abrodkin@synopsys.com>;
-> Alexey Brodkin <abrodkin@synopsys.com>; Geert Uytterhoeven <geert@linux-m=
-68k.org>; David Laight
-> <David.Laight@aculab.com>; Peter Zijlstra <peterz@infradead.org>; Thomas =
-Gleixner
-> <tglx@linutronix.de>; Vineet Gupta <vgupta@synopsys.com>; Will Deacon <wi=
-ll.deacon@arm.com>; Sasha
-> Levin <alexander.levin@microsoft.com>
-> Subject: Re: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to ARCH_KMAL=
-LOC_MINALIGN
->=20
-> On Tue, May 07, 2019 at 01:38:01AM -0400, Sasha Levin wrote:
-> > From: Alexey Brodkin <alexey.brodkin@synopsys.com>
-> >
-> > [ Upstream commit a66d972465d15b1d89281258805eb8b47d66bd36 ]
-> >
-> > Initially we bumped into problem with 32-bit aligned atomic64_t
-> > on ARC, see [1]. And then during quite lengthly discussion Peter Z.
-> > mentioned ARCH_KMALLOC_MINALIGN which IMHO makes perfect sense.
-> > If allocation is done by plain kmalloc() obtained buffer will be
-> > ARCH_KMALLOC_MINALIGN aligned and then why buffer obtained via
-> > devm_kmalloc() should have any other alignment?
-> >
-> > This way we at least get the same behavior for both types of
-> > allocation.
-> >
-> > [1] https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__lists.infrade=
-ad.org_pipermail_linux-2Dsnps-
-> 2Darc_2018-
-> 2DJuly_004009.html&d=3DDwIBAg&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3DlqdeeSSEes0G=
-FDDl656eViXO7breS55ytWkhpk5R81I&m=3DA
-> YtkWKU38pzVfJMBuK0lUwxRyKT6dDfHoD3yO6OIB5k&s=3De7e2sXKcjHDQdGSrKWM0jmpSOf=
-he0MFk4-nMZJe9En8&e=3D
-> > [2] https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__lists.infrade=
-ad.org_pipermail_linux-2Dsnps-
-> 2Darc_2018-
-> 2DJuly_004036.html&d=3DDwIBAg&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3DlqdeeSSEes0G=
-FDDl656eViXO7breS55ytWkhpk5R81I&m=3DA
-> YtkWKU38pzVfJMBuK0lUwxRyKT6dDfHoD3yO6OIB5k&s=3DL23zrl8rf2MmReUI8rT3FQpMiZ=
-U9H3Xjh9uVxJQe8dw&e=3D
-> >
-> > Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Cc: David Laight <David.Laight@ACULAB.COM>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Vineet Gupta <vgupta@synopsys.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Greg KH <greg@kroah.com>
-> > Cc: <stable@vger.kernel.org> # 4.8+
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-> > ---
-> >  drivers/base/devres.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> > index 71d577025285..e43a04a495a3 100644
-> > --- a/drivers/base/devres.c
-> > +++ b/drivers/base/devres.c
-> > @@ -25,8 +25,14 @@ struct devres_node {
-> >
-> >  struct devres {
-> >  	struct devres_node		node;
-> > -	/* -- 3 pointers */
-> > -	unsigned long long		data[];	/* guarantee ull alignment */
-> > +	/*
-> > +	 * Some archs want to perform DMA into kmalloc caches
-> > +	 * and need a guaranteed alignment larger than
-> > +	 * the alignment of a 64-bit integer.
-> > +	 * Thus we use ARCH_KMALLOC_MINALIGN here and get exactly the same
-> > +	 * buffer alignment as if it was allocated by plain kmalloc().
-> > +	 */
-> > +	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
-> >  };
-> >
-> >  struct devres_group {
->=20
-> This is not needed in any of the older kernels, despite what the stable@
-> line said, as it ends up taking a lot of memory up for all other arches.
-> That's why I only applied it to the one kernel version.  I'm betting
-> that it will be eventually reverted when people notice it as well :)
+Um, why can't "all" Android devices take the same patches that the Pixel
+phones are using today?  They should all be in the public android-common
+kernel repositories that all Android devices should be syncing with on a
+weekly/monthly basis anyway, right?
 
-That very well might become the case but then we're back to the initial pro=
-blem,
-right? So maybe some other more future-proof solution should be implemented=
-?
+thanks,
 
-See initially we discussed simple explicit 8-byte alignment which won't cha=
-nge
-data layout for most of arches while fixing our issue on ARC but for some r=
-eason
-people were not happy with that proposal and that's how we ended-up with wh=
-at we
-discuss here now.
-
--Alexey
+greg k-h
