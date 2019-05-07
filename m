@@ -2,153 +2,196 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD7DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7091DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB94216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C8120C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:49:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F+eBurhH"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cMAOQ3XS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfEGIsf (ORCPT
+        id S1727025AbfEGItY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:48:35 -0400
-Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:62081
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Tue, 7 May 2019 04:49:24 -0400
+Received: from mail-eopbgr690060.outbound.protection.outlook.com ([40.107.69.60]:18915
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725780AbfEGIsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:48:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+        id S1725780AbfEGItY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Aq3CVt2b3lc5FgEiUrsD8dwwYa/6bf7sNuyyllfY9Qc=;
- b=F+eBurhH5ulkkI/Ip3iWxA7Fvj17RV1u8yGpfDq2GcYSOGcKaSsdjTZjZHY6s93kE8DnQjT3m7+kCUQO6lVrYMFlbjFILdD4KWz8BrNH3kJgoUkdiZcT37LnV/3GuMAVZsN/6a6O7s5iVo4VN/WEHAv3zZtaONraskrqCzgypKE=
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
- AM5PR0402MB2849.eurprd04.prod.outlook.com (10.175.40.20) with Microsoft SMTP
+ bh=9jnm+5DPm82QOz4O3NbmD5dDeuBvD7b6i0dcmQbscHM=;
+ b=cMAOQ3XSLutsXK02w2zxS21YnFVWBnsQxlHITSiyfYB+/cb7/SfiIWvqC9H3ZIIHm16NiCrWJZ59xbm42jQnQsi5gIxiulrgYt9i7smfpZJKAa87ZBcQL9S1U/X5RBl4KXt7b/RVQfFnVVOQvPmeq7ehPCR19eIpj6W4+KXiTg0=
+Received: from BL0PR02MB5681.namprd02.prod.outlook.com (20.177.241.92) by
+ BL0PR02MB4898.namprd02.prod.outlook.com (52.132.14.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Tue, 7 May 2019 08:48:31 +0000
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51%9]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 08:48:31 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+ 15.20.1856.12; Tue, 7 May 2019 08:48:41 +0000
+Received: from BL0PR02MB5681.namprd02.prod.outlook.com
+ ([fe80::6cde:f726:b36e:752d]) by BL0PR02MB5681.namprd02.prod.outlook.com
+ ([fe80::6cde:f726:b36e:752d%5]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 08:48:41 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
-Thread-Topic: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
-Thread-Index: AQHU+/SBIFirjMEfrESTZvW0Hl61haZW+m4AgAhvTQA=
-Date:   Tue, 7 May 2019 08:48:31 +0000
-Message-ID: <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190426055558.44544-1-ran.wang_1@nxp.com>
- <20190501235410.GA25492@bogus>
-In-Reply-To: <20190501235410.GA25492@bogus>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Thread-Topic: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+Thread-Index: AQHU/UVOyBvhwX5Hf0mi9G9IHzQgRKZYHAiAgAGBAECAAQXIAIADZtRggAAL5YCAATcywA==
+Date:   Tue, 7 May 2019 08:48:41 +0000
+Message-ID: <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172007.GA1874@kroah.com>
+ <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190504075502.GA11133@kroah.com>
+ <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
+ <20190506123425.GA26360@kroah.com>
+In-Reply-To: <20190506123425.GA26360@kroah.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.197]
+ smtp.mailfrom=draganc@xilinx.com; 
+x-originating-ip: [149.199.80.133]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bd759458-80dc-4b19-23ff-08d6d2c8c853
+x-ms-office365-filtering-correlation-id: 7b1bdd10-0ce8-4b6a-226a-08d6d2c8ce24
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2849;
-x-ms-traffictypediagnostic: AM5PR0402MB2849:
-x-microsoft-antispam-prvs: <AM5PR0402MB2849500B82E1C50B29BEE3BFF1310@AM5PR0402MB2849.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BL0PR02MB4898;
+x-ms-traffictypediagnostic: BL0PR02MB4898:
+x-microsoft-antispam-prvs: <BL0PR02MB4898157F4314057627F7FABFCB310@BL0PR02MB4898.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(346002)(136003)(366004)(376002)(396003)(39860400002)(189003)(199004)(305945005)(86362001)(71190400001)(71200400001)(6506007)(6246003)(81156014)(6916009)(53546011)(33656002)(81166006)(54906003)(53936002)(8676002)(26005)(55016002)(446003)(5660300002)(186003)(7736002)(9686003)(8936002)(74316002)(52536014)(256004)(102836004)(6436002)(73956011)(7696005)(316002)(11346002)(486006)(66556008)(66476007)(64756008)(66446008)(14454004)(66946007)(99286004)(68736007)(76116006)(76176011)(229853002)(66066001)(25786009)(2906002)(4326008)(478600001)(14444005)(476003)(3846002)(6116002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2849;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(346002)(366004)(396003)(136003)(376002)(13464003)(189003)(199004)(305945005)(55016002)(26005)(66946007)(66476007)(52536014)(73956011)(2906002)(316002)(7736002)(54906003)(64756008)(7696005)(4326008)(66556008)(33656002)(6116002)(68736007)(186003)(9686003)(14444005)(256004)(99286004)(6436002)(3846002)(5660300002)(81166006)(66446008)(66066001)(81156014)(8936002)(8676002)(6916009)(107886003)(76116006)(6246003)(14454004)(446003)(25786009)(74316002)(486006)(53936002)(76176011)(86362001)(11346002)(71200400001)(71190400001)(102836004)(476003)(229853002)(478600001)(53546011)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4898;H:BL0PR02MB5681.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Adic0pvt9H5MNoFvyJ0glYIODbCuQCtSp47pzv5ExGAAkbdyCY+sMLA9zEkT3YBpeKBg8w0dOLsavZlo+ymemg5m/UfvyIUJWPDuQMO47r+JUYjWNWun5jucu7lCg0IppuHIXUqM8mw5CeZSd+Bf3z0CvUiWUGoaOGU5pRofAN+8X+YbK8QOX2A+K6qB8ca0dX0syNsE57aQKeZtSLKEZMuITh4YlB5ypCozvgR4TcU1mFlWCPWWbO1EFt0NEoQcQRE2UpG4gtDo4TDZQtbFU5cqLDTVZYxukVpItMyfqNHsPSa/tbf9MJIXO+x0nff3eji7OCWZK1gwhIiAtpySQRDIsYvpbAUFXbJpkgwFq8z20Z4lJ91S7L74ya2TaE9LuIji+XYweQQnnIobwK+SbBjra7lhVq/AuMIZLmlYEuA=
+x-microsoft-antispam-message-info: rCs73paD0sLPXdMctWKr9oYG76bXIrbpsm3a4CJUKfdJIz8V6twAJg8A3kQRIR3AXTN/et/RCG/ctlMiVILWLYNWcdJR+PGjbLK37U+qoveglkGPN7qQaBzGIpj6VY7WKpdCTnpoV/S/w+OEjetgKxJbGQUusF+9ldzqwV0RmYolgypG46iqgWx3Hxr7QGqqrMBUROsuuOdLIldtwAourAivp5sNUG2LLxofeXbUwgZQOJRdCQR5E0D4S6c2yeWuROWlAqXg+O8wAdk5E16AeoqtzudWm6hfldMZxNfW3Qgf0AAcDjOrECwST2+eXZ2Vhz9ZYsnvIiiTrWjuRs/qJ0tLwHpKsCuk/odRqeF7bbATYt1qIWHeoQN2thxI19GYXZN8evEmjRdO9Y8+3E0tjk6tclDd4JhfcCt4p+5oWvs=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd759458-80dc-4b19-23ff-08d6d2c8c853
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 08:48:31.4346
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b1bdd10-0ce8-4b6a-226a-08d6d2c8ce24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 08:48:41.1791
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2849
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4898
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-On Thursday, May 02, 2019 07:54 Rob Herring wrote:
+
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Monday 6 May 2019 13:34
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
+sts.infradead.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
+l.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
 >=20
-> On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
-> > This patch adds USB dt nodes for LS1028A.
+> On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
 > >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> > Changes in v2:
-> >   - Rename node from usb3@... to usb@... to meet DTSpec
 > >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20
-> ++++++++++++++++++++
-> >  1 files changed, 20 insertions(+), 0 deletions(-)
+> > > -----Original Message-----
+> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > Sent: Saturday 4 May 2019 08:55
+> > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
+l@lists.infradead.org; robh+dt@kernel.org;
+> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
+ernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > >
+> > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
+> > > > Hi Greg,
+> > > >
+> > > > Please find my inline comments below,
+> > > >
+> > > > Regards
+> > > > Dragan
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > Sent: Thursday 2 May 2019 18:20
+> > > > > To: Dragan Cvetic <draganc@xilinx.com>
+> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-k=
+ernel@lists.infradead.org; robh+dt@kernel.org;
+> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vg=
+er.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
+> > > > >
+> > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
+> > > > > > +#define DRIVER_NAME "xilinx_sdfec"
+> > > > > > +#define DRIVER_VERSION "0.3"
+> > > > >
+> > > > > Version means nothing with the driver in the kernel tree, please =
+remove
+> > > > > it.
+> > > >
+> > > > Will be removed. Thank you.
+> > > >
+> > > > >
+> > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
+> > > > >
+> > > > > Why this number?  Why limit yourself to any number?
+> > > > >
+> > > >
+> > > > There can be max 8 devices for this driver. I'll change to 8.
+> > > >
+> > > > > > +
+> > > > > > +static struct class *xsdfec_class;
+> > > > >
+> > > > > Do you really need your own class?
+> > > >
+> > > > When writing a character device driver, my goal is to create and re=
+gister an instance
+> > > > of that structure associated with a struct file_operations, exposin=
+g a set of operations
+> > > > to the user-space. One of the steps to make this goal is Create a c=
+lass for a devices,
+> > > > visible in /sys/class/.
+> > >
+> > > Why do you need a class?  Again, why not just use the misc_device api=
+,
+> > > that seems much more relevant here and will make the code a lot simpl=
+er.
+> > >
 > >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index 8dd3501..188cfb8 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -144,6 +144,26 @@
-> >  			clocks =3D <&sysclk>;
-> >  		};
-> >
-> > +		usb0:usb@3100000 {
->                      ^ space needed
-
-Yes, will update this in next version.
-=20
-> > +			compatible=3D "snps,dwc3";
+> > The driver can have 8 devices in SoC plus more in Programming Logic.
+> > It looked logical to group them under the same MAJOR, although they
+> > are independent of each other.  Is this argument strong enough to use
+> > class?
 >=20
-> Needs an SoC specific compatible.
+> Not really :)
+>=20
+> 8 devices is pretty small.  What tool will be trying to talk to all of
+> these devices and how was it going to find out what devices were in the
+> system?
+>
 
-Do you mean change compatible to "snps,dwc3", "fsl,ls1028a-dwc3" ?
+These devices are Forward Error Correction encoder/decoder
+and will be part of the RF communication chain. They will be included
+in the system through DT. Also, described in DT.
+  =20
 
-As I know, so far there is no SoC specific programming for this IP, so do
-you think it's still necessary to add it?
-
-Regards,
-Ran
-
-> > +			reg=3D <0x0 0x3100000 0x0 0x10000>;
-> > +			interrupts=3D <0 80 0x4>;
-> > +			dr_mode=3D "host";
-> > +			snps,dis_rxdet_inp3_quirk;
-> > +			snps,quirk-frame-length-adjustment =3D <0x20>;
-> > +			snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
-> > +		};
-> > +
-> > +		usb1:usb@3110000 {
-> > +			compatible=3D "snps,dwc3";
-> > +			reg=3D <0x0 0x3110000 0x0 0x10000>;
-> > +			interrupts=3D <0 81 0x4>;
-> > +			dr_mode=3D "host";
-> > +			snps,dis_rxdet_inp3_quirk;
-> > +			snps,quirk-frame-length-adjustment =3D <0x20>;
-> > +			snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
-> > +		};
-> > +
-> >  		i2c0: i2c@2000000 {
-> >  			compatible =3D "fsl,vf610-i2c";
-> >  			#address-cells =3D <1>;
-> > --
-> > 1.7.1
-> >
+> thanks,
+>=20
+> greg k-h
