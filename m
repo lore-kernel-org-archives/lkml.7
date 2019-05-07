@@ -2,141 +2,153 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED23C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD7DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5030A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB94216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:48:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F+eBurhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfEGIqH (ORCPT
+        id S1726726AbfEGIsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:46:07 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37020 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfEGIqG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:46:06 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hNvjg-00034m-9f; Tue, 07 May 2019 08:46:04 +0000
-Subject: Re: [PATCH][next] Input: qt1050: fix less than zero comparison on an
- unsigned int
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh@kernel.org>, linux-input@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190507082135.21538-1-colin.king@canonical.com>
- <20190507083214.rcew5cjfvlbwbov5@pengutronix.de>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e2a30ae6-da97-1abe-3385-d86bc81406f0@canonical.com>
-Date:   Tue, 7 May 2019 09:46:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190507083214.rcew5cjfvlbwbov5@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
+        Tue, 7 May 2019 04:48:35 -0400
+Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:62081
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbfEGIsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:48:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Aq3CVt2b3lc5FgEiUrsD8dwwYa/6bf7sNuyyllfY9Qc=;
+ b=F+eBurhH5ulkkI/Ip3iWxA7Fvj17RV1u8yGpfDq2GcYSOGcKaSsdjTZjZHY6s93kE8DnQjT3m7+kCUQO6lVrYMFlbjFILdD4KWz8BrNH3kJgoUkdiZcT37LnV/3GuMAVZsN/6a6O7s5iVo4VN/WEHAv3zZtaONraskrqCzgypKE=
+Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
+ AM5PR0402MB2849.eurprd04.prod.outlook.com (10.175.40.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Tue, 7 May 2019 08:48:31 +0000
+Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
+ ([fe80::d8ed:b418:4ee9:a51]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
+ ([fe80::d8ed:b418:4ee9:a51%9]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 08:48:31 +0000
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
+Thread-Topic: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
+Thread-Index: AQHU+/SBIFirjMEfrESTZvW0Hl61haZW+m4AgAhvTQA=
+Date:   Tue, 7 May 2019 08:48:31 +0000
+Message-ID: <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190426055558.44544-1-ran.wang_1@nxp.com>
+ <20190501235410.GA25492@bogus>
+In-Reply-To: <20190501235410.GA25492@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ran.wang_1@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bd759458-80dc-4b19-23ff-08d6d2c8c853
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2849;
+x-ms-traffictypediagnostic: AM5PR0402MB2849:
+x-microsoft-antispam-prvs: <AM5PR0402MB2849500B82E1C50B29BEE3BFF1310@AM5PR0402MB2849.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(346002)(136003)(366004)(376002)(396003)(39860400002)(189003)(199004)(305945005)(86362001)(71190400001)(71200400001)(6506007)(6246003)(81156014)(6916009)(53546011)(33656002)(81166006)(54906003)(53936002)(8676002)(26005)(55016002)(446003)(5660300002)(186003)(7736002)(9686003)(8936002)(74316002)(52536014)(256004)(102836004)(6436002)(73956011)(7696005)(316002)(11346002)(486006)(66556008)(66476007)(64756008)(66446008)(14454004)(66946007)(99286004)(68736007)(76116006)(76176011)(229853002)(66066001)(25786009)(2906002)(4326008)(478600001)(14444005)(476003)(3846002)(6116002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2849;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Adic0pvt9H5MNoFvyJ0glYIODbCuQCtSp47pzv5ExGAAkbdyCY+sMLA9zEkT3YBpeKBg8w0dOLsavZlo+ymemg5m/UfvyIUJWPDuQMO47r+JUYjWNWun5jucu7lCg0IppuHIXUqM8mw5CeZSd+Bf3z0CvUiWUGoaOGU5pRofAN+8X+YbK8QOX2A+K6qB8ca0dX0syNsE57aQKeZtSLKEZMuITh4YlB5ypCozvgR4TcU1mFlWCPWWbO1EFt0NEoQcQRE2UpG4gtDo4TDZQtbFU5cqLDTVZYxukVpItMyfqNHsPSa/tbf9MJIXO+x0nff3eji7OCWZK1gwhIiAtpySQRDIsYvpbAUFXbJpkgwFq8z20Z4lJ91S7L74ya2TaE9LuIji+XYweQQnnIobwK+SbBjra7lhVq/AuMIZLmlYEuA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd759458-80dc-4b19-23ff-08d6d2c8c853
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 08:48:31.4346
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2849
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/2019 09:32, Marco Felsch wrote:
-> Hi Ian,
-> 
-> On 19-05-07 09:21, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently the less than zero comparison of val is always false because
->> val is an unsigned int. Fix this by making val a signed int.
-> 
-> Thanks for covering that, was an copy 'n' paste failure..
->>
->> Addresses-Coverity: ("Unsigned compared against zero")
->> Fixes: a33ff45923c8 ("Input: qt1050 - add Microchip AT42QT1050 support")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/input/keyboard/qt1050.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/input/keyboard/qt1050.c b/drivers/input/keyboard/qt1050.c
->> index 6b1603cb7515..4debddb13972 100644
->> --- a/drivers/input/keyboard/qt1050.c
->> +++ b/drivers/input/keyboard/qt1050.c
->> @@ -222,7 +222,7 @@ static struct regmap_config qt1050_regmap_config = {
->>  
->>  static bool qt1050_identify(struct qt1050_priv *ts)
->>  {
->> -	unsigned int val;
->> +	int val;
-> 
-> I think the proper solution is to add a ret val, because this covers the
-> success/fail. I will send a patch to fix this.
+Hi Rob,
 
-OK, thanks for the follow-up fix.
+On Thursday, May 02, 2019 07:54 Rob Herring wrote:
+>=20
+> On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
+> > This patch adds USB dt nodes for LS1028A.
+> >
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > ---
+> > Changes in v2:
+> >   - Rename node from usb3@... to usb@... to meet DTSpec
+> >
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20
+> ++++++++++++++++++++
+> >  1 files changed, 20 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index 8dd3501..188cfb8 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -144,6 +144,26 @@
+> >  			clocks =3D <&sysclk>;
+> >  		};
+> >
+> > +		usb0:usb@3100000 {
+>                      ^ space needed
+
+Yes, will update this in next version.
+=20
+> > +			compatible=3D "snps,dwc3";
+>=20
+> Needs an SoC specific compatible.
+
+Do you mean change compatible to "snps,dwc3", "fsl,ls1028a-dwc3" ?
+
+As I know, so far there is no SoC specific programming for this IP, so do
+you think it's still necessary to add it?
 
 Regards,
-Colin
+Ran
 
-> 
-> Regards,
->   Marco
-> 
->>  	/* Read Chip ID */
->>  	regmap_read(ts->regmap, QT1050_CHIP_ID, &val);
->> -- 
->> 2.20.1
->>
->>
-> 
-
+> > +			reg=3D <0x0 0x3100000 0x0 0x10000>;
+> > +			interrupts=3D <0 80 0x4>;
+> > +			dr_mode=3D "host";
+> > +			snps,dis_rxdet_inp3_quirk;
+> > +			snps,quirk-frame-length-adjustment =3D <0x20>;
+> > +			snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
+> > +		};
+> > +
+> > +		usb1:usb@3110000 {
+> > +			compatible=3D "snps,dwc3";
+> > +			reg=3D <0x0 0x3110000 0x0 0x10000>;
+> > +			interrupts=3D <0 81 0x4>;
+> > +			dr_mode=3D "host";
+> > +			snps,dis_rxdet_inp3_quirk;
+> > +			snps,quirk-frame-length-adjustment =3D <0x20>;
+> > +			snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
+> > +		};
+> > +
+> >  		i2c0: i2c@2000000 {
+> >  			compatible =3D "fsl,vf610-i2c";
+> >  			#address-cells =3D <1>;
+> > --
+> > 1.7.1
+> >
