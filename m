@@ -2,165 +2,141 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA5BC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5046C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279AB206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557221987;
-	bh=oXRKVHlZHDamJiPpfj36vVQjP9gWgXkIVXvvUy/gBho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o85kHN6bwVFXE0RG2TwobFmsHzTJw6tBVp5DXVAYJKe55qBxt2MnJWb8tORICpF0K
-	 tE8TWAEXwdHn371rB4WSMSD6U2u44Vfj7wBCqQWqOVqdRX2nwiMi6P2hpinZaieKjP
-	 Fh3wDahAihcatCd1PzGJruM5AzGFLnF/jkJ4WsqA=
+	by mail.kernel.org (Postfix) with ESMTP id 95004204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfEGJjp (ORCPT
+        id S1726960AbfEGJkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:39:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbfEGJjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:39:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94DA820675;
-        Tue,  7 May 2019 09:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557221984;
-        bh=oXRKVHlZHDamJiPpfj36vVQjP9gWgXkIVXvvUy/gBho=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qPEBnk56bPCyo9NFwqkasLn5N18ZRBOfXBTZNk8ltq1OK5Wc3wNOJmcvU/wc2KnBP
-         8a8ouUroyRoxPFWe5QgaWTyQ1P/vt46oTvnNewYaCKmZYWr5lIDRSdXENo5iaMS1o8
-         WMQOmbEcR9CbwtLCmbgbkdwzCTMDtvUqL2Uvr750=
-Date:   Tue, 7 May 2019 11:39:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dragan Cvetic <draganc@xilinx.com>
-Cc:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Message-ID: <20190507093941.GC20355@kroah.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
- <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190504075502.GA11133@kroah.com>
- <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190506123425.GA26360@kroah.com>
- <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
+        Tue, 7 May 2019 05:40:07 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:38365 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfEGJkG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:40:06 -0400
+Received: by mail-it1-f197.google.com with SMTP id r198so14133714itb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:40:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=M+r1dDE8p2pZ1Gb6K0q/nd2z9VfNJGEaSacktrDrGiE=;
+        b=J554nVGTiyfE94hnc5IExdiquqQ8vlYL4g1IquB4UEoZcVhqmT617fgcF0hVVu/CdJ
+         zeMYwkXExhPDyVXreTODqa7h21bqe3PDTtDjd6hJ8p5eGJrHLnoluJuagbR6cR00idV0
+         CSnNsd9upDF1l8OxXKR/FDK3gAl2/sMJXPptMJkBeGzJYSMzQKPyPlSFXw1IjnokM4+z
+         H0VCovhUoltbLkULqK3uzsin79lUDb3G+UrzaRJbj5WiUu7JGTN7kNl9wzS3pRFNQlV7
+         BrgEkLuo9H/z7bjFxQaKMbQjhx7w4RINbMibvs5c6ukT3SItAugSsXgPP9+L6nToyHBj
+         EU+Q==
+X-Gm-Message-State: APjAAAWJnp0PmidRb0WY80zknvpdcFaUJzo4ji2cf8tNFeboTiDq+Q/i
+        YnfAWkXPLaz/Xo9AiwFmbzx5ySXg4ngfphtbD2oVDELNnMM9
+X-Google-Smtp-Source: APXvYqwRADDuYNGX3Y7wDUsoO/ls6z/INnziGesI/Q40aER2KXJo4Xe68NwqOHF0E9x1LanGkDBhQDSgSqNmGas1uSblsCD++5Vo
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Received: by 2002:a02:7122:: with SMTP id n34mr22853517jac.73.1557222005928;
+ Tue, 07 May 2019 02:40:05 -0700 (PDT)
+Date:   Tue, 07 May 2019 02:40:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007ffeda0588490086@google.com>
+Subject: general protection fault in rfcomm_dlc_open
+From:   syzbot <syzbot+7cd22aae14e82bcf8379@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, gustavo@embeddedor.com,
+        johan.hedberg@gmail.com, keescook@chromium.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tiny.windzz@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 08:48:41AM +0000, Dragan Cvetic wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > Sent: Monday 6 May 2019 13:34
-> > To: Dragan Cvetic <draganc@xilinx.com>
-> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > 
-> > On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > Sent: Saturday 4 May 2019 08:55
-> > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > > >
-> > > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > Please find my inline comments below,
-> > > > >
-> > > > > Regards
-> > > > > Dragan
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > > Sent: Thursday 2 May 2019 18:20
-> > > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > > > > >
-> > > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
-> > > > > > > +#define DRIVER_NAME "xilinx_sdfec"
-> > > > > > > +#define DRIVER_VERSION "0.3"
-> > > > > >
-> > > > > > Version means nothing with the driver in the kernel tree, please remove
-> > > > > > it.
-> > > > >
-> > > > > Will be removed. Thank you.
-> > > > >
-> > > > > >
-> > > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
-> > > > > >
-> > > > > > Why this number?  Why limit yourself to any number?
-> > > > > >
-> > > > >
-> > > > > There can be max 8 devices for this driver. I'll change to 8.
-> > > > >
-> > > > > > > +
-> > > > > > > +static struct class *xsdfec_class;
-> > > > > >
-> > > > > > Do you really need your own class?
-> > > > >
-> > > > > When writing a character device driver, my goal is to create and register an instance
-> > > > > of that structure associated with a struct file_operations, exposing a set of operations
-> > > > > to the user-space. One of the steps to make this goal is Create a class for a devices,
-> > > > > visible in /sys/class/.
-> > > >
-> > > > Why do you need a class?  Again, why not just use the misc_device api,
-> > > > that seems much more relevant here and will make the code a lot simpler.
-> > > >
-> > >
-> > > The driver can have 8 devices in SoC plus more in Programming Logic.
-> > > It looked logical to group them under the same MAJOR, although they
-> > > are independent of each other.  Is this argument strong enough to use
-> > > class?
-> > 
-> > Not really :)
-> > 
-> > 8 devices is pretty small.  What tool will be trying to talk to all of
-> > these devices and how was it going to find out what devices were in the
-> > system?
-> >
-> 
-> These devices are Forward Error Correction encoder/decoder
-> and will be part of the RF communication chain. They will be included
-> in the system through DT. Also, described in DT.
+Hello,
 
-Userspace doesn't mess with DT.
+syzbot found the following crash on:
 
-I am asking what userspace tool/program is going to be interacting with
-these devices through your now-custom api you are creating.  Do you have
-a link to that software, and how is that code doing the "determine what
-device nodes are associated with what devices" logic?
+HEAD commit:    cd86972a Merge branch 'tcp-undo-congestion'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=127331dca00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=429a5a550a968ac7
+dashboard link: https://syzkaller.appspot.com/bug?extid=7cd22aae14e82bcf8379
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-thanks,
+Unfortunately, I don't have any reproducer for this crash yet.
 
-greg k-h
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7cd22aae14e82bcf8379@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 31668 Comm: syz-executor.5 Not tainted 5.1.0-rc6+ #163
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:rfcomm_dlc_get net/bluetooth/rfcomm/core.c:360 [inline]
+RIP: 0010:__rfcomm_dlc_open net/bluetooth/rfcomm/core.c:396 [inline]
+RIP: 0010:rfcomm_dlc_open+0x28a/0xd60 net/bluetooth/rfcomm/core.c:431
+Code: 9d 50 ff ff ff 74 67 e8 14 b6 16 fb 48 8d bb 44 01 00 00 48 b9 00 00  
+00 00 00 fc ff df 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <0f> b6 04 08 38  
+d0 7f 08 84 c0 0f 85 e6 09 00 00 0f b6 b3 44 01 00
+RSP: 0018:ffff888068067c88 EFLAGS: 00010206
+RAX: 0620fbe76423b6ea RBX: 3107df3b211db60f RCX: dffffc0000000000
+RDX: 0000000000000003 RSI: ffffffff8659d70c RDI: 3107df3b211db753
+RBP: ffff888068067d60 R08: ffff8880a7f1e3c0 R09: fffffbfff12898a5
+R10: ffff888068067c78 R11: ffffffff8944c527 R12: ffff888085e7f0c0
+R13: ffff88809b3b2300 R14: 1ffff1100d00cf97 R15: 000000008659d603
+FS:  00007f9e3b56f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000073c000 CR3: 000000006895d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  rfcomm_sock_connect+0x38a/0x4b0 net/bluetooth/rfcomm/sock.c:416
+  __sys_connect+0x266/0x330 net/socket.c:1828
+  __do_sys_connect net/socket.c:1839 [inline]
+  __se_sys_connect net/socket.c:1836 [inline]
+  __x64_sys_connect+0x73/0xb0 net/socket.c:1836
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9e3b56ec78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
+RDX: 000000000000000e RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9e3b56f6d4
+R13: 00000000004bf18a R14: 00000000004d0218 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace cac206debc49dd35 ]---
+RIP: 0010:rfcomm_dlc_get net/bluetooth/rfcomm/core.c:360 [inline]
+RIP: 0010:__rfcomm_dlc_open net/bluetooth/rfcomm/core.c:396 [inline]
+RIP: 0010:rfcomm_dlc_open+0x28a/0xd60 net/bluetooth/rfcomm/core.c:431
+Code: 9d 50 ff ff ff 74 67 e8 14 b6 16 fb 48 8d bb 44 01 00 00 48 b9 00 00  
+00 00 00 fc ff df 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <0f> b6 04 08 38  
+d0 7f 08 84 c0 0f 85 e6 09 00 00 0f b6 b3 44 01 00
+RSP: 0018:ffff888068067c88 EFLAGS: 00010206
+RAX: 0620fbe76423b6ea RBX: 3107df3b211db60f RCX: dffffc0000000000
+RDX: 0000000000000003 RSI: ffffffff8659d70c RDI: 3107df3b211db753
+RBP: ffff888068067d60 R08: ffff8880a7f1e3c0 R09: fffffbfff12898a5
+R10: ffff888068067c78 R11: ffffffff8944c527 R12: ffff888085e7f0c0
+R13: ffff88809b3b2300 R14: 1ffff1100d00cf97 R15: 000000008659d603
+FS:  00007f9e3b56f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000006895d000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
