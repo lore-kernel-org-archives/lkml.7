@@ -8,55 +8,54 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2414C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECDBC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE7D205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71103205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mL/DwRZ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9xny6Jg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfEGQ7E (ORCPT
+        id S1727245AbfEGQ7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:59:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44699 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfEGQ7C (ORCPT
+        Tue, 7 May 2019 12:59:07 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45572 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfEGQ7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:59:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d3so4455491plj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:59:02 -0700 (PDT)
+        Tue, 7 May 2019 12:59:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so8945820pfi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xkDmKHN/t0FLLqvqBKew99AjKdIrGt8ctiEpmuZPQEg=;
-        b=mL/DwRZ6NNE/tDrfyJO92P34yidij+IBavjnpFg+vLE7NxYbAdRI3A3VMvYhslLP+M
-         nzJpelgOI5WlnMSUiO2DLDiObsStnF75NA5K4GOPR2Tpf+Mte7AeN7m9u/GkN1tkj/BA
-         ioJAXF1PTTz56OYBYzX4N0FBnJtVbr/5AaT9pmbrAyIIdbgWmPJvFlXLcV14BAJyA0Rz
-         6edAUUl/bt2Lpp5VTwHKdXY226DIe11A2NmQRFKad4Vq37ZUnT9N8mOH7YS6tKEWWlvT
-         lxcCLHwCrgm9u2hi7xdJyey5Fz+2mmlkZCtuWAgSPr2pP9tw7C3PR0P9oK7glcguRLgT
-         Ec2A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=HpUfowzPkPP+EimE58t16S3r0XExpxfBQEdnNQKh3Bc=;
+        b=g9xny6JgesQKFtGTi5kEK7/Ikcq8NsKELmngrvHowFn6ojZtnzg4X+UR9s9XHsOLMK
+         atxUuP/jBO/XQjlM7YFRyNAGG/kHQaIs20geCqyOQm31bLMI0iu881uzXAL5fKgtw9rk
+         3rrZtE2h8ztC+6lUMMaT4V3RS/P6d9ItRnxVAi8//paxzCDECnQ1ZiZjhtn0NM/9+4Cn
+         WQjWg6SfxsX2gqxeYz8u4h2YXhCVX4/wEk3g9yO2h/jvCUQDyIFKl9CP0O6JrhwzFMHP
+         8ZrIEQ1DZnzNVLUaglA2DyxvaYR4khxGLgEumI2+2DCx+CV6hcM5H+xewdX6v8gdk4Ue
+         O7HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xkDmKHN/t0FLLqvqBKew99AjKdIrGt8ctiEpmuZPQEg=;
-        b=hD+x4MmxayLWnpEbpvG43iSBI4UL657gg8Gq2Pv8NoEE3Jam3t8jathnCzLzvGv8XF
-         gC8Z6yZ9RfhZKz0egFvpiDQKCDqvaKwQaa97QIDNGFF+/y47oRIn+s4Ct4STLWeOmkaI
-         Ijy4t0LLqhgSLxkeo3pEamHAFFR60x1H7Dwm7395WwIP1Y9Mt4OL26AGVGg2XMV0mrLS
-         fLXq1MpbwO3816wIZuz8ZUE5n2SawTByhP8F3GAePAqLiYKVl+zB6dDC9Kh5ulLvUe8/
-         w8oBEgPNwSmHZbwPoDOkatWX4AZ714wQlq84p5WP1B9UFI3RatGJDzPIIq4P+GsjkIdH
-         yTAA==
-X-Gm-Message-State: APjAAAXlEgbpLrYFmcwC+Mj2w+suGb/0Sq7P2a5akB1+P3czBTXWrgtd
-        EBbKuVhCJ6ixwPsw5hR+/rQ=
-X-Google-Smtp-Source: APXvYqxJ+EQKiVy218dYR7Dm20kGmAZ+GmsLMjRTyqSTJFjZWJoq+O3itK0N2nmenAgyxxLL9dUu9Q==
-X-Received: by 2002:a17:902:b606:: with SMTP id b6mr5432879pls.100.1557248342269;
-        Tue, 07 May 2019 09:59:02 -0700 (PDT)
+         :references;
+        bh=HpUfowzPkPP+EimE58t16S3r0XExpxfBQEdnNQKh3Bc=;
+        b=HwYMzjCfKjPC1rKsJVrHakM6rQa+C48d9rKDrh2RdIzz5+DF0OrSRgIdBbgq49BbSr
+         7memHf5AEBA4RlVyK4Xsp9mp7fHV4ekgXlb3ZeqUASX+FNridcR49bmPl0yGkaDUtJbq
+         rsx1vGvpuO5F1wawhUiGXBNcjA3YSbxIhxSQsylIndemJ1LGFIdXRmFtvdiptFhExFar
+         bp3NXcJJG7XHUsMn+J3BoXXiHb0cZfFShfN7siOs3Ws4uYnGWkq2lKTdhLYHUolyqT2X
+         4Vrk94wXupygNA6pcrK1dySbuAje7YYe3SkceaI6igVb8pf3nMgke8jJDi5C2izCJEbX
+         dz2Q==
+X-Gm-Message-State: APjAAAVTssDnqEcjshGZNm7mO78Bzws8nQgIR33K9vAUPRK+PVLnkgJw
+        l6Dc+UyQiBS9P1N2tjnhOEQ=
+X-Google-Smtp-Source: APXvYqyuqnN4Vgezd5EXk0WeM5ZmcTumZxABQ40n/nV8S+B8o9TKIPvDyqx6/SaAXGHOoeGiSmm4dw==
+X-Received: by 2002:a63:3190:: with SMTP id x138mr28837539pgx.402.1557248345314;
+        Tue, 07 May 2019 09:59:05 -0700 (PDT)
 Received: from mita-MS-7A45.lan ([240f:34:212d:1:1b24:991b:df50:ea3f])
-        by smtp.gmail.com with ESMTPSA id r12sm18140093pfn.144.2019.05.07.09.58.59
+        by smtp.gmail.com with ESMTPSA id r12sm18140093pfn.144.2019.05.07.09.59.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 07 May 2019 09:59:01 -0700 (PDT)
+        Tue, 07 May 2019 09:59:04 -0700 (PDT)
 From:   Akinobu Mita <akinobu.mita@gmail.com>
 To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
@@ -65,21 +64,20 @@ Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
         Christoph Hellwig <hch@lst.de>,
         Sagi Grimberg <sagi@grimberg.me>,
         Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: [PATCH v2 4/7] nvme.h: add telemetry log page definisions
-Date:   Wed,  8 May 2019 01:58:31 +0900
-Message-Id: <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH v2 5/7] nvme: add facility to check log page attributes
+Date:   Wed,  8 May 2019 01:58:32 +0900
+Message-Id: <1557248314-4238-6-git-send-email-akinobu.mita@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
 References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Copy telemetry log page definisions from nvme-cli.
+This provides a facility to check whether the controller supports the
+telemetry log pages and log page offset field for the Get Log Page
+command.
 
 Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: Keith Busch <keith.busch@intel.com>
@@ -92,50 +90,48 @@ Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 * v2
 - New patch in this version.
 
- include/linux/nvme.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/nvme/host/core.c | 1 +
+ drivers/nvme/host/nvme.h | 1 +
+ include/linux/nvme.h     | 2 ++
+ 3 files changed, 4 insertions(+)
 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 6265d92..42f09d6 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2580,6 +2580,7 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+ 	} else
+ 		ctrl->shutdown_timeout = shutdown_timeout;
+ 
++	ctrl->lpa = id->lpa;
+ 	ctrl->npss = id->npss;
+ 	ctrl->apsta = id->apsta;
+ 	prev_apst_enabled = ctrl->apst_enabled;
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 527d645..8711c71 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -195,6 +195,7 @@ struct nvme_ctrl {
+ 	u32 vs;
+ 	u32 sgls;
+ 	u16 kas;
++	u8 lpa;
+ 	u8 npss;
+ 	u8 apsta;
+ 	u32 oaes;
 diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-index c40720c..5217fe4 100644
+index 5217fe4..c1c4ca5 100644
 --- a/include/linux/nvme.h
 +++ b/include/linux/nvme.h
-@@ -396,6 +396,28 @@ enum {
- 	NVME_NIDT_UUID		= 0x03,
+@@ -294,6 +294,8 @@ enum {
+ 	NVME_CTRL_OACS_DIRECTIVES		= 1 << 5,
+ 	NVME_CTRL_OACS_DBBUF_SUPP		= 1 << 8,
+ 	NVME_CTRL_LPA_CMD_EFFECTS_LOG		= 1 << 1,
++	NVME_CTRL_LPA_EXTENDED_DATA		= 1 << 2,
++	NVME_CTRL_LPA_TELEMETRY_LOG		= 1 << 3,
  };
  
-+/* Derived from 1.3a Figure 101: Get Log Page – Telemetry Host
-+ * -Initiated Log (Log Identifier 07h)
-+ */
-+struct nvme_telemetry_log_page_hdr {
-+	__u8    lpi; /* Log page identifier */
-+	__u8    rsvd[4];
-+	__u8    iee_oui[3];
-+	__le16  dalb1; /* Data area 1 last block */
-+	__le16  dalb2; /* Data area 2 last block */
-+	__le16  dalb3; /* Data area 3 last block */
-+	__u8    rsvd1[368]; /* TODO verify */
-+	__u8    ctrlavail; /* Controller initiated data avail?*/
-+	__u8    ctrldgn; /* Controller initiated telemetry Data Gen # */
-+	__u8    rsnident[128];
-+	/* We'll have to double fetch so we can get the header,
-+	 * parse dalb1->3 determine how much size we need for the
-+	 * log then alloc below. Or just do a secondary non-struct
-+	 * allocation.
-+	 */
-+	__u8    telemetry_dataarea[0];
-+};
-+
- struct nvme_smart_log {
- 	__u8			critical_warning;
- 	__u8			temperature[2];
-@@ -832,6 +854,7 @@ enum {
- 	NVME_LOG_FW_SLOT	= 0x03,
- 	NVME_LOG_CHANGED_NS	= 0x04,
- 	NVME_LOG_CMD_EFFECTS	= 0x05,
-+	NVME_LOG_TELEMETRY_CTRL	= 0x08,
- 	NVME_LOG_ANA		= 0x0c,
- 	NVME_LOG_DISC		= 0x70,
- 	NVME_LOG_RESERVATION	= 0x80,
+ struct nvme_lbaf {
 -- 
 2.7.4
 
