@@ -2,139 +2,148 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D346C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91433C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3746D20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CD0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OaB/4ACU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbfEGU4m (ORCPT
+        id S1728101AbfEGU56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:56:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10113 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfEGU4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:56:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 13:56:41 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga008.jf.intel.com with ESMTP; 07 May 2019 13:56:40 -0700
-Date:   Tue, 7 May 2019 13:48:12 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: [PATCH v8 13/15] x86/split_lock: Enable split lock detection by
- default
-Message-ID: <20190507204812.GC124959@romley-ivt3.sc.intel.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-14-git-send-email-fenghua.yu@intel.com>
- <762682ba43a0468897ff5ddbf6633d58@AcuMS.aculab.com>
- <alpine.DEB.2.21.1904251255590.1960@nanos.tec.linutronix.de>
+        Tue, 7 May 2019 16:57:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36444 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbfEGU56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:57:58 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so1281180plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TzIDRvnZo9wzh0xH3koUcb27TGvZ58GI6x5LKLeUe9I=;
+        b=OaB/4ACU/IWVZycUh57X29GmMnkaQrLyMkJ3KidBs2HBMnVPyuS8/OBUtIfMxShvCn
+         WgUQF4rEGtZONQ4PmLZ2gf/8xYixQd+1MwAMSvyy+W7G2Jrrw7gY9Hiqu/RRw8+PtJqE
+         X2bMJd2tWgRU7o3C1/rJU8nhc5o8adgsUhM0A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TzIDRvnZo9wzh0xH3koUcb27TGvZ58GI6x5LKLeUe9I=;
+        b=paFJwAuazFz5v+BiXGVZBz2bOF/ibPoxml5P4O3IbpE1uQ0qIpLUtjpqizXngX+E1E
+         qXCdteMtN3t2nH5iz8TPU3FwlvZruVwVje7ufWExIgvoq+tY1tLdqbt9AXbtAFo2/qzK
+         f1BROHlUf3+buUNgDdI4x/hPLDdsoRte0PLgHpaYiY2vbfVXuK4w970pJch+QYH9gyFv
+         SUHgz3XKeuEtrWjydi/+ZL5clwHhAvbpVi4TLNIU+f0BqcoN5JS75UEkY9JgKwanqiwl
+         32jL81UI/mXFs2jqgXtWmDLFjW/1Y9qAnHV25UibCq96Q4EuTjkPHmdntP3UhsbgnbKp
+         phhQ==
+X-Gm-Message-State: APjAAAWdLZxwoBpxWwogSG5hKwWGrpbUTqK0ky0VonMSwUduNeI1O8D0
+        yhCuGvKTttjA+6l1eHRNJmHYHw==
+X-Google-Smtp-Source: APXvYqzYlHZ7coikKWCS9HQ5qQvpgCjiuR9K5Lq4yfRHG4UsIqkyhrUN0ehUlirvQ6B8bDiFku6CcQ==
+X-Received: by 2002:a17:902:8f88:: with SMTP id z8mr42103644plo.54.1557262677391;
+        Tue, 07 May 2019 13:57:57 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id m6sm16482035pgq.0.2019.05.07.13.57.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 13:57:56 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>, hal@halemmerich.com,
+        amstan@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] clk: rockchip: Slightly more accurate math in rockchip_mmc_get_phase()
+Date:   Tue,  7 May 2019 13:57:42 -0700
+Message-Id: <20190507205742.50835-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.1904251255590.1960@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 12:58:32PM +0200, Thomas Gleixner wrote:
-> On Thu, 25 Apr 2019, David Laight wrote:
-> 
-> > From:  Fenghua Yu
-> > > Sent: 24 April 2019 20:33
-> > > A split locked access locks bus and degrades overall memory access
-> > > performance. When split lock detection feature is enumerated, enable
-> > > the feature by default by writing 1 to bit 29 in MSR TEST_CTL to find
-> > > any split lock issue.
-> > 
-> > You can't enable this by default until ALL the known potentially
-> > misaligned locked memory operations have been fixed.
-> 
-> Errm? The result will be a WARN_ON() printed and no further damage. It's
-> not making anything worse than it is now. In fact we just should add a
-> 
->     WARN_ON_ONCE(!aligned_to_long(p)) to all the xxx_bit() operations.
-> 
-> so we catch them even when they do not trigger that #AC thingy.
+There's a bit of math in rockchip_mmc_get_phase() to calculate the
+"fine delay".  This math boils down to:
 
-I add WARN_ON_ONCE() in atomic xxx_bit(). But the code cannot be compiled.
+ PSECS_PER_SEC = 1000000000000.
+ ROCKCHIP_MMC_DELAY_ELEMENT_PSEC = 60
+ card_clk * ROCKCHIP_MMC_DELAY_ELEMENT_PSEC * 360 * x / PSECS_PER_SEC
 
-Here is a simplified patch (only adding warning in set_bit()):
+...but we do it in pieces to avoid overflowing 32-bits.  Right now we
+overdo it a little bit, though, and end up getting less accurate math
+than we could.  Right now we do:
 
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 8e790ec219a5..bc889ac12e26 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -14,6 +14,8 @@
- #endif
+ DIV_ROUND_CLOSEST((card_clk / 1000000) *
+                   (ROCKCHIP_MMC_DELAY_ELEMENT_PSEC / 10) *
+                   (360 / 10) *
+		   delay_num,
+		   PSECS_PER_SEC / 1000000 / 10 / 10)
 
- #include <linux/compiler.h>
-+#include <linux/kernel.h>
-+#include <asm-generic/bug.h>
- #include <asm/alternative.h>
- #include <asm/rmwcc.h>
- #include <asm/barrier.h>
-@@ -67,6 +69,8 @@
- static __always_inline void
- set_bit(long nr, volatile unsigned long *addr)
- {
-+       WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
-        if (IS_IMMEDIATE(nr)) {
-                asm volatile(LOCK_PREFIX "orb %1,%0"
-                        : CONST_MASK_ADDR(nr, addr)
+This is non-ideal because:
+A) The pins on Rockchip SoCs are rated to go at most 150 MHz, so the
+   max card clock is 150 MHz.  Even ignoring this the maximum SD card
+   clock (for SDR104) would be 208 MHz.  This means you can decrease
+   your division by 100x and still not overflow:
+     hex(208000000 / 10000 * 6 * 36 * 0xff) == 0x44497200
+B) On many Rockchip SoCs we end up with a card clock that is actually
+   148500000 because we parent off the 297 MHz PLL.  That means the
+   math we're actually doing today is less than ideal.  Specifically:
+   148500000 / 1000000 = 148
 
-gcc reports errors:
-  CC      kernel/bounds.s
-  CALL    scripts/atomic/check-atomics.sh
-In file included from ./include/linux/bitops.h:19,
-                 from ./include/linux/kernel.h:12,
-                 from ./include/asm-generic/bug.h:18,
-                 from ./arch/x86/include/asm/bug.h:83,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/page-flags.h:10,
-                 from kernel/bounds.c:10:
-./arch/x86/include/asm/bitops.h: In function ‘set_bit’:
-./arch/x86/include/asm/bitops.h:72:2: error: implicit declaration of function ‘WARN_ON_ONCE’; did you mean ‘WRITE_ONCE’? [-Werror=implicit-function-declaration]
-  WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-  ^~~~~~~~~~~~
-./arch/x86/include/asm/bitops.h:72:16: error: implicit declaration of function ‘IS_ALIGNED’; did you mean ‘IS_ENABLED’? [-Werror=implicit-function-declaration]
-  WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-                ^~~~~~~~~~
-I think it's because arch/x86/include/asm/bitops.h is included in
-include/linux/kernel.h before IS_ALIGNED() is defined and in
-include/asm-generic/bug.h before WARN_ON_ONCE() is defined.
+Let's fix the math to be slightly more accurate.
 
-How to write a right warn patch and solve the compilation issue?
+NOTE: no known problems are fixed by this.  It was found simply by
+code inspection.  If you want to see the difference between the old
+and the new on a 148.5 MHz clock, this python can help:
 
-Thanks.
+  old = [x for x in
+         (int(round(148 * 6 * 36 * x / 10000.)) for x in range(256))
+	 if x < 90]
+  new = [x for x in
+         (int(round(1485 * 6 * 36 * x / 100000.)) for x in range(256))
+	 if x < 90]
 
--Fenghua
+The only differences are:
+  delay_num=17 54=>55
+  delay_num=22 70=>71
+  delay_num=27 86=>87
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/clk/rockchip/clk-mmc-phase.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
+index 026a26bb702d..9b2f4c094adf 100644
+--- a/drivers/clk/rockchip/clk-mmc-phase.c
++++ b/drivers/clk/rockchip/clk-mmc-phase.c
+@@ -71,13 +71,13 @@ static int rockchip_mmc_get_phase(struct clk_hw *hw)
+ 	degrees = (raw_value & ROCKCHIP_MMC_DEGREE_MASK) * 90;
+ 
+ 	if (raw_value & ROCKCHIP_MMC_DELAY_SEL) {
+-		/* degrees/delaynum * 10000 */
++		/* degrees/delaynum * 1000000 */
+ 		unsigned long factor = (ROCKCHIP_MMC_DELAY_ELEMENT_PSEC / 10) *
+-					36 * (rate / 1000000);
++					36 * (rate / 10000);
+ 
+ 		delay_num = (raw_value & ROCKCHIP_MMC_DELAYNUM_MASK);
+ 		delay_num >>= ROCKCHIP_MMC_DELAYNUM_OFFSET;
+-		degrees += DIV_ROUND_CLOSEST(delay_num * factor, 10000);
++		degrees += DIV_ROUND_CLOSEST(delay_num * factor, 1000000);
+ 	}
+ 
+ 	return degrees % 360;
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
