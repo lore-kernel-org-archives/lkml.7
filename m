@@ -6,63 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7625EC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E29BC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4703B206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E712087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557249605;
-	bh=gWwe0zFb3P+pIl4cNVlAWOBbo7Fxyfh4BDTraeJSBXs=;
+	s=default; t=1557249607;
+	bh=MqL5PlmTIm3uLQu5xMhwJ2JsgU9dbIrVLcDeCaL9cX8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=l/E2cc23FlewCMYYiA0ePHQgVBrQu+y6boWL3hB1AAoLR+HcI+/jTOO6+sxfIHNjz
-	 g7Vt1bPg8L3XRzLfYk1e8zgrIodVL8k4gMaMU44HNSgx+OC2SEdpKJdW1zjLOHywet
-	 AY0jkuS8RpMRXA1l7BtMXWCPo7N+2FEdBZOQMB9g=
+	b=cs/5wQwSf0N8vX+azlXqp+yZBqLvPfBDufeyl57D2oUnpMl6+3t/u7N5Jf4lPUxr4
+	 wN5wUTKZSm5IZel+BFGxnAyd9vpf6dFxmyCI2gXS7t41d6e84F7WF5r7M8USjoCX86
+	 0KRaD0I7J8FeXOy9xByANDXDKxXWgpna5ToipowI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfEGRUE (ORCPT
+        id S1727432AbfEGRUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36698 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 13:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfEGRUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:20:04 -0400
-Subject: Re: [GIT PULL] i3c: Changes for 5.2
+        id S1726589AbfEGRUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:20:05 -0400
+Subject: Re: [GIT PULL] printk for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557249603;
-        bh=gWwe0zFb3P+pIl4cNVlAWOBbo7Fxyfh4BDTraeJSBXs=;
+        s=default; t=1557249604;
+        bh=MqL5PlmTIm3uLQu5xMhwJ2JsgU9dbIrVLcDeCaL9cX8=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Z63emYpAUv+3pQ2Gja0JVsX9cPFnGv6lEBfWlYmiMthk1LRhNBdj02vZjF4Ezk1bm
-         U6mcNWU6yNimyIwvqwGutzEtb4xW++8QOlj9zJCO+uP47sK8M3/U07/w8VObz2CH2M
-         xGuY8SzXdcp5FhtIq0qiE3SLNDfyXAEpQtTFS9i8=
+        b=VKPET5DDmL/mydiHqeVseW6b4WHIp/Qx+HIidIAwmDRFNcRCES6ymWPuDiSxRbEBa
+         dgm/OugVjRCntzd31ylDtRAzPbdYOINKXQ2hiUMAY+y9k3isOzkauUoeg8lWAqSjHA
+         MXgjYUojvelJ23zHAVjag0RXLxIQq6DldoXjOHzE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190506085835.61688fd2@collabora.com>
-References: <20190506085835.61688fd2@collabora.com>
+In-Reply-To: <20190506105505.asfh2spqa4qairng@pathway.suse.cz>
+References: <20190506105505.asfh2spqa4qairng@pathway.suse.cz>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190506085835.61688fd2@collabora.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/for-5.2
-X-PR-Tracked-Commit-Id: 476c7e1d34f2a03b1aa5a924c50703053fe5f77c
+X-PR-Tracked-Message-Id: <20190506105505.asfh2spqa4qairng@pathway.suse.cz>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk
+ tags/printk-for-5.2
+X-PR-Tracked-Commit-Id: 0f46c78391e1348fe45af86a0cd52795726695af
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 80104bb06b17497b570b11a187131dca7d445b40
-Message-Id: <155724960355.23705.11213415373851030230.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 May 2019 17:20:03 +0000
-To:     Boris Brezillon <boris.brezillon@collabora.com>
+X-PR-Merge-Commit-Id: 0968621917add2e0d60c8fbc4e24c670cb14319c
+Message-Id: <155724960460.23705.15983415274957364091.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 May 2019 17:20:04 +0000
+To:     Petr Mladek <pmladek@suse.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-i3c <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vitor Soares <vitor.soares@synopsys.com>,
-        Przemyslaw Gaj <pgaj@cadence.com>
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 6 May 2019 08:58:35 +0200:
+The pull request you sent on Mon, 6 May 2019 12:55:05 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/for-5.2
+> git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk tags/printk-for-5.2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/80104bb06b17497b570b11a187131dca7d445b40
+https://git.kernel.org/torvalds/c/0968621917add2e0d60c8fbc4e24c670cb14319c
 
 Thank you!
 
