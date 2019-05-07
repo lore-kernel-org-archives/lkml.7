@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C620C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E38C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E585205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA058205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208812;
-	bh=DJuL2ejuLOji21RwsU2T4+wD8kSXrsBUmaAO2NFzV3g=;
+	s=default; t=1557208814;
+	bh=wbEAVvMA4Vg5qETHunFBfuUNCOAxZC1YaJjR0olzspM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NB0jdovDJK9mS1lliV9BBS4Arc3WdmgrXdiM2BSBqZKb4I+PJyEazMDgbDWMpggP8
-	 QJBQxn0mHP+8xxNA2h5kCGkCHb9YbiZvX5svR2U1Yo3W4JJQsL2sGYQGgSd7+SONkx
-	 vXMhlCk+UMT2o0kv5cEfqrKQwj5gadBpGzDAoP9o=
+	b=YdGS2xiZzzJnZ3Y2Qt/tUfYJAFryzW22Xms4y5HLMKVt/wpifULPBXOGKm0OF/Bb2
+	 +l6Gf2nNUeRC3HbgUqSt3K9F/+TaJlFmakKd7fDxZiq73o9qmuXvbngcfpgNGmDQNP
+	 xpghzkMLPkZwl+n1TxCUROqu3XrvlKgAuR+Lm3Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfEGFgY (ORCPT
+        id S1728079AbfEGFgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56212 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbfEGFgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:11 -0400
+        id S1727985AbfEGFgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BD2E20C01;
-        Tue,  7 May 2019 05:36:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C5F21479;
+        Tue,  7 May 2019 05:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207371;
-        bh=DJuL2ejuLOji21RwsU2T4+wD8kSXrsBUmaAO2NFzV3g=;
+        s=default; t=1557207368;
+        bh=wbEAVvMA4Vg5qETHunFBfuUNCOAxZC1YaJjR0olzspM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKuLi4UyLC53kpD+u8NQ3JAtiWpNDw5vMAozSwd2nD5qT1zgN7AVP0WiyMWROcuG3
-         460zptDbIREi0BB3g2KneDEvD8mODdeQkm74jDWC/2Kz2QHJQgTXjL1U7tpF5DFCDu
-         yN75ry0qFO/Gu0VT2WeatC3LYOgR0RzIg5Wzx9ks=
+        b=PNPnLwMTagA2M8+/306T8ezp2CzjZJjdQqP/ZFuhviVk1xoqg7kVCsxMOLpx5tHuk
+         8v1oSihW94drHSzdO6mgOC/J578CyKcgz/razyp4IlbSe8TXjybd8B3F1NrMu+epKY
+         Gdnm/f5TjeQLtVU93hDUbIsXwqHQRUwFKLtaC2Xs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/81] mac80211: Increase MAX_MSG_LEN
-Date:   Tue,  7 May 2019 01:34:43 -0400
-Message-Id: <20190507053554.30848-12-sashal@kernel.org>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/81] s390/dasd: Fix capacity calculation for large volumes
+Date:   Tue,  7 May 2019 01:34:41 -0400
+Message-Id: <20190507053554.30848-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -61,45 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Peter Oberparleiter <oberpar@linux.ibm.com>
 
-[ Upstream commit 78be2d21cc1cd3069c6138dcfecec62583130171 ]
+[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
 
-Looks that 100 chars isn't enough for messages, as we keep getting
-warnings popping from different places due to message shortening.
-Instead of trying to shorten the prints, just increase the buffer size.
+The DASD driver incorrectly limits the maximum number of blocks of ECKD
+DASD volumes to 32 bit numbers. Volumes with a capacity greater than
+2^32-1 blocks are incorrectly recognized as smaller volumes.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This results in the following volume capacity limits depending on the
+formatted block size:
+
+  BLKSIZE  MAX_GB   MAX_CYL
+      512    2047   5843492
+     1024    4095   8676701
+     2048    8191  13634816
+     4096   16383  23860929
+
+The same problem occurs when a volume with more than 17895697 cylinders
+is accessed in raw-track-access mode.
+
+Fix this problem by adding an explicit type cast when calculating the
+maximum number of blocks.
+
+Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/trace_msg.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/s390/block/dasd_eckd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/trace_msg.h b/net/mac80211/trace_msg.h
-index 366b9e6f043e..40141df09f25 100644
---- a/net/mac80211/trace_msg.h
-+++ b/net/mac80211/trace_msg.h
-@@ -1,4 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Portions of this file
-+ * Copyright (C) 2019 Intel Corporation
-+ */
-+
- #ifdef CONFIG_MAC80211_MESSAGE_TRACING
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 6e294b4d3635..f89f9d02e788 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -2004,14 +2004,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+ 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
  
- #if !defined(__MAC80211_MSG_DRIVER_TRACE) || defined(TRACE_HEADER_MULTI_READ)
-@@ -11,7 +16,7 @@
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM mac80211_msg
+ raw:
+-	block->blocks = (private->real_cyl *
++	block->blocks = ((unsigned long) private->real_cyl *
+ 			  private->rdc_data.trk_per_cyl *
+ 			  blk_per_trk);
  
--#define MAX_MSG_LEN	100
-+#define MAX_MSG_LEN	120
- 
- DECLARE_EVENT_CLASS(mac80211_msg_event,
- 	TP_PROTO(struct va_format *vaf),
+ 	dev_info(&device->cdev->dev,
+-		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
++		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
+ 		 "%s\n", (block->bp_block >> 10),
+-		 ((private->real_cyl *
++		 (((unsigned long) private->real_cyl *
+ 		   private->rdc_data.trk_per_cyl *
+ 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
+ 		 ((blk_per_trk * block->bp_block) >> 10),
 -- 
 2.20.1
 
