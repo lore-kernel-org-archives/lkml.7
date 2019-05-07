@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44299C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BE3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07EBA20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9156320675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209122;
-	bh=OtmpiCU5JGKKoiDwBuTUKHerUDdvMzN+WtY8xEl3Jjg=;
+	s=default; t=1557209136;
+	bh=Zw9fc+VOZQLTTWQMnDrEn3mdTEmZTLmdRm2mZTjIAPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9Fjb88ZB15px8BbBmWdqHzJGvhVLHmTXe4lHavcfCTA3nGp6IKoyI3F976vcAKgc
-	 tGEQIwQBm7TKXkTaGPz4ovdLe7qY8cixDwMpdPE8l6qKW7jGh7fu/xftOz1cD8M0p9
-	 KKiGe+5CvCXqxFu8w4RIFaAY+FU+n/9RRxwB8AZ8=
+	b=t5MuxwmtyjEIO4pPNvqVOnDUbYwKV+kAdRivsNgRzh2GmMGIVLyqGb/G7/zQmKXaw
+	 kOGEP2rYLt+7KcLW+e/Q4DiPyrvhiGKmzMMHUacY4TEBlIfzRWRd9LZarw6qMFCdSJ
+	 xNWxXS0YSZeF69R+SFrRoOmW6uvkkkNK+45ezh4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfEGGFU (ORCPT
+        id S1726682AbfEGGFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfEGFeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:11 -0400
+        id S1727426AbfEGFeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E332087F;
-        Tue,  7 May 2019 05:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D53D206A3;
+        Tue,  7 May 2019 05:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207250;
-        bh=OtmpiCU5JGKKoiDwBuTUKHerUDdvMzN+WtY8xEl3Jjg=;
+        s=default; t=1557207246;
+        bh=Zw9fc+VOZQLTTWQMnDrEn3mdTEmZTLmdRm2mZTjIAPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z93CCMMKi3AmJi80dOcFH9BkuS0eZL9vSVy9mLX3VFzCzA/8hZwQY7/bHMRJTr25Q
-         Jw8TkHsIh+CL2GHA71dGk8wSY9Vb9O4Er2FSR9Uz83TBYMfnB6yK9Mxv2XvPvMyGOz
-         je0ueXSGkrfsd3i8rYEarzG41TuAqSs8PuNtNIFc=
+        b=hKdILhbmTFopoq3W9WgYW8fV/DYVhFpGQX0Tf2pcqFpCLJbDKnhs+RUbNLQdslqOH
+         hwP4rJhFRNmLuxSwL6XXRl8CtQ5flTmJcVl9DVjxKss7oHGT0oVMERHAN0F9s/pJ88
+         CJYHDK51/ia7Vp0GTqtgyZNURollkyedvnh3Cov8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Camuso <tcamuso@redhat.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 51/99] ipmi: ipmi_si_hardcode.c: init si_type array to fix a crash
-Date:   Tue,  7 May 2019 01:31:45 -0400
-Message-Id: <20190507053235.29900-51-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 48/99] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
+Date:   Tue,  7 May 2019 01:31:42 -0400
+Message-Id: <20190507053235.29900-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -59,48 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Camuso <tcamuso@redhat.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit a885bcfd152f97b25005298ab2d6b741aed9b49c ]
+[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
 
-The intended behavior of function ipmi_hardcode_init_one() is to default
-to kcs interface when no type argument is presented when initializing
-ipmi with hard coded addresses.
+In __apic_accept_irq() interface trig_mode is int and actually on some code
+paths it is set above u8:
 
-However, the array of char pointers allocated on the stack by function
-ipmi_hardcode_init() was not inited to zeroes, so it contained stack
-debris.
+kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
+is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
+(1 << 15) & e->msi.data
 
-Consequently, passing the cruft stored in this array to function
-ipmi_hardcode_init_one() caused a crash when it was unable to detect
-that the char * being passed was nonsense and tried to access the
-address specified by the bogus pointer.
+kvm_apic_local_deliver sets it to reg & (1 << 15).
 
-The fix is simply to initialize the si_type array to zeroes, so if
-there were no type argument given to at the command line, function
-ipmi_hardcode_init_one() could properly default to the kcs interface.
+Fix the immediate issue by making 'tm' into u16. We may also want to adjust
+__apic_accept_irq() interface and use proper sizes for vector, level,
+trig_mode but this is not urgent.
 
-Signed-off-by: Tony Camuso <tcamuso@redhat.com>
-Message-Id: <1554837603-40299-1-git-send-email-tcamuso@redhat.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_hardcode.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/trace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_hardcode.c b/drivers/char/ipmi/ipmi_si_hardcode.c
-index 1e5783961b0d..ab7180c46d8d 100644
---- a/drivers/char/ipmi/ipmi_si_hardcode.c
-+++ b/drivers/char/ipmi/ipmi_si_hardcode.c
-@@ -201,6 +201,8 @@ void __init ipmi_hardcode_init(void)
- 	char *str;
- 	char *si_type[SI_MAX_PARMS];
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 6432d08c7de7..4d47a2631d1f 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -438,13 +438,13 @@ TRACE_EVENT(kvm_apic_ipi,
+ );
  
-+	memset(si_type, 0, sizeof(si_type));
-+
- 	/* Parse out the si_type string into its components. */
- 	str = si_type_str;
- 	if (*str != '\0') {
+ TRACE_EVENT(kvm_apic_accept_irq,
+-	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
++	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
+ 	    TP_ARGS(apicid, dm, tm, vec),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	__u32,		apicid		)
+ 		__field(	__u16,		dm		)
+-		__field(	__u8,		tm		)
++		__field(	__u16,		tm		)
+ 		__field(	__u8,		vec		)
+ 	),
+ 
 -- 
 2.20.1
 
