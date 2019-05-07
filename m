@@ -2,79 +2,121 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F793C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97EE205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D993F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RrcJGUvS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sb4uWI6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfEGRiE (ORCPT
+        id S1727281AbfEGRix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:38:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41136 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGRiC (ORCPT
+        Tue, 7 May 2019 13:38:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48376 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGRiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:38:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id b17so5799359oie.8;
-        Tue, 07 May 2019 10:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zejYr5P9JiV4KR1EkhmBRbvHxOzLvVhI6r2OnIBaRd0=;
-        b=RrcJGUvSDVZbfl9hZpD4xKaS/X/X4eJ6XNpnE5TvH+8k+M2J4BezoyG0uoPiw1T7Mp
-         FNJyR+M+8/EbLI1BtdXnA7FrTybPRf81fPQONlrpduFRI11rcpGZDW8cwIYFWG2HrWiQ
-         LRI9jgY3uD+hiJfgtD9soAMao74Sg/iw7l5OrN6HkpglxIDsS96YHHz7wwwjFBepAGWB
-         5bn4pwwmXWF2+ym5S9dE+E2o7IcaNQ5s9iGVMyPzeva6LWuLZ4d96j/G9Lxh787YvDVM
-         jEsg646vwYrMf0PZQHfWP6Z8WhSkejg4RbFIeCtnD2ZJdZltQ8cFknYVNvNFOUUIJJNX
-         HfWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zejYr5P9JiV4KR1EkhmBRbvHxOzLvVhI6r2OnIBaRd0=;
-        b=P7w7Z2aUsUWqxqcheHfk3dcanUieg2V2ykHZ5WyFuF+evZV92nGIb9eGmb1//L296/
-         Fsf1NqJtGPhtRF+y+pkL6LUgXOzUfZW8ApnUo9sbsIXs/yxYfKMEjQJfHInPw/buXx42
-         JvxIMiwmYBVGmnteNUIcvl07VBSFSXihrwJuPNIgl+QQBXVSKmhvBALQRpHswa65fU//
-         VoJwyNkpYzPeBM5gVClCXFTa+jV5L/m3FKiRsiSllVwj1VRpi7z2uJrvuXzJbh2quD1f
-         8JS5UzSXsfAjN6lWS2jAx5B+MtJNQeQnIOMJXX1GiQp6XvSYlx0tjMt4FjN7X7hmR3Ip
-         u00Q==
-X-Gm-Message-State: APjAAAUvgRuuxnMXclH3s8LyxKdBW7tKsbFWnYGAYpHdwkmK+o8PinSx
-        HviVGnKCaKUbPfmF//9u0TnWDzkSNozxi5g6+8M=
-X-Google-Smtp-Source: APXvYqyVJ600eKkO90LrXjBVxF5ULSSxyIkNoCzDHXPjvL2K6/VaX5vZILVpcwZqeiW15E86Kikyb6sBuTUNfC7cu/4=
-X-Received: by 2002:aca:5b06:: with SMTP id p6mr977542oib.129.1557250681968;
- Tue, 07 May 2019 10:38:01 -0700 (PDT)
+        Tue, 7 May 2019 13:38:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JOIMQ2PwgSE1LhNwkWDe6YdOB+QHfRQcSFVAFTagnHc=; b=sb4uWI6EOfMhfhDCgpKA1PsTt
+        7AhxjT2DW9CBAQi3QL28CeYK4IdpuEgwnbOH7iFySchxnUvQeMB5XWF7okxzl8rcTv0UfkZqZIZgP
+        +VTGovbm0Nrgrhzot5tqQS7B4Qz5sOAs5QQoT9WLkUcOLm2z4uZ3WVDfGMg+E494qMmCmHSh9IhuK
+        sCNzI0WjeVto0407AhNmb4eni+BMJHFALTFvTKoxt5Ak7fwsvdcvfxHIA2gN82rLNcp70nc8lx6Ul
+        WqJH7yyS5UnLJnUXruUW0UaNb0SzWWtj6c+cT1YIoPCqOJE6YuoYPdPLam2cVWhhRBfmZksBl7MfW
+        KDVqGkpcA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hO42w-0000jD-Rr; Tue, 07 May 2019 17:38:31 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 12157207E85C5; Tue,  7 May 2019 19:38:29 +0200 (CEST)
+Date:   Tue, 7 May 2019 19:38:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190507173829.GY2606@hirez.programming.kicks-ass.net>
+References: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
+ <20190506225819.11756974@oasis.local.home>
+ <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
+ <20190506232158.13c9123b@oasis.local.home>
+ <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
+ <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
+ <20190507111227.1d4268d7@gandalf.local.home>
+ <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
+ <20190507163440.GV2606@hirez.programming.kicks-ass.net>
+ <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-4-glaroque@baylibre.com>
-In-Reply-To: <20190507115726.23714-4-glaroque@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 7 May 2019 19:37:50 +0200
-Message-ID: <CAFBinCANc2DmOofmp0QtLGZy8yNNTY2+0+AXQYxsTM5bjWp2zw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: pinctrl: meson: Add
- drive-strength-microamp property
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        khilman@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> Add optional drive-strength-microamp property
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, May 07, 2019 at 10:08:50AM -0700, Linus Torvalds wrote:
+> On Tue, May 7, 2019 at 9:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > Would you consider my approach later on, under the guise of unification?
+> 
+> WHY?
+> 
+> The *only* advantage of your patch is that trivial "look up kernel stack" macro.
+> 
+> Seriously. There's absolutely nothing else.
+
+The ftrace_regs_caller, the kprobe tramplines, the unwinder, they all
+have 'funny' bits because pt_regs isn't 'right'.
+
+> So the whole "let's clean up x86-32 to look like x86-64, which got
+> things right" is to me a completely bogus argument. x86-64 got the
+> "yes, push ss/sp unconditionally" part right, but got a lot of other
+> things horribly wrong. So this is all just one small detail that
+> differs, across two architectures that are similar but have very
+> different warts.
+
+It's a detail that leaks into the C code. Yes SWAPGS is horrible crap,
+but C code doesn't much care. The partial pt_regs thing otoh comes up a
+fair number of times.
+
+Anyway; I think we're at the point where we'll have to agree to
+disagree (or maybe slightly past it).
