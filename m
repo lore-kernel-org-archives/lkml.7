@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E39CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CB1C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34573214AE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDF521530
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207616;
-	bh=HeUEZ4EShkEDGQAY7rwzP+ZLsb5wZJcbmnVnt73gLow=;
+	s=default; t=1557207624;
+	bh=N8ajWXn71Lm1wn4HdOG/RTY7uqgJZAxINuEKsuT+bp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Na1WsYTldhjsnemFYmHO7dVCk2UeDQowdOfZ7nx9/aajrDedYqXAVvpzNnK83xV4i
-	 KauwfjGXYSb+0WXeudOOhwsFdw2lGEwRcmw+GGaJKUl7AzaI3ujHNHgpY6gy8/PwyX
-	 +ahOYb86i1FGW78MiqS5nKPx0euHOlt9W4JUO1xA=
+	b=H4nhKlII7y1e8VCY9hT2qJDv56xzl/sfrDTdrdvrEamPnoFEZB4ynlELrvQftr5zf
+	 RwI5SrHN0V92yMAQu+d+QS+r+rgTmGr17c8vI4rL9cw6/iG2rVPZrcY91JNTHgESgV
+	 Xe3wUqJanDx77zAGMWJIN6NEYZfNamzZ8yPrgCDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbfEGFkO (ORCPT
+        id S1729099AbfEGFkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbfEGFkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:12 -0400
+        id S1729038AbfEGFkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC0DA20B7C;
-        Tue,  7 May 2019 05:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5008C2087F;
+        Tue,  7 May 2019 05:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207611;
-        bh=HeUEZ4EShkEDGQAY7rwzP+ZLsb5wZJcbmnVnt73gLow=;
+        s=default; t=1557207615;
+        bh=N8ajWXn71Lm1wn4HdOG/RTY7uqgJZAxINuEKsuT+bp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SeGZPjJHMW7Ehi4/0hwbjnWFIEIy9HLKjxkh/wCe9TztuUle/iiQSafqz9WKjejqB
-         56YAHMp5TYdKvvLd60OkU0RF64icVsrH2Sz3nHf4wM+pta7DGYoEbIt0fAIXusgJ6c
-         lh5W5db25aQZznMPihUh+b4tIWKlPZqY2oSj9Vt0=
+        b=fGk611XQmEx0iAM+/5I9S3xzt9MCqL5QTv2Mj76tmzEiz11U1vI1OJ8gwPg/u5lRw
+         eVna28ECrwuxN0mdAPQ0jCANDSzomy97ZiItb//b+58wtEwUriBnWw5EDI5WWdr2/3
+         sTpqS4H1M4AeMFTbANsQbJylA9OW4CPdFxwZhVQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 55/95] drm/i915: Downgrade Gen9 Plane WM latency error
-Date:   Tue,  7 May 2019 01:37:44 -0400
-Message-Id: <20190507053826.31622-55-sashal@kernel.org>
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 58/95] net: stmmac: Move debugfs init/exit to ->probe()/->remove()
+Date:   Tue,  7 May 2019 01:37:47 -0400
+Message-Id: <20190507053826.31622-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -61,39 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 86c1c87d0e6241cbe35bd52badfc84b154e1b959 ]
+[ Upstream commit 5f2b8b62786853341a20d4cd4948f9cbca3db002 ]
 
-According to intel_read_wm_latency() it is perfectly legal for one WM
-and all subsequent levels to be 0 (and the deeper powersaving states
-disabled), so don't shout *ERROR*, over and over again.
+Setting up and tearing down debugfs is current unbalanced, as seen by
+this error during resume from suspend:
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Ville Syrjala <ville.syrjala@linux.intel.com>
-Acked-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180726161527.10516-1-chris@chris-wilson.co.uk
+    [  752.134067] dwc-eth-dwmac 2490000.ethernet eth0: ERROR failed to create debugfs directory
+    [  752.134347] dwc-eth-dwmac 2490000.ethernet eth0: stmmac_hw_setup: failed debugFS registration
+
+The imbalance happens because the driver creates the debugfs hierarchy
+when the device is opened and tears it down when the device is closed.
+There's little gain in that, and it could be argued that it is even
+surprising because it's not usually done for other devices. Fix the
+imbalance by moving the debugfs creation and teardown to the driver's
+->probe() and ->remove() implementations instead.
+
+Note that the ring descriptors cannot be read while the interface is
+down, so make sure to return an empty file when the descriptors_status
+debugfs file is read.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/gpu/drm/i915/intel_pm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 23 +++++++++++--------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-index 96a5237741e0..cb377b003321 100644
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -2934,8 +2934,8 @@ static void intel_print_wm_latency(struct drm_i915_private *dev_priv,
- 		unsigned int latency = wm[level];
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index ecf3f8c1bc0e..3389545353a7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2530,12 +2530,6 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
+ 			netdev_warn(priv->dev, "PTP init failed\n");
+ 	}
  
- 		if (latency == 0) {
--			DRM_ERROR("%s WM%d latency not provided\n",
--				  name, level);
-+			DRM_DEBUG_KMS("%s WM%d latency not provided\n",
-+				      name, level);
- 			continue;
- 		}
+-#ifdef CONFIG_DEBUG_FS
+-	ret = stmmac_init_fs(dev);
+-	if (ret < 0)
+-		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
+-			    __func__);
+-#endif
+ 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
  
+ 	if ((priv->use_riwt) && (priv->hw->dma->rx_watchdog)) {
+@@ -2729,10 +2723,6 @@ static int stmmac_release(struct net_device *dev)
+ 
+ 	netif_carrier_off(dev);
+ 
+-#ifdef CONFIG_DEBUG_FS
+-	stmmac_exit_fs(dev);
+-#endif
+-
+ 	stmmac_release_ptp(priv);
+ 
+ 	return 0;
+@@ -3837,6 +3827,9 @@ static int stmmac_sysfs_ring_read(struct seq_file *seq, void *v)
+ 	u32 tx_count = priv->plat->tx_queues_to_use;
+ 	u32 queue;
+ 
++	if ((dev->flags & IFF_UP) == 0)
++		return 0;
++
+ 	for (queue = 0; queue < rx_count; queue++) {
+ 		struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+ 
+@@ -4308,6 +4301,13 @@ int stmmac_dvr_probe(struct device *device,
+ 		goto error_netdev_register;
+ 	}
+ 
++#ifdef CONFIG_DEBUG_FS
++	ret = stmmac_init_fs(ndev);
++	if (ret < 0)
++		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
++			    __func__);
++#endif
++
+ 	return ret;
+ 
+ error_netdev_register:
+@@ -4341,6 +4341,9 @@ int stmmac_dvr_remove(struct device *dev)
+ 
+ 	netdev_info(priv->dev, "%s: removing driver", __func__);
+ 
++#ifdef CONFIG_DEBUG_FS
++	stmmac_exit_fs(ndev);
++#endif
+ 	stmmac_stop_all_dma(priv);
+ 
+ 	priv->hw->mac->set_mac(priv->ioaddr, false);
 -- 
 2.20.1
 
