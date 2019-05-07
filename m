@@ -2,260 +2,124 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F089DC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7ABC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0386206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8DC20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:19:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="SRtwe796"
+	dkim=pass (1024-bit key) header.d=darbyshire-bryant.me.uk header.i=@darbyshire-bryant.me.uk header.b="a01RCY1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfEGUSX (ORCPT
+        id S1727126AbfEGUTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:18:23 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35992 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfEGUSW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:18:22 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c14so2630451qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:18:21 -0700 (PDT)
+        Tue, 7 May 2019 16:19:03 -0400
+Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:22597
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726371AbfEGUTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:19:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E+94DeG/Cjai3KQu1dmx6FwycC/IR8RFjQ6FJQvgySI=;
-        b=SRtwe796Ln1mTAv6ShT7et5/HBB6sOe4yG9tHm7VTvE+o58ZESHA8b8IOntpBfrcc8
-         1u7MIisiP/wBui5dpMwAYrQVz09DCYyzBhagjwiynOiL4k5GYo9QPvRAdI46mryDFcjM
-         +6U8+v7Cc1DJOhsUvN2s6wAKqQBcnCeCU+jdWN1CiZ9cYDZD///tjCQUBK6Rs23aB+VF
-         CsdlSMCAn+T/JfNUd581Ix0iyZAXDkAXxSYa+7NPZzvAZA1rU9+rAjE9IRfAKb/43ARy
-         6H7+GYPjhDUPF0tShoFBE6X1aMB0Q/vCGD0Au6dOm4idRG78J2a2KDYTeRaeVxfA0Bur
-         hwYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E+94DeG/Cjai3KQu1dmx6FwycC/IR8RFjQ6FJQvgySI=;
-        b=Y/DNOfUqnvKEubsMnMjfDiI/1EobYnEm2yQrgEm3ltuYrxlviJ+Mw5gF2FzxBjwDv5
-         v+ujIFg0EWx7X93twNZFX+xDwHs0RhtA4rBFxVHfGgfwh3TM5dj5aodt8N1uhlFWvx8S
-         z0LXLluGFxrIjGFEnf6OA834e2LiAwrV8OH1AljPP7DCXEXGwiEFLDN2+6MI7/R6Zq7S
-         /i7ukdF3x5iFdMZC5MRW32CY+dYHtXswsRhHDoV0mROaYH/SFOa+XYHJhRZApj08AmgI
-         42nlGIQIhqBpiQgGsgvhkgbQdignUg/phDDHx2Wf/NxV/xbLzvrpu4CG1qs9pCaEqqQM
-         j9pw==
-X-Gm-Message-State: APjAAAU6MhpUL4tJ7EpBszFzvW2Ekk8gE1hRWn2uTytj6j12TBrFI+0j
-        avcJWQyMcY+yLhrW6lFQjDZDhQ==
-X-Google-Smtp-Source: APXvYqx9XMRCil7J0ZbdY48pPd3nYGBEXSKh037S2lHSoBcl6eE/1OgpwKKtmnr0KppO1wFSMqLQmA==
-X-Received: by 2002:a37:9cd5:: with SMTP id f204mr12747236qke.75.1557260301063;
-        Tue, 07 May 2019 13:18:21 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id 3sm2248680qtm.37.2019.05.07.13.18.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 13:18:20 -0700 (PDT)
-Date:   Tue, 7 May 2019 16:18:19 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
-        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
-        harry.wentland@amd.com,
-        =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@google.com>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        eric@anholt.net, robdclark@gmail.com,
-        amd-gfx@lists.freedesktop.org,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 5/5] drm: don't block fb changes for async plane
- updates
-Message-ID: <20190507201819.GI17077@art_vandelay>
-References: <20190314002027.7833-1-helen.koike@collabora.com>
- <20190314002027.7833-6-helen.koike@collabora.com>
+ d=darbyshire-bryant.me.uk; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tt5GizVHAWE1wdD3qtqBy2WWNQl/XmF8gHqSZLHu5Oo=;
+ b=a01RCY1oIUKFO4Cny/w29CHEpxeFN4FWE19oaW9isHRrmXCwdKuxRD1M3xldXIXpdV3MhOmGx2x5Uc/n/10haxhZpLk0klXEL+Da9SxVYJ/as9fPgfoBr4ie8ssj970T2gyBuwuWl+gmM9KRokE5u+JBJmDw4H1L7uyStWy09nI=
+Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com (10.171.105.143) by
+ VI1PR0302MB2672.eurprd03.prod.outlook.com (10.171.104.145) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Tue, 7 May 2019 20:18:58 +0000
+Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com
+ ([fe80::a096:fef7:568:7358]) by VI1PR0302MB2750.eurprd03.prod.outlook.com
+ ([fe80::a096:fef7:568:7358%7]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 20:18:58 +0000
+From:   Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+To:     David Miller <davem@davemloft.net>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        "jiri@resnulli.us" <jiri@resnulli.us>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
+Subject: Re: [net-next v3] net: sched: Introduce act_ctinfo action
+Thread-Topic: [net-next v3] net: sched: Introduce act_ctinfo action
+Thread-Index: AQHVA0VFBCng6RnNCEC0SahM/hixhqZgErwAgAAK7IA=
+Date:   Tue, 7 May 2019 20:18:58 +0000
+Message-ID: <72A692BD-993C-4E88-9E95-9B1D4BFD3320@darbyshire-bryant.me.uk>
+References: <20190505101523.48425-1-ldir@darbyshire-bryant.me.uk>
+ <20190505131736.50496-1-ldir@darbyshire-bryant.me.uk>
+ <20190507.123952.2046042425594195721.davem@davemloft.net>
+In-Reply-To: <20190507.123952.2046042425594195721.davem@davemloft.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ldir@darbyshire-bryant.me.uk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2a02:c7f:1268:6500::dc83]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 89557cab-4bae-4a68-79c6-08d6d3293cc2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0302MB2672;
+x-ms-traffictypediagnostic: VI1PR0302MB2672:
+x-microsoft-antispam-prvs: <VI1PR0302MB2672C3EE5F7E82BC610EB3B8C9310@VI1PR0302MB2672.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39830400003)(376002)(346002)(366004)(136003)(199004)(189003)(73956011)(71200400001)(81156014)(6436002)(66556008)(66476007)(66946007)(66446008)(6116002)(64756008)(305945005)(99286004)(76116006)(6486002)(91956017)(86362001)(53936002)(76176011)(4326008)(68736007)(25786009)(5660300002)(102836004)(6512007)(2906002)(82746002)(229853002)(6246003)(6506007)(53546011)(8936002)(6916009)(508600001)(71190400001)(11346002)(2616005)(8676002)(476003)(36756003)(46003)(81166006)(446003)(54906003)(256004)(14454004)(486006)(14444005)(74482002)(33656002)(186003)(316002)(83716004)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0302MB2672;H:VI1PR0302MB2750.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: darbyshire-bryant.me.uk does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kT4deSxOp5mhwQjH0yfOq53nMQwBGtq03jFLtWebsaXPbzlQ6Y7NeSznGcbwpOtji6LNNrcTpWjaq7pSFNjVRRwr0m/0lAuSZbqw6wIWjYKIT4BgD+Cz4s87WY2oGvv1CEgtp8e1lNDL7tJqw1Sn2aVXnAYX5tFNpJ+nBgrTgFX7mwyZ/vvBx2UyOzd5k80mpN7ZCtfksAJrEJDADmI3NB2etFeUeP4egUVkkC+G/3CwShNm/jfbpRhSZ4SeK2h+0oVRnmDylPPhsuZ0gL4ONmF/ryrdwMSURlsGcsP98npJDJkhBiBBLa5hE9ciunU0q2OwM1Y7wJBReuw2gSBmb3Qa808K3Yzq/0Guxq/dXccD76ViQe/HlyK3JicVXzXVhaViXmjpso+krDhwOSiGUWKkXbPXrb4vjBV8yyTWuIo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E80843239A2CA44ABAAE6F2718729F8D@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314002027.7833-6-helen.koike@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: darbyshire-bryant.me.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89557cab-4bae-4a68-79c6-08d6d3293cc2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 20:18:58.5011
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9151708b-c553-406f-8e56-694f435154a4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0302MB2672
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 09:20:26PM -0300, Helen Koike wrote:
-> In the case of a normal sync update, the preparation of framebuffers (be
-> it calling drm_atomic_helper_prepare_planes() or doing setups with
-> drm_framebuffer_get()) are performed in the new_state and the respective
-> cleanups are performed in the old_state.
-> 
-> In the case of async updates, the preparation is also done in the
-> new_state but the cleanups are done in the new_state (because updates
-> are performed in place, i.e. in the current state).
-> 
-> The current code blocks async udpates when the fb is changed, turning
-> async updates into sync updates, slowing down cursor updates and
-> introducing regressions in igt tests with errors of type:
-> 
-> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-> expect to complete approximately 15360 updates, with the threshold set
-> at 7680"
-> 
-> Fb changes in async updates were prevented to avoid the following scenario:
-> 
-> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-> Where we have a single call to prepare fb2 but double cleanup call to fb2.
-> 
-> To solve the above problems, instead of blocking async fb changes, we
-> place the old framebuffer in the new_state object, so when the code
-> performs cleanups in the new_state it will cleanup the old_fb and we
-> will have the following scenario instead:
-> 
-> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-> 
-> Where calls to prepare/cleanup are balanced.
-> 
-> Cc: <stable@vger.kernel.org> # v4.14+
-
-I'm not convinced this should be cc: stable, seems more in the improvement
-category than a bug fix.
-
-> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-> 
-> ---
-> Hello,
-> 
-> I added a TODO in drm_atomic_helper_async_commit() regarding doing a
-> full state swap(), Boris and Nicholas, let me know if this is ok and if
-> I can keep your Reviewed-by tags)
-> 
-> As mentioned in the cover letter, I tested in almost all platforms with
-> igt plane_cursor_legacy and kms_cursor_legacy and I didn't see any
-> regressions. But I couldn't test on MSM and AMD because I don't have
-> the hardware I would appreciate if anyone could help me testing those.
-> 
-> Thanks!
-> Helen
-> 
-> Changes in v3:
-> - Add Reviewed-by tags
-> - Add TODO in drm_atomic_helper_async_commit()
-> 
-> Changes in v2:
-> - Change the order of the patch in the series, add this as the last one.
-> - Add documentation
-> - s/ballanced/balanced
-> 
->  drivers/gpu/drm/drm_atomic_helper.c      | 22 ++++++++++++----------
->  include/drm/drm_modeset_helper_vtables.h |  5 +++++
->  2 files changed, 17 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 2453678d1186..de5812c362b5 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
->  	    old_plane_state->crtc != new_plane_state->crtc)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
-> -	 * the new_plane_state for async updates we need to block framebuffer
-> -	 * changes. This prevents use of a fb that's been cleaned up and
-> -	 * double cleanups from occuring.
-> -	 */
-> -	if (old_plane_state->fb != new_plane_state->fb)
-> -		return -EINVAL;
-> -
->  	funcs = plane->helper_private;
->  	if (!funcs->atomic_async_update)
->  		return -EINVAL;
-> @@ -1647,6 +1638,8 @@ EXPORT_SYMBOL(drm_atomic_helper_async_check);
->   * drm_atomic_async_check() succeeds. Async commits are not supposed to swap
->   * the states like normal sync commits, but just do in-place changes on the
->   * current state.
-> + *
-> + * TODO: Implement full swap instead of doing in-place changes.
->   */
->  void drm_atomic_helper_async_commit(struct drm_device *dev,
->  				    struct drm_atomic_state *state)
-> @@ -1657,6 +1650,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
->  	int i;
->  
->  	for_each_new_plane_in_state(state, plane, plane_state, i) {
-> +		struct drm_framebuffer *new_fb = plane_state->fb;
-> +		struct drm_framebuffer *old_fb = plane->state->fb;
-> +
->  		funcs = plane->helper_private;
->  		funcs->atomic_async_update(plane, plane_state);
->  
-> @@ -1665,11 +1661,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
->  		 * plane->state in-place, make sure at least common
->  		 * properties have been properly updated.
->  		 */
-> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-> +		WARN_ON_ONCE(plane->state->fb != new_fb);
->  		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
->  		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
->  		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
->  		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-> +
-> +		/*
-> +		 * Make sure the FBs have been swapped so that cleanups in the
-> +		 * new_state performs a cleanup in the old FB.
-> +		 */
-> +		WARN_ON_ONCE(plane_state->fb != old_fb);
->  	}
->  }
->  EXPORT_SYMBOL(drm_atomic_helper_async_commit);
-> diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-> index cfb7be40bed7..ce582e8e8f2f 100644
-> --- a/include/drm/drm_modeset_helper_vtables.h
-> +++ b/include/drm/drm_modeset_helper_vtables.h
-> @@ -1174,6 +1174,11 @@ struct drm_plane_helper_funcs {
->  	 * current one with the new plane configurations in the new
->  	 * plane_state.
->  	 *
-> +	 * Drivers should also swap the framebuffers between plane state
-
-Perhaps add "current" before plane state and then after add "(&drm_plane.state)"
-so it's more clear what you're referring to here?
-
-> +	 * and new_state. This is required because prepare and cleanup calls
-> +	 * are performed on the new_state object, then to cleanup the old
-> +	 * framebuffer, it needs to be placed inside the new_state object.
-
-I'd change this bit to:
-
-        * This is required since cleanup for async commits is performed on
-        * the new state, rather than old state like for traditional commits.
-        * Since we want to give up the reference on the current (old) fb instead
-        * of our brand new one, swap them in the driver during the async commit.
-
-> +	 *
->  	 * FIXME:
->  	 *  - It only works for single plane updates
->  	 *  - Async Pageflips are not supported yet
-> -- 
-> 2.20.1
-> 
-
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+DQoNCj4gT24gNyBNYXkgMjAxOSwgYXQgMjA6MzksIERhdmlkIE1pbGxlciA8ZGF2ZW1AZGF2ZW1s
+b2Z0Lm5ldD4gd3JvdGU6DQo+IA0KPiBGcm9tOiBLZXZpbiAnbGRpcicgRGFyYnlzaGlyZS1Ccnlh
+bnQgPGxkaXJAZGFyYnlzaGlyZS1icnlhbnQubWUudWs+DQo+IERhdGU6IFN1biwgNSBNYXkgMjAx
+OSAxMzoyMDoxMyArMDAwMA0KPiANCj4+IGN0aW5mbyBpcyBhIG5ldyB0YyBmaWx0ZXIgYWN0aW9u
+IG1vZHVsZS4gIEl0IGlzIGRlc2lnbmVkIHRvIHJlc3RvcmUNCj4+IGluZm9ybWF0aW9uIGNvbnRh
+aW5lZCBpbiBjb25udHJhY2sgbWFya3MgdG8gb3RoZXIgcGxhY2VzLiAgQXQgcHJlc2VudCBpdA0K
+Pj4gY2FuIHJlc3RvcmUgRFNDUCB2YWx1ZXMgdG8gSVB2NC82IGRpZmZzZXJ2IGZpZWxkcyBhbmQg
+YWxzbyBjb3B5DQo+PiBjb25udHJhY2sgbWFya3MgdG8gc2tiIG1hcmtzLiAgQXMgc3VjaCB0aGUg
+Mm5kIGZ1bmN0aW9uIGVmZmVjdGl2ZWx5DQo+PiByZXBsYWNlcyB0aGUgZXhpc3RpbmcgYWN0X2Nv
+bm5tYXJrIG1vZHVsZQ0KDQpIaSBEYXZpZCwNCg0KPiANCj4gVGhpcyBuZWVkcyBtb3JlIHRpbWUg
+Zm9yIHJldmlldyBhbmQgdGhlcmVmb3JlIEknbSBkZWZlcnJpbmcgdGhpcyB0byB0aGUNCj4gbmV4
+dCBtZXJnZSB3aW5kb3cuDQoNClRoYW5rIHlvdS4NCg0KPiANCj4+ICtzdGF0aWMgaW5saW5lIGlu
+dCB0Y2ZfY3RpbmZvX2R1bXAoc3RydWN0IHNrX2J1ZmYgKnNrYiwgc3RydWN0IHRjX2FjdGlvbiAq
+YSwNCj4+ICsJCQkJICBpbnQgYmluZCwgaW50IHJlZikNCj4+ICt7DQo+PiArCXVuc2lnbmVkIGNo
+YXIgKmIgPSBza2JfdGFpbF9wb2ludGVyKHNrYik7DQo+PiArCXN0cnVjdCB0Y2ZfY3RpbmZvICpj
+aSA9IHRvX2N0aW5mbyhhKTsNCj4+ICsJc3RydWN0IHRjZl9jdGluZm9fcGFyYW1zICpjcDsNCj4+
+ICsJc3RydWN0IHRjX2N0aW5mbyBvcHQgPSB7DQo+PiArCQkuaW5kZXggICA9IGNpLT50Y2ZfaW5k
+ZXgsDQo+PiArCQkucmVmY250ICA9IHJlZmNvdW50X3JlYWQoJmNpLT50Y2ZfcmVmY250KSAtIHJl
+ZiwNCj4+ICsJCS5iaW5kY250ID0gYXRvbWljX3JlYWQoJmNpLT50Y2ZfYmluZGNudCkgLSBiaW5k
+LA0KPj4gKwl9Ow0KPj4gKwlzdHJ1Y3QgdGNmX3QgdDsNCj4+ICsJc3RydWN0IHRjX2N0aW5mb19k
+c2NwIGRzY3BwYXJtOw0KPj4gKwlzdHJ1Y3QgdGNfY3RpbmZvX3N0YXRzX2RzY3AgZHNjcHN0YXRz
+Ow0KPiANCg0KQWxsIGRvbmUsIEnigJl2ZSBwdXQgc3RydWN0IHRjZl9jdGluZm8gKmNpID0gdG9f
+Y3RpbmZvKGEpOyBhdCB0aGUgdG9wIHRob3VnaA0KYXMgb3RoZXIgdmFyaWFibGVzIG5lZWQgdGhh
+dCBpbml0aWFsaXNlZCwgaG9wZSB0aGF04oCZcyBvaywgZWxzZSBwbGVhc2UgZXhwbGFpbg0Kd2hh
+dCBJIHNob3VsZCBoYXZlIGRvbmUuDQoNCj4gTGlrZXdpc2UuDQo+IA0KPiBBbHNvLCBuZXZlciB1
+c2UgdGhlIGlubGluZSBrZXl3b3JkIGluIGZvby5jIGZpbGVzLCBhbHdheXMgbGV0IHRoZSBjb21w
+aWxlcg0KPiBkZWNpZGUuDQoNClRoZSBwZXJpbHMgb2YgdXNpbmcgZXhpc3RpbmcgY29kZSwgc2hv
+dWxkIGhhdmUgc3BvdHRlZCB0aGF0IHRob3VnaHQsIGRpZG7igJl0DQppbmxpbmUgYW55dGhpbmcg
+ZWxzZSDigJhjb3MgaW4gdGhlb3J5IEkga25vdyBiZXR0ZXIuICBPaCB3ZWxsLg0KDQpTaGFtZSBj
+aGVja3BhdGNoIGRpZG7igJl0IHdhcm4gbWUgYWJvdXQgY2hyaXN0bWFzIHRyZWVzIG9yIGlubGlu
+ZSBvdGhlcndpc2UgaXQNCndvdWxkbuKAmXQgaGF2ZSBnb3QgdGhpcyBmYXIuDQoNClRoYW5rcyBm
+b3IgeW91ciB0aW1lIGFuZCBwYXRpZW5jZS4NCg0KQ2hlZXJzLA0KDQpLZXZpbiBELUINCg0KZ3Bn
+OiAwMTJDIEFDQjIgMjhDNiBDNTNFIDk3NzUgIDkxMjMgQjNBMiAzODlCIDlERTIgMzM0QQ0KDQo=
