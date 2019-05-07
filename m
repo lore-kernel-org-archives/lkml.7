@@ -2,133 +2,71 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8366C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14521C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C563A206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F2B21019
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557194105;
+	bh=q+4u+nowOgKwzVXclxdSeaAHEW0vSdacvBGW4S5TBJ8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=oupTINxuqpwCplF/jq0OoM9vMhdtRAsWeJE/injwBr+Yv5BQpvMGt/8+5/0GFKSDQ
+	 snhGN+/LTdViokGl6x6b2RyKCzFa3Xzuubhjg0ru+5c8XRwDtntDXzfqWecPnOujgr
+	 IJYWyV95yC/J23OY+k8ALpl05WIhVWrA09iRkAT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfEGBx7 (ORCPT
+        id S1726365AbfEGBzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 21:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 21:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfEGBx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 21:53:58 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F031206A3;
-        Tue,  7 May 2019 01:53:54 +0000 (UTC)
-Date:   Mon, 6 May 2019 21:53:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        id S1725994AbfEGBzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 21:55:04 -0400
+Subject: Re: [git pull] m68k updates for 5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557194104;
+        bh=q+4u+nowOgKwzVXclxdSeaAHEW0vSdacvBGW4S5TBJ8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Qq1k3RTt16St9N8bSr2bHcgamjAtbcXldw3V2Lhwma6bjbi80xBVBio7YJ4c+S8VY
+         hqoWW+7yAAlTUxrpEiPTgsEUAZdCPMHPb40FAkEqpOCR2yKSoJksZB7KsiWrMTaEyi
+         xY0bWioAqQjxmTPyZctBtmr7c7GtRCtAIGXq5Mfk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190506090539.4338-1-geert@linux-m68k.org>
+References: <20190506090539.4338-1-geert@linux-m68k.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190506090539.4338-1-geert@linux-m68k.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git
+ tags/m68k-for-v5.2-tag1
+X-PR-Tracked-Commit-Id: fdd20ec8786ab2950439c7e78871618f7e51f18b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ccbc2e5ed192ccd2663477107379f843d072e649
+Message-Id: <155719410393.3542.892910503659366335.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 May 2019 01:55:03 +0000
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190506215353.14a8ef78@oasis.local.home>
-In-Reply-To: <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <20190503092247.20cc1ff0@gandalf.local.home>
-        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
-        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
-        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-        <20190506095631.6f71ad7c@gandalf.local.home>
-        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
-        <20190506130643.62c35eeb@gandalf.local.home>
-        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
-        <20190506145745.17c59596@gandalf.local.home>
-        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
-        <20190506162915.380993f9@gandalf.local.home>
-        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
-        <20190506174511.2f8b696b@gandalf.local.home>
-        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
-        <20190506210416.2489a659@oasis.local.home>
-        <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Greg Ungerer <gerg@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 18:34:59 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+The pull request you sent on Mon,  6 May 2019 11:05:39 +0200:
 
-> On Mon, May 6, 2019 at 6:04 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > That iterator does something special for each individual record. All
-> > 40,000 of them.  
-> 
-> .. yes, but the 'int3' only happens for *one* of them at a time.
-> 
-> Why would it bother with the other 39,999 calls?
-> 
-> You could easily just look up the record at the int3 time, and just
-> use the record. Exactly the same way you use the one-at-a-time ones.
-> 
-> Instead, you emulate a fake call to a function that *wouldn't* get
-> called, which now does the lookup there. That's the part I don't get.
-> Why are you emulating something else than what you'd be rewriting?
->
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.2-tag1
 
-Ah, now I see what you are saying. Yes, I could pass in what it is
-suppose to call. But I was trying to use the same code for all the
-alternative solutions we were passing around, and this became the
-"default" case that would work with any int3_emulate_call
-implementation we came up with.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ccbc2e5ed192ccd2663477107379f843d072e649
 
-That is, if we call ftrace_regs_caller() for any scenario it should
-work. Even if the call was suppose to be a nop, because in that case,
-all the ftrace_ops registered in the iterator would refuse to have
-their handler be called for that function.
+Thank you!
 
-I sent you a single patch, but that was really just a diff of several
-applied patches against your unmodified tree. The last patch implements
-the ftrace code. And I had it this way because it should work for any
-of the implementations.
-
-I could modify it so that it picks what function to call when the int3
-is triggered. I think all the solutions we are down to allow that now.
-Some of the early ideas had me call one function for all int3s due to
-trampolines and such.
-
-Also, I figured just calling ftrace_regs_caller() was simpler then
-having that int3 handler do the hash look ups to determine what handler
-it needs to call.
-
--- Steve
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
