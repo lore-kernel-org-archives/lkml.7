@@ -2,99 +2,124 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9794C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA7320675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5359120675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="ahJR6LhO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMZ5yccx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfEGT1D (ORCPT
+        id S1726582AbfEGT1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:27:03 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44947 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfEGT1D (ORCPT
+        Tue, 7 May 2019 15:27:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35227 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfEGT1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:27:03 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c5so23854830wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 12:27:02 -0700 (PDT)
+        Tue, 7 May 2019 15:27:48 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h1so8814449pgs.2;
+        Tue, 07 May 2019 12:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=Snv7TyoiGAcKNv0tuFYq8gStYoAzEsMX1pXAbixEywg=;
-        b=ahJR6LhOZaw/AKX3XQShai5q5fKGZgezH1HRW7PZg3qTUvHODj7PancgoKDpf4eYPB
-         8D+Uk08/K8w+BrDtXi6T4G9b09r8Kbu9s8wTJj7MIAxUlmRL1EBFpjHqsd5JNvRfafOz
-         kHsorRt2Xb8o/9e3re4j+yL86uYXjqwuzOrloBvDdpS43qYZ4RKQBhoCnqOH8Qzf8Jc+
-         fndMpElNwdLnxC/P69a+zezMCKhmIhVhsyn82/kBAQ9juGgU9CImIvSJSRkmEPEoVc/q
-         rPe0w9yF6gSoj5g5W0sc1z4UeOiWTzVADhhK4NDDjn/AZaEsh4rYXWW6vx8lBy2Nc9ED
-         xMPw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UsO+U03AZmNxGw5Vmiy9onXJw2kyj5f6knAPlgEnwvA=;
+        b=PMZ5yccxZhPQByq4vbt3SM7vQ98wEzRrFZ+a59T5vibYhMFx9No3MkUk3g+fdRyIpF
+         PsXBFIP7aqhsqUYV3Vs+4KCkBd6sHAXcz8pAjV0FG3qbRZaLddfP5FWkAr+XchWlXAr2
+         CVFu7ohEkigDbqWPEi2W1scgQfVqNXHtinXKhLqBGNf1Etx103aCRvx+6Lh5SJntx5oD
+         9e5IBIPfN63hZeNrcgrH/31daPJjTRCqNvjvJZtSfqIvtmGsXHjlHIhhtf09HQKM3Y5v
+         fW5ZVrwdBNnVsSg/z9qQsmJbtI9V1kuOJn5Fo87bJY0quiU9tHp2V4XITNU6ffKkPkH3
+         rmPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=Snv7TyoiGAcKNv0tuFYq8gStYoAzEsMX1pXAbixEywg=;
-        b=HoU28wOphygesys8ZdKj1edhIlny2jfXxx9pSRAqvY8q/OHpJgJYDUIOrr2gX4FIfm
-         QYs/ksh+hld0ZdCMyxI1ix6GqBYNnDw7VpxjHE5LYs9gRYHAkbwFxHNYhKfeF5IBu6oh
-         YICdTNGFkurpkRgP3MSb6qh2N+JwWGHjN6q8bsebN9TYhmu37z6V8jU/jOqfbpKJ5h1x
-         xcppG/cZ+DjuPMbY7h5/hVV52OFmf2VaGios9soH5KFbwomo06kuVIC/Q+NesjVy7Kis
-         wS2PwlzvxzNc6Ii2kUXPoJ3OvSA5j8QK6rMArL5HNe+QLZpV7JLsrgIwXpX0gDQLW93q
-         JwjA==
-X-Gm-Message-State: APjAAAVfUu/OMqcxS2C5rVdJxPpvFxU7T5JyJQzJXV4BKuYv9RIkCI0N
-        pY5q3rmOIKjV5Habr2VZ8gcJ2g==
-X-Google-Smtp-Source: APXvYqwZvey4kdE6QfjZ1FMDGUpTasFbSeF/gxEF+fQQVuag6wSWUDqY0OMwS8/kJ0hMrFB3Ovu46g==
-X-Received: by 2002:a05:6000:3:: with SMTP id h3mr23305782wrx.314.1557257221363;
-        Tue, 07 May 2019 12:27:01 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id m25sm14465583wmi.45.2019.05.07.12.27.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 12:27:00 -0700 (PDT)
-Message-ID: <5cd1dc04.1c69fb81.7a4ca.ab0f@mx.google.com>
-Date:   Tue, 07 May 2019 12:27:00 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UsO+U03AZmNxGw5Vmiy9onXJw2kyj5f6knAPlgEnwvA=;
+        b=XtSCQLqAjx3mpG58ccehH1g1qbJ6BttzNDdR2uiQty5uKvh1BYhUnw16jTjK2L43Fo
+         rc1N01zCvj98r81I8/FilDpjD2wAy5X4sioddE56uRocXAQkq18QNk20+G7z/DsNJRZV
+         WVNlXEf9Oh2NC9elQKJbufj1DV08IZ89CI8+GMI9JpbfWvwAffemRjKMEL8QrU3tkiKY
+         6cVlTCLUmYXM1FboxAOKvEd1fksvvzXoUObq4PrHQNt9XavXV3Dl674uI8vpseMr/Nos
+         OkH/9avgoWnCWOPom+YzM3/coW8+/LXnH7tT8mEJWjdGfiCLBc3raXVhlDg0U2Q+xFrJ
+         bVDQ==
+X-Gm-Message-State: APjAAAU9ALO637bof7IozwOfQ/68oGjOhevvog9g/BCKNexhMitBPIlD
+        crsYGinIqmi0b+/IgEwo8ek=
+X-Google-Smtp-Source: APXvYqx3QdxmS1TfgpJjb2UvoVR9Qfb7R65IPICkhpfEPHLIPPUNYsGbV26fkjhj/5GbeT1ZXe/mrw==
+X-Received: by 2002:aa7:8c1a:: with SMTP id c26mr43137193pfd.25.1557257267204;
+        Tue, 07 May 2019 12:27:47 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b22sm21831486pgg.88.2019.05.07.12.27.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 12:27:46 -0700 (PDT)
+Date:   Tue, 7 May 2019 12:27:44 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] Input: libps2 - mark expected switch fall-through
+Message-ID: <20190507192744.GA248929@dtor-ws>
+References: <20190507182409.GA11027@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Kernel: v4.19.40-100-gf897c76a347c
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/99] 4.19.41-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190507182409.GA11027@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 54 boots: 0 failed, 53 passed with 1 untried/u=
-nknown (v4.19.40-100-gf897c76a347c)
+On Tue, May 07, 2019 at 01:24:09PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning:
+> 
+> drivers/input/serio/libps2.c: In function ‘ps2_handle_ack’:
+> drivers/input/serio/libps2.c:407:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (ps2dev->flags & PS2_FLAG_NAK) {
+>       ^
+> drivers/input/serio/libps2.c:417:2: note: here
+>   case 0x00:
+>   ^~~~
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.40-100-gf897c76a347c/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.40-100-gf897c76a347c/
+Applied, thank you.
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.40-100-gf897c76a347c
-Git Commit: f897c76a347c330cca7fc03afaa64164eda545f7
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 24 unique boards, 11 SoC families, 10 builds out of 206
+> ---
+>  drivers/input/serio/libps2.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/serio/libps2.c b/drivers/input/serio/libps2.c
+> index e6a07e68d1ff..22b8e05aa36c 100644
+> --- a/drivers/input/serio/libps2.c
+> +++ b/drivers/input/serio/libps2.c
+> @@ -409,6 +409,7 @@ bool ps2_handle_ack(struct ps2dev *ps2dev, u8 data)
+>  			ps2dev->nak = PS2_RET_ERR;
+>  			break;
+>  		}
+> +		/* Fall through */
+>  
+>  	/*
+>  	 * Workaround for mice which don't ACK the Get ID command.
+> -- 
+> 2.21.0
+> 
 
----
-For more info write to <info@kernelci.org>
+-- 
+Dmitry
