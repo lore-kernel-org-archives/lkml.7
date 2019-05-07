@@ -2,69 +2,106 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD6BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E7EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E82D20835
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557197716;
-	bh=4ut9ZcLtqxhm4Xv6Hl7Re8O2R+beiHRl2DvA3Z4m87U=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=aQMIPG2ae7hW8OWOIwkjWy5J7BTJ9rpnlDbzfC2s+lcBpGJV7hJSMJSx2luDz6QMa
-	 weK19n1z1f1AkJWZ3U1OdvP3bDxdshPTlReqUtktFu4mFaNjXy0cCYJ1gxLN/kD1vw
-	 dzFDhwTGBh+Ks5DCB9o3wPt2eKEdg1tzvAh9/V1E=
+	by mail.kernel.org (Postfix) with ESMTP id B56F92087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfEGCzO (ORCPT
+        id S1726881AbfEGC6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 22:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46876 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 22:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfEGCzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 22:55:04 -0400
-Subject: Re: [GIT PULL] Power management updates for v5.2-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557197703;
-        bh=4ut9ZcLtqxhm4Xv6Hl7Re8O2R+beiHRl2DvA3Z4m87U=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ayQrKf98jzsnFRCKmtraslHvgUoxczIvMxASlYghk/gxKMrdq8jmmTP/fRa6Nnnzr
-         Ybj+jwp/B/2oM3as9Jzbi0BSeN70wFHCKZTcnWs5X8ynxrT07dI8nEGUdXdynYvXel
-         h1qY4SDVVhbYdwabO6C1r5en+REZzvWv5oxr3Oko=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0ge6JhqYEAiFY9cVF5rMW1u_VgC1Cgi=XQOVt4kw0oKTw@mail.gmail.com>
-References: <CAJZ5v0ge6JhqYEAiFY9cVF5rMW1u_VgC1Cgi=XQOVt4kw0oKTw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0ge6JhqYEAiFY9cVF5rMW1u_VgC1Cgi=XQOVt4kw0oKTw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.2-rc1
-X-PR-Tracked-Commit-Id: e07095c9bbcd296401bec8b6852d258d7c926969
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8f5e823f9131a430b12f73e9436d7486e20c16f5
-Message-Id: <155719770356.24898.11372056159509895164.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 May 2019 02:55:03 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1726346AbfEGC6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 22:58:24 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FCB920835;
+        Tue,  7 May 2019 02:58:20 +0000 (UTC)
+Date:   Mon, 6 May 2019 22:58:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190506225819.11756974@oasis.local.home>
+In-Reply-To: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+        <20190506095631.6f71ad7c@gandalf.local.home>
+        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+        <20190506130643.62c35eeb@gandalf.local.home>
+        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
+        <20190506145745.17c59596@gandalf.local.home>
+        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
+        <20190506162915.380993f9@gandalf.local.home>
+        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
+        <20190506174511.2f8b696b@gandalf.local.home>
+        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
+        <20190506210416.2489a659@oasis.local.home>
+        <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
+        <20190506215353.14a8ef78@oasis.local.home>
+        <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 6 May 2019 13:14:47 +0200:
+On Mon, 6 May 2019 19:22:06 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.2-rc1
+> Notice? We'd not even have to look up any values.  We'd literally just
+> do something like
+> 
+>         int offset = locked_atomic_read(ip+1);
+>         return int3_emulate_call(ip, ip+5+offset);
+> 
+> and it would be *atomic* with respect to whatever other user that
+> updates the instruction, as long as they update the offset with a
+> "xchg" instruction.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8f5e823f9131a430b12f73e9436d7486e20c16f5
+Honestly, I'm not really sure what you are trying to do here.
 
-Thank you!
+Are you talking about making the update to the code in the int3
+handler? And then just returning back to the regs->ip and executing the
+new call (not really emulating).
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+-- Steve
