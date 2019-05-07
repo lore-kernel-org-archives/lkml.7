@@ -2,151 +2,155 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AE5C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9A5C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780C320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA96205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qmbcluUn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyq9xD0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfEGU6F (ORCPT
+        id S1728450AbfEGVEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:58:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42800 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfEGU6F (ORCPT
+        Tue, 7 May 2019 17:04:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38966 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfEGVEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:58:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so13402407oig.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:58:04 -0700 (PDT)
+        Tue, 7 May 2019 17:04:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z26so9283820pfg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1mkmD4Z4DaLqsFVMxyizn2ogd6gC2HtEG84lOnN4epw=;
-        b=qmbcluUnRpOQqSYRBKyovFsqnRyKdZV6CKWDoAJpSXQgJX7TkK70etljQyZyVQQnWK
-         c/TZ+swgI53npSGuu+2JE/6bhNbaKy50WoMbrLuYyKHZOgqRoVScpSt0AHUDQRiAcQzX
-         oCyb7TNqVt24+RL0Vtf6NVC5n0CHu3+rUn0PpLS9pEtxDWSdjTEzY+2ThOkn98GdTmda
-         WmIbbUjijC2Xp4qKF6wR2l25YLIsQ8YxWCiZOFzDQPqyWI7L+PornZQly/H7EWMuQpgU
-         mqhMDZu6CDJUg4UY9KVxC9TDUrtrrctwMCXZWKSFyTMkz/OdmaK1KBlJJy5VFIuOBhbY
-         bP+g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y2Y0CjWjtHP/Qy4+OparVDP87z9HGL2o3QgDn+d+krE=;
+        b=kyq9xD0zvBmkC+9lbypm8x/BwDOZ+6JcizSxqy1gsQLtuXQq5Ph2euW/eL17RVJAS3
+         ZOzTwAdPwQT7Y2mhlg9dTWMNMk+JG0zj2p7d97HiB32k7zpeMwCw3OIS09ITMB+lw9Bx
+         RQKLIl0fbw+QjQLHbNI1219eTrgRhi3SwHmchiT1rP0Ut22kN7FxkyZoGeF7Y1lhFJh8
+         Ezzigsip7I9iMp9cpkUAhNIa2kVtkLWVJMRfBRXNpoqdbmg0LCKR+DxyQpIAWEO1Ic24
+         LNzFbckTeSOZBGGD0hv64u9pbOaYXYGtSTOehYDDRlUmVgcjpa8d+MXEyhiDmrHS8mKQ
+         CkVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1mkmD4Z4DaLqsFVMxyizn2ogd6gC2HtEG84lOnN4epw=;
-        b=c6yi+p0gJEuB8imc+FpJtAUbYLxoE2AJfck/f4Czp7LJ85he24K74oOaDHqubvW81C
-         +NmAWhAInTrinWA/rjxHRC3U0jlZduxuJ7BcJuLPD1/yV6Q7xRwLQUjkXRFisfUwLt3z
-         O2ta/EKxTAu63jrBHKAVRsdZzsC1/FV+Fz3brhYSqmnzHuiZahjjpYeZ+u/RbPFZOLY7
-         3eSnEEY54JuzxOUwyoiTzL/fGkqdMb6SSmIMdaR008uqIonf0frVHSnexJPURMpsgJj9
-         z5sieMLqlJdQbgdg2Bsd4+mt/AqsT2F4JEttzHjuAvaX5R4mmM+W/nJiZX3+g4C1ddev
-         aUgA==
-X-Gm-Message-State: APjAAAXJS+hqb/zuljgcXodcxMvG3pjW2qohnMgtH2T7Ph2auyGmXB3i
-        WD1uYYFkKsbEQs48n2HeU1eFGk+IrYYwc/NiU/GfZA==
-X-Google-Smtp-Source: APXvYqzD5+iPmR82mW0JcgXC+OAUQI8mo10rE9WLLRa7cfVMYW4IBqbIoZo+d7Cn/arRPuEVXDJreevhDqywHe+Kspk=
-X-Received: by 2002:aca:b108:: with SMTP id a8mr333966oif.0.1557262684029;
- Tue, 07 May 2019 13:58:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y2Y0CjWjtHP/Qy4+OparVDP87z9HGL2o3QgDn+d+krE=;
+        b=WLmn+giw0NbX2TpEIs7eH5dXSlndUPNkL4uY02dOfU/dprMQWyBjB6o1lJQelhqPwQ
+         v5dzgnzVsvmvvtzC+2CoGeITe00/IfnTVU0J4NN2hLZNJOUeKHePW24mu6tmEcay6aLF
+         APdulvPx0e8U7gwWmjQXrfLfRGVlZPYEnsVSZvEquuct+9HUysANNOAhdinS1d/LLzUq
+         vdK2aWNhRIa+IgPdTHTpLPITo0x5H+MpWQ8aMi7x+4rb10T7GhOFk7K1cL2N2Bsn9g4B
+         pVulPAOLi/7zEKOWVvWYJ2SDvNXg3jgE1BD6HZBM7aysrZq5xcdjIdYWbcg7AA/43fhd
+         4jPg==
+X-Gm-Message-State: APjAAAWkC2NwMMKo4it1HEe49PEwWl/4feqKH1vou9hdssbQ4lF5v88g
+        jRzCll+d8U2o9HQLAwUEpkY=
+X-Google-Smtp-Source: APXvYqzNSt+11j7miw3L1LKW2tCngdliT8Xm7f99QxM0C1+ZpwViDvlZFAVemZW3WfNN4Wh3cT50Mg==
+X-Received: by 2002:a65:5886:: with SMTP id d6mr42277500pgu.295.1557263063352;
+        Tue, 07 May 2019 14:04:23 -0700 (PDT)
+Received: from localhost ([2601:640:2:82fb:19d3:11c4:475e:3daa])
+        by smtp.gmail.com with ESMTPSA id 17sm27387961pfw.65.2019.05.07.14.04.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 14:04:22 -0700 (PDT)
+Date:   Tue, 7 May 2019 14:04:21 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Yury Norov <ynorov@marvell.com>, Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH 0/7] lib: rework bitmap_parse
+Message-ID: <20190507210421.GA8935@yury-thinkpad>
+References: <20190501010636.30595-1-ynorov@marvell.com>
 MIME-Version: 1.0
-References: <20190507183804.5512-1-david@redhat.com> <20190507183804.5512-3-david@redhat.com>
- <CAPcyv4gtAMn2mDz0s1GRTJ52MeTK3jJYLQne6MiEx_ipPFUsmA@mail.gmail.com> <97a6a2ab-0e8b-d403-ca39-ffa4425e15a5@redhat.com>
-In-Reply-To: <97a6a2ab-0e8b-d403-ca39-ffa4425e15a5@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 May 2019 13:57:53 -0700
-Message-ID: <CAPcyv4hvpBo=6c6pFCoGiEf3xiPsjc8w2p4Y6_bW4PrzcN=Few@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] s390x/mm: Implement arch_remove_memory()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501010636.30595-1-ynorov@marvell.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 1:47 PM David Hildenbrand <david@redhat.com> wrote:
->
-> On 07.05.19 22:46, Dan Williams wrote:
-> > On Tue, May 7, 2019 at 11:38 AM David Hildenbrand <david@redhat.com> wrote:
-> >>
-> >> Will come in handy when wanting to handle errors after
-> >> arch_add_memory().
-> >>
-> >> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> >> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Michal Hocko <mhocko@suse.com>
-> >> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> >> Cc: David Hildenbrand <david@redhat.com>
-> >> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> >> Cc: Oscar Salvador <osalvador@suse.com>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >> ---
-> >>  arch/s390/mm/init.c | 13 +++++++------
-> >>  1 file changed, 7 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> >> index 31b1071315d7..1e0cbae69f12 100644
-> >> --- a/arch/s390/mm/init.c
-> >> +++ b/arch/s390/mm/init.c
-> >> @@ -237,12 +237,13 @@ int arch_add_memory(int nid, u64 start, u64 size,
-> >>  void arch_remove_memory(int nid, u64 start, u64 size,
-> >>                         struct vmem_altmap *altmap)
-> >>  {
-> >> -       /*
-> >> -        * There is no hardware or firmware interface which could trigger a
-> >> -        * hot memory remove on s390. So there is nothing that needs to be
-> >> -        * implemented.
-> >> -        */
-> >> -       BUG();
-> >> +       unsigned long start_pfn = start >> PAGE_SHIFT;
-> >> +       unsigned long nr_pages = size >> PAGE_SHIFT;
-> >> +       struct zone *zone;
-> >> +
-> >> +       zone = page_zone(pfn_to_page(start_pfn));
-> >
-> > Does s390 actually support passing in an altmap? If 'yes', I think it
-> > also needs the vmem_altmap_offset() fixup like x86-64:
-> >
-> >         /* With altmap the first mapped page is offset from @start */
-> >         if (altmap)
-> >                 page += vmem_altmap_offset(altmap);
-> >
-> > ...but I suspect it does not support altmap since
-> > arch/s390/mm/vmem.c::vmemmap_populate() does not arrange for 'struct
-> > page' capacity to be allocated out of an altmap defined page pool.
-> >
-> > I think it would be enough to disallow any arch_add_memory() on s390
-> > where @altmap is non-NULL. At least until s390 gains ZONE_DEVICE
-> > support and can enable the pmem use case.
-> >
->
-> As far as I know, it doesn't yet, however I guess this could change once
-> virtio-pmem is supported?
+On Tue, Apr 30, 2019 at 06:06:29PM -0700, Yury Norov wrote:
+> On top of next-20190418.
+> 
+> Similarly to recently revisited bitmap_parselist() [1],
+> bitmap_parse() is ineffective and overcomplicated.  This
+> series reworks it, aligns its interface with bitmap_parselist()
+> and makes usage simpler.
+> 
+> The series also adds a test for the function and fixes usage of it
+> in cpumask_parse() according to new design - drops the calculating
+> of length of an input string.
+> 
+> The following users would also consider to drop the length argument,
+> if possible:
+> drivers/block/drbd/drbd_main.c:2608
+> kernel/padata.c:924
+> net/core/net-sysfs.c:726
+> net/core/net-sysfs.c:1309
+> net/core/net-sysfs.c:1391
+> 
+> bitmap_parse() takes the array of numbers to be put into the map in
+> the BE order which is reversed to the natural LE order for bitmaps.
+> For example, to construct bitmap containing a bit on the position 42,
+> we have to put a line '400,0'. Current implementation reads chunk
+> one by one from the beginning ('400' before '0') and makes bitmap
+> shift after each successful parse. It makes the complexity of the
+> whole process as O(n^2). We can do it in reverse direction ('0'
+> before '400') and avoid shifting, but it requires reverse parsing
+> helpers.
+> 
+> Tested on arm64 and BE mips.
 
-I would expect and request virtio-pmem remain a non-starter on s390
-until s390 gains ZONE_DEVICE support. As it stands virtio-pmem is just
-another flavor of the general pmem driver and the pmem driver
-currently only exports ZONE_DEVICE pfns tagged by the PTE_DEVMAP
-pte-flag and PFN_DEV+PFN_MAP pfn_t-flags.
+Any comments?
 
-A hamstrung version of DAX (CONFIG_FS_DAX_LIMITED) is enabled for the
-s390/dcssblk driver, but that requires that the driver indicate this
-limited use case via the PTE_SPECIAL pte-flag and PFN_SPECIAL
-pfn_t-flag. I otherwise do not want to see CONFIG_FS_DAX_LIMITED
-spread outside of the s390/dcssblk use case.
+> v1: https://lkml.org/lkml/2019/4/27/597
+> v2:
+>  - strnchrnul() signature and description changed, ifdeffery and
+>    exporting removed;
+>  - test split for better demonstration of before/after changes;
+>  - minor naming and formatting issues fixed.
+> 
+> [1] https://lkml.org/lkml/2019/4/16/66
+> 
+> Yury Norov (7):
+>   lib/string: add strnchrnul()
+>   bitops: more BITS_TO_* macros
+>   lib: add test for bitmap_parse()
+>   lib: make bitmap_parse_user a wrapper on bitmap_parse
+>   lib: rework bitmap_parse()
+>   lib: new testcases for bitmap_parse{_user}
+>   cpumask: don't calculate length of the input string
+> 
+>  include/linux/bitmap.h       |   8 +-
+>  include/linux/bitops.h       |   5 +-
+>  include/linux/cpumask.h      |   4 +-
+>  include/linux/string.h       |   1 +
+>  lib/bitmap.c                 | 197 +++++++++++++++++------------------
+>  lib/string.c                 |  17 +++
+>  lib/test_bitmap.c            | 102 +++++++++++++++++-
+>  tools/include/linux/bitops.h |   9 +-
+>  8 files changed, 226 insertions(+), 117 deletions(-)
+> 
+> -- 
+> 2.17.1
