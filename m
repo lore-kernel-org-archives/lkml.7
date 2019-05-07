@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60586C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D0DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12786208CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE6E206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iILYhkOD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ur0+n8U1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfEGWBe (ORCPT
+        id S1726494AbfEGWBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:01:34 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55044 "EHLO
+        Tue, 7 May 2019 18:01:41 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34058 "EHLO
         mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfEGWBe (ORCPT
+        with ESMTP id S1726225AbfEGWBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:01:34 -0400
-Received: by mail-it1-f194.google.com with SMTP id a190so733619ite.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:01:33 -0700 (PDT)
+        Tue, 7 May 2019 18:01:40 -0400
+Received: by mail-it1-f194.google.com with SMTP id p18so638161itm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jzxdeQPD874VRWBOQMkGCZqd18zUmWaxlgAr45wPRjg=;
-        b=iILYhkODkY5Kt8x13ngFRFhVlNLWpxc9QwiKOwRhz2pUrQ/OCkt3Ljw1rbel3+L5S2
-         2SL2S/DrdM9pZIZxSXfEHIrDqqJbg0SRmygEXstAJ0JCtTR3yDQv11iJSbn4F2ke3hEo
-         GudFi7A5gFR4hjiC3hLLGp6nKhXl1OYTL8Mh0=
+        bh=0y6QmCNGHLhzoejt/pdxavffrkeNyFEyZD1nqAARdlY=;
+        b=Ur0+n8U1zxyYcca0cp4iDatcc90uGmWj59N95mD1hHvZ5jqmdm/qfp4xIoe1UoopXk
+         4cWDRkSBJaIL9LjeknZH+MhNhyJZMFXn4224ptWmtxOuArRmVXh6G/UcuS0N16G392rN
+         44aSS3bHuVQk+VB5Yh2qgQenoJg//hOd3Ce3Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jzxdeQPD874VRWBOQMkGCZqd18zUmWaxlgAr45wPRjg=;
-        b=gLd/GtcFte6lXB7YtC7mXAF+HSDojBj8p/qW0jGG8IXQWU+w2eZBCjZ90xUpq3ctcf
-         AYzKfftQxWdRZPBAbJZbBclimhtIjQ5ejCFoHlW/AYmHb9JSaT9l11YDH8oDC/E+lw7F
-         zxS/hJgcrayYn16rxFUi/5fop7WHDJEGKOhaFaDVr3ZFidHM/GrYfKouaWIdnwR5/kNq
-         n8gWsoqyEEIYuFN0HreNYk7iMzwgVEuJLMO714wfBezW4ZJ9mnPxiKz0KPumAth8p7Yo
-         +aPUHzSylftfeZtv8F0XoA+CPfcLpm6oKpKYM62Aln8YCwHxqLzTbRh2z9fJxYbo0J9O
-         Z2AA==
-X-Gm-Message-State: APjAAAW8QSC1LrajbMhPVrmkWLnb6HKNObhgWB0Q3WX6OAruxe6Iadiv
-        gUsw0SxU7oTSyXW4XpOG6Aeh/6IHfCM=
-X-Google-Smtp-Source: APXvYqx6xWUH9FgtZv+4RrSVji35ShlEdR9b6meQlGYqUARoO58tbCng6j97FC4pTax1CyaAwMAJRA==
-X-Received: by 2002:a24:744d:: with SMTP id o74mr533054itc.109.1557266492836;
-        Tue, 07 May 2019 15:01:32 -0700 (PDT)
+        bh=0y6QmCNGHLhzoejt/pdxavffrkeNyFEyZD1nqAARdlY=;
+        b=cZZYSbqH+XJ4SMOUwyMoICUgmwrl0XBZdyT20Kj5N9wPpKiW5+I/UT59eAN7BiJ8U2
+         vtDDGB7YN4AExA+mj5xnnr/ad7vWYv7EInDhoro0b5owMG/i/+xEUbZU7Si99FA1BvmM
+         M+i9zfAABeyYcNvjARpgXRXb1TtwFXM4PCbv7npUvfckUOv8n6dWrwtoiqCX4wIZ4Q86
+         TWFfF8XqYPdzN0LTAn/fQT4l6YrA13o/eWL2DXbG3nSSEm9VUMLVat9yd+1M0OnGsL8P
+         RaQSNXL0kZnreGo9rVyw2YNY5M24Z8YzjovNj7yqatoLEFopNh5AcUjXyvJrIwyfZGiE
+         NfHg==
+X-Gm-Message-State: APjAAAWNkrZQXd8Mt5/clorbtBpfkvjv21nar8GgnNgUZhHZMKucfHQJ
+        nJT0OoQYxK2xRgQYE+mChuRPAOJMbaI=
+X-Google-Smtp-Source: APXvYqy0KcRoECeXNNuHv8xBdEoqlb0zpbHlHRTAogQJywYQ9/nSwf9tNTgkk7eWz2m8DsPHWacLSQ==
+X-Received: by 2002:a24:a946:: with SMTP id x6mr623969iti.136.1557266498735;
+        Tue, 07 May 2019 15:01:38 -0700 (PDT)
 Received: from localhost ([2620:15c:183:200:33ce:f5cf:f863:d3a6])
-        by smtp.gmail.com with ESMTPSA id n199sm5883188iod.54.2019.05.07.15.01.31
+        by smtp.gmail.com with ESMTPSA id f129sm170255itf.4.2019.05.07.15.01.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 15:01:32 -0700 (PDT)
+        Tue, 07 May 2019 15:01:38 -0700 (PDT)
 From:   Fletcher Woodruff <fletcherw@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ben Zhang <benzh@chromium.org>, Jaroslav Kysela <perex@perex.cz>,
@@ -63,9 +63,9 @@ Cc:     Ben Zhang <benzh@chromium.org>, Jaroslav Kysela <perex@perex.cz>,
         Curtis Malainey <cujomalainey@chromium.org>,
         alsa-devel@alsa-project.org,
         Fletcher Woodruff <fletcherw@chromium.org>
-Subject: [PATCH v5 1/3] ASoC: rt5677: allow multiple interrupt sources
-Date:   Tue,  7 May 2019 16:01:13 -0600
-Message-Id: <20190507220115.90395-2-fletcherw@chromium.org>
+Subject: [PATCH v5 2/3] ASoC: rt5677: handle concurrent interrupts
+Date:   Tue,  7 May 2019 16:01:14 -0600
+Message-Id: <20190507220115.90395-3-fletcherw@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190507220115.90395-1-fletcherw@chromium.org>
 References: <20190507220115.90395-1-fletcherw@chromium.org>
@@ -78,397 +78,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ben Zhang <benzh@chromium.org>
 
-This patch allows headphone plug detect and mic present
-detect to be enabled at the same time. This patch implements
-an irq_chip with irq_domain directly instead of using
-regmap-irq, so that interrupt source line polarities can
-be flipped to support irq sharing.
+The rt5677 driver writes to the IRQ control register within the IRQ
+handler in order to flip the polarity of the interrupts that have been
+signalled.  If an interrupt fires in the interval between the
+regmap_read and the regmap_write, it will not trigger a new call to
+rt5677_irq.
 
-This patch does not add polarity flipping support within regmap-irq
-because there is extra work that must be done within the irq handler
-to support hotword detection. On the Chromebook Pixel, the firmware will
-disconnect GPIO1 from the jack detection irq when a hotword is detected
-and trigger the interrupt handler. Inside the handler, we will need to
-detect this, report the hotword event, and re-connect GPIO1 to the jack
-detection irq.
+Add a bounded loop to rt5677_irq that keeps checking interrupts until
+none are seen, so that any interrupts that are signalled in that
+interval are correctly handled.
 
 Signed-off-by: Ben Zhang <benzh@chromium.org>
 Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
 ---
- sound/soc/codecs/rt5677.c | 256 ++++++++++++++++++++++++++++----------
- sound/soc/codecs/rt5677.h |  14 ++-
- 2 files changed, 203 insertions(+), 67 deletions(-)
+ sound/soc/codecs/rt5677.c | 84 +++++++++++++++++++++++----------------
+ 1 file changed, 50 insertions(+), 34 deletions(-)
 
 diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 9b7a1833d3316c..7d2039f3f67e75 100644
+index 7d2039f3f67e75..091ef3e78fe3d2 100644
 --- a/sound/soc/codecs/rt5677.c
 +++ b/sound/soc/codecs/rt5677.c
-@@ -23,6 +23,10 @@
- #include <linux/firmware.h>
- #include <linux/of_device.h>
- #include <linux/property.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
-+#include <linux/workqueue.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -4620,7 +4624,6 @@ static void rt5677_gpio_config(struct rt5677_priv *rt5677, unsigned offset,
- static int rt5677_to_irq(struct gpio_chip *chip, unsigned offset)
+@@ -5069,47 +5069,63 @@ static const struct rt5677_irq_desc rt5677_irq_descs[] = {
+ static irqreturn_t rt5677_irq(int unused, void *data)
  {
- 	struct rt5677_priv *rt5677 = gpiochip_get_data(chip);
--	struct regmap_irq_chip_data *data = rt5677->irq_data;
- 	int irq;
+ 	struct rt5677_priv *rt5677 = data;
+-	int ret = 0, i, reg_irq, virq;
++	int ret = 0, loop, i, reg_irq, virq;
+ 	bool irq_fired;
  
- 	if ((rt5677->pdata.jd1_gpio == 1 && offset == RT5677_GPIO1) ||
-@@ -4646,7 +4649,7 @@ static int rt5677_to_irq(struct gpio_chip *chip, unsigned offset)
- 		return -ENXIO;
+ 	mutex_lock(&rt5677->irq_lock);
+-	/* Read interrupt status */
+-	ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
+-	if (ret) {
+-		dev_err(rt5677->component->dev,
+-			"Failed to read IRQ status: %d\n",
+-			ret);
+-		goto exit;
+-	}
+ 	/*
+-	 * Clear the interrupt by flipping the polarity of the
+-	 * interrupt source lines that just fired
++	 * Loop to handle interrupts until the last i2c read shows no pending
++	 * irqs. The interrupt line is shared by multiple interrupt sources.
++	 * After the regmap_read() below, a new interrupt source line may
++	 * become high before the regmap_write() finishes, so there isn't a
++	 * rising edge on the shared interrupt line for the new interrupt. Thus,
++	 * the loop is needed to avoid missing irqs.
++	 *
++	 * A safeguard of 20 loops is used to avoid hanging in the irq handler
++	 * if there is something wrong with the interrupt status update. The
++	 * interrupt sources here are audio jack plug/unplug events which
++	 * shouldn't happen at a high frequency for a long period of time.
++	 * Empirically, more than 3 loops have never been seen.
+ 	 */
+-	irq_fired = false;
+-	for (i = 0; i < RT5677_IRQ_NUM; i++) {
+-		if (reg_irq & rt5677_irq_descs[i].status_mask) {
+-			reg_irq ^= rt5677_irq_descs[i].polarity_mask;
+-			irq_fired = true;
++	for (loop = 0; loop < 20; loop++) {
++		/* Read interrupt status */
++		ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
++		if (ret) {
++			dev_err(rt5677->component->dev,
++				"Failed to read IRQ status: %d\n",
++				ret);
++			goto exit;
++		}
++		/*
++		 * Clear the interrupt by flipping the polarity of the
++		 * interrupt source lines that just fired
++		 */
++		irq_fired = false;
++		for (i = 0; i < RT5677_IRQ_NUM; i++) {
++			if (reg_irq & rt5677_irq_descs[i].status_mask) {
++				reg_irq ^= rt5677_irq_descs[i].polarity_mask;
++				irq_fired = true;
++			}
++		}
++		if (!irq_fired)
++			goto exit;
++
++		ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
++		if (ret) {
++			dev_err(rt5677->component->dev,
++				"Failed to update IRQ status: %d\n",
++				ret);
++			goto exit;
+ 		}
+-	}
+-	if (!irq_fired)
+-		goto exit;
+-
+-	ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
+-	if (ret) {
+-		dev_err(rt5677->component->dev,
+-			"Failed to update IRQ status: %d\n",
+-			ret);
+-		goto exit;
+-	}
+ 
+-	/* Process interrupts */
+-	for (i = 0; i < RT5677_IRQ_NUM; i++) {
+-		if ((reg_irq & rt5677_irq_descs[i].enable_mask) &&
+-		    (reg_irq & rt5677_irq_descs[i].status_mask)) {
+-			virq = irq_find_mapping(rt5677->domain, i);
+-			if (virq)
+-				handle_nested_irq(virq);
++		/* Process interrupts */
++		for (i = 0; i < RT5677_IRQ_NUM; i++) {
++			if ((reg_irq & rt5677_irq_descs[i].enable_mask) &&
++			    (reg_irq & rt5677_irq_descs[i].status_mask)) {
++				virq = irq_find_mapping(rt5677->domain, i);
++				if (virq)
++					handle_nested_irq(virq);
++			}
+ 		}
  	}
- 
--	return regmap_irq_get_virq(data, irq);
-+	return irq_create_mapping(rt5677->domain, irq);
- }
- 
- static const struct gpio_chip rt5677_template_chip = {
-@@ -4716,37 +4719,13 @@ static int rt5677_probe(struct snd_soc_component *component)
- 
- 	snd_soc_component_force_bias_level(component, SND_SOC_BIAS_OFF);
- 
--	regmap_write(rt5677->regmap, RT5677_DIG_MISC, 0x0020);
-+	regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC,
-+			~RT5677_IRQ_DEBOUNCE_SEL_MASK, 0x0020);
- 	regmap_write(rt5677->regmap, RT5677_PWR_DSP2, 0x0c00);
- 
- 	for (i = 0; i < RT5677_GPIO_NUM; i++)
- 		rt5677_gpio_config(rt5677, i, rt5677->pdata.gpio_config[i]);
- 
--	if (rt5677->irq_data) {
--		regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1, 0x8000,
--			0x8000);
--		regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC, 0x0018,
--			0x0008);
--
--		if (rt5677->pdata.jd1_gpio)
--			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
--				RT5677_SEL_GPIO_JD1_MASK,
--				rt5677->pdata.jd1_gpio <<
--				RT5677_SEL_GPIO_JD1_SFT);
--
--		if (rt5677->pdata.jd2_gpio)
--			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
--				RT5677_SEL_GPIO_JD2_MASK,
--				rt5677->pdata.jd2_gpio <<
--				RT5677_SEL_GPIO_JD2_SFT);
--
--		if (rt5677->pdata.jd3_gpio)
--			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
--				RT5677_SEL_GPIO_JD3_MASK,
--				rt5677->pdata.jd3_gpio <<
--				RT5677_SEL_GPIO_JD3_SFT);
--	}
--
- 	mutex_init(&rt5677->dsp_cmd_lock);
- 	mutex_init(&rt5677->dsp_pri_lock);
- 
-@@ -5063,65 +5042,210 @@ static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
- 			&rt5677->pdata.jd3_gpio);
- }
- 
--static struct regmap_irq rt5677_irqs[] = {
-+struct rt5677_irq_desc {
-+	unsigned int enable_mask;
-+	unsigned int status_mask;
-+	unsigned int polarity_mask;
-+};
-+
-+static const struct rt5677_irq_desc rt5677_irq_descs[] = {
- 	[RT5677_IRQ_JD1] = {
--		.reg_offset = 0,
--		.mask = RT5677_EN_IRQ_GPIO_JD1,
-+		.enable_mask = RT5677_EN_IRQ_GPIO_JD1,
-+		.status_mask = RT5677_STA_GPIO_JD1,
-+		.polarity_mask = RT5677_INV_GPIO_JD1,
- 	},
- 	[RT5677_IRQ_JD2] = {
--		.reg_offset = 0,
--		.mask = RT5677_EN_IRQ_GPIO_JD2,
-+		.enable_mask = RT5677_EN_IRQ_GPIO_JD2,
-+		.status_mask = RT5677_STA_GPIO_JD2,
-+		.polarity_mask = RT5677_INV_GPIO_JD2,
- 	},
- 	[RT5677_IRQ_JD3] = {
--		.reg_offset = 0,
--		.mask = RT5677_EN_IRQ_GPIO_JD3,
-+		.enable_mask = RT5677_EN_IRQ_GPIO_JD3,
-+		.status_mask = RT5677_STA_GPIO_JD3,
-+		.polarity_mask = RT5677_INV_GPIO_JD3,
- 	},
- };
- 
--static struct regmap_irq_chip rt5677_irq_chip = {
--	.name = "rt5677",
--	.irqs = rt5677_irqs,
--	.num_irqs = ARRAY_SIZE(rt5677_irqs),
-+static irqreturn_t rt5677_irq(int unused, void *data)
-+{
-+	struct rt5677_priv *rt5677 = data;
-+	int ret = 0, i, reg_irq, virq;
-+	bool irq_fired;
-+
-+	mutex_lock(&rt5677->irq_lock);
-+	/* Read interrupt status */
-+	ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
-+	if (ret) {
-+		dev_err(rt5677->component->dev,
-+			"Failed to read IRQ status: %d\n",
-+			ret);
-+		goto exit;
-+	}
-+	/*
-+	 * Clear the interrupt by flipping the polarity of the
-+	 * interrupt source lines that just fired
-+	 */
-+	irq_fired = false;
-+	for (i = 0; i < RT5677_IRQ_NUM; i++) {
-+		if (reg_irq & rt5677_irq_descs[i].status_mask) {
-+			reg_irq ^= rt5677_irq_descs[i].polarity_mask;
-+			irq_fired = true;
-+		}
-+	}
-+	if (!irq_fired)
-+		goto exit;
- 
--	.num_regs = 1,
--	.status_base = RT5677_IRQ_CTRL1,
--	.mask_base = RT5677_IRQ_CTRL1,
--	.mask_invert = 1,
--};
-+	ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
-+	if (ret) {
-+		dev_err(rt5677->component->dev,
-+			"Failed to update IRQ status: %d\n",
-+			ret);
-+		goto exit;
-+	}
-+
-+	/* Process interrupts */
-+	for (i = 0; i < RT5677_IRQ_NUM; i++) {
-+		if ((reg_irq & rt5677_irq_descs[i].enable_mask) &&
-+		    (reg_irq & rt5677_irq_descs[i].status_mask)) {
-+			virq = irq_find_mapping(rt5677->domain, i);
-+			if (virq)
-+				handle_nested_irq(virq);
-+		}
-+	}
-+exit:
-+	mutex_unlock(&rt5677->irq_lock);
-+	return IRQ_HANDLED;
-+}
- 
--static int rt5677_init_irq(struct i2c_client *i2c)
-+static void rt5677_irq_work(struct work_struct *work)
- {
--	int ret;
--	struct rt5677_priv *rt5677 = i2c_get_clientdata(i2c);
-+	struct rt5677_priv *rt5677 =
-+		container_of(work, struct rt5677_priv, irq_work.work);
- 
--	if (!rt5677->pdata.jd1_gpio &&
--		!rt5677->pdata.jd2_gpio &&
--		!rt5677->pdata.jd3_gpio)
--		return 0;
-+	rt5677_irq(0, rt5677);
-+}
- 
--	if (!i2c->irq) {
--		dev_err(&i2c->dev, "No interrupt specified\n");
--		return -EINVAL;
--	}
-+static void rt5677_irq_bus_lock(struct irq_data *data)
-+{
-+	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
- 
--	ret = regmap_add_irq_chip(rt5677->regmap, i2c->irq,
--		IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT, 0,
--		&rt5677_irq_chip, &rt5677->irq_data);
-+	mutex_lock(&rt5677->irq_lock);
-+}
- 
--	if (ret != 0) {
--		dev_err(&i2c->dev, "Failed to register IRQ chip: %d\n", ret);
--		return ret;
--	}
-+static void rt5677_irq_bus_sync_unlock(struct irq_data *data)
-+{
-+	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
-+
-+	regmap_update_bits(rt5677->regmap, RT5677_IRQ_CTRL1,
-+			RT5677_EN_IRQ_GPIO_JD1 | RT5677_EN_IRQ_GPIO_JD2 |
-+			RT5677_EN_IRQ_GPIO_JD3, rt5677->irq_en);
-+	mutex_unlock(&rt5677->irq_lock);
-+}
- 
-+static void rt5677_irq_enable(struct irq_data *data)
-+{
-+	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
-+
-+	rt5677->irq_en |= rt5677_irq_descs[data->hwirq].enable_mask;
-+}
-+
-+static void rt5677_irq_disable(struct irq_data *data)
-+{
-+	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
-+
-+	rt5677->irq_en &= ~rt5677_irq_descs[data->hwirq].enable_mask;
-+}
-+
-+static struct irq_chip rt5677_irq_chip = {
-+	.name			= "rt5677_irq_chip",
-+	.irq_bus_lock		= rt5677_irq_bus_lock,
-+	.irq_bus_sync_unlock	= rt5677_irq_bus_sync_unlock,
-+	.irq_disable		= rt5677_irq_disable,
-+	.irq_enable		= rt5677_irq_enable,
-+};
-+
-+static int rt5677_irq_map(struct irq_domain *h, unsigned int virq,
-+			  irq_hw_number_t hw)
-+{
-+	struct rt5677_priv *rt5677 = h->host_data;
-+
-+	irq_set_chip_data(virq, rt5677);
-+	irq_set_chip(virq, &rt5677_irq_chip);
-+	irq_set_nested_thread(virq, 1);
-+	irq_set_noprobe(virq);
- 	return 0;
- }
- 
--static void rt5677_free_irq(struct i2c_client *i2c)
-+
-+static const struct irq_domain_ops rt5677_domain_ops = {
-+	.map	= rt5677_irq_map,
-+	.xlate	= irq_domain_xlate_twocell,
-+};
-+
-+static void rt5677_init_irq(struct i2c_client *i2c)
-+{
-+	struct rt5677_priv *rt5677 = i2c_get_clientdata(i2c);
-+	int ret;
-+	unsigned int jd_mask = 0, jd_val = 0;
-+
-+	/* No irq has been assigned to the codec */
-+	if (!i2c->irq)
-+		return;
-+
-+	mutex_init(&rt5677->irq_lock);
-+	INIT_DELAYED_WORK(&rt5677->irq_work, rt5677_irq_work);
-+
-+	/*
-+	 * Select RC as the debounce clock so that GPIO works even when
-+	 * MCLK is gated which happens when there is no audio stream
-+	 * (SND_SOC_BIAS_OFF).
-+	 */
-+	regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC,
-+			RT5677_IRQ_DEBOUNCE_SEL_MASK,
-+			RT5677_IRQ_DEBOUNCE_SEL_RC);
-+	/* Enable auto power on RC when GPIO states are changed */
-+	regmap_update_bits(rt5677->regmap, RT5677_GEN_CTRL1, 0xff, 0xff);
-+
-+	/* Select and enable jack detection sources per platform data */
-+	if (rt5677->pdata.jd1_gpio) {
-+		jd_mask	|= RT5677_SEL_GPIO_JD1_MASK;
-+		jd_val	|= rt5677->pdata.jd1_gpio << RT5677_SEL_GPIO_JD1_SFT;
-+	}
-+	if (rt5677->pdata.jd2_gpio) {
-+		jd_mask	|= RT5677_SEL_GPIO_JD2_MASK;
-+		jd_val	|= rt5677->pdata.jd2_gpio << RT5677_SEL_GPIO_JD2_SFT;
-+	}
-+	if (rt5677->pdata.jd3_gpio) {
-+		jd_mask	|= RT5677_SEL_GPIO_JD3_MASK;
-+		jd_val	|= rt5677->pdata.jd3_gpio << RT5677_SEL_GPIO_JD3_SFT;
-+	}
-+	regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1, jd_mask, jd_val);
-+
-+	/* Set GPIO1 pin to be IRQ output */
-+	regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1,
-+			RT5677_GPIO1_PIN_MASK, RT5677_GPIO1_PIN_IRQ);
-+
-+	/* Ready to listen for interrupts */
-+	rt5677->domain = irq_domain_add_linear(i2c->dev.of_node,
-+			RT5677_IRQ_NUM, &rt5677_domain_ops, rt5677);
-+	if (!rt5677->domain) {
-+		dev_err(&i2c->dev, "Failed to create IRQ domain\n");
-+		return;
-+	}
-+	ret = devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL, rt5677_irq,
-+			IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+			"rt5677", rt5677);
-+	if (ret) {
-+		dev_err(&i2c->dev, "Failed to request IRQ: %d\n", ret);
-+		return;
-+	}
-+}
-+
-+static void rt5677_irq_exit(struct i2c_client *i2c)
- {
- 	struct rt5677_priv *rt5677 = i2c_get_clientdata(i2c);
- 
--	if (rt5677->irq_data)
--		regmap_del_irq_chip(i2c->irq, rt5677->irq_data);
-+	cancel_delayed_work_sync(&rt5677->irq_work);
- }
- 
- static int rt5677_i2c_probe(struct i2c_client *i2c)
-@@ -5259,7 +5383,7 @@ static int rt5677_i2c_probe(struct i2c_client *i2c)
- 
- static int rt5677_i2c_remove(struct i2c_client *i2c)
- {
--	rt5677_free_irq(i2c);
-+	rt5677_irq_exit(i2c);
- 	rt5677_free_gpio(i2c);
- 
- 	return 0;
-diff --git a/sound/soc/codecs/rt5677.h b/sound/soc/codecs/rt5677.h
-index 183d92b030459f..9c73bea8635508 100644
---- a/sound/soc/codecs/rt5677.h
-+++ b/sound/soc/codecs/rt5677.h
-@@ -1636,6 +1636,12 @@
- #define RT5677_GPIO6_P_NOR			(0x0 << 0)
- #define RT5677_GPIO6_P_INV			(0x1 << 0)
- 
-+/* General Control (0xfa) */
-+#define RT5677_IRQ_DEBOUNCE_SEL_MASK		(0x3 << 3)
-+#define RT5677_IRQ_DEBOUNCE_SEL_MCLK		(0x0 << 3)
-+#define RT5677_IRQ_DEBOUNCE_SEL_RC		(0x1 << 3)
-+#define RT5677_IRQ_DEBOUNCE_SEL_SLIM		(0x2 << 3)
-+
- /* Virtual DSP Mixer Control (0xf7 0xf8 0xf9) */
- #define RT5677_DSP_IB_01_H			(0x1 << 15)
- #define RT5677_DSP_IB_01_H_SFT			15
-@@ -1713,6 +1719,7 @@ enum {
- 	RT5677_IRQ_JD1,
- 	RT5677_IRQ_JD2,
- 	RT5677_IRQ_JD3,
-+	RT5677_IRQ_NUM,
- };
- 
- enum rt5677_type {
-@@ -1811,9 +1818,14 @@ struct rt5677_priv {
- 	struct gpio_chip gpio_chip;
- #endif
- 	bool dsp_vad_en;
--	struct regmap_irq_chip_data *irq_data;
- 	bool is_dsp_mode;
- 	bool is_vref_slow;
-+
-+	/* Interrupt handling */
-+	struct irq_domain *domain;
-+	struct mutex irq_lock;
-+	unsigned int irq_en;
-+	struct delayed_work irq_work;
- };
- 
- int rt5677_sel_asrc_clk_src(struct snd_soc_component *component,
+ exit:
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
