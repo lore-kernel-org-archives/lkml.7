@@ -2,111 +2,170 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11591C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD62C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D775320B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6165220B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfEGIvm (ORCPT
+        id S1726983AbfEGIv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:51:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33114 "EHLO mx1.redhat.com"
+        Tue, 7 May 2019 04:51:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47832 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfEGIvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:51:42 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726520AbfEGIv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:51:56 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E04966993;
-        Tue,  7 May 2019 08:51:41 +0000 (UTC)
-Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB47C171C5;
-        Tue,  7 May 2019 08:51:28 +0000 (UTC)
-Date:   Tue, 7 May 2019 10:51:26 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
- for mdev device
-Message-ID: <20190507105126.4be3a6da.cohuck@redhat.com>
-In-Reply-To: <20190507053913.GA14284@joy-OptiPlex-7040>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
-        <20190419083505.19654-1-yan.y.zhao@intel.com>
-        <20190423115932.42619422.cohuck@redhat.com>
-        <20190424031036.GB26247@joy-OptiPlex-7040>
-        <20190424095624.0ce97328.cohuck@redhat.com>
-        <20190424081558.GE26247@joy-OptiPlex-7040>
-        <20190430172908.2ae77fa9.cohuck@redhat.com>
-        <20190507053913.GA14284@joy-OptiPlex-7040>
-Organization: Red Hat GmbH
+        by mx1.redhat.com (Postfix) with ESMTPS id 230853082E51;
+        Tue,  7 May 2019 08:51:56 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C1F54123;
+        Tue,  7 May 2019 08:51:54 +0000 (UTC)
+Date:   Tue, 7 May 2019 10:51:53 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     acme@kernel.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        xiezhipeng1@huawei.com
+Subject: Re: [PATCH] fix use-after-free in perf_sched__lat
+Message-ID: <20190507085153.GC17416@krava>
+References: <20190503023555.24736-1-liwei391@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 07 May 2019 08:51:41 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190503023555.24736-1-liwei391@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 07 May 2019 08:51:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 01:39:13 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
-
-> On Tue, Apr 30, 2019 at 11:29:08PM +0800, Cornelia Huck wrote:
-
-> > If I followed the discussion correctly, I think you plan to drop this
-> > format, don't you? I'd be happy if a vendor driver can use a simple
-> > number without any prefixes if it so chooses.
-> > 
-> > I also like the idea of renaming this "migration_version" so that it is
-> > clear we're dealing with versioning of the migration capability (and
-> > not a version of the device or so).  
-> hi Cornelia,
-> sorry I just saw this mail after sending v2 of this patch set...
-> yes, I dropped the common part and vendor driver now can define whatever it
-> wishes to identify a device version.
-
-Ok, I'll look at v2.
-
-> However, I don't agree to rename it to "migration_version", as it still may
-> bring some kind of confusing with the migration version a vendor driver is
-> using, e.g. vendor driver changes migration code and increases that migration
-> version.
-> In fact, what info we want to get from this attribute is whether this mdev
-> device is compatible with another mdev device, which is tied to device, and not
-> necessarily bound to migration.
+On Fri, May 03, 2019 at 10:35:55AM +0800, Wei Li wrote:
+> After thread is added to machine->threads[i].dead in
+> __machine__remove_thread, the machine->threads[i].dead is freed
+> when calling free(session) in perf_session__delete(). So it get a
+> Segmentation fault when accessing it in thread__put().
 > 
-> do you think so?
+> In this patch, we delay the perf_session__delete until all threads
+> have been deleted.
+> 
+> This can be reproduced by following steps:
+> 	ulimit -c unlimited
+> 	export MALLOC_MMAP_THRESHOLD_=0
 
-I'm not 100% convinced; but we can continue the discussion on v2.
+what's this for?
+
+> 	perf sched record sleep 10
+> 	perf sched latency --sort max
+> 	Segmentation fault (core dumped)
+> 
+> Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+>  tools/perf/builtin-sched.c | 44 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 42 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index cbf39dab19c1..17849ae2eb1e 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -3130,11 +3130,48 @@ static void perf_sched__merge_lat(struct perf_sched *sched)
+>  static int perf_sched__lat(struct perf_sched *sched)
+>  {
+>  	struct rb_node *next;
+> +	const struct perf_evsel_str_handler handlers[] = {
+> +		{ "sched:sched_switch",	      process_sched_switch_event, },
+> +		{ "sched:sched_stat_runtime", process_sched_runtime_event, },
+> +		{ "sched:sched_wakeup",	      process_sched_wakeup_event, },
+> +		{ "sched:sched_wakeup_new",   process_sched_wakeup_event, },
+> +		{ "sched:sched_migrate_task", process_sched_migrate_task_event, },
+> +	};
+> +	struct perf_session *session;
+> +	struct perf_data data = {
+> +		.file      = {
+> +			.path = input_name,
+> +		},
+
+I can't compile this:
+
+builtin-sched.c: In function ‘perf_sched__lat’:
+builtin-sched.c:3144:12: error: initialization discards ‘const’ qualifier from pointer target type [-Werror=discarded-qualifiers]
+    .path = input_name,
+
+
+> +		.mode      = PERF_DATA_MODE_READ,
+> +		.force     = sched->force,
+> +	};
+> +	int rc = -1;
+>  
+>  	setup_pager();
+>  
+> -	if (perf_sched__read_events(sched))
+
+so it's basically perf_sched__read_events code in here now, right?
+
+might be better to add __perf_sched__read_events function
+that would take session argument, something like:
+
+        session = perf_session__new(&data, false, &sched->tool);
+	...
+	__perf_sched__read_events(sched, session)
+	...
+	perf_session__delete(session);
+
+to avoid the code ducplication
+
+thanks,
+jirka
+
+> +	session = perf_session__new(&data, false, &sched->tool);
+> +	if (session == NULL) {
+> +		pr_debug("No Memory for session\n");
+>  		return -1;
+> +	}
+> +
+> +	symbol__init(&session->header.env);
+> +
+> +	if (perf_session__set_tracepoints_handlers(session, handlers))
+> +		goto out_delete;
+> +
+> +	if (perf_session__has_traces(session, "record -R")) {
+> +		int err = perf_session__process_events(session);
+> +
+> +		if (err) {
+> +			pr_err("Failed to process events, error %d", err);
+> +			goto out_delete;
+> +		}
+> +
+> +		sched->nr_events      = session->evlist->stats.nr_events[0];
+> +		sched->nr_lost_events = session->evlist->stats.total_lost;
+> +		sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
+> +	}
+>  
+>  	perf_sched__merge_lat(sched);
+>  	perf_sched__sort_lat(sched);
+> @@ -3163,7 +3200,10 @@ static int perf_sched__lat(struct perf_sched *sched)
+>  	print_bad_events(sched);
+>  	printf("\n");
+>  
+> -	return 0;
+> +	rc = 0;
+> +out_delete:
+> +	perf_session__delete(session);
+> +	return rc;
+>  }
+>  
+>  static int setup_map_cpus(struct perf_sched *sched)
+> -- 
+> 2.17.1
+> 
