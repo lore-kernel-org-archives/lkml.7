@@ -2,139 +2,148 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454AEC46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EF3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1EF20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:25:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oTNWEoWU"
+	by mail.kernel.org (Postfix) with ESMTP id 4E56420989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557206861;
+	bh=UVbc4iB6zImLc+u0YFa5xDna8kmTDTd7akBPgEp3Vm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mwiLc/p5CXPsMLw3r6XZ/qhY7CTW1UW6YsTlImBkkSs8hAXavKOFvflWEQJZ1ZRtM
+	 YjHUH00ano21O5qeLraxAK8ZuE/9E+umGWGDVKles+62jnw6ZbBjWTtdzovG28sv8Y
+	 QXSpIuSs+VEufgDlYxkQYo2f3nH4xcfBT5bu8VRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfEGFZD (ORCPT
+        id S1726449AbfEGF1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:25:03 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36990 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfEGFZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:25:03 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o7so5679388qtp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 22:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0hFqmwNLrgOZ2d4LHKnw2c1GsxJZR0XMM1CJizfkss0=;
-        b=oTNWEoWULY5My61dxjSyob+ke4AB8mRsMSGQA39QxxGStJqKwc6brL3ScY9Pf6MlNV
-         cHlwWL4HZ2LL18qYr53Bt8gCq0vAEVs49chuSjny1Td+/Havv9W25UPJAwR7YrDl8KVP
-         gd5O+H3z2FdeEtB4nJ1685Y+V8/0Vt3jWOwxA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0hFqmwNLrgOZ2d4LHKnw2c1GsxJZR0XMM1CJizfkss0=;
-        b=oqEcTq7/KU4XMr5J6DMqRLe2tm5s8KhBNuGHU+YsJN5uWq9l/ypq1JyBIJs8idLS1d
-         OxQLpKs8bGCyKIawLCynRrqHdJv9mFoQoFXWC6aiOekXqzq0NKWU8t7NAXfeGLSQ5/ZP
-         mG4IVHgjTjiSIUZG8tvtHEahZkUqUruGtc4AUjmqPg9Q3d22k5T4Z+EXhDi30tpMDyz7
-         B3XEnSZr+lhyPGfYidQZGgd6aHZeo5MLRACqi8GFj0LqKv3HIraczvEJn4079+9u74GJ
-         mkSzP8kuOWpFIcodzbFrRXm6Cq0OZt+uZgyycLp9obhyOmoOGQvfWSaty2iWzx4k7otI
-         Txpw==
-X-Gm-Message-State: APjAAAVRaOBJLwvrSEPJFUuXfuC/Uxlqt6WCBYFcI37NJmPfBluNKJo/
-        ord2Djw9jP2CxeF94K/5CRNxwPNmT6kiPxokIW7Xhg==
-X-Google-Smtp-Source: APXvYqw2tJU/Bf+A/JCr79IIzV4N6cX86Z0Gi/0NwYK3aYJCyNc6+UuOalKy+yiSTLrBH1vrjl87uP7dCzAESuSwzsc=
-X-Received: by 2002:ac8:1ae2:: with SMTP id h31mr7545363qtk.75.1557206702363;
- Mon, 06 May 2019 22:25:02 -0700 (PDT)
+        Tue, 7 May 2019 01:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfEGF1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:27:39 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99391206A3;
+        Tue,  7 May 2019 05:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557206858;
+        bh=UVbc4iB6zImLc+u0YFa5xDna8kmTDTd7akBPgEp3Vm4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C/+Tyj3EJnEfQtmPl4wAuOQmnEKvTFlW8qYh1dF6fbWNETkJKsnDW4/hwieXjvtRh
+         e6JxXYLq0TKNmzbFmn/p+2eDhYS30fnWzdO6OAXl9PLL0ps1lSJktKaNZeYrHg1sq4
+         XDQEjEqG4MpYNu5dAjwWMA0jGzYWSNhwVqhJBhGA=
+Date:   Tue, 7 May 2019 10:57:32 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org,
+        tiwai@suse.de, linux-kernel@vger.kernel.org,
+        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
+ master(s)
+Message-ID: <20190507052732.GD16052@vkoul-mobl>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
+ <20190504065242.GA9770@kroah.com>
+ <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
 MIME-Version: 1.0
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com> <20190503093117.54830-5-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <20190503093117.54830-5-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 7 May 2019 14:24:51 +0900
-Message-ID: <CANMq1KCiK69kXkpagccqd1=pKOs7qOOVuJUaCe5JfoGVmPt7mg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/10] dt-bindings: mfd: Add compatible for the
- MediaTek MT6358 PMIC
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 6:34 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> This adds compatible for the MediaTek MT6358 PMIC.
->
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> index 0ebd08af777d..62f1c17c7738 100644
-> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> @@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
->  This document describes the binding for MFD device and its sub module.
->
->  Required properties:
-> -compatible: "mediatek,mt6397" or "mediatek,mt6323"
-> +compatible:
-> +       "mediatek,mt6323" for PMIC MT6323
-> +       "mediatek,mt6358" for PMIC MT6358
-> +       "mediatek,mt6397" for PMIC MT6397
->
->  Optional subnodes:
->
->  - rtc
->         Required properties:
-> -               - compatible: "mediatek,mt6397-rtc"
-> +               - compatible: "mediatek,mt6397-rtc" or "mediatek,mt6358-rtc"
->  - regulators
->         Required properties:
->                 - compatible: "mediatek,mt6397-regulator"
->         see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
-> +               - compatible: "mediatek,mt6358-regulator"
-> +       see Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
->                 - compatible: "mediatek,mt6323-regulator"
->         see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
->  - codec
->         Required properties:
-> -               - compatible: "mediatek,mt6397-codec"
-> +               - compatible: "mediatek,mt6397-codec" or "mediatek,mt6358-sound"
+On 06-05-19, 21:24, Pierre-Louis Bossart wrote:
+> 
+> > > +int sdw_sysfs_bus_init(struct sdw_bus *bus)
+> > > +{
+> > > +	struct sdw_master_sysfs *master;
+> > > +	int err;
+> > > +
+> > > +	if (bus->sysfs) {
+> > > +		dev_err(bus->dev, "SDW sysfs is already initialized\n");
+> > > +		return -EIO;
+> > > +	}
+> > > +
+> > > +	master = kzalloc(sizeof(*master), GFP_KERNEL);
+> > > +	if (!master)
+> > > +		return -ENOMEM;
+> > 
+> > Why are you creating a whole new device to put all of this under?  Is
+> > this needed?  What will the sysfs tree look like when you do this?  Why
+> > can't the "bus" device just get all of these attributes and no second
+> > device be created?
+> 
+> I tried a quick hack and indeed we could simplify the code with something as
+> simple as:
+> 
+> [attributes omitted]
+> 
+> static const struct attribute_group sdw_master_node_group = {
+> 	.attrs = master_node_attrs,
+> 	.name = "mipi-disco"
+> };
+> 
+> int sdw_sysfs_bus_init(struct sdw_bus *bus)
+> {
+> 	return sysfs_create_group(&bus->dev->kobj, &sdw_master_node_group);
+> }
+> 
+> void sdw_sysfs_bus_exit(struct sdw_bus *bus)
+> {
+> 	sysfs_remove_group(&bus->dev->kobj, &sdw_master_node_group);	
+> }
+> 
+> which gives me a simpler structure and doesn't require additional
+> pretend-devices:
+> 
+> /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# ls
+> clock_gears
+> /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# more clock_gears
+> 8086
+> 
+> The issue I have is that for the _show() functions, I don't see a way to go
+> from the device argument to bus. In the example above I forced the output
+> but would need a helper.
+> 
+> static ssize_t clock_gears_show(struct device *dev,
+> 				struct device_attribute *attr, char *buf)
+> {
+> 	struct sdw_bus *bus; // this is what I need to find from dev
+> 	ssize_t size = 0;
+> 	int i;
+> 
+> 	return sprintf(buf, "%d \n", 8086);
+> }
+> 
+> my brain is starting to fry, but I don't see how container_of() would work
+> here since the bus structure contains a pointer to the device. I don't also
+> see a way to check for all devices for the bus_type soundwire.
+> For the slaves we do have a macro based on container_of(), so wondering if
+> we made a mistake in the bus definition? Vinod, any thoughts?
 
-Sean had a question about this
-(https://patchwork.kernel.org/patch/10846669/#22524299):
-"why didn't we use a more consistent naming as mt6358-codec?"
+yeah I dont recall a way to get bus fed into create_group, I did look at
+the other examples back then and IIRC and most of them were using a
+global to do the trick (I didn't want to go down that route).
 
->  - clk
->         Required properties:
->                 - compatible: "mediatek,mt6397-clk"
-> --
-> 2.18.0
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+I think that was the reason I wrote it this way...
+
+BTW if you do use psedo-device you can create your own struct foo which
+embeds device and then then you can use container approach to get foo
+(and foo contains bus as a member).
+
+Greg, any thoughts?
+
+Thanks
+-- 
+~Vinod
