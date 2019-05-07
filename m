@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A7DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4A8C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 584FF206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E045D216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207512;
-	bh=RZD/a2cE2LfZoQN7QH14SlZNsSVhfHoBkmQDKGxT8+c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vlRypzqHdzoET4UkvqY1pMMgeCoRfj5D1aYEM/Vmsr3+6oNK0s4jmnDkQxN7+vALX
-	 zPIF0T+X65Lj1S7NC0c2/xGc0qIre7As0vOnzC9jByLaCBK/6zuXLlAXwgOG9G2Ayt
-	 jgddter39pMgBQFfVz3WnAMRwSTSc/Tr3+NaHWJI=
+	s=default; t=1557207518;
+	bh=urE+JUTXgi9HJ2ubXFyGGLoxFb/k6SX5voM/jz7q91g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vHyVIp4UvhGaYGq0xD6dXM9kKFG/mBIgfdGdYUEXlTxTSMXlkT0fvMpfGIIT9eMFe
+	 ss2oqD2onRxqGCxQM7K24Ug0YL11LD6HEPtNt8CkqoodLrJeUhgHx4cUInlsnxoFhP
+	 l0lFZJCfiAJxTUQmEpUVKiOqkexwmgPry4HDubok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfEGFib (ORCPT
+        id S1728705AbfEGFig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727897AbfEGFi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:28 -0400
+        id S1728681AbfEGFie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE2B205ED;
-        Tue,  7 May 2019 05:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5AC0206A3;
+        Tue,  7 May 2019 05:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207508;
-        bh=RZD/a2cE2LfZoQN7QH14SlZNsSVhfHoBkmQDKGxT8+c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=myxQtKNaoPJ/Rk0MzgORWqu/pGp+RV9/I1vQSLQuvVxPahrXJkg+EO5ky8gerEJzn
-         zc2gPAbrkw7Em4f0JGXNkwnenOFvPynNQ/BJty9ZMzHquM4f7MVFXppDyYNp0KODjX
-         5FEkAKdySnx1qw26l+DJ3Vf6OyBUd/u6YbeF9fHo=
+        s=default; t=1557207513;
+        bh=urE+JUTXgi9HJ2ubXFyGGLoxFb/k6SX5voM/jz7q91g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RrTF/GJ6ha+G5SzuyOo2Cd7nJeTEkbM/uuTHlWnAfkfKq8IIW/uWcrAXcLKUG5bHu
+         yi8d2jX21XyKg9BsekeHqfjVBwN3iLQWo+TvF/5ca3SycXyLGYlrHV+pxwQoqo+Mau
+         BAzklKRYOsXs3oi4cBnaXlKOv1y9KqNWC/4+TE98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/95] iio: adc: xilinx: fix potential use-after-free on remove
-Date:   Tue,  7 May 2019 01:36:50 -0400
-Message-Id: <20190507053826.31622-1-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 4.14 06/95] libnvdimm/btt: Fix a kmemdup failure check
+Date:   Tue,  7 May 2019 01:36:55 -0400
+Message-Id: <20190507053826.31622-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
+References: <20190507053826.31622-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,38 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
+[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
 
-When cancel_delayed_work() returns, the delayed work may still
-be running. This means that the core could potentially free
-the private structure (struct xadc) while the delayed work
-is still using it. This is a potential use-after-free.
+In case kmemdup fails, the fix releases resources and returns to
+avoid the NULL pointer dereference.
 
-Fix by calling cancel_delayed_work_sync(), which waits for
-any residual work to finish before returning.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/xilinx-xadc-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index 4a60497a1f19..e89711b30ae8 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1302,7 +1302,7 @@ static int xadc_remove(struct platform_device *pdev)
- 	}
- 	free_irq(irq, indio_dev);
- 	clk_disable_unprepare(xadc->clk);
--	cancel_delayed_work(&xadc->zynq_unmask_work);
-+	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	kfree(xadc->data);
- 	kfree(indio_dev->channels);
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index d58925295aa7..e610dd890263 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
  
+ 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
+-	if (nd_btt->id < 0) {
+-		kfree(nd_btt);
+-		return NULL;
+-	}
++	if (nd_btt->id < 0)
++		goto out_nd_btt;
+ 
+ 	nd_btt->lbasize = lbasize;
+-	if (uuid)
++	if (uuid) {
+ 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
++		if (!uuid)
++			goto out_put_id;
++	}
+ 	nd_btt->uuid = uuid;
+ 	dev = &nd_btt->dev;
+ 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
+@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
+ 	}
+ 	return dev;
++
++out_put_id:
++	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
++
++out_nd_btt:
++	kfree(nd_btt);
++	return NULL;
+ }
+ 
+ struct device *nd_btt_create(struct nd_region *nd_region)
 -- 
 2.20.1
 
