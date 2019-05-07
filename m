@@ -3,61 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF442C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE2DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830432053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B042053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfEGNfW (ORCPT
+        id S1726690AbfEGNfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:35:22 -0400
-Received: from Chamillionaire.breakpoint.cc ([146.0.238.67]:37826 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726295AbfEGNfW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:35:22 -0400
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.89)
-        (envelope-from <fw@strlen.de>)
-        id 1hO0FS-0003pu-QV; Tue, 07 May 2019 15:35:11 +0200
-Date:   Tue, 7 May 2019 15:35:10 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukasz Pawelczyk <havner@gmail.com>
-Subject: Re: [PATCH] extensions: libxt_owner: Add complementary groups option
-Message-ID: <20190507133510.u6jq5fhhkehlkr34@breakpoint.cc>
-References: <CGME20190426160306eucas1p1a0c8ec9783cc78db7381582a70d6de10@eucas1p1.samsung.com>
- <20190426160257.4139-1-l.pawelczyk@samsung.com>
- <20190505225930.w4bcrlsgzq7cipvg@salvia>
- <d071578df35b11b858752f014f4ae5923b61be49.camel@samsung.com>
+        Tue, 7 May 2019 09:35:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:54406 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbfEGNfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:35:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9581580D;
+        Tue,  7 May 2019 06:35:32 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 165423F73C;
+        Tue,  7 May 2019 06:35:29 -0700 (PDT)
+Date:   Tue, 7 May 2019 14:35:28 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Luca Abeni <luca.abeni@santannapisa.it>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
+Message-ID: <20190507133528.ia4p3medvtg4z5az@queper01-lin>
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+ <20190506044836.2914-3-luca.abeni@santannapisa.it>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d071578df35b11b858752f014f4ae5923b61be49.camel@samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190506044836.2914-3-luca.abeni@santannapisa.it>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lukasz Pawelczyk <l.pawelczyk@samsung.com> wrote:
-> On Mon, 2019-05-06 at 00:59 +0200, Pablo Neira Ayuso wrote:
-> > On Fri, Apr 26, 2019 at 06:02:57PM +0200, Lukasz Pawelczyk wrote:
-> > > The --compl-groups option causes GIDs specified with --gid-owner to
-> > > be
-> > > also checked in the complementary groups of a process.
-> > 
-> > Please, could you also update manpage?
-> 
-> Will do. iptables-extensions(8) I presume? Anything else?
+Hi Luca,
 
-Yes, thats the one.
+On Monday 06 May 2019 at 06:48:32 (+0200), Luca Abeni wrote:
+> +static inline int dl_task_fit(const struct sched_dl_entity *dl_se,
+> +			      int cpu, u64 *c)
+> +{
+> +	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) * arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;
+
+I'm a little bit confused by this use of arch_scale_freq_capacity()
+here. IIUC this means you would say a big DL task doesn't fit on a big
+CPU just because it happens to be running at a low frequency when this
+function is called. Is this what we want ?
+
+If the frequency is low, we can (probably) raise it to accommodate this
+DL task so perhaps we should say it fits ?
+
+> +	s64 rel_deadline = dl_se->dl_deadline;
+> +	u64 rem_runtime  = dl_se->dl_runtime;
+> +
+> +	if (c)
+> +		*c = cap;
+> +
+> +	if ((rel_deadline * cap) >> SCHED_CAPACITY_SHIFT < rem_runtime)
+> +		return 0;
+> +
+> +	return 1;
+> +}
+
+Thanks,
+Quentin
