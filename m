@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE24C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C750C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB1D2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF4021479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207269;
-	bh=vtaTpa38CojxyPM1lfClIIF52DyI3e1yNz+U3k9Z5As=;
+	s=default; t=1557207271;
+	bh=Z70QKsPD3e3mToKCe29V3EsQvz2CP06bSc4T9mz6NSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fM/oadTh0ea/TlKpraC2c3l+MSi7INJSINlLraVjzEuphwPDOsjNmwVayG+rSjhTw
-	 tia4FKK2deAImPF1o+qkYMoL4zILnoIdNVLy4TfhjbVtdAlC0Xe/6pqOHVbZRMIt1T
-	 j39bIJUzbpGOBakU2VNK3/1RYtPIuJpXns5JX/fo=
+	b=xZ732NOvSqKT2C0cuTherX7F98SfKQvICYP4ntffw+d96pj9N+3sW59d9ek4woTw+
+	 mfuvRnNm+wiqmzXlzlYIg3dtbXO6raxsulfTZnS7YJDK5iasv35PEKfIhnNd8J49L8
+	 Wfg+6PnsHg1/iJdZYXjbLzS6rbwEgpGN0js2GOgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfEGFe2 (ORCPT
+        id S1726622AbfEGFea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfEGFeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:21 -0400
+        id S1727532AbfEGFe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A3E721530;
-        Tue,  7 May 2019 05:34:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02F22087F;
+        Tue,  7 May 2019 05:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207260;
-        bh=vtaTpa38CojxyPM1lfClIIF52DyI3e1yNz+U3k9Z5As=;
+        s=default; t=1557207265;
+        bh=Z70QKsPD3e3mToKCe29V3EsQvz2CP06bSc4T9mz6NSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BSSSeKvGl6+wW6FMKan/jiZB3DTRfWoUG8en9QuuMNeqMAYJHr/AGzcJF9k5yeS10
-         WFJ1oFXR8eWr058PnDOIH8dlzIC7wlS+xot4Ym6x9QKWfIpYySgeY5UF+wIwS+BwAs
-         5ff27QLFJx7d7ZekiUNU6b3u9GO+4KDyQr65m0CA=
+        b=U8Y2cIYhPozZhD5z/fvTjnBgJi7DaPFsIatp1ut9gnoLwSL+dyOiXIL53tX900YVf
+         6Z7RgU3v2FT67S2Io3pnyWaoCUt8jLUTsSLZdE6wNqd4jZMtbZzTBZdR+AzKSJt+lq
+         SytGeXsj4A5N6NECLXHbYsrm54FPfiWoWJXNhFbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 56/99] slab: store tagged freelist for off-slab slabmgmt
-Date:   Tue,  7 May 2019 01:31:50 -0400
-Message-Id: <20190507053235.29900-56-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 58/99] mm: fix inactive list balancing between NUMA nodes and cgroups
+Date:   Tue,  7 May 2019 01:31:52 -0400
+Message-Id: <20190507053235.29900-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -67,144 +62,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 1a62b18d51e5c5ecc0345c85bb9fef870ab721ed ]
+[ Upstream commit 3b991208b897f52507168374033771a984b947b1 ]
 
-Commit 51dedad06b5f ("kasan, slab: make freelist stored without tags")
-calls kasan_reset_tag() for off-slab slab management object leading to
-freelist being stored non-tagged.
+During !CONFIG_CGROUP reclaim, we expand the inactive list size if it's
+thrashing on the node that is about to be reclaimed.  But when cgroups
+are enabled, we suddenly ignore the node scope and use the cgroup scope
+only.  The result is that pressure bleeds between NUMA nodes depending
+on whether cgroups are merely compiled into Linux.  This behavioral
+difference is unexpected and undesirable.
 
-However, cache_grow_begin() calls alloc_slabmgmt() which calls
-kmem_cache_alloc_node() assigns a tag for the address and stores it in
-the shadow address.  As the result, it causes endless errors below
-during boot due to drain_freelist() -> slab_destroy() ->
-kasan_slab_free() which compares already untagged freelist against the
-stored tag in the shadow address.
+When the refault adaptivity of the inactive list was first introduced,
+there were no statistics at the lruvec level - the intersection of node
+and memcg - so it was better than nothing.
 
-Since off-slab slab management object freelist is such a special case,
-just store it tagged.  Non-off-slab management object freelist is still
-stored untagged which has not been assigned a tag and should not cause
-any other troubles with this inconsistency.
+But now that we have that infrastructure, use lruvec_page_state() to
+make the list balancing decision always NUMA aware.
 
-  BUG: KASAN: double-free or invalid-free in slab_destroy+0x84/0x88
-  Pointer tag: [ff], memory tag: [99]
-
-  CPU: 0 PID: 1376 Comm: kworker/0:4 Tainted: G        W 5.1.0-rc3+ #8
-  Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.0.6 07/10/2018
-  Workqueue: cgroup_destroy css_killed_work_fn
-  Call trace:
-   print_address_description+0x74/0x2a4
-   kasan_report_invalid_free+0x80/0xc0
-   __kasan_slab_free+0x204/0x208
-   kasan_slab_free+0xc/0x18
-   kmem_cache_free+0xe4/0x254
-   slab_destroy+0x84/0x88
-   drain_freelist+0xd0/0x104
-   __kmem_cache_shrink+0x1ac/0x224
-   __kmemcg_cache_deactivate+0x1c/0x28
-   memcg_deactivate_kmem_caches+0xa0/0xe8
-   memcg_offline_kmem+0x8c/0x3d4
-   mem_cgroup_css_offline+0x24c/0x290
-   css_killed_work_fn+0x154/0x618
-   process_one_work+0x9cc/0x183c
-   worker_thread+0x9b0/0xe38
-   kthread+0x374/0x390
-   ret_from_fork+0x10/0x18
-
-  Allocated by task 1625:
-   __kasan_kmalloc+0x168/0x240
-   kasan_slab_alloc+0x18/0x20
-   kmem_cache_alloc_node+0x1f8/0x3a0
-   cache_grow_begin+0x4fc/0xa24
-   cache_alloc_refill+0x2f8/0x3e8
-   kmem_cache_alloc+0x1bc/0x3bc
-   sock_alloc_inode+0x58/0x334
-   alloc_inode+0xb8/0x164
-   new_inode_pseudo+0x20/0xec
-   sock_alloc+0x74/0x284
-   __sock_create+0xb0/0x58c
-   sock_create+0x98/0xb8
-   __sys_socket+0x60/0x138
-   __arm64_sys_socket+0xa4/0x110
-   el0_svc_handler+0x2c0/0x47c
-   el0_svc+0x8/0xc
-
-  Freed by task 1625:
-   __kasan_slab_free+0x114/0x208
-   kasan_slab_free+0xc/0x18
-   kfree+0x1a8/0x1e0
-   single_release+0x7c/0x9c
-   close_pdeo+0x13c/0x43c
-   proc_reg_release+0xec/0x108
-   __fput+0x2f8/0x784
-   ____fput+0x1c/0x28
-   task_work_run+0xc0/0x1b0
-   do_notify_resume+0xb44/0x1278
-   work_pending+0x8/0x10
-
-  The buggy address belongs to the object at ffff809681b89e00
-   which belongs to the cache kmalloc-128 of size 128
-  The buggy address is located 0 bytes inside of
-   128-byte region [ffff809681b89e00, ffff809681b89e80)
-  The buggy address belongs to the page:
-  page:ffff7fe025a06e00 count:1 mapcount:0 mapping:01ff80082000fb00
-  index:0xffff809681b8fe04
-  flags: 0x17ffffffc000200(slab)
-  raw: 017ffffffc000200 ffff7fe025a06d08 ffff7fe022ef7b88 01ff80082000fb00
-  raw: ffff809681b8fe04 ffff809681b80000 00000001000000e0 0000000000000000
-  page dumped because: kasan: bad access detected
-  page allocated via order 0, migratetype Unmovable, gfp_mask
-  0x2420c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_COMP|__GFP_THISNODE)
-   prep_new_page+0x4e0/0x5e0
-   get_page_from_freelist+0x4ce8/0x50d4
-   __alloc_pages_nodemask+0x738/0x38b8
-   cache_grow_begin+0xd8/0xa24
-   ____cache_alloc_node+0x14c/0x268
-   __kmalloc+0x1c8/0x3fc
-   ftrace_free_mem+0x408/0x1284
-   ftrace_free_init_mem+0x20/0x28
-   kernel_init+0x24/0x548
-   ret_from_fork+0x10/0x18
-
-  Memory state around the buggy address:
-   ffff809681b89c00: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-   ffff809681b89d00: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-  >ffff809681b89e00: 99 99 99 99 99 99 99 99 fe fe fe fe fe fe fe fe
-                     ^
-   ffff809681b89f00: 43 43 43 43 43 fe fe fe fe fe fe fe fe fe fe fe
-   ffff809681b8a000: 6d fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-
-Link: http://lkml.kernel.org/r/20190403022858.97584-1-cai@lca.pw
-Fixes: 51dedad06b5f ("kasan, slab: make freelist stored without tags")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
+[hannes@cmpxchg.org: fix bisection hole]
+  Link: http://lkml.kernel.org/r/20190417155241.GB23013@cmpxchg.org
+Link: http://lkml.kernel.org/r/20190412144438.2645-1-hannes@cmpxchg.org
+Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Michal Hocko <mhocko@kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 1 -
- 1 file changed, 1 deletion(-)
+ mm/vmscan.c | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 2f2aa8eaf7d9..516df2d854ef 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -2371,7 +2371,6 @@ static void *alloc_slabmgmt(struct kmem_cache *cachep,
- 		/* Slab management obj is off-slab. */
- 		freelist = kmem_cache_alloc_node(cachep->freelist_cache,
- 					      local_flags, nodeid);
--		freelist = kasan_reset_tag(freelist);
- 		if (!freelist)
- 			return NULL;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index e979705bbf32..022afabac3f6 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2199,7 +2199,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
+  *   10TB     320        32GB
+  */
+ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+-				 struct mem_cgroup *memcg,
+ 				 struct scan_control *sc, bool actual_reclaim)
+ {
+ 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
+@@ -2220,16 +2219,12 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+ 	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
+ 	active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
+ 
+-	if (memcg)
+-		refaults = memcg_page_state(memcg, WORKINGSET_ACTIVATE);
+-	else
+-		refaults = node_page_state(pgdat, WORKINGSET_ACTIVATE);
+-
+ 	/*
+ 	 * When refaults are being observed, it means a new workingset
+ 	 * is being established. Disable active list protection to get
+ 	 * rid of the stale workingset quickly.
+ 	 */
++	refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
+ 	if (file && actual_reclaim && lruvec->refaults != refaults) {
+ 		inactive_ratio = 0;
  	} else {
+@@ -2250,12 +2245,10 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+ }
+ 
+ static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
+-				 struct lruvec *lruvec, struct mem_cgroup *memcg,
+-				 struct scan_control *sc)
++				 struct lruvec *lruvec, struct scan_control *sc)
+ {
+ 	if (is_active_lru(lru)) {
+-		if (inactive_list_is_low(lruvec, is_file_lru(lru),
+-					 memcg, sc, true))
++		if (inactive_list_is_low(lruvec, is_file_lru(lru), sc, true))
+ 			shrink_active_list(nr_to_scan, lruvec, sc, lru);
+ 		return 0;
+ 	}
+@@ -2355,7 +2348,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+ 			 * anonymous pages on the LRU in eligible zones.
+ 			 * Otherwise, the small LRU gets thrashed.
+ 			 */
+-			if (!inactive_list_is_low(lruvec, false, memcg, sc, false) &&
++			if (!inactive_list_is_low(lruvec, false, sc, false) &&
+ 			    lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, sc->reclaim_idx)
+ 					>> sc->priority) {
+ 				scan_balance = SCAN_ANON;
+@@ -2373,7 +2366,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+ 	 * lruvec even if it has plenty of old anonymous pages unless the
+ 	 * system is under heavy pressure.
+ 	 */
+-	if (!inactive_list_is_low(lruvec, true, memcg, sc, false) &&
++	if (!inactive_list_is_low(lruvec, true, sc, false) &&
+ 	    lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, sc->reclaim_idx) >> sc->priority) {
+ 		scan_balance = SCAN_FILE;
+ 		goto out;
+@@ -2526,7 +2519,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
+ 				nr[lru] -= nr_to_scan;
+ 
+ 				nr_reclaimed += shrink_list(lru, nr_to_scan,
+-							    lruvec, memcg, sc);
++							    lruvec, sc);
+ 			}
+ 		}
+ 
+@@ -2593,7 +2586,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
+ 	 * Even if we did not try to evict anon pages at all, we want to
+ 	 * rebalance the anon lru active/inactive ratio.
+ 	 */
+-	if (inactive_list_is_low(lruvec, false, memcg, sc, true))
++	if (inactive_list_is_low(lruvec, false, sc, true))
+ 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+ 				   sc, LRU_ACTIVE_ANON);
+ }
+@@ -2993,12 +2986,8 @@ static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
+ 		unsigned long refaults;
+ 		struct lruvec *lruvec;
+ 
+-		if (memcg)
+-			refaults = memcg_page_state(memcg, WORKINGSET_ACTIVATE);
+-		else
+-			refaults = node_page_state(pgdat, WORKINGSET_ACTIVATE);
+-
+ 		lruvec = mem_cgroup_lruvec(pgdat, memcg);
++		refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
+ 		lruvec->refaults = refaults;
+ 	} while ((memcg = mem_cgroup_iter(root_memcg, memcg, NULL)));
+ }
+@@ -3363,7 +3352,7 @@ static void age_active_anon(struct pglist_data *pgdat,
+ 	do {
+ 		struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
+ 
+-		if (inactive_list_is_low(lruvec, false, memcg, sc, true))
++		if (inactive_list_is_low(lruvec, false, sc, true))
+ 			shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+ 					   sc, LRU_ACTIVE_ANON);
+ 
 -- 
 2.20.1
 
