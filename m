@@ -2,292 +2,250 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3B4C46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06769C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAAF208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B001A214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbNXzgMp"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kA1mQnQb";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gA0dZ3TD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfEGVh5 (ORCPT
+        id S1728668AbfEGVjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:37:57 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40597 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfEGVh4 (ORCPT
+        Tue, 7 May 2019 17:39:03 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:47048 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726650AbfEGVjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:37:56 -0400
-Received: by mail-lf1-f67.google.com with SMTP id o16so12940358lfl.7;
-        Tue, 07 May 2019 14:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c2AE0M9uKxK1GU3dXIY+HrWBQ1aPXALof+/VlxHoO1M=;
-        b=DbNXzgMpRyh83SvjTc5fgop9liZROTeCkrJGrIMAKnH2aSH/LcjlunA9HTEQgF+rul
-         fVxaDKk7NMt9d6pbHZBJzW5ng7rRKuykuwsuBittWxi+JRaxuAxvPpAn4q/FjOo1yfoT
-         rwmLbWRldEEy6U6vrxyKPVpA2gSly1lNMmXbH5XKQjbd+rJTRhPY03YWyqEcxuJGDDsy
-         ORZVda2Rdjm9HP6Vw+wX+WE7ZIvr2g3DUY5F8KOvIcdIoUtPnsScpb1T6NBfSnpOem3F
-         y6hDn5TVggVc14Fdk4eCrk5RSrMgd9YWfBGkK0Jgf/tUduV4OnBlu7alxcXegoxpXiDm
-         J1uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c2AE0M9uKxK1GU3dXIY+HrWBQ1aPXALof+/VlxHoO1M=;
-        b=R1JkDsMrPya4xu3DLCDDYIk4hH8dbSjOzGByG+ve6J4+pe+1MiPfiOxWRrbUtif1X/
-         4ntK3FU4Ga4VgITPRDX8IoPgpqtwotTWjbVoIjFtd48C5CdHz7f9vV6QVMLN8wnsyrOX
-         LEL8D5SmNSM5Dyrjv9lU3c5q7WmbpuVIUYS2DIu08w+5vKRITJKEo0JCtL1eCOwkCqMd
-         7/3/Q3TOn6H4PS102UZwm3sMtx0o3MqdaocfaJBAJPCVEWIplPcqk+R6NentWeAxkKds
-         +eqNQHHFn5ETgr/5p0/aWwhqiQfScPPsMP9L6LPj3rToJ+82SYBwCeavL93l6dGIUeey
-         0hQA==
-X-Gm-Message-State: APjAAAXNqV/P99wR8OQxxOgp0UoRHT7lQbJS02Yql2DRFD9NZd/NVZcI
-        r4+uz/W8uXoUl+ZO3Wb76Z739uVdcVIeiyRd2g==
-X-Google-Smtp-Source: APXvYqwGEIJQDKGUklBybOb13P03Jr/Opb2A6gTJ5xcjl3Z1hLJsdqb8cp455ZXZTFghgckkxPAIIzgwj/K6ua1Kvuk=
-X-Received: by 2002:ac2:53ad:: with SMTP id j13mr4458442lfh.14.1557265074026;
- Tue, 07 May 2019 14:37:54 -0700 (PDT)
+        Tue, 7 May 2019 17:39:03 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47LUXaY008536;
+        Tue, 7 May 2019 14:38:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=RNN4LBOFtefrvAX1xBIexBu2lvT5Ch1nLeo0DJY36Kg=;
+ b=kA1mQnQbrPfn4zDn9zZa+DDZu1oidG+gVk2c8cNGAZZtH8v61FkAtxSA1SKnLBzIix7/
+ vnYTr+klcVwEdyWHo5788UxOfWRrLqeqg9WN/mgz39kaSpThEHyU/C31gZHG5oZvSGlW
+ SsoG2LVHjz0pPV9rXu6rl8Qv47lSOoYckTk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sb2rkkcww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 07 May 2019 14:38:08 -0700
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 7 May 2019 14:38:04 -0700
+Received: from ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 7 May 2019 14:38:03 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 7 May 2019 14:38:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNN4LBOFtefrvAX1xBIexBu2lvT5Ch1nLeo0DJY36Kg=;
+ b=gA0dZ3TDJJlvRFHoOBGzBtyha+L5dsL3AzTK9N5PeJVc5M2BLYabUNsL99rBVr6EP7Z/jqD8BCI7txl+awd8M9guqvS0Oi21w0JEmpTNvle01O5NIbmt3i7KgjHruJ7DCwMTbWSOA3kKYYVNgK3ss4tZuj4nrgehxoAaAHwLhUU=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3461.namprd15.prod.outlook.com (20.179.59.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.12; Tue, 7 May 2019 21:37:58 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ddd2:172e:d688:b5b7]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ddd2:172e:d688:b5b7%3]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 21:37:58 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Qian Cai <cai@lca.pw>
+CC:     "oleg@redhat.com" <oleg@redhat.com>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "lizefan@huawei.com" <lizefan@huawei.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: ptrace warning due to "cgroup: get rid of
+ cgroup_freezer_frozen_exit()"
+Thread-Topic: ptrace warning due to "cgroup: get rid of
+ cgroup_freezer_frozen_exit()"
+Thread-Index: AQHVBRAdiRV9e0TuJUe+IcFJ/bKLuqZgMCKA
+Date:   Tue, 7 May 2019 21:37:58 +0000
+Message-ID: <20190507213752.GA24308@tower.DHCP.thefacebook.com>
+References: <1557259462.6132.20.camel@lca.pw>
+In-Reply-To: <1557259462.6132.20.camel@lca.pw>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR14CA0053.namprd14.prod.outlook.com
+ (2603:10b6:300:81::15) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:e676]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2fb6a2d3-28bb-41ce-b7ff-08d6d33445f1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3461;
+x-ms-traffictypediagnostic: BYAPR15MB3461:
+x-microsoft-antispam-prvs: <BYAPR15MB34617DE1C8140E0CBC0E6C4ABE310@BYAPR15MB3461.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39860400002)(346002)(376002)(366004)(199004)(189003)(6916009)(86362001)(6506007)(46003)(68736007)(76176011)(11346002)(9686003)(4326008)(102836004)(476003)(305945005)(256004)(6436002)(6246003)(73956011)(25786009)(1076003)(66446008)(6512007)(7736002)(14444005)(446003)(66556008)(66476007)(64756008)(66946007)(71200400001)(486006)(99286004)(71190400001)(45080400002)(54906003)(478600001)(2906002)(5660300002)(8936002)(186003)(6116002)(8676002)(14454004)(53936002)(81166006)(81156014)(6486002)(33656002)(386003)(229853002)(316002)(52116002)(26583001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3461;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sAE1LUYSH5faGODH1pjq6ST5L3R0/SfRWKYHzpdXgzDFtPfzHPlq8RGzpF8sEhog6KfcMVjWTHQIDuBpbiJmDVQPvakUfLE5Gmem8lR8FR/+0AuqrpB1QS2LjAQi29koQqU1BVpv+T5yiU+avSzQ1Jfws9qDVp+n5pKepoeM3GOrmByeBsqZu3eVSlTc0VPyb+tLocbL+Zqnz34f1aXOeEkAm0RWnX9frkwRcFWImo0WNeZSqVK34dr7adsljrDEjurWdFX0GFs90HlQwKPLfZaYnwnpo3wb2A/4SNvtd2wQrfkW5DqVxrfYkRaADb+XnAo9SRvMng78kqf/bLzJsBB45zP7trSIR0TpkHlCJE58Otj42Jk+rLrwp6V3fjzG9UDDr/GL/6Wju8F19ycybGqrezIyNLjhjFZ6hHlhoQI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <9B589E8022892A4FBFD8897D5CD8C2B1@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
- <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com>
- <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
- <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
- <CAEJqkgiB7woieNZ-vVm7x-GzVrqGpJWLXOM9JpSUgPgE7eA6gA@mail.gmail.com>
- <CF6A88132359CE47947DB4C6E1709ED53C5A9EBD@ORSMSX122.amr.corp.intel.com>
- <CAEJqkggvtYobXNjFbvqjajMcbZ_+3PrQJC-9kK+nn5cgXgOyWg@mail.gmail.com> <CF6A88132359CE47947DB4C6E1709ED53C5A9F1C@ORSMSX122.amr.corp.intel.com>
-In-Reply-To: <CF6A88132359CE47947DB4C6E1709ED53C5A9F1C@ORSMSX122.amr.corp.intel.com>
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Tue, 7 May 2019 23:39:13 +0200
-Message-ID: <CAEJqkgiTRo0K9YTAK6VaYoHKqae4Oz6q4pxboRMt+s99A=gG3w@mail.gmail.com>
-Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
-To:     "Schmauss, Erik" <erik.schmauss@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Moore, Robert" <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fb6a2d3-28bb-41ce-b7ff-08d6d33445f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 21:37:58.7565
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3461
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070134
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Di., 7. Mai 2019 um 22:17 Uhr schrieb Schmauss, Erik
-<erik.schmauss@intel.com>:
->
->
->
-> > -----Original Message-----
-> > From: Gabriel C [mailto:nix.or.die@gmail.com]
-> > Sent: Tuesday, May 7, 2019 12:06 PM
-> > To: Schmauss, Erik <erik.schmauss@intel.com>
-> > Cc: Rafael J. Wysocki <rafael@kernel.org>; ACPI Devel Maling List <linux-
-> > acpi@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Moore,
-> > Robert <robert.moore@intel.com>
-> > Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without
-> > CONFIG_ACPI_DEBUG being set
-> >
-> > Am Di., 7. Mai 2019 um 20:46 Uhr schrieb Schmauss, Erik
-> > <erik.schmauss@intel.com>:
-> > >
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Gabriel C [mailto:nix.or.die@gmail.com]
-> > > > Sent: Tuesday, May 7, 2019 2:33 AM
-> > > > To: Rafael J. Wysocki <rafael@kernel.org>
-> > > > Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>; LKML
-> > > > <linux- kernel@vger.kernel.org>; Schmauss, Erik
-> > > > <erik.schmauss@intel.com>
-> > > > Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without
-> > > > CONFIG_ACPI_DEBUG being set
-> > > >
-> > > > Am Di., 7. Mai 2019 um 10:35 Uhr schrieb Rafael J. Wysocki
-> > > > <rafael@kernel.org>:
-> > > > >
-> > > > > On Tue, May 7, 2019 at 9:31 AM Gabriel C <nix.or.die@gmail.com>
-> > wrote:
-> > > > > >
-> > > > > > Am Di., 7. Mai 2019 um 09:01 Uhr schrieb Rafael J. Wysocki
-> > > > <rafael@kernel.org>:
-> > > > > > >
-> > > > > >  Hello Rafael ,  Erik
-> > > > > >
-> > > > > > > +Erik
-> > > > > > >
-> > > > > > > On Tue, May 7, 2019 at 1:33 AM Gabriel C
-> > > > > > > <nix.or.die@gmail.com>
-> > > > wrote:
-> > > > > > > >
-> > > > > > > > Hello,
-> > > > > > > >
-> > > > > > > > while testing kernel-5.1 I get on one of my Lenovo Laptops
-> > > > > > > > very strange 'ACPI Debug:' messages.
-> > > > > > > >
-> > > > > > > > After some grepping I realized these are Debug messages from
-> > > > > > > > DSDT , however my kernel does not have ACPI_DEBUG enabled.
-> > > > > > > >
-> > > > > > > > I found out the module triggering this, on this Laptop is
-> > > > > > > > ideapad_laptop , but looking at the code I cannot see what
-> > > > > > > > would causes that.
-> > > > > > > >
-> > > > > > > > Also on the same Laptop with any 5.0.X kernels I cannot see these.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1 #
-> > > > > > > > CONFIG_ACPI_DEBUGGER is not set # CONFIG_ACPI_DEBUG is
-> > not
-> > > > set #
-> > > > > > > > CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set #
-> > > > > > > > CONFIG_THINKPAD_ACPI_DEBUG is not set
-> > > > > > > >
-> > > > > > > > .. dmesg ..
-> > > > > > > > ...
-> > > > > > > > [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
-> > > > > > > > [ideapad_laptop] @ 1322
-> > > > > > > > [   68.026708] input: Ideapad extra buttons as
-> > > > > > > >
-> > > > /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
-> > > > > > > > [   68.038236] ACPI Debug:  "=====QUERY_64====="
-> > > > > > > > [   68.050232] ACPI Debug:  "=====QUERY_65====="
-> > > > > > > > [   68.060218] ACPI Debug:  "=====QUERY_64====="
-> > > > > > > > [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
-> > > > > > > > [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
-> > > > > > > > [ideapad_laptop] returned 0 after 69751 usecssg
-> > > > > > > >
-> > > > > > > > ...
-> > > > > > > >
-> > > > > > > > These =====QUERY_XX===== messages are from DSDT:
-> > > > > > > >
-> > > > > > > > ~/acpi$ grep QUERY dsdt.dsl
-> > > > > > > >                Debug = "=====QUERY_11====="
-> > > > > > > >                Debug = "=====QUERY_12====="
-> > > > > > > >                Debug = "=====QUERY_24====="
-> > > > > > > >                Debug = "=====QUERY_25====="
-> > > > > > > >                Debug = "=====QUERY_37====="
-> > > > > > > >                Debug = "=====QUERY_38====="
-> > > > > > > >                Debug = "=====QUERY_64====="
-> > > > > > > >                Debug = "=====QUERY_65====="
-> > > > > > > >
-> > > > > > > > Also this is the code from DSDT for QUERY 64 and 65:
-> > > > > > > >
-> > > > > > > > ...
-> > > > > > > >             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
-> > > > > > > >            {
-> > > > > > > >                Debug = "=====QUERY_64====="
-> > > > > > > >                If ((OSYS == 0x07D9))
-> > > > > > > >                {
-> > > > > > > >                    If (((WLEX == One) & (WLAT == One)))
-> > > > > > > >                    {
-> > > > > > > >                        SGOV (0x02040005, One)
-> > > > > > > >                    }
-> > > > > > > >                    Else
-> > > > > > > >                    {
-> > > > > > > >                        SGOV (0x02040005, Zero)
-> > > > > > > >                    }
-> > > > > > > >                }
-> > > > > > > >            }
-> > > > > > > >
-> > > > > > > >            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
-> > > > > > > >            {
-> > > > > > > >                Debug = "=====QUERY_65====="
-> > > > > > > >                If ((OSYS == 0x07D9))
-> > > > > > > >                {
-> > > > > > > >                    If (((BTEX == One) & (BTAT == One)))
-> > > > > > > >                    {
-> > > > > > > >                        SGOV (0x0202000B, One)
-> > > > > > > >                    }
-> > > > > > > >                    Else
-> > > > > > > >                    {
-> > > > > > > >                        SGOV (0x0202000B, Zero)
-> > > > > > > >                    }
-> > > > > > > >                }
-> > > > > > > >            }
-> > > > > > > >
-> > > > > > > > ...
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > Any idea what would cause this ?
-> > > > > >
-> > > > > > I think I found what is causing that.
-> > > > > >
-> > > > > > Commit aa9aaa4d61c0048d3faad056893cd7860bbc084c is moving
-> > > > definition
-> > > > > > of Linux's  ACPI_DEBUG_DEFAULT to incude/acpi/platform/aclinux.h
-> > > > > > , however include/acpi/acpi.h didn't got updated and
-> > > > > > ACPI_DEBUG_DEFAULT now being always defined as  (ACPI_LV_INIT
-> > |
-> > > > > > ACPI_LV_DEBUG_OBJECT | ACPI_LV_EVALUATION |
-> > ACPI_LV_REPAIR)
-> > > > >
-> > > > > I'm not sure what you mean by this.
-> > > > >
-> > > > > include/acpi/acpi.h should get the right definitions through
-> > > > > include/acpi/platform/acenv.h and include/acpi/acoutput.h that are
-> > > > > included by it.
-> > > > >
-> > > >
-> > > > Hmm yes should , I missed that include. However it does not work.
-> > > >
-> > > > I've just put back old code back into drivers/acpi/bus.c to test and
-> > > > all working now fine without any other changes.
-> > > >
-> > > > > It looks like incude/acpi/platform/aclinux.h has not been included
-> > > > > by include/acpi/platform/acenv.h for some reason when building
-> > > > > this module.
-> > > >
-> > > > If this one getting it wrong all will do so , they all just include
-> > <linux/acpi.h>.
-> > > >
-> > > > Probably not so much users will notice that , I just did because my
-> > > > BIOS vendor forgot DEBUG around.
-> > >
-> > > Do you still get this issue after doing make clean and rebuilding your
-> > kernel?
-> >
-> > A clean build from tarball has this issue for me. I don't think is a building
-> > problem , any <5.1 kernel is fine , kernel 5.1 with your commit reverted is fine
-> > too , kernel 5.1 with your commit in but the removed hunk in bus.c re-added
-> > is fine also.
->
-> I took a closer look. This was an obvious mistake on my part. Thanks for catching it.
->
-> The following should fix it:
->
+On Tue, May 07, 2019 at 04:04:22PM -0400, Qian Cai wrote:
+> LTP ptrace01 test case triggers a warning below. Looks at ptrace_stop() c=
+alls
+> cgroup_enter_frozen() there in the cgroup v2 freezer.
+>=20
+> [ 8373.336330] WARNING: CPU: 56 PID: 67026 at kernel/cgroup/cgroup.c:6008
+> cgroup_exit+0x2a9/0x2f0
+> [ 8373.345001] Modules linked in: brd ext4 crc16 mbcache jbd2 overlay loo=
+p
+> nls_iso8859_1 nls_cp437 vfat fat kvm_amd kvm ses enclosure dax_pmem irqby=
+pass
+> dax_pmem_core efivars ip_tables x_tables xfs sd_mod smartpqi scsi_transpo=
+rt_sas
+> tg3 mlx5_core libphy firmware_class dm_mirror dm_region_hash dm_log dm_mo=
+d
+> efivarfs [last unloaded: dummy_del_mod]
+> [ 8373.375561] CPU: 56 PID: 67026 Comm: ptrace01 Tainted:
+> G=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0O=A0=A0=A0=A0=A0=A05.1.0-next-20190507+=
+ #25
+> [ 8373.384579] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen=
+10,
+> BIOS A40 01/25/2019
+> [ 8373.393164] RIP: 0010:cgroup_exit+0x2a9/0x2f0
+> [ 8373.397556] Code: 0d ff ff ff 4c 89 f7 e8 75 4b 1b 00 4c 8b ab 20 0f 0=
+0 00 49
+> 8d 7d 50 e8 65 4b 1b 00 49 8b 7d 50 e8 4c 56 00 00 e9 db fe ff ff <0f> 0b=
+ e9 3a
+> fe ff ff 48 01 f1 0f 82 3b ff ff ff 48 c7 c7 40 83 5b
+> [ 8373.416443] RSP: 0018:ffff888bdc9ef9b8 EFLAGS: 00010002
+> [ 8373.421709] RAX: 0000000000000000 RBX: ffff888e5cfcc040 RCX: ffffffffa=
+b3a8e7d
+> [ 8373.428897] RDX: 1ffff111cb9f9875 RSI: dffffc0000000000 RDI: ffff888e5=
+cfcc3a8
+> [ 8373.436080] RBP: ffff888bdc9efa50 R08: ffffed117b93df25 R09: ffffed117=
+b93df24
+> [ 8373.443266] R10: ffffed117b93df24 R11: 0000000000000003 R12: ffff888bd=
+c9efa28
+> [ 8373.450451] R13: ffff888f4c2346c8 R14: ffff888e5cfccf60 R15: ffff888e5=
+cfccf68
+> [ 8373.457637] FS:=A0=A000007ff1e2e3d5c0(0000) GS:ffff88902f800000(0000)
+> knlGS:0000000000000000
+> [ 8373.465781] CS:=A0=A00010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 8373.471569] CR2: 00007ff1e286fe8a CR3: 000000092c412000 CR4: 000000000=
+01406a0
+> [ 8373.478750] Call Trace:
+> [ 8373.481219]=A0=A0? cgroup_post_fork+0x350/0x350
+> [ 8373.485435]=A0=A0? fpu__drop+0x5e/0x230
+> [ 8373.488951]=A0=A0? exit_thread+0x10c/0x160
+> [ 8373.492736]=A0=A0do_exit+0x5cb/0x1740
+> [ 8373.496083]=A0=A0? check_chain_key+0x142/0x200
+> [ 8373.500210]=A0=A0? mm_update_next_owner+0x360/0x360
+> [ 8373.504775]=A0=A0? map_id_up+0x14c/0x1f0
+> [ 8373.508380]=A0=A0? check_chain_key+0x142/0x200
+> [ 8373.512512]=A0=A0? get_signal+0x5f1/0xde0
+> [ 8373.516206]=A0=A0? lock_downgrade+0x300/0x300
+> [ 8373.520246]=A0=A0? lock_downgrade+0x300/0x300
+> [ 8373.524287]=A0=A0do_group_exit+0x78/0x160
+> [ 8373.527978]=A0=A0get_signal+0x1e8/0xde0
+> [ 8373.531498]=A0=A0do_signal+0x9c/0x9d0
+> [ 8373.534841]=A0=A0? check_chain_key+0x142/0x200
+> [ 8373.538970]=A0=A0? setup_sigcontext+0x280/0x280
+> [ 8373.543185]=A0=A0? lock_downgrade+0x300/0x300
+> [ 8373.547228]=A0=A0? kill_pid_info+0x2e/0xd0
+> [ 8373.551006]=A0=A0? kill_pid_info+0xa4/0xd0
+> [ 8373.554788]=A0=A0? __x64_sys_kill+0x262/0x350
+> [ 8373.558830]=A0=A0exit_to_usermode_loop+0x9d/0xc0
+> [ 8373.563131]=A0=A0do_syscall_64+0x470/0x5d8
+> [ 8373.566910]=A0=A0? syscall_return_slowpath+0xf0/0xf0
+> [ 8373.571565]=A0=A0? __do_page_fault+0x44d/0x5b0
+> [ 8373.575698]=A0=A0entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [ 8373.580789] RIP: 0033:0x7ff1e2893c3b
+> [ 8373.584402] Code: Bad RIP value.
+> [ 8373.587653] RSP: 002b:00007ffd8e5efe78 EFLAGS: 00000206 ORIG_RAX:
+> 000000000000003e
+> [ 8373.595276] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007ff1e=
+2893c3b
+> [ 8373.602461] RDX: 0000000000000000 RSI: 000000000000000c RDI: 000000000=
+00105d2
+> [ 8373.609642] RBP: 0000000000000000 R08: 00000000ffffffff R09: 00007ff1e=
+2e3d5c0
+> [ 8373.616824] R10: fffffffffffff768 R11: 0000000000000206 R12: 00007ffd8=
+e5efe98
+> [ 8373.624005] R13: 00007ffd8e5f00c0 R14: 0000000000000000 R15: 000000000=
+0000000
+> [ 8373.631190] ---[ end trace a7169f3366f1d100 ]---
 
-I can confirm it does fix the bug , thx.
+Hello, Qian!
 
+Thank you for the report!
 
-> diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
-> index 624b90b34085..70b55b8fe48b 100644
-> --- a/include/acpi/platform/aclinux.h
-> +++ b/include/acpi/platform/aclinux.h
-> @@ -66,6 +66,12 @@
->
->  #define ACPI_INIT_FUNCTION __init
->
-> +
-> +/* Use a specific bugging default separate from ACPICA */
-> +
-> +#undef ACPI_DEBUG_DEFAULT
-> +#define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
-> +
->  #ifndef CONFIG_ACPI
->
->  /* External globals for __KERNEL__, stubs is needed */
-> @@ -82,11 +88,6 @@
->  #define ACPI_NO_ERROR_MESSAGES
->  #undef ACPI_DEBUG_OUTPUT
->
-> -/* Use a specific bugging default separate from ACPICA */
-> -
-> -#undef ACPI_DEBUG_DEFAULT
-> -#define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
-> -
->  /* External interface for __KERNEL__, stub is needed */
->
->  #define ACPI_EXTERNAL_RETURN_STATUS(prototype) \
+Can you, please, try if the following patch fixes the problem?
+
+Thank you!
+
+Roman
+
+--
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 16b72f4f14df..bf2f268f1386 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2484,9 +2484,6 @@ bool get_signal(struct ksignal *ksig)
+                sigdelset(&current->pending.signal, SIGKILL);
+                recalc_sigpending();
+                current->jobctl &=3D ~JOBCTL_TRAP_FREEZE;
+-               spin_unlock_irq(&sighand->siglock);
+-               if (unlikely(cgroup_task_frozen(current)))
+-                       cgroup_leave_frozen(true);
+                goto fatal;
+        }
+=20
+@@ -2608,8 +2605,10 @@ bool get_signal(struct ksignal *ksig)
+                        continue;
+                }
+=20
+-               spin_unlock_irq(&sighand->siglock);
+        fatal:
++               spin_unlock_irq(&sighand->siglock);
++               if (unlikely(cgroup_task_frozen(current)))
++                       cgroup_leave_frozen(true);
+=20
+                /*
+                 * Anything else is fatal, maybe with a core dump.
