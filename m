@@ -4,200 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCB8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD816C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87BC205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E212054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EKcDa+QD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OHGTsQ3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfEGQyI (ORCPT
+        id S1726978AbfEGQzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:54:08 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33694 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfEGQyH (ORCPT
+        Tue, 7 May 2019 12:55:10 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36021 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfEGQzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:54:07 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f23so14997723ljc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:54:06 -0700 (PDT)
+        Tue, 7 May 2019 12:55:10 -0400
+Received: by mail-it1-f196.google.com with SMTP id o190so9767094itc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B6zYDfIbsh4fVsiu8ZkF/mnbm8ndRtPN2deL3LIfJ84=;
-        b=EKcDa+QDVLkg6+3F8xbsv66Xjpqs7OCvn17LDo9ArsHIg8OaBH61OtNHdmo4oEUq5n
-         ZwK1/9qEBuAd0IgekzYIK3To6Nzsd0YeQOP7JwPvcMYhjWGcFE6o0ORE/sI5twuTDy4T
-         gUUgf+pxkfNjY0XhhVXhUlQ712ZFrn7yP8jrjpXunN1rMkY78mCOxdF6DbrTVbpIEsea
-         Tq3vmVUjR7DDqWaAe0GaXrnlTxTKQmPJx7hit+oPKdybNnPwtNo5QS9GLvS0oXFFASeE
-         fS2/5GIeEQ4IVQl813CT7q2XFlPxVtCT+mYkhINKA2uRoG4mtGsnIvFlVKBZ5CGXrKd5
-         91KA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ItNUzKiQktZ8tRatFK3EANWC6VYaqJXLrYpbccD+kyg=;
+        b=OHGTsQ3xW+AeuFa3i/yt5q6LQHW/sLQPH7o2eGd7aSRSbmVeJiabwQjwY1JJR8K2ES
+         fq6R+/cpFFMR5gKzerEGUiMhv1uVe5u4T6HhlMK7Arw+4c9j5o7NXSrN1pEclW993OcN
+         wcskeVgwDuHn4H/uLAcsMIGG8qblNv+OJ0Tqc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B6zYDfIbsh4fVsiu8ZkF/mnbm8ndRtPN2deL3LIfJ84=;
-        b=eQqENyHZJtTwv5fxSUnNFCIxp049COm2zquH/OVpBIhj08SUxdygkwm6XSBxjoBDym
-         wUtlNH+P2xgfiY61gQiKQNOIPoWTb43eUK7KUFxxXVeLjFm5lktiWBc5/LpKg3GHiau1
-         tyt4tBA6UpVo2W4hRN2NXdOqReJZ7mzusfBNC3qAFxerpd4OWCdfwU/J2eLOr5cjTKNX
-         Gn1WFq7Un5u4FIP/7EKsT5/TDkS4L16qL9lMWxHgi/5zq5oSPzCbbqyHPtgKe61j2qtU
-         Qnb2tyX8FI9TLbcaG1RNGE09cktWDL0pu4rO3T+fu5+wiD/6qTa2Yz9p32GVsORicMmv
-         JpOA==
-X-Gm-Message-State: APjAAAX1SGYPg/IK/NARvjZrG3N2AbCtXf6Y8C4iaHdWJ4FjGUlXxey7
-        5ZGieEoRAKqnGxbYWAlyksBD+7SMees=
-X-Google-Smtp-Source: APXvYqyhBj0Cyym7O8BCcezWKbBr4/wUsQ/rLaB9CojWM34lke/HKUoy6IgewO93/sjprcXXThVOXw==
-X-Received: by 2002:a2e:86c5:: with SMTP id n5mr18423638ljj.184.1557248045227;
-        Tue, 07 May 2019 09:54:05 -0700 (PDT)
-Received: from [192.168.1.9] (hst-221-118.medicom.bg. [84.238.221.118])
-        by smtp.googlemail.com with ESMTPSA id n10sm3877075ljh.36.2019.05.07.09.54.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 09:54:04 -0700 (PDT)
-Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
- <20190502095550.31282c0d@coco.lan>
- <ee78effa-f678-5d15-3802-bb787e7057e2@xs4all.nl>
- <20190502102956.70aed1c3@coco.lan>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <5a94d216-dc61-968e-2eda-8f460c42b4ca@linaro.org>
-Date:   Tue, 7 May 2019 19:54:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ItNUzKiQktZ8tRatFK3EANWC6VYaqJXLrYpbccD+kyg=;
+        b=fmONmGv4LyXdANscHrsP+CcL0SsY21L2wg3APF+1F4jg86CznY0HPdcbNg7zf5i3NC
+         w5ax+oYOGzW6DV9VZ2M8jfVw6mJPzRsH0rnfBaYYiOwoh8Bh3EHfdXa6lrszyDF5UOlV
+         Kadj+9kaLq0m9StpF5OgRtjSvIS3s2YyUzy9B5iCzQYehiMRfS0P2cywfBN6p7D35A+N
+         AhY4mnYAYhTme4ySr6Plqe6Nq6Eh5H/SKqQWGsNLgXUnDFUEC6c4Ug4uPsngFVIsC7+y
+         caqGn7qe5PSqXO02mVn0UnrjTV++W+A5Dz80Yij4RFrcGd+AE0609fLSW4I1mwfcYdY1
+         LtAQ==
+X-Gm-Message-State: APjAAAVuDk/rEIc5pYgekzyQIAhP+I6h/tq222RkHVQVun8VnYIy8zdj
+        PUyZ078r6BhzDBsuAT+jDKH6x71Hkx/YojIHar/5sQ==
+X-Google-Smtp-Source: APXvYqyq65GxMEAgdu0nfbFID23F8qPQmyxacCisKRD6UI64kiPDsyvRApQTomOFzIDkZYUwgk2e2se761+mN8NT9Ag=
+X-Received: by 2002:a24:90f:: with SMTP id 15mr22727243itm.100.1557247624916;
+ Tue, 07 May 2019 09:47:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190502102956.70aed1c3@coco.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190506182736.21064-1-evgreen@chromium.org> <20190506182736.21064-2-evgreen@chromium.org>
+In-Reply-To: <20190506182736.21064-2-evgreen@chromium.org>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Tue, 7 May 2019 09:46:53 -0700
+Message-ID: <CAPUE2utMUPmOntOsgV5+dOeQtVPu_LJ4vJCHD=G6L=h3cgakvA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] loop: Report EOPNOTSUPP properly
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Alexis Savery <asavery@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 
-Thanks for comments!
-
-On 5/2/19 4:29 PM, Mauro Carvalho Chehab wrote:
-> Em Thu, 2 May 2019 15:16:54 +0200
-> Hans Verkuil <hverkuil@xs4all.nl> escreveu:
-> 
->> On 5/2/19 2:55 PM, Mauro Carvalho Chehab wrote:
->>> Em Fri, 12 Apr 2019 18:59:15 +0300
->>> Stanimir Varbanov <stanimir.varbanov@linaro.org> escreveu:
->>>   
->>>> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
->>>> field description to allow v4l clients to set bigger image size
->>>> in case of variable length compressed data.
->>>>
->>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>>> ---
->>>>  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
->>>>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
->>>>  2 files changed, 22 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
->>>> index 5688c816e334..005428a8121e 100644
->>>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
->>>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
->>>> @@ -31,7 +31,18 @@ describing all planes of that format.
->>>>  
->>>>      * - __u32
->>>>        - ``sizeimage``
->>>> -      - Maximum size in bytes required for image data in this plane.
->>>> +      - Maximum size in bytes required for image data in this plane,
->>>> +	set by the driver. When the image consists of variable length
->>>> +	compressed data this is the number of bytes required by the
->>>> +	codec to support the worst-case compression scenario.
->>>> +
->>>> +	For uncompressed images the driver will set the value. For
->>>> +	variable length compressed data clients are allowed to set
->>>> +	the sizeimage field, but the driver may ignore it and set the
->>>> +	value itself, or it may modify the provided value based on
->>>> +	alignment requirements or minimum/maximum size requirements.
->>>> +	If the client wants to leave this to the driver, then it should
->>>> +	set sizeimage to 0.
->>>>      * - __u32
->>>>        - ``bytesperline``
->>>>        - Distance in bytes between the leftmost pixels in two adjacent
->>>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
->>>> index 71eebfc6d853..0f7771151db9 100644
->>>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
->>>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
->>>> @@ -89,7 +89,16 @@ Single-planar format structure
->>>>        - Size in bytes of the buffer to hold a complete image, set by the
->>>>  	driver. Usually this is ``bytesperline`` times ``height``. When
->>>>  	the image consists of variable length compressed data this is the
->>>> -	maximum number of bytes required to hold an image.
->>>> +	number of bytes required by the codec to support the worst-case
->>>> +	compression scenario.
->>>> +
->>>> +	For uncompressed images the driver will set the value. For
->>>> +	variable length compressed data clients are allowed to set
->>>> +	the sizeimage field, but the driver may ignore it and set the
->>>> +	value itself, or it may modify the provided value based on
->>>> +	alignment requirements or minimum/maximum size requirements.
->>>> +	If the client wants to leave this to the driver, then it should
->>>> +	set sizeimage to 0.  
->>>
->>> It is very confusing to understand what you meant by the above paragraph,
->>> as you inverted the sentence order and forgot a comma.
->>>
->>> I would, instead, write the phrases using the direct order, and break
->>> into two paragraphs, e. g., changing the above to:
->>>
->>> 	"The driver will set the value for uncompressed images.
->>>
->>> 	Clients are allowed to set the sizeimage field for variable length
->>> 	compressed data, but the driver may ignore it and set the
->>> 	value itself, or it may modify the provided value based on
->>> 	alignment requirements or minimum/maximum size requirements.
->>> 	If the client wants to leave this to the driver, then it should
->>> 	set sizeimage to 0."
->>>
->>> That makes it a lot easier to read, hopefully preventing mistakes from
->>> app and driver developers when reading about sizeimage.
->>>
->>> Yet, I'm not too comfortable on letting this too generic. I mean,
->>> how an app writer would know what formats are "variable length
->>> compressed data", specially since libv4l may actually change that.  
->>
->> It's actually quite clearly defined: compressed formats set the
->> V4L2_FMT_FLAG_COMPRESSED flag in VIDIOC_ENUMFMT.
-> 
-> Ok, so let's be explicit here, e. g. something like:
-> 
->  	"Clients are allowed to set the sizeimage field for variable length
->  	compressed data flagged with V4L2_FMT_FLAG_COMPRESSED at
-> 	VIDIOC_ENUMFMT, but the driver may ignore it and set the
->  	value itself, or it may modify the provided value based on
->  	alignment requirements or minimum/maximum size requirements.
->  	If the client wants to leave this to the driver, then it should
->  	set sizeimage to 0."
-> 
-> That makes clear for app developers when they can use this new
-> feature.
-
-OK, I will resend with that description.
-
-> 
-> That still leads us to what happens at libv4l with sizeimage
-> for a compressed format that got uncompressed by the library, in
-> order to ensure that a change like this won't cause breakages at
-> existing userspace apps.
-
-libv4l can decompress formats like MJPEG, right? I mean it isn't to
-decompress MPEG/H264 for example.
-
--- 
--- 
-regards,
-Stan
+On Mon, May 6, 2019 at 11:30 AM Evan Green <evgreen@chromium.org> wrote:
+>
+> Properly plumb out EOPNOTSUPP from loop driver operations, which may
+> get returned when for instance a discard operation is attempted but not
+> supported by the underlying block device. Before this change, everything
+> was reported in the log as an I/O error, which is scary and not
+> helpful in debugging.
+>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+> ---
+>
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3:
+> - Updated tags
+>
+> Changes in v2:
+> - Unnested error if statement (Bart)
+>
+>  drivers/block/loop.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index bf1c61cab8eb..bbf21ebeccd3 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -458,7 +458,9 @@ static void lo_complete_rq(struct request *rq)
+>
+>         if (!cmd->use_aio || cmd->ret < 0 || cmd->ret == blk_rq_bytes(rq) ||
+>             req_op(rq) != REQ_OP_READ) {
+> -               if (cmd->ret < 0)
+> +               if (cmd->ret == -EOPNOTSUPP)
+> +                       ret = BLK_STS_NOTSUPP;
+> +               else if (cmd->ret < 0)
+>                         ret = BLK_STS_IOERR;
+>                 goto end_io;
+>         }
+> @@ -1892,7 +1894,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>   failed:
+>         /* complete non-aio request */
+>         if (!cmd->use_aio || ret) {
+> -               cmd->ret = ret ? -EIO : 0;
+> +               if (ret == -EOPNOTSUPP)
+> +                       cmd->ret = ret;
+> +               else
+> +                       cmd->ret = ret ? -EIO : 0;
+>                 blk_mq_complete_request(rq);
+>         }
+>  }
+> --
+> 2.20.1
+>
