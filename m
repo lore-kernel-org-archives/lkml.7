@@ -2,143 +2,122 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B1FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8CCC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D2E20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D382204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfEGJkL (ORCPT
+        id S1726779AbfEGJlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:40:11 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:41106 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfEGJkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:40:08 -0400
-Received: by mail-it1-f200.google.com with SMTP id y62so14132082itd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:40:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Uypp6ieG5xvoC6Zp2hwEemoE2ROs7ap0zeGJoNwhgoI=;
-        b=LsgFr16ViRGVUvbAcv2plT3RqfR8Beyj0XQAM9JjyrTYsFsiIEdtYHeMi3670MsGOG
-         5B3h/4w/e9RPtW32U3ARjnWVNcVFaYZRKSxatWryvlXXhrrFI2MgAOC35ASnVmSN/cUa
-         quLwQTh+jrowJhgku67LXVMcMQ5kLl0Ae0ntvCUT2SY/YlZOmkd2z1J7XeqoJUnk482B
-         2waycgN4ZB7qC8Rh4j9oZyNSz9Ne9+gHVrjGT7mqSMCgrc3XacdOwzQSSyPStCrFEshU
-         x36jZMz3/Boc539Cl+f2upPPujUdGUYcrcLAZVq73NN7TWa4m6NWdM49kgazhyJFDoLR
-         pnRw==
-X-Gm-Message-State: APjAAAWo2XHOE9UUzE52gzOEgYXvYp/8u7FDN0YzuNLJfTDEj6DyFFc2
-        FcnRfViyG0Pl44KD9BHQ/Xw+bi33mowygcNYHazNVD7gOFbk
-X-Google-Smtp-Source: APXvYqyX7bBGbgzgjisOPvRfugSvioOCkjt/965wR3GWcPoApxD8qv0M02JW46oNd6ajbJgDNRbJuVpaIElRgyvno6ArQu6ZwX8k
+        Tue, 7 May 2019 05:41:11 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48498 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfEGJlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:41:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5FBD374;
+        Tue,  7 May 2019 02:41:09 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E478B3F5AF;
+        Tue,  7 May 2019 02:41:07 -0700 (PDT)
+Date:   Tue, 7 May 2019 10:41:02 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Eric Auger <eric.auger@redhat.com>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] PCI: iproc: Add sorted dma ranges resource
+ entries to host bridge
+Message-ID: <20190507094102.GA10964@e121166-lin.cambridge.arm.com>
+References: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
+ <1556892334-16270-4-git-send-email-srinath.mannam@broadcom.com>
+ <20190506211208.GA156478@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:db8a:: with SMTP id c132mr23093680itg.46.1557222007798;
- Tue, 07 May 2019 02:40:07 -0700 (PDT)
-Date:   Tue, 07 May 2019 02:40:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009c83b005884900cf@google.com>
-Subject: general protection fault in rfcomm_dlc_exists
-From:   syzbot <syzbot+362be51217ce29d215bc@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, gustavo@embeddedor.com,
-        johan.hedberg@gmail.com, keescook@chromium.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tiny.windzz@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506211208.GA156478@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, May 06, 2019 at 04:12:08PM -0500, Bjorn Helgaas wrote:
+> On Fri, May 03, 2019 at 07:35:34PM +0530, Srinath Mannam wrote:
+> > The IPROC host controller allows only a subset of physical address space
+> > as target of inbound PCI memory transactions addresses.
+> > 
+> > PCIe devices memory transactions targeting memory regions that
+> > are not allowed for inbound transactions in the host controller
+> > are rejected by the host controller and cannot reach the upstream
+> > buses.
+> > 
+> > Firmware device tree description defines the DMA ranges that are
+> > addressable by devices DMA transactions; parse the device tree
+> > dma-ranges property and add its ranges to the PCI host bridge dma_ranges
+> > list; the iova_reserve_pci_windows() call in the driver will reserve the
+> > IOVA address ranges that are not addressable (ie memory holes in the
+> > dma-ranges set) so that they are not allocated to PCI devices for DMA
+> > transfers.
+> > 
+> > All allowed address ranges are listed in dma-ranges DT parameter.
+> > 
+> > Example:
+> > 
+> > dma-ranges = < \
+> >   0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
+> >   0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
+> >   0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+> > 
+> > In the above example of dma-ranges, memory address from
+> > 
+> > 0x0 - 0x80000000,
+> > 0x100000000 - 0x800000000,
+> > 0x1000000000 - 0x8000000000 and
+> > 0x10000000000 - 0xffffffffffffffff.
+> > 
+> > are not allowed to be used as inbound addresses.
+> > 
+> > Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > [lorenzo.pieralisi@arm.com: updated commit log]
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 43 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > index c20fd6b..94ba5c0 100644
+> > --- a/drivers/pci/controller/pcie-iproc.c
+> > +++ b/drivers/pci/controller/pcie-iproc.c
+> > @@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
+> >  	return ret;
+> >  }
+> >  
+> > +static int
+> > +iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
+> > +			 struct of_pci_range *range)
+> 
+> Just FYI, I cherry-picked these commits from Lorenzo's branch to fix
+> the formatting of this prototype to match the rest of the file, e.g.:
 
-syzbot found the following crash on:
+Thank you, I noticed too but I forgot to update it before merging
+v6 from the list.
 
-HEAD commit:    26f146ed net: ll_temac: Fix typo bug for 32-bit
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1481e350a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=70f5b9827d8c73d8
-dashboard link: https://syzkaller.appspot.com/bug?extid=362be51217ce29d215bc
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thanks,
+Lorenzo
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+362be51217ce29d215bc@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 29087 Comm: syz-executor.2 Not tainted 5.1.0-rc6+ #164
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:rfcomm_dlc_get net/bluetooth/rfcomm/core.c:360 [inline]
-RIP: 0010:rfcomm_dlc_exists+0x12e/0x1a0 net/bluetooth/rfcomm/core.c:550
-Code: 42 80 3c 28 00 75 74 4d 8b 24 24 4d 39 f4 74 55 e8 37 99 16 fb 49 8d  
-bc 24 44 01 00 00 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28  
-38 d0 7f 04 84 c0 75 3d 45 0f b6 bc 24 44 01 00 00
-RSP: 0018:ffff88809e9f79c0 EFLAGS: 00010202
-RAX: 0ecc2d8e6bee4e95 RBX: 000000000000000d RCX: ffffc90005ffc000
-RDX: 0000000000000004 RSI: ffffffff8659f3e9 RDI: 76616c735f7274ac
-RBP: ffff88809e9f79e8 R08: ffff888093d44580 R09: fffffbfff1289895
-R10: ffff88809e9f79b0 R11: ffffffff8944c4a7 R12: 76616c735f727368
-R13: dffffc0000000000 R14: ffff88809b2d3980 R15: 0000000000000000
-FS:  00007faf4b6fc700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f90c3150000 CR3: 0000000097c73000 CR4: 00000000001406f0
-Call Trace:
-  __rfcomm_create_dev net/bluetooth/rfcomm/tty.c:413 [inline]
-  rfcomm_create_dev net/bluetooth/rfcomm/tty.c:486 [inline]
-  rfcomm_dev_ioctl+0x591/0x1b60 net/bluetooth/rfcomm/tty.c:588
-  rfcomm_sock_ioctl+0x90/0xb0 net/bluetooth/rfcomm/sock.c:902
-  sock_do_ioctl+0xde/0x300 net/socket.c:1037
-  sock_ioctl+0x3f3/0x790 net/socket.c:1188
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007faf4b6fbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
-RDX: 0000000020000100 RSI: 00000000400452c8 RDI: 0000000000000004
-RBP: 000000000073bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007faf4b6fc6d4
-R13: 00000000004c133a R14: 00000000004d3920 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 6a47bc10d7ab5e63 ]---
-RIP: 0010:rfcomm_dlc_get net/bluetooth/rfcomm/core.c:360 [inline]
-RIP: 0010:rfcomm_dlc_exists+0x12e/0x1a0 net/bluetooth/rfcomm/core.c:550
-Code: 42 80 3c 28 00 75 74 4d 8b 24 24 4d 39 f4 74 55 e8 37 99 16 fb 49 8d  
-bc 24 44 01 00 00 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28  
-38 d0 7f 04 84 c0 75 3d 45 0f b6 bc 24 44 01 00 00
-RSP: 0018:ffff88809e9f79c0 EFLAGS: 00010202
-RAX: 0ecc2d8e6bee4e95 RBX: 000000000000000d RCX: ffffc90005ffc000
-RDX: 0000000000000004 RSI: ffffffff8659f3e9 RDI: 76616c735f7274ac
-RBP: ffff88809e9f79e8 R08: ffff888093d44580 R09: fffffbfff1289895
-R10: ffff88809e9f79b0 R11: ffffffff8944c4a7 R12: 76616c735f727368
-R13: dffffc0000000000 R14: ffff88809b2d3980 R15: 0000000000000000
-FS:  00007faf4b6fc700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000097c73000 CR4: 00000000001406f0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >  static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+> > ...
+> >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
