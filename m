@@ -2,121 +2,100 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FDEC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC7BC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C6C21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:04:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557212675;
-	bh=hNi2vt1qB3b6X3N9lBhgsKLvokmDdrvsjVx/J28EZ90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T+JUsFBulf5bQwXXWhZk0GNGsG5Up72K1vKzw3C4TgzQKopiyZwWr70kOQO7BLhqb
-	 8FKrKQSTwJXQ6+xpGwx+ujEWxt2qOi6YlxO2FuX5r2Twfbcfp6BIRRW6X366NlGdJY
-	 EUetvAehNDJR3vE4yMaEwJk7u1A6tePU1dQD/f/c=
+	by mail.kernel.org (Postfix) with ESMTP id 04F8F20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfEGHEe (ORCPT
+        id S1726839AbfEGHFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbfEGHEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:04:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A59721019;
-        Tue,  7 May 2019 07:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557212673;
-        bh=hNi2vt1qB3b6X3N9lBhgsKLvokmDdrvsjVx/J28EZ90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1NwSfNdiJdTpK3PxZVb09tk48+2+AXcgrQl+ONIUsuxrfaxWSH5EVRvzyWG0q5iZK
-         GoU2xj/aHaJYSzTAqERyT8jaORLr94yQ1si1oFuQ21nMGXDmmeQt8N0QaISagR8JcU
-         YXN8lw0eZwmxKlwz0uu4QBqj9nvLINBiTWHmBxHY=
-Date:   Tue, 7 May 2019 09:04:30 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Daniel Colascione <dancol@google.com>,
-        kernel-team <kernel-team@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190507070430.GA24150@kroah.com>
-References: <20190317015306.GA167393@google.com>
- <20190317114238.ab6tvvovpkpozld5@brauner.io>
- <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
- <20190318002949.mqknisgt7cmjmt7n@brauner.io>
- <20190318235052.GA65315@google.com>
- <20190319221415.baov7x6zoz7hvsno@brauner.io>
- <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
- <20190319231020.tdcttojlbmx57gke@brauner.io>
- <20190320015249.GC129907@google.com>
- <20190507021622.GA27300@sultan-box.localdomain>
+        Tue, 7 May 2019 03:05:05 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33655 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfEGHFF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:05:05 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k189so394379qkc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 00:05:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TWiAWNDuxMoa7BnWbstcQAwxTlS5yxqis7kCQjsT23I=;
+        b=QMOkgytU7WmvIgIRtJclFo/eHyNkZSVBM8N993hxMzydAEcrmjuLM2oVh1PlEvcXSJ
+         c0DQ0+CmHVbWQSpf1JBCCPPDWXgSBKXxs8XTpAEsq+z5xWfQaVqoCRyQiqNx+e2uB+eN
+         r0FIOjtFMvk3HF4pYzOQSvJYQEiQKUeq9KyHh5fJzk9rP6L83jTwLDfKmqhoxx7oj8cp
+         Ih9Xn3YBueJZO044pX1YZGRWFDJMDH0oopyjM7N7gaVmVH/ZiHKoElevHnYNE0CS9IVO
+         CZmTVus5OHadmi5RA6iXKLueW2UmyWhskuI+XKvOMpUusNdKN/1U6t/zVGVCpktgnq69
+         Z2Bg==
+X-Gm-Message-State: APjAAAWDkyaxqx19ZQOvzOxhy80iq0NsicJjVT4DfAhlb3sj0QYeNIqf
+        7mWMcechqeb0m7wv51hv5+1PNSS3nQw+8sfipRVNgqAO6P4=
+X-Google-Smtp-Source: APXvYqz4HUHY0unSxfyqKVfzthJ4zVbpJ5xgmf3KDTNskB7uJbYHco/MM7pyk5JZEfU+J7rzIPlS71SU9loEQKjgEUw=
+X-Received: by 2002:ae9:e418:: with SMTP id q24mr23566715qkc.134.1557212704629;
+ Tue, 07 May 2019 00:05:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507021622.GA27300@sultan-box.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <e2154a13-0ec5-d39c-52cf-db98867b0496@infradead.org>
+In-Reply-To: <e2154a13-0ec5-d39c-52cf-db98867b0496@infradead.org>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 7 May 2019 09:04:53 +0200
+Message-ID: <CAO-hwJKueMUp=4ioCNhgkX2+HWsd9GV4bkKi_+uvzpOV_UED8A@mail.gmail.com>
+Subject: Re: [PATCH -next] hid: fix hid-logitech-dj build error
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 07:16:22PM -0700, Sultan Alsawaf wrote:
-> This is a complete low memory killer solution for Android that is small
-> and simple. Processes are killed according to the priorities that
-> Android gives them, so that the least important processes are always
-> killed first. Processes are killed until memory deficits are satisfied,
-> as observed from kswapd struggling to free up pages. Simple LMK stops
-> killing processes when kswapd finally goes back to sleep.
-> 
-> The only tunables are the desired amount of memory to be freed per
-> reclaim event and desired frequency of reclaim events. Simple LMK tries
-> to free at least the desired amount of memory per reclaim and waits
-> until all of its victims' memory is freed before proceeding to kill more
-> processes.
-> 
-> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+Hi Randy,
+
+On Tue, May 7, 2019 at 3:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix build error in hid-logitech-dj by making it depend on
+> USB_HID, like several other HID drivers do.
+>
+> Fixes this build error:
+>
+> ERROR: "usb_hid_driver" [drivers/hid/hid-logitech-dj.ko] undefined!
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
 > ---
-> Hello everyone,
-> 
-> I've addressed some of the concerns that were brought up with the first version
-> of the Simple LMK patch. I understand that a kernel-based solution like this
-> that contains policy decisions for a specific userspace is not the way to go,
-> but the Android ecosystem still has a pressing need for a low memory killer that
-> works well.
-> 
-> Most Android devices still use the ancient and deprecated lowmemorykiller.c
-> kernel driver; Simple LMK seeks to replace that, at the very least until PSI and
-> a userspace daemon utilizing PSI are ready for *all* Android devices, and not
-> just the privileged Pixel phone line.
+>  drivers/hid/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> --- mmotm-2019-0425-1630.orig/drivers/hid/Kconfig
+> +++ mmotm-2019-0425-1630/drivers/hid/Kconfig
+> @@ -522,6 +522,7 @@ config HID_LOGITECH
+>  config HID_LOGITECH_DJ
+>         tristate "Logitech Unifying receivers full support"
+>         depends on HIDRAW
+> +       depends on USB_HID
 
-Um, why can't "all" Android devices take the same patches that the Pixel
-phones are using today?  They should all be in the public android-common
-kernel repositories that all Android devices should be syncing with on a
-weekly/monthly basis anyway, right?
+this is already scheduled in the HID PR:
+https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-linus&id=c08f38e9fd0b5486957ed42438ec8fa9b6ebbf4f
 
-thanks,
+Cheers,
+Benjamin
 
-greg k-h
+>         depends on HID_LOGITECH
+>         select HID_LOGITECH_HIDPP
+>         ---help---
+>
+>
