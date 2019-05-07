@@ -6,67 +6,55 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C20C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80778C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC7420825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E2A20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfEGT2v (ORCPT
+        id S1726568AbfEGTao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:28:51 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33308 "EHLO
+        Tue, 7 May 2019 15:30:44 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33328 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfEGT2v (ORCPT
+        with ESMTP id S1726000AbfEGTan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:28:51 -0400
+        Tue, 7 May 2019 15:30:43 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9A69014B79718;
-        Tue,  7 May 2019 12:28:50 -0700 (PDT)
-Date:   Tue, 07 May 2019 12:28:49 -0700 (PDT)
-Message-Id: <20190507.122849.1270099594432351727.davem@davemloft.net>
-To:     harini.katakam@xilinx.com
-Cc:     nicolas.ferre@microchip.com, rafalo@cadence.com,
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E985A14B89888;
+        Tue,  7 May 2019 12:30:42 -0700 (PDT)
+Date:   Tue, 07 May 2019 12:30:42 -0700 (PDT)
+Message-Id: <20190507.123042.589323077170977597.davem@davemloft.net>
+To:     maxime.chevallier@bootlin.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michal.simek@xilinx.com, harinikatakamlinux@gmail.com
-Subject: Re: [PATCH] net: macb: Change interrupt and napi enable order in
- open
+        devicetree@vger.kernel.org, antoine.tenart@bootlin.com,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com
+Subject: Re: [PATCH net] dt-bindings: net: Fix a typo in the phy-mode list
+ for ethernet bindings
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1557239350-4760-1-git-send-email-harini.katakam@xilinx.com>
-References: <1557239350-4760-1-git-send-email-harini.katakam@xilinx.com>
+In-Reply-To: <20190507153555.18545-1-maxime.chevallier@bootlin.com>
+References: <20190507153555.18545-1-maxime.chevallier@bootlin.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 12:28:50 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 12:30:43 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
-Date: Tue, 7 May 2019 19:59:10 +0530
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Date: Tue,  7 May 2019 17:35:55 +0200
 
-> Current order in open:
-> -> Enable interrupts (macb_init_hw)
-> -> Enable NAPI
-> -> Start PHY
+> The phy_mode "2000base-x" is actually supposed to be "1000base-x", even
+> though the commit title of the original patch says otherwise.
 > 
-> Sequence of RX handling:
-> -> RX interrupt occurs
-> -> Interrupt is cleared and interrupt bits disabled in handler
-> -> NAPI is scheduled
-> -> In NAPI, RX budget is processed and RX interrupts are re-enabled
-> 
-> With the above, on QEMU or fixed link setups (where PHY state doesn't
-> matter), there's a chance macb RX interrupt occurs before NAPI is
-> enabled. This will result in NAPI being scheduled before it is enabled.
-> Fix this macb open by changing the order.
-> 
-> Fixes: ae1f2a56d273 ("net: macb: Added support for many RX queues")
-> Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+> Fixes: 55601a880690 ("net: phy: Add 2000base-x, 2500base-x and rxaui modes")
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Applied and queued up for -stable.
+Applied.
