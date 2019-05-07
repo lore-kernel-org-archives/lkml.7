@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DE1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D50C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3DE20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FB7206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207889;
-	bh=0esvBg3sZPHXqyPWKf8K32UkMNDTLhp2VPF6mDiGBRk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0fF64XQkoyFUQTk6JfnjkBKNL6u3Zf2DJmqr0ins5GAn88r8qK6ztJmGdO4r/xzGt
-	 vJt1lTkHLXCX72c3JGgMM1Um9IANjhXMZ5C99MjF8pfbeqyzj7o8NExd5Hb1m7EvBy
-	 YjHAkLV1jZ+mEJuhnr97AxuIS+oRTFPgblo4lJwY=
+	s=default; t=1557207892;
+	bh=ehpT+1p5i1oDKz7Z9MKts9E+IMzu602Ou/N0iMaoWFA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pW8+bWbrMiFyf+G7R9biXAHEnXaj3FD70xqhuY2+MJcWpvQduAPpR0K0rMGLIi9RD
+	 ma+v6/glAxhcBXbhFfNbDe17sXcjeD+BQmICFveTZ3zVN9I9Ev/AUBwKqKKSq/Ikkw
+	 cISfxiPHiKqWGn9dH35l58Qz/E4+H8Yiabu6ZUmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfEGFm2 (ORCPT
+        id S1729553AbfEGFm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33322 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfEGFmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:42:20 -0400
+        id S1729507AbfEGFmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:42:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59EF520578;
-        Tue,  7 May 2019 05:42:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B41B220578;
+        Tue,  7 May 2019 05:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207740;
-        bh=0esvBg3sZPHXqyPWKf8K32UkMNDTLhp2VPF6mDiGBRk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=do8xcuLo5ZtPfCPsVQHmLx8l9xcFYqbrMpZLQiUzO9E1naRmhqjmHwSAYZiGG/aap
-         KXOtl5Hxj6y1VHidonrmYcN6xm/L1Z+JyM4BzK6dwUNfyj+nq80Iq0yJP2ePp/N5Ux
-         /ea3x4by0Q5pLOqNawEPFjJNbf1vPTMtJeaaFKlA=
+        s=default; t=1557207736;
+        bh=ehpT+1p5i1oDKz7Z9MKts9E+IMzu602Ou/N0iMaoWFA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SdAyKfhh+ArozRYcqvRbE4R4VYGGNWKidS2ssBOH8lVVGFf4e6U40kf5p0wtoPNE0
+         zi7By7UuqpM6o71ZdpDY4BhdiPNyqs+bhSk8YjSkbgBxibOQGhH2VFUFyWts5SiNtI
+         240zB86WWqkU6yBKxJKAbah460QYVifC11waBoCg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/14] iio: adc: xilinx: fix potential use-after-free on remove
-Date:   Tue,  7 May 2019 01:42:03 -0400
-Message-Id: <20190507054218.340-1-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 25/25] Input: synaptics-rmi4 - fix possible double free
+Date:   Tue,  7 May 2019 01:41:22 -0400
+Message-Id: <20190507054123.32514-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
+References: <20190507054123.32514-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,38 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
+[ Upstream commit bce1a78423961fce676ac65540a31b6ffd179e6d ]
 
-When cancel_delayed_work() returns, the delayed work may still
-be running. This means that the core could potentially free
-the private structure (struct xadc) while the delayed work
-is still using it. This is a potential use-after-free.
+The RMI4 function structure has been released in rmi_register_function
+if error occurs. However, it will be released again in the function
+rmi_create_function, which may result in a double-free bug.
 
-Fix by calling cancel_delayed_work_sync(), which waits for
-any residual work to finish before returning.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/xilinx-xadc-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_driver.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index 475c5a74f2d1..6398e86a272b 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1299,7 +1299,7 @@ static int xadc_remove(struct platform_device *pdev)
- 	}
- 	free_irq(irq, indio_dev);
- 	clk_disable_unprepare(xadc->clk);
--	cancel_delayed_work(&xadc->zynq_unmask_work);
-+	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	kfree(xadc->data);
- 	kfree(indio_dev->channels);
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index 4a88312fbd25..65038dcc7613 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -772,7 +772,7 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
  
+ 	error = rmi_register_function(fn);
+ 	if (error)
+-		goto err_put_fn;
++		return error;
+ 
+ 	if (pdt->function_number == 0x01)
+ 		data->f01_container = fn;
+@@ -780,10 +780,6 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
+ 	list_add_tail(&fn->node, &data->function_list);
+ 
+ 	return RMI_SCAN_CONTINUE;
+-
+-err_put_fn:
+-	put_device(&fn->dev);
+-	return error;
+ }
+ 
+ int rmi_driver_suspend(struct rmi_device *rmi_dev)
 -- 
 2.20.1
 
