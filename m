@@ -2,85 +2,139 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D55AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E137AC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0223320449
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BED520656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="IoMCwYAD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pJmy6g7E";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pJmy6g7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbfEGUki (ORCPT
+        id S1726997AbfEGUkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:40:38 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37992 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfEGUki (ORCPT
+        Tue, 7 May 2019 16:40:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52634 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfEGUkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:40:38 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w11so19974893edl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Id82w3zmCw69bC990k5wJX0+RNJ/yd54rmawO3O5848=;
-        b=IoMCwYADikrhWMRO0YX8OYBTqY+UbPI476whvUkAKOfnTtA+5x3+EStH9HMj0ASU6j
-         mBZdPmBRH215QlWMsUul9UlGsW6qRsP+HI5Wbw4KyfVWE3dD7YRZH9rGw1qLHLKlskSq
-         WLw67vfHbQG8eNGUdgdPdRE4bjnvIqKVGrOuNzdB2jkA4vbcyVvqrZibmLWlSsNG5x3Y
-         H36DSO6DLp/kZ5Ezm5pLqmGGcJsy+Mx1gUX3AQsm54mERaKXxzWMz4b+gTYcD/o5af6+
-         pwU34Q6CwfHThMgqdHV0JcgK6llnHKxVoGhDerQx/XWd18wWAAf459MGG8lHCQJEiSad
-         5t6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Id82w3zmCw69bC990k5wJX0+RNJ/yd54rmawO3O5848=;
-        b=lrvLopstE9SFTElBYBWkkoed4q8H1csNwiSI7o0T2Cc5UtLRMiWT0ywMEuI3fvGhMj
-         51JBhFTRKBCg1suO1+zGU7eNPzpg1NL0pOlASfsetpst21XI7260fkHWbZKaJbf518N7
-         pO0apb9dtyrlXRyJ/wLme7xP5BrigXgQfuSWvE5dV4V8lW7hBGu2G8QqG46F+D/s0/S8
-         xtGJrJP0VauVAlZsfhiTRK2lqUqyDMJBiLlBOeH0hTLxRLpOYh7WErme+YsjYGBgoBCl
-         LAGPpgJTq+Uk6WRQPAOWOBN/MYhjfyLV8AkuXuBavQEMngdkB29HIO3j/D7RoxTLcVv+
-         oD6w==
-X-Gm-Message-State: APjAAAVavztYDOAV8T/cirSN8COV2t3ur2JuNcYfiSdMssZMwpx3X+xW
-        XMs5u8MIGZYunEAYVjm/frno7g==
-X-Google-Smtp-Source: APXvYqyaRGYa/8yGTPMBa3T2oP7SqyidqAh1hGDpH7fzy8BcRA8VWUqjzXW4I20lZcjT3CiYAZGZiw==
-X-Received: by 2002:a50:a5ed:: with SMTP id b42mr34559690edc.178.1557261636543;
-        Tue, 07 May 2019 13:40:36 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id t2sm4751397eda.41.2019.05.07.13.40.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 07 May 2019 13:40:36 -0700 (PDT)
-Date:   Tue, 7 May 2019 22:40:35 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jann Horn <jannh@google.com>, David Howells <dhowells@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] pidfd patches for v5.2-rc1
-Message-ID: <20190507204034.kgwqkgw6lc3hzukd@brauner.io>
-References: <20190506123659.23591-1-christian@brauner.io>
- <CAHk-=wh692HhZ+s=WWCw81mWFvXEGpXKccHcmpRUrO9p3KKD=w@mail.gmail.com>
+        Tue, 7 May 2019 16:40:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C904160A24; Tue,  7 May 2019 20:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557261650;
+        bh=stcg8CzvSafuMT/P1RIQCG/y6ujXCmqbponKtEXZm8Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pJmy6g7EwedqarmCGBv4Q4MbLuCLcnAb2ncrlgtnSiMCqp5o9XpsQe+M9Dg4NCXFd
+         08LX8MlIKdKAUT/DCZ6XDkN4pKkhZHCy3A2RIMkfZcRDSCima7jUYg1OWQo0Thh1Xf
+         /VhaGNGYuxHksenYJRFHon8o56Nt3GKl+SFH0NYs=
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22A43605A2;
+        Tue,  7 May 2019 20:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557261650;
+        bh=stcg8CzvSafuMT/P1RIQCG/y6ujXCmqbponKtEXZm8Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pJmy6g7EwedqarmCGBv4Q4MbLuCLcnAb2ncrlgtnSiMCqp5o9XpsQe+M9Dg4NCXFd
+         08LX8MlIKdKAUT/DCZ6XDkN4pKkhZHCy3A2RIMkfZcRDSCima7jUYg1OWQo0Thh1Xf
+         /VhaGNGYuxHksenYJRFHon8o56Nt3GKl+SFH0NYs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22A43605A2
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com,
+        linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
+        bjorn.andersson@linaro.org, dianders@chromium.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v5 00/11] Support wakeup capable GPIOs
+Date:   Tue,  7 May 2019 14:37:38 -0600
+Message-Id: <20190507203749.3384-1-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh692HhZ+s=WWCw81mWFvXEGpXKccHcmpRUrO9p3KKD=w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:39:05PM -0700, Linus Torvalds wrote:
-> Oh, and this causes "git status" to mention the
-> 
->   samples/pidfd/pidfd-metadata
-> 
-> file, because you generate it, but don't then mark it in a .gitignore file..
+Hi all,
 
-Oh, sorry. You want me to send a follow-up that fixes it?
+This is a re-spin of the wakeup capable GPIO support for QCOM SoCs.
+The earlier version of the patch revision 4, was published [1] and had
+some good discussions. The comments from the review have also been
+addressed and the code rebased on top of 5.1 in this spin. There a few
+changes in this spin:
+	- Review comments from Stephen, Marc
+	- Bug fixes in irqdomain-map
+	- Fix invalid interrupt case
+	- Update documentation
+	- Attempt generalizing gpiochip_to_irq() for hierarchical domain
 
-Christian
+In patch v4, we were discussing about the IRQ type of GPIO defaulting to
+IRQ_TYPE_NONE (as is was the custom for older implementation). In the
+SDM845 SoC select GPIOs are routed to an always-on interrupt controller
+called the PDC and then to the GIC.
+
+Wakeup capabable:
+	GPIO  --->  PDC  ------>  GIC
+
+Requesting a GPIO as an interrupt through the gpio_to_irq() call would
+setup an interrupt hierarchy as above and return the linux interrupt
+number. However, since the trigger type of the GPIO is unknown at this
+time, gpiolib defaults to IRQ_TYPE_NONE. This triggers a warning at the
+GIC, which expects a valid trigger type be set correctly in the fwspec.
+The solution to this problem is still at large and I would like to
+solicit feedback on this.
+
+Appreciate your time.
+
+Thanks,
+Lina
+
+[1]. https://patchwork.kernel.org/cover/10851807/
+
+Lina Iyer (9):
+  gpio: allow gpio_to_irq to use OF variants for gpiochips
+  irqdomain: add bus token DOMAIN_BUS_WAKEUP
+  of: irq: document properties for wakeup interrupt parent
+  drivers: irqchip: add PDC irqdomain for wakeup capable GPIOs
+  dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+  drivers: pinctrl: msm: setup GPIO irqchip hierarchy
+  arm64: dts: qcom: add PDC interrupt controller for SDM845
+  arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
+  arm64: dts: qcom: setup PDC as wakeup parent for GPIOs for SDM845
+
+Stephen Boyd (1):
+  of: irq: add helper to remap interrupts to another irqdomain
+
+Thierry Reding (1):
+  gpio: Add support for hierarchical IRQ domains
+
+ .../interrupt-controller/interrupts.txt       |  54 +++++++
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  |  79 +++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  88 +++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/gpio/gpiolib.c                        |  28 +++-
+ drivers/irqchip/qcom-pdc.c                    |  98 +++++++++++--
+ drivers/of/irq.c                              | 129 +++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.c            | 137 +++++++++++++++---
+ include/linux/gpio/driver.h                   |   6 +
+ include/linux/irqdomain.h                     |   1 +
+ include/linux/of_irq.h                        |   1 +
+ include/linux/soc/qcom/irq.h                  |  25 ++++
+ 12 files changed, 610 insertions(+), 37 deletions(-)
+ create mode 100644 include/linux/soc/qcom/irq.h
+
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
