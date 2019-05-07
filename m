@@ -2,116 +2,119 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444E0C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85033C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164B5205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E6820989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:32:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="RqOFfDSY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bv9hlo2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725843AbfEGLbf (ORCPT
+        id S1726586AbfEGLcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:31:35 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:50423 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEGLbe (ORCPT
+        Tue, 7 May 2019 07:32:16 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38388 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEGLcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:31:34 -0400
-Received: by mail-wm1-f54.google.com with SMTP id p21so19987726wmc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=QjMXMsSSirdUYoTUuJO+JEDtUnxzPrM5xgigZEkLnYQ=;
-        b=RqOFfDSYdz/H0bcGfdSjaCVDatHo8QOFl9VXt50M2D3B0Pl2xxxi0898C7GyYi3zx/
-         wgaHMiv4lbloz8y3chMJwbSDG05DUC/zjhHpvhcyQZDee25CFO4zB5a9nkeQgBhO/UA+
-         uz4qOSyAlE8agjyZOCgxdu7k5YhSui3vUYd58viRzWH88/Yfw++XsNAC4vTs/fIbhuY3
-         4UgDvzWCoOFnH8shxy0lBiaS8kLsM+mqqpqSy0KPVcMz0P8R/ltcUzh1iGkEGoBDM3ia
-         JYSUT2PH9o098h+nPMGyncOBu6+MU350F3EscT3UIFI0IE/B34or+gy5PQm+Y6966eef
-         /4yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=QjMXMsSSirdUYoTUuJO+JEDtUnxzPrM5xgigZEkLnYQ=;
-        b=mRPQgod4knbdBo5RxVJC6D8mAkXSmYzPTwGkOfYbTp+fMjCD0wDgYGGek++7nS7UTG
-         b1VXZBgdCiKUqm0+OFwxmHY7Ih3pwK0Orx3un/YHrE7lcuNlWfCvHNYTu3mK0QU7hyrC
-         tpOcn7WOFB93dp+vU7d0EnKXg5yfc2JY48xgTBISsAQ0Yo/bLJjoIwpTkqZQs/aVDqE6
-         6usorgOqJUBoZQUbGIt40pOMZR3JzoYmYqJ1JkcuYIzEnyLNels38pKi7NFNt7HTn2+p
-         MMSYp7USn8XC4bzgVxzKUZCY8gSMYlNjkYgRUM7W1paTmDha9y5GpheqH3nsxoZj38WV
-         p2kg==
-X-Gm-Message-State: APjAAAW7jTI3xoeeR+L2WJjZnu/5BSkHXDMJcynBumu0S/lz8VOb7QT7
-        /pcQuBFY407RgGKJ3WVC5FLOew==
-X-Google-Smtp-Source: APXvYqzpk9v6VfYXiGQLaQXAPP9u1YxXM4HVm7/pNclsGOb/OESBsJfjNuMH+hELgSYpImHipKwfHA==
-X-Received: by 2002:a1c:cf83:: with SMTP id f125mr19275746wmg.96.1557228692779;
-        Tue, 07 May 2019 04:31:32 -0700 (PDT)
-Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id m25sm12848005wmi.45.2019.05.07.04.31.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 04:31:31 -0700 (PDT)
-References: <673b885183fb64f1cbb3ed2387524077@natalenko.name> <87mujzutsw.fsf@netronome.com> <4414f1798ea3c0f70128b7e4caa14edc@natalenko.name>
-User-agent: mu4e 0.9.18; emacs 25.2.2
-From:   Jiong Wang <jiong.wang@netronome.com>
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc:     Jiong Wang <jiong.wang@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, valdis@vt.edu
-Subject: Re: [oss-drivers] netronome/nfp/bpf/jit.c cannot be build with -O3
-In-reply-to: <4414f1798ea3c0f70128b7e4caa14edc@natalenko.name>
-Date:   Tue, 07 May 2019 12:31:29 +0100
-Message-ID: <87ef5abiwe.fsf@netronome.com>
+        Tue, 7 May 2019 07:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0G0Op7qzdUllIx217BDIX7hQDFmNR1hjBEmN3uH/wmM=; b=bv9hlo2+IqIluXyx1IyzYf4+2
+        XhumvYALMGJMgM81v5ZLGPqY5LRZT67zik8hBt/625x5jxWyUACHPwDUiRtMLRjyLFvSehE0YE9hA
+        WGGaAEm4Vl0gGDXvotmBnc3tECB82fSuKQ8Sex3m4R/NZ4WI2ti48nUQA8iUYzqb3GENub4IxQS9M
+        xUX1h7wMqORpAYUeAvaWgn5ss/K6KKU3WqkmIEqdjHnLl1vrosMXNaFZEhI6TOJsXytb/c3vdR6P3
+        dD4e/QeMf+TEl7i2H86GUAZAY5cVEe9letJOB7J9cES996O5TlJTAZ3VCmQ+UyU3Pmz+Q62/LWc8F
+        7dDh57edQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hNyJB-0006Sy-Su; Tue, 07 May 2019 11:30:54 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D03FC2063D744; Tue,  7 May 2019 13:30:50 +0200 (CEST)
+Date:   Tue, 7 May 2019 13:30:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190507113050.GR2606@hirez.programming.kicks-ass.net>
+References: <20190502185225.0cdfc8bc@gandalf.local.home>
+ <20190502193129.664c5b2e@gandalf.local.home>
+ <20190502195052.0af473cf@gandalf.local.home>
+ <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+ <20190503092247.20cc1ff0@gandalf.local.home>
+ <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+ <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+ <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+ <20190507085753.GO2606@hirez.programming.kicks-ass.net>
+ <b34aa38bdfe84263bc20b60761bf6005@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b34aa38bdfe84263bc20b60761bf6005@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 07, 2019 at 09:18:51AM +0000, David Laight wrote:
+> From: Peter Zijlstra
+> > Sent: 07 May 2019 09:58
+> ...
+> > +	/*
+> > +	 * When we're here from kernel mode; the (exception) stack looks like:
+> > +	 *
+> > +	 * 4*4(%esp) - <previous context>
+> > +	 * 3*4(%esp) - flags
+> > +	 * 2*4(%esp) - cs
+> > +	 * 1*4(%esp) - ip
+> > +	 * 0*4(%esp) - orig_eax
+> 
+> Am I right in thinking that this is the only 'INT3' stack frame that
+> needs to be 'fiddled' with?
+> And that the 'emulate a call instruction' has verified that is the case??
+> So the %cs is always the kernel %cs.
 
-Oleksandr Natalenko writes:
+Only the INT3 thing needs 'the gap', but the far bigger change here is
+that kernel frames now have a complete pt_regs set and all sorts of
+horrible crap can go away.
 
-> Hi.
->
-> On 07.05.2019 00:01, Jiong Wang wrote:
->> I guess it's because constant prop. Could you try the following change 
->> to
->> __emit_shift?
->> 
->> drivers/net/ethernet/netronome/nfp/bpf/jit.c
->> __emit_shift:331
->> -       if (sc == SHF_SC_L_SHF)
->> +       if (sc == SHF_SC_L_SHF && shift)
->>                 shift = 32 - shift;
->> 
->> emit_shf_indir is passing "0" as shift to __emit_shift which will
->> eventually be turned into 32 and it was OK because we truncate to 
->> 5-bit,
->> but before truncation, it will overflow the shift mask.
->
-> Yup, it silences the error for me.
-
-Thanks for the testing.
-
-I have also reproduced this issue after switching to gcc 8.3, and confirmed
-the error is triggered from "value too large for the field" check inside
-__BF_FIELD_CHECK due to immediate "32" is out of range for mask 0x1f.
-
-Will send out a fix.
-
-Regards,
-Jiong
+For 32bit 'the gap' happens naturally when building a 5 entry frame. Yes
+it is possible to build a 5 entry frame on top of the old 3 entry one,
+but why bother...
