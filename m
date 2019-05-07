@@ -2,196 +2,111 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7091DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11591C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C8120C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cMAOQ3XS"
+	by mail.kernel.org (Postfix) with ESMTP id D775320B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfEGItY (ORCPT
+        id S1726775AbfEGIvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:49:24 -0400
-Received: from mail-eopbgr690060.outbound.protection.outlook.com ([40.107.69.60]:18915
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725780AbfEGItY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:49:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9jnm+5DPm82QOz4O3NbmD5dDeuBvD7b6i0dcmQbscHM=;
- b=cMAOQ3XSLutsXK02w2zxS21YnFVWBnsQxlHITSiyfYB+/cb7/SfiIWvqC9H3ZIIHm16NiCrWJZ59xbm42jQnQsi5gIxiulrgYt9i7smfpZJKAa87ZBcQL9S1U/X5RBl4KXt7b/RVQfFnVVOQvPmeq7ehPCR19eIpj6W4+KXiTg0=
-Received: from BL0PR02MB5681.namprd02.prod.outlook.com (20.177.241.92) by
- BL0PR02MB4898.namprd02.prod.outlook.com (52.132.14.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Tue, 7 May 2019 08:48:41 +0000
-Received: from BL0PR02MB5681.namprd02.prod.outlook.com
- ([fe80::6cde:f726:b36e:752d]) by BL0PR02MB5681.namprd02.prod.outlook.com
- ([fe80::6cde:f726:b36e:752d%5]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 08:48:41 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Tue, 7 May 2019 04:51:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbfEGIvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:51:42 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7E04966993;
+        Tue,  7 May 2019 08:51:41 +0000 (UTC)
+Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB47C171C5;
+        Tue,  7 May 2019 08:51:28 +0000 (UTC)
+Date:   Tue, 7 May 2019 10:51:26 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Thread-Topic: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Thread-Index: AQHU/UVOyBvhwX5Hf0mi9G9IHzQgRKZYHAiAgAGBAECAAQXIAIADZtRggAAL5YCAATcywA==
-Date:   Tue, 7 May 2019 08:48:41 +0000
-Message-ID: <BL0PR02MB568169E26DCD12498EBDFC3ACB310@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
- <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190504075502.GA11133@kroah.com>
- <BL0PR02MB56814D6EACC16938A0575D16CB300@BL0PR02MB5681.namprd02.prod.outlook.com>
- <20190506123425.GA26360@kroah.com>
-In-Reply-To: <20190506123425.GA26360@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7b1bdd10-0ce8-4b6a-226a-08d6d2c8ce24
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BL0PR02MB4898;
-x-ms-traffictypediagnostic: BL0PR02MB4898:
-x-microsoft-antispam-prvs: <BL0PR02MB4898157F4314057627F7FABFCB310@BL0PR02MB4898.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(346002)(366004)(396003)(136003)(376002)(13464003)(189003)(199004)(305945005)(55016002)(26005)(66946007)(66476007)(52536014)(73956011)(2906002)(316002)(7736002)(54906003)(64756008)(7696005)(4326008)(66556008)(33656002)(6116002)(68736007)(186003)(9686003)(14444005)(256004)(99286004)(6436002)(3846002)(5660300002)(81166006)(66446008)(66066001)(81156014)(8936002)(8676002)(6916009)(107886003)(76116006)(6246003)(14454004)(446003)(25786009)(74316002)(486006)(53936002)(76176011)(86362001)(11346002)(71200400001)(71190400001)(102836004)(476003)(229853002)(478600001)(53546011)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4898;H:BL0PR02MB5681.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rCs73paD0sLPXdMctWKr9oYG76bXIrbpsm3a4CJUKfdJIz8V6twAJg8A3kQRIR3AXTN/et/RCG/ctlMiVILWLYNWcdJR+PGjbLK37U+qoveglkGPN7qQaBzGIpj6VY7WKpdCTnpoV/S/w+OEjetgKxJbGQUusF+9ldzqwV0RmYolgypG46iqgWx3Hxr7QGqqrMBUROsuuOdLIldtwAourAivp5sNUG2LLxofeXbUwgZQOJRdCQR5E0D4S6c2yeWuROWlAqXg+O8wAdk5E16AeoqtzudWm6hfldMZxNfW3Qgf0AAcDjOrECwST2+eXZ2Vhz9ZYsnvIiiTrWjuRs/qJ0tLwHpKsCuk/odRqeF7bbATYt1qIWHeoQN2thxI19GYXZN8evEmjRdO9Y8+3E0tjk6tclDd4JhfcCt4p+5oWvs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
+ for mdev device
+Message-ID: <20190507105126.4be3a6da.cohuck@redhat.com>
+In-Reply-To: <20190507053913.GA14284@joy-OptiPlex-7040>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+        <20190419083505.19654-1-yan.y.zhao@intel.com>
+        <20190423115932.42619422.cohuck@redhat.com>
+        <20190424031036.GB26247@joy-OptiPlex-7040>
+        <20190424095624.0ce97328.cohuck@redhat.com>
+        <20190424081558.GE26247@joy-OptiPlex-7040>
+        <20190430172908.2ae77fa9.cohuck@redhat.com>
+        <20190507053913.GA14284@joy-OptiPlex-7040>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b1bdd10-0ce8-4b6a-226a-08d6d2c8ce24
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 08:48:41.1791
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4898
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 07 May 2019 08:51:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 7 May 2019 01:39:13 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
+> On Tue, Apr 30, 2019 at 11:29:08PM +0800, Cornelia Huck wrote:
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Monday 6 May 2019 13:34
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
->=20
-> On Mon, May 06, 2019 at 12:23:56PM +0000, Dragan Cvetic wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > Sent: Saturday 4 May 2019 08:55
-> > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
-l@lists.infradead.org; robh+dt@kernel.org;
-> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
-ernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > >
-> > > On Fri, May 03, 2019 at 04:41:21PM +0000, Dragan Cvetic wrote:
-> > > > Hi Greg,
-> > > >
-> > > > Please find my inline comments below,
-> > > >
-> > > > Regards
-> > > > Dragan
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > Sent: Thursday 2 May 2019 18:20
-> > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-k=
-ernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vg=
-er.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-> > > > >
-> > > > > On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
-> > > > > > +#define DRIVER_NAME "xilinx_sdfec"
-> > > > > > +#define DRIVER_VERSION "0.3"
-> > > > >
-> > > > > Version means nothing with the driver in the kernel tree, please =
-remove
-> > > > > it.
-> > > >
-> > > > Will be removed. Thank you.
-> > > >
-> > > > >
-> > > > > > +#define DRIVER_MAX_DEV BIT(MINORBITS)
-> > > > >
-> > > > > Why this number?  Why limit yourself to any number?
-> > > > >
-> > > >
-> > > > There can be max 8 devices for this driver. I'll change to 8.
-> > > >
-> > > > > > +
-> > > > > > +static struct class *xsdfec_class;
-> > > > >
-> > > > > Do you really need your own class?
-> > > >
-> > > > When writing a character device driver, my goal is to create and re=
-gister an instance
-> > > > of that structure associated with a struct file_operations, exposin=
-g a set of operations
-> > > > to the user-space. One of the steps to make this goal is Create a c=
-lass for a devices,
-> > > > visible in /sys/class/.
-> > >
-> > > Why do you need a class?  Again, why not just use the misc_device api=
-,
-> > > that seems much more relevant here and will make the code a lot simpl=
-er.
-> > >
-> >
-> > The driver can have 8 devices in SoC plus more in Programming Logic.
-> > It looked logical to group them under the same MAJOR, although they
-> > are independent of each other.  Is this argument strong enough to use
-> > class?
->=20
-> Not really :)
->=20
-> 8 devices is pretty small.  What tool will be trying to talk to all of
-> these devices and how was it going to find out what devices were in the
-> system?
->
+> > If I followed the discussion correctly, I think you plan to drop this
+> > format, don't you? I'd be happy if a vendor driver can use a simple
+> > number without any prefixes if it so chooses.
+> > 
+> > I also like the idea of renaming this "migration_version" so that it is
+> > clear we're dealing with versioning of the migration capability (and
+> > not a version of the device or so).  
+> hi Cornelia,
+> sorry I just saw this mail after sending v2 of this patch set...
+> yes, I dropped the common part and vendor driver now can define whatever it
+> wishes to identify a device version.
 
-These devices are Forward Error Correction encoder/decoder
-and will be part of the RF communication chain. They will be included
-in the system through DT. Also, described in DT.
-  =20
+Ok, I'll look at v2.
 
-> thanks,
->=20
-> greg k-h
+> However, I don't agree to rename it to "migration_version", as it still may
+> bring some kind of confusing with the migration version a vendor driver is
+> using, e.g. vendor driver changes migration code and increases that migration
+> version.
+> In fact, what info we want to get from this attribute is whether this mdev
+> device is compatible with another mdev device, which is tied to device, and not
+> necessarily bound to migration.
+> 
+> do you think so?
+
+I'm not 100% convinced; but we can continue the discussion on v2.
