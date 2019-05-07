@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985C7C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F361C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAA7216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9F020B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207436;
-	bh=tARrl+dlCeMWwd6+nJw4vqRjGE7VzfnCPt7TdhVL47o=;
+	s=default; t=1557207440;
+	bh=6eYzvdpLkadmW6qPSEIkeXBgut3LdJXI5R40mz6omm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3ssxUmskHWAJyL3LQYR/c9Zstclo4fLvxIx1ANSHgutgSmjWpxGlZou0bh3GMOtw
-	 Jn/BDaTc2wmDbXY1D7OIaWBkDodHvg+iouhbC4q0BEeVp3DqulCciYSDDBC8mf6vsi
-	 1zrnEkoS7PdKEeUJFZiIM5j5mQKwgNvb0ZdoSSqI=
+	b=06dqTM9xpp89sGnXXB571U5qLhdzOuUiLCZ0KQPVJSPRsHONpPFufEYYDr/XLp2z2
+	 b4PMKqJeTtU75fzn6YCJCKTLDUkOE88JDLtDsv03gkZEUNtSPByI5jkVdwNdYmHqy/
+	 NBh5yQ02frliBWLA8kCRjM48dSTUS9L8zXqxNgKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfEGFhP (ORCPT
+        id S1728303AbfEGFhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727651AbfEGFhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:09 -0400
+        id S1727843AbfEGFhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 985FE20B7C;
-        Tue,  7 May 2019 05:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E58F20B7C;
+        Tue,  7 May 2019 05:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207428;
-        bh=tARrl+dlCeMWwd6+nJw4vqRjGE7VzfnCPt7TdhVL47o=;
+        s=default; t=1557207434;
+        bh=6eYzvdpLkadmW6qPSEIkeXBgut3LdJXI5R40mz6omm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4gbq5IPnNr0m429qYkJy+i2DNLNq542pzOJQMqHGCUoWv/XBV8YFkqpM+vCLSzHt
-         4qegXFtxnBhZT7MllaFJ5d9w6I8x7Jtw1WjJhoZcMJ7SjbZHaoTYXgOI6KY+VKdqXu
-         LCWkR9ItanqlcSnUBmm5P0Z97XI7wa0vnTbEAtyY=
+        b=PExlh3TrlTqxCOGgxK3rjg7w4u8pvC6bRXwaGj4e5g6zREG2es1Gy9uIa0IqmSFht
+         UlFr/TSGFO5r4VQ9Om4bgcmO1KrxVWUTGkrLOrp9+zhek7nEOa+/Mj+CChYycgx2B6
+         mOK3BcV0elOxHGjTSc4Rw5eN8RNtUTxCqYsFHbJ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 38/81] ocelot: Don't sleep in atomic context (irqs_disabled())
-Date:   Tue,  7 May 2019 01:35:09 -0400
-Message-Id: <20190507053554.30848-38-sashal@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 41/81] mm: fix inactive list balancing between NUMA nodes and cgroups
+Date:   Tue,  7 May 2019 01:35:12 -0400
+Message-Id: <20190507053554.30848-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -59,45 +62,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
+[ Upstream commit 3b991208b897f52507168374033771a984b947b1 ]
 
-Preemption disabled at:
- [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
- Call trace:
- [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
- [<ffff00000808a9a4>] show_stack+0x14/0x20
- [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
- [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
- [<ffff0000080fe890>] __might_sleep+0x50/0x88
- [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
- [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188 [mscc_ocelot_common]
- [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
- [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
+During !CONFIG_CGROUP reclaim, we expand the inactive list size if it's
+thrashing on the node that is about to be reclaimed.  But when cgroups
+are enabled, we suddenly ignore the node scope and use the cgroup scope
+only.  The result is that pressure bleeds between NUMA nodes depending
+on whether cgroups are merely compiled into Linux.  This behavioral
+difference is unexpected and undesirable.
 
-Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+When the refault adaptivity of the inactive list was first introduced,
+there were no statistics at the lruvec level - the intersection of node
+and memcg - so it was better than nothing.
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+But now that we have that infrastructure, use lruvec_page_state() to
+make the list balancing decision always NUMA aware.
+
+[hannes@cmpxchg.org: fix bisection hole]
+  Link: http://lkml.kernel.org/r/20190417155241.GB23013@cmpxchg.org
+Link: http://lkml.kernel.org/r/20190412144438.2645-1-hannes@cmpxchg.org
+Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/vmscan.c | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 0bdd3c400c92..10291198decd 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -605,7 +605,7 @@ static int ocelot_mact_mc_add(struct ocelot_port *port,
- 			      struct netdev_hw_addr *hw_addr)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 3830066018c1..ee545d1e9894 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2190,7 +2190,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
+  *   10TB     320        32GB
+  */
+ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+-				 struct mem_cgroup *memcg,
+ 				 struct scan_control *sc, bool actual_reclaim)
  {
- 	struct ocelot *ocelot = port->ocelot;
--	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_KERNEL);
-+	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_ATOMIC);
+ 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
+@@ -2211,16 +2210,12 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+ 	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
+ 	active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
  
- 	if (!ha)
- 		return -ENOMEM;
+-	if (memcg)
+-		refaults = memcg_page_state(memcg, WORKINGSET_ACTIVATE);
+-	else
+-		refaults = node_page_state(pgdat, WORKINGSET_ACTIVATE);
+-
+ 	/*
+ 	 * When refaults are being observed, it means a new workingset
+ 	 * is being established. Disable active list protection to get
+ 	 * rid of the stale workingset quickly.
+ 	 */
++	refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
+ 	if (file && actual_reclaim && lruvec->refaults != refaults) {
+ 		inactive_ratio = 0;
+ 	} else {
+@@ -2241,12 +2236,10 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
+ }
+ 
+ static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
+-				 struct lruvec *lruvec, struct mem_cgroup *memcg,
+-				 struct scan_control *sc)
++				 struct lruvec *lruvec, struct scan_control *sc)
+ {
+ 	if (is_active_lru(lru)) {
+-		if (inactive_list_is_low(lruvec, is_file_lru(lru),
+-					 memcg, sc, true))
++		if (inactive_list_is_low(lruvec, is_file_lru(lru), sc, true))
+ 			shrink_active_list(nr_to_scan, lruvec, sc, lru);
+ 		return 0;
+ 	}
+@@ -2346,7 +2339,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+ 			 * anonymous pages on the LRU in eligible zones.
+ 			 * Otherwise, the small LRU gets thrashed.
+ 			 */
+-			if (!inactive_list_is_low(lruvec, false, memcg, sc, false) &&
++			if (!inactive_list_is_low(lruvec, false, sc, false) &&
+ 			    lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, sc->reclaim_idx)
+ 					>> sc->priority) {
+ 				scan_balance = SCAN_ANON;
+@@ -2364,7 +2357,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+ 	 * lruvec even if it has plenty of old anonymous pages unless the
+ 	 * system is under heavy pressure.
+ 	 */
+-	if (!inactive_list_is_low(lruvec, true, memcg, sc, false) &&
++	if (!inactive_list_is_low(lruvec, true, sc, false) &&
+ 	    lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, sc->reclaim_idx) >> sc->priority) {
+ 		scan_balance = SCAN_FILE;
+ 		goto out;
+@@ -2517,7 +2510,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
+ 				nr[lru] -= nr_to_scan;
+ 
+ 				nr_reclaimed += shrink_list(lru, nr_to_scan,
+-							    lruvec, memcg, sc);
++							    lruvec, sc);
+ 			}
+ 		}
+ 
+@@ -2584,7 +2577,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
+ 	 * Even if we did not try to evict anon pages at all, we want to
+ 	 * rebalance the anon lru active/inactive ratio.
+ 	 */
+-	if (inactive_list_is_low(lruvec, false, memcg, sc, true))
++	if (inactive_list_is_low(lruvec, false, sc, true))
+ 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+ 				   sc, LRU_ACTIVE_ANON);
+ }
+@@ -2982,12 +2975,8 @@ static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
+ 		unsigned long refaults;
+ 		struct lruvec *lruvec;
+ 
+-		if (memcg)
+-			refaults = memcg_page_state(memcg, WORKINGSET_ACTIVATE);
+-		else
+-			refaults = node_page_state(pgdat, WORKINGSET_ACTIVATE);
+-
+ 		lruvec = mem_cgroup_lruvec(pgdat, memcg);
++		refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
+ 		lruvec->refaults = refaults;
+ 	} while ((memcg = mem_cgroup_iter(root_memcg, memcg, NULL)));
+ }
+@@ -3344,7 +3333,7 @@ static void age_active_anon(struct pglist_data *pgdat,
+ 	do {
+ 		struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
+ 
+-		if (inactive_list_is_low(lruvec, false, memcg, sc, true))
++		if (inactive_list_is_low(lruvec, false, sc, true))
+ 			shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+ 					   sc, LRU_ACTIVE_ANON);
+ 
 -- 
 2.20.1
 
