@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7034AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B62C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED62205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DFD20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207798;
-	bh=8NQddyDvhDHI0W0/+44DvOna4t2fOYlxJuDCeJ9gO48=;
+	s=default; t=1557207801;
+	bh=9WXawZNnulOTgBEcYcDCkjcBWrkrOS5qKpa52igguuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaDEOjPIUH3RX26eGXJI2EQxV7lx5d8s9nqN2A6h0vNXME7V3qOCTvC/vqdXPGjbE
-	 GWW9+JI3/v3XL3xa48Hm8sV44vBTUJQ2MoWugEwmEOTyYcZIKPl8Yzc3e5QucCv3Tk
-	 1ENrmgtnU9dJnRNTSHQ0eCenIohuHkikTYFgETyI=
+	b=EsivlOOWKokHABI6xjC4eTgk3hoe6iOPbD63N6XZsHxltwFLewV7UJ3H2ecqaK9CX
+	 zBViXnYRhnWCNz/oH1hukFub8xWUzCHJDSOlj59BbRD1cAVfKL1P2/HJCulTdQ2gNi
+	 +qTbakzUPbEmsmwUjXKPE+kVl3OzUdd69flNc/R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbfEGFnR (ORCPT
+        id S1729741AbfEGFnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbfEGFnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:43:10 -0400
+        id S1729426AbfEGFnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:43:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9E232087F;
-        Tue,  7 May 2019 05:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAFD7205ED;
+        Tue,  7 May 2019 05:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207789;
-        bh=8NQddyDvhDHI0W0/+44DvOna4t2fOYlxJuDCeJ9gO48=;
+        s=default; t=1557207786;
+        bh=9WXawZNnulOTgBEcYcDCkjcBWrkrOS5qKpa52igguuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjSKLp/y9rtbYoRJDjKOoU4bNP+s7EuJRNCFX81bWxRqY87fTXfHLhg6fpGHTS7QU
-         oMboPJe7xSls9RUdwGvNZsIjgWyHEG9j6vJ4ETpgdOB3GGyJEjbMfnYJAS4xyWkwc4
-         5MI4oU5PQNus4vEYlPCcONGyJ9eIHYnbiqEboAgg=
+        b=uMfDNDQbUDyl5OjznW4pKlWklu4rLVWnvoDtG6Y/nadjt1YFn8RWk4HZqlxw286PR
+         m40BY7L81Ei7Crpmp0Uzx0qvWJ4iH6hdnqSjpBdH3Fb0/MufY2N5VDzFUbJnucfett
+         +PRRmFZwLpfKn6uWVdRRzbesAasQLfK6WZrJHoak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 3.18 10/10] gpu: ipu-v3: dp: fix CSC handling
-Date:   Tue,  7 May 2019 01:42:46 -0400
-Message-Id: <20190507054247.537-10-sashal@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 07/10] init: initialize jump labels before command line option parsing
+Date:   Tue,  7 May 2019 01:42:43 -0400
+Message-Id: <20190507054247.537-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054247.537-1-sashal@kernel.org>
 References: <20190507054247.537-1-sashal@kernel.org>
@@ -61,69 +66,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit d4fad0a426c6e26f48c9a7cdd21a7fe9c198d645 ]
+[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-Initialize the flow input colorspaces to unknown and reset to that value
-when the channel gets disabled. This avoids the state getting mixed up
-with a previous mode.
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early.  While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-Also keep the CSC settings for the background flow intact when disabling
-the foreground flow.
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
 
-Root-caused-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Move the fallback call to jump_label_init() to occur before
+parse_args().
+
+The redundant calls to jump_label_init() in other archs are left intact
+in case they have static key toggling use cases that are even earlier
+than option parsing.
+
+Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Guenter Roeck <groeck@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Russell King <rmk@armlinux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-dp.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ init/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-dp.c b/drivers/gpu/ipu-v3/ipu-dp.c
-index 98686edbcdbb..33de3a1bac49 100644
---- a/drivers/gpu/ipu-v3/ipu-dp.c
-+++ b/drivers/gpu/ipu-v3/ipu-dp.c
-@@ -195,7 +195,8 @@ int ipu_dp_setup_channel(struct ipu_dp *dp,
- 		ipu_dp_csc_init(flow, flow->foreground.in_cs, flow->out_cs,
- 				DP_COM_CONF_CSC_DEF_BOTH);
- 	} else {
--		if (flow->foreground.in_cs == flow->out_cs)
-+		if (flow->foreground.in_cs == IPUV3_COLORSPACE_UNKNOWN ||
-+		    flow->foreground.in_cs == flow->out_cs)
- 			/*
- 			 * foreground identical to output, apply color
- 			 * conversion on background
-@@ -261,6 +262,8 @@ void ipu_dp_disable_channel(struct ipu_dp *dp)
- 	struct ipu_dp_priv *priv = flow->priv;
- 	u32 reg, csc;
+diff --git a/init/main.c b/init/main.c
+index 32940a68ea48..6235c0bed3da 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -539,6 +539,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
  
-+	dp->in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+
- 	if (!dp->foreground)
- 		return;
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -548,8 +550,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   set_init_arg);
  
-@@ -268,8 +271,9 @@ void ipu_dp_disable_channel(struct ipu_dp *dp)
- 
- 	reg = readl(flow->base + DP_COM_CONF);
- 	csc = reg & DP_COM_CONF_CSC_DEF_MASK;
--	if (csc == DP_COM_CONF_CSC_DEF_FG)
--		reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	if (csc == DP_COM_CONF_CSC_DEF_BOTH || csc == DP_COM_CONF_CSC_DEF_BG)
-+		reg |= DP_COM_CONF_CSC_DEF_BG;
- 
- 	reg &= ~DP_COM_CONF_FG_EN;
- 	writel(reg, flow->base + DP_COM_CONF);
-@@ -350,6 +354,8 @@ int ipu_dp_init(struct ipu_soc *ipu, struct device *dev, unsigned long base)
- 	mutex_init(&priv->mutex);
- 
- 	for (i = 0; i < IPUV3_NUM_FLOWS; i++) {
-+		priv->flow[i].background.in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+		priv->flow[i].foreground.in_cs = IPUV3_COLORSPACE_UNKNOWN;
- 		priv->flow[i].foreground.foreground = true;
- 		priv->flow[i].base = priv->base + ipu_dp_flow_base[i];
- 		priv->flow[i].priv = priv;
+-	jump_label_init();
+-
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 -- 
 2.20.1
 
