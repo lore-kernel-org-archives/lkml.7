@@ -2,69 +2,130 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C6CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0598BC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAF3208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557251707;
-	bh=Y1b8xY0c/spqs+BJnAyAoYQDlLG6WCWT2jxAwob5C8k=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=iari6ek9J6s2rfOxUR6qQ5uHy2G4eGXGh8fEyA3bBcPhWycEtV7sf1uqcEyI4K4tI
-	 ujjlNMU+D5qMPB776fIALokonUTLIKXDXEQG1S2DCxAN24QnxNAKAGt1D54MkG9pbt
-	 aFkf5qIk5rBUvylV7deS+C5HZFMVJPgBgjb5oGaA=
+	by mail.kernel.org (Postfix) with ESMTP id DC37820825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfEGRzG (ORCPT
+        id S1727236AbfEGR5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46372 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 13:57:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49604 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbfEGRzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:55:04 -0400
-Subject: Re: [GIT PULL] x86 FPU changes for 5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557251704;
-        bh=Y1b8xY0c/spqs+BJnAyAoYQDlLG6WCWT2jxAwob5C8k=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=NO6i/lJR5Z+qYObb1lzqrRa20psJ1RWpUTPcMWbMmsOL4upbFvUze3wYoIH0hHr/s
-         i4S5YnDsu7g6liCC/sUpRjNANKiCIgg2Q5a3svPFjPkE+q/MJ8e5bHxAgCJE41QPcT
-         Y+eeILLu+cAKOvNnsdNajLOcL3oo+zDltYzLxNSs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190507132632.GB26655@zn.tnic>
-References: <20190507132632.GB26655@zn.tnic>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190507132632.GB26655@zn.tnic>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
-X-PR-Tracked-Commit-Id: d9c9ce34ed5c892323cbf5b4f9a4c498e036316a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8ff468c29e9a9c3afe9152c10c7b141343270bf3
-Message-Id: <155725170435.24816.11533088367798432294.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 May 2019 17:55:04 +0000
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
+        id S1726797AbfEGR5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:57:10 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3D7013001821;
+        Tue,  7 May 2019 17:57:09 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7588B60BF4;
+        Tue,  7 May 2019 17:56:58 +0000 (UTC)
+Date:   Tue, 7 May 2019 12:56:55 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/3] x86_64: Add gap to int3 to allow for call
+ emulation
+Message-ID: <20190507175655.u3kcvedpfao4rchj@treble>
+References: <20190507174227.673261270@goodmis.org>
+ <20190507174400.064350937@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190507174400.064350937@goodmis.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 07 May 2019 17:57:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 7 May 2019 15:26:32 +0200:
+On Tue, May 07, 2019 at 01:42:28PM -0400, Steven Rostedt wrote:
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> 
+> To allow an int3 handler to emulate a call instruction, it must be able to
+> push a return address onto the stack. Add a gap to the stack to allow the
+> int3 handler to push the return address and change the return from int3 to
+> jump straight to the emulated called function target.
+> 
+> Link: http://lkml.kernel.org/r/20181130183917.hxmti5josgq4clti@treble
+> Link: http://lkml.kernel.org/r/20190502162133.GX2623@hirez.programming.kicks-ass.net
+> 
+> [
+>   Note, this is needed to allow Live Kernel Patching to not miss calling a
+>   patched function when tracing is enabled. -- Steven Rostedt
+> ]
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  arch/x86/entry/entry_64.S | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index 1f0efdb7b629..00df6b135ab1 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -879,7 +879,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
+>   * @paranoid == 2 is special: the stub will never switch stacks.  This is for
+>   * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
+>   */
+> -.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1
+> +.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 create_gap=0
+>  ENTRY(\sym)
+>  	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+>  
+> @@ -899,6 +899,20 @@ ENTRY(\sym)
+>  	jnz	.Lfrom_usermode_switch_stack_\@
+>  	.endif
+>  
+> +	.if \create_gap == 1
+> +	/*
+> +	 * If coming from kernel space, create a 6-word gap to allow the static
+> +	 * call #BP handler to emulate a call instruction.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
+Might as well refer to it as the int3 handler, since that's what the
+rest of the code calls it.  Also, no static calls yet :-)  So:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8ff468c29e9a9c3afe9152c10c7b141343270bf3
-
-Thank you!
+s/static call #BP handler/int3 handler/
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Josh
