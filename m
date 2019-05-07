@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66582C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF32C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38746214AE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B8B214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207234;
-	bh=lI2xi2mj34+sJkfJwEYZcKAO+lQOs07Up/5HbiAgGoQ=;
+	s=default; t=1557207237;
+	bh=1by+GoL9pOxiZZ6k7a2kqSUKTIfStabNYt7FXouFx5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmwNwsLIaoz8IENgao5PiVotNf1StQYFaCQbBOjpgMozkXmkbLtsKhnIUfMuHpzlQ
-	 H9QMox7HQSjSE/b6tjygmODb9i3QQSImo4GONuI2rO8dDqQpj2kb4MH3WwNNgRCU4j
-	 R/aZL0WxYOkjOBAOyewnxPwypHrUyUhgWzH8Oyl4=
+	b=UkPS5qMrwb6LXZ7k5VLvxgQZzztw/B82XLvFnHwkMMaM+ij3JyrGE49WqWvTmpnnP
+	 zg2ajBXCFq8oE8WChVeAJ9LPPck5WRMKNICuqOtwVKwIBfE/QIXCqvUsuCnDR8eifq
+	 98YLGMSUBojC7V842LVM8vTcuP57iNhrZVAGAgD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfEGFdx (ORCPT
+        id S1727381AbfEGFd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbfEGFdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:50 -0400
+        id S1727357AbfEGFdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13194206A3;
-        Tue,  7 May 2019 05:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF4C4206A3;
+        Tue,  7 May 2019 05:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207229;
-        bh=lI2xi2mj34+sJkfJwEYZcKAO+lQOs07Up/5HbiAgGoQ=;
+        s=default; t=1557207233;
+        bh=1by+GoL9pOxiZZ6k7a2kqSUKTIfStabNYt7FXouFx5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGoJmsL3g/ar1DUKFMzlKstcoVtOcYKtcXXvbuIgEYwXOQHcyVokGTl5++7cPddbP
-         EgSFTlWJkdkFf5lN4XsPWa2vjs39uT2dCZ9pDU9DuBbG1+moI35VQxMjtvv/pBsNcm
-         w9pvsYXsekE3wGzoGlgUW27PGNhKYWEyPjHQ0wU8=
+        b=Xmc+BhhKed8yCeGlp+QFKM6KlIxenMuONF5pEW37Sdf0/QqdBCt7kzuAf+yu0Pazv
+         +RHQ5Io+T9ZMQGSX5M5q0H599LGaDwloQe48oj8GfrLw4AauqKi2ArTyshPC0ZeUG9
+         /omAt18tCARTalZzsPseNnJA77pW2eybarWuVC+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Francis <David.Francis@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Bhawanpreet Lakha <BhawanpreetLakha@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 38/99] drm/amd/display: If one stream full updates, full update all planes
-Date:   Tue,  7 May 2019 01:31:32 -0400
-Message-Id: <20190507053235.29900-38-sashal@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 40/99] x86/build/lto: Fix truncated .bss with -fdata-sections
+Date:   Tue,  7 May 2019 01:31:34 -0400
+Message-Id: <20190507053235.29900-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -64,120 +65,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Francis <David.Francis@amd.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit c238bfe0be9ef7420f7669a69e27c8c8f4d8a568 ]
+[ Upstream commit 6a03469a1edc94da52b65478f1e00837add869a3 ]
 
-[Why]
-On some compositors, with two monitors attached, VT terminal
-switch can cause a graphical issue by the following means:
+With CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y, we compile the kernel with
+-fdata-sections, which also splits the .bss section.
 
-There are two streams, one for each monitor. Each stream has one
-plane
+The new section, with a new .bss.* name, which pattern gets missed by the
+main x86 linker script which only expects the '.bss' name. This results
+in the discarding of the second part and a too small, truncated .bss
+section and an unhappy, non-working kernel.
 
-current state:
-	M1:S1->P1
-	M2:S2->P2
+Use the common BSS_MAIN macro in the linker script to properly capture
+and merge all the generated BSS sections.
 
-The user calls for a terminal switch and a commit is made to
-change both planes to linear swizzle mode. In atomic check,
-a new dc_state is constructed with new planes on each stream
-
-new state:
-	M1:S1->P3
-	M2:S2->P4
-
-In commit tail, each stream is committed, one at a time. The first
-stream (S1) updates properly, triggerring a full update and replacing
-the state
-
-current state:
-	M1:S1->P3
-	M2:S2->P4
-
-The update for S2 comes in, but dc detects that there is no difference
-between the stream and plane in the new and current states, and so
-triggers a fast update. The fast update does not program swizzle,
-so the second monitor is corrupted
-
-[How]
-Add a flag to dc_plane_state that forces full updates
-
-When a stream undergoes a full update, set this flag on all changed
-planes, then clear it on the current stream
-
-Subsequent streams will get full updates as a result
-
-Signed-off-by: David Francis <David.Francis@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet Lakha@amd.com>
-Acked-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20190415164956.124067-1-samitolvanen@google.com
+[ Extended the changelog. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 19 +++++++++++++++++++
- drivers/gpu/drm/amd/display/dc/dc.h      |  3 +++
- 2 files changed, 22 insertions(+)
+ arch/x86/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 1f92e7e8e3d3..5af2ea1f201d 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -1308,6 +1308,11 @@ static enum surface_update_type det_surface_update(const struct dc *dc,
- 		return UPDATE_TYPE_FULL;
- 	}
- 
-+	if (u->surface->force_full_update) {
-+		update_flags->bits.full_update = 1;
-+		return UPDATE_TYPE_FULL;
-+	}
-+
- 	type = get_plane_info_update_type(u);
- 	elevate_update_type(&overall_type, type);
- 
-@@ -1637,6 +1642,14 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 		}
- 
- 		dc_resource_state_copy_construct(state, context);
-+
-+		for (i = 0; i < dc->res_pool->pipe_count; i++) {
-+			struct pipe_ctx *new_pipe = &context->res_ctx.pipe_ctx[i];
-+			struct pipe_ctx *old_pipe = &dc->current_state->res_ctx.pipe_ctx[i];
-+
-+			if (new_pipe->plane_state && new_pipe->plane_state != old_pipe->plane_state)
-+				new_pipe->plane_state->force_full_update = true;
-+		}
- 	}
- 
- 
-@@ -1680,6 +1693,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 		dc->current_state = context;
- 		dc_release_state(old);
- 
-+		for (i = 0; i < dc->res_pool->pipe_count; i++) {
-+			struct pipe_ctx *pipe_ctx = &context->res_ctx.pipe_ctx[i];
-+
-+			if (pipe_ctx->plane_state && pipe_ctx->stream == stream)
-+				pipe_ctx->plane_state->force_full_update = false;
-+		}
- 	}
- 	/*let's use current_state to update watermark etc*/
- 	if (update_type >= UPDATE_TYPE_FULL)
-diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
-index 4b5bbb13ce7f..7d5656d7e460 100644
---- a/drivers/gpu/drm/amd/display/dc/dc.h
-+++ b/drivers/gpu/drm/amd/display/dc/dc.h
-@@ -496,6 +496,9 @@ struct dc_plane_state {
- 	struct dc_plane_status status;
- 	struct dc_context *ctx;
- 
-+	/* HACK: Workaround for forcing full reprogramming under some conditions */
-+	bool force_full_update;
-+
- 	/* private to dc_surface.c */
- 	enum dc_irq_source irq_source;
- 	struct kref refcount;
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index ee3b5c7d662e..c45214c44e61 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -362,7 +362,7 @@ SECTIONS
+ 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
+ 		__bss_start = .;
+ 		*(.bss..page_aligned)
+-		*(.bss)
++		*(BSS_MAIN)
+ 		BSS_DECRYPTED
+ 		. = ALIGN(PAGE_SIZE);
+ 		__bss_stop = .;
 -- 
 2.20.1
 
