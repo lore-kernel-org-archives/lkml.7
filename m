@@ -2,217 +2,248 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E99C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2482CC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B00D20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9BF20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfEGIKw (ORCPT
+        id S1727117AbfEGIKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 7 May 2019 04:10:52 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:26552 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbfEGIKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726561AbfEGIKv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 May 2019 04:10:51 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 4160247459E102E887A2;
-        Tue,  7 May 2019 16:10:49 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x478AhC4054488;
-        Tue, 7 May 2019 16:10:43 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019050716105055-10087609 ;
-          Tue, 7 May 2019 16:10:50 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        cocci@systeme.lip6.fr
-Subject: [PATCH] coccinelle: semantic patch for missing of_node_put
-Date:   Tue, 7 May 2019 16:12:24 +0800
-Message-Id: <1557216744-25339-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-05-07 16:10:50,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-05-07 16:10:37,
-        Serialize complete at 2019-05-07 16:10:37
-X-MAIL: mse-fl2.zte.com.cn x478AhC4054488
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4782Nij022754
+        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 04:10:50 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sb62u0psp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:10:49 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 7 May 2019 09:10:48 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 May 2019 09:10:44 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x478AgSw59244598
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 May 2019 08:10:42 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A06E0AE045;
+        Tue,  7 May 2019 08:10:42 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05D71AE055;
+        Tue,  7 May 2019 08:10:42 +0000 (GMT)
+Received: from [9.152.222.136] (unknown [9.152.222.136])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 May 2019 08:10:41 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+ <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
+ <ecc5d1d5-a1ea-64ed-2af0-b2a6ca00d748@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 7 May 2019 10:10:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <ecc5d1d5-a1ea-64ed-2af0-b2a6ca00d748@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050708-0020-0000-0000-0000033A1254
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050708-0021-0000-0000-0000218CAC19
+Message-Id: <23915628-a517-1749-a0c0-e73e6e20f911@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_parse_phandle()/of_find_node_by_name() ... returns a node
-pointer with refcount incremented thus it must be explicitly decremented
-after the last usage.
+On 06/05/2019 21:37, Tony Krowiak wrote:
+> On 5/6/19 2:41 AM, Pierre Morel wrote:
+>> On 03/05/2019 23:14, Tony Krowiak wrote:
+>>> Refactors the AP queue reset function to wait until the queue is empty
+>>> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+>>> required by the AP architecture.
+>>>
+>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>> ---
+>>>   drivers/s390/crypto/vfio_ap_ops.c | 35 
+>>> ++++++++++++++++++++++++++++++++---
+>>>   1 file changed, 32 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>>> b/drivers/s390/crypto/vfio_ap_ops.c
+>>> index 900b9cf20ca5..b88a2a2ba075 100644
+>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>>> @@ -271,6 +271,32 @@ static int vfio_ap_mdev_verify_no_sharing(struct 
+>>> ap_matrix_mdev *matrix_mdev)
+>>>       return 0;
+>>>   }
+>>> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, 
+>>> unsigned long apqi)
+>>> +{
+>>> +    struct ap_queue_status status;
+>>> +    ap_qid_t qid = AP_MKQID(apid, apqi);
+>>> +    int retry = 5;
+>>> +
+>>> +    do {
+>>> +        status = ap_tapq(qid, NULL);
+>>> +        switch (status.response_code) {
+>>> +        case AP_RESPONSE_NORMAL:
+>>> +            if (status.queue_empty)
+>>> +                return;
+>>> +            msleep(20);
+>>
+>> NIT:     Fall through ?
+> 
+> Yes
+> 
+>>
+>>> +            break;
+>>> +        case AP_RESPONSE_RESET_IN_PROGRESS:
+>>> +        case AP_RESPONSE_BUSY:
+>>> +            msleep(20);
+>>> +            break;
+>>> +        default:
+>>> +            pr_warn("%s: tapq err %02x: %04lx.%02lx may not be 
+>>> empty\n",
+>>> +                __func__, status.response_code, apid, apqi);
+>>
+>> I do not thing the warning sentence is appropriate:
+>> The only possible errors here are if the AP is not available due to AP 
+>> checkstop, deconfigured AP or invalid APQN.
+> 
+> Right you are! I'll work on a new message.
+> 
+>>
+>>
+>>> +            return;
+>>> +        }
+>>> +    } while (--retry);
+>>> +}
+>>> +
+>>>   /**
+>>>    * assign_adapter_store
+>>>    *
+>>> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct 
+>>> notifier_block *nb,
+>>>       return NOTIFY_OK;
+>>>   }
+>>> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int 
+>>> apqi,
+>>> -                    unsigned int retry)
+>>> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+>>>   {
+>>>       struct ap_queue_status status;
+>>> +    int retry = 5;
+>>>       do {
+>>>           status = ap_zapq(AP_MKQID(apid, apqi));
+>>>           switch (status.response_code) {
+>>>           case AP_RESPONSE_NORMAL:
+>>> +            vfio_ap_mdev_wait_for_qempty(apid, apqi);
+>>> +            return 0;
+>>> +        case AP_RESPONSE_DECONFIGURED:
+>>
+>> Since you modify the switch, you can return for all the following cases:
+>> AP_RESPONSE_DECONFIGURE
+>> ..._CHECKSTOP
+>> ..._INVALID_APQN
+>>
+>>
+>> And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
+>> AP_RESPONSE_NORMAL
+> 
+> If a queue reset is in progress, we retry the zapq. Are you saying we
+> should wait for qempty then reissue the zapq?
 
-This SmPL is also looking for places where there is an of_node_put on
-some path but not on others.
 
-Suggested-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: cocci@systeme.lip6.fr
----
- scripts/coccinelle/free/of_node_put.cocci | 133 ++++++++++++++++++++++++++++++
- 1 file changed, 133 insertions(+)
- create mode 100644 scripts/coccinelle/free/of_node_put.cocci
+Yes, I fear that if we reissue the zapq while RESET is in progress we 
+could fall in a loop depending on the reset hardware time and the 
+software retry .
 
-diff --git a/scripts/coccinelle/free/of_node_put.cocci b/scripts/coccinelle/free/of_node_put.cocci
-new file mode 100644
-index 0000000..304293c
---- /dev/null
-+++ b/scripts/coccinelle/free/of_node_put.cocci
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/// Find missing of_node_put
-+///
-+// Confidence: Moderate
-+// Copyright: (C) 2018-2019 Wen Yang, ZTE.
-+// Comments:
-+// Options: --no-includes --include-headers
-+
-+virtual report
-+virtual org
-+
-+@initialize:python@
-+@@
-+
-+msg_prefix = "ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line "
-+msg_suffix = ", but without a corresponding object release within this function."
-+
-+seen = set()
-+
-+def add_if_not_present (p1, p2):
-+    if (p1, p2) not in seen:
-+        seen.add((p1, p2))
-+        return True
-+    return False
-+
-+@r1 exists@
-+local idexpression struct device_node *x;
-+expression e, e1;
-+position p1, p2;
-+identifier f;
-+statement S;
-+type T;
-+@@
-+
-+(
-+x = f@p1(...);
-+... when != e = (T)x
-+    when any
-+    when != true x == NULL
-+    when != of_node_put(x)
-+    when != of_get_next_parent(x)
-+    when != of_find_matching_node(x, ...)
-+    when != if (x) { ... of_node_put(x) ... }
-+    when != if (x) { ... return x; }
-+    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
-+    when != e1 = of_fwnode_handle(x)
-+(
-+if (x) { ... when forall
-+         of_node_put(x) ... }
-+|
-+return x;
-+|
-+return of_fwnode_handle(x);
-+|
-+return@p2 ...;
-+)
-+&
-+x = f(...)
-+...
-+if (<+...x...+>) S
-+...
-+of_node_put(x);
-+)
-+
-+@script:python depends on report && r1@
-+p1 << r1.p1;
-+p2 << r1.p2;
-+@@
-+
-+if(add_if_not_present(p1[0].line, p2[0].line)):
-+  coccilib.report.print_report(p2[0], msg_prefix + p1[0].line + msg_suffix)
-+
-+@script:python depends on org && r1@
-+p1 << r1.p1;
-+p2 << r1.p2;
-+@@
-+
-+cocci.print_main("acquired a node pointer with refcount incremented", p1)
-+cocci.print_secs("needed of_node_put", p2)
-+
-+@r2 exists@
-+local idexpression struct device_node *x;
-+expression e, e1;
-+position p1, p2;
-+statement S;
-+type T;
-+@@
-+
-+x = @p1\(of_find_compatible_node\|of_find_node_by_name\|of_parse_phandle\|
-+    of_find_node_by_type\|of_find_node_by_name\|of_find_all_nodes\|
-+    of_get_cpu_node\|of_get_parent\|of_get_next_parent\|
-+    of_get_next_child\|of_get_next_available_child\|of_get_next_cpu_node\|
-+    of_get_compatible_child\|of_get_child_by_name\|of_find_node_opts_by_path\|
-+    of_find_node_with_property\|of_find_matching_node_and_match\|of_find_node_by_phandle\|
-+    of_parse_phandle\)(...);
-+...
-+if (x == NULL || ...) S
-+... when != e = (T)x
-+    when any
-+    when != true x == NULL
-+    when != of_node_put(x)
-+    when != of_get_next_parent(x)
-+    when != of_find_matching_node(x, ...)
-+    when != if (x) { ... of_node_put(x) ... }
-+    when != if (x) { ... return x; }
-+    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
-+    when != e1 = of_fwnode_handle(x)
-+(
-+if (x) { ... when forall
-+         of_node_put(x) ... }
-+|
-+return x;
-+|
-+return of_fwnode_handle(x);
-+|
-+return@p2 ...;
-+)
-+
-+@script:python depends on report && r2@
-+p1 << r2.p1;
-+p2 << r2.p2;
-+@@
-+
-+if(add_if_not_present(p1[0].line, p2[0].line)):
-+  coccilib.report.print_report(p2[0], msg_prefix + p1[0].line + msg_suffix)
-+
-+@script:python depends on org && r2@
-+p1 << r2.p1;
-+p2 << r2.p2;
-+@@
-+
-+cocci.print_main("acquired a node pointer with refcount incremented", p1)
-+cocci.print_secs("needed of_node_put", p2)
+> 
+>>
+>>>               return 0;
+>>>           case AP_RESPONSE_RESET_IN_PROGRESS:
+>>>           case AP_RESPONSE_BUSY:
+>>
+>> While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
+>> code for ZAPQ, you can remove this.
+> 
+> Okay
+> 
+>>
+>>> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct 
+>>> mdev_device *mdev)
+>>>                    matrix_mdev->matrix.apm_max + 1) {
+>>>           for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>>>                        matrix_mdev->matrix.aqm_max + 1) {
+>>> -            ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>>> +            ret = vfio_ap_mdev_reset_queue(apid, apqi);
+>>
+>> IMHO, since you are at changing this call, passing the apqn as 
+>> parameter would be a good simplification.
+> 
+> Okay.
+
+Sorry, I should have add: NIT.
+
+> 
+>>
+>>
+>>
+>>>               /*
+>>>                * Regardless whether a queue turns out to be busy, or
+>>>                * is not operational, we need to continue resetting
+>>
+>> Depends on why the reset failed, but this is out of scope.
+> 
+> I'm not sure what you mean by out of scope here, but you do make a valid
+> point. If the response code for the zapq is AP_RESPONSE_DECONFIGURED,
+> there is probably no sense in continuing to reset queues for that
+> particular adapter. I'll consider a change here.
+
+Yes, this was the point, but I consider this as a enhancement, trying a 
+reset on bad queues AFAIK do no arm.
+
+> 
+>>
+>>>
+>>
+>>
+> 
+
+
 -- 
-2.9.5
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
