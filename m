@@ -2,172 +2,103 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FC5C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088B3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8680E20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FF720989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 23:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcR0z1fy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGx8NaFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfEGXDz (ORCPT
+        id S1726451AbfEGXHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 19:03:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38782 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfEGXDy (ORCPT
+        Tue, 7 May 2019 19:07:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43352 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfEGXHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 19:03:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id u21so6665750lja.5;
-        Tue, 07 May 2019 16:03:53 -0700 (PDT)
+        Tue, 7 May 2019 19:07:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t22so9036741pgi.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 16:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YCO9eai/elcMyDJTY4ZF6twzD/0maEHb+2ajw9eNMYA=;
-        b=GcR0z1fyOgKTa18jfuHdBgqzs8/MwQIZD5MZAeNHqmFkV9lT73tcI+0Gq/zF84eefZ
-         Wu7N81HKmRdudd/eFEsbP9UaBHQ2irgQH8NYTS2MNsh0MJQWbT1chjXAZhET/Idf/u00
-         IPooib9QXibN7RQVFbdLcjcpup6IRlU8mx+j/kukqtRORc9NH3oNkaAexerXhUieNqxz
-         XqW60nZYbhlrWaGLno7QL4vCQ5sCt1j9EV8ydM7S2nVoKwJYYZQJCrFvszcm4Uf2mzj7
-         5uzOHBwEycCyFeju611RH9RMFx6pji2jnzA/CYAqDlnZS9cDC9Z0wIv1w3dcGdKb6HWr
-         u6mw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ksCK6MwbJy5hkcrjGKRfLybVWED7pfrtN2x342eMfl8=;
+        b=AGx8NaFcW0nNXm6FRSDK6XWn3BprVlDb7i1+/3oeRJ/rTpK2ryo/87zzPV5opLP7xf
+         39wPiWYVVrh822ck/V2weclYk6f7buLBNfCsV7AaAs/jVezQ9fX6c5+Ib/Cs+xAWW9yu
+         OwaApcdTNA+9aDNHpR+2WuMuAs0x4ZCBsFrnyKuD98zkTsrYOhwzMAfhS7onbHITyBti
+         EP2BdBCb2EFWw3NHM3JT4nY0Lew6PhPWbwiXnW49AkZmhZApjQVIyVeE5frTrY2Kgxj1
+         37Z3lmZG0Xjhzz/PtQ7BjhTj8SXaXK8I6AUi5D9lSE7zPFhoYSel/z4ojks6JAIv5F8n
+         fyag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YCO9eai/elcMyDJTY4ZF6twzD/0maEHb+2ajw9eNMYA=;
-        b=RpCohmXSuQDpbEldyW72gwQSCgcp1oQIXa46wa1E08bfwTyaUg6mQRoisZ+XzmhP21
-         L8rtsLsUO682twdlssB3Au3gYhqSdqHwE3gIqUQ4eRu1RbBu8O3mjx9PqOeuD9HqMSkj
-         ymSFsV8+Q7AEm4cNWKhGn5aKdcPuF7ZOOTRuZLeRnp8rz3DNTDFR2MdMQ9ndLV5fcubS
-         Bkx/jGDsV4K2eDRyzomLFEBatbE6+UOpTtPGjVVnJXJbxTUy85t7F/ey2Prl53Ro92SS
-         3+RuvTGLoxvOPn3K6sWSvaoYItz3qxozNpiuI9Jav34i8NqcZc4K6od+HM9DoH9t8YJM
-         4vhA==
-X-Gm-Message-State: APjAAAXSGuRkGtMyFIe2HSj4j+YW38GDRE5zW9xr3ZKELm+Xss3RjLMy
-        1Sm5lkr6xSGfwUxdJgItfrg=
-X-Google-Smtp-Source: APXvYqzFfhMmo+sEqkGmbUYErpdz2pgowR0QnjpvB9McqLIEQjU0eMueQavyEnEmopbofjiCUYINKg==
-X-Received: by 2002:a2e:9002:: with SMTP id h2mr3703362ljg.164.1557270232490;
-        Tue, 07 May 2019 16:03:52 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id r9sm281044ljb.79.2019.05.07.16.03.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 16:03:51 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] mips: Print the kernel virtual mem layout on debugging
-Date:   Wed,  8 May 2019 02:03:20 +0300
-Message-Id: <20190507230320.23074-1-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190503175041.7949-4-fancer.lancer@gmail.com>
-References: 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ksCK6MwbJy5hkcrjGKRfLybVWED7pfrtN2x342eMfl8=;
+        b=a1yIuA+1/B2g0fHjI/AJJ2Af/ZF/y9AI5GLT1Nw/GfaEwTTbfpnpGUliz4d9JOJ86M
+         rfbF95aM3l5OsPLoh+doXOX5+2+MDqMY0jjHj1/PFhhsGlixpBylfsZ7exlHNB+Uan+j
+         P6Yo/fqMK8Tmw7GOXrbQppAXnpyFPaSHszV27eRNo7PGunHi6Wyh8ztBL8V55sxOD3IQ
+         ZcnRFgI4zY0OjxyE9R49xj+QqECnzJtTZiuQP++rdUUW9+/tI8x+vh9j2wbEtnMmL/iQ
+         1Bd+VyLb79axpW8i1kBwt75tzpdn5xVIHXrPDO8hqrs/cvLZmP2U2UMj0RTdRwIKmCYa
+         Kgtw==
+X-Gm-Message-State: APjAAAVeAwqYkGlg0+0eV5uhSpgrKSfz45Gxa01HdU9a+fo898ziE92T
+        htqjlfgNwsCsO5mKZvk56Z0=
+X-Google-Smtp-Source: APXvYqwl7+tg2Ewiz/jP4v1lUDMe2zgpvST8mIlQ/beigoour/174+exi07SmbvBzd/rqbmEpqcJJg==
+X-Received: by 2002:a63:ed16:: with SMTP id d22mr9290179pgi.35.1557270468115;
+        Tue, 07 May 2019 16:07:48 -0700 (PDT)
+Received: from localhost ([2601:640:2:82fb:19d3:11c4:475e:3daa])
+        by smtp.gmail.com with ESMTPSA id l68sm19547511pfb.20.2019.05.07.16.07.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 16:07:47 -0700 (PDT)
+Date:   Tue, 7 May 2019 16:07:46 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Breno Leitao <leitao@debian.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Yury Norov <ynorov@marvell.com>
+Subject: Re: [PATCH] powerpc: restore current_thread_info()
+Message-ID: <20190507230746.GA19259@yury-thinkpad>
+References: <20190507225121.18676-1-ynorov@marvell.com>
+ <20190507225856.GP23075@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507225856.GP23075@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is useful at least for debugging to have the kernel virtual
-memory layout printed at boot time so to have the full information
-about the booted kernel. Make the printing optional and available
-only when DEBUG_KERNEL config is enabled so not to leak a sensitive
-kernel information.
+On Tue, May 07, 2019 at 11:58:56PM +0100, Al Viro wrote:
+> On Tue, May 07, 2019 at 03:51:21PM -0700, Yury Norov wrote:
+> > Commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
+> > removes the function current_thread_info(). It's wrong because the
+> > function is used in non-arch code and is part of API.
+> 
+> In include/linux/thread_info.h:
+> 
+> #ifdef CONFIG_THREAD_INFO_IN_TASK
+> /*
+>  * For CONFIG_THREAD_INFO_IN_TASK kernels we need <asm/current.h> for the
+>  * definition of current, but for !CONFIG_THREAD_INFO_IN_TASK kernels,
+>  * including <asm/current.h> can cause a circular dependency on some platforms.
+>  */
+> #include <asm/current.h>
+> #define current_thread_info() ((struct thread_info *)current)
+> #endif
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-
----
-Changelog v3
-- Add MLM_ROUNDUP() and use it to calculate the low memory addresses range.
-- Print KB instead of kB for kilobyte quantities.
-- Check constants inconsistancies for systems with HIGHMEM only.
----
- arch/mips/mm/init.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index bbb196ad5f26..40558b979f96 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -31,6 +31,7 @@
- #include <linux/gfp.h>
- #include <linux/kcore.h>
- #include <linux/initrd.h>
-+#include <linux/sizes.h>
- 
- #include <asm/bootinfo.h>
- #include <asm/cachectl.h>
-@@ -56,6 +57,55 @@ unsigned long empty_zero_page, zero_page_mask;
- EXPORT_SYMBOL_GPL(empty_zero_page);
- EXPORT_SYMBOL(zero_page_mask);
- 
-+/*
-+ * Print out the kernel virtual memory layout
-+ */
-+#define MLK(b, t) (void *)b, (void *)t, ((t) - (b)) >> 10
-+#define MLM(b, t) (void *)b, (void *)t, ((t) - (b)) >> 20
-+#define MLK_ROUNDUP(b, t) (void *)b, (void *)t, DIV_ROUND_UP(((t) - (b)), SZ_1K)
-+#define MLM_ROUNDUP(b, t) (void *)b, (void *)t, DIV_ROUND_UP(((t) - (b)), SZ_1M)
-+static void __init mem_print_kmap_info(void)
-+{
-+#ifdef CONFIG_DEBUG_KERNEL
-+	pr_notice("Kernel virtual memory layout:\n"
-+		  "    lowmem  : 0x%px - 0x%px  (%6td MB)\n"
-+		  "      .text : 0x%px - 0x%px  (%6td KB)\n"
-+		  "      .data : 0x%px - 0x%px  (%6td KB)\n"
-+		  "      .init : 0x%px - 0x%px  (%6td KB)\n"
-+		  "      .bss  : 0x%px - 0x%px  (%6td KB)\n"
-+		  "    vmalloc : 0x%px - 0x%px  (%6ld MB)\n"
-+#ifdef CONFIG_HIGHMEM
-+		  "    pkmap   : 0x%px - 0x%px  (%6ld MB)\n"
-+#endif
-+		  "    fixmap  : 0x%px - 0x%px  (%6ld KB)\n",
-+		  MLM_ROUNDUP((void *)PAGE_OFFSET, high_memory),
-+		  MLK_ROUNDUP(_text, _etext),
-+		  MLK_ROUNDUP(_sdata, _edata),
-+		  MLK_ROUNDUP(__init_begin, __init_end),
-+		  MLK_ROUNDUP(__bss_start, __bss_stop),
-+		  MLM(VMALLOC_START, VMALLOC_END),
-+#ifdef CONFIG_HIGHMEM
-+		  MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE)),
-+#endif
-+		  MLK(FIXADDR_START, FIXADDR_TOP));
-+
-+	/* Check some fundamental inconsistencies. May add something else? */
-+#ifdef CONFIG_HIGHMEM
-+	BUILD_BUG_ON(VMALLOC_END < PAGE_OFFSET);
-+	BUG_ON(VMALLOC_END < (unsigned long)high_memory);
-+	BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-+	BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) <
-+		(unsigned long)high_memory);
-+	BUILD_BUG_ON(FIXADDR_TOP < PAGE_OFFSET);
-+	BUG_ON(FIXADDR_TOP < (unsigned long)high_memory);
-+#endif
-+#endif /* CONFIG_DEBUG_KERNEL */
-+}
-+#undef MLK
-+#undef MLM
-+#undef MLK_ROUNDUP
-+#undef MLM_ROUNDUP
-+
- /*
-  * Not static inline because used by IP27 special magic initialization code
-  */
-@@ -479,6 +529,7 @@ void __init mem_init(void)
- 	setup_zero_pages();	/* Setup zeroed pages.  */
- 	mem_init_free_highmem();
- 	mem_init_print_info(NULL);
-+	mem_print_kmap_info();
- 
- #ifdef CONFIG_64BIT
- 	if ((unsigned long) &_text > (unsigned long) CKSEG0)
--- 
-2.21.0
-
+Ah, sorry. Then it might be my rebase issue. I was confused because Christophe
+didn't remove the comment to current_thread_info(), so I decided he
+removed it erroneously.
