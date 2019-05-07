@@ -2,109 +2,80 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF27C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B66BC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0ED620989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4356F205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfEGORt (ORCPT
+        id S1726752AbfEGOVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:17:49 -0400
-Received: from ms01.santannapisa.it ([193.205.80.98]:19645 "EHLO
-        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfEGORt (ORCPT
+        Tue, 7 May 2019 10:21:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:16877 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726454AbfEGOVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:17:49 -0400
-Received: from [83.43.182.198] (account l.abeni@santannapisa.it HELO nowhere)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 138898218; Tue, 07 May 2019 16:17:45 +0200
-Date:   Tue, 7 May 2019 16:17:33 +0200
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
-Message-ID: <20190507161733.1a26419b@nowhere>
-In-Reply-To: <20190507133528.ia4p3medvtg4z5az@queper01-lin>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
-        <20190506044836.2914-3-luca.abeni@santannapisa.it>
-        <20190507133528.ia4p3medvtg4z5az@queper01-lin>
-Organization: Scuola Superiore S.Anna
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 7 May 2019 10:21:11 -0400
+X-UUID: 754959646c76419f84b050e67e5730c5-20190507
+X-UUID: 754959646c76419f84b050e67e5730c5-20190507
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1623362754; Tue, 07 May 2019 22:21:05 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 7 May 2019 22:20:57 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 7 May 2019 22:20:57 +0800
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <khali@linux-fr.org>
+CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Date:   Tue, 7 May 2019 22:20:32 +0800
+Message-ID: <1557238832-10723-1-git-send-email-yingjoe.chen@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 82EDD77E36B98B06E0D48449A43857A9C339EBD6B0843B3FFEA6EE130FBF90972000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin,
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-On Tue, 7 May 2019 14:35:28 +0100
-Quentin Perret <quentin.perret@arm.com> wrote:
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+---
+Only check arm64 defconfig build pass.
+I haven't test it since it just fix memleak for error cases.
+---
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Hi Luca,
-> 
-> On Monday 06 May 2019 at 06:48:32 (+0200), Luca Abeni wrote:
-> > +static inline int dl_task_fit(const struct sched_dl_entity *dl_se,
-> > +			      int cpu, u64 *c)
-> > +{
-> > +	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) *
-> > arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;  
-> 
-> I'm a little bit confused by this use of arch_scale_freq_capacity()
-> here. IIUC this means you would say a big DL task doesn't fit on a big
-> CPU just because it happens to be running at a low frequency when this
-> function is called. Is this what we want ?
-
-The idea of this approach was to avoid frequency switches when
-possible; so, I wanted to check if the task fits on a CPU core at its
-current operating frequency.
-
-
-> If the frequency is low, we can (probably) raise it to accommodate
-> this DL task so perhaps we should say it fits ?
-
-In a later patch, if the task does not fit on any core (at its current
-frequency), the task is moved to the core having the maximum capacity
-(without considering the operating frequency --- at least, this was my
-intention when I wrote the patches :)
-
-
-
-				Luca
-
-> 
-> > +	s64 rel_deadline = dl_se->dl_deadline;
-> > +	u64 rem_runtime  = dl_se->dl_runtime;
-> > +
-> > +	if (c)
-> > +		*c = cap;
-> > +
-> > +	if ((rel_deadline * cap) >> SCHED_CAPACITY_SHIFT <
-> > rem_runtime)
-> > +		return 0;
-> > +
-> > +	return 1;
-> > +}  
-> 
-> Thanks,
-> Quentin
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index 3f7b9af..776f366 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -283,6 +283,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
+ 			    msgs[i].len < 1 || msgs[i].buf[0] < 1 ||
+ 			    msgs[i].len < msgs[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
+-- 
+1.9.1
 
