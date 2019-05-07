@@ -2,96 +2,115 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDF5C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF539C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41ED20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B82E2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557241649;
+	bh=jn/eoADZJilvovY/63mFWDXvJLbWUtGb5M6HjT5UXW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VCKSwJlZcxBXA/uR90qpF4jtQp5+/2Df7ndwPfad0FrUKz4DGV6VWO/WUVcNJmL5X
+	 MAwkhSUWpbH8NVA6n3H82+yz47KJl8SPMpnk4FbpHQJU1qnhpNpsf44wSCd3rYKAh/
+	 d0Bs8GAS9E1RTiWpoMZKXUmOLCXaPRXXsiBv/jDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfEGPEa (ORCPT
+        id S1726548AbfEGPH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:04:30 -0400
-Received: from foss.arm.com ([217.140.101.70]:56820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfEGPEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:04:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96DDA374;
-        Tue,  7 May 2019 08:04:29 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17B743F5C1;
-        Tue,  7 May 2019 08:04:26 -0700 (PDT)
-Date:   Tue, 7 May 2019 16:04:25 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     luca abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
-Message-ID: <20190507150423.xid3j6wcjdbtavdf@queper01-lin>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-3-luca.abeni@santannapisa.it>
- <20190507133528.ia4p3medvtg4z5az@queper01-lin>
- <20190507161733.1a26419b@nowhere>
+        Tue, 7 May 2019 11:07:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39417 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfEGPH1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:07:27 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q10so14674135ljc.6;
+        Tue, 07 May 2019 08:07:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xp/CFTnCntNL718RZBE1t6TOjNAgSDPcc69Aq4PftC0=;
+        b=VZV9OdWAXWpNLgYqSijb8DJpVIUQtljYEol+X70RHLqKnPiwsj2BeKg6rvp48ivOHe
+         wxP2gSvGjHoiKDu347zIjkPsC8OJr9Knl1zfgfCmTTbDQXkxzPvEWk/8FzORzQ/33WDr
+         Zm0gV/inaEnCOxpRgTiPs6C7W9y0YcSYKgo3DRRfoMkV3MFd/5aHPZLdJNQ9ErtHyhau
+         glqkyTBkhSwHlcdx4nF6tBI2rWP+3JWDvU2Tf78Fw1C1C0uD0XDphUHNVrkek3974G8o
+         sXizSSUCycq/eJRfvh9oxHFwyOzxXGFpuZgiWA3kHyN/fgoH74I8wtjUgZhFnxuMMESD
+         YvPQ==
+X-Gm-Message-State: APjAAAXKO7uwgPpii5NuE48QTzy5kp1IGb/4GWWsHEahzGYJG+S4Mj5j
+        jg0vOCfnnTpJLhCMUBoxhB0=
+X-Google-Smtp-Source: APXvYqwZuquZubbjwTDIWF3T6DNz6fB1XmF6DU/2TQniv247cfrvU6HXLZ8GerzNEO0PwLoLLWw0Ow==
+X-Received: by 2002:a2e:5b18:: with SMTP id p24mr4265728ljb.50.1557241645461;
+        Tue, 07 May 2019 08:07:25 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id x6sm3327063lfn.74.2019.05.07.08.07.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 08:07:23 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hO1gj-0004fP-5D; Tue, 07 May 2019 17:07:25 +0200
+Date:   Tue, 7 May 2019 17:07:25 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Johan Hovold <johan@kernel.org>,
+        syzbot <syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, syzkaller-bugs@googlegroups.com,
+        wen.yang99@zte.com.cn
+Subject: Re: general protection fault in smsusb_init_device
+Message-ID: <20190507150725.GB29016@localhost>
+References: <20190507083430.GD4333@localhost>
+ <Pine.LNX.4.44L0.1905071035450.1632-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507161733.1a26419b@nowhere>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <Pine.LNX.4.44L0.1905071035450.1632-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 07 May 2019 at 16:17:33 (+0200), luca abeni wrote:
-> Hi Quentin,
-> 
-> On Tue, 7 May 2019 14:35:28 +0100
-> Quentin Perret <quentin.perret@arm.com> wrote:
-> 
-> > Hi Luca,
-> > 
-> > On Monday 06 May 2019 at 06:48:32 (+0200), Luca Abeni wrote:
-> > > +static inline int dl_task_fit(const struct sched_dl_entity *dl_se,
-> > > +			      int cpu, u64 *c)
-> > > +{
-> > > +	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) *
-> > > arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;  
-> > 
-> > I'm a little bit confused by this use of arch_scale_freq_capacity()
-> > here. IIUC this means you would say a big DL task doesn't fit on a big
-> > CPU just because it happens to be running at a low frequency when this
-> > function is called. Is this what we want ?
-> 
-> The idea of this approach was to avoid frequency switches when
-> possible; so, I wanted to check if the task fits on a CPU core at its
-> current operating frequency.
-> 
-> 
-> > If the frequency is low, we can (probably) raise it to accommodate
-> > this DL task so perhaps we should say it fits ?
-> 
-> In a later patch, if the task does not fit on any core (at its current
-> frequency), the task is moved to the core having the maximum capacity
-> (without considering the operating frequency --- at least, this was my
-> intention when I wrote the patches :)
+On Tue, May 07, 2019 at 10:42:58AM -0400, Alan Stern wrote:
+> On Tue, 7 May 2019, Johan Hovold wrote:
 
-Ah, I see, patches 05-06. I'll go have a look then !
+> > > @@ -411,6 +412,23 @@ static int smsusb_init_device(struct usb
+> > >  	dev->udev = interface_to_usbdev(intf);
+> > >  	dev->state = SMSUSB_DISCONNECTED;
+> > >  
+> > > +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+> > > +		struct usb_endpoint_descriptor *desc =
+> > > +				&intf->cur_altsetting->endpoint[i].desc;
+> > > +
+> > > +		if (desc->bEndpointAddress & USB_DIR_IN) {
+> > > +			dev->in_ep = desc->bEndpointAddress;
+> > > +			in_maxp = usb_endpoint_maxp(desc);
+> > > +		} else {
+> > > +			dev->out_ep = desc->bEndpointAddress;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	pr_debug("in_ep = %02x, out_ep = %02x\n",
+> > > +		dev->in_ep, dev->out_ep);
+> > > +	if (!dev->in_ep || !dev->out_ep)	/* Missing endpoints? */
+> > > +		return -EINVAL;
+> > 
+> > Looks like you're now leaking dev here, and so is the current code in
+> > the later error paths.
+> > 
+> > Since this return value will be returned from probe, you may want to use
+> > -ENXIO or -ENODEV instead of -EINVAL.
+> > 
+> > Looks good otherwise.
+> 
+> Thanks for the review.  You're right about the memory leak (although 
+> you're wrong about the later error paths: smsusb_term_device() 
+> deallocates dev).
 
-Thanks,
-Quentin
+Indeed, I missed the free in smsusb_term_device(). Sorry about that.
+
+Johan
