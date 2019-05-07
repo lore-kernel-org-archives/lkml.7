@@ -2,91 +2,70 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE804C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7198C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890782087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA4320989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfEGONM (ORCPT
+        id S1726790AbfEGONp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:13:12 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22015 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfEGONM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:13:12 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 07:13:11 -0700
-X-ExtLoop1: 1
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 07 May 2019 07:13:06 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 07 May 2019 17:13:05 +0300
-Date:   Tue, 7 May 2019 17:13:05 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 7 May 2019 10:13:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55644 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726394AbfEGONp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:13:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7ADD80D;
+        Tue,  7 May 2019 07:13:44 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 277933F5C1;
+        Tue,  7 May 2019 07:13:42 -0700 (PDT)
+Date:   Tue, 7 May 2019 15:13:40 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Luca Abeni <luca.abeni@santannapisa.it>
+Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Biju Das <biju.das@bp.renesas.com>,
-        Yu Chen <chenyu56@huawei.com>, Min Guo <min.guo@mediatek.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: Re: [v2 PATCH] dt-binding: usb: add usb-role-switch property
-Message-ID: <20190507141305.GA19816@kuha.fi.intel.com>
-References: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC PATCH 3/6] sched/dl: Try better placement even for deadline
+ tasks that do not block
+Message-ID: <20190507141338.tnp62joujcrxyv5j@queper01-lin>
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+ <20190506044836.2914-4-luca.abeni@santannapisa.it>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <38ff51264e971d5c58940c8435b9d8d274662d50.1557195204.git.chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190506044836.2914-4-luca.abeni@santannapisa.it>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 10:22:58AM +0800, Chunfeng Yun wrote:
-> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> index 0a74ab8dfdc2..f5a6ad053ecc 100644
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@ -30,6 +30,11 @@ Optional properties:
->  			optional for OTG device.
->   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
->  			optional for OTG device.
-> + - usb-role-switch: tells Dual-Role USB controllers we want to handle the role
-> +			switch between host and device according to the state
-> +			detected by the USB connector, typically for Type-C,
-> +			Type-B(micro).
-> +			see connector/usb-connector.txt.
+On Monday 06 May 2019 at 06:48:33 (+0200), Luca Abeni wrote:
+> @@ -1591,6 +1626,7 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+>  
+>  	rcu_read_lock();
+>  	curr = READ_ONCE(rq->curr); /* unlocked access */
+> +	het = static_branch_unlikely(&sched_asym_cpucapacity);
 
-That does not look correct to me. Firstly, USB role switches are not
-always dual-role USB controllers. Secondly, stating what determines
-the role irrelevant IMO.
+Nit: not sure how the generated code looks like but I wonder if this
+could potentially make you loose the benefit of the static key ?
 
-Since this is a boolean property, the description for it should simply
-explain what does it tell about the capabilities of the device that
-has it. The description should not make any assumptions about the
-users of the property, and since the property is a "generic" USB
-property, I'm not sure it should make any assumptions about the type
-of the device that has the property either. Also, I would really like
-the description to show the type of the property.
-
-Why not just say something like this:
-
-"Boolean property informing that the device is capable of assigning
-the USB data role (USB host or USB device) for a given USB connector."
-
-
-thanks,
-
--- 
-heikki
+Thanks,
+Quentin
