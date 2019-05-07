@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F90C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA446C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC36B2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7738B21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208875;
-	bh=do+ctK6vMrmPG3/X1yI/Y4iQbmdI+qKCYt1nt9shrCM=;
+	s=default; t=1557208880;
+	bh=8eSI9nxK7/A1OjFsFLV8LynX+vejKP5TFlSub7YZ5UU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulgsEuvGs9MbrbxPo7kagWyCKgcO07L080xeV05oYonHVcZiSqmoHaGsEmFl4jf5u
-	 ylnX/RQZ1IwXfqctPZcFsdo8HVNkOgi4nMrnP+JFFl56MNejvxLfMpYDQK+ODC2PQJ
-	 rX+Tp3ynmA9/jLlZRzxGPZUVOTqlymr5RBOIvSWE=
+	b=Jq9gfZqxJpxrhvKVo8fiB1e8NC+vE/VnMYrqMbTCJrcN6J6XbbXfUneOAjUAiEkLN
+	 XQnBMG/I0uwPKu3BftgwOzt4NSfn2RybTkSLDo+Z7vE6K3ZMKEyrTC8Vwst1lyrY73
+	 5msFjYm7kNkFcmIZwtRcPEonuG4lgZU+G6GtATl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfEGGBO (ORCPT
+        id S1726816AbfEGGBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbfEGFgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:06 -0400
+        id S1727849AbfEGFgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED45D21530;
-        Tue,  7 May 2019 05:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9D8821479;
+        Tue,  7 May 2019 05:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207365;
-        bh=do+ctK6vMrmPG3/X1yI/Y4iQbmdI+qKCYt1nt9shrCM=;
+        s=default; t=1557207363;
+        bh=8eSI9nxK7/A1OjFsFLV8LynX+vejKP5TFlSub7YZ5UU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4daZcj4Zj+/4TaLSHcW5Yzays7Ynx6rwY/AnCXSmXCJgHBIuGQ+AjUmFBAovI8lQ
-         MRG0I5V99OsPJWbIPOaHZsV/cUnPlKK/dP6JfHgMDea2+/8xW0wGZGu7m+88hRfnCK
-         XKU3SZJN47MbWhYVZVBLNJGgSUEe7oWsAlL119mI=
+        b=ocjfS9eSZIQd2dt1GO6IeGSGcDM2jmQwmngcQssqN6cfAakKcW57IZnpor1k3/t+q
+         SJZlxPBEScTMIVHaJU5n6/MGGYxzHV9Taf5pV1cTU5JWggJ8wqDsH6KNJUhLcyz9Fh
+         N48+PrR4vYymwkrztM6nZQ7OB9XQekcBISeAaCno=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/81] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
-Date:   Tue,  7 May 2019 01:34:38 -0400
-Message-Id: <20190507053554.30848-7-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 4.19 05/81] libnvdimm/namespace: Fix a potential NULL pointer dereference
+Date:   Tue,  7 May 2019 01:34:36 -0400
+Message-Id: <20190507053554.30848-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -58,34 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
+[ Upstream commit 55c1fc0af29a6c1b92f217b7eb7581a882e0c07c ]
 
-According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
-correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
+In case kmemdup fails, the fix goes to blk_err to avoid NULL
+pointer dereference.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvdimm/namespace_devs.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 150b14623749..eeb9ba7e8fc6 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -895,6 +895,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
- 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
- 
-+		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
-+		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
-+		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
-+
- 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
- 		case 0x083: map_key_clear(KEY_LAST);		break;
- 		case 0x084: map_key_clear(KEY_ENTER);		break;
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index 54d79837f7c6..73a444c41cde 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -2251,9 +2251,12 @@ static struct device *create_namespace_blk(struct nd_region *nd_region,
+ 	if (!nsblk->uuid)
+ 		goto blk_err;
+ 	memcpy(name, nd_label->name, NSLABEL_NAME_LEN);
+-	if (name[0])
++	if (name[0]) {
+ 		nsblk->alt_name = kmemdup(name, NSLABEL_NAME_LEN,
+ 				GFP_KERNEL);
++		if (!nsblk->alt_name)
++			goto blk_err;
++	}
+ 	res = nsblk_add_resource(nd_region, ndd, nsblk,
+ 			__le64_to_cpu(nd_label->dpa));
+ 	if (!res)
 -- 
 2.20.1
 
