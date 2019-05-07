@@ -2,68 +2,129 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817DCC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B85C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EECD20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557239214;
-	bh=jvW/RogS5UCoRbdKhxoGxh1J+GRr7o3WjwzEAYCw46o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fhi8vrss1nNMdZM4UQcB03b2xCEionYSGYEtiJOSaE4E//I8sTkh9AjSAbnnuqtWu
-	 ge+fF3PDg+njqU+RbnHLvSbLPKthK5xqDr4ioNhRPhxwtXWP6yZkP7qjl+34kNj3oU
-	 R7yHQdl1TABlte6NccaSzeRjOm2LSVXKMR13ZkNw=
+	by mail.kernel.org (Postfix) with ESMTP id 8AE812087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfEGO0x (ORCPT
+        id S1726766AbfEGO2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:26:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16286 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfEGO0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:26:52 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 07:26:52 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 May 2019 07:26:51 -0700
-Date:   Tue, 7 May 2019 08:21:17 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] nvme-pci: mark expected switch fall-through
-Message-ID: <20190507142117.GE2219@localhost.localdomain>
-References: <20190507142300.GA25717@embeddedor>
+        Tue, 7 May 2019 10:28:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59240 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726353AbfEGO2Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:28:25 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47ENFhh177712
+        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 10:28:24 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sb9tcnx82-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:28:23 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 7 May 2019 15:28:20 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 May 2019 15:28:18 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47ESHQ937486628
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 May 2019 14:28:17 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3755BA4A33;
+        Tue,  7 May 2019 14:28:17 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDFF3A4A2C;
+        Tue,  7 May 2019 14:28:16 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.229])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 May 2019 14:28:16 +0000 (GMT)
+Date:   Tue, 7 May 2019 16:28:15 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Emese Revfy <re.emese@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] latent_entropy: avoid build error when plugin cflags are not
+ set
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190507142300.GA25717@embeddedor>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+X-TM-AS-GCONF: 00
+x-cbid: 19050714-0012-0000-0000-00000319364F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050714-0013-0000-0000-00002151B41F
+Message-Id: <patch.git-0d8ac0206ebb.your-ad-here.call-01557238927-ext-2525@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:23:00AM -0500, Gustavo A. R. Silva wrote:
-> @@ -1296,6 +1296,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
->  	switch (dev->ctrl.state) {
->  	case NVME_CTRL_DELETING:
->  		shutdown = true;
-> +		/* fall through */
->  	case NVME_CTRL_CONNECTING:
->  	case NVME_CTRL_RESETTING:
->  		dev_warn_ratelimited(dev->ctrl.device,
+Some architectures set up CFLAGS for linux decompressor phase from
+scratch and do not include GCC_PLUGINS_CFLAGS. Since "latent_entropy"
+variable declaration is generated by the plugin code itself including
+linux/random.h in decompressor code then would cause a build
+error. E.g. on s390:
 
-Thanks, Looks good.
+In file included from ./include/linux/net.h:22,
+                 from ./include/linux/skbuff.h:29,
+                 from ./include/linux/if_ether.h:23,
+                 from ./arch/s390/include/asm/diag.h:12,
+                 from arch/s390/boot/startup.c:8:
+./include/linux/random.h: In function 'add_latent_entropy':
+./include/linux/random.h:26:39: error: 'latent_entropy' undeclared
+(first use in this function); did you mean 'add_latent_entropy'?
+   26 |  add_device_randomness((const void *)&latent_entropy,
+      |                                       ^~~~~~~~~~~~~~
+      |                                       add_latent_entropy
+./include/linux/random.h:26:39: note: each undeclared identifier is
+reported only once for each function it appears in
 
-Reviewed-by: Keith Busch <keith.busch@intel.com>
+The build error is triggered by commit a80313ff91ab ("s390/kernel:
+introduce .dma sections") which made it into 5.2 merge window.
+
+To address that avoid using CONFIG_GCC_PLUGIN_LATENT_ENTROPY in
+favour of LATENT_ENTROPY_PLUGIN definition which is defined as a
+part of gcc plugins cflags and hence reflect more accurately when gcc
+plugin is active. Besides that it is also used for similar purpose in
+linux/compiler-gcc.h for latent_entropy attribute definition.
+
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ include/linux/random.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/random.h b/include/linux/random.h
+index 445a0ea4ff49..d4eb9b3789ad 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -20,7 +20,7 @@ struct random_ready_callback {
+ 
+ extern void add_device_randomness(const void *, unsigned int);
+ 
+-#if defined(CONFIG_GCC_PLUGIN_LATENT_ENTROPY) && !defined(__CHECKER__)
++#if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
+ static inline void add_latent_entropy(void)
+ {
+ 	add_device_randomness((const void *)&latent_entropy,
+-- 
+2.18.0.13.gd42ae10
+
