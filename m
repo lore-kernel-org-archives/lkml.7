@@ -2,130 +2,113 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A40C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EE9C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C2421019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04817205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="J4MSG3Ty"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P0H0CNbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfEGMv4 (ORCPT
+        id S1726686AbfEGMws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:51:56 -0400
-Received: from mail-eopbgr780114.outbound.protection.outlook.com ([40.107.78.114]:48320
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726348AbfEGMvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:51:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=E+hA16GAMRZHIHZAs4CR/MpAVOXzHu/EmLXlhi/ZbQPJAz/TI1cFlkxrEtq6w4LRB6VJHds8DlzkR2ACgbdRHSLGPpZ1ytJc6RcCXjkwJa54VOWsUKLDg0jR/6XsY5+5HjTBR1lNxLnlYn5sLLIl8ppbeSNYVpw5zsK0vZd2A/Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0Ky181NJatpNjnAsO3YPhF0oKBEzAmcIwNcbi6h5yY=;
- b=CVawSngQnpKP9858lGqPvgCpRaelaXy2NtVUVYCOgaBs1owCKvrvL9RESmU7xltnnuRIY5sG+p2/quLYonzzWNJe9EpQeWqxcSVB4gwaLL3xOS11uVFA3o8AMjAa4JgkEZBpPSnTD3VVYAN93U81/hAVNwe+7MotlW96GDBmzRM=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0Ky181NJatpNjnAsO3YPhF0oKBEzAmcIwNcbi6h5yY=;
- b=J4MSG3Ty3FYAGby5SNsEF0eAVXGWZOOOvQetMdJBR47DDt58DIlDnGcI6VAZdqxxqR8kzDaXyHcfE6a9wISKOwtXcx0PEqu9Uw4IAAfPpq+tG6wWn25Fwkm47epb7NUPWjofp61aIgb4KkvxGNFnt1WE+TmYf+AOn2Lnrk8NZBM=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB0902.namprd21.prod.outlook.com (52.132.132.159) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.2; Tue, 7 May 2019 12:51:52 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::25b3:455b:5e85:3c60]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::25b3:455b:5e85:3c60%3]) with mapi id 15.20.1900.002; Tue, 7 May 2019
- 12:51:52 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
-        "juliana.rodrigueiro@intra2net.com" 
-        <juliana.rodrigueiro@intra2net.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
-Thread-Index: AQHVBKkKTisq9OloE02W7qrjLXJSBaZfnaGA
-Date:   Tue, 7 May 2019 12:51:51 +0000
-Message-ID: <DM5PR2101MB09188A7DB0777CD50333F94ED7310@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <1557215147-89776-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1557215147-89776-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-07T12:51:49.1646513Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=98dfddef-5679-453b-aaa2-4ac33bc314a9;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 038d20fb-c55e-4c35-44c5-08d6d2eac710
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB0902;
-x-ms-traffictypediagnostic: DM5PR2101MB0902:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR2101MB0902F772A4FB05CCF3A0844CD7310@DM5PR2101MB0902.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(396003)(346002)(39860400002)(199004)(189003)(4744005)(10090500001)(71200400001)(71190400001)(86362001)(86612001)(7696005)(256004)(33656002)(186003)(14454004)(81156014)(81166006)(8936002)(22452003)(1511001)(5660300002)(99286004)(54906003)(110136005)(66066001)(316002)(8990500004)(8676002)(2201001)(76176011)(53936002)(9686003)(55016002)(6116002)(7416002)(229853002)(74316002)(68736007)(3846002)(102836004)(7736002)(6246003)(6436002)(2501003)(305945005)(4326008)(2906002)(446003)(6506007)(478600001)(10290500003)(486006)(476003)(52536014)(11346002)(26005)(25786009)(66446008)(73956011)(76116006)(66476007)(66556008)(66946007)(64756008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0902;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: b10gQ6SjZVqoPEjp5oLD2AbPp/q6XqYXeFaPDuA6O92UH03zjJh6oYy3OT8xkCHo73+GSWYhoVvh5vnJXlgB60uHFQyfQZJGHbGOF6ziYMagdlyxC3iDop91gzGqPzrzlBXkhaZWCtzjckD/+E6nwc2eWuANlnsVg+kkrKPJZbGo/fDDE6FG/jU+8jSu904TtlR+ogtnruzOALlgghJff4m8zuv2cNvktGRNbBmUXko7m/VdKXg3cipuX0xxqWrvPfxZahk9Li4FFv60Ly7qYwRVT/Q7NMsTIaH7NqFJnBnT0Ygq+J0MfFWLC9VO1ZZZwFsPL3pAIkIr9RByD9qyasBluycADonSmrdu2mN2IHpJD+M3vGest/amGj4d0XUJPICCqM7LkiJKy5hS7hg04ccVFFgW+ANMXJa0xjAArkg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 7 May 2019 08:52:48 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:46556 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfEGMws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:52:48 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x47Ci14h136728;
+        Tue, 7 May 2019 12:52:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=HJB6jyzrLVpXE0eF23Fp5tuwTCQ10Zf7366gUN/UEMk=;
+ b=P0H0CNbK/dJxZxbyAcfx7c4I+kxbEYIgTy++Y/291NpZgdep1YGngVIGyR8p5duIPEhl
+ /tpOcMkw0MGIPxrRGfhKXr9C0cb6qHCeY9PWaAquK0yhHD6tvf0l0ePtWjeqUwE4Agbm
+ k5NpO+AsjhqSpzVCASgnvC2bAPES2BI1X0Had/oYfPwRO9z+ZAZRDZTw9lskc7pb3SG8
+ fgjTYcPr+/OeiTpKAdfNUysVX7z8nwhxP6lj854BTBe5GOqW8/kKC8K/6OmqmWK7CAxy
+ HzNVSmSwD1dDy4VX0MN81SsCg2eWbnrhd3oowX6HC9SCnEb/3vbAcTS3x1KuuNbYG4qF Sg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2s94b5w0eu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 12:52:38 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x47CnrQ4069032;
+        Tue, 7 May 2019 12:50:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2sagytwke2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 May 2019 12:50:37 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x47CoYeu029182;
+        Tue, 7 May 2019 12:50:34 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 May 2019 05:50:34 -0700
+Date:   Tue, 7 May 2019 15:50:27 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     alexander.shishkin@linux.intel.com, security@kernel.org,
+        sasha.levin@oracle.com, gregkh@linuxfoundation.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, trivial@kernel.org
+Subject: Re: stm class: Prevent user-controllable allocations
+Message-ID: <20190507125027.GV2239@kadam>
+References: <20190507124113.GA659@amd>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 038d20fb-c55e-4c35-44c5-08d6d2eac710
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 12:51:51.0333
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0902
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507124113.GA659@amd>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905070083
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905070083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4gU2VudDogVHVlc2RheSwgTWF5
-IDcsIDIwMTkgMTI6NDcgQU0NCj4gDQo+IEluIHRoZSBjYXNlIG9mIFg4Nl9QQUUsIHVuc2lnbmVk
-IGxvbmcgaXMgdTMyLCBidXQgdGhlIHBoeXNpY2FsIGFkZHJlc3MgdHlwZQ0KPiBzaG91bGQgYmUg
-dTY0LiBEdWUgdG8gdGhlIGJ1ZyBoZXJlLCB0aGUgbmV0dnNjIGRyaXZlciBjYW4gbm90IGxvYWQN
-Cj4gc3VjY2Vzc2Z1bGx5LCBhbmQgc29tZXRpbWVzIHRoZSBWTSBjYW4gcGFuaWMgZHVlIHRvIG1l
-bW9yeSBjb3JydXB0aW9uICh0aGUNCj4gaHlwZXJ2aXNvciB3cml0ZXMgZGF0YSB0byB0aGUgd3Jv
-bmcgbG9jYXRpb24pLg0KPiANCj4gRml4ZXM6IDZiYTM0MTcxYmNiZCAoIkRyaXZlcnM6IGh2OiB2
-bWJ1czogUmVtb3ZlIHVzZSBvZiBzbG93X3ZpcnRfdG9fcGh5cygpIikNCj4gQ2M6IHN0YWJsZUB2
-Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQu
-Y29tPg0KPiBSZXBvcnRlZC1hbmQtdGVzdGVkLWJ5OiBKdWxpYW5hIFJvZHJpZ3VlaXJvIDxqdWxp
-YW5hLnJvZHJpZ3VlaXJvQGludHJhMm5ldC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IERleHVhbiBD
-dWkgPGRlY3VpQG1pY3Jvc29mdC5jb20+DQoNClJldmlld2VkLWJ5OiAgTWljaGFlbCBLZWxsZXkg
-PG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo=
+On Tue, May 07, 2019 at 02:41:13PM +0200, Pavel Machek wrote:
+> 
+> It seems to me that we still allow overflow if count == ~0. We'll then
+> allocate 0 bytes but copy ~0 bytes. That does not sound healthy.
+> 
+> Fixes: f08b18266c7116e2ec6885dd53a928f580060a71
+> 
+> Signed-off-by: Pavel Machek <pavel@denx.de>
+> 
+> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+> index c7ba8ac..8846fca 100644
+> --- a/drivers/hwtracing/stm/core.c
+> +++ b/drivers/hwtracing/stm/core.c
+> @@ -631,7 +631,7 @@ static ssize_t stm_char_write(struct file *file, const char __user *buf,
+>  	char *kbuf;
+>  	int err;
+>  
+> -	if (count + 1 > PAGE_SIZE)
+> +	if (count > PAGE_SIZE - 1)
+>  		count = PAGE_SIZE - 1;
+
+The "count" variable should all be checked in vfs_write().  count + off
+is checked in rw_verify_area() and count is capped at MAX_RW_COUNT.
+
+#define MAX_RW_COUNT (INT_MAX & PAGE_MASK)
+
+regards,
+dan carpenter
+
