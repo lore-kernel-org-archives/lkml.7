@@ -2,93 +2,114 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9021FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6FAC46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1FB2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229D921479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557210825;
+	bh=oBFyk7fpihJdB0jCxegQVyX+6vGmLC1DK9IvU35itFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ruBGKuCgcJvT7btJfVKCrJgvUDw2CfMabGmW6bE7u+gHCKsojstLqmJ0QttDrE7QN
+	 tP28+q5JNAfPz5k6FGfb2Or9sx9nQFwUpsFlNg5OAegy58hScIHCsu1D1B6KKWtPdR
+	 EZawQL/DG7jNNyE7ss1NjZtZYE3UfAB1urIzUa3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfEGGdJ (ORCPT
+        id S1726576AbfEGGdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:33:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:2483 "EHLO mga02.intel.com"
+        Tue, 7 May 2019 02:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfEGGdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 02:33:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 23:33:07 -0700
-X-ExtLoop1: 1
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by fmsmga007.fm.intel.com with ESMTP; 06 May 2019 23:33:05 -0700
-Subject: Re: [PATCH 1/2] mmc: sdhci-iproc: cygnus: Set NO_HISPD bit to fix
- HS50 data hold time problem
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>
-References: <20190506170115.10840-1-scott.branden@broadcom.com>
- <20190506170115.10840-2-scott.branden@broadcom.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <195374db-9a9a-2807-d8be-50ec4e8fedcb@intel.com>
-Date:   Tue, 7 May 2019 09:32:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726349AbfEGGdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 02:33:43 -0400
+Received: from localhost (unknown [37.142.3.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6C092087F;
+        Tue,  7 May 2019 06:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557210822;
+        bh=oBFyk7fpihJdB0jCxegQVyX+6vGmLC1DK9IvU35itFk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RyPsl6lmqvcCnKl41VkY/GHW2+ETy7nDPo8Tpqc6bp7gDCBLdqWePFxG5B2Wa9vwT
+         R3/WlBSqCc8Bj3KtWz9uGTPPZS6ordaRPlQ/fveMibMSWfgfc4tq1AglaAlmwW4kMa
+         oMxOIvxG2cStHRR+RV/gLi/uVrPbQ27CrKcpR2aA=
+Date:   Tue, 7 May 2019 09:33:37 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 13/17] IB, arm64: untag user pointers in
+ ib_uverbs_(re)reg_mr()
+Message-ID: <20190507063337.GP6938@mtr-leonro.mtl.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <66d044ab9445dcf36a96205a109458ac23f38b73.1557160186.git.andreyknvl@google.com>
+ <20190506195020.GD6201@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190506170115.10840-2-scott.branden@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506195020.GD6201@ziepe.ca>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/05/19 8:01 PM, Scott Branden wrote:
-> From: Trac Hoang <trac.hoang@broadcom.com>
-> 
-> The iproc host eMMC/SD controller hold time does not meet the
-> specification in the HS50 mode. This problem can be mitigated
-> by disabling the HISPD bit; thus forcing the controller output
-> data to be driven on the falling clock edges rather than the
-> rising clock edges.
-> 
-> This change applies only to the Cygnus platform.
-> 
-> Fixes: c833e92bbb60 ("mmc: sdhci-iproc: support standard byte register accesses")
-> Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+On Mon, May 06, 2019 at 04:50:20PM -0300, Jason Gunthorpe wrote:
+> On Mon, May 06, 2019 at 06:30:59PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > pass tagged user pointers (with the top byte set to something else other
+> > than 0x00) as syscall arguments.
+> >
+> > ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
+> > e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
+> >
+> > Untag user pointers in these functions.
+> >
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  drivers/infiniband/core/uverbs_cmd.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+>
+> I think this is OK.. We should really get it tested though.. Leon?
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+It can be done after v5.2-rc1.
 
-> ---
->  drivers/mmc/host/sdhci-iproc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
-> index 9d12c06c7fd6..9d4071c41c94 100644
-> --- a/drivers/mmc/host/sdhci-iproc.c
-> +++ b/drivers/mmc/host/sdhci-iproc.c
-> @@ -196,7 +196,8 @@ static const struct sdhci_ops sdhci_iproc_32only_ops = {
->  };
->  
->  static const struct sdhci_pltfm_data sdhci_iproc_cygnus_pltfm_data = {
-> -	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
-> +	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
-> +		  SDHCI_QUIRK_NO_HISPD_BIT,
->  	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN | SDHCI_QUIRK2_HOST_OFF_CARD_ON,
->  	.ops = &sdhci_iproc_32only_ops,
->  };
-> 
+Thanks
 
+>
+> Jason
