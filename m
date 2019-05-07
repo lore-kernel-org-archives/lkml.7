@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072DBC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999BCC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD297205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3B620C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208937;
-	bh=BS8bQZGoB7uxBqsmLwt1/UFGaXwyTwZEytlGNIEdKnU=;
+	s=default; t=1557208944;
+	bh=mfgA1AuaX10R2u6azGrWCWNVloqUtLhMbn73+xrO3Og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=au2gFw4AO+IP9ThU3AUaeWzWTJ966yh8LeX+MS5hpuMymaQQiJKxy2DbZnZ4J9aTg
-	 FT0uFwC9h6N/KgytzDg23MTKprZZ9AqoYMCzceomilS3F91Coy8L5lsyOhtkkhGKya
-	 8JW43idoqCbb494VBAJTwNamg1mtNPO4MUG8jp1s=
+	b=LVwcWH3Rzc82XswQfizbk2Bt5/0a/Hr9NF07NbA0CafhBT4Tioz59hHmrtlQeC2OA
+	 0RujxrUICZZyzkH50i6u/d2NZ4+PglLtNgZSxrRPmw0CcVNTiNXppGyATsEOwATiby
+	 L3ApgHruTsxQyjaJBzJwIzfU6C6/pcrxSPmz0lZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfEGGCQ (ORCPT
+        id S1727378AbfEGFfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbfEGFfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:41 -0400
+        id S1727276AbfEGFfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E85EB2087F;
-        Tue,  7 May 2019 05:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2EDD214AE;
+        Tue,  7 May 2019 05:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207340;
-        bh=BS8bQZGoB7uxBqsmLwt1/UFGaXwyTwZEytlGNIEdKnU=;
+        s=default; t=1557207330;
+        bh=mfgA1AuaX10R2u6azGrWCWNVloqUtLhMbn73+xrO3Og=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iTyCt+hhs6WDmtMI27GEtirrF94M2dzJBG21bV7pKRoMyZwvzfdt0IrdEKf7521xO
-         LsWbUzjZ/+5pBbKmUYxrzFTErGpOfV5rvoDAtwpz+74akzA+kQa2pTXPy/IJFpOH9J
-         MdZtf/xco6k/fMksoHQil6jQtOxk9plagM56F9Tg=
+        b=SgsBV5ntmD6YRYy0DsZrp5Jz5q724SMQmzC+J240+HdvUloD21Pm4m4OTkhEiJKfn
+         3vdanpXLnR+GTq84q0dvK4ejeSRKVaBvQTOncXotnB2JLxU2wbqRi0czZ60qVFQbFX
+         oER0D7FRg0ve4uFvVn50r7PKRIYTVQka/B/OKWxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 95/99] mm/page_alloc.c: avoid potential NULL pointer dereference
-Date:   Tue,  7 May 2019 01:32:29 -0400
-Message-Id: <20190507053235.29900-95-sashal@kernel.org>
+Cc:     Miaohe Lin <linmiaohe@huawei.com>,
+        Hui Wang <wanghui104@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 90/99] net: vrf: Fix operation not supported when set vrf mac
+Date:   Tue,  7 May 2019 01:32:24 -0400
+Message-Id: <20190507053235.29900-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -61,41 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit 8139ad043d632c0e9e12d760068a7a8e91659aa1 ]
+[ Upstream commit 6819e3f6d83a24777813b0d031ebe0861694db5a ]
 
-ac.preferred_zoneref->zone passed to alloc_flags_nofragment() can be NULL.
-'zone' pointer unconditionally derefernced in alloc_flags_nofragment().
-Bail out on NULL zone to avoid potential crash.  Currently we don't see
-any crashes only because alloc_flags_nofragment() has another bug which
-allows compiler to optimize away all accesses to 'zone'.
+Vrf device is not able to change mac address now because lack of
+ndo_set_mac_address. Complete this in case some apps need to do
+this.
 
-Link: http://lkml.kernel.org/r/20190423120806.3503-1-aryabinin@virtuozzo.com
-Fixes: 6bb154504f8b ("mm, page_alloc: spread allocations across zones before introducing fragmentation")
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Hui Wang <wanghui104@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/vrf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index eedb57f9b40b..d59be95ba45c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3385,6 +3385,9 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
- 		alloc_flags |= ALLOC_KSWAPD;
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index cd15c32b2e43..9ee4d7402ca2 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -875,6 +875,7 @@ static const struct net_device_ops vrf_netdev_ops = {
+ 	.ndo_init		= vrf_dev_init,
+ 	.ndo_uninit		= vrf_dev_uninit,
+ 	.ndo_start_xmit		= vrf_xmit,
++	.ndo_set_mac_address	= eth_mac_addr,
+ 	.ndo_get_stats64	= vrf_get_stats64,
+ 	.ndo_add_slave		= vrf_add_slave,
+ 	.ndo_del_slave		= vrf_del_slave,
+@@ -1274,6 +1275,7 @@ static void vrf_setup(struct net_device *dev)
+ 	/* default to no qdisc; user can add if desired */
+ 	dev->priv_flags |= IFF_NO_QUEUE;
+ 	dev->priv_flags |= IFF_NO_RX_HANDLER;
++	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
  
- #ifdef CONFIG_ZONE_DMA32
-+	if (!zone)
-+		return alloc_flags;
-+
- 	if (zone_idx(zone) != ZONE_NORMAL)
- 		goto out;
- 
+ 	/* VRF devices do not care about MTU, but if the MTU is set
+ 	 * too low then the ipv4 and ipv6 protocols are disabled
 -- 
 2.20.1
 
