@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E087C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB4EC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54B720578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEDF204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208035;
-	bh=8+YtWPnbUFWPN/iXi/LHn7xtcTeGo8pWKdfVgK4GiBk=;
+	s=default; t=1557208042;
+	bh=u5nLj1PXZVqHlkzigzMqgeiIEsW8UvhBTd76hsdfV/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGT8QtqatLThCYwt9uKYV5/A9clp/62zczGa4F9YqMKkLzSrOrWeG9jCHqh//19j+
-	 o5GGkrmcs7vYsP3dXPmziJ3BhZkurZeRwwuqAhJR/CCHjRKkwqu+eyFhLUZx3IoLmn
-	 3PQOyxxk+C6VAIqJTdp32Ucy7XxDgYXc8BjI5jZ4=
+	b=oKEvxF+UNKMpPm+4KBAyJM7qek8ORFhhJXqwMhjkNRYGWQO0A3S/+844WsAUx1in1
+	 M6pD/W1TDR8y2jd68m2Zswl9AoFETu1ZTxXVvpS28lT76ZiDY11lKv+tzNpCPH2D3P
+	 qmbMOBfYMsYTrvduwr2EDDsqjURDX9XUxtnw8eu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfEGFrN (ORCPT
+        id S1729378AbfEGFrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60770 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbfEGFlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727388AbfEGFlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 May 2019 01:41:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4545E2087F;
-        Tue,  7 May 2019 05:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C08205ED;
+        Tue,  7 May 2019 05:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207676;
-        bh=8+YtWPnbUFWPN/iXi/LHn7xtcTeGo8pWKdfVgK4GiBk=;
+        s=default; t=1557207674;
+        bh=u5nLj1PXZVqHlkzigzMqgeiIEsW8UvhBTd76hsdfV/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vrPYhCXnPtGPNM96J5T9s9AAgsES+9Pmyspum+0+olVfdJBtvytor2xRh8NmD8f5/
-         xmLVhCgPoal7vy63ZB+SQlLwzB6ltvKgls0pVjL+hFdE48qyFRzZ3AepMJSLULIjs9
-         2j4i13wH9IIcUW4xcIe+g+q3mrC7Mru9WO5zUPC4=
+        b=QYdS2n/izfzXH3ywu4wLmLoePdS2UYgTsssYzZlZIFiDrtfM5AkjTTuhnqEfLll19
+         bF4rYxbaLrfL4qnJ5JsNHqYgE0EW8SJStypEaIxhRg++YGymJFtzuv/tyIenp5946H
+         04BOqRk46Tp/W/bqDkBqbRFR6pMYBsspNxiBfqak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        Semion Lisyansky <semionl@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 92/95] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
-Date:   Tue,  7 May 2019 01:38:21 -0400
-Message-Id: <20190507053826.31622-92-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 91/95] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw ordered workqueue
+Date:   Tue,  7 May 2019 01:38:20 -0400
+Message-Id: <20190507053826.31622-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -62,17 +64,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit b442fed1b724af0de087912a5718ddde1b87acbb ]
+[ Upstream commit 4af0699782e2cc7d0d89db9eb6f8844dd3df82dc ]
 
-The workqueue is used to periodically update the networking stack about
-activity / statistics of various objects such as neighbours and TC
-actions.
+The ordered workqueue is used to offload various objects such as routes
+and neighbours in the order they are notified.
 
 It should not be called as part of memory reclaim path, so remove the
-WQ_MEM_RECLAIM flag.
+WQ_MEM_RECLAIM flag. This can also result in a warning [1], if a worker
+tries to flush a non-WQ_MEM_RECLAIM workqueue.
 
-Fixes: 3d5479e92087 ("mlxsw: core: Remove deprecated create_workqueue")
+[1]
+[97703.542861] workqueue: WQ_MEM_RECLAIM mlxsw_core_ordered:mlxsw_sp_router_fib6_event_work [mlxsw_spectrum] is flushing !WQ_MEM_RECLAIM events:rht_deferred_worker
+[97703.542884] WARNING: CPU: 1 PID: 32492 at kernel/workqueue.c:2605 check_flush_dependency+0xb5/0x130
+...
+[97703.542988] Hardware name: Mellanox Technologies Ltd. MSN3700C/VMOD0008, BIOS 5.11 10/10/2018
+[97703.543049] Workqueue: mlxsw_core_ordered mlxsw_sp_router_fib6_event_work [mlxsw_spectrum]
+[97703.543061] RIP: 0010:check_flush_dependency+0xb5/0x130
+...
+[97703.543071] RSP: 0018:ffffb3f08137bc00 EFLAGS: 00010086
+[97703.543076] RAX: 0000000000000000 RBX: ffff96e07740ae00 RCX: 0000000000000000
+[97703.543080] RDX: 0000000000000094 RSI: ffffffff82dc1934 RDI: 0000000000000046
+[97703.543084] RBP: ffffb3f08137bc20 R08: ffffffff82dc18a0 R09: 00000000000225c0
+[97703.543087] R10: 0000000000000000 R11: 0000000000007eec R12: ffffffff816e4ee0
+[97703.543091] R13: ffff96e06f6a5c00 R14: ffff96e077ba7700 R15: ffffffff812ab0c0
+[97703.543097] FS: 0000000000000000(0000) GS:ffff96e077a80000(0000) knlGS:0000000000000000
+[97703.543101] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[97703.543104] CR2: 00007f8cd135b280 CR3: 00000001e860e003 CR4: 00000000003606e0
+[97703.543109] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[97703.543112] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[97703.543115] Call Trace:
+[97703.543129] __flush_work+0xbd/0x1e0
+[97703.543137] ? __cancel_work_timer+0x136/0x1b0
+[97703.543145] ? pwq_dec_nr_in_flight+0x49/0xa0
+[97703.543154] __cancel_work_timer+0x136/0x1b0
+[97703.543175] ? mlxsw_reg_trans_bulk_wait+0x145/0x400 [mlxsw_core]
+[97703.543184] cancel_work_sync+0x10/0x20
+[97703.543191] rhashtable_free_and_destroy+0x23/0x140
+[97703.543198] rhashtable_destroy+0xd/0x10
+[97703.543254] mlxsw_sp_fib_destroy+0xb1/0xf0 [mlxsw_spectrum]
+[97703.543310] mlxsw_sp_vr_put+0xa8/0xc0 [mlxsw_spectrum]
+[97703.543364] mlxsw_sp_fib_node_put+0xbf/0x140 [mlxsw_spectrum]
+[97703.543418] ? mlxsw_sp_fib6_entry_destroy+0xe8/0x110 [mlxsw_spectrum]
+[97703.543475] mlxsw_sp_router_fib6_event_work+0x6cd/0x7f0 [mlxsw_spectrum]
+[97703.543484] process_one_work+0x1fd/0x400
+[97703.543493] worker_thread+0x34/0x410
+[97703.543500] kthread+0x121/0x140
+[97703.543507] ? process_one_work+0x400/0x400
+[97703.543512] ? kthread_park+0x90/0x90
+[97703.543523] ret_from_fork+0x35/0x40
+
+Fixes: a3832b31898f ("mlxsw: core: Create an ordered workqueue for FIB offload")
 Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Semion Lisyansky <semionl@mellanox.com>
 Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
@@ -81,18 +124,18 @@ Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index 33262c09c703..fad26046e159 100644
+index 070fd3f7fadf..33262c09c703 100644
 --- a/drivers/net/ethernet/mellanox/mlxsw/core.c
 +++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -1812,7 +1812,7 @@ static int __init mlxsw_core_module_init(void)
- {
- 	int err;
- 
--	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
-+	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, 0, 0);
+@@ -1815,7 +1815,7 @@ static int __init mlxsw_core_module_init(void)
+ 	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
  	if (!mlxsw_wq)
  		return -ENOMEM;
- 	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
+-	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", WQ_MEM_RECLAIM,
++	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
+ 					    mlxsw_core_driver_name);
+ 	if (!mlxsw_owq) {
+ 		err = -ENOMEM;
 -- 
 2.20.1
 
