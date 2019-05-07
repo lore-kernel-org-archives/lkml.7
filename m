@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE682C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1264C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8689E20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762AB20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207808;
-	bh=rVSya5QCW5mY+ThgI+l4OR8ZblKeKEonGB7uEyCGGgM=;
+	s=default; t=1557207814;
+	bh=FlCMi7O7nvmlmp2MPamvn8aAjMD0ugeFa6JxNhQe4es=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nR1wvIy6lnCEMViOYmO1uqvzU4wLzM+4EAM8w8iSEhxPvW6XtTjETvXL2yNMC+yXS
-	 t0vuTe4pjf5xWB+lZasJVDnG6p6M1dBDlK5FmkO3ox4ryuACk0WCuYUOAMKS19P7Qj
-	 bLKAYdguv1qOXHI0WHNKoIWWufdxMozsf5AyqInI=
+	b=EqI98iKEkCXvYuhOWIoQOHG6JYAuls4yyXTq0BbT1k7hHXcldcR1qKPrFhwdF++Pc
+	 +60NNBG7i/gTCeOc1ofmheBdRRLPjgdS4fZsiRhBTA8K4uj1CR9hEU40Ipxp07ni2g
+	 6zCzssPdoqTAH8WouUKVCrGJZlqyE4xvz9nPoI4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfEGFnL (ORCPT
+        id S1729738AbfEGFnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:43:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33782 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729688AbfEGFnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:43:01 -0400
+        id S1728835AbfEGFnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:43:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EDA120675;
-        Tue,  7 May 2019 05:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58BBB20675;
+        Tue,  7 May 2019 05:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207780;
-        bh=rVSya5QCW5mY+ThgI+l4OR8ZblKeKEonGB7uEyCGGgM=;
+        s=default; t=1557207787;
+        bh=FlCMi7O7nvmlmp2MPamvn8aAjMD0ugeFa6JxNhQe4es=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUZd8sxIa9GuBxslYle7iB7BaHFMfhpukXfMWEmm09UFZosUX3PsIupCXt52yL+ff
-         L6f2r0jZs7n0yNwMKERXKthiPyjCjEQoLAYvTSP55IQ8L13YioONyEdqpey4Gk+BtQ
-         PLPFJVOQjhJEIyyn2JP2ag9kaIvFlcBO9ivPMNhE=
+        b=p7W7ZBkQ8r/egYmNniknUSzQHwNADue10oiEX+0AcELIUvsGYumcw7CpnktI3PHU4
+         SYegZn8j8KrFWAoS7uC73l9LBiPDeXPg6WRAjyTP8h10/yA3UFKJ/XFB+CCBb/j7IK
+         uiltMBaJFd2xyXALsIRSrFVM7nD6+lM3Lx3d5So4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 05/10] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
-Date:   Tue,  7 May 2019 01:42:41 -0400
-Message-Id: <20190507054247.537-5-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 08/10] s390: ctcm: fix ctcm_new_device error return code
+Date:   Tue,  7 May 2019 01:42:44 -0400
+Message-Id: <20190507054247.537-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054247.537-1-sashal@kernel.org>
 References: <20190507054247.537-1-sashal@kernel.org>
@@ -59,50 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
+[ Upstream commit 27b141fc234a3670d21bd742c35d7205d03cbb3a ]
 
-In __apic_accept_irq() interface trig_mode is int and actually on some code
-paths it is set above u8:
+clang points out that the return code from this function is
+undefined for one of the error paths:
 
-kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
-is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
-(1 << 15) & e->msi.data
+../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
+      [-Wsometimes-uninitialized]
+                if (priv->channel[direction] == NULL) {
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
+        return result;
+               ^~~~~~
+../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
+                if (priv->channel[direction] == NULL) {
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
+        int result;
+                  ^
 
-kvm_apic_local_deliver sets it to reg & (1 << 15).
+Make it return -ENODEV here, as in the related failure cases.
+gcc has a known bug in underreporting some of these warnings
+when it has already eliminated the assignment of the return code
+based on some earlier optimization step.
 
-Fix the immediate issue by making 'tm' into u16. We may also want to adjust
-__apic_accept_irq() interface and use proper sizes for vector, level,
-trig_mode but this is not urgent.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/net/ctcm_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index 6b06ab8748dd..005a5b8d5628 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -415,13 +415,13 @@ TRACE_EVENT(kvm_apic_ipi,
- );
- 
- TRACE_EVENT(kvm_apic_accept_irq,
--	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
-+	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
- 	    TP_ARGS(apicid, dm, tm, vec),
- 
- 	TP_STRUCT__entry(
- 		__field(	__u32,		apicid		)
- 		__field(	__u16,		dm		)
--		__field(	__u8,		tm		)
-+		__field(	__u16,		tm		)
- 		__field(	__u8,		vec		)
- 	),
- 
+diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
+index e056dd4fe44d..5526388f905e 100644
+--- a/drivers/s390/net/ctcm_main.c
++++ b/drivers/s390/net/ctcm_main.c
+@@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
+ 		if (priv->channel[direction] == NULL) {
+ 			if (direction == CTCM_WRITE)
+ 				channel_free(priv->channel[CTCM_READ]);
++			result = -ENODEV;
+ 			goto out_dev;
+ 		}
+ 		priv->channel[direction]->netdev = dev;
 -- 
 2.20.1
 
