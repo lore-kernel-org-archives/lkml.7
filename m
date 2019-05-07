@@ -2,130 +2,99 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE5C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CFE20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2E520825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="c8YCsFOL"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MOXKNuRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfEGWqp (ORCPT
+        id S1726525AbfEGWrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:46:45 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43058 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEGWqo (ORCPT
+        Tue, 7 May 2019 18:47:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33780 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfEGWrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:46:44 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w33so17894468edb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:46:43 -0700 (PDT)
+        Tue, 7 May 2019 18:47:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e11so11420259wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=2SBXkPPsS90MxklCe6MIGlkttGdHW3kI9AU6dDeoWq0=;
-        b=c8YCsFOL5XUurB/wLU01FUTlJ+LmbsoTAONIDSv6Ve2y9sfQIO00JcBoneTawrU37S
-         ZxHXBrqZPJHAB7Y9fHXTTthRpBiTxbWYVk+FE08Jp0WYjYvYKAl5oBOeeH4MtBg/3L0C
-         h0QAqHEOXzezLEUlvcU8JoSmAFNwDCBsNmcWw=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=9KmZcvbM51Ahdr1a8pXzpoTQRpVZOoeydHZiJZ+kMlg=;
+        b=MOXKNuRq6G1Cab3TGfzPz4NbGfvhNpLU88y5ZOW5Te+AH0kwjRSNyHHZEzkkuNnZ6/
+         YuB86zdivMVacZQP/8IxTQiZlyLYBPW3FVP6/tluXjHMXo7O0hTCBW2Kx4zmDB4GJvBS
+         H+aEqkhJk/JqUsu23xQdhI0TKNY5tgGDqtmTKGi3a3QLnmjy6axqCP4WUxqPqdVJMuk5
+         V8CwDqImiJ1IbdQOEAy7Evv+jGR5P+g48nUyu1kc/syvD5pcOkCYSDaxdHHniQdq2Vjm
+         oAsNM1wf4daUks7iunqls+++luohTyjiyN+vJgN2cwh3AE30Ts+bzAxs2F1SzJm4L+v0
+         g6Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=2SBXkPPsS90MxklCe6MIGlkttGdHW3kI9AU6dDeoWq0=;
-        b=mNXOg1wAAelQ9yrK6KB8UfzuAjO0gZ+wg+bGVC3TxKTLsX+QrJBtPePUTNvDFLwaJq
-         hQudmAka0VmC3r8XHq2IBfr6Kchqmv5nXZoEUbCx6QvWyHM7lUJ3ccsYPxqHu4MpVRTe
-         9rRRFdWYV9odMOezf9+ogT6lr6EtDtMk9cDPqyS6PjvOynemyDuAb67hqbQ0R/C1Ktn2
-         1+5QJuxhMAc43L1qWGBVmyjWlp9pKHPpUqRAvNJ2Ko4QdPVWDNqAQK7f9qNTArCKb2He
-         wTr/aU4WlF1aguP0wqDcwPes7InzxS27GMje+Pml3mBcMSyJsRvTp5ZySvAYlQUda6QL
-         kfnA==
-X-Gm-Message-State: APjAAAVWHB/0AagJqm/fKIIV5Y6CfBHtMLLe3TOk0iKjT67o065dXPfD
-        Dq5XsUn81IJ2SF/Zj13ZJLjXQBCABjOPEYsJ
-X-Google-Smtp-Source: APXvYqyXCGYgKhd7HiuSIvjEImJkx/UgMafy843ubjLvtfYY0p7CumAUjx/69TyceblENiM727jj+g==
-X-Received: by 2002:a50:c201:: with SMTP id n1mr35712206edf.244.1557269202927;
-        Tue, 07 May 2019 15:46:42 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id s53sm4603529edb.20.2019.05.07.15.46.39
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=9KmZcvbM51Ahdr1a8pXzpoTQRpVZOoeydHZiJZ+kMlg=;
+        b=HKDV4EgsmaejEWNTvSrKR7vVZ+0B3nzNUjC0MI0KbFziPCkKvd+uP9yfdnF/0Dv8mA
+         jgTa6RDJuORzzEI+ERQJRqgbPfzx5Ub6+Iyhp5MIHhw35sY8q+6GPl8BmaMg4sqnxA68
+         js/p10pNdvttG5iLtAxEN2MMgDiI4Mqd5rqHpMzqSs8kGc3KG6IMBxG3Gas4rZtimze6
+         avti+Y6Wj9yxz1i1lCpuxdRNguOJnPEivguZnV7kANo87m4I9Ac4NG9oNFUks08m6dsE
+         Jc7to7Befvuk2R4oTMVJilkWFcUHOieslMZlvOo4aPuh8ZvmM2j56lkY8riDA+u6gmQu
+         Y/hw==
+X-Gm-Message-State: APjAAAUewK3Qc+0qQhvpV7+4+X1YurvS3q950WFFOjicNUI9tSDdB5cX
+        /HNNQlLDcNCn8ZAbBpOQmSLbFA==
+X-Google-Smtp-Source: APXvYqwRoaj/hHFJl0RN2ppt7xelUHTljhJJzr+5KeC3rV8d9qUmGOi31ZkwaoRwnza8C+/Dy5wqzw==
+X-Received: by 2002:adf:9c87:: with SMTP id d7mr18660680wre.68.1557269222219;
+        Tue, 07 May 2019 15:47:02 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id 91sm25815586wrs.43.2019.05.07.15.47.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 15:46:41 -0700 (PDT)
-Subject: Re: [PATCH 2/2] mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data
- hold time problem
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>
-References: <20190506170115.10840-1-scott.branden@broadcom.com>
- <20190506170115.10840-3-scott.branden@broadcom.com>
- <673b3d25-0256-9cd7-c89a-673546e69f3a@intel.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <293b4f12-c74f-35fe-80d7-fdb25405e499@broadcom.com>
-Date:   Tue, 7 May 2019 15:46:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 07 May 2019 15:47:01 -0700 (PDT)
+Message-ID: <5cd20ae5.1c69fb81.b91f5.9074@mx.google.com>
+Date:   Tue, 07 May 2019 15:47:01 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <673b3d25-0256-9cd7-c89a-673546e69f3a@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Kernel: v4.14.116-76-g2e004f6acb80
+In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
+References: <20190506143053.287515952@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 00/75] 4.14.117-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+stable-rc/linux-4.14.y boot: 64 boots: 0 failed, 64 passed (v4.14.116-76-g2=
+e004f6acb80)
 
-On 2019-05-06 11:31 p.m., Adrian Hunter wrote:
-> On 6/05/19 8:01 PM, Scott Branden wrote:
->> From: Trac Hoang <trac.hoang@broadcom.com>
->>
->> The iproc host eMMC/SD controller hold time does not meet the
->> specification in the HS50 mode.  This problem can be mitigated
->> by disabling the HISPD bit; thus forcing the controller output
->> data to be driven on the falling clock edges rather than the
->> rising clock edges.
->>
->> Fixes: f5f968f2371c ("mmc: sdhci-iproc: suppress spurious interrupt with Multiblock read")
-> Is this fixes tag correct, because it doesn't seem related.  Maybe explain
-> that in the commit message.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.116-76-g2e004f6acb80/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.116-76-g2e004f6acb80/
 
-I chose this tag to assist stable kernel maintainers so that the change 
-does not produce merge conflicts backporting to older kernel versions.
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.116-76-g2e004f6acb80
+Git Commit: 2e004f6acb8062e310cf8e50c91d562d91dcdb73
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 31 unique boards, 15 SoC families, 10 builds out of 201
 
-In reality, the timing bug existed since the driver was first introduced 
-but there is no need for this driver to be supported in kernel versions 
-that old.
-
-Do you want me to add such to the commit message?
-
->
->> Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   drivers/mmc/host/sdhci-iproc.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
->> index 9d4071c41c94..2feb4ef32035 100644
->> --- a/drivers/mmc/host/sdhci-iproc.c
->> +++ b/drivers/mmc/host/sdhci-iproc.c
->> @@ -220,7 +220,8 @@ static const struct sdhci_iproc_data iproc_cygnus_data = {
->>   
->>   static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
->>   	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
->> -		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
->> +		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 |
->> +		  SDHCI_QUIRK_NO_HISPD_BIT,
->>   	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
->>   	.ops = &sdhci_iproc_ops,
->>   };
->>
+---
+For more info write to <info@kernelci.org>
