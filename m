@@ -2,109 +2,120 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620C2C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723F9C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1BE2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1B22087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfEGPsW convert rfc822-to-8bit (ORCPT
+        id S1726984AbfEGPtL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:48:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37950 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726000AbfEGPsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:48:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ABF71AE0F;
-        Tue,  7 May 2019 15:48:20 +0000 (UTC)
-Date:   Tue, 7 May 2019 17:48:20 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 00/3] MIPS: SGI-IP27 rework part2
-Message-Id: <20190507174820.381fd56f678609416fd8b617@suse.de>
-In-Reply-To: <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
-References: <20190319154755.31049-1-tbogendoerfer@suse.de>
-        <20190418205726.GB126710@google.com>
-        <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+        Tue, 7 May 2019 11:49:11 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:50932 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfEGPtK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:49:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 58C0B608F446;
+        Tue,  7 May 2019 17:49:07 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 8Su0dz-W26oG; Tue,  7 May 2019 17:49:06 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 0322C6083105;
+        Tue,  7 May 2019 17:49:06 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 31Kf02fmxQu5; Tue,  7 May 2019 17:49:05 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id C33C26083104;
+        Tue,  7 May 2019 17:49:05 +0200 (CEST)
+Date:   Tue, 7 May 2019 17:49:05 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Message-ID: <785015370.48464.1557244145722.JavaMail.zimbra@nod.at>
+In-Reply-To: <3034821c-3cd0-b0c5-a6fd-548fd87486a4@embeddedor.com>
+References: <20190208180202.GA16603@embeddedor> <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com> <71df15e7-af2e-0326-78fe-0271a1e240fe@embeddedor.com> <20190415104458.7faeec57@xps13> <ee1f8c4a-92b0-db9d-6110-3acadeb9e457@embeddedor.com> <20190416192408.0e321563@xps13> <8df20a3a-3068-1fb7-0421-e6c417550125@embeddedor.com> <3034821c-3cd0-b0c5-a6fd-548fd87486a4@embeddedor.com>
+Subject: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.8_GA_3025 (ZimbraWebClient - FF60 (Linux)/8.8.8_GA_1703)
+Thread-Topic: cfi_util: mark expected switch fall-throughs
+Thread-Index: c1PkOuWOdQy8fEL4I6CUz4FzFPRcPA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 16:31:17 +0100
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+----- UrsprÃ¼ngliche Mail -----
+> Von: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> An: "Miquel Raynal" <miquel.raynal@bootlin.com>
+> CC: "David Woodhouse" <dwmw2@infradead.org>, "Brian Norris" <computersforpeace@gmail.com>, "Boris Brezillon"
+> <bbrezillon@kernel.org>, "Marek Vasut" <marek.vasut@gmail.com>, "richard" <richard@nod.at>, "linux-mtd"
+> <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "Kees Cook" <keescook@chromium.org>
+> Gesendet: Dienstag, 7. Mai 2019 16:54:12
+> Betreff: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
 
-> On Thu, Apr 18, 2019 at 03:57:26PM -0500, Bjorn Helgaas wrote:
-> > Hi Thomas,
-> > 
-> > On Tue, Mar 19, 2019 at 04:47:49PM +0100, Thomas Bogendoerfer wrote:
-> > > SGI IP27 (Origin/Onyx2) and SGI IP30 (Octane) have a similair
-> > > architecture and share some hardware (ioc3/bridge). To share
-> > > the software parts this patchset reworks SGI IP27 interrupt
-> > > and pci bridge code. By using features Linux gained during the
-> > > many years since SGI IP27 code was integrated this even results
-> > > in code reduction and IMHO cleaner code.
-> > > 
-> > > Tests have been done on a two module O200 (4 CPUs) and an
-> > > Origin 2000 (8 CPUs).
-> > 
-> > Thanks for doing all this work!  It seems like it basically converts
-> > some of the SGI PCI code to the structure typical of current host
-> > controller drivers and moves it to drivers/pci/controller, which all
-> > seems great to me.
+> Hi all,
 > 
-> I had a look and the code is really, really MIPS specific, actually
-> I would be interested in understanding how many platforms it supports,
-> it is not even FW configurable.
+> Thanks a lot for this, Richard:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git/log/?h=mtd%2Fnext&qt=grep&q=fall-through
+> 
+> There are only two of these warnings left to be addressed in
+> MTD[1]:
+> 
+>        > @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
+>        >                       if ((this->version_id & 0xf) == 0xe)
+>        >                               this->options |= ONENAND_HAS_NOP_1;
+>        >               }
+>        > +             /* fall through */
+>        >
+>        >       case ONENAND_DEVICE_DENSITY_2Gb:
+>        >               /* 2Gb DDP does not have 2 plane */
+>        >               if (!ONENAND_IS_DDP(this))
+>        >                       this->options |= ONENAND_HAS_2PLANE;
+>        >               this->options |= ONENAND_HAS_UNLOCK_ALL;
+>        > +             /* fall through */
+> 
+>        This looks strange.
+> 
+>        In ONENAND_DEVICE_DENSITY_2Gb:
+>        ONENAND_HAS_UNLOCK_ALL is set unconditionally.
+> 
+>        But then, under ONENAND_DEVICE_DENSITY_1Gb, the same option is set only
+>        if process is evaluated to true.
+> 
+>        Same problem with ONENAND_HAS_2PLANE:
+>        - it is set in ONENAND_DEVICE_DENSITY_4Gb only if ONENAND_IS_DDP()
+>        - it is unset in ONENAND_DEVICE_DENSITY_2Gb only if !ONENAND_IS_DDP()
+> 
+>        Maybe this portion should be reworked because I am unsure if this is a
+>        missing fall through or a bug.
+> 
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1036251/
 
-it's MIPS only and used in basically 3 different SGI platforms.
+Did we miss this patch? AFAICT it is in -next too.
 
-> With hard-coded resources, <asm/...> includes in driver code and MIPS
-> specific kludges even if it does reuse some APIs shared with controller
-> drivers I am not 100% certain that moving it to drivers/pci/controller
-> buys us anything, this is really arch specific code, however we slice
-> it.
-
-hmm, I thought the idea of having one drivers/pci/controller directory
-is to have all of them in one place.
-
-> The line between what stays in arch and what goes to
-> drivers/pci/controller is thin but this code is definitely more on the
-> arch side IMHO.
-
-what makes the xgene driver different from the xtalk-bridge driver ? Ok
-it used DT, but it's still just for a specific type of SOCs from one
-vendor, isn't it ?
-
-> I do not question Thomas' effort, which I appreciate, I question
-> the end result and its usefulness, this series is even increasing
-> lines of kernel code, I would like to see the benefits.
-
-the move from arch/mips/pci to drivers/pci/controller increases lines of
-code by two lines. The whole patchset adds 155 lines, but also adds
-functionality to be able to use the driver with different platforms.
-
-Anyway I can live with not moving to drivers/pci/controller if you don't
-like it there.
-
-Thomas.
-
--- 
-SUSE Linux GmbH
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+Thanks,
+//richard
