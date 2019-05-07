@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126A2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE7DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B11205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD6720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208712;
-	bh=wbY17iC+YFYv7hcWzcyg95eJdFrNRIjFZv1JtEP1hZU=;
+	s=default; t=1557208717;
+	bh=FIxnxYUSeq0LwFRlBniKtK8bipW2JmLI0dZz7/OXqjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FjYh1gE94OhC17iXMMZWpR3RarNQK5HHvLvej4bzMIAZsjpNIZOCu40LmuypinbT
-	 Ut9A77gM2Ds3uusWHW+Wh0TrEYaicPsgLoZW1LUlWnsxBC5I8PVdupN2NIs5MNU4zK
-	 T0/558YopWAt1JPH4/Gyw0QYp0iKjnjXpOpuzZos=
+	b=HT+BA+nZjgH9Ygr1gTGwKAtJ3TgD6A/XQmVTWrbkfmFlKX+nfYFPC0W4NKs6dAUxK
+	 IxpEbBUui6ITY0xwqbxDen3QFcuK5wLt/Or5H7ucMWQM/3fTaNYD2dc0gFE15KyV2Z
+	 lPb3bPlblZdm5u/cQAl1w0zR1ghTY/90Tx4S08As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbfEGF6b (ORCPT
+        id S1728579AbfEGF6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56882 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:58:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbfEGFhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:08 -0400
+        id S1727660AbfEGFhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962A52087F;
-        Tue,  7 May 2019 05:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFBEC214AE;
+        Tue,  7 May 2019 05:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207427;
-        bh=wbY17iC+YFYv7hcWzcyg95eJdFrNRIjFZv1JtEP1hZU=;
+        s=default; t=1557207430;
+        bh=FIxnxYUSeq0LwFRlBniKtK8bipW2JmLI0dZz7/OXqjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PM0raNILrCXWIPqhaRNXYi23oi8UoE5DAjCZ6BSBtItNIt2PvuYK/3vYeiknRzgO+
-         7pDYEVHBxaWRWGd6b5gbq2y5HJl856vnW7zUuAh/0Fk90gT8N4wokiPCgGy3Q/XpE4
-         cHHqL7o2fD+QiK0D9so4y0L2AhWcX/lGH179TrG0=
+        b=pCHBMqod4CyJsKAv6r4YVuJ/FTYaV3IZUqq5R5Wwq9uMsn/5qz1lPId9UFnK6iCMP
+         N724BNs+CUccnm8REbqbnrNq0eupIrjYVUSSYiuuZ1aq/vVNRNiISa02yqszsJ/gZs
+         rA8TsuTOgKU3QFwb5rNAWxBTpXfIK54sI+amyAs0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Camuso <tcamuso@redhat.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 37/81] ipmi: ipmi_si_hardcode.c: init si_type array to fix a crash
-Date:   Tue,  7 May 2019 01:35:08 -0400
-Message-Id: <20190507053554.30848-37-sashal@kernel.org>
+Cc:     Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Thomas Garnier <thgarnie@google.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, frank.ramsay@hpe.com,
+        herbert@gondor.apana.org.au, kirill@shutemov.name,
+        mike.travis@hpe.com, x86-ml <x86@kernel.org>,
+        yamada.masahiro@socionext.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 39/81] x86/mm/KASLR: Fix the size of the direct mapping section
+Date:   Tue,  7 May 2019 01:35:10 -0400
+Message-Id: <20190507053554.30848-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -59,48 +69,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Camuso <tcamuso@redhat.com>
+From: Baoquan He <bhe@redhat.com>
 
-[ Upstream commit a885bcfd152f97b25005298ab2d6b741aed9b49c ]
+[ Upstream commit ec3937107ab43f3e8b2bc9dad95710043c462ff7 ]
 
-The intended behavior of function ipmi_hardcode_init_one() is to default
-to kcs interface when no type argument is presented when initializing
-ipmi with hard coded addresses.
+kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
+the maximum amount of system RAM supported. The size of the direct
+mapping section is obtained from the smaller one of the below two
+values:
 
-However, the array of char pointers allocated on the stack by function
-ipmi_hardcode_init() was not inited to zeroes, so it contained stack
-debris.
+  (actual system RAM size + padding size) vs (max system RAM size supported)
 
-Consequently, passing the cruft stored in this array to function
-ipmi_hardcode_init_one() caused a crash when it was unable to detect
-that the char * being passed was nonsense and tried to access the
-address specified by the bogus pointer.
+This calculation is wrong since commit
 
-The fix is simply to initialize the si_type array to zeroes, so if
-there were no type argument given to at the command line, function
-ipmi_hardcode_init_one() could properly default to the kcs interface.
+  b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
 
-Signed-off-by: Tony Camuso <tcamuso@redhat.com>
-Message-Id: <1554837603-40299-1-git-send-email-tcamuso@redhat.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+In it, __PHYSICAL_MASK_SHIFT was changed to be 52, regardless of whether
+the kernel is using 4-level or 5-level page tables. Thus, it will always
+use 4 PB as the maximum amount of system RAM, even in 4-level paging
+mode where it should actually be 64 TB.
+
+Thus, the size of the direct mapping section will always
+be the sum of the actual system RAM size plus the padding size.
+
+Even when the amount of system RAM is 64 TB, the following layout will
+still be used. Obviously KALSR will be weakened significantly.
+
+   |____|_______actual RAM_______|_padding_|______the rest_______|
+   0            64TB                                            ~120TB
+
+Instead, it should be like this:
+
+   |____|_______actual RAM_______|_________the rest______________|
+   0            64TB                                            ~120TB
+
+The size of padding region is controlled by
+CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING, which is 10 TB by default.
+
+The above issue only exists when
+CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING is set to a non-zero value,
+which is the case when CONFIG_MEMORY_HOTPLUG is enabled. Otherwise,
+using __PHYSICAL_MASK_SHIFT doesn't affect KASLR.
+
+Fix it by replacing __PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
+
+ [ bp: Massage commit message. ]
+
+Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thomas Garnier <thgarnie@google.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: frank.ramsay@hpe.com
+Cc: herbert@gondor.apana.org.au
+Cc: kirill@shutemov.name
+Cc: mike.travis@hpe.com
+Cc: thgarnie@google.com
+Cc: x86-ml <x86@kernel.org>
+Cc: yamada.masahiro@socionext.com
+Link: https://lkml.kernel.org/r/20190417083536.GE7065@MiWiFi-R3L-srv
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_hardcode.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/mm/kaslr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_hardcode.c b/drivers/char/ipmi/ipmi_si_hardcode.c
-index 9ae2405c28bb..0c28e872ad3a 100644
---- a/drivers/char/ipmi/ipmi_si_hardcode.c
-+++ b/drivers/char/ipmi/ipmi_si_hardcode.c
-@@ -200,6 +200,8 @@ void __init ipmi_hardcode_init(void)
- 	char *str;
- 	char *si_type[SI_MAX_PARMS];
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 61db77b0eda9..0988971069c9 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -93,7 +93,7 @@ void __init kernel_randomize_memory(void)
+ 	if (!kaslr_memory_enabled())
+ 		return;
  
-+	memset(si_type, 0, sizeof(si_type));
-+
- 	/* Parse out the si_type string into its components. */
- 	str = si_type_str;
- 	if (*str != '\0') {
+-	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
++	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
+ 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
+ 
+ 	/*
 -- 
 2.20.1
 
