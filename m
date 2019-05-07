@@ -2,159 +2,115 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E13DC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD16AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E08F2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0912087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C1tRkzBG";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ICJDmdw4"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IxJ7peEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfEGOPj (ORCPT
+        id S1726768AbfEGOQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:15:39 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:47960 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726063AbfEGOPj (ORCPT
+        Tue, 7 May 2019 10:16:28 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:53062 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfEGOQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:15:39 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 19432C01C3;
-        Tue,  7 May 2019 14:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557238541; bh=GIeJKktwhSGd5wafQaABKD1cgbkQN4Uwg9qKVqqyDOw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=C1tRkzBG3ZvadYarqek9GGucnznIVPGFg6jlJ76iGFtAn1yfNU2QoS1Gvsqw9V+uP
-         fc0GYEQOwaCc9jIVc/tYqbavi605dnt0nhfOKQ+vy4MXiCu7elQIWMZuJamktmaG2z
-         i0bZJMH8oNSJHId/XQGzCKj+ixP1hkTqqUDMAqSnEpc+8FqA1x0Pv9/sTzJH7EOpGc
-         NwOEtV7ayB9ncEKcWTvUaSdkBdV8KhsubyPY+uZB5eCSH3Bkds1R1mfMkaO6R+4lAt
-         cfv2kb1ctA07ORXN34r2kRtLEVQXmH5u71qkGL9Cosjse6Mmvdw+pmTb9dY456gzG6
-         8qE2MCUOWpxmg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 0BF8DA0066;
-        Tue,  7 May 2019 14:15:35 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 7 May 2019 07:15:35 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 7 May 2019 07:15:35 -0700
+        Tue, 7 May 2019 10:16:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3JayWQUCAh87xOkE47UnBlKgwytKxHcNI4I7TOJl5I=;
- b=ICJDmdw41LqKylmxdJ7lODGTTFgUVHex+tkv8qVSuNZSwhAmfX9oaVS8ku5g53tofbRt2RV1DMwMWY9B8nM2RaVCpkpvAGMG5P9AZr07z6UuqtBnsP5SmJvZfNEqgwl83CoVBrCDRGkcwoWdMPFCcgGmAXuZmmr1jxFJy2ncerw=
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
- CY4PR1201MB0024.namprd12.prod.outlook.com (10.172.77.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Tue, 7 May 2019 14:15:33 +0000
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::ac77:1c39:d9eb:ee9a]) by CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::ac77:1c39:d9eb:ee9a%4]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 14:15:33 +0000
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Sasha Levin <sashal@kernel.org>,
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1557238587; x=1588774587;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Vo1VSCRyKTg9cfYNPO1nz0gtpqGkbp+mZ2rF1BBRI8k=;
+  b=IxJ7peElO1kPIttQCCEt5KJga3tSJLHV6IIOlDA6g2XckcYQWFmmVrju
+   V2whX5vOrpa8T0I2dK/4afpYXYLiydxYaRJHpO7Cx6mohgAS6RnZfRcjD
+   EeS/AU0r8A9kgvxgHMVDhuKJcSoPE33ch67gUh/+9j+hrNktQeYR6YpiF
+   k=;
+X-IronPort-AV: E=Sophos;i="5.60,441,1549929600"; 
+   d="scan'208";a="798327030"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 07 May 2019 14:16:25 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x47EGNMf029527
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 7 May 2019 14:16:24 GMT
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 May 2019 14:16:23 +0000
+Received: from 38f9d35ad2cf.ant.amazon.com (10.28.86.127) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 May 2019 14:16:21 +0000
+Subject: Re: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host APIC
+ ID 255
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David Laight" <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: RE: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to
- ARCH_KMALLOC_MINALIGN
-Thread-Topic: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to
- ARCH_KMALLOC_MINALIGN
-Thread-Index: AQHVBJd3onwrWwkS2UueAl57c5ZJEaZfKNsAgAATBJCAAA2mgIAAa1uQ
-Date:   Tue, 7 May 2019 14:15:32 +0000
-Message-ID: <CY4PR1201MB012086E453B1C8435535D44AA1310@CY4PR1201MB0120.namprd12.prod.outlook.com>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-72-sashal@kernel.org>
- <20190507055214.GA17986@kroah.com>
- <CY4PR1201MB01200B5B52E39A88D8D3FDDDA1310@CY4PR1201MB0120.namprd12.prod.outlook.com>
- <20190507074909.GD26478@kroah.com>
-In-Reply-To: <20190507074909.GD26478@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abrodkin@synopsys.com; 
-x-originating-ip: [188.243.7.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e222b65d-eb95-4e8a-a227-08d6d2f677ae
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR1201MB0024;
-x-ms-traffictypediagnostic: CY4PR1201MB0024:
-x-microsoft-antispam-prvs: <CY4PR1201MB00249969AC593A4BEA5AA8F0A1310@CY4PR1201MB0024.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(366004)(376002)(346002)(136003)(189003)(199004)(52536014)(33656002)(74316002)(6506007)(478600001)(561944003)(53936002)(305945005)(76116006)(66556008)(66446008)(64756008)(5660300002)(2906002)(229853002)(73956011)(3846002)(66946007)(6246003)(54906003)(6116002)(486006)(14454004)(81156014)(11346002)(66476007)(68736007)(446003)(8676002)(476003)(81166006)(7416002)(26005)(7736002)(14444005)(6436002)(8936002)(25786009)(256004)(186003)(4326008)(6916009)(71190400001)(71200400001)(7696005)(76176011)(86362001)(99286004)(9686003)(102836004)(66066001)(316002)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0024;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1cl7EKsTI4uvi0soir0P/FpDCyRqnUTxtO23jVslcH57v9xRjonZ186nru8PwwttuMiKqBTZoKz/tc38WIzJF4EHDkmJUaDXigl/13jxpJ5W7fHJEINr78qZLbz092O8dX6LXfxbiUm10uuonARLgL+I3wNFsWIZ3Bfm2XWmLAK8yvUG2hhO9RPMlPKcQUUzwdvqaVXN7GHu9UpOz8tQvWxcTQ6etDqYdIq1l2p/M4GQvvBuF278LQVL26v2lCEO+Djo9E9Kbox/n3QpvHN+htIasS/73+j6KtY6H/jtH4+b1JAzf9H7Z6CQaR/AUAsfQbBxoQaTNo2BIy7eCzz+MZQYL2a/f2ufZP233LfY4ku8LZAPUn1DEMIMNTgcQaR9BK4kr9Tqc3u+YaObLcpmyK2WHPqr/i+UDbK6WFhfXcg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+References: <1556890631-9561-1-git-send-email-suravee.suthikulpanit@amd.com>
+From:   "Graf, Alexander" <graf@amazon.com>
+Message-ID: <49a27e83-a83e-5d2d-9b11-bb09c15776d2@amazon.com>
+Date:   Tue, 7 May 2019 16:16:19 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e222b65d-eb95-4e8a-a227-08d6d2f677ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 14:15:32.9924
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0024
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <1556890631-9561-1-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.86.127]
+X-ClientProxiedBy: EX13MTAUEA001.ant.amazon.com (10.43.61.82) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 03.05.19 15:37, Suthikulpanit, Suravee wrote:
+> Current logic does not allow VCPU to be loaded onto CPU with
+> APIC ID 255. This should be allowed since the host physical APIC ID
+> field in the AVIC Physical APIC table entry is an 8-bit value,
+> and APIC ID 255 is valid in system with x2APIC enabled.
+> 
+> Instead, do not allow VCPU load if the host APIC ID cannot be
+> represented by an 8-bit value.
+> 
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-[snip]
+Your comment for AVIC_MAX_PHYSICAL_ID_COUNT says that 0xff (255) is 
+broadcast hence you disallow that value. In fact, even the comment a few 
+lines above the patch hunk does say that. Why the change of mind?
 
-> > > This is not needed in any of the older kernels, despite what the stab=
-le@
-> > > line said, as it ends up taking a lot of memory up for all other arch=
-es.
-> > > That's why I only applied it to the one kernel version.  I'm betting
-> > > that it will be eventually reverted when people notice it as well :)
-> >
-> > That very well might become the case but then we're back to the initial=
- problem,
-> > right? So maybe some other more future-proof solution should be impleme=
-nted?
->=20
-> Possibly yes.
->=20
-> > See initially we discussed simple explicit 8-byte alignment which won't=
- change
-> > data layout for most of arches while fixing our issue on ARC but for so=
-me reason
-> > people were not happy with that proposal and that's how we ended-up wit=
-h what we
-> > discuss here now.
->=20
-> I'm not disagreeing that this is a valid solution for you, I wasn't part
-> of the original discussion, sorry.  Just that this probably isn't
-> something that should be backported to older kernels at this point in
-> time.
+Alex
 
-That's fine for now.
+> ---
+>   arch/x86/kvm/svm.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 294448e..122788f 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -2071,7 +2071,11 @@ static void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   	if (!kvm_vcpu_apicv_active(vcpu))
+>   		return;
+>   
+> -	if (WARN_ON(h_physical_id >= AVIC_MAX_PHYSICAL_ID_COUNT))
+> +	/*
+> +	 * Since the host physical APIC id is 8 bits,
+> +	 * we can support host APIC ID upto 255.
+> +	 */
+> +	if (WARN_ON(h_physical_id > AVIC_MAX_PHYSICAL_ID_COUNT))
+>   		return;
+>   
+>   	entry = READ_ONCE(*(svm->avic_physical_id_cache));
+> 
 
-Then if it ever gets reverted in Linux tree hopefully I'll be CCed and
-it will be enough time to come up with a better fix.
-
--Alexey
