@@ -2,91 +2,181 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D5DC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAD2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625402087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571B0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557248666;
+	bh=QNdzYqtcCSj83BraVNtAcUvMnpFCFrqPfOOO+y+hF3E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w2jhgjJS//POOIcinlEumSTlHAMGlFqo57UalQ50+3LfXqNomjUrdUTbRz6ycD330
+	 N1hahRqdRXGY6yGOsuIv3VAUyotuNU5z2JtLTL00LHxSp+6fmjEBZLGR7gdY11pxCJ
+	 0nQrSq1j0Wm8cPZuV66I35DAA3GmCtkUt3THD6Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfEGRDj (ORCPT
+        id S1727328AbfEGREZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfEGRDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:03:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47879205C9;
-        Tue,  7 May 2019 17:03:35 +0000 (UTC)
-Date:   Tue, 7 May 2019 13:03:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
-        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?B?TWljaGHFgg==?= Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
-        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
-Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
-Message-ID: <20190507130333.58c95268@gandalf.local.home>
-In-Reply-To: <20190507165718.GA1241@kroah.com>
-References: <20190504121213.183203-1-joel@joelfernandes.org>
-        <20190504122158.GA23535@kroah.com>
-        <20190504123650.GA229151@google.com>
-        <20190505091030.GA25646@kroah.com>
-        <20190505132623.GA3076@localhost>
-        <20190505163145.45f77e44@oasis.local.home>
-        <20190507163824.GC89248@google.com>
-        <20190507165718.GA1241@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 7 May 2019 13:04:25 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33462 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfEGREZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:04:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 66so6226577otq.0;
+        Tue, 07 May 2019 10:04:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qof9Nq6m3eIX2nP0Hb5nTkjVTKOQLNCq2yMZEGD0HaI=;
+        b=fU3blnO8KGc0e4se6/fUy7GSCouh/Hp7fOe771gW5Qocisbbk/vBu5SdnVcWujEvc4
+         ohxV7xxMw38HxQeiAgfZXx7rsFLbZkVAcHRdwkeg5WU9gub214GnxYD7cGjuSoa1VubA
+         pwJjuge/ml9k9Hd1pxtDeTc0a20tTknimC2tqC/SvkVZa1kHwrMiLl43AbhUkZLo5oJQ
+         y4yB0Ucr7Oq14NRfLsSpjD78FdHOLUiC0J6wQrWnU8MGlwPvWTfeLRd72hZntlAfQmCm
+         047YSOeJNMlxvuhrOOeds0lQ55bis2W4fZRIydPU8VG9aZ/z07IjtLRWJJkxX1S9IC3o
+         aPtQ==
+X-Gm-Message-State: APjAAAXojTy5HbeN2txRK3RrhWgb+heAy/skGUbEb1SH6mWnnz+4iCZ1
+        a4f8xoyXkO+M7HAVDC3Obg==
+X-Google-Smtp-Source: APXvYqzBww8F6CSc1wcNwfmlZTyY59ASOQFWi+ArE8HLHc01LuQYndTn0tXDxdgCiqati7OO6LO2Jg==
+X-Received: by 2002:a9d:5d03:: with SMTP id b3mr1965330oti.268.1557248664018;
+        Tue, 07 May 2019 10:04:24 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x12sm5190251otq.19.2019.05.07.10.04.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 10:04:23 -0700 (PDT)
+Date:   Tue, 7 May 2019 12:04:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
+ DMC device description
+Message-ID: <20190507170422.GA25179@bogus>
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
+ <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 18:57:18 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> > Thanks makes sense. So Greg, I submitted this properly, does it look good to
-> > you now? Steven, I would appreciate any Acks/Reviews on the patch as well:
-> > https://lore.kernel.org/patchwork/patch/1070199/  
+On Mon, May 06, 2019 at 05:11:55PM +0200, Lukasz Luba wrote:
+> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> Memory Controller device.
 > 
-> Looks good to me, should get to it in a few days...
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../bindings/memory-controllers/exynos5422-dmc.txt | 74 ++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> new file mode 100644
+> index 0000000..be602a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -0,0 +1,74 @@
+> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+> +
+> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> +memory chips are connected. The driver is to monitor the controller in runtime
+> +and switch frequency and voltage. To monitor the usage of the controller in
+> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> +is able to measure the current load of the memory.
+> +When 'userspace' governor is used for the driver, an application is able to
+> +switch the DMC and memory frequency.
+> +
+> +Required properties for DMC device for Exynos5422:
+> +- compatible: Should be "samsung,exynos5422-dmc".
+> +- clock-names : the name of clock used by the controller.
+> +- clocks : phandles for clock specified in "clock-names" property.
 
-Me too. Feel free to add
+Need to enumerate the clocks and their order.
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- vdd-supply : phandle for voltage regulator which is connected.
+> +- reg : registers of two CDREX controllers.
+> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+> +- device-handle : phandle of the connected DRAM memory device. For more
+> +	information please refer to Documentation
 
-But as for reviewing, I see nothing wrong with it, but I doubt I'll
-find something that Greg missed in this code.
+Documentation... ?
 
--- Steve
+> +- devfreq-events : phandles of the PPMU events used by the controller.
+> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
+> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+
+Looks like a hack. Can't you get this from the clocks property? What is 
+this for?
+
+> +
+> +Example:
+> +
+> +	ppmu_dmc0_0: ppmu@10d00000 {
+> +		compatible = "samsung,exynos-ppmu";
+> +		reg = <0x10d00000 0x2000>;
+> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+> +		clock-names = "ppmu";
+> +		events {
+> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+> +				event-name = "ppmu-event3-dmc0_0";
+> +			};
+> +		};
+> +	};
+> +
+> +	dmc: memory-controller@10c20000 {
+> +		compatible = "samsung,exynos5422-dmc";
+> +		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
+> +		clocks = 	<&clock CLK_FOUT_SPLL>,
+> +				<&clock CLK_MOUT_SCLK_SPLL>,
+> +				<&clock CLK_FF_DOUT_SPLL2>,
+> +				<&clock CLK_FOUT_BPLL>,
+> +				<&clock CLK_MOUT_BPLL>,
+> +				<&clock CLK_SCLK_BPLL>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+> +				<&clock CLK_MOUT_MCLK_CDREX>,
+> +				<&clock CLK_DOUT_CLK2X_PHY0>,
+> +				<&clock CLK_CLKM_PHY0>,
+> +				<&clock CLK_CLKM_PHY1>;
+> +		clock-names =	"fout_spll",
+> +				"mout_sclk_spll",
+> +				"ff_dout_spll2",
+> +				"fout_bpll",
+> +				"mout_bpll",
+> +				"sclk_bpll",
+> +				"mout_mx_mspll_ccore",
+> +				"mout_mx_mspll_ccore_phy",
+> +				"mout_mclk_cdrex",
+> +				"dout_clk2x_phy0",
+> +				"clkm_phy0",
+> +			        "clkm_phy1";
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+> +		operating-points-v2 = <&dmc_opp_table>;
+> +		device-handle = <&samsung_K3QF2F20DB>;
+> +		vdd-supply = <&buck1_reg>;
+> +		samsung,syscon-clk = <&clock>;
+> +		samsung,syscon-chipid = <&chipid>;
+> +	};
+> -- 
+> 2.7.4
+> 
