@@ -2,130 +2,113 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9081C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CB7C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B5A20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344BE205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557247217;
+	bh=bvy3TxkD6QYNRWZoUtKKAkzQfSrcSJIcIGTYRGnLKug=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pKcHOlfTAGyZ+s29/DoLEQ0ep5548xNuzJg8qtoYhUIPHVPH6P5MVpjm8+i9LpnRu
+	 k4ubK0qJfbEl/vu3CHkx+06+OIrneV/CPVwc7a99c84LD+ap691BfYOJwm/JJVBf30
+	 VgL6wDIa05Ik35qy8D5Ntf1a3MOQLfvykGZqcsZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfEGQjt (ORCPT
+        id S1727148AbfEGQkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:39:49 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:52364 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726494AbfEGQjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:39:48 -0400
-Received: (qmail 5705 invoked by uid 2102); 7 May 2019 12:39:47 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 7 May 2019 12:39:47 -0400
-Date:   Tue, 7 May 2019 12:39:47 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     mchehab@kernel.org
-cc:     andreyknvl@google.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <wen.yang99@zte.com.cn>
-Subject: [PATCH] media: usb: siano: Fix general protection fault in smsusb
-In-Reply-To: <0000000000004a08f805883ead54@google.com>
-Message-ID: <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
+        Tue, 7 May 2019 12:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfEGQkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:40:16 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9BE205C9;
+        Tue,  7 May 2019 16:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557247215;
+        bh=bvy3TxkD6QYNRWZoUtKKAkzQfSrcSJIcIGTYRGnLKug=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JTCJWQqMALzVnz8pn0XWSps1BGXqUlUzq+/+NT/Ch42t/H9o2FEbSvt7oC++u0ThX
+         0LqL/ynMHT3x9ny1Txnf+8YJ2NzB7zdliZvC6DP6MdKAQSEWt6XwZOqSXvm/uK3iJX
+         N9Cmj98zvy+F+ywMFFWm43oZlpxOWVcThstqdmVA=
+Received: by mail-qt1-f175.google.com with SMTP id d13so2859030qth.5;
+        Tue, 07 May 2019 09:40:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPVzl6ytuD08wNxp0MHLe5jhDQrwk9fbKWI8LZ3ehzzXB/DIRy
+        tqhwXrnE36ZaPL1rnhfI6z5AUqgaUbfMhsz1JQ==
+X-Google-Smtp-Source: APXvYqwp5oN/U/L3GW2JMFZpyrG4LHPEVHaqtylnCTc4SbNGRF2GMOSnOZpjLlwUzTir6yXm3AenT0Q78p+6iSnukXE=
+X-Received: by 2002:ac8:641:: with SMTP id e1mr27627572qth.76.1557247214367;
+ Tue, 07 May 2019 09:40:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20190426055558.44544-1-ran.wang_1@nxp.com> <20190501235410.GA25492@bogus>
+ <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+In-Reply-To: <AM5PR0402MB286539A070BDEEDFC3304F0EF1310@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 May 2019 11:40:02 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+tmUCjZw7ybhKTGg0NNfc+JsOQ30vArfHzdw14XoWm5A@mail.gmail.com>
+Message-ID: <CAL_Jsq+tmUCjZw7ybhKTGg0NNfc+JsOQ30vArfHzdw14XoWm5A@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add USB dt nodes
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The syzkaller USB fuzzer found a general-protection-fault bug in the
-smsusb part of the Siano DVB driver.  The fault occurs during probe
-because the driver assumes without checking that the device has both
-IN and OUT endpoints and the IN endpoint is ep1.
+On Tue, May 7, 2019 at 3:48 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> On Thursday, May 02, 2019 07:54 Rob Herring wrote:
+> >
+> > On Fri, Apr 26, 2019 at 05:54:26AM +0000, Ran Wang wrote:
+> > > This patch adds USB dt nodes for LS1028A.
+> > >
+> > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > ---
+> > > Changes in v2:
+> > >   - Rename node from usb3@... to usb@... to meet DTSpec
+> > >
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20
+> > ++++++++++++++++++++
+> > >  1 files changed, 20 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > index 8dd3501..188cfb8 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > @@ -144,6 +144,26 @@
+> > >                     clocks = <&sysclk>;
+> > >             };
+> > >
+> > > +           usb0:usb@3100000 {
+> >                      ^ space needed
+>
+> Yes, will update this in next version.
+>
+> > > +                   compatible= "snps,dwc3";
+> >
+> > Needs an SoC specific compatible.
+>
+> Do you mean change compatible to "snps,dwc3", "fsl,ls1028a-dwc3" ?
 
-By slightly rearranging the driver's initialization code, we can make
-the appropriate checks early on and thus avoid the problem.  If the
-expected endpoints aren't present, the new code safely returns -ENODEV
-from the probe routine.
+Well, that's the wrong order, but yes.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+> As I know, so far there is no SoC specific programming for this IP, so do
+> you think it's still necessary to add it?
 
----
+Yes. All the bugs and quirks are discovered already?
 
-
-[as1897]
-
-
- drivers/media/usb/siano/smsusb.c |   33 ++++++++++++++++++++-------------
- 1 file changed, 20 insertions(+), 13 deletions(-)
-
-Index: usb-devel/drivers/media/usb/siano/smsusb.c
-===================================================================
---- usb-devel.orig/drivers/media/usb/siano/smsusb.c
-+++ usb-devel/drivers/media/usb/siano/smsusb.c
-@@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
- 	struct smsusb_device_t *dev;
- 	void *mdev;
- 	int i, rc;
-+	int in_maxp;
- 
- 	/* create device object */
- 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-@@ -411,6 +412,24 @@ static int smsusb_init_device(struct usb
- 	dev->udev = interface_to_usbdev(intf);
- 	dev->state = SMSUSB_DISCONNECTED;
- 
-+	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
-+		struct usb_endpoint_descriptor *desc =
-+				&intf->cur_altsetting->endpoint[i].desc;
-+
-+		if (desc->bEndpointAddress & USB_DIR_IN) {
-+			dev->in_ep = desc->bEndpointAddress;
-+			in_maxp = usb_endpoint_maxp(desc);
-+		} else {
-+			dev->out_ep = desc->bEndpointAddress;
-+		}
-+	}
-+
-+	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
-+	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
-+		smsusb_term_device(intf);
-+		return -ENODEV;
-+	}
-+
- 	params.device_type = sms_get_board(board_id)->type;
- 
- 	switch (params.device_type) {
-@@ -425,24 +444,12 @@ static int smsusb_init_device(struct usb
- 		/* fall-thru */
- 	default:
- 		dev->buffer_size = USB2_BUFFER_SIZE;
--		dev->response_alignment =
--		    le16_to_cpu(dev->udev->ep_in[1]->desc.wMaxPacketSize) -
--		    sizeof(struct sms_msg_hdr);
-+		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
- 
- 		params.flags |= SMS_DEVICE_FAMILY2;
- 		break;
- 	}
- 
--	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
--		if (intf->cur_altsetting->endpoint[i].desc. bEndpointAddress & USB_DIR_IN)
--			dev->in_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
--		else
--			dev->out_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
--	}
--
--	pr_debug("in_ep = %02x, out_ep = %02x\n",
--		dev->in_ep, dev->out_ep);
--
- 	params.device = &dev->udev->dev;
- 	params.usb_device = dev->udev;
- 	params.buffer_size = dev->buffer_size;
-
+Rob
