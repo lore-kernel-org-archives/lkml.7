@@ -2,134 +2,95 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA28C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA98C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90A72054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110942054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208341;
-	bh=N26NT472AJl64Ye593vKGyraTKV6QYnsEVPtsPUDgS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=amKYW9Xs8PAiUTchKmri4zH5tc8HSQkbBFWDQwglSUmb7SxeJLbCeO5rajdpO2LIi
-	 uBeWC23g9nnSqNQilqAyGULMisL7lNBMG08IcEaIOCUjdWL0quRnZncaYMtK2lbB9v
-	 853ahOYQo1nL4hdRVxu5KaKz2RZiSf+pSNkRJfGo=
+	s=default; t=1557208347;
+	bh=FSFqdbn+Yk9ZtVY/0EwJNaARZW+n+i2voT5o2zoa3PA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MmVa0iRrGlOuBU2SSXmL5h8ZEKTw0o4jALfdsNFZmvLMFnelpnXN4jtNzPmfX2gjR
+	 y/MzDd9S0MAf6/A+ltp/8Dp8wMOUl91murUyTX6btLt9AHYNuYQqrB5shx1dBBTqHu
+	 ZO9RIib8d7/LzQp2/cBruUe/ZUhBgZoMIyPvBMY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfEGFwU (ORCPT
+        id S1728445AbfEGFj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38230 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:39:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbfEGFwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:52:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728402AbfEGFjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:39:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7D5B205ED;
-        Tue,  7 May 2019 05:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA7A20675;
+        Tue,  7 May 2019 05:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557208336;
-        bh=N26NT472AJl64Ye593vKGyraTKV6QYnsEVPtsPUDgS8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RjCEr5aCMT4Uk9yNqIWCCL//2hkpSqXtp7E46ssLuyMCdjwXaf/KlsSxWnBWpiGo8
-         I95XOQDzgMx15QM+/qeZ93Wv+tITASZOVFMtU3sbNl+b+lCl1P9xO/fJtGOedFHaIe
-         psw9yA4amrorbJPSVfl31q+MqIMeGMI+31IesEdc=
-Date:   Tue, 7 May 2019 07:52:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to
- ARCH_KMALLOC_MINALIGN
-Message-ID: <20190507055214.GA17986@kroah.com>
+        s=default; t=1557207565;
+        bh=FSFqdbn+Yk9ZtVY/0EwJNaARZW+n+i2voT5o2zoa3PA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YcZFyZ/bKuVeEtJMxAkFGhQE4/uzPk/hKHNNvCzoqrenGfSRG2wzXuAsIpk81AqED
+         NOCJD9nl9SOlicJ8Gb0KjpF4WtgOWnRkeGLI15/r1QRCWYXK2sBFhTE6tRMZevqjNn
+         ObNScxpCmNPY/frblleaVVk0UsNkON745TNXL/hU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 28/95] drm/sun4i: Set device driver data at bind time for use in unbind
+Date:   Tue,  7 May 2019 01:37:17 -0400
+Message-Id: <20190507053826.31622-28-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-72-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507053826.31622-72-sashal@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:38:01AM -0400, Sasha Levin wrote:
-> From: Alexey Brodkin <alexey.brodkin@synopsys.com>
-> 
-> [ Upstream commit a66d972465d15b1d89281258805eb8b47d66bd36 ]
-> 
-> Initially we bumped into problem with 32-bit aligned atomic64_t
-> on ARC, see [1]. And then during quite lengthly discussion Peter Z.
-> mentioned ARCH_KMALLOC_MINALIGN which IMHO makes perfect sense.
-> If allocation is done by plain kmalloc() obtained buffer will be
-> ARCH_KMALLOC_MINALIGN aligned and then why buffer obtained via
-> devm_kmalloc() should have any other alignment?
-> 
-> This way we at least get the same behavior for both types of
-> allocation.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004009.html
-> [2] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004036.html
-> 
-> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: David Laight <David.Laight@ACULAB.COM>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Greg KH <greg@kroah.com>
-> Cc: <stable@vger.kernel.org> # 4.8+
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-> ---
->  drivers/base/devres.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> index 71d577025285..e43a04a495a3 100644
-> --- a/drivers/base/devres.c
-> +++ b/drivers/base/devres.c
-> @@ -25,8 +25,14 @@ struct devres_node {
->  
->  struct devres {
->  	struct devres_node		node;
-> -	/* -- 3 pointers */
-> -	unsigned long long		data[];	/* guarantee ull alignment */
-> +	/*
-> +	 * Some archs want to perform DMA into kmalloc caches
-> +	 * and need a guaranteed alignment larger than
-> +	 * the alignment of a 64-bit integer.
-> +	 * Thus we use ARCH_KMALLOC_MINALIGN here and get exactly the same
-> +	 * buffer alignment as if it was allocated by plain kmalloc().
-> +	 */
-> +	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
->  };
->  
->  struct devres_group {
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-This is not needed in any of the older kernels, despite what the stable@
-line said, as it ends up taking a lot of memory up for all other arches.
-That's why I only applied it to the one kernel version.  I'm betting
-that it will be eventually reverted when people notice it as well :)
+[ Upstream commit 02b92adbe33e6dbd15dc6e32540b22f47c4ff0a2 ]
 
-So can you please drop it from all of your trees?
+Our sun4i_drv_unbind gets the drm device using dev_get_drvdata.
+However, that driver data is never set in sun4i_drv_bind.
 
-thanks,
+Set it there to avoid getting a NULL pointer at unbind time.
 
-greg k-h
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-3-paul.kocialkowski@bootlin.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 8d3c8070ed86..e09161cf312f 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -96,6 +96,8 @@ static int sun4i_drv_bind(struct device *dev)
+ 		ret = -ENOMEM;
+ 		goto free_drm;
+ 	}
++
++	dev_set_drvdata(dev, drm);
+ 	drm->dev_private = drv;
+ 	INIT_LIST_HEAD(&drv->engine_list);
+ 	INIT_LIST_HEAD(&drv->tcon_list);
+-- 
+2.20.1
+
