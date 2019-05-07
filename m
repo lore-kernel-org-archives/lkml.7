@@ -2,124 +2,71 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C20C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5359120675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMZ5yccx"
+	by mail.kernel.org (Postfix) with ESMTP id CFC7420825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfEGT1t (ORCPT
+        id S1726591AbfEGT2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:27:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35227 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfEGT1s (ORCPT
+        Tue, 7 May 2019 15:28:51 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33308 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfEGT2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:27:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h1so8814449pgs.2;
-        Tue, 07 May 2019 12:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UsO+U03AZmNxGw5Vmiy9onXJw2kyj5f6knAPlgEnwvA=;
-        b=PMZ5yccxZhPQByq4vbt3SM7vQ98wEzRrFZ+a59T5vibYhMFx9No3MkUk3g+fdRyIpF
-         PsXBFIP7aqhsqUYV3Vs+4KCkBd6sHAXcz8pAjV0FG3qbRZaLddfP5FWkAr+XchWlXAr2
-         CVFu7ohEkigDbqWPEi2W1scgQfVqNXHtinXKhLqBGNf1Etx103aCRvx+6Lh5SJntx5oD
-         9e5IBIPfN63hZeNrcgrH/31daPJjTRCqNvjvJZtSfqIvtmGsXHjlHIhhtf09HQKM3Y5v
-         fW5ZVrwdBNnVsSg/z9qQsmJbtI9V1kuOJn5Fo87bJY0quiU9tHp2V4XITNU6ffKkPkH3
-         rmPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UsO+U03AZmNxGw5Vmiy9onXJw2kyj5f6knAPlgEnwvA=;
-        b=XtSCQLqAjx3mpG58ccehH1g1qbJ6BttzNDdR2uiQty5uKvh1BYhUnw16jTjK2L43Fo
-         rc1N01zCvj98r81I8/FilDpjD2wAy5X4sioddE56uRocXAQkq18QNk20+G7z/DsNJRZV
-         WVNlXEf9Oh2NC9elQKJbufj1DV08IZ89CI8+GMI9JpbfWvwAffemRjKMEL8QrU3tkiKY
-         6cVlTCLUmYXM1FboxAOKvEd1fksvvzXoUObq4PrHQNt9XavXV3Dl674uI8vpseMr/Nos
-         OkH/9avgoWnCWOPom+YzM3/coW8+/LXnH7tT8mEJWjdGfiCLBc3raXVhlDg0U2Q+xFrJ
-         bVDQ==
-X-Gm-Message-State: APjAAAU9ALO637bof7IozwOfQ/68oGjOhevvog9g/BCKNexhMitBPIlD
-        crsYGinIqmi0b+/IgEwo8ek=
-X-Google-Smtp-Source: APXvYqx3QdxmS1TfgpJjb2UvoVR9Qfb7R65IPICkhpfEPHLIPPUNYsGbV26fkjhj/5GbeT1ZXe/mrw==
-X-Received: by 2002:aa7:8c1a:: with SMTP id c26mr43137193pfd.25.1557257267204;
-        Tue, 07 May 2019 12:27:47 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b22sm21831486pgg.88.2019.05.07.12.27.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 12:27:46 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:27:44 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] Input: libps2 - mark expected switch fall-through
-Message-ID: <20190507192744.GA248929@dtor-ws>
-References: <20190507182409.GA11027@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190507182409.GA11027@embeddedor>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 7 May 2019 15:28:51 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9A69014B79718;
+        Tue,  7 May 2019 12:28:50 -0700 (PDT)
+Date:   Tue, 07 May 2019 12:28:49 -0700 (PDT)
+Message-Id: <20190507.122849.1270099594432351727.davem@davemloft.net>
+To:     harini.katakam@xilinx.com
+Cc:     nicolas.ferre@microchip.com, rafalo@cadence.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, harinikatakamlinux@gmail.com
+Subject: Re: [PATCH] net: macb: Change interrupt and napi enable order in
+ open
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1557239350-4760-1-git-send-email-harini.katakam@xilinx.com>
+References: <1557239350-4760-1-git-send-email-harini.katakam@xilinx.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 12:28:50 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:24:09PM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning:
-> 
-> drivers/input/serio/libps2.c: In function ‘ps2_handle_ack’:
-> drivers/input/serio/libps2.c:407:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (ps2dev->flags & PS2_FLAG_NAK) {
->       ^
-> drivers/input/serio/libps2.c:417:2: note: here
->   case 0x00:
->   ^~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
+Date: Tue, 7 May 2019 19:59:10 +0530
 
-Applied, thank you.
-
-> ---
->  drivers/input/serio/libps2.c | 1 +
->  1 file changed, 1 insertion(+)
+> Current order in open:
+> -> Enable interrupts (macb_init_hw)
+> -> Enable NAPI
+> -> Start PHY
 > 
-> diff --git a/drivers/input/serio/libps2.c b/drivers/input/serio/libps2.c
-> index e6a07e68d1ff..22b8e05aa36c 100644
-> --- a/drivers/input/serio/libps2.c
-> +++ b/drivers/input/serio/libps2.c
-> @@ -409,6 +409,7 @@ bool ps2_handle_ack(struct ps2dev *ps2dev, u8 data)
->  			ps2dev->nak = PS2_RET_ERR;
->  			break;
->  		}
-> +		/* Fall through */
->  
->  	/*
->  	 * Workaround for mice which don't ACK the Get ID command.
-> -- 
-> 2.21.0
+> Sequence of RX handling:
+> -> RX interrupt occurs
+> -> Interrupt is cleared and interrupt bits disabled in handler
+> -> NAPI is scheduled
+> -> In NAPI, RX budget is processed and RX interrupts are re-enabled
 > 
+> With the above, on QEMU or fixed link setups (where PHY state doesn't
+> matter), there's a chance macb RX interrupt occurs before NAPI is
+> enabled. This will result in NAPI being scheduled before it is enabled.
+> Fix this macb open by changing the order.
+> 
+> Fixes: ae1f2a56d273 ("net: macb: Added support for many RX queues")
+> Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
 
--- 
-Dmitry
+Applied and queued up for -stable.
