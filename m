@@ -3,80 +3,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DE8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0B6C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEE220578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3FC20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfEGJSn (ORCPT
+        id S1726913AbfEGJS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:18:43 -0400
-Received: from mx.socionext.com ([202.248.49.38]:3500 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbfEGJSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:18:43 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 07 May 2019 18:18:41 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 28CB56117D;
-        Tue,  7 May 2019 18:18:41 +0900 (JST)
-Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Tue, 7 May 2019 18:18:41 +0900
-Received: from SOC-EX02V.e01.socionext.com (10.213.24.22) by
- SOC-EX02V.e01.socionext.com (10.213.24.22) with Microsoft SMTP Server (TLS)
- id 15.0.995.29; Tue, 7 May 2019 18:18:40 +0900
-Received: from SOC-EX02V.e01.socionext.com ([10.213.25.22]) by
- SOC-EX02V.e01.socionext.com ([10.213.25.22]) with mapi id 15.00.0995.028;
- Tue, 7 May 2019 18:18:40 +0900
-From:   <orito.takao@socionext.com>
-To:     <ulf.hansson@linaro.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <masami.hiramatsu@linaro.org>,
-        <jaswinder.singh@linaro.org>, <sugaya.taichi@socionext.com>,
-        <kasai.kazuhiro@socionext.com>, <kanematsu.shinji@socionext.com>
-Subject: Re: [PATCH 2/2] mmc: sdhci-milbeaut: add Milbeaut SD controller
- driver
-Thread-Topic: [PATCH 2/2] mmc: sdhci-milbeaut: add Milbeaut SD controller
- driver
-Thread-Index: AQHU+9RfYkmmIj60pUy4Wj4B7rC5AKZSXwKAgAx+LAA=
-Date:   Tue, 7 May 2019 09:18:40 +0000
-Message-ID: <20190507181831.9D75.F0D17A80@socionext.com>
-References: <1556244405-15863-1-git-send-email-orito.takao@socionext.com>
- <CAPDyKFrBJeBNOPh9H3Yn-6-um2B-9Gt6_pW8Qh0ZGQB26-tq+Q@mail.gmail.com>
-In-Reply-To: <CAPDyKFrBJeBNOPh9H3Yn-6-um2B-9Gt6_pW8Qh0ZGQB26-tq+Q@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
+        Tue, 7 May 2019 05:18:56 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:24750 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726736AbfEGJS4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:18:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-180-vfktmACVNDKgwMnn5zucnQ-1; Tue, 07 May 2019 10:18:52 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 7 May 2019 10:18:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 7 May 2019 10:18:51 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Nicolai Stange" <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: RE: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Thread-Topic: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Thread-Index: AQHVBLOOpe57oOoUm0iPpfi6TWW3V6ZfXgyA
+Date:   Tue, 7 May 2019 09:18:51 +0000
+Message-ID: <b34aa38bdfe84263bc20b60761bf6005@AcuMS.aculab.com>
+References: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+ <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+ <20190502185225.0cdfc8bc@gandalf.local.home>
+ <20190502193129.664c5b2e@gandalf.local.home>
+ <20190502195052.0af473cf@gandalf.local.home>
+ <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+ <20190503092247.20cc1ff0@gandalf.local.home>
+ <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+ <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+ <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+ <20190507085753.GO2606@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190507085753.GO2606@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Becky! ver. 2.74.02 [ja] (Unregistered)
-x-originating-ip: [10.213.24.1]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <7D48D25CA52EE9408F98EFD1A593606E@socionext.com>
-Content-Transfer-Encoding: base64
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+X-MC-Unique: vfktmACVNDKgwMnn5zucnQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpUaGFuayB5b3UgZm9yIHJldmlld2luZyBteSBwYXRjaGVzLg0KDQo+IFsuLi5dDQo+IA0KPiA+
-ICsNCj4gPiArc3RhdGljIHZvaWQgc2RoY2lfbWlsYmVhdXRfcG93ZXJfb2ZmKHN0cnVjdCBzZGhj
-aV9ob3N0ICpob3N0KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZl9zZGhvc3RfcHJpdiAq
-cHJpdiA9IHNkaGNpX3ByaXYoaG9zdCk7DQo+ID4gKw0KPiA+ICsgICAgICAgZ3Bpb2Rfc2V0X3Zh
-bHVlKHByaXYtPnBvd2VyX2dwaW8sIDApOw0KPiA+ICsgICAgICAgdWRlbGF5KDEwMDApOw0KPiA+
-ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBzZGhjaV9taWxiZWF1dF9wb3dlcl9vbihzdHJ1
-Y3Qgc2RoY2lfaG9zdCAqaG9zdCkNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IGZfc2Rob3N0
-X3ByaXYgKnByaXYgPSBzZGhjaV9wcml2KGhvc3QpOw0KPiA+ICsNCj4gPiArICAgICAgIGdwaW9k
-X3NldF92YWx1ZShwcml2LT5wb3dlcl9ncGlvLCAxKTsNCj4gPiArfQ0KPiA+ICsNCj4gDQo+IEFz
-IHN0YXRlZCBmb3IgdGhlIERUIGRvYyBwYXRjaCwgcGxlYXNlIHVzZSBhIGZpeGVkIEdQSU8gcmVn
-dWxhdG9yDQo+IGluc3RlYWQuIEluIHRoaXMgd2F5IHlvdSB3aWxsIGFsc28gZ2V0IGEgdGhlIE9D
-UiBtYXNrIGJhc2VkIHVwb24gdGhlDQo+IEdQSU8gcmVndWxhdG9yLCB3aGljaCBpcyBwYXJzZWQg
-b3V0IGJ5IHRoZSBtbWMgY29yZSB3aGVuIHNkaGNpIGNhbGxzDQo+IG1tY19yZWd1bGF0b3JfZ2V0
-X3N1cHBseSgpLg0KDQpJIHNlZS4gSSB3aWxsIHVwZGF0ZSB0aGlzIHBhcnQgdG9vIGF0IHRoZSB2
-aWV3IHBvaW50IG9mIHVzaW5nIHJlZ3VyYXRvci4NCg0KVGhhbmtzDQpPcml0bw0KDQo+IA0KPiBP
-dGhlcndpc2UsIHRoaXMgbG9va3MgZ29vZCB0byBtZS4NCj4gDQo+IFsuLi5dDQo+IA0KPiBLaW5k
-IHJlZ2FyZHMNCj4gVWZmZQ0KDQotLSANClRha2FvIE9yaXRvIDxvcml0by50YWthb0Bzb2Npb25l
-eHQuY29tPg0K
+RnJvbTogUGV0ZXIgWmlqbHN0cmENCj4gU2VudDogMDcgTWF5IDIwMTkgMDk6NTgNCi4uLg0KPiAr
+CS8qDQo+ICsJICogV2hlbiB3ZSdyZSBoZXJlIGZyb20ga2VybmVsIG1vZGU7IHRoZSAoZXhjZXB0
+aW9uKSBzdGFjayBsb29rcyBsaWtlOg0KPiArCSAqDQo+ICsJICogNCo0KCVlc3ApIC0gPHByZXZp
+b3VzIGNvbnRleHQ+DQo+ICsJICogMyo0KCVlc3ApIC0gZmxhZ3MNCj4gKwkgKiAyKjQoJWVzcCkg
+LSBjcw0KPiArCSAqIDEqNCglZXNwKSAtIGlwDQo+ICsJICogMCo0KCVlc3ApIC0gb3JpZ19lYXgN
+Cg0KQW0gSSByaWdodCBpbiB0aGlua2luZyB0aGF0IHRoaXMgaXMgdGhlIG9ubHkgJ0lOVDMnIHN0
+YWNrIGZyYW1lIHRoYXQNCm5lZWRzIHRvIGJlICdmaWRkbGVkJyB3aXRoPw0KQW5kIHRoYXQgdGhl
+ICdlbXVsYXRlIGEgY2FsbCBpbnN0cnVjdGlvbicgaGFzIHZlcmlmaWVkIHRoYXQgaXMgdGhlIGNh
+c2U/Pw0KU28gdGhlICVjcyBpcyBhbHdheXMgdGhlIGtlcm5lbCAlY3MuDQoNCklmIHRoZSAnY2Fs
+bCB0YXJnZXQnIGFkZHJlc3MgaXMgc2F2ZWQgaW4gYSBwZXItY3B1IGxvY2F0aW9uIGl0IG91Z2h0
+DQp0byBiZSBwb3NzaWJsZSB0byBnZXQgdGhlIGNvZGUgdGhhdCByZXR1cm5zIGZyb20gdGhlIElO
+VDMgd2l0aCB0aGUNCmNhbGwgdGFyZ2V0IGFkZHJlc3MgKG9yIHplcm8pIGluICVheC4NCklmIG5v
+bi16ZXJvLCBpbnN0ZWFkIG9mICdwb3AgJWF4OyBpcmV0JyBleGVjdXRlOg0KCXhjaGcgJWVheCwg
+NCglZXNwKSAgIC0gc3dhcCBmdW5jdGlvbiBhZGRyZXNzIGFuZCBjYWxsZXJzIGlwDQoJcHVzaCAx
+MiglZXNwKSAgICAgICAgLSBvbGQgZmxhZ3MNCgltb3YgIDE0KCVlc3ApLCVlYXggICAtIGNhbGxl
+cnMgYWRkcmVzcyBvdmVyIGZsYWdzDQoJcG9wZiAgICAgICAgICAgICAgICAgLSBlbmFibGVzIGlu
+dGVycnVwdHMgKGV0YykNCglwb3AgICVlYXgNCglyZXRmICAgICAgICAgICAgICAgICAtIEp1bXAg
+dG8gY2FsbGVkIGZ1bmN0aW9uIGFuZCByZW1vdmUgJWNzDQoNCk5vdGhpbmcgZWxzZSBuZWVkcyB0
+byBiZSBtb3ZlZC4NCg0KCURhdmlkDQoNCgkNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
+aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
+DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+
