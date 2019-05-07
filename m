@@ -2,109 +2,72 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BA3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FD2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A947E2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC5520675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208564;
-	bh=Mr/2++AK0yHkr642himO4kwv2kPh2SKci7S98rv3zsU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sV8dMaHHa4rH9E+qY6yY5KSc3a/e/d+l/0Q2mVirlyLoKs1JHlN/ZfhhBrC/HGCJ+
-	 ok/5I63bDByI1Iqi0wJ7VOaZTJ5mznRGS/XUGBvxFvqoaXTNmcXyIBOWtBDRWTW6Pv
-	 mwk2RMadSUIj66CN4nMeklQe7dLxuVcugKGv5+vo=
+	s=default; t=1557208575;
+	bh=t1e6qR30XoBlOonZc+HmloDE9SesZNKua7dzCp++aG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bWzepVioaTLHrE37XVCsY5pFuulzLQecOGhaU55X98Gxoru/2b/+nNpQY7Gmk3GHM
+	 Ew9tl4BauTYLBuKbwZxuiAizVMUwJpNjUc4rFGhBlrQqrN3O6nFVNJoP/jXgQNJxCh
+	 dOUugnKINvwLzC5VGa1puXjQbKX634wPbwitxq1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfEGF4D (ORCPT
+        id S1728774AbfEGF4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57948 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728519AbfEGFiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:08 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727334AbfEGF4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:56:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DB8621655;
-        Tue,  7 May 2019 05:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A92B7205ED;
+        Tue,  7 May 2019 05:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207487;
-        bh=Mr/2++AK0yHkr642himO4kwv2kPh2SKci7S98rv3zsU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Op8iNN4HXtfi6AOoeQKEoc/HHIHb2C4C/Hz2TW7psf/BXUG9TOgqZuQ5V8jfUHoX9
-         psknTrDTeVtd78S5eQgk4/YWNmuEl89s9Y66xszipxdy/LK72WDbGP77W5arO6tGoW
-         11mcmQDZ4Skmsh/x0IXn3Vn+GBXbp3XI4sL3M1P4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 71/81] netfilter: nf_tables: add missing ->release_ops() in error path of newrule()
-Date:   Tue,  7 May 2019 01:35:42 -0400
-Message-Id: <20190507053554.30848-71-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
-References: <20190507053554.30848-1-sashal@kernel.org>
+        s=default; t=1557208571;
+        bh=t1e6qR30XoBlOonZc+HmloDE9SesZNKua7dzCp++aG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cS1hFIOnRvtfqQN3aLt7ozfE6Nuiq9UTnTOQrVkeHauYc1jvYJAkxhbMj00JJ/kq8
+         odLH6j1FQmphq7y78OZj13oyaZILigDagMpaWuM4iWulZY7DlG5US2/tuOgbrvKwiT
+         99ZYJ1DTzPkw+U5sEkwJV99kJJSajOReiixmSaOo=
+Date:   Tue, 7 May 2019 07:56:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 5/7] soundwire: add debugfs support
+Message-ID: <20190507055608.GC17986@kroah.com>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-6-pierre-louis.bossart@linux.intel.com>
+ <20190504070301.GD9770@kroah.com>
+ <a9e1c3d2-fe29-1683-9253-b66034c62010@linux.intel.com>
+ <20190506163810.GK3845@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506163810.GK3845@vkoul-mobl.Dlink>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+On Mon, May 06, 2019 at 10:08:10PM +0530, Vinod Koul wrote:
+> Yes, but then device exit routine is supposed to do debugfs cleanup as
+> well, so that would ensure these references are dropped at that point of
+> time. Greg should that not take care of it or we *should* always do
+> refcounting.
 
-[ Upstream commit b25a31bf0ca091aa8bdb9ab329b0226257568bbe ]
-
-->release_ops() callback releases resources and this is used in error path.
-If nf_tables_newrule() fails after ->select_ops(), it should release
-resources. but it can not call ->destroy() because that should be called
-after ->init().
-At this point, ->release_ops() should be used for releasing resources.
-
-Test commands:
-   modprobe -rv xt_tcpudp
-   iptables-nft -I INPUT -m tcp   <-- error command
-   lsmod
-
-Result:
-   Module                  Size  Used by
-   xt_tcpudp              20480  2      <-- it should be 0
-
-Fixes: b8e204006340 ("netfilter: nft_compat: use .release_ops and remove list of extension")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
----
- net/netfilter/nf_tables_api.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index ef7ff13a7b99..ebfcfe1dcbdb 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2719,8 +2719,11 @@ static int nf_tables_newrule(struct net *net, struct sock *nlsk,
- 	nf_tables_rule_release(&ctx, rule);
- err1:
- 	for (i = 0; i < n; i++) {
--		if (info[i].ops != NULL)
-+		if (info[i].ops) {
- 			module_put(info[i].ops->type->owner);
-+			if (info[i].ops->type->release_ops)
-+				info[i].ops->type->release_ops(info[i].ops);
-+		}
- 	}
- 	kvfree(info);
- 	return err;
--- 
-2.20.1
-
+Always do refcounting.  How else can you "guarantee" that it is safe?
