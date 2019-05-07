@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEF1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45583C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8018120578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2C820578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207956;
-	bh=QDqOCEDarxWfQhCL9qDRT16S4s4tYLQ45SxE07/nZkQ=;
+	s=default; t=1557207968;
+	bh=KrhlHYDC3Mc2EEiVKPpdCQCUu2tXKBSno8oTxZhew/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xHtDBmpQV9wTDmyM6ZnoqXSmzeXd5GRkx0bVnFG4pLGmbHc6oegs9aMnzynlDrYFE
-	 FlR/E4Aqo6naUMRY8X0v+aHx6Fvx1Xjvd0S8NhrEx+zTB7JBc0MENJ07JxEp/SyVKD
-	 vnnaH/TRYf/I64sgMReulCFPY2wfPAyKzCki1rrY=
+	b=MgXm4mUK0pozLr7ZgBLYa/2ZuEWqKk9rih+7T61ABymo4QwDHAhuliqZyH+mRPk8R
+	 1+ypujq+yAx9+T47qCW/b/LCJb3QrRYduZ0E2t8gpHkbj8T2fLJS1MBRzcaJzAZLV9
+	 4buYpqNLHv3Uwj8j/NmQq1ch0TqLQoOgchb+NwtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfEGFpz (ORCPT
+        id S1729377AbfEGFli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32986 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729422AbfEGFlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:53 -0400
+        id S1729344AbfEGFlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D19D020B7C;
-        Tue,  7 May 2019 05:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4941520675;
+        Tue,  7 May 2019 05:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207712;
-        bh=QDqOCEDarxWfQhCL9qDRT16S4s4tYLQ45SxE07/nZkQ=;
+        s=default; t=1557207691;
+        bh=KrhlHYDC3Mc2EEiVKPpdCQCUu2tXKBSno8oTxZhew/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15KlPjWQOeGyilYYRRvB/j9Ga+qrJ1DgQDObLf0QWTbX8N3omDeGzAMKxHpzwE322
-         76AQAv0oEZBVKgXTGx6OtQYu6FOkBT5HAVY6mac/P2QBuwV83U+GpAcvXEzaulSQV1
-         T7Nrqw0PqnKNdEFx5HZ8fy5FAh3BGqfwk2gdT31Q=
+        b=o+hfyjz+lz8xGS16e0eflTmj5GAp5XbwLp2mfywtJVaF6TkRqv1ggMcJr0vvVZX5q
+         uBV8pN0Xq8a7Y6l0IxYJoK9mdI/h2C2664bzQxycXEue3zAzdIGwAHxS1HbSEqwFuZ
+         cRBZCEa6b8bzpovB8b9bs/OxKTCAkwWT3KM4sbHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 14/25] tools lib traceevent: Fix missing equality check for strcmp
-Date:   Tue,  7 May 2019 01:41:11 -0400
-Message-Id: <20190507054123.32514-14-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 4.9 06/25] libnvdimm/btt: Fix a kmemdup failure check
+Date:   Tue,  7 May 2019 01:41:03 -0400
+Message-Id: <20190507054123.32514-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -61,59 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
+[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
+In case kmemdup fails, the fix releases resources and returns to
+avoid the NULL pointer dereference.
 
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
-
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
-
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
-
-Detected by cppcheck.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 700c74b0aed0..def61125ac36 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2204,7 +2204,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index 97dd2925ed6e..5d2c76682848 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
  
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
+ 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
+-	if (nd_btt->id < 0) {
+-		kfree(nd_btt);
+-		return NULL;
+-	}
++	if (nd_btt->id < 0)
++		goto out_nd_btt;
  
- 	if (strcmp(type, "s8") == 0)
+ 	nd_btt->lbasize = lbasize;
+-	if (uuid)
++	if (uuid) {
+ 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
++		if (!uuid)
++			goto out_put_id;
++	}
+ 	nd_btt->uuid = uuid;
+ 	dev = &nd_btt->dev;
+ 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
+@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
+ 	}
+ 	return dev;
++
++out_put_id:
++	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
++
++out_nd_btt:
++	kfree(nd_btt);
++	return NULL;
+ }
+ 
+ struct device *nd_btt_create(struct nd_region *nd_region)
 -- 
 2.20.1
 
