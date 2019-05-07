@@ -2,154 +2,349 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC30C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFDEC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56281205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Uo8Nv1i3"
+	by mail.kernel.org (Postfix) with ESMTP id 55FD620656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfEGQoI (ORCPT
+        id S1727236AbfEGQoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:44:08 -0400
-Received: from mail-eopbgr730065.outbound.protection.outlook.com ([40.107.73.65]:13792
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726476AbfEGQoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:44:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XDmUxc0I3Vs06iUOv0mgYhYfmxdHxaW2JnGAm6xmlv4=;
- b=Uo8Nv1i3+69R/LhIxA3soBtXJ2s46HvlJdQoCtBNkfjEGnuoOXrCeXEd+f+FmlnJA0QmasVRB7BYDnk2uCZy86IWpuo418YVAzko+51ZBkfaRJKMicVW0XR7xHG8dD8Ngc8gbJnMxuTKKQmrt3wxM4zHz376fEGgZ9IuvR64H8E=
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com (20.179.92.82) by
- BYAPR12MB3544.namprd12.prod.outlook.com (20.179.94.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Tue, 7 May 2019 16:44:02 +0000
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::9118:73f2:809c:22c7]) by BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::9118:73f2:809c:22c7%4]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 16:44:02 +0000
-From:   "Kuehling, Felix" <Felix.Kuehling@amd.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tue, 7 May 2019 12:44:19 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:34988 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbfEGQoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:44:18 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 63843A1239;
+        Tue,  7 May 2019 18:44:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id 3Kf4UIRToEKx; Tue,  7 May 2019 18:43:59 +0200 (CEST)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <christian@brauner.io>,
         Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 12/17] drm/radeon, arm64: untag user pointers in
- radeon_gem_userptr_ioctl
-Thread-Topic: [PATCH v15 12/17] drm/radeon, arm64: untag user pointers in
- radeon_gem_userptr_ioctl
-Thread-Index: AQHVBCkzLfkJvfOc9kqyclyg05ajP6Zf386A
-Date:   Tue, 7 May 2019 16:44:02 +0000
-Message-ID: <7568118b-ad57-156c-464f-54fb3f90a783@amd.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <03fe9d923db75cf72678f3ce103838e67390751a.1557160186.git.andreyknvl@google.com>
-In-Reply-To: <03fe9d923db75cf72678f3ce103838e67390751a.1557160186.git.andreyknvl@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-clientproxiedby: YTXPR0101CA0058.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:1::35) To BYAPR12MB3176.namprd12.prod.outlook.com
- (2603:10b6:a03:133::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 93eca1e0-2a8f-45ef-5051-08d6d30b35d1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BYAPR12MB3544;
-x-ms-traffictypediagnostic: BYAPR12MB3544:
-x-microsoft-antispam-prvs: <BYAPR12MB35449D43230F5246FFBE6D1892310@BYAPR12MB3544.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(346002)(136003)(39860400002)(189003)(199004)(72206003)(71190400001)(2501003)(316002)(76176011)(386003)(36756003)(81166006)(53546011)(66066001)(476003)(81156014)(6506007)(14454004)(8936002)(478600001)(52116002)(102836004)(486006)(2906002)(8676002)(65956001)(31696002)(65806001)(68736007)(25786009)(5660300002)(186003)(2616005)(6116002)(6246003)(66446008)(73956011)(11346002)(86362001)(446003)(66476007)(64756008)(2201001)(66946007)(26005)(4326008)(31686004)(71200400001)(6512007)(66556008)(53936002)(229853002)(64126003)(58126008)(54906003)(305945005)(6486002)(7406005)(7416002)(256004)(99286004)(65826007)(7736002)(110136005)(6436002)(3846002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3544;H:BYAPR12MB3176.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Lq5pCPDcPNLU5X+6HbKKo8uqlLH+qh1zPjC6a8jGCekQNZW/q3Uz5M5mILQQpOHPKm6yY7nVRSZkwb1aqbixPMKXDgRTrUEtSJc3P0fPdeVOAWwqkgoD6CXrw1+YnroUVESXWCnoWejM1WWWmtHHXP/3jLhJBO+0owXMBvH5Zjj7+nHCSozrJ++KKAP4ZRiPdoDmJVdEjPv4cM/2d8TBRHXO/Qd6GZcvYkcHUd1Nd9wYO+vrqFTuHiSZXQIUA+091XhYfn/pTZ5FbYAGZQFJZGCdA4KlegQuZPs2ughkxoW92Z9qq4w/pVD1i2tJKBOKsXs+vssL9Jfc4LWT0XHg5u6nA1YN4UpzQZ4b7EHBx37e00LlGJc2ZkMXVBMWO3RFqCccp5ZFyrsn9YtusagfI81mN78mXr3VKrVHTnKLwGY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AC55AB809D9E174784D2867A22094BC5@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH v7 2/5] namei: O_BENEATH-style path resolution flags
+Date:   Wed,  8 May 2019 02:43:14 +1000
+Message-Id: <20190507164317.13562-3-cyphar@cyphar.com>
+In-Reply-To: <20190507164317.13562-1-cyphar@cyphar.com>
+References: <20190507164317.13562-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93eca1e0-2a8f-45ef-5051-08d6d30b35d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 16:44:02.5248
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3544
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0wNiAxMjozMCBwLm0uLCBBbmRyZXkgS29ub3ZhbG92IHdyb3RlOg0KPiBbQ0FV
-VElPTjogRXh0ZXJuYWwgRW1haWxdDQo+DQo+IFRoaXMgcGF0Y2ggaXMgYSBwYXJ0IG9mIGEgc2Vy
-aWVzIHRoYXQgZXh0ZW5kcyBhcm02NCBrZXJuZWwgQUJJIHRvIGFsbG93IHRvDQo+IHBhc3MgdGFn
-Z2VkIHVzZXIgcG9pbnRlcnMgKHdpdGggdGhlIHRvcCBieXRlIHNldCB0byBzb21ldGhpbmcgZWxz
-ZSBvdGhlcg0KPiB0aGFuIDB4MDApIGFzIHN5c2NhbGwgYXJndW1lbnRzLg0KPg0KPiBJbiByYWRl
-b25fZ2VtX3VzZXJwdHJfaW9jdGwoKSBhbiBNTVUgbm90aWZpZXIgaXMgc2V0IHVwIHdpdGggYSAo
-dGFnZ2VkKQ0KPiB1c2Vyc3BhY2UgcG9pbnRlci4gVGhlIHVudGFnZ2VkIGFkZHJlc3Mgc2hvdWxk
-IGJlIHVzZWQgc28gdGhhdCBNTVUNCj4gbm90aWZpZXJzIGZvciB0aGUgdW50YWdnZWQgYWRkcmVz
-cyBnZXQgY29ycmVjdGx5IG1hdGNoZWQgdXAgd2l0aCB0aGUgcmlnaHQNCj4gQk8uIFRoaXMgZnVu
-Y2F0aW9uIGFsc28gY2FsbHMgcmFkZW9uX3R0bV90dF9waW5fdXNlcnB0cigpLCB3aGljaCB1c2Vz
-DQo+IHByb3ZpZGVkIHVzZXIgcG9pbnRlcnMgZm9yIHZtYSBsb29rdXBzLCB3aGljaCBjYW4gb25s
-eSBieSBkb25lIHdpdGgNCj4gdW50YWdnZWQgcG9pbnRlcnMuDQo+DQo+IFRoaXMgcGF0Y2ggdW50
-YWdzIHVzZXIgcG9pbnRlcnMgaW4gcmFkZW9uX2dlbV91c2VycHRyX2lvY3RsKCkuDQo+DQo+IFNp
-Z25lZC1vZmYtYnk6IEFuZHJleSBLb25vdmFsb3YgPGFuZHJleWtudmxAZ29vZ2xlLmNvbT4NCkFj
-a2VkLWJ5OiBGZWxpeCBLdWVobGluZyA8RmVsaXguS3VlaGxpbmdAYW1kLmNvbT4NCg0KDQo+IC0t
-LQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2dlbS5jIHwgMiArKw0KPiAgIDEg
-ZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9yYWRlb24vcmFkZW9uX2dlbS5jIGIvZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRl
-b25fZ2VtLmMNCj4gaW5kZXggNDQ2MTdkZWM4MTgzLi45MGViNzhmYjVlYjIgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2dlbS5jDQo+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9yYWRlb24vcmFkZW9uX2dlbS5jDQo+IEBAIC0yOTEsNiArMjkxLDggQEAgaW50IHJh
-ZGVvbl9nZW1fdXNlcnB0cl9pb2N0bChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB2b2lkICpkYXRh
-LA0KPiAgICAgICAgICB1aW50MzJfdCBoYW5kbGU7DQo+ICAgICAgICAgIGludCByOw0KPg0KPiAr
-ICAgICAgIGFyZ3MtPmFkZHIgPSB1bnRhZ2dlZF9hZGRyKGFyZ3MtPmFkZHIpOw0KPiArDQo+ICAg
-ICAgICAgIGlmIChvZmZzZXRfaW5fcGFnZShhcmdzLT5hZGRyIHwgYXJncy0+c2l6ZSkpDQo+ICAg
-ICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+DQo+IC0tDQo+IDIuMjEuMC4xMDIwLmdm
-MjgyMGNmMDFhLWdvb2cNCj4NCg==
+Add the following flags to allow various restrictions on path
+resolution (these affect the *entire* resolution, rather than just the
+final path component -- as is the case with most other AT_* flags).
+
+The primary justification for these flags is to allow for programs to be
+far more strict about how they want path resolution to handle symlinks,
+mountpoint crossings, and paths that escape the dirfd (through an
+absolute path or ".." shenanigans).
+
+This is of particular concern to container runtimes that want to be very
+careful about malicious root filesystems that a container's init might
+have screwed around with (and there is no real way to protect against
+this in userspace if you consider potential races against a malicious
+container's init). More classical applications (which have their own
+potentially buggy userspace path sanitisation code) include web
+servers, archive extraction tools, network file servers, and so on.
+
+These flags are exposed to userspace in a later patchset.
+
+* LOOKUP_XDEV: Disallow mount-point crossing (both *down* into one, or
+  *up* from one). The primary "scoping" use is to blocking resolution
+  that crosses a bind-mount, which has a similar property to a symlink
+  (in the way that it allows for escape from the starting-point). Since
+  it is not possible to differentiate bind-mounts However since
+  bind-mounting requires privileges (in ways symlinks don't) this has
+  been split from LOOKUP_BENEATH. The naming is based on "find -xdev" as
+  well as -EXDEV (though find(1) doesn't walk upwards, the semantics
+  seem obvious).
+
+* LOOKUP_NO_MAGICLINKS: Disallows ->get_link "symlink" jumping. This is
+  a very specific restriction, and it exists because /proc/$pid/fd/...
+  "symlinks" allow for access outside nd->root and pose risk to
+  container runtimes that don't want to be tricked into accessing a host
+  path (but do want to allow no-funny-business symlink resolution).
+
+* LOOKUP_NO_SYMLINKS: Disallows symlink jumping *of any kind*. Implies
+  LOOKUP_NO_MAGICLINKS (obviously).
+
+* LOOKUP_BENEATH: Disallow "escapes" from the starting point of the
+  filesystem tree during resolution (you must stay "beneath" the
+  starting point at all times). Currently this is done by disallowing
+  ".." and absolute paths (either in the given path or found during
+  symlink resolution) entirely, as well as all "magic link" jumping.
+
+  The wholesale banning of ".." is because it is currently not safe to
+  allow ".." resolution (races can cause the path to be moved outside of
+  the root -- this is conceptually similar to historical chroot(2)
+  escape attacks). Future patches in this series will address this, and
+  will re-enable ".." resolution once it is safe. With those patches,
+  ".." resolution will only be allowed if it remains in the root
+  throughout resolution (such as "a/../b" not "a/../../outside/b").
+
+  The banning of "magic link" jumping is done because it is not clear
+  whether semantically they should be allowed -- while some "magic
+  links" are safe there are many that can cause escapes (and once a
+  resolution is outside of the root, O_BENEATH will no longer detect
+  it). Future patches may re-enable "magic link" jumping when such jumps
+  would remain inside the root.
+
+The LOOKUP_NO_*LINK flags return -ELOOP if path resolution would
+violates their requirement, while the others all return -EXDEV.
+
+This is a refresh of Al's AT_NO_JUMPS patchset[1] (which was a variation
+on David Drysdale's O_BENEATH patchset[2], which in turn was based on
+the Capsicum project[3]). Input from Linus and Andy in the AT_NO_JUMPS
+thread[4] determined most of the API changes made in this refresh.
+
+[1]: https://lwn.net/Articles/721443/
+[2]: https://lwn.net/Articles/619151/
+[3]: https://lwn.net/Articles/603929/
+[4]: https://lwn.net/Articles/723057/
+
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: Kees Cook <keescook@chromium.org>
+Suggested-by: David Drysdale <drysdale@google.com>
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ fs/namei.c            | 76 ++++++++++++++++++++++++++++++++++++-------
+ include/linux/namei.h |  7 ++++
+ 2 files changed, 72 insertions(+), 11 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 2a91b72aa5e9..e13a02720a9d 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -843,6 +843,12 @@ static inline void path_to_nameidata(const struct path *path,
+ 
+ static int nd_jump_root(struct nameidata *nd)
+ {
++	if (unlikely(nd->flags & LOOKUP_BENEATH))
++		return -EXDEV;
++	if (unlikely(nd->flags & LOOKUP_XDEV)) {
++		if (nd->path.mnt != nd->root.mnt)
++			return -EXDEV;
++	}
+ 	if (nd->flags & LOOKUP_RCU) {
+ 		struct dentry *d;
+ 		nd->path = nd->root;
+@@ -1051,6 +1057,9 @@ const char *get_link(struct nameidata *nd)
+ 	int error;
+ 	const char *res;
+ 
++	if (unlikely(nd->flags & LOOKUP_NO_SYMLINKS))
++		return ERR_PTR(-ELOOP);
++
+ 	if (!(nd->flags & LOOKUP_RCU)) {
+ 		touch_atime(&last->link);
+ 		cond_resched();
+@@ -1081,14 +1090,23 @@ const char *get_link(struct nameidata *nd)
+ 		} else {
+ 			res = get(dentry, inode, &last->done);
+ 		}
++		/* If we just jumped it was because of a procfs-style link. */
++		if (unlikely(nd->flags & LOOKUP_JUMPED)) {
++			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
++				return ERR_PTR(-ELOOP);
++			/* Not currently safe. */
++			if (unlikely(nd->flags & LOOKUP_BENEATH))
++				return ERR_PTR(-EXDEV);
++		}
+ 		if (IS_ERR_OR_NULL(res))
+ 			return res;
+ 	}
+ 	if (*res == '/') {
+ 		if (!nd->root.mnt)
+ 			set_root(nd);
+-		if (unlikely(nd_jump_root(nd)))
+-			return ERR_PTR(-ECHILD);
++		error = nd_jump_root(nd);
++		if (unlikely(error))
++			return ERR_PTR(error);
+ 		while (unlikely(*++res == '/'))
+ 			;
+ 	}
+@@ -1269,12 +1287,16 @@ static int follow_managed(struct path *path, struct nameidata *nd)
+ 		break;
+ 	}
+ 
+-	if (need_mntput && path->mnt == mnt)
+-		mntput(path->mnt);
++	if (need_mntput) {
++		if (path->mnt == mnt)
++			mntput(path->mnt);
++		if (unlikely(nd->flags & LOOKUP_XDEV))
++			ret = -EXDEV;
++		else
++			nd->flags |= LOOKUP_JUMPED;
++	}
+ 	if (ret == -EISDIR || !ret)
+ 		ret = 1;
+-	if (need_mntput)
+-		nd->flags |= LOOKUP_JUMPED;
+ 	if (unlikely(ret < 0))
+ 		path_put_conditional(path, nd);
+ 	return ret;
+@@ -1331,6 +1353,8 @@ static bool __follow_mount_rcu(struct nameidata *nd, struct path *path,
+ 		mounted = __lookup_mnt(path->mnt, path->dentry);
+ 		if (!mounted)
+ 			break;
++		if (unlikely(nd->flags & LOOKUP_XDEV))
++			return false;
+ 		path->mnt = &mounted->mnt;
+ 		path->dentry = mounted->mnt.mnt_root;
+ 		nd->flags |= LOOKUP_JUMPED;
+@@ -1351,8 +1375,11 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+ 	struct inode *inode = nd->inode;
+ 
+ 	while (1) {
+-		if (path_equal(&nd->path, &nd->root))
++		if (path_equal(&nd->path, &nd->root)) {
++			if (unlikely(nd->flags & LOOKUP_BENEATH))
++				return -EXDEV;
+ 			break;
++		}
+ 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
+ 			struct dentry *old = nd->path.dentry;
+ 			struct dentry *parent = old->d_parent;
+@@ -1377,6 +1404,8 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+ 				return -ECHILD;
+ 			if (&mparent->mnt == nd->path.mnt)
+ 				break;
++			if (unlikely(nd->flags & LOOKUP_XDEV))
++				return -EXDEV;
+ 			/* we know that mountpoint was pinned */
+ 			nd->path.dentry = mountpoint;
+ 			nd->path.mnt = &mparent->mnt;
+@@ -1391,6 +1420,8 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+ 			return -ECHILD;
+ 		if (!mounted)
+ 			break;
++		if (unlikely(nd->flags & LOOKUP_XDEV))
++			return -EXDEV;
+ 		nd->path.mnt = &mounted->mnt;
+ 		nd->path.dentry = mounted->mnt.mnt_root;
+ 		inode = nd->path.dentry->d_inode;
+@@ -1479,8 +1510,11 @@ static int path_parent_directory(struct path *path)
+ static int follow_dotdot(struct nameidata *nd)
+ {
+ 	while(1) {
+-		if (path_equal(&nd->path, &nd->root))
++		if (path_equal(&nd->path, &nd->root)) {
++			if (unlikely(nd->flags & LOOKUP_BENEATH))
++				return -EXDEV;
+ 			break;
++		}
+ 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
+ 			int ret = path_parent_directory(&nd->path);
+ 			if (ret)
+@@ -1489,6 +1523,8 @@ static int follow_dotdot(struct nameidata *nd)
+ 		}
+ 		if (!follow_up(&nd->path))
+ 			break;
++		if (unlikely(nd->flags & LOOKUP_XDEV))
++			return -EXDEV;
+ 	}
+ 	follow_mount(&nd->path);
+ 	nd->inode = nd->path.dentry->d_inode;
+@@ -1703,6 +1739,13 @@ static inline int may_lookup(struct nameidata *nd)
+ static inline int handle_dots(struct nameidata *nd, int type)
+ {
+ 	if (type == LAST_DOTDOT) {
++		/*
++		 * LOOKUP_BENEATH resolving ".." is not currently safe -- races can
++		 * cause our parent to have moved outside of the root and us to skip
++		 * over it.
++		 */
++		if (unlikely(nd->flags & LOOKUP_BENEATH))
++			return -EXDEV;
+ 		if (!nd->root.mnt)
+ 			set_root(nd);
+ 		if (nd->flags & LOOKUP_RCU) {
+@@ -2251,6 +2294,15 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 	nd->path.dentry = NULL;
+ 
+ 	nd->m_seq = read_seqbegin(&mount_lock);
++
++	if (unlikely(nd->flags & LOOKUP_BENEATH)) {
++		error = dirfd_path_init(nd);
++		if (unlikely(error))
++			return ERR_PTR(error);
++		nd->root = nd->path;
++		if (!(nd->flags & LOOKUP_RCU))
++			path_get(&nd->root);
++	}
+ 	if (*s == '/') {
+ 		if (likely(!nd->root.mnt))
+ 			set_root(nd);
+@@ -2259,9 +2311,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 			s = ERR_PTR(error);
+ 		return s;
+ 	}
+-	error = dirfd_path_init(nd);
+-	if (unlikely(error))
+-		return ERR_PTR(error);
++	if (likely(!nd->path.mnt)) {
++		error = dirfd_path_init(nd);
++		if (unlikely(error))
++			return ERR_PTR(error);
++	}
+ 	return s;
+ }
+ 
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 9138b4471dbf..7bc819ad0cd3 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -50,6 +50,13 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
+ #define LOOKUP_EMPTY		0x4000
+ #define LOOKUP_DOWN		0x8000
+ 
++/* Scoping flags for lookup. */
++#define LOOKUP_BENEATH		0x010000 /* No escaping from starting point. */
++#define LOOKUP_XDEV		0x020000 /* No mountpoint crossing. */
++#define LOOKUP_NO_MAGICLINKS	0x040000 /* No /proc/$pid/fd/ "symlink" crossing. */
++#define LOOKUP_NO_SYMLINKS	0x080000 /* No symlink crossing *at all*.
++					    Implies LOOKUP_NO_MAGICLINKS. */
++
+ extern int path_pts(struct path *path);
+ 
+ extern int user_path_at_empty(int, const char __user *, unsigned, struct path *, int *empty);
+-- 
+2.21.0
+
