@@ -4,166 +4,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEE9C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE998C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD9C20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56542087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o0JRNPqY"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uuC5O9IS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfEGHvZ (ORCPT
+        id S1727086AbfEGHwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:51:25 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11203 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEGHvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:51:24 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd138f60000>; Tue, 07 May 2019 00:51:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 00:51:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 May 2019 00:51:22 -0700
-Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 07:51:15 +0000
-Subject: Re: [PATCH V5 02/16] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-3-vidyas@nvidia.com> <20190503110159.GB32400@ulmo>
- <b8f482f4-8136-07b5-3d68-f45a6fd580ba@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <f550fc06-98b1-0e08-874a-f2fba49d32b5@nvidia.com>
-Date:   Tue, 7 May 2019 13:21:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 7 May 2019 03:52:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12217 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbfEGHwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:52:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44ysJY12qBz9v0QD;
+        Tue,  7 May 2019 09:52:13 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=uuC5O9IS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id yFfxo6T7vyke; Tue,  7 May 2019 09:52:13 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44ysJX73Sfz9v0Pt;
+        Tue,  7 May 2019 09:52:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557215533; bh=v6NA55NzwK+qVu67DCAtG3dejyduGQyYNpu105tIJQo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=uuC5O9IS1ZRhjnqrSuAfc89JUVIegmtu/C20wBh5ca8SDTErkUiQ3hsd/VowB2T2+
+         qPrvaMLL4Me+wlu34BZGSpCmpQuubdQwQBt8GxH6b7B/JO+68JMKmYIDa6rf0eeQWv
+         9lR0JB9h6r66DvbMX2In1V7hbD7Zr1Fg2Khyzs/Q=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F13CF8B87B;
+        Tue,  7 May 2019 09:52:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id W3R6lgpBh9Z6; Tue,  7 May 2019 09:52:13 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4FBE28B879;
+        Tue,  7 May 2019 09:52:13 +0200 (CEST)
+Subject: Re: [PATCH AUTOSEL 4.14 65/95] powerpc: remove old GCC version checks
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Sasha Levin <alexander.levin@microsoft.com>,
+        linuxppc-dev@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-65-sashal@kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c1b63e96-127d-98cf-62f9-2e0ee1a434e3@c-s.fr>
+Date:   Tue, 7 May 2019 09:52:13 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <b8f482f4-8136-07b5-3d68-f45a6fd580ba@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557215478; bh=9MM2Job8LFhpLfYfcy/viLo+D6a9yn3lQWyaaUwWEG4=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=o0JRNPqYfaCtg1oCXPE4tDy0BvTxjjKUHDRoJ36ll2ac2Tqa56V4pnsNTpCF7TTgc
-         hobKxRYWdZMQt2/V5jzADR5cC4I0TLI/gQ8FDAxNqZ02CoxGqx39N+GOflwX9hPkfD
-         pFK3IWx2aLZmk+lMSDMqyxUHg+T7U3XXN57Z+j7bL1xxqlREQhqPVU8rhq66NVNTfi
-         KRYakrWeVQ5M6XFvZqGg/wjSrZIhG8PcGmF/gmIVppWNcGUH6oh+taEbX4RHSHmVK3
-         BFrlgliw26g3JlwrbwBJfLbGA0SgVaNcu1vo8pgYGM2Kiujk9ybT3ZnRW0dBrPOxd5
-         VVAI5B4smOhPg==
+In-Reply-To: <20190507053826.31622-65-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/2019 12:40 PM, Vidya Sagar wrote:
-> On 5/3/2019 4:31 PM, Thierry Reding wrote:
->> On Wed, Apr 24, 2019 at 10:49:50AM +0530, Vidya Sagar wrote:
->>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable driver=
-s
->>> using this API be able to build as loadable modules.
->>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>> Changes from [v4]:
->>> * None
->>>
->>> Changes from [v3]:
->>> * None
->>>
->>> Changes from [v2]:
->>> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a s=
-tatic
->>>
->>> Changes from [v1]:
->>> * This is a new patch in v2 series
->>>
->>> =A0 drivers/pci/pcie/pme.c=A0=A0=A0=A0 | 14 +++++++++++++-
->>> =A0 drivers/pci/pcie/portdrv.h | 16 +++-------------
->>> =A0 2 files changed, 16 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
->>> index 54d593d10396..d5e0ea4a62fc 100644
->>> --- a/drivers/pci/pcie/pme.c
->>> +++ b/drivers/pci/pcie/pme.c
->>> @@ -25,7 +25,19 @@
->>> =A0=A0 * that using MSI for PCIe PME signaling doesn't play well with P=
-CIe PME-based
->>> =A0=A0 * wake-up from system sleep states.
->>> =A0=A0 */
->>> -bool pcie_pme_msi_disabled;
->>> +static bool pcie_pme_msi_disabled;
->>> +
->>> +void pcie_pme_disable_msi(void)
->>> +{
->>> +=A0=A0=A0 pcie_pme_msi_disabled =3D true;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
->>> +
->>> +bool pcie_pme_no_msi(void)
->>> +{
->>> +=A0=A0=A0 return pcie_pme_msi_disabled;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
->>> =A0 static int __init pcie_pme_setup(char *str)
->>> =A0 {
->>> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
->>> index 1d50dc58ac40..7c8c3da4bd58 100644
->>> --- a/drivers/pci/pcie/portdrv.h
->>> +++ b/drivers/pci/pcie/portdrv.h
->>> @@ -125,22 +125,12 @@ void pcie_port_bus_unregister(void);
->>> =A0 struct pci_dev;
->>> =A0 #ifdef CONFIG_PCIE_PME
->>> -extern bool pcie_pme_msi_disabled;
->>> -
->>> -static inline void pcie_pme_disable_msi(void)
->>> -{
->>> -=A0=A0=A0 pcie_pme_msi_disabled =3D true;
->>> -}
->>> -
->>> -static inline bool pcie_pme_no_msi(void)
->>> -{
->>> -=A0=A0=A0 return pcie_pme_msi_disabled;
->>> -}
->>> -
->>> +void pcie_pme_disable_msi(void);
->>> +bool pcie_pme_no_msi(void);
->>> =A0 void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
->>> =A0 #else /* !CONFIG_PCIE_PME */
->>> =A0 static inline void pcie_pme_disable_msi(void) {}
->>> -static inline bool pcie_pme_no_msi(void) { return false; }
->>> +static inline bool pcie_pme_no_msi(void) {}
->>
->> This looks wrong.
-> Can you please give more info on what is wrong in this?
-Is missing "return false;" the wrong here or there is more than just this?
+Hi Sasha,
 
->=20
->>
->> Thierry
->>
->=20
+I don't think GCC 4.6 is the minimum supported for 4.14
 
+As far as I can see, commit cafa0010cd51f ("Raise the minimum required 
+gcc version to 4.6") has not been applied to 4.14 and I can't see any 
+reason such a commit should apply on a stable branch.
+
+Christophe
+
+Le 07/05/2019 à 07:37, Sasha Levin a écrit :
+> From: Nicholas Piggin <npiggin@gmail.com>
+> 
+> [ Upstream commit f2910f0e6835339e6ce82cef22fa15718b7e3bfa ]
+> 
+> GCC 4.6 is the minimum supported now.
+> 
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+> ---
+>   arch/powerpc/Makefile | 31 ++-----------------------------
+>   1 file changed, 2 insertions(+), 29 deletions(-)
+> 
+> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+> index 7452e50f4d1f..0f04c878113e 100644
+> --- a/arch/powerpc/Makefile
+> +++ b/arch/powerpc/Makefile
+> @@ -396,36 +396,9 @@ archprepare: checkbin
+>   # to stdout and these checks are run even on install targets.
+>   TOUT	:= .tmp_gas_check
+>   
+> -# Check gcc and binutils versions:
+> -# - gcc-3.4 and binutils-2.14 are a fatal combination
+> -# - Require gcc 4.0 or above on 64-bit
+> -# - gcc-4.2.0 has issues compiling modules on 64-bit
+> +# Check toolchain versions:
+> +# - gcc-4.6 is the minimum kernel-wide version so nothing required.
+>   checkbin:
+> -	@if test "$(cc-name)" != "clang" \
+> -	    && test "$(cc-version)" = "0304" ; then \
+> -		if ! /bin/echo mftb 5 | $(AS) -v -mppc -many -o $(TOUT) >/dev/null 2>&1 ; then \
+> -			echo -n '*** ${VERSION}.${PATCHLEVEL} kernels no longer build '; \
+> -			echo 'correctly with gcc-3.4 and your version of binutils.'; \
+> -			echo '*** Please upgrade your binutils or downgrade your gcc'; \
+> -			false; \
+> -		fi ; \
+> -	fi
+> -	@if test "$(cc-name)" != "clang" \
+> -	    && test "$(cc-version)" -lt "0400" \
+> -	    && test "x${CONFIG_PPC64}" = "xy" ; then \
+> -                echo -n "Sorry, GCC v4.0 or above is required to build " ; \
+> -                echo "the 64-bit powerpc kernel." ; \
+> -                false ; \
+> -        fi
+> -	@if test "$(cc-name)" != "clang" \
+> -	    && test "$(cc-fullversion)" = "040200" \
+> -	    && test "x${CONFIG_MODULES}${CONFIG_PPC64}" = "xyy" ; then \
+> -		echo -n '*** GCC-4.2.0 cannot compile the 64-bit powerpc ' ; \
+> -		echo 'kernel with modules enabled.' ; \
+> -		echo -n '*** Please use a different GCC version or ' ; \
+> -		echo 'disable kernel modules' ; \
+> -		false ; \
+> -	fi
+>   	@if test "x${CONFIG_CPU_LITTLE_ENDIAN}" = "xy" \
+>   	    && $(LD) --version | head -1 | grep ' 2\.24$$' >/dev/null ; then \
+>   		echo -n '*** binutils 2.24 miscompiles weak symbols ' ; \
+> 
