@@ -2,75 +2,126 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63117C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB34AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3533F2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557249191;
-	bh=kYXQnl6bERnwR0kRmwU+snqBmqJr2oubdODXs6VjdRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iCDH8vaecHoOa6VIFCsNtvyKFV7ENthERjqPAfYjdParx+z7UjHfmuW3qNY6mbjgd
-	 AcDXwj6002YoBOqv4jexnALjjlHZ4BaZVph7r0j2/BQEjNMOMe3CBGiyGA7w+D3G1c
-	 oiZ3SP9IexB8SffIqKksWjDhIh68RKW7twZg4hRI=
+	by mail.kernel.org (Postfix) with ESMTP id 92FC12054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfEGRNJ (ORCPT
+        id S1726801AbfEGROn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:13:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:47997 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfEGRNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:13:09 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 10:13:08 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga006.jf.intel.com with ESMTP; 07 May 2019 10:13:08 -0700
-Date:   Tue, 7 May 2019 11:07:34 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH v2 6/7] nvme-pci: add device coredump support
-Message-ID: <20190507170733.GA6783@localhost.localdomain>
-References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
- <1557248314-4238-7-git-send-email-akinobu.mita@gmail.com>
+        Tue, 7 May 2019 13:14:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33150 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726225AbfEGROn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:14:43 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47HESUA077392
+        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 13:14:41 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sbbj6028h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:14:31 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Tue, 7 May 2019 18:13:07 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 May 2019 18:13:02 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47HD1lY39846070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 May 2019 17:13:01 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1037A405B;
+        Tue,  7 May 2019 17:13:01 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28C49A4060;
+        Tue,  7 May 2019 17:13:01 +0000 (GMT)
+Received: from thinkpad (unknown [9.152.212.151])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 May 2019 17:13:01 +0000 (GMT)
+Date:   Tue, 7 May 2019 19:13:00 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize
+ struct pages for the full memory section
+In-Reply-To: <20190507170208.GF1747@sasha-vm>
+References: <20190507053826.31622-1-sashal@kernel.org>
+        <20190507053826.31622-62-sashal@kernel.org>
+        <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
+        <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
+        <20190507170208.GF1747@sasha-vm>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557248314-4238-7-git-send-email-akinobu.mita@gmail.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050717-0008-0000-0000-000002E43CCF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050717-0009-0000-0000-00002250BAE6
+Message-Id: <20190507191300.6e653799@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=925 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 01:58:33AM +0900, Akinobu Mita wrote:
-> +static void nvme_coredump(struct device *dev)
-> +{
-> +	struct nvme_dev *ndev = dev_get_drvdata(dev);
-> +
-> +	mutex_lock(&ndev->shutdown_lock);
-> +
-> +	nvme_coredump_prologue(ndev);
-> +	nvme_coredump_epilogue(ndev);
-> +
-> +	mutex_unlock(&ndev->shutdown_lock);
-> +}
+On Tue, 7 May 2019 13:02:08 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-This is a bit of a mine field. The shutdown_lock is held when reclaiming
-requests that didn't see a response. If you're holding it here and your
-telemetry log page times out, we're going to deadlock. And since the
-controller is probably in a buggered state when you try to retrieve one,
-I would guess an unrecoverable timeout is the most likely outcome.
+> On Tue, May 07, 2019 at 09:50:50AM -0700, Linus Torvalds wrote:
+> >On Tue, May 7, 2019 at 9:31 AM Alexander Duyck
+> ><alexander.duyck@gmail.com> wrote:
+> >>
+> >> Wasn't this patch reverted in Linus's tree for causing a regression on
+> >> some platforms? If so I'm not sure we should pull this in as a
+> >> candidate for stable should we, or am I missing something?
+> >
+> >Good catch. It was reverted in commit 4aa9fc2a435a ("Revert "mm,
+> >memory_hotplug: initialize struct pages for the full memory
+> >section"").
+> >
+> >We ended up with efad4e475c31 ("mm, memory_hotplug:
+> >is_mem_section_removable do not pass the end of a zone") instead (and
+> >possibly others - this was just from looking for commit messages that
+> >mentioned that reverted commit).
+> 
+> I got it wrong then. I'll fix it up and get efad4e475c31 in instead.
+
+There were two commits replacing the reverted commit, fixing
+is_mem_section_removable() and test_pages_in_a_zone() respectively:
+
+commit 24feb47c5fa5 ("mm, memory_hotplug: test_pages_in_a_zone do not
+pass the end of zone")
+commit efad4e475c31 ("mm, memory_hotplug: is_mem_section_removable do
+not pass the end of a zone")
+
