@@ -2,77 +2,117 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CB4C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EF6C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F5820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BF52054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dEjPu79o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfEGSDM (ORCPT
+        id S1727647AbfEGSD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:03:12 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:36904 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfEGSDL (ORCPT
+        Tue, 7 May 2019 14:03:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39106 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfEGSD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:03:11 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id DB7A7803E1;
-        Tue,  7 May 2019 20:03:06 +0200 (CEST)
-Date:   Tue, 7 May 2019 20:03:05 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: Document FriendlyELEC
- HD702E LCD panel
-Message-ID: <20190507180305.GA15122@ravnborg.org>
-References: <20190507130708.11255-1-jagan@amarulasolutions.com>
+        Tue, 7 May 2019 14:03:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o39so15810796ota.6;
+        Tue, 07 May 2019 11:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JPY4MNS2RU9Z7127GFID4Lx/B6dOG3nVMga0YqQtB8c=;
+        b=dEjPu79oBosxszWQphXSKUqe7G1xsSPgFhtqj4tKfyqpcctSiuhn/Fb66s9jXMolky
+         3/vX9dPKYZDNBS3w5AuB+6GiRdByvIdADIWDyE7qfX6CiEnXiQ1T7ivdnnJOwldqBkVc
+         v4lg11BczqJr454iyBOORvN47uUdLjtHzwdH+LIoqXvoPLjAAJX7O+TDhzFG2LiiB3yh
+         zQ4GjQsfw0RpbY3v/M46MMcHlhLjUYoVg74+42B5FPKdr3eIAnCirn378EZL8byrbbXO
+         yf7c9bL7D7lktp6PPblQIUTjIK354FWIpLlgXoL0KCyS9maY19pcygF5NeXUlWJJjaRH
+         WwDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JPY4MNS2RU9Z7127GFID4Lx/B6dOG3nVMga0YqQtB8c=;
+        b=sFzjQLDdHlZTDJRSXXqzz3jDzuK2cHNfnslWEz0kJ3keH9y7jTXsAK0IzEHytFaZ5F
+         UhlW0UrwMBD3PoSTD3+o5GdHssQAy1tHe+inLjY9zLpxautUdMT0vBqFdqHgNxohe/YN
+         3ZzfLW0M3UNyz4LgZsMpp0F3q8DV9Ga73HX5kUnVCNEZpZJmU6Oe7SlCJQu2eDV0TG8l
+         bAvTvijZecNLFgLpdE46lK9ZTTPcJy9UfQ2ZSjsN5hrNY2K2N6IxyVKdEd7ZYY0Syl0o
+         3izTJR3R2szPFQdkt9X8n3Q0XQnknkBWNHsYkfPrvtOcRwrPTxpFAv6Yjkdtf9CN1RXD
+         1RlQ==
+X-Gm-Message-State: APjAAAVRphbPiEuan0Eiyb9xCHwP0qinGSVZDoRyzozRrLwwOmc2NabK
+        O2LLAZHphpFD1QwJ8K0edQUbdkTpvzHD2915UgY=
+X-Google-Smtp-Source: APXvYqw3QBhK8LJY1eO9eY8Zl3pQCD8whSaY67O+KAJ6VK+cZrA3KkKtchg9DDHLc0L3WQpNu0M/382cG+WBidgDFb8=
+X-Received: by 2002:a9d:4e97:: with SMTP id v23mr22088662otk.148.1557252207032;
+ Tue, 07 May 2019 11:03:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507130708.11255-1-jagan@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=iP-xVBlJAAAA:8
-        a=DoxgV9RLCDXaxzI0TiIA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Vxmtnl_E_bksehYqCbjh:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=lHLH-nfn2y1bM_0xSXwp:22
+References: <20190507115726.23714-1-glaroque@baylibre.com>
+In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 7 May 2019 20:03:15 +0200
+Message-ID: <CAFBinCBeqW7NLyFygB5vi5a+KGcez8q5Hy1e7MdHmaWLv7KmkA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Add drive-strength in Meson pinctrl driver
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 06:37:06PM +0530, Jagan Teki wrote:
-> HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
-> resolution. It has built in Goodix, GT9271 captive touchscreen
-> with backlight adjustable via PWM.
-> 
-> Add dt-bindings documentation for it.
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-
-Patch applied to drm-misc-next
-
-	Sam
+On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+>
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-uA". The change to do so
+> would be minimal and could be benefit to other platforms later on.
+>
+> Cheers
+> Guillaume
+>
+> Changes since v2:
+> - update driver-strength-uA property to be compliant with DT documentation
+> - rework patch series for better understanding
+> - rework set_bias function
+>
+> Changes since v1:
+> - fix missing break
+> - implement new pinctrl generic property "drive-strength-uA"
+>
+> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+>
+>
+> Guillaume La Roque (6):
+>   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+>   pinctrl: generic: add new 'drive-strength-microamp' property support
+>   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+>   pinctrl: meson: Rework enable/disable bias part
+>   pinctrl: meson: add support of drive-strength-microamp
+>   pinctrl: meson: g12a: add DS bank value
+>
+>  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+>  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+>  drivers/pinctrl/meson/pinctrl-meson.c         | 177 +++++++++++++++---
+>  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+>  drivers/pinctrl/pinconf-generic.c             |   2 +
+>  include/linux/pinctrl/pinconf-generic.h       |   3 +
+>  7 files changed, 195 insertions(+), 48 deletions(-)
+I gave this a go on one of my Meson8m2 boards:
+[Meson8m2 doesn't support drive strength and still boots without any
+crashes or obvious regressions]
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
