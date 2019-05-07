@@ -2,94 +2,137 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD81C04AAE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7268AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8ED02087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B9920989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207360;
-	bh=yQogMUBQPjk9nrgNv1yeng0T8x7R0pvQDhEzCVBPASc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Zx9Qud0Qws5n3/ArqmQlHaz1+QPBr5GMjq7LFMtxdGKjl1Ir8OEUa99r2EKt5M6C
-	 /YHiCoYaukbBSCk93DJIKldqHC9uM5DE5PFk5jdwJuvX6gnojroPPZ9B3+z2rqKVTS
-	 c8U6qCNAothvVnnvRq3rA08lfTqmAQDw3hTMh+WA=
+	s=default; t=1557207363;
+	bh=0L4usra1BWLLoQ6Ux30TjVYIwy8g90JNMEHJnbVW2bk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pkb7tLaxINUEGJdzTi4XdDXRaPhABimMA1xgxWruRqwymDgnnyZSVn1Ii4+7y3TaC
+	 dlCrk+hWjt/eZPJ0TaxuO/ffiGVaFgOrhbKwIdNh9QPSzwB1f5AIrR3JcNpniii34P
+	 jD/ysrHNVEeau1lcWZmyUIzhG1hmGGVCjgpsrnl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfEGFf6 (ORCPT
+        id S1727965AbfEGFgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727357AbfEGFfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:52 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727921AbfEGFfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:53 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C00C2087F;
-        Tue,  7 May 2019 05:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB9420C01;
+        Tue,  7 May 2019 05:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207352;
-        bh=yQogMUBQPjk9nrgNv1yeng0T8x7R0pvQDhEzCVBPASc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BG579wH5o7r5gSH7s420RRjjYkl1Sgn7Txz9Vqaf7Beo3lpPHqz9+zYO53lG6Th5b
-         mKURfxOHTRgXYAV2oZiQwLfz0qWiyBTaJweliLZsrilbVKOwKWfKpFhzqI7FntspAn
-         /Gt9jkU91ca98AIVNmptMzF6lUCPYUJRNHvv+uzM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Damian Kos <dkos@cadence.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 99/99] drm/rockchip: fix for mailbox read validation.
-Date:   Tue,  7 May 2019 01:32:33 -0400
-Message-Id: <20190507053235.29900-99-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
-References: <20190507053235.29900-1-sashal@kernel.org>
+        s=default; t=1557207353;
+        bh=0L4usra1BWLLoQ6Ux30TjVYIwy8g90JNMEHJnbVW2bk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FqQwOTE8wHKh1em/Zw+yqD1h4HGq9lupWbgQrz3Bm+z+RBDstmOntfkEjUs9rx3Lm
+         1KMgqbvHgNrdG7Qw0Deeu4HAg+3I3eHQWYIDlxmcDAfcHhxl2UX6ZevSjoAg2Omf9z
+         miHgPFGSBqPcBwBljOKqFhXBWZSaec0HfYrARRfU=
+Date:   Tue, 7 May 2019 11:05:47 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, amit.kucheria@linaro.org,
+        jorge.ramirez-ortiz@linaro.org, lina.iyer@linaro.org,
+        ulf.hansson@linaro.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+Message-ID: <20190507053547.GE16052@vkoul-mobl>
+References: <20190506193115.20909-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506193115.20909-1-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damian Kos <dkos@cadence.com>
+On 06-05-19, 21:31, Niklas Cassel wrote:
+> Add device bindings for CPUs to suspend using PSCI as the enable-method.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index ffedf9640af7..f9db9f3ee10c 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -31,6 +31,7 @@
+>  			reg = <0x100>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			cpu-idle-states = <&CPU_PC>;
+>  		};
+>  
+>  		CPU1: cpu@101 {
+> @@ -39,6 +40,7 @@
+>  			reg = <0x101>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			cpu-idle-states = <&CPU_PC>;
+>  		};
+>  
+>  		CPU2: cpu@102 {
+> @@ -47,6 +49,7 @@
+>  			reg = <0x102>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			cpu-idle-states = <&CPU_PC>;
+>  		};
+>  
+>  		CPU3: cpu@103 {
+> @@ -55,12 +58,24 @@
+>  			reg = <0x103>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			cpu-idle-states = <&CPU_PC>;
+>  		};
+>  
+>  		L2_0: l2-cache {
+>  			compatible = "cache";
+>  			cache-level = <2>;
+>  		};
+> +
+> +		idle-states {
 
-[ Upstream commit e4056bbb6719fe713bfc4030ac78e8e97ddf7574 ]
+Since we are trying to sort the file per address and
+alphabetically, it would be great if this can be moved before l2-cache
+:)
 
-This is basically the same fix as in
-commit fa68d4f8476b ("drm/rockchip: fix for mailbox read size")
-but for cdn_dp_mailbox_validate_receive function.
-
-See patchwork.kernel.org/patch/10671981/ for details.
-
-Signed-off-by: Damian Kos <dkos@cadence.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/1542640463-18332-1-git-send-email-dkos@cadence.com
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
----
- drivers/gpu/drm/rockchip/cdn-dp-reg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/rockchip/cdn-dp-reg.c b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
-index 5a485489a1e2..6c8b14fb1d2f 100644
---- a/drivers/gpu/drm/rockchip/cdn-dp-reg.c
-+++ b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
-@@ -113,7 +113,7 @@ static int cdp_dp_mailbox_write(struct cdn_dp_device *dp, u8 val)
+Other than that this lgtm
  
- static int cdn_dp_mailbox_validate_receive(struct cdn_dp_device *dp,
- 					   u8 module_id, u8 opcode,
--					   u8 req_size)
-+					   u16 req_size)
- {
- 	u32 mbox_size, i;
- 	u8 header[4];
--- 
-2.20.1
+> +			CPU_PC: pc {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <125>;
+> +				exit-latency-us = <180>;
+> +				min-residency-us = <595>;
+> +				local-timer-stop;
+> +			};
+> +		};
+>  	};
+>  
+>  	firmware {
+> -- 
+> 2.21.0
 
+-- 
+~Vinod
