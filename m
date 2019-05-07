@@ -2,111 +2,116 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62062C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444E0C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40256205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164B5205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="RqOFfDSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfEGL3w (ORCPT
+        id S1725843AbfEGLbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:29:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44240 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725843AbfEGL3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:29:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4D460ABF1;
-        Tue,  7 May 2019 11:29:51 +0000 (UTC)
-Date:   Tue, 7 May 2019 13:29:50 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
- reliable stacktrace support
-Message-ID: <20190507112950.wejw6nmfwzmm3vaf@pathway.suse.cz>
-References: <20190430091049.30413-1-pmladek@suse.com>
- <20190430091049.30413-2-pmladek@suse.com>
- <20190507004032.2fgddlsycyypqdsn@treble>
- <20190507014332.l5pmvjyfropaiui2@treble>
+        Tue, 7 May 2019 07:31:35 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:50423 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEGLbe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 07:31:34 -0400
+Received: by mail-wm1-f54.google.com with SMTP id p21so19987726wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=QjMXMsSSirdUYoTUuJO+JEDtUnxzPrM5xgigZEkLnYQ=;
+        b=RqOFfDSYdz/H0bcGfdSjaCVDatHo8QOFl9VXt50M2D3B0Pl2xxxi0898C7GyYi3zx/
+         wgaHMiv4lbloz8y3chMJwbSDG05DUC/zjhHpvhcyQZDee25CFO4zB5a9nkeQgBhO/UA+
+         uz4qOSyAlE8agjyZOCgxdu7k5YhSui3vUYd58viRzWH88/Yfw++XsNAC4vTs/fIbhuY3
+         4UgDvzWCoOFnH8shxy0lBiaS8kLsM+mqqpqSy0KPVcMz0P8R/ltcUzh1iGkEGoBDM3ia
+         JYSUT2PH9o098h+nPMGyncOBu6+MU350F3EscT3UIFI0IE/B34or+gy5PQm+Y6966eef
+         /4yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=QjMXMsSSirdUYoTUuJO+JEDtUnxzPrM5xgigZEkLnYQ=;
+        b=mRPQgod4knbdBo5RxVJC6D8mAkXSmYzPTwGkOfYbTp+fMjCD0wDgYGGek++7nS7UTG
+         b1VXZBgdCiKUqm0+OFwxmHY7Ih3pwK0Orx3un/YHrE7lcuNlWfCvHNYTu3mK0QU7hyrC
+         tpOcn7WOFB93dp+vU7d0EnKXg5yfc2JY48xgTBISsAQ0Yo/bLJjoIwpTkqZQs/aVDqE6
+         6usorgOqJUBoZQUbGIt40pOMZR3JzoYmYqJ1JkcuYIzEnyLNels38pKi7NFNt7HTn2+p
+         MMSYp7USn8XC4bzgVxzKUZCY8gSMYlNjkYgRUM7W1paTmDha9y5GpheqH3nsxoZj38WV
+         p2kg==
+X-Gm-Message-State: APjAAAW7jTI3xoeeR+L2WJjZnu/5BSkHXDMJcynBumu0S/lz8VOb7QT7
+        /pcQuBFY407RgGKJ3WVC5FLOew==
+X-Google-Smtp-Source: APXvYqzpk9v6VfYXiGQLaQXAPP9u1YxXM4HVm7/pNclsGOb/OESBsJfjNuMH+hELgSYpImHipKwfHA==
+X-Received: by 2002:a1c:cf83:: with SMTP id f125mr19275746wmg.96.1557228692779;
+        Tue, 07 May 2019 04:31:32 -0700 (PDT)
+Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
+        by smtp.gmail.com with ESMTPSA id m25sm12848005wmi.45.2019.05.07.04.31.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 04:31:31 -0700 (PDT)
+References: <673b885183fb64f1cbb3ed2387524077@natalenko.name> <87mujzutsw.fsf@netronome.com> <4414f1798ea3c0f70128b7e4caa14edc@natalenko.name>
+User-agent: mu4e 0.9.18; emacs 25.2.2
+From:   Jiong Wang <jiong.wang@netronome.com>
+To:     Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc:     Jiong Wang <jiong.wang@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, valdis@vt.edu
+Subject: Re: [oss-drivers] netronome/nfp/bpf/jit.c cannot be build with -O3
+In-reply-to: <4414f1798ea3c0f70128b7e4caa14edc@natalenko.name>
+Date:   Tue, 07 May 2019 12:31:29 +0100
+Message-ID: <87ef5abiwe.fsf@netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507014332.l5pmvjyfropaiui2@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-05-06 20:43:32, Josh Poimboeuf wrote:
-> On Mon, May 06, 2019 at 07:40:32PM -0500, Josh Poimboeuf wrote:
-> > On Tue, Apr 30, 2019 at 11:10:48AM +0200, Petr Mladek wrote:
-> > > WARN_ON_ONCE() could not be called safely under rq lock because
-> > > of console deadlock issues. Fortunately, there is another check
-> > > for the reliable stacktrace support in klp_enable_patch().
-> > > 
-> > > Signed-off-by: Petr Mladek <pmladek@suse.com>
-> > > ---
-> > >  kernel/livepatch/transition.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-> > > index 9c89ae8b337a..8e0274075e75 100644
-> > > --- a/kernel/livepatch/transition.c
-> > > +++ b/kernel/livepatch/transition.c
-> > > @@ -263,8 +263,15 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
-> > >  	trace.nr_entries = 0;
-> > >  	trace.max_entries = MAX_STACK_ENTRIES;
-> > >  	trace.entries = entries;
-> > > +
-> > >  	ret = save_stack_trace_tsk_reliable(task, &trace);
-> > > -	WARN_ON_ONCE(ret == -ENOSYS);
-> > > +	/*
-> > > +	 * pr_warn() under task rq lock might cause a deadlock.
-> > > +	 * Fortunately, missing reliable stacktrace support has
-> > > +	 * already been handled when the livepatch was enabled.
-> > > +	 */
-> > > +	if (ret == -ENOSYS)
-> > > +		return ret;
-> > 
-> > I find the comment to be a bit wordy and confusing (and vague).
 
-Then please provide a better one. I have no idea what might make
-you happy and am not interested into an endless disputing.
+Oleksandr Natalenko writes:
 
-> > Also this check is effectively the same as the klp_have_reliable_stack()
-> > check which is done in kernel/livepatch/core.c.  So I think it would be
-> > clearer and more consistent if the same check is done here:
-> > 
-> > 	if (!klp_have_reliable_stack())
-> > 		return -ENOSYS;
+> Hi.
+>
+> On 07.05.2019 00:01, Jiong Wang wrote:
+>> I guess it's because constant prop. Could you try the following change 
+>> to
+>> __emit_shift?
+>> 
+>> drivers/net/ethernet/netronome/nfp/bpf/jit.c
+>> __emit_shift:331
+>> -       if (sc == SHF_SC_L_SHF)
+>> +       if (sc == SHF_SC_L_SHF && shift)
+>>                 shift = 32 - shift;
+>> 
+>> emit_shf_indir is passing "0" as shift to __emit_shift which will
+>> eventually be turned into 32 and it was OK because we truncate to 
+>> 5-bit,
+>> but before truncation, it will overflow the shift mask.
+>
+> Yup, it silences the error for me.
 
-Huh, it smells with over engineering to me.
+Thanks for the testing.
 
-> > 	ret = save_stack_trace_tsk_reliable(task, &trace);
-> > 
-> > 	[ no need to check ret for ENOSYS here ]
-> > 
-> > Then, IMO, no comment is needed.
-> 
-> BTW, if you agree with this approach then we can leave the
-> WARN_ON_ONCE() in save_stack_trace_tsk_reliable() after all.
+I have also reproduced this issue after switching to gcc 8.3, and confirmed
+the error is triggered from "value too large for the field" check inside
+__BF_FIELD_CHECK due to immediate "32" is out of range for mask 0x1f.
 
-I really like the removal of the WARN_ON_ONCE(). I consider
-it an old fashioned way used when people are lazy to handle
-errors. It might make sense when the backtrace helps to locate
-the context but the context is well known here. Finally,
-WARN() should be used with care. It might cause reboot
-with panic_on_warn.
+Will send out a fix.
 
-Best Regards,
-Petr
+Regards,
+Jiong
