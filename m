@@ -2,198 +2,230 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39586C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4974FC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DE1206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D7420578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9kqiPtj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfEGTB6 convert rfc822-to-8bit (ORCPT
+        id S1727218AbfEGTFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfEGTB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:01:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 603DF20578;
-        Tue,  7 May 2019 19:01:54 +0000 (UTC)
-Date:   Tue, 7 May 2019 15:01:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 2/3] x86_64: Allow breakpoints to emulate call
- functions
-Message-ID: <20190507150153.7a5d376d@gandalf.local.home>
-In-Reply-To: <20190507175342.fskdj2qidpao65qi@treble>
-References: <20190507174227.673261270@goodmis.org>
-        <20190507174400.219947724@goodmis.org>
-        <20190507175342.fskdj2qidpao65qi@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 7 May 2019 15:05:01 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38250 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfEGTFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 15:05:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y19so5084509lfy.5;
+        Tue, 07 May 2019 12:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0zWJfwz+fwYJ1p02uShHdeYN/Qq2lWdk2D2AnZwo/RE=;
+        b=C9kqiPtjJhOr+PT9TOzf9EdTE4aAycrdlfcomlxZDi9eWymu8VL66yBjYifDrVmLQ1
+         h5if7Y23u0n1K74IJ36bYKIs2jxph+5G+MbiplhElUg6ajOJMpEMHipTnZVCs0KZ3W72
+         0ccNxikXjj+mliOLNyDDrMxnvP6cyOtLFPdygIpiNvUCS2UBS21mW0LKb424MqBzkwJx
+         iz41xMUu+eh5d1wbmyVpSNUlL4Zg9bFzuFB0SvNVpNpBOa6LZm3KRS5PYdvtA2dzE9vc
+         dcBglkX6yZTasuobzX3tUUJUPouS9ipPyidbVZUIuN6a1YOTsQ7/FeFJmk0LW4Ih+c3R
+         gbiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0zWJfwz+fwYJ1p02uShHdeYN/Qq2lWdk2D2AnZwo/RE=;
+        b=Jxud9hNZHIC89A48jQSPpEdgISxtXChyl1XLCRr0we0OI8X/vyC7sxr/zPz/41AnxX
+         e37btIN/qFt/UxNPhmxX/XzIYscbpdDrdcybv1qvNM8r1aTTm3PRKS8VRBDdaQUjCUJE
+         v/u/eoUqVqEwcbZTbQMY3WpetT9nKQLuqd7UDOpi9pqi+ClH4LYVm6Tb51ZYN89KL/WH
+         nU6yP+ODamzZqbm71MeSi/wB7ZLQtSz/Mzdq3KMb2SDnAVjRe/W6kAA1HEx1trNuRsqt
+         3lGANmKqXgx+vAVGyv7BAy5W+k8ASxpYKxRx0vXJXGvysa5yP1J79gIH9LyLkwhYNlTb
+         6wWg==
+X-Gm-Message-State: APjAAAUTlCCm4UAqqs621Z1JWdtZ99NJnDwUxal7fOdNqIcwtLsO7s5s
+        bEFQTqbnlFJRvlwpfffpvGHX2Qt0D1bhD09I0AR20g0=
+X-Google-Smtp-Source: APXvYqxRFT8eFl96LKSEpeW6IfTfSWn3NoQOypBRaYlTSzug24KxN+OlnkY+P2KCuHLU2Qpwm7Sf2m3xTWj/dI4fPc8=
+X-Received: by 2002:a19:7d04:: with SMTP id y4mr17763594lfc.153.1557255897702;
+ Tue, 07 May 2019 12:04:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
+ <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com>
+ <CAEJqkgiNYXwsJaT0d3JyMW-2yJ2DV53FHPV5-iAy7b-NbAEAcw@mail.gmail.com>
+ <CAJZ5v0ghNMPMdc03T-is-=-k11rZ8K5O9Av+TnbBY_2mNr-eug@mail.gmail.com>
+ <CAEJqkgiB7woieNZ-vVm7x-GzVrqGpJWLXOM9JpSUgPgE7eA6gA@mail.gmail.com> <CF6A88132359CE47947DB4C6E1709ED53C5A9EBD@ORSMSX122.amr.corp.intel.com>
+In-Reply-To: <CF6A88132359CE47947DB4C6E1709ED53C5A9EBD@ORSMSX122.amr.corp.intel.com>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Tue, 7 May 2019 21:06:16 +0200
+Message-ID: <CAEJqkggvtYobXNjFbvqjajMcbZ_+3PrQJC-9kK+nn5cgXgOyWg@mail.gmail.com>
+Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
+To:     "Schmauss, Erik" <erik.schmauss@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 12:53:42 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+Am Di., 7. Mai 2019 um 20:46 Uhr schrieb Schmauss, Erik
+<erik.schmauss@intel.com>:
+>
+>
+>
+> > -----Original Message-----
+> > From: Gabriel C [mailto:nix.or.die@gmail.com]
+> > Sent: Tuesday, May 7, 2019 2:33 AM
+> > To: Rafael J. Wysocki <rafael@kernel.org>
+> > Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>; LKML <linux-
+> > kernel@vger.kernel.org>; Schmauss, Erik <erik.schmauss@intel.com>
+> > Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without
+> > CONFIG_ACPI_DEBUG being set
+> >
+> > Am Di., 7. Mai 2019 um 10:35 Uhr schrieb Rafael J. Wysocki
+> > <rafael@kernel.org>:
+> > >
+> > > On Tue, May 7, 2019 at 9:31 AM Gabriel C <nix.or.die@gmail.com> wrote:
+> > > >
+> > > > Am Di., 7. Mai 2019 um 09:01 Uhr schrieb Rafael J. Wysocki
+> > <rafael@kernel.org>:
+> > > > >
+> > > >  Hello Rafael ,  Erik
+> > > >
+> > > > > +Erik
+> > > > >
+> > > > > On Tue, May 7, 2019 at 1:33 AM Gabriel C <nix.or.die@gmail.com>
+> > wrote:
+> > > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > > > while testing kernel-5.1 I get on one of my Lenovo Laptops very
+> > > > > > strange 'ACPI Debug:' messages.
+> > > > > >
+> > > > > > After some grepping I realized these are Debug messages from
+> > > > > > DSDT , however my kernel does not have ACPI_DEBUG enabled.
+> > > > > >
+> > > > > > I found out the module triggering this, on this Laptop is
+> > > > > > ideapad_laptop , but looking at the code I cannot see what would
+> > > > > > causes that.
+> > > > > >
+> > > > > > Also on the same Laptop with any 5.0.X kernels I cannot see these.
+> > > > > >
+> > > > > >
+> > > > > > ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1 #
+> > > > > > CONFIG_ACPI_DEBUGGER is not set # CONFIG_ACPI_DEBUG is not
+> > set #
+> > > > > > CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set #
+> > > > > > CONFIG_THINKPAD_ACPI_DEBUG is not set
+> > > > > >
+> > > > > > .. dmesg ..
+> > > > > > ...
+> > > > > > [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
+> > > > > > [ideapad_laptop] @ 1322
+> > > > > > [   68.026708] input: Ideapad extra buttons as
+> > > > > >
+> > /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
+> > > > > > [   68.038236] ACPI Debug:  "=====QUERY_64====="
+> > > > > > [   68.050232] ACPI Debug:  "=====QUERY_65====="
+> > > > > > [   68.060218] ACPI Debug:  "=====QUERY_64====="
+> > > > > > [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
+> > > > > > [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
+> > > > > > [ideapad_laptop] returned 0 after 69751 usecssg
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > > These =====QUERY_XX===== messages are from DSDT:
+> > > > > >
+> > > > > > ~/acpi$ grep QUERY dsdt.dsl
+> > > > > >                Debug = "=====QUERY_11====="
+> > > > > >                Debug = "=====QUERY_12====="
+> > > > > >                Debug = "=====QUERY_24====="
+> > > > > >                Debug = "=====QUERY_25====="
+> > > > > >                Debug = "=====QUERY_37====="
+> > > > > >                Debug = "=====QUERY_38====="
+> > > > > >                Debug = "=====QUERY_64====="
+> > > > > >                Debug = "=====QUERY_65====="
+> > > > > >
+> > > > > > Also this is the code from DSDT for QUERY 64 and 65:
+> > > > > >
+> > > > > > ...
+> > > > > >             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
+> > > > > >            {
+> > > > > >                Debug = "=====QUERY_64====="
+> > > > > >                If ((OSYS == 0x07D9))
+> > > > > >                {
+> > > > > >                    If (((WLEX == One) & (WLAT == One)))
+> > > > > >                    {
+> > > > > >                        SGOV (0x02040005, One)
+> > > > > >                    }
+> > > > > >                    Else
+> > > > > >                    {
+> > > > > >                        SGOV (0x02040005, Zero)
+> > > > > >                    }
+> > > > > >                }
+> > > > > >            }
+> > > > > >
+> > > > > >            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
+> > > > > >            {
+> > > > > >                Debug = "=====QUERY_65====="
+> > > > > >                If ((OSYS == 0x07D9))
+> > > > > >                {
+> > > > > >                    If (((BTEX == One) & (BTAT == One)))
+> > > > > >                    {
+> > > > > >                        SGOV (0x0202000B, One)
+> > > > > >                    }
+> > > > > >                    Else
+> > > > > >                    {
+> > > > > >                        SGOV (0x0202000B, Zero)
+> > > > > >                    }
+> > > > > >                }
+> > > > > >            }
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > >
+> > > > > > Any idea what would cause this ?
+> > > >
+> > > > I think I found what is causing that.
+> > > >
+> > > > Commit aa9aaa4d61c0048d3faad056893cd7860bbc084c is moving
+> > definition
+> > > > of Linux's  ACPI_DEBUG_DEFAULT to incude/acpi/platform/aclinux.h ,
+> > > > however include/acpi/acpi.h didn't got updated and
+> > > > ACPI_DEBUG_DEFAULT now being always defined as  (ACPI_LV_INIT |
+> > > > ACPI_LV_DEBUG_OBJECT | ACPI_LV_EVALUATION | ACPI_LV_REPAIR)
+> > >
+> > > I'm not sure what you mean by this.
+> > >
+> > > include/acpi/acpi.h should get the right definitions through
+> > > include/acpi/platform/acenv.h and include/acpi/acoutput.h that are
+> > > included by it.
+> > >
+> >
+> > Hmm yes should , I missed that include. However it does not work.
+> >
+> > I've just put back old code back into drivers/acpi/bus.c to test and all working
+> > now fine without any other changes.
+> >
+> > > It looks like incude/acpi/platform/aclinux.h has not been included by
+> > > include/acpi/platform/acenv.h for some reason when building this
+> > > module.
+> >
+> > If this one getting it wrong all will do so , they all just include <linux/acpi.h>.
+> >
+> > Probably not so much users will notice that , I just did because my BIOS
+> > vendor forgot DEBUG around.
+>
+> Do you still get this issue after doing make clean and rebuilding your kernel?
 
-> > To handle this, copy the exception frame on entry of the breakpoint handler
-> > and have leave a gap that can be used to add a return address to the stack
-> > frame and return from the breakpoint to the emulated called function,
-> > allowing for that called function to return back to the location after the
-> > breakpoint was placed.  
-> 
-> This part is done by patch 1.
-> 
-> > 
-> > The helper functions were also added:  
-> 
-> No longer "also" :-)
-
-
-> > +#ifdef CONFIG_X86_64
-> > +static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
-> > +{
-> > +	regs->sp -= sizeof(unsigned long);
-> > +	*(unsigned long *)regs->sp = val;
-> > +}  
-> 
-> How this works isn't really obvious.  A comment is probably warranted to
-> explain the fact that the int3 entry code reserved some space on the
-> stack.
-> 
-
-
-How's this?
-
--- Steve
-
-From d29dc2e9e0275c9857932b80cebc01551b669efb Mon Sep 17 00:00:00 2001
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Wed, 1 May 2019 15:11:17 +0200
-Subject: [PATCH] x86_64: Allow breakpoints to emulate call functions
-
-In order to allow breakpoints to emulate call functions, they need to push
-the return address onto the stack. But because the breakpoint exception
-frame is added to the stack when the breakpoint is hit, there's no room to
-add the address onto the stack and return to the address of the emulated
-called funtion.
-
-This helper functions are added:
-
-  int3_emulate_jmp(): changes the location of the regs->ip to return there.
-
- (The next two are only for x86_64)
-  int3_emulate_push(): to push the address onto the gap in the stack
-  int3_emulate_call(): push the return address and change regs->ip
-
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nayna Jain <nayna@linux.ibm.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-[ Modified to only work for x86_64 and added comment to int3_emulate_push() ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- arch/x86/include/asm/text-patching.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index e85ff65c43c3..05861cc08787 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -39,4 +39,32 @@ extern int poke_int3_handler(struct pt_regs *regs);
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
- extern int after_bootmem;
- 
-+static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
-+{
-+	regs->ip = ip;
-+}
-+
-+#define INT3_INSN_SIZE 1
-+#define CALL_INSN_SIZE 5
-+
-+#ifdef CONFIG_X86_64
-+static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
-+{
-+	/*
-+	 * The int3 handler in entry_64.S adds a gap between the
-+	 * stack where the break point happened, and the saving of
-+	 * pt_regs. We can extend the original stack because of
-+	 * this gap. See the idtentry macro's create_gap option.
-+	 */
-+	regs->sp -= sizeof(unsigned long);
-+	*(unsigned long *)regs->sp = val;
-+}
-+
-+static inline void int3_emulate_call(struct pt_regs *regs, unsigned long func)
-+{
-+	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
-+	int3_emulate_jmp(regs, func);
-+}
-+#endif
-+
- #endif /* _ASM_X86_TEXT_PATCHING_H */
--- 
-2.20.1
-
+A clean build from tarball has this issue for me. I don't think is a
+building problem ,
+any <5.1 kernel is fine , kernel 5.1 with your commit reverted is fine too ,
+kernel 5.1 with your commit in but the removed hunk in bus.c re-added
+is fine also.
