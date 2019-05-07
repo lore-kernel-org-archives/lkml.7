@@ -2,94 +2,159 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B25C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE09DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12222054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5582054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208474;
-	bh=dyoheBYe10LN6nBTsCT3WYUs9mOHV0vInXEYAm/3z94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MxyzAAf8NZxXDfa/SWmARkRKqQRxC1EJA+9QltH1i0zATCXdrTdm803TKDTXWZg+/
-	 Re24xK1wG2odRug45yoUINWEuCwOHLqmNGSqgzC3X5IkPH1c7t2Vo5BWuEBbVx0vjZ
-	 tDm1TSWObxT9zF8QgymIb+IwLckP1sU72gx16wTw=
+	s=default; t=1557208478;
+	bh=T1lFngWDo2uXq8zx/zlRw0MCtf9yDbV/wl8t0Mgby4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HTIBQQPJQoSyktJBU6ChwRsp8RsMYbnAsoPZ+WGEZiasq+cwUnEfz6ilxIYUFii5+
+	 +ung0I+Po2IvmCTho7ME95wblO6A1ZaCVq5L0q1tB9NCcdiFTC6+so1YL123jbAVEm
+	 LyEQy7+YitYih1PiicXyVv4JE2mK/i8qexDw/8c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfEGFyd (ORCPT
+        id S1729108AbfEGFyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfEGFi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727334AbfEGFyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:54:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B514206A3;
-        Tue,  7 May 2019 05:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8DE920825;
+        Tue,  7 May 2019 05:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207509;
-        bh=dyoheBYe10LN6nBTsCT3WYUs9mOHV0vInXEYAm/3z94=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9JDcfhWGhv6T6VcgL0jhmW2c4nL+EMXq0dKOcppfeg4mGdLgoXWxOAbH9bgaOriV
-         PdJ20rJ0DtjLpo6p2bJ2pEtVEknl4r+av++oWjsUspq7RzIVnvK1uj28hc8stGbgaQ
-         OY0R27r/Pd5QVB5FvtYwouGPiiaOfj0ToY9lL7AI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 4.14 02/95] libnvdimm/namespace: Fix a potential NULL pointer dereference
-Date:   Tue,  7 May 2019 01:36:51 -0400
-Message-Id: <20190507053826.31622-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
-References: <20190507053826.31622-1-sashal@kernel.org>
+        s=default; t=1557208475;
+        bh=T1lFngWDo2uXq8zx/zlRw0MCtf9yDbV/wl8t0Mgby4M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PcsGyPByjN2k4OHTjJPuELvY5crdqPjZLkS+AZVI0SPsnXJRellVmW3Cq3v8Oibc5
+         KwQZKOoa+HCeZ9X5f3CKUIDSrlevlpMJY7eQioIQC3oPaSF+FJZMAsx7AonxU6WTYS
+         o5o7T18Rhxwge0jmLOVbbue0W2w/QA82aVwJc/To=
+Date:   Tue, 7 May 2019 07:54:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
+ master(s)
+Message-ID: <20190507055432.GB17986@kroah.com>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
+ <20190504065242.GA9770@kroah.com>
+ <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
+ <20190507052732.GD16052@vkoul-mobl>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507052732.GD16052@vkoul-mobl>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+On Tue, May 07, 2019 at 10:57:32AM +0530, Vinod Koul wrote:
+> On 06-05-19, 21:24, Pierre-Louis Bossart wrote:
+> > 
+> > > > +int sdw_sysfs_bus_init(struct sdw_bus *bus)
+> > > > +{
+> > > > +	struct sdw_master_sysfs *master;
+> > > > +	int err;
+> > > > +
+> > > > +	if (bus->sysfs) {
+> > > > +		dev_err(bus->dev, "SDW sysfs is already initialized\n");
+> > > > +		return -EIO;
+> > > > +	}
+> > > > +
+> > > > +	master = kzalloc(sizeof(*master), GFP_KERNEL);
+> > > > +	if (!master)
+> > > > +		return -ENOMEM;
+> > > 
+> > > Why are you creating a whole new device to put all of this under?  Is
+> > > this needed?  What will the sysfs tree look like when you do this?  Why
+> > > can't the "bus" device just get all of these attributes and no second
+> > > device be created?
+> > 
+> > I tried a quick hack and indeed we could simplify the code with something as
+> > simple as:
+> > 
+> > [attributes omitted]
+> > 
+> > static const struct attribute_group sdw_master_node_group = {
+> > 	.attrs = master_node_attrs,
+> > 	.name = "mipi-disco"
+> > };
+> > 
+> > int sdw_sysfs_bus_init(struct sdw_bus *bus)
+> > {
+> > 	return sysfs_create_group(&bus->dev->kobj, &sdw_master_node_group);
+> > }
+> > 
+> > void sdw_sysfs_bus_exit(struct sdw_bus *bus)
+> > {
+> > 	sysfs_remove_group(&bus->dev->kobj, &sdw_master_node_group);	
+> > }
+> > 
+> > which gives me a simpler structure and doesn't require additional
+> > pretend-devices:
+> > 
+> > /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# ls
+> > clock_gears
+> > /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# more clock_gears
+> > 8086
+> > 
+> > The issue I have is that for the _show() functions, I don't see a way to go
+> > from the device argument to bus. In the example above I forced the output
+> > but would need a helper.
+> > 
+> > static ssize_t clock_gears_show(struct device *dev,
+> > 				struct device_attribute *attr, char *buf)
+> > {
+> > 	struct sdw_bus *bus; // this is what I need to find from dev
+> > 	ssize_t size = 0;
+> > 	int i;
+> > 
+> > 	return sprintf(buf, "%d \n", 8086);
+> > }
+> > 
+> > my brain is starting to fry, but I don't see how container_of() would work
+> > here since the bus structure contains a pointer to the device. I don't also
+> > see a way to check for all devices for the bus_type soundwire.
+> > For the slaves we do have a macro based on container_of(), so wondering if
+> > we made a mistake in the bus definition? Vinod, any thoughts?
+> 
+> yeah I dont recall a way to get bus fed into create_group, I did look at
+> the other examples back then and IIRC and most of them were using a
+> global to do the trick (I didn't want to go down that route).
+> 
+> I think that was the reason I wrote it this way...
+> 
+> BTW if you do use psedo-device you can create your own struct foo which
+> embeds device and then then you can use container approach to get foo
+> (and foo contains bus as a member).
+> 
+> Greg, any thoughts?
 
-[ Upstream commit 55c1fc0af29a6c1b92f217b7eb7581a882e0c07c ]
+Why would you have "bus" attributes on a device?  I don't think you are
+using "bus" here like the driver model uses the term "bus", right?
 
-In case kmemdup fails, the fix goes to blk_err to avoid NULL
-pointer dereference.
+What are you really trying to show here?
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvdimm/namespace_devs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+And if you need to know the bus pointer from the device, why don't you
+have a pointer to it in your device-specific structure?
 
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 50b01d3eadd9..e3f228af59d1 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -2234,9 +2234,12 @@ struct device *create_namespace_blk(struct nd_region *nd_region,
- 	if (!nsblk->uuid)
- 		goto blk_err;
- 	memcpy(name, nd_label->name, NSLABEL_NAME_LEN);
--	if (name[0])
-+	if (name[0]) {
- 		nsblk->alt_name = kmemdup(name, NSLABEL_NAME_LEN,
- 				GFP_KERNEL);
-+		if (!nsblk->alt_name)
-+			goto blk_err;
-+	}
- 	res = nsblk_add_resource(nd_region, ndd, nsblk,
- 			__le64_to_cpu(nd_label->dpa));
- 	if (!res)
--- 
-2.20.1
+thanks,
 
+greg k-h
