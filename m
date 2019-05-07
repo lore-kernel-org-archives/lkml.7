@@ -2,85 +2,148 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20777C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0FB205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF584206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfEGNTQ (ORCPT
+        id S1726492AbfEGNXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:19:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42890 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbfEGNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:19:16 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 231CE307D91F;
-        Tue,  7 May 2019 13:19:16 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0519660C4E;
-        Tue,  7 May 2019 13:19:09 +0000 (UTC)
-Date:   Tue, 7 May 2019 08:19:07 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] livepatch: Use static buffer for debugging
- messages under rq lock
-Message-ID: <20190507131907.ep5g2hi4hp2lvy3d@treble>
-References: <20190430091049.30413-1-pmladek@suse.com>
- <20190430091049.30413-3-pmladek@suse.com>
- <20190507004319.oxxncicid6pxg352@treble>
- <20190507115029.54qxbsd4vsouwvjo@pathway.suse.cz>
+        Tue, 7 May 2019 09:23:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37304 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726321AbfEGNXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:23:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 756B6AEBF;
+        Tue,  7 May 2019 13:23:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 097871E3C5A; Tue,  7 May 2019 15:23:30 +0200 (CEST)
+Date:   Tue, 7 May 2019 15:23:30 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 50/95] fsnotify: generalize handling of
+ extra event flags
+Message-ID: <20190507132330.GB4635@quack2.suse.cz>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-50-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507115029.54qxbsd4vsouwvjo@pathway.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 07 May 2019 13:19:16 +0000 (UTC)
+In-Reply-To: <20190507053826.31622-50-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:50:29PM +0200, Petr Mladek wrote:
-> On Mon 2019-05-06 19:43:19, Josh Poimboeuf wrote:
-> > On Tue, Apr 30, 2019 at 11:10:49AM +0200, Petr Mladek wrote:
-> > > klp_try_switch_task() is called under klp_mutex. The buffer for
-> > > debugging messages might be static.
-> > 
-> > The patch description is missing a "why" (presumably to reduce stack
-> > usage).
+On Tue 07-05-19 01:37:39, Sasha Levin wrote:
+> From: Amir Goldstein <amir73il@gmail.com>
 > 
-> Exactly. I thought that it was obvious. But I am infected by printk
-> code where line buffers are 1k and nobody wants them on the stack.
+> [ Upstream commit 007d1e8395eaa59b0e7ad9eb2b53a40859446a88 ]
 > 
-> 128bytes in klp_try_switch_task() context are acceptable but
-> it is still rather big buffer.
+> FS_EVENT_ON_CHILD gets a special treatment in fsnotify() because it is
+> not a flag specifying an event type, but rather an extra flags that may
+> be reported along with another event and control the handling of the
+> event by the backend.
 > 
-> OK, what about the following commit message?
+> FS_ISDIR is also an "extra flag" and not an "event type" and therefore
+> desrves the same treatment. With inotify/dnotify backends it was never
+> possible to set FS_ISDIR in mark masks, so it did not matter.
+> With fanotify backend, mark adding code jumps through hoops to avoid
+> setting the FS_ISDIR in the commulative object mask.
 > 
-> "klp_try_switch_task() is called under klp_mutex. The buffer for
-> debugging messages might be static to reduce stack usage."
+> Separate the constant ALL_FSNOTIFY_EVENTS to ALL_FSNOTIFY_FLAGS and
+> ALL_FSNOTIFY_EVENTS, so the latter can be used to test for specific
+> event types.
+> 
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 
-It's better to use imperative language.  It would also be good to
-reverse the order of the wording by starting with the problem.
+Sasha, why did you select this patch? It is just a cleanup with no user
+visible effect and was done mostly to simplify implementing following
+features...
 
-Something like:
+								Honza
 
-The err_buf array uses 128 bytes of stack space.  Move it off the stack
-by making it static.  It's safe to use a shared buffer because
-klp_try_switch_task() is called under klp_mutex.
-
+> ---
+>  fs/notify/fsnotify.c             | 7 +++----
+>  include/linux/fsnotify_backend.h | 9 +++++++--
+>  2 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
+> index 506da82ff3f1..dc080c642dd0 100644
+> --- a/fs/notify/fsnotify.c
+> +++ b/fs/notify/fsnotify.c
+> @@ -192,7 +192,7 @@ static int send_to_group(struct inode *to_tell,
+>  			 struct fsnotify_iter_info *iter_info)
+>  {
+>  	struct fsnotify_group *group = NULL;
+> -	__u32 test_mask = (mask & ~FS_EVENT_ON_CHILD);
+> +	__u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
+>  	__u32 marks_mask = 0;
+>  	__u32 marks_ignored_mask = 0;
+>  
+> @@ -256,8 +256,7 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
+>  	struct fsnotify_iter_info iter_info;
+>  	struct mount *mnt;
+>  	int ret = 0;
+> -	/* global tests shouldn't care about events on child only the specific event */
+> -	__u32 test_mask = (mask & ~FS_EVENT_ON_CHILD);
+> +	__u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
+>  
+>  	if (data_is == FSNOTIFY_EVENT_PATH)
+>  		mnt = real_mount(((const struct path *)data)->mnt);
+> @@ -380,7 +379,7 @@ static __init int fsnotify_init(void)
+>  {
+>  	int ret;
+>  
+> -	BUG_ON(hweight32(ALL_FSNOTIFY_EVENTS) != 23);
+> +	BUG_ON(hweight32(ALL_FSNOTIFY_BITS) != 23);
+>  
+>  	ret = init_srcu_struct(&fsnotify_mark_srcu);
+>  	if (ret)
+> diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
+> index ce74278a454a..81052313adeb 100644
+> --- a/include/linux/fsnotify_backend.h
+> +++ b/include/linux/fsnotify_backend.h
+> @@ -67,15 +67,20 @@
+>  
+>  #define ALL_FSNOTIFY_PERM_EVENTS (FS_OPEN_PERM | FS_ACCESS_PERM)
+>  
+> +/* Events that can be reported to backends */
+>  #define ALL_FSNOTIFY_EVENTS (FS_ACCESS | FS_MODIFY | FS_ATTRIB | \
+>  			     FS_CLOSE_WRITE | FS_CLOSE_NOWRITE | FS_OPEN | \
+>  			     FS_MOVED_FROM | FS_MOVED_TO | FS_CREATE | \
+>  			     FS_DELETE | FS_DELETE_SELF | FS_MOVE_SELF | \
+>  			     FS_UNMOUNT | FS_Q_OVERFLOW | FS_IN_IGNORED | \
+> -			     FS_OPEN_PERM | FS_ACCESS_PERM | FS_EXCL_UNLINK | \
+> -			     FS_ISDIR | FS_IN_ONESHOT | FS_DN_RENAME | \
+> +			     FS_OPEN_PERM | FS_ACCESS_PERM | FS_DN_RENAME)
+> +
+> +/* Extra flags that may be reported with event or control handling of events */
+> +#define ALL_FSNOTIFY_FLAGS  (FS_EXCL_UNLINK | FS_ISDIR | FS_IN_ONESHOT | \
+>  			     FS_DN_MULTISHOT | FS_EVENT_ON_CHILD)
+>  
+> +#define ALL_FSNOTIFY_BITS   (ALL_FSNOTIFY_EVENTS | ALL_FSNOTIFY_FLAGS)
+> +
+>  struct fsnotify_group;
+>  struct fsnotify_event;
+>  struct fsnotify_mark;
+> -- 
+> 2.20.1
+> 
 -- 
-Josh
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
