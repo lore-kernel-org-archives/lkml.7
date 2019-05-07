@@ -2,96 +2,130 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7501C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0C3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90DF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8949520656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfEGVFe (ORCPT
+        id S1728489AbfEGVGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:05:34 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:40794 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726686AbfEGVFe (ORCPT
+        Tue, 7 May 2019 17:06:09 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:50695 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfEGVGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:05:34 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 96178634C7B;
-        Wed,  8 May 2019 00:04:54 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hO7Gg-0001Uy-9b; Wed, 08 May 2019 00:04:54 +0300
-Date:   Wed, 8 May 2019 00:04:54 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Nicholas Mc Guire <der.herr@hofr.at>
-Cc:     Nicholas Mc Guire <hofrat@opentech.at>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: smiapp: core: add range to usleep_range
-Message-ID: <20190507210454.633dxxdggfe27fud@valkosipuli.retiisi.org.uk>
-References: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
- <20190430134944.6sutxdztj6crgo6w@valkosipuli.retiisi.org.uk>
- <20190504094635.GA27029@osadl.at>
+        Tue, 7 May 2019 17:06:07 -0400
+Received: by mail-it1-f197.google.com with SMTP id k8so274821itd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:06:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=i0ea6qcnQd61vbI8zTdhw0aEpWQ9Mlm3sK4Plx8ZZ34=;
+        b=oXqHdG1NLA8Nh6W7gorsBqE3BhqrC7EvlVsFXHCkw0Imp4p9qAV3BO2NltZ9amw25h
+         AgDboaNUvp2W1h/pmqvObMWpKNejNeewn6FR9/n4o9Rp1gsz72RUp/nwDISD/WiQUtUe
+         DhhFeKTyyaQjrlvidbpGEvLY7ZqD46CEl7lK99UiWXfW4LxnqPaTIw69uD3CGbEGxMZ6
+         6Wh9pCSGqxff6TjzhomRx7xdvwFNvPCTuxGMYNrLiNN/qNf0N5Rikh6juS1SwQMKeHTG
+         aq8DLXhfxh6x37+uRg7ejQp9jzmhnycngRQBSK99fnCL5sO/787KLh1N99Bhq0w/NT1Y
+         dvKA==
+X-Gm-Message-State: APjAAAUP84GK+K/jo9rIjjcbBIJO23hStXfXbMk+UMEEu5xaZapNpvcJ
+        krT4x8NFR7+pi7GQSnvvfwX9CmB3D7KSkHEAslDGsEe1ym6q
+X-Google-Smtp-Source: APXvYqwviF0xJxHe46j5bqms5DHO0TndCvSi+GNUBcjDPBsGCSLKdU29VhEZ0WAQRpIfAcyXdPYocu9RIPfTPT+fF7bNU6r4CWkr
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190504094635.GA27029@osadl.at>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Received: by 2002:a6b:fe0d:: with SMTP id x13mr3993691ioh.1.1557263166391;
+ Tue, 07 May 2019 14:06:06 -0700 (PDT)
+Date:   Tue, 07 May 2019 14:06:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dace5e0588529558@google.com>
+Subject: WARNING: ODEBUG bug in del_timer (3)
+From:   syzbot <syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net, doronrk@fb.com,
+        jakub.kicinski@netronome.com, kafai@fb.com, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        vakul.garg@nxp.com, yhs@fb.com, yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 11:46:35AM +0200, Nicholas Mc Guire wrote:
-> On Tue, Apr 30, 2019 at 04:49:44PM +0300, Sakari Ailus wrote:
-> > Hi Nicholas,
-> > 
-> > On Sun, Apr 07, 2019 at 04:16:02AM +0200, Nicholas Mc Guire wrote:
-> > > Allow the hrtimer subsystem to coalesce delay timers of lower accuracy
-> > > by providing a suitable range
-> > > 
-> > > Signed-off-by: Nicholas Mc Guire <hofrat@opentech.at>
-> > > ---
-> > > 
-> > > Problem located by an experimental coccinelle script
-> > > 
-> > > hrtimers in atomic context have limited accuracy due to possible
-> > > context-switching and interruption so the accuracy is limited 
-> > > anyway. Giving the hrtimer subsystem a reasonable range for merging
-> > > hrtimers helps to reduce the load on the hrtimer subsystem. As this
-> > > delays do not seem to mandate high accuracy the range of a factor
-> > > two seems acceptable.
-> > > 
-> > > Patch was compile tested with: x86_64_defconfig + MEDIA_SUPPORT=m,
-> > > MEDIA_CAMERA_SUPPORT=y, MEDIA_CONTROLLER=y, VIDEO_V4L2_SUBDEV_API=y,
-> > > VIDEO_SMIAPP=m                                                                                               
-> > > (with a number of sparse warnings on sizeof() usage)
-> > > 
-> > > Patch is against 5.1-rc3 (localversion-next is next-20190405)
-> > 
-> > The delays are exact for the reason that they are user-visible delays in
-> > image capturing related use cases. Sometimes milliseconds matter, or at
-> > least adding more does not help.
-> >
-> 
-> Actually it can be better iwith respect to jitter to let the hrtimer 
-> subsystem use an existing timer event than to have a close by second event 
-> and the accuracy is determined by the non-atomic context anyway - 
-> so while the proposed delay extension might be excessive in your case
-> I would still suggest to try to get away from a range of 0 - even if
-> you only end up with (1000,1050) that would be an advantage for the
-> timer subsystem.
+Hello,
 
-Sounds reasonable to me. Would you like to send v2?
+syzbot found the following crash on:
 
-Thanks.
+HEAD commit:    71ae5fc8 Merge tag 'linux-kselftest-5.2-rc1' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=136c06f0a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=511168bc7720867
+dashboard link: https://syzkaller.appspot.com/bug?extid=13d91ed9bbcd7dc13230
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17128012a00000
 
--- 
-Sakari Ailus
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+ODEBUG: assert_init not available (active state 0) object type: timer_list  
+hint:           (null)
+WARNING: CPU: 1 PID: 22 at lib/debugobjects.c:325  
+debug_print_object+0x16a/0x250 lib/debugobjects.c:325
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events sk_psock_destroy_deferred
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:566
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
+RIP: 0010:debug_print_object+0x16a/0x250 lib/debugobjects.c:325
+Code: dd 60 f4 a1 87 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48  
+8b 14 dd 60 f4 a1 87 48 c7 c7 00 ea a1 87 e8 44 02 12 fe <0f> 0b 83 05 31  
+10 2d 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
+RSP: 0018:ffff8880a9a3f970 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815aec76 RDI: ffffed1015347f20
+RBP: ffff8880a9a3f9b0 R08: ffff8880a9a2a5c0 R09: ffffed1015d240f1
+R10: ffffed1015d240f0 R11: ffff8880ae920787 R12: 0000000000000001
+R13: ffffffff889ac720 R14: ffffffff81605b60 R15: ffff8880990fdba8
+  debug_object_assert_init lib/debugobjects.c:694 [inline]
+  debug_object_assert_init+0x23d/0x2f0 lib/debugobjects.c:665
+  debug_timer_assert_init kernel/time/timer.c:725 [inline]
+  debug_assert_init kernel/time/timer.c:770 [inline]
+  del_timer+0x7c/0x120 kernel/time/timer.c:1192
+  try_to_grab_pending+0x2d7/0x710 kernel/workqueue.c:1249
+  __cancel_work_timer+0xc4/0x520 kernel/workqueue.c:3079
+  cancel_delayed_work_sync+0x1b/0x20 kernel/workqueue.c:3252
+  strp_done+0x5d/0xf0 net/strparser/strparser.c:526
+  sk_psock_destroy_deferred+0x3a/0x6c0 net/core/skmsg.c:558
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2263
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2409
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
