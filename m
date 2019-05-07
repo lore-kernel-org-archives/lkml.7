@@ -2,91 +2,69 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428D0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7730EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E09206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:38:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MJOagZXD"
+	by mail.kernel.org (Postfix) with ESMTP id 414A920835
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557197706;
+	bh=DKq5ld8azkwCO4PVenfxhI9f/eRPDSvFeZ3ODzcoU4g=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=VnTRIk6AMPo+AS7jbbOLD+v6NZtHp0fZrgX2KYV7rY2SGFD+9UdPYQcf300yWRYCC
+	 R/yduj+gwH775wljBnorQrXeYNrew9zYWe50PzTIL5cHT1yq9hwYz8VtKBa9pThSEk
+	 3vtrFXWyUSKfmG5Sst0GKREGrY7x5mrkaiQ8JuMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfEGCiY (ORCPT
+        id S1726891AbfEGCzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 22:38:24 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56447 "EHLO vps0.lunn.ch"
+        Mon, 6 May 2019 22:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfEGCiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 22:38:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=skvNpO0zX4GPyRd+jUiVZhghKIV6JCNA6t+XLkt7Xgc=; b=MJOagZXDuuoE7EUinW89m7vNvB
-        0z0j6lBWk/wscM30KRmuqvRs5tlm0OV2nTJSj3TOHCrXpWninS1t7Rm6udzmJbiRdiqJSGp5SzQN4
-        tOprsYUPvURP30Fj5WHyOGFTCozX+PnWop2/TosXXHogaahEeKbTSAu/ln0IMtM2XfI0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hNpzg-0003JU-VM; Tue, 07 May 2019 04:38:12 +0200
-Date:   Tue, 7 May 2019 04:38:12 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     20190505220524.37266-2-ruslan@babayev.com
-Cc:     linux@armlinux.org.uk, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        mika.westerberg@linux.intel.com, wsa@the-dreams.de,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: Re: [PATCH RFC v2 net-next 2/2] net: phy: sfp: enable i2c-bus
- detection on ACPI based systems
-Message-ID: <20190507023812.GA12262@lunn.ch>
-References: <20190505220524.37266-2-ruslan@babayev.com>
- <20190507003557.40648-3-ruslan@babayev.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507003557.40648-3-ruslan@babayev.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        id S1726861AbfEGCzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 22:55:04 -0400
+Subject: Re: [GIT PULL] Device properties framework updates for v5.2-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557197703;
+        bh=DKq5ld8azkwCO4PVenfxhI9f/eRPDSvFeZ3ODzcoU4g=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=lGD2RluWtlpueokiZtnLhVMQpAP0KtcxIDfVxav+r+BBHkiGgbyBD2/w4j3GuFgZi
+         G/Upw42wAybw3U7raQIvFvZfQmWh15Ze12TRBx1qfmLlaUf0sa8FdIyAIQt8ceXChJ
+         SmjwklcQ7y8M6gMSMC7RmTVUY3kTGdDLNVEZZp1I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0jx12=bmcDaVkgd1=mocwPQ2MwMNHOE6KiTSyS+CdhRyQ@mail.gmail.com>
+References: <CAJZ5v0jx12=bmcDaVkgd1=mocwPQ2MwMNHOE6KiTSyS+CdhRyQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0jx12=bmcDaVkgd1=mocwPQ2MwMNHOE6KiTSyS+CdhRyQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+ devprop-5.2-rc1
+X-PR-Tracked-Commit-Id: 23583f7795025e3c783b680d906509366b0906ad
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4dd2ab9a0f84a446c65ff33c95339f1cd0e21a4b
+Message-Id: <155719770389.24898.16425239395427218692.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 May 2019 02:55:03 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 05:35:57PM -0700, Ruslan Babayev wrote:
-> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
-> systems similar to how it's done with DT.
-> 
-> An example DSD describing an SFP on an ACPI based system:
-> 
-> Device (SFP0)
-> {
->     Name (_HID, "PRP0001")
->     Name (_CRS, ResourceTemplate()
->     {
->         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
->                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
->             { 0, 1, 2, 3, 4 }
->     })
->     Name (_DSD, Package ()
->     {
->         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package () {
->             Package () { "compatible", "sff,sfp" },
->             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
->             Package () { "maximum-power-milliwatt", 1000 },
->             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
->             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
->             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
->             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
->             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
->         },
+The pull request you sent on Mon, 6 May 2019 13:16:02 +0200:
 
-As i said before, i know ~0 about ACPI. Does devm_gpiod_get() just
-work for ACPI?
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git devprop-5.2-rc1
 
-Thanks
-	Andrew
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4dd2ab9a0f84a446c65ff33c95339f1cd0e21a4b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
