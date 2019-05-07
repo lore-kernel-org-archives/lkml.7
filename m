@@ -2,90 +2,85 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A594C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D31C205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0FB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfEGNSE (ORCPT
+        id S1726726AbfEGNTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:18:04 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:42274 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfEGNSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:18:03 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 May 2019 09:19:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42890 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbfEGNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:19:16 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 31DE92002B;
-        Tue,  7 May 2019 15:17:58 +0200 (CEST)
-Date:   Tue, 7 May 2019 15:17:56 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     jagdsh.linux@gmail.com, robdclark@gmail.com, sean@poorly.run,
-        airlied@linux.ie, bskeggs@redhat.com, hierry.reding@gmail.com,
-        jcrouse@codeaurora.org, jsanka@codeaurora.org,
-        skolluku@codeaurora.org, paul.burton@mips.com,
-        jrdr.linux@gmail.com, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org
-Subject: Re: [PATCH] gpu/drm: Remove duplicate headers
-Message-ID: <20190507131756.GA17647@ravnborg.org>
-References: <1556906293-128921-1-git-send-email-jagdsh.linux@gmail.com>
- <20190506144334.GH17751@phenom.ffwll.local>
- <20190507100532.GP17751@phenom.ffwll.local>
+        by mx1.redhat.com (Postfix) with ESMTPS id 231CE307D91F;
+        Tue,  7 May 2019 13:19:16 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0519660C4E;
+        Tue,  7 May 2019 13:19:09 +0000 (UTC)
+Date:   Tue, 7 May 2019 08:19:07 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] livepatch: Use static buffer for debugging
+ messages under rq lock
+Message-ID: <20190507131907.ep5g2hi4hp2lvy3d@treble>
+References: <20190430091049.30413-1-pmladek@suse.com>
+ <20190430091049.30413-3-pmladek@suse.com>
+ <20190507004319.oxxncicid6pxg352@treble>
+ <20190507115029.54qxbsd4vsouwvjo@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190507100532.GP17751@phenom.ffwll.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=4sjd1iRJTynRc3plxrAA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20190507115029.54qxbsd4vsouwvjo@pathway.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 07 May 2019 13:19:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 12:05:32PM +0200, Daniel Vetter wrote:
-> On Mon, May 06, 2019 at 04:43:34PM +0200, Daniel Vetter wrote:
-> > On Fri, May 03, 2019 at 11:28:13PM +0530, jagdsh.linux@gmail.com wrote:
-> > > From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-> > > 
-> > > Remove duplicate headers which are included twice.
-> > > 
-> > > Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+On Tue, May 07, 2019 at 01:50:29PM +0200, Petr Mladek wrote:
+> On Mon 2019-05-06 19:43:19, Josh Poimboeuf wrote:
+> > On Tue, Apr 30, 2019 at 11:10:49AM +0200, Petr Mladek wrote:
+> > > klp_try_switch_task() is called under klp_mutex. The buffer for
+> > > debugging messages might be static.
 > > 
-> > I collected some acks for the msm and nouveau parts and pushed this. For
-> > next time around would be great if you split these up along driver/module
-> > boundaries, so that each maintainer can pick this up directly.
-> > 
-> > Thanks for your patch.
-> > -Daniel
-> > 
-> > > ---
-> > >  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c             | 1 -
-> > >  drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c        | 2 --
-> > >  drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 -
+> > The patch description is missing a "why" (presumably to reduce stack
+> > usage).
 > 
-> Correction, this didn't compile, so I dropped the changes to panel-rpi.
-> Another reason to split patches more for next time around. Also, needs
-> more compile testing (you need cross compilers for at least arm to test
-> this stuff).
-I will try to resurrect my patch series for drm/panel/ that
-addresses:
-- removal of drmP.h
-- removal of duplicated include files
-- sort all include files
+> Exactly. I thought that it was obvious. But I am infected by printk
+> code where line buffers are 1k and nobody wants them on the stack.
+> 
+> 128bytes in klp_try_switch_task() context are acceptable but
+> it is still rather big buffer.
+> 
+> OK, what about the following commit message?
+> 
+> "klp_try_switch_task() is called under klp_mutex. The buffer for
+> debugging messages might be static to reduce stack usage."
 
-In other words - panel-raspberrypi-touchscreen.c will be dealt with.
-I expect to look at it in two weeks time (on vacation starting friday).
+It's better to use imperative language.  It would also be good to
+reverse the order of the wording by starting with the problem.
 
-	Sam
+Something like:
+
+The err_buf array uses 128 bytes of stack space.  Move it off the stack
+by making it static.  It's safe to use a shared buffer because
+klp_try_switch_task() is called under klp_mutex.
+
+-- 
+Josh
