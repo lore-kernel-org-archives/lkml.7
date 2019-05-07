@@ -2,129 +2,321 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F7BC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1A1C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C47520675
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="bCXmNwBd"
+	by mail.kernel.org (Postfix) with ESMTP id 2005C20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEHAKH (ORCPT
+        id S1726678AbfEHAKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:10:07 -0400
-Received: from mx1.cock.li ([185.10.68.5]:58579 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726604AbfEHAKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:10:04 -0400
-X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 May 2019 20:10:03 EDT
+        Tue, 7 May 2019 20:10:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12346 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbfEHAKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:10:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 17:10:08 -0700
+X-ExtLoop1: 1
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga004.jf.intel.com with ESMTP; 07 May 2019 17:10:07 -0700
+Subject: [PATCH v2 4/6] lib/genalloc: Introduce chunk owners
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Tue, 07 May 2019 16:56:21 -0700
+Message-ID: <155727338118.292046.13407378933221579644.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1557273851; bh=8G0TzcOzwSFxmUI0oP71wqUIU3dz/rah4Bu4Hn2AW4Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bCXmNwBdPf/drfE7nppPOCJziilvIQJ8RYnE4Fnc6yOxcb7WmSzMRdY3TavehAigG
-         ZyIYBvSLxELl30ck/QIc8sxQn7RlAqX92Xk4xzydlGKZYCvxM5EYd8qx93DS8Km7KQ
-         1K4n12eV3QOON89chJDZN5fDVWwfkNeXWBG5IcS1ZMx+2uoVhutWT8K5a+5t13TOuc
-         3r6Ozf941wmCEGM4ExhOu77ZjiW1TLRBp2aotTT0QsU7zaEI/dnVk8weFulhkjx6Kp
-         /2jAqie5hhxKNn9//VoYXvRJQrThHKUMZTGP6CXAb7E60aIUClMcLfyBCA+Rt36Y5U
-         wmjVZwEiDNXxw==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 May 2019 00:04:11 +0000
-From:   informator@redchan.it
-To:     andrew@rainway.io
-Cc:     linux-kernel@vger.kernel.org
-Subject: To: Andrew Sampson: Rights granted by the GPL _can_ be
- "retroactively" retracted. Yes I am a lawyer
-Message-ID: <cfc2a12664356a6d14078b58fc1ddbf0@redchan.it>
-X-Sender: informator@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Andrew Sampson;
-The proclamations given in the thread: 
-github.com/Codeusa/Borderless-Gaming/issues/312 are incorrect.
+The p2pdma facility enables a provider to publish a pool of dma
+addresses for a consumer to allocate. A genpool is used internally by
+p2pdma to collect dma resources, 'chunks', to be handed out to
+consumers. Whenever a consumer allocates a resource it needs to pin the
+'struct dev_pagemap' instance that backs the chunk selected by
+pci_alloc_p2pmem().
 
-If the non-exclusive licensee did not pay the copyright holder 
-consideration for receipt of the permissions given regarding the 
-copyrighted work, the copyright holder can freely rescind those 
-permissions _AT_ANY_TIME_ .
+Currently that reference is taken globally on the entire provider
+device. That sets up a lifetime mismatch whereby the p2pdma core needs
+to maintain hacks to make sure the percpu_ref is not released twice.
 
-The reasons are as follows: For the licensee to "hold" the licensor to 
-any promise regarding when and how rescission is to take place there 
-must be a contract between the two. A contract requires valid 
-bargained-for consideration. Otherwise any "promise" made is an Illusory 
-Promise (unenforceable).
+This lifetime mismatch also stands in the way of a fix to
+devm_memremap_pages() whereby devm_memremap_pages_release() must wait
+for the percpu_ref ->release() callback to complete before it can
+proceed to teardown pages.
 
-"Nothing" is not valid consideration.
+So, towards fixing this situation, introduce the ability to store a
+'chunk owner' at gen_pool_add() time, and a facility to retrieve the
+owner at gen_pool_{alloc,free}() time. For p2pdma this will be used to
+store and recall individual dev_pagemap reference counter instances
+per-chunk.
 
-Obeying a pre-existing duty is not valid consideration.
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ include/linux/genalloc.h |   55 +++++++++++++++++++++++++++++++++++++++++-----
+ lib/genalloc.c           |   51 +++++++++++++++++++++----------------------
+ 2 files changed, 74 insertions(+), 32 deletions(-)
 
-The licensee has a pre-existing duty to obey copyright law, without 
-permission from the copyright holder he may not 
-use/modify/make-derivative-works-of/distribute/distribute-derivative-works-of. 
-That permission is what he is attempting to "contract" for. Saying one 
-will follow those permissions is not valid consideration to "pay" for 
-those permissions. Promising not to violate the copyright holder's 
-rights -by promising to only use the copyrighted works as freely 
-permitted by the copyright holder, is not valid consideration as that is 
-a pre-existing duty.
-
-Yes: Codeusa: you _C_A_N_ revoke GPL permissions from free-takers at 
-your will. And you should do so if that is needed for your livelihood to 
-succeed.
-
-You should do so if it is simply your want.
-
-Do not the pennyless leaches intimidate you from making your own 
-decisions regarding your work of authorship. They gave you nothing, you 
-asked for nothing, they have nothing. Remember: a non-exclusive license 
-is not a transfer, it is permission. Permission that can be ended at any 
-time unless there exists an attached interest (ie: the other side payed 
-you for a license contract)
-Also Remember: The FSF has _always_ (and still does) required Copyright 
-Transfers before it would accept a contribution.
-
-And yes: I am a lawyer.
-
-Of course: consult your local copyright attorney. Strategy is important 
-in these cases. The free-loaders feel they have the 9th circuit judges 
-in the bag, and that the 9th circuit will invalidate the concept of 
-consideration if needed to protect the California tech industry (so 
-revoke from those outside the 9th circuit first).
-
-
-
-
-
-
-For easy to read by lay-people discussions on this topic:
-lkml.org/lkml/2019/5/4/334
-lkml.org/lkml/2019/5/3/698
-
-For legal articles and treatises that agree: no consideration from GPL 
-free-taker, no contract, revocable by the copyright holder:
-scholarship.law.duke.edu/faculty_scholarship/1857/
-www.amazon.com/Open-Source-Licensing-Software-Intellectual/dp/0131487876
-papers.ssrn.com/sol3/papers.cfm?abstract_id=243237
-
-
-
-Note: I tried to inform you of this on your github account but was 
-immediatly "hell banned" by github.
-
-
-Sincerely;
-Pro-Bono Attorney
-
-
+diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
+index dd0a452373e7..a337313e064f 100644
+--- a/include/linux/genalloc.h
++++ b/include/linux/genalloc.h
+@@ -75,6 +75,7 @@ struct gen_pool_chunk {
+ 	struct list_head next_chunk;	/* next chunk in pool */
+ 	atomic_long_t avail;
+ 	phys_addr_t phys_addr;		/* physical starting address of memory chunk */
++	void *owner;			/* private data to retrieve at alloc time */
+ 	unsigned long start_addr;	/* start address of memory chunk */
+ 	unsigned long end_addr;		/* end address of memory chunk (inclusive) */
+ 	unsigned long bits[0];		/* bitmap for allocating memory chunk */
+@@ -96,8 +97,15 @@ struct genpool_data_fixed {
+ 
+ extern struct gen_pool *gen_pool_create(int, int);
+ extern phys_addr_t gen_pool_virt_to_phys(struct gen_pool *pool, unsigned long);
+-extern int gen_pool_add_virt(struct gen_pool *, unsigned long, phys_addr_t,
+-			     size_t, int);
++extern int gen_pool_add_owner(struct gen_pool *, unsigned long, phys_addr_t,
++			     size_t, int, void *);
++
++static inline int gen_pool_add_virt(struct gen_pool *pool, unsigned long addr,
++		phys_addr_t phys, size_t size, int nid)
++{
++	return gen_pool_add_owner(pool, addr, phys, size, nid, NULL);
++}
++
+ /**
+  * gen_pool_add - add a new chunk of special memory to the pool
+  * @pool: pool to add new memory chunk to
+@@ -116,12 +124,47 @@ static inline int gen_pool_add(struct gen_pool *pool, unsigned long addr,
+ 	return gen_pool_add_virt(pool, addr, -1, size, nid);
+ }
+ extern void gen_pool_destroy(struct gen_pool *);
+-extern unsigned long gen_pool_alloc(struct gen_pool *, size_t);
+-extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
+-		genpool_algo_t algo, void *data);
++unsigned long gen_pool_alloc_algo_owner(struct gen_pool *pool, size_t size,
++		genpool_algo_t algo, void *data, void **owner);
++
++static inline unsigned long gen_pool_alloc_owner(struct gen_pool *pool,
++		size_t size, void **owner)
++{
++	return gen_pool_alloc_algo_owner(pool, size, pool->algo, pool->data,
++			owner);
++}
++
++static inline unsigned long gen_pool_alloc_algo(struct gen_pool *pool,
++		size_t size, genpool_algo_t algo, void *data)
++{
++	return gen_pool_alloc_algo_owner(pool, size, algo, data, NULL);
++}
++
++/**
++ * gen_pool_alloc - allocate special memory from the pool
++ * @pool: pool to allocate from
++ * @size: number of bytes to allocate from the pool
++ *
++ * Allocate the requested number of bytes from the specified pool.
++ * Uses the pool allocation function (with first-fit algorithm by default).
++ * Can not be used in NMI handler on architectures without
++ * NMI-safe cmpxchg implementation.
++ */
++static inline unsigned long gen_pool_alloc(struct gen_pool *pool, size_t size)
++{
++	return gen_pool_alloc_algo(pool, size, pool->algo, pool->data);
++}
++
+ extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
+ 		dma_addr_t *dma);
+-extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
++extern void gen_pool_free_owner(struct gen_pool *pool, unsigned long addr,
++		size_t size, void **owner);
++static inline void gen_pool_free(struct gen_pool *pool, unsigned long addr,
++                size_t size)
++{
++	gen_pool_free_owner(pool, addr, size, NULL);
++}
++
+ extern void gen_pool_for_each_chunk(struct gen_pool *,
+ 	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
+ extern size_t gen_pool_avail(struct gen_pool *);
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index 7e85d1e37a6e..770c769d7cb7 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -168,20 +168,21 @@ struct gen_pool *gen_pool_create(int min_alloc_order, int nid)
+ EXPORT_SYMBOL(gen_pool_create);
+ 
+ /**
+- * gen_pool_add_virt - add a new chunk of special memory to the pool
++ * gen_pool_add_owner- add a new chunk of special memory to the pool
+  * @pool: pool to add new memory chunk to
+  * @virt: virtual starting address of memory chunk to add to pool
+  * @phys: physical starting address of memory chunk to add to pool
+  * @size: size in bytes of the memory chunk to add to pool
+  * @nid: node id of the node the chunk structure and bitmap should be
+  *       allocated on, or -1
++ * @owner: private data the publisher would like to recall at alloc time
+  *
+  * Add a new chunk of special memory to the specified pool.
+  *
+  * Returns 0 on success or a -ve errno on failure.
+  */
+-int gen_pool_add_virt(struct gen_pool *pool, unsigned long virt, phys_addr_t phys,
+-		 size_t size, int nid)
++int gen_pool_add_owner(struct gen_pool *pool, unsigned long virt, phys_addr_t phys,
++		 size_t size, int nid, void *owner)
+ {
+ 	struct gen_pool_chunk *chunk;
+ 	int nbits = size >> pool->min_alloc_order;
+@@ -195,6 +196,7 @@ int gen_pool_add_virt(struct gen_pool *pool, unsigned long virt, phys_addr_t phy
+ 	chunk->phys_addr = phys;
+ 	chunk->start_addr = virt;
+ 	chunk->end_addr = virt + size - 1;
++	chunk->owner = owner;
+ 	atomic_long_set(&chunk->avail, size);
+ 
+ 	spin_lock(&pool->lock);
+@@ -203,7 +205,7 @@ int gen_pool_add_virt(struct gen_pool *pool, unsigned long virt, phys_addr_t phy
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(gen_pool_add_virt);
++EXPORT_SYMBOL(gen_pool_add_owner);
+ 
+ /**
+  * gen_pool_virt_to_phys - return the physical address of memory
+@@ -260,35 +262,20 @@ void gen_pool_destroy(struct gen_pool *pool)
+ EXPORT_SYMBOL(gen_pool_destroy);
+ 
+ /**
+- * gen_pool_alloc - allocate special memory from the pool
+- * @pool: pool to allocate from
+- * @size: number of bytes to allocate from the pool
+- *
+- * Allocate the requested number of bytes from the specified pool.
+- * Uses the pool allocation function (with first-fit algorithm by default).
+- * Can not be used in NMI handler on architectures without
+- * NMI-safe cmpxchg implementation.
+- */
+-unsigned long gen_pool_alloc(struct gen_pool *pool, size_t size)
+-{
+-	return gen_pool_alloc_algo(pool, size, pool->algo, pool->data);
+-}
+-EXPORT_SYMBOL(gen_pool_alloc);
+-
+-/**
+- * gen_pool_alloc_algo - allocate special memory from the pool
++ * gen_pool_alloc_algo_owner - allocate special memory from the pool
+  * @pool: pool to allocate from
+  * @size: number of bytes to allocate from the pool
+  * @algo: algorithm passed from caller
+  * @data: data passed to algorithm
++ * @owner: optionally retrieve the chunk owner
+  *
+  * Allocate the requested number of bytes from the specified pool.
+  * Uses the pool allocation function (with first-fit algorithm by default).
+  * Can not be used in NMI handler on architectures without
+  * NMI-safe cmpxchg implementation.
+  */
+-unsigned long gen_pool_alloc_algo(struct gen_pool *pool, size_t size,
+-		genpool_algo_t algo, void *data)
++unsigned long gen_pool_alloc_algo_owner(struct gen_pool *pool, size_t size,
++		genpool_algo_t algo, void *data, void **owner)
+ {
+ 	struct gen_pool_chunk *chunk;
+ 	unsigned long addr = 0;
+@@ -299,6 +286,9 @@ unsigned long gen_pool_alloc_algo(struct gen_pool *pool, size_t size,
+ 	BUG_ON(in_nmi());
+ #endif
+ 
++	if (owner)
++		*owner = NULL;
++
+ 	if (size == 0)
+ 		return 0;
+ 
+@@ -326,12 +316,14 @@ unsigned long gen_pool_alloc_algo(struct gen_pool *pool, size_t size,
+ 		addr = chunk->start_addr + ((unsigned long)start_bit << order);
+ 		size = nbits << order;
+ 		atomic_long_sub(size, &chunk->avail);
++		if (owner)
++			*owner = chunk->owner;
+ 		break;
+ 	}
+ 	rcu_read_unlock();
+ 	return addr;
+ }
+-EXPORT_SYMBOL(gen_pool_alloc_algo);
++EXPORT_SYMBOL(gen_pool_alloc_algo_owner);
+ 
+ /**
+  * gen_pool_dma_alloc - allocate special memory from the pool for DMA usage
+@@ -367,12 +359,14 @@ EXPORT_SYMBOL(gen_pool_dma_alloc);
+  * @pool: pool to free to
+  * @addr: starting address of memory to free back to pool
+  * @size: size in bytes of memory to free
++ * @owner: private data stashed at gen_pool_add() time
+  *
+  * Free previously allocated special memory back to the specified
+  * pool.  Can not be used in NMI handler on architectures without
+  * NMI-safe cmpxchg implementation.
+  */
+-void gen_pool_free(struct gen_pool *pool, unsigned long addr, size_t size)
++void gen_pool_free_owner(struct gen_pool *pool, unsigned long addr, size_t size,
++		void **owner)
+ {
+ 	struct gen_pool_chunk *chunk;
+ 	int order = pool->min_alloc_order;
+@@ -382,6 +376,9 @@ void gen_pool_free(struct gen_pool *pool, unsigned long addr, size_t size)
+ 	BUG_ON(in_nmi());
+ #endif
+ 
++	if (owner)
++		*owner = NULL;
++
+ 	nbits = (size + (1UL << order) - 1) >> order;
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(chunk, &pool->chunks, next_chunk) {
+@@ -392,6 +389,8 @@ void gen_pool_free(struct gen_pool *pool, unsigned long addr, size_t size)
+ 			BUG_ON(remain);
+ 			size = nbits << order;
+ 			atomic_long_add(size, &chunk->avail);
++			if (owner)
++				*owner = chunk->owner;
+ 			rcu_read_unlock();
+ 			return;
+ 		}
+@@ -399,7 +398,7 @@ void gen_pool_free(struct gen_pool *pool, unsigned long addr, size_t size)
+ 	rcu_read_unlock();
+ 	BUG();
+ }
+-EXPORT_SYMBOL(gen_pool_free);
++EXPORT_SYMBOL(gen_pool_free_owner);
+ 
+ /**
+  * gen_pool_for_each_chunk - call func for every chunk of generic memory pool
 
