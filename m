@@ -2,157 +2,79 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8413CC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE9C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489FC20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="l69sznhG"
+	by mail.kernel.org (Postfix) with ESMTP id 509BC20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfEGWsd (ORCPT
+        id S1726546AbfEGWtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:48:33 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39649 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGWsc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:48:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z128so8620162qkb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 15:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=xxk1I9iNW8G6154lt9spaBJJd7VgHW36j4K0WHRcyow=;
-        b=l69sznhGwxe1nQgn6oxo52fenPGAnolimIs47b9+djCmMsyaO5sSy7wxLA1EkAK2D9
-         Ogwc8X6C/P5xKukKPWVeM+ojSJvK0ZPxyWjevAizgd9m/bOLgEMnBbUOgJKTXD0TrOI6
-         jyKSLHIqhXmIwaKh2Qd9U5RuuuzcDG6LdXQaKcugEjpT2ttzlYrNCcu1GZYRilZU0nwz
-         ToI3exO4jnbQTK74obnVqFjqQlBKJBuolE9ZGG8vdYlb9DyS+GaCTtn671TxyxBKBto+
-         8ZkbJMwPJ7dFLYiuAqHpR0o2ZMsVDKhA8PfqIY1x5ceXgzcgSovzWZL0Jr2xhvC3nyu+
-         387w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=xxk1I9iNW8G6154lt9spaBJJd7VgHW36j4K0WHRcyow=;
-        b=NTm78KwqqF5Po+RsGIP03skYqva7RZU/u+cqhf/nTijfv04UnHRkvQ94nDCSTPywVZ
-         tzsQjEZMiMUEmr+mdoz/jQv4xdrZHjyQY7guFQ8MJvvMDrjJsvxHCqOI0SRdwV7n8k3H
-         J6WChxgOGcc+TPmbCjeH1s05BuKUMcJWay5ANiZ0dRsbvZhFbSWykECYVOY3gIOTkynf
-         QV7W0BpSU3FMJtrvqinTVoiRod/mMixbBD5QC4raKZcMa8tx6P1Ffu8bPfXQAX8Kg3gc
-         MJd0a1zCdKtGq1joBsPXN764CASHPOYs3kNwUgiGo1BiRN71mWidtl45snbtAIzdR6LW
-         bm4g==
-X-Gm-Message-State: APjAAAVjFwjCf4IojXUIms6Li82BqL1yiuOqcINA8NUsX2Ugao7/DYa1
-        1uu8NQ+2ejfmV8r1amapHAuE0A==
-X-Google-Smtp-Source: APXvYqy9K+QwTsgkQpI2AW+V0xRPiKAtUOLm3ktla5vxOmCdm5ertpiO/mGcasVbRdz8N8oPmbAstA==
-X-Received: by 2002:a37:b404:: with SMTP id d4mr4847748qkf.111.1557269311293;
-        Tue, 07 May 2019 15:48:31 -0700 (PDT)
-Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id s1sm8793121qkm.93.2019.05.07.15.48.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 07 May 2019 15:48:31 -0700 (PDT)
-Date:   Tue, 7 May 2019 15:48:21 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     syzbot <syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, doronrk@fb.com,
-        kafai@fb.com, kjlu@umn.edu, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, vakul.garg@nxp.com, yhs@fb.com,
-        yuehaibing@huawei.com, John Fastabend <john.fastabend@gmail.com>
-Subject: Re: WARNING: ODEBUG bug in del_timer (3)
-Message-ID: <20190507154821.1b04f4aa@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <000000000000dace5e0588529558@google.com>
-References: <000000000000dace5e0588529558@google.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 7 May 2019 18:49:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6104 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbfEGWtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 18:49:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 15:49:51 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 07 May 2019 15:49:51 -0700
+Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
+        by linux.intel.com (Postfix) with ESMTP id 48EC2580105;
+        Tue,  7 May 2019 15:49:50 -0700 (PDT)
+Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
+ master(s)
+To:     Greg KH <gregkh@linuxfoundation.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
+ <20190504065242.GA9770@kroah.com>
+ <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
+ <20190507052732.GD16052@vkoul-mobl> <20190507055432.GB17986@kroah.com>
+ <20190507110331.GL16052@vkoul-mobl> <20190507111956.GB1092@kroah.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <10fef156-7b01-7a08-77b4-ae3153eaaabc@linux.intel.com>
+Date:   Tue, 7 May 2019 17:49:48 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190507111956.GB1092@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCing John, looks like John's upcoming fix may address this:
 
-bpf: sockmap, only stop/flush strp if it was enabled at some point
+>> The model here is that Master device is PCI or Platform device and then
+>> creates a bus instance which has soundwire slave devices.
+>>
+>> So for any attribute on Master device (which has properties as well and
+>> representation in sysfs), device specfic struct (PCI/platfrom doesn't
+>> help). For slave that is not a problem as sdw_slave structure takes care
+>> if that.
+>>
+>> So, the solution was to create the psedo sdw_master device for the
+>> representation and have device-specific structure.
+> 
+> Ok, much like the "USB host controller" type device.  That's fine, make
+> such a device, add it to your bus, and set the type correctly.  And keep
+> a pointer to that structure in your device-specific structure if you
+> really need to get to anything in it.
 
-On Tue, 07 May 2019 14:06:06 -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    71ae5fc8 Merge tag 'linux-kselftest-5.2-rc1' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=136c06f0a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=511168bc7720867
-> dashboard link: https://syzkaller.appspot.com/bug?extid=13d91ed9bbcd7dc13230
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17128012a00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> ODEBUG: assert_init not available (active state 0) object type: timer_list  
-> hint:           (null)
-> WARNING: CPU: 1 PID: 22 at lib/debugobjects.c:325  
-> debug_print_object+0x16a/0x250 lib/debugobjects.c:325
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: events sk_psock_destroy_deferred
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->   panic+0x2cb/0x65c kernel/panic.c:214
->   __warn.cold+0x20/0x45 kernel/panic.c:566
->   report_bug+0x263/0x2b0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-> RIP: 0010:debug_print_object+0x16a/0x250 lib/debugobjects.c:325
-> Code: dd 60 f4 a1 87 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48  
-> 8b 14 dd 60 f4 a1 87 48 c7 c7 00 ea a1 87 e8 44 02 12 fe <0f> 0b 83 05 31  
-> 10 2d 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-> RSP: 0018:ffff8880a9a3f970 EFLAGS: 00010086
-> RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff815aec76 RDI: ffffed1015347f20
-> RBP: ffff8880a9a3f9b0 R08: ffff8880a9a2a5c0 R09: ffffed1015d240f1
-> R10: ffffed1015d240f0 R11: ffff8880ae920787 R12: 0000000000000001
-> R13: ffffffff889ac720 R14: ffffffff81605b60 R15: ffff8880990fdba8
->   debug_object_assert_init lib/debugobjects.c:694 [inline]
->   debug_object_assert_init+0x23d/0x2f0 lib/debugobjects.c:665
->   debug_timer_assert_init kernel/time/timer.c:725 [inline]
->   debug_assert_init kernel/time/timer.c:770 [inline]
->   del_timer+0x7c/0x120 kernel/time/timer.c:1192
->   try_to_grab_pending+0x2d7/0x710 kernel/workqueue.c:1249
->   __cancel_work_timer+0xc4/0x520 kernel/workqueue.c:3079
->   cancel_delayed_work_sync+0x1b/0x20 kernel/workqueue.c:3252
->   strp_done+0x5d/0xf0 net/strparser/strparser.c:526
->   sk_psock_destroy_deferred+0x3a/0x6c0 net/core/skmsg.c:558
->   process_one_work+0x98e/0x1790 kernel/workqueue.c:2263
->   worker_thread+0x98/0xe40 kernel/workqueue.c:2409
->   kthread+0x357/0x430 kernel/kthread.c:253
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
-
+humm, you lost me on the last sentence. Did you mean using 
+set_drv/platform_data during the init and retrieving the bus information 
+with get_drv/platform_data as needed later? Or something else I badly 
+need to learn?
