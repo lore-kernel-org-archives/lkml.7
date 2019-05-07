@@ -2,107 +2,109 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8C3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620C2C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEED20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bd6vFoKN"
+	by mail.kernel.org (Postfix) with ESMTP id 3E1BE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfEGPr5 (ORCPT
+        id S1726936AbfEGPsW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:47:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfEGPr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:47:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:References:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AEfE8EIktfS0Ycd7e0jTJYMFc8dseypamAWIWa0rG3o=; b=bd6vFoKNSwXSMajhrl2bD5JXa+
-        949BQ9H3YwErJYagV4BhjxunsD2ny5YZ0430G0I+pOJn8YnxFkqxI9nKJYRGwM//vtTKOkzCjs4rt
-        8TespmFYFe4vdW6nb5LVXQproTVdS9nrkUy/1PbZCuB1gLukj8cQUktlRUmkmkhaefaGP/NglLqyi
-        AVoWhX6pf3805cm1K0+Z2sNFHotDwCWTEu6ZZJZDN/BD8+8d78uQYfs3UsaanMReFlxTUu8abglXo
-        PTUk5GNo/+qm4w1zaI/WrjI6RAH7axxHFyGbCE1v/JcMmsxF4NQuIm4cg+/nTaM2z+2dxlCG9JvOm
-        ptbq054Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hO2Jt-0004Hj-Su; Tue, 07 May 2019 15:47:53 +0000
-Date:   Tue, 7 May 2019 08:47:53 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH RFC] vhost: don't use kmap() to log dirty pages
-Message-ID: <20190507154753.GA8809@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557195809-12373-1-git-send-email-jasowang@redhat.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Tue, 7 May 2019 11:48:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37950 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726000AbfEGPsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:48:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ABF71AE0F;
+        Tue,  7 May 2019 15:48:20 +0000 (UTC)
+Date:   Tue, 7 May 2019 17:48:20 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 00/3] MIPS: SGI-IP27 rework part2
+Message-Id: <20190507174820.381fd56f678609416fd8b617@suse.de>
+In-Reply-To: <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
+References: <20190319154755.31049-1-tbogendoerfer@suse.de>
+        <20190418205726.GB126710@google.com>
+        <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:23:29PM -0400, Jason Wang wrote:
-> Note: there're archs (few non popular ones) that don't implement
-> futex helper, we can't log dirty pages. We can fix them on top or
-> simply disable LOG_ALL features of vhost.
+On Tue, 7 May 2019 16:31:17 +0100
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
-That means vhost now has to depend on HAVE_FUTEX_CMPXCHG to make
-sure we have a working implementation.
+> On Thu, Apr 18, 2019 at 03:57:26PM -0500, Bjorn Helgaas wrote:
+> > Hi Thomas,
+> > 
+> > On Tue, Mar 19, 2019 at 04:47:49PM +0100, Thomas Bogendoerfer wrote:
+> > > SGI IP27 (Origin/Onyx2) and SGI IP30 (Octane) have a similair
+> > > architecture and share some hardware (ioc3/bridge). To share
+> > > the software parts this patchset reworks SGI IP27 interrupt
+> > > and pci bridge code. By using features Linux gained during the
+> > > many years since SGI IP27 code was integrated this even results
+> > > in code reduction and IMHO cleaner code.
+> > > 
+> > > Tests have been done on a two module O200 (4 CPUs) and an
+> > > Origin 2000 (8 CPUs).
+> > 
+> > Thanks for doing all this work!  It seems like it basically converts
+> > some of the SGI PCI code to the structure typical of current host
+> > controller drivers and moves it to drivers/pci/controller, which all
+> > seems great to me.
+> 
+> I had a look and the code is really, really MIPS specific, actually
+> I would be interested in understanding how many platforms it supports,
+> it is not even FW configurable.
 
+it's MIPS only and used in basically 3 different SGI platforms.
 
->  #include <linux/sched/signal.h>
->  #include <linux/interval_tree_generic.h>
->  #include <linux/nospec.h>
-> +#include <asm/futex.h>
+> With hard-coded resources, <asm/...> includes in driver code and MIPS
+> specific kludges even if it does reuse some APIs shared with controller
+> drivers I am not 100% certain that moving it to drivers/pci/controller
+> buys us anything, this is really arch specific code, however we slice
+> it.
 
-Also please include the futex maintainers to make sure they are fine
-with this first usage of <asm/futex.h> outside of kernel/futex.c.
+hmm, I thought the idea of having one drivers/pci/controller directory
+is to have all of them in one place.
 
+> The line between what stays in arch and what goes to
+> drivers/pci/controller is thin but this code is definitely more on the
+> arch side IMHO.
 
-> +static int set_bit_to_user(int nr, u32 __user *addr)
->  {
->  	unsigned long log = (unsigned long)addr;
->  	struct page *page;
-> +	u32 old_log;
->  	int r;
->  
->  	r = get_user_pages_fast(log, 1, 1, &page);
->  	if (r < 0)
->  		return r;
->  	BUG_ON(r != 1);
-> +
-> +	r = futex_atomic_cmpxchg_inatomic(&old_log, addr, 0, 0);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	old_log |= 1 << nr;
-> +	r = put_user(old_log, addr);
-> +	if (r < 0)
-> +		return r;
+what makes the xgene driver different from the xtalk-bridge driver ? Ok
+it used DT, but it's still just for a specific type of SOCs from one
+vendor, isn't it ?
 
-And this just looks odd to me.  Why do we need the futex call to
-replace a 0 value with 0?  Why does it still duplicate the
-put_user?  This doesn't look like actually working code to me.
+> I do not question Thomas' effort, which I appreciate, I question
+> the end result and its usefulness, this series is even increasing
+> lines of kernel code, I would like to see the benefits.
 
-Also don't we need a pagefault_disable() around
-futex_atomic_cmpxchg_inatomic?
+the move from arch/mips/pci to drivers/pci/controller increases lines of
+code by two lines. The whole patchset adds 155 lines, but also adds
+functionality to be able to use the driver with different platforms.
+
+Anyway I can live with not moving to drivers/pci/controller if you don't
+like it there.
+
+Thomas.
+
+-- 
+SUSE Linux GmbH
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
