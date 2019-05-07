@@ -2,73 +2,220 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16782C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC7EC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C4020856
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BC420856
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfEGA6p (ORCPT
+        id S1726548AbfEGBEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 20:58:45 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38228 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfEGA6o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 20:58:44 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hNoRO-000209-WB; Tue, 07 May 2019 00:58:43 +0000
-Date:   Tue, 7 May 2019 01:58:42 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
+        Mon, 6 May 2019 21:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfEGBEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 21:04:22 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09DBE206BF;
+        Tue,  7 May 2019 01:04:17 +0000 (UTC)
+Date:   Mon, 6 May 2019 21:04:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs.git pile 2: several fixes to backport
-Message-ID: <20190507005842.GG23075@ZenIV.linux.org.uk>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190506210416.2489a659@oasis.local.home>
+In-Reply-To: <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <20190502195052.0af473cf@gandalf.local.home>
+        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+        <20190503092247.20cc1ff0@gandalf.local.home>
+        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+        <20190506095631.6f71ad7c@gandalf.local.home>
+        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+        <20190506130643.62c35eeb@gandalf.local.home>
+        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
+        <20190506145745.17c59596@gandalf.local.home>
+        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
+        <20190506162915.380993f9@gandalf.local.home>
+        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
+        <20190506174511.2f8b696b@gandalf.local.home>
+        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	acct_on() fix for deadlock caught be overlayfs folks,
-autofs RCU use-after-free SNAFU (->d_manage() can be called
-lockless, so we need to RCU-delay freeing the objects it
-looks at) and (hopefully) the end of "do we need freeing this
-dentry RCU-delayed" whack-a-mole.
+On Mon, 6 May 2019 15:06:57 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+> On Mon, May 6, 2019 at 2:45 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > To do that we would need to rewrite the logic to update each of those
+> > 40,000 calls one at a time, or group them together to what gets
+> > changed.  
+> 
+> Stephen, YOU ARE NOT LISTENING.
 
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+ (note, it's Steven ;-)
 
-are available in the git repository at:
+I'm listening, I'm just trying to understand.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git stable-fodder
+> 
+> You are already fixing the value of the call in the instruction as
+> part of the instruction rewriting.
+> 
+> When you do things like this:
+> 
+>         unsigned long ip = (unsigned long)(&ftrace_call);
+>         unsigned char *new;
+>         int ret;
+> 
+>         new = ftrace_call_replace(ip, (unsigned long)func);
+>         ret = update_ftrace_func(ip, new);
+> 
+> you have already decided to rewrite the instruction with one single
+> fixed call target: "func".
+> 
+> I'm just saying that you should ALWAYS use the same call target in the
+> int3 emulation.
+> 
+> Instead, you hardcode something else than what you are AT THE SAME
+> TIME rewriting the instruction with.
+> 
+> See what I'm saying?
 
-for you to fetch changes up to ce285c267a003acbf607f3540ff71287f82e5282:
+Yes, but that's not the code I'm worried about.
 
-  autofs: fix use-after-free in lockless ->d_manage() (2019-04-09 19:18:19 -0400)
+ftrace_replace_code() is, which does:
 
-----------------------------------------------------------------
-Al Viro (3):
-      acct_on(): don't mess with freeze protection
-      dcache: sort the freeing-without-RCU-delay mess for good.
-      autofs: fix use-after-free in lockless ->d_manage()
+	for_ftrace_rec_iter(iter) {
+		rec = ftrace_rec_iter_record(iter);
 
- Documentation/filesystems/porting |  5 +++++
- fs/autofs/autofs_i.h              |  1 +
- fs/autofs/inode.c                 |  2 +-
- fs/dcache.c                       | 24 +++++++++++++-----------
- fs/internal.h                     |  2 --
- fs/nsfs.c                         |  3 +--
- include/linux/dcache.h            |  2 +-
- include/linux/mount.h             |  2 ++
- kernel/acct.c                     |  4 ++--
- 9 files changed, 26 insertions(+), 19 deletions(-)
+		ret = add_breakpoints(rec, enable);
+		if (ret)
+			goto remove_breakpoints;
+		count++;
+	}
+
+	run_sync();
+
+
+And there's two more iterator loops that will do the modification of
+the call site, and then the third loop will remove the breakpoint.
+
+That iterator does something special for each individual record. All
+40,000 of them.
+
+That add_breakpoint() does:
+
+static int add_breakpoints(struct dyn_ftrace *rec, int enable)
+{
+	unsigned long ftrace_addr;
+	int ret;
+
+	ftrace_addr = ftrace_get_addr_curr(rec);
+
+	ret = ftrace_test_record(rec, enable);
+
+	switch (ret) {
+	case FTRACE_UPDATE_IGNORE:
+		return 0;
+
+	case FTRACE_UPDATE_MAKE_CALL:
+		/* converting nop to call */
+		return add_brk_on_nop(rec);
+
+	case FTRACE_UPDATE_MODIFY_CALL:
+	case FTRACE_UPDATE_MAKE_NOP:
+		/* converting a call to a nop */
+		return add_brk_on_call(rec, ftrace_addr);
+	}
+	return 0;
+}
+
+And to get what the target is, we call ftrace_get_addr_curr(), which
+will return a function based on the flags in the record. Which can be
+anything from a call to a customized trampoline, to either
+ftrace_caller, or to ftrace_regs_caller, or it can turn the record into
+a nop.
+
+This is what I'm talking about. We are adding thousands of int3s
+through out the kernel, and we have a single handler to handle each one
+of them.
+
+The reason I picked ftrace_regs_caller() is because that one does
+anything that any of the callers can do (albeit slower). If it does
+not, then ftrace will be broken, because it handles the case that all
+types of trampolines are attached to a single function, and that code
+had better do the exact same thing for each of those trampolines as if
+the trampolines were called directly, because the handlers that those
+trampolines call, shouldn't care who else is using that function.
+
+Note, the only exception to that rule, is that we only allow one
+function attached to the function to modify the return address (and the
+record has a flag for that). If a record already modifies the ip
+address on return, the registering of another ftrace_ops that modifies
+the ip address will fail to register.
+
+
+> 
+> Stop with the "there could be thousands of targets" arguyment. The
+> "call" instruction THAT YOU ARE REWRITING has exactly one target.
+> There aren't 40,000 of them. x86 does not have that kind of "call"
+> instruction that randomly calls 40k different functions. You are
+> replacing FIVE BYTES of memory, and the emulation you do should
+> emulate those FIVE BYTES.
+> 
+> See?
+> 
+> Why are you emulating something different than what you are rewriting?
+
+I'm not having one call site call 40,000 different functions. You are
+right about that. But I have 40,000 different call sites that could be
+calling different functions and all of them are being processed by a
+single int3 handler.
+
+That's my point.
+
+-- Steve
