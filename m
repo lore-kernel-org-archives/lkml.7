@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007DCC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DEAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD10620578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C246216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207466;
-	bh=CqM25Liyll1vUZ+oKuFskUUke6oAbdea2XABoh0OlYE=;
+	s=default; t=1557207470;
+	bh=EiAGYo1E9SxfPaS0i1ndJq2wTAwaTy0SAsYy7NBE9E4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJCoQD+HvesYOvrnNY2AoqVuwWLJAGoBPs+u11m7+4rqdl4eUCeMN2d4cJTC+ppXC
-	 FCRubMPctEKwCE06VSZ9hJMhddFWXvW0YP0mgBPwWsUDqWNw+TUghNZ5b4nckhXm1e
-	 BLUTclcAX9T6sXwoUlqWlvFDAnbk6V3+g986gscw=
+	b=TBsPLZn1EIQFQpEAinfxBewlwr/83CNj0ZhOKNqyX4HaACUERrPhzuAKOTpTWrsca
+	 dWKJrgMHDtpWK3yXwMWI3/izaqJ1cokRlR3RBtkdD3AIHB1H89xtadg3+Fna14U6fy
+	 XSAehSV6DmwxW4nuEmLa+Gg5QgDdei0VZuxVv0II=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfEGFhp (ORCPT
+        id S1728463AbfEGFht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:37:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfEGFhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:41 -0400
+        id S1728440AbfEGFhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA0420578;
-        Tue,  7 May 2019 05:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42A920578;
+        Tue,  7 May 2019 05:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207460;
-        bh=CqM25Liyll1vUZ+oKuFskUUke6oAbdea2XABoh0OlYE=;
+        s=default; t=1557207464;
+        bh=EiAGYo1E9SxfPaS0i1ndJq2wTAwaTy0SAsYy7NBE9E4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1pjhi46v9GkAsY12cvWwK0a7+0w1K9hEVSH3EScR6z01V6JJbOuooze2uL6Tfr6gW
-         ao0LBtV23Kl55pYGvIu+KpTs3Xt2Ws3s5x6/pf/CpgqWaQkXR2TvnGzsUszWtJ3ymx
-         2+qcFupNDXqRjo7X4HJ7NYUXtxauT18iKFGQZeU0=
+        b=z6HQS+K2Rw5Xt5FFvV3vBPfmzpZ/Ld5kBYA2vQGt7ccCLP7iVTDVX2kgqvo5tD3Ea
+         u6hjUYD1REZ7/zx+whyu0fSDZ7FhwZ6MGAQCG/xUq87/H0p72zSNJty2OupHVOovlw
+         o/37sCJGgrlwdFrJjESXKMG5QlOM7fHq2SCb3BCQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tigran Tadevosyan <tigran.tadevosyan@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 55/81] ARM: 8856/1: NOMMU: Fix CCR register faulty initialization when MPU is disabled
-Date:   Tue,  7 May 2019 01:35:26 -0400
-Message-Id: <20190507053554.30848-55-sashal@kernel.org>
+Cc:     Daniel Gomez <dagmcr@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 57/81] spi: ST ST95HF NFC: declare missing of table
+Date:   Tue,  7 May 2019 01:35:28 -0400
+Message-Id: <20190507053554.30848-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -60,38 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tigran Tadevosyan <tigran.tadevosyan@arm.com>
+From: Daniel Gomez <dagmcr@gmail.com>
 
-[ Upstream commit c3143967807adb1357c36b68a7563fc0c4e1f615 ]
+[ Upstream commit d04830531d0c4a99c897a44038e5da3d23331d2f ]
 
-When CONFIG_ARM_MPU is not defined, the base address of v7M SCB register
-is not initialized with correct value. This prevents enabling I/D caches
-when the L1 cache poilcy is applied in kernel.
+Add missing <of_device_id> table for SPI driver relying on SPI
+device match since compatible is in a DT binding or in a DTS.
 
-Fixes: 3c24121039c9da14692eb48f6e39565b28c0f3cf ("ARM: 8756/1: NOMMU: Postpone MPU activation till __after_proc_init")
-Signed-off-by: Tigran Tadevosyan <tigran.tadevosyan@arm.com>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Before this patch:
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
+
+After this patch:
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
+alias:          of:N*T*Cst,st95hfC*
+alias:          of:N*T*Cst,st95hf
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/head-nommu.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/st95hf/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
-index ec29de250076..cab89479d15e 100644
---- a/arch/arm/kernel/head-nommu.S
-+++ b/arch/arm/kernel/head-nommu.S
-@@ -133,9 +133,9 @@ __secondary_data:
-  */
- 	.text
- __after_proc_init:
--#ifdef CONFIG_ARM_MPU
- M_CLASS(movw	r12, #:lower16:BASEADDR_V7M_SCB)
- M_CLASS(movt	r12, #:upper16:BASEADDR_V7M_SCB)
-+#ifdef CONFIG_ARM_MPU
- M_CLASS(ldr	r3, [r12, 0x50])
- AR_CLASS(mrc	p15, 0, r3, c0, c1, 4)          @ Read ID_MMFR0
- 	and	r3, r3, #(MMFR0_PMSA)           @ PMSA field
+diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
+index 2b26f762fbc3..01acb6e53365 100644
+--- a/drivers/nfc/st95hf/core.c
++++ b/drivers/nfc/st95hf/core.c
+@@ -1074,6 +1074,12 @@ static const struct spi_device_id st95hf_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st95hf_id);
+ 
++static const struct of_device_id st95hf_spi_of_match[] = {
++        { .compatible = "st,st95hf" },
++        { },
++};
++MODULE_DEVICE_TABLE(of, st95hf_spi_of_match);
++
+ static int st95hf_probe(struct spi_device *nfc_spi_dev)
+ {
+ 	int ret;
+@@ -1260,6 +1266,7 @@ static struct spi_driver st95hf_driver = {
+ 	.driver = {
+ 		.name = "st95hf",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(st95hf_spi_of_match),
+ 	},
+ 	.id_table = st95hf_id,
+ 	.probe = st95hf_probe,
 -- 
 2.20.1
 
