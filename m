@@ -2,144 +2,126 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1E1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3EEC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64EDD2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0D5205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iopnbCEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfEGM5V convert rfc822-to-8bit (ORCPT
+        id S1726819AbfEGM5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:57:21 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:42364 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbfEGM5V (ORCPT
+        Tue, 7 May 2019 08:57:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52995 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfEGM5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:57:21 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-90--vy_klLVNSOvRBjrRdIVmQ-1; Tue, 07 May 2019 13:57:17 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 7 May 2019 13:57:15 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 7 May 2019 13:57:15 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Peter Zijlstra' <peterz@infradead.org>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Jiri Kosina" <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Joerg Roedel" <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: RE: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-Thread-Topic: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Thread-Index: AQHVBLOOpe57oOoUm0iPpfi6TWW3V6ZfXgyAgAAYbgCAACXZIA==
-Date:   Tue, 7 May 2019 12:57:15 +0000
-Message-ID: <f55e3c951aee4b5686201aaf282cc62b@AcuMS.aculab.com>
-References: <20190502185225.0cdfc8bc@gandalf.local.home>
- <20190502193129.664c5b2e@gandalf.local.home>
- <20190502195052.0af473cf@gandalf.local.home>
- <20190503092959.GB2623@hirez.programming.kicks-ass.net>
- <20190503092247.20cc1ff0@gandalf.local.home>
- <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
- <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
- <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
- <20190507085753.GO2606@hirez.programming.kicks-ass.net>
- <b34aa38bdfe84263bc20b60761bf6005@AcuMS.aculab.com>
- <20190507113050.GR2606@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190507113050.GR2606@hirez.programming.kicks-ass.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 7 May 2019 08:57:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o25so9198186wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 05:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/RaXXBk8jojDKv8ZmQ0ryO/koLyatTNCLWmxjtwxqGc=;
+        b=iopnbCEUtg1eAxFuU08UrnyeGqTI+HGYI7hLhiCz6a8D7KehZIhwl7APdw7pnq8V8f
+         5v6f2Lclyksgs1+8aRGEqs2y8Zcs9PwH2fjM5t6NYDSozt7EBXN3QoQlitjVL5zfa3t0
+         40LZTE68pOiz37WL82Gm43xJG5y8cv4aUlMgGThFR6BR89N3BHdZos+aARYT6ewxG/iZ
+         t/yya9uEPJyp8q+5aBvbopkeAgmiUsC/7kRRvdooul36Sc5Sd2XDkc5IkQfNe9g0V4EF
+         THePO2G+D4ADC2I6Gl9r3RM1wUB+N3En8hGtRpx3W1tMLZyVzmzqhKm6QK0Dcxj0PtAi
+         3BMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/RaXXBk8jojDKv8ZmQ0ryO/koLyatTNCLWmxjtwxqGc=;
+        b=a3HF6SLVECDiLNw9ZrMA4d+BqUg3r4B/a5aECj/LUPhRI0dueloYsrsjR2whYmYCXV
+         ME1eLjhrHdHARSwC0NAHlGxSPQX3h8hFFP7X32ThbvmSWKW4ruwE8gfDBRhMbXkeEEvW
+         33VFGp48XmSqQ1Hzk2s68GEzs2z68N9cv3uvgF1WpRNJjiZYsqaGA4R59Gd/ykmSlYw9
+         DVepqB1Fjko38vdnpe9qCsfHmOIpGjEglb66RtMbJzS9R21z2Cwo2F3etRq0tQXgxL55
+         /c7Cc3dwCx2ksKaE5ApeHJBkqNxg6vrRHBPx8Q6oNO4rS1lALvfdXyoS70eAPHn3OOH3
+         D4LQ==
+X-Gm-Message-State: APjAAAVlmBFzi8ES1x/oZt38YpLunvkIZ1eq7UBDFJUivtHYnUCApHpt
+        PQZm4aOtwXOOFrNSiSZ41efRkg==
+X-Google-Smtp-Source: APXvYqxfXo1lWPeAKtlRyEL3cx6RJOPy4WmqDUMfvFj0NINxzhHchVHKD/CQSUXUaH2ov9alSw3E/Q==
+X-Received: by 2002:a1c:2c89:: with SMTP id s131mr9244361wms.142.1557233852944;
+        Tue, 07 May 2019 05:57:32 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id o130sm13593961wmo.43.2019.05.07.05.57.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 05:57:32 -0700 (PDT)
+Date:   Tue, 7 May 2019 13:57:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, juliensu@mxic.com.tw,
+        Simon Horman <horms@verge.net.au>, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+Message-ID: <20190507125730.GD29524@dell>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus>
+ <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: -vy_klLVNSOvRBjrRdIVmQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra
-> Sent: 07 May 2019 12:31
-> To: David Laight
-> On Tue, May 07, 2019 at 09:18:51AM +0000, David Laight wrote:
-> > From: Peter Zijlstra
-> > > Sent: 07 May 2019 09:58
-> > ...
-> > > +	/*
-> > > +	 * When we're here from kernel mode; the (exception) stack looks like:
-> > > +	 *
-> > > +	 * 4*4(%esp) - <previous context>
-> > > +	 * 3*4(%esp) - flags
-> > > +	 * 2*4(%esp) - cs
-> > > +	 * 1*4(%esp) - ip
-> > > +	 * 0*4(%esp) - orig_eax
-> >
-> > Am I right in thinking that this is the only 'INT3' stack frame that
-> > needs to be 'fiddled' with?
-> > And that the 'emulate a call instruction' has verified that is the case??
-> > So the %cs is always the kernel %cs.
+On Wed, 24 Apr 2019, Marek Vasut wrote:
+
+> On 4/24/19 11:23 PM, Rob Herring wrote:
+> > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
+> >> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
+> >>
+> >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> >> ---
+> >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++++++++++++++++++
+> >>  1 file changed, 40 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> >> new file mode 100644
+> >> index 0000000..668b822
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> >> @@ -0,0 +1,40 @@
+> >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
+> >> +--------------------------------------------------
+> > 
+> > Looks like a SPI flash controller from the example. What makes it an 
+> > MFD?
 > 
-> Only the INT3 thing needs 'the gap', but the far bigger change here is
-> that kernel frames now have a complete pt_regs set and all sorts of
-> horrible crap can go away.
+> It supports both SPI NOR and HyperFlash (CFI-compliant flash with
+> different bus interface).
 
-I'm not doubting that generating the 'five register' interrupt stack frame
-for faults in kernel space makes life simpler just suggesting that the
-'emulated call' can be done by emulating the 'iret' rather than generating
-a gap in the stack.
+Looks like you're registering one OR the other.
 
-> For 32bit 'the gap' happens naturally when building a 5 entry frame. Yes
-> it is possible to build a 5 entry frame on top of the old 3 entry one,
-> but why bother...
+Why don't you just do this from DT?
 
-Presumably there is 'horrid' code to generate the gap in 64bit mode?
-(less horrid than 32bit, but still horrid?)
-Or does it copy the entire pt_regs into a local stack frame and use
-that for the iret?
+No reason for this to be an MFD IMHO.
 
-I've just tried to parse the pseudo code for IRET in the intel docs.
-Does anyone find that readable?
-I wonder if you can force 32bit mode to do a stack switch 'iret'
-by doing something like a far jump to a different %cs ?
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
