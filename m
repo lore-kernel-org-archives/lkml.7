@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D7BC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5858BC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15172087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D66220C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208585;
-	bh=y9ZLVXMrz9krp9KqLxl4O+qrXhLwZoiMvHNYlQn2wu8=;
+	s=default; t=1557208592;
+	bh=IppytvYArZuXTW2szNeE2hJxNI5S5UlMeksAx99e3SI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0mUIhoQeESE2LBedQrpX0uKHb8xy6U133BTSSkT+xkspoVvSSOV7kCgWJlIvVyL8X
-	 ApsOflBR17Eg0YfITYmPl1Y4U/h6WLRqgsJf9HKmmJL/Ah7rL960ernmVMGcVFWg50
-	 sg1EHLyBc4YTynVyTNROSVZfCBFG3Pg55VXmAaqc=
+	b=ulSFr0hjI5CPyC6OJU4IHOSvH0NWgNWtxt9XVhsKuNrPz0DKqavAtVQikOnJrFV6O
+	 vCWhvrXRod5lSmBRR8Nybkawx0RY5wAvPqbs3SMRpafJMWSS6qdYMAjh7ImXTRh0nD
+	 VAUoi7mKt10NIu52ej6gj+Q7LJ02uIp+KcO05afA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfEGF4Y (ORCPT
+        id S1728497AbfEGFiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfEGFiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:03 -0400
+        id S1727878AbfEGFhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C11A421655;
-        Tue,  7 May 2019 05:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E03C21655;
+        Tue,  7 May 2019 05:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207482;
-        bh=y9ZLVXMrz9krp9KqLxl4O+qrXhLwZoiMvHNYlQn2wu8=;
+        s=default; t=1557207471;
+        bh=IppytvYArZuXTW2szNeE2hJxNI5S5UlMeksAx99e3SI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJzielO5QAPxr5NXCU89nVN8nPJnzsYPuPtBAZGRWiZoTtL30Hh1rt72TISAzZif2
-         MU+Uk5v5s1Jvx9jHSvOxFb+mtUmeubSBJJsNRRMIs2YV2QuRR/yCi9G6S7qxRzmgs9
-         6ObaPFkKUtUDJW1vG3fdmSoaNGt1BFX59h/D15rM=
+        b=0MJDAe+Q8BtWOa7ZcE5Nhrwv8fVlVdUDKrBBA5uyN8ewee5qPYeFEICzUwTICkzc9
+         nmaKmRp5CU321IEBBuL08It6AEwLyC3Bv+GHNjQPCRvK1A4shsMxUHKsII6Je9iH/F
+         q749X/MzBagkRVB1LWR/excuDnMx+wSrEjwCmdYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 67/81] mm/memory.c: fix modifying of page protection by insert_pfn()
-Date:   Tue,  7 May 2019 01:35:38 -0400
-Message-Id: <20190507053554.30848-67-sashal@kernel.org>
+Cc:     Lijun Ou <oulijun@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 62/81] RDMA/hns: Bugfix for mapping user db
+Date:   Tue,  7 May 2019 01:35:33 -0400
+Message-Id: <20190507053554.30848-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -63,79 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit cae85cb8add35f678cf487139d05e083ce2f570a ]
+[ Upstream commit 2557fabd6e29f349bfa0ac13f38ac98aa5eafc74 ]
 
-Aneesh has reported that PPC triggers the following warning when
-excercising DAX code:
+When the maximum send wr delivered by the user is zero, the qp does not
+have a sq.
 
-  IP set_pte_at+0x3c/0x190
-  LR insert_pfn+0x208/0x280
-  Call Trace:
-     insert_pfn+0x68/0x280
-     dax_iomap_pte_fault.isra.7+0x734/0xa40
-     __xfs_filemap_fault+0x280/0x2d0
-     do_wp_page+0x48c/0xa40
-     __handle_mm_fault+0x8d0/0x1fd0
-     handle_mm_fault+0x140/0x250
-     __do_page_fault+0x300/0xd60
-     handle_page_fault+0x18
+When allocating the sq db buffer to store the user sq pi pointer and map
+it to the kernel mode, max_send_wr is used as the trigger condition, while
+the kernel does not consider the max_send_wr trigger condition when
+mapmping db. It will cause sq record doorbell map fail and create qp fail.
 
-Now that is WARN_ON in set_pte_at which is
+The failed print information as follows:
 
-        VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
+ hns3 0000:7d:00.1: Send cmd: tail - 418, opcode - 0x8504, flag - 0x0011, retval - 0x0000
+ hns3 0000:7d:00.1: Send cmd: 0xe59dc000 0x00000000 0x00000000 0x00000000 0x00000116 0x0000ffff
+ hns3 0000:7d:00.1: sq record doorbell map failed!
+ hns3 0000:7d:00.1: Create RC QP failed
 
-The problem is that on some architectures set_pte_at() cannot cope with
-a situation where there is already some (different) valid entry present.
-
-Use ptep_set_access_flags() instead to modify the pfn which is built to
-deal with modifying existing PTE.
-
-Link: http://lkml.kernel.org/r/20190311084537.16029-1-jack@suse.cz
-Fixes: b2770da64254 "mm: add vm_insert_mixed_mkwrite()"
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Chandan Rajendra <chandan@linux.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 9c69278173b7..e0010cb870e0 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1796,10 +1796,12 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
- 				goto out_unlock;
- 			}
--			entry = *pte;
--			goto out_mkwrite;
--		} else
--			goto out_unlock;
-+			entry = pte_mkyoung(*pte);
-+			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-+			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-+				update_mmu_cache(vma, addr, pte);
-+		}
-+		goto out_unlock;
- 	}
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index efb7e961ca65..2fa4fb17f6d3 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -494,7 +494,7 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
  
- 	/* Ok, finally just insert the thing.. */
-@@ -1808,7 +1810,6 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 	else
- 		entry = pte_mkspecial(pfn_t_pte(pfn, prot));
+ static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
+ {
+-	if (attr->qp_type == IB_QPT_XRC_TGT)
++	if (attr->qp_type == IB_QPT_XRC_TGT || !attr->cap.max_send_wr)
+ 		return 0;
  
--out_mkwrite:
- 	if (mkwrite) {
- 		entry = pte_mkyoung(entry);
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+ 	return 1;
 -- 
 2.20.1
 
