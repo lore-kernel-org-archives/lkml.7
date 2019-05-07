@@ -2,94 +2,114 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3253C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB799C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52642054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB06205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557248226;
-	bh=VDMc0En6Ctw4wEmBmf9DSnDD+MPODldEW2o5fA2OpDs=;
+	s=default; t=1557248242;
+	bh=D6MpCQTS8LI1AAzN1OZT+Q/x/AiPwhtV7g7kacQEbx0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MdjEVdPQN7m2zOLNM90GtyB/XJDs2ngoRx/hZVZHnwcJnNGpv6jefO9pvbndQVGuY
-	 s5HVoYzOUqX1xS0ZzpuotHkBGKf+Oj5SQr05JPkIEmVCa/zA5hSTyYQNBTkSGv32RH
-	 yatAO3lfo2FtIV4kF5+UV+hukQxNADS96R0h9fCQ=
+	b=1J/DuG+vw4QOTy5GOM/1iaCoKsW6wX64aQJgQHeQh2BwPEN5kCr01ju58r+lIrwV+
+	 FUB2TDIFjSNz04t66l2sNDS2CSoCJdbUv4QbP6BeA7/x77/+fheDyD+9M4pHpDYxHf
+	 ExU3n7NWpsauJuhGCySBZDE1el35qobAck+rxHWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfEGQ5G (ORCPT
+        id S1727259AbfEGQ5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:57:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34351 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfEGQ5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:57:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l17so6093665otq.1;
-        Tue, 07 May 2019 09:57:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6RHMQB9VsKEtQqS8G9mnViUVuGlcHIfclZdgk/wbUV8=;
-        b=ZK8Nnu8GY66LDCSZq9QHAPh4hsCklQ8xzNMP2br18SU511tv/5Ar3EDHFMBbNj4q84
-         H/HXBJKPmqr3eSIlQVR2C7CAMtR3Ji1kj83o84EB0EI+sE9MPy+RpLIEmzYAjy+Bkr7F
-         nzztk84LEqvq6mQ3va1itB0Sgia+gH833y+H6YlAdYSnQymQrQXEgjXQ3C2mhT3+nr2H
-         8r7Bf2f4iFdxvedbrhnuggX0AaOffjPewdvx6ULHYk7IqN1XHbE4iJbFzuVdSs2oIGC6
-         Px3OTIz+X9dw9xKvqMLypw4itkcwDi3dEMSOBje4iLdsm/x1al2vDXZdR0u2Ccc392zo
-         ZwrA==
-X-Gm-Message-State: APjAAAXDu4i8RLtNo1FNwlU4Qacm5/0G+zT+xtdPQP2zayHD45lNylUM
-        K5hkXtiHHpQQFD2h+yjy5asR74M=
-X-Google-Smtp-Source: APXvYqzu8AIp7fFUsfN2rUa5cBm1eaPc1YwsapNxl5TxnL6Ff2he9kIUwK3dNY/DU/9pQHKCc0s8Gg==
-X-Received: by 2002:a05:6830:1510:: with SMTP id k16mr6166230otp.226.1557248224453;
-        Tue, 07 May 2019 09:57:04 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g21sm2591156otj.25.2019.05.07.09.57.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 09:57:03 -0700 (PDT)
-Date:   Tue, 7 May 2019 11:57:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v7 04/13] dt-bindings: ddr: rename lpddr2 directory
-Message-ID: <20190507165703.GA20137@bogus>
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190506151213eucas1p2ca40029d09ddbbcd11e4a1dd60ae9654@eucas1p2.samsung.com>
- <1557155521-30949-5-git-send-email-l.luba@partner.samsung.com>
+        Tue, 7 May 2019 12:57:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727165AbfEGQ5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:57:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA68D2054F;
+        Tue,  7 May 2019 16:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557248240;
+        bh=D6MpCQTS8LI1AAzN1OZT+Q/x/AiPwhtV7g7kacQEbx0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pjgx1GTyMP+8PrB4yhNbdYYUT4PUzjnrXZrXUGgoIXuA1GMtcBVXzbftpqViPkLRf
+         Od3fEvQcUMn8gEGQgMi4aq2W81hyvEPRzpOFzYwjYPV58uOgOdz57cUJFqiCQmFdMh
+         NM+XkPDA1KAFGGjnkOidL7aoRawFLQCcA14u1/ds=
+Date:   Tue, 7 May 2019 18:57:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
+        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
+        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
+Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
+Message-ID: <20190507165718.GA1241@kroah.com>
+References: <20190504121213.183203-1-joel@joelfernandes.org>
+ <20190504122158.GA23535@kroah.com>
+ <20190504123650.GA229151@google.com>
+ <20190505091030.GA25646@kroah.com>
+ <20190505132623.GA3076@localhost>
+ <20190505163145.45f77e44@oasis.local.home>
+ <20190507163824.GC89248@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557155521-30949-5-git-send-email-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190507163824.GC89248@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  6 May 2019 17:11:52 +0200, Lukasz Luba wrote:
-> Change directory name to be ready for new types of memories.
+On Tue, May 07, 2019 at 12:38:24PM -0400, Joel Fernandes wrote:
+> On Sun, May 05, 2019 at 04:31:45PM -0400, Steven Rostedt wrote:
+> > On Sun, 5 May 2019 13:26:23 +0000
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > 
+> > > On Sun, May 05, 2019 at 11:10:30AM +0200, Greg KH wrote:
+> > > > On Sat, May 04, 2019 at 08:36:50AM -0400, Joel Fernandes wrote:  
+> > > > > > But, you should change S_IRUGO to the correct octal number, checkpatch
+> > > > > > should have barfed on this change.  
+> > > > > 
+> > > > > fixed, below is the updated patch inline, thanks!  
+> > > > 
+> > > > Please resend as a "real" submission, doing so in this format is a bit
+> > > > more difficult to apply.  
+> > > 
+> > > git am --scissors can do it, but no problem I will send as a formal
+> > > submission. Thanks a lot.
+> > >
+> > 
+> > True, but a lot of us depend on scripts to pull in patches from our
+> > INBOX. Which is why we like them to stay with the standard format.
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../devicetree/bindings/ddr/lpddr2-timings.txt     |  52 +++++++++++
->  Documentation/devicetree/bindings/ddr/lpddr2.txt   | 102 +++++++++++++++++++++
->  .../devicetree/bindings/lpddr2/lpddr2-timings.txt  |  52 -----------
->  .../devicetree/bindings/lpddr2/lpddr2.txt          | 102 ---------------------
->  4 files changed, 154 insertions(+), 154 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
->  create mode 100644 Documentation/devicetree/bindings/ddr/lpddr2.txt
->  delete mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
->  delete mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2.txt
-> 
+> Thanks makes sense. So Greg, I submitted this properly, does it look good to
+> you now? Steven, I would appreciate any Acks/Reviews on the patch as well:
+> https://lore.kernel.org/patchwork/patch/1070199/
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Looks good to me, should get to it in a few days...
