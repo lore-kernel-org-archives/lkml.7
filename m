@@ -2,231 +2,139 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E274C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89C2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D859B20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557243999;
-	bh=penb8S4fViGUKJbQWsYzyhvsGBxaCjDKIZ8jATHrGD0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iMwgD1hHe+TIGn5H1tbA9W6LuXJcFVVTvebaHyQoFdSH672ykd2ciKN+LDMYfeeiX
-	 ihX1xQNQV6rDXaHsfNOj+EpfRB5YaiRXAAu+V1VpXN16TbA5asbtN5sXqrtQ/9nZEm
-	 H1kV+MAk5wGGIQ3DpifxoOyspNtjPVx4jWXpdqC8=
+	by mail.kernel.org (Postfix) with ESMTP id A88B02087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LcspjzYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfEGPqh (ORCPT
+        id S1726947AbfEGPql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfEGPqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:46:37 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9402087F;
-        Tue,  7 May 2019 15:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557243996;
-        bh=penb8S4fViGUKJbQWsYzyhvsGBxaCjDKIZ8jATHrGD0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=18LtHFvCsfPLrZOB7VMaA18HObI1ydwRxW+80PWInoUC+/lLTvQ3zuCIyhnYdzQk9
-         7ESDca5xHFkL1s7Xurm+sbOAwQmd4Tq1YLCMdk2f7GIVlYYeq6gKfAWVx6GJzdCadv
-         2NxRvZIg1FTCAyntWh8sBpS/h3bu/zaLJEMTrc64=
-Date:   Tue, 7 May 2019 08:46:35 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: new features for 5.2
-Message-ID: <20190507154635.GT5207@magnolia>
+        Tue, 7 May 2019 11:46:41 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41378 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEGPqk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 11:46:40 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d9so8385379pls.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:from:to:cc:subject:date:message-id;
+        bh=AyxScH4NIE4sDe1p/0kXATnx4Yd1gHetw4ugG+CXftg=;
+        b=LcspjzYTpm18fBxDLtdVlOSLYgih/UOIl8y2xm86Shd54JuFLAbjRuZJsh7/UJROFW
+         TtPG3dZCOLd3NNoEul47o9myIkAwvByEQcLu1SVAeEFQ3dYwmEQe2TjcZkXAt8F96qzm
+         m1bi5u09yD15mF9UitMHo4z+MNjDAqwkwSCXkNMppq2snlQsOkVdmKMDPENoU43mV7+L
+         RzfwzYC8qqQM7ryF6MyV/7SwGQIPHoB/YzUQMpD8PmNZ4S8CadI+FEHvI2Sbv59AL5vH
+         C1i10OgAXmZLSd450lkDBFZGCG8h/znBvgvuZLKNKvyS6oFP0RmLcCe3dPQ26CPTyW9W
+         x7qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=mime-version:x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AyxScH4NIE4sDe1p/0kXATnx4Yd1gHetw4ugG+CXftg=;
+        b=qqax+oEj1hfLS51Gxf44C9k+SxTOycALp1FmujaWL0dWJ771RiMMHTUYMI3fzUEIij
+         M96xKDEbJwXrSlRhehTUKsr7pDMBzR3e6C1Qw2B8ZMIOUQmyo/X7FU5jwqzMLckxjWf9
+         Il9CwZonRYGVfp3DKliAZ+gQ3NENFZuVSs5xAaA76E1UierBnTXzh2SDdhB4GpNM6UYI
+         Pnve7ptCiL55e8Fbsu4um4W6VtDLh6MuAi3NRDhfrQVaNaeXNghHZ71Gn/bMrhmlt491
+         cKIsZ7ZC5GDK6CKprjqsAhSCW8t3u9R1yd1kcIoTgrtnVHQJ2jyGSGAWwc/lwmdiD3LV
+         14Sg==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Gm-Message-State: APjAAAWxfVgEwSRUJ6ZnHE3351j6Whbs1zuCqpbgk9hiV1/GTn5nmxRk
+        7p2fHPT/SMSIxuPKLLfsiILXmMEgWILxdwvL9WZ3/8O2ioNfPjddwgH8prGycjJIDoI0eJbsLmE
+        P/reT0SOwZLx4AXjwqw==
+X-Google-Smtp-Source: APXvYqxkIWDXrclgUoj+jqcoyhO6CLT/D3zJ0ThibTrmWBC8R5Y1pe8PKcAAb/jfMzxK3ee5u+CN2w==
+X-Received: by 2002:a17:902:29c9:: with SMTP id h67mr41070276plb.114.1557243998932;
+        Tue, 07 May 2019 08:46:38 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id 5sm15482096pfs.17.2019.05.07.08.46.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 May 2019 08:46:38 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        bbrezillon@kernel.org, richard@nod.at, palmer@sifive.com,
+        aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v3 v3 0/3] add support for is25wp256 spi-nor device.
+Date:   Tue,  7 May 2019 21:16:00 +0530
+Message-Id: <1557243963-14140-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain; charset="US-ASCII"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The patch set is tested on HiFive Unleashed board and is based on mainline
+kernel v5.1. Its intended to add support for 32 MB spi-nor flash
+mounted on the board. Memory Device supports 4/32/and 64 KB sectors size.
+The device id table is updated accordingly.
 
-Here's a big pile of new stuff for XFS for 5.2.  XFS has grown the
-ability to report metadata health status to userspace after online fsck
-checks the filesystem.  The online metadata checking code is (I really
-hope) feature complete with the addition of checks for the global fs
-counters, though it'll remain EXPERIMENTAL for now.
+Flash parameter table for ISSI device is set to use macronix_quad_enable
+procedure to set the QE (quad-enable) bit of Status register.
 
-There are also fixes for thundering herds of writeback completions and
-some other deadlocks, fixes for theoretical integer overflow attacks on
-space accounting, and removal of the long-defunct 'mntpt' option which
-was deprecated in the mid-2000s and (it turns out) totally broken since
-2011 (and nobody complained...).
+A unilaterlay block unlocking scheme is added in patch 2.
 
-The branch merges cleanly against this morning's HEAD (as well as HEAD +
-iomap-5.2-merge) and survived an overnight run of xfstests.  Let me know
-if you run into anything weird along the way.  FYI, I will also be out
-for about 10 days starting Thursday, so if anything urgent comes up
-during that time, please don't hesitate to ask Dave or Eric.
+These patches are based on original work done by Wesley Terpstra and/or Palmer Dabbelt:
+https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
 
---D
+Erase/Read/Write operations are verified on HiFive Unleashed board using  mtd and flash utils (v1.5.2):
+1. mtd_debug  	:Options available are : erase/read/write.
+2. flashcp	:Single utility that erases flash, writes a file to flash and verifies the data back.
+3. flash_unlock: Unlock flash memory blocks.
+3. flash_lock: 	 Lock flash memory blocks. 
 
-The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
+Unlock scheme clears the protection bits of all blocks in the Status register.
 
-  Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
+Lock scheme:
+It is a basic implementation similar to stm_lock scheme and is validated for different number of blocks passed
+to flash_lock.
 
-are available in the Git repository at:
+Revision history:
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-merge-4
+V2<->V3:
+-Rebased patch to mainline v5.1 from earlier v5.1-rc5
+-Updated commit messages, and cover letter with reference to git URL and author information.
+-Deferred flash_lock mechanism and can go as separate patch. 
 
-for you to fetch changes up to 910832697cf85536c7fe26edb8bc6f830c4b9bb6:
+V1<-> V2:
+-Incorporated changes suggested by reviewers regarding patch/cover letter versioning, references of patch.
+-Updated cover letter with description for flash operations verified with these changes.
+-Add support for unlocking is25xxxxxx device
+-Add support for locking is25xxxxxx device.
 
-  xfs: change some error-less functions to void types (2019-05-01 20:26:30 -0700)
+v1:
+-Add support for is25wp256 device.
 
-----------------------------------------------------------------
-Changes for Linux 5.2:
 
-- Fix some more buffer deadlocks when performing an unmount after a hard
-  shutdown.
-- Fix some minor space accounting issues.
-- Fix some use after free problems.
-- Make the (undocumented) FITRIM behavior consistent with other filesystems.
-- Embiggen the xfs geometry ioctl's data structure.
-- Introduce a new AG geometry ioctl.
-- Introduce a new online health reporting infrastructure and ioctl for
-  userspace to query a filesystem's health status.
-- Enhance online scrub and repair to update the health reports.
-- Reduce thundering herd problems when writeback io completes.
-- Fix some transaction reservation type errors.
-- Fix integer overflow problems with delayed alloc reservation counters.
-- Fix some problems where we would exit to userspace without unlocking.
-- Fix inconsistent behavior when finishing deferred ops fails.
-- Strengthen scrub to check incore data against ondisk metadata.
-- Remove long-broken mntpt mount option.
-- Add an online scrub function for the filesystem summary counters,
-  which should make online metadata scrub more or less feature complete
-  for now.
-- Various cleanups.
+Sagar Shrikant Kadam (3):
+  mtd: spi-nor: add support for is25wp256
+  mtd: spi-nor: add support to unlock flash device.
+  mtd: spi-nor: add locking support for is25xxxxx device
 
-----------------------------------------------------------------
-Brian Foster (7):
-      xfs: fix use after free in buf log item unlock assert
-      xfs: wake commit waiters on CIL abort before log item abort
-      xfs: shutdown after buf release in iflush cluster abort path
-      xfs: don't account extra agfl blocks as available
-      xfs: make tr_growdata a permanent transaction
-      xfs: assert that we don't enter agfl freeing with a non-permanent transaction
-      xfs: add missing error check in xfs_prepare_shift()
+ drivers/mtd/spi-nor/spi-nor.c | 110 +++++++++++++++++++++++++++++++++++++++++-
+ include/linux/mtd/spi-nor.h   |   2 +
+ 2 files changed, 111 insertions(+), 1 deletion(-)
 
-Christoph Hellwig (1):
-      xfs: don't parse the mtpt mount option
+-- 
+1.9.1
 
-Darrick J. Wong (27):
-      xfs: track metadata health status
-      xfs: replace the BAD_SUMMARY mount flag with the equivalent health code
-      xfs: clear BAD_SUMMARY if unmounting an unhealthy filesystem
-      xfs: add a new ioctl to describe allocation group geometry
-      xfs: report fs and rt health via geometry structure
-      xfs: report AG health via AG geometry ioctl
-      xfs: report inode health via bulkstat
-      xfs: refactor scrub context initialization
-      xfs: collapse scrub bool state flags into a single unsigned int
-      xfs: hoist the already_fixed variable to the scrub context
-      xfs: scrub/repair should update filesystem metadata health
-      xfs: scrub should only cross-reference with healthy btrees
-      xfs: implement per-inode writeback completion queues
-      xfs: remove unused m_data_workqueue
-      xfs: merge adjacent io completions of the same type
-      xfs: abort unaligned nowait directio early
-      xfs: widen quota block counters to 64-bit integers
-      xfs: widen inode delalloc block counter to 64-bits
-      xfs: kill the xfs_dqtrx_t typedef
-      xfs: unlock inode when xfs_ioctl_setattr_get_trans can't get transaction
-      xfs: fix broken bhold behavior in xrep_roll_ag_trans
-      xfs: track delayed allocation reservations across the filesystem
-      xfs: rename the speculative block allocation reclaim toggle functions
-      xfs: allow scrubbers to pause background reclaim
-      xfs: scrub should check incore counters against ondisk headers
-      xfs: always rejoin held resources during defer roll
-      xfs: add online scrub for superblock counters
 
-Dave Chinner (1):
-      xfs: bump XFS_IOC_FSGEOMETRY to v5 structures
-
-Eric Sandeen (1):
-      xfs: change some error-less functions to void types
-
-Wang Shilong (1):
-      xfs,fstrim: fix to return correct minlen
-
- fs/xfs/Makefile                |   3 +
- fs/xfs/libxfs/xfs_ag.c         |  54 ++++++
- fs/xfs/libxfs/xfs_ag.h         |   2 +
- fs/xfs/libxfs/xfs_alloc.c      |  13 +-
- fs/xfs/libxfs/xfs_attr.c       |  35 ++--
- fs/xfs/libxfs/xfs_attr.h       |   2 +-
- fs/xfs/libxfs/xfs_bmap.c       |  17 +-
- fs/xfs/libxfs/xfs_defer.c      |  14 +-
- fs/xfs/libxfs/xfs_dquot_buf.c  |   4 +-
- fs/xfs/libxfs/xfs_fs.h         | 139 +++++++++++----
- fs/xfs/libxfs/xfs_health.h     | 190 ++++++++++++++++++++
- fs/xfs/libxfs/xfs_quota_defs.h |   2 +-
- fs/xfs/libxfs/xfs_sb.c         |  18 +-
- fs/xfs/libxfs/xfs_sb.h         |   2 +-
- fs/xfs/libxfs/xfs_trans_resv.c |   6 +-
- fs/xfs/libxfs/xfs_types.c      |   2 +-
- fs/xfs/libxfs/xfs_types.h      |   2 +
- fs/xfs/scrub/agheader.c        |  20 +++
- fs/xfs/scrub/common.c          |  47 ++++-
- fs/xfs/scrub/common.h          |   4 +
- fs/xfs/scrub/fscounters.c      | 366 ++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/health.c          | 237 +++++++++++++++++++++++++
- fs/xfs/scrub/health.h          |  14 ++
- fs/xfs/scrub/ialloc.c          |   4 +-
- fs/xfs/scrub/parent.c          |   2 +-
- fs/xfs/scrub/quota.c           |   2 +-
- fs/xfs/scrub/repair.c          |  34 ++--
- fs/xfs/scrub/repair.h          |   5 +-
- fs/xfs/scrub/scrub.c           |  49 ++++--
- fs/xfs/scrub/scrub.h           |  27 ++-
- fs/xfs/scrub/trace.h           |  63 ++++++-
- fs/xfs/xfs_aops.c              | 135 ++++++++++++--
- fs/xfs/xfs_aops.h              |   1 -
- fs/xfs/xfs_bmap_util.c         |   2 +
- fs/xfs/xfs_buf_item.c          |   4 +-
- fs/xfs/xfs_discard.c           |   3 +-
- fs/xfs/xfs_dquot.c             |  17 +-
- fs/xfs/xfs_file.c              |   6 +-
- fs/xfs/xfs_fsops.c             |   3 +-
- fs/xfs/xfs_fsops.h             |   2 +-
- fs/xfs/xfs_health.c            | 392 +++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_icache.c            |  11 +-
- fs/xfs/xfs_icache.h            |   4 +-
- fs/xfs/xfs_inode.c             |  31 ++--
- fs/xfs/xfs_inode.h             |  17 +-
- fs/xfs/xfs_ioctl.c             |  62 ++++---
- fs/xfs/xfs_ioctl32.c           |   9 +-
- fs/xfs/xfs_itable.c            |   2 +
- fs/xfs/xfs_log.c               |   3 +-
- fs/xfs/xfs_log_cil.c           |  21 ++-
- fs/xfs/xfs_log_recover.c       |  10 +-
- fs/xfs/xfs_mount.c             |  35 +++-
- fs/xfs/xfs_mount.h             |  32 +++-
- fs/xfs/xfs_qm.c                |   3 +-
- fs/xfs/xfs_qm.h                |   8 +-
- fs/xfs/xfs_quota.h             |  37 ++--
- fs/xfs/xfs_super.c             |  41 ++---
- fs/xfs/xfs_trace.h             |  76 ++++++++
- fs/xfs/xfs_trans_dquot.c       |  52 +++---
- 59 files changed, 2085 insertions(+), 313 deletions(-)
- create mode 100644 fs/xfs/libxfs/xfs_health.h
- create mode 100644 fs/xfs/scrub/fscounters.c
- create mode 100644 fs/xfs/scrub/health.c
- create mode 100644 fs/xfs/scrub/health.h
- create mode 100644 fs/xfs/xfs_health.c
+-- 
+The information transmitted is intended only for the person or entity to 
+which it is addressed and may contain confidential and/or privileged 
+material. If you are not the intended recipient of this message please do 
+not read, copy, use or disclose this communication and notify the sender 
+immediately. It should be noted that any review, retransmission, 
+dissemination or other use of, or taking action or reliance upon, this 
+information by persons or entities other than the intended recipient is 
+prohibited.
