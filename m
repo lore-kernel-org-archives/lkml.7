@@ -2,128 +2,76 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB798C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443D6C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60BE20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F20E21019
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfEGHfh (ORCPT
+        id S1726862AbfEGHgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:35:37 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:15356 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726276AbfEGHff (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:35:35 -0400
-X-UUID: 61e10e502b6a4bb7801dfbedde110a53-20190507
-X-UUID: 61e10e502b6a4bb7801dfbedde110a53-20190507
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1757909939; Tue, 07 May 2019 15:35:30 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 7 May 2019 15:35:28 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 7 May 2019 15:35:28 +0800
-Message-ID: <1557214528.3498.3.camel@mtksdaap41>
-Subject: Re: [v3 2/3] drm/mediatek: dpi dual edge support
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Tue, 7 May 2019 15:35:28 +0800
-In-Reply-To: <20190416055242.75764-3-jitao.shi@mediatek.com>
-References: <20190416055242.75764-1-jitao.shi@mediatek.com>
-         <20190416055242.75764-3-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 7 May 2019 03:36:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56868 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726449AbfEGHgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:36:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 83F24AD17;
+        Tue,  7 May 2019 07:36:46 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     linux-riscv@lists.infradead.org
+Subject: [PATCH] riscv: fix locking violation in page fault handler
+CC:     linux-kernel@vger.kernel.org
+X-Yow:  I'm rated PG-34!!
+Date:   Tue, 07 May 2019 09:36:46 +0200
+Message-ID: <mvm5zqmu35d.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+When a user mode process accesses an address in the vmalloc area
+do_page_fault tries to unlock the mmap semaphore when it isn't locked.
 
-On Tue, 2019-04-16 at 13:52 +0800, Jitao Shi wrote:
+Signed-off-by: Andreas Schwab <schwab@suse.de>
+---
+ arch/riscv/mm/fault.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Where is the commit message? I think you could introduce what is dual
-edge (Maybe it's trivial for you, but not for me)
-
-Regards,
-CK
-
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 22e68a100e7b..66405159141a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
->  	unsigned int (*cal_factor)(int clock);
->  	u32 reg_h_fre_con;
->  	bool edge_sel_en;
-> +	bool dual_edge;
->  };
->  
->  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-> @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
->  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
->  }
->  
-> +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
-> +{
-> +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
-> +		     DDR_EN | DDR_4PHASE);
-> +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
-> +}
-> +
->  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
->  					enum mtk_dpi_out_color_format format)
->  {
-> @@ -509,6 +517,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
->  	mtk_dpi_config_color_format(dpi, dpi->color_format);
->  	mtk_dpi_config_2n_h_fre(dpi);
->  	mtk_dpi_config_disable_edge(dpi);
-> +	if (dpi->conf->dual_edge)
-> +		mtk_dpi_enable_dual_edge(dpi);
->  	mtk_dpi_sw_reset(dpi, false);
->  
->  	return 0;
+diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+index 88401d5125bc..c51878e5a66a 100644
+--- a/arch/riscv/mm/fault.c
++++ b/arch/riscv/mm/fault.c
+@@ -181,6 +181,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+ 	up_read(&mm->mmap_sem);
+ 	/* User mode accesses just cause a SIGSEGV */
+ 	if (user_mode(regs)) {
++bad_area_do_trap:
+ 		do_trap(regs, SIGSEGV, code, addr, tsk);
+ 		return;
+ 	}
+@@ -230,7 +231,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+ 		int index;
+ 
+ 		if (user_mode(regs))
+-			goto bad_area;
++			goto bad_area_do_trap;
+ 
+ 		/*
+ 		 * Synchronize this task's top level page-table
+-- 
+2.21.0
 
 
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
