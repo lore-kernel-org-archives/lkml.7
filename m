@@ -2,130 +2,84 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0C3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC273C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8949520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA42D20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbfEGVGJ (ORCPT
+        id S1728499AbfEGVGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:06:09 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:50695 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfEGVGH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:06:07 -0400
-Received: by mail-it1-f197.google.com with SMTP id k8so274821itd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:06:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=i0ea6qcnQd61vbI8zTdhw0aEpWQ9Mlm3sK4Plx8ZZ34=;
-        b=oXqHdG1NLA8Nh6W7gorsBqE3BhqrC7EvlVsFXHCkw0Imp4p9qAV3BO2NltZ9amw25h
-         AgDboaNUvp2W1h/pmqvObMWpKNejNeewn6FR9/n4o9Rp1gsz72RUp/nwDISD/WiQUtUe
-         DhhFeKTyyaQjrlvidbpGEvLY7ZqD46CEl7lK99UiWXfW4LxnqPaTIw69uD3CGbEGxMZ6
-         6Wh9pCSGqxff6TjzhomRx7xdvwFNvPCTuxGMYNrLiNN/qNf0N5Rikh6juS1SwQMKeHTG
-         aq8DLXhfxh6x37+uRg7ejQp9jzmhnycngRQBSK99fnCL5sO/787KLh1N99Bhq0w/NT1Y
-         dvKA==
-X-Gm-Message-State: APjAAAUP84GK+K/jo9rIjjcbBIJO23hStXfXbMk+UMEEu5xaZapNpvcJ
-        krT4x8NFR7+pi7GQSnvvfwX9CmB3D7KSkHEAslDGsEe1ym6q
-X-Google-Smtp-Source: APXvYqwviF0xJxHe46j5bqms5DHO0TndCvSi+GNUBcjDPBsGCSLKdU29VhEZ0WAQRpIfAcyXdPYocu9RIPfTPT+fF7bNU6r4CWkr
+        Tue, 7 May 2019 17:06:49 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18304 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727137AbfEGVGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 17:06:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 14:06:49 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 07 May 2019 14:06:48 -0700
+Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
+        by linux.intel.com (Postfix) with ESMTP id 6BA21580105;
+        Tue,  7 May 2019 14:06:47 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH v1 1/2] ASoC: SOF: Add Comet Lake PCI ID
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Rajat Jain <rajatja@chromium.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>,
+        "M, Naveen" <naveen.m@intel.com>
+References: <20190506225321.74100-1-evgreen@chromium.org>
+ <20190506225321.74100-2-evgreen@chromium.org>
+ <74e8cfcd-b99f-7f66-48ce-44d60eb2bbca@linux.intel.com>
+ <64FD1F8348A3A14CA3CB4D4C9EB1D15F30A7C756@BGSMSX107.gar.corp.intel.com>
+ <5c42b741-5e5c-ce00-8321-59df1df115f1@linux.intel.com>
+ <CAE=gft5TeW1h3GAT9Gkwdf8eE_p5aoywveE2ddXgYQ+fET8Sdg@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <73ebe767-0371-00aa-bb0b-9cb2ba708a42@linux.intel.com>
+Date:   Tue, 7 May 2019 16:06:46 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fe0d:: with SMTP id x13mr3993691ioh.1.1557263166391;
- Tue, 07 May 2019 14:06:06 -0700 (PDT)
-Date:   Tue, 07 May 2019 14:06:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dace5e0588529558@google.com>
-Subject: WARNING: ODEBUG bug in del_timer (3)
-From:   syzbot <syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, doronrk@fb.com,
-        jakub.kicinski@netronome.com, kafai@fb.com, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        vakul.garg@nxp.com, yhs@fb.com, yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CAE=gft5TeW1h3GAT9Gkwdf8eE_p5aoywveE2ddXgYQ+fET8Sdg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+>> What we are missing are the PCI IDs for CML PCH-LP (0x02C8) and CML
+>> PCH-H (0x06C8).
+>>
+>> Can we respin this patchset to add support for those last two instead of
+>> just the -LP case?
+> 
+> Sure. So just to clarify, you want the entry for 0x02c8, and you want
+> an additional entry for 0x06c8 under the same config. Will do.
 
-HEAD commit:    71ae5fc8 Merge tag 'linux-kselftest-5.2-rc1' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=136c06f0a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=511168bc7720867
-dashboard link: https://syzkaller.appspot.com/bug?extid=13d91ed9bbcd7dc13230
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17128012a00000
+I'd like both entries but with different Kconfigs (e.g. CometLake-LP and 
+CometLake-H). We have one PCI ID per Kconfig so far.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com
+>>
+>> I'll send a patch to add those IDs for the HDaudio legacy driver for
+>> consistency.
+> 
+> Actually I've got that change ready to go too, I'm happy to send that out.
 
-------------[ cut here ]------------
-ODEBUG: assert_init not available (active state 0) object type: timer_list  
-hint:           (null)
-WARNING: CPU: 1 PID: 22 at lib/debugobjects.c:325  
-debug_print_object+0x16a/0x250 lib/debugobjects.c:325
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events sk_psock_destroy_deferred
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:566
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:debug_print_object+0x16a/0x250 lib/debugobjects.c:325
-Code: dd 60 f4 a1 87 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48  
-8b 14 dd 60 f4 a1 87 48 c7 c7 00 ea a1 87 e8 44 02 12 fe <0f> 0b 83 05 31  
-10 2d 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-RSP: 0018:ffff8880a9a3f970 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815aec76 RDI: ffffed1015347f20
-RBP: ffff8880a9a3f9b0 R08: ffff8880a9a2a5c0 R09: ffffed1015d240f1
-R10: ffffed1015d240f0 R11: ffff8880ae920787 R12: 0000000000000001
-R13: ffffffff889ac720 R14: ffffffff81605b60 R15: ffff8880990fdba8
-  debug_object_assert_init lib/debugobjects.c:694 [inline]
-  debug_object_assert_init+0x23d/0x2f0 lib/debugobjects.c:665
-  debug_timer_assert_init kernel/time/timer.c:725 [inline]
-  debug_assert_init kernel/time/timer.c:770 [inline]
-  del_timer+0x7c/0x120 kernel/time/timer.c:1192
-  try_to_grab_pending+0x2d7/0x710 kernel/workqueue.c:1249
-  __cancel_work_timer+0xc4/0x520 kernel/workqueue.c:3079
-  cancel_delayed_work_sync+0x1b/0x20 kernel/workqueue.c:3252
-  strp_done+0x5d/0xf0 net/strparser/strparser.c:526
-  sk_psock_destroy_deferred+0x3a/0x6c0 net/core/skmsg.c:558
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2263
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2409
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I guess I beat you to it.
+Thanks for reporting all this.
+-Pierre
