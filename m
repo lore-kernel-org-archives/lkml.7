@@ -2,134 +2,174 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FD7C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554FDC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03072053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225192053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8zBwAnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfEGQbV (ORCPT
+        id S1727070AbfEGQbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:31:21 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59100 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbfEGQbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:31:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C93E8374;
-        Tue,  7 May 2019 09:31:20 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EA733F5AF;
-        Tue,  7 May 2019 09:31:19 -0700 (PDT)
-Date:   Tue, 7 May 2019 17:30:41 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 00/3] MIPS: SGI-IP27 rework part2
-Message-ID: <20190507163041.GA640@e121166-lin.cambridge.arm.com>
-References: <20190319154755.31049-1-tbogendoerfer@suse.de>
- <20190418205726.GB126710@google.com>
- <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
- <20190507174820.381fd56f678609416fd8b617@suse.de>
+        Tue, 7 May 2019 12:31:25 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55237 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEGQbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:31:23 -0400
+Received: by mail-it1-f196.google.com with SMTP id a190so27486972ite.4;
+        Tue, 07 May 2019 09:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HdcDag0bf4IjXr3oQ80U5L8vdpfE6vzh4djKOZUTxxI=;
+        b=d8zBwAnCH7wUVI7KmuH2Dm4GeSJ2CVS2J6feMijMY7bNAvSwrLtdbQcnx15Y2PAB84
+         Q5wC8rvpIXPCIzvd1IB6Me7cHeiof/G4YASOOq/9MiQ65X3Hx4qa0MoBesKx/BfdbD5n
+         8Pq1jscYgeQias7h0sbJwGEa2g/xeC1/YuY9zoVZ0YCgQr9obvTKYBZBYuJ7FFEj3Z4z
+         IgYfRyQ/+7uZzuFUBPA5Ndpx4ZDAqoTC8/IxfAgZEWe8xTrpTOFwnLsT2Cb4iDHn0pnO
+         zqxXN1aXggULxJT+BowYgXgFb02kS3sMAYDfhtqx10xgQ+d+zF95W0lEx6123zZ5eLa2
+         LU0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HdcDag0bf4IjXr3oQ80U5L8vdpfE6vzh4djKOZUTxxI=;
+        b=GDRErti9bO5xIXdpBYG6zuXaICRC6PuL95bpn5Gzl780yIqjcVKmjqm1QnGlvwpplx
+         YhqX+D7YTGPV0NdWfNoifCyA6skmhwgX8NeG++A6mXiyb6rdISWa1IUBFgydE10xaI8t
+         XDvfqRUWwptVtSq2kmfQZgwmMSAGC5st761AfoDmMXOX37Hd6PorDbuik6fuFb9IIOcn
+         btQ9ALNAw1NA/jmoXPhBqumLxF388FYiQGUqvt7mjT4G1Tn1r9BMguGDKq+T6/ezFBtS
+         zLbVpPQdF4DDTOwQfj+SSv+q1vCZe3VDtW9+eYnKNSLINWNiui4OOFGHicUvPiFaA9Sk
+         fSeQ==
+X-Gm-Message-State: APjAAAWZc6ye5r7qpCFx3tswYEYyZMJfmbeSBfSd/BhNGllnqYtMtR9O
+        GziqweAIS3ZhrM5tTeDPX/pPg73uMlamLYxq3uY=
+X-Google-Smtp-Source: APXvYqwrRhM2NXqqo7rGUDDdcwtaybqL1I98pu0GXC1TCViomXKy36uHt5drGc+qF4QiXVZZU7eohpNYuOZJy0GKpgs=
+X-Received: by 2002:a24:b04:: with SMTP id 4mr19257328itd.6.1557246682072;
+ Tue, 07 May 2019 09:31:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507174820.381fd56f678609416fd8b617@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190507053826.31622-1-sashal@kernel.org> <20190507053826.31622-62-sashal@kernel.org>
+In-Reply-To: <20190507053826.31622-62-sashal@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 7 May 2019 09:31:10 -0700
+Message-ID: <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
+ pages for the full memory section
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 05:48:20PM +0200, Thomas Bogendoerfer wrote:
-> On Tue, 7 May 2019 16:31:17 +0100
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> 
-> > On Thu, Apr 18, 2019 at 03:57:26PM -0500, Bjorn Helgaas wrote:
-> > > Hi Thomas,
-> > > 
-> > > On Tue, Mar 19, 2019 at 04:47:49PM +0100, Thomas Bogendoerfer wrote:
-> > > > SGI IP27 (Origin/Onyx2) and SGI IP30 (Octane) have a similair
-> > > > architecture and share some hardware (ioc3/bridge). To share
-> > > > the software parts this patchset reworks SGI IP27 interrupt
-> > > > and pci bridge code. By using features Linux gained during the
-> > > > many years since SGI IP27 code was integrated this even results
-> > > > in code reduction and IMHO cleaner code.
-> > > > 
-> > > > Tests have been done on a two module O200 (4 CPUs) and an
-> > > > Origin 2000 (8 CPUs).
-> > > 
-> > > Thanks for doing all this work!  It seems like it basically converts
-> > > some of the SGI PCI code to the structure typical of current host
-> > > controller drivers and moves it to drivers/pci/controller, which all
-> > > seems great to me.
-> > 
-> > I had a look and the code is really, really MIPS specific, actually
-> > I would be interested in understanding how many platforms it supports,
-> > it is not even FW configurable.
-> 
-> it's MIPS only and used in basically 3 different SGI platforms.
-> 
-> > With hard-coded resources, <asm/...> includes in driver code and MIPS
-> > specific kludges even if it does reuse some APIs shared with controller
-> > drivers I am not 100% certain that moving it to drivers/pci/controller
-> > buys us anything, this is really arch specific code, however we slice
-> > it.
-> 
-> hmm, I thought the idea of having one drivers/pci/controller directory
-> is to have all of them in one place.
+On Mon, May 6, 2019 at 10:40 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+>
+> [ Upstream commit 2830bf6f05fb3e05bc4743274b806c821807a684 ]
+>
+> If memory end is not aligned with the sparse memory section boundary,
+> the mapping of such a section is only partly initialized.  This may lead
+> to VM_BUG_ON due to uninitialized struct page access from
+> is_mem_section_removable() or test_pages_in_a_zone() function triggered
+> by memory_hotplug sysfs handlers:
+>
+> Here are the the panic examples:
+>  CONFIG_DEBUG_VM=y
+>  CONFIG_DEBUG_VM_PGFLAGS=y
+>
+>  kernel parameter mem=2050M
+>  --------------------------
+>  page:000003d082008000 is uninitialized and poisoned
+>  page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+>  Call Trace:
+>  ( test_pages_in_a_zone+0xde/0x160)
+>    show_valid_zones+0x5c/0x190
+>    dev_attr_show+0x34/0x70
+>    sysfs_kf_seq_show+0xc8/0x148
+>    seq_read+0x204/0x480
+>    __vfs_read+0x32/0x178
+>    vfs_read+0x82/0x138
+>    ksys_read+0x5a/0xb0
+>    system_call+0xdc/0x2d8
+>  Last Breaking-Event-Address:
+>    test_pages_in_a_zone+0xde/0x160
+>  Kernel panic - not syncing: Fatal exception: panic_on_oops
+>
+>  kernel parameter mem=3075M
+>  --------------------------
+>  page:000003d08300c000 is uninitialized and poisoned
+>  page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+>  Call Trace:
+>  ( is_mem_section_removable+0xb4/0x190)
+>    show_mem_removable+0x9a/0xd8
+>    dev_attr_show+0x34/0x70
+>    sysfs_kf_seq_show+0xc8/0x148
+>    seq_read+0x204/0x480
+>    __vfs_read+0x32/0x178
+>    vfs_read+0x82/0x138
+>    ksys_read+0x5a/0xb0
+>    system_call+0xdc/0x2d8
+>  Last Breaking-Event-Address:
+>    is_mem_section_removable+0xb4/0x190
+>  Kernel panic - not syncing: Fatal exception: panic_on_oops
+>
+> Fix the problem by initializing the last memory section of each zone in
+> memmap_init_zone() till the very end, even if it goes beyond the zone end.
+>
+> Michal said:
+>
+> : This has alwways been problem AFAIU.  It just went unnoticed because we
+> : have zeroed memmaps during allocation before f7f99100d8d9 ("mm: stop
+> : zeroing memory during allocation in vmemmap") and so the above test
+> : would simply skip these ranges as belonging to zone 0 or provided a
+> : garbage.
+> :
+> : So I guess we do care for post f7f99100d8d9 kernels mostly and
+> : therefore Fixes: f7f99100d8d9 ("mm: stop zeroing memory during
+> : allocation in vmemmap")
+>
+> Link: http://lkml.kernel.org/r/20181212172712.34019-2-zaslonko@linux.ibm.com
+> Fixes: f7f99100d8d9 ("mm: stop zeroing memory during allocation in vmemmap")
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Cc: Pasha Tatashin <Pavel.Tatashin@microsoft.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+> ---
+>  mm/page_alloc.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-Well, drivers/pci/controller code should at least try to be arch
-agnostic to belong there, there are exceptions, as I said but
-they are the exception not the rule.
-
-> > The line between what stays in arch and what goes to
-> > drivers/pci/controller is thin but this code is definitely more on the
-> > arch side IMHO.
-> 
-> what makes the xgene driver different from the xtalk-bridge driver ? Ok
-> it used DT, but it's still just for a specific type of SOCs from one
-> vendor, isn't it ?
-
-Eg no <asm/...> includes required; its code can in principle be
-reused on other arches, this series can't, it is arch code IMO.
-
-> > I do not question Thomas' effort, which I appreciate, I question
-> > the end result and its usefulness, this series is even increasing
-> > lines of kernel code, I would like to see the benefits.
-> 
-> the move from arch/mips/pci to drivers/pci/controller increases lines of
-> code by two lines. The whole patchset adds 155 lines, but also adds
-> functionality to be able to use the driver with different platforms.
-
-I am not convinced it will buy you much to be honest, I might be wrong.
-
-If we move the code we have to have a compelling reason for it to
-happen and at the moment I do not necessarily see one, happy to
-be proven wrong if you extend it to support other platforms cleanly
-(eg with firmware bindings) on top of this series.
-
-> Anyway I can live with not moving to drivers/pci/controller if you don't
-> like it there.
-
-I can't certainly maintain it, it is too MIPS specific and I do not like
-this code either but that's certainly not your fault.
-
-- Hardcoded resources
-- No firmware bindings
-- Lots of MIPS specific workarounds
-- arch code dependency
-
-I do not think that as it stands it belongs in driver/pci/controller,
-no.
-
-Thanks,
-Lorenzo
+Wasn't this patch reverted in Linus's tree for causing a regression on
+some platforms? If so I'm not sure we should pull this in as a
+candidate for stable should we, or am I missing something?
