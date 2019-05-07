@@ -2,148 +2,92 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20777C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC773C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF584206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31E22053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfEGNXd (ORCPT
+        id S1726600AbfEGNYw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:23:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37304 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726321AbfEGNXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:23:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 756B6AEBF;
-        Tue,  7 May 2019 13:23:30 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 097871E3C5A; Tue,  7 May 2019 15:23:30 +0200 (CEST)
-Date:   Tue, 7 May 2019 15:23:30 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 50/95] fsnotify: generalize handling of
- extra event flags
-Message-ID: <20190507132330.GB4635@quack2.suse.cz>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-50-sashal@kernel.org>
+        Tue, 7 May 2019 09:24:52 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:57168 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbfEGNYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:24:51 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id C494E14180; Tue,  7 May 2019 14:24:49 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] usb: core: verify devicetree nodes for disabled interfaces
+References: <CGME20190507125630eucas1p1c5fd171a8dc2a6b8eb9dd317fe245f0c@eucas1p1.samsung.com>
+        <20190507125615.9381-1-m.szyprowski@samsung.com>
+Date:   Tue, 07 May 2019 14:24:49 +0100
+In-Reply-To: <20190507125615.9381-1-m.szyprowski@samsung.com> (Marek
+        Szyprowski's message of "Tue, 07 May 2019 14:56:15 +0200")
+Message-ID: <yw1xy33iv1lq.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507053826.31622-50-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-05-19 01:37:39, Sasha Levin wrote:
-> From: Amir Goldstein <amir73il@gmail.com>
-> 
-> [ Upstream commit 007d1e8395eaa59b0e7ad9eb2b53a40859446a88 ]
-> 
-> FS_EVENT_ON_CHILD gets a special treatment in fsnotify() because it is
-> not a flag specifying an event type, but rather an extra flags that may
-> be reported along with another event and control the handling of the
-> event by the backend.
-> 
-> FS_ISDIR is also an "extra flag" and not an "event type" and therefore
-> desrves the same treatment. With inotify/dnotify backends it was never
-> possible to set FS_ISDIR in mark masks, so it did not matter.
-> With fanotify backend, mark adding code jumps through hoops to avoid
-> setting the FS_ISDIR in the commulative object mask.
-> 
-> Separate the constant ALL_FSNOTIFY_EVENTS to ALL_FSNOTIFY_FLAGS and
-> ALL_FSNOTIFY_EVENTS, so the latter can be used to test for specific
-> event types.
-> 
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Marek Szyprowski <m.szyprowski@samsung.com> writes:
 
-Sasha, why did you select this patch? It is just a cleanup with no user
-visible effect and was done mostly to simplify implementing following
-features...
-
-								Honza
-
+> Commit 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
+> add support for disabling given USB device interface by adding nodes to
+> the USB host controller device. The mentioned commit however identifies
+> the given USB interface node only by the 'reg' property in the host
+> controller children nodes and then checks for their the 'status'. The USB
+> device interface nodes however also has to have a 'compatible' property as
+> described in Documentation/devicetree/bindings/usb/usb-device.txt. This is
+> important, because USB host controller might have child-nodes for other
+> purposes. For example, Exynos EHCI and OHCI drivers already define
+> child-nodes for each physical root hub port and assigns respective PHY
+> controller and parameters for them. This conflicts with the proposed
+> approach and verifying for the presence of the compatible property fixes
+> this issue without changing the devicetree bindings and the way the PHY
+> controllers are handled by Exynos EHCI/OHCI drivers.
+>
+> Reported-by: Markus Reichl <m.reichl@fivetechno.de>
+> Fixes: 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  fs/notify/fsnotify.c             | 7 +++----
->  include/linux/fsnotify_backend.h | 9 +++++++--
->  2 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-> index 506da82ff3f1..dc080c642dd0 100644
-> --- a/fs/notify/fsnotify.c
-> +++ b/fs/notify/fsnotify.c
-> @@ -192,7 +192,7 @@ static int send_to_group(struct inode *to_tell,
->  			 struct fsnotify_iter_info *iter_info)
->  {
->  	struct fsnotify_group *group = NULL;
-> -	__u32 test_mask = (mask & ~FS_EVENT_ON_CHILD);
-> +	__u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
->  	__u32 marks_mask = 0;
->  	__u32 marks_ignored_mask = 0;
->  
-> @@ -256,8 +256,7 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
->  	struct fsnotify_iter_info iter_info;
->  	struct mount *mnt;
->  	int ret = 0;
-> -	/* global tests shouldn't care about events on child only the specific event */
-> -	__u32 test_mask = (mask & ~FS_EVENT_ON_CHILD);
-> +	__u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
->  
->  	if (data_is == FSNOTIFY_EVENT_PATH)
->  		mnt = real_mount(((const struct path *)data)->mnt);
-> @@ -380,7 +379,7 @@ static __init int fsnotify_init(void)
->  {
->  	int ret;
->  
-> -	BUG_ON(hweight32(ALL_FSNOTIFY_EVENTS) != 23);
-> +	BUG_ON(hweight32(ALL_FSNOTIFY_BITS) != 23);
->  
->  	ret = init_srcu_struct(&fsnotify_mark_srcu);
->  	if (ret)
-> diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-> index ce74278a454a..81052313adeb 100644
-> --- a/include/linux/fsnotify_backend.h
-> +++ b/include/linux/fsnotify_backend.h
-> @@ -67,15 +67,20 @@
->  
->  #define ALL_FSNOTIFY_PERM_EVENTS (FS_OPEN_PERM | FS_ACCESS_PERM)
->  
-> +/* Events that can be reported to backends */
->  #define ALL_FSNOTIFY_EVENTS (FS_ACCESS | FS_MODIFY | FS_ATTRIB | \
->  			     FS_CLOSE_WRITE | FS_CLOSE_NOWRITE | FS_OPEN | \
->  			     FS_MOVED_FROM | FS_MOVED_TO | FS_CREATE | \
->  			     FS_DELETE | FS_DELETE_SELF | FS_MOVE_SELF | \
->  			     FS_UNMOUNT | FS_Q_OVERFLOW | FS_IN_IGNORED | \
-> -			     FS_OPEN_PERM | FS_ACCESS_PERM | FS_EXCL_UNLINK | \
-> -			     FS_ISDIR | FS_IN_ONESHOT | FS_DN_RENAME | \
-> +			     FS_OPEN_PERM | FS_ACCESS_PERM | FS_DN_RENAME)
-> +
-> +/* Extra flags that may be reported with event or control handling of events */
-> +#define ALL_FSNOTIFY_FLAGS  (FS_EXCL_UNLINK | FS_ISDIR | FS_IN_ONESHOT | \
->  			     FS_DN_MULTISHOT | FS_EVENT_ON_CHILD)
->  
-> +#define ALL_FSNOTIFY_BITS   (ALL_FSNOTIFY_EVENTS | ALL_FSNOTIFY_FLAGS)
-> +
->  struct fsnotify_group;
->  struct fsnotify_event;
->  struct fsnotify_mark;
+>  drivers/usb/core/message.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+> index 82239f27c4cc..cd455c4add25 100644
+> --- a/drivers/usb/core/message.c
+> +++ b/drivers/usb/core/message.c
+> @@ -2007,6 +2007,7 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+>  		struct usb_interface *intf = cp->interface[i];
+>
+>  		if (intf->dev.of_node &&
+> +		    of_device_is_compatible(intf->dev.of_node, NULL) &&
+>  		    !of_device_is_available(intf->dev.of_node)) {
+>  			dev_info(&dev->dev, "skipping disabled interface %d\n",
+>  				 intf->cur_altsetting->desc.bInterfaceNumber);
 > -- 
-> 2.20.1
-> 
+
+This doesn't look right.  of_device_is_compatible() with a NULL compat
+argument always returns zero.
+
+There also seems to be a broader incompatibility between the generic USB
+bindings and the use of child nodes in the Exynos bindings.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Måns Rullgård
