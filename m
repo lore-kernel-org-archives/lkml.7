@@ -2,117 +2,141 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187D2C46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A84C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC152054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mPaCfQeH"
+	by mail.kernel.org (Postfix) with ESMTP id B5ADC2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557226034;
+	bh=h/Vf28zyKT7ZTVLlLgZV6Ssyfl0DWtXw+260nTk0YiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=14ISIuTqsgwMrlUNCLvupPs4tLaEx0fle8dFEaQCNSD/LT6copUY+aKWJLoDOJ/+v
+	 QojE1Ju+BPfzH1muPq2bYiQ0tjyv/o523tcOGff0PMbcjksGauyec9oc+9KIQb97wI
+	 xtqprC77BOL51oiVHOGr3fr5ZPU8Sf9Or2SYpN8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfEGKkn (ORCPT
+        id S1726574AbfEGKrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:40:43 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35608 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfEGKkn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:40:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JcsFUl7CHtmmwrs51FmIWdyRtiT3Wl9CxTGXiiAUYec=; b=mPaCfQeHR6JOJpSd6Hq+AJ5ub
-        3BLhIrQEjNLDuLkxG5+L8XTsPrJlxLrYCYfQUk3mlQ4iAQiG2+SvPVFD5veUHwFdE0FJ7Sbr221Gg
-        fARQLR2jtCIGMed5NPNDNWqlo0vRQjlRs+nLZKHpow92zqlOtz0X0bV9TUmJI3+gkUHyE2S3jsLg/
-        D7bL3ty0LHo0jp1ScAcdPN8SmSrWwj2/L+OyLmIHelffdbkIQmzvSRQj5tQQEkBtFZcU8JDE4PrGJ
-        vt3gPMAzwgpsFVEMoE0A3g4LRgTIfL0zQFZrBw57ohrp9kCuKxS8LMyog1/NvExVDsT89qs7E3Zru
-        23kPfarOw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55712)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hNxWT-0002o7-SO; Tue, 07 May 2019 11:40:34 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hNxWO-0001kd-Ou; Tue, 07 May 2019 11:40:28 +0100
-Date:   Tue, 7 May 2019 11:40:28 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Ruslan Babayev <ruslan@babayev.com>, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, wsa@the-dreams.de,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: Re: [PATCH net-next 2/2] net: phy: sfp: enable i2c-bus detection on
- ACPI based systems
-Message-ID: <20190507104028.zf34wxr7hgwdwa64@shell.armlinux.org.uk>
-References: <20190505220524.37266-3-ruslan@babayev.com>
- <20190506045951.GB2895@lahna.fi.intel.com>
- <871s1bv4aw.fsf@babayev.com>
- <20190507092946.GS2895@lahna.fi.intel.com>
+        Tue, 7 May 2019 06:47:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37278 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725844AbfEGKrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:47:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3D211AD56;
+        Tue,  7 May 2019 10:47:11 +0000 (UTC)
+Date:   Tue, 7 May 2019 12:47:09 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+Message-ID: <20190507104709.GP31017@dhcp22.suse.cz>
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+ <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
+ <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190507092946.GS2895@lahna.fi.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 12:29:46PM +0300, Mika Westerberg wrote:
-> On Mon, May 06, 2019 at 11:14:15AM -0700, Ruslan Babayev wrote:
-> > 
-> > Mika Westerberg writes:
-> > 
-> > > On Sun, May 05, 2019 at 03:05:23PM -0700, Ruslan Babayev wrote:
-> > >> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
-> > >> systems similar to how it's done with DT.
-> > >> 
-> > >> An example DSD describing an SFP on an ACPI based system:
-> > >> 
-> > >> Device (SFP0)
-> > >> {
-> > >>     Name (_HID, "PRP0001")
-> > >>     Name (_DSD, Package ()
-> > >>     {
-> > >>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > >>         Package () {
-> > >>             Package () { "compatible", "sff,sfp" },
-> > >>             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
-> > >
-> > > Hmm, ACPI has I2cSerialBusV2() resource for this purpose. Why you are not
-> > > using that?
-> > 
-> > I am not an ACPI expert, but my understanding is I2cSerialBusV2() is
-> > used for slave connections. I am trying to reference an I2C controller
-> > here.
+
+[Hmm, I thought, Hugh was CCed]
+
+On Mon 06-05-19 16:37:42, Yang Shi wrote:
 > 
-> Ah, the device itself is not sitting on an I2C bus? In that case I
-> agree, I2CSerialBusV2() is not correct here.
+> 
+> On 4/28/19 12:13 PM, Yang Shi wrote:
+> > 
+> > 
+> > On 4/23/19 10:52 AM, Michal Hocko wrote:
+> > > On Wed 24-04-19 00:43:01, Yang Shi wrote:
+> > > > The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
+> > > > for each
+> > > > vma") introduced THPeligible bit for processes' smaps. But, when
+> > > > checking
+> > > > the eligibility for shmem vma, __transparent_hugepage_enabled() is
+> > > > called to override the result from shmem_huge_enabled().  It may result
+> > > > in the anonymous vma's THP flag override shmem's.  For example,
+> > > > running a
+> > > > simple test which create THP for shmem, but with anonymous THP
+> > > > disabled,
+> > > > when reading the process's smaps, it may show:
+> > > > 
+> > > > 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+> > > > Size:               4096 kB
+> > > > ...
+> > > > [snip]
+> > > > ...
+> > > > ShmemPmdMapped:     4096 kB
+> > > > ...
+> > > > [snip]
+> > > > ...
+> > > > THPeligible:    0
+> > > > 
+> > > > And, /proc/meminfo does show THP allocated and PMD mapped too:
+> > > > 
+> > > > ShmemHugePages:     4096 kB
+> > > > ShmemPmdMapped:     4096 kB
+> > > > 
+> > > > This doesn't make too much sense.  The anonymous THP flag should not
+> > > > intervene shmem THP.  Calling shmem_huge_enabled() with checking
+> > > > MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+> > > > dax vma check since we already checked if the vma is shmem already.
+> > > Kirill, can we get a confirmation that this is really intended behavior
+> > > rather than an omission please? Is this documented? What is a global
+> > > knob to simply disable THP system wise?
+> > 
+> > Hi Kirill,
+> > 
+> > Ping. Any comment?
+> 
+> Talked with Kirill at LSFMM, it sounds this is kind of intended behavior
+> according to him. But, we all agree it looks inconsistent.
+> 
+> So, we may have two options:
+>     - Just fix the false negative issue as what the patch does
+>     - Change the behavior to make it more consistent
+> 
+> I'm not sure whether anyone relies on the behavior explicitly or implicitly
+> or not.
 
-There are several possibilities:
+Well, I would be certainly more happy with a more consistent behavior.
+Talked to Hugh at LSFMM about this and he finds treating shmem objects
+separately from the anonymous memory. And that is already the case
+partially when each mount point might have its own setup. So the primary
+question is whether we need a one global knob to controll all THP
+allocations. One argument to have that is that it might be helpful to
+for an admin to simply disable source of THP at a single place rather
+than crawling over all shmem mount points and remount them. Especially
+in environments where shmem points are mounted in a container by a
+non-root. Why would somebody wanted something like that? One example
+would be to temporarily workaround high order allocations issues which
+we have seen non trivial amount of in the past and we are likely not at
+the end of the tunel.
 
-- Identifying information in EEPROM-like device at 0x50.
-- Optional diagnostics information and measurements at 0x51.
-- Optional network PHY at some other address.
+That being said I would be in favor of treating the global sysfs knob to
+be global for all THP allocations. I will not push back on that if there
+is a general consensus that shmem and fs in general are a different
+class of objects and a single global control is not desirable for
+whatever reasons.
 
-Hence, we need access to the bus to be able to parse the EEPROM without
-interfering with the AT24 driver that would otherwise bind to it, to
-be able to read the diagnostics, and to probe for the network PHY
-without needing to have a big table of module vendors/descriptions to
-PHY information (and therefore limiting our SFP support to only
-"approved" known modules (which, common with big-name switches, pisses
-users off and is widely seen as a vendor lock-in measure.)
-
+Kirill, Hugh othe folks?
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Michal Hocko
+SUSE Labs
