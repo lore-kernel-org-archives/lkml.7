@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7265C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04117C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F16420B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13A120C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207207;
-	bh=d7L5F/u6uZcwEiaxK2nW2KdYXm5ZwScJNxRiBPNroKY=;
+	s=default; t=1557207212;
+	bh=ljHDDdXyratzljjdrAbax9jGz9/dTE86P9+UvMbcDXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLV/3Y4eIJnYpi6UiBVUa6f34TBFc55UhfII/q7EwFbw3hqztjpZclh/w6DmBtEv3
-	 i+y2oYg54R4hB4Pgs1fpYK4qwAVsd+GOlR0PJEkGW0Z0ok6WNA+XvJT1ddLXTFvC00
-	 G81yplxWEtmXGqd1cQBw94+WOJpNzJTgAyqkRYqk=
+	b=MkOQ7ZcCjfx0Cs+uDX2DQFUVDI9dunJDiJHLNXwYU6KltY9GvNjmjsqSmwjvQYiuU
+	 OH7VavsoGi1cFB46SPwOsK3qElJ75M3raHpWSJRIFQ3kTxljR16Tw6GwluKB2bWNqa
+	 StGrXmmvYeTEqNR+o0baQE9kMs0V5wdDGPQCXiJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfEGFd1 (ORCPT
+        id S1726977AbfEGFdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfEGFdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:24 -0400
+        id S1726894AbfEGFd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45BB020C01;
-        Tue,  7 May 2019 05:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2A120B7C;
+        Tue,  7 May 2019 05:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207203;
-        bh=d7L5F/u6uZcwEiaxK2nW2KdYXm5ZwScJNxRiBPNroKY=;
+        s=default; t=1557207206;
+        bh=ljHDDdXyratzljjdrAbax9jGz9/dTE86P9+UvMbcDXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYbYWR4fP3WcDtHS/llDGcTT69E54FK+wykXd9ZJxt2R99aWumq5Yc/bkfPr8CXlM
-         XeV6aztyB66ez9X4KJQVVOMO6MRTxc1B1ziEi6X18bIxuKVfTyvcW+u142v+TrseBj
-         j9z54FVWuRjLpU9oAfuiiFhG2ruAKpGOtl0m5tB8=
+        b=KepX4JqgQaVD4o6ZQeWrsI6IZqjar3QdHXMWYJuuFnB1AJ9tRb8KHokGPwMNX7pmz
+         Lkr+J8eG9L8zYMQE2TwZX+Dt+i4ZSLaZaNxIVMrQOWkm+LTVW4XMILPFmvKtYhwPc0
+         evQB6lPPMlyIAsbub72EsExoHXIcMTaSak8bz1p8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 24/99] clocksource/drivers/npcm: select TIMER_OF
-Date:   Tue,  7 May 2019 01:31:18 -0400
-Message-Id: <20190507053235.29900-24-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 26/99] selftests: fib_tests: Fix 'Command line is not complete' errors
+Date:   Tue,  7 May 2019 01:31:20 -0400
+Message-Id: <20190507053235.29900-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -58,35 +60,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 99834eead2a04e93a120abb112542b87c42ff5e1 ]
+[ Upstream commit a5f622984a623df9a84cf43f6b098d8dd76fbe05 ]
 
-When this is disabled, we get a link failure:
+A couple of tests are verifying a route has been removed. The helper
+expects the prefix as the first part of the expected output. When
+checking that a route has been deleted the prefix is empty leading
+to an invalid ip command:
 
-drivers/clocksource/timer-npcm7xx.o: In function `npcm7xx_timer_init':
-timer-npcm7xx.c:(.init.text+0xf): undefined reference to `timer_of_init'
+  $ ip ro ls match
+  Command line is not complete. Try option "help"
 
-Fixes: 1c00289ecd12 ("clocksource/drivers/npcm: Add NPCM7xx timer driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Fix by moving the comparison of expected output and output to a new
+function that is used by both check_route and check_route6. Use the
+new helper for the 2 checks on route removal.
+
+Also, remove the reset of 'set -x' in route_setup which overrides the
+user managed setting.
+
+Fixes: d69faad76584c ("selftests: fib_tests: Add prefix route tests with metric")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/net/fib_tests.sh | 94 ++++++++++--------------
+ 1 file changed, 40 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 8dfd3bc448d0..9df90daa9c03 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -144,6 +144,7 @@ config VT8500_TIMER
- config NPCM7XX_TIMER
- 	bool "NPCM7xx timer driver" if COMPILE_TEST
- 	depends on HAS_IOMEM
-+	select TIMER_OF
- 	select CLKSRC_MMIO
- 	help
- 	  Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx architecture,
+diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
+index 1080ff55a788..0d2a5f4f1e63 100755
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -605,6 +605,39 @@ run_cmd()
+ 	return $rc
+ }
+ 
++check_expected()
++{
++	local out="$1"
++	local expected="$2"
++	local rc=0
++
++	[ "${out}" = "${expected}" ] && return 0
++
++	if [ -z "${out}" ]; then
++		if [ "$VERBOSE" = "1" ]; then
++			printf "\nNo route entry found\n"
++			printf "Expected:\n"
++			printf "    ${expected}\n"
++		fi
++		return 1
++	fi
++
++	# tricky way to convert output to 1-line without ip's
++	# messy '\'; this drops all extra white space
++	out=$(echo ${out})
++	if [ "${out}" != "${expected}" ]; then
++		rc=1
++		if [ "${VERBOSE}" = "1" ]; then
++			printf "    Unexpected route entry. Have:\n"
++			printf "        ${out}\n"
++			printf "    Expected:\n"
++			printf "        ${expected}\n\n"
++		fi
++	fi
++
++	return $rc
++}
++
+ # add route for a prefix, flushing any existing routes first
+ # expected to be the first step of a test
+ add_route6()
+@@ -652,31 +685,7 @@ check_route6()
+ 	pfx=$1
+ 
+ 	out=$($IP -6 ro ls match ${pfx} | sed -e 's/ pref medium//')
+-	[ "${out}" = "${expected}" ] && return 0
+-
+-	if [ -z "${out}" ]; then
+-		if [ "$VERBOSE" = "1" ]; then
+-			printf "\nNo route entry found\n"
+-			printf "Expected:\n"
+-			printf "    ${expected}\n"
+-		fi
+-		return 1
+-	fi
+-
+-	# tricky way to convert output to 1-line without ip's
+-	# messy '\'; this drops all extra white space
+-	out=$(echo ${out})
+-	if [ "${out}" != "${expected}" ]; then
+-		rc=1
+-		if [ "${VERBOSE}" = "1" ]; then
+-			printf "    Unexpected route entry. Have:\n"
+-			printf "        ${out}\n"
+-			printf "    Expected:\n"
+-			printf "        ${expected}\n\n"
+-		fi
+-	fi
+-
+-	return $rc
++	check_expected "${out}" "${expected}"
+ }
+ 
+ route_cleanup()
+@@ -725,7 +734,7 @@ route_setup()
+ 	ip -netns ns2 addr add 172.16.103.2/24 dev veth4
+ 	ip -netns ns2 addr add 172.16.104.1/24 dev dummy1
+ 
+-	set +ex
++	set +e
+ }
+ 
+ # assumption is that basic add of a single path route works
+@@ -960,7 +969,8 @@ ipv6_addr_metric_test()
+ 	run_cmd "$IP li set dev dummy2 down"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route6 ""
++		out=$($IP -6 ro ls match 2001:db8:104::/64)
++		check_expected "${out}" ""
+ 		rc=$?
+ 	fi
+ 	log_test $rc 0 "Prefix route removed on link down"
+@@ -1091,38 +1101,13 @@ check_route()
+ 	local pfx
+ 	local expected="$1"
+ 	local out
+-	local rc=0
+ 
+ 	set -- $expected
+ 	pfx=$1
+ 	[ "${pfx}" = "unreachable" ] && pfx=$2
+ 
+ 	out=$($IP ro ls match ${pfx})
+-	[ "${out}" = "${expected}" ] && return 0
+-
+-	if [ -z "${out}" ]; then
+-		if [ "$VERBOSE" = "1" ]; then
+-			printf "\nNo route entry found\n"
+-			printf "Expected:\n"
+-			printf "    ${expected}\n"
+-		fi
+-		return 1
+-	fi
+-
+-	# tricky way to convert output to 1-line without ip's
+-	# messy '\'; this drops all extra white space
+-	out=$(echo ${out})
+-	if [ "${out}" != "${expected}" ]; then
+-		rc=1
+-		if [ "${VERBOSE}" = "1" ]; then
+-			printf "    Unexpected route entry. Have:\n"
+-			printf "        ${out}\n"
+-			printf "    Expected:\n"
+-			printf "        ${expected}\n\n"
+-		fi
+-	fi
+-
+-	return $rc
++	check_expected "${out}" "${expected}"
+ }
+ 
+ # assumption is that basic add of a single path route works
+@@ -1387,7 +1372,8 @@ ipv4_addr_metric_test()
+ 	run_cmd "$IP li set dev dummy2 down"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route ""
++		out=$($IP ro ls match 172.16.104.0/24)
++		check_expected "${out}" ""
+ 		rc=$?
+ 	fi
+ 	log_test $rc 0 "Prefix route removed on link down"
 -- 
 2.20.1
 
