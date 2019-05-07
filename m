@@ -2,141 +2,94 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B9EC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19501C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF81F2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="gfC81bEt"
+	by mail.kernel.org (Postfix) with ESMTP id E6C1720989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfEGOb5 (ORCPT
+        id S1726873AbfEGOcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:31:57 -0400
-Received: from mail-eopbgr40109.outbound.protection.outlook.com ([40.107.4.109]:32686
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726340AbfEGOb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:31:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8p7dJeec2rydzXAsQFgVikLcIA0qKJ/k1RuN3ew8/fc=;
- b=gfC81bEt4gHl3B//jwASDBP1MrYb1JqeKoUYaS3261hb/W9Mk7rk6fqD7JoMHs2b2WqG+TWCZsO1dEax2VzQokTn3clvLVm/23syU4J0yHd1gxVgMIOYb+KFSmOl9lTd08+ZYbOOOQ5934s9TPhexHUM9SU3snpV4H2kpVHhe5s=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3871.eurprd05.prod.outlook.com (52.134.5.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Tue, 7 May 2019 14:31:49 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::48ff:f344:98da:6571]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::48ff:f344:98da:6571%5]) with mapi id 15.20.1856.012; Tue, 7 May 2019
- 14:31:49 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>,
-        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>
-CC:     "stefan@agner.ch" <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 2/3] iio: stmpe-adc: Make wait_completion non
- interruptible
-Thread-Topic: [PATCH 2/3] iio: stmpe-adc: Make wait_completion non
- interruptible
-Thread-Index: AQHVAbgvhKEqeNeMGUGopQqxfyxbHKZZeJoAgAAWGICAAyCfgIACqXCAgABnAwA=
-Date:   Tue, 7 May 2019 14:31:49 +0000
-Message-ID: <69a00774deb5d5c8f5611855fa354cccbe92a6aa.camel@toradex.com>
-References: <20190503135725.9959-1-dev@pschenker.ch>
-         <20190503135725.9959-2-dev@pschenker.ch>
-         <0aab3e91bb9644acb430a8beba927b5a@AcuMS.aculab.com>
-         <1aa6533aa8b1bf4a01c1c5f8d6a208337be6b57e.camel@toradex.com>
-         <20190505164409.7976f43e@archlinux>
-         <4df31129d19c4128a4bbc5e0575886af@AcuMS.aculab.com>
-In-Reply-To: <4df31129d19c4128a4bbc5e0575886af@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: edff2429-5768-4af5-3c7b-08d6d2f8bdb8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0502MB3871;
-x-ms-traffictypediagnostic: VI1PR0502MB3871:
-x-microsoft-antispam-prvs: <VI1PR0502MB38716A831BBC8E868036A6C0F4310@VI1PR0502MB3871.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(39850400004)(366004)(376002)(199004)(189003)(2906002)(68736007)(36756003)(229853002)(2501003)(6512007)(7416002)(316002)(8936002)(99286004)(6486002)(3846002)(6436002)(6116002)(71200400001)(71190400001)(446003)(2616005)(476003)(478600001)(11346002)(81156014)(81166006)(256004)(14444005)(14454004)(76116006)(66446008)(64756008)(66556008)(66476007)(66946007)(91956017)(73956011)(486006)(44832011)(7736002)(66066001)(4326008)(110136005)(25786009)(6246003)(53936002)(305945005)(118296001)(6506007)(54906003)(76176011)(26005)(8676002)(86362001)(186003)(5660300002)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3871;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ESKjahfAQepahqpyGtg7Jfk7YuJwd4S55SEFeGtQ5+9dUBfkh0F6PLGUefKgxY0r7DMZzgH8poNX+xoy2NdtVK2J3TaNaoOsn7p6tn/bAwjiZxluIoCNL3nsav3r6USRAAGOdR7/NGXM/fbp//1D8xiXWafZNyj5/WTxzo90ZARcWNkRAe12w8lqfKdtyQtiu8wb4Q+dYZDtIah0zoaqIcHJotjo7Xqx8EOFKVxgPfIXzZs1UGIaChJPTFCGPPVrvXGakLhNqKS1rO6eHFO3irXNUsHfPfbUd1+M4m9IM5LaHMAH1VU6MWC4LyLc4GTl2SmQU20brjPjnNR8od1b2xDNY1OqZnHUMYhRA2nonEFiM701hOjVgDTsVCr7FXisZZ0tykFazQFmZ+lTyazusyUf1YgeYQ07UUgKIcIV21Y=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EAA6079BD1A28F43886E8BD45814DA37@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 7 May 2019 10:32:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726340AbfEGOcM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:32:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47EToQR003230
+        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 10:32:11 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sb9tcp00k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:32:06 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Tue, 7 May 2019 15:30:05 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 May 2019 15:30:00 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47ETxx346596170
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 May 2019 14:29:59 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3EFC420B0;
+        Tue,  7 May 2019 14:29:59 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA2FE42081;
+        Tue,  7 May 2019 14:29:57 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.102.0.77])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 May 2019 14:29:57 +0000 (GMT)
+Date:   Tue, 7 May 2019 19:59:51 +0530
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     jikos@kernel.org, jpoimboe@redhat.com, pmladek@suse.com,
+        joe.lawrence@redhat.com, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] livepatch: Remove stale kobj_added entries from
+ kernel-doc descriptions
+References: <20190507130815.17685-1-mbenes@suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edff2429-5768-4af5-3c7b-08d6d2f8bdb8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 14:31:49.4663
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3871
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507130815.17685-1-mbenes@suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19050714-0008-0000-0000-000002E431E2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050714-0009-0000-0000-00002250AF46
+Message-Id: <20190507142951.GA8038@JAVRIS.in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=802 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA1LTA3IGF0IDA4OjIzICswMDAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+
-IEZyb206IEpvbmF0aGFuIENhbWVyb24NCj4gPiBTZW50OiAwNSBNYXkgMjAxOSAxNjo0NA0KPiA+
-IE9uIEZyaSwgMyBNYXkgMjAxOSAxNTo1ODozOCArMDAwMA0KPiA+IFBoaWxpcHBlIFNjaGVua2Vy
-IDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gPiBPbiBG
-cmksIDIwMTktMDUtMDMgYXQgMTQ6MzkgKzAwMDAsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiA+
-ID4gRnJvbTogUGhpbGlwcGUgU2NoZW5rZXINCj4gPiA+ID4gPiBTZW50OiAwMyBNYXkgMjAxOSAx
-NDo1Nw0KPiA+ID4gPiA+IEluIHNvbWUgY2FzZXMsIHRoZSB3YWl0X2NvbXBsZXRpb24gZ290IGlu
-dGVycnVwdGVkLiBUaGlzIGNhdXNlZCB0aGUNCj4gPiA+ID4gPiBlcnJvci1oYW5kbGluZyB0byBt
-dXRleF91bmxvY2sgdGhlIGZ1bmN0aW9uLiBUaGUgYmVmb3JlIHR1cm5lZCBvbg0KPiA+ID4gPiA+
-IGludGVycnVwdCB0aGVuIGdvdCBjYWxsZWQgYW55d2F5LiBJbiB0aGUgSVNSIHRoZW4gY29tcGxl
-dGlvbigpDQo+ID4gPiA+ID4gd2FzIGNhbGxlZCBjYXVzaW5nIHByb2JsZW1zLg0KPiA+ID4gPiA+
-IA0KPiA+ID4gPiA+IE1ha2luZyB0aGlzIHdhaXRfY29tcGxldGlvbiBub24gaW50ZXJydXB0aWJs
-ZSBzb2x2ZXMgdGhlIHByb2JsZW0uDQo+ID4gPiA+IA0KPiA+ID4gPiBXb24ndCB0aGUgc2FtZSB0
-aGluZyBoYXBwZW4gaWYgdGhlIGludGVycnVwdCBvY2N1cnMganVzdCBhZnRlcg0KPiA+ID4gPiB0
-aGUgdGltZW91dD8NCj4gPiA+ID4gDQo+ID4gPiA+IAlEYXZpZA0KPiA+ID4gPiANCj4gPiA+ID4g
-DQo+ID4gPiA+IC0NCj4gPiA+ID4gUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
-IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsDQo+ID4gPiA+IE1LMSAxUFQsDQo+ID4g
-PiA+IFVLDQo+ID4gPiA+IFJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo+ID4gPiA+
-IA0KPiA+ID4gDQo+ID4gPiBZb3UncmUgb2YgY291cnNlIHJpZ2h0Li4uIFRoYW5rcyBmb3IgcG9p
-bnRpbmcgdGhpcyBvdXQuIEkgd2lsbCBzZW5kIGEgdjINCj4gPiA+IHdpdGggYQ0KPiA+ID4gYmV0
-dGVyIHNvbHV0aW9uIHRoZW4uDQo+ID4gPiANCj4gPiANCj4gPiBJc24ndCB0aGUgdGltZW91dCBs
-b25nIGVub3VnaCB0aGF0IGl0IHNob3VsZCBvbmx5IGhhcHBlbiBpZiB0aGUgaGFyZHdhcmUgaGFz
-DQo+ID4gYSBmYXVsdD8gSWYgdGhhdCdzIHRoZSBjYXNlLCBJIHdvdWxkbid0IHdvcnJ5IHRvbyBt
-dWNoIGFib3V0IHBvc3NpYmlsaXR5IG9mDQo+ID4gYW4gaW50ZXJydXB0IGNhdXNpbmcgY29uZnVz
-aW9uIGFzIGxvbmcgYXMgaXQgaXNuJ3QgY2F0YXN0cm9waGljLg0KPiANCj4gVGhlICdjb25mdXNp
-b24nIGlzIGxpa2VseSB0byBiZSAnY2F0YXN0cm9waGljJyB1bmxlc3MgdGhlIGNvZGUgaXMgd3Jp
-dHRlbg0KPiB0byBoYW5kbGUgaXQgcHJvcGVybHkuDQo+IA0KPiBDYW5jZWxsaW5nIGNhbGxiYWNr
-cyBpcyBoYXJkIHRvIGdldCByaWdodCBhbmQgb2Z0ZW4gbm90IGRvbmUgcHJvcGVybHkuDQo+IFRp
-bWluZyBvdXQgYW4gaW50ZXJydXB0IGlzIG11Y2ggdGhlIHNhbWUgcHJvYmxlbS4NCj4gDQo+IAlE
-YXZpZA0KDQpJIHNvcnRlZCBpdCBvdXQgbm93LCB0aGVyZSB3aGVyZSBhbHNvIHNvbWUgbW9yZSBi
-dWdzIEkgZm91bmQgYW5kIGNvcnJlY3RlZC4NCg0KQEpvbmF0aGFuOiBJIHdpbGwgc2VuZCBhIGNv
-bXBsZXRlbHkgbmV3IHNlcmllcyBvZiBwYXRjaGVzIHRoYXQgd2lsbCBpbmNsdWRlDQpwYXRjaCAz
-LzMgZnJvbSB0aGlzIHNlcmllcyBidXQgbm90IHRoZSBvbmUgeW91IGFscmVhZHkgYXBwbGllZC4g
-VGhpcyBkdWUgdG8NCmluY3JlYXNlZCBwYXRjaCBudW1iZXIgYW5kIGRpZmZlcmVudCBvcmRlci4u
-Lg0KPiANCj4gLQ0KPiBSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwg
-TW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwNCj4gVUsNCj4gUmVnaXN0cmF0aW9u
-IE5vOiAxMzk3Mzg2IChXYWxlcykNCj4gDQo=
+On Tue, May 07, 2019 at 03:08:14PM +0200, Miroslav Benes wrote:
+> Commit 4d141ab3416d ("livepatch: Remove custom kobject state handling")
+> removed kobj_added members of klp_func, klp_object and klp_patch
+> structures. kernel-doc descriptions were omitted by accident. Remove
+> them.
+> 
+> Reported-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+
+-- 
+Kamalesh
+
