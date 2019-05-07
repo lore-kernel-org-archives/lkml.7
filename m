@@ -2,78 +2,58 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20D8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBA5C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DC0205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jznAwWaz"
+	by mail.kernel.org (Postfix) with ESMTP id 47BED205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfEGRhP (ORCPT
+        id S1727521AbfEGRhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:37:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44188 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGRhP (ORCPT
+        Tue, 7 May 2019 13:37:31 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59918 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGRha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:37:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y25so5943259oih.11;
-        Tue, 07 May 2019 10:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A7rFP5HCgHx8H7Ab1m4RlZcKeQpsRgTbpXa86ApVmL4=;
-        b=jznAwWaz1+h6XkFSKPJ8JUuHKDtojrwc1VIMQUkbeOnuLfA04Bh4drUJSQVjwTRLLK
-         tpRN+k80EUcAFYURp8kW6oIR6A7W/dABaQ+vHCvB+PBXmOXDBhK4TtRl1bmNrxWvB/kQ
-         tsfPhOzDtvNjrgONOygJhsfxDqEQe/D02brPS/tPrvZhd/A0IhuZWBSo2NWyBjk05XGU
-         NzDxQUu9u67atekXYBHBMIK24wDmPrRaiI9jj8ftvAEcOsSmg8vhcWkWr/stardW5fVp
-         Vdus8drJXa3uTlzkuSzGRWOW0+JRuUUS1Q6mRqMeHN56P0g2dZX9+XlNjy34VwmGcZYG
-         NyaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A7rFP5HCgHx8H7Ab1m4RlZcKeQpsRgTbpXa86ApVmL4=;
-        b=rHp5riBXEMfbr8707j+M8QZtsRdDbracgqD9NV8N+3ER+fAfrJjQROsV1kIAU8iFcu
-         4yyZk246rPC0lPvmqyQ2kk6m0A30oEYsbk4dIpgCHuUjaimLtClxl9ozB1JqX+UI5dzZ
-         PfbZwaYBTgfRULkBfT2thoOh9NjxFXEvaeCbuuwu6LuUD9Uidt9Z2BtjpRKilbwsAiFT
-         0NOAtfnsf585+0eenQr2N0L7Ta29jMYdlWfqqf5PubYByFfYVzK4DJB6EIz0TfBlCR+h
-         U9l9m31oPRpBKVth5BfRuKMcas0fMazXlvkvpwqJCq4SYZYuDxqGFCUXOmhgeC81PANM
-         oxbg==
-X-Gm-Message-State: APjAAAUK1r8qQCSem+10FdoRsyhMGz9AoIAF1kt/VO4MR5w9THcV1+1j
-        Yj7ssJqgGMhKKTaGqXfx8TGUA+wYSNvsLRViPXs=
-X-Google-Smtp-Source: APXvYqzovDy0Mb8VNCrV2ND+CU4kL4rfD7/PRqoAPGA9ilH4XNAxUQq05LTuTGAWxinmXAUUJyzTdAUM2/wiGQGZAE0=
-X-Received: by 2002:aca:bdc4:: with SMTP id n187mr910881oif.140.1557250633841;
- Tue, 07 May 2019 10:37:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507115726.23714-1-glaroque@baylibre.com> <20190507115726.23714-2-glaroque@baylibre.com>
-In-Reply-To: <20190507115726.23714-2-glaroque@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 7 May 2019 19:37:02 +0200
-Message-ID: <CAFBinCDXrr9gCsAu_H0LQec-k25YA3vo7zf4n5Nbzh=QKoKizA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp'
- property
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        khilman@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 May 2019 13:37:30 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D4B0F1491A2B5;
+        Tue,  7 May 2019 10:37:29 -0700 (PDT)
+Date:   Tue, 07 May 2019 10:37:27 -0700 (PDT)
+Message-Id: <20190507.103727.18553029517298566.davem@davemloft.net>
+To:     tanhuazhong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, nhorman@redhat.com
+Subject: Re: [PATCH net-next 00/12] cleanup & optimizations & bugfixes for
+ HNS3 driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
+References: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 May 2019 10:37:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 1:57 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> This property allow drive-strength parameter in uA instead of mA.
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
+Date: Mon, 6 May 2019 10:48:40 +0800
+
+> This patchset contains some cleanup related to hns3_enet_ring
+> struct and tx bd filling process, optimizations related
+> to rx page reusing, barrier using and tso handling process,
+> bugfixes related to tunnel type handling and error handling for
+> desc filling.
+
+Series applied, thanks.
