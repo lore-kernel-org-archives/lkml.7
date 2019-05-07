@@ -2,176 +2,89 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F7AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D349FC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BEB205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557247513;
-	bh=iM8J/j10jYr+vXCxXzUjgCYgZk17YUkoK9VE/2fhJ1I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=La9NpfB/MDZ5hbLtQH/1Ul4ZdZthZ8Hc50Uf75fZt+oVvP2AYGecaQ6qgoz3LTEAL
-	 lI0PnIrO2uiAG/yyZJjZFwUvdExnQnqksMU8RoZmR/pfOVUukCJWb6OmGPqlidRFf1
-	 ZbCD4oM7taSH0gQl4M/sPkkQzyzoiXS8FOO9ttJ8=
+	by mail.kernel.org (Postfix) with ESMTP id A2BFE205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLgqz+8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfEGQpM (ORCPT
+        id S1726859AbfEGQqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfEGQpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:45:11 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C9921019;
-        Tue,  7 May 2019 16:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557247509;
-        bh=iM8J/j10jYr+vXCxXzUjgCYgZk17YUkoK9VE/2fhJ1I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=INXumkFeyNf58pU/qjd3huFH5ZfaxLIpyMXHCnZHxbXpsPJF6T1W6Vkh88hhOGvrJ
-         GIheX5UtWz5QwB5Diw5nYE1jqJSPYf2nUHSJh66NP2uXzpdCBhwXjr4Np+l7L8hUOv
-         mxoIiNV+EIzMpgJ0Ex/W0XZsuvBDRvLXKk1WcejY=
-Received: by mail-qt1-f173.google.com with SMTP id f24so9394033qtk.11;
-        Tue, 07 May 2019 09:45:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAW38M9Gj0afQsWp34yIMtcPqexEj+ZkKDww0vcMTa0oFMgsPMU2
-        lL3t6er9pY7fTllc6G2RqfdislO1NyFIcY2ddQ==
-X-Google-Smtp-Source: APXvYqy7rk1sMMIHbSD/9OOZe8P3NIAyg7u8OPXuXWtwWi2WaDv6h/Xnf9ZSQ+8dUBlM+SULUoG2eW9wkEEg+3BdjGk=
-X-Received: by 2002:ac8:641:: with SMTP id e1mr27644859qth.76.1557247508777;
- Tue, 07 May 2019 09:45:08 -0700 (PDT)
+        Tue, 7 May 2019 12:46:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40134 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfEGQqB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:46:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id d15so14948124ljc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2SaL00iV1UNCyLI8qSrWSgzywNwyxR2ABU4F6/Mpj/U=;
+        b=sLgqz+8svFVJmInlU2NbYaBgK2Ey1bgZIzqFKNG0JA/5OyJk9eEFhuyDRfJDszjWlS
+         F8ow0umJbkd4e9k0aYeb2+755cafzxshd7aEW79MeUiz+SxQ8RganQcARZk9ynPVRKZR
+         e7GB2NwjLqTU4/nFZrtEURZtVpEj9EKmXi9kLyhF9xP2PQquT9Hl8naPjreNZ+XbsNe+
+         08M8gsI21EOCC5qPgWrDxMb+MtXL4JZulTbteqGu4uG229VP4TTN0Igqngb80YYgGy9d
+         visSw/BBSsAYG9brRGCUaBptxuDjpPMplLJgVcyd4+H/YGCkx34exTLZhluw5kDTKvv+
+         Yg3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2SaL00iV1UNCyLI8qSrWSgzywNwyxR2ABU4F6/Mpj/U=;
+        b=H9qDrPM2VOrSh/JI60D+0mNjb3Euttd7Y8IEyOn5hZEK+LCoppG6R6IymG0qMhON+I
+         rnAhetEPGy9e0m8ZlWUM+wDgG89Wtn4J871oj64/r7/vInGi9sBFP1CuZSVrO3inQrUY
+         abj1DWM9aQ4WLvx7D4IHE0+6nyTkBTDutNmJWhZfRKWGfCzt5UmGYTyRWxrGAhtAXalt
+         PZH4Iki2yInnHY/+mqJUaWiUuq9d2+tzV0dyhlvLojGqme/0bvhd4hCv+UsLwIi9k75T
+         3ok/936NOzYAFvCcxjqtRVwDzlzoY0J6YsM5bA3qKRSrCjMUSERQqRY2ZfDCdiFnYt1D
+         3gBw==
+X-Gm-Message-State: APjAAAXxyIIAQBjlFlQCKluemktjuESug5ABYNMthsSD5J2Y8ySkJAtp
+        /s6ltYnvUK6R3SyYEdXPnciX7yTowcrD3yVtGtg=
+X-Google-Smtp-Source: APXvYqxfTK0z2SDdzOJd/69D8yC9FUzlfkY52RfEl/daX8tPGy7hCHERgk4xHwuJ9fnOkuHuJj8uQ6aATsFhFuSoLpw=
+X-Received: by 2002:a2e:3c06:: with SMTP id j6mr16320744lja.99.1557247558995;
+ Tue, 07 May 2019 09:45:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz> <1556893635-18549-3-git-send-email-ynezz@true.cz>
-In-Reply-To: <1556893635-18549-3-git-send-email-ynezz@true.cz>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 May 2019 11:44:57 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
-Message-ID: <CAL_JsqLt6UFU_6bmh3Pc0taXUgMtAEV7kL7eZU13cLOjoakf=Q@mail.gmail.com>
-Subject: Re: [PATCH v4 02/10] dt-bindings: doc: reflect new NVMEM
- of_get_mac_address behaviour
-To:     =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+References: <20190422162652.15483-1-kasong@redhat.com> <20190423113501.GN11158@hirez.programming.kicks-ass.net>
+ <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com> <20190424125212.GN12232@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190424125212.GN12232@hirez.programming.kicks-ass.net>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 7 May 2019 09:45:47 -0700
+Message-ID: <CAADnVQJLLCQJoV8Qg+0D4_-mE8hLmrEYz91Jy0kT2Qgkb1evtQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v4] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 9:27 AM Petr =C5=A0tetiar <ynezz@true.cz> wrote:
+On Wed, Apr 24, 2019 at 5:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> As of_get_mac_address now supports NVMEM under the hood, we need to updat=
-e
-> the bindings documentation with the new nvmem-cell* properties, which wou=
-ld
-> mean copy&pasting a lot of redundant information to every binding
-> documentation currently referencing some of the MAC address properties.
+> On Wed, Apr 24, 2019 at 08:42:40AM -0400, Kairui Song wrote:
 >
-> So I've just removed all the references to the optional MAC address
-> properties and replaced them with the small note referencing
-> net/ethernet.txt file.
+> > Sure, the updated comments looks much better. Will the maintainer
+> > squash the comment update or should I send a V5?
 >
-> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
-> ---
->
->  Changes since v2:
->
->  * replaced only MAC address related optional properties with a text
->    referencing ethernet.txt
->
->  Documentation/devicetree/bindings/net/altera_tse.txt           |  5 ++--=
--
->  Documentation/devicetree/bindings/net/amd-xgbe.txt             |  5 +++-=
--
->  Documentation/devicetree/bindings/net/brcm,amac.txt            |  4 ++--
->  Documentation/devicetree/bindings/net/cpsw.txt                 |  4 +++-
->  Documentation/devicetree/bindings/net/davinci_emac.txt         |  5 +++-=
--
->  Documentation/devicetree/bindings/net/dsa/dsa.txt              |  5 ++--=
--
->  Documentation/devicetree/bindings/net/ethernet.txt             |  6 ++++=
---
->  Documentation/devicetree/bindings/net/hisilicon-femac.txt      |  4 +++-
->  .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt         |  4 +++-
->  Documentation/devicetree/bindings/net/keystone-netcp.txt       | 10 ++++=
-+-----
->  Documentation/devicetree/bindings/net/macb.txt                 |  5 ++--=
--
->  Documentation/devicetree/bindings/net/marvell-pxa168.txt       |  4 +++-
->  Documentation/devicetree/bindings/net/microchip,enc28j60.txt   |  3 ++-
->  Documentation/devicetree/bindings/net/microchip,lan78xx.txt    |  5 ++--=
--
->  Documentation/devicetree/bindings/net/qca,qca7000.txt          |  4 +++-
->  Documentation/devicetree/bindings/net/samsung-sxgbe.txt        |  4 +++-
->  .../devicetree/bindings/net/snps,dwc-qos-ethernet.txt          |  5 +++-=
--
->  .../devicetree/bindings/net/socionext,uniphier-ave4.txt        |  4 ++--
->  Documentation/devicetree/bindings/net/socionext-netsec.txt     |  5 +++-=
--
->  .../devicetree/bindings/net/wireless/mediatek,mt76.txt         |  5 +++-=
--
->  Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt   |  4 ++--
->  21 files changed, 58 insertions(+), 42 deletions(-)
+> I've squashed it, I've just not gotten around to stuffing it a git tree
+> yet. Should happen 'soon'.
 
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/D=
-ocumentation/devicetree/bindings/net/keystone-netcp.txt
-> index 04ba1dc..3a65aab 100644
-> --- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
-> +++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
-> @@ -135,14 +135,14 @@ Optional properties:
->                 are swapped.  The netcp driver will swap the two DWORDs
->                 back to the proper order when this property is set to 2
->                 when it obtains the mac address from efuse.
-> -- local-mac-address:   the driver is designed to use the of_get_mac_addr=
-ess api
-> -                       only if efuse-mac is 0. When efuse-mac is 0, the =
-MAC
-> -                       address is obtained from local-mac-address. If th=
-is
-> -                       attribute is not present, then the driver will us=
-e a
-> -                       random MAC address.
->  - "netcp-device label":        phandle to the device specification for e=
-ach of NetCP
->                         sub-module attached to this interface.
->
-> +The MAC address will be determined using the optional properties defined=
- in
-> +ethernet.txt, as provided by the of_get_mac_address API and only if efus=
-e-mac
-
-Don't make references to Linux in bindings. You can talk about
-expectations of client programs (e.g Linux, u-boot, BSD, etc.) though.
-
-Rob
+Was it applied and on the way to Linus yet ?
