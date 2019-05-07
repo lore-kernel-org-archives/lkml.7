@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999BCC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EE1C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3B620C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E79820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208944;
-	bh=mfgA1AuaX10R2u6azGrWCWNVloqUtLhMbn73+xrO3Og=;
+	s=default; t=1557208948;
+	bh=oxyX3hjJz+OABeVAQr1I6dRhgr5IRIY6tXqYrzy3+hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVwcWH3Rzc82XswQfizbk2Bt5/0a/Hr9NF07NbA0CafhBT4Tioz59hHmrtlQeC2OA
-	 0RujxrUICZZyzkH50i6u/d2NZ4+PglLtNgZSxrRPmw0CcVNTiNXppGyATsEOwATiby
-	 L3ApgHruTsxQyjaJBzJwIzfU6C6/pcrxSPmz0lZY=
+	b=XKpohm9cDsvmut340FSUWPrAnlNQxIdmhUxeq2q2MMMXnFj2bkZk57Lkv6LY01R+K
+	 9Q5KYDhZdvPs1sg/VRvc6ryNsJdmjiX3u4aOCY5VyqdOsighKvCwT4yO87/oSHd16M
+	 OUVBb/9m3qh6OphzMmG/mT+/TcTivQQmpWfQH3T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfEGFfk (ORCPT
+        id S1727040AbfEGGC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55550 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:02:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727276AbfEGFfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:31 -0400
+        id S1727828AbfEGFfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2EDD214AE;
-        Tue,  7 May 2019 05:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536C52087F;
+        Tue,  7 May 2019 05:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207330;
-        bh=mfgA1AuaX10R2u6azGrWCWNVloqUtLhMbn73+xrO3Og=;
+        s=default; t=1557207333;
+        bh=oxyX3hjJz+OABeVAQr1I6dRhgr5IRIY6tXqYrzy3+hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgsBV5ntmD6YRYy0DsZrp5Jz5q724SMQmzC+J240+HdvUloD21Pm4m4OTkhEiJKfn
-         3vdanpXLnR+GTq84q0dvK4ejeSRKVaBvQTOncXotnB2JLxU2wbqRi0czZ60qVFQbFX
-         oER0D7FRg0ve4uFvVn50r7PKRIYTVQka/B/OKWxs=
+        b=njAbU8bpf4iUcCS1n68q2AN6mJChhKzjRUpQEfLc4fGCFrPKhcySf9+eT3xdqFIlA
+         LCJRnrqoIJLcm4DM+EGq7dRrBAAFl+StnGQEEb2IHoWG3yQMSZ9EkEWCV7QRNjr25h
+         gUjZtnX4nXwblExHgulJmomNfkGKOS1mldBKHBSs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaohe Lin <linmiaohe@huawei.com>,
-        Hui Wang <wanghui104@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 90/99] net: vrf: Fix operation not supported when set vrf mac
-Date:   Tue,  7 May 2019 01:32:24 -0400
-Message-Id: <20190507053235.29900-90-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 92/99] btrfs: Switch memory allocations in async csum calculation path to kvmalloc
+Date:   Tue,  7 May 2019 01:32:26 -0400
+Message-Id: <20190507053235.29900-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -60,42 +58,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 6819e3f6d83a24777813b0d031ebe0861694db5a ]
+[ Upstream commit a3d46aea46f99d134b4e0726e4826b824c3e5980 ]
 
-Vrf device is not able to change mac address now because lack of
-ndo_set_mac_address. Complete this in case some apps need to do
-this.
+Recent multi-page biovec rework allowed creation of bios that can span
+large regions - up to 128 megabytes in the case of btrfs. OTOH btrfs'
+submission path currently allocates a contiguous array to store the
+checksums for every bio submitted. This means we can request up to
+(128mb / BTRFS_SECTOR_SIZE) * 4 bytes + 32bytes of memory from kmalloc.
+On busy systems with possibly fragmented memory said kmalloc can fail
+which will trigger BUG_ON due to improper error handling IO submission
+context in btrfs.
 
-Reported-by: Hui Wang <wanghui104@huawei.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Until error handling is improved or bios in btrfs limited to a more
+manageable size (e.g. 1m) let's use kvmalloc to fallback to vmalloc for
+such large allocations. There is no hard requirement that the memory
+allocated for checksums during IO submission has to be contiguous, but
+this is a simple fix that does not require several non-contiguous
+allocations.
+
+For small writes this is unlikely to have any visible effect since
+kmalloc will still satisfy allocation requests as usual. For larger
+requests the code will just fallback to vmalloc.
+
+We've performed evaluation on several workload types and there was no
+significant difference kmalloc vs kvmalloc.
+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/file-item.c    | 15 +++++++++++----
+ fs/btrfs/ordered-data.c |  3 ++-
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index cd15c32b2e43..9ee4d7402ca2 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -875,6 +875,7 @@ static const struct net_device_ops vrf_netdev_ops = {
- 	.ndo_init		= vrf_dev_init,
- 	.ndo_uninit		= vrf_dev_uninit,
- 	.ndo_start_xmit		= vrf_xmit,
-+	.ndo_set_mac_address	= eth_mac_addr,
- 	.ndo_get_stats64	= vrf_get_stats64,
- 	.ndo_add_slave		= vrf_add_slave,
- 	.ndo_del_slave		= vrf_del_slave,
-@@ -1274,6 +1275,7 @@ static void vrf_setup(struct net_device *dev)
- 	/* default to no qdisc; user can add if desired */
- 	dev->priv_flags |= IFF_NO_QUEUE;
- 	dev->priv_flags |= IFF_NO_RX_HANDLER;
-+	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+index 920bf3b4b0ef..cccc75d15970 100644
+--- a/fs/btrfs/file-item.c
++++ b/fs/btrfs/file-item.c
+@@ -7,6 +7,7 @@
+ #include <linux/slab.h>
+ #include <linux/pagemap.h>
+ #include <linux/highmem.h>
++#include <linux/sched/mm.h>
+ #include "ctree.h"
+ #include "disk-io.h"
+ #include "transaction.h"
+@@ -427,9 +428,13 @@ blk_status_t btrfs_csum_one_bio(struct inode *inode, struct bio *bio,
+ 	unsigned long this_sum_bytes = 0;
+ 	int i;
+ 	u64 offset;
++	unsigned nofs_flag;
++
++	nofs_flag = memalloc_nofs_save();
++	sums = kvzalloc(btrfs_ordered_sum_size(fs_info, bio->bi_iter.bi_size),
++		       GFP_KERNEL);
++	memalloc_nofs_restore(nofs_flag);
  
- 	/* VRF devices do not care about MTU, but if the MTU is set
- 	 * too low then the ipv4 and ipv6 protocols are disabled
+-	sums = kzalloc(btrfs_ordered_sum_size(fs_info, bio->bi_iter.bi_size),
+-		       GFP_NOFS);
+ 	if (!sums)
+ 		return BLK_STS_RESOURCE;
+ 
+@@ -472,8 +477,10 @@ blk_status_t btrfs_csum_one_bio(struct inode *inode, struct bio *bio,
+ 
+ 				bytes_left = bio->bi_iter.bi_size - total_bytes;
+ 
+-				sums = kzalloc(btrfs_ordered_sum_size(fs_info, bytes_left),
+-					       GFP_NOFS);
++				nofs_flag = memalloc_nofs_save();
++				sums = kvzalloc(btrfs_ordered_sum_size(fs_info,
++						      bytes_left), GFP_KERNEL);
++				memalloc_nofs_restore(nofs_flag);
+ 				BUG_ON(!sums); /* -ENOMEM */
+ 				sums->len = bytes_left;
+ 				ordered = btrfs_lookup_ordered_extent(inode,
+diff --git a/fs/btrfs/ordered-data.c b/fs/btrfs/ordered-data.c
+index 6fde2b2741ef..45e3cfd1198b 100644
+--- a/fs/btrfs/ordered-data.c
++++ b/fs/btrfs/ordered-data.c
+@@ -6,6 +6,7 @@
+ #include <linux/slab.h>
+ #include <linux/blkdev.h>
+ #include <linux/writeback.h>
++#include <linux/sched/mm.h>
+ #include "ctree.h"
+ #include "transaction.h"
+ #include "btrfs_inode.h"
+@@ -442,7 +443,7 @@ void btrfs_put_ordered_extent(struct btrfs_ordered_extent *entry)
+ 			cur = entry->list.next;
+ 			sum = list_entry(cur, struct btrfs_ordered_sum, list);
+ 			list_del(&sum->list);
+-			kfree(sum);
++			kvfree(sum);
+ 		}
+ 		kmem_cache_free(btrfs_ordered_extent_cache, entry);
+ 	}
 -- 
 2.20.1
 
