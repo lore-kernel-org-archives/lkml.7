@@ -2,123 +2,99 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32A8C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE5DC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9212054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:17:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OrB1lgi2"
+	by mail.kernel.org (Postfix) with ESMTP id E83352087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557249490;
+	bh=xt9ukkJvDmf42/+1FX7EomlPuDAXRZaZI20EEYYs5jM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vaJSXChIs/2M0cALOpYyVRoq8Ollq7uaTPdFeskPCYbhrfXVdaOq0PHMjq0Mm39/w
+	 BIB8eu/BhaSaM6lV2mzlbhpzaKYpoAZqHdTxFyV4xV43fqMI9mrJtSpwFJIf3XVk+z
+	 zgBEHu9Ii8GCDaFRXkxI8nAvfv07i5GLqUXPRlyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfEGRRm (ORCPT
+        id S1727256AbfEGRSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:17:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33529 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfEGRRl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:17:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so2652895pgv.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sXiQJbpi/4IGaaTOVq7540dm+WX0y+kDeTKOVgV+NMk=;
-        b=OrB1lgi2e5zENC5xyWyvWQlBbafJaPk/dhSP7eqEOwgN+g5epKpCynLaNInuOffPJW
-         Y7KfBhVuc8GkA09O1V0m+yT89l3VxpB/ZlVa9qyXaEuMndK09H1aFyf4VlsFjogHEAuA
-         EoV8tJOUg8v067Z5ptBuIe5cHUyjWDL3LjqH8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sXiQJbpi/4IGaaTOVq7540dm+WX0y+kDeTKOVgV+NMk=;
-        b=aYP0SXfW9V+6TT43BvsUy9JUkWeVilcxuIVftg/dYgAjjSorEBSUOjGz0uPjTJunkM
-         NHfjPlLy7n8tDLot0XVborSXOUUL7Z7h4hEIi9QUrHDQWEKp/UASh4Da5DhLs7m19Ben
-         JDq4uQ2FWfChfYHOyy2Obs2bR9oCLlubZuSDw2lmO048YnE2yThqQmxR9AY8720crSUT
-         J3YwSp81hTw+B86dwEP5TwQEkEiiR4wlR0qRscLfcS23iSiC9PyUaoNzBO328eDS8H4s
-         SBdXx1zUFqup7elpHyewxlZ+71IJ0eh3yK/TLRkAzKbmDxhP+CeC2dzIU2gYpDWQYtmC
-         RTVA==
-X-Gm-Message-State: APjAAAXGnI7zc/s2Pvq+zIyiqtSWPPddnNeXXoOR80vPkx/JqkfPlkrN
-        a7hwmWZZfAf/E/IvQZ8dkUYsJA==
-X-Google-Smtp-Source: APXvYqznkP0ThPErDNtnYUHloyF7dhrTadAsD2R/2MqVYWQNALgwqZGdhqOdOSCT6tsWXaWn7VHKDw==
-X-Received: by 2002:a63:1701:: with SMTP id x1mr40730723pgl.153.1557249460626;
-        Tue, 07 May 2019 10:17:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s19sm16914559pfe.74.2019.05.07.10.17.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 10:17:39 -0700 (PDT)
-Date:   Tue, 7 May 2019 13:17:37 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
-        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
-        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
-Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
-Message-ID: <20190507171737.GA97358@google.com>
-References: <20190504121213.183203-1-joel@joelfernandes.org>
- <20190504122158.GA23535@kroah.com>
- <20190504123650.GA229151@google.com>
- <20190505091030.GA25646@kroah.com>
- <20190505132623.GA3076@localhost>
- <20190505163145.45f77e44@oasis.local.home>
- <20190507163824.GC89248@google.com>
- <20190507165718.GA1241@kroah.com>
- <20190507130333.58c95268@gandalf.local.home>
+        Tue, 7 May 2019 13:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfEGRSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:18:08 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEFAB206A3;
+        Tue,  7 May 2019 17:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557249488;
+        bh=xt9ukkJvDmf42/+1FX7EomlPuDAXRZaZI20EEYYs5jM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P13JV0rmV+5jHlhlN519NNBjhELHn7/LNhU9HK1HfT551G7PtkVA1vPvH2NhGGovl
+         iugCemv8wI3IXV48UKY55GgEdHi8U98lXAlBJmVdJj7X9uwf6oOshqmXdQw6+mYpFP
+         HToXiAVL+O2CLBxNhwDl2wZ+Ki/mNA2aVcJX1aoI=
+Date:   Tue, 7 May 2019 13:18:06 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
+ pages for the full memory section
+Message-ID: <20190507171806.GG1747@sasha-vm>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-62-sashal@kernel.org>
+ <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
+ <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
+ <20190507170208.GF1747@sasha-vm>
+ <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190507130333.58c95268@gandalf.local.home>
+In-Reply-To: <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:03:33PM -0400, Steven Rostedt wrote:
-> On Tue, 7 May 2019 18:57:18 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > > Thanks makes sense. So Greg, I submitted this properly, does it look good to
-> > > you now? Steven, I would appreciate any Acks/Reviews on the patch as well:
-> > > https://lore.kernel.org/patchwork/patch/1070199/  
-> > 
-> > Looks good to me, should get to it in a few days...
-> 
-> Me too. Feel free to add
-> 
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> But as for reviewing, I see nothing wrong with it, but I doubt I'll
-> find something that Greg missed in this code.
+On Tue, May 07, 2019 at 10:15:19AM -0700, Linus Torvalds wrote:
+>On Tue, May 7, 2019 at 10:02 AM Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> I got it wrong then. I'll fix it up and get efad4e475c31 in instead.
+>
+>Careful. That one had a bug too, and we have 891cb2a72d82 ("mm,
+>memory_hotplug: fix off-by-one in is_pageblock_removable").
+>
+>All of these were *horribly* and subtly buggy, and might be
+>intertwined with other issues. And only trigger on a few specific
+>machines where the memory map layout is just right to trigger some
+>special case or other, and you have just the right config.
+>
+>It might be best to verify with Michal Hocko. Michal?
 
-Thanks!
+Michal, is there a testcase I can plug into kselftests to make sure we
+got this right (and don't regress)? We care a lot about memory hotplug
+working right.
 
- - Joel
-
+--
+Thanks,
+Sasha
