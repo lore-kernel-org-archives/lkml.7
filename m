@@ -2,71 +2,247 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6EBC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4961C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA97920C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1F121479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfEGJXJ (ORCPT
+        id S1726767AbfEGJZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:23:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53644 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfEGJXJ (ORCPT
+        Tue, 7 May 2019 05:25:07 -0400
+Received: from [195.159.176.226] ([195.159.176.226]:35302 "EHLO
+        blaine.gmane.org" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfEGJZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:23:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 198so1623040wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:23:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GWMFFy2F73uQioGzc/atPqbskzKfI+KjLLT2AD39XqM=;
-        b=OX5vvZ87LB8cDTHYamz6ligqfmQhsZ90tAaUfhW/IEsC6KHMHK+E9vGdNRRy6BOkyX
-         6+cj0giqIw4AHdBAi8vmxMODUJn8lXbsDTJIH/fbvp54BZTW7/eJVi8hBs2V2a+/dRgz
-         P4AZcCq8siWWa1i1ZdA0WHsf86YolUA/v7aAUzexizy/0jj+PSLWAog22NrW0arYjkmv
-         kq83vOOTR/Ni78BW71QcFHgrj8o/uLFJZcXwHiHC/ena89R4f6NGoe5b5mOJdN3cflqT
-         2U9wPrMk67OSqdM6fU70ReShJTHFD+EqYPj2V2+Im6rhBoBLG/ppiYktnrAuaSEMarHA
-         MqZQ==
-X-Gm-Message-State: APjAAAX4xe4fon1ydvgy6fwbyXBTZVA7zrRrnWyfAg9qAqUutqE9g6eS
-        zIXPXC8DmtyXqyPCtlnGg35JsA==
-X-Google-Smtp-Source: APXvYqznSrFaB6uyOHVbt0B0t1ukse7n+r+sBjTzNFN1gJDrpzuanPf8ms1kehTEDJTT1MzX9RHvpg==
-X-Received: by 2002:a1c:4c09:: with SMTP id z9mr19795673wmf.87.1557220987708;
-        Tue, 07 May 2019 02:23:07 -0700 (PDT)
-Received: from linux.home (2a01cb05850ddf00045dd60e6368f84b.ipv6.abo.wanadoo.fr. [2a01:cb05:850d:df00:45d:d60e:6368:f84b])
-        by smtp.gmail.com with ESMTPSA id s3sm26161021wre.97.2019.05.07.02.23.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 02:23:07 -0700 (PDT)
-Date:   Tue, 7 May 2019 11:23:05 +0200
-From:   Guillaume Nault <gnault@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, g.nault@alphalink.fr, jian.w.wen@oracle.com,
-        edumazet@google.com, kafai@fb.com, xiyou.wangcong@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] l2tp: Fix possible NULL pointer dereference
-Message-ID: <20190507092304.GA12570@linux.home>
-References: <20190506144404.25220-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506144404.25220-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 7 May 2019 05:25:07 -0400
+Received: from list by blaine.gmane.org with local (Exim 4.89)
+        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
+        id 1hNwLO-000iAi-DL
+        for linux-kernel@vger.kernel.org; Tue, 07 May 2019 11:25:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Subject: Re: [PATCH 3/3] block/diskstats: more accurate approximation of
+ io_ticks for slow disks
+Date:   Tue, 7 May 2019 10:13:57 +0100
+Message-ID: <d5d39e1c-59f2-b5d8-0189-020efaed4ce8@gmail.com>
+References: <155413438394.3201.15211440151043943989.stgit@buzz>
+ <155413438824.3201.15254568091182734151.stgit@buzz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+X-Mozilla-News-Host: news://nntp.gmane.org
+In-Reply-To: <155413438824.3201.15254568091182734151.stgit@buzz>
+Content-Language: en-GB
+Cc:     linux-block@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20190507091357.oFIZ7u0tgQskVyjhuePz0tUzk581F_ep3wPlrnxYoKA@z>
 
-On Mon, May 06, 2019 at 10:44:04PM +0800, YueHaibing wrote:
-> If alloc_workqueue fails in l2tp_init, l2tp_net_ops
-> is unregistered on failure path. Then l2tp_exit_net
-> is called which will flush NULL workqueue, this patch
-> add a NULL check to fix it.
+On 01/04/2019 16:59, Konstantin Khlebnikov wrote:
+> Currently io_ticks is approximated by adding one at each
+> start and end of requests if jiffies has changed.
+> This works perfectly for requests shorter than a jiffy.
 > 
-Thanks!
+> Fix for slow requests is simple: at the end of request add
+> count of jiffies passed since last update.
+> 
+> Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Acked-by: Guillaume Nault <gnault@redhat.com>
+Thanks for working on this!  I noticed the problem behaviour using the 
+Fedora 29 kernel [1].  I wasn't sure how it could be fixed.  Now I found 
+this patch series, but I still have some questions :-).
+
+[1] 
+https://unix.stackexchange.com/questions/517132/dd-is-running-at-full-speed-but-i-only-see-20-disk-utilization-why
+
+With these patches, `atopsar -d 2` shows about 100% "busy" when running 
+a simple `dd` command, instead of 20 or 35%.  So that looked promising.
+
+I saw some samples showing 112, 113, and 114% utilization. 
+Unfortunately I'm not sure exactly how to reproduce that.  I think it 
+happened during filesystem buffered writes (i.e. `dd` without 
+`oflag=direct`), with the IO scheduler set to "none", on my SATA HDD.
+
+Getting some "101% busy" samples seemed fairly easy to trigger, but I am 
+not sure whether that is just a rounding error in `atopsar` :-(.
+
+
+Q1)
+
+ > Fix for slow requests is simple: at the end of request add
+ > count of jiffies passed since last update.
+
+Even considering the simple case of a single CPU, the approximation may 
+be "less accurate" when requests complete out of order.  Is that right?
+
+  t        1      10     20   30
+  io1      start              end
+  io2             start  end
+  io_ticks 1      2      11   21
+
+            ^^^^^^
+               \
+                 9 ticks not accounted as "busy"
+
+
+At least, I found something fun happens if I run `dd if=/dev/urandom 
+of=~/t bs=1M oflag=direct` at the same time as `dd if=/dev/sda 
+of=/dev/null bs=1M oflag=direct` .  With scheduler=none, it reduces 
+"busy" from 100%, down to 97%.  With scheduler=mq-deadline, it reduces 
+"busy" from 100% to 60% :-).  Even though the system "iowait" is about 
+100% (equivalent to one CPU).
+
+(Environment: My /dev/sda max read speed is about 150MB/s.  My 
+/dev/urandom read speed is about 140 MB/s.  I have 4 logical CPUs).
+
+It feels like it should be possible to improve io_ticks, by basically 
+changing the condition in your fix, from (end==true), to (inflight>0). 
+Would that make sense?
+
+
+Q2) But what most confuses me, is that I think `io_ticks` is defined as 
+a per-cpu field.  And the per-cpu fields are summed into one value, 
+which is reported to userspace.
+
+I have tried playing with a couple `dd iflag=direct` readers, using 
+`taskset` to pin them to different CPUs, but I only got 98-102% "busy". 
+It did not rise to 200% :-).
+
+i) Is it possible to see 200% "busy", due to per-cpu ioticks?
+
+ii) If so, then can per-cpu ioticks also cause us to see 100% "busy", 
+when IO's were only inflight for 50% of the time (but on two different 
+CPUs)?
+
+     If it is possible to trigger both of these cases, this metric seems 
+very difficult to trust and use in any reliable way.  It seems 
+preferable to disable it altogether and force people to use more 
+trustworthy metrics.  E.g. system-wide "iowait", and iostat field 11 
+"weighted # of milliseconds spent doing I/Os" which `iostat` uses to 
+show "average queue length".
+
+     Or the "special pleading" approach?  Should ioticks accounted at 
+the level of the hardware queue, and be disabled if the device has is 
+using more than one hardware queue?
+
+
+Q3) In case I am mistaken in some way, and Q2 is not an issue at all:
+
+I still think reporting over 100% utilization is something new.  At 
+least the comments I see were removed in the "Fixes" commit seem to 
+agree.  That one error of 14% ("114% busy") that I saw, seems fairly big 
+:-).
+
+I wonder if we can better explain how much of a rough approximation this 
+metric is now, e.g. in Documentation/iostats.txt ?
+
+So far I don't know what the real description and limitations would be...
+
+I think it would be understandable e.g. if we were able to say "busy%" 
+should show around 100% when the device is used around 100% of the time, 
+and definitely 0% when it is idle, but is probably not as accurate as 
+"iowait". ("iowait" reported by the CPU scheduler.  Not to say these are 
+the same or equivalent.  And I understand "iowait" is another ball of 
+approximations and confusion.)
+
+
+Regards
+Alan
+
+
+> ---
+>   block/bio.c           |    8 ++++----
+>   block/blk-core.c      |    4 ++--
+>   include/linux/genhd.h |    2 +-
+>   3 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/block/bio.c b/block/bio.c
+> index c0a60f3e9b7b..245056797999 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -1729,14 +1729,14 @@ void bio_check_pages_dirty(struct bio *bio)
+>   	schedule_work(&bio_dirty_work);
+>   }
+>   
+> -void update_io_ticks(struct hd_struct *part, unsigned long now)
+> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
+>   {
+>   	unsigned long stamp;
+>   again:
+>   	stamp = READ_ONCE(part->stamp);
+>   	if (unlikely(stamp != now)) {
+>   		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
+> -			__part_stat_add(part, io_ticks, 1);
+> +			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
+>   		}
+>   	}
+>   	if (part->partno) {
+> @@ -1752,7 +1752,7 @@ void generic_start_io_acct(struct request_queue *q, int op,
+>   
+>   	part_stat_lock();
+>   
+> -	update_io_ticks(part, jiffies);
+> +	update_io_ticks(part, jiffies, false);
+>   	part_stat_inc(part, ios[sgrp]);
+>   	part_stat_add(part, sectors[sgrp], sectors);
+>   	part_inc_in_flight(q, part, op_is_write(op));
+> @@ -1770,7 +1770,7 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
+>   
+>   	part_stat_lock();
+>   
+> -	update_io_ticks(part, now);
+> +	update_io_ticks(part, now, true);
+>   	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
+>   	part_dec_in_flight(q, part, op_is_write(req_op));
+>   
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index d89168b167e9..6e8f0b9e7731 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1334,7 +1334,7 @@ void blk_account_io_done(struct request *req, u64 now)
+>   		part_stat_lock();
+>   		part = req->part;
+>   
+> -		update_io_ticks(part, jiffies);
+> +		update_io_ticks(part, jiffies, true);
+>   		part_stat_inc(part, ios[sgrp]);
+>   		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
+>   		part_dec_in_flight(req->q, part, rq_data_dir(req));
+> @@ -1375,7 +1375,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
+>   		rq->part = part;
+>   	}
+>   
+> -	update_io_ticks(part, jiffies);
+> +	update_io_ticks(part, jiffies, false);
+>   
+>   	part_stat_unlock();
+>   }
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index 2f5a9ed7e86e..8ece8e02c609 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -410,7 +410,7 @@ static inline void free_part_info(struct hd_struct *part)
+>   	kfree(part->info);
+>   }
+>   
+> -void update_io_ticks(struct hd_struct *part, unsigned long now);
+> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end);
+>   
+>   /* block/genhd.c */
+>   extern void device_add_disk(struct device *parent, struct gendisk *disk,
+> 
+> 
+
+
