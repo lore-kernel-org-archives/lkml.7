@@ -2,116 +2,166 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5084C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E40C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E39820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB4F2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfEGJHv convert rfc822-to-8bit (ORCPT
+        id S1726503AbfEGJKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:07:51 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38890 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfEGJHu (ORCPT
+        Tue, 7 May 2019 05:10:07 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:40320 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfEGJKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:07:50 -0400
-Received: by mail-vs1-f66.google.com with SMTP id v9so2115025vse.5;
-        Tue, 07 May 2019 02:07:48 -0700 (PDT)
+        Tue, 7 May 2019 05:10:07 -0400
+Received: by mail-it1-f199.google.com with SMTP id d12so693580itl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 02:10:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8lThRAo28vQwCl4DV4/hRXs4pusVcLZ06vXVXU+ReNg=;
-        b=UApIQqVvCdCdwez208QOX/KvpZdg45Aw0SyxZfCSaIKvmTC3Ti92Vq/UATMBa5SBu0
-         aVW7JcE570usIfzi+EPhs6sES83dCX9JdSYqlMIgYmEWEZsWJ5pXlpBz2amqrOqKmn2S
-         HRCKgtsXudML+kN1HaP80O+jVUcisFVihF4Tm7kZvmSNHnEV8YqrMFa7sW69rmvFKXxq
-         I6WGi8bLazGmTgL0CMoJdGpH8sZWKbkugn22iU/ZleACG/dEdE/qGqK5ddMFUT3oZCSU
-         00uw5rwkoi8GboV2rX2qPUyuKgB9cOnkl4Jm3FRCvyDKwxinyWXBlvF4/wBgIMqscTxB
-         kBTg==
-X-Gm-Message-State: APjAAAUheCQC4ZgSDlgnc5srBkUJAB+BMsNuBYUBsDbZ7vV/0EFOmtcR
-        g+RR9/U/tsRKERARt6wI2blc7Fgu1o84vm3y1KY=
-X-Google-Smtp-Source: APXvYqyd0GOgX82w7/Ps0Lm4sBbfBrQV34Mg2L46fkooG6+5Z29jjbCP+ChBPEI7uLyAXz7jM3WBzg+6K0S1grth8pg=
-X-Received: by 2002:a67:8e03:: with SMTP id q3mr15845324vsd.152.1557220063399;
- Tue, 07 May 2019 02:07:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wGj8QD5gKJW43OuUYpH6pO7J5gHO+g1GMqUge+gSVCw=;
+        b=irwaotWyBI4H0FoZPJ9qvq+74T8LcH8X3ZqRCZfQbiqVkUpmQFLh26W31Xl7H/Bx41
+         /hta7yBPEKt4q0rXg+PXjsuNlBKMMzp3BYiUtm6DQ+zl/ZYykWsDaim61YUAzW3jSgD7
+         MLJTRWSag/+356prDctobZUGed7a7gsXZsRw80UY9hEQ0GfFZCbMgKaImUJsCdieG2Gv
+         EFaCwhOm7/8K0HWbvKR8A5Qad5J4az7YLo3cJC7RMFbyd+0f341Nf8Xy+KNtEv3m6qJE
+         lZylKVzoTWAOrEoPpo+3sFAC0Tdfi4tVpf1n0TjjDGhMBI+1i0nj4jNKPKvf5J/Sn3gN
+         VHmQ==
+X-Gm-Message-State: APjAAAW29M3LEjKRX7rp/BHEIbd2aEGmoqhHE5FW+rOW7+78MoW5hUeM
+        dvUYm/63VVYv2ez7qhCzQGLe1yQFWJs5lkfUD4q1C0dkLR2v
+X-Google-Smtp-Source: APXvYqxDW5QCZU/EC3UQeUBZbnYC491FuIKbQhdZyD6oz6ReScipKY22VF2GVnlNUccnTQrfJH2EAiIxRFO/ATvrnpwvlaT00zLt
 MIME-Version: 1.0
-References: <1557177887-30446-1-git-send-email-ynezz@true.cz>
-In-Reply-To: <1557177887-30446-1-git-send-email-ynezz@true.cz>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 May 2019 11:07:31 +0200
-Message-ID: <CAMuHMdVra2h00OUCxZ1s=ExpkgkN_SGZdUtdohBapjNHf6hesQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 0/4] of_get_mac_address ERR_PTR fixes
-To:     =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-Received: by 2002:a24:7595:: with SMTP id y143mr7969814itc.42.1557220205903;
+ Tue, 07 May 2019 02:10:05 -0700 (PDT)
+Date:   Tue, 07 May 2019 02:10:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000035c756058848954a@google.com>
+Subject: KASAN: use-after-free Read in hci_cmd_timeout
+From:   syzbot <syzbot+19a9f729f05272857487@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+Hello,
 
-On Mon, May 6, 2019 at 11:25 PM Petr Štetiar <ynezz@true.cz> wrote:
-> this patch series is an attempt to fix the mess, I've somehow managed to
-> introduce.
->
-> First patch in this series is defacto v5 of the previous 05/10 patch in the
-> series, but since the v4 of this 05/10 patch wasn't picked up by the
-> patchwork for some unknown reason, this patch wasn't applied with the other
-> 9 patches in the series, so I'm resending it as a separate patch of this
-> fixup series again.
->
-> Second patch is a result of this rebase against net-next tree, where I was
-> checking again all current users of of_get_mac_address and found out, that
-> there's new one in DSA, so I've converted this user to the new ERR_PTR
-> encoded error value as well.
->
-> Third patch which was sent as v5 wasn't considered for merge, but I still
-> think, that we need to check for possible NULL value, thus current IS_ERR
-> check isn't sufficient and we need to use IS_ERR_OR_NULL instead.
->
-> Fourth patch fixes warning reported by kbuild test robot.
->
-> Cheers,
->
-> Petr
->
-> Petr Štetiar (4):
->   net: ethernet: support of_get_mac_address new ERR_PTR error
+syzbot found the following crash on:
 
-I didn't receive the patch through email, but patchwork does have it:
-https://patchwork.ozlabs.org/patch/1096054/
+HEAD commit:    83a50840 Merge tag 'seccomp-v5.1-rc8' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b99b60a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ef1b87b455c397cf
+dashboard link: https://syzkaller.appspot.com/bug?extid=19a9f729f05272857487
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-This fixes the crash ("Unable to handle kernel paging request atvirtual
-address fffffffe") I'm seeing with sh_eth on r8a7791/koelsch, so
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+19a9f729f05272857487@syzkaller.appspotmail.com
 
-Gr{oetje,eeting}s,
+==================================================================
+BUG: KASAN: use-after-free in hci_cmd_timeout+0x212/0x220  
+net/bluetooth/hci_core.c:2617
+Read of size 2 at addr ffff88809fa9ca08 by task kworker/1:1/22
 
-                        Geert
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc7+ #94
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events hci_cmd_timeout
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
+  hci_cmd_timeout+0x212/0x220 net/bluetooth/hci_core.c:2617
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Allocated by task 8319:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
+  __do_kmalloc_node mm/slab.c:3687 [inline]
+  __kmalloc_node_track_caller+0x4e/0x70 mm/slab.c:3701
+  __kmalloc_reserve.isra.0+0x40/0xf0 net/core/skbuff.c:140
+  __alloc_skb+0x10b/0x5e0 net/core/skbuff.c:208
+  alloc_skb include/linux/skbuff.h:1058 [inline]
+  bt_skb_alloc include/net/bluetooth/bluetooth.h:339 [inline]
+  hci_prepare_cmd+0x30/0x230 net/bluetooth/hci_request.c:287
+  hci_req_add_ev+0xb0/0x210 net/bluetooth/hci_request.c:321
+  __hci_cmd_sync_ev+0xfc/0x1c0 net/bluetooth/hci_request.c:133
+  __hci_cmd_sync+0x37/0x50 net/bluetooth/hci_request.c:182
+  btintel_enter_mfg+0x2e/0x90 drivers/bluetooth/btintel.c:82
+  ag6xx_setup+0x106/0x820 drivers/bluetooth/hci_ag6xx.c:180
+  hci_uart_setup+0x1c4/0x490 drivers/bluetooth/hci_ldisc.c:418
+  hci_dev_do_open+0x78c/0x1780 net/bluetooth/hci_core.c:1450
+  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Freed by task 8319:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+  __cache_free mm/slab.c:3499 [inline]
+  kfree+0xcf/0x230 mm/slab.c:3822
+  skb_free_head+0x93/0xb0 net/core/skbuff.c:557
+  skb_release_data+0x576/0x7a0 net/core/skbuff.c:577
+  skb_release_all+0x4d/0x60 net/core/skbuff.c:631
+  __kfree_skb net/core/skbuff.c:645 [inline]
+  kfree_skb net/core/skbuff.c:663 [inline]
+  kfree_skb+0xe8/0x390 net/core/skbuff.c:657
+  hci_dev_do_open+0xb2b/0x1780 net/bluetooth/hci_core.c:1552
+  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff88809fa9ca00
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 8 bytes inside of
+  512-byte region [ffff88809fa9ca00, ffff88809fa9cc00)
+The buggy address belongs to the page:
+page:ffffea00027ea700 count:1 mapcount:0 mapping:ffff8880aa400940 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00023039c8 ffffea00026f9488 ffff8880aa400940
+raw: 0000000000000000 ffff88809fa9c000 0000000100000006 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88809fa9c900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809fa9c980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff88809fa9ca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                       ^
+  ffff88809fa9ca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809fa9cb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
