@@ -2,89 +2,140 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D349FC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EF4C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BFE205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLgqz+8s"
+	by mail.kernel.org (Postfix) with ESMTP id A33CD205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557247852;
+	bh=4tZewm4W45u/iRbwmWuTzyVbl39+IFYmFh6qEBuo2/Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DkcOe/CdlTq5G14ElsbUd3kjazOAxiEDnkRo0Kui9YwW9WRBxyqXAQLpA5O82tYCh
+	 EtRVWOa4HVHo+BpoU/k9UH0jFZl4LRhYxiRXLJX6njr4olq8Ts+pTa6Q6L6zT/2V/g
+	 PdD5A3C4ujkYjj3wlkjbOXhaoTdm50XApci2J/xM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfEGQqB (ORCPT
+        id S1726853AbfEGQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:46:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40134 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfEGQqB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:46:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d15so14948124ljc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2SaL00iV1UNCyLI8qSrWSgzywNwyxR2ABU4F6/Mpj/U=;
-        b=sLgqz+8svFVJmInlU2NbYaBgK2Ey1bgZIzqFKNG0JA/5OyJk9eEFhuyDRfJDszjWlS
-         F8ow0umJbkd4e9k0aYeb2+755cafzxshd7aEW79MeUiz+SxQ8RganQcARZk9ynPVRKZR
-         e7GB2NwjLqTU4/nFZrtEURZtVpEj9EKmXi9kLyhF9xP2PQquT9Hl8naPjreNZ+XbsNe+
-         08M8gsI21EOCC5qPgWrDxMb+MtXL4JZulTbteqGu4uG229VP4TTN0Igqngb80YYgGy9d
-         visSw/BBSsAYG9brRGCUaBptxuDjpPMplLJgVcyd4+H/YGCkx34exTLZhluw5kDTKvv+
-         Yg3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2SaL00iV1UNCyLI8qSrWSgzywNwyxR2ABU4F6/Mpj/U=;
-        b=H9qDrPM2VOrSh/JI60D+0mNjb3Euttd7Y8IEyOn5hZEK+LCoppG6R6IymG0qMhON+I
-         rnAhetEPGy9e0m8ZlWUM+wDgG89Wtn4J871oj64/r7/vInGi9sBFP1CuZSVrO3inQrUY
-         abj1DWM9aQ4WLvx7D4IHE0+6nyTkBTDutNmJWhZfRKWGfCzt5UmGYTyRWxrGAhtAXalt
-         PZH4Iki2yInnHY/+mqJUaWiUuq9d2+tzV0dyhlvLojGqme/0bvhd4hCv+UsLwIi9k75T
-         3ok/936NOzYAFvCcxjqtRVwDzlzoY0J6YsM5bA3qKRSrCjMUSERQqRY2ZfDCdiFnYt1D
-         3gBw==
-X-Gm-Message-State: APjAAAXxyIIAQBjlFlQCKluemktjuESug5ABYNMthsSD5J2Y8ySkJAtp
-        /s6ltYnvUK6R3SyYEdXPnciX7yTowcrD3yVtGtg=
-X-Google-Smtp-Source: APXvYqxfTK0z2SDdzOJd/69D8yC9FUzlfkY52RfEl/daX8tPGy7hCHERgk4xHwuJ9fnOkuHuJj8uQ6aATsFhFuSoLpw=
-X-Received: by 2002:a2e:3c06:: with SMTP id j6mr16320744lja.99.1557247558995;
- Tue, 07 May 2019 09:45:58 -0700 (PDT)
+        Tue, 7 May 2019 12:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbfEGQuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:50:50 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE30A20B7C;
+        Tue,  7 May 2019 16:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557247848;
+        bh=4tZewm4W45u/iRbwmWuTzyVbl39+IFYmFh6qEBuo2/Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Uqn/JtYS4kPRY76N+lJ+ylfSX3jhhKt8bpMbsPUAbhIPq7WbPOkwI7B+bzrRF+mtW
+         rr9fHN54+6u6esuv8V9WbtBn2fLQCuyF7SDLs4bATzuba3qo3XUrWi5tyIGjUg7cWf
+         ohL4+iQdMasZDjhJ/NdA27RT3khpi3Ok67A7e0sg=
+Received: by mail-qk1-f182.google.com with SMTP id c15so1403744qkl.2;
+        Tue, 07 May 2019 09:50:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWU/YvdochfhPJ65wvV2J/RL4XUBsq8SVnpfwMUF95E7Rekw30F
+        Fq7nxqolBxCAObeOF1tB7yWqEeSclDpRbk/xRw==
+X-Google-Smtp-Source: APXvYqwy91gBuwgIgFwBIlr7H7WziKK1/q+qve5xTg6xIcAxeG7XLdX/VKJhShfFBkFEzLxxQLOwWb8GHqYD7EgmNlA=
+X-Received: by 2002:a37:5c81:: with SMTP id q123mr23947855qkb.29.1557247848038;
+ Tue, 07 May 2019 09:50:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190422162652.15483-1-kasong@redhat.com> <20190423113501.GN11158@hirez.programming.kicks-ass.net>
- <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com> <20190424125212.GN12232@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190424125212.GN12232@hirez.programming.kicks-ass.net>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 7 May 2019 09:45:47 -0700
-Message-ID: <CAADnVQJLLCQJoV8Qg+0D4_-mE8hLmrEYz91Jy0kT2Qgkb1evtQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v4] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kairui Song <kasong@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
+ <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+ <20190430223629.GA22317@bogus> <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
+ <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
+ <97277857-666d-7720-9d85-19120c977682@partner.samsung.com> <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
+In-Reply-To: <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 May 2019 11:50:37 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
+Message-ID: <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events description
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 5:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, May 7, 2019 at 4:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
 >
-> On Wed, Apr 24, 2019 at 08:42:40AM -0400, Kairui Song wrote:
+> Hi Rob,
 >
-> > Sure, the updated comments looks much better. Will the maintainer
-> > squash the comment update or should I send a V5?
->
-> I've squashed it, I've just not gotten around to stuffing it a git tree
-> yet. Should happen 'soon'.
+> On 5/6/19 12:29 PM, Lukasz Luba wrote:
+> > Hi Rob,
+> >
+> > On 5/2/19 10:24 PM, Rob Herring wrote:
+> >> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba
+> >> <l.luba@partner.samsung.com> wrote:
+> >>>
+> >>> Hi Rob,
+> >>>
+> >>> On 5/1/19 12:36 AM, Rob Herring wrote:
+> >>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
+> >>>>> Extend the documenation by events description with new
+> >>>>> 'event-data-type'
+> >>>>> field. Add example how the event might be defined in DT.
+> >>>>
+> >>>> Why do we need event types in DT? We don't do this for other h/w
+> >>>> such as
+> >>>> ARM PMU.
+> >>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
+> >>> arch/arm/kernel/perf_event_v7.c
+> >>> and are seen from perf. They are different type and for different
+> >>> purpose. The Ecynos PPMU events are not seen in perf, they are
+> >>> for internal monitoring and must not be reset by other actors like perf.
+> >>> They are used by the 'bus drivers' to made some heuristics and tune the
+> >>> internal settings, like frequency.
+> >>>
+> >>> Chanwoo has written PPMU driver which relies on DT definition.
+> >>> The DT events are used by other DT devices by phandle.
+> >>
+> >> How is that done? I don't see anything in the binding for that.
+> > Here are the DT devices and how they are pinned together:
+> > - declared devfreq events:
+> > https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+> >
+> > - devfreq events pinned to the bus device:
+> > https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107
+> >
+> > - the bus device itself:
+> > https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457
+> >
+> >
+> > Regards,
+> > Lukasz
+> >
+> >>
+> >> Rob
+> >>
+> >>
+> Can I send the next version of the patch set, which has Chanwoo's
+> suggestions, or do you have some objections to this PPMU entries?
 
-Was it applied and on the way to Linus yet ?
+I think the existing binding which this is based on needs some
+changes, so it's pointless really for me to comment on additions.
+
+Rob
