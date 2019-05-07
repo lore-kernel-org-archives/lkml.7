@@ -2,104 +2,190 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AFEC04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB088C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FFC21530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D257205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DNftd0hd"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="HBxCcCtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfEGMPD (ORCPT
+        id S1726515AbfEGMUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:15:03 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38688 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEGMPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:15:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2f8uLRl8GMvPK9du+Y2zBV1bq1EpSh3gX/EwGd6390U=; b=DNftd0hd7CIq6B/3/BjfTB7f0
-        E6GTEB51f7SpbiXzih2qPiGrPXNDD4fr1Fpckv4UBhjLd8vSfucwuoQ0NdGsEwQNd1Dvijq4hi55e
-        KdXmm6bnNS730A4Mb2liyRn07qsvuPYZoeq7YWCJ41dDl5kanjpfAonbchJT7nOYzpEZJF++byy8T
-        MC4jlpctVv3kqytX865R1dFPf9VGu4hgU/FSpv1bgRMf7eyUdeq9TQNtVDXXxritIPiGJ8PB7MJq+
-        Ec7JUpj0Jlljqi29JjtD0P/C6XR8/IWk/PFatC6O62SXFb5C+lpqecQBLS3LyzQuXGXlTcYhoGrYK
-        lrN/xWTaQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hNyzt-0006wY-64; Tue, 07 May 2019 12:15:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C03542023ADB5; Tue,  7 May 2019 14:14:59 +0200 (CEST)
-Date:   Tue, 7 May 2019 14:14:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Len Brown <lenb@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 10/22] powercap/intel_rapl: Support multi-die/package
-Message-ID: <20190507121459.GL2623@hirez.programming.kicks-ass.net>
-References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
- <9f6958c231347e639e322de8d8c3de6859559345.1557177585.git.len.brown@intel.com>
+        Tue, 7 May 2019 08:20:33 -0400
+Received: from node.akkea.ca ([192.155.83.177]:50710 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbfEGMUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 08:20:33 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id 749404E204B; Tue,  7 May 2019 12:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1557231632; bh=uNQSdULdLhLXke+sVh9CJSn8ILWLrlBcNdJ0iCE+fHg=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=HBxCcCtHYigQMIa+28XmuqqpJnFns+o8aJFMkt0DsO17Oafu8ciamepG/5uLSR3s0
+         FZV9VUzZ2IG2AQTGwM2DUsUVaw4vkvvQfoK46fXFsDlvfT4dh/d29x6AEmStyzqvgr
+         LgI5nfUvntOUGyWtYTcxCdwHnVozqZWNva6mO0VI=
+To:     Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/3] usb: typec: tcpm: Add functions to read the VBUS  voltage
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f6958c231347e639e322de8d8c3de6859559345.1557177585.git.len.brown@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 07 May 2019 06:20:32 -0600
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <groeck7@gmail.com>
+In-Reply-To: <20190506162049.GA26804@roeck-us.net>
+References: <20190506140830.25376-1-angus@akkea.ca>
+ <20190506140830.25376-3-angus@akkea.ca>
+ <20190506162049.GA26804@roeck-us.net>
+Message-ID: <0c8b8a38c50f0d80276bd6d2a443fc82@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 05:26:05PM -0400, Len Brown wrote:
-> From: Zhang Rui <rui.zhang@intel.com>
+On 2019-05-06 10:20, Guenter Roeck wrote:
+> On Mon, May 06, 2019 at 08:08:29AM -0600, Angus Ainslie (Purism) wrote:
+>> Put some diagnostics in the tcpm log when there's an over
+>> or under voltage situation.
+>> 
+>> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > 
-> RAPL "package" domains are actually implemented in hardware per-die.
-> Thus, the new multi-die/package systems have mulitple domains
-> within each physical package.
+> Subject is missing 'tcpci'.
 > 
-> Update the intel_rapl driver to be "die aware" -- exporting multiple
-> domains within a single package, when present.
-> No change on single die/package systems.
+>> ---
+>>  drivers/usb/typec/tcpm/tcpci.c | 44 
+>> ++++++++++++++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>> 
+>> diff --git a/drivers/usb/typec/tcpm/tcpci.c 
+>> b/drivers/usb/typec/tcpm/tcpci.c
+>> index c1f7073a56de..c6e0e48b9a2a 100644
+>> --- a/drivers/usb/typec/tcpm/tcpci.c
+>> +++ b/drivers/usb/typec/tcpm/tcpci.c
+>> @@ -261,6 +261,39 @@ static int tcpci_set_pd_rx(struct tcpc_dev *tcpc, 
+>> bool enable)
+>>  	return 0;
+>>  }
+>> 
+>> +static int tcpci_get_vbus_voltage(struct tcpc_dev *tcpc)
+>> +{
+>> +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+>> +	u16 vbus_reg;
+>> +	unsigned int vbus_voltage;
+>> +	int ret, scale;
+>> +
+>> +	ret = tcpci_read16(tcpci, TCPC_VBUS_VOLTAGE, &vbus_reg);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	vbus_voltage = vbus_reg & 0x3f;
+>> +	switch ((ret >> 10) & 3) {
 > 
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> Signed-off-by: Len Brown <len.brown@intel.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: linux-pm@vger.kernel.org
-> ---
->  drivers/powercap/intel_rapl.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Did you test this code ?
 > 
-> diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-> index 3c3c0c23180b..9202dbcef96d 100644
-> --- a/drivers/powercap/intel_rapl.c
-> +++ b/drivers/powercap/intel_rapl.c
-> @@ -266,7 +266,7 @@ static struct rapl_domain *platform_rapl_domain; /* Platform (PSys) domain */
->  /* caller to ensure CPU hotplug lock is held */
->  static struct rapl_package *rapl_find_package_domain(int cpu)
->  {
-> -	int id = topology_physical_package_id(cpu);
-> +	int id = topology_logical_die_id(cpu);
->  	struct rapl_package *rp;
->  
->  	list_for_each_entry(rp, &rapl_packages, plist) {
-> @@ -1459,7 +1459,7 @@ static void rapl_remove_package(struct rapl_package *rp)
->  /* called from CPU hotplug notifier, hotplug lock held */
->  static struct rapl_package *rapl_add_package(int cpu)
->  {
-> -	int id = topology_physical_package_id(cpu);
-> +	int id = topology_logical_die_id(cpu);
->  	struct rapl_package *rp;
->  	int ret;
 
-Both functions are still misnomers. rapl_find_package_domain() does in
-fact now do rapl_find_die_domain(), right? Same for rapl_add_package()
+It turned out this wasn't how the device was failing so the code path 
+never got executed. I'll figure out how to get it to run before v2.
+
+>> +	case 0:
+>> +		scale = 1;
+>> +		break;
+>> +	case 1:
+>> +		scale = 2;
+>> +		break;
+>> +	case 2:
+>> +		scale = 4;
+>> +		break;
+>> +	case 3:
+>> +		tcpm_log(tcpci->port, "invalid VBUS scale");
+>> +		return -1;
+> 
+> Any special reason for not using standard error codes ?
+> The code above does, meaning this is a hardcodesd -EPERM, which doesn't
+> really make any sense.
+> 
+
+Ok I'll find a better return value.
+
+>> +	}
+>> +
+>> +	if (scale != 1)
+>> +		vbus_voltage *= scale;
+> 
+> I don't immediately see why this is better than, say,
+> 
+> 	scale = (vbus_reg >> 10) & 3;
+> 	if (scale == 3)
+> 		return -Esomething;	// -EPROTO, maybe
+> 	return vbus_voltage << scale;
+> 
+
+That looks more concise than what I can up with.
+
+>> +
+>> +	return vbus_voltage;
+>> +}
+>> +
+>>  static int tcpci_get_vbus(struct tcpc_dev *tcpc)
+>>  {
+>>  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+>> @@ -463,6 +496,17 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
+>>  	else if (status & TCPC_ALERT_TX_FAILED)
+>>  		tcpm_pd_transmit_complete(tcpci->port, TCPC_TX_FAILED);
+>> 
+>> +	if (status & (TCPC_ALERT_V_ALARM_LO | TCPC_ALERT_V_ALARM_HI)) {
+>> +		int ret;
+>> +
+>> +		ret = tcpci_get_vbus_voltage(&tcpci->tcpc);
+>> +
+> Unnecessary empty line.
+> 
+>> +		if (IS_ERR(ret))
+>> +			tcpm_log(tcpci->port, "Can't read VBUS voltage");
+> 
+> VBUS_VOLTAGE is an optional register. This is not an error. Besides, 
+> the
+> message doesn't match the event and is useless.
+> 
+>> +		else
+>> +			tcpm_log(tcpci->port, "Invalid VBUS voltage %d", ret);
+> 
+> Displaying a raw number without context is not very useful.
+> 'ret' is the voltage in multiples of 25mV. Besides, the error is that a 
+> low
+> or high voltage was detected. That doesn't mean the voltage is still 
+> invalid.
+> The error message should reflect that situation. Something like
+> 
+> 		"VBUS {low, high} detected, VBUS=x.yy V"
+> 
+> would be much more useful (with VBUS=x.yy being optional).
+> 
+> Also, please no tcpm log. The tcpci driver needs to implement
+> its own logging if that is desired.
+> 
+
+Ok I'll clear up the logging.
+
+>> +	}
+>> +
+>>  	return IRQ_HANDLED;
+>>  }
+>>  EXPORT_SYMBOL_GPL(tcpci_irq);
+>> --
+>> 2.17.1
+>> 
+
