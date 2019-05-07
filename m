@@ -2,181 +2,94 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAD2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464ACC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571B0205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:04:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557248666;
-	bh=QNdzYqtcCSj83BraVNtAcUvMnpFCFrqPfOOO+y+hF3E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w2jhgjJS//POOIcinlEumSTlHAMGlFqo57UalQ50+3LfXqNomjUrdUTbRz6ycD330
-	 N1hahRqdRXGY6yGOsuIv3VAUyotuNU5z2JtLTL00LHxSp+6fmjEBZLGR7gdY11pxCJ
-	 0nQrSq1j0Wm8cPZuV66I35DAA3GmCtkUt3THD6Us=
+	by mail.kernel.org (Postfix) with ESMTP id 18DDE20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfEGREZ (ORCPT
+        id S1727203AbfEGRFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:04:25 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33462 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfEGREZ (ORCPT
+        Tue, 7 May 2019 13:05:32 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:41174 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfEGRFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:04:25 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 66so6226577otq.0;
-        Tue, 07 May 2019 10:04:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qof9Nq6m3eIX2nP0Hb5nTkjVTKOQLNCq2yMZEGD0HaI=;
-        b=fU3blnO8KGc0e4se6/fUy7GSCouh/Hp7fOe771gW5Qocisbbk/vBu5SdnVcWujEvc4
-         ohxV7xxMw38HxQeiAgfZXx7rsFLbZkVAcHRdwkeg5WU9gub214GnxYD7cGjuSoa1VubA
-         pwJjuge/ml9k9Hd1pxtDeTc0a20tTknimC2tqC/SvkVZa1kHwrMiLl43AbhUkZLo5oJQ
-         y4yB0Ucr7Oq14NRfLsSpjD78FdHOLUiC0J6wQrWnU8MGlwPvWTfeLRd72hZntlAfQmCm
-         047YSOeJNMlxvuhrOOeds0lQ55bis2W4fZRIydPU8VG9aZ/z07IjtLRWJJkxX1S9IC3o
-         aPtQ==
-X-Gm-Message-State: APjAAAXojTy5HbeN2txRK3RrhWgb+heAy/skGUbEb1SH6mWnnz+4iCZ1
-        a4f8xoyXkO+M7HAVDC3Obg==
-X-Google-Smtp-Source: APXvYqzBww8F6CSc1wcNwfmlZTyY59ASOQFWi+ArE8HLHc01LuQYndTn0tXDxdgCiqati7OO6LO2Jg==
-X-Received: by 2002:a9d:5d03:: with SMTP id b3mr1965330oti.268.1557248664018;
-        Tue, 07 May 2019 10:04:24 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x12sm5190251otq.19.2019.05.07.10.04.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 10:04:23 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:04:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-Message-ID: <20190507170422.GA25179@bogus>
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
- <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+        Tue, 7 May 2019 13:05:32 -0400
+Received: from [2001:470:1f07:12aa:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.91)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hO3Wz-0007hS-IA; Tue, 07 May 2019 13:05:29 -0400
+Date:   Tue, 7 May 2019 13:05:28 -0400
+From:   Rik van Riel <riel@surriel.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "David Chinner" <dchinner@redhat.com>
+Subject: [PATCH] fs,xfs: fix missed wakeup on l_flush_wait
+Message-ID: <20190507130528.1d3d471b@imladris.surriel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 05:11:55PM +0200, Lukasz Luba wrote:
-> The patch adds description for DT binding for a new Exynos5422 Dynamic
-> Memory Controller device.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../bindings/memory-controllers/exynos5422-dmc.txt | 74 ++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> new file mode 100644
-> index 0000000..be602a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -0,0 +1,74 @@
-> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
-> +
-> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-> +memory chips are connected. The driver is to monitor the controller in runtime
-> +and switch frequency and voltage. To monitor the usage of the controller in
-> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-> +is able to measure the current load of the memory.
-> +When 'userspace' governor is used for the driver, an application is able to
-> +switch the DMC and memory frequency.
-> +
-> +Required properties for DMC device for Exynos5422:
-> +- compatible: Should be "samsung,exynos5422-dmc".
-> +- clock-names : the name of clock used by the controller.
-> +- clocks : phandles for clock specified in "clock-names" property.
+The code in xlog_wait uses the spinlock to make adding the task to
+the wait queue, and setting the task state to UNINTERRUPTIBLE atomic
+with respect to the waker.
 
-Need to enumerate the clocks and their order.
+Doing the wakeup after releasing the spinlock opens up the following
+race condition:
 
-> +- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- vdd-supply : phandle for voltage regulator which is connected.
-> +- reg : registers of two CDREX controllers.
-> +- operating-points-v2 : phandle for OPPs described in v2 definition.
-> +- device-handle : phandle of the connected DRAM memory device. For more
-> +	information please refer to Documentation
+- add task to wait queue
 
-Documentation... ?
+-                                      wake up task
 
-> +- devfreq-events : phandles of the PPMU events used by the controller.
-> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
-> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+- set task state to UNINTERRUPTIBLE
 
-Looks like a hack. Can't you get this from the clocks property? What is 
-this for?
+Simply moving the spin_unlock to after the wake_up_all results
+in the waker not being able to see a task on the waitqueue before
+it has set its state to UNINTERRUPTIBLE.
 
-> +
-> +Example:
-> +
-> +	ppmu_dmc0_0: ppmu@10d00000 {
-> +		compatible = "samsung,exynos-ppmu";
-> +		reg = <0x10d00000 0x2000>;
-> +		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
-> +		clock-names = "ppmu";
-> +		events {
-> +			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
-> +				event-name = "ppmu-event3-dmc0_0";
-> +			};
-> +		};
-> +	};
-> +
-> +	dmc: memory-controller@10c20000 {
-> +		compatible = "samsung,exynos5422-dmc";
-> +		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
-> +		clocks = 	<&clock CLK_FOUT_SPLL>,
-> +				<&clock CLK_MOUT_SCLK_SPLL>,
-> +				<&clock CLK_FF_DOUT_SPLL2>,
-> +				<&clock CLK_FOUT_BPLL>,
-> +				<&clock CLK_MOUT_BPLL>,
-> +				<&clock CLK_SCLK_BPLL>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> +				<&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
-> +				<&clock CLK_MOUT_MCLK_CDREX>,
-> +				<&clock CLK_DOUT_CLK2X_PHY0>,
-> +				<&clock CLK_CLKM_PHY0>,
-> +				<&clock CLK_CLKM_PHY1>;
-> +		clock-names =	"fout_spll",
-> +				"mout_sclk_spll",
-> +				"ff_dout_spll2",
-> +				"fout_bpll",
-> +				"mout_bpll",
-> +				"sclk_bpll",
-> +				"mout_mx_mspll_ccore",
-> +				"mout_mx_mspll_ccore_phy",
-> +				"mout_mclk_cdrex",
-> +				"dout_clk2x_phy0",
-> +				"clkm_phy0",
-> +			        "clkm_phy1";
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		device-handle = <&samsung_K3QF2F20DB>;
-> +		vdd-supply = <&buck1_reg>;
-> +		samsung,syscon-clk = <&clock>;
-> +		samsung,syscon-chipid = <&chipid>;
-> +	};
-> -- 
-> 2.7.4
-> 
+The lock ordering of taking the waitqueue lock inside the l_icloglock
+is already used inside xlog_wait; it is unclear why the waker was doing
+things differently.
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Reported-by: Chris Mason <clm@fb.com>
+
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index c3b610b687d1..8b9be76b2412 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -2710,7 +2710,6 @@ xlog_state_do_callback(
+ 	int		   funcdidcallbacks; /* flag: function did callbacks */
+ 	int		   repeats;	/* for issuing console warnings if
+ 					 * looping too many times */
+-	int		   wake = 0;
+ 
+ 	spin_lock(&log->l_icloglock);
+ 	first_iclog = iclog = log->l_iclog;
+@@ -2912,11 +2911,9 @@ xlog_state_do_callback(
+ #endif
+ 
+ 	if (log->l_iclog->ic_state & (XLOG_STATE_ACTIVE|XLOG_STATE_IOERROR))
+-		wake = 1;
+-	spin_unlock(&log->l_icloglock);
+-
+-	if (wake)
+ 		wake_up_all(&log->l_flush_wait);
++
++	spin_unlock(&log->l_icloglock);
+ }
+ 
+ 
+
