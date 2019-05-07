@@ -2,139 +2,167 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89C2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80D5C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88B02087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LcspjzYT"
+	by mail.kernel.org (Postfix) with ESMTP id A150820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfEGPql (ORCPT
+        id S1726970AbfEGPq4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:46:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41378 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEGPqk (ORCPT
+        Tue, 7 May 2019 11:46:56 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:57894 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726954AbfEGPqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:46:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d9so8385379pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:from:to:cc:subject:date:message-id;
-        bh=AyxScH4NIE4sDe1p/0kXATnx4Yd1gHetw4ugG+CXftg=;
-        b=LcspjzYTpm18fBxDLtdVlOSLYgih/UOIl8y2xm86Shd54JuFLAbjRuZJsh7/UJROFW
-         TtPG3dZCOLd3NNoEul47o9myIkAwvByEQcLu1SVAeEFQ3dYwmEQe2TjcZkXAt8F96qzm
-         m1bi5u09yD15mF9UitMHo4z+MNjDAqwkwSCXkNMppq2snlQsOkVdmKMDPENoU43mV7+L
-         RzfwzYC8qqQM7ryF6MyV/7SwGQIPHoB/YzUQMpD8PmNZ4S8CadI+FEHvI2Sbv59AL5vH
-         C1i10OgAXmZLSd450lkDBFZGCG8h/znBvgvuZLKNKvyS6oFP0RmLcCe3dPQ26CPTyW9W
-         x7qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=mime-version:x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AyxScH4NIE4sDe1p/0kXATnx4Yd1gHetw4ugG+CXftg=;
-        b=qqax+oEj1hfLS51Gxf44C9k+SxTOycALp1FmujaWL0dWJ771RiMMHTUYMI3fzUEIij
-         M96xKDEbJwXrSlRhehTUKsr7pDMBzR3e6C1Qw2B8ZMIOUQmyo/X7FU5jwqzMLckxjWf9
-         Il9CwZonRYGVfp3DKliAZ+gQ3NENFZuVSs5xAaA76E1UierBnTXzh2SDdhB4GpNM6UYI
-         Pnve7ptCiL55e8Fbsu4um4W6VtDLh6MuAi3NRDhfrQVaNaeXNghHZ71Gn/bMrhmlt491
-         cKIsZ7ZC5GDK6CKprjqsAhSCW8t3u9R1yd1kcIoTgrtnVHQJ2jyGSGAWwc/lwmdiD3LV
-         14Sg==
+        Tue, 7 May 2019 11:46:55 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-181-LGeneRpPP1-n91Ii04Istg-1; Tue, 07 May 2019 16:46:52 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 7 May 2019 16:46:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 7 May 2019 16:46:50 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Rostedt' <rostedt@goodmis.org>
+CC:     'Peter Zijlstra' <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Jiri Kosina" <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Joerg Roedel" <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: RE: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Thread-Topic: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Thread-Index: AQHVBLOOpe57oOoUm0iPpfi6TWW3V6ZfXgyAgAAYbgCAACXZIP//9vwAgAARSgCAAAuXAIAAEj/g
+Date:   Tue, 7 May 2019 15:46:50 +0000
+Message-ID: <9820e70016e0454e89e70d8f7dd90259@AcuMS.aculab.com>
+References: <20190502185225.0cdfc8bc@gandalf.local.home>
+        <20190502193129.664c5b2e@gandalf.local.home>
+        <20190502195052.0af473cf@gandalf.local.home>
+        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+        <20190503092247.20cc1ff0@gandalf.local.home>
+        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+        <20190507085753.GO2606@hirez.programming.kicks-ass.net>
+        <b34aa38bdfe84263bc20b60761bf6005@AcuMS.aculab.com>
+        <20190507113050.GR2606@hirez.programming.kicks-ass.net>
+        <f55e3c951aee4b5686201aaf282cc62b@AcuMS.aculab.com>
+        <20190507091403.556daba7@gandalf.local.home>
+        <b4a24fbe906a438798870c5112cde8b2@AcuMS.aculab.com>
+ <20190507105724.02abe6f6@gandalf.local.home>
+In-Reply-To: <20190507105724.02abe6f6@gandalf.local.home>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-Gm-Message-State: APjAAAWxfVgEwSRUJ6ZnHE3351j6Whbs1zuCqpbgk9hiV1/GTn5nmxRk
-        7p2fHPT/SMSIxuPKLLfsiILXmMEgWILxdwvL9WZ3/8O2ioNfPjddwgH8prGycjJIDoI0eJbsLmE
-        P/reT0SOwZLx4AXjwqw==
-X-Google-Smtp-Source: APXvYqxkIWDXrclgUoj+jqcoyhO6CLT/D3zJ0ThibTrmWBC8R5Y1pe8PKcAAb/jfMzxK3ee5u+CN2w==
-X-Received: by 2002:a17:902:29c9:: with SMTP id h67mr41070276plb.114.1557243998932;
-        Tue, 07 May 2019 08:46:38 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id 5sm15482096pfs.17.2019.05.07.08.46.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 07 May 2019 08:46:38 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, richard@nod.at, palmer@sifive.com,
-        aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v3 v3 0/3] add support for is25wp256 spi-nor device.
-Date:   Tue,  7 May 2019 21:16:00 +0530
-Message-Id: <1557243963-14140-1-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-Content-Type: text/plain; charset="US-ASCII"
+X-MC-Unique: LGeneRpPP1-n91Ii04Istg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch set is tested on HiFive Unleashed board and is based on mainline
-kernel v5.1. Its intended to add support for 32 MB spi-nor flash
-mounted on the board. Memory Device supports 4/32/and 64 KB sectors size.
-The device id table is updated accordingly.
+From: Steven Rostedt
+> Sent: 07 May 2019 15:57
+> On Tue, 7 May 2019 14:50:26 +0000
+> David Laight <David.Laight@ACULAB.COM> wrote:
+> 
+> > From: Steven Rostedt
+> > > Sent: 07 May 2019 14:14
+> > > On Tue, 7 May 2019 12:57:15 +0000
+> > > David Laight <David.Laight@ACULAB.COM> wrote:
+> 
+> > The 'user' (ie the kernel code that needs to emulate the call) doesn't
+> > write the data to the stack, just to some per-cpu location.
+> > (Actually it could be on the stack at the other end of pt-regs.)
+> > So you get to the 'register restore and iret' code with the stack unaltered.
+> > It is then a SMOP to replace the %flags saved by the int3 with the %ip
+> > saved by the int3, the %ip with the address of the function to call,
+> > restore the flags (push and popf) and issue a ret.f to remove the %ip and %cs.
+> 
+> How would you handle NMIs doing the same thing? Yes, the NMI handlers
+> have breakpoints that will need to emulated calls as well.
 
-Flash parameter table for ISSI device is set to use macronix_quad_enable
-procedure to set the QE (quad-enable) bit of Status register.
+That means you'd have to use a field in the on-stack pt_regs for the
+'address to call' rather than a per-cpu variable.
+Then it would all nest.
 
-A unilaterlay block unlocking scheme is added in patch 2.
+...
+> > Actually that means you can do the following in both modes:
+> > 	if not emulated_call_address then pop %ax; iret else
+> > 	# assume kernel<->kernel return
+> > 	push emulated_call_address;
+> > 	push flags_saved_by_int3
+> > 	load %ax, return_address_from_iret
+> > 	add %ax,#4
+> > 	store %ax, first_stack_location_written_by_int3
+> > 	load %ax, value_saved_by_int3_entry
+> > 	popf
+> > 	ret.n
+> >
+> > The ret.n discards everything from the %ax to the required return address.
+> > So 'n' is the size of the int3 frame, so 12 for i386 and 40 for amd64.
+> >
+> > If the register restore (done just before this code) finished with
+> > 'add %sp, sizeof *pt_regs' then the emulated_call_address can be
+> > loaded in %ax from the other end of pt_regs.
+...
+> 
+> This all sounds much more complex and fragile than the proposed
+> solution. Why would we do this over what is being proposed?
 
-These patches are based on original work done by Wesley Terpstra and/or Palmer Dabbelt:
-https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
+It is all complex and fragile however you do it.
 
-Erase/Read/Write operations are verified on HiFive Unleashed board using  mtd and flash utils (v1.5.2):
-1. mtd_debug  	:Options available are : erase/read/write.
-2. flashcp	:Single utility that erases flash, writes a file to flash and verifies the data back.
-3. flash_unlock: Unlock flash memory blocks.
-3. flash_lock: 	 Lock flash memory blocks. 
+I see a problem with converting the 3 register trap frame to a 5 register
+one is that the entry code and exit code both have to know whether
+it is necessary or was done.
 
-Unlock scheme clears the protection bits of all blocks in the Status register.
+AFAICT it is actually quite hard to tell from the stack which form it is.
+Although the %sp value might tell you because %ss:%sp might only be
+pushed when a stack switch happens so the kernel %sp will be a known
+value (for the switched to stack).
 
-Lock scheme:
-It is a basic implementation similar to stm_lock scheme and is validated for different number of blocks passed
-to flash_lock.
+The advantage of converting the frame is that, as pointed out earlier it
+does let you have a pt_regs that always contains %ss:%sp.
 
-Revision history:
+	David
 
-V2<->V3:
--Rebased patch to mainline v5.1 from earlier v5.1-rc5
--Updated commit messages, and cover letter with reference to git URL and author information.
--Deferred flash_lock mechanism and can go as separate patch. 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-V1<-> V2:
--Incorporated changes suggested by reviewers regarding patch/cover letter versioning, references of patch.
--Updated cover letter with description for flash operations verified with these changes.
--Add support for unlocking is25xxxxxx device
--Add support for locking is25xxxxxx device.
-
-v1:
--Add support for is25wp256 device.
-
-
-Sagar Shrikant Kadam (3):
-  mtd: spi-nor: add support for is25wp256
-  mtd: spi-nor: add support to unlock flash device.
-  mtd: spi-nor: add locking support for is25xxxxx device
-
- drivers/mtd/spi-nor/spi-nor.c | 110 +++++++++++++++++++++++++++++++++++++++++-
- include/linux/mtd/spi-nor.h   |   2 +
- 2 files changed, 111 insertions(+), 1 deletion(-)
-
--- 
-1.9.1
-
-
--- 
-The information transmitted is intended only for the person or entity to 
-which it is addressed and may contain confidential and/or privileged 
-material. If you are not the intended recipient of this message please do 
-not read, copy, use or disclose this communication and notify the sender 
-immediately. It should be noted that any review, retransmission, 
-dissemination or other use of, or taking action or reliance upon, this 
-information by persons or entities other than the intended recipient is 
-prohibited.
