@@ -2,115 +2,89 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56C3C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B536AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B196C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BBB20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfEGKbc convert rfc822-to-8bit (ORCPT
+        id S1726752AbfEGKeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:31:32 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:48742 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726543AbfEGKbc (ORCPT
+        Tue, 7 May 2019 06:34:37 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39251 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfEGKeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:31:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-135-fQiddA3kMDSw-qG7Exz2OQ-1; Tue, 07 May 2019 11:31:29 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 7 May 2019 11:31:28 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 7 May 2019 11:31:28 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jiri Kosina' <jikos@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Thread-Topic: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Thread-Index: AQHVAkq0vUiV5g3MjEetDYjdoqqHvaZfXF+Q
-Date:   Tue, 7 May 2019 10:31:28 +0000
-Message-ID: <957b01f742ed47d1ac9e0ea1277d155b@AcuMS.aculab.com>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905040849370.17054@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.1905040849370.17054@cbobk.fhfr.pm>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 7 May 2019 06:34:37 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hNxQh-0001mq-1y; Tue, 07 May 2019 10:34:35 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH][next] net: dsa: sja1105: fix check on while loop exit
+Date:   Tue,  7 May 2019 11:34:34 +0100
+Message-Id: <20190507103434.16174-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MC-Unique: fQiddA3kMDSw-qG7Exz2OQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
-> So I don't really see a problem with Andy's patch. If we want to annoy
-> external non-GPL modules as much as possible, sure, that's for a separate
-> discussion though (and I am sure many people would agree to that).
-> Proposal to get rid of EXPORT_SYMBOL in favor of EXPORT_SYMBOL_GPL would
-> be a good start I guess :)
+From: Colin Ian King <colin.king@canonical.com>
 
-As a writer on an external non-GPL module I'd point out:
-1 - Even if we wanted to 'upstream' our code it is very specific
-    and wouldn't really be wanted/accepted.
-    Even if accepted it would always be excluded from builds.
-2 - It would take man-years to make it meet the kernel code guidelines
-    and to make it portable (from x86).
-    It also contains conditionals because it gets build for windows.
-    I don't like a lot of it.
-3 - Almost all the calls to kernel functions are through a 'wrapper'
-    file that is compiled on the target system.
-    About the only functions that are directly called are ones like memcpy().
-4 - It wouldn't be that hard, and would still be GPLv2 if we built
-    two loadable modules, one GPL and one non-GPL and put all our
-    wrapper functions in the GPL one.
-    We'd still need a small wrapper for the non-GPL module, but while
-    Non-GPL modules are supported at all it wouldn't be much work.
-5 - The continual tweaks for new kernel versions keep us in a job!
+The while-loop exit condition check is not correct; the
+loop should continue if the returns from the function calls are
+negative or the CRC status returns are invalid.  Currently it
+is ignoring the returns from the function calls.  Fix this by
+removing the status return checks and only break from the loop
+at the very end when we know that all the success condtions have
+been met.
 
-Some of the _GPL exports are a PITA:
-- we can't reference count network namespaces (without creating a socket).
-- we can't reference count 'pid' structures making sending signals tricky.
-- I thing the PCIe error handling functions that we ought to be using
-  are GPL.
+Kudos to Dan Carpenter for describing the correct fix.
 
-At the moment we've not needed the fpu :-)
+Addresses-Coverity: ("Uninitialized scalar variable")
+Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
 
-	David
+V2: Discard my broken origina fix. Use correct fix as described by
+    Dan Carpenter.
+---
+ drivers/net/dsa/sja1105/sja1105_spi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+index 244a94ccfc18..40ac696adf63 100644
+--- a/drivers/net/dsa/sja1105/sja1105_spi.c
++++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+@@ -465,9 +465,11 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+ 			dev_err(dev, "Switch reported that configuration is "
+ 				"invalid, retrying...\n");
+ 			continue;
++
+ 		}
+-	} while (--retries && (status.crcchkl == 1 || status.crcchkg == 1 ||
+-		 status.configs == 0 || status.ids == 1));
++		/* Success! */
++		break;
++	} while (--retries);
+ 
+ 	if (!retries) {
+ 		rc = -EIO;
+-- 
+2.20.1
 
