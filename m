@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE6DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EF4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2633205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A17D205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208218;
-	bh=0lXt05TCRZdQkuVRMf8JxGKjSOx8H7tZZ4rq+/yUapg=;
+	s=default; t=1557208226;
+	bh=gJeXJ2QRq1NFjpcek+JAmbg2dpyjUJM27PIPaL5vOzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YgT2h8/qQyyWNdG8JGvsCSLYkOutTIRGApGCqbgBV+cj0q2uTTLcwMkdtlvWBsYI
-	 MQXt4ExBaKvsc+ZOtXr9VbcxSN+eABC3vVfuCWKMwOFO6NKkS8/PnXRmhYnzny4gN/
-	 UTNGh1SWcTVIfkj81MAZPPEI2yjY7hdUqEk91CUI=
+	b=hthnurGRG/RDJV2mIcGcQG4BjYXdklg67sB9yo0UEB3yM+Z/1afrL3ztOZ/nFIs66
+	 y12pCpcRirlUvNX4Tzm/WVizYR8EdQ1I8DCuB71nf7Wq5/QFBN2WD54lAwFzpCXsdd
+	 /T5p5wL90rxRC1dRXLIbfTg+Tc7X3lzkPTeADaOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfEGFuQ (ORCPT
+        id S1727897AbfEGFuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59708 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbfEGFkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:13 -0400
+        id S1727645AbfEGFkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D38E214AE;
-        Tue,  7 May 2019 05:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B42D420578;
+        Tue,  7 May 2019 05:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207612;
-        bh=0lXt05TCRZdQkuVRMf8JxGKjSOx8H7tZZ4rq+/yUapg=;
+        s=default; t=1557207610;
+        bh=gJeXJ2QRq1NFjpcek+JAmbg2dpyjUJM27PIPaL5vOzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M15DwTnazETUyojdPwDWNKfgfFiSJStb1YFGtXqCjehpDYxEEGfQXmwQcZLX/oAg2
-         8mUmyUiuWxZb9xCpYGA3p6rfTqlszRxcONeRDYCMAiaWrOHVsQntJpWpmyfgyUK6XF
-         mUD1k0QBa3MyuW7peoSALDhUOMUSWvbUl12XCj2s=
+        b=Ekgz6yhmqm6BiRa0vcQNnrpFLjBOkyb7PExMITEriX2fhrRV+BCkvTxqwNrWcFtXl
+         3rbleqiFW5JFIfWhCJNKLGvLXpbfz59DZCMN9fh27MfgqZK+cHwtXt+TZmpQ5hTM9v
+         30o4k1QmR6Y3qdKMHWQi15t5wXjOWwtjLJni6W24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 56/95] scsi: raid_attrs: fix unused variable warning
-Date:   Tue,  7 May 2019 01:37:45 -0400
-Message-Id: <20190507053826.31622-56-sashal@kernel.org>
+Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>, stable@kernel.org,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.14 54/95] tracing/fgraph: Fix set_graph_function from showing interrupts
+Date:   Tue,  7 May 2019 01:37:43 -0400
+Message-Id: <20190507053826.31622-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,49 +59,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-[ Upstream commit 0eeec01488da9b1403c8c29e73eacac8af9e4bf2 ]
+[ Upstream commit 5cf99a0f3161bc3ae2391269d134d6bf7e26f00e ]
 
-I ran into a new warning on randconfig kernels:
+The tracefs file set_graph_function is used to only function graph functions
+that are listed in that file (or all functions if the file is empty). The
+way this is implemented is that the function graph tracer looks at every
+function, and if the current depth is zero and the function matches
+something in the file then it will trace that function. When other functions
+are called, the depth will be greater than zero (because the original
+function will be at depth zero), and all functions will be traced where the
+depth is greater than zero.
 
-drivers/scsi/raid_class.c: In function 'raid_match':
-drivers/scsi/raid_class.c:64:24: error: unused variable 'i' [-Werror=unused-variable]
+The issue is that when a function is first entered, and the handler that
+checks this logic is called, the depth is set to zero. If an interrupt comes
+in and a function in the interrupt handler is traced, its depth will be
+greater than zero and it will automatically be traced, even if the original
+function was not. But because the logic only looks at depth it may trace
+interrupts when it should not be.
 
-This looks like a very old problem that for some reason was very hard to
-run into, but it is very easy to fix, by replacing the incorrect #ifdef
-with a simpler IS_ENABLED() check.
+The recent design change of the function graph tracer to fix other bugs
+caused the depth to be zero while the function graph callback handler is
+being called for a longer time, widening the race of this happening. This
+bug was actually there for a longer time, but because the race window was so
+small it seldom happened. The Fixes tag below is for the commit that widen
+the race window, because that commit belongs to a series that will also help
+fix the original bug.
 
-Fixes: fac829fdcaf4 ("[SCSI] raid_attrs: fix dependency problems")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@kernel.org
+Fixes: 39eb456dacb5 ("function_graph: Use new curr_ret_depth to manage depth instead of curr_ret_stack")
+Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
+Tested-by: Joe Lawrence <joe.lawrence@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/scsi/raid_class.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/trace/trace.h                 | 57 ++++++++++++++++++++++++++--
+ kernel/trace/trace_functions_graph.c |  4 ++
+ kernel/trace/trace_irqsoff.c         |  2 +
+ kernel/trace/trace_sched_wakeup.c    |  2 +
+ 4 files changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/raid_class.c b/drivers/scsi/raid_class.c
-index 2c146b44d95f..cddd78893b46 100644
---- a/drivers/scsi/raid_class.c
-+++ b/drivers/scsi/raid_class.c
-@@ -63,8 +63,7 @@ static int raid_match(struct attribute_container *cont, struct device *dev)
- 	 * emulated RAID devices, so start with SCSI */
- 	struct raid_internal *i = ac_to_raid_internal(cont);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 851cd1605085..a51e32de7c5f 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -504,12 +504,44 @@ enum {
+  * can only be modified by current, we can reuse trace_recursion.
+  */
+ 	TRACE_IRQ_BIT,
++
++	/* Set if the function is in the set_graph_function file */
++	TRACE_GRAPH_BIT,
++
++	/*
++	 * In the very unlikely case that an interrupt came in
++	 * at a start of graph tracing, and we want to trace
++	 * the function in that interrupt, the depth can be greater
++	 * than zero, because of the preempted start of a previous
++	 * trace. In an even more unlikely case, depth could be 2
++	 * if a softirq interrupted the start of graph tracing,
++	 * followed by an interrupt preempting a start of graph
++	 * tracing in the softirq, and depth can even be 3
++	 * if an NMI came in at the start of an interrupt function
++	 * that preempted a softirq start of a function that
++	 * preempted normal context!!!! Luckily, it can't be
++	 * greater than 3, so the next two bits are a mask
++	 * of what the depth is when we set TRACE_GRAPH_BIT
++	 */
++
++	TRACE_GRAPH_DEPTH_START_BIT,
++	TRACE_GRAPH_DEPTH_END_BIT,
+ };
  
--#if defined(CONFIG_SCSI) || defined(CONFIG_SCSI_MODULE)
--	if (scsi_is_sdev_device(dev)) {
-+	if (IS_ENABLED(CONFIG_SCSI) && scsi_is_sdev_device(dev)) {
- 		struct scsi_device *sdev = to_scsi_device(dev);
+ #define trace_recursion_set(bit)	do { (current)->trace_recursion |= (1<<(bit)); } while (0)
+ #define trace_recursion_clear(bit)	do { (current)->trace_recursion &= ~(1<<(bit)); } while (0)
+ #define trace_recursion_test(bit)	((current)->trace_recursion & (1<<(bit)))
  
- 		if (i->f->cookie != sdev->host->hostt)
-@@ -72,7 +71,6 @@ static int raid_match(struct attribute_container *cont, struct device *dev)
++#define trace_recursion_depth() \
++	(((current)->trace_recursion >> TRACE_GRAPH_DEPTH_START_BIT) & 3)
++#define trace_recursion_set_depth(depth) \
++	do {								\
++		current->trace_recursion &=				\
++			~(3 << TRACE_GRAPH_DEPTH_START_BIT);		\
++		current->trace_recursion |=				\
++			((depth) & 3) << TRACE_GRAPH_DEPTH_START_BIT;	\
++	} while (0)
++
+ #define TRACE_CONTEXT_BITS	4
  
- 		return i->f->is_raid(dev);
+ #define TRACE_FTRACE_START	TRACE_FTRACE_BIT
+@@ -839,8 +871,9 @@ extern void __trace_graph_return(struct trace_array *tr,
+ extern struct ftrace_hash *ftrace_graph_hash;
+ extern struct ftrace_hash *ftrace_graph_notrace_hash;
+ 
+-static inline int ftrace_graph_addr(unsigned long addr)
++static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+ {
++	unsigned long addr = trace->func;
+ 	int ret = 0;
+ 
+ 	preempt_disable_notrace();
+@@ -851,6 +884,14 @@ static inline int ftrace_graph_addr(unsigned long addr)
  	}
--#endif
- 	/* FIXME: look at other subsystems too */
+ 
+ 	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
++
++		/*
++		 * This needs to be cleared on the return functions
++		 * when the depth is zero.
++		 */
++		trace_recursion_set(TRACE_GRAPH_BIT);
++		trace_recursion_set_depth(trace->depth);
++
+ 		/*
+ 		 * If no irqs are to be traced, but a set_graph_function
+ 		 * is set, and called by an interrupt handler, we still
+@@ -868,6 +909,13 @@ static inline int ftrace_graph_addr(unsigned long addr)
+ 	return ret;
+ }
+ 
++static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
++{
++	if (trace_recursion_test(TRACE_GRAPH_BIT) &&
++	    trace->depth == trace_recursion_depth())
++		trace_recursion_clear(TRACE_GRAPH_BIT);
++}
++
+ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ {
+ 	int ret = 0;
+@@ -881,7 +929,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ 	return ret;
+ }
+ #else
+-static inline int ftrace_graph_addr(unsigned long addr)
++static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+ {
+ 	return 1;
+ }
+@@ -890,6 +938,8 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ {
  	return 0;
  }
++static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
++{ }
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ 
+ extern unsigned int fgraph_max_depth;
+@@ -897,7 +947,8 @@ extern unsigned int fgraph_max_depth;
+ static inline bool ftrace_graph_ignore_func(struct ftrace_graph_ent *trace)
+ {
+ 	/* trace it when it is-nested-in or is a function enabled. */
+-	return !(trace->depth || ftrace_graph_addr(trace->func)) ||
++	return !(trace_recursion_test(TRACE_GRAPH_BIT) ||
++		 ftrace_graph_addr(trace)) ||
+ 		(trace->depth < 0) ||
+ 		(fgraph_max_depth && trace->depth >= fgraph_max_depth);
+ }
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 169b3c44ee97..72d0d477f5c1 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -482,6 +482,8 @@ void trace_graph_return(struct ftrace_graph_ret *trace)
+ 	int cpu;
+ 	int pc;
+ 
++	ftrace_graph_addr_finish(trace);
++
+ 	local_irq_save(flags);
+ 	cpu = raw_smp_processor_id();
+ 	data = per_cpu_ptr(tr->trace_buffer.data, cpu);
+@@ -505,6 +507,8 @@ void set_graph_array(struct trace_array *tr)
+ 
+ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace)
+ {
++	ftrace_graph_addr_finish(trace);
++
+ 	if (tracing_thresh &&
+ 	    (trace->rettime - trace->calltime < tracing_thresh))
+ 		return;
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index 7758bc0617cb..2d9e12380dc3 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -204,6 +204,8 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace)
+ 	unsigned long flags;
+ 	int pc;
+ 
++	ftrace_graph_addr_finish(trace);
++
+ 	if (!func_prolog_dec(tr, &data, &flags))
+ 		return;
+ 
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index 7d461dcd4831..0fa9dadf3f4f 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -270,6 +270,8 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace)
+ 	unsigned long flags;
+ 	int pc;
+ 
++	ftrace_graph_addr_finish(trace);
++
+ 	if (!func_prolog_preempt_disable(tr, &data, &pc))
+ 		return;
+ 
 -- 
 2.20.1
 
