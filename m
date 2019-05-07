@@ -2,204 +2,201 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEA8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4433C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 584C620675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9A120675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Zx6RWQrt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlkziPOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfEGSmX (ORCPT
+        id S1727537AbfEGSme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:42:23 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:60322 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727264AbfEGSmW (ORCPT
+        Tue, 7 May 2019 14:42:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39063 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfEGSme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:42:22 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 757FAC01AC;
-        Tue,  7 May 2019 18:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557254545; bh=+Kw/M/wsl5I8kh5Zi1eVVOvgVSMbvlURKUyvYUBDAzs=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=Zx6RWQrtlJ5nSATgWJQV/eeZHNA5htBlJrpji0erd6qjO17eNzjyOmnkvRl4ulo5i
-         OtueF2YJPjUeBV6UzPgz+tSZUI6rVngGMyK2rvxk+IS7nNKfBn2MJacMQNC9iUzDTW
-         cxDrgIK+4Mzfl2KIHgaBIcUVjnDMWUicEpX3M6XogOpbdHqTAjV9C8Gu0AiMfR9J7S
-         O83jp5hAH2cu3Y0JcfeTelwdPffd5RR9GdO/dsgQW05YDGlRkA5LeMldLc6cYZ3m91
-         A+9x0gGYzekJGsKgc81W0c1bztPdyXfrJ6vvGwOky08o63G68HVedrP1A0WMaZFY+Q
-         ACZVB8tOpJQqw==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C4824A006B;
-        Tue,  7 May 2019 18:42:21 +0000 (UTC)
-Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
- us01wehtc1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue, 7
- May 2019 11:42:21 -0700
-From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To:     Anurag Kumar Vulisha <anuragku@xilinx.com>,
-        "Claus H. Stovgaard" <cst@phaseone.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
-Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
- U2 entries
-Thread-Topic: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1
- and U2 entries
-Thread-Index: AQHVANC7IojVFwqibkuorQOh5WYjBw==
-Date:   Tue, 7 May 2019 18:42:20 +0000
-Message-ID: <30102591E157244384E984126FC3CB4F639E9035@us01wembx1.internal.synopsys.com>
-References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
- <1557176302.18203.20.camel@phaseone.com>
- <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.19]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Tue, 7 May 2019 14:42:34 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z124so6470675lfd.6;
+        Tue, 07 May 2019 11:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=l+0Pt9QcE8cQteNSHBBiNf32UMkhjCszFRdNxebMlOc=;
+        b=nlkziPOHnatMrgjcwWMr2S1NWq3IRuFWTxzD+xZCyXnNguFCXY4vtTyuFKASElRNY6
+         U/t2q1ENiF9ADOVYGonQP5Dq20SDYOG34D0R+793XiQtoDslO3LajsPwj1MIX4AaRkja
+         yY2Qqvu6ueUu/TxOPioandCy1hH+0ZRctylQncwMBoIs41uHVrIdTW+3ox9/WaTaDUKq
+         7N5laNr59vmyd139E4JnxNQAdJ36y6T+n5pHOi6ax5SatGvxPQau7lQaKNj1I2WPaEZe
+         IuOzA9fK+5DWwixuSWnW91eLEp2A8TCd0O7jJsu3VQGPjpbDNIzmayhoI9TV4fN+9+dr
+         p2gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l+0Pt9QcE8cQteNSHBBiNf32UMkhjCszFRdNxebMlOc=;
+        b=Q3WE9K0Z20iCiKSi1PoszqCcTHmPfrbnfCZc5FWLhaQ7FMfyPtU3YYPqtdkPjjQoQi
+         migatZ3pw6MXkBcskuQSxxE+HA/qeq1YIS1YmXI9oEgB9A4NVWCJEWRxqW8PxJ4GwRH2
+         5DdTTFho2aIs/DY/DjAQGlS4quLkzG9rRFr8sFUs45riwxo3hhYKg+6S6XySCliRLC9V
+         /hp1hXcesTybN/zY5lbr8iD+tZoJe7q/o0gi7DRHiikPAdduuyviOYfrpt8xlQItGFi9
+         If3PZr2ANd8iUUKpnBGzk0M7BMZCkVRQvvpnyPllaAtiV18sHBPAd73osZBB3ccztrud
+         sIvQ==
+X-Gm-Message-State: APjAAAWJsoDFJXOmmG99+VuvX1aodeIxDwca8WltkRRnFmN4XdjWmDc0
+        KRCK3mAoY6KbILg/JZdSxPk=
+X-Google-Smtp-Source: APXvYqxR79+zmld/+zt66xNJYQ+2Y/sOgCEBJi2Iz0RT9F8XqCw12yCbzsgv/6Y+x6z9j5eEtdn8BQ==
+X-Received: by 2002:ac2:5621:: with SMTP id b1mr7465050lff.27.1557254551581;
+        Tue, 07 May 2019 11:42:31 -0700 (PDT)
+Received: from myhost.home (bgw158.neoplus.adsl.tpnet.pl. [83.28.86.158])
+        by smtp.gmail.com with ESMTPSA id 9sm1262852ljc.93.2019.05.07.11.42.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 11:42:30 -0700 (PDT)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, colin.king@canonical.com,
+        daniel@zonque.org, dmurphy@ti.com, info@metux.net,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        sakari.ailus@linux.intel.com, yuehaibing@huawei.com
+Subject: [GIT PULL] LED updates for 5.2-rc1
+Date:   Tue,  7 May 2019 20:42:25 +0200
+Message-Id: <20190507184225.5309-1-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,=0A=
-=0A=
-Anurag Kumar Vulisha wrote:=0A=
-> Hi Claus,=0A=
->=0A=
->> -----Original Message-----=0A=
->> From: Claus H. Stovgaard [mailto:cst@phaseone.com]=0A=
->> Sent: Tuesday, May 07, 2019 2:28 AM=0A=
->> To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>; Anurag Kumar Vulisha=0A=
->> <anuragku@xilinx.com>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; =
-Rob=0A=
->> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Felip=
-e Balbi=0A=
->> <balbi@kernel.org>=0A=
->> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
->> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
->> Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1=
- and U2=0A=
->> entries=0A=
->>=0A=
->> Hi Thinh and Anurag=0A=
->>=0A=
->> On man, 2019-05-06 at 19:21 +0000, Thinh Nguyen wrote:=0A=
->>=0A=
->>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c index=
-=0A=
->>>> a1b126f..4f0912c 100644=0A=
->>>> --- a/drivers/usb/dwc3/core.c=0A=
->>>> +++ b/drivers/usb/dwc3/core.c=0A=
->>>> @@ -1285,6 +1285,10 @@ static void dwc3_get_properties(struct dwc3=0A=
->>>> *dwc)=0A=
->>>>  				"snps,dis_u2_susphy_quirk");=0A=
->>>>  	dwc->dis_enblslpm_quirk =3D device_property_read_bool(dev,=0A=
->>>>  				"snps,dis_enblslpm_quirk");=0A=
->>>> +	dwc->dis_u1_entry_quirk =3D device_property_read_bool(dev,=0A=
->>>> +				"snps,dis_u1_entry_quirk");=0A=
->>>> +	dwc->dis_u2_entry_quirk =3D device_property_read_bool(dev,=0A=
->>>> +				"snps,dis_u2_entry_quirk");=0A=
->>> Please use "-" rather than "_" in the property names.=0A=
->> I have thought about this feature over the weekend, and think the naming=
- should be=0A=
->> changed to something like "snps,bos-u1-exit-lat-in-us"=0A=
->> and named the same in the code. And then be the value used by the=0A=
->> get_config_params. E.g. the device-tree is used to set the values direct=
-ly used for=0A=
->> bUxdevExitLat instead of named something not related to exit latency.=0A=
->>=0A=
->> With this the name and function is a 1 to 1 match, and you can among oth=
-ers set it to=0A=
->> 0 for optaining what Anurag wants.=0A=
->>=0A=
-> Your suggestion looks good but the problem is the U1 and U2 exit latencie=
-s are=0A=
-> fixed values in dwc3 controller(can be found in HCSPARAMS3). Adding diffe=
-rent=0A=
-> exit latencies may modify the U1SEL/U2SEL values sent from the host but t=
-he real=0A=
-> dwc3 controller exit latencies are not getting changed. Because of this r=
-eason I=0A=
-> had opted "snps,dis_u1_entry_quirk", so that the U1/U2 exit latency value=
-s=0A=
-> reported in BOS descriptor can be either be zero (when U1/U2 entries need=
-s to be=0A=
-> disabled) or non-zero value (reported in HCSPARAMS3) when U1/U2 states al=
-lowed.=0A=
-> Based on this I think it is better if we can continue with "snps,dis-u1-e=
-ntry-quirk"=0A=
-> instead of the "snps,bos-u1-exit-lat-in-us". Please  provide your opinion=
- on this.=0A=
-=0A=
->  =0A=
->> Regarding the disabling of U1 / U2. I send this to Anurag=0A=
->> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__marc.info_-3Fl-3D=
-linux-2Dusb-26m-3D155683299311954-26w-3D2&d=3DDwIGaQ&c=3DDPL6_X_6JkXFx7AXWq=
-B0tg&r=3Du9FYoxKtyhjrGFcyixFYqTjw1ZX0VsG2d8FCmzkTY-w&m=3DMBQpZmX-jgrlpT68k5=
-VR-4xv_DYb5UGUiD5objMqwpA&s=3DCa-zBV5t26-ZFPbNAkD8K3F3lbc3CwUXNpAgnkVasg4&e=
-=3D=0A=
->> Here i created a configfs interface with the names "lpm_U1_disable" and=
-=0A=
->> "lpm_U2_disable" for controlling the DTCL of dwc3, and reject=0A=
->> SET_FEATURE(U1/U2)=0A=
->>=0A=
->> Will send this in seperate patch tomorrow, in the hope that Anurags feat=
-ure can=0A=
->> become a way for controlling exit latency, and my patch become a way for=
- disabling=0A=
->> U1/U2=0A=
->>=0A=
-> I agree with your suggestion. When U1 and U2 entries are not allowed  it =
-is always=0A=
-> better to report zero value for U1/U2 exit latencies in BOS descriptor (n=
-o point in=0A=
-> reporting non-zero exit latency values when U1/U2 states are not allowed)=
-.  Along=0A=
-> with that changes for preventing the dwc3 controller from initiating or a=
-ccepting=0A=
-> U1/U2 requests are also required (since there are some host platforms whe=
-re sending=0A=
-> 0 exit latency doesn't work). Based on these observations I believe both =
-your patch=0A=
-> changes and my patch changes needs to be added.=0A=
->=0A=
-> @Thinh Nguyen=0A=
-> Please provide your opinion on this=0A=
->=0A=
-=0A=
-The 0 exit latency in the BOS descriptor doesn't mean that device=0A=
-doesn't support U1/U2 (however unrealistic it may seem).=0A=
-=0A=
-The exit latency values reported in the BOS decriptor are just=0A=
-recommended latency. The host controls over what they should be (host=0A=
-has its own U1/U2 exit latency). I don't think we should have a device=0A=
-property to set the device exit latency.=0A=
-=0A=
-If the gadget driver needs to know what the recommended latency to set=0A=
-in the BOS descriptor, we can have those values exported to some new=0A=
-fields in the usb_gadget structure.=0A=
-=0A=
-BR,=0A=
-Thinh=0A=
-=0A=
-=0A=
+Hi Linus,
+
+Please pull LED updates for 5.2-rc1.
+
+At first, the things touching other subsystems:
+
+Merge of immutable branch between LED, MFD and OMAP Device Tree:
+
+lm3532 driver relocation from MFD to LED subsystem,
+accompanied by various improvements and optimizations;
+it entails also a change in omap4-droid4-xt894.dts:
+
+	- leds: lm3532: Introduce the lm3532 LED driver
+	- mfd: ti-lmu: Remove LM3532 backlight driver references
+	- ARM: dts: omap4-droid4: Update backlight dt properties
+	- dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+
+LED related addition to ACPI documentation:
+
+	- document how to refer to LEDs from remote nodes
+
+LED related fix to ALSA line6/toneport driver:
+
+	- avoid polluting led_* namespace
+
+Besides that there are regular LED updates:
+
+LED core fixes and improvements:
+
+	- avoid races with workqueue
+	- Kconfig: pedantic cleanup
+	- small fixes for Flash class description
+
+leds-lt3593:
+
+	- remove unneeded assignment in lt3593_led_probe
+	- drop pdata handling code
+
+leds-blinkm:
+
+	- clean up double assignment to data->i2c_addr
+
+leds-pca955x, leds-pca963x:
+
+	- revert ACPI support, as it turned out that there is no evidence
+	  of officially registered ACPI IDs for these devices.
+	- make use of device property API
+
+leds-as3645a:
+
+	- switch to fwnode property API
+
+
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/leds-for-5.2-rc1
+
+for you to fetch changes up to 0db37915d912e8dc6588f25da76d3ed36718d92f:
+
+  leds: avoid races with workqueue (2019-05-02 22:54:51 +0200)
+
+Thanks,
+Jacek Anaszewski
+
+----------------------------------------------------------------
+LED updates for 5.2-rc1.
+----------------------------------------------------------------
+Andy Shevchenko (4):
+      leds: pca963x: Revert "Add ACPI support"
+      leds: pca955x: Revert "Add ACPI support"
+      leds: pca955x: Make use of device property API
+      leds: pca963x: Make use of device property API
+
+Colin Ian King (1):
+      leds: blinkm: clean up double assignment to data->i2c_addr
+
+Dan Murphy (5):
+      leds: Small fixes for Flash class description
+      dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+      ARM: dts: omap4-droid4: Update backlight dt properties
+      mfd: ti-lmu: Remove LM3532 backlight driver references
+      leds: lm3532: Introduce the lm3532 LED driver
+
+Daniel Mack (1):
+      leds: lt3593: drop pdata handling code
+
+Enrico Weigelt, metux IT consult (1):
+      drivers: leds: Kconfig: pedantic cleanups
+
+Jacek Anaszewski (2):
+      Merge tag 'lm3532-driver-improvements' into for-next
+      ALSA: line6: Avoid polluting led_* namespace
+
+Pavel Machek (1):
+      leds: avoid races with workqueue
+
+Sakari Ailus (2):
+      leds: as3645a: Switch to fwnode property API
+      ACPI: Document how to refer to LEDs from remote nodes
+
+YueHaibing (1):
+      leds: lt3593: Remove unneeded assignment in lt3593_led_probe
+
+ Documentation/acpi/dsd/leds.txt                    |  99 +++
+ .../devicetree/bindings/leds/leds-lm3532.txt       | 101 +++
+ Documentation/devicetree/bindings/mfd/ti-lmu.txt   |  20 -
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |  27 +-
+ drivers/leds/Kconfig                               |  33 +-
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/led-class.c                           |   1 +
+ drivers/leds/led-core.c                            |   5 +
+ drivers/leds/leds-as3645a.c                        |  93 +--
+ drivers/leds/leds-blinkm.c                         |   1 -
+ drivers/leds/leds-lm3532.c                         | 683 +++++++++++++++++++++
+ drivers/leds/leds-lt3593.c                         |  64 +-
+ drivers/leds/leds-pca955x.c                        |  57 +-
+ drivers/leds/leds-pca963x.c                        |  66 +-
+ drivers/mfd/ti-lmu.c                               |  11 -
+ include/linux/mfd/ti-lmu-register.h                |  44 --
+ include/linux/mfd/ti-lmu.h                         |   1 -
+ sound/usb/line6/toneport.c                         |   8 +-
+ 18 files changed, 1023 insertions(+), 292 deletions(-)
+ create mode 100644 Documentation/acpi/dsd/leds.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
+ create mode 100644 drivers/leds/leds-lm3532.c
