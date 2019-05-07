@@ -2,87 +2,179 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C7C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8386C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D99120825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA81B20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557228001;
+	bh=2KW4IES2kdF+LQdQyLSfPjc52EwP8NS9wLwRpFTrJ5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q26X3UJlRC1PIkzBSuSS3gPTvgxqZKU3JRxqbmIA0DrKj8YNBDb8SCikIdh6VQdXN
+	 /utHdqpg5Xq0MvUnZFCSYcdwHrzdyp3BVoEdSbzXDEzPpXyBceKDACdDirv6zrjaTx
+	 ig+3YN9Cp0ryfKdRCh6mciEMqbmWljda3Q9jAdcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfEGLRO (ORCPT
+        id S1726557AbfEGLUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:17:14 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34362 "EHLO gloria.sntech.de"
+        Tue, 7 May 2019 07:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfEGLRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:17:14 -0400
-Received: from we0048.dip.tu-dresden.de ([141.76.176.48] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hNy5v-00084m-35; Tue, 07 May 2019 13:17:11 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ezequiel@collabora.com, tom@vamrs.com, dev@vamrs.com
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Enable SPI0 and SPI4 on Rock960
-Date:   Tue, 07 May 2019 13:17:10 +0200
-Message-ID: <3484838.jBNMtg6mRV@phil>
-In-Reply-To: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
-References: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
+        id S1725843AbfEGLUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 07:20:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AED4B20825;
+        Tue,  7 May 2019 11:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557227999;
+        bh=2KW4IES2kdF+LQdQyLSfPjc52EwP8NS9wLwRpFTrJ5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cm884n610KLZNhOM9X2yXhp42AGTNt1AIxR2VPq1sMQs41n28o3Ojh3+0asTgFc17
+         Z0TLT4R7S/k1b8dKxw+c7LgnrSpRiTEr/yRh2KqwUaUIyfzEl91HEctY/ArOE1190S
+         PqA2+jjA3JW0BErUVpxOIVke9ZoK1P4e0ukwoBmk=
+Date:   Tue, 7 May 2019 13:19:56 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
+ master(s)
+Message-ID: <20190507111956.GB1092@kroah.com>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
+ <20190504065242.GA9770@kroah.com>
+ <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
+ <20190507052732.GD16052@vkoul-mobl>
+ <20190507055432.GB17986@kroah.com>
+ <20190507110331.GL16052@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507110331.GL16052@vkoul-mobl>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 6. Mai 2019, 14:04:57 CEST schrieb Manivannan Sadhasivam:
-> Enable SPI0 and SPI4 exposed on the Low and High speed expansion
-> connectors of Rock960.
+On Tue, May 07, 2019 at 04:33:31PM +0530, Vinod Koul wrote:
+> On 07-05-19, 07:54, Greg KH wrote:
+> > On Tue, May 07, 2019 at 10:57:32AM +0530, Vinod Koul wrote:
+> > > On 06-05-19, 21:24, Pierre-Louis Bossart wrote:
+> > > > 
+> > > > > > +int sdw_sysfs_bus_init(struct sdw_bus *bus)
+> > > > > > +{
+> > > > > > +	struct sdw_master_sysfs *master;
+> > > > > > +	int err;
+> > > > > > +
+> > > > > > +	if (bus->sysfs) {
+> > > > > > +		dev_err(bus->dev, "SDW sysfs is already initialized\n");
+> > > > > > +		return -EIO;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	master = kzalloc(sizeof(*master), GFP_KERNEL);
+> > > > > > +	if (!master)
+> > > > > > +		return -ENOMEM;
+> > > > > 
+> > > > > Why are you creating a whole new device to put all of this under?  Is
+> > > > > this needed?  What will the sysfs tree look like when you do this?  Why
+> > > > > can't the "bus" device just get all of these attributes and no second
+> > > > > device be created?
+> > > > 
+> > > > I tried a quick hack and indeed we could simplify the code with something as
+> > > > simple as:
+> > > > 
+> > > > [attributes omitted]
+> > > > 
+> > > > static const struct attribute_group sdw_master_node_group = {
+> > > > 	.attrs = master_node_attrs,
+> > > > 	.name = "mipi-disco"
+> > > > };
+> > > > 
+> > > > int sdw_sysfs_bus_init(struct sdw_bus *bus)
+> > > > {
+> > > > 	return sysfs_create_group(&bus->dev->kobj, &sdw_master_node_group);
+> > > > }
+> > > > 
+> > > > void sdw_sysfs_bus_exit(struct sdw_bus *bus)
+> > > > {
+> > > > 	sysfs_remove_group(&bus->dev->kobj, &sdw_master_node_group);	
+> > > > }
+> > > > 
+> > > > which gives me a simpler structure and doesn't require additional
+> > > > pretend-devices:
+> > > > 
+> > > > /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# ls
+> > > > clock_gears
+> > > > /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# more clock_gears
+> > > > 8086
+> > > > 
+> > > > The issue I have is that for the _show() functions, I don't see a way to go
+> > > > from the device argument to bus. In the example above I forced the output
+> > > > but would need a helper.
+> > > > 
+> > > > static ssize_t clock_gears_show(struct device *dev,
+> > > > 				struct device_attribute *attr, char *buf)
+> > > > {
+> > > > 	struct sdw_bus *bus; // this is what I need to find from dev
+> > > > 	ssize_t size = 0;
+> > > > 	int i;
+> > > > 
+> > > > 	return sprintf(buf, "%d \n", 8086);
+> > > > }
+> > > > 
+> > > > my brain is starting to fry, but I don't see how container_of() would work
+> > > > here since the bus structure contains a pointer to the device. I don't also
+> > > > see a way to check for all devices for the bus_type soundwire.
+> > > > For the slaves we do have a macro based on container_of(), so wondering if
+> > > > we made a mistake in the bus definition? Vinod, any thoughts?
+> > > 
+> > > yeah I dont recall a way to get bus fed into create_group, I did look at
+> > > the other examples back then and IIRC and most of them were using a
+> > > global to do the trick (I didn't want to go down that route).
+> > > 
+> > > I think that was the reason I wrote it this way...
+> > > 
+> > > BTW if you do use psedo-device you can create your own struct foo which
+> > > embeds device and then then you can use container approach to get foo
+> > > (and foo contains bus as a member).
+> > > 
+> > > Greg, any thoughts?
+> > 
+> > Why would you have "bus" attributes on a device?  I don't think you are
+> > using "bus" here like the driver model uses the term "bus", right?
+> > 
+> > What are you really trying to show here?
+> > 
+> > And if you need to know the bus pointer from the device, why don't you
+> > have a pointer to it in your device-specific structure?
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-rock960.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> The model here is that Master device is PCI or Platform device and then
+> creates a bus instance which has soundwire slave devices.
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> index 12285c51cceb..7498344d4a73 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> @@ -114,6 +114,18 @@
->  	};
->  };
->  
-> +&spi0 {
-> +	/* On Low speed expansion */
-> +	label = "LS-SPI0";
-
-where does the label property come from and what does it do?
-It's not part of the rockchip-spi / general-spi binding.
-
-
-Heiko
-
-> +	status = "okay";
-> +};
-> +
-> +&spi4 {
-> +	/* On High speed expansion */
-> +	label = "HS-SPI1";
-> +	status = "okay";
-> +};
-> +
->  &usbdrd_dwc3_0 {
->  	dr_mode = "otg";
->  };
+> So for any attribute on Master device (which has properties as well and
+> representation in sysfs), device specfic struct (PCI/platfrom doesn't
+> help). For slave that is not a problem as sdw_slave structure takes care
+> if that.
 > 
+> So, the solution was to create the psedo sdw_master device for the
+> representation and have device-specific structure.
 
+Ok, much like the "USB host controller" type device.  That's fine, make
+such a device, add it to your bus, and set the type correctly.  And keep
+a pointer to that structure in your device-specific structure if you
+really need to get to anything in it.
 
+thanks,
 
-
+greg k-h
