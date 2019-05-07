@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0B7C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8417C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD92205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E3F205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208111;
-	bh=1Ohsioqf6e9PSqCMvFBCxo6ssLXNXK3ezfG6Snz+1is=;
+	s=default; t=1557208117;
+	bh=4Ruw6mUD4zBOCDiBbLvKaU1Nm+tiQj2boN6q3TPTB18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VF3Ob/IdS91ePvRy+fNmGqY4jCZ1AIepMsFL3LzgpaFj0n5Flenlt1PpW1ozm7Kdz
-	 ATf4KQuDVwG5lMSJd6yJDuWpAPEo6wVrGdrsGuUruq/Uyg+qVsCTIKOcEMu/DLdZsP
-	 VaLsNR2pXsJxon2sKyJorXtFq3lcLkqgLqaxMi8o=
+	b=XrbJ0+rT9hjJuPrPPCdrZ/UQNsS+fNktpOa3KMUegDS/0gOoS8E6Ljrhz9wAkTYsH
+	 RjPGawNajYh6U3EMfwSRfjplEF4nMmD7njSyqhQfWlBAl9TZsMAT3H3TT70NYcVwI9
+	 GsjR/WHW+wIemSDNhFoNqkUdq38wor/x/Xk9xf1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfEGFkp (ORCPT
+        id S1729174AbfEGFko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbfEGFkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:43 -0400
+        id S1729142AbfEGFkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC97420675;
-        Tue,  7 May 2019 05:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECDB5205ED;
+        Tue,  7 May 2019 05:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207642;
-        bh=1Ohsioqf6e9PSqCMvFBCxo6ssLXNXK3ezfG6Snz+1is=;
+        s=default; t=1557207639;
+        bh=4Ruw6mUD4zBOCDiBbLvKaU1Nm+tiQj2boN6q3TPTB18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uJszTVfgS3EUTBCmd8TIFp7tV6Nc265+9hVB5kp2NNFJqhR3eAM8F/WCjFKPN53tD
-         44vEhFmsln6n/ElabpJmTWg/3cA2lVAjBgZz5iwqDkIj/bs8cbUR0QZTuLB5qBgP8w
-         lT68rLfjBDu3h1qMdd0mIdCnNdOzbvzlkD2D8RGk=
+        b=LjiMBnFqwrkyL5H3KcTcobAxMWzYoiTWdC0MeV86TAsOH3OxzcGmiW7nOetBtdKF0
+         7yNG25HAH6n8BjmT4OR/QapehK4qyRRIOCuvjVckGfa/LOHQJiZwpncVtBtMTPY6jB
+         Mb/w8ek7oX0hNNFLv5NoW7MSMr8nTdbHMO++sPOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 75/95] net_sched: fix two more memory leaks in cls_tcindex
-Date:   Tue,  7 May 2019 01:38:04 -0400
-Message-Id: <20190507053826.31622-75-sashal@kernel.org>
+Cc:     Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to ARCH_KMALLOC_MINALIGN
+Date:   Tue,  7 May 2019 01:38:01 -0400
+Message-Id: <20190507053826.31622-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -62,96 +65,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Alexey Brodkin <alexey.brodkin@synopsys.com>
 
-[ Upstream commit 1db817e75f5b9387b8db11e37d5f0624eb9223e0 ]
+[ Upstream commit a66d972465d15b1d89281258805eb8b47d66bd36 ]
 
-struct tcindex_filter_result contains two parts:
-struct tcf_exts and struct tcf_result.
+Initially we bumped into problem with 32-bit aligned atomic64_t
+on ARC, see [1]. And then during quite lengthly discussion Peter Z.
+mentioned ARCH_KMALLOC_MINALIGN which IMHO makes perfect sense.
+If allocation is done by plain kmalloc() obtained buffer will be
+ARCH_KMALLOC_MINALIGN aligned and then why buffer obtained via
+devm_kmalloc() should have any other alignment?
 
-For the local variable 'cr', its exts part is never used but
-initialized without being released properly on success path. So
-just completely remove the exts part to fix this leak.
+This way we at least get the same behavior for both types of
+allocation.
 
-For the local variable 'new_filter_result', it is never properly
-released if not used by 'r' on success path.
+[1] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004009.html
+[2] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004036.html
 
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: <stable@vger.kernel.org> # 4.8+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- net/sched/cls_tcindex.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/base/devres.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/cls_tcindex.c b/net/sched/cls_tcindex.c
-index 52829fdc280b..75c7c7cc7499 100644
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -322,9 +322,9 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 		  struct nlattr *est, bool ovr)
- {
- 	struct tcindex_filter_result new_filter_result, *old_r = r;
--	struct tcindex_filter_result cr;
- 	struct tcindex_data *cp = NULL, *oldp;
- 	struct tcindex_filter *f = NULL; /* make gcc behave */
-+	struct tcf_result cr = {};
- 	int err, balloc = 0;
- 	struct tcf_exts e;
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 71d577025285..e43a04a495a3 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -25,8 +25,14 @@ struct devres_node {
  
-@@ -363,13 +363,10 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	cp->h = p->h;
+ struct devres {
+ 	struct devres_node		node;
+-	/* -- 3 pointers */
+-	unsigned long long		data[];	/* guarantee ull alignment */
++	/*
++	 * Some archs want to perform DMA into kmalloc caches
++	 * and need a guaranteed alignment larger than
++	 * the alignment of a 64-bit integer.
++	 * Thus we use ARCH_KMALLOC_MINALIGN here and get exactly the same
++	 * buffer alignment as if it was allocated by plain kmalloc().
++	 */
++	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
+ };
  
- 	err = tcindex_filter_result_init(&new_filter_result);
--	if (err < 0)
--		goto errout1;
--	err = tcindex_filter_result_init(&cr);
- 	if (err < 0)
- 		goto errout1;
- 	if (old_r)
--		cr.res = r->res;
-+		cr = r->res;
- 
- 	if (tb[TCA_TCINDEX_HASH])
- 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
-@@ -460,8 +457,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	}
- 
- 	if (tb[TCA_TCINDEX_CLASSID]) {
--		cr.res.classid = nla_get_u32(tb[TCA_TCINDEX_CLASSID]);
--		tcf_bind_filter(tp, &cr.res, base);
-+		cr.classid = nla_get_u32(tb[TCA_TCINDEX_CLASSID]);
-+		tcf_bind_filter(tp, &cr, base);
- 	}
- 
- 	if (old_r && old_r != r) {
-@@ -473,7 +470,7 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	}
- 
- 	oldp = p;
--	r->res = cr.res;
-+	r->res = cr;
- 	tcf_exts_change(&r->exts, &e);
- 
- 	rcu_assign_pointer(tp->root, cp);
-@@ -492,6 +489,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 				; /* nothing */
- 
- 		rcu_assign_pointer(*fp, f);
-+	} else {
-+		tcf_exts_destroy(&new_filter_result.exts);
- 	}
- 
- 	if (oldp)
-@@ -504,7 +503,6 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	else if (balloc == 2)
- 		kfree(cp->h);
- errout1:
--	tcf_exts_destroy(&cr.exts);
- 	tcf_exts_destroy(&new_filter_result.exts);
- errout:
- 	kfree(cp);
+ struct devres_group {
 -- 
 2.20.1
 
