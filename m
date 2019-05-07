@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EB1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD96C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AFE205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7B9205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208798;
-	bh=dtxVRlW6Z/Ecgilwcz3UsI4vc79zq4ii/093dHgzIN0=;
+	s=default; t=1557208805;
+	bh=07ezoWhYpZHYmDgI6PuPhh2G7jw9bKMuMBXHQEJETHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiQ3sYfXN/PDlMwYWHvbpvnwkXli1L9Y34IciVZ/eWNXsr6wjumVHW/kwL8FVQYhc
-	 YVXK9jHP1Xjig5oVS8PY1ABUlpPgXU0UmTnnbc82DWSh+sxNs3DLowky3jOqadtCSK
-	 imZBLY84GEslI3CfyPwzBlFE6udsLjDPR/f7bNTg=
+	b=0ZhMv+Vkk8QrMBBSHCQwiWupZpkm2zn0IHcE7+PxBJ92P4VF18jFm3k3TRJ299umy
+	 8jQIBO3Y31MR4gu6vOMnySlwPxZmFrC41gAgRZ94b5G+pVWmavL4F8YFn8iTqaMPP0
+	 97DDVnsgLS4ldVSuYmdMMhBiUBnB+LQbWFNSVX2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfEGF75 (ORCPT
+        id S1728287AbfEGGAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56466 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbfEGFgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:37 -0400
+        id S1728097AbfEGFg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64A1620B7C;
-        Tue,  7 May 2019 05:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4417420989;
+        Tue,  7 May 2019 05:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207397;
-        bh=dtxVRlW6Z/Ecgilwcz3UsI4vc79zq4ii/093dHgzIN0=;
+        s=default; t=1557207387;
+        bh=07ezoWhYpZHYmDgI6PuPhh2G7jw9bKMuMBXHQEJETHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETJVvg1+Zv2duBEc+bU7t+ZvZb6JENmyLUtyLsTKTRPTmrYY/cbTaPdp4COIXtRoE
-         WEZJXn6J/spzDO2Ak5BLZI8TxfiRZF128VYtFCc7FjX/W+xx+73fIBKf4iUm0feZJb
-         IMz5N6hO8gqQfCrMLulkHPw+D651GxpjWTjCthrQ=
+        b=dpsOP6NXDt8FB0jJEfaimhLvH6HivuzTFCms2Qry3/fVf6efPyUGXjQN/tP3cxsqO
+         Plh47GkAtG1o8QQF9SAjerznTNHGicHAdPi+143A31wyWsNv1P0blwDNUlcbwh/xbH
+         MnZ56qG8GHkwUZyHpTze3YlrV8nZPg/Ah5GMSjKo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 21/81] clocksource/drivers/npcm: select TIMER_OF
-Date:   Tue,  7 May 2019 01:34:52 -0400
-Message-Id: <20190507053554.30848-21-sashal@kernel.org>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/81] s390/3270: fix lockdep false positive on view->lock
+Date:   Tue,  7 May 2019 01:34:50 -0400
+Message-Id: <20190507053554.30848-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -59,35 +57,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-[ Upstream commit 99834eead2a04e93a120abb112542b87c42ff5e1 ]
+[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
 
-When this is disabled, we get a link failure:
+The spinlock in the raw3270_view structure is used by con3270, tty3270
+and fs3270 in different ways. For con3270 the lock can be acquired in
+irq context, for tty3270 and fs3270 the highest context is bh.
 
-drivers/clocksource/timer-npcm7xx.o: In function `npcm7xx_timer_init':
-timer-npcm7xx.c:(.init.text+0xf): undefined reference to `timer_of_init'
+Lockdep sees the view->lock as a single class and if the 3270 driver
+is used for the console the following message is generated:
 
-Fixes: 1c00289ecd12 ("clocksource/drivers/npcm: Add NPCM7xx timer driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+WARNING: inconsistent lock state
+5.1.0-rc3-05157-g5c168033979d #12 Not tainted
+--------------------------------
+inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
+(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
+
+Introduce a lockdep subclass for the view lock to distinguish bh from
+irq locks.
+
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/char/con3270.c | 2 +-
+ drivers/s390/char/fs3270.c  | 3 ++-
+ drivers/s390/char/raw3270.c | 3 ++-
+ drivers/s390/char/raw3270.h | 4 +++-
+ drivers/s390/char/tty3270.c | 3 ++-
+ 5 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index c1ddafa4c299..4d37f018d846 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -136,6 +136,7 @@ config VT8500_TIMER
- config NPCM7XX_TIMER
- 	bool "NPCM7xx timer driver" if COMPILE_TEST
- 	depends on HAS_IOMEM
-+	select TIMER_OF
- 	select CLKSRC_MMIO
- 	help
- 	  Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx architecture,
+diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
+index fd2146bcc0ad..e17364e13d2f 100644
+--- a/drivers/s390/char/con3270.c
++++ b/drivers/s390/char/con3270.c
+@@ -629,7 +629,7 @@ con3270_init(void)
+ 		     (void (*)(unsigned long)) con3270_read_tasklet,
+ 		     (unsigned long) condev->read);
+ 
+-	raw3270_add_view(&condev->view, &con3270_fn, 1);
++	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
+ 
+ 	INIT_LIST_HEAD(&condev->freemem);
+ 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
+diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
+index 16a4e8528bbc..2f9905ee047c 100644
+--- a/drivers/s390/char/fs3270.c
++++ b/drivers/s390/char/fs3270.c
+@@ -463,7 +463,8 @@ fs3270_open(struct inode *inode, struct file *filp)
+ 
+ 	init_waitqueue_head(&fp->wait);
+ 	fp->fs_pid = get_pid(task_pid(current));
+-	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
++	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		fs3270_free_view(&fp->view);
+ 		goto out;
+diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
+index f8cd2935fbfd..63a41b168761 100644
+--- a/drivers/s390/char/raw3270.c
++++ b/drivers/s390/char/raw3270.c
+@@ -920,7 +920,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
+  * Add view to device with minor "minor".
+  */
+ int
+-raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
++raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
+ {
+ 	unsigned long flags;
+ 	struct raw3270 *rp;
+@@ -942,6 +942,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
+ 		view->cols = rp->cols;
+ 		view->ascebc = rp->ascebc;
+ 		spin_lock_init(&view->lock);
++		lockdep_set_subclass(&view->lock, subclass);
+ 		list_add(&view->list, &rp->view_list);
+ 		rc = 0;
+ 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
+diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
+index 114ca7cbf889..3afaa35f7351 100644
+--- a/drivers/s390/char/raw3270.h
++++ b/drivers/s390/char/raw3270.h
+@@ -150,6 +150,8 @@ struct raw3270_fn {
+ struct raw3270_view {
+ 	struct list_head list;
+ 	spinlock_t lock;
++#define RAW3270_VIEW_LOCK_IRQ	0
++#define RAW3270_VIEW_LOCK_BH	1
+ 	atomic_t ref_count;
+ 	struct raw3270 *dev;
+ 	struct raw3270_fn *fn;
+@@ -158,7 +160,7 @@ struct raw3270_view {
+ 	unsigned char *ascebc;		/* ascii -> ebcdic table */
+ };
+ 
+-int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
++int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
+ int raw3270_activate_view(struct raw3270_view *);
+ void raw3270_del_view(struct raw3270_view *);
+ void raw3270_deactivate_view(struct raw3270_view *);
+diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+index 5b8af2782282..81067f5bb178 100644
+--- a/drivers/s390/char/tty3270.c
++++ b/drivers/s390/char/tty3270.c
+@@ -980,7 +980,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
+ 		return PTR_ERR(tp);
+ 
+ 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
+-			      tty->index + RAW3270_FIRSTMINOR);
++			      tty->index + RAW3270_FIRSTMINOR,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		tty3270_free_view(tp);
+ 		return rc;
 -- 
 2.20.1
 
