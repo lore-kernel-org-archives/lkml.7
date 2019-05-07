@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4319C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C620C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75671205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E585205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208809;
-	bh=Cky+mAxpRThh75WYi0Ey42ZgD+2VmcouYKl/3nh/3dk=;
+	s=default; t=1557208812;
+	bh=DJuL2ejuLOji21RwsU2T4+wD8kSXrsBUmaAO2NFzV3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQmvsP9fjhX7lsJp/NOR0b5F42r6/HtGG1BP5MnJZrSyK6uL2tq3SyLTDHEg2ZcFy
-	 P38Q5w92u7NTyNKYS8cJTpMXeG0OJ67dmGHCYhOZu5ibcjE46x+md5ntx1qQSlMxrI
-	 VuttG7prnfBMMD97C3dVeP6WHDC1WPAHAMs6BxeA=
+	b=NB0jdovDJK9mS1lliV9BBS4Arc3WdmgrXdiM2BSBqZKb4I+PJyEazMDgbDWMpggP8
+	 QJBQxn0mHP+8xxNA2h5kCGkCHb9YbiZvX5svR2U1Yo3W4JJQsL2sGYQGgSd7+SONkx
+	 vXMhlCk+UMT2o0kv5cEfqrKQwj5gadBpGzDAoP9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfEGFg0 (ORCPT
+        id S1726891AbfEGFgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:36:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56228 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbfEGFgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:13 -0400
+        id S1728000AbfEGFgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A133620B7C;
-        Tue,  7 May 2019 05:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BD2E20C01;
+        Tue,  7 May 2019 05:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207372;
-        bh=Cky+mAxpRThh75WYi0Ey42ZgD+2VmcouYKl/3nh/3dk=;
+        s=default; t=1557207371;
+        bh=DJuL2ejuLOji21RwsU2T4+wD8kSXrsBUmaAO2NFzV3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etIgIJmBznxiPoq2nPhpcZhpOINuV16icMNridxwCvdQDQa4kMT2VvNPEe2m0Uk/P
-         94oMjd/ml74t9802R5cnbXDqpzzMNN4HaBgYDgaH3vLdxcVLTdyE0IzDgTd1NBSAm1
-         r6iwSJ0H3iLHxbKz6S+UgzAIQuc/u7FsH+sr+IWc=
+        b=KKuLi4UyLC53kpD+u8NQ3JAtiWpNDw5vMAozSwd2nD5qT1zgN7AVP0WiyMWROcuG3
+         460zptDbIREi0BB3g2KneDEvD8mODdeQkm74jDWC/2Kz2QHJQgTXjL1U7tpF5DFCDu
+         yN75ry0qFO/Gu0VT2WeatC3LYOgR0RzIg5Wzx9ks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilan Peer <ilan.peer@intel.com>,
+Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/81] cfg80211: Handle WMM rules in regulatory domain intersection
-Date:   Tue,  7 May 2019 01:34:44 -0400
-Message-Id: <20190507053554.30848-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 12/81] mac80211: Increase MAX_MSG_LEN
+Date:   Tue,  7 May 2019 01:34:43 -0400
+Message-Id: <20190507053554.30848-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -61,93 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-[ Upstream commit 08a75a887ee46828b54600f4bb7068d872a5edd5 ]
+[ Upstream commit 78be2d21cc1cd3069c6138dcfecec62583130171 ]
 
-The support added for regulatory WMM rules did not handle
-the case of regulatory domain intersections. Fix it.
+Looks that 100 chars isn't enough for messages, as we keep getting
+warnings popping from different places due to message shortening.
+Instead of trying to shorten the prints, just increase the buffer size.
 
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
-Fixes: 230ebaa189af ("cfg80211: read wmm rules from regulatory database")
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ net/mac80211/trace_msg.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 8002ace7c9f6..8a47297ff206 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -1287,6 +1287,16 @@ reg_intersect_dfs_region(const enum nl80211_dfs_regions dfs_region1,
- 	return dfs_region1;
- }
- 
-+static void reg_wmm_rules_intersect(const struct ieee80211_wmm_ac *wmm_ac1,
-+				    const struct ieee80211_wmm_ac *wmm_ac2,
-+				    struct ieee80211_wmm_ac *intersect)
-+{
-+	intersect->cw_min = max_t(u16, wmm_ac1->cw_min, wmm_ac2->cw_min);
-+	intersect->cw_max = max_t(u16, wmm_ac1->cw_max, wmm_ac2->cw_max);
-+	intersect->cot = min_t(u16, wmm_ac1->cot, wmm_ac2->cot);
-+	intersect->aifsn = max_t(u8, wmm_ac1->aifsn, wmm_ac2->aifsn);
-+}
+diff --git a/net/mac80211/trace_msg.h b/net/mac80211/trace_msg.h
+index 366b9e6f043e..40141df09f25 100644
+--- a/net/mac80211/trace_msg.h
++++ b/net/mac80211/trace_msg.h
+@@ -1,4 +1,9 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Portions of this file
++ * Copyright (C) 2019 Intel Corporation
++ */
 +
- /*
-  * Helper for regdom_intersect(), this does the real
-  * mathematical intersection fun
-@@ -1301,6 +1311,8 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
- 	struct ieee80211_freq_range *freq_range;
- 	const struct ieee80211_power_rule *power_rule1, *power_rule2;
- 	struct ieee80211_power_rule *power_rule;
-+	const struct ieee80211_wmm_rule *wmm_rule1, *wmm_rule2;
-+	struct ieee80211_wmm_rule *wmm_rule;
- 	u32 freq_diff, max_bandwidth1, max_bandwidth2;
+ #ifdef CONFIG_MAC80211_MESSAGE_TRACING
  
- 	freq_range1 = &rule1->freq_range;
-@@ -1311,6 +1323,10 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
- 	power_rule2 = &rule2->power_rule;
- 	power_rule = &intersected_rule->power_rule;
+ #if !defined(__MAC80211_MSG_DRIVER_TRACE) || defined(TRACE_HEADER_MULTI_READ)
+@@ -11,7 +16,7 @@
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM mac80211_msg
  
-+	wmm_rule1 = &rule1->wmm_rule;
-+	wmm_rule2 = &rule2->wmm_rule;
-+	wmm_rule = &intersected_rule->wmm_rule;
-+
- 	freq_range->start_freq_khz = max(freq_range1->start_freq_khz,
- 					 freq_range2->start_freq_khz);
- 	freq_range->end_freq_khz = min(freq_range1->end_freq_khz,
-@@ -1354,6 +1370,29 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
- 	intersected_rule->dfs_cac_ms = max(rule1->dfs_cac_ms,
- 					   rule2->dfs_cac_ms);
+-#define MAX_MSG_LEN	100
++#define MAX_MSG_LEN	120
  
-+	if (rule1->has_wmm && rule2->has_wmm) {
-+		u8 ac;
-+
-+		for (ac = 0; ac < IEEE80211_NUM_ACS; ac++) {
-+			reg_wmm_rules_intersect(&wmm_rule1->client[ac],
-+						&wmm_rule2->client[ac],
-+						&wmm_rule->client[ac]);
-+			reg_wmm_rules_intersect(&wmm_rule1->ap[ac],
-+						&wmm_rule2->ap[ac],
-+						&wmm_rule->ap[ac]);
-+		}
-+
-+		intersected_rule->has_wmm = true;
-+	} else if (rule1->has_wmm) {
-+		*wmm_rule = *wmm_rule1;
-+		intersected_rule->has_wmm = true;
-+	} else if (rule2->has_wmm) {
-+		*wmm_rule = *wmm_rule2;
-+		intersected_rule->has_wmm = true;
-+	} else {
-+		intersected_rule->has_wmm = false;
-+	}
-+
- 	if (!is_valid_reg_rule(intersected_rule))
- 		return -EINVAL;
- 
+ DECLARE_EVENT_CLASS(mac80211_msg_event,
+ 	TP_PROTO(struct va_format *vaf),
 -- 
 2.20.1
 
