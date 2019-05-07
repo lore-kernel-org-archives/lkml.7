@@ -2,141 +2,97 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FF5C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF0EC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE38F214AE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3147320675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gjV+r7YK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YdndEbZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfEGKMC (ORCPT
+        id S1726652AbfEGKSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:12:02 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19486 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfEGKMC (ORCPT
+        Tue, 7 May 2019 06:18:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44114 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfEGKSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:12:02 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd159ed0000>; Tue, 07 May 2019 03:11:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 03:12:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 03:12:01 -0700
-Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 10:11:54 +0000
-Subject: Re: [PATCH V5 13/16] arm64: tegra: Enable PCIe slots in P2972-0000
- board
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-14-vidyas@nvidia.com> <20190503112751.GG32400@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <ed191c29-a10e-e420-2bc0-55cefdecf6ee@nvidia.com>
-Date:   Tue, 7 May 2019 15:41:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 06:18:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y13so8413038pfm.11;
+        Tue, 07 May 2019 03:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G8pBOHepmnJE1/KzU1bAO4V1FlfT0xpTPU7pMbXBSIs=;
+        b=YdndEbZRVbfd6JyBmK3pprG9Tj5uVoHj96dazYWHgaGCvSG9YackGco1b+A+QwJsbo
+         2IB2Aw7AFIlHUyQQC8OO/PyGaFsdl3a+Ui0i9jS+jmmybLAhKCrIMdroPMTkQ4BW4r1J
+         XSWyDl7hgLw/Es8QDdli57it39JXrJgf6xEww/UU0Hu1MQ8k/YIfVupnm/ShMrbpS40i
+         TKaQf3XBE204zQnuxlm1FjbqkYCb/c4oOboF9mZGIDj6wFWS3BAOXO7ZYcUzlP4MtSsH
+         wcYN7m+dzyRII4/Z/8oiuJ4u3KTWDHMSyqpYRZGyhveY3ro3kPT0yKrdQtrjvIXjMhrU
+         OYyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G8pBOHepmnJE1/KzU1bAO4V1FlfT0xpTPU7pMbXBSIs=;
+        b=iUVvvjzOdMaLqNhgpuEYVxYlcY/A8gJ4b/9D0yQFli2InhXG2kM2hFioyDtyI7M29V
+         mzDmLwksFLtX+2TRDCriu51/uWZsU+Ahv7B6XgZ+DrME1qqhrJAkC1Xpq4vZ+CXHCSPX
+         EXI3Ot39TsEL3UnPUTTVfvx8Dn9RgZJfS1kvO7/oRgcNGrfZXVjQZJop6ZiU1mgXmUBY
+         rkL6lgBBM2ZMxyMWZIpw/A/pR8f2/LLmtIKG2A4DejsDUdjWqV4NVjlwh8J09hmCBYso
+         HOqQx1kHQOTc+JHdZFjhZi28Nc3gTJAC2DzWIZ2cpIemh866IPYWtxLzV3EgUULOmSwc
+         jFxA==
+X-Gm-Message-State: APjAAAXzfkVllIiNmthDuXKOZWEWcCTXa0ZZqC7PYFNQdyPgsloZaGXD
+        GwA6Q00YqEToKhWccqH/eXk=
+X-Google-Smtp-Source: APXvYqw0MpKiLCvqwe8N+6fugyXUfcfqbZxka1Z+eJC2FrcXxk4z1+/4iDtrJjM2rg8zYe1KAD/hYw==
+X-Received: by 2002:aa7:9ac4:: with SMTP id x4mr14324313pfp.43.1557224333621;
+        Tue, 07 May 2019 03:18:53 -0700 (PDT)
+Received: from icarus ([2001:268:c1c3:2283:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id a6sm26288248pgd.67.2019.05.07.03.18.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 03:18:51 -0700 (PDT)
+Date:   Tue, 7 May 2019 19:18:29 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, fabrice.gasnier@st.com, alexandre.torgue@st.com,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
+ trigger driver
+Message-ID: <20190507101729.GA3420@icarus>
+References: <20190507091224.17781-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503112751.GG32400@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557223917; bh=vq50Jt+k6FTdyIXHkyAqZgXq1yOp1zXcB8xjDiE9XEU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gjV+r7YKL4OGCshwVRXkMzkPIrMJxasj/gy8YXmNPclvZ9VRpSBWAycpFPiNrUAGX
-         zL4WVEsuRQnqAWk30Yphy56oZT1zr01UTeIWM+xguz7yj70LDTxWliL5xdt/058Hnh
-         GWZa3YaMfzuSBX2iLSJRgD1nzdGoCnMUnRZHEfa1kpRKdBTLX16RCYAKDJDd1fJsB8
-         nVeHRaUjtHpuArdRcc8qIeL8Xzd4mKK1ZxnDdUyW9gh4stdgIDT/NZqmGXBUNyh88H
-         5MC9oHyIe4xXUrJ4rVhdoON+QbkhB4DNDfcgxcp/A74Bach3EZzZfK8uBf4Wx6L2Xi
-         fk5yiIzFpTJrA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190507091224.17781-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/2019 4:57 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:50:01AM +0530, Vidya Sagar wrote:
->> Enable PCIe controller nodes to enable respective PCIe slots on
->> P2972-0000 board. Following is the ownership of slots by different
->> PCIe controllers.
->> Controller-0 : M.2 Key-M slot
->> Controller-1 : On-board Marvell eSATA controller
->> Controller-3 : M.2 Key-E slot
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Changed P2U label names to reflect new format that includes 'hsio'/'nvhs'
->>    strings to reflect UPHY brick they belong to
->>
->> Changes since [v1]:
->> * Dropped 'pcie-' from phy-names property strings
->>
->>   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
->>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 +++++++++++++++++++
->>   2 files changed, 42 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->> index 0fd5bd29fbf9..30a83d4c5b69 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->> @@ -191,7 +191,7 @@
->>   						regulator-boot-on;
->>   					};
->>   
->> -					sd3 {
->> +					vdd_1v8ao: sd3 {
->>   						regulator-name = "VDD_1V8AO";
->>   						regulator-min-microvolt = <1800000>;
->>   						regulator-max-microvolt = <1800000>;
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
->> index b62e96945846..7411c64e24a6 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
->> @@ -169,4 +169,45 @@
->>   			};
->>   		};
->>   	};
->> +
->> +	pcie@14180000 {
-> [...]
->> +	pcie@14100000 {
-> [...]
+On Tue, May 07, 2019 at 11:12:24AM +0200, Benjamin Gaignard wrote:
+> Quadrature feature is now hosted on it own framework.
+> Remove quadrature related code from stm32-trigger driver to avoid
+> code duplication and simplify the ABI.
 > 
-> Again, these should be sorted by unit-address.
-Done.
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-> 
-> Thierry
-> 
+Although this functionality is now provided by the Counter subsystem, we
+should keep the IIO Counter interface for this driver intact since
+existing user applications may depend on it; this is the same reason why
+the IIO Counter code in the 104-QUAD-8 device driver was not removed
+despite moving to the Counter subsystem.
 
+Once user applications have had enough time to migrate to the Generic
+Counter interface, we can consider removing the deprecated IIO Counter
+interface.
+
+William Breathitt Gray
