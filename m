@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD85C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE8C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E2D205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F016B20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208901;
-	bh=B/gkt7iNSmPmscq9jO/iJBG7GmmIjSdgYLzaZQRpVmA=;
+	s=default; t=1557208910;
+	bh=b6nEX9JyoFG3leregqh5qsp2VIYU9nfUcat7IvLJ+Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2bPk8haFpPVcC/aA0vYbl2A6pJBvBTkCrE/aB3ORBvlOS2BD2bHmHUqPeckzctO6/
-	 yrlB3RmbPhMO+B1wCysRKIPgLtjZdGJEO7BNChI8gWWvvISktRRgGzZ0sRNkg2NoJD
-	 LPpxTGjn9E2Pg+X515D5df7L4QHIqrUJ3F6NL+A4=
+	b=B3886tftmjnaH02XZmfI9I6CJZneGfWXp8pNhIsCiz/5EZROmBLEYCmp0VlPMfkrq
+	 sEcwJ04vnJqUrST+3HtiIrFXf/at8thqTVLuF7CZjRDY4ZlYFw1BIYErDJtH5trgn3
+	 FS4r285oOZVuHOZPeYGz4jnK6QNlslPq+emqNRzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfEGGBk (ORCPT
+        id S1727006AbfEGGBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:01:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfEGFgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:03 -0400
+        id S1727407AbfEGFf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A392420B7C;
-        Tue,  7 May 2019 05:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 223CD20B7C;
+        Tue,  7 May 2019 05:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207362;
-        bh=B/gkt7iNSmPmscq9jO/iJBG7GmmIjSdgYLzaZQRpVmA=;
+        s=default; t=1557207358;
+        bh=b6nEX9JyoFG3leregqh5qsp2VIYU9nfUcat7IvLJ+Ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2eFw6OY7htbyuF6kXuXcMlHCKY2VYGGSwXXA13vZUeb6EcqvAsW9unn6AFWuygK3p
-         Z0p7GPNBaq/Hb5QAuSJTyd0Z4wr8sAdNRlxJ0bC9hcs7S+3mkcm7GjS+TBvGhafYnO
-         zj/hovWJ09kQljXGkazMylYaXBlwG/qmG3N3WlUs=
+        b=F92IoYb766qNEaLrlBicRomfGCN/iUS99IE6DpS74xsjyDizd+p3pEBZKviwtrbyy
+         WBVnKEBdHMyHDa2QKmP8gy297nv+2GL5Bx5HjF85U1S+3WMcHd04zZgoLdTF3BtOeD
+         68M+4y6cDrx441TyYeWwmjN19qCiclxElt9JoZYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/81] acpi/nfit: Always dump _DSM output payload
-Date:   Tue,  7 May 2019 01:34:35 -0400
-Message-Id: <20190507053554.30848-4-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/81] iio: adc: xilinx: fix potential use-after-free on probe
+Date:   Tue,  7 May 2019 01:34:33 -0400
+Message-Id: <20190507053554.30848-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -60,52 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 351f339faa308c1c1461314a18c832239a841ca0 ]
+[ Upstream commit 862e4644fd2d7df8998edc65e0963ea2f567bde9 ]
 
-The dynamic-debug statements for command payload output only get emitted
-when the command is not ND_CMD_CALL. Move the output payload dumping
-ahead of the early return path for ND_CMD_CALL.
+If probe errors out after request_irq(), its error path
+does not explicitly cancel the delayed work, which may
+have been scheduled by the interrupt handler.
 
-Fixes: 31eca76ba2fc9 ("...whitelisted dimm command marshaling mechanism")
-Reported-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+This means the delayed work may still be running when
+the core frees the private structure (struct xadc).
+This is a potential use-after-free.
+
+Fix by inserting cancel_delayed_work_sync() in the probe
+error path.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/nfit/core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 925dbc751322..8340c81b258b 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -542,6 +542,12 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		goto out;
- 	}
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index 1960694e8007..15e1a103f37d 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1290,6 +1290,7 @@ static int xadc_probe(struct platform_device *pdev)
  
-+	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
-+			cmd_name, out_obj->buffer.length);
-+	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
-+			out_obj->buffer.pointer,
-+			min_t(u32, 128, out_obj->buffer.length), true);
-+
- 	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -560,12 +566,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		return 0;
- 	}
- 
--	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
--			cmd_name, out_obj->buffer.length);
--	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
--			out_obj->buffer.pointer,
--			min_t(u32, 128, out_obj->buffer.length), true);
--
- 	for (i = 0, offset = 0; i < desc->out_num; i++) {
- 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i, buf,
- 				(u32 *) out_obj->buffer.pointer,
+ err_free_irq:
+ 	free_irq(xadc->irq, indio_dev);
++	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+ err_clk_disable_unprepare:
+ 	clk_disable_unprepare(xadc->clk);
+ err_free_samplerate_trigger:
 -- 
 2.20.1
 
