@@ -2,106 +2,161 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D4DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8EDC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5F220989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD61520989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557218074;
+	bh=bw0jJnTi+BOG3JkGkLCdHvD3XznpBQkEgnF6ljfR6lM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JwwN9xn390+Ac0ubxc/7zgEsAjy4jxd6oJrXzdTUiBAlvOhcSxT/bN5RVU1PQUgT9
+	 Q0ZxFYGAbnUq7Y1kCVqUzyh31ml4N5mPfx+CXeD/vjHH97W3TiPa6c5Mbch/f8xqDx
+	 PS526wxnQyNcXA4/zjM6UV4D+lNdaELv5kLBs3hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfEGIcT (ORCPT
+        id S1726940AbfEGIed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:32:19 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57173 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfEGIcT (ORCPT
+        Tue, 7 May 2019 04:34:33 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45502 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfEGIed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:32:19 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hNvWJ-0000Ck-8h; Tue, 07 May 2019 10:32:15 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hNvWI-0003SX-L7; Tue, 07 May 2019 10:32:14 +0200
-Date:   Tue, 7 May 2019 10:32:14 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh@kernel.org>, linux-input@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] Input: qt1050: fix less than zero comparison on an
- unsigned int
-Message-ID: <20190507083214.rcew5cjfvlbwbov5@pengutronix.de>
-References: <20190507082135.21538-1-colin.king@canonical.com>
+        Tue, 7 May 2019 04:34:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r76so2443825lja.12;
+        Tue, 07 May 2019 01:34:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JVwysLC6toX2nyIeQoEP1UKJSN5udlnWwblQh6x6pT0=;
+        b=blBmAm0OpW0B8WbcjIwqSDGTJPb31Qdt4XuH8z7CduanKt2BUn5kSaigkD4c9Kg312
+         sH/xHeR3T3xUDXfDGoVeCLuN4enVw8dKX2D1leq5Xq9s64a0xrV5VJDQc01gliPUKkrH
+         tF+b2nywJHI2r9DN7047vIv8qS/4cKYJwL+5d9pYgejRuI2sYrpp9ict5Y+ZFGVW6b8+
+         9O+YTyDVSZFNBroSM1hdWwaEOwhSXkqTbBREpJuI6yPt+u/MxrJ8oQFG04P+2kjSyLkD
+         Q22BbCU6WpN2qH0jkccnr7RZYyUNwKnsHa2Z14cK/yfQrFjc0OVQ4nt+TUUb52VqG3eT
+         ANfg==
+X-Gm-Message-State: APjAAAXq4Tz6lTMBbNxVoueHOP8yPOG+IlimPocF7tJdqAiDakvBvjlF
+        6gG4jKtInlP/w8UudyAgV4Y=
+X-Google-Smtp-Source: APXvYqz2fBtz+GXsvkihKxsOKNeL6Kpuy9x3cAuWG48o19KNu9qW6OyOXPHMXK2/1GINfd/FZYqRTQ==
+X-Received: by 2002:a2e:3311:: with SMTP id d17mr16663969ljc.52.1557218071028;
+        Tue, 07 May 2019 01:34:31 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id d23sm2820976ljj.38.2019.05.07.01.34.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 01:34:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hNvYU-0006uI-C9; Tue, 07 May 2019 10:34:30 +0200
+Date:   Tue, 7 May 2019 10:34:30 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, syzkaller-bugs@googlegroups.com,
+        wen.yang99@zte.com.cn
+Subject: Re: general protection fault in smsusb_init_device
+Message-ID: <20190507083430.GD4333@localhost>
+References: <0000000000008d89900586ccd37b@google.com>
+ <Pine.LNX.4.44L0.1905061638380.1585-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507082135.21538-1-colin.king@canonical.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:29:30 up 108 days, 13:11, 83 users,  load average: 0.00, 0.01,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <Pine.LNX.4.44L0.1905061638380.1585-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ian,
-
-On 19-05-07 09:21, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Mon, May 06, 2019 at 04:41:41PM -0400, Alan Stern wrote:
+> On Thu, 18 Apr 2019, syzbot wrote:
 > 
-> Currently the less than zero comparison of val is always false because
-> val is an unsigned int. Fix this by making val a signed int.
-
-Thanks for covering that, was an copy 'n' paste failure..
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=128ec3fd200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=53f029db71c19a47325a
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16138e67200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128dddbf200000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+> > 
+> > usb 1-1: config 0 descriptor??
+> > usb 1-1: string descriptor 0 read error: -71
+> > smsusb:smsusb_probe: board id=18, interface number 0
+> > kasan: CONFIG_KASAN_INLINE enabled
+> > kasan: GPF could be caused by NULL-ptr deref or user memory access
+> > general protection fault: 0000 [#1] SMP KASAN PTI
+> > CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > RIP: 0010:smsusb_init_device+0x366/0x937  
+> > drivers/media/usb/siano/smsusb.c:429
 > 
-> Addresses-Coverity: ("Unsigned compared against zero")
-> Fixes: a33ff45923c8 ("Input: qt1050 - add Microchip AT42QT1050 support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/input/keyboard/qt1050.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The driver assumes endpoint 1in exists, and doesn't check the existence 
+> of the endpoints it uses.
 > 
-> diff --git a/drivers/input/keyboard/qt1050.c b/drivers/input/keyboard/qt1050.c
-> index 6b1603cb7515..4debddb13972 100644
-> --- a/drivers/input/keyboard/qt1050.c
-> +++ b/drivers/input/keyboard/qt1050.c
-> @@ -222,7 +222,7 @@ static struct regmap_config qt1050_regmap_config = {
+> Alan Stern
+> 
+> 
+> #syz test: https://github.com/google/kasan.git usb-fuzzer
+> 
+>  drivers/media/usb/siano/smsusb.c |   32 +++++++++++++++++++-------------
+>  1 file changed, 19 insertions(+), 13 deletions(-)
+> 
+> Index: usb-devel/drivers/media/usb/siano/smsusb.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/usb/siano/smsusb.c
+> +++ usb-devel/drivers/media/usb/siano/smsusb.c
+> @@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
+>  	struct smsusb_device_t *dev;
+>  	void *mdev;
+>  	int i, rc;
+> +	int in_maxp;
 >  
->  static bool qt1050_identify(struct qt1050_priv *ts)
->  {
-> -	unsigned int val;
-> +	int val;
+>  	/* create device object */
+>  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+> @@ -411,6 +412,23 @@ static int smsusb_init_device(struct usb
+>  	dev->udev = interface_to_usbdev(intf);
+>  	dev->state = SMSUSB_DISCONNECTED;
+>  
+> +	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+> +		struct usb_endpoint_descriptor *desc =
+> +				&intf->cur_altsetting->endpoint[i].desc;
+> +
+> +		if (desc->bEndpointAddress & USB_DIR_IN) {
+> +			dev->in_ep = desc->bEndpointAddress;
+> +			in_maxp = usb_endpoint_maxp(desc);
+> +		} else {
+> +			dev->out_ep = desc->bEndpointAddress;
+> +		}
+> +	}
+> +
+> +	pr_debug("in_ep = %02x, out_ep = %02x\n",
+> +		dev->in_ep, dev->out_ep);
+> +	if (!dev->in_ep || !dev->out_ep)	/* Missing endpoints? */
+> +		return -EINVAL;
 
-I think the proper solution is to add a ret val, because this covers the
-success/fail. I will send a patch to fix this.
+Looks like you're now leaking dev here, and so is the current code in
+the later error paths.
 
-Regards,
-  Marco
+Since this return value will be returned from probe, you may want to use
+-ENXIO or -ENODEV instead of -EINVAL.
 
->  	/* Read Chip ID */
->  	regmap_read(ts->regmap, QT1050_CHIP_ID, &val);
-> -- 
-> 2.20.1
-> 
-> 
+Looks good otherwise.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Johan
