@@ -2,92 +2,119 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A532CC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088A6C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818AD20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XexsToTG"
+	by mail.kernel.org (Postfix) with ESMTP id D110E20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557254374;
+	bh=FSY3/kqchvKx22CyZoGU3L1w1ZK66nbuC+IJH0TQFJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MQ+GjXNhUOfXUKSVVc1pyKUP0BPDLLIOArEPmEcB6l+L9y7jIHnMOMznsjPXuuz2+
+	 O2W7FVmnteJxmWEyWSVL7WffiPr0w2t8dp/uA5Vop2idXuTQUxfB/aehkc324uOooK
+	 EIONDIrzm307tO8jXS0vhERo7hnnanIIz4gQu/G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfEGSjW (ORCPT
+        id S1727784AbfEGSjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:39:22 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39463 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfEGSjW (ORCPT
+        Tue, 7 May 2019 14:39:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52104 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbfEGSjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:39:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w22so7426757pgi.6;
-        Tue, 07 May 2019 11:39:21 -0700 (PDT)
+        Tue, 7 May 2019 14:39:33 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o189so10832215wmb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 11:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=BP35SswCbqECcvWrM/PHEqjhBRhUqq1LQom7X/iBeAA=;
-        b=XexsToTG899SSRfBRwHpqivMpwnSefjVP9WJCuYHxNq6QgYihHmpVX+yu/jfTot0+w
-         3GpesXb6kk8QG05Esoe2AQpga4KI7H2xSxUawWv4+l5MZk7SLI+cUKjMWy83o2M4P1GJ
-         Ku2pRm0KQFDHmyQ6DoPHkKTSd+NbpBSkITZISVeBwP/vqnFMp0KC8D6FkIpCqWvcsa6q
-         OgmG8e8i/SHeTLpjqEhlVr2rdgHcH0gcEN1Avx5xwuytvs+a3xHJONCwBaXGqsdM592s
-         SZNYk4Y0ActbZebWhxKODZT6Eyiej0U5+vIYlJJIRdJp729EF1hvdATP6PA5Z3TwEIK6
-         STQA==
+        bh=6ha4TvK1nBUnsPWxdsbjlDPyZh819YBxf34Nph3LP10=;
+        b=m9PeB/nVcFG8IBBf2K7WNaroHWM8hSErZv+Gjf0Qelb/621k777REskBflS4n35GYJ
+         IRm5yBNsX5fqiKm92io4KytZN+lGZ2e9Goo1VA9zzPQ3X9P3eNEIbnWyeRVcDwmOCt6Z
+         yyZM2czZJqEzciV5K+hUF/5AZNghdu15sE98tcxqPFv+yJ0dYZiImd6+cF+ey07WfKr3
+         LRw1QdkblKD8v7jhNbKMESECWVR+tcXvwEjwX32KGNSTkRsHjic26AajF5+46m1IZ+5D
+         bU4Z2QJgkb2AccN5qoQxeFNnYFqSrQadWnBvKMMIPFooNgexVekcv4RUjwjQIyyLfOTa
+         V6wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BP35SswCbqECcvWrM/PHEqjhBRhUqq1LQom7X/iBeAA=;
-        b=OCvY5YTxGcjysqidXySbev/cxKOMaapLCBCSYxV3no2u4qj86lP+RMVL1DwW00Pczc
-         vRoq3ijACQmU+ZhuU8yTV4/24Opg3n19RHxjoOE0tqXBkRTiWD+5/U76nhDqOGyM8+c/
-         8FGbQlzizvvIXO4UdrY+ieDbJF6iFsBzWd/PTjV9azRss7OC9hAlNyd+nnGB2sHhToRz
-         QOfkVYwAk5oIaKtqf86jbKUN3EiODP34qEAbLKihui74SN3w/koV/qKL6+osOHvJJD3r
-         AI+9kSiehFvojhBb30gofuI0Ux4r/uYVgxPBG54Cte0ProsOHqsiVyFtcNmBMy2xWaiR
-         2kEA==
-X-Gm-Message-State: APjAAAVzgP/YS5Kd0TENs8CrckVAZob5ChdaGJviXqJ8SGLyylH5pubM
-        AFqKjE92bIwb12DnA+qUH3s=
-X-Google-Smtp-Source: APXvYqysSafBEHQKYHSkWLryo6blT2+d1/1AMIG5Z3dZhRwvuHzlRgQYj6wb4DhVbrfExxcegefnqQ==
-X-Received: by 2002:a62:e101:: with SMTP id q1mr43047008pfh.160.1557254361505;
-        Tue, 07 May 2019 11:39:21 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y68sm19728288pfy.28.2019.05.07.11.39.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 11:39:20 -0700 (PDT)
-Date:   Tue, 7 May 2019 11:39:20 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/99] 4.19.41-stable review
-Message-ID: <20190507183920.GC30225@roeck-us.net>
-References: <20190506143053.899356316@linuxfoundation.org>
+        bh=6ha4TvK1nBUnsPWxdsbjlDPyZh819YBxf34Nph3LP10=;
+        b=XyiQ1GUmV3+Hp3mS9n8SGaDNEaKa4E/vHNLHNFmSXuB+IyIKZbXW10xv+WynnBxw3G
+         1oyZKRZ9uzUCASgl6RCjYjA+X5f0UuP1xtIGiF7Z2fC5zl24tkeFPyF6ACrxRE9OYtdr
+         FfI2xcpSy4zb2W6NmxDRrMqLiWHIqhSTM3t/lP6eZNHBTX1uodddyVYyTjzKnI2GKUmH
+         jj1DEZ6QND7o6/c70DZjWcWKTHieNdTAluzmR2tXJ20ej9ktDahoCd0T7rmvADo1mlen
+         j1Me3g9ls3DAp525w0rnqx0QQio3AZ4AQ7InjqInn0TVLeGGVP7qji9LJ2Jvyd1lPgbI
+         +3kg==
+X-Gm-Message-State: APjAAAXsogOlFoL2mgdtmVjvvcg4KRBwwRZ9Wz1KLRFSejWoSTDbqLmc
+        EwEHz8Cq/nuoF4MncAIGuxg=
+X-Google-Smtp-Source: APXvYqxw0+V81AiQLmC/WqdO5pmK7YDtfDkRbUqI73ZsJkOecs/aK4u6Ht3uxMvCLpqjV466DRxrEQ==
+X-Received: by 2002:a1c:2d91:: with SMTP id t139mr23229494wmt.102.1557254370721;
+        Tue, 07 May 2019 11:39:30 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id f7sm6784321wrt.81.2019.05.07.11.39.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 11:39:29 -0700 (PDT)
+Date:   Tue, 7 May 2019 20:39:27 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kairui Song <kasong@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH v4] perf/x86: make perf callchain work without
+ CONFIG_FRAME_POINTER
+Message-ID: <20190507183927.GA58030@gmail.com>
+References: <20190422162652.15483-1-kasong@redhat.com>
+ <20190423113501.GN11158@hirez.programming.kicks-ass.net>
+ <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com>
+ <20190424125212.GN12232@hirez.programming.kicks-ass.net>
+ <CAADnVQJLLCQJoV8Qg+0D4_-mE8hLmrEYz91Jy0kT2Qgkb1evtQ@mail.gmail.com>
+ <20190507165743.GX2606@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190507165743.GX2606@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:31:33PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.41 release.
-> There are 99 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 08 May 2019 02:29:12 PM UTC.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 349 pass: 349 fail: 0
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-Guenter
+> On Tue, May 07, 2019 at 09:45:47AM -0700, Alexei Starovoitov wrote:
+> > On Wed, Apr 24, 2019 at 5:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Wed, Apr 24, 2019 at 08:42:40AM -0400, Kairui Song wrote:
+> > >
+> > > > Sure, the updated comments looks much better. Will the maintainer
+> > > > squash the comment update or should I send a V5?
+> > >
+> > > I've squashed it, I've just not gotten around to stuffing it a git tree
+> > > yet. Should happen 'soon'.
+> > 
+> > Was it applied and on the way to Linus yet ?
+> 
+> AFAICT it has already landed in Linus' tree.
+
+Yeah, it's now the following commit upstream:
+
+  d15d356887e7: perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER
+
+Thanks,
+
+	Ingo
