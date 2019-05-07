@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98733C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C79FC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AA021530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB7E20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207525;
-	bh=TFdJyvUjJpEhPvCZZANtbgOwSBX7ybxA106rFtdE+g0=;
+	s=default; t=1557207530;
+	bh=iEfU6ZPCt9MjIIlaMRwGa+rdr1IuXQoK3n05WICoS5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMwmqoWpA1eanCi6D2dTz0j/lbY0Ow8sKktbw/D8nhdE9t8uG+2VKBDk6Cgplz3jb
-	 +ulF2gWK7lY1+zX/moyopzV8IqVoxBQXFbCCu+BHpYigiiMZYPx/L/ryQfRa4FUSHr
-	 Yrdi1NQh/HWLZuiaLGsJaBFL0LzZUrO3DUxe2AI8=
+	b=13y6JgnhTNowZHvA5HjtTidBGOIqqTMvEgx6IqaBmDY7Sn0WIImsEv/A71T7lppS+
+	 W3wV/pJAglqZWPilUs5TiEBMWG3SnpYyzUXkZzmRTjHJ4Dnv5960p4kvb935zKedO/
+	 C+yUL+a1uclOdaBG+ivbdmTKPf2DqLY+Q/buJc2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfEGFio (ORCPT
+        id S1727814AbfEGFis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbfEGFik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:40 -0400
+        id S1728735AbfEGFim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE300206A3;
-        Tue,  7 May 2019 05:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C40F205ED;
+        Tue,  7 May 2019 05:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207519;
-        bh=TFdJyvUjJpEhPvCZZANtbgOwSBX7ybxA106rFtdE+g0=;
+        s=default; t=1557207521;
+        bh=iEfU6ZPCt9MjIIlaMRwGa+rdr1IuXQoK3n05WICoS5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ecZH/Q+UBk0Gbyg73RUtbmAHr+bY9yLGke3sTegzHeCCJ3omx/yE2NkxhvoCeByC7
-         T2Q2DAKmZMh6nTtYVK/g+m0fc+iqAQWTUwcCddAtUhCFhxRIqP8I0Mm3njv958QkL5
-         EKeOjIVjIeB4N//+7heksEhgjanDhBXUW7MBYhSQ=
+        b=rlt/mal9ySJNuMxVNxK+JrL3J6kD6NaNDhv39vOH4QGvQHNZHEqDjRLi8I9Oa2lTb
+         6ZWlwqG1kzcil9ntleW6Ic8WnvCCwiDIbjC1Bcin9TYcrPtd6aB3peibuKExV5MfX5
+         HfN3N1hJ9zk4Zdq2UcKkLhDqUz7xajvOon0ClkK4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sunil Dutt <usdutt@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/95] nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
-Date:   Tue,  7 May 2019 01:37:00 -0400
-Message-Id: <20190507053826.31622-11-sashal@kernel.org>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/95] Input: snvs_pwrkey - initialize necessary driver data before enabling IRQ
+Date:   Tue,  7 May 2019 01:37:01 -0400
+Message-Id: <20190507053826.31622-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,88 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sunil Dutt <usdutt@codeaurora.org>
+From: Anson Huang <anson.huang@nxp.com>
 
-[ Upstream commit d6db02a88a4aaa1cd7105137c67ddec7f3bdbc05 ]
+[ Upstream commit bf2a7ca39fd3ab47ef71c621a7ee69d1813b1f97 ]
 
-This commit adds NL80211_FLAG_CLEAR_SKB flag to other NL commands
-that carry key data to ensure they do not stick around on heap
-after the SKB is freed.
+SNVS IRQ is requested before necessary driver data initialized,
+if there is a pending IRQ during driver probe phase, kernel
+NULL pointer panic will occur in IRQ handler. To avoid such
+scenario, just initialize necessary driver data before enabling
+IRQ. This patch is inspired by NXP's internal kernel tree.
 
-Also introduced this flag for NL80211_CMD_VENDOR as there are sub
-commands which configure the keys.
-
-Signed-off-by: Sunil Dutt <usdutt@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: d3dc6e232215 ("input: keyboard: imx: add snvs power key driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/input/keyboard/snvs_pwrkey.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 46e9812d13c0..c1a2ad050e61 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -12761,7 +12761,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEAUTHENTICATE,
-@@ -12812,7 +12813,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_UPDATE_CONNECT_PARAMS,
-@@ -12820,7 +12822,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DISCONNECT,
-@@ -12849,7 +12852,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMKSA,
-@@ -13201,7 +13205,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_WIPHY |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_SET_QOS_MAP,
-@@ -13256,7 +13261,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.doit = nl80211_set_pmk,
- 		.policy = nl80211_policy,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMK,
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+index 7544888c4749..b8dbde746b4e 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -156,6 +156,9 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
++	pdata->input = input;
++	platform_set_drvdata(pdev, pdata);
++
+ 	error = devm_request_irq(&pdev->dev, pdata->irq,
+ 			       imx_snvs_pwrkey_interrupt,
+ 			       0, pdev->name, pdev);
+@@ -171,9 +174,6 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
+-	pdata->input = input;
+-	platform_set_drvdata(pdev, pdata);
+-
+ 	device_init_wakeup(&pdev->dev, pdata->wakeup);
+ 
+ 	return 0;
 -- 
 2.20.1
 
