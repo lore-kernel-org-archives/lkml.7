@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C400C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE47C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1347020989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839992087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207245;
-	bh=eb4XH/RZms7oiIkPyrmBezPUBJP6PV/bKa9SBqpcRQg=;
+	s=default; t=1557207248;
+	bh=YSIJSBBHtM0WqwfXn8MlZjoSKbffyCq5FDxyImeCKYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JO6yyeWv3xbLkUq3SSWclQ1nREYgcSsHQQIK8+LK9JhjGM6rt8r0mVDjsjF7VHlYA
-	 1LpmTq48GtN+lGqjObHYspKGNXqpUZ5qF4nvYR0NUMIWjW/m4E/iZSG17WQP82aVsP
-	 +L4/n44/vqUuVYmcvFrBn1abDcf8q6ARX8p3lHUM=
+	b=CjsJeu318xOv3HeYP6Gf6tkiM1Wo43NywQ7uScoLG9Kzhca1Z3of3VDv4UI27J6jS
+	 XG0Z1lKDBxbGGssLPpvB1AnQBBbjY+hRLkDotjxmj/My/iGUUADXeex2FTupGSLzDG
+	 JYiblAFxJQ+RWfnZAIH+cz+dOd7Cf1gd6ckdUU4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfEGFeE (ORCPT
+        id S1727440AbfEGFeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:34:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfEGFeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:34:00 -0400
+        id S1727411AbfEGFeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:34:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2413C2087F;
-        Tue,  7 May 2019 05:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F32AE20B7C;
+        Tue,  7 May 2019 05:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207239;
-        bh=eb4XH/RZms7oiIkPyrmBezPUBJP6PV/bKa9SBqpcRQg=;
+        s=default; t=1557207244;
+        bh=YSIJSBBHtM0WqwfXn8MlZjoSKbffyCq5FDxyImeCKYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUpUHx7fKSltZUFC/VtiiYWPL3ymyjVcmdkhZyCUwxqShd5qp+sDm54vxX3kAU2ll
-         Sl89rrXlMa7h8FgUsvc51EkvjB1a5zVjm6trstf40KYOV5K98MnQNwW40gMFxWRC94
-         vPuOye63M8pEt8lPQewTW0/lTFy23V81YckSi6sY=
+        b=MdgDMdib5QADik8ITb9tCPLolbcaxwQATvyBsRfgrWjUy7LH3kYto16Xmp8ZCC9bj
+         tJtZQaJSMgI6qRTTxJ/PMqB17G1/TWxc+RzdVDeNjwIIgvZcZJOIwS/6LZPsdTwUzh
+         kl6t6tsX0erl7tkeDr42fQJ3vkjax+qFBJriYxuo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 43/99] x86/mm/tlb: Revert "x86/mm: Align TLB invalidation info"
-Date:   Tue,  7 May 2019 01:31:37 -0400
-Message-Id: <20190507053235.29900-43-sashal@kernel.org>
+Cc:     Liran Alon <liran.alon@oracle.com>,
+        Saar Amar <saaramar@microsoft.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 46/99] KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU
+Date:   Tue,  7 May 2019 01:31:40 -0400
+Message-Id: <20190507053235.29900-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -64,51 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Liran Alon <liran.alon@oracle.com>
 
-[ Upstream commit 780e0106d468a2962b16b52fdf42898f2639e0a0 ]
+[ Upstream commit e51bfdb68725dc052d16241ace40ea3140f938aa ]
 
-Revert the following commit:
+Issue was discovered when running kvm-unit-tests on KVM running as L1 on
+top of Hyper-V.
 
-  515ab7c41306: ("x86/mm: Align TLB invalidation info")
+When vmx_instruction_intercept unit-test attempts to run RDPMC to test
+RDPMC-exiting, it is intercepted by L1 KVM which it's EXIT_REASON_RDPMC
+handler raise #GP because vCPU exposed by Hyper-V doesn't support PMU.
+Instead of unit-test expectation to be reflected with EXIT_REASON_RDPMC.
 
-I found out (the hard way) that under some .config options (notably L1_CACHE_SHIFT=7)
-and compiler combinations this on-stack alignment leads to a 320 byte
-stack usage, which then triggers a KASAN stack warning elsewhere.
+The reason vmx_instruction_intercept unit-test attempts to run RDPMC
+even though Hyper-V doesn't support PMU is because L1 expose to L2
+support for RDPMC-exiting. Which is reasonable to assume that is
+supported only in case CPU supports PMU to being with.
 
-Using 320 bytes of stack space for a 40 byte structure is ludicrous and
-clearly not right.
+Above issue can easily be simulated by modifying
+vmx_instruction_intercept config in x86/unittests.cfg to run QEMU with
+"-cpu host,+vmx,-pmu" and run unit-test.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Nadav Amit <namit@vmware.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 515ab7c41306 ("x86/mm: Align TLB invalidation info")
-Link: http://lkml.kernel.org/r/20190416080335.GM7905@worktop.programming.kicks-ass.net
-[ Minor changelog edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+To handle issue, change KVM to expose RDPMC-exiting only when guest
+supports PMU.
+
+Reported-by: Saar Amar <saaramar@microsoft.com>
+Reviewed-by: Mihai Carabas <mihai.carabas@oracle.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/tlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 999d6d8f0bef..9a49335e717a 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -731,7 +731,7 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- {
- 	int cpu;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 34499081022c..0479aee38f4d 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6982,6 +6982,30 @@ static void nested_vmx_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
+ 	}
+ }
  
--	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
-+	struct flush_tlb_info info = {
- 		.mm = mm,
- 		.stride_shift = stride_shift,
- 		.freed_tables = freed_tables,
++static bool guest_cpuid_has_pmu(struct kvm_vcpu *vcpu)
++{
++	struct kvm_cpuid_entry2 *entry;
++	union cpuid10_eax eax;
++
++	entry = kvm_find_cpuid_entry(vcpu, 0xa, 0);
++	if (!entry)
++		return false;
++
++	eax.full = entry->eax;
++	return (eax.split.version_id > 0);
++}
++
++static void nested_vmx_procbased_ctls_update(struct kvm_vcpu *vcpu)
++{
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	bool pmu_enabled = guest_cpuid_has_pmu(vcpu);
++
++	if (pmu_enabled)
++		vmx->nested.msrs.procbased_ctls_high |= CPU_BASED_RDPMC_EXITING;
++	else
++		vmx->nested.msrs.procbased_ctls_high &= ~CPU_BASED_RDPMC_EXITING;
++}
++
+ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -7070,6 +7094,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+ 	if (nested_vmx_allowed(vcpu)) {
+ 		nested_vmx_cr_fixed1_bits_update(vcpu);
+ 		nested_vmx_entry_exit_ctls_update(vcpu);
++		nested_vmx_procbased_ctls_update(vcpu);
+ 	}
+ 
+ 	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
 -- 
 2.20.1
 
