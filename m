@@ -2,117 +2,120 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94130C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7994C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F6D2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:52:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwQVKBlK"
+	by mail.kernel.org (Postfix) with ESMTP id A50DA2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfEGRwJ (ORCPT
+        id S1727185AbfEGRxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:52:09 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39145 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfEGRwJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:52:09 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g9so1131490plm.6;
-        Tue, 07 May 2019 10:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3hWkoDSJOZrfkTI64LpT00O3NiHbk0Ob1pJ65mVFON8=;
-        b=JwQVKBlKDR92Sclejlu6Vw2HEiOQ94zveEodXjIxNpRKXX/8QP/ICWdvWDwa4eKxIL
-         9x6Y2YrvN0jM6eBBCUIDzg2wUc7GCnowlNy6K1KkASCQdcV59d4QIsxSf71IYZILRf96
-         h9t6FQ2wjKVqYwMkQ7B1S/QP5s76pj/6/uj0TIJqIl7uUNh+jcuAUBvRZLrmz031NFFd
-         BVqdGZrbqCCk/bTfnHb2lvbNMJ4nq34bC9x7KKG+vF7fDu9+bPE89gNpo0ZVoECB+CNG
-         kxgfFa2hdzWd45g/DfPIU6N4IdmsDDCZXQMwtgn4uCT7l7r3tovrR4ecZQGcoyEFxMkm
-         gAyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3hWkoDSJOZrfkTI64LpT00O3NiHbk0Ob1pJ65mVFON8=;
-        b=HBOzabr1SXrzVkDUJ/eViMqflGDEr3dH1OZz+y3JXAgt3n8B+Lm99lKo6j8ruvVR02
-         Fvd6AjnPkAR0dJxcsA1olwXKeSetV7aGn4G5WozfkoAXlSEQ9MY5k0deA3evyEGTcXw5
-         eSTBpuRNFgOoTwZNfOTE1qtUvi7o3X/X92iDJ5Uj0FPoyZMd8S3xsdoFjYgbXlzuDiwQ
-         67Yq9mJ7KsJ/yMTy2w0d7WkiEwPKV0tvhG7m3wZ9C8Q9OKMa0AC1GDQrzCrBLoUje2Yo
-         7LoDEh402AQmDur8OFtmUQ5MK9hhjo0KDCm8cgg49volUnn8PT1FCG50uaDlnPsKNbFJ
-         KYfA==
-X-Gm-Message-State: APjAAAUcVoGsopC/DpSuYAIPy1f2GnYn8XWlMIw2DXUK9EmfqddA49dg
-        hL81qiXjMMN2uf3rKMTFHFA=
-X-Google-Smtp-Source: APXvYqwV2fTFNQXeeczraLQ8ZQHBYaNpzObxLES0PAOQWGcz6OqTVaRRZV1VJ+05CjQtDMabO/z4ag==
-X-Received: by 2002:a17:902:8343:: with SMTP id z3mr25340601pln.240.1557251528475;
-        Tue, 07 May 2019 10:52:08 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id g128sm19504187pfb.131.2019.05.07.10.52.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 10:52:07 -0700 (PDT)
-Subject: Re: [PATCH] of: Add dummy for of_node_is_root if not CONFIG_OF
-To:     Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-rockchip@lists.infradead.org, jwerner@chromium.org,
-        groeck@chromium.org, briannorris@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190507044801.250396-1-dianders@chromium.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <a3573253-e3de-0a82-8af3-6bacea20bd97@gmail.com>
-Date:   Tue, 7 May 2019 10:52:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 7 May 2019 13:53:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62483 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbfEGRxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:53:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 10:53:00 -0700
+Received: from unknown (HELO [10.232.112.171]) ([10.232.112.171])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 07 May 2019 10:52:59 -0700
+Subject: Re: [PATCH v2 4/7] nvme.h: add telemetry log page definisions
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christoph Hellwig <hch@lst.de>
+References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
+ <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
+From:   "Heitke, Kenneth" <kenneth.heitke@intel.com>
+Message-ID: <67f0d1ab-2edb-24ea-a4b5-62c90c1ef0fb@intel.com>
+Date:   Tue, 7 May 2019 11:52:58 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190507044801.250396-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 9:48 PM, Douglas Anderson wrote:
-> We'll add a dummy to just return false.
-
-A more complete explanation of why this is needed please.
-
-My one guess would be compile testing of arch/sparc/kernel/prom_64.c
-fails???
-
--Frank
 
 
+On 5/7/2019 10:58 AM, Akinobu Mita wrote:
+> Copy telemetry log page definisions from nvme-cli.
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Jens Axboe <axboe@fb.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 > ---
+> * v2
+> - New patch in this version.
 > 
->  include/linux/of.h | 5 +++++
->  1 file changed, 5 insertions(+)
+>   include/linux/nvme.h | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 0cf857012f11..62ae5c1cafa5 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -653,6 +653,11 @@ static inline bool of_have_populated_dt(void)
->  	return false;
->  }
->  
-> +static inline bool of_node_is_root(const struct device_node *node)
-> +{
-> +	return false;
-> +}
-> +
->  static inline struct device_node *of_get_compatible_child(const struct device_node *parent,
->  					const char *compatible)
->  {
-> 
+> diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+> index c40720c..5217fe4 100644
+> --- a/include/linux/nvme.h
+> +++ b/include/linux/nvme.h
+> @@ -396,6 +396,28 @@ enum {
+>   	NVME_NIDT_UUID		= 0x03,
+>   };
+>   
+> +/* Derived from 1.3a Figure 101: Get Log Page – Telemetry Host
+> + * -Initiated Log (Log Identifier 07h)
+> + */
 
+Is this Host Initiated or Controller Initiated? The comment says host
+initiated but everything else seems to indicated controller initiated.
+Is controller initiated even the correct choice because the controller
+would have sent an AER to indicate that the host should pull the
+telemetry data.
+
+
+> +struct nvme_telemetry_log_page_hdr {
+> +	__u8    lpi; /* Log page identifier */
+> +	__u8    rsvd[4];
+> +	__u8    iee_oui[3];
+> +	__le16  dalb1; /* Data area 1 last block */
+> +	__le16  dalb2; /* Data area 2 last block */
+> +	__le16  dalb3; /* Data area 3 last block */
+> +	__u8    rsvd1[368]; /* TODO verify */
+> +	__u8    ctrlavail; /* Controller initiated data avail?*/
+> +	__u8    ctrldgn; /* Controller initiated telemetry Data Gen # */
+> +	__u8    rsnident[128];
+> +	/* We'll have to double fetch so we can get the header,
+> +	 * parse dalb1->3 determine how much size we need for the
+> +	 * log then alloc below. Or just do a secondary non-struct
+> +	 * allocation.
+> +	 */
+> +	__u8    telemetry_dataarea[0];
+> +};
+> +
+>   struct nvme_smart_log {
+>   	__u8			critical_warning;
+>   	__u8			temperature[2];
+> @@ -832,6 +854,7 @@ enum {
+>   	NVME_LOG_FW_SLOT	= 0x03,
+>   	NVME_LOG_CHANGED_NS	= 0x04,
+>   	NVME_LOG_CMD_EFFECTS	= 0x05,
+> +	NVME_LOG_TELEMETRY_CTRL	= 0x08,
+>   	NVME_LOG_ANA		= 0x0c,
+>   	NVME_LOG_DISC		= 0x70,
+>   	NVME_LOG_RESERVATION	= 0x80,
+> 
