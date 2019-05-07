@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E90AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DED4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D083C205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9BE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208162;
-	bh=t/Br6gIcSiZmlrPC7V3vb+4t9UEZaeU+lmbv8eZ3UJY=;
+	s=default; t=1557208170;
+	bh=vHZe3uduaFSrPSwGHGXSIurZ6mFW3HgdPpMWiMpWwxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ag8hGub8CK73l/99r4KWu6Ay35uuN9nRPJg3twMdVtWlCtUzomK0BTX0Q6wa0qVPz
-	 /qMotWvIp82eqr2HhOen3ITrvGXdXlsw009PwyP5ULPoPyXB/aXYBRkLuOYhXLjRxQ
-	 f60Pdkvty8SG1mV6CrG+uZe6c5ZQlIRvmQ7tbVVE=
+	b=D/DMeFkr635eiB0aZwl4kaT9lu4rq15jEoZaBLPBHW7GMSxwtYtoy90JdiwQjKnuw
+	 kwDSa+qRtXl82QJ9e7QQzZZiw80dp2t4Ac3ROdXKrwUIx3Ep7Tyy8rtfReqnp3wSae
+	 /wCTUPl/yZ6ylI5NJ2VF0VXNyjolllWAp9qJDEf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfEGFtV (ORCPT
+        id S1729118AbfEGFkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60042 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbfEGFkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:32 -0400
+        id S1728317AbfEGFk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58BE920578;
-        Tue,  7 May 2019 05:40:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B489B214AE;
+        Tue,  7 May 2019 05:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207631;
-        bh=t/Br6gIcSiZmlrPC7V3vb+4t9UEZaeU+lmbv8eZ3UJY=;
+        s=default; t=1557207626;
+        bh=vHZe3uduaFSrPSwGHGXSIurZ6mFW3HgdPpMWiMpWwxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqMTMFfNiAdmOTFz6IRJSh1OzTHCw+F8+JdFUgr8JXsy6OYrMC/U3z/LM+lAJxd+2
-         xlyLSQA6woMkon6KhWrh2KOzoVyJsfwfOvcZiI7lNkosOttSUE0s3dpkucqR4Aim6x
-         CUVIVnkXsSzF47bGYqiAcpVshRB1jaHsmO3T3pWw=
+        b=tH46lFajqXfjyVjNf+etMMQ2e+VLoAoOPtxPS8HSJ58k3IzvESr4n84VpxlsfZ0SJ
+         nqXuvNoHQ0qa5BVXS8jDSF7WOg/tLZUkoxJmntSjgLJfEzHDHcvGDMSmoUwTiJvJa0
+         esJGHb1XH7adwPDAlSxjCtzihYSqVuMUH9I8PzR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adit Ranadive <aditr@vmware.com>,
-        Ruishuang Wang <ruishuangw@vmware.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+Cc:     Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 68/95] RDMA/vmw_pvrdma: Return the correct opcode when creating WR
-Date:   Tue,  7 May 2019 01:37:57 -0400
-Message-Id: <20190507053826.31622-68-sashal@kernel.org>
+        linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 64/95] crypto: testmgr - add AES-CFB tests
+Date:   Tue,  7 May 2019 01:37:53 -0400
+Message-Id: <20190507053826.31622-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -63,103 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adit Ranadive <aditr@vmware.com>
+From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
 
-[ Upstream commit 6325e01b6cdf4636b721cf7259c1616e3cf28ce2 ]
+[ Upstream commit 7da66670775d201f633577f5b15a4bbeebaaa2b0 ]
 
-Since the IB_WR_REG_MR opcode value changed, let's set the PVRDMA device
-opcodes explicitly.
+Add AES128/192/256-CFB testvectors from NIST SP800-38A.
 
-Reported-by: Ruishuang Wang <ruishuangw@vmware.com>
-Fixes: 9a59739bd01f ("IB/rxe: Revise the ib_wr_opcode enum")
+Signed-off-by: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Bryan Tan <bryantan@vmware.com>
-Reviewed-by: Ruishuang Wang <ruishuangw@vmware.com>
-Reviewed-by: Vishnu Dasa <vdasa@vmware.com>
-Signed-off-by: Adit Ranadive <aditr@vmware.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma.h    | 35 +++++++++++++++++++-
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c |  6 ++++
- include/uapi/rdma/vmw_pvrdma-abi.h           |  1 +
- 3 files changed, 41 insertions(+), 1 deletion(-)
+ crypto/tcrypt.c  |  5 ++++
+ crypto/testmgr.c |  7 +++++
+ crypto/testmgr.h | 76 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 88 insertions(+)
 
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h b/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
-index 984aa3484928..4463e1c1a764 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
-@@ -407,7 +407,40 @@ static inline enum ib_qp_state pvrdma_qp_state_to_ib(enum pvrdma_qp_state state)
+diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+index f7affe7cf0b4..76df552f099b 100644
+--- a/crypto/tcrypt.c
++++ b/crypto/tcrypt.c
+@@ -1099,6 +1099,7 @@ static int do_test(const char *alg, u32 type, u32 mask, int m)
+ 		ret += tcrypt_test("xts(aes)");
+ 		ret += tcrypt_test("ctr(aes)");
+ 		ret += tcrypt_test("rfc3686(ctr(aes))");
++		ret += tcrypt_test("cfb(aes)");
+ 		break;
  
- static inline enum pvrdma_wr_opcode ib_wr_opcode_to_pvrdma(enum ib_wr_opcode op)
- {
--	return (enum pvrdma_wr_opcode)op;
-+	switch (op) {
-+	case IB_WR_RDMA_WRITE:
-+		return PVRDMA_WR_RDMA_WRITE;
-+	case IB_WR_RDMA_WRITE_WITH_IMM:
-+		return PVRDMA_WR_RDMA_WRITE_WITH_IMM;
-+	case IB_WR_SEND:
-+		return PVRDMA_WR_SEND;
-+	case IB_WR_SEND_WITH_IMM:
-+		return PVRDMA_WR_SEND_WITH_IMM;
-+	case IB_WR_RDMA_READ:
-+		return PVRDMA_WR_RDMA_READ;
-+	case IB_WR_ATOMIC_CMP_AND_SWP:
-+		return PVRDMA_WR_ATOMIC_CMP_AND_SWP;
-+	case IB_WR_ATOMIC_FETCH_AND_ADD:
-+		return PVRDMA_WR_ATOMIC_FETCH_AND_ADD;
-+	case IB_WR_LSO:
-+		return PVRDMA_WR_LSO;
-+	case IB_WR_SEND_WITH_INV:
-+		return PVRDMA_WR_SEND_WITH_INV;
-+	case IB_WR_RDMA_READ_WITH_INV:
-+		return PVRDMA_WR_RDMA_READ_WITH_INV;
-+	case IB_WR_LOCAL_INV:
-+		return PVRDMA_WR_LOCAL_INV;
-+	case IB_WR_REG_MR:
-+		return PVRDMA_WR_FAST_REG_MR;
-+	case IB_WR_MASKED_ATOMIC_CMP_AND_SWP:
-+		return PVRDMA_WR_MASKED_ATOMIC_CMP_AND_SWP;
-+	case IB_WR_MASKED_ATOMIC_FETCH_AND_ADD:
-+		return PVRDMA_WR_MASKED_ATOMIC_FETCH_AND_ADD;
-+	case IB_WR_REG_SIG_MR:
-+		return PVRDMA_WR_REG_SIG_MR;
-+	default:
-+		return PVRDMA_WR_ERROR;
-+	}
- }
+ 	case 11:
+@@ -1422,6 +1423,10 @@ static int do_test(const char *alg, u32 type, u32 mask, int m)
+ 				speed_template_16_24_32);
+ 		test_cipher_speed("ctr(aes)", DECRYPT, sec, NULL, 0,
+ 				speed_template_16_24_32);
++		test_cipher_speed("cfb(aes)", ENCRYPT, sec, NULL, 0,
++				speed_template_16_24_32);
++		test_cipher_speed("cfb(aes)", DECRYPT, sec, NULL, 0,
++				speed_template_16_24_32);
+ 		break;
  
- static inline enum ib_wc_status pvrdma_wc_status_to_ib(
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
-index d7162f2b7979..4d9c99dd366b 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
-@@ -695,6 +695,12 @@ int pvrdma_post_send(struct ib_qp *ibqp, struct ib_send_wr *wr,
- 		    wr->opcode == IB_WR_RDMA_WRITE_WITH_IMM)
- 			wqe_hdr->ex.imm_data = wr->ex.imm_data;
- 
-+		if (unlikely(wqe_hdr->opcode == PVRDMA_WR_ERROR)) {
-+			*bad_wr = wr;
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
- 		switch (qp->ibqp.qp_type) {
- 		case IB_QPT_GSI:
- 		case IB_QPT_UD:
-diff --git a/include/uapi/rdma/vmw_pvrdma-abi.h b/include/uapi/rdma/vmw_pvrdma-abi.h
-index 912ea1556a0b..fd801c7be120 100644
---- a/include/uapi/rdma/vmw_pvrdma-abi.h
-+++ b/include/uapi/rdma/vmw_pvrdma-abi.h
-@@ -76,6 +76,7 @@ enum pvrdma_wr_opcode {
- 	PVRDMA_WR_MASKED_ATOMIC_FETCH_AND_ADD,
- 	PVRDMA_WR_BIND_MW,
- 	PVRDMA_WR_REG_SIG_MR,
-+	PVRDMA_WR_ERROR,
+ 	case 201:
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index d91278c01ea8..e65c8228ea47 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -2631,6 +2631,13 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 				.dec = __VECS(aes_ccm_dec_tv_template)
+ 			}
+ 		}
++	}, {
++		.alg = "cfb(aes)",
++		.test = alg_test_skcipher,
++		.fips_allowed = 1,
++		.suite = {
++			.cipher = __VECS(aes_cfb_tv_template)
++		},
+ 	}, {
+ 		.alg = "chacha20",
+ 		.test = alg_test_skcipher,
+diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+index 12835f072614..5bd9c1400fee 100644
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -16071,6 +16071,82 @@ static const struct cipher_testvec aes_cbc_dec_tv_template[] = {
+ 	},
  };
  
- enum pvrdma_wc_status {
++static const struct cipher_testvec aes_cfb_tv_template[] = {
++	{ /* From NIST SP800-38A */
++		.key	= "\x2b\x7e\x15\x16\x28\xae\xd2\xa6"
++			  "\xab\xf7\x15\x88\x09\xcf\x4f\x3c",
++		.klen	= 16,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae\x2d\x8a\x57\x1e\x03\xac\x9c"
++			  "\x9e\xb7\x6f\xac\x45\xaf\x8e\x51"
++			  "\x30\xc8\x1c\x46\xa3\x5c\xe4\x11"
++			  "\xe5\xfb\xc1\x19\x1a\x0a\x52\xef"
++			  "\xf6\x9f\x24\x45\xdf\x4f\x9b\x17"
++			  "\xad\x2b\x41\x7b\xe6\x6c\x37\x10",
++		.ctext	= "\x3b\x3f\xd9\x2e\xb7\x2d\xad\x20"
++			  "\x33\x34\x49\xf8\xe8\x3c\xfb\x4a"
++			  "\xc8\xa6\x45\x37\xa0\xb3\xa9\x3f"
++			  "\xcd\xe3\xcd\xad\x9f\x1c\xe5\x8b"
++			  "\x26\x75\x1f\x67\xa3\xcb\xb1\x40"
++			  "\xb1\x80\x8c\xf1\x87\xa4\xf4\xdf"
++			  "\xc0\x4b\x05\x35\x7c\x5d\x1c\x0e"
++			  "\xea\xc4\xc6\x6f\x9f\xf7\xf2\xe6",
++		.len	= 64,
++	}, {
++		.key	= "\x8e\x73\xb0\xf7\xda\x0e\x64\x52"
++			  "\xc8\x10\xf3\x2b\x80\x90\x79\xe5"
++			  "\x62\xf8\xea\xd2\x52\x2c\x6b\x7b",
++		.klen	= 24,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae\x2d\x8a\x57\x1e\x03\xac\x9c"
++			  "\x9e\xb7\x6f\xac\x45\xaf\x8e\x51"
++			  "\x30\xc8\x1c\x46\xa3\x5c\xe4\x11"
++			  "\xe5\xfb\xc1\x19\x1a\x0a\x52\xef"
++			  "\xf6\x9f\x24\x45\xdf\x4f\x9b\x17"
++			  "\xad\x2b\x41\x7b\xe6\x6c\x37\x10",
++		.ctext	= "\xcd\xc8\x0d\x6f\xdd\xf1\x8c\xab"
++			  "\x34\xc2\x59\x09\xc9\x9a\x41\x74"
++			  "\x67\xce\x7f\x7f\x81\x17\x36\x21"
++			  "\x96\x1a\x2b\x70\x17\x1d\x3d\x7a"
++			  "\x2e\x1e\x8a\x1d\xd5\x9b\x88\xb1"
++			  "\xc8\xe6\x0f\xed\x1e\xfa\xc4\xc9"
++			  "\xc0\x5f\x9f\x9c\xa9\x83\x4f\xa0"
++			  "\x42\xae\x8f\xba\x58\x4b\x09\xff",
++		.len	= 64,
++	}, {
++		.key	= "\x60\x3d\xeb\x10\x15\xca\x71\xbe"
++			  "\x2b\x73\xae\xf0\x85\x7d\x77\x81"
++			  "\x1f\x35\x2c\x07\x3b\x61\x08\xd7"
++			  "\x2d\x98\x10\xa3\x09\x14\xdf\xf4",
++		.klen	= 32,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae\x2d\x8a\x57\x1e\x03\xac\x9c"
++			  "\x9e\xb7\x6f\xac\x45\xaf\x8e\x51"
++			  "\x30\xc8\x1c\x46\xa3\x5c\xe4\x11"
++			  "\xe5\xfb\xc1\x19\x1a\x0a\x52\xef"
++			  "\xf6\x9f\x24\x45\xdf\x4f\x9b\x17"
++			  "\xad\x2b\x41\x7b\xe6\x6c\x37\x10",
++		.ctext	= "\xdc\x7e\x84\xbf\xda\x79\x16\x4b"
++			  "\x7e\xcd\x84\x86\x98\x5d\x38\x60"
++			  "\x39\xff\xed\x14\x3b\x28\xb1\xc8"
++			  "\x32\x11\x3c\x63\x31\xe5\x40\x7b"
++			  "\xdf\x10\x13\x24\x15\xe5\x4b\x92"
++			  "\xa1\x3e\xd0\xa8\x26\x7a\xe2\xf9"
++			  "\x75\xa3\x85\x74\x1a\xb9\xce\xf8"
++			  "\x20\x31\x62\x3d\x55\xb1\xe4\x71",
++		.len	= 64,
++	},
++};
++
+ static const struct aead_testvec hmac_md5_ecb_cipher_null_enc_tv_template[] = {
+ 	{ /* Input data from RFC 2410 Case 1 */
+ #ifdef __LITTLE_ENDIAN
 -- 
 2.20.1
 
