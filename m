@@ -2,148 +2,160 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EF3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6730C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E56420989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557206861;
-	bh=UVbc4iB6zImLc+u0YFa5xDna8kmTDTd7akBPgEp3Vm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mwiLc/p5CXPsMLw3r6XZ/qhY7CTW1UW6YsTlImBkkSs8hAXavKOFvflWEQJZ1ZRtM
-	 YjHUH00ano21O5qeLraxAK8ZuE/9E+umGWGDVKles+62jnw6ZbBjWTtdzovG28sv8Y
-	 QXSpIuSs+VEufgDlYxkQYo2f3nH4xcfBT5bu8VRc=
+	by mail.kernel.org (Postfix) with ESMTP id 76507206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="cKqE966E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEGF1k (ORCPT
+        id S1726486AbfEGF17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfEGF1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:27:39 -0400
-Received: from localhost (unknown [106.200.210.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99391206A3;
-        Tue,  7 May 2019 05:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557206858;
-        bh=UVbc4iB6zImLc+u0YFa5xDna8kmTDTd7akBPgEp3Vm4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C/+Tyj3EJnEfQtmPl4wAuOQmnEKvTFlW8qYh1dF6fbWNETkJKsnDW4/hwieXjvtRh
-         e6JxXYLq0TKNmzbFmn/p+2eDhYS30fnWzdO6OAXl9PLL0ps1lSJktKaNZeYrHg1sq4
-         XDQEjEqG4MpYNu5dAjwWMA0jGzYWSNhwVqhJBhGA=
-Date:   Tue, 7 May 2019 10:57:32 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org,
-        tiwai@suse.de, linux-kernel@vger.kernel.org,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
- master(s)
-Message-ID: <20190507052732.GD16052@vkoul-mobl>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
- <20190504065242.GA9770@kroah.com>
- <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 7 May 2019 01:27:59 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:41323 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfEGF16 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:27:58 -0400
+Received: by mail-ed1-f43.google.com with SMTP id m4so17474324edd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 22:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=MBFNJxMevG48pJHzyxmna7JyM+HsId/GulK9IbVJxcA=;
+        b=cKqE966EYoJpcFwaLW+7vPPCnFUkD9zrcBged5xkJVhxhyl6CP/yYrWZCcxliKqFph
+         xlniyUjm6CNcoFZe9eEqbVd3stPeHiPhzagkauIg67asW3A/RKvXIlgkX5G5D3A9XCTZ
+         fstxP1JRcROQkRtzbMhaVqWgQI4289PrCX3EZr4AZsAmppUfxXDjX+5kxgy5zSa56mu/
+         h69xt/UBT8M7dpfJEcn7EWeIVp6RsFHdPlgur8mezQnA5khpO1hLJL9PU7K8TKrXOqiS
+         Dj5ygRmE6MP3S+vUo8NAT/n/zruDMp9YwIgqUTR5aPbuOABE2iippXYTrjhxvKk5IPXw
+         lhZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=MBFNJxMevG48pJHzyxmna7JyM+HsId/GulK9IbVJxcA=;
+        b=SawS4nZ2K8OnxCt+qSXH3orbcdYPGV2iq4srAXOkBE/Iq/Bio64ip6F0ysYRHZJDd3
+         16uNUd8SRfnG2dORBu80gQqsTnlEfCliUSKqSd7u6Z7kuYjHTtfWdo2CdFTP9qcpZMbU
+         AgP9FXfko/XgU0gaeaxz0kWWYOC79G0tAHfhrUvx0LMZ/t3FNw64DdeRhj1YYZthim5u
+         JJO+LMH1ezCYKkY/AITjDZVSL6qyqRNaO4SZcd0Iw9BW4NCEaENLyxA6ypy06pVcrSMS
+         cnRb/rA1HbuHhyZDjUALfpppGIeXrctq1qZqNK5POln2nwDuU2Q+n6YLJ4MM9SYRcz5X
+         POUA==
+X-Gm-Message-State: APjAAAX385kzAppSkNpu/f0trPiaCvSdKfq7G0lEWoCKXziduyNlrZMg
+        +rG+IcogfIPQuzRSIBuJshSzXg==
+X-Google-Smtp-Source: APXvYqwyLbiU3H266HvLDvt7zxIbQABXSFxbhE5pS/0xJ9Go+lZuCbEcKMfGQISmlFmSKhsg3ysT+Q==
+X-Received: by 2002:a17:906:2301:: with SMTP id l1mr17855620eja.121.1557206876819;
+        Mon, 06 May 2019 22:27:56 -0700 (PDT)
+Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id i33sm3835646ede.47.2019.05.06.22.27.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 22:27:55 -0700 (PDT)
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Message-Id: <67CD0023-8852-43F9-A447-88E4AFFED315@javigon.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
+Date:   Tue, 7 May 2019 07:27:54 +0200
+In-Reply-To: <CAJbgVnU3-ed42CBtPv7SWdtA=__bNcSPhiXwobuVKek2-BFBig@mail.gmail.com>
+Cc:     "Konopko, Igor J" <igor.j.konopko@intel.com>,
+        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Heiner Litz <hlitz@ucsc.edu>
+References: <20190425052152.6571-1-hlitz@ucsc.edu>
+ <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
+ <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
+ <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
+ <CAJbgVnWsHQRpEPkd77E6u0hoW5jKQaOGR-3dW9+drGNq_JYpfA@mail.gmail.com>
+ <139AF16B-E69C-4AA5-A9AC-38576BB9BD4B@javigon.com>
+ <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
+ <b7c03f26-90bb-ffd6-e744-6daf3bbe348d@intel.com>
+ <CAJbgVnU3-ed42CBtPv7SWdtA=__bNcSPhiXwobuVKek2-BFBig@mail.gmail.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-05-19, 21:24, Pierre-Louis Bossart wrote:
-> 
-> > > +int sdw_sysfs_bus_init(struct sdw_bus *bus)
-> > > +{
-> > > +	struct sdw_master_sysfs *master;
-> > > +	int err;
-> > > +
-> > > +	if (bus->sysfs) {
-> > > +		dev_err(bus->dev, "SDW sysfs is already initialized\n");
-> > > +		return -EIO;
-> > > +	}
-> > > +
-> > > +	master = kzalloc(sizeof(*master), GFP_KERNEL);
-> > > +	if (!master)
-> > > +		return -ENOMEM;
-> > 
-> > Why are you creating a whole new device to put all of this under?  Is
-> > this needed?  What will the sysfs tree look like when you do this?  Why
-> > can't the "bus" device just get all of these attributes and no second
-> > device be created?
-> 
-> I tried a quick hack and indeed we could simplify the code with something as
-> simple as:
-> 
-> [attributes omitted]
-> 
-> static const struct attribute_group sdw_master_node_group = {
-> 	.attrs = master_node_attrs,
-> 	.name = "mipi-disco"
-> };
-> 
-> int sdw_sysfs_bus_init(struct sdw_bus *bus)
-> {
-> 	return sysfs_create_group(&bus->dev->kobj, &sdw_master_node_group);
-> }
-> 
-> void sdw_sysfs_bus_exit(struct sdw_bus *bus)
-> {
-> 	sysfs_remove_group(&bus->dev->kobj, &sdw_master_node_group);	
-> }
-> 
-> which gives me a simpler structure and doesn't require additional
-> pretend-devices:
-> 
-> /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# ls
-> clock_gears
-> /sys/bus/acpi/devices/PRP00001:00/int-sdw.0/mipi-disco# more clock_gears
-> 8086
-> 
-> The issue I have is that for the _show() functions, I don't see a way to go
-> from the device argument to bus. In the example above I forced the output
-> but would need a helper.
-> 
-> static ssize_t clock_gears_show(struct device *dev,
-> 				struct device_attribute *attr, char *buf)
-> {
-> 	struct sdw_bus *bus; // this is what I need to find from dev
-> 	ssize_t size = 0;
-> 	int i;
-> 
-> 	return sprintf(buf, "%d \n", 8086);
-> }
-> 
-> my brain is starting to fry, but I don't see how container_of() would work
-> here since the bus structure contains a pointer to the device. I don't also
-> see a way to check for all devices for the bus_type soundwire.
-> For the slaves we do have a macro based on container_of(), so wondering if
-> we made a mistake in the bus definition? Vinod, any thoughts?
 
-yeah I dont recall a way to get bus fed into create_group, I did look at
-the other examples back then and IIRC and most of them were using a
-global to do the trick (I didn't want to go down that route).
+--Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-I think that was the reason I wrote it this way...
+> On 6 May 2019, at 07.16, Heiner Litz <hlitz@ucsc.edu> wrote:
+>=20
+> Igor, Javier,
+>=20
+> both of you are right. Here is what I came up with after some more =
+thinking.
+>=20
+> We can avoid the races in 2. and 3. with the following two invariants:
+> I1: If we have a GC line with seq_id X, only garbage collect from
+> lines older than X (this addresses 2.)
+> I2: Guarantee that the open GC line always has a smaller seq_id than
+> all open user lines (this addresses 3)
+>=20
+> We can enforce I2 by adding a minor seq_id. The major sequence id is
+> only incremented when allocating a user line. Whenever a GC line is
+> allocated we read the current major seq_id (open user line) and
+> increment the minor seq_id. This allows us to order all GC lines
+> before the open user line during recovery.
+>=20
+> Problem with this approach:
+> Consider the following example: There exist user lines U0, U1, U2
+> (where 0,1,2 are seq_ids) and a non-empty GC5 line (with seq_id 5). If
+> we now do only sequential writes all user lines will be overwritten
+> without GC being required. As a result, data will now reside on U6,
+> U7, U8. If we now need to GC we cannot because of I1.
+> Solution: We cannot fast-forward the GC line's seq_id because it
+> contains old data, so pad the GC line with zeros, close it and open a
+> new GC9 line.
+>=20
+> Generality:
+> This approach extends to schemes that use e.g. hot, warm, cold open
+> lines (adding a minor_minor_seq_id)
+>=20
+> Heiner
 
-BTW if you do use psedo-device you can create your own struct foo which
-embeds device and then then you can use container approach to get foo
-(and foo contains bus as a member).
 
-Greg, any thoughts?
+Looks like a good solution that allows us to maintain the current =
+mapping model.
 
-Thanks
--- 
-~Vinod
+Javier
+
+--Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlzRF1oACgkQPEYBfS0l
+eOAA5w//Y7hc9YZYawmU3f9VgBOR0aaGsv9Wj9/oTX44srpceZgxsLSqNfTLaree
+qA5t0keisrMDRq27BRU8UXMEJAoNnqa1BnG0CwTdA+faF7lN9nPdAzYSD0Mfc0XI
+RB6icT3oMYknVBeh36P/UlYDAX4Y8U9H8la6nSsqlY0FYQTjacb8MvBsrxqLEAZO
+43AsYTLz9IuvlrMFRhFuqSwte3kgjEU/w6OLJQvogYLHD6s5bcKdm8pis6w/xjmg
+3W3y/XhnCToS6ZsMrNUGlEd+e/IuKqadZ+iKuG0x0PSbw0IhfdlBdRwMzMCJY2JN
+7QYYzQoM+s22qCI9OK/hN2Ry9Rwe/f25Pa0dT5xwfS4ZtPDwhkmhgQmbibVQquAz
+pl4RHnr06aeX5DEj0y/ISV3KAk+O/cySh9bWCYs2XulDw3NJB1UI2/BZYGx83E2o
+fjoSYaok6WegmlgfBD/dhnpGmkWYtPZryaNo4jD4AbL9B7DgB68U6Pl5YkCZwM//
+NiCkl2MJsNjvKLtjti4OYlin7G39CggcmeV9C/2uPy8V5uVFXBMybqW6AVwaKKCw
+uufcMO/3bO9gMraKf+AIbT3Ky4OuZ66KPB8DOTNverHwyhsS01MiGMVjevDUOZdE
+S9mTFCcxaGe2eSJ3Rmz69noe0bIZTIY2ulS48ysKEV6L9oF2S74=
+=O9E7
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_EDE3D055-B8E4-4353-ABDD-D4F4A955ABFD--
