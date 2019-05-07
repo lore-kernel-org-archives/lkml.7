@@ -2,98 +2,99 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35228C04AAE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01B0C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068062087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F1C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557248544;
-	bh=+dH1dylfToIztT6tIsED1NzXkgisvmtolImG8/gDIeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GlOOfqd/alFnHyiqxzLeEi++F3b04i9+LqyhzIflBhYPQEIsQnKNpGdIXrIWRfElm
-	 HLgOIeYISkZYMF1WRTYZzxZ0CO/Twtaw8NowxOEHw47yJtMQlfpM6kpA2pFQbxuOAd
-	 3JI4IHjcFYrwueBq6Cip9KKPSfNMHzSe33Tilnp0=
+	s=default; t=1557248598;
+	bh=3E48yfIuMb989wSMyEAgJjcy1s9jUqjh3X8BkoivnNA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=q3z01JsCVuR1Y9OZvqz7kgDN5CsRdokuCBPUSUyJiZ+APpGeDetyFv+QB51LoTtB8
+	 B2/jEKeG6wiGAY1/Tgt90ZwIw96q178xdEuNHiii5rwgyVLsbccWzw5AUhMHKc+R8Q
+	 Lyjyun1ZXPv35CnQp2DBXYQpyCgCheG1B9Mtg06A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfEGRCW (ORCPT
+        id S1727327AbfEGRDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727179AbfEGRCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:02:10 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3030A205C9;
-        Tue,  7 May 2019 17:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557248529;
-        bh=+dH1dylfToIztT6tIsED1NzXkgisvmtolImG8/gDIeU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g67/5rAMyjMObT6TuHwzVVr5fhZH+BNj5IA+NG26oX7D7N4Az/RLsgF1Jc+jUk5c+
-         WAC9pINLyovaABMYNG69uAcI1Z1rL/PoxWrlPNd8yFEF2xS7eu0xqXW/90vGKpIwKR
-         2kZ9uGjgtwHlfzPHAQvgsHdgIpxzJRUuhzepGMCc=
-Date:   Tue, 7 May 2019 13:02:08 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize struct
- pages for the full memory section
-Message-ID: <20190507170208.GF1747@sasha-vm>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-62-sashal@kernel.org>
- <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
- <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
+        Tue, 7 May 2019 13:03:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34994 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbfEGRDR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:03:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so8494389plp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:03:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZgOuuMrrhj8XAofs6xeZ/fsPkpFUrdc6Z7bFfUFRLkU=;
+        b=UjCPb+Kl6rcv6K9jz5eafsxtoQNmNFLmA6vEkjnDgrlBumH1I0DAOD8N6UCXzhUf5a
+         /kGsGvctvwXxmNklWyjiHIZEJV68hBQKVMmJ26242tUDnTRteO5iZi7PI4fGD4q/ITJI
+         hVeyoTOm+PKTVzfKNB+ZQo7PUyHqW80rhiQtPwdjIsgAKcmzf3wjLX+TPNdLtTSpBwHM
+         reM+ChdjbVjWkBs0eqLuQ1EuizUT8CWJJ9oG8CGO5drZdvycAyMazj2vXDXL3tD2hFgg
+         QFg/tZqNFPg4DMKc3FszmMeePEeH32FxcuJ6+1xARh7L/hcdk+A1tRAVUy4N91mEcikD
+         pidw==
+X-Gm-Message-State: APjAAAWanLb3dKHotVU+fAMe9yqFg87+KWKQ74dIG6Yx0nLV1WDsLS9h
+        1x9uag42mUPfRhHM6JjLQB34bQ==
+X-Google-Smtp-Source: APXvYqwNDn3NrBxsLCzzv0AbtjUL+SxTQfXa4VJ+Fy/gn2Z/CVWh+d8UM3NntMwIqWZ7Z/heKmrJ2Q==
+X-Received: by 2002:a17:902:8483:: with SMTP id c3mr39962344plo.19.1557248596403;
+        Tue, 07 May 2019 10:03:16 -0700 (PDT)
+Received: from localhost ([2601:647:4700:2953:ec49:968:583:9f8])
+        by smtp.gmail.com with ESMTPSA id n15sm31360519pfb.111.2019.05.07.10.03.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 10:03:15 -0700 (PDT)
+From:   Moritz Fischer <mdf@kernel.org>
+To:     linux-fpga@vger.kernel.org
+Cc:     atull@kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        Moritz Fischer <mdf@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] fpga: zynqmp-fpga: Correctly handle error pointer
+Date:   Tue,  7 May 2019 10:02:57 -0700
+Message-Id: <20190507170257.25451-1-mdf@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:50:50AM -0700, Linus Torvalds wrote:
->On Tue, May 7, 2019 at 9:31 AM Alexander Duyck
-><alexander.duyck@gmail.com> wrote:
->>
->> Wasn't this patch reverted in Linus's tree for causing a regression on
->> some platforms? If so I'm not sure we should pull this in as a
->> candidate for stable should we, or am I missing something?
->
->Good catch. It was reverted in commit 4aa9fc2a435a ("Revert "mm,
->memory_hotplug: initialize struct pages for the full memory
->section"").
->
->We ended up with efad4e475c31 ("mm, memory_hotplug:
->is_mem_section_removable do not pass the end of a zone") instead (and
->possibly others - this was just from looking for commit messages that
->mentioned that reverted commit).
+Fixes the following static checker error:
 
-I got it wrong then. I'll fix it up and get efad4e475c31 in instead.
-Thanks!
+drivers/fpga/zynqmp-fpga.c:50 zynqmp_fpga_ops_write()
+error: 'eemi_ops' dereferencing possible ERR_PTR()
 
---
-Thanks,
-Sasha
+Note: This does not handle the EPROBE_DEFER value in a
+      special manner.
+
+Fixes commit c09f7471127e ("fpga manager: Adding FPGA Manager support for
+Xilinx zynqmp")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+---
+ drivers/fpga/zynqmp-fpga.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c
+index f7cbaadf49ab..abcb0b2e75bf 100644
+--- a/drivers/fpga/zynqmp-fpga.c
++++ b/drivers/fpga/zynqmp-fpga.c
+@@ -47,7 +47,7 @@ static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
+ 	char *kbuf;
+ 	int ret;
+ 
+-	if (!eemi_ops || !eemi_ops->fpga_load)
++	if (IS_ERR_OR_NULL(eemi_ops) || !eemi_ops->fpga_load)
+ 		return -ENXIO;
+ 
+ 	priv = mgr->priv;
+-- 
+2.21.0
+
