@@ -2,135 +2,103 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481E7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31E5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154FF206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557193308;
-	bh=9D/5jhhY/r7hbe/Nd5GrK0RWuyDt4WTTNPwLtCd3DiU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LxcE4SuQN8EO3Qm4cNOs6xvJWYe9pZkWsBeCIrfWf03r6ELb0J3AbRBlgrZ8/MCJK
-	 r1eKs9YaGiHMx5JIv3iHgwCNRM9tEFHR/SX3Nf/FzofMeyTogbHrxu2dltKle+Y+d/
-	 gl96yy9fDnV08WtcYDayBMfpDEvDglxfEmwr/zFs=
+	by mail.kernel.org (Postfix) with ESMTP id 78067206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 01:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfEGBlq (ORCPT
+        id S1726451AbfEGBni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 21:41:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45067 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfEGBlq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 21:41:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n22so3006044lfe.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 18:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6H70OYCWqWNzJ1zGHNlYsHEsCgxXv8c0o/4c1a8H4TM=;
-        b=dpFgNSCaKcwRzOTxc2CRA45EB/B/5baFN6H/ywJJjn2iC4DVw0z3j37EPur3kF2BcM
-         gR5dH5TJcCt0L08AcgiCY39z5fIt5og+cl6z+Q6Orik7/B2A+FvQSQtx6uaVPo9r5nWT
-         BpDf9SS2XWqZ2zgNFN0ahQyv31mOBnC8Onm0o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6H70OYCWqWNzJ1zGHNlYsHEsCgxXv8c0o/4c1a8H4TM=;
-        b=Bx0TeM1O007mDlnOZU6ybzIZqIl2NVIk7TzlqDpEFH68/kbU7KnV2cblXPlZBDm0ZV
-         gT+b3Fe7jwC6PP+4QXHhikpbuPEbfuTZ0/JBQD8U5aUe4+G85H1YcpTu1/p12faPwPGl
-         VkoaEtm2GaUUwXH4q/vxJfLT0E1oDjrzVcQF3MBRc0YxIUaUFYoCbdFyjY54LjRGucVo
-         NtRYL0Tlc6sISXYvhQF9mBT5In+VB05AJL+/GshJFloeskka3qb+U0PX8bXJrNILFtuh
-         gN0DlhGIN9hvpVjNbF5UZYYRbYiXGp4ztqetD4d+a1+EgAQQW0GF8qpVuBjT2WLh7tN2
-         ifKQ==
-X-Gm-Message-State: APjAAAX9I2A8PmOpPcECyBb6DQjTdJtwJ3eero4ErIOFD7lfUnaQmoqZ
-        2v4idOp50KFTMF5pUP6aon3pcxI2esY=
-X-Google-Smtp-Source: APXvYqx0j6cT0FfjvePJ9DnIx9dKW3IP2T//lW6PmYrVypQbAGyhkccCAnpiddOIt+OBpv74l6X6iw==
-X-Received: by 2002:a19:97c8:: with SMTP id z191mr14340744lfd.167.1557193304273;
-        Mon, 06 May 2019 18:41:44 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id p18sm3199628ljc.54.2019.05.06.18.41.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 18:41:44 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id n134so8716011lfn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 18:41:43 -0700 (PDT)
-X-Received: by 2002:a19:2952:: with SMTP id p79mr5995097lfp.166.1557192915891;
- Mon, 06 May 2019 18:35:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
- <20190502195052.0af473cf@gandalf.local.home> <20190503092959.GB2623@hirez.programming.kicks-ass.net>
- <20190503092247.20cc1ff0@gandalf.local.home> <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
- <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
- <20190506081951.GJ2606@hirez.programming.kicks-ass.net> <20190506095631.6f71ad7c@gandalf.local.home>
- <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
- <20190506130643.62c35eeb@gandalf.local.home> <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
- <20190506145745.17c59596@gandalf.local.home> <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
- <20190506162915.380993f9@gandalf.local.home> <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
- <20190506174511.2f8b696b@gandalf.local.home> <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
- <20190506210416.2489a659@oasis.local.home>
-In-Reply-To: <20190506210416.2489a659@oasis.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 6 May 2019 18:34:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
-Message-ID: <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
+        Mon, 6 May 2019 21:43:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfEGBni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 21:43:38 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DCC4F308427D;
+        Tue,  7 May 2019 01:43:37 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CC131001925;
+        Tue,  7 May 2019 01:43:34 +0000 (UTC)
+Date:   Mon, 6 May 2019 20:43:32 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
         Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+Message-ID: <20190507014332.l5pmvjyfropaiui2@treble>
+References: <20190430091049.30413-1-pmladek@suse.com>
+ <20190430091049.30413-2-pmladek@suse.com>
+ <20190507004032.2fgddlsycyypqdsn@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190507004032.2fgddlsycyypqdsn@treble>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 07 May 2019 01:43:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 6:04 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> That iterator does something special for each individual record. All
-> 40,000 of them.
+On Mon, May 06, 2019 at 07:40:32PM -0500, Josh Poimboeuf wrote:
+> On Tue, Apr 30, 2019 at 11:10:48AM +0200, Petr Mladek wrote:
+> > WARN_ON_ONCE() could not be called safely under rq lock because
+> > of console deadlock issues. Fortunately, there is another check
+> > for the reliable stacktrace support in klp_enable_patch().
+> > 
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > ---
+> >  kernel/livepatch/transition.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> > index 9c89ae8b337a..8e0274075e75 100644
+> > --- a/kernel/livepatch/transition.c
+> > +++ b/kernel/livepatch/transition.c
+> > @@ -263,8 +263,15 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+> >  	trace.nr_entries = 0;
+> >  	trace.max_entries = MAX_STACK_ENTRIES;
+> >  	trace.entries = entries;
+> > +
+> >  	ret = save_stack_trace_tsk_reliable(task, &trace);
+> > -	WARN_ON_ONCE(ret == -ENOSYS);
+> > +	/*
+> > +	 * pr_warn() under task rq lock might cause a deadlock.
+> > +	 * Fortunately, missing reliable stacktrace support has
+> > +	 * already been handled when the livepatch was enabled.
+> > +	 */
+> > +	if (ret == -ENOSYS)
+> > +		return ret;
+> 
+> I find the comment to be a bit wordy and confusing (and vague).
+> 
+> Also this check is effectively the same as the klp_have_reliable_stack()
+> check which is done in kernel/livepatch/core.c.  So I think it would be
+> clearer and more consistent if the same check is done here:
+> 
+> 	if (!klp_have_reliable_stack())
+> 		return -ENOSYS;
+> 
+> 	ret = save_stack_trace_tsk_reliable(task, &trace);
+> 
+> 	[ no need to check ret for ENOSYS here ]
+> 
+> Then, IMO, no comment is needed.
 
-.. yes, but the 'int3' only happens for *one* of them at a time.
+BTW, if you agree with this approach then we can leave the
+WARN_ON_ONCE() in save_stack_trace_tsk_reliable() after all.
 
-Why would it bother with the other 39,999 calls?
-
-You could easily just look up the record at the int3 time, and just
-use the record. Exactly the same way you use the one-at-a-time ones.
-
-Instead, you emulate a fake call to a function that *wouldn't* get
-called, which now does the lookup there. That's the part I don't get.
-Why are you emulating something else than what you'd be rewriting?
-
-             Linus
+-- 
+Josh
