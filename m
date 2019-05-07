@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26614C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DF0C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFC820B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4E7206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207171;
-	bh=PmCGJ0NjA0CzWNNs3pQMoJSk+k9SlvmAm0wpIjRrbI4=;
+	s=default; t=1557207177;
+	bh=u2VF2JXohGzCVS0YQxbe4icbtKNKWHD2I4phXbF95dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3rq3hJzmCJPNDzn07SPn2ZqKYHptsJRjYQg/bOoZ2+sSZkmMNaiqY4eNcxcVI+Ti
-	 mq4TEAA8ZF1RofvyypUx/s/dwp6tAX+Fa0nc2JULJv3Vez4URxeS7JnY0Bcl//iWNj
-	 Yp0ky0m1cWZuPnLWw53CyLvIPfINhMDXyqayIenQ=
+	b=vRM7wscr3UX9IVQ0spJNm46MmoNbLBuBLtcSVL44fIuxLWU1iKvaRe3DnVTec0Ez2
+	 E0E+XbnKgUR6s2+4VAPCV6Q+vUiyOvTTguGj7aGQsEA6ABWhCvEfj6Ig+2C8UVcsOg
+	 KmSvK0lUoZHpVSqPJkzSjlitErWfNP6QxyO4SoJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfEGFcu (ORCPT
+        id S1726663AbfEGFcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:32:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:32:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbfEGFcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:32:46 -0400
+        id S1726592AbfEGFcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:32:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C69FB2087F;
-        Tue,  7 May 2019 05:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 092DB206A3;
+        Tue,  7 May 2019 05:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207165;
-        bh=PmCGJ0NjA0CzWNNs3pQMoJSk+k9SlvmAm0wpIjRrbI4=;
+        s=default; t=1557207170;
+        bh=u2VF2JXohGzCVS0YQxbe4icbtKNKWHD2I4phXbF95dc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xLOd7mYaUBoz7F8oeoAlsf4SYO0prf6UyfQejAudn/iLNx8tD/Ao/WAR5pWVHV9az
-         bsau7V9y7DhaYd6KLdw+MffmygNvRo7UB+t/MDSECbKBaJczxV43xf+nCw7Jypetgd
-         EINMZoy9KQwFI5m1nR3pDrWMb9+c5svEIWzuiGSM=
+        b=EMgGs+98nOX168na4RT7587e3c4UYXjKtOi+5REn6PeLlz2AeiKiDE4V+bBmDwu3l
+         tHxkG82/sHgGvkVINotwQvetmzBRy2mAPVm4dWOonLj/d8zoULq7RieVakLMvju5me
+         GbKJzeDeAW2tQD4yKEP26Q4Q0qfcneeEC/s5xpLQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 06/99] HID: input: add mapping for Expose/Overview key
-Date:   Tue,  7 May 2019 01:31:00 -0400
-Message-Id: <20190507053235.29900-6-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 11/99] mac80211: fix unaligned access in mesh table hash function
+Date:   Tue,  7 May 2019 01:31:05 -0400
+Message-Id: <20190507053235.29900-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,34 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
+[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
 
-According to HUTRR77 usage 0x29f from the consumer page is reserved for
-the Desktop application to present all running user’s application windows.
-Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
-add the mapping.
+The pointer to the last four bytes of the address is not guaranteed to be
+aligned, so we need to use __get_unaligned_cpu32 here
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/mesh_pathtbl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 59a5608b8dc0..f55bfcabd718 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1041,6 +1041,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
- 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 88a6d5e18ccc..ac1f5db52994 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
+ static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
+ {
+ 	/* Use last four bytes of hw addr as hash index */
+-	return jhash_1word(*(u32 *)(addr+2), seed);
++	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
+ }
  
-+		case 0x29f: map_key_clear(KEY_SCALE);		break;
-+
- 		default: map_key_clear(KEY_UNKNOWN);
- 		}
- 		break;
+ static const struct rhashtable_params mesh_rht_params = {
 -- 
 2.20.1
 
