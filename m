@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646F0C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885EAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3588B20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EDAD20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209219;
-	bh=70TvJEmu8OvJflZWtXYL2j9zSm78Falniq/Upr9UmP0=;
+	s=default; t=1557209236;
+	bh=Gza0Tf2zcIx0jq1gzVW4i2us7RjbkGM7Bg3NPcSyrGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pDOD2rMvwbWjmUw1ru80ab2muea/o33vNzGbSiTk5rThvAWf6++B8ArLt9ixVNejX
-	 +XvvldKLy8Bmdv/WhsHT3TdlP4ruETEw7XJjxxrctDJ6ZxgNRuEif9i9LE+Bb9ne5b
-	 nNijy00IsoEm/uSDJFvYJyrxu5dI2rK9Y6ksHa/M=
+	b=ZwdwUnOgk7uD8GbdFCDnPnoqjEQyNg8XKNtTt3gaHznyVtOalZMOn+e61Z9ESwaFX
+	 CHJmWnPLadJdPZ4xNvhWz4D2VIad1rGMlxTl6rlBfTybIf2NWsL1lNHuYx8EBxZOOA
+	 R5ForYl5gxCRGHYqQihvjv6shg9vV1HQCZNeq7SQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfEGGG6 (ORCPT
+        id S1727082AbfEGGHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:06:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53566 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfEGFdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:40 -0400
+        id S1727208AbfEGFdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C035F20C01;
-        Tue,  7 May 2019 05:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44C5A21019;
+        Tue,  7 May 2019 05:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207219;
-        bh=70TvJEmu8OvJflZWtXYL2j9zSm78Falniq/Upr9UmP0=;
+        s=default; t=1557207216;
+        bh=Gza0Tf2zcIx0jq1gzVW4i2us7RjbkGM7Bg3NPcSyrGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCR+6p+WrVtBRY8/bv88sRfLYsXqCCyit1/5UD+ZDZSHPBdzA0X+KPXQRomQz9T6y
-         ammL22PgEymNESxWuOfAJ+yOPCHN+WSeNxWeuV5sLiaO6UyN8tOKR3pTRwQlO1hufB
-         yNsAT6RIJ4aCyEjQVsqT7xExU+x3HCcIJxol4hAU=
+        b=DMrLt8ibwV0at3oqC6MtPYNEafulfvAtTzLOIifo5HvfspcZn7j0ngwDaNf36UsEW
+         iX59xvVHUiYIpoK0lvq7esjIYMX+mIALnj+QYUvbLlkgRko9s2rw/LHT6XOJAl+H8X
+         EwgPZ+upWVR143zoMJNSWrOg1YX5px6lo9hdoQNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Kai Krakow <kai@kaishome.de>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 33/99] bfq: update internal depth state when queue depth changes
-Date:   Tue,  7 May 2019 01:31:27 -0400
-Message-Id: <20190507053235.29900-33-sashal@kernel.org>
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Jonathan Billings <jsbillin@umich.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 31/99] afs: Unlock pages for __pagevec_release()
+Date:   Tue,  7 May 2019 01:31:25 -0400
+Message-Id: <20190507053235.29900-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -59,87 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Marc Dionne <marc.dionne@auristor.com>
 
-[ Upstream commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e ]
+[ Upstream commit 21bd68f196ca91fc0f3d9bd1b32f6e530e8c1c88 ]
 
-A previous commit moved the shallow depth and BFQ depth map calculations
-to be done at init time, moving it outside of the hotter IO path. This
-potentially causes hangs if the users changes the depth of the scheduler
-map, by writing to the 'nr_requests' sysfs file for that device.
+__pagevec_release() complains loudly if any page in the vector is still
+locked.  The pages need to be locked for generic_error_remove_page(), but
+that function doesn't actually unlock them.
 
-Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
-the depth changes, so that the scheduler can update its internal state.
+Unlock the pages afterwards.
 
-Tested-by: Kai Krakow <kai@kaishome.de>
-Reported-by: Paolo Valente <paolo.valente@linaro.org>
-Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Jonathan Billings <jsbillin@umich.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c      | 8 +++++++-
- block/blk-mq.c           | 2 ++
- include/linux/elevator.h | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ fs/afs/write.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 72510c470001..356620414cf9 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5353,7 +5353,7 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
- 	return min_shallow;
- }
- 
--static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
-+static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
- {
- 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
- 	struct blk_mq_tags *tags = hctx->sched_tags;
-@@ -5361,6 +5361,11 @@ static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
- 
- 	min_shallow = bfq_update_depths(bfqd, &tags->bitmap_tags);
- 	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, min_shallow);
-+}
-+
-+static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
-+{
-+	bfq_depth_updated(hctx);
- 	return 0;
- }
- 
-@@ -5783,6 +5788,7 @@ static struct elevator_type iosched_bfq_mq = {
- 		.requests_merged	= bfq_requests_merged,
- 		.request_merged		= bfq_request_merged,
- 		.has_work		= bfq_has_work,
-+		.depth_updated		= bfq_depth_updated,
- 		.init_hctx		= bfq_init_hctx,
- 		.init_sched		= bfq_init_queue,
- 		.exit_sched		= bfq_exit_queue,
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 16f9675c57e6..9ab847d0d6d2 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3123,6 +3123,8 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 72efcfcf9f95..0122d7445fba 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -264,6 +264,7 @@ static void afs_kill_pages(struct address_space *mapping,
+ 				first = page->index + 1;
+ 			lock_page(page);
+ 			generic_error_remove_page(mapping, page);
++			unlock_page(page);
  		}
- 		if (ret)
- 			break;
-+		if (q->elevator && q->elevator->type->ops.depth_updated)
-+			q->elevator->type->ops.depth_updated(hctx);
- 	}
  
- 	if (!ret)
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index 2e9e2763bf47..6e8bc53740f0 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -31,6 +31,7 @@ struct elevator_mq_ops {
- 	void (*exit_sched)(struct elevator_queue *);
- 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
- 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
-+	void (*depth_updated)(struct blk_mq_hw_ctx *);
- 
- 	bool (*allow_merge)(struct request_queue *, struct request *, struct bio *);
- 	bool (*bio_merge)(struct blk_mq_hw_ctx *, struct bio *);
+ 		__pagevec_release(&pv);
 -- 
 2.20.1
 
