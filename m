@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D0AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8FEC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E27205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A31206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208126;
-	bh=wVexugz/PHLlLDRwzGd8Fi0rLwjyVsyR155fbuB14hs=;
+	s=default; t=1557208133;
+	bh=C/SEdJvcztVmaWYIHppHb6GDJ7iOjWkEKhogPF8LK1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJffgn/y7PZI1vomfZgYXVK5VkQ0PmizrBaLsEcxj+Mw9K095DFh7HGRqell5RIQB
-	 xTRcmer0XnS+0kA+ruPwiGN1ls6kIIH+jNKXtI7j0r0NXXE4RlcKuwcuZE2u36iSaX
-	 bJS3DvRKyBIEinEOwOTQxAGYt1Ml4XMZ25HwtRwg=
+	b=zhi8p/61b9T0/gtGApBM5xSiDlZMhd3R166peMMkc0Er2Qzl0V5c/+Q66pk+x2urE
+	 DyacnxqCWaWvpVznNuZn76pB2tH407dVG6qxYHBjcEZ+PTwvTLVbWlPOv3n1DWOznc
+	 vWXsUbYy4mDnvj+WCt0WgjD1ZcJapIzetq1Huqvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfEGFsp (ORCPT
+        id S1729150AbfEGFkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728404AbfEGFkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:42 -0400
+        id S1729119AbfEGFka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA5D620578;
-        Tue,  7 May 2019 05:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F8DC2087F;
+        Tue,  7 May 2019 05:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207641;
-        bh=wVexugz/PHLlLDRwzGd8Fi0rLwjyVsyR155fbuB14hs=;
+        s=default; t=1557207629;
+        bh=C/SEdJvcztVmaWYIHppHb6GDJ7iOjWkEKhogPF8LK1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvSF9SnCWyyvnTbwNzez4HTbzt9VAndcx/R8LbnJIRRqjT+6O6NqUMecSelKQt+i6
-         EjstU3vmyoRYGzudJPNxbpDFyXIfnYjtfDbNGEU6zGyjimTR6pULymYCTPquAU1Wpk
-         oR/h7Yo83SQJpU4GTQMAaVysCNJcKb3KHvUt7zCg=
+        b=GzLugjq8V/bTzbg43eUiU523ZrMeJwpsfGuXMzckElO7DXJomqN+NW2UIm8pAkKLX
+         P8PJcWgoVtZwneNDn/RzqxYprPZOMjqwTh2QRLvazvthMHftSn+VDRaPacvKN9DB/S
+         ZnuI51kryP7CnSTdJMEXm+769qAfAvPj1/1zVw+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>,
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 74/95] btrfs: harden agaist duplicate fsid on scanned devices
-Date:   Tue,  7 May 2019 01:38:03 -0400
-Message-Id: <20190507053826.31622-74-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 67/95] drm/rockchip: psr: do not dereference encoder before it is null checked.
+Date:   Tue,  7 May 2019 01:37:56 -0400
+Message-Id: <20190507053826.31622-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,116 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit a9261d4125c97ce8624e9941b75dee1b43ad5df9 ]
+[ Upstream commit 4eda776c3cefcb1f01b2d85bd8753f67606282b5 ]
 
-It's not that impossible to imagine that a device OR a btrfs image is
-copied just by using the dd or the cp command. Which in case both the
-copies of the btrfs will have the same fsid. If on the system with
-automount enabled, the copied FS gets scanned.
+'encoder' is dereferenced before it is null sanity checked, hence we
+potentially have a null pointer dereference bug. Instead, initialise
+drm_drv from encoder->dev->dev_private after we are sure 'encoder' is
+not null.
 
-We have a known bug in btrfs, that we let the device path be changed
-after the device has been mounted. So using this loop hole the new
-copied device would appears as if its mounted immediately after it's
-been copied.
-
-For example:
-
-Initially.. /dev/mmcblk0p4 is mounted as /
-
-  $ lsblk
-  NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-  mmcblk0     179:0    0 29.2G  0 disk
-  |-mmcblk0p4 179:4    0    4G  0 part /
-  |-mmcblk0p2 179:2    0  500M  0 part /boot
-  |-mmcblk0p3 179:3    0  256M  0 part [SWAP]
-  `-mmcblk0p1 179:1    0  256M  0 part /boot/efi
-
-  $ btrfs fi show
-     Label: none  uuid: 07892354-ddaa-4443-90ea-f76a06accaba
-     Total devices 1 FS bytes used 1.40GiB
-     devid    1 size 4.00GiB used 3.00GiB path /dev/mmcblk0p4
-
-Copy mmcblk0 to sda
-
-  $ dd if=/dev/mmcblk0 of=/dev/sda
-
-And immediately after the copy completes the change in the device
-superblock is notified which the automount scans using btrfs device scan
-and the new device sda becomes the mounted root device.
-
-  $ lsblk
-  NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-  sda           8:0    1 14.9G  0 disk
-  |-sda4        8:4    1    4G  0 part /
-  |-sda2        8:2    1  500M  0 part
-  |-sda3        8:3    1  256M  0 part
-  `-sda1        8:1    1  256M  0 part
-  mmcblk0     179:0    0 29.2G  0 disk
-  |-mmcblk0p4 179:4    0    4G  0 part
-  |-mmcblk0p2 179:2    0  500M  0 part /boot
-  |-mmcblk0p3 179:3    0  256M  0 part [SWAP]
-  `-mmcblk0p1 179:1    0  256M  0 part /boot/efi
-
-  $ btrfs fi show /
-    Label: none  uuid: 07892354-ddaa-4443-90ea-f76a06accaba
-    Total devices 1 FS bytes used 1.40GiB
-    devid    1 size 4.00GiB used 3.00GiB path /dev/sda4
-
-The bug is quite nasty that you can't either unmount /dev/sda4 or
-/dev/mmcblk0p4. And the problem does not get solved until you take sda
-out of the system on to another system to change its fsid using the
-'btrfstune -u' command.
-
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 5182c1a556d7f ("drm/rockchip: add an common abstracted PSR driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181013105654.11827-1-enric.balletbo@collabora.com
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- fs/btrfs/volumes.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/gpu/drm/rockchip/rockchip_drm_psr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 38ed8e259e00..bd1117720fc1 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -696,6 +696,35 @@ static noinline int device_list_add(const char *path,
- 			return -EEXIST;
- 		}
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_psr.c b/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
+index a553e182ff53..32e7dba2bf5e 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
+@@ -221,13 +221,15 @@ EXPORT_SYMBOL(rockchip_drm_psr_flush_all);
+ int rockchip_drm_psr_register(struct drm_encoder *encoder,
+ 			void (*psr_set)(struct drm_encoder *, bool enable))
+ {
+-	struct rockchip_drm_private *drm_drv = encoder->dev->dev_private;
++	struct rockchip_drm_private *drm_drv;
+ 	struct psr_drv *psr;
+ 	unsigned long flags;
  
-+		/*
-+		 * We are going to replace the device path for a given devid,
-+		 * make sure it's the same device if the device is mounted
-+		 */
-+		if (device->bdev) {
-+			struct block_device *path_bdev;
+ 	if (!encoder || !psr_set)
+ 		return -EINVAL;
+ 
++	drm_drv = encoder->dev->dev_private;
 +
-+			path_bdev = lookup_bdev(path);
-+			if (IS_ERR(path_bdev)) {
-+				mutex_unlock(&fs_devices->device_list_mutex);
-+				return ERR_CAST(path_bdev);
-+			}
-+
-+			if (device->bdev != path_bdev) {
-+				bdput(path_bdev);
-+				mutex_unlock(&fs_devices->device_list_mutex);
-+				btrfs_warn_in_rcu(device->fs_info,
-+			"duplicate device fsid:devid for %pU:%llu old:%s new:%s",
-+					disk_super->fsid, devid,
-+					rcu_str_deref(device->name), path);
-+				return ERR_PTR(-EEXIST);
-+			}
-+			bdput(path_bdev);
-+			btrfs_info_in_rcu(device->fs_info,
-+				"device fsid %pU devid %llu moved old:%s new:%s",
-+				disk_super->fsid, devid,
-+				rcu_str_deref(device->name), path);
-+		}
-+
- 		name = rcu_string_strdup(path, GFP_NOFS);
- 		if (!name)
- 			return -ENOMEM;
+ 	psr = kzalloc(sizeof(struct psr_drv), GFP_KERNEL);
+ 	if (!psr)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
