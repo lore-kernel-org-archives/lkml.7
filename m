@@ -2,93 +2,77 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4409EC46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CB4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198412054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:02:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fQogLD0J";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fQogLD0J"
+	by mail.kernel.org (Postfix) with ESMTP id 33F5820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 18:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfEGSCR (ORCPT
+        id S1727592AbfEGSDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 14:02:17 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52814 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfEGSCP (ORCPT
+        Tue, 7 May 2019 14:03:12 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:36904 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfEGSDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 14:02:15 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B22BE6115B; Tue,  7 May 2019 18:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557252134;
-        bh=YbD1o3QTKsJc4Zlft7yYAtBneOymuecIq+BLGIcWNb8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQogLD0JnSBEpalnlpNF5Uas85Spykb5e8TiI0bIgHWubYzfupZe7n5LGEh9m1p9e
-         wnJLAojV/1BSBhpxZwogD5TFWSFnSDy7gaQlNRsj/7tUOEYAf98PZsHY3haJM94+hu
-         kCAtpxYnDfGzcyyTTPKrl66eMau51BuPRlm7Df4Q=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 7 May 2019 14:03:11 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4AA7A60E59;
-        Tue,  7 May 2019 18:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557252134;
-        bh=YbD1o3QTKsJc4Zlft7yYAtBneOymuecIq+BLGIcWNb8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQogLD0JnSBEpalnlpNF5Uas85Spykb5e8TiI0bIgHWubYzfupZe7n5LGEh9m1p9e
-         wnJLAojV/1BSBhpxZwogD5TFWSFnSDy7gaQlNRsj/7tUOEYAf98PZsHY3haJM94+hu
-         kCAtpxYnDfGzcyyTTPKrl66eMau51BuPRlm7Df4Q=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4AA7A60E59
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@gmail.com>,
+        by asavdk4.altibox.net (Postfix) with ESMTPS id DB7A7803E1;
+        Tue,  7 May 2019 20:03:06 +0200 (CEST)
+Date:   Tue, 7 May 2019 20:03:05 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v1 2/3] drm/msm: Print all 64 bits of the faulting IOMMU address
-Date:   Tue,  7 May 2019 12:02:06 -0600
-Message-Id: <1557252127-11145-3-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557252127-11145-1-git-send-email-jcrouse@codeaurora.org>
-References: <1557252127-11145-1-git-send-email-jcrouse@codeaurora.org>
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: Document FriendlyELEC
+ HD702E LCD panel
+Message-ID: <20190507180305.GA15122@ravnborg.org>
+References: <20190507130708.11255-1-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507130708.11255-1-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
+        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=iP-xVBlJAAAA:8
+        a=DoxgV9RLCDXaxzI0TiIA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=lHLH-nfn2y1bM_0xSXwp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we move to 64 bit addressing for a5xx and a6xx targets we will start
-seeing pagefaults at larger addresses so format them appropriately in the
-log message for easier debugging.
+On Tue, May 07, 2019 at 06:37:06PM +0530, Jagan Teki wrote:
+> HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
+> resolution. It has built in Goodix, GT9271 captive touchscreen
+> with backlight adjustable via PWM.
+> 
+> Add dt-bindings documentation for it.
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Patch applied to drm-misc-next
 
- drivers/gpu/drm/msm/msm_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 12bb54c..1926329 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -30,7 +30,7 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
- 	struct msm_iommu *iommu = arg;
- 	if (iommu->base.handler)
- 		return iommu->base.handler(iommu->base.arg, iova, flags);
--	pr_warn_ratelimited("*** fault: iova=%08lx, flags=%d\n", iova, flags);
-+	pr_warn_ratelimited("*** fault: iova=%16lx, flags=%d\n", iova, flags);
- 	return 0;
- }
- 
--- 
-2.7.4
-
+	Sam
