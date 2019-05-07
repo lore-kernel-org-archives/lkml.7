@@ -2,72 +2,139 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD2C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D346C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D2D20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3746D20825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfEGUxV (ORCPT
+        id S1727971AbfEGU4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:53:21 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52278 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727644AbfEGUxV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:53:21 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hO75T-0000aP-6S; Tue, 07 May 2019 20:53:19 +0000
-Date:   Tue, 7 May 2019 21:53:19 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs.git misc pieces
-Message-ID: <20190507205319.GN23075@ZenIV.linux.org.uk>
+        Tue, 7 May 2019 16:56:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10113 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727944AbfEGU4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:56:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 13:56:41 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga008.jf.intel.com with ESMTP; 07 May 2019 13:56:40 -0700
+Date:   Tue, 7 May 2019 13:48:12 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH v8 13/15] x86/split_lock: Enable split lock detection by
+ default
+Message-ID: <20190507204812.GC124959@romley-ivt3.sc.intel.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+ <1556134382-58814-14-git-send-email-fenghua.yu@intel.com>
+ <762682ba43a0468897ff5ddbf6633d58@AcuMS.aculab.com>
+ <alpine.DEB.2.21.1904251255590.1960@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1904251255590.1960@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Assorted stuff, with no common topic whatsoever...
+On Thu, Apr 25, 2019 at 12:58:32PM +0200, Thomas Gleixner wrote:
+> On Thu, 25 Apr 2019, David Laight wrote:
+> 
+> > From:  Fenghua Yu
+> > > Sent: 24 April 2019 20:33
+> > > A split locked access locks bus and degrades overall memory access
+> > > performance. When split lock detection feature is enumerated, enable
+> > > the feature by default by writing 1 to bit 29 in MSR TEST_CTL to find
+> > > any split lock issue.
+> > 
+> > You can't enable this by default until ALL the known potentially
+> > misaligned locked memory operations have been fixed.
+> 
+> Errm? The result will be a WARN_ON() printed and no further damage. It's
+> not making anything worse than it is now. In fact we just should add a
+> 
+>     WARN_ON_ONCE(!aligned_to_long(p)) to all the xxx_bit() operations.
+> 
+> so we catch them even when they do not trigger that #AC thingy.
 
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+I add WARN_ON_ONCE() in atomic xxx_bit(). But the code cannot be compiled.
 
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+Here is a simplified patch (only adding warning in set_bit()):
 
-are available in the git repository at:
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 8e790ec219a5..bc889ac12e26 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -14,6 +14,8 @@
+ #endif
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.misc
+ #include <linux/compiler.h>
++#include <linux/kernel.h>
++#include <asm-generic/bug.h>
+ #include <asm/alternative.h>
+ #include <asm/rmwcc.h>
+ #include <asm/barrier.h>
+@@ -67,6 +69,8 @@
+ static __always_inline void
+ set_bit(long nr, volatile unsigned long *addr)
+ {
++       WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+        if (IS_IMMEDIATE(nr)) {
+                asm volatile(LOCK_PREFIX "orb %1,%0"
+                        : CONST_MASK_ADDR(nr, addr)
 
-for you to fetch changes up to 6ee9706aa22e026f438caabb2982e5f78de2c82c:
+gcc reports errors:
+  CC      kernel/bounds.s
+  CALL    scripts/atomic/check-atomics.sh
+In file included from ./include/linux/bitops.h:19,
+                 from ./include/linux/kernel.h:12,
+                 from ./include/asm-generic/bug.h:18,
+                 from ./arch/x86/include/asm/bug.h:83,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/page-flags.h:10,
+                 from kernel/bounds.c:10:
+./arch/x86/include/asm/bitops.h: In function ‘set_bit’:
+./arch/x86/include/asm/bitops.h:72:2: error: implicit declaration of function ‘WARN_ON_ONCE’; did you mean ‘WRITE_ONCE’? [-Werror=implicit-function-declaration]
+  WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
+  ^~~~~~~~~~~~
+./arch/x86/include/asm/bitops.h:72:16: error: implicit declaration of function ‘IS_ALIGNED’; did you mean ‘IS_ENABLED’? [-Werror=implicit-function-declaration]
+  WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
+                ^~~~~~~~~~
+I think it's because arch/x86/include/asm/bitops.h is included in
+include/linux/kernel.h before IS_ALIGNED() is defined and in
+include/asm-generic/bug.h before WARN_ON_ONCE() is defined.
 
-  libfs: document simple_get_link() (2019-04-30 23:59:25 -0400)
+How to write a right warn patch and solve the compilation issue?
 
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      fs: use timespec64 in relatime_need_update
+Thanks.
 
-Chengguang Xu (1):
-      fs/block_dev.c: remove unused include
-
-Eric Biggers (4):
-      Documentation/filesystems/vfs.txt: remove bogus "Last updated" date
-      Documentation/filesystems/vfs.txt: document how ->i_link works
-      Documentation/filesystems/Locking: fix ->get_link() prototype
-      libfs: document simple_get_link()
-
- Documentation/filesystems/Locking |  2 +-
- Documentation/filesystems/vfs.txt |  8 ++++++--
- fs/block_dev.c                    |  1 -
- fs/inode.c                        |  4 ++--
- fs/libfs.c                        | 14 ++++++++++++++
- 5 files changed, 23 insertions(+), 6 deletions(-)
+-Fenghua
