@@ -4,97 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C820C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4111C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA1C20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB6F21019
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557234281;
-	bh=ghMMFs+smRiUJhzhQvBqNOqBbENZPU3baDUngdO/oDE=;
+	s=default; t=1557234303;
+	bh=U5Njy+cgqsa5JZNyf0k1GwtrQUuBB14C8uSm1z6PB1A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tVQEfhDy4vUStLTnDxI7SxV9atm8y2K9bR8WOJUNKQ/ge1l3NehhK2WOATx+C0xPm
-	 1cS+MVWPYEUnn9eAzdnJUNgN+/ymP00U1rC/+TGbGGxPwQiNO76pHo8ABlTJ6giJIm
-	 eEg2Kl1cmsMuZc1pqdSI5i6riw++Cl2EpsdfKQ1M=
+	b=xGMjSBUVXPZdK485HCPBUD8lnzil0pPNhh/KtYEIA2dflbz2XW8tlwYDQumahBU53
+	 T5VY2t3w2xNzzVia9Z9a4TixLy39GCfWEiMEvD+1PDaIKjMU/rCnoVgb+FmBmoN0KP
+	 Uq2pxUQ3bOjPe/Hj01Poqfo2mhMeWkQ0cdu/euHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfEGNEk (ORCPT
+        id S1726684AbfEGNFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 09:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfEGNEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:04:40 -0400
+        id S1725780AbfEGNFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 09:05:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132FE20578;
-        Tue,  7 May 2019 13:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE4620578;
+        Tue,  7 May 2019 13:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557234279;
-        bh=ghMMFs+smRiUJhzhQvBqNOqBbENZPU3baDUngdO/oDE=;
+        s=default; t=1557234301;
+        bh=U5Njy+cgqsa5JZNyf0k1GwtrQUuBB14C8uSm1z6PB1A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xoyvPzbo/OcghHebiLzP6YkXWjori96wzLm3mOlHas+t97oCIYK+J8IEBuTJq5W92
-         Smplji4ot/HFLUi1SFDCAo0Vnns26vVPpFT8L56nj/3YAHqe9nO4s8zr3vBHCbexCj
-         T+Gp7XEhp7frTiOzgyxaDD4UqNPTGxYsWFjIyP9I=
-Date:   Tue, 7 May 2019 15:04:37 +0200
+        b=S4PPh6vW6IRWvqmcRMO2RFQa2elrfZEnK/cxHetinJ6BKznqMzk88waQVQgdPxZ2j
+         lNA8+d5snlLSzi22QVBf02Ad4J/F53ljAlCh2tHmd0pSN5JaaG9k35+EnOMy4HAFFn
+         7KmtUT8pj2cEQU7x//aGDdO3C3C5PO3LZxoTSKXc=
+Date:   Tue, 7 May 2019 15:04:59 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Subject: Re: [PATCH 5.0 000/122] 5.0.14-stable review
-Message-ID: <20190507130437.GA17237@kroah.com>
+Message-ID: <20190507130459.GB17237@kroah.com>
 References: <20190506143054.670334917@linuxfoundation.org>
- <d0683ebc-a3d0-c726-cf69-40d55e52e845@nvidia.com>
+ <CA+G9fYsQhu8=23c0zNPKuDxOxJuwCesNYZikEtMztUBYy30u1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d0683ebc-a3d0-c726-cf69-40d55e52e845@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsQhu8=23c0zNPKuDxOxJuwCesNYZikEtMztUBYy30u1w@mail.gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 01:45:04PM +0100, Jon Hunter wrote:
-> 
-> On 06/05/2019 15:30, Greg Kroah-Hartman wrote:
+On Tue, May 07, 2019 at 12:48:45PM +0530, Naresh Kamboju wrote:
+> On Mon, 6 May 2019 at 20:04, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
 > > This is the start of the stable review cycle for the 5.0.14 release.
 > > There are 122 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
 > > let me know.
-> > 
+> >
 > > Responses should be made by Wed 08 May 2019 02:29:09 PM UTC.
 > > Anything received after that time might be too late.
-> > 
+> >
 > > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.14-rc1.gz
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.14-rc1.gz
 > > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
 > > and the diffstat can be found below.
-> > 
+> >
 > > thanks,
-> > 
+> >
 > > greg k-h
 > 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.0:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	5.0.14-rc1-g5b4a1a1
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Thanks for testing all of these and letting me know,
+Wonderful, thanks for testing all of these and letting me know.
 
 greg k-h
