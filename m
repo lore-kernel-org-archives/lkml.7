@@ -2,133 +2,90 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2873C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A594C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0F6205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D31C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfEGNRd (ORCPT
+        id S1726784AbfEGNSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:17:33 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.3]:52882 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726420AbfEGNRd (ORCPT
+        Tue, 7 May 2019 09:18:04 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:42274 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfEGNSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:17:33 -0400
-Received: from [46.226.52.101] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-a.eu-west-1.aws.symcld.net id AB/1F-23123-96581DC5; Tue, 07 May 2019 13:17:29 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRWlGSWpSXmKPExsUyo1hfUjez9WK
-  MwfpFahZvHv9jtzjW9oTdYv6Rc6wWzYvXs1lc3jWHzWLRslZmi6XXLzJZtO49wm6xasEBdosr
-  T6cyOnB5rJm3htFj56y77B6bVnWyeeyfu4bdY8v+z4wenzfJeez9/JslgD2KNTMvKb8igTXj5
-  /0Z7AU7BCreH+pga2DcwtvFyMkhJLCGUeLLXXsQm1fAVGLfj81MILawQITE1gvfgWwODjYBXY
-  muO6ZdjFwcIgLfGCWmHVvFDuIwC7xllPj2qIcRpIFFQEWi7dkdNhCbUyBW4v+fwywgRUIC95k
-  kZlyfCVbELKAp0br9NzuILSGgIbHh5jEmiM2CEidnPmGBqJGXaN46mxlks5CArMTRS7EQ5QoS
-  Z7dMZISwkyTO9V1hm8AoMAvJ1FlIJs1CMmkBI/MqRoukosz0jJLcxMwcXUMDA11DQyNdQ0tjX
-  SNjE73EKt1EvdRS3fLU4hJdQ73E8mK94src5JwUvbzUkk2MwJhKKTj4agfjrhXphxglOZiURH
-  lF7C/GCPEl5adUZiQWZ8QXleakFh9ilOHgUJLg7W0GygkWpaanVqRl5gCjGyYtwcGjJMKbDpL
-  mLS5IzC3OTIdInWLU5Vhw89c8ZiGWvPy8VClx3p0gRQIgRRmleXAjYInmEqOslDAvIwMDgxBP
-  QWpRbmYJqvwrRnEORiVh3n6QKTyZeSVwm14BHcEEdMS8jnMgR5QkIqSkGhirPZNmcegmWswQj
-  ty3Jn/i6uiTTR/aWq/E75t2xuVH1ZWGDQZKCl9nGClP8lBZ0ce2TJn9x4qtjtuf740QSefiVP
-  8YN5VdjFE0unX6KaV55zrnnFo4b2+mMjtnuHR51vxNmf+sgm++/ppvZWKv+2p68xfzSPP/c7Z
-  ULpvQarZwNoPzv9ieIDYlluKMREMt5qLiRAABRNN8LwMAAA==
-X-Env-Sender: cst@phaseone.com
-X-Msg-Ref: server-8.tower-265.messagelabs.com!1557235049!8196729!1
-X-Originating-IP: [152.115.47.25]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 19072 invoked from network); 7 May 2019 13:17:29 -0000
-Received: from unknown (HELO Exchange2.phaseone.com) (152.115.47.25)
-  by server-8.tower-265.messagelabs.com with AES256-SHA encrypted SMTP; 7 May 2019 13:17:29 -0000
-Received: from cstu16.phaseone.com (172.16.2.207) by Exchange2.phaseone.com
- (172.16.1.180) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 7 May
- 2019 15:17:28 +0200
-Message-ID: <1557235048.114189.22.camel@phaseone.com>
-Subject: Re: [PATCH 3/3] usb: dwc3: gadget: Add support for disabling U1 and
- U2 entries
-From:   "Claus H. Stovgaard" <cst@phaseone.com>
-To:     Anurag Kumar Vulisha <anuragku@xilinx.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
-Date:   Tue, 7 May 2019 15:17:28 +0200
-In-Reply-To: <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
-References: <1556792423-4833-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <1556792423-4833-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
-         <30102591E157244384E984126FC3CB4F639E7BA8@us01wembx1.internal.synopsys.com>
-         <1557176302.18203.20.camel@phaseone.com>
-         <BYAPR02MB55918A76A1567C3209860748A7310@BYAPR02MB5591.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+        Tue, 7 May 2019 09:18:03 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 31DE92002B;
+        Tue,  7 May 2019 15:17:58 +0200 (CEST)
+Date:   Tue, 7 May 2019 15:17:56 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     jagdsh.linux@gmail.com, robdclark@gmail.com, sean@poorly.run,
+        airlied@linux.ie, bskeggs@redhat.com, hierry.reding@gmail.com,
+        jcrouse@codeaurora.org, jsanka@codeaurora.org,
+        skolluku@codeaurora.org, paul.burton@mips.com,
+        jrdr.linux@gmail.com, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org
+Subject: Re: [PATCH] gpu/drm: Remove duplicate headers
+Message-ID: <20190507131756.GA17647@ravnborg.org>
+References: <1556906293-128921-1-git-send-email-jagdsh.linux@gmail.com>
+ <20190506144334.GH17751@phenom.ffwll.local>
+ <20190507100532.GP17751@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.16.2.207]
-X-ClientProxiedBy: Exchange3.phaseone.com (172.16.1.184) To
- Exchange2.phaseone.com (172.16.1.180)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507100532.GP17751@phenom.ffwll.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
+        a=4sjd1iRJTynRc3plxrAA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anurag
-
-> > > Please use "-" rather than "_" in the property names.
-> > I have thought about this feature over the weekend, and think the
-> > naming should be
-> > changed to something like "snps,bos-u1-exit-lat-in-us"
-> > and named the same in the code. And then be the value used by the
-> > get_config_params. E.g. the device-tree is used to set the values
-> > directly used for
-> > bUxdevExitLat instead of named something not related to exit
-> > latency.
+On Tue, May 07, 2019 at 12:05:32PM +0200, Daniel Vetter wrote:
+> On Mon, May 06, 2019 at 04:43:34PM +0200, Daniel Vetter wrote:
+> > On Fri, May 03, 2019 at 11:28:13PM +0530, jagdsh.linux@gmail.com wrote:
+> > > From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> > > 
+> > > Remove duplicate headers which are included twice.
+> > > 
+> > > Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 > > 
-> > With this the name and function is a 1 to 1 match, and you can
-> > among others set it to
-> > 0 for optaining what Anurag wants.
+> > I collected some acks for the msm and nouveau parts and pushed this. For
+> > next time around would be great if you split these up along driver/module
+> > boundaries, so that each maintainer can pick this up directly.
 > > 
-> Your suggestion looks good but the problem is the U1 and U2 exit
-> latencies are
-> fixed values in dwc3 controller(can be found in HCSPARAMS3). Adding
-> different
-> exit latencies may modify the U1SEL/U2SEL values sent from the host
-> but the real
-> dwc3 controller exit latencies are not getting changed. Because of
-> this reason I
-> had opted "snps,dis_u1_entry_quirk", so that the U1/U2 exit latency
-> values
-> reported in BOS descriptor can be either be zero (when U1/U2 entries
-> needs to be
-> disabled) or non-zero value (reported in HCSPARAMS3) when U1/U2
-> states allowed.
-> Based on this I think it is better if we can continue with "snps,dis-
-> u1-entry-quirk"
-> instead of the "snps,bos-u1-exit-lat-in-us". Please  provide your
-> opinion on this.
+> > Thanks for your patch.
+> > -Daniel
+> > 
+> > > ---
+> > >  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c             | 1 -
+> > >  drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c        | 2 --
+> > >  drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 -
+> 
+> Correction, this didn't compile, so I dropped the changes to panel-rpi.
+> Another reason to split patches more for next time around. Also, needs
+> more compile testing (you need cross compilers for at least arm to test
+> this stuff).
+I will try to resurrect my patch series for drm/panel/ that
+addresses:
+- removal of drmP.h
+- removal of duplicated include files
+- sort all include files
 
-With this in mind I can see why having direct control over the exit
-latency value might not be optimum in many situations.
-Regarding the name, I think the snps,dis_u1_entry_quirk will be a good
-name, if it is combined with the DCTL control. E.g. remove the configfs
-part of my patch, and merge the DCTL control with your patches.
-If the dt-binding still only control the bos descriptor I think a
-better name is something with u1_force_exist_lat_0 or similar.
+In other words - panel-raspberrypi-touchscreen.c will be dealt with.
+I expect to look at it in two weeks time (on vacation starting friday).
 
-I don't think setting bos to 0 or controlling DCTL will be used
-individual, so to keep things simple I will vote for
-snps,dis_u1_entry_quirk, and then just control all elements regarding
-disabling U1/U2 from this dt-binding.
-
-Please cut what your need from my patch.
-
-BR Claus
+	Sam
