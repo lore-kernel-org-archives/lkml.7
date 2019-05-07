@@ -2,169 +2,139 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F576C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF9BC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD12021019
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557215354;
-	bh=+PWIk+jenwliWAQGmS7l/OPCGC2E4s58qIi8cbiRXLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XeHa/MEcEXuB71QelEBmg6HnhGyyL9hte/H3i3UAaT5PVQQpJwz9/9/NDvn6komYr
-	 UqDbnwMYceGYEAe9IySpeFfvq13AJV/ypqSv4qoZPLTeymRuUZOrv3n2ELU2mbLszS
-	 0ksugcySSar0RTNKZuwm/p/fC1RrD99U3aPsyqxo=
+	by mail.kernel.org (Postfix) with ESMTP id B775620989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VzvW/Z1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfEGHtN (ORCPT
+        id S1727107AbfEGHto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbfEGHtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:49:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6824320989;
-        Tue,  7 May 2019 07:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557215351;
-        bh=+PWIk+jenwliWAQGmS7l/OPCGC2E4s58qIi8cbiRXLI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W3ms7NVNGVP2YJfjyg1AmbDqErSBQBizUYMjqYDn4u1VbkhJDwoxVV8SttbGCkna2
-         /qmtqAfxO5IwQrjhWSTS+szdYAj3zV9bkrOVlkRqzDKpj36aesJfgTqjM6d1tL4q50
-         Ghr4dYffs90kIXLQ67WCZTqbDRonRJEtDtFf7Mv4=
-Date:   Tue, 7 May 2019 09:49:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to
- ARCH_KMALLOC_MINALIGN
-Message-ID: <20190507074909.GD26478@kroah.com>
-References: <20190507053826.31622-1-sashal@kernel.org>
- <20190507053826.31622-72-sashal@kernel.org>
- <20190507055214.GA17986@kroah.com>
- <CY4PR1201MB01200B5B52E39A88D8D3FDDDA1310@CY4PR1201MB0120.namprd12.prod.outlook.com>
+        Tue, 7 May 2019 03:49:44 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:7234 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfEGHto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:49:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd1389e0002>; Tue, 07 May 2019 00:49:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 May 2019 00:49:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 00:49:43 -0700
+Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
+ 2019 07:49:36 +0000
+Subject: Re: [PATCH V5 04/16] PCI: dwc: Perform dbi regs write lock towards
+ the end
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-5-vidyas@nvidia.com> <20190503111303.GD32400@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <2544621a-4c88-3f3e-786c-7ee8103e132d@nvidia.com>
+Date:   Tue, 7 May 2019 13:19:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR1201MB01200B5B52E39A88D8D3FDDDA1310@CY4PR1201MB0120.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190503111303.GD32400@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557215390; bh=7aKDP0PrR8UIUscgN8AluGENbezYgudBe8R0F7tHAOo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=VzvW/Z1vIyC82jZseAoID7gNZrMmCKK54TotulhenXUaOPM25Fgkyu8/t7GyDCArJ
+         pHnYW8VMh/3Pif4M8EucT6ODyFN50p4tsXm+gyfL1U2gtH6vWczZx0ZvX7wCXgXz9t
+         B6cfutJkFWW0EF5gDPAhELjdZNu2+IpwUtp9fRIHrWAy3PlVYr0YcxCvjH1aD+g+zl
+         aFTIUDio1gL8KpJXFg8EJTSHpO/HhCGHVkIjBw3OwHUhcWyjPb/fNw5yFGy1zGbc2o
+         0A0s1VHTiZdw/B09xqEke0nlRECDlPXV4BId0zvtAGtkJWfWYUNK8hb7V3AfL95Gic
+         PKKKgGA8PnVbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 07:04:13AM +0000, Alexey Brodkin wrote:
-> Hi Greg,
+On 5/3/2019 4:43 PM, Thierry Reding wrote:
+> On Wed, Apr 24, 2019 at 10:49:52AM +0530, Vidya Sagar wrote:
+>> Remove multiple write enable and disable sequences of dbi registers as
+>> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+>> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
+>> register in config space to take place. Hence disabling write permission
+>> only towards the end.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * None
+>>
+>> Changes since [v1]:
+>> * None
+>>
+>>   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ---
+>>   1 file changed, 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index 36fd3f5b48f6..e5e3571dd2fe 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -654,7 +654,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>   	val &= 0xffff00ff;
+>>   	val |= 0x00000100;
+>>   	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+>> -	dw_pcie_dbi_ro_wr_dis(pci);
+>>   
+>>   	/* Setup bus numbers */
+>>   	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+>> @@ -686,8 +685,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>   
+>>   	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+>>   
+>> -	/* Enable write permission for the DBI read-only register */
+>> -	dw_pcie_dbi_ro_wr_en(pci);
+>>   	/* Program correct class for RC */
+>>   	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+>>   	/* Better disable write permission right after the update */
 > 
-> > -----Original Message-----
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: Tuesday, May 7, 2019 8:52 AM
-> > To: Sasha Levin <sashal@kernel.org>
-> > Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Alexey Brodkin <abrodkin@synopsys.com>;
-> > Alexey Brodkin <abrodkin@synopsys.com>; Geert Uytterhoeven <geert@linux-m68k.org>; David Laight
-> > <David.Laight@aculab.com>; Peter Zijlstra <peterz@infradead.org>; Thomas Gleixner
-> > <tglx@linutronix.de>; Vineet Gupta <vgupta@synopsys.com>; Will Deacon <will.deacon@arm.com>; Sasha
-> > Levin <alexander.levin@microsoft.com>
-> > Subject: Re: [PATCH AUTOSEL 4.14 72/95] devres: Align data[] to ARCH_KMALLOC_MINALIGN
-> > 
-> > On Tue, May 07, 2019 at 01:38:01AM -0400, Sasha Levin wrote:
-> > > From: Alexey Brodkin <alexey.brodkin@synopsys.com>
-> > >
-> > > [ Upstream commit a66d972465d15b1d89281258805eb8b47d66bd36 ]
-> > >
-> > > Initially we bumped into problem with 32-bit aligned atomic64_t
-> > > on ARC, see [1]. And then during quite lengthly discussion Peter Z.
-> > > mentioned ARCH_KMALLOC_MINALIGN which IMHO makes perfect sense.
-> > > If allocation is done by plain kmalloc() obtained buffer will be
-> > > ARCH_KMALLOC_MINALIGN aligned and then why buffer obtained via
-> > > devm_kmalloc() should have any other alignment?
-> > >
-> > > This way we at least get the same behavior for both types of
-> > > allocation.
-> > >
-> > > [1] https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_pipermail_linux-2Dsnps-
-> > 2Darc_2018-
-> > 2DJuly_004009.html&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=lqdeeSSEes0GFDDl656eViXO7breS55ytWkhpk5R81I&m=A
-> > YtkWKU38pzVfJMBuK0lUwxRyKT6dDfHoD3yO6OIB5k&s=e7e2sXKcjHDQdGSrKWM0jmpSOfhe0MFk4-nMZJe9En8&e=
-> > > [2] https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_pipermail_linux-2Dsnps-
-> > 2Darc_2018-
-> > 2DJuly_004036.html&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=lqdeeSSEes0GFDDl656eViXO7breS55ytWkhpk5R81I&m=A
-> > YtkWKU38pzVfJMBuK0lUwxRyKT6dDfHoD3yO6OIB5k&s=L23zrl8rf2MmReUI8rT3FQpMiZU9H3Xjh9uVxJQe8dw&e=
-> > >
-> > > Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Cc: David Laight <David.Laight@ACULAB.COM>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Vineet Gupta <vgupta@synopsys.com>
-> > > Cc: Will Deacon <will.deacon@arm.com>
-> > > Cc: Greg KH <greg@kroah.com>
-> > > Cc: <stable@vger.kernel.org> # 4.8+
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-> > > ---
-> > >  drivers/base/devres.c | 10 ++++++++--
-> > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> > > index 71d577025285..e43a04a495a3 100644
-> > > --- a/drivers/base/devres.c
-> > > +++ b/drivers/base/devres.c
-> > > @@ -25,8 +25,14 @@ struct devres_node {
-> > >
-> > >  struct devres {
-> > >  	struct devres_node		node;
-> > > -	/* -- 3 pointers */
-> > > -	unsigned long long		data[];	/* guarantee ull alignment */
-> > > +	/*
-> > > +	 * Some archs want to perform DMA into kmalloc caches
-> > > +	 * and need a guaranteed alignment larger than
-> > > +	 * the alignment of a 64-bit integer.
-> > > +	 * Thus we use ARCH_KMALLOC_MINALIGN here and get exactly the same
-> > > +	 * buffer alignment as if it was allocated by plain kmalloc().
-> > > +	 */
-> > > +	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
-> > >  };
-> > >
-> > >  struct devres_group {
-> > 
-> > This is not needed in any of the older kernels, despite what the stable@
-> > line said, as it ends up taking a lot of memory up for all other arches.
-> > That's why I only applied it to the one kernel version.  I'm betting
-> > that it will be eventually reverted when people notice it as well :)
+> Perhaps make this explicit by moving the write enable call to the
+> beginning of the function and the write disable call to the end?
 > 
-> That very well might become the case but then we're back to the initial problem,
-> right? So maybe some other more future-proof solution should be implemented?
+> Currently it's pretty difficult to see where it's being disabled. Also,
+> that would make it more resilient against instantiations that require a
+> different register to be programmed with writes enabled.
+Agree. I'll move enabling write to beginning of this function and disabling
+to the end in the next patch series.
 
-Possibly yes.
+> 
+> Thierry
+> 
 
-> See initially we discussed simple explicit 8-byte alignment which won't change
-> data layout for most of arches while fixing our issue on ARC but for some reason
-> people were not happy with that proposal and that's how we ended-up with what we
-> discuss here now.
-
-I'm not disagreeing that this is a valid solution for you, I wasn't part
-of the original discussion, sorry.  Just that this probably isn't
-something that should be backported to older kernels at this point in
-time.
-
-thanks,
-
-greg k-h
