@@ -2,154 +2,103 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C29C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E0CC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B427E20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA9B206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:12:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QLHWta7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfEGULT convert rfc822-to-8bit (ORCPT
+        id S1727007AbfEGUMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:11:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60918 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfEGULT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:11:19 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E1B083F3C;
-        Tue,  7 May 2019 20:11:19 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D73B717B90;
-        Tue,  7 May 2019 20:11:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] AFS fixes and development
+        Tue, 7 May 2019 16:12:06 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41348 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfEGUMG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:12:06 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x47KBrXb103329;
+        Tue, 7 May 2019 15:11:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1557259913;
+        bh=mb9DtpGK++v8kJ0PeDAjLnaIBJtP4888+bgXxUdkl88=;
+        h=From:To:CC:Subject:Date;
+        b=QLHWta7VBsbo3+PCq/r4cAfxo+MiBf7t7qa3TLwRp1SB4WH/6prt3Jm0ebOazm260
+         J4loBa9KZwssB4sq4NPMmkc/3JnFAiPrDWMO4yy/ovTwd0HWSl8ENGCc8uwkzZODfF
+         57+VXHE6+l9HhMZcq4H67zQ8bMUSMBV3FoPju2sM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x47KBrTv104682
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 May 2019 15:11:53 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 7 May
+ 2019 15:11:53 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 7 May 2019 15:11:53 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x47KBrDL013898;
+        Tue, 7 May 2019 15:11:53 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 0/6] LM36274 Introduction
+Date:   Tue, 7 May 2019 15:11:53 -0500
+Message-ID: <20190507201159.13940-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <28467.1557259876.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 07 May 2019 21:11:17 +0100
-Message-ID: <28470.1557259877@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 07 May 2019 20:11:19 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello
 
-The following are a set of fix and development patches for AFS for 5.2.  To
-summarise:
+This is patch set v4 for the LM36274.  There were no changes made
+to this patch set except to rebase this on top of the latest TI LMU common code
+patchset.
 
- (1) Fix the AFS file locking so that sqlite can run on an AFS mount and
-     also so that firefox and gnome can use a homedir that's mounted
-     through AFS.
+This patch set was rebased on the series at:
+https://lore.kernel.org/patchwork/project/lkml/list/?series=393071
 
-     This required emulation of fine-grained locking when the server will
-     only support whole-file locks and no upgrade/downgrade.  Four modes
-     are provided, settable by mount parameter:
+Dan
 
-     "flock=local" - No reference to the server
+Dan Murphy (6):
+  regulator: lm363x: Make the gpio register enable flexible
+  dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+  mfd: ti-lmu: Add LM36274 support to the ti-lmu
+  regulator: lm363x: Add support for LM36274
+  dt-bindings: leds: Add LED bindings for the LM36274
+  leds: lm36274: Introduce the TI LM36274 LED driver
 
-     "flock=openafs" - Fine-grained locks are local-only, whole-file locks
-     require sufficient server locks
+ .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+ drivers/leds/Kconfig                          |   7 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |   5 +-
+ drivers/mfd/ti-lmu.c                          |  14 ++
+ drivers/regulator/Kconfig                     |   2 +-
+ drivers/regulator/lm363x-regulator.c          |  56 +++++-
+ include/linux/mfd/ti-lmu-register.h           |  23 +++
+ include/linux/mfd/ti-lmu.h                    |   4 +
+ 11 files changed, 416 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+ create mode 100644 drivers/leds/leds-lm36274.c
 
-     "flock=strict" - All locks require sufficient server locks
+-- 
+2.21.0.5.gaeb582a983
 
-     "flock=write" - Always get an exclusive server lock
-
-     If the volume is a read-only or backup volume, then flock=local for
-     that volume.
-
- (2) Log extra information for a couple of cases where the client mucks up
-     somehow: AFS vnode with undefined type and dir check failure - in both
-     cases we seem to end up with unfilled data, but the issues happen
-     infrequently and are difficult to reproduce at will.
-
- (3) Implement silly rename for unlink() and rename().
-
- (4) Set i_blocks so that du can get some information about usage.
-
- (5) Fix xattr handlers to return the right amount of data and to not
-     overflow buffers.
-
- (6) Implement getting/setting raw AFS and YFS ACLs as xattrs.
-
-Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-The following changes since commit cd8dead0c39457e58ec1d36db93aedca811d48f1:
-
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net (2019-04-24 16:18:59 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-next-20190507
-
-for you to fetch changes up to f5e4546347bc847be30b3cf904db5fc874b3c5dc:
-
-  afs: Implement YFS ACL setting (2019-05-07 16:48:44 +0100)
-
-----------------------------------------------------------------
-AFS Development
-
-----------------------------------------------------------------
-David Howells (17):
-      afs: Split wait from afs_make_call()
-      afs: Calculate lock extend timer from set/extend reply reception
-      afs: Fix AFS file locking to allow fine grained locks
-      afs: Further fix file locking
-      afs: Add file locking tracepoints
-      afs: Improve dir check failure reports
-      afs: Handle lock rpc ops failing on a file that got deleted
-      afs: Add directory reload tracepoint
-      afs: Implement sillyrename for unlink and rename
-      afs: Add more tracepoints
-      afs: Provide mount-time configurable byte-range file locking emulation
-      afs: Log more information for "kAFS: AFS vnode with undefined type\n"
-      afs: Fix the afs.cell and afs.volume xattr handlers
-      afs: Fix getting the afs.fid xattr
-      afs: Get an AFS3 ACL as an xattr
-      afs: Get YFS ACLs and information through xattrs
-      afs: Implement YFS ACL setting
-
-Joe Gorse (1):
-      afs: implement acl setting
-
-Marc Dionne (1):
-      afs: Calculate i_blocks based on file size
-
- fs/afs/Makefile            |   1 +
- fs/afs/afs_fs.h            |   2 +
- fs/afs/dir.c               | 167 ++++++++++--
- fs/afs/dir_silly.c         | 239 ++++++++++++++++++
- fs/afs/flock.c             | 616 ++++++++++++++++++++++++++++-----------------
- fs/afs/fs_probe.c          |  13 +-
- fs/afs/fsclient.c          | 277 +++++++++++++++++---
- fs/afs/inode.c             |  43 +++-
- fs/afs/internal.h          |  64 ++++-
- fs/afs/protocol_yfs.h      |   6 +-
- fs/afs/rxrpc.c             |  33 ++-
- fs/afs/super.c             |  34 ++-
- fs/afs/vl_probe.c          |  14 +-
- fs/afs/vlclient.c          |  26 +-
- fs/afs/xattr.c             | 270 +++++++++++++++++++-
- fs/afs/yfsclient.c         | 329 +++++++++++++++++++++---
- include/linux/fs.h         |   1 +
- include/trace/events/afs.h | 385 +++++++++++++++++++++++++++-
- 18 files changed, 2142 insertions(+), 378 deletions(-)
- create mode 100644 fs/afs/dir_silly.c
