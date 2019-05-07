@@ -2,118 +2,107 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C043AC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA38C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B4C205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38EE205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GtBJBi17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfEGUtY (ORCPT
+        id S1727273AbfEGUt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:49:24 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52134 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfEGUtY (ORCPT
+        Tue, 7 May 2019 16:49:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43895 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfEGUt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:49:24 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hO71d-0000Nx-Nu; Tue, 07 May 2019 20:49:21 +0000
-Date:   Tue, 7 May 2019 21:49:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs.git next bits of mount ABI stuff (syscalls, this time)
-Message-ID: <20190507204921.GL23075@ZenIV.linux.org.uk>
+        Tue, 7 May 2019 16:49:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c6so4062957pfa.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 13:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=16ni+8UEniYJYlMiaLm9MTZL5f4uI05QVZvXY8kGkyE=;
+        b=GtBJBi17Nvcq1G7rVZ9uJaeHxN4bn4kXoaDa6iTX8XSeUFAicrKXpkEgXGf3y81kvf
+         5mT8XP9qGfozJM+DJlH2PiPHjL8scDu/V6aO++md4LgoYQ6eaGaD41a2YFFVxDS16Hzj
+         AfaZDXtfrRnyP36FduMmBoEotVSb6OqRnajcI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=16ni+8UEniYJYlMiaLm9MTZL5f4uI05QVZvXY8kGkyE=;
+        b=MHQhFiddupFxLmtLih89vuHPJmXa/8+WmnM5EU+ALPTBOIbFI378VsjhnLDldkueka
+         vCUNv797/+mqRPaSfcK6i8Bnf7e+7T9g8zg7FSyI5YqQ6eKTdnRlzl/3V6cGqp3XCo61
+         NT3igLEi7KZRlAwa4nuQRKmZoNIBBesihEknCYne8n+Vs0jd0+a2xQdSSkMOFVKitR96
+         Z0GlTgQ8ZH6y84wLITss4QUzkXKadwepNCoaCBajg2NQMdz9/8Gvuy3+E1R90vJ6oMr7
+         /qWAwYOPj5PnB9KHsJxMgKxNqH3E5weQJkRE/Oluxi5g3nHqYcEmiawQh4Q6p9gVJI8v
+         9gyw==
+X-Gm-Message-State: APjAAAU5oKHHxhnmWbOmh8LMiStpdrMblCe/GJyzA/BYy4Ir1plw/oxj
+        yOzhSK4J7kAoxKbYwnm3ZASsNg==
+X-Google-Smtp-Source: APXvYqzq46xNr1WmdaRR59uTuZVU09D1ZwcWwdDjivzpxshj1SH+qs20Hl2kkBUMpFYjGgNqsTbWWA==
+X-Received: by 2002:a63:9d8d:: with SMTP id i135mr25594688pgd.245.1557262197357;
+        Tue, 07 May 2019 13:49:57 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id x19sm8312796pga.4.2019.05.07.13.49.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 13:49:56 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>, hal@halemmerich.com,
+        Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] clk: rockchip: Use clk_hw_get_rate() in MMC phase calculation
+Date:   Tue,  7 May 2019 13:49:35 -0700
+Message-Id: <20190507204935.256982-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Syscalls themselves, finally.  That's not all there is to that
-stuff, but switching individual filesystems to new methods is
-fortunately independent from everything else, so e.g. NFS series can
-go through NFS tree, etc.  As those conversions get done, we'll be
-finally able to get rid of a bunch of duplication in fs/super.c introduced
-in the beginning of the entire thing.  I expect that to be finished
-in the next window...
+When calculating the MMC phase we can just use clk_hw_get_rate()
+instead of clk_get_rate().  This avoids recalculating the rate.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+ drivers/clk/rockchip/clk-mmc-phase.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-are available in the git repository at:
+diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
+index 026a26bb702d..07526f64dbfd 100644
+--- a/drivers/clk/rockchip/clk-mmc-phase.c
++++ b/drivers/clk/rockchip/clk-mmc-phase.c
+@@ -55,7 +55,7 @@ static unsigned long rockchip_mmc_recalc(struct clk_hw *hw,
+ static int rockchip_mmc_get_phase(struct clk_hw *hw)
+ {
+ 	struct rockchip_mmc_clock *mmc_clock = to_mmc_clock(hw);
+-	unsigned long rate = clk_get_rate(hw->clk);
++	unsigned long rate = clk_hw_get_rate(hw);
+ 	u32 raw_value;
+ 	u16 degrees;
+ 	u32 delay_num = 0;
+@@ -86,7 +86,7 @@ static int rockchip_mmc_get_phase(struct clk_hw *hw)
+ static int rockchip_mmc_set_phase(struct clk_hw *hw, int degrees)
+ {
+ 	struct rockchip_mmc_clock *mmc_clock = to_mmc_clock(hw);
+-	unsigned long rate = clk_get_rate(hw->clk);
++	unsigned long rate = clk_hw_get_rate(hw);
+ 	u8 nineties, remainder;
+ 	u8 delay_num;
+ 	u32 raw_value;
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.mount-syscalls
-
-for you to fetch changes up to f1b5618e013af28b3c78daf424436a79674423c0:
-
-  vfs: Add a sample program for the new mount API (2019-03-20 18:49:06 -0400)
-
-----------------------------------------------------------------
-Al Viro (1):
-      vfs: syscall: Add open_tree(2) to reference or clone a mount
-
-David Howells (9):
-      vfs: syscall: Add move_mount(2) to move mounts around
-      teach move_mount(2) to work with OPEN_TREE_CLONE
-      Make anon_inodes unconditional
-      vfs: syscall: Add fsopen() to prepare for superblock creation
-      vfs: Implement logging through fs_context
-      vfs: syscall: Add fsconfig() for configuring and managing a context
-      vfs: syscall: Add fsmount() to create a mount for a superblock
-      vfs: syscall: Add fspick() to select a superblock for reconfiguration
-      vfs: Add a sample program for the new mount API
-
- arch/arm/kvm/Kconfig                   |   1 -
- arch/arm64/kvm/Kconfig                 |   1 -
- arch/mips/kvm/Kconfig                  |   1 -
- arch/powerpc/kvm/Kconfig               |   1 -
- arch/s390/kvm/Kconfig                  |   1 -
- arch/x86/Kconfig                       |   1 -
- arch/x86/entry/syscalls/syscall_32.tbl |   7 +-
- arch/x86/entry/syscalls/syscall_64.tbl |   6 +
- arch/x86/kvm/Kconfig                   |   1 -
- drivers/base/Kconfig                   |   1 -
- drivers/char/tpm/Kconfig               |   1 -
- drivers/dma-buf/Kconfig                |   1 -
- drivers/gpio/Kconfig                   |   1 -
- drivers/iio/Kconfig                    |   1 -
- drivers/infiniband/Kconfig             |   1 -
- drivers/vfio/Kconfig                   |   1 -
- fs/Makefile                            |   4 +-
- fs/file_table.c                        |   9 +-
- fs/fs_context.c                        | 160 ++++++++++-
- fs/fsopen.c                            | 477 +++++++++++++++++++++++++++++++++
- fs/internal.h                          |   4 +
- fs/namespace.c                         | 477 +++++++++++++++++++++++++++++----
- fs/notify/fanotify/Kconfig             |   1 -
- fs/notify/inotify/Kconfig              |   1 -
- include/linux/fs.h                     |   7 +-
- include/linux/fs_context.h             |  38 ++-
- include/linux/lsm_hooks.h              |   6 +
- include/linux/module.h                 |   6 +
- include/linux/security.h               |   7 +
- include/linux/syscalls.h               |   9 +
- include/uapi/linux/fcntl.h             |   2 +
- include/uapi/linux/mount.h             |  62 +++++
- init/Kconfig                           |  10 -
- samples/Kconfig                        |   9 +-
- samples/Makefile                       |   2 +-
- samples/{statx => vfs}/Makefile        |   5 +-
- samples/vfs/test-fsmount.c             | 133 +++++++++
- samples/{statx => vfs}/test-statx.c    |  11 +-
- security/security.c                    |   5 +
- 39 files changed, 1354 insertions(+), 118 deletions(-)
- create mode 100644 fs/fsopen.c
- rename samples/{statx => vfs}/Makefile (55%)
- create mode 100644 samples/vfs/test-fsmount.c
- rename samples/{statx => vfs}/test-statx.c (96%)
