@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077C8C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D16C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13D720578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43712205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207971;
-	bh=O/MTctHPgCyvQ0QI32cGss5bUNi/gQpGB+y/MKIRfJY=;
+	s=default; t=1557207983;
+	bh=Iapv8+LW/JqKANMSo08CbIC7pOslcbP8rBMT8KWHo2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qE0mSvu+jCU9t3qcEaQix5HSWPE1NQ/DmCjQ/wKAN5qg0vGBq9Pg6TwaOUwYPTiLJ
-	 Dhm7OF0MbcTjDXfqR0mlvb+V5ZIHUc9I7gW45iY6cWtQwTE8WdhoE6xII8/XhwRhwv
-	 DY9QoZuvCswYEgzMKxYA6ufHeZubzPjilOUeA1tQ=
+	b=itswHVtkdenyvxjTJ1jtDom376sGBZAHwHLxJpBMtWUA4JJpRVH9Sc+K8axDhlAg8
+	 BW8g7M439fV1geNbqdCBKLUwlfqOYHDkjC1AoPEy4OBzHEzzuMNQZXYq3IZiTkMCDV
+	 FJ8edqJBiShoZw+dL4zV1E9/XZxbcRd8OVa3KheA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfEGFlg (ORCPT
+        id S1729159AbfEGFqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60966 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:46:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729338AbfEGFla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:30 -0400
+        id S1728670AbfEGFlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B21A205ED;
-        Tue,  7 May 2019 05:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E21220B7C;
+        Tue,  7 May 2019 05:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207689;
-        bh=O/MTctHPgCyvQ0QI32cGss5bUNi/gQpGB+y/MKIRfJY=;
+        s=default; t=1557207692;
+        bh=Iapv8+LW/JqKANMSo08CbIC7pOslcbP8rBMT8KWHo2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nI9aZ8LMpoWRuZOIdB5HxkiChn4296+MigUHaSCguNCcnCh8KOnFaRXBs9BO1YFgF
-         aNJn30vHV+kCnMrsWoAo3xcjoo09oLN+F49VIJ4BsgAZprRXULMQc1dhk/rcGTD8gf
-         ncXgwy8RTCTGd+OlZQCfvNocRNTitNJgrIOTtDNM=
+        b=Sn9bcnrA+gt4HaETt3EjzUUcvADJF3/uDDqphswIswt7tW13E0PzApNLlKiotthLb
+         +QSwboK9vld0i5r5Q+qlzbeZY6qb6+OpZm24VsDNi/FfVjpOBf7B9Q2fRMS2rAduWj
+         SgXijo90W/8uc4Gf8OG3/4hp8bRguxp3l2vAHtJk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/25] HID: input: add mapping for "Toggle Display" key
-Date:   Tue,  7 May 2019 01:41:02 -0400
-Message-Id: <20190507054123.32514-5-sashal@kernel.org>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/25] s390/dasd: Fix capacity calculation for large volumes
+Date:   Tue,  7 May 2019 01:41:04 -0400
+Message-Id: <20190507054123.32514-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507054123.32514-1-sashal@kernel.org>
 References: <20190507054123.32514-1-sashal@kernel.org>
@@ -57,39 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Peter Oberparleiter <oberpar@linux.ibm.com>
 
-[ Upstream commit c01908a14bf735b871170092807c618bb9dae654 ]
+[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
 
-According to HUT 1.12 usage 0xb5 from the generic desktop page is reserved
-for switching between external and internal display, so let's add the
-mapping.
+The DASD driver incorrectly limits the maximum number of blocks of ECKD
+DASD volumes to 32 bit numbers. Volumes with a capacity greater than
+2^32-1 blocks are incorrectly recognized as smaller volumes.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This results in the following volume capacity limits depending on the
+formatted block size:
+
+  BLKSIZE  MAX_GB   MAX_CYL
+      512    2047   5843492
+     1024    4095   8676701
+     2048    8191  13634816
+     4096   16383  23860929
+
+The same problem occurs when a volume with more than 17895697 cylinders
+is accessed in raw-track-access mode.
+
+Fix this problem by adding an explicit type cast when calculating the
+maximum number of blocks.
+
+Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/s390/block/dasd_eckd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 302a24931147..9f7b1cf726a8 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -607,6 +607,14 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 			break;
- 		}
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 11c6335b1951..9d772201e334 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -2054,14 +2054,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+ 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
  
-+		if ((usage->hid & 0xf0) == 0xb0) {	/* SC - Display */
-+			switch (usage->hid & 0xf) {
-+			case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
-+			default: goto ignore;
-+			}
-+			break;
-+		}
-+
- 		/*
- 		 * Some lazy vendors declare 255 usages for System Control,
- 		 * leading to the creation of ABS_X|Y axis and too many others.
+ raw:
+-	block->blocks = (private->real_cyl *
++	block->blocks = ((unsigned long) private->real_cyl *
+ 			  private->rdc_data.trk_per_cyl *
+ 			  blk_per_trk);
+ 
+ 	dev_info(&device->cdev->dev,
+-		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
++		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
+ 		 "%s\n", (block->bp_block >> 10),
+-		 ((private->real_cyl *
++		 (((unsigned long) private->real_cyl *
+ 		   private->rdc_data.trk_per_cyl *
+ 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
+ 		 ((blk_per_trk * block->bp_block) >> 10),
 -- 
 2.20.1
 
