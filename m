@@ -2,171 +2,175 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC07CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81B3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F46D206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F6F20835
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfEGAZJ (ORCPT
+        id S1726533AbfEGAhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 20:25:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51406 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbfEGAZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 20:25:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 72C33AE5A;
-        Tue,  7 May 2019 00:25:07 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Date:   Tue, 07 May 2019 10:24:58 +1000
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-In-Reply-To: <20190503153531.GJ12608@fieldses.org>
-References: <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <20190503153531.GJ12608@fieldses.org>
-Message-ID: <87woj3157p.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Mon, 6 May 2019 20:37:50 -0400
+Received: from alln-iport-2.cisco.com ([173.37.142.89]:50779 "EHLO
+        alln-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfEGAhu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 20:37:50 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0DtAgB90tBc/5JdJa1lHAEBAQQBAQc?=
+ =?us-ascii?q?EAQGBZYIRgW0oshmBZxCEbQKCEyM4EwEDAQEEAQECAQJtKIVLBidSEFFXBxK?=
+ =?us-ascii?q?DIoILrVIzhTeDOoFFFIEehniEVheBf4ERg1CEKAWFeQSSQIENk28JggtWkWc?=
+ =?us-ascii?q?nbpRijB+VGYFmIYFWMxoIGxWCCIEfgkaOKx8DMJJaAQE?=
+X-IronPort-AV: E=Sophos;i="5.60,439,1549929600"; 
+   d="scan'208";a="270222088"
+Received: from rcdn-core-10.cisco.com ([173.37.93.146])
+  by alln-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 07 May 2019 00:37:48 +0000
+Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
+        by rcdn-core-10.cisco.com (8.15.2/8.15.2) with ESMTP id x470bjOH019352;
+        Tue, 7 May 2019 00:37:47 GMT
+From:   Ruslan Babayev <ruslan@babayev.com>
+To:     linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, mika.westerberg@linux.intel.com,
+        wsa@the-dreams.de
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
+Subject: [PATCH RFC v2 net-next 2/2] net: phy: sfp: enable i2c-bus detection on ACPI based systems
+Date:   Mon,  6 May 2019 17:35:57 -0700
+Message-Id: <20190507003557.40648-3-ruslan@babayev.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190505220524.37266-2-ruslan@babayev.com>
+References: <20190505220524.37266-2-ruslan@babayev.com>
+Reply-To: 20190505220524.37266-2-ruslan@babayev.com
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
+X-Outbound-Node: rcdn-core-10.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Lookup I2C adapter using the "i2c-bus" device property on ACPI based
+systems similar to how it's done with DT.
 
-On Fri, May 03 2019, J. Bruce Fields wrote:
+An example DSD describing an SFP on an ACPI based system:
 
-> On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
->> On Tue, Dec 06 2016, J. Bruce Fields wrote:
->>=20
->> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
->> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> w=
-rote:
->> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
->> >> > <andreas.gruenbacher@gmail.com> wrote:
->> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gruenba=
-cher@gmail.com>:
->> >> >
->> >> >>> It's not hard to come up with a heuristic that determines if a
->> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore=
- the
->> >> >>> attribute in that case. (The file mode is transmitted in its own
->> >> >>> attribute already, so actually converting .) That way, overlayfs =
-could
->> >> >>> still fail copying up files that have an actual ACL. It's still an
->> >> >>> ugly hack ...
->> >> >>
->> >> >> Actually, that kind of heuristic would make sense in the NFS client
->> >> >> which could then hide the "system.nfs4_acl" attribute.
->> >> >
->> >> > Even simpler would be if knfsd didn't send the attribute if not
->> >> > necessary.  Looks like there's code actively creating the nfs4_acl =
-on
->> >> > the wire even if the filesystem had none:
->> >> >
->> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
->> >> >     if (!pacl)
->> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
->> >> >
->> >> > What's the point?
->> >>=20
->> >> That's how the protocol is specified.
->> >
->> > Yep, even if we could make that change to nfsd it wouldn't help the
->> > client with the large number of other servers that are out there
->> > (including older knfsd's).
->> >
->> > --b.
->> >
->> >> (I'm not saying that that's very helpful.)
->> >>=20
->> >> Andreas
->>=20
->> Hi everyone.....
->>  I have a customer facing this problem, and so stumbled onto the email
->>  thread.
->>  Unfortunately it didn't resolve anything.  Maybe I can help kick things
->>  along???
->>=20
->>  The core problem here is that NFSv4 and ext4 use different and largely
->>  incompatible ACL implementations.  There is no way to accurately
->>  translate from one to the other in general (common specific examples
->>  can be converted).
->>=20
->>  This means that either:
->>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
->>       versa) or
->>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
->>       that is OK.
->>=20
->>  Silently not copying the ACLs is probably not a good idea as it might
->>  result in inappropriate permissions being given away.  So if the
->>  sysadmin wants this (and some clearly do), they need a way to
->>  explicitly say "I accept the risk".
->
-> So, I feel like silently copying ACLs up *also* carries a risk, if that
-> means switching from server-enforcement to client-enforcement of those
-> permissions.
+Device (SFP0)
+{
+    Name (_HID, "PRP0001")
+    Name (_CRS, ResourceTemplate()
+    {
+        GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
+               "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
+            { 0, 1, 2, 3, 4 }
+    })
+    Name (_DSD, Package ()
+    {
+        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+        Package () {
+            Package () { "compatible", "sff,sfp" },
+            Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+            Package () { "maximum-power-milliwatt", 1000 },
+            Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
+            Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
+            Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
+            Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
+            Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
+        },
+    })
+}
 
-Interesting perspective .... though doesn't NFSv4 explicitly allow
-client-side ACL enforcement in the case of delegations?
-Not sure how relevant that is....
+Device (PHY0)
+{
+    Name (_HID, "PRP0001")
+    Name (_DSD, Package ()
+    {
+        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+        Package () {
+            Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
+            Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
+            Package () { "managed", "in-band-status" },
+            Package () { "phy-mode", "sgmii" },
+        },
+    })
+}
 
-It seems to me we have two options:
- 1/ declare the NFSv4 doesn't work as a lower layer for overlayfs and
-    recommend people use NFSv3, or
- 2/ Modify overlayfs to work with NFSv4 by ignoring nfsv4 ACLs either
- 2a/ always - and ignore all other acls and probably all system. xattrs,
- or
- 2b/ based on a mount option that might be
-      2bi/ general "noacl" or might be
-      2bii/ explicit "noxattr=3Dsystem.nfs4acl"
-=20
-I think that continuing to discuss the miniature of the options isn't
-going to help.  No solution is perfect - we just need to clearly
-document the implications of whatever we come up with.
+Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+Cc: xe-linux-external@cisco.com
+---
+ drivers/net/phy/sfp.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
-I lean towards 2a, but I be happy with with any '2' and '1' won't kill
-me.
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index d4635c2178d1..7a6c8df8899b 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
++#include <linux/acpi.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/rtnetlink.h>
+@@ -1783,6 +1784,7 @@ static int sfp_probe(struct platform_device *pdev)
+ {
+ 	const struct sff_data *sff;
+ 	struct sfp *sfp;
++	struct i2c_adapter *i2c = NULL;
+ 	bool poll = false;
+ 	int irq, err, i;
+ 
+@@ -1801,7 +1803,6 @@ static int sfp_probe(struct platform_device *pdev)
+ 	if (pdev->dev.of_node) {
+ 		struct device_node *node = pdev->dev.of_node;
+ 		const struct of_device_id *id;
+-		struct i2c_adapter *i2c;
+ 		struct device_node *np;
+ 
+ 		id = of_match_node(sfp_of_match, node);
+@@ -1818,14 +1819,30 @@ static int sfp_probe(struct platform_device *pdev)
+ 
+ 		i2c = of_find_i2c_adapter_by_node(np);
+ 		of_node_put(np);
+-		if (!i2c)
+-			return -EPROBE_DEFER;
+-
+-		err = sfp_i2c_configure(sfp, i2c);
+-		if (err < 0) {
+-			i2c_put_adapter(i2c);
+-			return err;
++	} else if (ACPI_COMPANION(&pdev->dev)) {
++		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
++		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
++		struct fwnode_reference_args args;
++		struct acpi_handle *acpi_handle;
++		int ret;
++
++		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
++		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
++			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
++			return -ENODEV;
+ 		}
++
++		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
++		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
++	}
++
++	if (!i2c)
++		return -EPROBE_DEFER;
++
++	err = sfp_i2c_configure(sfp, i2c);
++	if (err < 0) {
++		i2c_put_adapter(i2c);
++		return err;
+ 	}
+ 
+ 	for (i = 0; i < GPIO_MAX; i++)
+-- 
+2.17.1
 
-Do we have a vote?  Or does someone make an executive decision??
-
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzQ0FsACgkQOeye3VZi
-gbmsVw//WnOlxrweqSKICkAAi603PMcmS8Md0wmkM70CI1jpJ83XZmzKxrcTex9N
-yVZv4IqQ/WvQWTPFfqZQEjUJF9VD3hr18q0EPYqAxkTUINChjiqFtXVm7+I1Z/Ws
-MplLXNj978izRf1k4M+HyET8FSc1cp1rADRgRj7yu9sejX85GmIqOjfso6s51KYZ
-ji+GkrEvNiSSLx3H1hN5bzOQMpuzUMUPfTe4k+HvCYpngC5vxd5dpdwta6gFsK9Q
-k8mtWmwXgmBmRCc0yIvzMPoxwH4LIKcg5fc0h0E5ZDduHwkTECRP9bRQ91BxxTT6
-MDgooq7ykE8ymbM2nxsJOhBZbCqpZ4Ax14JiWHr1gHqf62JST/ButWYH+kJkfmWa
-6YVm//jEorhKtBddNix+y9xDqz1vaY2kJvSa586rqO1jfc3k4JD8nhFQ0RyY7ZVp
-35FR4z3hDu9zclmL76Dhisn623IFEkbiosjzXBCSavd4gKB2ps+McSQ+x+ZKhapx
-3yEAMnbxp9Mw/58S5fdil9ftmRp1cf/BGWKOQes8SwxpOy7e3/aJOZRaMVnTk1FX
-s8aIANnLaP2+Rp/0LyN9Z83bEI8sePgPGVBY768Q3QRuGD6K85WA2lc4rOXPrnCD
-e1O4ESUMyEe6ZTOACTw/EF6ceotlqPEBTXrVecVAkI+c4JtwtYs=
-=/EJ8
------END PGP SIGNATURE-----
---=-=-=--
