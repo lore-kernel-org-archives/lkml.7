@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19764C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78357C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF481205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46500205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208750;
-	bh=XxO6TjRIcp5X5OiMe4gAGo/n1EizSuDR1wlTAcNzDT4=;
+	s=default; t=1557208760;
+	bh=G0mL/H8gNfYgbuvpwiVRVokGWEdnGYTn1l78OE/dFUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sgty0rdAVXrryjV1K6Q72548S4OGY2Kp9KGzYWGA8aH02cayJyqsEOxZZaJYfXPmS
-	 kTi4aidK7dbwK4XMf3OEFy31Bwg61Ud2BwC8hNJOn2mQWHxPLRw3uLH990UoI24lOl
-	 IIDIckeYGZv9di/OKzxTKnOKR7WE/85pD8SOWJlw=
+	b=nTG1IBzV7apAGogsce3Sb0VvPqIRcZydM+ufeImX5PiseyHvnVZZfWCCTFRs4ERQW
+	 JoZbfD9teHW7tIz1nkEr+OCMmpObuIqQ87XGmNKv/Fp0wNUk3vhspphqU0Ryj0WpkI
+	 MKbxK+duRUlr+ZFeTSRMWTWvs3qljziVzLc7dlL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfEGF7I (ORCPT
+        id S1728171AbfEGFgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:59:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfEGFg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:56 -0400
+        id S1726666AbfEGFgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24D7620B7C;
-        Tue,  7 May 2019 05:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2D820989;
+        Tue,  7 May 2019 05:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207415;
-        bh=XxO6TjRIcp5X5OiMe4gAGo/n1EizSuDR1wlTAcNzDT4=;
+        s=default; t=1557207399;
+        bh=G0mL/H8gNfYgbuvpwiVRVokGWEdnGYTn1l78OE/dFUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQuIYJIE3sl3rQBRvlowqbrI+1FmBxAEa14nGeXURY+f3/3hE1Nv9hWbHAsvZH1H2
-         DCDUe+ODYxF+aUUfJuy/Ltwqe8izOa1CjUsKHs6LMBWjP/Zz+hB4g111LZB+z7V+U9
-         lg0jUN5JqyxgOQ0XvsYL8cp0F701Rrv+5/8qqO4k=
+        b=IXaVyuqBY3WCZb8HGfxYjUeZhbQIPmc5AbDxbO1sR6nm99fu+Fw2zTR3R62zMIxZx
+         dJjQYqaQMQ78cAPbiobMrFEvdiU4v6ePLTpqS+qgchXnpwIWhj2OkWT67BE9B8LqoN
+         5uwTnpzpO+u9wHYr/p6klnECADRDg2FTTzO2qDUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 30/81] x86/build/lto: Fix truncated .bss with -fdata-sections
-Date:   Tue,  7 May 2019 01:35:01 -0400
-Message-Id: <20190507053554.30848-30-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/81] selftests: fib_tests: Fix 'Command line is not complete' errors
+Date:   Tue,  7 May 2019 01:34:54 -0400
+Message-Id: <20190507053554.30848-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -65,52 +60,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 6a03469a1edc94da52b65478f1e00837add869a3 ]
+[ Upstream commit a5f622984a623df9a84cf43f6b098d8dd76fbe05 ]
 
-With CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y, we compile the kernel with
--fdata-sections, which also splits the .bss section.
+A couple of tests are verifying a route has been removed. The helper
+expects the prefix as the first part of the expected output. When
+checking that a route has been deleted the prefix is empty leading
+to an invalid ip command:
 
-The new section, with a new .bss.* name, which pattern gets missed by the
-main x86 linker script which only expects the '.bss' name. This results
-in the discarding of the second part and a too small, truncated .bss
-section and an unhappy, non-working kernel.
+  $ ip ro ls match
+  Command line is not complete. Try option "help"
 
-Use the common BSS_MAIN macro in the linker script to properly capture
-and merge all the generated BSS sections.
+Fix by moving the comparison of expected output and output to a new
+function that is used by both check_route and check_route6. Use the
+new helper for the 2 checks on route removal.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190415164956.124067-1-samitolvanen@google.com
-[ Extended the changelog. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Also, remove the reset of 'set -x' in route_setup which overrides the
+user managed setting.
+
+Fixes: d69faad76584c ("selftests: fib_tests: Add prefix route tests with metric")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/fib_tests.sh | 94 ++++++++++--------------
+ 1 file changed, 40 insertions(+), 54 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index c63bab98780c..85e6d5620188 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -372,7 +372,7 @@ SECTIONS
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		__bss_start = .;
- 		*(.bss..page_aligned)
--		*(.bss)
-+		*(BSS_MAIN)
- 		BSS_DECRYPTED
- 		. = ALIGN(PAGE_SIZE);
- 		__bss_stop = .;
+diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
+index a4ccde0e473b..2f190aa8fc5f 100755
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -602,6 +602,39 @@ run_cmd()
+ 	return $rc
+ }
+ 
++check_expected()
++{
++	local out="$1"
++	local expected="$2"
++	local rc=0
++
++	[ "${out}" = "${expected}" ] && return 0
++
++	if [ -z "${out}" ]; then
++		if [ "$VERBOSE" = "1" ]; then
++			printf "\nNo route entry found\n"
++			printf "Expected:\n"
++			printf "    ${expected}\n"
++		fi
++		return 1
++	fi
++
++	# tricky way to convert output to 1-line without ip's
++	# messy '\'; this drops all extra white space
++	out=$(echo ${out})
++	if [ "${out}" != "${expected}" ]; then
++		rc=1
++		if [ "${VERBOSE}" = "1" ]; then
++			printf "    Unexpected route entry. Have:\n"
++			printf "        ${out}\n"
++			printf "    Expected:\n"
++			printf "        ${expected}\n\n"
++		fi
++	fi
++
++	return $rc
++}
++
+ # add route for a prefix, flushing any existing routes first
+ # expected to be the first step of a test
+ add_route6()
+@@ -646,31 +679,7 @@ check_route6()
+ 	local rc=0
+ 
+ 	out=$($IP -6 ro ls match ${pfx} | sed -e 's/ pref medium//')
+-	[ "${out}" = "${expected}" ] && return 0
+-
+-	if [ -z "${out}" ]; then
+-		if [ "$VERBOSE" = "1" ]; then
+-			printf "\nNo route entry found\n"
+-			printf "Expected:\n"
+-			printf "    ${expected}\n"
+-		fi
+-		return 1
+-	fi
+-
+-	# tricky way to convert output to 1-line without ip's
+-	# messy '\'; this drops all extra white space
+-	out=$(echo ${out})
+-	if [ "${out}" != "${expected}" ]; then
+-		rc=1
+-		if [ "${VERBOSE}" = "1" ]; then
+-			printf "    Unexpected route entry. Have:\n"
+-			printf "        ${out}\n"
+-			printf "    Expected:\n"
+-			printf "        ${expected}\n\n"
+-		fi
+-	fi
+-
+-	return $rc
++	check_expected "${out}" "${expected}"
+ }
+ 
+ route_cleanup()
+@@ -714,7 +723,7 @@ route_setup()
+ 	$IP addr add 172.16.103.2/24 dev veth4
+ 	$IP addr add 172.16.104.1/24 dev dummy1
+ 
+-	set +ex
++	set +e
+ }
+ 
+ # assumption is that basic add of a single path route works
+@@ -949,7 +958,8 @@ ipv6_addr_metric_test()
+ 	run_cmd "$IP li set dev dummy2 down"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route6 ""
++		out=$($IP -6 ro ls match 2001:db8:104::/64)
++		check_expected "${out}" ""
+ 		rc=$?
+ 	fi
+ 	log_test $rc 0 "Prefix route removed on link down"
+@@ -1009,34 +1019,9 @@ check_route()
+ 	local pfx="172.16.104.0/24"
+ 	local expected="$1"
+ 	local out
+-	local rc=0
+ 
+ 	out=$($IP ro ls match ${pfx})
+-	[ "${out}" = "${expected}" ] && return 0
+-
+-	if [ -z "${out}" ]; then
+-		if [ "$VERBOSE" = "1" ]; then
+-			printf "\nNo route entry found\n"
+-			printf "Expected:\n"
+-			printf "    ${expected}\n"
+-		fi
+-		return 1
+-	fi
+-
+-	# tricky way to convert output to 1-line without ip's
+-	# messy '\'; this drops all extra white space
+-	out=$(echo ${out})
+-	if [ "${out}" != "${expected}" ]; then
+-		rc=1
+-		if [ "${VERBOSE}" = "1" ]; then
+-			printf "    Unexpected route entry. Have:\n"
+-			printf "        ${out}\n"
+-			printf "    Expected:\n"
+-			printf "        ${expected}\n\n"
+-		fi
+-	fi
+-
+-	return $rc
++	check_expected "${out}" "${expected}"
+ }
+ 
+ # assumption is that basic add of a single path route works
+@@ -1301,7 +1286,8 @@ ipv4_addr_metric_test()
+ 	run_cmd "$IP li set dev dummy2 down"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route ""
++		out=$($IP ro ls match 172.16.104.0/24)
++		check_expected "${out}" ""
+ 		rc=$?
+ 	fi
+ 	log_test $rc 0 "Prefix route removed on link down"
 -- 
 2.20.1
 
