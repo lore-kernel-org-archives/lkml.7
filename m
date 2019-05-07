@@ -2,79 +2,135 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE9C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1084CC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509BC20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D279C20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 22:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557269445;
+	bh=ofR3gf9a2nJrY32VNWR52pwsavGPKy11KlcaF1ruQMg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jn4svt6xT8Evvu7/aG8xW0pUA+RXK22u0sQO8Yd2Zca9SFV4lFm4N7zh9iQNf2R/N
+	 Fv72CwcQr64NDzX0JrScUaVh96/vEgTVfYRbrA9P3yFTFD8NamWaGXdmBvtCrzrNv4
+	 VlrJJhPD6w+IhjWKG4DMHUKLp9RhQz/kCi5f1e7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfEGWtw (ORCPT
+        id S1726549AbfEGWup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 18:49:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6104 "EHLO mga02.intel.com"
+        Tue, 7 May 2019 18:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726256AbfEGWtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 18:49:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 15:49:51 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 07 May 2019 15:49:51 -0700
-Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
-        by linux.intel.com (Postfix) with ESMTP id 48EC2580105;
-        Tue,  7 May 2019 15:49:50 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
- master(s)
-To:     Greg KH <gregkh@linuxfoundation.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
- <20190504065242.GA9770@kroah.com>
- <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
- <20190507052732.GD16052@vkoul-mobl> <20190507055432.GB17986@kroah.com>
- <20190507110331.GL16052@vkoul-mobl> <20190507111956.GB1092@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <10fef156-7b01-7a08-77b4-ae3153eaaabc@linux.intel.com>
-Date:   Tue, 7 May 2019 17:49:48 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1725843AbfEGWuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 18:50:44 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F12C20825;
+        Tue,  7 May 2019 22:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557269443;
+        bh=ofR3gf9a2nJrY32VNWR52pwsavGPKy11KlcaF1ruQMg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q8HzuDChdiOCMVNfo6MM2W2+skr7rZ7yqDAdrkY5qs9eIMnRp9/T266gImhjkjwOH
+         XGyOFGjN0XQBobQTOEpjMAbDqoANwEm/Livn+aRBsNBBgJQ2QxuleZvvEdB/6d3ZOA
+         RvQaju98/7G49oPyocYm9tfnBfnN6/JwMtxT5xao=
+Date:   Tue, 7 May 2019 17:50:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mohan Kumar <mohankumar718@gmail.com>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: Cleanup printk logging
+Message-ID: <20190507225040.GF156478@google.com>
+References: <1555733026-19609-1-git-send-email-mohankumar718@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190507111956.GB1092@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555733026-19609-1-git-send-email-mohankumar718@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mohan,
 
->> The model here is that Master device is PCI or Platform device and then
->> creates a bus instance which has soundwire slave devices.
->>
->> So for any attribute on Master device (which has properties as well and
->> representation in sysfs), device specfic struct (PCI/platfrom doesn't
->> help). For slave that is not a problem as sdw_slave structure takes care
->> if that.
->>
->> So, the solution was to create the psedo sdw_master device for the
->> representation and have device-specific structure.
+On Sat, Apr 20, 2019 at 07:03:46AM +0300, Mohan Kumar wrote:
+> Replace printk with pr_* to avoid checkpatch warnings.
+
+This looks fine, and I applied it to pci/printk with the intent of
+putting it in v5.2.  I squashed in some pieces of your second patch,
+and I'll respond to that one with the details.
+
+When you post more than one patch in a series, it's nice to include a
+cover letter where I can respond to the series as a whole.
+
+> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> ---
+>  drivers/pci/pci-acpi.c | 11 ++++-------
+>  drivers/pci/quirks.c   |  2 +-
+>  2 files changed, 5 insertions(+), 8 deletions(-)
 > 
-> Ok, much like the "USB host controller" type device.  That's fine, make
-> such a device, add it to your bus, and set the type correctly.  And keep
-> a pointer to that structure in your device-specific structure if you
-> really need to get to anything in it.
-
-humm, you lost me on the last sentence. Did you mean using 
-set_drv/platform_data during the init and retrieving the bus information 
-with get_drv/platform_data as needed later? Or something else I badly 
-need to learn?
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index e1949f7..3ada026 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -140,8 +140,7 @@ static acpi_status decode_type0_hpx_record(union acpi_object *record,
+>  		hpx->t0->enable_perr     = fields[5].integer.value;
+>  		break;
+>  	default:
+> -		printk(KERN_WARNING
+> -		       "%s: Type 0 Revision %d record not supported\n",
+> +		pr_warn("%s: Type 0 Revision %d record not supported\n",
+>  		       __func__, revision);
+>  		return AE_ERROR;
+>  	}
+> @@ -169,8 +168,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
+>  		hpx->t1->tot_max_split = fields[4].integer.value;
+>  		break;
+>  	default:
+> -		printk(KERN_WARNING
+> -		       "%s: Type 1 Revision %d record not supported\n",
+> +		pr_warn("%s: Type 1 Revision %d record not supported\n",
+>  		       __func__, revision);
+>  		return AE_ERROR;
+>  	}
+> @@ -211,8 +209,7 @@ static acpi_status decode_type2_hpx_record(union acpi_object *record,
+>  		hpx->t2->sec_unc_err_mask_or   = fields[17].integer.value;
+>  		break;
+>  	default:
+> -		printk(KERN_WARNING
+> -		       "%s: Type 2 Revision %d record not supported\n",
+> +		pr_warn("%s: Type 2 Revision %d record not supported\n",
+>  		       __func__, revision);
+>  		return AE_ERROR;
+>  	}
+> @@ -272,7 +269,7 @@ static acpi_status acpi_run_hpx(acpi_handle handle, struct hotplug_params *hpx)
+>  				goto exit;
+>  			break;
+>  		default:
+> -			printk(KERN_ERR "%s: Type %d record not supported\n",
+> +			pr_err("%s: Type %d record not supported\n",
+>  			       __func__, type);
+>  			status = AE_ERROR;
+>  			goto exit;
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f9cd4d4..06af0c3 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2613,7 +2613,7 @@ static void nvbridge_check_legacy_irq_routing(struct pci_dev *dev)
+>  	pci_read_config_dword(dev, 0x74, &cfg);
+>  
+>  	if (cfg & ((1 << 2) | (1 << 15))) {
+> -		printk(KERN_INFO "Rewriting IRQ routing register on MCP55\n");
+> +		pr_info("Rewriting IRQ routing register on MCP55\n");
+>  		cfg &= ~((1 << 2) | (1 << 15));
+>  		pci_write_config_dword(dev, 0x74, cfg);
+>  	}
+> -- 
+> 2.7.4
+> 
