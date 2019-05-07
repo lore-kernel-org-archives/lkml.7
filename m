@@ -2,109 +2,96 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D3C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7501C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3389205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTfyAoLB"
+	by mail.kernel.org (Postfix) with ESMTP id A90DF205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 21:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfEGVEr (ORCPT
+        id S1728473AbfEGVFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 17:04:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38994 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfEGVEr (ORCPT
+        Tue, 7 May 2019 17:05:34 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:40794 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726686AbfEGVFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 17:04:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so9284270pfg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 14:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tp9MHM6S82XiPQpC6c6jLekBkf9kgfqCZQyGw89KOqE=;
-        b=KTfyAoLB21CgLn4vV+DeWm27Z0NxxbAZXzSaXHMVtSC6cam9l8ioBG5uvVhsSKhamD
-         5O8P15XSzgMcT/aYJ6UID2M634g4V0M18eMkOog2O/53+5MJUBFoNjUQ9F7KCvtIlc4F
-         B7frY+UwvuCyqkixc99UccY4Q4r/WBFLetyaU1tp/0auaUSzitr5YJbs0NRr/EXsA/jO
-         Qyum4xwKpBUibLnDJd56JqbnQhzMKlTw48Fm+bceoOk5CPJFQlg4L/CGlS/yDMrG3cxg
-         d0npEcAiUhLIsWEerZF+tsXsVCqSY4NIlXXm2r0szlHmhPy19eJTu1TlNSwo9/sG4/Cs
-         +ZSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tp9MHM6S82XiPQpC6c6jLekBkf9kgfqCZQyGw89KOqE=;
-        b=k2euQ5smjBg3KHZoMAZYCXkcKk8z+j+sM5actdwhzIW1ugsoGMvUTWEa0Ivbl9DtlW
-         WAIAqkMR78p3mxGMpfX4cA+nlbUB7uScQI5Zo4da3H/odDaNAgrZ/b1aQYFkH3bMNq5k
-         vDzk3n9fZBaf7wUT4Z52QWRCFqsHa6UrZFZbDkjmFpnNTVjFaMbGSI2XxaZnge2GlMw0
-         TVe+hjoTLBnJBL5GZNmIrVb2CH8t5FrWz5I3+i8E0QuwUR3y0Tt/LqyTwlA5MUU0AzeO
-         0pR3E8HzNBch/lbOwerqo+0FYgrORkw4RfcVIxZFmkSWglFgDqPHWtsR+WdeBvPCHZTT
-         4c2A==
-X-Gm-Message-State: APjAAAWQMFT1eoWbJw4X0fpzMbazX7KQDjja+0EpSVXH7hnjSBXYISZE
-        NM/kTegjY+X51NivGd9JVWdDrWC6
-X-Google-Smtp-Source: APXvYqzflAmUTQydzxJ4cjPRW0WIecf2bKx2yQBktISYk/b4xLlIZ0c6pxz/B7pjskqQcN+h0MZuiQ==
-X-Received: by 2002:a65:6496:: with SMTP id e22mr42445689pgv.249.1557263086677;
-        Tue, 07 May 2019 14:04:46 -0700 (PDT)
-Received: from localhost ([2601:640:2:82fb:19d3:11c4:475e:3daa])
-        by smtp.gmail.com with ESMTPSA id u66sm5867753pfa.36.2019.05.07.14.04.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 14:04:45 -0700 (PDT)
-Date:   Tue, 7 May 2019 14:04:44 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Aaron Tomlin <atomlin@redhat.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Yury Norov <ynorov@marvell.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/slub: avoid double string traverse in
- kmem_cache_flags()
-Message-ID: <20190507210444.GB8935@yury-thinkpad>
-References: <20190501053111.7950-1-ynorov@marvell.com>
+        Tue, 7 May 2019 17:05:34 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 96178634C7B;
+        Wed,  8 May 2019 00:04:54 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hO7Gg-0001Uy-9b; Wed, 08 May 2019 00:04:54 +0300
+Date:   Wed, 8 May 2019 00:04:54 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Nicholas Mc Guire <der.herr@hofr.at>
+Cc:     Nicholas Mc Guire <hofrat@opentech.at>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: smiapp: core: add range to usleep_range
+Message-ID: <20190507210454.633dxxdggfe27fud@valkosipuli.retiisi.org.uk>
+References: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
+ <20190430134944.6sutxdztj6crgo6w@valkosipuli.retiisi.org.uk>
+ <20190504094635.GA27029@osadl.at>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501053111.7950-1-ynorov@marvell.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190504094635.GA27029@osadl.at>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:31:11PM -0700, Yury Norov wrote:
-> If ',' is not found, kmem_cache_flags() calls strlen() to find the end
-> of line. We can do it in a single pass using strchrnul().
-
-Ping?
-
-> Signed-off-by: Yury Norov <ynorov@marvell.com>
-> ---
->  mm/slub.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+On Sat, May 04, 2019 at 11:46:35AM +0200, Nicholas Mc Guire wrote:
+> On Tue, Apr 30, 2019 at 04:49:44PM +0300, Sakari Ailus wrote:
+> > Hi Nicholas,
+> > 
+> > On Sun, Apr 07, 2019 at 04:16:02AM +0200, Nicholas Mc Guire wrote:
+> > > Allow the hrtimer subsystem to coalesce delay timers of lower accuracy
+> > > by providing a suitable range
+> > > 
+> > > Signed-off-by: Nicholas Mc Guire <hofrat@opentech.at>
+> > > ---
+> > > 
+> > > Problem located by an experimental coccinelle script
+> > > 
+> > > hrtimers in atomic context have limited accuracy due to possible
+> > > context-switching and interruption so the accuracy is limited 
+> > > anyway. Giving the hrtimer subsystem a reasonable range for merging
+> > > hrtimers helps to reduce the load on the hrtimer subsystem. As this
+> > > delays do not seem to mandate high accuracy the range of a factor
+> > > two seems acceptable.
+> > > 
+> > > Patch was compile tested with: x86_64_defconfig + MEDIA_SUPPORT=m,
+> > > MEDIA_CAMERA_SUPPORT=y, MEDIA_CONTROLLER=y, VIDEO_V4L2_SUBDEV_API=y,
+> > > VIDEO_SMIAPP=m                                                                                               
+> > > (with a number of sparse warnings on sizeof() usage)
+> > > 
+> > > Patch is against 5.1-rc3 (localversion-next is next-20190405)
+> > 
+> > The delays are exact for the reason that they are user-visible delays in
+> > image capturing related use cases. Sometimes milliseconds matter, or at
+> > least adding more does not help.
+> >
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 4922a0394757..85f90370a293 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1317,9 +1317,7 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
->  		char *end, *glob;
->  		size_t cmplen;
->  
-> -		end = strchr(iter, ',');
-> -		if (!end)
-> -			end = iter + strlen(iter);
-> +		end = strchrnul(iter, ',');
->  
->  		glob = strnchr(iter, end - iter, '*');
->  		if (glob)
-> -- 
-> 2.17.1
+> Actually it can be better iwith respect to jitter to let the hrtimer 
+> subsystem use an existing timer event than to have a close by second event 
+> and the accuracy is determined by the non-atomic context anyway - 
+> so while the proposed delay extension might be excessive in your case
+> I would still suggest to try to get away from a range of 0 - even if
+> you only end up with (1000,1050) that would be an advantage for the
+> timer subsystem.
+
+Sounds reasonable to me. Would you like to send v2?
+
+Thanks.
+
+-- 
+Sakari Ailus
