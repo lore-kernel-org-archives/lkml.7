@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF31C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD32C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99CF205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A536420675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208008;
-	bh=rsUug3G0mv+TqKD7Fq6JHlS9tz1bq4opeCfYDRz4pxg=;
+	s=default; t=1557208012;
+	bh=kxTii2ZzhW44xrLVe3drDnbmjm4vKaWPoTd0ghA4gcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4eChtJJJMwduhWdDeyonbN9iAfFxR9KSKTnE7XsaUaGjrY/knJ5UsfAajAO7BXUs
-	 xQdVfd5CFkwHFmAcOWMR4RQH6l6/kNilLLMVgHrwKIzynXXQK6oVqrDCWcAEJES04G
-	 t+Y3O+zuLtrNXTuUwnZpm8+c6wNxxU1LfxkoaBMg=
+	b=b+01pqy0091tN9EBh69uVG/v2Kxre02xtoPuZZ6/JKwD1uoRjkUU8kzTCk3h58y9j
+	 XN079g6j0egoVFxROrbeloevQENrDVuc/jbI90MWXnkBVvJjKPJcV+tODmfTe310ac
+	 QOVIlApffAYG24yIwAp8ZQ18iVNKxz6CYGLvcWNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfEGFlV (ORCPT
+        id S1729004AbfEGFqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:41:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60690 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbfEGFlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:41:12 -0400
+        id S1729270AbfEGFlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:41:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9CA205ED;
-        Tue,  7 May 2019 05:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9948205ED;
+        Tue,  7 May 2019 05:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207671;
-        bh=rsUug3G0mv+TqKD7Fq6JHlS9tz1bq4opeCfYDRz4pxg=;
+        s=default; t=1557207679;
+        bh=kxTii2ZzhW44xrLVe3drDnbmjm4vKaWPoTd0ghA4gcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+T/LH6fnJF5I9AoNo15iTMfqUp71UAHPeT3qWNbN++Hp5/MplTRjd3Cvjn6wC5j/
-         dG9Lx5edRH0xxsmrs7IwdpbIEJIgkL/sfrSrQkz30T6jgk5QIUh+tZb1SfLMIevX8s
-         8+MDpuLARDguHvcSpm0s6POzoGQ9gUhLMRod+4XM=
+        b=ohWh8aVwnJFy8J1pMkr0C0yYOA52Myu9kEYPE8vCm9HshYWBO1gmdAzpcuhJvWMIm
+         RtIDGOY1fzaJ5ji3IKAIXkfFKCYLBcjOJpSn871j0TQNtnNLsgvwkvMi6Z0bhAw6WH
+         vAyQxnOZTdjSUTHBe2pQ7rhu3ymXbelQew7LSR0A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Duan <fugang.duan@nxp.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 88/95] net: fec: manage ahb clock in runtime pm
-Date:   Tue,  7 May 2019 01:38:17 -0400
-Message-Id: <20190507053826.31622-88-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 94/95] nfc: nci: Potential off by one in ->pipes[] array
+Date:   Tue,  7 May 2019 01:38:23 -0400
+Message-Id: <20190507053826.31622-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,109 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Duan <fugang.duan@nxp.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d7c3a206e6338e4ccdf030719dec028e26a521d5 ]
+[ Upstream commit 6491d698396fd5da4941980a35ca7c162a672016 ]
 
-Some SOC like i.MX6SX clock have some limits:
-- ahb clock should be disabled before ipg.
-- ahb and ipg clocks are required for MAC MII bus.
-So, move the ahb clock to runtime management together with
-ipg clock.
+This is similar to commit e285d5bfb7e9 ("NFC: Fix the number of pipes")
+where we changed NFC_HCI_MAX_PIPES from 127 to 128.
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+As the comment next to the define explains, the pipe identifier is 7
+bits long.  The highest possible pipe is 127, but the number of possible
+pipes is 128.  As the code is now, then there is potential for an
+out of bounds array access:
+
+    net/nfc/nci/hci.c:297 nci_hci_cmd_received() warn: array off by one?
+    'ndev->hci_dev->pipes[pipe]' '0-127 == 127'
+
+Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 30 ++++++++++++++++-------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ include/net/nfc/nci_core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index ce55c8f7f33a..ad3aabc39cc2 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1851,13 +1851,9 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
- 	int ret;
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 87499b6b35d6..df5c69db68af 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -166,7 +166,7 @@ struct nci_conn_info {
+  * According to specification 102 622 chapter 4.4 Pipes,
+  * the pipe identifier is 7 bits long.
+  */
+-#define NCI_HCI_MAX_PIPES          127
++#define NCI_HCI_MAX_PIPES          128
  
- 	if (enable) {
--		ret = clk_prepare_enable(fep->clk_ahb);
--		if (ret)
--			return ret;
--
- 		ret = clk_prepare_enable(fep->clk_enet_out);
- 		if (ret)
--			goto failed_clk_enet_out;
-+			return ret;
- 
- 		if (fep->clk_ptp) {
- 			mutex_lock(&fep->ptp_clk_mutex);
-@@ -1875,7 +1871,6 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
- 		if (ret)
- 			goto failed_clk_ref;
- 	} else {
--		clk_disable_unprepare(fep->clk_ahb);
- 		clk_disable_unprepare(fep->clk_enet_out);
- 		if (fep->clk_ptp) {
- 			mutex_lock(&fep->ptp_clk_mutex);
-@@ -1894,8 +1889,6 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
- failed_clk_ptp:
- 	if (fep->clk_enet_out)
- 		clk_disable_unprepare(fep->clk_enet_out);
--failed_clk_enet_out:
--		clk_disable_unprepare(fep->clk_ahb);
- 
- 	return ret;
- }
-@@ -3455,6 +3448,9 @@ fec_probe(struct platform_device *pdev)
- 	ret = clk_prepare_enable(fep->clk_ipg);
- 	if (ret)
- 		goto failed_clk_ipg;
-+	ret = clk_prepare_enable(fep->clk_ahb);
-+	if (ret)
-+		goto failed_clk_ahb;
- 
- 	fep->reg_phy = devm_regulator_get(&pdev->dev, "phy");
- 	if (!IS_ERR(fep->reg_phy)) {
-@@ -3546,6 +3542,9 @@ fec_probe(struct platform_device *pdev)
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- failed_regulator:
-+	clk_disable_unprepare(fep->clk_ahb);
-+failed_clk_ahb:
-+	clk_disable_unprepare(fep->clk_ipg);
- failed_clk_ipg:
- 	fec_enet_clk_enable(ndev, false);
- failed_clk:
-@@ -3669,6 +3668,7 @@ static int __maybe_unused fec_runtime_suspend(struct device *dev)
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct fec_enet_private *fep = netdev_priv(ndev);
- 
-+	clk_disable_unprepare(fep->clk_ahb);
- 	clk_disable_unprepare(fep->clk_ipg);
- 
- 	return 0;
-@@ -3678,8 +3678,20 @@ static int __maybe_unused fec_runtime_resume(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct fec_enet_private *fep = netdev_priv(ndev);
-+	int ret;
- 
--	return clk_prepare_enable(fep->clk_ipg);
-+	ret = clk_prepare_enable(fep->clk_ahb);
-+	if (ret)
-+		return ret;
-+	ret = clk_prepare_enable(fep->clk_ipg);
-+	if (ret)
-+		goto failed_clk_ipg;
-+
-+	return 0;
-+
-+failed_clk_ipg:
-+	clk_disable_unprepare(fep->clk_ahb);
-+	return ret;
- }
- 
- static const struct dev_pm_ops fec_pm_ops = {
+ struct nci_hci_gate {
+ 	u8 gate;
 -- 
 2.20.1
 
