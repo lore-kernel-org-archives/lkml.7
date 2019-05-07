@@ -4,59 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE7DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034F2C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD6720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00BF20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208717;
-	bh=FIxnxYUSeq0LwFRlBniKtK8bipW2JmLI0dZz7/OXqjA=;
+	s=default; t=1557208725;
+	bh=7/mtC7Ba7ycSvP1hl8RMihDYeDNslaXhlLtrjI31ik0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HT+BA+nZjgH9Ygr1gTGwKAtJ3TgD6A/XQmVTWrbkfmFlKX+nfYFPC0W4NKs6dAUxK
-	 IxpEbBUui6ITY0xwqbxDen3QFcuK5wLt/Or5H7ucMWQM/3fTaNYD2dc0gFE15KyV2Z
-	 lPb3bPlblZdm5u/cQAl1w0zR1ghTY/90Tx4S08As=
+	b=Z3CBlM0d/f5QLZEUlGTzvVW9Uf7ItZIoZOzAF4MRCQhpe2Lfxya7tLcIQJVTRiFsT
+	 IDu0c5zSbLaExEgD17lUNQssrWEw7RZUhcuL0p+PwiW1BVLe0Lz2Vp7nWSngakqVx7
+	 OypLbY0JMJYrjHLRE2ho4Bff0x+ITzRmtBad88Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfEGF6a (ORCPT
+        id S1728220AbfEGFhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:37:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727660AbfEGFhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:11 -0400
+        id S1728215AbfEGFhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:37:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFBEC214AE;
-        Tue,  7 May 2019 05:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1E7A214AE;
+        Tue,  7 May 2019 05:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207430;
-        bh=FIxnxYUSeq0LwFRlBniKtK8bipW2JmLI0dZz7/OXqjA=;
+        s=default; t=1557207421;
+        bh=7/mtC7Ba7ycSvP1hl8RMihDYeDNslaXhlLtrjI31ik0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pCHBMqod4CyJsKAv6r4YVuJ/FTYaV3IZUqq5R5Wwq9uMsn/5qz1lPId9UFnK6iCMP
-         N724BNs+CUccnm8REbqbnrNq0eupIrjYVUSSYiuuZ1aq/vVNRNiISa02yqszsJ/gZs
-         rA8TsuTOgKU3QFwb5rNAWxBTpXfIK54sI+amyAs0=
+        b=oL6aIWi2Ky7gcmqXbycJKpRHlYbLRiwU/wlWPR/Bh632R74u7HNN9a+TWBIQ+GE9T
+         QUBHmNcMdkH/OFmoh5Z1beddLGxz170XPokmyR6/93crs6zsz4KgNjwGVGbLKtoBTQ
+         al1/FMJUl/3T+BlD7lFRo5TGcSGOXRan2T/Cs/KE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Thomas Garnier <thgarnie@google.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, frank.ramsay@hpe.com,
-        herbert@gondor.apana.org.au, kirill@shutemov.name,
-        mike.travis@hpe.com, x86-ml <x86@kernel.org>,
-        yamada.masahiro@socionext.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 39/81] x86/mm/KASLR: Fix the size of the direct mapping section
-Date:   Tue,  7 May 2019 01:35:10 -0400
-Message-Id: <20190507053554.30848-39-sashal@kernel.org>
+Cc:     Liran Alon <liran.alon@oracle.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 33/81] KVM: x86: Raise #GP when guest vCPU do not support PMU
+Date:   Tue,  7 May 2019 01:35:04 -0400
+Message-Id: <20190507053554.30848-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -69,90 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baoquan He <bhe@redhat.com>
+From: Liran Alon <liran.alon@oracle.com>
 
-[ Upstream commit ec3937107ab43f3e8b2bc9dad95710043c462ff7 ]
+[ Upstream commit 672ff6cff80ca43bf3258410d2b887036969df5f ]
 
-kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
-the maximum amount of system RAM supported. The size of the direct
-mapping section is obtained from the smaller one of the below two
-values:
+Before this change, reading a VMware pseduo PMC will succeed even when
+PMU is not supported by guest. This can easily be seen by running
+kvm-unit-test vmware_backdoors with "-cpu host,-pmu" option.
 
-  (actual system RAM size + padding size) vs (max system RAM size supported)
-
-This calculation is wrong since commit
-
-  b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
-
-In it, __PHYSICAL_MASK_SHIFT was changed to be 52, regardless of whether
-the kernel is using 4-level or 5-level page tables. Thus, it will always
-use 4 PB as the maximum amount of system RAM, even in 4-level paging
-mode where it should actually be 64 TB.
-
-Thus, the size of the direct mapping section will always
-be the sum of the actual system RAM size plus the padding size.
-
-Even when the amount of system RAM is 64 TB, the following layout will
-still be used. Obviously KALSR will be weakened significantly.
-
-   |____|_______actual RAM_______|_padding_|______the rest_______|
-   0            64TB                                            ~120TB
-
-Instead, it should be like this:
-
-   |____|_______actual RAM_______|_________the rest______________|
-   0            64TB                                            ~120TB
-
-The size of padding region is controlled by
-CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING, which is 10 TB by default.
-
-The above issue only exists when
-CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING is set to a non-zero value,
-which is the case when CONFIG_MEMORY_HOTPLUG is enabled. Otherwise,
-using __PHYSICAL_MASK_SHIFT doesn't affect KASLR.
-
-Fix it by replacing __PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
-
- [ bp: Massage commit message. ]
-
-Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Garnier <thgarnie@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: frank.ramsay@hpe.com
-Cc: herbert@gondor.apana.org.au
-Cc: kirill@shutemov.name
-Cc: mike.travis@hpe.com
-Cc: thgarnie@google.com
-Cc: x86-ml <x86@kernel.org>
-Cc: yamada.masahiro@socionext.com
-Link: https://lkml.kernel.org/r/20190417083536.GE7065@MiWiFi-R3L-srv
+Reviewed-by: Mihai Carabas <mihai.carabas@oracle.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/kaslr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/pmu.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index 61db77b0eda9..0988971069c9 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -93,7 +93,7 @@ void __init kernel_randomize_memory(void)
- 	if (!kaslr_memory_enabled())
- 		return;
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 58ead7db71a3..e39741997893 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -281,9 +281,13 @@ static int kvm_pmu_rdpmc_vmware(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
+ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
+ {
+ 	bool fast_mode = idx & (1u << 31);
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
+ 	u64 ctr_val;
  
--	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
-+	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
- 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
++	if (!pmu->version)
++		return 1;
++
+ 	if (is_vmware_backdoor_pmc(idx))
+ 		return kvm_pmu_rdpmc_vmware(vcpu, idx, data);
  
- 	/*
 -- 
 2.20.1
 
