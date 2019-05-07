@@ -2,98 +2,100 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550C7C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9990FC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFFF2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7473320B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfEGOgm (ORCPT
+        id S1726612AbfEGOj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:36:42 -0400
-Received: from mxout014.mail.hostpoint.ch ([217.26.49.174]:53464 "EHLO
-        mxout014.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbfEGOg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:36:26 -0400
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.91 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hO1Ci-00028n-4E; Tue, 07 May 2019 16:36:24 +0200
-Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hO1Ch-0008oW-Sx; Tue, 07 May 2019 16:36:24 +0200
-X-Authenticated-Sender-Id: dev@pschenker.ch
-From:   Philippe Schenker <dev@pschenker.ch>
-To:     linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        David Laight <David.Laight@ACULAB.COM>, dev@pschenker.ch,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 5/5] iio: stmpe-adc: Reset possible interrupts
-Date:   Tue,  7 May 2019 16:36:15 +0200
-Message-Id: <20190507143615.28477-5-dev@pschenker.ch>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190507143615.28477-1-dev@pschenker.ch>
-References: <20190507143615.28477-1-dev@pschenker.ch>
+        Tue, 7 May 2019 10:39:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:7324 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbfEGOj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:39:27 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A73B7301988B;
+        Tue,  7 May 2019 14:39:27 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DDDA917ADD;
+        Tue,  7 May 2019 14:39:25 +0000 (UTC)
+Subject: Re: [GIT PULL] locking changes for v5.2
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190506085014.GA130963@gmail.com>
+ <a5ee37fe-bdcf-2da7-4f02-6d64b4dcd2d3@gmail.com>
+ <20190506194339.GA20938@gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <34c5c50d-cfe7-4b19-e889-62955d286f29@redhat.com>
+Date:   Tue, 7 May 2019 10:39:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190506194339.GA20938@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 07 May 2019 14:39:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
+On 5/6/19 3:43 PM, Ingo Molnar wrote:
+> * Waiman Long <longman9394@gmail.com> wrote:
+>
+>> On 5/6/19 4:50 AM, Ingo Molnar wrote:
+>>> Linus,
+>>>
+>>> Please pull the latest locking-core-for-linus git tree from:
+>>>
+>>>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
+>>>
+>>>    # HEAD: d671002be6bdd7f77a771e23bf3e95d1f16775e6 locking/lockdep: Remove unnecessary unlikely()
+>>>
+>>> [ Dependency note: this tree depends on commits also in the RCU tree, 
+>>>   please disregard this pull request if you weren't able to pull the RCU 
+>>>   tree for some reason. ]
+>>>
+>>> Here are the locking changes in this cycle:
+>>>
+>>>  - rwsem unification and simpler micro-optimizations to prepare for more 
+>>>    intrusive (and more lucrative) scalability improvements in v5.3
+>>>    (Waiman Long)
+>> Is it possible to pull in also my "locking/rwsem: Prevent decrement of
+>> reader count before  increment" patch for 5.2? The rests can wait until 5.3.
+> Sure - how close is this to a straight:
+>
+> 	git revert 70800c3c0cc5
+>
+> ?
+>
+> If it's close enough then please resubmit this as a 'Revert "..."' patch, 
+> which I'll queue up in locking/urgent.
+As explained by Linus, it is not a straight revert.
+> It also is a performance, not a correctness fix, and should probably get 
+> a Cc: stable as well, right?
 
-Clear any interrupt that still is on the device on every channel
-this driver is activated for in probe and specific channels in
-the timeout handler.
+This patch is not for performance. It is fixing a regression and it does
+have a cc: stable tag.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Thanks you for your help as I would like to backport the fix downstream.
 
----
-
- drivers/iio/adc/stmpe-adc.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-index cc752a47444c..a5990e9f2c80 100644
---- a/drivers/iio/adc/stmpe-adc.c
-+++ b/drivers/iio/adc/stmpe-adc.c
-@@ -80,6 +80,8 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
- 	ret = wait_for_completion_timeout(&info->completion, STMPE_ADC_TIMEOUT);
- 
- 	if (ret <= 0) {
-+		stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_STA,
-+				STMPE_ADC_CH(info->channel));
- 		mutex_unlock(&info->lock);
- 		return -ETIMEDOUT;
- 	}
-@@ -326,6 +328,9 @@ static int stmpe_adc_probe(struct platform_device *pdev)
- 	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
- 			~(norequest_mask & 0xFF));
- 
-+	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_STA,
-+			~(norequest_mask & 0xFF));
-+
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
- 
--- 
-2.21.0
+Cheers,
+Longman
 
