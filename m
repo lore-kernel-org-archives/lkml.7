@@ -2,97 +2,61 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7FBC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C595C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19DEA206BF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YPjyy3li";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KjR+7FM1"
+	by mail.kernel.org (Postfix) with ESMTP id 38B5F206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 13:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfEGNvh (ORCPT
+        id S1726864AbfEGNvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 09:51:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56120 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfEGNvg (ORCPT
+        Tue, 7 May 2019 09:51:49 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:60520 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfEGNvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 09:51:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AFDCC60E3E; Tue,  7 May 2019 13:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557237095;
-        bh=VRC3o28GRsYmFCcZSYL/tdVa0+t/wmCKtg6bTuKqrqM=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=YPjyy3liXUottUe4VeWZWzMLmQtgG9H3gVWo1pd8WoRGiORJOjkW5Y17R0oCP6O8i
-         8P9SmzvATCQx+ybN+iGFghtff+t/05+/hmDcd+lgIK4yyxNY2hLo4bqvXU2ccrBDb1
-         df5a1XxYmHD7OddKUg7n+fbRl8hCjSgcZzvYOwZA=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5352560350;
-        Tue,  7 May 2019 13:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557237094;
-        bh=VRC3o28GRsYmFCcZSYL/tdVa0+t/wmCKtg6bTuKqrqM=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=KjR+7FM1BokmxLrADzBIQsJPC2mLWq1u9iRPvlGHpVnBpuwFxCu2gPJBfVc7XzP9R
-         x5VBR9UZV2/i/938akRtnlg7zOdSYtEZi7xFJ8mv11rGGtXNc8xeEPge5F4PNtZw34
-         vSUXze4oRVrOH5vSVgLdJ/NvRkEJcC6ekFe4zPsE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5352560350
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 7 May 2019 09:51:49 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id B4DEE25B765;
+        Tue,  7 May 2019 23:51:46 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id B0FED9403F2; Tue,  7 May 2019 15:51:44 +0200 (CEST)
+Date:   Tue, 7 May 2019 15:51:44 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+Message-ID: <20190507135144.2pkfndhb2bduozh5@verge.net.au>
+References: <20190502123220.3016-1-geert+renesas@glider.be>
+ <20190502123220.3016-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] ath10k: Use struct_size() helper
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190403172029.GA302@embeddedor>
-References: <20190403172029.GA302@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190507135135.AFDCC60E3E@smtp.codeaurora.org>
-Date:   Tue,  7 May 2019 13:51:35 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502123220.3016-2-geert+renesas@glider.be>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Thu, May 02, 2019 at 02:32:16PM +0200, Geert Uytterhoeven wrote:
+> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, change the following form:
-> 
-> sizeof(*rx) + (sizeof(struct htt_rx_indication_mpdu_range) * num_mpdu_ranges)
-> 
->  to :
-> 
-> struct_size(rx, mpdu_ranges, num_mpdu_ranges)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-
-Patch applied to ath-next branch of ath.git, thanks.
-
-35b50e70df27 ath10k: Use struct_size() helper
-
--- 
-https://patchwork.kernel.org/patch/10884271/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
