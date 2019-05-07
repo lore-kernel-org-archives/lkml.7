@@ -2,147 +2,95 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805B0C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73306C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5032A2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208621;
-	bh=9cO+/aT9CElXUbD+6b8Ci49IlANqm7qYkIfp6dh7t+Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTOd3WA3CY9Q+WxMo4s3GFI0a1hkH6C4edwVmlSNnb3APwpe1o5L7m1k3F6VM0bfW
-	 PzFVRyaA8l0dwI0MVv8Q3R1B/LcttnnuxkJNUcFWSk1yBZHTcq+UFGDq2aZsDUGlcV
-	 /NFCxb6s9yBgiY9rDLHYTuiRMx0Or6jnfZShx2h8=
+	by mail.kernel.org (Postfix) with ESMTP id 412F32054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TDEjJvzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfEGF5A (ORCPT
+        id S1728667AbfEGF5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfEGFhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:37:47 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D18AE205ED;
-        Tue,  7 May 2019 05:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207466;
-        bh=9cO+/aT9CElXUbD+6b8Ci49IlANqm7qYkIfp6dh7t+Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIoM8eaeS2aSxgY0sT0d9SlJzxuMdxCbfuCU//Co3MNSSNpfEB7cj9V6mxmNR2qXD
-         UM1Znv2ZIrTMg0UeqKc8pOZIh4vhJ7PTR67YdPKQ+v9L7THVEQdaivBJdC7UlwLrXV
-         wVw+P8qdOUMZFR43AeIFs+k7SSVJ4pZHvDSEAIlk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Tue, 7 May 2019 01:57:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43390 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbfEGF5F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:57:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id z5so8033172lji.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 22:57:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C7TwO1vjbNHfMqbAxi9vlDVvmDYxhZ6ib+epFPKTheM=;
+        b=TDEjJvzcgnurW1FPZtCH9rYP2rDymIZeqdMqRdGI15WUsXRAn3v7+lnmyZ0fdZGIeF
+         Pc5D+zhVmkFbz3l3w4gfKZ2EnMZd+l84USSuNcl+9kMp8kUMYmIHDBt8nJJyKVkqp9N6
+         bfTxje9VGE12bymK8hn65n+jfWRpU1o46JJJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C7TwO1vjbNHfMqbAxi9vlDVvmDYxhZ6ib+epFPKTheM=;
+        b=Z0gsu2fcxjADZJ0+LfUkysv+/18/YYAIll+1hEjZsw6PeuBxgH3QYJD663eJbYYfA8
+         rtyrdTzJK53NSduHHwtS8XjfxFSpWbFA8JyAilAPeY8n21PZU8eYD0DUPEjlhdYOTBRH
+         MaYfniGgQuSEVRibO1bnfaYMNzFIQGBjNHNTNoAIn46ydFYkluntED0buC9ScXPqWQR3
+         UDSUdcUbGU+/8L99UTQuDw0SyL7xiAZz//H1o60XNgxWDev78eW1FMO8kfJrXbhuO3cO
+         sFajMsWyyt9JA4sJgKLwGvk3XC1jWiDbwkTxqxYgzO2hPrXxOK3lK2v/PbgUkF5Dkhj3
+         uFCw==
+X-Gm-Message-State: APjAAAXOQvJNAPJ/KTlWOdd9D2+IWik0aGb8+CVNI8tiGkAuys62VlYH
+        UWzoKvXvPmKxE8GZXOeYznnNZQ==
+X-Google-Smtp-Source: APXvYqwERnjT55opTEsv307+a6frciS871V94u2tJ9NDGTgJXKuYC1Zj43Kpzyifcos6RVOT/S+r2A==
+X-Received: by 2002:a2e:84ca:: with SMTP id q10mr2535264ljh.117.1557208623493;
+        Mon, 06 May 2019 22:57:03 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id s17sm1889372lfb.66.2019.05.06.22.57.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 22:57:02 -0700 (PDT)
+Subject: Re: [PATCH AUTOSEL 4.14 79/95] x86/asm: Remove dead __GNUC__
+ conditionals
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 58/81] x86/mm: Fix a crash with kmemleak_scan()
-Date:   Tue,  7 May 2019 01:35:29 -0400
-Message-Id: <20190507053554.30848-58-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
-References: <20190507053554.30848-1-sashal@kernel.org>
+        Sasha Levin <alexander.levin@microsoft.com>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-79-sashal@kernel.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <d18bba8c-0d2c-03bd-0098-5f39ad726b01@rasmusvillemoes.dk>
+Date:   Tue, 7 May 2019 07:57:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190507053826.31622-79-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+On 07/05/2019 07.38, Sasha Levin wrote:
+> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> 
+> [ Upstream commit 88ca66d8540ca26119b1428cddb96b37925bdf01 ]
+> 
+> The minimum supported gcc version is >= 4.6, so these can be removed.
 
-[ Upstream commit 0d02113b31b2017dd349ec9df2314e798a90fa6e ]
+Eh, that bump happened for the 4.19 kernel, so this is not true for the
+4.14 branch. Has cafa0010cd51fb711fdcb50fc55f394c5f167a0a been applied
+to 4.14.y? Otherwise I don't think this is appropriate.
 
-The first kmemleak_scan() call after boot would trigger the crash below
-because this callpath:
-
-  kernel_init
-    free_initmem
-      mem_encrypt_free_decrypted_mem
-        free_init_pages
-
-unmaps memory inside the .bss when DEBUG_PAGEALLOC=y.
-
-kmemleak_init() will register the .data/.bss sections and then
-kmemleak_scan() will scan those addresses and dereference them looking
-for pointer references. If free_init_pages() frees and unmaps pages in
-those sections, kmemleak_scan() will crash if referencing one of those
-addresses:
-
-  BUG: unable to handle kernel paging request at ffffffffbd402000
-  CPU: 12 PID: 325 Comm: kmemleak Not tainted 5.1.0-rc4+ #4
-  RIP: 0010:scan_block
-  Call Trace:
-   scan_gray_list
-   kmemleak_scan
-   kmemleak_scan_thread
-   kthread
-   ret_from_fork
-
-Since kmemleak_free_part() is tolerant to unknown objects (not tracked
-by kmemleak), it is fine to call it from free_init_pages() even if not
-all address ranges passed to this function are known to kmemleak.
-
- [ bp: Massage. ]
-
-Fixes: b3f0907c71e0 ("x86/mm: Add .bss..decrypted section to hold shared variables")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190423165811.36699-1-cai@lca.pw
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/mm/init.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index d883869437b5..fb5f29c60019 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -6,6 +6,7 @@
- #include <linux/bootmem.h>	/* for max_low_pfn */
- #include <linux/swapfile.h>
- #include <linux/swapops.h>
-+#include <linux/kmemleak.h>
- 
- #include <asm/set_memory.h>
- #include <asm/e820/api.h>
-@@ -767,6 +768,11 @@ void free_init_pages(char *what, unsigned long begin, unsigned long end)
- 	if (debug_pagealloc_enabled()) {
- 		pr_info("debug: unmapping init [mem %#010lx-%#010lx]\n",
- 			begin, end - 1);
-+		/*
-+		 * Inform kmemleak about the hole in the memory since the
-+		 * corresponding pages will be unmapped.
-+		 */
-+		kmemleak_free_part((void *)begin, end - begin);
- 		set_memory_np(begin, (end - begin) >> PAGE_SHIFT);
- 	} else {
- 		/*
--- 
-2.20.1
-
+Rasmus
