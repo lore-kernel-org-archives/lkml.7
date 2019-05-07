@@ -2,97 +2,153 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF0EC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94762C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3147320675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A87720578
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YdndEbZR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="GYtjTSvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEGKSy (ORCPT
+        id S1726708AbfEGKXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:18:54 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44114 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfEGKSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:18:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y13so8413038pfm.11;
-        Tue, 07 May 2019 03:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G8pBOHepmnJE1/KzU1bAO4V1FlfT0xpTPU7pMbXBSIs=;
-        b=YdndEbZRVbfd6JyBmK3pprG9Tj5uVoHj96dazYWHgaGCvSG9YackGco1b+A+QwJsbo
-         2IB2Aw7AFIlHUyQQC8OO/PyGaFsdl3a+Ui0i9jS+jmmybLAhKCrIMdroPMTkQ4BW4r1J
-         XSWyDl7hgLw/Es8QDdli57it39JXrJgf6xEww/UU0Hu1MQ8k/YIfVupnm/ShMrbpS40i
-         TKaQf3XBE204zQnuxlm1FjbqkYCb/c4oOboF9mZGIDj6wFWS3BAOXO7ZYcUzlP4MtSsH
-         wcYN7m+dzyRII4/Z/8oiuJ4u3KTWDHMSyqpYRZGyhveY3ro3kPT0yKrdQtrjvIXjMhrU
-         OYyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G8pBOHepmnJE1/KzU1bAO4V1FlfT0xpTPU7pMbXBSIs=;
-        b=iUVvvjzOdMaLqNhgpuEYVxYlcY/A8gJ4b/9D0yQFli2InhXG2kM2hFioyDtyI7M29V
-         mzDmLwksFLtX+2TRDCriu51/uWZsU+Ahv7B6XgZ+DrME1qqhrJAkC1Xpq4vZ+CXHCSPX
-         EXI3Ot39TsEL3UnPUTTVfvx8Dn9RgZJfS1kvO7/oRgcNGrfZXVjQZJop6ZiU1mgXmUBY
-         rkL6lgBBM2ZMxyMWZIpw/A/pR8f2/LLmtIKG2A4DejsDUdjWqV4NVjlwh8J09hmCBYso
-         HOqQx1kHQOTc+JHdZFjhZi28Nc3gTJAC2DzWIZ2cpIemh866IPYWtxLzV3EgUULOmSwc
-         jFxA==
-X-Gm-Message-State: APjAAAXzfkVllIiNmthDuXKOZWEWcCTXa0ZZqC7PYFNQdyPgsloZaGXD
-        GwA6Q00YqEToKhWccqH/eXk=
-X-Google-Smtp-Source: APXvYqw0MpKiLCvqwe8N+6fugyXUfcfqbZxka1Z+eJC2FrcXxk4z1+/4iDtrJjM2rg8zYe1KAD/hYw==
-X-Received: by 2002:aa7:9ac4:: with SMTP id x4mr14324313pfp.43.1557224333621;
-        Tue, 07 May 2019 03:18:53 -0700 (PDT)
-Received: from icarus ([2001:268:c1c3:2283:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id a6sm26288248pgd.67.2019.05.07.03.18.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 03:18:51 -0700 (PDT)
-Date:   Tue, 7 May 2019 19:18:29 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, fabrice.gasnier@st.com, alexandre.torgue@st.com,
-        linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
- trigger driver
-Message-ID: <20190507101729.GA3420@icarus>
-References: <20190507091224.17781-1-benjamin.gaignard@st.com>
+        Tue, 7 May 2019 06:23:14 -0400
+Received: from mx01-fr.bfs.de ([193.174.231.67]:62102 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726340AbfEGKXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:23:13 -0400
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id C114020318;
+        Tue,  7 May 2019 12:23:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1557224586; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X50mZEtUkHu4nljd78CE48MvDSsDCx/W93Ql/G26gDU=;
+        b=GYtjTSvDK62O2hrHSDE8J7WErMELUFgL3GCh4rG1v6eUG8wO7kGt+JTDrPBq4nkZuVp8cv
+        Afjho3CWCppoZdGchhQbetX4AAOseIHV8tpDmutdULDdGkaTZl6sm99MKnnmz+8bSCIVG7
+        90Jiu3JjyCnXcrmMurOdEDQkcnRhNKU346CN+ReEDTeDmFCtvvA/9x7+xfttW3jIb+rkRq
+        XByeiu5rA3NDKK50tOM8zS9kHDEB/QQRA0mzEapNy/utdw9cDE50u2SeI/r1tJ4EOXzDuv
+        w2mdWayA1JW0460n2oRff20hV0DfrdJf/OwQI82yBxMxN8dUbYMulE7SVq9A3Q==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id 3299BBEEBD;
+        Tue,  7 May 2019 12:23:05 +0200 (CEST)
+Message-ID: <5CD15C87.3040006@bfs.de>
+Date:   Tue, 07 May 2019 12:23:03 +0200
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190507091224.17781-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+To:     Colin Ian King <colin.king@canonical.com>
+CC:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH][next] net: dsa: sja1105: fix comparisons against uninitialized
+ status fields
+References: <20190507084458.22520-1-colin.king@canonical.com> <20190507092012.GL2269@kadam> <a8931feb-c11a-3833-0a14-2585e70c9114@canonical.com>
+In-Reply-To: <a8931feb-c11a-3833-0a14-2585e70c9114@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-3.10 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:12:24AM +0200, Benjamin Gaignard wrote:
-> Quadrature feature is now hosted on it own framework.
-> Remove quadrature related code from stm32-trigger driver to avoid
-> code duplication and simplify the ABI.
+
+
+Am 07.05.2019 11:29, schrieb Colin Ian King:
+> On 07/05/2019 10:20, Dan Carpenter wrote:
+>> On Tue, May 07, 2019 at 09:44:58AM +0100, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> The call to sja1105_status_get to set various fields in the status
+>>> structure can potentially be skipped in a while-loop because of a couple
+>>> of prior continuation jump paths. This can potientially lead to checking
+>>> be checking against an uninitialized fields in the structure which may
+>>> lead to unexpected results.  Fix this by ensuring all the fields in status
+>>> are initialized to zero to be safe.
+>>>
+>>> Addresses-Coverity: ("Uninitialized scalar variable")
+>>> Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>> ---
+>>>  drivers/net/dsa/sja1105/sja1105_spi.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+>>> index 244a94ccfc18..76f6a51e10d9 100644
+>>> --- a/drivers/net/dsa/sja1105/sja1105_spi.c
+>>> +++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+>>> @@ -394,7 +394,7 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+>>>  	struct sja1105_static_config *config = &priv->static_config;
+>>>  	const struct sja1105_regs *regs = priv->info->regs;
+>>>  	struct device *dev = &priv->spidev->dev;
+>>> -	struct sja1105_status status;
+>>> +	struct sja1105_status status = {};
+>>
+>> The exit condition isn't right.  It should continue if ret is negative
+>> or the CRC stuff is invalid but right now it's ignoring ret.  It would
+>> be better could just add a break statement at the very end and remove
+>> the status checks.  Like so:
+>>
+>> diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+>> index 244a94ccfc18..3af3b0f3cc44 100644
+>> --- a/drivers/net/dsa/sja1105/sja1105_spi.c
+>> +++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+>> @@ -466,8 +466,9 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+>>  				"invalid, retrying...\n");
+>>  			continue;
+>>  		}
+>> -	} while (--retries && (status.crcchkl == 1 || status.crcchkg == 1 ||
+>> -		 status.configs == 0 || status.ids == 1));
+>> +		/* Success! */
+>> +		break;
+>> +	} while (--retries);
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Good point, I'll send a V2 for that. Thanks Dan for your keen eyes.
+> 
 
-Although this functionality is now provided by the Counter subsystem, we
-should keep the IIO Counter interface for this driver intact since
-existing user applications may depend on it; this is the same reason why
-the IIO Counter code in the 104-QUAD-8 device driver was not removed
-despite moving to the Counter subsystem.
+please do not put everything into the while condition.
+It make that hard to read, just add if () break to detangle that.
 
-Once user applications have had enough time to migrate to the Generic
-Counter interface, we can consider removing the deprecated IIO Counter
-interface.
+re,
+ wh
 
-William Breathitt Gray
+> Colin
+> 
+>>  
+>>  	if (!retries) {
+>>  		rc = -EIO;
+>>
+> 
+> 
