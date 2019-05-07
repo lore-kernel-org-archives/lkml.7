@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E911C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0786C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D6420675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C8E20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557209016;
-	bh=A4X9SQPPjfGkJkY0C5z49LKq+k0Ez1/oGHC7xzeoxxM=;
+	s=default; t=1557209034;
+	bh=4awd9NLNSTDlyZDQlIvACymYmEBLRhsDM92GCE3UBXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYxdt1R9ME1nvnjZG3ZEG1GB5yxQIMiI1IUdxOngIA+ySWIx+NfU+WuZwDzakQAgl
-	 rCJT2d5OHv5J01DFJcN0o5NHK/u3nJ88cXyjC2BCL+Bik2CTHpYLTmiyYs3k6od1eM
-	 HTi0y5I57WwYYSL7LasVDXiW9lVSvk/a05IfoDlo=
+	b=oKri62+wW1GDHCmhcK22OiaiChmrq5Bvel9mm0J800wff2HSHYdS3ELvguYeKBqsV
+	 8viu1QSYXkQn2krmbkF1NQJjNScz8Vd9oiQVD91Abiewpr0NeXZElw/G7a0Lhqk/ys
+	 GL6RKLKFjFxLz7euJwKXfFeyivIwN9SW3J89beFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfEGGDf (ORCPT
+        id S1727168AbfEGGDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:03:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbfEGFfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:06 -0400
+        id S1727673AbfEGFfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D72732087F;
-        Tue,  7 May 2019 05:35:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17647214C6;
+        Tue,  7 May 2019 05:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207305;
-        bh=A4X9SQPPjfGkJkY0C5z49LKq+k0Ez1/oGHC7xzeoxxM=;
+        s=default; t=1557207302;
+        bh=4awd9NLNSTDlyZDQlIvACymYmEBLRhsDM92GCE3UBXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yTSN+U/XeXNNd2Iieni7R8Sr7Q7I7FYHNPmoLWSHyydOuBkmWTxMkgSmmQysAw/f3
-         BRSRg3aleSGZ10sR0crNpDxfD7dpLpBqwQhTOncfpfupqfriHG2E7HNlKSrR/nNMHs
-         iSxVppsJp34iP06+7F1VK6J4n8gv8OlOHKYkOSJ8=
+        b=mufxCoCqKpRM7AOqZIw96SuSG8RQhj/1j4yNYglvNR0/CPT/RYvjI26rEXaAKYywa
+         goa8/zyeohy5bQqWDS4+2lMI7liXXjurOecdeVNFZ9qQDqr699qAzbvSO+uErGifMD
+         3tRWrYh2eqETwVfE2Mku1I3+DMvl/oWjPFmpzjtg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Vagin <avagin@gmail.com>, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 75/99] netfilter: fix nf_l4proto_log_invalid to log invalid packets
-Date:   Tue,  7 May 2019 01:32:09 -0400
-Message-Id: <20190507053235.29900-75-sashal@kernel.org>
+Cc:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 73/99] selftests/net: correct the return value for run_afpackettests
+Date:   Tue,  7 May 2019 01:32:07 -0400
+Message-Id: <20190507053235.29900-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -61,37 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+From: Po-Hsu Lin <po-hsu.lin@canonical.com>
 
-[ Upstream commit d48668052b2603b6262459625c86108c493588dd ]
+[ Upstream commit 8c03557c3f25271e62e39154af66ebdd1b59c9ca ]
 
-It doesn't log a packet if sysctl_log_invalid isn't equal to protonum
-OR sysctl_log_invalid isn't equal to IPPROTO_RAW. This sentence is
-always true. I believe we need to replace OR to AND.
+The run_afpackettests will be marked as passed regardless the return
+value of those sub-tests in the script:
+    --------------------
+    running psock_tpacket test
+    --------------------
+    [FAIL]
+    selftests: run_afpackettests [PASS]
 
-Cc: Florian Westphal <fw@strlen.de>
-Fixes: c4f3db1595827 ("netfilter: conntrack: add and use nf_l4proto_log_invalid")
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fix this by changing the return value for each tests.
+
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/run_afpackettests | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/netfilter/nf_conntrack_proto.c b/net/netfilter/nf_conntrack_proto.c
-index 859f5d07a915..78361e462e80 100644
---- a/net/netfilter/nf_conntrack_proto.c
-+++ b/net/netfilter/nf_conntrack_proto.c
-@@ -86,7 +86,7 @@ void nf_l4proto_log_invalid(const struct sk_buff *skb,
- 	struct va_format vaf;
- 	va_list args;
+diff --git a/tools/testing/selftests/net/run_afpackettests b/tools/testing/selftests/net/run_afpackettests
+index 2dc95fda7ef7..ea5938ec009a 100755
+--- a/tools/testing/selftests/net/run_afpackettests
++++ b/tools/testing/selftests/net/run_afpackettests
+@@ -6,12 +6,14 @@ if [ $(id -u) != 0 ]; then
+ 	exit 0
+ fi
  
--	if (net->ct.sysctl_log_invalid != protonum ||
-+	if (net->ct.sysctl_log_invalid != protonum &&
- 	    net->ct.sysctl_log_invalid != IPPROTO_RAW)
- 		return;
- 
++ret=0
+ echo "--------------------"
+ echo "running psock_fanout test"
+ echo "--------------------"
+ ./in_netns.sh ./psock_fanout
+ if [ $? -ne 0 ]; then
+ 	echo "[FAIL]"
++	ret=1
+ else
+ 	echo "[PASS]"
+ fi
+@@ -22,6 +24,7 @@ echo "--------------------"
+ ./in_netns.sh ./psock_tpacket
+ if [ $? -ne 0 ]; then
+ 	echo "[FAIL]"
++	ret=1
+ else
+ 	echo "[PASS]"
+ fi
+@@ -32,6 +35,8 @@ echo "--------------------"
+ ./in_netns.sh ./txring_overwrite
+ if [ $? -ne 0 ]; then
+ 	echo "[FAIL]"
++	ret=1
+ else
+ 	echo "[PASS]"
+ fi
++exit $ret
 -- 
 2.20.1
 
