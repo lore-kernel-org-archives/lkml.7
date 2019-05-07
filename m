@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A75C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428ECC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFED20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154B120C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207225;
-	bh=H3FJUbZ8cdQuU5fVYR4pxnXg5jHeMXkwhuk8K7uyOic=;
+	s=default; t=1557207229;
+	bh=ptVtqOMVYoCmNDp4VQ6JUp/GpkRIfYIiQsi7nEBA6lM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pIHJe6M6XzaIO+CFw9TI3VsodunuI97jC2ImeTABMgMWIS5w7YVWD+mIvRe5/A0GT
-	 kjBOaT6FkWMYWLbG4cIsm1N1VkMJYYGvc7kNOXcBqzEOHe7F1eTlwFS0Qglc+e5mVc
-	 fQSI7SMZkZJYlOM6bmPM1pr0nzEBS9nIcIvxhrJk=
+	b=j/KVDOP+iRQ2YB4zf6VQOHJnPDBlK0V0FQuNsVhO91ZmErU5y4HO+iOyrMDYpgNq9
+	 Uviy8fO3EEtAM6EL7ClSncHyOjFVZCQOEfEcVA/Qj67+GKBPdHQnT7p8xIy8deTn+p
+	 z8DceI1bjz0JanL/G9xx30jzbVUBvw5rwqPtM0B4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfEGFdo (ORCPT
+        id S1727343AbfEGFdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:33:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53550 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:33:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727274AbfEGFdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:33:38 -0400
+        id S1727316AbfEGFdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:33:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E570214AE;
-        Tue,  7 May 2019 05:33:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF5D20C01;
+        Tue,  7 May 2019 05:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207217;
-        bh=H3FJUbZ8cdQuU5fVYR4pxnXg5jHeMXkwhuk8K7uyOic=;
+        s=default; t=1557207223;
+        bh=ptVtqOMVYoCmNDp4VQ6JUp/GpkRIfYIiQsi7nEBA6lM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQLBGeUguDKGPoftDKpLGakbUU38h/ljoJ5P0Y9iBjQqoYddI/5OLrwHG+c9GWYWc
-         9UmQFXwVkE9NpJ1kOlmD1morZ9j2lhX4AbFB3jb50xZkB05hW8SZjVS4gjLPGhwe5s
-         bSWSx4JZUcCQBUd0O4mv3l+GzuI4HrPhr1YcMo2o=
+        b=yf19qSUfp5SdwV/i6ZOQIRErURGB+DvdoIbzkpTrk5O53jnNPGpH1qvRvV/VHAeYz
+         EroZF7oLZj+kbzWMFiaAXzNYKRl+awTRY5eA7kYfXPG4+UnlHYI0NBnWzfNMEBQDKX
+         pVP6uov3baSnzCWYfz2ASakqvzJJUOq9U3xuM80g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 32/99] afs: Fix in-progess ops to ignore server-level callback invalidation
-Date:   Tue,  7 May 2019 01:31:26 -0400
-Message-Id: <20190507053235.29900-32-sashal@kernel.org>
+Cc:     Denis Bolotin <dbolotin@marvell.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 36/99] qed: Fix missing DORQ attentions
+Date:   Tue,  7 May 2019 01:31:30 -0400
+Message-Id: <20190507053235.29900-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -58,170 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Denis Bolotin <dbolotin@marvell.com>
 
-[ Upstream commit eeba1e9cf31d064284dd1fa7bd6cfe01395bd03d ]
+[ Upstream commit d4476b8a6151b2dd86c09b5acec64f66430db55d ]
 
-The in-kernel afs filesystem client counts the number of server-level
-callback invalidation events (CB.InitCallBackState* RPC operations) that it
-receives from the server.  This is stored in cb_s_break in various
-structures, including afs_server and afs_vnode.
+When the DORQ (doorbell block) is overflowed, all PFs get attentions at the
+same time. If one PF finished handling the attention before another PF even
+started, the second PF might miss the DORQ's attention bit and not handle
+the attention at all.
+If the DORQ attention is missed and the issue is not resolved, another
+attention will not be sent, therefore each attention is treated as a
+potential DORQ attention.
+As a result, the attention callback is called more frequently so the debug
+print was moved to reduce its quantity.
+The number of periodic doorbell recovery handler schedules was reduced
+because it was the previous way to mitigating the missed attention issue.
 
-If an inode is examined by afs_validate(), say, the afs_server copy is
-compared, along with other break counters, to those in afs_vnode, and if
-one or more of the counters do not match, it is considered that the
-server's callback promise is broken.  At points where this happens,
-AFS_VNODE_CB_PROMISED is cleared to indicate that the status must be
-refetched from the server.
-
-afs_validate() issues an FS.FetchStatus operation to get updated metadata -
-and based on the updated data_version may invalidate the pagecache too.
-
-However, the break counters are also used to determine whether to note a
-new callback in the vnode (which would set the AFS_VNODE_CB_PROMISED flag)
-and whether to cache the permit data included in the YFSFetchStatus record
-by the server.
-
-The problem comes when the server sends us a CB.InitCallBackState op.  The
-first such instance doesn't cause cb_s_break to be incremented, but rather
-causes AFS_SERVER_FL_NEW to be cleared - but thereafter, say some hours
-after last use and all the volumes have been automatically unmounted and
-the server has forgotten about the client[*], this *will* likely cause an
-increment.
-
- [*] There are other circumstances too, such as the server restarting or
-     needing to make space in its callback table.
-
-Note that the server won't send us a CB.InitCallBackState op until we talk
-to it again.
-
-So what happens is:
-
- (1) A mount for a new volume is attempted, a inode is created for the root
-     vnode and vnode->cb_s_break and AFS_VNODE_CB_PROMISED aren't set
-     immediately, as we don't have a nominated server to talk to yet - and
-     we may iterate through a few to find one.
-
- (2) Before the operation happens, afs_fetch_status(), say, notes in the
-     cursor (fc.cb_break) the break counter sum from the vnode, volume and
-     server counters, but the server->cb_s_break is currently 0.
-
- (3) We send FS.FetchStatus to the server.  The server sends us back
-     CB.InitCallBackState.  We increment server->cb_s_break.
-
- (4) Our FS.FetchStatus completes.  The reply includes a callback record.
-
- (5) xdr_decode_AFSCallBack()/xdr_decode_YFSCallBack() check to see whether
-     the callback promise was broken by checking the break counter sum from
-     step (2) against the current sum.
-
-     This fails because of step (3), so we don't set the callback record
-     and, importantly, don't set AFS_VNODE_CB_PROMISED on the vnode.
-
-This does not preclude the syscall from progressing, and we don't loop here
-rechecking the status, but rather assume it's good enough for one round
-only and will need to be rechecked next time.
-
- (6) afs_validate() it triggered on the vnode, probably called from
-     d_revalidate() checking the parent directory.
-
- (7) afs_validate() notes that AFS_VNODE_CB_PROMISED isn't set, so doesn't
-     update vnode->cb_s_break and assumes the vnode to be invalid.
-
- (8) afs_validate() needs to calls afs_fetch_status().  Go back to step (2)
-     and repeat, every time the vnode is validated.
-
-This primarily affects volume root dir vnodes.  Everything subsequent to
-those inherit an already incremented cb_s_break upon mounting.
-
-The issue is that we assume that the callback record and the cached permit
-information in a reply from the server can't be trusted after getting a
-server break - but this is wrong since the server makes sure things are
-done in the right order, holding up our ops if necessary[*].
-
- [*] There is an extremely unlikely scenario where a reply from before the
-     CB.InitCallBackState could get its delivery deferred till after - at
-     which point we think we have a promise when we don't.  This, however,
-     requires unlucky mass packet loss to one call.
-
-AFS_SERVER_FL_NEW tries to paper over the cracks for the initial mount from
-a server we've never contacted before, but this should be unnecessary.
-It's also further insulated from the problem on an initial mount by
-querying the server first with FS.GetCapabilities, which triggers the
-CB.InitCallBackState.
-
-Fix this by
-
- (1) Remove AFS_SERVER_FL_NEW.
-
- (2) In afs_calc_vnode_cb_break(), don't include cb_s_break in the
-     calculation.
-
- (3) In afs_cb_is_broken(), don't include cb_s_break in the check.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Denis Bolotin <dbolotin@marvell.com>
+Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/callback.c | 3 +--
- fs/afs/internal.h | 4 +---
- fs/afs/server.c   | 1 -
- 3 files changed, 2 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed.h      |  1 +
+ drivers/net/ethernet/qlogic/qed/qed_int.c  | 20 ++++++++++++++++++--
+ drivers/net/ethernet/qlogic/qed/qed_main.c |  2 +-
+ 3 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-index 1c7955f5cdaf..128f2dbe256a 100644
---- a/fs/afs/callback.c
-+++ b/fs/afs/callback.c
-@@ -203,8 +203,7 @@ void afs_put_cb_interest(struct afs_net *net, struct afs_cb_interest *cbi)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index d5fece7eb169..07ae600d0f35 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -436,6 +436,7 @@ struct qed_db_recovery_info {
+ 
+ 	/* Lock to protect the doorbell recovery mechanism list */
+ 	spinlock_t lock;
++	bool dorq_attn;
+ 	u32 db_recovery_counter;
+ };
+ 
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
+index b994f81eb51c..00688f4c0464 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_int.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
+@@ -436,17 +436,19 @@ static int qed_dorq_attn_cb(struct qed_hwfn *p_hwfn)
+ 	struct qed_ptt *p_ptt = p_hwfn->p_dpc_ptt;
+ 	int rc;
+ 
+-	int_sts = qed_rd(p_hwfn, p_ptt, DORQ_REG_INT_STS);
+-	DP_NOTICE(p_hwfn->cdev, "DORQ attention. int_sts was %x\n", int_sts);
++	p_hwfn->db_recovery_info.dorq_attn = true;
+ 
+ 	/* int_sts may be zero since all PFs were interrupted for doorbell
+ 	 * overflow but another one already handled it. Can abort here. If
+ 	 * This PF also requires overflow recovery we will be interrupted again.
+ 	 * The masked almost full indication may also be set. Ignoring.
+ 	 */
++	int_sts = qed_rd(p_hwfn, p_ptt, DORQ_REG_INT_STS);
+ 	if (!(int_sts & ~DORQ_REG_INT_STS_DORQ_FIFO_AFULL))
+ 		return 0;
+ 
++	DP_NOTICE(p_hwfn->cdev, "DORQ attention. int_sts was %x\n", int_sts);
++
+ 	/* check if db_drop or overflow happened */
+ 	if (int_sts & (DORQ_REG_INT_STS_DB_DROP |
+ 		       DORQ_REG_INT_STS_DORQ_FIFO_OVFL_ERR)) {
+@@ -503,6 +505,17 @@ static int qed_dorq_attn_cb(struct qed_hwfn *p_hwfn)
+ 	return -EINVAL;
+ }
+ 
++static void qed_dorq_attn_handler(struct qed_hwfn *p_hwfn)
++{
++	if (p_hwfn->db_recovery_info.dorq_attn)
++		goto out;
++
++	/* Call DORQ callback if the attention was missed */
++	qed_dorq_attn_cb(p_hwfn);
++out:
++	p_hwfn->db_recovery_info.dorq_attn = false;
++}
++
+ /* Instead of major changes to the data-structure, we have a some 'special'
+  * identifiers for sources that changed meaning between adapters.
   */
- void afs_init_callback_state(struct afs_server *server)
- {
--	if (!test_and_clear_bit(AFS_SERVER_FL_NEW, &server->flags))
--		server->cb_s_break++;
-+	server->cb_s_break++;
+@@ -1076,6 +1089,9 @@ static int qed_int_deassertion(struct qed_hwfn  *p_hwfn,
+ 		}
+ 	}
+ 
++	/* Handle missed DORQ attention */
++	qed_dorq_attn_handler(p_hwfn);
++
+ 	/* Clear IGU indication for the deasserted bits */
+ 	DIRECT_REG_WR((u8 __iomem *)p_hwfn->regview +
+ 				    GTT_BAR0_MAP_REG_IGU_CMD +
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 6adf5bda9811..26bfcbeebc4c 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -966,7 +966,7 @@ static void qed_update_pf_params(struct qed_dev *cdev,
+ 	}
  }
  
- /*
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 8871b9e8645f..465526f495b0 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -475,7 +475,6 @@ struct afs_server {
- 	time64_t		put_time;	/* Time at which last put */
- 	time64_t		update_at;	/* Time at which to next update the record */
- 	unsigned long		flags;
--#define AFS_SERVER_FL_NEW	0		/* New server, don't inc cb_s_break */
- #define AFS_SERVER_FL_NOT_READY	1		/* The record is not ready for use */
- #define AFS_SERVER_FL_NOT_FOUND	2		/* VL server says no such server */
- #define AFS_SERVER_FL_VL_FAIL	3		/* Failed to access VL server */
-@@ -828,7 +827,7 @@ static inline struct afs_cb_interest *afs_get_cb_interest(struct afs_cb_interest
- 
- static inline unsigned int afs_calc_vnode_cb_break(struct afs_vnode *vnode)
- {
--	return vnode->cb_break + vnode->cb_s_break + vnode->cb_v_break;
-+	return vnode->cb_break + vnode->cb_v_break;
- }
- 
- static inline bool afs_cb_is_broken(unsigned int cb_break,
-@@ -836,7 +835,6 @@ static inline bool afs_cb_is_broken(unsigned int cb_break,
- 				    const struct afs_cb_interest *cbi)
- {
- 	return !cbi || cb_break != (vnode->cb_break +
--				    cbi->server->cb_s_break +
- 				    vnode->volume->cb_v_break);
- }
- 
-diff --git a/fs/afs/server.c b/fs/afs/server.c
-index 642afa2e9783..65b33b6da48b 100644
---- a/fs/afs/server.c
-+++ b/fs/afs/server.c
-@@ -226,7 +226,6 @@ static struct afs_server *afs_alloc_server(struct afs_net *net,
- 	RCU_INIT_POINTER(server->addresses, alist);
- 	server->addr_version = alist->version;
- 	server->uuid = *uuid;
--	server->flags = (1UL << AFS_SERVER_FL_NEW);
- 	server->update_at = ktime_get_real_seconds() + afs_server_update_delay;
- 	rwlock_init(&server->fs_lock);
- 	INIT_HLIST_HEAD(&server->cb_volumes);
+-#define QED_PERIODIC_DB_REC_COUNT		100
++#define QED_PERIODIC_DB_REC_COUNT		10
+ #define QED_PERIODIC_DB_REC_INTERVAL_MS		100
+ #define QED_PERIODIC_DB_REC_INTERVAL \
+ 	msecs_to_jiffies(QED_PERIODIC_DB_REC_INTERVAL_MS)
 -- 
 2.20.1
 
