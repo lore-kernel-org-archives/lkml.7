@@ -2,109 +2,84 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9D8C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B6DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01676205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3880205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 12:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j2AXwDjy"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ur1LfKkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfEGMpJ (ORCPT
+        id S1726521AbfEGMtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 08:45:09 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10536 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEGMpJ (ORCPT
+        Tue, 7 May 2019 08:49:00 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:23556 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfEGMtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 08:45:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd17dd00001>; Tue, 07 May 2019 05:45:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 05:45:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 05:45:08 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 12:45:05 +0000
-Subject: Re: [PATCH 5.0 000/122] 5.0.14-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190506143054.670334917@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d0683ebc-a3d0-c726-cf69-40d55e52e845@nvidia.com>
-Date:   Tue, 7 May 2019 13:45:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557233104; bh=z8eBBt/ftcusB8sv7i5DphK4f+siDOoKbWArHa4qBOU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=j2AXwDjyahFkXfgUcJTo2vqVyxzTs39u/8UId188fBKqXbo7NIyDCZLDrTLl4ZJqJ
-         5J8nbhR0O6j0ed2pisbVZlZnmZYEBTKqUioPRrXMCvIfmf+55LLiqejIGb7Ytlrbkx
-         2mNwqsQN3MF5ATNHaQDpYh+nLxKYEu5qGFjZ/ppnaCvfnGBVPbb4CZbyiNmCowxCsd
-         g7vStm/H8ONwhNXLdIhTubm9BpyMP+yMy+v7cGFAH72t2UFL90Fey373zFAFW1BVXa
-         eEDpHJStDF1DALA6iUPa1u48sd8UPVUhlCSRDT3tqHuXst/2RPdiw+Xve+O6hb5v0u
-         bFSZsX0bzG4fA==
+        Tue, 7 May 2019 08:49:00 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x47Cmr6D025198;
+        Tue, 7 May 2019 21:48:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x47Cmr6D025198
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557233334;
+        bh=QHgrx9JlLgTxo5RIiXOXGXOqS1tuTFILxM8klYbVGNQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ur1LfKkVfxqXAHwJ+HcCg0FXWJHwa5aL8BIYsLtXOSt3FZoB7BaTWSMheRs62uG4+
+         dAQT4unggsHegY8A/FFSlxK1q9FqCkSCp77rZXgzoOswd/jGWnCh3ajewdPX+KWpkK
+         011FsptQ8m+LfKsLRYErZKsdIR5cNyGyqKREeXoIg+oszGRvzymMh6ZLFq0DAxSG8J
+         6Ml33H8qFOx3wUrWkMPabJGXh7suKFf5s0SApMcRnYT3Y5U2xZ/fW38gelBUX5U9xR
+         xu9Q7YX2LVn6dhxGIO1KIdKh+rXQIEf8NCdTUQSVKWFp86hti0X4E6b0fO7WrREjG+
+         q0FI5PBQk7P2A==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] .gitignore: add more all*.config patterns
+Date:   Tue,  7 May 2019 21:48:46 +0900
+Message-Id: <1557233326-13247-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For completeness, ignore all the allconfig variants.
 
-On 06/05/2019 15:30, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.14 release.
-> There are 122 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 08 May 2019 02:29:09 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.14-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+I added a leading slash because they are only searched in the
+top of the tree.
 
-All tests are passing for Tegra ...
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Test results for stable-v5.0:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
+ .gitignore | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Linux version:	5.0.14-rc1-g5b4a1a1
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/.gitignore b/.gitignore
+index 2fb1765..d263ca9 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -130,7 +130,12 @@ signing_key.x509
+ x509.genkey
+ 
+ # Kconfig presets
+-all.config
++/all.config
++/alldef.config
++/allmod.config
++/allno.config
++/allrandom.config
++/allyes.config
+ 
+ # Kdevelop4
+ *.kdev4
 -- 
-nvpublic
+2.7.4
+
