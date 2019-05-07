@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA7CC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D51C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02E2205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60AF205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208980;
-	bh=pdVdyom2uZTEAtZ+3r+7LEvj378VMGzw2pWsGonkZFA=;
+	s=default; t=1557208990;
+	bh=nUE/tGG4Eiqp4QbhmubyW9/DNF8bdzhhE8jZr+0HMOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEyW5WM14HLWvBOFfoPndVigacYoxvLsAJwSLPGS8Om7IX/LWeUCUzbW+VfNBv0AF
-	 HOoX6/I8iGS1u/O8ZyybE7u9mh804cgeYwx/USsUGm1ZfdPUjMAl6ZJUZMnm6XUe3o
-	 zcPI7/k62s/6XNpnvdPpmpuFt1i45OdVHiAR9vqM=
+	b=Sa3IpRpIK/9CTI8x7nX2YhRfBXa0xBJDbe48C14McYX128el1IwXdiJh7RqULmhU4
+	 y326V1dl4D35xfgWnHhy0psTY5xu1fP6stKNqyxB7SXEdrjvHmsoJqYgtkmEKZJqzO
+	 JmneUOrkkQgyv4FfRSHi2wS1IMBbPWKb3XjNbqO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfEGGC6 (ORCPT
+        id S1727093AbfEGGDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55418 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 02:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbfEGFfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:23 -0400
+        id S1726953AbfEGFfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04C172087F;
-        Tue,  7 May 2019 05:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA9C220C01;
+        Tue,  7 May 2019 05:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207321;
-        bh=pdVdyom2uZTEAtZ+3r+7LEvj378VMGzw2pWsGonkZFA=;
+        s=default; t=1557207320;
+        bh=nUE/tGG4Eiqp4QbhmubyW9/DNF8bdzhhE8jZr+0HMOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDhVKSXB9VQD5C7OazCIf0nIjlDEGmYWsaNIxogDMuoEKewAbk5c6ikOglXLvbF4N
-         0E+4blx8e5Wir0DT9mCUTWNvhRAYqLzih2vhQ7J1UviNy5QU50PpBqliyLFJmsEq7K
-         DvkBGrhqVEysH4QLC2D2kak79YgHp1kftjCJ7Ks4=
+        b=w6E9I6GjbqEh7ScuU0qFOGvDOk7MMkbJAdMldd7Bn1T370ojVo4p5J7FlqEm7r5PK
+         nidyQgghU+dtIrj0yMyNbL/MbTivS+8jwNONDjGW8nUFj1X4KJU/ujUP8j0KYChuBg
+         W9UYxQU4zyiFh7UkL8/I5IUaxfKBwwLVYV7SCnVQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Airlie <airlied@redhat.com>,
-        =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.0 85/99] Revert "drm/virtio: drop prime import/export callbacks"
-Date:   Tue,  7 May 2019 01:32:19 -0400
-Message-Id: <20190507053235.29900-85-sashal@kernel.org>
+Cc:     Jeff Layton <jlayton@kernel.org>, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 84/99] ceph: handle the case where a dentry has been renamed on outstanding req
+Date:   Tue,  7 May 2019 01:32:18 -0400
+Message-Id: <20190507053235.29900-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,95 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit a0cecc23cfcbf2626497a8c8770856dd56b67917 ]
+[ Upstream commit 4b8222870032715f9d995f3eb7c7acd8379a275d ]
 
-This patch does more harm than good, as it breaks both Xwayland and
-gnome-shell with X11.
+It's possible for us to issue a lookup to revalidate a dentry
+concurrently with a rename. If done in the right order, then we could
+end up processing dentry info in the reply that no longer reflects the
+state of the dentry.
 
-Xwayland requires DRI3 & DRI3 requires PRIME.
+If req->r_dentry->d_name differs from the one in the trace, then just
+ignore the trace in the reply. We only need to do this however if the
+parent's i_rwsem is not held.
 
-X11 crash for obscure double-free reason which are hard to debug
-(starting X11 by hand doesn't trigger the crash).
-
-I don't see an apparent problem implementing those stub prime
-functions, they may return an error at run-time, and it seems to be
-handled fine by GNOME at least.
-
-This reverts commit b318e3ff7ca065d6b107e424c85a63d7a6798a69.
-[airlied:
-This broke userspace for virtio-gpus, and regressed things from DRI3 to DRI2.
-
-This brings back the original problem, but it's better than regressions.]
-
-Fixes: b318e3ff7ca065d6b107e424c85a63d7a6798a ("drm/virtio: drop prime import/export callbacks")
-Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.c   |  4 ++++
- drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++++
- drivers/gpu/drm/virtio/virtgpu_prime.c | 12 ++++++++++++
- 3 files changed, 20 insertions(+)
+ fs/ceph/inode.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index 2d1aaca49105..f7f32a885af7 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -127,10 +127,14 @@ static struct drm_driver driver = {
- #if defined(CONFIG_DEBUG_FS)
- 	.debugfs_init = virtio_gpu_debugfs_init,
- #endif
-+	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-+	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_export = drm_gem_prime_export,
- 	.gem_prime_import = drm_gem_prime_import,
- 	.gem_prime_pin = virtgpu_gem_prime_pin,
- 	.gem_prime_unpin = virtgpu_gem_prime_unpin,
-+	.gem_prime_get_sg_table = virtgpu_gem_prime_get_sg_table,
-+	.gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
- 	.gem_prime_vmap = virtgpu_gem_prime_vmap,
- 	.gem_prime_vunmap = virtgpu_gem_prime_vunmap,
- 	.gem_prime_mmap = virtgpu_gem_prime_mmap,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 0c15000f926e..1deb41d42ea4 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -372,6 +372,10 @@ int virtio_gpu_object_wait(struct virtio_gpu_object *bo, bool no_wait);
- /* virtgpu_prime.c */
- int virtgpu_gem_prime_pin(struct drm_gem_object *obj);
- void virtgpu_gem_prime_unpin(struct drm_gem_object *obj);
-+struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj);
-+struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
-+	struct drm_device *dev, struct dma_buf_attachment *attach,
-+	struct sg_table *sgt);
- void *virtgpu_gem_prime_vmap(struct drm_gem_object *obj);
- void virtgpu_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr);
- int virtgpu_gem_prime_mmap(struct drm_gem_object *obj,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-index c59ec34c80a5..eb51a78e1199 100644
---- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-@@ -39,6 +39,18 @@ void virtgpu_gem_prime_unpin(struct drm_gem_object *obj)
- 	WARN_ONCE(1, "not implemented");
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 9d1f34d46627..5880ee20ada4 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -1152,6 +1152,19 @@ static int splice_dentry(struct dentry **pdn, struct inode *in)
+ 	return 0;
  }
  
-+struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
++static int d_name_cmp(struct dentry *dentry, const char *name, size_t len)
 +{
-+	return ERR_PTR(-ENODEV);
++	int ret;
++
++	/* take d_lock to ensure dentry->d_name stability */
++	spin_lock(&dentry->d_lock);
++	ret = dentry->d_name.len - len;
++	if (!ret)
++		ret = memcmp(dentry->d_name.name, name, len);
++	spin_unlock(&dentry->d_lock);
++	return ret;
 +}
 +
-+struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
-+	struct drm_device *dev, struct dma_buf_attachment *attach,
-+	struct sg_table *table)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- void *virtgpu_gem_prime_vmap(struct drm_gem_object *obj)
- {
- 	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+ /*
+  * Incorporate results into the local cache.  This is either just
+  * one inode, or a directory, dentry, and possibly linked-to inode (e.g.,
+@@ -1401,7 +1414,8 @@ int ceph_fill_trace(struct super_block *sb, struct ceph_mds_request *req)
+ 		err = splice_dentry(&req->r_dentry, in);
+ 		if (err < 0)
+ 			goto done;
+-	} else if (rinfo->head->is_dentry) {
++	} else if (rinfo->head->is_dentry &&
++		   !d_name_cmp(req->r_dentry, rinfo->dname, rinfo->dname_len)) {
+ 		struct ceph_vino *ptvino = NULL;
+ 
+ 		if ((le32_to_cpu(rinfo->diri.in->cap.caps) & CEPH_CAP_FILE_SHARED) ||
 -- 
 2.20.1
 
