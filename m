@@ -2,247 +2,228 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4961C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC23C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1F121479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54AB21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:25:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rFmCGa/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfEGJZH (ORCPT
+        id S1726838AbfEGJZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:25:07 -0400
-Received: from [195.159.176.226] ([195.159.176.226]:35302 "EHLO
-        blaine.gmane.org" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfEGJZH (ORCPT
+        Tue, 7 May 2019 05:25:28 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37037 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfEGJZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:25:07 -0400
-Received: from list by blaine.gmane.org with local (Exim 4.89)
-        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
-        id 1hNwLO-000iAi-DL
-        for linux-kernel@vger.kernel.org; Tue, 07 May 2019 11:25:02 +0200
-X-Injected-Via-Gmane: http://gmane.org/
-To:     linux-kernel@vger.kernel.org
-From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Subject: Re: [PATCH 3/3] block/diskstats: more accurate approximation of
- io_ticks for slow disks
-Date:   Tue, 7 May 2019 10:13:57 +0100
-Message-ID: <d5d39e1c-59f2-b5d8-0189-020efaed4ce8@gmail.com>
-References: <155413438394.3201.15211440151043943989.stgit@buzz>
- <155413438824.3201.15254568091182734151.stgit@buzz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
+        Tue, 7 May 2019 05:25:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190507092525euoutp013b695b9ffbf20a92bea4e6e3f3022332~cXF0Sudz-2476924769euoutp01K
+        for <linux-kernel@vger.kernel.org>; Tue,  7 May 2019 09:25:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190507092525euoutp013b695b9ffbf20a92bea4e6e3f3022332~cXF0Sudz-2476924769euoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557221126;
+        bh=dB+e2yrRh4QWNuV04t7a1d5E5ggX5TKGj86c7YDqDwY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=rFmCGa/z8wWMtc1sMbraKn6s7StHoNJFXZSg1xZ7Hyvys1iA9AjNZxwHiWVch3xqC
+         BdPpp7Gm5mE9zPJo2NZ7xg6a74a8+82T8qSC6sNeLNEil6S9Pvoho0PFs6eZiVgrVx
+         pOZBY2RWoajG4IsZaXBAYsOSMR+UbkN3TsUFjlY4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190507092525eucas1p22aa50e61cefb7cbeaa20193174475e49~cXFziqM8f1247712477eucas1p2C;
+        Tue,  7 May 2019 09:25:25 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 12.85.04377.40F41DC5; Tue,  7
+        May 2019 10:25:24 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190507092524eucas1p20bdd1319a20df133d656ce1b7932a5ce~cXFypbLUF1030410304eucas1p2P;
+        Tue,  7 May 2019 09:25:24 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190507092523eusmtrp27af9be321ccedbfe7d126bf0001eca29~cXFybNd8T2025120251eusmtrp24;
+        Tue,  7 May 2019 09:25:23 +0000 (GMT)
+X-AuditID: cbfec7f4-5632c9c000001119-5f-5cd14f04f2dd
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id DE.7A.04146.30F41DC5; Tue,  7
+        May 2019 10:25:23 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190507092522eusmtip2067e1bc04156a115241aa01517a2c12f~cXFxfK_XN0483604836eusmtip2L;
+        Tue,  7 May 2019 09:25:22 +0000 (GMT)
+Subject: Re: [PATCH v7 01/13] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <eab8fd90-7075-3f7b-5634-553fdf32f546@partner.samsung.com>
+Date:   Tue, 7 May 2019 11:25:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-X-Mozilla-News-Host: news://nntp.gmane.org
-In-Reply-To: <155413438824.3201.15254568091182734151.stgit@buzz>
-Content-Language: en-GB
-Cc:     linux-block@vger.kernel.org
+        Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <e808eb3a-9fbe-897d-ce25-cab732581391@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUURjtzntv3tMaub40PyqSplWjsU262G4LQ0QG0aJJ9bKXSo7WPJc2
+        ymxxyWkxXBozCyNzKtwl/dGig+aSoyRUimWOZGQppgmWbTNPyX/nfud895wDH0fxPcxULjQ8
+        UtSHC2FqpSNdVj1sWUj7NQcuqvu1gBRm5DPk9WA3Q7LNjQx50G9F5HpdloI0XNKRK9Yeilgs
+        BSx5GfeFJa8qbirJgMGMSIbliYI8MrezpO3sfSWp+hLPkKctm0nbTycy9KITreW1Q99TaG1m
+        bDOtLTe2s9oiU6JSazjXq9ReLjEhbXH9Se1A0YxtXIDjyoNiWGi0qPdavd8xpH3kAnukZfqx
+        9ic5VCy65paEHDjAy+CZNU+RhBw5Ht9HMDyUTdsIHg8iqC2cKRMDCDqShxVjG73melomchEk
+        G+KR/PiK4P2LfNammoz9wZT1w0644BwEqXk/7SYUfqCAke+PmCTEcUqsgcemo7YFFd4EnfEG
+        xoZpPBsMN1rt2BXvhvfVBYyscYbaG132fA54DZT130M2TGE3aO3KVsjYHc6VZlI2L8CpHPwu
+        6lPYvABvgMy3vnKFyfC5poSV8XT4U549Wk2CWMMdJONTYL2SNapZAVU1zfbIFPaA/AovebwO
+        zNZSJP/uBG++OssJnCClLJ2SxypIuMjL6vlQktw0ajQFch+msVeR2jiul3FcF+O4Lsb/vrcR
+        bUJuYpSkCxalJeFijEYSdFJUeLAmKEJXhP6dYP3vmsHHqGLkQCXCHFJPUl31bQrkGSFaOq6r
+        RMBRaheV8LExkFcdFI6fEPUR+/RRYaJUiaZxtNpNdXJCxx4eBwuR4mFRPCLqx1gF5zA1Fk0I
+        mCF9+EambZwUkFu3d8POtO6slbnbAt2pvZsKq6N3HUp/2HM+0fP26Yb17hajf/Ec1nV1wpkQ
+        q7f+5vPevDM+Qaoq7y0L58b1XVZGbl/O93fMW9pYGX/LOyZ01jsPHz/vHXO6u139T0cJhRq/
+        lolYszV1TfOC2lUJYXdx4yfpVmmdmpZChMWelF4S/gLOddAifgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42I5/e/4PV1m/4sxBl8Wm1lsnLGe1eL6l+es
+        FvOPnGO1WP3xMaPF5FNzmSzOdOda9D9+zWxx/vwGdouzTW/YLS7vmsNm8bn3CKPFjPP7mCzW
+        HrnLbnG7cQWbxeE37awW+694Wdz+zWfx7cQjRgchj29fJ7F4zG64yOKxc9Zddo9NqzrZPHqb
+        37F59G1Zxeix+XS1x+dNcgEcUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK
+        +nY2Kak5mWWpRfp2CXoZd/+0shdckam4u28xcwPjRPEuRk4OCQETiXdHTrN0MXJxCAksZZRo
+        +HKMHSIhJjFp33YoW1jiz7UuNoii14wSu36uYgFJCAtESqya+4sRxBYRWMwo8bW1GqSIWWA1
+        k8Skj1ugOtqYJU4d2wzUwcHBJqAnsWNVIUgDr4CbxKP2XlYQm0VARaJ35i0wW1QgQuLM+xUs
+        EDWCEidnPgGzOQXsJbZ9XAa2jFnATGLe5ofMELa4xK0n85kgbHmJ5q2zmScwCs1C0j4LScss
+        JC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERj724793LyD8dLG4EOMAhyMSjy8
+        D2wvxAixJpYVV+YeYpTgYFYS4U18di5GiDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OBaSmv
+        JN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANjhZ2mjwGDrk7G4YXX
+        HmWpTUjc1C1wdr3OlBrxzojFnFOVjFfEetb0BWv718ozhnZH+9b7GU05fv3qcp24v9lVq99v
+        Wz1ZO3eTe5jtl0y7qQVJD5IcXL90TboS8k997gU9ede9d/bk7/R8J675f/8uuY85EcZ7hJPO
+        X7g6Nb2APUZuZ5S8hpkSS3FGoqEWc1FxIgDiB5B8EwMAAA==
+X-CMS-MailID: 20190507092524eucas1p20bdd1319a20df133d656ce1b7932a5ce
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190506151210eucas1p13c2a4b86a6f987ff34fbe1e2d705fbbf@eucas1p1.samsung.com>
+        <1557155521-30949-2-git-send-email-l.luba@partner.samsung.com>
+        <8b063f30-1a4d-3292-2e57-6e33e94d57ae@samsung.com>
+        <55e89fc7-6f22-b384-adbf-40c68618bdac@partner.samsung.com>
+        <e808eb3a-9fbe-897d-ce25-cab732581391@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190507091357.oFIZ7u0tgQskVyjhuePz0tUzk581F_ep3wPlrnxYoKA@z>
 
-On 01/04/2019 16:59, Konstantin Khlebnikov wrote:
-> Currently io_ticks is approximated by adding one at each
-> start and end of requests if jiffies has changed.
-> This works perfectly for requests shorter than a jiffy.
+
+
+On 5/7/19 11:17 AM, Chanwoo Choi wrote:
+> On 19. 5. 7. 오후 5:51, Lukasz Luba wrote:
+>> Hi Chanwoo,
+>>
+>> On 5/7/19 9:33 AM, Chanwoo Choi wrote:
+>>> Hi Lukasz,
+>>>
+>>> On 19. 5. 7. 오전 12:11, Lukasz Luba wrote:
+>>>> Define new IDs for clocks used by Dynamic Memory Controller in
+>>>> Exynos5422 SoC.
+>>>>
+>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    include/dt-bindings/clock/exynos5420.h | 28 ++++++++++++++++++++++------
+>>>>    1 file changed, 22 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+>>>> index 355f469..bf50d8a 100644
+>>>> --- a/include/dt-bindings/clock/exynos5420.h
+>>>> +++ b/include/dt-bindings/clock/exynos5420.h
+>>>> @@ -60,6 +60,7 @@
+>>>>    #define CLK_MAU_EPLL		159
+>>>>    #define CLK_SCLK_HSIC_12M	160
+>>>>    #define CLK_SCLK_MPHY_IXTAL24	161
+>>>> +#define CLK_SCLK_BPLL		162
+>>>>    
+>>>>    /* gate clocks */
+>>>>    #define CLK_UART0		257
+>>>> @@ -195,6 +196,16 @@
+>>>>    #define CLK_ACLK432_CAM		518
+>>>>    #define CLK_ACLK_FL1550_CAM	519
+>>>>    #define CLK_ACLK550_CAM		520
+>>>> +#define CLK_CLKM_PHY0		521
+>>>> +#define CLK_CLKM_PHY1		522
+>>>> +#define CLK_ACLK_PPMU_DREX0_0	523
+>>>> +#define CLK_ACLK_PPMU_DREX0_1	524
+>>>> +#define CLK_ACLK_PPMU_DREX1_0	525
+>>>> +#define CLK_ACLK_PPMU_DREX1_1	526
+>>>> +#define CLK_PCLK_PPMU_DREX0_0	527
+>>>> +#define CLK_PCLK_PPMU_DREX0_1	528
+>>>> +#define CLK_PCLK_PPMU_DREX1_0	529
+>>>> +#define CLK_PCLK_PPMU_DREX1_1	530
+>>>>    
+>>>>    /* mux clocks */
+>>>>    #define CLK_MOUT_HDMI		640
+>>>> @@ -217,6 +228,8 @@
+>>>>    #define CLK_MOUT_EPLL		657
+>>>>    #define CLK_MOUT_MAU_EPLL	658
+>>>>    #define CLK_MOUT_USER_MAU_EPLL	659
+>>>> +#define CLK_MOUT_SCLK_SPLL	660
+>>>> +#define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
+>>>>    
+>>>>    /* divider clocks */
+>>>>    #define CLK_DOUT_PIXEL		768
+>>>> @@ -243,13 +256,16 @@
+>>>>    #define CLK_DOUT_ACLK300_GSCL	789
+>>>>    #define CLK_DOUT_ACLK400_DISP1	790
+>>>>    #define CLK_DOUT_PCLK_CDREX	791
+>>>> -#define CLK_DOUT_SCLK_CDREX	792
+>>>> -#define CLK_DOUT_ACLK_CDREX1	793
+>>>> -#define CLK_DOUT_CCLK_DREX0	794
+>>>> -#define CLK_DOUT_CLK2X_PHY0	795
+>>>> -#define CLK_DOUT_PCLK_CORE_MEM	796
+>>>
+>>> The your previous patch didn't change the id number
+>>> of already exiting clocks. It cause the fault.
+>>> In order to keep the compatibility, you keep
+>>> the original id number without modification.
+>> True, the previous patch didn't change these IDs.
+>> I have not seen any faults during builds and stress tests, though.
 > 
-> Fix for slow requests is simple: at the end of request add
-> count of jiffies passed since last update.
+> If you use the built dtb file before modification, it cause the fault.
+> It is advantage of device-tree style to split out
+> the dependency between kernel image and dtb.
+Good point.
 > 
-> Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-
-Thanks for working on this!  I noticed the problem behaviour using the 
-Fedora 29 kernel [1].  I wasn't sure how it could be fixed.  Now I found 
-this patch series, but I still have some questions :-).
-
-[1] 
-https://unix.stackexchange.com/questions/517132/dd-is-running-at-full-speed-but-i-only-see-20-disk-utilization-why
-
-With these patches, `atopsar -d 2` shows about 100% "busy" when running 
-a simple `dd` command, instead of 20 or 35%.  So that looked promising.
-
-I saw some samples showing 112, 113, and 114% utilization. 
-Unfortunately I'm not sure exactly how to reproduce that.  I think it 
-happened during filesystem buffered writes (i.e. `dd` without 
-`oflag=direct`), with the IO scheduler set to "none", on my SATA HDD.
-
-Getting some "101% busy" samples seemed fairly easy to trigger, but I am 
-not sure whether that is just a rounding error in `atopsar` :-(.
-
-
-Q1)
-
- > Fix for slow requests is simple: at the end of request add
- > count of jiffies passed since last update.
-
-Even considering the simple case of a single CPU, the approximation may 
-be "less accurate" when requests complete out of order.  Is that right?
-
-  t        1      10     20   30
-  io1      start              end
-  io2             start  end
-  io_ticks 1      2      11   21
-
-            ^^^^^^
-               \
-                 9 ticks not accounted as "busy"
-
-
-At least, I found something fun happens if I run `dd if=/dev/urandom 
-of=~/t bs=1M oflag=direct` at the same time as `dd if=/dev/sda 
-of=/dev/null bs=1M oflag=direct` .  With scheduler=none, it reduces 
-"busy" from 100%, down to 97%.  With scheduler=mq-deadline, it reduces 
-"busy" from 100% to 60% :-).  Even though the system "iowait" is about 
-100% (equivalent to one CPU).
-
-(Environment: My /dev/sda max read speed is about 150MB/s.  My 
-/dev/urandom read speed is about 140 MB/s.  I have 4 logical CPUs).
-
-It feels like it should be possible to improve io_ticks, by basically 
-changing the condition in your fix, from (end==true), to (inflight>0). 
-Would that make sense?
-
-
-Q2) But what most confuses me, is that I think `io_ticks` is defined as 
-a per-cpu field.  And the per-cpu fields are summed into one value, 
-which is reported to userspace.
-
-I have tried playing with a couple `dd iflag=direct` readers, using 
-`taskset` to pin them to different CPUs, but I only got 98-102% "busy". 
-It did not rise to 200% :-).
-
-i) Is it possible to see 200% "busy", due to per-cpu ioticks?
-
-ii) If so, then can per-cpu ioticks also cause us to see 100% "busy", 
-when IO's were only inflight for 50% of the time (but on two different 
-CPUs)?
-
-     If it is possible to trigger both of these cases, this metric seems 
-very difficult to trust and use in any reliable way.  It seems 
-preferable to disable it altogether and force people to use more 
-trustworthy metrics.  E.g. system-wide "iowait", and iostat field 11 
-"weighted # of milliseconds spent doing I/Os" which `iostat` uses to 
-show "average queue length".
-
-     Or the "special pleading" approach?  Should ioticks accounted at 
-the level of the hardware queue, and be disabled if the device has is 
-using more than one hardware queue?
-
-
-Q3) In case I am mistaken in some way, and Q2 is not an issue at all:
-
-I still think reporting over 100% utilization is something new.  At 
-least the comments I see were removed in the "Fixes" commit seem to 
-agree.  That one error of 14% ("114% busy") that I saw, seems fairly big 
-:-).
-
-I wonder if we can better explain how much of a rough approximation this 
-metric is now, e.g. in Documentation/iostats.txt ?
-
-So far I don't know what the real description and limitations would be...
-
-I think it would be understandable e.g. if we were able to say "busy%" 
-should show around 100% when the device is used around 100% of the time, 
-and definitely 0% when it is idle, but is probably not as accurate as 
-"iowait". ("iowait" reported by the CPU scheduler.  Not to say these are 
-the same or equivalent.  And I understand "iowait" is another ball of 
-approximations and confusion.)
-
-
-Regards
-Alan
-
-
-> ---
->   block/bio.c           |    8 ++++----
->   block/blk-core.c      |    4 ++--
->   include/linux/genhd.h |    2 +-
->   3 files changed, 7 insertions(+), 7 deletions(-)
+>>>
+>>> Please don't change the id number of the existing clocks
+>>> and then just add the new clocks.
+>> OK, I will add CLK_DOUT_PCLK_DREX0	and CLK_DOUT_PCLK_DREX1
+>> at the end:
+>> ------------------>8--------------------------
+>> @@ -248,8 +261,11 @@
+>>    #define CLK_DOUT_CCLK_DREX0    794
+>>    #define CLK_DOUT_CLK2X_PHY0    795
+>>    #define CLK_DOUT_PCLK_CORE_MEM 796
+>> +#define CLK_FF_DOUT_SPLL2      797
+>> +#define CLK_DOUT_PCLK_DREX0    798
+>> +#define CLK_DOUT_PCLK_DREX1    799
+>>
+>>    /* must be greater than maximal clock id */
+>> -#define CLK_NR_CLKS            797
+>> +#define CLK_NR_CLKS            800
+>> -----------------8<---------------------------
+>>
+>> Can I add your ack in the modified version?
 > 
-> diff --git a/block/bio.c b/block/bio.c
-> index c0a60f3e9b7b..245056797999 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -1729,14 +1729,14 @@ void bio_check_pages_dirty(struct bio *bio)
->   	schedule_work(&bio_dirty_work);
->   }
->   
-> -void update_io_ticks(struct hd_struct *part, unsigned long now)
-> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
->   {
->   	unsigned long stamp;
->   again:
->   	stamp = READ_ONCE(part->stamp);
->   	if (unlikely(stamp != now)) {
->   		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
-> -			__part_stat_add(part, io_ticks, 1);
-> +			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
->   		}
->   	}
->   	if (part->partno) {
-> @@ -1752,7 +1752,7 @@ void generic_start_io_acct(struct request_queue *q, int op,
->   
->   	part_stat_lock();
->   
-> -	update_io_ticks(part, jiffies);
-> +	update_io_ticks(part, jiffies, false);
->   	part_stat_inc(part, ios[sgrp]);
->   	part_stat_add(part, sectors[sgrp], sectors);
->   	part_inc_in_flight(q, part, op_is_write(op));
-> @@ -1770,7 +1770,7 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
->   
->   	part_stat_lock();
->   
-> -	update_io_ticks(part, now);
-> +	update_io_ticks(part, now, true);
->   	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
->   	part_dec_in_flight(q, part, op_is_write(req_op));
->   
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index d89168b167e9..6e8f0b9e7731 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1334,7 +1334,7 @@ void blk_account_io_done(struct request *req, u64 now)
->   		part_stat_lock();
->   		part = req->part;
->   
-> -		update_io_ticks(part, jiffies);
-> +		update_io_ticks(part, jiffies, true);
->   		part_stat_inc(part, ios[sgrp]);
->   		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
->   		part_dec_in_flight(req->q, part, rq_data_dir(req));
-> @@ -1375,7 +1375,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
->   		rq->part = part;
->   	}
->   
-> -	update_io_ticks(part, jiffies);
-> +	update_io_ticks(part, jiffies, false);
->   
->   	part_stat_unlock();
->   }
-> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-> index 2f5a9ed7e86e..8ece8e02c609 100644
-> --- a/include/linux/genhd.h
-> +++ b/include/linux/genhd.h
-> @@ -410,7 +410,7 @@ static inline void free_part_info(struct hd_struct *part)
->   	kfree(part->info);
->   }
->   
-> -void update_io_ticks(struct hd_struct *part, unsigned long now);
-> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end);
->   
->   /* block/genhd.c */
->   extern void device_add_disk(struct device *parent, struct gendisk *disk,
-> 
-> 
+> I agree.
+Thank you.
 
-
+Regards,
+Lukasz
