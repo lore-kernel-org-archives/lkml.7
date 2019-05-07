@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB6EC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D0AC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CF0205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E27205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208121;
-	bh=pNoHONEm1X9opg3xl9NbGvRfo6Og1Tx2dproK5eTanU=;
+	s=default; t=1557208126;
+	bh=wVexugz/PHLlLDRwzGd8Fi0rLwjyVsyR155fbuB14hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aflx52Igl209a/nyd3tiQnd1ysCIMX9PO6jjKQ9lnud8k0MvhEBkUsnN4mE0ZSkyG
-	 z8PXn3OB/dasM7T2i40BnPpGZVtF1T4S8+awCaBBQPrYhFPZks0y1JWG32Gmotl+us
-	 wt1ysphFQRZaDnIkS1As3DnFL3xn8Ee7/2f5P2ec=
+	b=hJffgn/y7PZI1vomfZgYXVK5VkQ0PmizrBaLsEcxj+Mw9K095DFh7HGRqell5RIQB
+	 xTRcmer0XnS+0kA+ruPwiGN1ls6kIIH+jNKXtI7j0r0NXXE4RlcKuwcuZE2u36iSaX
+	 bJS3DvRKyBIEinEOwOTQxAGYt1Ml4XMZ25HwtRwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbfEGFkm (ORCPT
+        id S1728798AbfEGFsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:48:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbfEGFki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:38 -0400
+        id S1728404AbfEGFkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A4A20578;
-        Tue,  7 May 2019 05:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA5D620578;
+        Tue,  7 May 2019 05:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207637;
-        bh=pNoHONEm1X9opg3xl9NbGvRfo6Og1Tx2dproK5eTanU=;
+        s=default; t=1557207641;
+        bh=wVexugz/PHLlLDRwzGd8Fi0rLwjyVsyR155fbuB14hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMYCK3wtrE7IvV0gQzSlZL/zBwGU4POxkmXUxvS/CdJf6YshP3/f0idjABTj0iA64
-         Iz/DycLKqufCQCaVgTKDvSnX9BWVy/jhwjEioqkb1+LBobrBFintNYnINk+M7XzyNb
-         aWViDuA0uxQNKoRQh+DsCTFWlt4vRo7VCCxisSgs=
+        b=cvSF9SnCWyyvnTbwNzez4HTbzt9VAndcx/R8LbnJIRRqjT+6O6NqUMecSelKQt+i6
+         EjstU3vmyoRYGzudJPNxbpDFyXIfnYjtfDbNGEU6zGyjimTR6pULymYCTPquAU1Wpk
+         oR/h7Yo83SQJpU4GTQMAaVysCNJcKb3KHvUt7zCg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Robert Shteynfeld <robert.shteynfeld@gmail.com>,
-        stable@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 71/95] Revert "mm, memory_hotplug: initialize struct pages for the full memory section"
-Date:   Tue,  7 May 2019 01:38:00 -0400
-Message-Id: <20190507053826.31622-71-sashal@kernel.org>
+Cc:     Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 74/95] btrfs: harden agaist duplicate fsid on scanned devices
+Date:   Tue,  7 May 2019 01:38:03 -0400
+Message-Id: <20190507053826.31622-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,67 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Anand Jain <anand.jain@oracle.com>
 
-[ Upstream commit 4aa9fc2a435abe95a1e8d7f8c7b3d6356514b37a ]
+[ Upstream commit a9261d4125c97ce8624e9941b75dee1b43ad5df9 ]
 
-This reverts commit 2830bf6f05fb3e05bc4743274b806c821807a684.
+It's not that impossible to imagine that a device OR a btrfs image is
+copied just by using the dd or the cp command. Which in case both the
+copies of the btrfs will have the same fsid. If on the system with
+automount enabled, the copied FS gets scanned.
 
-The underlying assumption that one sparse section belongs into a single
-numa node doesn't hold really. Robert Shteynfeld has reported a boot
-failure. The boot log was not captured but his memory layout is as
-follows:
+We have a known bug in btrfs, that we let the device path be changed
+after the device has been mounted. So using this loop hole the new
+copied device would appears as if its mounted immediately after it's
+been copied.
 
-  Early memory node ranges
-    node   1: [mem 0x0000000000001000-0x0000000000090fff]
-    node   1: [mem 0x0000000000100000-0x00000000dbdf8fff]
-    node   1: [mem 0x0000000100000000-0x0000001423ffffff]
-    node   0: [mem 0x0000001424000000-0x0000002023ffffff]
+For example:
 
-This means that node0 starts in the middle of a memory section which is
-also in node1.  memmap_init_zone tries to initialize padding of a
-section even when it is outside of the given pfn range because there are
-code paths (e.g.  memory hotplug) which assume that the full worth of
-memory section is always initialized.
+Initially.. /dev/mmcblk0p4 is mounted as /
 
-In this particular case, though, such a range is already intialized and
-most likely already managed by the page allocator.  Scribbling over
-those pages corrupts the internal state and likely blows up when any of
-those pages gets used.
+  $ lsblk
+  NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+  mmcblk0     179:0    0 29.2G  0 disk
+  |-mmcblk0p4 179:4    0    4G  0 part /
+  |-mmcblk0p2 179:2    0  500M  0 part /boot
+  |-mmcblk0p3 179:3    0  256M  0 part [SWAP]
+  `-mmcblk0p1 179:1    0  256M  0 part /boot/efi
 
-Reported-by: Robert Shteynfeld <robert.shteynfeld@gmail.com>
-Fixes: 2830bf6f05fb ("mm, memory_hotplug: initialize struct pages for the full memory section")
-Cc: stable@kernel.org
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  $ btrfs fi show
+     Label: none  uuid: 07892354-ddaa-4443-90ea-f76a06accaba
+     Total devices 1 FS bytes used 1.40GiB
+     devid    1 size 4.00GiB used 3.00GiB path /dev/mmcblk0p4
+
+Copy mmcblk0 to sda
+
+  $ dd if=/dev/mmcblk0 of=/dev/sda
+
+And immediately after the copy completes the change in the device
+superblock is notified which the automount scans using btrfs device scan
+and the new device sda becomes the mounted root device.
+
+  $ lsblk
+  NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+  sda           8:0    1 14.9G  0 disk
+  |-sda4        8:4    1    4G  0 part /
+  |-sda2        8:2    1  500M  0 part
+  |-sda3        8:3    1  256M  0 part
+  `-sda1        8:1    1  256M  0 part
+  mmcblk0     179:0    0 29.2G  0 disk
+  |-mmcblk0p4 179:4    0    4G  0 part
+  |-mmcblk0p2 179:2    0  500M  0 part /boot
+  |-mmcblk0p3 179:3    0  256M  0 part [SWAP]
+  `-mmcblk0p1 179:1    0  256M  0 part /boot/efi
+
+  $ btrfs fi show /
+    Label: none  uuid: 07892354-ddaa-4443-90ea-f76a06accaba
+    Total devices 1 FS bytes used 1.40GiB
+    devid    1 size 4.00GiB used 3.00GiB path /dev/sda4
+
+The bug is quite nasty that you can't either unmount /dev/sda4 or
+/dev/mmcblk0p4. And the problem does not get solved until you take sda
+out of the system on to another system to change its fsid using the
+'btrfstune -u' command.
+
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- mm/page_alloc.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ fs/btrfs/volumes.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 16c20d9e771f..923deb33bf34 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5348,18 +5348,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 			__init_single_pfn(pfn, zone, nid);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 38ed8e259e00..bd1117720fc1 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -696,6 +696,35 @@ static noinline int device_list_add(const char *path,
+ 			return -EEXIST;
  		}
- 	}
--#ifdef CONFIG_SPARSEMEM
--	/*
--	 * If the zone does not span the rest of the section then
--	 * we should at least initialize those pages. Otherwise we
--	 * could blow up on a poisoned page in some paths which depend
--	 * on full sections being initialized (e.g. memory hotplug).
--	 */
--	while (end_pfn % PAGES_PER_SECTION) {
--		__init_single_page(pfn_to_page(end_pfn), end_pfn, zone, nid);
--		end_pfn++;
--	}
--#endif
- }
  
- static void __meminit zone_init_free_lists(struct zone *zone)
++		/*
++		 * We are going to replace the device path for a given devid,
++		 * make sure it's the same device if the device is mounted
++		 */
++		if (device->bdev) {
++			struct block_device *path_bdev;
++
++			path_bdev = lookup_bdev(path);
++			if (IS_ERR(path_bdev)) {
++				mutex_unlock(&fs_devices->device_list_mutex);
++				return ERR_CAST(path_bdev);
++			}
++
++			if (device->bdev != path_bdev) {
++				bdput(path_bdev);
++				mutex_unlock(&fs_devices->device_list_mutex);
++				btrfs_warn_in_rcu(device->fs_info,
++			"duplicate device fsid:devid for %pU:%llu old:%s new:%s",
++					disk_super->fsid, devid,
++					rcu_str_deref(device->name), path);
++				return ERR_PTR(-EEXIST);
++			}
++			bdput(path_bdev);
++			btrfs_info_in_rcu(device->fs_info,
++				"device fsid %pU devid %llu moved old:%s new:%s",
++				disk_super->fsid, devid,
++				rcu_str_deref(device->name), path);
++		}
++
+ 		name = rcu_string_strdup(path, GFP_NOFS);
+ 		if (!name)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
