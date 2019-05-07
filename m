@@ -2,100 +2,141 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CDFC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B9EC04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4692087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF81F2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 14:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="gfC81bEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfEGObc (ORCPT
+        id S1726835AbfEGOb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 10:31:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56028 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbfEGObc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 10:31:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE06680D;
-        Tue,  7 May 2019 07:31:31 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ECE73F5C1;
-        Tue,  7 May 2019 07:31:29 -0700 (PDT)
-Date:   Tue, 7 May 2019 15:31:27 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     luca abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 1/6] sched/dl: Improve deadline admission control for
- asymmetric CPU capacities
-Message-ID: <20190507143125.cjfhdxngcugqmko3@queper01-lin>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-2-luca.abeni@santannapisa.it>
- <20190507134850.yreebscc3zigfmtd@queper01-lin>
- <20190507162523.6a405d48@nowhere>
+        Tue, 7 May 2019 10:31:57 -0400
+Received: from mail-eopbgr40109.outbound.protection.outlook.com ([40.107.4.109]:32686
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726340AbfEGOb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 10:31:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8p7dJeec2rydzXAsQFgVikLcIA0qKJ/k1RuN3ew8/fc=;
+ b=gfC81bEt4gHl3B//jwASDBP1MrYb1JqeKoUYaS3261hb/W9Mk7rk6fqD7JoMHs2b2WqG+TWCZsO1dEax2VzQokTn3clvLVm/23syU4J0yHd1gxVgMIOYb+KFSmOl9lTd08+ZYbOOOQ5934s9TPhexHUM9SU3snpV4H2kpVHhe5s=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB3871.eurprd05.prod.outlook.com (52.134.5.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Tue, 7 May 2019 14:31:49 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::48ff:f344:98da:6571]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::48ff:f344:98da:6571%5]) with mapi id 15.20.1856.012; Tue, 7 May 2019
+ 14:31:49 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>,
+        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>
+CC:     "stefan@agner.ch" <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 2/3] iio: stmpe-adc: Make wait_completion non
+ interruptible
+Thread-Topic: [PATCH 2/3] iio: stmpe-adc: Make wait_completion non
+ interruptible
+Thread-Index: AQHVAbgvhKEqeNeMGUGopQqxfyxbHKZZeJoAgAAWGICAAyCfgIACqXCAgABnAwA=
+Date:   Tue, 7 May 2019 14:31:49 +0000
+Message-ID: <69a00774deb5d5c8f5611855fa354cccbe92a6aa.camel@toradex.com>
+References: <20190503135725.9959-1-dev@pschenker.ch>
+         <20190503135725.9959-2-dev@pschenker.ch>
+         <0aab3e91bb9644acb430a8beba927b5a@AcuMS.aculab.com>
+         <1aa6533aa8b1bf4a01c1c5f8d6a208337be6b57e.camel@toradex.com>
+         <20190505164409.7976f43e@archlinux>
+         <4df31129d19c4128a4bbc5e0575886af@AcuMS.aculab.com>
+In-Reply-To: <4df31129d19c4128a4bbc5e0575886af@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: edff2429-5768-4af5-3c7b-08d6d2f8bdb8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0502MB3871;
+x-ms-traffictypediagnostic: VI1PR0502MB3871:
+x-microsoft-antispam-prvs: <VI1PR0502MB38716A831BBC8E868036A6C0F4310@VI1PR0502MB3871.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(39850400004)(366004)(376002)(199004)(189003)(2906002)(68736007)(36756003)(229853002)(2501003)(6512007)(7416002)(316002)(8936002)(99286004)(6486002)(3846002)(6436002)(6116002)(71200400001)(71190400001)(446003)(2616005)(476003)(478600001)(11346002)(81156014)(81166006)(256004)(14444005)(14454004)(76116006)(66446008)(64756008)(66556008)(66476007)(66946007)(91956017)(73956011)(486006)(44832011)(7736002)(66066001)(4326008)(110136005)(25786009)(6246003)(53936002)(305945005)(118296001)(6506007)(54906003)(76176011)(26005)(8676002)(86362001)(186003)(5660300002)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3871;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ESKjahfAQepahqpyGtg7Jfk7YuJwd4S55SEFeGtQ5+9dUBfkh0F6PLGUefKgxY0r7DMZzgH8poNX+xoy2NdtVK2J3TaNaoOsn7p6tn/bAwjiZxluIoCNL3nsav3r6USRAAGOdR7/NGXM/fbp//1D8xiXWafZNyj5/WTxzo90ZARcWNkRAe12w8lqfKdtyQtiu8wb4Q+dYZDtIah0zoaqIcHJotjo7Xqx8EOFKVxgPfIXzZs1UGIaChJPTFCGPPVrvXGakLhNqKS1rO6eHFO3irXNUsHfPfbUd1+M4m9IM5LaHMAH1VU6MWC4LyLc4GTl2SmQU20brjPjnNR8od1b2xDNY1OqZnHUMYhRA2nonEFiM701hOjVgDTsVCr7FXisZZ0tykFazQFmZ+lTyazusyUf1YgeYQ07UUgKIcIV21Y=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EAA6079BD1A28F43886E8BD45814DA37@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507162523.6a405d48@nowhere>
-User-Agent: NeoMutt/20171215
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: edff2429-5768-4af5-3c7b-08d6d2f8bdb8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 14:31:49.4663
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 07 May 2019 at 16:25:23 (+0200), luca abeni wrote:
-> On Tue, 7 May 2019 14:48:52 +0100
-> Quentin Perret <quentin.perret@arm.com> wrote:
-> 
-> > Hi Luca,
-> > 
-> > On Monday 06 May 2019 at 06:48:31 (+0200), Luca Abeni wrote:
-> > > diff --git a/drivers/base/arch_topology.c
-> > > b/drivers/base/arch_topology.c index edfcf8d982e4..646d6d349d53
-> > > 100644 --- a/drivers/base/arch_topology.c
-> > > +++ b/drivers/base/arch_topology.c
-> > > @@ -36,6 +36,7 @@ DEFINE_PER_CPU(unsigned long, cpu_scale) =
-> > > SCHED_CAPACITY_SCALE; 
-> > >  void topology_set_cpu_scale(unsigned int cpu, unsigned long
-> > > capacity) {
-> > > +	topology_update_cpu_capacity(cpu, per_cpu(cpu_scale, cpu),
-> > > capacity);  
-> > 
-> > Why is that one needed ? Don't you end up re-building the sched
-> > domains after this anyways ?
-> 
-> If I remember correctly, this function was called at boot time when the
-> capacities are assigned to the CPU cores.
-> 
-> I do not remember if the sched domain was re-built after this call, but
-> I admit I do not know this part of the kernel very well...
-
-Right and things moved recently in this area, see bb1fbdd3c3fd
-("sched/topology, drivers/base/arch_topology: Rebuild the sched_domain
-hierarchy when capacities change")
-
-> This achieved the effect of correctly setting up the "rd_capacity"
-> field, but I do not know if there is a better/simpler way to achieve
-> the same result :)
-
-OK, that's really an implementation detail, so no need to worry too
-much about it at the RFC stage I suppose :-)
-
-Thanks,
-Quentin
+T24gVHVlLCAyMDE5LTA1LTA3IGF0IDA4OjIzICswMDAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+
+IEZyb206IEpvbmF0aGFuIENhbWVyb24NCj4gPiBTZW50OiAwNSBNYXkgMjAxOSAxNjo0NA0KPiA+
+IE9uIEZyaSwgMyBNYXkgMjAxOSAxNTo1ODozOCArMDAwMA0KPiA+IFBoaWxpcHBlIFNjaGVua2Vy
+IDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gPiBPbiBG
+cmksIDIwMTktMDUtMDMgYXQgMTQ6MzkgKzAwMDAsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiA+
+ID4gRnJvbTogUGhpbGlwcGUgU2NoZW5rZXINCj4gPiA+ID4gPiBTZW50OiAwMyBNYXkgMjAxOSAx
+NDo1Nw0KPiA+ID4gPiA+IEluIHNvbWUgY2FzZXMsIHRoZSB3YWl0X2NvbXBsZXRpb24gZ290IGlu
+dGVycnVwdGVkLiBUaGlzIGNhdXNlZCB0aGUNCj4gPiA+ID4gPiBlcnJvci1oYW5kbGluZyB0byBt
+dXRleF91bmxvY2sgdGhlIGZ1bmN0aW9uLiBUaGUgYmVmb3JlIHR1cm5lZCBvbg0KPiA+ID4gPiA+
+IGludGVycnVwdCB0aGVuIGdvdCBjYWxsZWQgYW55d2F5LiBJbiB0aGUgSVNSIHRoZW4gY29tcGxl
+dGlvbigpDQo+ID4gPiA+ID4gd2FzIGNhbGxlZCBjYXVzaW5nIHByb2JsZW1zLg0KPiA+ID4gPiA+
+IA0KPiA+ID4gPiA+IE1ha2luZyB0aGlzIHdhaXRfY29tcGxldGlvbiBub24gaW50ZXJydXB0aWJs
+ZSBzb2x2ZXMgdGhlIHByb2JsZW0uDQo+ID4gPiA+IA0KPiA+ID4gPiBXb24ndCB0aGUgc2FtZSB0
+aGluZyBoYXBwZW4gaWYgdGhlIGludGVycnVwdCBvY2N1cnMganVzdCBhZnRlcg0KPiA+ID4gPiB0
+aGUgdGltZW91dD8NCj4gPiA+ID4gDQo+ID4gPiA+IAlEYXZpZA0KPiA+ID4gPiANCj4gPiA+ID4g
+DQo+ID4gPiA+IC0NCj4gPiA+ID4gUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
+IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsDQo+ID4gPiA+IE1LMSAxUFQsDQo+ID4g
+PiA+IFVLDQo+ID4gPiA+IFJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo+ID4gPiA+
+IA0KPiA+ID4gDQo+ID4gPiBZb3UncmUgb2YgY291cnNlIHJpZ2h0Li4uIFRoYW5rcyBmb3IgcG9p
+bnRpbmcgdGhpcyBvdXQuIEkgd2lsbCBzZW5kIGEgdjINCj4gPiA+IHdpdGggYQ0KPiA+ID4gYmV0
+dGVyIHNvbHV0aW9uIHRoZW4uDQo+ID4gPiANCj4gPiANCj4gPiBJc24ndCB0aGUgdGltZW91dCBs
+b25nIGVub3VnaCB0aGF0IGl0IHNob3VsZCBvbmx5IGhhcHBlbiBpZiB0aGUgaGFyZHdhcmUgaGFz
+DQo+ID4gYSBmYXVsdD8gSWYgdGhhdCdzIHRoZSBjYXNlLCBJIHdvdWxkbid0IHdvcnJ5IHRvbyBt
+dWNoIGFib3V0IHBvc3NpYmlsaXR5IG9mDQo+ID4gYW4gaW50ZXJydXB0IGNhdXNpbmcgY29uZnVz
+aW9uIGFzIGxvbmcgYXMgaXQgaXNuJ3QgY2F0YXN0cm9waGljLg0KPiANCj4gVGhlICdjb25mdXNp
+b24nIGlzIGxpa2VseSB0byBiZSAnY2F0YXN0cm9waGljJyB1bmxlc3MgdGhlIGNvZGUgaXMgd3Jp
+dHRlbg0KPiB0byBoYW5kbGUgaXQgcHJvcGVybHkuDQo+IA0KPiBDYW5jZWxsaW5nIGNhbGxiYWNr
+cyBpcyBoYXJkIHRvIGdldCByaWdodCBhbmQgb2Z0ZW4gbm90IGRvbmUgcHJvcGVybHkuDQo+IFRp
+bWluZyBvdXQgYW4gaW50ZXJydXB0IGlzIG11Y2ggdGhlIHNhbWUgcHJvYmxlbS4NCj4gDQo+IAlE
+YXZpZA0KDQpJIHNvcnRlZCBpdCBvdXQgbm93LCB0aGVyZSB3aGVyZSBhbHNvIHNvbWUgbW9yZSBi
+dWdzIEkgZm91bmQgYW5kIGNvcnJlY3RlZC4NCg0KQEpvbmF0aGFuOiBJIHdpbGwgc2VuZCBhIGNv
+bXBsZXRlbHkgbmV3IHNlcmllcyBvZiBwYXRjaGVzIHRoYXQgd2lsbCBpbmNsdWRlDQpwYXRjaCAz
+LzMgZnJvbSB0aGlzIHNlcmllcyBidXQgbm90IHRoZSBvbmUgeW91IGFscmVhZHkgYXBwbGllZC4g
+VGhpcyBkdWUgdG8NCmluY3JlYXNlZCBwYXRjaCBudW1iZXIgYW5kIGRpZmZlcmVudCBvcmRlci4u
+Lg0KPiANCj4gLQ0KPiBSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwg
+TW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwNCj4gVUsNCj4gUmVnaXN0cmF0aW9u
+IE5vOiAxMzk3Mzg2IChXYWxlcykNCj4gDQo=
