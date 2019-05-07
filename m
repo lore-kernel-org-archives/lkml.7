@@ -2,82 +2,159 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB681C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1239C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B687D20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17E4214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557212508;
+	bh=O7KdOdVyapD4tSCh0cvzdvPhsMRl+yh9MUrVvXsiLnw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rG2leoWwauwbWj/2dRPLpB9czxmtwCT/d/ri4DE42aWLN0hfNUwHRAfBSouoi0A1/
+	 VtXOfgz5bSIan0ev8j4is9LhscsAx30NlXeZNtG4rEV1yFhZatPbZEJPdPaXTVS3qk
+	 YAs8fmO4gnutR4UgMhyDmW8gMeRlaO/FlrzBPUIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbfEGG4k (ORCPT
+        id S1726691AbfEGHBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:56:40 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:32809 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfEGG4k (ORCPT
+        Tue, 7 May 2019 03:01:48 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36504 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfEGHBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 02:56:40 -0400
-Received: by mail-vk1-f195.google.com with SMTP id r195so3796876vke.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 23:56:39 -0700 (PDT)
+        Tue, 7 May 2019 03:01:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b18so13917053otq.3;
+        Tue, 07 May 2019 00:01:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=G9/9K0rq5nGHfHISp2XHAr4LKBOhZnBOjj4ANxEXHd8=;
-        b=QAMruxhtzDMgQWxPrJfx3Y8ip/AOCuaRZAf3x9/cr0/jQseU/Z/LSOomg52s8teX5v
-         PYr+xk5Zfzo7yjU5HC04ArfodQDuv7nYJBjuTC/nmlrNh0+lKr6GccXePeouroI7XMXx
-         zd3SJvqHeW19uynb4bBTQlH5DRdU/PJwv1+BtIq5C/7fNzkvzv+bi1FU7p1gzVo75p7Q
-         +n5fI5n15l9ZnhbcbCAAegwzDCLIlMVGoj0g69THFMqL6Tskzv3ySGB1kvsTD3lpJAUo
-         j15+pEprW6DTK8zR/EmpitO15a+vIN/OUjV2+Xpc8BPMTAz9375k2JOy5G+Qd0eSSYap
-         rQGg==
-X-Gm-Message-State: APjAAAU8xwGB+GxJmnNdT/Y62yJUu8QDYSQtIVqcP+wZ6V9nJq9O6l5x
-        z9qdSLDHFXy7VQCoG9J9clzIu0B2nOpy1m0N0Qta7w==
-X-Google-Smtp-Source: APXvYqxPX4jCpcW+866IjucNuww+AIBVfUXXNEHeuKZnq9czOWVGOvioeoeHuNfw54cRxR4EemPbUsAPfgmNtGEaw3k=
-X-Received: by 2002:a1f:c2c1:: with SMTP id s184mr6275483vkf.65.1557212198471;
- Mon, 06 May 2019 23:56:38 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=zKMbIttCgzcVVkRNu5fztyhWx+BL/3mOVoqyvi0NAEI=;
+        b=INSgcKv8O9yM65+VKqHoMOrNHbmlcEnHOVbaCQOGmt0PIZC9v+jY+T8l/YedGA5NA/
+         Tz+qZPZ6yZNqFT/CK02u6QG74NWhUgkOr+nAw/XnxufPoizP/znYNYR6UvgAoH6RSot3
+         Qtnkr2Gu+NlLSZkbT1vC0qUNTcyBWXp0alwHZ0xOETpG2m5UoJaUs5b3siE7wEY2C44A
+         /VEzhFCZ/DsDN2t1bOfBmP3N1MOOvUF/3QZSD0OfwmuF2Gfz4gE/9nbeMkakfGUF+AVn
+         KjV97vEHwb4/wwI88lcpGfze914MRqPgIEf4fZsZGDYq2o3gzCIkEq/Z+usY809PiwxL
+         fA/g==
+X-Gm-Message-State: APjAAAWjshv6yrOs7FjIStrYJZnaE7Mu+mxWsg5RK/0NvCvpYmGmH3he
+        i5ztm6LkBFBO4cALu3OnYbeUbyxpo+gnkRebga8=
+X-Google-Smtp-Source: APXvYqx5HZyzDhKKw/pMsuceYuNU8AOS/SQGy+9vmSPw9U4np+bboCTLUqSXmY0Nhp2RD3+3Fq6+UQEkP8tUjoPf56M=
+X-Received: by 2002:a05:6830:1251:: with SMTP id s17mr17144503otp.186.1557212506581;
+ Tue, 07 May 2019 00:01:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190507064844.15299-1-geert@linux-m68k.org>
-In-Reply-To: <20190507064844.15299-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 May 2019 08:56:26 +0200
-Message-ID: <CAMuHMdXC+bPCCbLKGQvV+nan_r1j+Sm-yUprDYOKHXOBzCCfTw@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.1
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
+In-Reply-To: <CAEJqkgh-eh0F0rNBChhurH0LWTLFP0DyfFzKj66p4Z2d1kM2gw@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 May 2019 09:01:34 +0200
+Message-ID: <CAJZ5v0gRWEL1shQE3im0VxiPRBYat86o=R_NVQbc3JgOX8uT6w@mail.gmail.com>
+Subject: Re: [Kernel 5.1] ACPI_DEBUG messages without CONFIG_ACPI_DEBUG being set
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 8:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v5.1[1] compared to v5.0[2].
++Erik
+
+On Tue, May 7, 2019 at 1:33 AM Gabriel C <nix.or.die@gmail.com> wrote:
 >
-> Summarized:
->   - build errors: +1/-1
->   - build warnings: +126/-105
+> Hello,
 >
-> JFYI, when comparing v5.1[1] to v5.1-rc7[3], the summaries are:
->   - build errors: +0/-1
->   - build warnings: +102/-61
-
-The warning regressions look a bit excessive to me, for a final
-v5.1 release...
-
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd/ (all 236 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/1c163f4c7b3f621efff9b28a47abb36f7378d783/ (all 236 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/37624b58542fb9f2d9a70e6ea006ef8a5f66c30b/ (all 236 configs)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> while testing kernel-5.1 I get on one of my Lenovo Laptops very
+> strange 'ACPI Debug:' messages.
+>
+> After some grepping I realized these are Debug messages from DSDT ,
+> however my kernel does
+> not have ACPI_DEBUG enabled.
+>
+> I found out the module triggering this, on this Laptop is
+> ideapad_laptop , but looking at the code
+> I cannot see what would causes that.
+>
+> Also on the same Laptop with any 5.0.X kernels I cannot see these.
+>
+>
+> ~$ grep -i ACPI_DEBUG /boot/config-5.1-fw1
+> # CONFIG_ACPI_DEBUGGER is not set
+> # CONFIG_ACPI_DEBUG is not set
+> # CONFIG_THINKPAD_ACPI_DEBUGFACILITIES is not set
+> # CONFIG_THINKPAD_ACPI_DEBUG is not set
+>
+> .. dmesg ..
+> ...
+> [   68.020812] calling  ideapad_acpi_driver_init+0x0/0x1000
+> [ideapad_laptop] @ 1322
+> [   68.026708] input: Ideapad extra buttons as
+> /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/input/input16
+> [   68.038236] ACPI Debug:  "=====QUERY_64====="
+> [   68.050232] ACPI Debug:  "=====QUERY_65====="
+> [   68.060218] ACPI Debug:  "=====QUERY_64====="
+> [   68.092216] probe of VPC2004:00 returned 1 after 71386 usecs
+> [   68.092245] initcall ideapad_acpi_driver_init+0x0/0x1000
+> [ideapad_laptop] returned 0 after 69751 usecssg
+>
+> ...
+>
+> These =====QUERY_XX===== messages are from DSDT:
+>
+> ~/acpi$ grep QUERY dsdt.dsl
+>                Debug = "=====QUERY_11====="
+>                Debug = "=====QUERY_12====="
+>                Debug = "=====QUERY_24====="
+>                Debug = "=====QUERY_25====="
+>                Debug = "=====QUERY_37====="
+>                Debug = "=====QUERY_38====="
+>                Debug = "=====QUERY_64====="
+>                Debug = "=====QUERY_65====="
+>
+> Also this is the code from DSDT for QUERY 64 and 65:
+>
+> ...
+>             Method (_Q64, 0, NotSerialized)  // _Qxx: EC Query
+>            {
+>                Debug = "=====QUERY_64====="
+>                If ((OSYS == 0x07D9))
+>                {
+>                    If (((WLEX == One) & (WLAT == One)))
+>                    {
+>                        SGOV (0x02040005, One)
+>                    }
+>                    Else
+>                    {
+>                        SGOV (0x02040005, Zero)
+>                    }
+>                }
+>            }
+>
+>            Method (_Q65, 0, NotSerialized)  // _Qxx: EC Query
+>            {
+>                Debug = "=====QUERY_65====="
+>                If ((OSYS == 0x07D9))
+>                {
+>                    If (((BTEX == One) & (BTAT == One)))
+>                    {
+>                        SGOV (0x0202000B, One)
+>                    }
+>                    Else
+>                    {
+>                        SGOV (0x0202000B, Zero)
+>                    }
+>                }
+>            }
+>
+> ...
+>
+>
+> Any idea what would cause this ?
+>
+> BR,
+>
+> Gabriel C
