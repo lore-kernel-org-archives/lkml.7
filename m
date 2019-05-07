@@ -2,132 +2,111 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E463C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED22C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0470B205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557246295;
-	bh=32zdtmSFU7gmpB48Jswp0pwOKODwXBGNxj9zkXofPE0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=cZxNBgrmenrNRrudTqX7PfdUH3+NGKkrkWdIvLKXe03FPFg/z21dEekKK9CaQaux5
-	 wnlomOJu4BJEtQqnM5xf8eAUYHPNnpwGL7h8ggJHt47pU16FEa8AYQNS1LX7huw7+p
-	 9gn01389LstotcjxJNqSmgPp/yu+6RdWocGNvjlc=
+	by mail.kernel.org (Postfix) with ESMTP id 3763E20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 16:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfEGQYy (ORCPT
+        id S1726761AbfEGQZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 12:24:54 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:38842 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEGQYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 12:24:53 -0400
-Received: by mail-qk1-f180.google.com with SMTP id a64so4666200qkg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 09:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=iSNw5fu9lUP2MWiBpedtYkAamwdAf22AYRSw8dqpkoc=;
-        b=NjJFTWJEcuSDKym1wWes+8rSRjiyMTVCtxK8R5Yo70hBVhhVNbjv0BlB3Rut6LW1uu
-         Q6yRVr5VRdkCzqk9GmwvDlCWz5aJ4Qefh/x4MN0IhPA4HlPJDu7aCPwMPt7kRHa1nkr+
-         uVVXIlPD+/RdEOCt7liyHhfpFF8bktBid26Vu3cKq7M8HjlR1krFErkcBKRob/VY5W17
-         dIUbAmHNyl7FuWZBqRN/Oo/6jphVJhjtEtk55S1/LJaQ4Mw2Fn75llrBnlElMA+lYZqt
-         DgPJwxsJ+sbTlgzZdbEcGkB3Gd2r+Ij6CJO3Uyp5gQ6JKFuXZ1vg2tTapGlgPaLfrQev
-         0wMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=iSNw5fu9lUP2MWiBpedtYkAamwdAf22AYRSw8dqpkoc=;
-        b=roxC48rsR2M+Ls1g+5qvQiyYD29Imz42bf4DcUoSMbi5ak4OSY/1/9JH1VuS2pZHmk
-         FrNtbtxikJVdlrkM6EHt6DXcEhFgeoizwAGtrTriSURx5JcZyoctDgewsTRjXarE4Rhl
-         9AClijQbb3bKsuBsHiJHcQJARnWbNieB+pjB6W48eOq9tRjGyXzVYPg2737r/RAE7XzI
-         4pyVkymtIOm/xbUA7WmapgOVLBcKI4eZItMvHniS0aYAnucWLmVfaHfPKpm6DzhtN+vs
-         ARkySd1YGkY3onJlaH0+E3tSnkfjg3ODCiy8IC+cSajg8H7nkL8HYHbdK96eRNwx3ptE
-         40QA==
-X-Gm-Message-State: APjAAAX6y5R6cUsuGMoQ7sVClFLoJ7n8BDLadYumsj1GosUw4kSX9TB/
-        GwPtT4hNnR/Q0UHImo6UKoE=
-X-Google-Smtp-Source: APXvYqwhHr/1zzAbdilCsxzM93SPTG+zJd5uRO7jrTzHIUam6NUjs6kXmHnuXACDHAkgvN83jxUx5A==
-X-Received: by 2002:a37:a394:: with SMTP id m142mr15434807qke.180.1557246292745;
-        Tue, 07 May 2019 09:24:52 -0700 (PDT)
-Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
-        by smtp.gmail.com with ESMTPSA id 7sm8892335qtx.20.2019.05.07.09.24.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 09:24:51 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:24:47 -0400
-From:   Konrad Rzeszutek Wilk <konrad@kernel.org>
-To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     konrad.wilk@oracle.com
-Subject: [GIT PULL] (swiotlb) stable/for-linus-5.2
-Message-ID: <20190507162434.GA27798@localhost.localdomain>
+        Tue, 7 May 2019 12:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfEGQZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 12:25:15 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3136205C9;
+        Tue,  7 May 2019 16:25:11 +0000 (UTC)
+Date:   Tue, 7 May 2019 12:25:10 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190507122510.0dd37cc8@gandalf.local.home>
+In-Reply-To: <20190507112513.11297412@gandalf.local.home>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
+        <20190506162915.380993f9@gandalf.local.home>
+        <CAHk-=wi5KBWUOvM94aTOPnoJ5L_aQG=vgLQ4SxxZDeQD0pF2tQ@mail.gmail.com>
+        <20190506174511.2f8b696b@gandalf.local.home>
+        <CAHk-=wj3R_s0RTJOmTBNaUPhu4fz2shNBUr4M6Ej65UYSNCs-g@mail.gmail.com>
+        <20190506210416.2489a659@oasis.local.home>
+        <CAHk-=whZwqzbu-=1r_j_cXfd=ta1q7RFCuneqBZfQQhS_P-BmQ@mail.gmail.com>
+        <20190506215353.14a8ef78@oasis.local.home>
+        <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
+        <20190506225819.11756974@oasis.local.home>
+        <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
+        <20190506232158.13c9123b@oasis.local.home>
+        <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
+        <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
+        <20190507111227.1d4268d7@gandalf.local.home>
+        <20190507112513.11297412@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 7 May 2019 11:25:13 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Note, if you really are adamant on your solution, I can write them up,
+> test them, and get them out for this merge window. I really want a
+> solution for the int3 emulate calls, as there is a real bug here that
+> they fix.
 
-Hi Linus,
+Thinking about this more, as my real motivation for getting this in
+(for this merge window), is to fix the live kernel patching bug. We
+only need to implement int3 call emulation for x86_64. We don't need to
+implement it for 32bit. The ftrace code can continue to just make it a
+nop. Live kernel patching does not support x86_32, and the only issue
+that happens on 32bit when we do a nop when converting a call to call,
+is that we might lose a trace. But that's been the case since this
+started, and not a critical issue. But with live kernel patching,
+losing a trace could crash the machine.
 
-Please git pull the following branch:
+As I need to mark all this for stable, I'm going to look into just
+implementing this for x86_64. Then we can continue the debate about
+how to do this for x86_32 if we care about loss traces. But we don't
+need to commit to anything yet.
 
-
-git pull git://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git stable/for-linus-5.2
-
-which has cleanups in the swiotlb code and extra debugfs knobs to help with the field
-diagnostics.
-
-Thank you!
-
-Christoph Hellwig (4):
-      swiotlb-xen: make instances match their method names
-      swiotlb-xen: use ->map_page to implement ->map_sg
-      swiotlb-xen: simplify the DMA sync method implementations
-      swiotlb-xen: ensure we have a single callsite for xen_dma_map_page
-
-Dongli Zhang (2):
-      swiotlb: dump used and total slots when swiotlb buffer is full
-      swiotlb: save io_tlb_used to local variable before leaving critical section
-
-
- drivers/xen/swiotlb-xen.c | 196 ++++++++++++++--------------------------------
- kernel/dma/swiotlb.c      |   6 +-
- 2 files changed, 64 insertions(+), 138 deletions(-)
-
---cmJC7u66zC7hs+87
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJc0bFJAAoJEFKlDoTx2wm/rjkQAIA42+eXI4nVD/i+qetJbNxF
-XmUUNt+WjKuUTvlllQGfiqN5Za9+Qc5vQAPOxXsi6UYxsYkuJEiOMsOpGsMjF3rd
-v7/i5SuDOdhLnVyoQZZOoIQ2sKmYmNXFVr0eT9Va/jVnphC+06EGdgQd+KTLYVTv
-KZUpIvgXLo4zZGqTuYKtBE6CmT1DKfZlYd5wCz7Z410FLvbKItv/R5Jh00dzlEVy
-YaukyLLJ9tKVqIvKDVbhj1l5rbh+BFuYTHriIl8/KVvPE6Z+Ku0Cz7chKAhB8RRS
-BoQfRtqK02kEEryPK9yNAdpUhSWb6v6yw8kXdabs+Bz1OTE7XrmFdk0aVVcWmoPz
-Dv4lHrO0Lp6OriOkJY2IlTGaiBGQo3Qq1/31gDkazMoBBBHcUidTOy8AO3tr3QuE
-uljmtKCzDSd61rhUFKnGzkZNaQ2QnMUjUZylUFq6CbIwaoRagUPJBUpqeKz1emJy
-SY+38LNdtaTwPc5FVirtoz0sa2eG56L+wX8XGR5ATvqIk+ACR3/VANMW6kLR2DG5
-Lj3fiUzOl8X5fksC6SaAu3/NCWw/HsSzh1i7qVxiXKgZHHY+Z9NqAOWQAqFXx4ob
-RxAUVe2jxnDzErRpO5+52a8B+px5b1ijInXBaK9uAH/s3RywU9xT/LK9lFvtxBl1
-e7TDyyIMZyXvhmBhnv2O
-=wKk8
------END PGP SIGNATURE-----
-
---cmJC7u66zC7hs+87--
+-- Steve
