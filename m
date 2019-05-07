@@ -2,117 +2,104 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC6AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F007C04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB8F20835
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557195542;
-	bh=X+Tyc3TT4jJIA/SmSdj7OPXzHKvFdhbPzEF49RBNtSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AJm9TN4pTrcXv8aGfNzpORHUo0J44ccRvH1OkR+PgBjiH1gxpaqY4ykOa+4TXC8PB
-	 6j8Oui9a0k6A14vuQf/Qomzd4MxJ0gWp+IYj3v8InP73DkKQiVQGqoOis9eDImrJCv
-	 /PjAj4UxUJ6so9deXGRDXkfMGCcficE3tpRDb36I=
+	by mail.kernel.org (Postfix) with ESMTP id 29B54206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 02:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aXinLTgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfEGCTB (ORCPT
+        id S1726362AbfEGCWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 22:19:01 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57466 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEGCTB (ORCPT
+        Mon, 6 May 2019 22:22:11 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40112 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfEGCWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 22:19:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HJ6HqMU1sPHXWvDxvJW6MISYuiPP8r+D0++57SCHFmI=; b=DUSD2I6furej502T+29FUF5s9
-        Ir1MXxFDaIAYjGXu+mv2qZKFhrjjdbNYAzamOBTMyVx+dtcF9Em4yCq/cs+TsitOwz2F4xttFh1gA
-        Rw4TL4qm6gewD73gJL2Rc80kPtWf/dSRi5P/pmY585tILEZ5/kQaUm13kBKEl0Tpuqo3s=;
-Received: from kd111239185057.au-net.ne.jp ([111.239.185.57] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hNph3-0003Pa-85; Tue, 07 May 2019 02:18:57 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 878CA44000C; Tue,  7 May 2019 03:18:53 +0100 (BST)
-Date:   Tue, 7 May 2019 11:18:53 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] spi updates for v5.2
-Message-ID: <20190507021853.GY14916@sirena.org.uk>
-References: <20190506143301.GU14916@sirena.org.uk>
- <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
+        Mon, 6 May 2019 22:22:10 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k24so134754qtq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 19:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jK6Bics0fYV05jP/8TC1wHKksibXz+N1xS03DvO5n0M=;
+        b=aXinLTgKPNcXcliZibkQr+Tp4wlzRVm+grI6Y9DxEMpfTyWa6gXVIri7+kkOUjiDhA
+         WNTk8Fb58VDaeuMTDF3pwoFNuYLTzHUkwkwoQvD+sQUhk5Deyf6vswkgb8z0QeUQwcPx
+         KKRH4NDWHuBU0fm6SjckVbXZMOzylyftUdtR7Bjq2dupX2ZGvMcL50CMO74hOAh19nem
+         KAKiWU1rxNlAE27s7ZUrosQe0J7S5RYBroW8wlCyYzQ0I0xBWLrl0Cq3OL0y1yyvpUBA
+         9u2tOFYLhCchnKUIbR7w39gUYNK1h1s24rxfHNt6Eaj0Z7m3TO4JUGzEVyRRRfLjf2mk
+         8iXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jK6Bics0fYV05jP/8TC1wHKksibXz+N1xS03DvO5n0M=;
+        b=CPut2LwZArFb3xZ/T2TtezSj+mVKhAP8ZoTljsDuevvhfdA7CFcsg7bwkPsz0LuDgA
+         j1RcUJiWGlaB2KbjA3sSVMpPEcFe//VTKBMZtolywDKs0nc6fp+jNBu3OoIUOE3G0M8D
+         yRyBUG1vmS7h1egDEqacx5gB/w7nC/mVJhMrj5I9sXrsHb8Fpu+jaE+rGp5Sz+VRFieJ
+         cyve3niIwfa6zPhQbViOLe/FPv1+BvmKpNCXmSqakOdid33j4VlhricUufc6wsCiBTmB
+         Wbt9TvWme5dZuuzqBSZRoVgKEgXAMvJ/xlkK/JaxbqCVpkQtifBDbQkIwQbtqbHZmxpC
+         oolQ==
+X-Gm-Message-State: APjAAAXtAHF+qGZB7b0DoGxGxjgShdQi/9pgha7aNqfFpSIYMluMsDUm
+        IL73x1fW6huipKWx3b22yCG0HzDEJiqE6+AQ91fyoome/OYCRVDF
+X-Google-Smtp-Source: APXvYqx8Fnjl3bYZT6WDWHo/fsPeg+oWFyOgvvjtSHCy2S+lcQcUXt58CIY3af2nT1J7bxxAcWQEg+LWhpvwKtBuKjQ=
+X-Received: by 2002:a0c:af81:: with SMTP id s1mr24155119qvc.49.1557195729668;
+ Mon, 06 May 2019 19:22:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iwX7oKFvAj2SwWc7"
-Content-Disposition: inline
-In-Reply-To: <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190424101934.51535-1-duyuyang@gmail.com> <20190424101934.51535-20-duyuyang@gmail.com>
+ <20190425193247.GU12232@hirez.programming.kicks-ass.net> <CAHttsrY4jK2cayBE8zNCSJKDAkzLiBb40GVfQHpJi2YK1nEZaQ@mail.gmail.com>
+ <20190430121148.GV2623@hirez.programming.kicks-ass.net> <20190507014712.GA14921@lerouge>
+In-Reply-To: <20190507014712.GA14921@lerouge>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Tue, 7 May 2019 10:21:58 +0800
+Message-ID: <CAHttsra_jACOSZpwnp0KtuAOFWtXt5AHf+RVWMvEbxWbieVw0w@mail.gmail.com>
+Subject: Re: [PATCH 19/28] locking/lockdep: Optimize irq usage check when
+ marking lock usage bit
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, will.deacon@arm.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
+        tglx@linutronix.de, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 7 May 2019 at 09:47, Frederic Weisbecker <frederic@kernel.org> wrote:
+> > > But for usage checking, which vectors are does not really matter. So,
+> > > the current size of the arrays and bitmaps are good enough. Right?
+> >
+> > Frederic? My understanding was that he really was going to split the
+> > whole thing. The moment you allow masking individual soft vectors, you
+> > get per-vector dependency chains.
+>
+> Right, so in my patchset there is indeed individual soft vectors masked
+> so we indeed need per vector checks. For example a lock taken in HRTIMER
+> softirq shouldn't be a problem if it is concurrently taken while BLOCK softirq
+> is enabled. And for that we expand the usage_mask so that the 4 bits currently
+> used for general SOFTIRQ are now multiplied by NR_SOFTIRQ (10) because we need to
+> track the USED and ENABLED_IN bits for each of them.
+>
+> The end result is:
+>
+> 4 hard irq bits + 4 * 10 softirq bits + LOCK_USED bit = 45 bits.
+>
+> Not sure that answers the question as I'm a bit lost in the debate...
 
---iwX7oKFvAj2SwWc7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It was really I was lost: I didn't realize the enabling (or disabling)
+is going to be fine-grained as well until I read this changelog:
 
-On Mon, May 06, 2019 at 12:01:44PM -0700, Linus Torvalds wrote:
-> Mark,
->  gmail once again hates your emails. Your email ends up as spam, due to
->=20
->     dmarc=3Dfail (p=3DNONE sp=3DNONE dis=3DNONE) header.from=3Dkernel.org
+Disabling the softirqs is currently an all-or-nothing operation: either
+all softirqs are enabled or none of them. However we plan to introduce a
+per vector granularity of this ability to improve latency response and
+make each softirq vector interruptible by the others.
 
-That looks like it's a fail on validation of the kernel.org bit of
-things which I have no control over and which purposely doesn't
-advertise DKIM stuff in the hope that people will actually be able to
-send mail from non-kernel.org mail servers.  I'm really unsure why
-that's failing at all, there's no policy for kernel.org to fail.
-
-> but it has a DKIM signature for sirena.org.uk:
->=20
->     DKIM-Signature: v=3D1; a=3Drsa-sha256; q=3Ddns/txt; c=3Drelaxed/relax=
-ed;
-> d=3Dsirena.org.uk; ...
-
-which should match the envelope sender.
-
-As far as I can tell Google is going to be unhappy no matter what unless
-I use their services - if there's DKIM records it's not going to like
-that the from is from kernel.org and if I don't have DKIM records then
-it's not going to like that either and I'll be more vulnerable to the
-blacklists that try to extort money out of people for permanent
-delisting.
-
-Possibly it's not actually anything to do with the DKIM and it's just
-upset that I'm travelling and so the mail was injected from a mobile
-broadband IP in Japan which doesn't match up with the .uk domain.
-
---iwX7oKFvAj2SwWc7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzQ6woACgkQJNaLcl1U
-h9CVoQf/VViEns1FF+b1XU9wV7gcbUx9zYS/VA3JSRel7Z5EwW95p98WYkw8RG3k
-BKLav1zV87dO+uCB2jhW9QZX6M1HC9k09MR3W5hlRPmh9WEYfNdTmhBxAad7MFje
-XpYC2lrYAoBeOx4Lf0GwsjbLERG4D4t9zc424sazqj6spnnwIMlgw9LlU8oYpuqJ
-CdyWWs3tTPrMhfMo7KyN52/X0xAxuvdNn/ENDgEOlUC49msa/+mAnsgsOKRL4kAd
-A7omKODjAzUUXDxPAkjkmtvdtZc5SwdvJ4OJ57OcKtOZkQp6Qjjo6DA6cG3V6Hby
-dt2hGyITxKXWX5i1WsjCtLuHrBzWIQ==
-=AaKX
------END PGP SIGNATURE-----
-
---iwX7oKFvAj2SwWc7--
+Sorry for the confusion I made :)
