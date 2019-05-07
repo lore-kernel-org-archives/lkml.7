@@ -2,124 +2,154 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9DDC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C29C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D97F20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557259838;
-	bh=oTBgKL5aXOPYEaA0QsHuiiXhVpGLNi15rpzcfvlc1DU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xVSFMDVkpMyqikjCB+/B/nF8T7dYyt7E/58T7OtFk6Y7wM0ZpP77WQAXex0lCSq42
-	 Bflnh10B6+HaFABcUTG5XGeyp0phF9kaeMRd7gBe89gMSy+JIYXrSSXaAFVemZbFNp
-	 oZ6qBCF5NOdiiAYdxg6MTdsfP2VngyWEVUFC0zYM=
+	by mail.kernel.org (Postfix) with ESMTP id B427E20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 20:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfEGUKh (ORCPT
+        id S1726824AbfEGULT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 16:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 16:11:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60918 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfEGUKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 16:10:37 -0400
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726225AbfEGULT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 16:11:19 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FF0F206A3;
-        Tue,  7 May 2019 20:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557259836;
-        bh=oTBgKL5aXOPYEaA0QsHuiiXhVpGLNi15rpzcfvlc1DU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VZjgbpZPTl/MncgPQqKajohmdLIAXZzdzcb/Bhhm/oAmiUiWlmtVoQxca7vspL/yU
-         HAhS97V8BHdCSYRNeyXDgooemuMlOT29lwnuXoFZ2Lmv1i3VkgmsBpmUB0nbRgBixv
-         uZajpFvPyz2ZQJHh9Yo4LwloBjWGpW8991VRkrFA=
-Received: by mail-ed1-f50.google.com with SMTP id m4so19903423edd.8;
-        Tue, 07 May 2019 13:10:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAWmbLDKUsDErv5oeTSC60iE/lUicQHCafwmXJDUCc0oXzwSS1Mz
-        XsSrLIXz/m53Atchn1MufB66If7XahpOiXqRRUw=
-X-Google-Smtp-Source: APXvYqyiCB9JXQ0wLTLu8EE9iNvVNOx/KZdH3UB/pccMW07rIEOkU5//tddBxsd+La7b72Op9PI0/zra1uHwU6biSAo=
-X-Received: by 2002:a17:906:4c59:: with SMTP id d25mr14287057ejw.195.1557259834620;
- Tue, 07 May 2019 13:10:34 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E1B083F3C;
+        Tue,  7 May 2019 20:11:19 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D73B717B90;
+        Tue,  7 May 2019 20:11:17 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] AFS fixes and development
 MIME-Version: 1.0
-References: <20190507194313.1618-1-mdf@kernel.org>
-In-Reply-To: <20190507194313.1618-1-mdf@kernel.org>
-From:   Alan Tull <atull@kernel.org>
-Date:   Tue, 7 May 2019 15:09:57 -0500
-X-Gmail-Original-Message-ID: <CANk1AXTgzAAH+c6oNe-ALZ5vHhUCcdhWYYAs9mbdYSB+bPabJQ@mail.gmail.com>
-Message-ID: <CANk1AXTgzAAH+c6oNe-ALZ5vHhUCcdhWYYAs9mbdYSB+bPabJQ@mail.gmail.com>
-Subject: Re: [PATCH v2] fpga: zynqmp-fpga: Correctly handle error pointer
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28467.1557259876.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Tue, 07 May 2019 21:11:17 +0100
+Message-ID: <28470.1557259877@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 07 May 2019 20:11:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 2:43 PM Moritz Fischer <mdf@kernel.org> wrote:
->
-> Fixes the following static checker errors:
->
-> drivers/fpga/zynqmp-fpga.c:50 zynqmp_fpga_ops_write()
-> error: 'eemi_ops' dereferencing possible ERR_PTR()
->
-> drivers/fpga/zynqmp-fpga.c:84 zynqmp_fpga_ops_state()
-> error: 'eemi_ops' dereferencing possible ERR_PTR()
->
-> Note: This does not handle the EPROBE_DEFER value in a
->       special manner.
->
-> Fixes commit c09f7471127e ("fpga manager: Adding FPGA Manager support for
-> Xilinx zynqmp")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Hi Linus,
 
-Acked-by: Alan Tull <atull@kernel.org>
+The following are a set of fix and development patches for AFS for 5.2.  To
+summarise:
 
-Thanks!
-Alan
+ (1) Fix the AFS file locking so that sqlite can run on an AFS mount and
+     also so that firefox and gnome can use a homedir that's mounted
+     through AFS.
 
-> ---
->
-> Changes from v1:
-> - Address Alan's feedback regarding handling both occurences.
->
-> ---
->  drivers/fpga/zynqmp-fpga.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c
-> index f7cbaadf49ab..b8a88d21d038 100644
-> --- a/drivers/fpga/zynqmp-fpga.c
-> +++ b/drivers/fpga/zynqmp-fpga.c
-> @@ -47,7 +47,7 @@ static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
->         char *kbuf;
->         int ret;
->
-> -       if (!eemi_ops || !eemi_ops->fpga_load)
-> +       if (IS_ERR_OR_NULL(eemi_ops) || !eemi_ops->fpga_load)
->                 return -ENXIO;
->
->         priv = mgr->priv;
-> @@ -81,7 +81,7 @@ static enum fpga_mgr_states zynqmp_fpga_ops_state(struct fpga_manager *mgr)
->         const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
->         u32 status;
->
-> -       if (!eemi_ops || !eemi_ops->fpga_get_status)
-> +       if (IS_ERR_OR_NULL(eemi_ops) || !eemi_ops->fpga_get_status)
->                 return FPGA_MGR_STATE_UNKNOWN;
->
->         eemi_ops->fpga_get_status(&status);
-> --
-> 2.21.0
->
+     This required emulation of fine-grained locking when the server will
+     only support whole-file locks and no upgrade/downgrade.  Four modes
+     are provided, settable by mount parameter:
+
+     "flock=local" - No reference to the server
+
+     "flock=openafs" - Fine-grained locks are local-only, whole-file locks
+     require sufficient server locks
+
+     "flock=strict" - All locks require sufficient server locks
+
+     "flock=write" - Always get an exclusive server lock
+
+     If the volume is a read-only or backup volume, then flock=local for
+     that volume.
+
+ (2) Log extra information for a couple of cases where the client mucks up
+     somehow: AFS vnode with undefined type and dir check failure - in both
+     cases we seem to end up with unfilled data, but the issues happen
+     infrequently and are difficult to reproduce at will.
+
+ (3) Implement silly rename for unlink() and rename().
+
+ (4) Set i_blocks so that du can get some information about usage.
+
+ (5) Fix xattr handlers to return the right amount of data and to not
+     overflow buffers.
+
+ (6) Implement getting/setting raw AFS and YFS ACLs as xattrs.
+
+Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+The following changes since commit cd8dead0c39457e58ec1d36db93aedca811d48f1:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net (2019-04-24 16:18:59 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-next-20190507
+
+for you to fetch changes up to f5e4546347bc847be30b3cf904db5fc874b3c5dc:
+
+  afs: Implement YFS ACL setting (2019-05-07 16:48:44 +0100)
+
+----------------------------------------------------------------
+AFS Development
+
+----------------------------------------------------------------
+David Howells (17):
+      afs: Split wait from afs_make_call()
+      afs: Calculate lock extend timer from set/extend reply reception
+      afs: Fix AFS file locking to allow fine grained locks
+      afs: Further fix file locking
+      afs: Add file locking tracepoints
+      afs: Improve dir check failure reports
+      afs: Handle lock rpc ops failing on a file that got deleted
+      afs: Add directory reload tracepoint
+      afs: Implement sillyrename for unlink and rename
+      afs: Add more tracepoints
+      afs: Provide mount-time configurable byte-range file locking emulation
+      afs: Log more information for "kAFS: AFS vnode with undefined type\n"
+      afs: Fix the afs.cell and afs.volume xattr handlers
+      afs: Fix getting the afs.fid xattr
+      afs: Get an AFS3 ACL as an xattr
+      afs: Get YFS ACLs and information through xattrs
+      afs: Implement YFS ACL setting
+
+Joe Gorse (1):
+      afs: implement acl setting
+
+Marc Dionne (1):
+      afs: Calculate i_blocks based on file size
+
+ fs/afs/Makefile            |   1 +
+ fs/afs/afs_fs.h            |   2 +
+ fs/afs/dir.c               | 167 ++++++++++--
+ fs/afs/dir_silly.c         | 239 ++++++++++++++++++
+ fs/afs/flock.c             | 616 ++++++++++++++++++++++++++++-----------------
+ fs/afs/fs_probe.c          |  13 +-
+ fs/afs/fsclient.c          | 277 +++++++++++++++++---
+ fs/afs/inode.c             |  43 +++-
+ fs/afs/internal.h          |  64 ++++-
+ fs/afs/protocol_yfs.h      |   6 +-
+ fs/afs/rxrpc.c             |  33 ++-
+ fs/afs/super.c             |  34 ++-
+ fs/afs/vl_probe.c          |  14 +-
+ fs/afs/vlclient.c          |  26 +-
+ fs/afs/xattr.c             | 270 +++++++++++++++++++-
+ fs/afs/yfsclient.c         | 329 +++++++++++++++++++++---
+ include/linux/fs.h         |   1 +
+ include/trace/events/afs.h | 385 +++++++++++++++++++++++++++-
+ 18 files changed, 2142 insertions(+), 378 deletions(-)
+ create mode 100644 fs/afs/dir_silly.c
