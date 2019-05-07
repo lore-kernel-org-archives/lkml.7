@@ -2,139 +2,99 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF9BC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957D3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B775620989
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VzvW/Z1v"
+	by mail.kernel.org (Postfix) with ESMTP id 710F520989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 07:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfEGHto (ORCPT
+        id S1727016AbfEGHus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 03:49:44 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7234 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfEGHto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 03:49:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd1389e0002>; Tue, 07 May 2019 00:49:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 00:49:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 00:49:43 -0700
-Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 07:49:36 +0000
-Subject: Re: [PATCH V5 04/16] PCI: dwc: Perform dbi regs write lock towards
- the end
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-5-vidyas@nvidia.com> <20190503111303.GD32400@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <2544621a-4c88-3f3e-786c-7ee8103e132d@nvidia.com>
-Date:   Tue, 7 May 2019 13:19:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 03:50:48 -0400
+Received: from shell.v3.sk ([90.176.6.54]:34514 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbfEGHus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 03:50:48 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 351B5103E1A;
+        Tue,  7 May 2019 09:50:44 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id nohfolaQftHQ; Tue,  7 May 2019 09:50:39 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 9D22B103E16;
+        Tue,  7 May 2019 09:50:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ytnwLJcCxEiL; Tue,  7 May 2019 09:50:37 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 73CFA103D8C;
+        Tue,  7 May 2019 09:50:37 +0200 (CEST)
+Message-ID: <a99e0316d831dcf0c81060fb977f7147704b6742.camel@v3.sk>
+Subject: Re: [PATCH -next] x86: olpc: fix section mismatch warning
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Date:   Tue, 07 May 2019 09:50:35 +0200
+In-Reply-To: <CAL_JsqLawPdSa-c_a7EE_uyu2Oc=xvJKf3NgcTywcm6AY0CQ9w@mail.gmail.com>
+References: <76cbb7d3-bb91-4900-0275-a9b09fd7c77b@infradead.org>
+         <CAL_JsqLawPdSa-c_a7EE_uyu2Oc=xvJKf3NgcTywcm6AY0CQ9w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20190503111303.GD32400@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557215390; bh=7aKDP0PrR8UIUscgN8AluGENbezYgudBe8R0F7tHAOo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=VzvW/Z1vIyC82jZseAoID7gNZrMmCKK54TotulhenXUaOPM25Fgkyu8/t7GyDCArJ
-         pHnYW8VMh/3Pif4M8EucT6ODyFN50p4tsXm+gyfL1U2gtH6vWczZx0ZvX7wCXgXz9t
-         B6cfutJkFWW0EF5gDPAhELjdZNu2+IpwUtp9fRIHrWAy3PlVYr0YcxCvjH1aD+g+zl
-         aFTIUDio1gL8KpJXFg8EJTSHpO/HhCGHVkIjBw3OwHUhcWyjPb/fNw5yFGy1zGbc2o
-         0A0s1VHTiZdw/B09xqEke0nlRECDlPXV4BId0zvtAGtkJWfWYUNK8hb7V3AfL95Gic
-         PKKKgGA8PnVbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/2019 4:43 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:49:52AM +0530, Vidya Sagar wrote:
->> Remove multiple write enable and disable sequences of dbi registers as
->> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
->> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
->> register in config space to take place. Hence disabling write permission
->> only towards the end.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * None
->>
->> Changes since [v1]:
->> * None
->>
->>   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index 36fd3f5b48f6..e5e3571dd2fe 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -654,7 +654,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   	val &= 0xffff00ff;
->>   	val |= 0x00000100;
->>   	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
->> -	dw_pcie_dbi_ro_wr_dis(pci);
->>   
->>   	/* Setup bus numbers */
->>   	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
->> @@ -686,8 +685,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   
->>   	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
->>   
->> -	/* Enable write permission for the DBI read-only register */
->> -	dw_pcie_dbi_ro_wr_en(pci);
->>   	/* Program correct class for RC */
->>   	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
->>   	/* Better disable write permission right after the update */
+On Mon, 2019-05-06 at 16:06 -0500, Rob Herring wrote:
+> +Lubomir
 > 
-> Perhaps make this explicit by moving the write enable call to the
-> beginning of the function and the write disable call to the end?
+> On Mon, May 6, 2019 at 2:31 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> > 
+> > Fix section mismatch warning:
+> > 
+> > WARNING: vmlinux.o(.text+0x36e00): Section mismatch in reference from the function olpc_dt_compatible_match() to the function .init.text:olpc_dt_getproperty()
+> > The function olpc_dt_compatible_match() references
+> > the function __init olpc_dt_getproperty().
+> > This is often because olpc_dt_compatible_match lacks a __init
+> > annotation or the annotation of olpc_dt_getproperty is wrong.
+> > 
+> > All calls to olpc_dt_compatible_match() are from __init functions,
+> > so it can be marked __init also.
+> > 
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: x86@kernel.org
+> > Cc: Rob Herring <robh+dt@kernel.org>
 > 
-> Currently it's pretty difficult to see where it's being disabled. Also,
-> that would make it more resilient against instantiations that require a
-> different register to be programmed with writes enabled.
-Agree. I'll move enabling write to beginning of this function and disabling
-to the end in the next patch series.
+> Fixes: a7a9bacb9a32 ("x86/platform/olpc: Use a correct version when
+> making up a battery node")
+> Acked-by: Rob Herring <robh@kernel.org>
 
-> 
-> Thierry
-> 
+Thanks for this. Which tree does this apply to? I can't see the patch
+that introduce the problem in x86's for-next? I've a mostly equivalent
+patch lined up with an intent to send it over to x86 once the faulty
+commit reaches it:
+
+https://lists.01.org/pipermail/kbuild-all/2019-April/060269.html
+
+In any case;
+
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+
+> -int olpc_dt_compatible_match(phandle node, const char *compat)
+> +int __init olpc_dt_compatible_match(phandle node, const char *compat)
+
+My patch also marks olpc_dt_compatible_match() static. It should still
+be done if this one ends up being applied.
+
+Lubo
 
