@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89446C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80599C04AAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434F62087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4902E20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208775;
-	bh=wl5TuaET9VOElNIB4pAQ3YmM6xzvebkpLmf1Sbkd5Do=;
+	s=default; t=1557208786;
+	bh=GWtj5sn6eGmzf83hUA+j2TSsuO+I8LbeQZWZRL+aPgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tBEZiMgDd1vPLB0vdAE3ciNA7HVCobPiRzqzJ24lVrlsLPR8NQMLjqVEWDznAfjzJ
-	 DqOF3ApYuzHishIIy1IyG273sBLUwy0nkTbm3IRyzzUaY6I0d2bgFiuyzcEK0NTBhM
-	 /UIPr4nOiJrS2f56fhbK0EUTqIXx4Dnw2+WCjR7E=
+	b=Vz3sZf/IKTYgKQwWXmREEzZ2Dcim+4C8ZXRG9gnkzhlaETo9YH9XbCgzV5LPdFSqP
+	 wF7AnRXEVoM2leE4AYp7vjo2GAqKoHaN6syyH3i8jyIk4zMXLkEWRacy4T48PlXMkv
+	 Cs3pimy4Yq1Ksaj7O42+3PnLZ/NvQF+VSSL7/ZhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfEGF7d (ORCPT
+        id S1728147AbfEGFgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:59:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbfEGFgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:45 -0400
+        id S1727570AbfEGFgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C3520B7C;
-        Tue,  7 May 2019 05:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6569D20C01;
+        Tue,  7 May 2019 05:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207405;
-        bh=wl5TuaET9VOElNIB4pAQ3YmM6xzvebkpLmf1Sbkd5Do=;
+        s=default; t=1557207398;
+        bh=GWtj5sn6eGmzf83hUA+j2TSsuO+I8LbeQZWZRL+aPgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VfTMrXl0iMWNausytItP2gOUzpu92/mU3l1JgyFrNJH01v6mRspLjZI2H3JHiAiu5
-         Vf4nE/978WV4t0piaZNi/pigMF1uzBSuk1mxYz9SFcG5W5AtcdAKyy0suIJd63CoO0
-         Bkb7uGj8Fh26dIVknEYc0AQV7o835DtM1U9Ccgyg=
+        b=Ex2zNh4ppLvvTVYZdwuh1LE8C59iz/Y2i3uFWmbZNU+wBfP3oXr7C0XDTCQB8tP4S
+         tY3avQW+wOpRIH4ARWw4mLzsQ1Wp0MdPMqFeHT5bluz1YWFE80NhOLEHpqG3fCDJf6
+         quF4hOc/A5fAvvaCKStnuDGdli5tdB7p8EUgo3To=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/81] qede: fix write to free'd pointer error and double free of ptp
-Date:   Tue,  7 May 2019 01:34:57 -0400
-Message-Id: <20190507053554.30848-26-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/81] clocksource/drivers/oxnas: Fix OX820 compatible
+Date:   Tue,  7 May 2019 01:34:53 -0400
+Message-Id: <20190507053554.30848-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -59,53 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 1dc2b3d65523780ed1972d446c76e62e13f3e8f5 ]
+[ Upstream commit fbc87aa0f7c429999dc31f1bac3b2615008cac32 ]
 
-The err2 error return path calls qede_ptp_disable that cleans up
-on an error and frees ptp. After this, the free'd ptp is dereferenced
-when ptp->clock is set to NULL and the code falls-through to error
-path err1 that frees ptp again.
+The OX820 compatible is wrong is the driver, fix it.
 
-Fix this by calling qede_ptp_disable and exiting via an error
-return path that does not set ptp->clock or kfree ptp.
-
-Addresses-Coverity: ("Write to pointer after free")
-Fixes: 035744975aec ("qede: Add support for PTP resource locking.")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
+Reported-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede_ptp.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/clocksource/timer-oxnas-rps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-index 013ff567283c..5e574c3b625e 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-@@ -490,18 +490,17 @@ int qede_ptp_enable(struct qede_dev *edev, bool init_tc)
- 
- 	ptp->clock = ptp_clock_register(&ptp->clock_info, &edev->pdev->dev);
- 	if (IS_ERR(ptp->clock)) {
--		rc = -EINVAL;
- 		DP_ERR(edev, "PTP clock registration failed\n");
-+		qede_ptp_disable(edev);
-+		rc = -EINVAL;
- 		goto err2;
- 	}
- 
- 	return 0;
- 
--err2:
--	qede_ptp_disable(edev);
--	ptp->clock = NULL;
- err1:
- 	kfree(ptp);
-+err2:
- 	edev->ptp = NULL;
- 
- 	return rc;
+diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
+index eed6feff8b5f..30c6f4ce672b 100644
+--- a/drivers/clocksource/timer-oxnas-rps.c
++++ b/drivers/clocksource/timer-oxnas-rps.c
+@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
+ TIMER_OF_DECLARE(ox810se_rps,
+ 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
+ TIMER_OF_DECLARE(ox820_rps,
+-		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
++		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
 -- 
 2.20.1
 
