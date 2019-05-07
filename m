@@ -2,164 +2,182 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4CFC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AE4C04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7353520C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C6121479
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OWYcMWvJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X+FkTbzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfEGJ0a (ORCPT
+        id S1726789AbfEGJ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:26:30 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:12219 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfEGJ0a (ORCPT
+        Tue, 7 May 2019 05:28:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50762 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfEGJ2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:26:30 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd14f210000>; Tue, 07 May 2019 02:25:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 02:26:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 May 2019 02:26:27 -0700
-Received: from [10.25.73.250] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 09:26:22 +0000
-Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree support
- for T194
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-11-vidyas@nvidia.com> <20190503111923.GE32400@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <af37a21a-a14e-70c0-8687-de2c29e2d99b@nvidia.com>
-Date:   Tue, 7 May 2019 14:56:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 05:28:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=K74zIJWVTADuSIeC0XGT8F72POWkdJPeuuL+utrmqlI=; b=X+FkTbzUvH17w4p9cdF0zY8Lj
+        z6mvwSURsgoU9jZNM7JsIZkBBkQG+d+bLW17Dp4Yp9sQg+zPplRVE8UIxiC1ILSqiEGILP19Hx7M8
+        P+0mCwuZ7ldUxusHH2FqbBQ1crOSmnAteH6lVo+sMIdAbCS9N+QhsNjuWxRXM5Vi4mT31Fxbgk3G2
+        7+HWX/nyUSdgFlIdYdwc6c84w7qsgHu8aFyj/mTQws57Wn52FNW6WZ0JdacRQ+jGxPyY3nZxQcERn
+        ysnUZztpngc6ZTNpHwFbHjVCxUvuYok1HGJ2n1qNas+WlKwXJyb8qZ0LA4CT2FAzJ5ZghGYrgnRix
+        nMIDyk9hA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hNwNo-00016k-Li; Tue, 07 May 2019 09:27:32 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1BF2A2023ADB7; Tue,  7 May 2019 11:27:31 +0200 (CEST)
+Date:   Tue, 7 May 2019 11:27:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190507092731.GH2650@hirez.programming.kicks-ass.net>
+References: <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+ <20190502185225.0cdfc8bc@gandalf.local.home>
+ <20190502193129.664c5b2e@gandalf.local.home>
+ <20190502195052.0af473cf@gandalf.local.home>
+ <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+ <20190503092247.20cc1ff0@gandalf.local.home>
+ <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+ <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+ <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+ <20190507085753.GO2606@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190503111923.GE32400@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557221153; bh=eWcAPdSLPxJziq38mCpdrLZ+f2V3YxaE900UI9oR3M8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OWYcMWvJ73bokiGH63V36U0ZgG8nxhs8EQ2XMAIA4G0gV+uy3N+HNa8DmcsgGNdK0
-         D1NepnPvHbMlRi2jlis8jLRQJ/IIL+3whFkwsP/EOIb41Y13dZMzHL2p8jXCg9/mUt
-         dzQGM0Y9s2al3Sc0vyWiY0c/fRmZungo6rW+z8pJBvjs10N+DySMc/bawK835Q/Zpf
-         uvMRmbvvdco9nPfEO86i4nn+WiklGhd20caEUBkxbgDF/UOKvKPr7Mf31b+5jafde3
-         +Rttxta7sKTnjOTzIbVEi1vFuO19t/QK5Amj/+moN09AKuMqVtEpYp4LMjhkR3bqPK
-         DK5cwNjqUrygA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507085753.GO2606@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/2019 4:49 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
->> Add support for Tegra194 PCIe controllers. These controllers are based
->> on Synopsys DesignWare core IP.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Using only 'Cx' (x-being controller number) format to represent a controller
->> * Changed to 'value: description' format where applicable
->> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
->> * Provided more documentation for 'nvidia,init-link-speed' property
->> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->>
->> Changes since [v1]:
->> * Added documentation for 'power-domains' property
->> * Removed 'window1' and 'window2' properties
->> * Removed '_clk' and '_rst' from clock and reset names
->> * Dropped 'pcie' from phy-names
->> * Added entry for BPMP-FW handle
->> * Removed offsets for some of the registers and added them in code and would be pickedup based on
->>    controller ID
->> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
->> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
->> * Added more documentation for 'nvidia,update-fc-fixup' property
->> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
->> * Added '-us' to all properties that represent time in microseconds
->> * Moved P2U documentation to a separate file
->>
->>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
->>   1 file changed, 187 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> new file mode 100644
->> index 000000000000..208dff126108
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> @@ -0,0 +1,187 @@
->> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
->> +
->> +This PCIe host controller is based on the Synopsis Designware PCIe IP
->> +and thus inherits all the common properties defined in designware-pcie.txt.
->> +
->> +Required properties:
->> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
->> +- device_type: Must be "pci"
->> +- power-domains: A phandle to the node that controls power to the respective
->> +  PCIe controller and a specifier name for the PCIe controller. Following are
->> +  the specifiers for the different PCIe controllers
->> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
->> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
->> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
->> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
->> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
->> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
->> +  these specifiers are defined in
->> +  "include/dt-bindings/power/tegra194-powergate.h" file.
->> +- reg: A list of physical base address and length for each set of controller
-> 
-> Perhaps "list of physical base address and length pairs".
-Ok.
+On Tue, May 07, 2019 at 10:57:53AM +0200, Peter Zijlstra wrote:
+> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> index 9e4fa2484d10..28d8ba3b9add 100644
+> --- a/arch/x86/kernel/kprobes/core.c
+> +++ b/arch/x86/kernel/kprobes/core.c
+> @@ -731,29 +731,27 @@ asm(
+>  	".global kretprobe_trampoline\n"
+>  	".type kretprobe_trampoline, @function\n"
+>  	"kretprobe_trampoline:\n"
+> -#ifdef CONFIG_X86_64
+>  	/* We don't bother saving the ss register */
+> +#ifdef CONFIG_X86_64
+>  	"	pushq %rsp\n"
+>  	"	pushfq\n"
+>  	SAVE_REGS_STRING
+>  	"	movq %rsp, %rdi\n"
+>  	"	call trampoline_handler\n"
+>  	/* Replace saved sp with true return address. */
+> -	"	movq %rax, 152(%rsp)\n"
+> +	"	movq %rax, 19*8(%rsp)\n"
+>  	RESTORE_REGS_STRING
+>  	"	popfq\n"
+>  #else
+> -	"	pushf\n"
+> +	"	pushl %esp\n"
+> +	"	pushfl\n"
+>  	SAVE_REGS_STRING
+>  	"	movl %esp, %eax\n"
+>  	"	call trampoline_handler\n"
+> -	/* Move flags to cs */
+> -	"	movl 56(%esp), %edx\n"
+> -	"	movl %edx, 52(%esp)\n"
+> -	/* Replace saved flags with true return address. */
+> -	"	movl %eax, 56(%esp)\n"
+> +	/* Replace saved sp with true return address. */
+> +	"	movl %eax, 15*4(%esp)\n"
+>  	RESTORE_REGS_STRING
+> -	"	popf\n"
+> +	"	popfl\n"
+>  #endif
+>  	"	ret\n"
+>  	".size kretprobe_trampoline, .-kretprobe_trampoline\n"
 
-> 
->> +  registers. Must contain an entry for each entry in the reg-names property.
->> +- reg-names: Must include the following entries:
->> +  "appl": Controller's application logic registers
->> +  "config": As per the definition in designware-pcie.txt
->> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
->> +             Translation Unit) registers of the PCIe core are made available
->> +             fow SW access.
-> 
-> s/fow/for/
-Done.
+> diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
+> index f14262952015..c1010207d036 100644
+> --- a/arch/x86/kernel/kprobes/opt.c
+> +++ b/arch/x86/kernel/kprobes/opt.c
+> @@ -115,14 +115,15 @@ asm (
+>  			"optprobe_template_call:\n"
+>  			ASM_NOP5
+>  			/* Move flags to rsp */
+> -			"	movq 144(%rsp), %rdx\n"
+> -			"	movq %rdx, 152(%rsp)\n"
+> +			"	movq 18*8(%rsp), %rdx\n"
+> +			"	movq %rdx, 19*8(%rsp)\n"
+>  			RESTORE_REGS_STRING
+>  			/* Skip flags entry */
+>  			"	addq $8, %rsp\n"
+>  			"	popfq\n"
+>  #else /* CONFIG_X86_32 */
+> -			"	pushf\n"
+> +			"	pushl %esp\n"
+> +			"	pushfl\n"
+>  			SAVE_REGS_STRING
+>  			"	movl %esp, %edx\n"
+>  			".global optprobe_template_val\n"
+> @@ -131,9 +132,13 @@ asm (
+>  			".global optprobe_template_call\n"
+>  			"optprobe_template_call:\n"
+>  			ASM_NOP5
+> +			/* Move flags into esp */
+> +			"	movl 14*4(%esp), %edx\n"
+> +			"	movl %edx, 15*4(%esp)\n"
+>  			RESTORE_REGS_STRING
+> -			"	addl $4, %esp\n"	/* skip cs */
+> -			"	popf\n"
+> +			/* Skip flags entry */
+> +			"	addl $4, %esp\n"
+> +			"	popfl\n"
+>  #endif
+>  			".global optprobe_template_end\n"
+>  			"optprobe_template_end:\n"
 
-> 
-> Thierry
-> 
+FWIW, both these trampolines assume a kprobe will not
+int3_emulate_{push/call}(), for both bitnesses.
+
+But then; I'm thinking kprobes should be inspection only and not modify
+things. So that might just be good enough.
 
