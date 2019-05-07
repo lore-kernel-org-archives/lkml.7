@@ -2,105 +2,217 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FDEC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E99C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FEB20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="JciVvm+L"
+	by mail.kernel.org (Postfix) with ESMTP id 0B00D20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 08:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfEGIHf (ORCPT
+        id S1727048AbfEGIKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 04:07:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36315 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfEGIHe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 04:07:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id e19so3701794iob.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 01:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PEZVy9C+Z3ICJpvsn26xeqhO1e763sY5Q6qDpaKXZYs=;
-        b=JciVvm+L8utAHEyD6sXVzJvXBWDDmLzUDru6e2Z6O7UUhE2uYt6t01+U9KuovpPXFK
-         SVoBnOMRpR/M0jYtVyra7OBS30QfLjlk+10q3bu8kYLImeYysyY5BCIcTiaH8mJwq+lF
-         dWqGpCsk3fQOh11X0sH7ux9nl+jIhQyw49PY4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PEZVy9C+Z3ICJpvsn26xeqhO1e763sY5Q6qDpaKXZYs=;
-        b=MJOociRY7+yocnIWTlcLJvswXXrrNqcsdrpQttyvUi6LRyrjHzfMOsG5TC8/GTw/Vn
-         1xVSPoOlyegLEM1wzwyCitQuKuFCgXps3lHt1P1raBTFPLbFnuFNvK/GCnZ8LKORyNPS
-         qQcyhnwuYVlfHf17XNYaATHUgneluCthi0Ad8kHEO2HIeVmmEvP992MgNbFNBVeQR1yt
-         xOYQjGcevuHr9/APKDCKT0tJQ6Zs7HeqLLev9hPs6tuSk1u6Zi1zNXpjSD/Ad6ozoXXd
-         iNILPL2TV9ipeJZqNaAz4MSw2782lyQOk6H1w4q63dh1tKLBaghBGue0oOJv0ZY7K8fZ
-         IK+w==
-X-Gm-Message-State: APjAAAV/49ZdZ8qY+RlnPF6QEZ3H9S1zjmF4JCfP/TFja5ij5+lMl3qu
-        ovGn4O+0RICzI1NRq/PM+fbwWb8+3CYtci/VTIWIMw==
-X-Google-Smtp-Source: APXvYqwG7Qhlz0ih1MCulvyvogd0VnUgA/VyGWATqTE+j80uOQBpCOYbueOcG/IyjFlZNjhBSEPaLFPbgVREQTdhdl0=
-X-Received: by 2002:a6b:ee04:: with SMTP id i4mr1817315ioh.246.1557216453174;
- Tue, 07 May 2019 01:07:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org>
-In-Reply-To: <20190503153531.GJ12608@fieldses.org>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 7 May 2019 04:07:21 -0400
-Message-ID: <CAJfpegv-0mUs=XRgerxR_Zz_MvYuDvb95v0QZeBUcHNnenusnw@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 May 2019 04:10:52 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:26552 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726457AbfEGIKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 04:10:51 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 4160247459E102E887A2;
+        Tue,  7 May 2019 16:10:49 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x478AhC4054488;
+        Tue, 7 May 2019 16:10:43 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019050716105055-10087609 ;
+          Tue, 7 May 2019 16:10:50 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        cocci@systeme.lip6.fr
+Subject: [PATCH] coccinelle: semantic patch for missing of_node_put
+Date:   Tue, 7 May 2019 16:12:24 +0800
+Message-Id: <1557216744-25339-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-05-07 16:10:50,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-05-07 16:10:37,
+        Serialize complete at 2019-05-07 16:10:37
+X-MAIL: mse-fl2.zte.com.cn x478AhC4054488
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 11:35 AM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
+The call to of_parse_phandle()/of_find_node_by_name() ... returns a node
+pointer with refcount incremented thus it must be explicitly decremented
+after the last usage.
 
-> >  Silently not copying the ACLs is probably not a good idea as it might
-> >  result in inappropriate permissions being given away.  So if the
-> >  sysadmin wants this (and some clearly do), they need a way to
-> >  explicitly say "I accept the risk".
->
-> So, I feel like silently copying ACLs up *also* carries a risk, if that
-> means switching from server-enforcement to client-enforcement of those
-> permissions.
+This SmPL is also looking for places where there is an of_node_put on
+some path but not on others.
 
-That's not correct: permissions are checked on the overlay layer,
-regardless of where the actual file resides.  For filesystems using a
-server enforced permission model that means possibly different
-permissions for accesses through overlayfs than for accesses without
-overlayfs.  Apparently this is missing from the documentation and
-definitely needs to be added.
+Suggested-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+Cc: Nicolas Palix <nicolas.palix@imag.fr>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: cocci@systeme.lip6.fr
+---
+ scripts/coccinelle/free/of_node_put.cocci | 133 ++++++++++++++++++++++++++++++
+ 1 file changed, 133 insertions(+)
+ create mode 100644 scripts/coccinelle/free/of_node_put.cocci
 
-So I think it's perfectly fine to allow copying up ACLs, as long as
-the ACL is representable on the upper fs.  If that cannot be ensured,
-then the only sane thing to do is to disable ACL checking across the
-overlay ("noacl" option).
+diff --git a/scripts/coccinelle/free/of_node_put.cocci b/scripts/coccinelle/free/of_node_put.cocci
+new file mode 100644
+index 0000000..304293c
+--- /dev/null
++++ b/scripts/coccinelle/free/of_node_put.cocci
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/// Find missing of_node_put
++///
++// Confidence: Moderate
++// Copyright: (C) 2018-2019 Wen Yang, ZTE.
++// Comments:
++// Options: --no-includes --include-headers
++
++virtual report
++virtual org
++
++@initialize:python@
++@@
++
++msg_prefix = "ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line "
++msg_suffix = ", but without a corresponding object release within this function."
++
++seen = set()
++
++def add_if_not_present (p1, p2):
++    if (p1, p2) not in seen:
++        seen.add((p1, p2))
++        return True
++    return False
++
++@r1 exists@
++local idexpression struct device_node *x;
++expression e, e1;
++position p1, p2;
++identifier f;
++statement S;
++type T;
++@@
++
++(
++x = f@p1(...);
++... when != e = (T)x
++    when any
++    when != true x == NULL
++    when != of_node_put(x)
++    when != of_get_next_parent(x)
++    when != of_find_matching_node(x, ...)
++    when != if (x) { ... of_node_put(x) ... }
++    when != if (x) { ... return x; }
++    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
++    when != e1 = of_fwnode_handle(x)
++(
++if (x) { ... when forall
++         of_node_put(x) ... }
++|
++return x;
++|
++return of_fwnode_handle(x);
++|
++return@p2 ...;
++)
++&
++x = f(...)
++...
++if (<+...x...+>) S
++...
++of_node_put(x);
++)
++
++@script:python depends on report && r1@
++p1 << r1.p1;
++p2 << r1.p2;
++@@
++
++if(add_if_not_present(p1[0].line, p2[0].line)):
++  coccilib.report.print_report(p2[0], msg_prefix + p1[0].line + msg_suffix)
++
++@script:python depends on org && r1@
++p1 << r1.p1;
++p2 << r1.p2;
++@@
++
++cocci.print_main("acquired a node pointer with refcount incremented", p1)
++cocci.print_secs("needed of_node_put", p2)
++
++@r2 exists@
++local idexpression struct device_node *x;
++expression e, e1;
++position p1, p2;
++statement S;
++type T;
++@@
++
++x = @p1\(of_find_compatible_node\|of_find_node_by_name\|of_parse_phandle\|
++    of_find_node_by_type\|of_find_node_by_name\|of_find_all_nodes\|
++    of_get_cpu_node\|of_get_parent\|of_get_next_parent\|
++    of_get_next_child\|of_get_next_available_child\|of_get_next_cpu_node\|
++    of_get_compatible_child\|of_get_child_by_name\|of_find_node_opts_by_path\|
++    of_find_node_with_property\|of_find_matching_node_and_match\|of_find_node_by_phandle\|
++    of_parse_phandle\)(...);
++...
++if (x == NULL || ...) S
++... when != e = (T)x
++    when any
++    when != true x == NULL
++    when != of_node_put(x)
++    when != of_get_next_parent(x)
++    when != of_find_matching_node(x, ...)
++    when != if (x) { ... of_node_put(x) ... }
++    when != if (x) { ... return x; }
++    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
++    when != e1 = of_fwnode_handle(x)
++(
++if (x) { ... when forall
++         of_node_put(x) ... }
++|
++return x;
++|
++return of_fwnode_handle(x);
++|
++return@p2 ...;
++)
++
++@script:python depends on report && r2@
++p1 << r2.p1;
++p2 << r2.p2;
++@@
++
++if(add_if_not_present(p1[0].line, p2[0].line)):
++  coccilib.report.print_report(p2[0], msg_prefix + p1[0].line + msg_suffix)
++
++@script:python depends on org && r2@
++p1 << r2.p1;
++p2 << r2.p2;
++@@
++
++cocci.print_main("acquired a node pointer with refcount incremented", p1)
++cocci.print_secs("needed of_node_put", p2)
+-- 
+2.9.5
 
-Thanks,
-Miklos
