@@ -2,121 +2,83 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5ADC04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80D4C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D390206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZLkwKDW"
+	by mail.kernel.org (Postfix) with ESMTP id B678E205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfEGRZw (ORCPT
+        id S1727483AbfEGR0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:25:52 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39160 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEGRZw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:25:52 -0400
-Received: by mail-io1-f66.google.com with SMTP id m7so12617391ioa.6;
-        Tue, 07 May 2019 10:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WNM91LsYQ4Jk8pRE5BfQ7giBI1LrDmHfewasLQMdhYY=;
-        b=UZLkwKDWZ/r8H5KY8fg/33/rzkBhC8rortcsHyxbj/uQouwgh3b3DDS9g6ykPyPpra
-         aDFzXyc8EsTaiUrLSUywp2Yuj8/azQ3kmxsbvf9f9iz42l/apPGiv/stQXD171MNZbYn
-         aRXTbtthM9+AmPyJkKyuAPS+nYUn2CxFBzMWFfHOlfh5rZShAl0z41ZRJvNYhzQ0JQ7E
-         0PCQV+Un+PumHBZJ97r58/YpwZoXwUAMeMes+m0CWSTL0lPWYuLDXvxyxMScNSDkh9fh
-         hr44kb4EK8811jwNm9b66Xz40Gv0a/IVVN4xSeKvHy7gCqQVZG9izL1k/slGn4/i7p4h
-         frFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WNM91LsYQ4Jk8pRE5BfQ7giBI1LrDmHfewasLQMdhYY=;
-        b=cc0pQUdbgUf0oPdcaPnzzScRoU65qVjz4TZ+Km+6VGOAe3qwmw6aY2sOuTcBl++BgI
-         KehnLFNWWcixcOMuNbQ1nd4HMGIReUQpwPpapUvg5OENSetuTMY33+JoUTo8Kfz71NIq
-         SJOBmGWFaoJ8ZAiP3KbGG5XXWO4iTVVOQgdZb4jD+eh4Ri+RXtdfAM5P37gHecKbrb4T
-         nOQcLup7ZV3Y9/PJgWaLbNciPK3BBcNP9dtIJcr8z7OLeBmssTYmESM88SnuUlPcamg7
-         WlbK+AJiVTwTVb7uZ4VaStw+lKG9m5RHCpeE9F4JunTYEg/iw/bxED/FccQ2mLQ2s+W6
-         vLTA==
-X-Gm-Message-State: APjAAAXUufpViBkfUHoVGymIj9pz7zLCMmAs1Xw0kw90Lqnjlf9UCd3g
-        HONy0VwH+emevV3+xhZC2oC161z3ifCDrLrgSpk=
-X-Google-Smtp-Source: APXvYqw+NPyrJL89GMAhzIt3t6zWXwhaYY9Oqkc/vWNxkqLzU5VEltblOOYuAi3nSrx7h8Vv8xifBDFUb2XsSSe0CzY=
-X-Received: by 2002:a6b:6e0f:: with SMTP id d15mr794901ioh.116.1557249951555;
- Tue, 07 May 2019 10:25:51 -0700 (PDT)
+        Tue, 7 May 2019 13:26:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50166 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfEGR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 13:26:00 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 743FB36887;
+        Tue,  7 May 2019 17:26:00 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D766E171AD;
+        Tue,  7 May 2019 17:25:59 +0000 (UTC)
+Date:   Tue, 7 May 2019 11:25:59 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Greg Kurz <groug@kaod.org>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio-pci/nvlink2: Fix potential VMA leak
+Message-ID: <20190507112559.2022645c@x1.home>
+In-Reply-To: <20190507090145.4be12c82@bahia.lan>
+References: <155568823785.601037.2151744205292679252.stgit@bahia.lan>
+        <20190506155845.70f3b01d@x1.home>
+        <20190507014915.GA10274@tungsten.ozlabs.ibm.com>
+        <20190507090145.4be12c82@bahia.lan>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190507053826.31622-1-sashal@kernel.org> <20190507053826.31622-71-sashal@kernel.org>
-In-Reply-To: <20190507053826.31622-71-sashal@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 7 May 2019 10:25:40 -0700
-Message-ID: <CAKgT0Uf89zkZDU5d5GO-i4B4igASXWqUioWCpoTsY92V4gEWjg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.14 71/95] Revert "mm, memory_hotplug: initialize
- struct pages for the full memory section"
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Robert Shteynfeld <robert.shteynfeld@gmail.com>,
-        stable@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 07 May 2019 17:26:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 10:40 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Michal Hocko <mhocko@suse.com>
->
-> [ Upstream commit 4aa9fc2a435abe95a1e8d7f8c7b3d6356514b37a ]
->
-> This reverts commit 2830bf6f05fb3e05bc4743274b806c821807a684.
->
-> The underlying assumption that one sparse section belongs into a single
-> numa node doesn't hold really. Robert Shteynfeld has reported a boot
-> failure. The boot log was not captured but his memory layout is as
-> follows:
->
->   Early memory node ranges
->     node   1: [mem 0x0000000000001000-0x0000000000090fff]
->     node   1: [mem 0x0000000000100000-0x00000000dbdf8fff]
->     node   1: [mem 0x0000000100000000-0x0000001423ffffff]
->     node   0: [mem 0x0000001424000000-0x0000002023ffffff]
->
-> This means that node0 starts in the middle of a memory section which is
-> also in node1.  memmap_init_zone tries to initialize padding of a
-> section even when it is outside of the given pfn range because there are
-> code paths (e.g.  memory hotplug) which assume that the full worth of
-> memory section is always initialized.
->
-> In this particular case, though, such a range is already intialized and
-> most likely already managed by the page allocator.  Scribbling over
-> those pages corrupts the internal state and likely blows up when any of
-> those pages gets used.
->
-> Reported-by: Robert Shteynfeld <robert.shteynfeld@gmail.com>
-> Fixes: 2830bf6f05fb ("mm, memory_hotplug: initialize struct pages for the full memory section")
-> Cc: stable@kernel.org
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-> ---
->  mm/page_alloc.c | 12 ------------
->  1 file changed, 12 deletions(-)
+On Tue, 7 May 2019 09:01:45 +0200
+Greg Kurz <groug@kaod.org> wrote:
 
-So it looks like you already had the revert of the earlier patch I
-pointed out enqueued as well. So you can probably at a minimum just
-drop this patch and the earlier patch that this reverts.
+> On Tue, 7 May 2019 11:52:44 +1000
+> Sam Bobroff <sbobroff@linux.ibm.com> wrote:
+> 
+> > On Mon, May 06, 2019 at 03:58:45PM -0600, Alex Williamson wrote:  
+> > > On Fri, 19 Apr 2019 17:37:17 +0200
+> > > Greg Kurz <groug@kaod.org> wrote:
+> > >     
+> > > > If vfio_pci_register_dev_region() fails then we should rollback
+> > > > previous changes, ie. unmap the ATSD registers.
+> > > > 
+> > > > Signed-off-by: Greg Kurz <groug@kaod.org>
+> > > > ---    
+> > > 
+> > > Applied to vfio next branch for v5.2 with Alexey's R-b.  Thanks!
+> > > 
+> > > Alex    
+> > 
+> > Should this have a fixes tag? e.g.:
+> > Fixes: 7f92891778df ("vfio_pci: Add NVIDIA GV100GL [Tesla V100 SXM2] subdriver")
+> >   
+> 
+> Oops... you're right.
+> 
+> Alex, can you add the above tag ?
 
-Thanks.
+Added.  Thanks,
 
-- Alex
+Alex
