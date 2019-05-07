@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CB1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A153DC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDF521530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DEC2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207624;
-	bh=N8ajWXn71Lm1wn4HdOG/RTY7uqgJZAxINuEKsuT+bp0=;
+	s=default; t=1557207628;
+	bh=QHYJhSEipdE/rN48jgEvQ9kYkDbe97frh8T5Aa0FxHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H4nhKlII7y1e8VCY9hT2qJDv56xzl/sfrDTdrdvrEamPnoFEZB4ynlELrvQftr5zf
-	 RwI5SrHN0V92yMAQu+d+QS+r+rgTmGr17c8vI4rL9cw6/iG2rVPZrcY91JNTHgESgV
-	 Xe3wUqJanDx77zAGMWJIN6NEYZfNamzZ8yPrgCDM=
+	b=bJWga8lNZH76YsZm/wI5Z+RJ880N/8wTARQt73PjRrW7D/gYLeaTW1D5HycGeDRfU
+	 wbX7jA4QHZ+WPGKG5zpQ59EQGNFsO8J55suuprIDv9qNgBecJEUTUzqnUrisiq4uT8
+	 hBt/9c2V6jqU0gI87hvErBVhjNkpL0/Y8OXH6Iec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfEGFkX (ORCPT
+        id S1728813AbfEGFk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59736 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:40:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbfEGFkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:16 -0400
+        id S1727850AbfEGFkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5008C2087F;
-        Tue,  7 May 2019 05:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C97C20675;
+        Tue,  7 May 2019 05:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207615;
-        bh=N8ajWXn71Lm1wn4HdOG/RTY7uqgJZAxINuEKsuT+bp0=;
+        s=default; t=1557207618;
+        bh=QHYJhSEipdE/rN48jgEvQ9kYkDbe97frh8T5Aa0FxHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fGk611XQmEx0iAM+/5I9S3xzt9MCqL5QTv2Mj76tmzEiz11U1vI1OJ8gwPg/u5lRw
-         eVna28ECrwuxN0mdAPQ0jCANDSzomy97ZiItb//b+58wtEwUriBnWw5EDI5WWdr2/3
-         sTpqS4H1M4AeMFTbANsQbJylA9OW4CPdFxwZhVQ0=
+        b=Dl9KccCazJdMyVfJPS3NONLamcTMuA5CXlx8tDg2708Q5PLO334nQmxoZBoUEeeFx
+         fHdTZRa8sqQ7pQh4w1UqMq/ZL0TJX7tIdIAQuka/iO7RufjvV+OqzMxmPQZw1PIRg6
+         QVNtRQTQq0hLa6mX+kpIzSmG4Xr8ukbMB8M6hiU4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 58/95] net: stmmac: Move debugfs init/exit to ->probe()/->remove()
-Date:   Tue,  7 May 2019 01:37:47 -0400
-Message-Id: <20190507053826.31622-58-sashal@kernel.org>
+Cc:     Alistair Strachan <astrachan@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <carlos@redhat.com>,
+        "H. J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Laura Abbott <labbott@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        kernel-team@android.com, Thomas Gleixner <tglx@linutronix.de>,
+        X86 ML <x86@kernel.org>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.14 60/95] x86/vdso: Pass --eh-frame-hdr to the linker
+Date:   Tue,  7 May 2019 01:37:49 -0400
+Message-Id: <20190507053826.31622-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -61,97 +67,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Alistair Strachan <astrachan@google.com>
 
-[ Upstream commit 5f2b8b62786853341a20d4cd4948f9cbca3db002 ]
+[ Upstream commit cd01544a268ad8ee5b1dfe42c4393f1095f86879 ]
 
-Setting up and tearing down debugfs is current unbalanced, as seen by
-this error during resume from suspend:
+Commit
 
-    [  752.134067] dwc-eth-dwmac 2490000.ethernet eth0: ERROR failed to create debugfs directory
-    [  752.134347] dwc-eth-dwmac 2490000.ethernet eth0: stmmac_hw_setup: failed debugFS registration
+  379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
 
-The imbalance happens because the driver creates the debugfs hierarchy
-when the device is opened and tears it down when the device is closed.
-There's little gain in that, and it could be argued that it is even
-surprising because it's not usually done for other devices. Fix the
-imbalance by moving the debugfs creation and teardown to the driver's
-->probe() and ->remove() implementations instead.
+accidentally broke unwinding from userspace, because ld would strip the
+.eh_frame sections when linking.
 
-Note that the ring descriptors cannot be read while the interface is
-down, so make sure to return an empty file when the descriptors_status
-debugfs file is read.
+Originally, the compiler would implicitly add --eh-frame-hdr when
+invoking the linker, but when this Makefile was converted from invoking
+ld via the compiler, to invoking it directly (like vmlinux does),
+the flag was missed. (The EH_FRAME section is important for the VDSO
+shared libraries, but not for vmlinux.)
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix the problem by explicitly specifying --eh-frame-hdr, which restores
+parity with the old method.
+
+See relevant bug reports for additional info:
+
+  https://bugzilla.kernel.org/show_bug.cgi?id=201741
+  https://bugzilla.redhat.com/show_bug.cgi?id=1659295
+
+Fixes: 379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
+Reported-by: Florian Weimer <fweimer@redhat.com>
+Reported-by: Carlos O'Donell <carlos@redhat.com>
+Reported-by: "H. J. Lu" <hjl.tools@gmail.com>
+Signed-off-by: Alistair Strachan <astrachan@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Laura Abbott <labbott@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Carlos O'Donell <carlos@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: kernel-team@android.com
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: X86 ML <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181214223637.35954-1-astrachan@google.com
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 23 +++++++++++--------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ arch/x86/entry/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index ecf3f8c1bc0e..3389545353a7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2530,12 +2530,6 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 			netdev_warn(priv->dev, "PTP init failed\n");
- 	}
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 839015f1b0de..ab7f730cf7f2 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -182,7 +182,8 @@ quiet_cmd_vdso = VDSO    $@
+ 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
  
--#ifdef CONFIG_DEBUG_FS
--	ret = stmmac_init_fs(dev);
--	if (ret < 0)
--		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
--			    __func__);
--#endif
- 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
+ VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
+-	$(call ld-option, --build-id) -Bsymbolic
++	$(call ld-option, --build-id) $(call ld-option, --eh-frame-hdr) \
++	-Bsymbolic
+ GCOV_PROFILE := n
  
- 	if ((priv->use_riwt) && (priv->hw->dma->rx_watchdog)) {
-@@ -2729,10 +2723,6 @@ static int stmmac_release(struct net_device *dev)
- 
- 	netif_carrier_off(dev);
- 
--#ifdef CONFIG_DEBUG_FS
--	stmmac_exit_fs(dev);
--#endif
--
- 	stmmac_release_ptp(priv);
- 
- 	return 0;
-@@ -3837,6 +3827,9 @@ static int stmmac_sysfs_ring_read(struct seq_file *seq, void *v)
- 	u32 tx_count = priv->plat->tx_queues_to_use;
- 	u32 queue;
- 
-+	if ((dev->flags & IFF_UP) == 0)
-+		return 0;
-+
- 	for (queue = 0; queue < rx_count; queue++) {
- 		struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
- 
-@@ -4308,6 +4301,13 @@ int stmmac_dvr_probe(struct device *device,
- 		goto error_netdev_register;
- 	}
- 
-+#ifdef CONFIG_DEBUG_FS
-+	ret = stmmac_init_fs(ndev);
-+	if (ret < 0)
-+		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
-+			    __func__);
-+#endif
-+
- 	return ret;
- 
- error_netdev_register:
-@@ -4341,6 +4341,9 @@ int stmmac_dvr_remove(struct device *dev)
- 
- 	netdev_info(priv->dev, "%s: removing driver", __func__);
- 
-+#ifdef CONFIG_DEBUG_FS
-+	stmmac_exit_fs(ndev);
-+#endif
- 	stmmac_stop_all_dma(priv);
- 
- 	priv->hw->mac->set_mac(priv->ioaddr, false);
+ #
 -- 
 2.20.1
 
