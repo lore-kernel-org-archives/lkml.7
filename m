@@ -2,116 +2,126 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AB4C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1047FC46460
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B6620675
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557257519;
-	bh=2YcGMbPErRLRDtNNQOcGhXDpKqci7xuZojPd3M/3x98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G3EoOcNJkQ5OrFtP9/ZV0EsH+8fcwuf88jEiNlMKTS1IEOyFil7+i3MGQqjiwKmmN
-	 8URIlN7ZDgVStOcC+eEf77/g5tsi49NJDOSYPwd702lXNjnUxG9HDjMs20LjwISHFk
-	 uFtG8MJcFl6wmol4dlBmo/d+nwV3Pkqm5ufbECZ8=
+	by mail.kernel.org (Postfix) with ESMTP id D39B020825
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 19:34:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nMydFJ0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfEGTb6 (ORCPT
+        id S1726575AbfEGTeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 15:31:58 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46584 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfEGTb6 (ORCPT
+        Tue, 7 May 2019 15:34:36 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56034 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEGTeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 15:31:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t187so4681715pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 12:31:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+BHeCC0KibMuGQaQ13pNV0ld+sIiRc+E9RP4V7KGKCA=;
-        b=Q1YrYJpXT9MBan21dF1kPXPMxK+4UC9tm28uThoafTKqnmyq8UBTjS54hj5rcsldY0
-         P0D2YT0saOyxdIIHlFwb8nU0jKsNlb8yZqeHCiwDPPm+wbGLfxCImHcyCjYwoQTrAUl1
-         vymh6m06u/85Az/Mx4uPZ1Aw2pFYdS8uIIjAV6GlXPl3gCx+9BH3YnOgrZNqakzVCTqY
-         lZr8zbiJm2Ldew5hcuDyoJw51sNR8aHeycRR2FrUklpSitDI5zLcCr9uU13R2VP6ktzm
-         8IiNjMbbaMrocDZ1Cd2x05h/MHIL6WqvhD4uWlGnID9mkvP4PO6ddor/MulWdZ36Gr8k
-         6/Bg==
-X-Gm-Message-State: APjAAAU2hkJG2F3PCoUCRb9kA3jlKFWejjCI6PPqwrnHq5B/0PUu/Ykl
-        bHKKUWPpRSw3VI4+f5//HEzyaA==
-X-Google-Smtp-Source: APXvYqzBLzsZYmzhOtRcPH8guMtfDVgap2dm+RKSPAKoX63LYVwZrff17koc4QYNdq+YQtiKmPRMzg==
-X-Received: by 2002:aa7:8dc7:: with SMTP id j7mr42767214pfr.82.1557257516723;
-        Tue, 07 May 2019 12:31:56 -0700 (PDT)
-Received: from localhost ([2601:647:4700:2953:ec49:968:583:9f8])
-        by smtp.gmail.com with ESMTPSA id q17sm35415411pfi.185.2019.05.07.12.31.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 12:31:55 -0700 (PDT)
-Date:   Tue, 7 May 2019 12:31:54 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Alan Tull <atull@kernel.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] fpga: zynqmp-fpga: Correctly handle error pointer
-Message-ID: <20190507193154.GB30078@archbox>
-References: <20190507170257.25451-1-mdf@kernel.org>
- <CANk1AXS2m+v2uMoE0gLhKqYhn_NcbV8gZq+ogMsC_Zp81ZHAow@mail.gmail.com>
+        Tue, 7 May 2019 15:34:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1557257672; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=9NMfdnya0GuZD5SgIy37BX/N2lS6vwhuvXIT4drEbnY=;
+        b=nMydFJ0XZqxs/6gFn6b50tlXto+17s/QudbdwWYuG5VysPUCbl0PfOjNJUwGvc573Qy8/T
+        mZXEtC7/J6+Oz4qw48Ef24GE1WyeIbSNpDl4SI5N3AEsadZ6QE6cKtFYs1RBEuhF0NEonW
+        J0fVlaWz4MNfRkMILkF0fUB1DbMdUhQ=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     od@zcrc.me, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/5] clk: ingenic: Add missing header in cgu.h
+Date:   Tue,  7 May 2019 21:34:17 +0200
+Message-Id: <20190507193421.12260-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANk1AXS2m+v2uMoE0gLhKqYhn_NcbV8gZq+ogMsC_Zp81ZHAow@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan,
+The cgu.h has structures that contain 'clk_onecell_data' and 'clk_hw'
+structures (no pointers), so the <linux/clk-provider.h> header should be
+included.
 
-On Tue, May 07, 2019 at 02:11:06PM -0500, Alan Tull wrote:
-> On Tue, May 7, 2019 at 12:03 PM Moritz Fischer <mdf@kernel.org> wrote:
-> 
-> Hi Moritz,
-> 
-> >
-> > Fixes the following static checker error:
-> >
-> > drivers/fpga/zynqmp-fpga.c:50 zynqmp_fpga_ops_write()
-> > error: 'eemi_ops' dereferencing possible ERR_PTR()
-> >
-> > Note: This does not handle the EPROBE_DEFER value in a
-> >       special manner.
-> >
-> > Fixes commit c09f7471127e ("fpga manager: Adding FPGA Manager support for
-> > Xilinx zynqmp")
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> >  drivers/fpga/zynqmp-fpga.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c
-> > index f7cbaadf49ab..abcb0b2e75bf 100644
-> > --- a/drivers/fpga/zynqmp-fpga.c
-> > +++ b/drivers/fpga/zynqmp-fpga.c
-> > @@ -47,7 +47,7 @@ static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
-> >         char *kbuf;
-> >         int ret;
-> >
-> > -       if (!eemi_ops || !eemi_ops->fpga_load)
-> > +       if (IS_ERR_OR_NULL(eemi_ops) || !eemi_ops->fpga_load)
-> 
-> This if statement also happens in fpga_mgr_states
-> zynqmp_fpga_ops_state(), so we'll need this fix there also.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/clk/ingenic/cgu.h         | 1 +
+ drivers/clk/ingenic/jz4725b-cgu.c | 1 -
+ drivers/clk/ingenic/jz4740-cgu.c  | 1 -
+ drivers/clk/ingenic/jz4770-cgu.c  | 1 -
+ drivers/clk/ingenic/jz4780-cgu.c  | 1 -
+ 5 files changed, 1 insertion(+), 4 deletions(-)
 
-Good catch, will fix in v2.
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index e12716d8ce3c..c18198ba2955 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -19,6 +19,7 @@
+ #define __DRIVERS_CLK_INGENIC_CGU_H__
+ 
+ #include <linux/bitops.h>
++#include <linux/clk-provider.h>
+ #include <linux/of.h>
+ #include <linux/spinlock.h>
+ 
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index 584ff4ff81c7..044bbd271bb6 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -6,7 +6,6 @@
+  * Author: Paul Cercueil <paul@crapouillou.net>
+  */
+ 
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+ #include <dt-bindings/clock/jz4725b-cgu.h>
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index b86edd328249..09629c0613c1 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -15,7 +15,6 @@
+  * GNU General Public License for more details.
+  */
+ 
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+ #include <dt-bindings/clock/jz4740-cgu.h>
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index bf46a0df2004..2e6fd8b1c248 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -5,7 +5,6 @@
+  */
+ 
+ #include <linux/bitops.h>
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+ #include <linux/syscore_ops.h>
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index 6427be117ff1..ad64afb438a5 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -15,7 +15,6 @@
+  * GNU General Public License for more details.
+  */
+ 
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+ #include <dt-bindings/clock/jz4780-cgu.h>
+-- 
+2.21.0.593.g511ec345e18
 
-Thanks
-Moritz
