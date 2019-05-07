@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B8DC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89446C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056832087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434F62087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208764;
-	bh=GZHlb0ZCvWD3FA2wtQ7A+3iNqoUuSvGsLtsouGGwzBg=;
+	s=default; t=1557208775;
+	bh=wl5TuaET9VOElNIB4pAQ3YmM6xzvebkpLmf1Sbkd5Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJP2DH7a5Pjk+R7SIDrXfIjv+Qk48IuPeWVwm5ZztAgyMtX7Lq0wPtezpTyCjZpwE
-	 3Vu55w9iJc8qrLiPt1XQo9TBOmRn71KvYJHTiWFiZWoIxZo8Hk2P+1oxAfj+yecghz
-	 OAirZPwt+a+12njV58c912XIXcJarb6DXD3ADE9c=
+	b=tBEZiMgDd1vPLB0vdAE3ciNA7HVCobPiRzqzJ24lVrlsLPR8NQMLjqVEWDznAfjzJ
+	 DqOF3ApYuzHishIIy1IyG273sBLUwy0nkTbm3IRyzzUaY6I0d2bgFiuyzcEK0NTBhM
+	 /UIPr4nOiJrS2f56fhbK0EUTqIXx4Dnw2+WCjR7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfEGF7W (ORCPT
+        id S1728328AbfEGF7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56584 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728170AbfEGFgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:36:47 -0400
+        id S1728158AbfEGFgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:36:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA6521479;
-        Tue,  7 May 2019 05:36:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C3520B7C;
+        Tue,  7 May 2019 05:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207406;
-        bh=GZHlb0ZCvWD3FA2wtQ7A+3iNqoUuSvGsLtsouGGwzBg=;
+        s=default; t=1557207405;
+        bh=wl5TuaET9VOElNIB4pAQ3YmM6xzvebkpLmf1Sbkd5Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YShogdLOpBOfh/e960firAIkzTQzbAPmGKSayzM7iyX0rs8tYdf9y7/hJqLrD2JXg
-         zBTLaeds1w96wL3wF6H7VTn14PjP8Dw55JGn9OABG8rZuZsYmVAHjLd/ZNj3gvbFy6
-         DzHZIwUgq5qlfqcaYuWgrdUM/eUbI3k3NLu50SBk=
+        b=VfTMrXl0iMWNausytItP2gOUzpu92/mU3l1JgyFrNJH01v6mRspLjZI2H3JHiAiu5
+         Vf4nE/978WV4t0piaZNi/pigMF1uzBSuk1mxYz9SFcG5W5AtcdAKyy0suIJd63CoO0
+         Bkb7uGj8Fh26dIVknEYc0AQV7o835DtM1U9Ccgyg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Jonathan Billings <jsbillin@umich.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 27/81] afs: Unlock pages for __pagevec_release()
-Date:   Tue,  7 May 2019 01:34:58 -0400
-Message-Id: <20190507053554.30848-27-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/81] qede: fix write to free'd pointer error and double free of ptp
+Date:   Tue,  7 May 2019 01:34:57 -0400
+Message-Id: <20190507053554.30848-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -60,36 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 21bd68f196ca91fc0f3d9bd1b32f6e530e8c1c88 ]
+[ Upstream commit 1dc2b3d65523780ed1972d446c76e62e13f3e8f5 ]
 
-__pagevec_release() complains loudly if any page in the vector is still
-locked.  The pages need to be locked for generic_error_remove_page(), but
-that function doesn't actually unlock them.
+The err2 error return path calls qede_ptp_disable that cleans up
+on an error and frees ptp. After this, the free'd ptp is dereferenced
+when ptp->clock is set to NULL and the code falls-through to error
+path err1 that frees ptp again.
 
-Unlock the pages afterwards.
+Fix this by calling qede_ptp_disable and exiting via an error
+return path that does not set ptp->clock or kfree ptp.
 
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Jonathan Billings <jsbillin@umich.edu>
+Addresses-Coverity: ("Write to pointer after free")
+Fixes: 035744975aec ("qede: Add support for PTP resource locking.")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/write.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qede/qede_ptp.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index 19c04caf3c01..e00461a6de9a 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -253,6 +253,7 @@ static void afs_kill_pages(struct address_space *mapping,
- 				first = page->index + 1;
- 			lock_page(page);
- 			generic_error_remove_page(mapping, page);
-+			unlock_page(page);
- 		}
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
+index 013ff567283c..5e574c3b625e 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
+@@ -490,18 +490,17 @@ int qede_ptp_enable(struct qede_dev *edev, bool init_tc)
  
- 		__pagevec_release(&pv);
+ 	ptp->clock = ptp_clock_register(&ptp->clock_info, &edev->pdev->dev);
+ 	if (IS_ERR(ptp->clock)) {
+-		rc = -EINVAL;
+ 		DP_ERR(edev, "PTP clock registration failed\n");
++		qede_ptp_disable(edev);
++		rc = -EINVAL;
+ 		goto err2;
+ 	}
+ 
+ 	return 0;
+ 
+-err2:
+-	qede_ptp_disable(edev);
+-	ptp->clock = NULL;
+ err1:
+ 	kfree(ptp);
++err2:
+ 	edev->ptp = NULL;
+ 
+ 	return rc;
 -- 
 2.20.1
 
