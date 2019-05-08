@@ -2,156 +2,173 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9B2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBB7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8EF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEC6204EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HniB7Q85"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2CfoAC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfEHPtK (ORCPT
+        id S1727543AbfEHPuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:49:10 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37951 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfEHPtI (ORCPT
+        Wed, 8 May 2019 11:50:12 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33471 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfEHPuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:49:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j26so10302579pgl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:49:08 -0700 (PDT)
+        Wed, 8 May 2019 11:50:12 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f23so17946208ljc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=48PM5wjwHg5QAu3xwuXzBgAZQekQFPxmgJORD2kHJRs=;
-        b=HniB7Q85atLr+xF0KXfSp07SsofmrDYFHpaSrRf/D3y7xkRoKwr4rdzgyUqRj26lqg
-         uQUGl/OHlceMWux9HEaQFZBdZd2cM4O9qYSGaEKO5Ee79L0jvzoPjOmafsgQyNlg62PW
-         5HvZJdfXvIHH2wgUXn7UaBUBUFhje8IdI7zX8=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B305JCF4NGCczfGfXU1a1TKoXlp/y2MhWZaGK0Ie4es=;
+        b=A2CfoAC96HAV0IlhpRIdq0sCzJOOUx6zxDraSZJePsGQe/2A8A/byVvNpR7hz+daF4
+         2a0ofpW8jtCw/hQJrpVYYGbOKWp+8b66TRCEwrwqjL3+Kz6QWv9huBpqZujXlMg0pD8P
+         R5mo/uiy970d/CIf0irWTjfuvETtSt5Uynfv52guHz7jeOBvenHdcLnvHQvxvOqpgqe2
+         h6PbXLiiVL5zMAHl22IJBGpisgZXdZrNEe7n9IzK2bwvUgv9cJs9rqEAnluIsxdAi3oB
+         UoVifu8pItlm7N1OZCfy/ZJNADLGh8eoItRVw0HgeytPli+tF0EKCKYdGtPwxdbvv7cv
+         qEyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=48PM5wjwHg5QAu3xwuXzBgAZQekQFPxmgJORD2kHJRs=;
-        b=pknS7aPdFfsl0Xsn3sEFffc99k5u5cbTa3W5/tK42eLIQSMjch9LZDVdYDWvsaRVG2
-         PTuw+Fvzgjz8XF2kLJvH3vL346t6U8DJ/HsM4HMFmc6ICiMGmy8yzr53DDv8OEcckv83
-         WCNpXTLEqmWmPp1g0+ojrg/2+rTNfO2ByfTISu1zSujaLwIhSb8TfmofopYYhKaGl88i
-         qEBoOLZc+/4KxKcZ46slkBZJJwqACcORf71YBkLFZ686sqB5mBSaIK4LFoH7mu5aPiAz
-         Z/GZQ5zcOto1Tu4ns4nK7gEDpV/QYAqREtlKD7pVfg2GOCgs8UQ1QFOshKwQ6NW4ncqT
-         QuPg==
-X-Gm-Message-State: APjAAAV0BUdnzcBdi9mOZUIPqnoZN7xevito5W7oSnKb5sfzhlh2eX2z
-        /LgHIKgqmOaaoQHgxabLJYLJFZamxd0=
-X-Google-Smtp-Source: APXvYqyK6aJeIBmRwXhHkF3WLNv5b7LcG+SteylVUiskVBLe8KT0Fs/zXnnoRsGZSoGUPGeRYxh69g==
-X-Received: by 2002:a62:56d9:: with SMTP id h86mr40751950pfj.195.1557330548169;
-        Wed, 08 May 2019 08:49:08 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d186sm11953443pgc.58.2019.05.08.08.49.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 08:49:07 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>
-Cc:     linux-rockchip@lists.infradead.org, briannorris@chromium.org,
-        groeck@chromium.org, mka@chromium.org,
-        Frank Rowand <frowand.list@gmail.com>, jwerner@chromium.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pstore/ram: Improve backward compatibility with older Chromebooks
-Date:   Wed,  8 May 2019 08:48:31 -0700
-Message-Id: <20190508154832.241525-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B305JCF4NGCczfGfXU1a1TKoXlp/y2MhWZaGK0Ie4es=;
+        b=WIubzIxo8eWSX4RKaYSn3lBx7s7f41b4BgurU1b+4dZldmmqhiW+0yZSUpWZdyAfLw
+         P/GtT/DTb/Tyk1JxcTS9qM2WDsc9SeMEX2S41hLNcg2gKHn+UglWuZ7ZJjnYwKctvpSf
+         ybFsQgXtk8144niKFNLGiGMDuosGo6JwTv1pNq/9SGfLaiRshod9BxLN9v8H6O3NldG2
+         5GOwlvWimxK+1cRfYNGM/nhdoklLtm+JJoW1+6Y+xfvkiRjIR2Yv1BzfYnKjDVFVthxd
+         JO+22NduCx6XJPYshKQvI4PRk8TK5tiqdbu8a5f+HYKTxcX7v3SzLCZCj/rwjGRnX6GQ
+         qtGw==
+X-Gm-Message-State: APjAAAXmI/AMyYQebkescq8xNjyyE/8xWj1JKY5de4gOVgc4Lu0f/Wd2
+        GpfLY3rR5l36VhJNMERZHRUm3xikEbw0F7YYhKg2OA==
+X-Google-Smtp-Source: APXvYqzdJss/5JTx3UQPYduwk+6ZDR8g0zugT/w5g8w3eoUBLk7F64RpNnjtBLeHvy972J2JozmTaIktDHhRlR7gmVo=
+X-Received: by 2002:a2e:810d:: with SMTP id d13mr20255512ljg.93.1557330609560;
+ Wed, 08 May 2019 08:50:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+ <20190429061516.GA9796@aaronlu> <6dfc392f-e24b-e641-2f7d-f336a90415fa@linux.intel.com>
+ <777b7674-4811-dac4-17df-29bd028d6b26@linux.intel.com>
+In-Reply-To: <777b7674-4811-dac4-17df-29bd028d6b26@linux.intel.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Wed, 8 May 2019 23:49:58 +0800
+Message-ID: <CAERHkrvU0nay-cG9equdOBejOZ5Ffdxo+67ZRp9q0L9BQkcAtQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When you try to run an upstream kernel on an old ARM-based Chromebook
-you'll find that console-ramoops doesn't work.
+On Fri, May 3, 2019 at 8:06 AM Tim Chen <tim.c.chen@linux.intel.com> wrote:
+>
+> On 5/1/19 4:27 PM, Tim Chen wrote:
+> > On 4/28/19 11:15 PM, Aaron Lu wrote:
+> >> On Tue, Apr 23, 2019 at 04:18:16PM +0000, Vineeth Remanan Pillai wrote:
+> >>> +/*
+> >>> + * Find left-most (aka, highest priority) task matching @cookie.
+> >>> + */
+> >>> +struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+> >>> +{
+> >>> +   struct rb_node *node = rq->core_tree.rb_node;
+> >>> +   struct task_struct *node_task, *match;
+> >>> +
+> >>> +   /*
+> >>> +    * The idle task always matches any cookie!
+> >>> +    */
+> >>> +   match = idle_sched_class.pick_task(rq);
+> >>> +
+> >>> +   while (node) {
+> >>> +           node_task = container_of(node, struct task_struct, core_node);
+> >>> +
+> >>> +           if (node_task->core_cookie < cookie) {
+> >>> +                   node = node->rb_left;
+> >>
+> >> Should go right here?
+> >>
+> >
+> > I think Aaron is correct.  We order the rb tree where tasks with smaller core cookies
+> > go to the left part of the tree.
+> >
+> > In this case, the cookie we are looking for is larger than the current node's cookie.
+> > It seems like we should move to the right to look for a node with matching cookie.
+> >
+> > At least making the following change still allow us to run the system stably for sysbench.
+> > Need to gather more data to see how performance changes.
+>
+> Pawan ran an experiment setting up 2 VMs, with one VM doing a parallel kernel build and one VM doing sysbench,
+> limiting both VMs to run on 16 cpu threads (8 physical cores), with 8 vcpu for each VM.
+> Making the fix did improve kernel build time by 7%.
 
-Old ARM-based Chromebooks, before <https://crrev.com/c/439792>
-("ramoops: support upstream {console,pmsg,ftrace}-size properties")
-used to create a "ramoops" node at the top level that looked like:
+I'm gonna agree with the patch below, but just wonder if the testing
+result is consistent,
+as I didn't see any improvement in my testing environment.
 
-/ {
-  ramoops {
-    compatible = "ramoops";
-    reg = <...>;
-    record-size = <...>;
-    dump-oops;
-  };
-};
+IIUC, from the code behavior, especially for 2 VMs case(only 2
+different cookies), the
+per-rq rb tree unlikely has nodes with different cookies, that is, all
+the nodes on this
+tree should have the same cookie, so:
+- if the parameter cookie is equal to the rb tree cookie, we meet a
+match and go the
+third branch
+- else, no matter we go left or right, we can't find a match, and
+we'll return idle thread
+finally.
 
-...and these Chromebooks assumed that the downstream kernel would make
-console_size / pmsg_size match the record size.  The above ramoops
-node was added by the firmware so it's not easy to make any changes.
+Please correct me if I was wrong.
 
-Let's match the expected behavior, but only for those using the old
-backward-compatible way of working where ramoops is right under the
-root node.
-
-NOTE: if there are some out-of-tree devices that had ramoops at the
-top level, left everything but the record size as 0, and somehow
-doesn't want this behavior, we can try to add more conditions here.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- s/mimicing/mimicking/ (Brian Norris)
-- Slight rewording of the comment (Brian Norris)
-- Check name rather than relying on of_node_is_root() (Frank Rowand)
-
- fs/pstore/ram.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index c5c685589e36..5195a3a3daec 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -669,6 +669,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
- 			    struct ramoops_platform_data *pdata)
- {
- 	struct device_node *of_node = pdev->dev.of_node;
-+	struct device_node *parent_node;
- 	struct resource *res;
- 	u32 value;
- 	int ret;
-@@ -703,6 +704,26 @@ static int ramoops_parse_dt(struct platform_device *pdev,
- 
- #undef parse_size
- 
-+	/*
-+	 * Some old Chromebooks relied on the kernel setting the
-+	 * console_size and pmsg_size to the record size since that's
-+	 * what the downstream kernel did.  These same Chromebooks had
-+	 * "ramoops" straight under the root node which isn't
-+	 * according to the current upstream bindings (though it was
-+	 * arguably acceptable under a prior version of the bindings).
-+	 * Let's make those old Chromebooks work by detecting that
-+	 * we're not a child of "reserved-memory" and mimicking the
-+	 * expected behavior.
-+	 */
-+	parent_node = of_get_parent(of_node);
-+	if (!of_node_name_eq(parent_node, "reserved-memory") &&
-+	    !pdata->console_size && !pdata->ftrace_size &&
-+	    !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
-+		pdata->console_size = pdata->record_size;
-+		pdata->pmsg_size = pdata->record_size;
-+	}
-+	of_node_put(parent_node);
-+
- 	return 0;
- }
- 
--- 
-2.21.0.1020.gf2820cf01a-goog
-
+Thanks,
+-Aubrey
+>
+> Tim
+>
+>
+> >
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 25638a47c408..ed4cfa49e3f2 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -208,9 +208,9 @@ static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+> >         while (node) {
+> >                 node_task = container_of(node, struct task_struct, core_node);
+> >
+> > -               if (node_task->core_cookie < cookie) {
+> > +               if (cookie < node_task->core_cookie) {
+> >                         node = node->rb_left;
+> > -               } else if (node_task->core_cookie > cookie) {
+> > +               } else if (cookie > node_task->core_cookie) {
+> >                         node = node->rb_right;
+> >                 } else {
+> >                         match = node_task;
+> >
+> >
+>
