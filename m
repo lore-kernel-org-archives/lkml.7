@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BACAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221A0C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A266216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32CE205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfEHOhy (ORCPT
+        id S1728009AbfEHOiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:37:54 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:45302 "EHLO gloria.sntech.de"
+        Wed, 8 May 2019 10:38:08 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:45300 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfEHOhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:37:52 -0400
+        id S1727354AbfEHOhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:37:51 -0400
 Received: from we0048.dip.tu-dresden.de ([141.76.176.48] helo=phil.dip.tu-dresden.de)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1hONhb-0006TE-6u; Wed, 08 May 2019 16:37:47 +0200
+        id 1hONha-0006TE-SP; Wed, 08 May 2019 16:37:46 +0200
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     broonie@kernel.org, lee.jones@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         tony.xie@rock-chips.com, zhangqing@rock-chips.com,
-        huangtao@rock-chips.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        huangtao@rock-chips.com, Rob Herring <robh@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v8 4/5] rtc: rk808: add RK809 and RK817 support.
-Date:   Wed,  8 May 2019 16:37:12 +0200
-Message-Id: <20190508143713.27954-5-heiko@sntech.de>
+Subject: [PATCH v8 3/5] dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
+Date:   Wed,  8 May 2019 16:37:11 +0200
+Message-Id: <20190508143713.27954-4-heiko@sntech.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508143713.27954-1-heiko@sntech.de>
 References: <20190508143713.27954-1-heiko@sntech.de>
@@ -47,226 +46,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Xie <tony.xie@rock-chips.com>
 
-RK809 and RK817 are power management IC chips for multimedia products.
-Most of their functions and registers are same, including the rtc.
+Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
 
 Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- drivers/rtc/Kconfig     |  4 +--
- drivers/rtc/rtc-rk808.c | 68 ++++++++++++++++++++++++++++++++---------
- 2 files changed, 56 insertions(+), 16 deletions(-)
+ .../devicetree/bindings/mfd/rk808.txt         | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index f933c06bff4f..6a7b367be26c 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -373,11 +373,11 @@ config RTC_DRV_MAX77686
- 	  will be called rtc-max77686.
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+index 1683ec3245bc..04df07f6f793 100644
+--- a/Documentation/devicetree/bindings/mfd/rk808.txt
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
+ The rk8xx family current members:
+ rk805
+ rk808
++rk809
++rk817
+ rk818
  
- config RTC_DRV_RK808
--	tristate "Rockchip RK805/RK808/RK818 RTC"
-+	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 RTC"
- 	depends on MFD_RK808
- 	help
- 	  If you say yes here you will get support for the
--	  RTC of RK805, RK808 and RK818 PMIC.
-+	  RTC of RK805, RK809 and RK817, RK808 and RK818 PMIC.
+ Required properties:
+ - compatible: "rockchip,rk805"
+ - compatible: "rockchip,rk808"
++- compatible: "rockchip,rk809"
++- compatible: "rockchip,rk817"
+ - compatible: "rockchip,rk818"
+ - reg: I2C slave address
+ - interrupts: the interrupt outputs of the controller.
+@@ -45,6 +49,23 @@ Optional RK808 properties:
+   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
+   very quickly with no slow ramp time.
  
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rk808-rtc.
-diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
-index 1fb864d4ef83..4e95b6a0a68e 100644
---- a/drivers/rtc/rtc-rk808.c
-+++ b/drivers/rtc/rtc-rk808.c
-@@ -50,9 +50,18 @@
- #define NUM_TIME_REGS	(RK808_WEEKS_REG - RK808_SECONDS_REG + 1)
- #define NUM_ALARM_REGS	(RK808_ALARM_YEARS_REG - RK808_ALARM_SECONDS_REG + 1)
- 
-+struct rk_rtc_compat_reg {
-+	unsigned int ctrl_reg;
-+	unsigned int status_reg;
-+	unsigned int alarm_seconds_reg;
-+	unsigned int int_reg;
-+	unsigned int seconds_reg;
-+};
++Optional shared RK809 and RK817 properties:
++- vcc1-supply:  The input supply for DCDC_REG1
++- vcc2-supply:  The input supply for DCDC_REG2
++- vcc3-supply:  The input supply for DCDC_REG3
++- vcc4-supply:  The input supply for DCDC_REG4
++- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
++- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
++- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
 +
- struct rk808_rtc {
- 	struct rk808 *rk808;
- 	struct rtc_device *rtc;
-+	struct rk_rtc_compat_reg *creg;
- 	int irq;
- };
- 
-@@ -101,7 +110,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
- 	int ret;
- 
- 	/* Force an update of the shadowed registers right now */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
- 				 BIT_RTC_CTRL_REG_RTC_GET_TIME);
- 	if (ret) {
-@@ -115,7 +124,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
- 	 * 32khz. If we clear the GET_TIME bit here, the time of i2c transfer
- 	 * certainly more than 31.25us: 16 * 2.5us at 400kHz bus frequency.
- 	 */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
- 				 0);
- 	if (ret) {
-@@ -123,7 +132,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
- 		return ret;
- 	}
- 
--	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG,
-+	ret = regmap_bulk_read(rk808->regmap, rk808_rtc->creg->seconds_reg,
- 			       rtc_data, NUM_TIME_REGS);
- 	if (ret) {
- 		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
-@@ -162,7 +171,7 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	rtc_data[6] = bin2bcd(tm->tm_wday);
- 
- 	/* Stop RTC while updating the RTC registers */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M);
- 	if (ret) {
-@@ -170,14 +179,14 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 		return ret;
- 	}
- 
--	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG,
-+	ret = regmap_bulk_write(rk808->regmap, rk808_rtc->creg->seconds_reg,
- 				rtc_data, NUM_TIME_REGS);
- 	if (ret) {
- 		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
- 		return ret;
- 	}
- 	/* Start RTC again */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
- 	if (ret) {
- 		dev_err(dev, "Failed to update RTC control: %d\n", ret);
-@@ -195,8 +204,13 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	uint32_t int_reg;
- 	int ret;
- 
--	ret = regmap_bulk_read(rk808->regmap, RK808_ALARM_SECONDS_REG,
-+	ret = regmap_bulk_read(rk808->regmap,
-+			       rk808_rtc->creg->alarm_seconds_reg,
- 			       alrm_data, NUM_ALARM_REGS);
-+	if (ret) {
-+		dev_err(dev, "Failed to read RTC alarm date REG: %d\n", ret);
-+		return ret;
-+	}
- 
- 	alrm->time.tm_sec = bcd2bin(alrm_data[0] & SECONDS_REG_MSK);
- 	alrm->time.tm_min = bcd2bin(alrm_data[1] & MINUTES_REG_MAK);
-@@ -206,7 +220,7 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	alrm->time.tm_year = (bcd2bin(alrm_data[5] & YEARS_REG_MSK)) + 100;
- 	rockchip_to_gregorian(&alrm->time);
- 
--	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
-+	ret = regmap_read(rk808->regmap, rk808_rtc->creg->int_reg, &int_reg);
- 	if (ret) {
- 		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
- 		return ret;
-@@ -225,7 +239,7 @@ static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
- 	struct rk808 *rk808 = rk808_rtc->rk808;
- 	int ret;
- 
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
- 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
- 
- 	return ret;
-@@ -236,7 +250,7 @@ static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
- 	struct rk808 *rk808 = rk808_rtc->rk808;
- 	int ret;
- 
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
- 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
- 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
- 
-@@ -266,7 +280,8 @@ static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
- 	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
- 
--	ret = regmap_bulk_write(rk808->regmap, RK808_ALARM_SECONDS_REG,
-+	ret = regmap_bulk_write(rk808->regmap,
-+				rk808_rtc->creg->alarm_seconds_reg,
- 				alrm_data, NUM_ALARM_REGS);
- 	if (ret) {
- 		dev_err(dev, "Failed to bulk write: %d\n", ret);
-@@ -310,7 +325,7 @@ static irqreturn_t rk808_alarm_irq(int irq, void *data)
- 	struct i2c_client *client = rk808->i2c;
- 	int ret;
- 
--	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
-+	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
- 			   RTC_STATUS_MASK);
- 	if (ret) {
- 		dev_err(&client->dev,
-@@ -363,6 +378,22 @@ static int rk808_rtc_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rk808_rtc_pm_ops,
- 	rk808_rtc_suspend, rk808_rtc_resume);
- 
-+static struct rk_rtc_compat_reg rk808_creg = {
-+	.ctrl_reg = RK808_RTC_CTRL_REG,
-+	.status_reg = RK808_RTC_STATUS_REG,
-+	.alarm_seconds_reg = RK808_ALARM_SECONDS_REG,
-+	.int_reg = RK808_RTC_INT_REG,
-+	.seconds_reg = RK808_SECONDS_REG,
-+};
++Optional RK809 properties:
++- vcc8-supply:  The input supply for SWITCH_REG1
++- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
 +
-+static struct rk_rtc_compat_reg rk817_creg = {
-+	.ctrl_reg = RK817_RTC_CTRL_REG,
-+	.status_reg = RK817_RTC_STATUS_REG,
-+	.alarm_seconds_reg = RK817_ALARM_SECONDS_REG,
-+	.int_reg = RK817_RTC_INT_REG,
-+	.seconds_reg = RK817_SECONDS_REG,
-+};
++Optional RK817 properties:
++- vcc8-supply:  The input supply for BOOST
++- vcc9-supply:  The input supply for OTG_SWITCH
 +
- static int rk808_rtc_probe(struct platform_device *pdev)
- {
- 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-@@ -373,11 +404,20 @@ static int rk808_rtc_probe(struct platform_device *pdev)
- 	if (rk808_rtc == NULL)
- 		return -ENOMEM;
+ Optional RK818 properties:
+ - vcc1-supply:  The input supply for DCDC_REG1
+ - vcc2-supply:  The input supply for DCDC_REG2
+@@ -86,6 +107,21 @@ number as described in RK808 datasheet.
+ 	- SWITCH_REGn
+ 		- valid values for n are 1 to 2
  
-+	switch (rk808->variant) {
-+	case RK809_ID:
-+	case RK817_ID:
-+		rk808_rtc->creg = &rk817_creg;
-+		break;
-+	default:
-+		rk808_rtc->creg = &rk808_creg;
-+		break;
-+	}
- 	platform_set_drvdata(pdev, rk808_rtc);
- 	rk808_rtc->rk808 = rk808;
++Following regulators of the RK809 and RK817 PMIC blocks are supported. Note that
++the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
++number as described in RK809 and RK817 datasheets.
++
++	- DCDC_REGn
++		- valid values for n are 1 to 5 for RK809.
++		- valid values for n are 1 to 4 for RK817.
++	- LDO_REGn
++		- valid values for n are 1 to 9 for RK809.
++		- valid values for n are 1 to 9 for RK817.
++	- SWITCH_REGn
++		- valid values for n are 1 to 2 for RK809.
++	- BOOST for RK817
++	- OTG_SWITCH for RK817
++
+ Following regulators of the RK818 PMIC block are supported. Note that
+ the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+ number as described in RK818 datasheet.
+@@ -98,6 +134,14 @@ number as described in RK818 datasheet.
+ 	- HDMI_SWITCH
+ 	- OTG_SWITCH
  
- 	/* start rtc running by default, and use shadowed timer. */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M |
- 				 BIT_RTC_CTRL_REG_RTC_READSEL_M,
- 				 BIT_RTC_CTRL_REG_RTC_READSEL_M);
-@@ -387,7 +427,7 @@ static int rk808_rtc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
-+	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
- 			   RTC_STATUS_MASK);
- 	if (ret) {
- 		dev_err(&pdev->dev,
++It is necessary to configure three pins for both the RK809 and RK817, the three
++pins are "gpio_ts" "gpio_gt" "gpio_slp".
++	The gpio_gt and gpio_ts pins support the gpio function.
++	The gpio_slp pin is for controlling the pmic states, as below:
++		- reset
++		- power down
++		- sleep
++
+ Standard regulator bindings are used inside regulator subnodes. Check
+   Documentation/devicetree/bindings/regulator/regulator.txt
+ for more details
 -- 
 2.20.1
 
