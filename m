@@ -2,70 +2,89 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10044C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69396C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E183420578
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F38120578
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfEHJfZ (ORCPT
+        id S1727175AbfEHJgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:35:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57874 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfEHJfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:35:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7BC613019882;
-        Wed,  8 May 2019 09:35:24 +0000 (UTC)
-Received: from localhost (ovpn-12-18.pek2.redhat.com [10.72.12.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA67C5D9C8;
-        Wed,  8 May 2019 09:35:23 +0000 (UTC)
-Date:   Wed, 8 May 2019 17:35:20 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        x86@kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        hpa@zytor.com, kirill.shutemov@linux.intel.com,
-        keescook@chromium.org
-Subject: Re: [PATCH v4] x86/mm/KASLR: Fix the size of vmemmap section
-Message-ID: <20190508093520.GD24922@MiWiFi-R3L-srv>
-References: <20190508080417.15074-1-bhe@redhat.com>
- <20190508082418.GC24922@MiWiFi-R3L-srv>
- <20190508090424.GA19015@zn.tnic>
+        Wed, 8 May 2019 05:36:00 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:35161 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfEHJf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 05:35:59 -0400
+Received: from [192.168.1.41] ([92.148.209.44])
+        by mwinf5d59 with ME
+        id 9lbw200030y1A8U03lbwXh; Wed, 08 May 2019 11:35:57 +0200
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 08 May 2019 11:35:57 +0200
+X-ME-IP: 92.148.209.44
+Subject: Re: [PATCH] scsi: bnx2fc: fix incorrect cast to u64 on shift
+ operation
+To:     Colin King <colin.king@canonical.com>,
+        QLogic-Storage-Upstream@qlogic.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190504164829.26631-1-colin.king@canonical.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <718d3ec2-c3e6-bdfa-bbd2-7988f7783bde@wanadoo.fr>
+Date:   Wed, 8 May 2019 11:35:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508090424.GA19015@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 08 May 2019 09:35:24 +0000 (UTC)
+In-Reply-To: <20190504164829.26631-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/19 at 11:04am, Borislav Petkov wrote:
-> On Wed, May 08, 2019 at 04:24:18PM +0800, Baoquan He wrote:
-> > I think this's worth noticing stable tree:
-> > 
-> > Cc: stable@vger.kernel.org
-> 
-> Fixes: ?
+Le 04/05/2019 à 18:48, Colin King a écrit :
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently an int is being shifted and the result is being cast to a u64
+> which leads to undefined behaviour if the shift is more than 31 bits. Fix
+> this by casting the integer value 1 to u64 before the shift operation.
+>
+> Addresses-Coverity: ("Bad shift operation")
+> Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+> index 19734ec7f42e..747f019fb393 100644
+> --- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+> +++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+> @@ -830,7 +830,7 @@ static void bnx2fc_process_unsol_compl(struct bnx2fc_rport *tgt, u16 wqe)
+>   			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
+>   			(u64)err_entry->data.err_warn_bitmap_lo;
+>   		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
+> -			if (err_warn_bit_map & (u64) (1 << i)) {
+> +			if (err_warn_bit_map & ((u64)1 << i)) {
+>   				err_warn = i;
+>   				break;
+>   			}
 
-Not sure which commit validated 5-level.
 
-Hi Kirill,
+Hi, just for the records and if you need additional ack, see
 
-Is this commit OK?
+    https://lkml.org/lkml/2016/11/26/172
 
-Fiexes: eedb92abb9bb ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
+just my 2c :-)
 
-Thanks
-Baoquan
+CJ
+
