@@ -2,225 +2,360 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A3EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F89C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294CA21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kVKVo365"
+	by mail.kernel.org (Postfix) with ESMTP id 223E4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557288713;
+	bh=tHqw+CrlyCnQ9Kul+HvSNIOFOD0JGJrQQfAZyS4/bR8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Le6gYtdA5nxZ4Mnqxa9rnqzMkmUp95OI/wmaG3A6oGInruMHXqDmGmZSr342KKYYr
+	 IE4CidHbrq/KDeBEgXhYrFNmEj6Lif5b2pdrghWzZmrswnJ2m6WYo03PWBIDqqwAEv
+	 T3KJa/JyWZdQ+ERje2DqURy/xNp1PxkNtFNjyuhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfEHEIb (ORCPT
+        id S1726251AbfEHELv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:08:31 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33058 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfEHEIb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:08:31 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m32so18622478qtf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yWv0q/m4CXezpbIlYfskiZo9emgFBrM3RwTHD33KBco=;
-        b=kVKVo365dv38tjyldZmSX4x+Gspo1e9OHAtatit3DPIngDXLiouFZhBbwxWfVK/oy9
-         9wtAKu2Va6gUaMEQ3PQVQMPOev3ZlUBZq4wb+aJNnCNGofPOK2hZFUbPqi26RSZmJpHG
-         1Q4n64GatxtWH1Pv+cmP5qnFg55BYBEkVbzCo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yWv0q/m4CXezpbIlYfskiZo9emgFBrM3RwTHD33KBco=;
-        b=mV+FNC4gckGBzoFoE29r4CsyyJIRh8VCk4/lWPJND3HkjGidlPmMdq/zuPPi766WY7
-         4jJQ7AxNDhFEq7Ty68yury980H0iaNabtonVi/sWjSjzo8BV6t7eb5RpXc8UaEybZgo5
-         J0juD6DLjOQrMvLOeel3vhHOnEG0+anht4uUEAkqu6K3NZD1UG9udoJw+WIQr783MbDt
-         jfOlmjl3EaBn1qX4ZK0D2rhWNoyU8Rq1Ltnm2KKPGC8ohpqwy0Flioo/2APmJQQUu+sy
-         E6EmvYhrIKl1wQC/JlNcP5ks9iPxHWJJYvDOXTrmtkVjOfVFpqTvGJchcqSRI8hu0eJT
-         36hA==
-X-Gm-Message-State: APjAAAV9o9S9ZPUX73pciEDscRIo5j9VedQIFUHZKp3i2PcdJ/1m+5Mu
-        AYizloUUIHVz2fpAlY1fYNQVrPpF9zaZTEa4sfPZGQ==
-X-Google-Smtp-Source: APXvYqxxxSmkf9PLSz/RDL1+3qpHbxikmXEsEiHYdT0nA1jOcbmVTTLhIDmlXHumkunAFeJn7KLh/deR6khriZKWfRQ=
-X-Received: by 2002:ad4:534b:: with SMTP id v11mr29123667qvs.31.1557288510019;
- Tue, 07 May 2019 21:08:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Wed, 8 May 2019 12:08:03 +0800
-Message-ID: <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
+        Wed, 8 May 2019 00:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfEHELv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 00:11:51 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09EA421479;
+        Wed,  8 May 2019 04:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557288710;
+        bh=tHqw+CrlyCnQ9Kul+HvSNIOFOD0JGJrQQfAZyS4/bR8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qg9acp58twME2EehcDiyqU7+sGxcbS/bYFvuFIOtCKc4lIEEkLrz8BuRjbzGY0nXa
+         g2kkTH9wb1/gAUHgpMLaA1PLRM/Nno3mtP9fmkLTr34LefE1+qirkJGkahB1oZtF9j
+         41dR9n5xeux8J9zXuujc/QvkYPhdmHAKKH2KKBJo=
+Date:   Wed, 8 May 2019 13:11:43 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [RFC PATCH v6 4/6] tracing/probe: Support user-space
+ dereference
+Message-Id: <20190508131143.6f69abddd4c11b47bea138fb@kernel.org>
+In-Reply-To: <20190506115226.70c62f7a@gandalf.local.home>
+References: <155289137555.7218.9282784065958321058.stgit@devnote2>
+        <155289143224.7218.6083289081805224583.stgit@devnote2>
+        <20190506115226.70c62f7a@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> +boot-architecture list as there was some discussion about this IIRC.
->
-> On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > Introducing a chosen node, rng-seed, which is an 64 bytes entropy
-> > that can be passed to kernel called very early to increase device
-> > randomness. Bootloader should provide this entropy and the value is
-> > read from /chosen/rng-seed in DT.
-> >
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> >
-> > ---
-> >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
->
-> Actually, this file has been converted to json-schema and lives
-> here[1]. I need to remove this one (or leave it with a reference to
-> the new one).
->
-> >  arch/arm64/kernel/setup.c                    |  2 ++
-> >  drivers/of/fdt.c                             | 33 ++++++++++++++++++++
-> >  include/linux/of_fdt.h                       |  1 +
-> >  4 files changed, 50 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > index 45e79172a646..bfd360691650 100644
-> > --- a/Documentation/devicetree/bindings/chosen.txt
-> > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
-> >  the Linux EFI stub (which will populate the property itself, using
-> >  EFI_RNG_PROTOCOL).
-> >
-> > +rng-seed
-> > +-----------
+On Mon, 6 May 2019 11:52:26 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Mon, 18 Mar 2019 15:43:52 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > +.. _user_mem_access:
+> > +User Memory Access
+> > +------------------
+> > +Kprobe events supports user-space memory access. For that purpose, you can use
+> > +either user-space dereference syntax or 'ustring' type.
 > > +
-> > +This property served as an entropy to add device randomness. It is parsed
-> > +as a 64 byte value, e.g.
->
-> Why only 64-bytes?
-We can also not specify size and read what bootloader can provide.
->
+> > +The user-space dereference syntax allows you to access a field of a data
+> > +structure in user-space. This is done by adding the "u" prefix to the
+> > +dereference syntax. For example, +u4(%si) means it will read memory from the
+> > +address in the register %si offset by 4, and the mory is expected to be in
+> 
+>                                                     ^^^^
+>  "memory"
+
+OK, thanks!
+
+> 
+> > +user-space. You can use this for strings too, e.g. +u0(%si):string will read
+> > +a string from the address in the register %si that is expected to be in user-
+> > +space. 'ustring' is a shortcut way of performing the same task. That is,
+> > ++0(%si):ustring is equivalent to +u0(%si):string.
 > > +
-> > +/ {
-> > +       chosen {
-> > +               rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
-> > +       };
-> > +};
-> > +
-> > +This random value should be provided by bootloader.
-> > +
-> >  stdout-path
-> >  -----------
-> >
-> > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > index 413d566405d1..ade4261516dd 100644
-> > --- a/arch/arm64/kernel/setup.c
-> > +++ b/arch/arm64/kernel/setup.c
-> > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
-> >         early_fixmap_init();
-> >         early_ioremap_init();
-> >
-> > +       early_init_dt_rng_seed(__fdt_pointer);
-> > +
->
-> I'm trying to reduce or eliminate all these early_init_dt_* calls.
->
-> Why is this arch specific and why can't this be done after
-> unflattening? It doesn't look like add_device_randomness() needs
-> anything early.
-Currently unflattening is called after setup_machine_fdt(), which
-called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
-PAGE_KERNEL_RO), and we can't modify DT after that since it's read
-only. But we need to clear (eg. write 0 to it) the rng-seed after
-reading from DT.
->
-> >         setup_machine_fdt(__fdt_pointer);
-> >
-> >         parse_early_param();
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index de893c9616a1..74e2c0c80b91 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/libfdt.h>
-> >  #include <linux/debugfs.h>
-> > +#include <linux/random.h>
-> >  #include <linux/serial_core.h>
-> >  #include <linux/sysfs.h>
-> >
-> > @@ -1117,6 +1118,38 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
-> >         return 1;
+> > +Note that kprobe-event provides the user-memory access syntax but it doesn't
+> > +use it transparently. This means if you use normal dereference or string type
+> > +for user memory, it might fail, and always fails on some arch. So user has to
+> 
+>   "and may always fail on some archs. The user has to carefully check
+>   if the target data is in kernel or user space."
+
+OK. I'll update.
+
+> > +check if the targe data is in kernel or in user space carefully.
+> >  
+> >  Per-Probe Event Filtering
+> >  -------------------------
+> > diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
+> > index 4346e23e3ae7..de8812c932bc 100644
+> > --- a/Documentation/trace/uprobetracer.rst
+> > +++ b/Documentation/trace/uprobetracer.rst
+> > @@ -42,16 +42,17 @@ Synopsis of uprobe_tracer
+> >     @+OFFSET	: Fetch memory at OFFSET (OFFSET from same file as PATH)
+> >     $stackN	: Fetch Nth entry of stack (N >= 0)
+> >     $stack	: Fetch stack address.
+> > -   $retval	: Fetch return value.(*)
+> > +   $retval	: Fetch return value.(\*1)
+> >     $comm	: Fetch current task comm.
+> > -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
+> > +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
+> >     NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
+> >     FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
+> >  		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> >  		       (x8/x16/x32/x64), "string" and bitfield are supported.
+> 
+> Hmm, shouldn't uprobes default to userspace. Isn't the purpose mostly
+> to find out what's going on in userspace. Perhaps we should add a 'k'
+> annotation to uprobes to denote that it's for kernel space, as that
+> should be the exception and not the norm.
+
+No, uprobe can not access kernel space, because it doesn't have the
+current kernel context. Note that all registers, stacks which
+can be accessed from uprobe handler are user-space. We can not access
+kernel context from that. See below
+
+> > -  (*) only for return probe.
+> > -  (**) this is useful for fetching a field of data structures.
+> > +  (\*1) only for return probe.
+> > +  (\*2) this is useful for fetching a field of data structures.
+> > +  (\*3) Unlike kprobe event, "u" prefix will just be ignored.
+
+Thus the 'u' is just ignored on uprobe event.
+
+> >  
+> >  Types
+> >  -----
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 7a6ed76ba104..b595d5ef099a 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -4815,10 +4815,11 @@ static const char readme_msg[] =
+> >  	"\t     args: <name>=fetcharg[:type]\n"
+> >  	"\t fetcharg: %<register>, @<address>, @<symbol>[+|-<offset>],\n"
+> >  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+> > -	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>\n"
+> > +	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
+> >  #else
+> > -	"\t           $stack<index>, $stack, $retval, $comm\n"
+> > +	"\t           $stack<index>, $stack, $retval, $comm,\n"
+> >  #endif
+> > +	"\t           +|-[u]<offset>(<fetcharg>)\n"
+> >  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, string, symbol,\n"
+> >  	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
+> >  	"\t           <type>\\[<array-size>\\]\n"
+> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> > index e346229ddbba..9456f4ca3b8a 100644
+> > --- a/kernel/trace/trace_kprobe.c
+> > +++ b/kernel/trace/trace_kprobe.c
+> > @@ -930,6 +930,12 @@ probe_mem_read(void *dest, void *src, size_t size)
+> >  	return probe_kernel_read(dest, src, size);
 > >  }
-> >
-> > +extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
-> > +                                      pgprot_t prot);
-> > +
-> > +void __init early_init_dt_rng_seed(u64 dt_phys)
+> >  
+> > +static nokprobe_inline int
+> > +probe_mem_read_user(void *dest, void *src, size_t size)
 > > +{
-> > +       void *fdt;
-> > +       int node, size, i;
-> > +       fdt64_t *prop;
-> > +       u64 rng_seed[8];
-> > +
-> > +       fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
-> > +       if (!fdt)
-> > +               return;
-> > +
-> > +       node = fdt_path_offset(fdt, "/chosen");
-> > +       if (node < 0)
-> > +               return;
-> > +
-> > +       prop = fdt_getprop_w(fdt, node, "rng-seed", &size);
-> > +       if (!prop || size != sizeof(u64) * 8)
-> > +               return;
-> > +
-> > +       for (i = 0; i < 8; i++) {
-> > +               rng_seed[i] = fdt64_to_cpu(*(prop + i));
-> > +               /* clear seed so it won't be found. */
-> > +               *(prop + i) = 0;
-> > +       }
-> > +       add_device_randomness(rng_seed, size);
-> > +
-> > +       return;
+> > +	return probe_user_read(dest, src, size);
 > > +}
 > > +
-> >  #ifndef MIN_MEMBLOCK_ADDR
-> >  #define MIN_MEMBLOCK_ADDR      __pa(PAGE_OFFSET)
-> >  #endif
-> > diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> > index a713e5d156d8..a4548dd6351e 100644
-> > --- a/include/linux/of_fdt.h
-> > +++ b/include/linux/of_fdt.h
-> > @@ -71,6 +71,7 @@ extern uint32_t of_get_flat_dt_phandle(unsigned long node);
-> >
-> >  extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
-> >                                      int depth, void *data);
-> > +extern void early_init_dt_rng_seed(u64 dt_phys);
-> >  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
-> >                                      int depth, void *data);
-> >  extern int early_init_dt_scan_chosen_stdout(void);
-> > --
-> > 2.20.1
-> >
+> >  /* Note that we don't verify it, since the code does not come from user space */
+> >  static int
+> >  process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index 30054136cfde..00771e7b6ef8 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -253,6 +253,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  {
+> >  	struct fetch_insn *code = *pcode;
+> >  	unsigned long param;
+> > +	int deref = FETCH_OP_DEREF;
+> >  	long offset = 0;
+> >  	char *tmp;
+> >  	int ret = 0;
+> > @@ -315,9 +316,14 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  		break;
+> >  
+> >  	case '+':	/* deref memory */
+> > -		arg++;	/* Skip '+', because kstrtol() rejects it. */
+> > -		/* fall through */
+> >  	case '-':
+> > +		if (arg[1] == 'u') {
+> > +			deref = FETCH_OP_UDEREF;
+> > +			arg[1] = arg[0];
+> > +			arg++;
+> > +		}
+> 
+> It should be fine to add a 'k' version here too.
+> 
+> > +		if (arg[0] == '+')
+> > +			arg++;	/* Skip '+', because kstrtol() rejects it. */
+> >  		tmp = strchr(arg, '(');
+> >  		if (!tmp)
+> >  			return -EINVAL;
+> > @@ -343,7 +349,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+> >  				return -E2BIG;
+> >  			*pcode = code;
+> >  
+> > -			code->op = FETCH_OP_DEREF;
+> > +			code->op = deref;
+> >  			code->offset = offset;
+> >  		}
+> >  		break;
+> > @@ -459,13 +465,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+> >  	/* Store operation */
+> >  	if (!strcmp(parg->type->name, "string") ||
+> >  	    !strcmp(parg->type->name, "ustring")) {
+> > -		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_IMM &&
+> > -		    code->op != FETCH_OP_COMM) {
+> > +		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_UDEREF
+> > +		    && code->op != FETCH_OP_IMM && code->op != FETCH_OP_COMM) {
+> >  			pr_info("string only accepts memory or address.\n");
+> >  			ret = -EINVAL;
+> >  			goto fail;
+> >  		}
+> > -		if (code->op != FETCH_OP_DEREF || parg->count) {
+> > +		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM)
+> > +		    || parg->count) {
+> >  			/*
+> >  			 * IMM and COMM is pointing actual address, those must
+> >  			 * be kept, and if parg->count != 0, this is an array
+> > @@ -478,7 +485,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+> >  			}
+> >  		}
+> >  		/* If op == DEREF, replace it with STRING */
+> > -		if (!strcmp(parg->type->name, "ustring"))
+> > +		if (!strcmp(parg->type->name, "ustring") ||
+> 
+> Perhaps have a "kstring" for kernel strings in uprobes.
+> 
+> > +		    code->op == FETCH_OP_UDEREF)
+> >  			code->op = FETCH_OP_ST_USTRING;
+> >  		else
+> >  			code->op = FETCH_OP_ST_STRING;
+> > @@ -487,6 +495,9 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+> >  	} else if (code->op == FETCH_OP_DEREF) {
+> >  		code->op = FETCH_OP_ST_MEM;
+> >  		code->size = parg->type->size;
+> > +	} else if (code->op == FETCH_OP_UDEREF) {
+> > +		code->op = FETCH_OP_ST_UMEM;
+> > +		code->size = parg->type->size;
+> >  	} else {
+> >  		code++;
+> >  		if (code->op != FETCH_OP_NOP) {
+> > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> > index 94cdcfdaced0..0feac0a81f82 100644
+> > --- a/kernel/trace/trace_probe.h
+> > +++ b/kernel/trace/trace_probe.h
+> > @@ -92,9 +92,11 @@ enum fetch_op {
+> >  	FETCH_OP_FOFFS,		/* File offset: .immediate */
+> >  	// Stage 2 (dereference) op
+> >  	FETCH_OP_DEREF,		/* Dereference: .offset */
+> > +	FETCH_OP_UDEREF,	/* User-space Dereference: .offset */
+> >  	// Stage 3 (store) ops
+> >  	FETCH_OP_ST_RAW,	/* Raw: .size */
+> >  	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
+> > +	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
+> >  	FETCH_OP_ST_STRING,	/* String: .offset, .size */
+> >  	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
+> >  	// Stage 4 (modify) op
+> > diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+> > index 7526f6f8d7b0..06f2d901c4cf 100644
+> > --- a/kernel/trace/trace_probe_tmpl.h
+> > +++ b/kernel/trace/trace_probe_tmpl.h
+> > @@ -64,6 +64,8 @@ static nokprobe_inline int
+> >  fetch_store_string_user(unsigned long addr, void *dest, void *base);
+> >  static nokprobe_inline int
+> >  probe_mem_read(void *dest, void *src, size_t size);
+> > +static nokprobe_inline int
+> > +probe_mem_read_user(void *dest, void *src, size_t size);
+> >  
+> >  /* From the 2nd stage, routine is same */
+> >  static nokprobe_inline int
+> > @@ -77,14 +79,21 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+> >  
+> >  stage2:
+> >  	/* 2nd stage: dereference memory if needed */
+> > -	while (code->op == FETCH_OP_DEREF) {
+> > -		lval = val;
+> > -		ret = probe_mem_read(&val, (void *)val + code->offset,
+> > -					sizeof(val));
+> > +	do {
+> > +		if (code->op == FETCH_OP_DEREF) {
+> > +			lval = val;
+> > +			ret = probe_mem_read(&val, (void *)val + code->offset,
+> > +					     sizeof(val));
+> > +		} else if (code->op == FETCH_OP_UDEREF) {
+> > +			lval = val;
+> > +			ret = probe_mem_read_user(&val,
+> > +				 (void *)val + code->offset, sizeof(val));
+> > +		} else
+> > +			break;
+> >  		if (ret)
+> >  			return ret;
+> >  		code++;
+> > -	}
+> > +	} while (1);
+> >  
+> >  	s3 = code;
+> >  stage3:
+> > @@ -109,6 +118,10 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+> >  	case FETCH_OP_ST_MEM:
+> >  		probe_mem_read(dest, (void *)val + code->offset, code->size);
+> >  		break;
+> > +	case FETCH_OP_ST_UMEM:
+> > +		probe_mem_read_user(dest, (void *)val + code->offset,
+> > +				    code->size);
+> > +		break;
+> >  	case FETCH_OP_ST_STRING:
+> >  		loc = *(u32 *)dest;
+> >  		ret = fetch_store_string(val + code->offset, dest, base);
+> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > index f4e37c4f8a21..5bc8c3686f6f 100644
+> > --- a/kernel/trace/trace_uprobe.c
+> > +++ b/kernel/trace/trace_uprobe.c
+> > @@ -140,6 +140,13 @@ probe_mem_read(void *dest, void *src, size_t size)
+> >  
+> >  	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
+> >  }
+> > +
+> > +static nokprobe_inline int
+> > +probe_mem_read_user(void *dest, void *src, size_t size)
+> > +{
+> > +	return probe_mem_read(dest, src, size);
+> 
+> Hmm, if probe_mem_read() is the same as probe_mem_read_user(), perhaps
+> not even have a 'u' version for uprobes.
+
+Yes, this is just a hack for sharing the template code.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
