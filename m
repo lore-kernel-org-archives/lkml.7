@@ -2,96 +2,185 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9317C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8A1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06A821530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:24:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="g9J2++dy";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="g9J2++dy"
+	by mail.kernel.org (Postfix) with ESMTP id 1AF3A21655
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfEHOYa (ORCPT
+        id S1727287AbfEHO2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:24:30 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51052 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726914AbfEHOYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:24:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D13058EE2B1;
-        Wed,  8 May 2019 07:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1557325469;
-        bh=xydTi/hn1JDJTRyeJqcJB5CNRIzFduahaKTlPNfO1IM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g9J2++dy2yHjw1VgAG+xuKtM3+Ffdl90VFrw8hMWS5OgnG15ZSG29vx3WWHYinwv9
-         NaciE0RfPfGVsVKEOEphmxnK7sbh/ih6GLZ8a7E9qR9BsXxXllu2adpGkb7yLMZFup
-         w6Bk1ctdc12FOZRshyvo/zvuvq7udEKyH3RQjoOs=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xgX-hAvPV0kW; Wed,  8 May 2019 07:24:29 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 22C688EE0D2;
-        Wed,  8 May 2019 07:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1557325469;
-        bh=xydTi/hn1JDJTRyeJqcJB5CNRIzFduahaKTlPNfO1IM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g9J2++dy2yHjw1VgAG+xuKtM3+Ffdl90VFrw8hMWS5OgnG15ZSG29vx3WWHYinwv9
-         NaciE0RfPfGVsVKEOEphmxnK7sbh/ih6GLZ8a7E9qR9BsXxXllu2adpGkb7yLMZFup
-         w6Bk1ctdc12FOZRshyvo/zvuvq7udEKyH3RQjoOs=
-Message-ID: <1557325468.3196.2.camel@HansenPartnership.com>
-Subject: Re: [PATCH] mptsas: fix undefined behaviour of a shift of an int by
- more than 31 places
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 08 May 2019 07:24:28 -0700
-In-Reply-To: <de7e3aaf-0155-5007-c228-510f0d0de428@canonical.com>
-References: <20190504164010.24937-1-colin.king@canonical.com>
-         <1557027274.2821.2.camel@HansenPartnership.com>
-         <de7e3aaf-0155-5007-c228-510f0d0de428@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 8 May 2019 10:28:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52442 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726783AbfEHO2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:28:37 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 252892C6F3213E655003;
+        Wed,  8 May 2019 22:28:35 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 8 May 2019 22:28:27 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <acme@kernel.org>, <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <xiezhipeng1@huawei.com>
+Subject: [PATCH v2] fix use-after-free in perf_sched__lat
+Date:   Wed, 8 May 2019 22:36:48 +0800
+Message-ID: <20190508143648.8153-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-08 at 14:07 +0100, Colin Ian King wrote:
-> On 05/05/2019 04:34, James Bottomley wrote:
-> > On Sat, 2019-05-04 at 17:40 +0100, Colin King wrote:
-> > > From: Colin Ian King <colin.king@canonical.com>
-> > > 
-> > > Currently the shift of int value 1 by more than 31 places can
-> > > result in undefined behaviour. Fix this by making the 1 a ULL
-> > > value before the shift operation.
-> > 
-> > Fusion SAS is pretty ancient.  I thought the largest one ever
-> > produced had four phys, so how did you produce the overflow?
-> 
-> This was an issue found by static analysis with Coverity; so I guess
-> won't happen in the wild, in which case the patch could be ignored.
+After thread is added to machine->threads[i].dead in
+__machine__remove_thread, the machine->threads[i].dead is freed
+when calling free(session) in perf_session__delete(). So it get a
+Segmentation fault when accessing it in thread__put().
 
-The point I was more making is that if we thought this could ever
-happen in practice, we'd need more error handling than simply this:
-we'd be setting the phy_bitmap to zero which would be every bit as bad
-as some random illegal value.
+In this patch, we delay the perf_session__delete until all threads
+have been deleted.
 
-James
+This can be reproduced by following steps:
+	ulimit -c unlimited
+	export MALLOC_MMAP_THRESHOLD_=0
+	perf sched record sleep 10
+	perf sched latency --sort max
+	Segmentation fault (core dumped)
+
+Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ tools/perf/builtin-sched.c | 63 ++++++++++++++++++++++++++------------
+ 1 file changed, 43 insertions(+), 20 deletions(-)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 275f2d92a7bf..8a4841fa124c 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1774,7 +1774,8 @@ static int perf_sched__process_comm(struct perf_tool *tool __maybe_unused,
+ 	return 0;
+ }
+ 
+-static int perf_sched__read_events(struct perf_sched *sched)
++static int __perf_sched__read_events(struct perf_sched *sched,
++					struct perf_session *session)
+ {
+ 	const struct perf_evsel_str_handler handlers[] = {
+ 		{ "sched:sched_switch",	      process_sched_switch_event, },
+@@ -1783,30 +1784,17 @@ static int perf_sched__read_events(struct perf_sched *sched)
+ 		{ "sched:sched_wakeup_new",   process_sched_wakeup_event, },
+ 		{ "sched:sched_migrate_task", process_sched_migrate_task_event, },
+ 	};
+-	struct perf_session *session;
+-	struct perf_data data = {
+-		.path  = input_name,
+-		.mode  = PERF_DATA_MODE_READ,
+-		.force = sched->force,
+-	};
+-	int rc = -1;
+-
+-	session = perf_session__new(&data, false, &sched->tool);
+-	if (session == NULL) {
+-		pr_debug("No Memory for session\n");
+-		return -1;
+-	}
+ 
+ 	symbol__init(&session->header.env);
+ 
+ 	if (perf_session__set_tracepoints_handlers(session, handlers))
+-		goto out_delete;
++		return -1;
+ 
+ 	if (perf_session__has_traces(session, "record -R")) {
+ 		int err = perf_session__process_events(session);
+ 		if (err) {
+ 			pr_err("Failed to process events, error %d", err);
+-			goto out_delete;
++			return -1;
+ 		}
+ 
+ 		sched->nr_events      = session->evlist->stats.nr_events[0];
+@@ -1814,9 +1802,28 @@ static int perf_sched__read_events(struct perf_sched *sched)
+ 		sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
+ 	}
+ 
+-	rc = 0;
+-out_delete:
++	return 0;
++}
++
++static int perf_sched__read_events(struct perf_sched *sched)
++{
++	struct perf_session *session;
++	struct perf_data data = {
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = sched->force,
++	};
++	int rc;
++
++	session = perf_session__new(&data, false, &sched->tool);
++	if (session == NULL) {
++		pr_debug("No Memory for session\n");
++		return -1;
++	}
++
++	rc = __perf_sched__read_events(sched, session);
+ 	perf_session__delete(session);
++
+ 	return rc;
+ }
+ 
+@@ -3130,12 +3137,25 @@ static void perf_sched__merge_lat(struct perf_sched *sched)
+ 
+ static int perf_sched__lat(struct perf_sched *sched)
+ {
++	struct perf_session *session;
++	struct perf_data data = {
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = sched->force,
++	};
+ 	struct rb_node *next;
++	int rc = -1;
+ 
+ 	setup_pager();
+ 
+-	if (perf_sched__read_events(sched))
++	session = perf_session__new(&data, false, &sched->tool);
++	if (session == NULL) {
++		pr_debug("No Memory for session\n");
+ 		return -1;
++	}
++
++	if (__perf_sched__read_events(sched, session))
++		goto out_delete;
+ 
+ 	perf_sched__merge_lat(sched);
+ 	perf_sched__sort_lat(sched);
+@@ -3164,7 +3184,10 @@ static int perf_sched__lat(struct perf_sched *sched)
+ 	print_bad_events(sched);
+ 	printf("\n");
+ 
+-	return 0;
++	rc = 0;
++out_delete:
++	perf_session__delete(session);
++	return rc;
+ }
+ 
+ static int setup_map_cpus(struct perf_sched *sched)
+-- 
+2.17.1
 
