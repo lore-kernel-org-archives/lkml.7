@@ -2,108 +2,113 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CFAC04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7532AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553B72054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BAA214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFSVhlXB"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AaSAORnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbfEHNHa (ORCPT
+        id S1727240AbfEHNKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:07:30 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35291 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfEHNHa (ORCPT
+        Wed, 8 May 2019 09:10:24 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35846 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfEHNKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:07:30 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c15so3131834qkl.2;
-        Wed, 08 May 2019 06:07:29 -0700 (PDT)
+        Wed, 8 May 2019 09:10:23 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a17so2095225qth.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 06:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PB0UQqZL2l81e8KBphbHsFIt1aSxB71MYNy4uU0+TBs=;
-        b=cFSVhlXBBuje5m5yG1SvlpxPFYTkUqhuABFFnM8Vap7s0cUik1oEGWP9QprZQO/4N5
-         3hIN3RGR1yVlwPky/QSUD9Q7ZHA7b8BPqbuwQvTvsuw+p7GFIWmRIGuTrLFcyGjlvCOg
-         cbWGC5thnbw+vzjdfs7WW6Sj1cjDOdFDkunmt2TPMNxOLKDTVHUxJ/iRJYv0nW/aaLjF
-         AYVX1MhiuDZ6p133n04G6zR0Afc9LSBf7Nef7XBmhWgSQRpg2F9EHnDIBa6k1YMz0tn/
-         1HQZ/EKTF2NKd3MPu/SxDC20Ay19kLnrmtwSsiYQ0G43B4kFJIwdmASlfCUHw1X3ESYy
-         KG0A==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bFa5fWOj2U39bADpZiNUIdboEoriIx8kxrH5dUaTGmo=;
+        b=AaSAORnuiyrLy4PFh/pbfE/NUYTkNM9t+xn/oTFhNa7mX9sFbcaoVkJmtjF5sY1MXr
+         eIqj3qnqmzXQf3o3O2SkcLx/OstU8qzgySEj2W774c/ByF6zLPv23RBIY4/AdgqDX69h
+         EviloJdUjLgbLAaKBBr73X4eiqQGOVvj+ngtfEcjYbzHmsYnmkMhfwihIpIXwxyWhYC4
+         P9wewZNWzPkhrAL+SemyWnARTqAOxs6aObkeomkAd+cUPUB9gKUlTbMdI1yFIc/blKLS
+         prRJc8G/OKf329fbsQGzeslm5Dmgr/SUc0aGC1j/Ff9mMKPmoeDMAUkVDIggh9P0Q4cU
+         WJGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PB0UQqZL2l81e8KBphbHsFIt1aSxB71MYNy4uU0+TBs=;
-        b=kDE0rjM25bGvdPNAvEnOXlLVDQhGuvnQwdyAnGShq8bPxvG6g4bLiC+8mJ8NS18twU
-         AisTC/TUDx6b2O+fJ5V+mqKbqE9u3O3ZV4q9zrcWNnPoGu/tFPHPcR4QQ5bKvm3TQUvE
-         VQJiRIrUS5SgjfDSL/koeNK4vuglM7EmkCZIqs+rDqIZW9iQwmuPhGg8nXh2/n9HiB31
-         ok4/5hNVHTpvNSYD4uHRw21BbweoRXtvJZ54hIGye4GgHRBFtfpkDdvaGqUldRu/g96H
-         oWQmqdvnE0hU8fIAn/elmyX7QG3qm2XPLGb9YJDKAg3r1Vlbmwt3v89uc0j3+Igpbvbf
-         qpyQ==
-X-Gm-Message-State: APjAAAWRfmogzgZFUOOA2E1RuYo4pVJBiM4lSDJIGB4JAOB9pFAmvG4t
-        tgo/oi7h/0I8Q56CBobU00k=
-X-Google-Smtp-Source: APXvYqwdNnENVaxCQS/UfbH5uDsAC1Cpc98U/DY8M3zrGBK2M8tRp+nc6/EGVHJZB5x+wEqALkCAtg==
-X-Received: by 2002:a37:40d2:: with SMTP id n201mr29155323qka.83.1557320849170;
-        Wed, 08 May 2019 06:07:29 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:6268:7a0b:50be:cebc])
-        by smtp.gmail.com with ESMTPSA id g206sm9021192qkb.75.2019.05.08.06.07.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 06:07:28 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm/a6xx: No zap shader is not an error
-Date:   Wed,  8 May 2019 06:06:52 -0700
-Message-Id: <20190508130726.27557-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bFa5fWOj2U39bADpZiNUIdboEoriIx8kxrH5dUaTGmo=;
+        b=H8OzIAaPDQCEr9lFOYt7hlWPSZsZzTnZLR6U1mQUzssGx1qi6gD089ynLVKdxYAWt0
+         fM3RhhQK4BYpjvKQZS/iLpcKv34Gw7ilWBAXVFghE3PUBm5OSD1OVIAA7z7d42OONBpa
+         ZbtxKg7LW+j3lHzKa6JCEv6JC+8jFbGgpRUR5/YR6igBh7UsKKDVH5D1R2EFBf0Erodo
+         JhaicAbicVzHb2JhLrn08wjmtp+YJQ6MpFdiZirnRJaZfyGeU1T82P3vMbNd+sLffpKC
+         YaRRxFuXliRsMbZcgQF5E1TxtvFNTdwzgTAU5mZHkDpiLTaqgVXRtgyUso/cSjkmmIPQ
+         r9Pw==
+X-Gm-Message-State: APjAAAULTSOwgBVQ92orXG/wyPtcu1g+wTpuYtsAy9ZRv5nmbW+4PFGw
+        85/gyBojZuhaLckY6572wpOoTg==
+X-Google-Smtp-Source: APXvYqzm+oveL+e4Ksxqb7E1V14270yzcZkoBPQa3SSnfTb4ZkyMqyPZpOmRXi68d8c82QtaH6B5NQ==
+X-Received: by 2002:a0c:8d07:: with SMTP id r7mr17494725qvb.206.1557321022824;
+        Wed, 08 May 2019 06:10:22 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id v190sm6992635qkc.9.2019.05.08.06.10.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 06:10:22 -0700 (PDT)
+Message-ID: <1557321021.6132.21.camel@lca.pw>
+Subject: Re: ptrace warning due to "cgroup: get rid of
+ cgroup_freezer_frozen_exit()"
+From:   Qian Cai <cai@lca.pw>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "oleg@redhat.com" <oleg@redhat.com>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "lizefan@huawei.com" <lizefan@huawei.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 08 May 2019 09:10:21 -0400
+In-Reply-To: <20190507213752.GA24308@tower.DHCP.thefacebook.com>
+References: <1557259462.6132.20.camel@lca.pw>
+         <20190507213752.GA24308@tower.DHCP.thefacebook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, 2019-05-07 at 21:37 +0000, Roman Gushchin wrote:
+> Can you, please, try if the following patch fixes the problem?
 
-Depending on platform firmware, a zap shader may not be required to take
-the GPU out of secure mode on boot, in which case we can just write
-RBBM_SECVID_TRUST_CNTL directly.  Which we *mostly* handled, but missed
-clearing 'ret' resulting that hw_init() returned an error on these
-devices.
+It works great.
 
-Fixes: abccb9fe3267 drm/msm/a6xx: Add zap shader load
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index ec24508b9d68..e74dce474250 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -527,6 +527,7 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 		dev_warn_once(gpu->dev->dev,
- 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
- 		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+		ret = 0;
- 	}
- 
- out:
--- 
-2.20.1
-
+> --
+> 
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 16b72f4f14df..bf2f268f1386 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2484,9 +2484,6 @@ bool get_signal(struct ksignal *ksig)
+>                 sigdelset(&current->pending.signal, SIGKILL);
+>                 recalc_sigpending();
+>                 current->jobctl &= ~JOBCTL_TRAP_FREEZE;
+> -               spin_unlock_irq(&sighand->siglock);
+> -               if (unlikely(cgroup_task_frozen(current)))
+> -                       cgroup_leave_frozen(true);
+>                 goto fatal;
+>         }
+>  
+> @@ -2608,8 +2605,10 @@ bool get_signal(struct ksignal *ksig)
+>                         continue;
+>                 }
+>  
+> -               spin_unlock_irq(&sighand->siglock);
+>         fatal:
+> +               spin_unlock_irq(&sighand->siglock);
+> +               if (unlikely(cgroup_task_frozen(current)))
+> +                       cgroup_leave_frozen(true);
+>  
+>                 /*
+>                  * Anything else is fatal, maybe with a core dump.
