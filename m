@@ -7,55 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF80BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76C8214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1600C214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557306103;
-	bh=J+lTId5Jw0PaXBSQUDJf2TtyCVbbsYx9XyZ34EEvT8A=;
+	s=default; t=1557306108;
+	bh=3lVs43UEkhF7T1qGGgMvzS45dl7693bNEg3z2tjnyhM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SLXBbVMdBQmFwFB2/Th4fG38Tk3ymZVgrlBnScOzhkYa22w89aZSUFJKv3CJ+syXl
-	 HfqJlOUynT9bupaIPo9dJu7YzXPh0IxPy74q7K1LfbZsp3wAJuKWjfnaglKLuVoJLa
-	 6mTtQ21Xa9D5etTzOK++1rw522ER8enfcmyQVaq8=
+	b=Stp0KtXeLIDiUfodOBZO48G7ZkzyUGii7W86GxVYJd0TCGg9uEt1bAHN7LMc0VQ9I
+	 1H34+aLOIph43vhLjYjZsRpBtN4IVrjc7wZnRI+s6+0TntX8E1Bm+Lw985axITjp44
+	 FF+mZMvNJiy4Grlu1Q73RvAyeFgxGdVGdf+sM6eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfEHJBm (ORCPT
+        id S1726687AbfEHJBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:01:42 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44756 "EHLO
+        Wed, 8 May 2019 05:01:46 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44826 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfEHJBm (ORCPT
+        with ESMTP id S1726452AbfEHJBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:01:42 -0400
+        Wed, 8 May 2019 05:01:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=bwHhshSS/kbfWXI+gsQyuvdaNlF4NdaPvcOqb1oDAdo=; b=bsWwKanjClyz
-        3Q9U6F/VocjQtO/23y2c9tlFDgFhqXBiGnFtBEHU/dJYlV3dP1j2bgg8Bk6D6wCZnPj6Tf+kCXAQD
-        hoNGpgQF/9zNWx9PFWMKEkNNEKceL1N4jLyGKKvmd3v6dzjvnJVyeCMsn22Zwf9I5hCtLMUe58Z9k
-        N7pE8=;
+        List-Archive; bh=jLxFpJS05ZYrxx0fuMS+5wjxjXR7kCedppzu/OUwilA=; b=r/8bGS+ZlFTm
+        MOHumLydScMrBTCMl4/2Xl45tKOy5iwxXqAleiJaCn7X5SlmDg/ws4nSfe/PjHIEmxaQLDQ5G/+oL
+        lbpqTZK2KYzVIH4QMi6rYHWvdW19MOLgXOJpAM8maRC28YE3XYG1nVtzC/nYbrv5+6H+80R6nCJ5I
+        cJuMw=;
 Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hOISA-0007dM-I7; Wed, 08 May 2019 09:01:31 +0000
+        id 1hOISG-0007dR-MH; Wed, 08 May 2019 09:01:40 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 34D1C44000C; Wed,  8 May 2019 10:01:24 +0100 (BST)
+        id 6916C440034; Wed,  8 May 2019 10:01:28 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "sound: soc-acpi: fix implicit header use of module.h/export.h" to the asoc tree
-In-Reply-To: <1555168518-15287-1-git-send-email-paul.gortmaker@windriver.com>
+        patchwork-bot+notify@kernel.org
+Subject: Applied "ASoC: hdmi-codec: remove reference to the dai drivers in the private data" to the asoc tree
+In-Reply-To: <20190506095815.24578-4-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190508090124.34D1C44000C@finisterre.sirena.org.uk>
-Date:   Wed,  8 May 2019 10:01:24 +0100 (BST)
+Message-Id: <20190508090128.6916C440034@finisterre.sirena.org.uk>
+Date:   Wed,  8 May 2019 10:01:28 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   sound: soc-acpi: fix implicit header use of module.h/export.h
+   ASoC: hdmi-codec: remove reference to the dai drivers in the private data
 
 has been applied to the asoc tree at
 
@@ -88,49 +87,80 @@ to this mail.
 Thanks,
 Mark
 
-From 473849e7f208b2d7de004c6c6c0eabe037d125ac Mon Sep 17 00:00:00 2001
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Date: Sat, 13 Apr 2019 11:15:18 -0400
-Subject: [PATCH] sound: soc-acpi: fix implicit header use of module.h/export.h
+From 1de005d47d90343666c5cc50a50929e05e52baac Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Mon, 6 May 2019 11:58:14 +0200
+Subject: [PATCH] ASoC: hdmi-codec: remove reference to the dai drivers in the
+ private data
 
-This file is implicitly relying on an instance of including
-module.h from <linux/acpi.h>.
+Keeping the a pointer to the dai drivers is not necessary. It is not used
+by the hdmi_codec after the probe.
 
-Ideally, header files under include/linux shouldn't be adding
-includes of other headers, in anticipation of their consumers,
-but just the headers needed for the header itself to pass
-parsing with CPP.
+Even if it was used, the 'struct snd_soc_dai_driver' can accessed through
+the 'struct snd_soc_dai' so keeping the pointer in the private data
+structure is not useful.
 
-The module.h is particularly bad in this sense, as it itself does
-include a whole bunch of other headers, due to the complexity of
-module support.
-
-Here, we make the include explicit, in order to allow the future
-removal of module.h from linux/acpi.h without causing build breakage.
-
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/soc-acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/hdmi-codec.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/soc-acpi.c b/sound/soc/soc-acpi.c
-index 4fb29f0e561e..444ce0602f76 100644
---- a/sound/soc/soc-acpi.c
-+++ b/sound/soc/soc-acpi.c
-@@ -4,6 +4,8 @@
- //
- // Copyright (c) 2013-15, Intel Corporation.
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 4d32f93f6be6..9408e6bc4d3e 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -278,7 +278,6 @@ static const struct hdmi_codec_cea_spk_alloc hdmi_codec_channel_alloc[] = {
  
-+#include <linux/export.h>
-+#include <linux/module.h>
- #include <sound/soc-acpi.h>
+ struct hdmi_codec_priv {
+ 	struct hdmi_codec_pdata hcd;
+-	struct snd_soc_dai_driver *daidrv;
+ 	struct hdmi_codec_daifmt daifmt[2];
+ 	uint8_t eld[MAX_ELD_BYTES];
+ 	struct snd_pcm_chmap *chmap_info;
+@@ -715,6 +714,7 @@ static const struct snd_soc_component_driver hdmi_driver = {
+ static int hdmi_codec_probe(struct platform_device *pdev)
+ {
+ 	struct hdmi_codec_pdata *hcd = pdev->dev.platform_data;
++	struct snd_soc_dai_driver *daidrv;
+ 	struct device *dev = &pdev->dev;
+ 	struct hdmi_codec_priv *hcp;
+ 	int dai_count, i = 0;
+@@ -737,27 +737,25 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- struct snd_soc_acpi_mach *
+ 	hcp->hcd = *hcd;
+-	hcp->daidrv = devm_kcalloc(dev, dai_count, sizeof(*hcp->daidrv),
+-				   GFP_KERNEL);
+-	if (!hcp->daidrv)
++	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv), GFP_KERNEL);
++	if (!daidrv)
+ 		return -ENOMEM;
+ 
+ 	if (hcd->i2s) {
+-		hcp->daidrv[i] = hdmi_i2s_dai;
+-		hcp->daidrv[i].playback.channels_max =
+-			hcd->max_i2s_channels;
++		daidrv[i] = hdmi_i2s_dai;
++		daidrv[i].playback.channels_max = hcd->max_i2s_channels;
+ 		i++;
+ 	}
+ 
+ 	if (hcd->spdif) {
+-		hcp->daidrv[i] = hdmi_spdif_dai;
++		daidrv[i] = hdmi_spdif_dai;
+ 		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
+ 	}
+ 
+ 	dev_set_drvdata(dev, hcp);
+ 
+-	ret = devm_snd_soc_register_component(dev, &hdmi_driver, hcp->daidrv,
+-				     dai_count);
++	ret = devm_snd_soc_register_component(dev, &hdmi_driver, daidrv,
++					      dai_count);
+ 	if (ret) {
+ 		dev_err(dev, "%s: snd_soc_register_component() failed (%d)\n",
+ 			__func__, ret);
 -- 
 2.20.1
 
