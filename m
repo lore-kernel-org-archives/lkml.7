@@ -2,149 +2,83 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076A8C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1CCC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB7B214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557321330;
-	bh=FcJSM/y2BlME+YwJKXMk2xvlnDqC5u1EXDgBURrRrFQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=kBohZL9ZuW2AYJgq05aMh5FugcZj/szagpsovqEalO9uE/DVH9LsAdb+vXJRUKoYK
-	 CmlPP7uyUKJqJ7oMARjlrfqzdr8+PjC5GbZ7QERp01PP7taUCK1Froq1VeE3WPn+8p
-	 ojX37Wyh67XJDwQiW9E5/nUksIuC9cfU7rRGd7PI=
+	by mail.kernel.org (Postfix) with ESMTP id D5DE720850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfEHNPa (ORCPT
+        id S1728766AbfEHNRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40282 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 09:17:54 -0400
+Received: from mga14.intel.com ([192.55.52.115]:42061 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbfEHNP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:15:29 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5685520850;
-        Wed,  8 May 2019 13:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557321328;
-        bh=FcJSM/y2BlME+YwJKXMk2xvlnDqC5u1EXDgBURrRrFQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Co24EdjTGma2lIPhu3U3ZulvyXwvV1sWJYNfPsrhv5STyAuxcjDRYveSac66hi0IN
-         kIGk+y2Xs2qAZ5KZtn8Md1tUAGmo9OJ0d9/z4X8LxP5S3ib2KDyq7LB2QDBd1/QySn
-         xsyIa8GbUlFGiwi7SvYCY0h8B6p1qENU/fejecGk=
-Message-ID: <1557321326.2167.5.camel@kernel.org>
-Subject: Re: [PATCH v2] Documentation/trace: Add clarification how histogram
- onmatch works
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Date:   Wed, 08 May 2019 08:15:26 -0500
-In-Reply-To: <20190507201157.2673f2de@gandalf.local.home>
-References: <20190507144946.7998-1-tstoyanov@vmware.com>
-         <20190507201157.2673f2de@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1727506AbfEHNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:17:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 06:17:52 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga001.fm.intel.com with ESMTP; 08 May 2019 06:17:50 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hOMSD-0000ml-Sq; Wed, 08 May 2019 16:17:49 +0300
+Date:   Wed, 8 May 2019 16:17:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-scsi@vger.kernel.org, gregkh@linuxfoundation.org,
+        jic23@kernel.org, lars@metafoo.de
+Subject: Re: [PATCH 3/3][V3] iio: Handle enumerated properties with gaps
+Message-ID: <20190508131749.GM9224@smile.fi.intel.com>
+References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
+ <20190508111913.7276-3-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508111913.7276-3-alexandru.ardelean@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Wed, May 08, 2019 at 02:19:13PM +0300, Alexandru Ardelean wrote:
+> From: Lars-Peter Clausen <lars@metafoo.de>
+> 
+> Some enums might have gaps or reserved values in the middle of their value
+> range. E.g. consider a 2-bit enum where the values 0, 1 and 3 have a
+> meaning, but 2 is a reserved value and can not be used.
+> 
+> Add support for such enums to the IIO enum helper functions. A reserved
+> values is marked by setting its entry in the items array to NULL rather
+> than the normal descriptive string value.
+> 
+> Also, `__sysfs_match_string()` now supports NULL gaps, so that doesn't
+> require any changes.
 
-On Tue, 2019-05-07 at 20:11 -0400, Steven Rostedt wrote:
-> Tom,
-> 
-> Can you review this patch.
-> 
+> -	for (i = 0; i < e->num_items; ++i)
+> +	for (i = 0; i < e->num_items; ++i) {
+> +		if (!e->items[i])
+> +			continue;
+>  		len += scnprintf(buf + len, PAGE_SIZE - len, "%s ", e->items[i]);
+> +	}
 
-Sure.
+The problem here that the user will have no clue where the gap is happened, to
+solve this we need either bitmap of array, where set bits shows defined items,
+or use comma-separated list of values. The latter would need another node since
+we don't break user space.
 
-> Jon,
-> 
-> After Tom gives his review, can you take this in your tree?
-> 
-> Thanks!
-> 
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Thanks,
-
-Tom
-
-> -- Steve
-> 
-> 
-> On Tue,  7 May 2019 17:49:46 +0300
-> Tzvetomir Stoyanov <tstoyanov@vmware.com> wrote:
-> 
-> > The current trace documentation, the section describing histogram's
-> > "onmatch"
-> > is not straightforward enough about how this action is applied. It
-> > is not
-> > clear what criteria are used to "match" both events. A short note
-> > is added,
-> > describing what exactly is compared in order to match the events.
-> > 
-> > Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> > ---
-> >  Documentation/trace/histogram.txt | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/trace/histogram.txt
-> > b/Documentation/trace/histogram.txt
-> > index 7ffea6aa22e3..d97f0530a731 100644
-> > --- a/Documentation/trace/histogram.txt
-> > +++ b/Documentation/trace/histogram.txt
-> > @@ -1863,7 +1863,10 @@ hist trigger specification.
-> >  
-> >      The 'matching.event' specification is simply the fully
-> > qualified
-> >      event name of the event that matches the target event for the
-> > -    onmatch() functionality, in the form 'system.event_name'.
-> > +    onmatch() functionality, in the form 'system.event_name'.
-> > Histogram
-> > +    keys of both events are compared to find if events match. In
-> > the case
-> > +    multiple histogram keys are used, both events must have the
-> > same
-> > +    number of keys, and the keys must match in the same order.
-> >  
-> >      Finally, the number and type of variables/fields in the 'param
-> >      list' must match the number and types of the fields in the
-> > @@ -1920,9 +1923,10 @@ hist trigger specification.
-> >  	    /sys/kernel/debug/tracing/events/sched/sched_waking/tr
-> > igger
-> >  
-> >      Then, when the corresponding thread is actually scheduled onto
-> > the
-> > -    CPU by a sched_switch event, calculate the latency and use
-> > that
-> > -    along with another variable and an event field to generate a
-> > -    wakeup_latency synthetic event:
-> > +    CPU by a sched_switch event (where the sched_waking key	
-> > "saved_pid"
-> > +    matches the sched_switch key "next_pid"), calculate the
-> > latency and
-> > +    use that along with another variable and an event field to
-> > generate
-> > +    a wakeup_latency synthetic event:
-> >  
-> >      # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-
-> > $ts0:\
-> >              onmatch(sched.sched_waking).wakeup_latency($wakeup_lat
-> > ,\
-> 
-> 
