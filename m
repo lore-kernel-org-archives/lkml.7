@@ -2,148 +2,87 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A62C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14248C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543EB20850
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k5zj7OpV"
+	by mail.kernel.org (Postfix) with ESMTP id E0198216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfEHQyE (ORCPT
+        id S1728792AbfEHQz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:54:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39435 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbfEHQxk (ORCPT
+        Wed, 8 May 2019 12:55:28 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:44752 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728686AbfEHQz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:53:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so9078377pgi.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rryjEKnmXLSanss7IlocYKHWgRAPzviP483T/WAfnlk=;
-        b=k5zj7OpVLHB6FkCHu5bgHvJmVAY2Fm5kbUxukWoHkbWSg7+NSTxwpn13m1tjSxlP2v
-         WG0ewAXGS7GpfSwn3v5qlPMTCNpjytjEs9V2XtoBrLXxnUe7dELh0yhX6SpM2JOfY1tN
-         O2NQ0JwnFAXxm22Z49KOLosW4T2IXbAsFu+swmsySIXs79e4vSCwAC73TdytrKUkczhF
-         /2O4eSPaTNs40AfsWNfa50HjQrPrsVqrx3U9azCKmchBd6aV1FCr0KgzeHNpRHiWgzht
-         QzVIb52x9ReAp+ro1VYtthU9hZs4pYtoBKvVN5pCwIlvZKRO51MIhD6C2Zc0aW2CZjrO
-         eYtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rryjEKnmXLSanss7IlocYKHWgRAPzviP483T/WAfnlk=;
-        b=uUMwcrkqhBFrHwFhzJb1pXVCxBRnxij909v2UHReGPqF766rxKWgyBGORfq9q5NfRl
-         6TCZ3FcSwDbgj5cArvaV8hBPc+i3cM3l1XJVG5BH/S3eVxvE5LDYrLSo1LXUF5iymEK1
-         Uhtsd/R/yd7n13zvUclev+OpgZJN/jD0+XnyqCjAbsN8Of27p4rL7qxSqm46zUUvgieJ
-         1K79UYYMYU7AHajlp6rXDEoob6SY/08lMw/1VaFEADHJGXFwKIxhCZnN2jfBdPxR5JQa
-         GMrcFY0sJ1jtF684PUqu0duPPSnobV9KUuGguuXkemPpaeC0oNVTYxMzAg1X/nEVjFZn
-         ulvA==
-X-Gm-Message-State: APjAAAWqE85TC+AM39WNJNUivKDERnNveJNhoWutonD5Hyq/RfQgJ9cF
-        a04o6q+oUvaqYQJG/zroLz/r
-X-Google-Smtp-Source: APXvYqyZuJF54O/JQ1Y+OS1fouLyTx2afjh5rMr6KsiYEj7BKNzIGXSc5e6v3oGSPymxHCVaKlEViQ==
-X-Received: by 2002:a63:a449:: with SMTP id c9mr2726591pgp.149.1557334419602;
-        Wed, 08 May 2019 09:53:39 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:6000:7ab1:cd79:1ccc:df38:79c0])
-        by smtp.gmail.com with ESMTPSA id m2sm25180676pfi.24.2019.05.08.09.53.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 09:53:38 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 2/4] arm64: dts: bitmain: Add reset controller support for BM1880 SoC
-Date:   Wed,  8 May 2019 22:23:17 +0530
-Message-Id: <20190508165319.19822-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
-References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
+        Wed, 8 May 2019 12:55:28 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TRCE-nj_1557334521;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRCE-nj_1557334521)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 09 May 2019 00:55:25 +0800
+Subject: Re: [PATCH] mm: filemap: correct the comment about VM_FAULT_RETRY
+To:     josef@toxicpanda.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <66e2f965-4f4d-a755-69b3-5342aa761ff3@linux.alibaba.com>
+Date:   Wed, 8 May 2019 09:55:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset controller support for Bitmain BM1880 SoC. This SoC has two
-reset controllers, each controlling reset lines of different peripherals.
-This commit also adds reset support to UART peripherals.
+Ping.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- arch/arm64/boot/dts/bitmain/bm1880.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-index fdfdc65d29ef..37ecb760a2d2 100644
---- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-+++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-@@ -5,6 +5,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/bitmain,bm1880-reset.h>
- 
- / {
- 	compatible = "bitmain,bm1880";
-@@ -92,6 +93,18 @@
- 				compatible = "bitmain,bm1880-pinctrl";
- 				reg = <0x50 0x4B0>;
- 			};
-+
-+			clk_rst: reset-controller@800 {
-+				compatible = "bitmain,bm1880-reset";
-+				reg = <0x800 0x8>;
-+				#reset-cells = <1>;
-+			};
-+
-+			rst: reset-controller@C00 {
-+				compatible = "bitmain,bm1880-reset";
-+				reg = <0xC00 0x8>;
-+				#reset-cells = <1>;
-+			};
- 		};
- 
- 		uart0: serial@58018000 {
-@@ -100,6 +113,7 @@
- 			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART0_1_CLK>;
- 			status = "disabled";
- 		};
- 
-@@ -109,6 +123,7 @@
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART0_1_ACLK>;
- 			status = "disabled";
- 		};
- 
-@@ -118,6 +133,7 @@
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART2_3_CLK>;
- 			status = "disabled";
- 		};
- 
-@@ -127,6 +143,7 @@
- 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst BM1880_RST_UART2_3_ACLK>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.17.1
+Josef, any comment on this one?
+
+
+Thanks,
+
+Yang
+
+
+
+On 4/25/19 4:22 PM, Yang Shi wrote:
+> The commit 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking
+> operations") changed when mmap_sem is dropped during filemap page fault
+> and when returning VM_FAULT_RETRY.
+>
+> Correct the comment to reflect the change.
+>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>   mm/filemap.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index d78f577..f0d6250 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2545,10 +2545,8 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+>    *
+>    * vma->vm_mm->mmap_sem must be held on entry.
+>    *
+> - * If our return value has VM_FAULT_RETRY set, it's because
+> - * lock_page_or_retry() returned 0.
+> - * The mmap_sem has usually been released in this case.
+> - * See __lock_page_or_retry() for the exception.
+> + * If our return value has VM_FAULT_RETRY set, it's because the mmap_sem
+> + * may be dropped before doing I/O or by lock_page_maybe_drop_mmap().
+>    *
+>    * If our return value does not have VM_FAULT_RETRY set, the mmap_sem
+>    * has not been released.
 
