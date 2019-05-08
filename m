@@ -2,100 +2,186 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A65C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD2FC46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0662214AE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC41E2173C
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xzb1Bg7B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RBlup3KP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEHCSv (ORCPT
+        id S1726591AbfEHCTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 22:18:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34099 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfEHCSu (ORCPT
+        Tue, 7 May 2019 22:19:42 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:45379 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfEHCTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 22:18:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m20so820367wmg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 19:18:49 -0700 (PDT)
+        Tue, 7 May 2019 22:19:42 -0400
+Received: by mail-yw1-f65.google.com with SMTP id w18so14956816ywa.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 19:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=2VQYmcOhfKzkM0UugtZ6mKBvbFSRbfp3capv5V8nMNw=;
-        b=Xzb1Bg7BQV7IlwuVho+Y2FAzS7+4V/AblssRM+CZs1Q6GtbB2f3dDtLYt6344mfRrr
-         1lY7KOT8XsEDplUFVBKcgJ/GOBz1C6oWAN33mepUNA4gBj1gEcjBqelBA4coWfwv55RQ
-         CTxT1ixJianc5C/PwzTAxgf3ykxLPTzmpS6ihRcJ0Kenf+B3tU3qV3RzuBQ4BisncGRK
-         yexLD40nG3Db8ePlVgikd1XuYCVmvRVu8PY/eRFyY8u5cWowYuOhLf5ZHn4mk151yXho
-         D7YyiadnfxqSb1UMIxkeH7MQ906jiqrjuMj2noJ/NjBIDq+P/LBOXMqY6ik3cwAWpdAs
-         dH9w==
+        h=from:to:cc:subject:date:message-id;
+        bh=53Jboj1jRgFvMb4WzHp98oy3I5nfTVXEAchn1y2EzOc=;
+        b=RBlup3KPFNcyrB9ylm1qkvs0cblxy6flpxA0OYqN53KJ8PIAYu8bo8D+/x/2pvQsmM
+         dl4wfuL8b02ODRM/SfXQfikr08d923wAv0kjMs9VhtlTv4EQiORgx3Rxhbwu9XcyWbHE
+         mj0pse0+S5xQSdjyolPLlxWnNr4H+2+Jnopz28QnJz9ijG2nGcc4nXu1G7Nv9QoiIeo3
+         L8i+OFgfTReIrAy3/4ipDRegLIPRsI3twnwK1LFJ5480U8fjuXKeZnCUwamHV9ZcDWbn
+         OOw6DkQabvzVU9g9iQdPeluo3AWax/6Oxwan60wUvw95otfaUHekxnGsvNrLXPgH0/6P
+         diaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=2VQYmcOhfKzkM0UugtZ6mKBvbFSRbfp3capv5V8nMNw=;
-        b=kK7lsWBmAnqIx0e/sZmzET1902URaBXO0UKHxwKJkcWEwAVLVLONSnvjM3SHG9IOUb
-         AmqyNL/54hYtVdf18mO5xfnoL7OOZqU7jILofZszhaZURualVeOR6g+FYkd6E2sCZ3eW
-         6wuvDE7a/wCfFOVCdohppJ20NJktVXnhvr2RcyWys7+CnIB+YrcYccn+/KGr6Ar69BCO
-         PsJx4hTws6o4tyrT2uCAuQ+4ouXiji4ShTB72j9Kvzr9LchtD9CSCfombJFlUQUBtPYD
-         mwErY76GNhGLIRx5VkfG2ihQtkaYKou6xW+qPOBVZgdq8R2/IwEM6JnAmx7oQD/2wbJ7
-         jxKQ==
-X-Gm-Message-State: APjAAAW3X+RO2RvT0AS0dC+CuHJT/3e3Dtx+AY6lLoal7mBqFJymnIUI
-        HHF06QDx656/kwze4gFNKp98eVyNv2FruXSVxuoIqw==
-X-Google-Smtp-Source: APXvYqxb9e/yUxVyvriVVzvxf06ff1qHb493UqijikoLDgmvw8T5PcvPPnrbBZbzN/ZbQb3/QTqSJLORpY29COaBfGo=
-X-Received: by 2002:a1c:a751:: with SMTP id q78mr929450wme.64.1557281928986;
- Tue, 07 May 2019 19:18:48 -0700 (PDT)
-MIME-Version: 1.0
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 7 May 2019 19:18:36 -0700
-Message-ID: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
-Subject: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-To:     Felipe Balbi <balbi@kernel.org>,
-        Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
-Cc:     "Yang, Fei" <fei.yang@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chen Yu <chenyu56@huawei.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=53Jboj1jRgFvMb4WzHp98oy3I5nfTVXEAchn1y2EzOc=;
+        b=nDymn8XDEusCtbcbSRRqO9PpAuDhWWYLUeCpzOI2APFGVdPyJzGVBsnYu5E+RBN1Bp
+         1bqfnrnJA3QlWEskd2fAdtF5I6cGfklMUXsjc1U8NHmJZdOArp8S46Rj4/vIArj5vYRj
+         duM88niZxhBeWnxN4FNRMCnOZ+a0XEDAO+OVyX38rfGk+0EUGV3YsEF77cq6EaD7+XnG
+         ugQvljIiEhHUCXMOEVMrDjaNcTetMoWg2Vs0bk0C1Bcw00xxYh0oEyDCYWNovWm5keH7
+         uC640dZlTnKFl7ImtUnBJGIU+O6TdZy/Oe24xVxaAMuL3vILyyVFJBjnvxk7fClBm7PN
+         FSRw==
+X-Gm-Message-State: APjAAAXu2yburi2/JZClOWrBwgE2fNvvHr8o6blL9lPNd+Z/UwgYRxxB
+        uZOoQqI0gOKKnuMHKgXLVekWDA==
+X-Google-Smtp-Source: APXvYqxIefpB6QOxsv5208c4eOzk2H+HjQbDo2jovyEHJ5xfkrhRDkweBqtP1NwPjRT6lpkVusJgxw==
+X-Received: by 2002:a25:542:: with SMTP id 63mr23605669ybf.331.1557281980950;
+        Tue, 07 May 2019 19:19:40 -0700 (PDT)
+Received: from localhost.localdomain (li931-65.members.linode.com. [45.56.113.65])
+        by smtp.gmail.com with ESMTPSA id s4sm1168116yws.48.2019.05.07.19.19.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 19:19:39 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>
+Subject: [PATCH v2 00/11] dts: Update DT bindings for CoreSight replicator and funnel
+Date:   Wed,  8 May 2019 10:18:51 +0800
+Message-Id: <20190508021902.10358-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather
-buffers"), I've been seeing trouble with adb transfers in Android on
-HiKey960, HiKey and now Dragonboard 845c.
+Since the DT bindings consolidatoins for CoreSight replicator and funnel
+is ready for kernel v5.2 merge window [1], this patch set is to update
+the related CoreSight DT bindings for platforms; IIUC, this patch set
+will be safe for merging into kernel v5.2 because the dependency
+patches in [1] will be landed into mainline kernel v5.2 cycle.
 
-Sometimes things crash, but often the transfers just stop w/o any
-obvious error messages.
+In this patch set, it tries to update below two compatible strings to
+the latest strings:
 
-Initially I thought it was an issue with the HiKey960 dwc3 usb patches
-being upstreamed, and was using the following hack workaround:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-5.1&id=dcdadaaec9db7a7b78ea9b838dd1453359a2f388
+  s/"arm,coresight-replicator"/"arm,coresight-static-replicator"
+  s/"arm,coresight-funnel"/"arm,coresight-dynamic-funnel"
 
-Then dwc2 added sg support, and I ended up having to revert it to get
-by on HiKey:
-  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey-5.1&id=6e91b4c7bd1e94bdd835263403c53e85a677b848
+Please note, some platforms have two continuous patches, one is for
+updating static replicator compatible string and another is for dynamic
+funnel change; and other platforms have only one patch since it only
+needs to change for dynamic funnel.
 
-(See thread here: https://lkml.org/lkml/2019/3/8/765)
+Avoid to introduce merging confliction, I rebased this patch set on
+linux-next branch with last commit fcdb095ad001 ("Add linux-next
+specific files for 20190506").
 
-And now I've reproduced the same issue (with the same dwc3 workaround)
-on the already upstream code for Dragonboard 845c.
+This patch set has been tested on Arm Juno and Hikey620 boards, other
+platforms are only compilation passing.
 
-Fei Yang has also reached out and mentioned he was seeing similar
-problems with the f_fs sg support.
+P.s. when use scirpt/checkpatch.pl, it reports the warnings as below. I
+think we can ignore this warnings for this patch set, please review if
+this makes sense for you.
 
-Andrzej: Do you have any ideas or suggestions on this? I'm happy to
-test or run any debug patches, if it would help narrow the issue down.
+WARNING: line over 80 characters
+#29: FILE: arch/arm/boot/dts/imx7s.dtsi:178:
++                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
 
-If not, should we consider reverting the f_fs sg support?
+[1] https://archive.armlinux.org.uk/lurker/message/20190412.102734.2afbb29a.en.html
 
-thanks
--john
+== Changes for v2 ==
+* Add explanation for the change in the commit logs. (Fabio)
+* Merge the separate patches for funnel and replicator per DTS into
+  a single patch. (Suzuki)
+
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Orson Zhai <orsonzhai@gmail.com>
+Cc: Baolin Wang <baolin.wang@linaro.org>
+
+
+Leo Yan (11):
+  ARM: dts: hip04: Update coresight DT bindings
+  ARM: dts: imx7s: Update coresight DT bindings
+  ARM: dts: qcom-apq8064: Update coresight DT bindings
+  ARM: dts: ste: Update coresight DT bindings
+  ARM: dts: vexpress-v2p-ca15_a7: Update coresight DT bindings
+  ARM: dts: qcom-msm8974: Update coresight DT bindings
+  arm64: dts: hi6220: Update coresight DT bindings
+  arm64: dts: juno: Update coresight DT bindings
+  arm64: dts: qcom-msm8916: Update coresight DT bindings
+  arm64: dts: sc9836: Update coresight DT bindings
+  arm64: dts: sc9860: Update coresight DT bindings
+
+ arch/arm/boot/dts/hip04.dtsi                   | 18 +++++++++---------
+ arch/arm/boot/dts/imx7s.dtsi                   |  6 +++---
+ arch/arm/boot/dts/qcom-apq8064.dtsi            |  4 ++--
+ arch/arm/boot/dts/qcom-msm8974.dtsi            |  6 +++---
+ arch/arm/boot/dts/ste-dbx5x0.dtsi              |  4 ++--
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts     |  4 ++--
+ arch/arm64/boot/dts/arm/juno-base.dtsi         |  6 +++---
+ arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi      |  4 ++--
+ .../boot/dts/hisilicon/hi6220-coresight.dtsi   |  6 +++---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi          |  4 ++--
+ arch/arm64/boot/dts/sprd/sc9836.dtsi           |  2 +-
+ arch/arm64/boot/dts/sprd/sc9860.dtsi           |  8 ++++----
+ 12 files changed, 36 insertions(+), 36 deletions(-)
+
+-- 
+2.17.1
+
