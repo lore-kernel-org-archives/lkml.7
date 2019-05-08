@@ -2,101 +2,117 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76448C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B26C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DE721479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tv8Z8svL"
+	by mail.kernel.org (Postfix) with ESMTP id CA7A320578
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557310385;
+	bh=ErD1/VVKRF8b62CZRklMab94FhD0FCMFP5weYO0YEes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A7NynyxLVtsnfD7eVOJ24CUewcVGdXVivVmkQnewjrgvz7ez+SO2/KEpQ166fb85z
+	 W7+xP35DueEu84OIcBRO0jDGU39y4ZFjprdmbtXom/ggocSl25k5FVW+/At64RCuc8
+	 wjL+bHrEBR91UwjA5BilbO526XmR2xo6NANox1j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfEHKGV (ORCPT
+        id S1726970AbfEHKNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:06:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44937 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfEHKGU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:06:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c5so1153692wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=W76017xpCMGd/eRYNl/6tdtFy+bghvWppnjb8gEgLwo=;
-        b=tv8Z8svLeF/GtceXkMecES5sO7KooVIDDL6QYugLmBuDt8JA+ODM9uZG0AGVsyAO7k
-         UjZs11IHZbvaZ/Db3orpmOFdzX9//tq5JxpXkxkviH+YF0VeThH3w6dSMgH4/t6j0VDC
-         yXqJAwpcTRWDTwfxwCO/F/HWMKy/IcqlJR/GDvsa8PREccPQS4TZLPXLbh+LM5DfvmVt
-         1hwAIaO0QXl+qhWYxO2XCKOdrVM93OJa7RPu/MaBuY2tXWPokVhNZrHWgcbehYN+/UfY
-         a3KcjLjwzNBmpFBET1eqpCoIVWdxbBjF+CQeewWyR1NceUr4gwd7GJCsx083WoloM6vu
-         Azmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=W76017xpCMGd/eRYNl/6tdtFy+bghvWppnjb8gEgLwo=;
-        b=lhPwetmG02PN8KxCuLtXmjWC6gPKffx8H72TYP5s7gRSaYdbtmhZ18Y67OAHFJNCKJ
-         jmP0K9jyjuuCUbgbPfPvpYcS38DOUtjaRdk47VV2pvrJkBpWYec1rk+WFDt24gUeJNAZ
-         3Vx8rUgbv5B/rmqyPW8NCsosK+TWVdin590QB5fr7aRXA8AY7341VnA2ULknnrHIUCna
-         klcABp8lteYnLo9GZRLjxMGG0tfX6X0BhQD3PNjpr0/+7rnOiJX1w0TWkLI+6PAQEvsO
-         6vBgWoRRDs4ZH6u5PDLdmi0ZgJrZXc3cZPOIzRGjqEJBmmlYc1/rEP3bxWwVQaucDRX3
-         51Rw==
-X-Gm-Message-State: APjAAAUp1gHSVAcL6gktP416WsMnj+oOf0kl/jXd6LEMjyRCFaCFaHMG
-        a0hvd4RUsSEXVMxk46E2EF/a15mK
-X-Google-Smtp-Source: APXvYqw4vYnN0BlzV5FVJgNHBZdG5eUUVXLEsMYQeCRKmNyLiB4w4NoBU+sQP+0C+IGnnTwPFu0acQ==
-X-Received: by 2002:adf:b611:: with SMTP id f17mr7662506wre.162.1557309978886;
-        Wed, 08 May 2019 03:06:18 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id d3sm4583273wmf.46.2019.05.08.03.06.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 03:06:18 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: check to load F/W before boot status
-Date:   Wed,  8 May 2019 13:06:16 +0300
-Message-Id: <20190508100616.2703-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 May 2019 06:13:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbfEHKNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 06:13:04 -0400
+Received: from earth.universe (dyndsl-091-248-052-181.ewe-ip-backbone.de [91.248.52.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8929320578;
+        Wed,  8 May 2019 10:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557310383;
+        bh=ErD1/VVKRF8b62CZRklMab94FhD0FCMFP5weYO0YEes=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j8NUrwNH5Hlt8uCH8AeYGh7YXEMXYP5oI00keFeekOJpu/Wbb3z6+2P2wStcduXmR
+         Zw3y9N5+cXGe4sxU4jTzFlr9jKl8gh44GQOx07Tl21dwwW0UT4meaX80Kms3/xYark
+         RIiUMPExHrd/AycUJTjWmTpGiYOMIqthg2jjFRLI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 4077C3C0CBD; Wed,  8 May 2019 12:13:01 +0200 (CEST)
+Date:   Wed, 8 May 2019 12:13:01 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] spi updates for v5.2
+Message-ID: <20190508101301.lxwt4e6eziujdfit@earth.universe>
+References: <20190506143301.GU14916@sirena.org.uk>
+ <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
+ <20190507021853.GY14916@sirena.org.uk>
+ <20190507030241.GC14916@sirena.org.uk>
+ <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
+ <20190507110345.GF14916@sirena.org.uk>
+ <20190507120730.5ylk6v4yvzxuzqld@earth.universe>
+ <20190508060936.GH14916@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="67wcu6z2guvpdeh7"
+Content-Disposition: inline
+In-Reply-To: <20190508060936.GH14916@sirena.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the order of checks when initializing the device CPU.
-We want first to check if we need to load the F/W, and only if we need to,
-then we want to check the status of the CPU boot program.
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/goya/goya.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--67wcu6z2guvpdeh7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index aaa88d442ffe..ccf9d925b6ed 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2277,14 +2277,14 @@ static int goya_init_cpu(struct hl_device *hdev, u32 cpu_timeout)
- 	goya_read_device_fw_version(hdev, FW_COMP_UBOOT);
- 	goya_read_device_fw_version(hdev, FW_COMP_PREBOOT);
- 
--	if (status == CPU_BOOT_STATUS_SRAM_AVAIL)
--		goto out;
--
- 	if (!hdev->fw_loading) {
- 		dev_info(hdev->dev, "Skip loading FW\n");
- 		goto out;
- 	}
- 
-+	if (status == CPU_BOOT_STATUS_SRAM_AVAIL)
-+		goto out;
-+
- 	rc = goya_push_linux_to_device(hdev);
- 	if (rc)
- 		return rc;
--- 
-2.17.1
+Hi,
 
+On Wed, May 08, 2019 at 03:09:36PM +0900, Mark Brown wrote:
+> On Tue, May 07, 2019 at 02:07:30PM +0200, Sebastian Reichel wrote:
+> > FWIW, I send out kernel.org mails via mail.kernel.org. Konstantin
+> > added that service in 2014. You can get a password with
+>=20
+> > ssh git@gitolite.kernel.org getsmtppass
+> >=20
+> > and then use the following settings for (example for git):
+>=20
+> I'd have to send all mail out via kernel.org to do that, or persuade a
+> MTA to route mail differently based on contents which seems interesting
+> - I inject most of my mail via /usr/sbin/sendmail rather than SMTP
+> (including a bunch of scripts).
+
+I have a locally installed postfix in sender dependent relay
+configuration, which does that for me:
+
+http://www.postfix.org/SOHO_README.html#client_sasl_sender
+
+-- Sebastian
+
+--67wcu6z2guvpdeh7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzSq6gACgkQ2O7X88g7
++pp6khAAmZ5my97oTpts1tAYrnA+mzSWdA+fvZAdfRUfIlIH7Xgwg6nH5Ll8CQyO
+BEcChOdj1Ph6bMgWnpZczOb9UW2rCMXqA27Rsucj8VtQPK7Ipdz92fXoigi5N64P
+Nr2KInKFS8chQYf0wNklhl0vE+/zpYlohL54QyGZrTr2/XgdZl4ytBqZvQK2LEJU
+lLSdHH87nTXqKnNVtUd3shezT/rOGB3BpYTqhtW2hIn1VUFZEeDpdC6iGLCILGMb
+dqG6MLNCa3JKtmALxXS4hWAeRa7EohHoxwPFXP1uvA6K09GYhBeyZla3yxyjYWHI
+QUaY4TUvqaTCr5I8BUihQFhb4yGLdXhzgnTKMWX5asgPw2+Dy6CpxiWLgO8hnDpf
+s2Qgb2B+KIyNC/onAUt5CDlCxpG16YrRLiX/7h4riKvzTMmavIFx4HgifmwbiLoO
+UugIu0TU08xGvJbmiJiUOGeXXLOPS61faBcKF1GFWLkEwO0PXpw9TsVoJVB4+Pvx
+V+4KZj/TdtP4CR5rkngHu+3jxU5T+eb6KFZYTu546QNIhNixEB68inYVcP2tV/QY
+5q0FIHAISvKz95rzuxIW6WZ8OyC+ZVccROSpcL6hs/heoUamsSexRzOf3eXCtndg
+STlX6FelVrUXgHXKY4h+gIFANOfr04wYq7miZYqV41Pab4L5oYI=
+=CZEI
+-----END PGP SIGNATURE-----
+
+--67wcu6z2guvpdeh7--
