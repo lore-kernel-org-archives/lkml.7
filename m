@@ -2,150 +2,130 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C85C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161ABC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB87216B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC72421655
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="lBhk7qhG"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FCy47X37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfEHLTz (ORCPT
+        id S1727502AbfEHLUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:19:55 -0400
-Received: from mail-eopbgr720060.outbound.protection.outlook.com ([40.107.72.60]:53352
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbfEHLTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:19:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t8Gpn5zKRV9ExKalhlYK3NE8SPPieqAU5p6PlMZIP/I=;
- b=lBhk7qhGM/ybnMCTJ0HQTthYMooVdbbGydbJNKxF82NBdwD1Ax3VUHcJNQXH8jPvqMxXOhCqCS5j0bq5AdltPfhAs42lAi01Ilimdp/KBBAl90gjR8vZBh15zqzKKI4Jdb55+FooIBIk63mJJcrDB5E3KuoeebriPq54X3tGDdU=
-Received: from DM6PR03CA0033.namprd03.prod.outlook.com (2603:10b6:5:40::46) by
- SN2PR03MB2270.namprd03.prod.outlook.com (2603:10b6:804:d::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Wed, 8 May 2019 11:19:50 +0000
-Received: from BL2NAM02FT057.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::205) by DM6PR03CA0033.outlook.office365.com
- (2603:10b6:5:40::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1856.11 via Frontend
- Transport; Wed, 8 May 2019 11:19:50 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT057.mail.protection.outlook.com (10.152.77.36) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
- via Frontend Transport; Wed, 8 May 2019 11:19:49 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x48BJndi020836
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 8 May 2019 04:19:49 -0700
-Received: from saturn.analog.com (10.50.1.244) by NWD2HUBCAS7.ad.analog.com
- (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Wed, 8 May 2019
- 07:19:49 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
-        <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/3][V3] iio: Handle enumerated properties with gaps
-Date:   Wed, 8 May 2019 14:19:13 +0300
-Message-ID: <20190508111913.7276-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190508111913.7276-1-alexandru.ardelean@analog.com>
-References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
+        Wed, 8 May 2019 07:20:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44349 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfEHLUQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 07:20:16 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x48BK26c978738
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 8 May 2019 04:20:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x48BK26c978738
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557314402;
+        bh=Msk4XSyxdjuxG9YJTcVec6YrqAS4iypraAZMnWjYLdk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=FCy47X379VeKtvneVX+5aBKT90oz7LMYiRQQErRqEapfilTqBE66MY7UvWoosj7k3
+         zNOl9c5jCsNNnTkLdBEBeSZCNIgAgv0scU2TTqXs7tvjoA3lPBfCzEASJLXu8XHiph
+         ooWXhNlp5c25GNs3dyTNg4Q/RfVtUmpaZmjlbcuzHUUCl5Eh+0GYqIy6ckeoQbyuqa
+         bwAsHapCAte5cc+SZ/7+O+aQ5hXbRQrpwScYoIyWBRjgASL4i05nxSPm/8IfDhdtst
+         bkI84ejZoaWGSVr+RlBpeEh6FbwjhyWzyoXE+H2bZBTrjgpms+MUig830BtV7ZOoCU
+         I8ssbJxLVacnA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x48BK1pn978708;
+        Wed, 8 May 2019 04:20:01 -0700
+Date:   Wed, 8 May 2019 04:20:01 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jia Zhang <tipbot@zytor.com>
+Message-ID: <tip-81d30225bc0c246b53270eb90b23cfbb941a186d@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
+        zhang.jia@linux.alibaba.com, tglx@linutronix.de
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
+          zhang.jia@linux.alibaba.com, tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <20190401114045.7280-1-zhang.jia@linux.alibaba.com>
+References: <20190401114045.7280-1-zhang.jia@linux.alibaba.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/vdso: Remove hpet_page from vDSO
+Git-Commit-ID: 81d30225bc0c246b53270eb90b23cfbb941a186d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(346002)(136003)(2980300002)(54534003)(199004)(189003)(86362001)(70586007)(50466002)(446003)(11346002)(478600001)(36756003)(126002)(50226002)(486006)(476003)(2616005)(186003)(26005)(77096007)(44832011)(426003)(246002)(8676002)(8936002)(5660300002)(336012)(1076003)(316002)(2201001)(7696005)(6666004)(356004)(76176011)(51416003)(70206006)(53416004)(106002)(7636002)(305945005)(107886003)(16586007)(4326008)(54906003)(2906002)(47776003)(48376002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR03MB2270;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 83806e9e-e88b-4c84-71aa-08d6d3a715cd
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:SN2PR03MB2270;
-X-MS-TrafficTypeDiagnostic: SN2PR03MB2270:
-X-Microsoft-Antispam-PRVS: <SN2PR03MB2270D9DB4054219D37658E6EF9320@SN2PR03MB2270.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-Forefront-PRVS: 0031A0FFAF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: cXn6UES+7eIPV7nYnZHu8fGJBqx/H2nXan2QDqoU28pNm2x7KqwQVaqEAZ+ATnvJVlqkyExWWe7n51UBIy0RYzKxBAwTcyw1M9IlU5YMwv4rxhlr1UV6AvA+Pd9B4aPYoauvqqb2bX+RKPwMMp45H5lidPuDVJZoaQG2zo/1a+3jVFjcYrjJeItyenFvitL1IhIdJOtZH1f8MlYaH+a3ePhqLiiFOikIkBnMfl0WqCHZbJVZ58UcWtHKEPfXW/U3PmWCZ0EzcnZR6LDgT1GXi0wxO32lieYPgyPLqDs/9levnVIcWtPPlirWgdN2v828/Rxw2RYRk150S1U99LAFz4iRPmKXRj0GOZqG821oBYgOcAu6+QiPnqpfJH4tCduF+3ctVIp2SoUR9ka+SeMs1Y2IuQdyOiHp4mxIWIB+0xA=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2019 11:19:49.7327
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83806e9e-e88b-4c84-71aa-08d6d3a715cd
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR03MB2270
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+Commit-ID:  81d30225bc0c246b53270eb90b23cfbb941a186d
+Gitweb:     https://git.kernel.org/tip/81d30225bc0c246b53270eb90b23cfbb941a186d
+Author:     Jia Zhang <zhang.jia@linux.alibaba.com>
+AuthorDate: Mon, 1 Apr 2019 19:40:45 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 8 May 2019 13:13:57 +0200
 
-Some enums might have gaps or reserved values in the middle of their value
-range. E.g. consider a 2-bit enum where the values 0, 1 and 3 have a
-meaning, but 2 is a reserved value and can not be used.
+x86/vdso: Remove hpet_page from vDSO
 
-Add support for such enums to the IIO enum helper functions. A reserved
-values is marked by setting its entry in the items array to NULL rather
-than the normal descriptive string value.
+This trivial cleanup finalizes the removal of vDSO HPET support.
 
-Also, `__sysfs_match_string()` now supports NULL gaps, so that doesn't
-require any changes.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Fixes: 1ed95e52d902 ("x86/vdso: Remove direct HPET access through the vDSO")
+Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: luto@kernel.org
+Cc: bp@alien8.de
+Link: https://lkml.kernel.org/r/20190401114045.7280-1-zhang.jia@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
+ arch/x86/entry/vdso/vdso2c.c | 3 ---
+ arch/x86/include/asm/vdso.h  | 1 -
+ 2 files changed, 4 deletions(-)
 
-Changelog v2 -> v3:
-* after fixing __sysfs_match_string(), this change only requires that NULL
-  be handled in the iio_enum_{available_}read functions
-  __sysfs_match_string() handles the NULL gaps
-
- drivers/iio/industrialio-core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 9c4d92115504..8b4ff3c8f547 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -446,8 +446,11 @@ ssize_t iio_enum_available_read(struct iio_dev *indio_dev,
- 	if (!e->num_items)
- 		return 0;
+diff --git a/arch/x86/entry/vdso/vdso2c.c b/arch/x86/entry/vdso/vdso2c.c
+index 8e470b018512..3a4d8d4d39f8 100644
+--- a/arch/x86/entry/vdso/vdso2c.c
++++ b/arch/x86/entry/vdso/vdso2c.c
+@@ -73,14 +73,12 @@ const char *outfilename;
+ enum {
+ 	sym_vvar_start,
+ 	sym_vvar_page,
+-	sym_hpet_page,
+ 	sym_pvclock_page,
+ 	sym_hvclock_page,
+ };
  
--	for (i = 0; i < e->num_items; ++i)
-+	for (i = 0; i < e->num_items; ++i) {
-+		if (!e->items[i])
-+			continue;
- 		len += scnprintf(buf + len, PAGE_SIZE - len, "%s ", e->items[i]);
-+	}
+ const int special_pages[] = {
+ 	sym_vvar_page,
+-	sym_hpet_page,
+ 	sym_pvclock_page,
+ 	sym_hvclock_page,
+ };
+@@ -93,7 +91,6 @@ struct vdso_sym {
+ struct vdso_sym required_syms[] = {
+ 	[sym_vvar_start] = {"vvar_start", true},
+ 	[sym_vvar_page] = {"vvar_page", true},
+-	[sym_hpet_page] = {"hpet_page", true},
+ 	[sym_pvclock_page] = {"pvclock_page", true},
+ 	[sym_hvclock_page] = {"hvclock_page", true},
+ 	{"VDSO32_NOTE_MASK", true},
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index 27566e57e87d..230474e2ddb5 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -19,7 +19,6 @@ struct vdso_image {
+ 	long sym_vvar_start;  /* Negative offset to the vvar area */
  
- 	/* replace last space with a newline */
- 	buf[len - 1] = '\n';
-@@ -468,7 +471,7 @@ ssize_t iio_enum_read(struct iio_dev *indio_dev,
- 	i = e->get(indio_dev, chan);
- 	if (i < 0)
- 		return i;
--	else if (i >= e->num_items)
-+	else if (i >= e->num_items || !e->items[i])
- 		return -EINVAL;
- 
- 	return snprintf(buf, PAGE_SIZE, "%s\n", e->items[i]);
--- 
-2.17.1
-
+ 	long sym_vvar_page;
+-	long sym_hpet_page;
+ 	long sym_pvclock_page;
+ 	long sym_hvclock_page;
+ 	long sym_VDSO32_NOTE_MASK;
