@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F142C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D73BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE828217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3AA20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbfEHOtO (ORCPT
+        id S1728437AbfEHOtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:49:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
+        Wed, 8 May 2019 10:49:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57660 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbfEHOos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:48 -0400
+        id S1728350AbfEHOor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:47 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:46 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 May 2019 07:44:43 -0700
+  by orsmga005.jf.intel.com with ESMTP; 08 May 2019 07:44:41 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 6B821BD1; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 51199B86; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 35/62] keys/mktme: Require ACPI HMAT to register the MKTME Key Service
-Date:   Wed,  8 May 2019 17:43:55 +0300
-Message-Id: <20190508144422.13171-36-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 33/62] acpi: Remove __init from acpi table parsing functions
+Date:   Wed,  8 May 2019 17:43:53 +0300
+Message-Id: <20190508144422.13171-34-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,48 +59,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The ACPI HMAT will be used by the MKTME key service to identify
-topologies that support the safe programming of encryption keys.
-Those decisions will happen at key creation time and during
-hotplug events.
+ACPI table parsing functions are useful outside of init time.
 
-To enable this, we at least need to have the ACPI HMAT present
-at init time. If it's not present, do not register the type.
+For example, the MKTME (Multi-Key Total Memory Encryption) key
+service will evaluate the ACPI HMAT table when the first key
+creation request occurs.  This will happen after init time.
 
-If the HMAT is not present, failure looks like this:
-[ ] MKTME: Registration failed. ACPI HMAT not present.
+Additionally, the table parsing functions can be used when
+_HMA objects are evaluated at runtime. The _HMA object provides
+a completely new HMAT, overriding the existing table. The table
+parsing functions will come in handy for those events.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/acpi/tables.c | 10 +++++-----
+ include/linux/acpi.h  |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index bcd68850048f..f5fc6cccc81b 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -2,6 +2,7 @@
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index 3d0da38f94c6..35646b0fa7eb 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -47,7 +47,7 @@ static char *mps_inti_flags_trigger[] = { "dfl", "edge", "res", "level" };
  
- /* Documentation/x86/mktme_keys.rst */
+ static struct acpi_table_desc initial_tables[ACPI_MAX_TABLES] __initdata;
  
-+#include <linux/acpi.h>
- #include <linux/cred.h>
- #include <linux/cpu.h>
- #include <linux/init.h>
-@@ -490,6 +491,12 @@ static int __init init_mktme(void)
- 	if (mktme_nr_keyids < 1)
- 		return 0;
+-static int acpi_apic_instance __initdata;
++static int acpi_apic_instance;
  
-+	/* Require an ACPI HMAT to identify MKTME safe topologies */
-+	if (!acpi_hmat_present()) {
-+		pr_warn("MKTME: Registration failed. ACPI HMAT not present.\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Mapping of Userspace Keys to Hardware KeyIDs */
- 	if (mktme_map_alloc())
- 		return -ENOMEM;
+ enum acpi_subtable_type {
+ 	ACPI_SUBTABLE_COMMON,
+@@ -63,7 +63,7 @@ struct acpi_subtable_entry {
+  * Disable table checksum verification for the early stage due to the size
+  * limitation of the current x86 early mapping implementation.
+  */
+-static bool acpi_verify_table_checksum __initdata = false;
++static bool acpi_verify_table_checksum = false;
+ 
+ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
+ {
+@@ -294,7 +294,7 @@ acpi_get_subtable_type(char *id)
+  * On success returns sum of all matching entries for all proc handlers.
+  * Otherwise, -ENODEV or -EINVAL is returned.
+  */
+-static int __init
++static int
+ acpi_parse_entries_array(char *id, unsigned long table_size,
+ 		struct acpi_table_header *table_header,
+ 		struct acpi_subtable_proc *proc, int proc_num,
+@@ -370,7 +370,7 @@ acpi_parse_entries_array(char *id, unsigned long table_size,
+ 	return errs ? -EINVAL : count;
+ }
+ 
+-int __init
++int
+ acpi_table_parse_entries_array(char *id,
+ 			 unsigned long table_size,
+ 			 struct acpi_subtable_proc *proc, int proc_num,
+@@ -402,7 +402,7 @@ acpi_table_parse_entries_array(char *id,
+ 	return count;
+ }
+ 
+-int __init
++int
+ acpi_table_parse_entries(char *id,
+ 			unsigned long table_size,
+ 			int entry_id,
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 7c7515b0767e..75078fc9b6b3 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -240,11 +240,11 @@ int acpi_numa_init (void);
+ 
+ int acpi_table_init (void);
+ int acpi_table_parse(char *id, acpi_tbl_table_handler handler);
+-int __init acpi_table_parse_entries(char *id, unsigned long table_size,
++int acpi_table_parse_entries(char *id, unsigned long table_size,
+ 			      int entry_id,
+ 			      acpi_tbl_entry_handler handler,
+ 			      unsigned int max_entries);
+-int __init acpi_table_parse_entries_array(char *id, unsigned long table_size,
++int acpi_table_parse_entries_array(char *id, unsigned long table_size,
+ 			      struct acpi_subtable_proc *proc, int proc_num,
+ 			      unsigned int max_entries);
+ int acpi_table_parse_madt(enum acpi_madt_type id,
 -- 
 2.20.1
 
