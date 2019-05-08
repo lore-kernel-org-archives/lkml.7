@@ -2,139 +2,213 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F20C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1C6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B3321019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72FC2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jXCprDUU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Uy6wXrmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfEHIZd (ORCPT
+        id S1726575AbfEHI2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:25:33 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:34040 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfEHIZd (ORCPT
+        Wed, 8 May 2019 04:28:00 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47195 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfEHI17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:25:33 -0400
-Received: by mail-it1-f193.google.com with SMTP id p18so1716778itm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IPBNJEnOOgZOHP3DTkbWlOxf/mJIrBhutW0vGsGc1B8=;
-        b=jXCprDUUshKVwss7HDPEZJcorfnfLTcvXjQhe/GtsyRYKLD8OZKqvjNIuK7EIqW/gI
-         NrADf/w6vCYRcdhKz3ZQEnK2JcXgfyjwSzxnAKNaF3NSxv92cfarsSf0qjlUX3+Zm1Gz
-         e7IL41sZF/D+wuNMtyXtU82pKahZWsHfVz3wA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IPBNJEnOOgZOHP3DTkbWlOxf/mJIrBhutW0vGsGc1B8=;
-        b=pv1sWrvzk2lmw3tX9NxPE92eYdbrWB/6nS6QreGbx7UO9h/DMgF8bXutTLS5FrkPFb
-         /53tPTIr+U3ieCYJ/RRDNuoU3zam5VTAzrc/vziBEUj74DB4RZM/xkzcqEsqAYUXJEox
-         KF+ecJpZdaJ5T3f7eoPdcePLktBEFEJlt3zGCVz/zW2fWpWE2LPKVPOjgjBCcLX+MRFu
-         0b4rnK/UWoOvtEBLmylT1qahg/yedA99lBzV5PQGbzpWfFek7qjLLLRub13y5X4d5+qL
-         /pOZAAVVE6FWlH0VvvvNSDn0a2luYmuyiwKtBbNnV92t72RhyXZfFRk2Iz3iAccoxSN3
-         Htzg==
-X-Gm-Message-State: APjAAAV4L8E8x8O5ZqU61VX3WCAda6UYK7ZhgzqRbxclbXwz74PwtZWJ
-        mHKbd/BU4YsfWN4w/Byavsa9GjDHjnRH/jxqEfqKFw==
-X-Google-Smtp-Source: APXvYqzTloJlW0inTtoYD5qbYbep//Q1zTPB6vaGFFnpXuJ1SJ7igL7fT98s5D2BWX8MxxcLaI/57hDNfl4TzG8G7fY=
-X-Received: by 2002:a24:39c6:: with SMTP id l189mr2576224ita.51.1557303932766;
- Wed, 08 May 2019 01:25:32 -0700 (PDT)
+        Wed, 8 May 2019 04:27:59 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190508082756euoutp0248d1d9b0efbba8e9e884ddef2cd2fde3~cp85v3--q0645206452euoutp02h
+        for <linux-kernel@vger.kernel.org>; Wed,  8 May 2019 08:27:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190508082756euoutp0248d1d9b0efbba8e9e884ddef2cd2fde3~cp85v3--q0645206452euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557304076;
+        bh=M4mu9eJCCybXEe/MwRtmtZ/unoWjTw3QHUKRuPZGCq8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Uy6wXrmQTcEYe9xqOBq0vV9FpWIc/SXhUaCR32DFsAqXD38gbdCi+HlPdgOOYD7kR
+         ATuj9mLPXp/DRCRx88R46Y68RbMOahz0qMptUiSfybacBYowYM1AU03zqN/DsQq6ay
+         DZnAKOp9/MYYQO4kE1MfplzRB/mW9N6Mp3JvGjic=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190508082755eucas1p2903df84538b5040ee65b5a63a7df0271~cp846_nvr0525005250eucas1p2U;
+        Wed,  8 May 2019 08:27:55 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 05.2F.04325.B0392DC5; Wed,  8
+        May 2019 09:27:55 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190508082754eucas1p1e2cd519164630da5c563d523a57335fb~cp84ECnnR2412224122eucas1p1t;
+        Wed,  8 May 2019 08:27:54 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190508082754eusmtrp2dc29a29dfafd2669df0b9310997d1013~cp83w7pXG0448304483eusmtrp2A;
+        Wed,  8 May 2019 08:27:54 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-94-5cd2930be523
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 80.6E.04146.90392DC5; Wed,  8
+        May 2019 09:27:54 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190508082753eusmtip206c1e39f35a9bc347c80d2cf32caaf53~cp83DWoZ01049510495eusmtip2W;
+        Wed,  8 May 2019 08:27:53 +0000 (GMT)
+Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
+ description
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <d48d6629-f171-aae3-ba5a-ae4c13d29407@partner.samsung.com>
+Date:   Wed, 8 May 2019 10:28:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190507173329.17031-1-daniel.vetter@ffwll.ch> <20190508074420.GB15704@jagdpanzerIV>
-In-Reply-To: <20190508074420.GB15704@jagdpanzerIV>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 8 May 2019 10:25:19 +0200
-Message-ID: <CAKMK7uHF_2QyYP5TB40gPQ6eG_=qk4ucij4RHnM_E=vutqWH5g@mail.gmail.com>
-Subject: Re: [PATCH] RFC: x86/smp: use printk_deferred in native_smp_send_reschedule
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1dTrTAa0+CsoVXGLxQ4yCCwkvEQkao/3wA4OJRkmwyFiIbHYE
+        RTQWNxREcZcK1CYoUNksjVBiiKksilhADBUIaiwKYXEBl7gi7dTI33lnybkneSwl66Z92LjE
+        /Zw6URkvZ9zF95q+W5dPv/QsckWOhSF3r1fSxPZ5gCa6BitNztuHKdLWViUhT4+NSIjR3kWT
+        zrp8hoznNCByva1eRMob+iTklq1DRHozShgycb9WQh6OZNLk66M3KAwrygrLkMKs7ZMojIYz
+        jKK66KjinMmAFOPGBeHMDveQGC4+LpVTB4buco+tbbokTtbBwYrHNSIN6vXMQm4s4CB4ndFI
+        ZyF3VoZLEFy7YxA5BBn+jOD92whBGJ/EZTb0L9FUk4cEoRjBx8ELYuExiqDiRK4z7om3QsXL
+        LokDe+FF8PPUVWcHhVtpaNdmTiZYlsEBUGvY5/BI8UbI/HSFcWAxXgxjtz848Wy8HV41VdGC
+        xwMe5/U7o254Cwz3hTloCntDT79OJOCFUDOaTzmqAGewMNhiFglXb4CL74rEAvaEoWaTRMDz
+        YMKsc3l40OToXSsPg/18gcuzBh42d9COXgr7Q2VdoECvg+qS38hBA54JL0Y9hBNmwsV71yiB
+        lsLpUzLBvQRMZ9tdRXOguOyqJBfJtVN2aaeM0U4Zo/3fexOJDcibS+ETVBy/OpE7EMArE/iU
+        RFXA7qQEI5r8cE/+NH+pRfW/oi0Is0g+QzqY3BEpo5WpfFqCBQFLyb2ktgvPImXSGGXaIU6d
+        FKVOied4C/JlxXJvafq01ztlWKXcz+3luGRO/U8VsW4+GnTc+lx/OGjB5tJcg6ZrBfbv1D+3
+        qqOUXuunVQ11b8uKXPbj8tqeiaO707IjWnuGo0vTb/QcCYkNDgN9mC/XPfKg/tW3uar8+fZ2
+        TXyLucAazIXqC8fCT4Yn+/kfU23KztY3zhoY8zXP2+PHdD6QrzGJHg2t9wsOKSWK4zPKYRUv
+        F/OxypVLKTWv/AuvsEkVbAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SXUhTYRjHe3fO2Y7W4jhnvgilji4icHb82jtZKl3ELozKLMoWNvSg5j50
+        Z5PsJtPQWpTaSnSIBqXJMNucuRUhZssUzbEFW000TEvwAykziEpzjsC7H8///7t4eB4SEyzj
+        MWSJRs/oNEqViBuOj62/nU4IN3kVhx4fQLbmpwTy/5gnULtrgkD1s4sYcrutPPSueomHemd9
+        BHr/opWLVm+7AGp2D3DQE9cUD3X4PRw0ea2LizZeOnno9VIdgX6OfAZZlLy7rRvIn5unePJe
+        y02u3P7oqvxOnwXIV3v3neDmiWU6rUHPxBVrWf1h0XkaJYlpKRInpUjFdLLkQnpSqigxQ1bI
+        qEoqGF1ixkVxsXPYhJe1w8s9ow5OFZiMNIIwElIpcNjRAowgnBRQHQDOrX/CQ8EeeHfAwQtx
+        JPzjM3JDpUUA19z3OMEgksqFPdO+rZKQioe/a5uIYAmjvAR81l9NhIw3OPww+xAzApLkUmLo
+        tJQHBT51FNZ9u88NMk7th987V7Y4ijoLx1e68FAnAo62zOFBNYw6CRensoJjjEqDbfYZLMTR
+        MDDXzglxLHQst2INQGDeZpu3KeZtinmb8gDgFiBkDKy6SM3SYlapZg2aInGBVt0LNk/dP/zL
+        7gRe26khQJFAtIvfoPEoBISygq1UDwFIYiIh39/oVQj4hcrKK4xOm68zqBh2CKRu7taIxUQV
+        aDcfR6PPp1NpCZLSkmRJchoSRfNvUK8UAqpIqWdKGaaM0f33OGRYTBU4QkyCQE2gdnBMsTMh
+        FzZZd3wp/xpYO5fD0n/LRwbyHPJ6aBc1npnJNDGZgzPKZmgd9I9Z82TDy3GsbUE2v9GZnmOa
+        +MjZ3aDOXrjEjgdWrdm8UnfraWHEgzKfk7h1rMURZ9SYY1XxQ0IPf0DqqdEe97YV7nXZ+ubX
+        r4twtlhJH8R0rPIfFFgdEwADAAA=
+X-CMS-MailID: 20190508082754eucas1p1e2cd519164630da5c563d523a57335fb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
+        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
+        <20190430223629.GA22317@bogus>
+        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
+        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
+        <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
+        <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
+        <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 9:44 AM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (05/07/19 19:33), Daniel Vetter wrote:
-> [..]
-> > - make the console_trylock trylock also the spinlock. This works in
-> >   the limited case of the console_lock use-case, but doesn't fix the
-> >   same semaphore.lock acquisition in the up() path in console_unlock,
-> >   which we can't avoid with a trylock.
-> >
-> > - move the wake_up_process in up() out from under the semaphore.lock
-> >   spinlock critical section. Again this works for the limited case of
-> >   the console_lock, and does fully break the cycle for this lock.
-> >   Unfortunately there's still plenty of scheduler related locks that
-> >   wake_up_process needs, so the loop is still there, just with a few
-> >   less locks involved.
-> >
-> > Hence now third attempt, trying to fix this by using printk_deferred()
-> > instead of the normal printk that WARN() uses.
-> > native_smp_send_reschedule is only called from scheduler related code,
-> > which has to use printk_deferred due to this locking recursion, so
-> > this seems consistent.
-> >
-> > It has the unfortunate downside that we're losing the backtrace though
-> > (I didn't find a printk_deferred version of WARN, and I'm not sure
-> > it's a bright idea to dump that much using printk_deferred.)
->
-> I'm catching up with the emails now (was offline for almost 2 weeks),
-> so I haven't seen [yet] all of the previous patches/discussions.
->
-> [..]
-> >  static void native_smp_send_reschedule(int cpu)
-> >  {
-> >       if (unlikely(cpu_is_offline(cpu))) {
-> > -             WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
-> > +             printk_deferred(KERN_WARNING
-> > +                             "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
-> >               return;
-> >       }
-> >       apic->send_IPI(cpu, RESCHEDULE_VECTOR);
->
-> Hmm,
-> One thing to notice here is that the CPU in question is offline-ed,
-> and printk_deferred() is a per-CPU type of deferred printk(). So the
-> following thing
->
->         __this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
->         irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
->
-> might not print anything at all. In this particular case we always
-> need another CPU to do console_unlock(), since this_cpu() is not
-> really expected to do wake_up_klogd_work_func()->console_unlock().
+Hi Rob,
 
-Hm right, I was happy enough when Petr pointed out the printk_deferred
-infrastructure that I didn't look too deeply into how it works. From a
-quick loo
+On 5/7/19 6:50 PM, Rob Herring wrote:
+> On Tue, May 7, 2019 at 4:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/6/19 12:29 PM, Lukasz Luba wrote:
+>>> Hi Rob,
+>>>
+>>> On 5/2/19 10:24 PM, Rob Herring wrote:
+>>>> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba
+>>>> <l.luba@partner.samsung.com> wrote:
+>>>>>
+>>>>> Hi Rob,
+>>>>>
+>>>>> On 5/1/19 12:36 AM, Rob Herring wrote:
+>>>>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
+>>>>>>> Extend the documenation by events description with new
+>>>>>>> 'event-data-type'
+>>>>>>> field. Add example how the event might be defined in DT.
+>>>>>>
+>>>>>> Why do we need event types in DT? We don't do this for other h/w
+>>>>>> such as
+>>>>>> ARM PMU.
+>>>>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
+>>>>> arch/arm/kernel/perf_event_v7.c
+>>>>> and are seen from perf. They are different type and for different
+>>>>> purpose. The Ecynos PPMU events are not seen in perf, they are
+>>>>> for internal monitoring and must not be reset by other actors like perf.
+>>>>> They are used by the 'bus drivers' to made some heuristics and tune the
+>>>>> internal settings, like frequency.
+>>>>>
+>>>>> Chanwoo has written PPMU driver which relies on DT definition.
+>>>>> The DT events are used by other DT devices by phandle.
+>>>>
+>>>> How is that done? I don't see anything in the binding for that.
+>>> Here are the DT devices and how they are pinned together:
+>>> - declared devfreq events:
+>>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+>>>
+>>> - devfreq events pinned to the bus device:
+>>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107
+>>>
+>>> - the bus device itself:
+>>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457
+>>>
+>>>
+>>> Regards,
+>>> Lukasz
+>>>
+>>>>
+>>>> Rob
+>>>>
+>>>>
+>> Can I send the next version of the patch set, which has Chanwoo's
+>> suggestions, or do you have some objections to this PPMU entries?
+> 
+> I think the existing binding which this is based on needs some
+> changes, so it's pointless really for me to comment on additions.
+Maybe the bindings description is not perfect, but it contains
+examples which might help clarifying the idea.
+Regarding the real value of the patch set, it is needed for some
+research. Currently, the Odroid xu3/4 is the best 'mainline' platform
+with big.LITTLE, has good performance and these counters.
+Willy, who is doing his PhD, wants to experiment with it. I agree that
+it could be better documented but it requires more effort.
+I will extend the documentation it in my free time slots (it is not my
+main task for now).
 
+For now, I have received comments and parts of code from Chanwoo which
+made the next patch set mature and ready to merge (IMHO).
 
+If you have suggestions how to improve these bindings or links for good
+examples, I would really appreciate. Thank you for your time and review.
 
+Regards,
+Lukasz
 
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
