@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC62C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1796EC04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9787521734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF15216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfEHOru (ORCPT
+        id S1728541AbfEHOrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:47:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57660 "EHLO mga06.intel.com"
+        Wed, 8 May 2019 10:47:55 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59540 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728435AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:49 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 08 May 2019 07:44:43 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:45 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 78815BD3; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 0BEE5F6B; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 36/62] acpi/hmat: Evaluate topology presented in ACPI HMAT for MKTME
-Date:   Wed,  8 May 2019 17:43:56 +0300
-Message-Id: <20190508144422.13171-37-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 46/62] x86/mm: Keep reference counts on encrypted VMAs for MKTME
+Date:   Wed,  8 May 2019 17:44:06 +0300
+Message-Id: <20190508144422.13171-47-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,95 +59,158 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-MKTME, Multi-Key Total Memory Encryption, is a feature on Intel
-platforms. The ACPI HMAT table can be used to verify that the
-platform topology is safe for the usage of MKTME.
+The MKTME (Multi-Key Total Memory Encryption) Key Service needs
+a reference count on encrypted VMAs. This reference count is used
+to determine when a hardware encryption KeyID is no longer in use
+and can be freed and reassigned to another Userspace Key.
 
-The kernel must be capable of programming every memory controller
-on the platform. This means that there must be a CPU online, in
-the same proximity domain of each memory controller.
+The MKTME Key service does the percpu_ref_init and _kill, so
+these gets/puts on encrypted VMA's can be considered the
+intermediaries in the lifetime of the key.
+
+Increment/decrement the reference count during encrypt_mprotect()
+system call for initial or updated encryption on a VMA.
+
+Piggy back on the vm_area_dup/free() helpers. If the VMAs being
+duplicated, or freed are encrypted, adjust the reference count.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- drivers/acpi/hmat/hmat.c | 54 ++++++++++++++++++++++++++++++++++++++++
- include/linux/acpi.h     |  1 +
- 2 files changed, 55 insertions(+)
+ arch/x86/include/asm/mktme.h |  5 +++++
+ arch/x86/mm/mktme.c          | 37 ++++++++++++++++++++++++++++++++++--
+ include/linux/mm.h           |  2 ++
+ kernel/fork.c                |  2 ++
+ 4 files changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index 38e3341f569f..936a403c0694 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -677,3 +677,57 @@ bool acpi_hmat_present(void)
- 	acpi_put_table(tbl);
- 	return true;
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index 0e6df07f1921..14da002d2e85 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -16,6 +16,11 @@ extern int mktme_keyid_shift;
+ extern void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
+ 				unsigned long start, unsigned long end);
+ 
++/* MTKME encrypt_count for VMAs */
++extern struct percpu_ref *encrypt_count;
++extern void vma_get_encrypt_ref(struct vm_area_struct *vma);
++extern void vma_put_encrypt_ref(struct vm_area_struct *vma);
++
+ DECLARE_STATIC_KEY_FALSE(mktme_enabled_key);
+ static inline bool mktme_enabled(void)
+ {
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index 91b49e88ca3f..df70651816a1 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -66,11 +66,12 @@ void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
+ 
+ 	if (oldkeyid == newkeyid)
+ 		return;
+-
++	vma_put_encrypt_ref(vma);
+ 	newprot = pgprot_val(vma->vm_page_prot);
+ 	newprot &= ~mktme_keyid_mask;
+ 	newprot |= (unsigned long)newkeyid << mktme_keyid_shift;
+ 	vma->vm_page_prot = __pgprot(newprot);
++	vma_get_encrypt_ref(vma);
+ 
+ 	/*
+ 	 * The VMA doesn't have any inherited pages.
+@@ -79,6 +80,18 @@ void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
+ 	unlink_anon_vmas(vma);
  }
-+
-+static int mktme_parse_proximity_domains(union acpi_subtable_headers *header,
-+					 const unsigned long end)
+ 
++void vma_get_encrypt_ref(struct vm_area_struct *vma)
 +{
-+	struct acpi_hmat_proximity_domain *mar = (void *)header;
-+	struct acpi_hmat_structure *hdr = (void *)header;
++	if (vma_keyid(vma))
++		percpu_ref_get(&encrypt_count[vma_keyid(vma)]);
++}
 +
-+	const struct cpumask *tmp_mask;
++void vma_put_encrypt_ref(struct vm_area_struct *vma)
++{
++	if (vma_keyid(vma))
++		percpu_ref_put(&encrypt_count[vma_keyid(vma)]);
++}
 +
-+	if (!hdr || hdr->type != ACPI_HMAT_TYPE_PROXIMITY)
-+		return -EINVAL;
+ /* Prepare page to be used for encryption. Called from page allocator. */
+ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+ {
+@@ -102,6 +115,22 @@ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+ 
+ 		page++;
+ 	}
 +
-+	if (mar->header.length != sizeof(*mar)) {
-+		pr_warn("MKTME: invalid header length in HMAT\n");
-+		return -1;
-+	}
 +	/*
-+	 * Require a valid processor proximity domain.
-+	 * This will catch memory only physical packages with
-+	 * no processor capable of programming the key table.
++	 * Make sure the KeyID cannot be freed until the last page that
++	 * uses the KeyID is gone.
++	 *
++	 * This is required because the page may live longer than VMA it
++	 * is mapped into (i.e. in get_user_pages() case) and having
++	 * refcounting per-VMA is not enough.
++	 *
++	 * Taking a reference per-4K helps in case if the page will be
++	 * split after the allocation. free_encrypted_page() will balance
++	 * out the refcount even if the page was split and freed as bunch
++	 * of 4K pages.
 +	 */
-+	if (!(mar->flags & ACPI_HMAT_PROCESSOR_PD_VALID)) {
-+		pr_warn("MKTME: no valid processor proximity domain\n");
-+		return -1;
-+	}
-+	/* Require an online CPU in the processor proximity domain. */
-+	tmp_mask = cpumask_of_node(pxm_to_node(mar->processor_PD));
-+	if (!cpumask_intersects(tmp_mask, cpu_online_mask)) {
-+		pr_warn("MKTME: no online CPU in proximity domain\n");
-+		return -1;
-+	}
-+	return 0;
-+}
 +
-+/* Returns true if topology is safe for MKTME key creation */
-+bool mktme_hmat_evaluate(void)
-+{
-+	struct acpi_table_header *tbl;
-+	bool ret = true;
-+	acpi_status status;
-+
-+	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	if (acpi_table_parse_entries(ACPI_SIG_HMAT,
-+				     sizeof(struct acpi_table_hmat),
-+				     ACPI_HMAT_TYPE_PROXIMITY,
-+				     mktme_parse_proximity_domains, 0) < 0) {
-+		ret = false;
-+	}
-+	acpi_put_table(tbl);
-+	return ret;
-+}
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index fe3ad4ca5bb3..82b270dfb785 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1341,6 +1341,7 @@ acpi_platform_notify(struct device *dev, enum kobject_action action)
++	percpu_ref_get_many(&encrypt_count[keyid], 1 << order);
+ }
  
- #ifdef CONFIG_X86_INTEL_MKTME
- extern bool acpi_hmat_present(void);
-+extern bool mktme_hmat_evaluate(void);
+ /*
+@@ -110,7 +139,9 @@ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+  */
+ void free_encrypted_page(struct page *page, int order)
+ {
+-	int i;
++	int i, keyid;
++
++	keyid = page_keyid(page);
+ 
+ 	/*
+ 	 * The hardware/CPU does not enforce coherency between mappings
+@@ -125,6 +156,8 @@ void free_encrypted_page(struct page *page, int order)
+ 		lookup_page_ext(page)->keyid = 0;
+ 		page++;
+ 	}
++
++	percpu_ref_put_many(&encrypt_count[keyid], 1 << order);
+ }
+ 
+ static int sync_direct_mapping_pte(unsigned long keyid,
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index a7f52d053826..00c0fd70816b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2831,6 +2831,8 @@ static inline void mprotect_set_encrypt(struct vm_area_struct *vma,
+ 					int newkeyid,
+ 					unsigned long start,
+ 					unsigned long end) {}
++static inline void vma_get_encrypt_ref(struct vm_area_struct *vma) {}
++static inline void vma_put_encrypt_ref(struct vm_area_struct *vma) {}
  #endif /* CONFIG_X86_INTEL_MKTME */
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 9dcd18aa210b..f0e35ed76f5a 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -342,12 +342,14 @@ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
+ 	if (new) {
+ 		*new = *orig;
+ 		INIT_LIST_HEAD(&new->anon_vma_chain);
++		vma_get_encrypt_ref(new);
+ 	}
+ 	return new;
+ }
  
- #endif	/*_LINUX_ACPI_H*/
+ void vm_area_free(struct vm_area_struct *vma)
+ {
++	vma_put_encrypt_ref(vma);
+ 	kmem_cache_free(vm_area_cachep, vma);
+ }
+ 
 -- 
 2.20.1
 
