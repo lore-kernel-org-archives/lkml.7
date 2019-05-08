@@ -2,157 +2,122 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C8BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5576C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30502053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="DrUwW+Hf"
+	by mail.kernel.org (Postfix) with ESMTP id 84A872053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557315166;
+	bh=t35deMfxEsBHDBEJ8drawqptDN3rUTqsdKCQYiyYYKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sdJJmPvDS3J/hqeUzq51JyaBTKkDzqbl38VJXLa/t7nJLG2gdQwrZJrWuUCS9iVe/
+	 OrNPR9R7+YHRYid/z7jJHyDxGForuohWZ5YlxFRWLFVrNZA2yQq+nEbqCstBfqDELm
+	 i7U9E/uSZYx3ZAp5nSkgsoTKZvay1loB2nPOHmVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfEHLc1 (ORCPT
+        id S1728283AbfEHLcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:32:27 -0400
-Received: from mail-eopbgr680040.outbound.protection.outlook.com ([40.107.68.40]:4677
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726751AbfEHLaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:30:19 -0400
+        Wed, 8 May 2019 07:32:45 -0400
+Received: from mail-wm1-f50.google.com ([209.85.128.50]:36343 "EHLO
+        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfEHLco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 07:32:44 -0400
+Received: by mail-wm1-f50.google.com with SMTP id j187so2819964wmj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1chwJ3hc4UTJ3blAlYUngE824WdNkP//hIXWmk1Ja8A=;
- b=DrUwW+HfBrwsEl2in+cz4S+PdeJEOhXU7fVfQQf7K1/7Bu4CQyX95NdYXd/oxxKLzmfA94Sp9RgysVQgxHHyK+aXVQgutw8CgBlEx5J1hG33ICxZPO0+0bHw7kb6PXGJmCSPuSxrDr+dHRaQH2ilSb5oPUIKVnknHgETTrV7qvg=
-Received: from DM6PR03CA0001.namprd03.prod.outlook.com (2603:10b6:5:40::14) by
- SN2PR03MB2272.namprd03.prod.outlook.com (2603:10b6:804:d::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Wed, 8 May 2019 11:30:13 +0000
-Received: from SN1NAM02FT003.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::203) by DM6PR03CA0001.outlook.office365.com
- (2603:10b6:5:40::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1878.21 via Frontend
- Transport; Wed, 8 May 2019 11:30:13 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; lists.freedesktop.org; dkim=none (message not
- signed) header.d=none;lists.freedesktop.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT003.mail.protection.outlook.com (10.152.73.29) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
- via Frontend Transport; Wed, 8 May 2019 11:30:12 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x48BUBS3023758
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 8 May 2019 04:30:11 -0700
-Received: from saturn.analog.com (10.50.1.244) by NWD2HUBCAS7.ad.analog.com
- (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Wed, 8 May 2019
- 07:30:11 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-ide@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-usb@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <alsa-devel@alsa-project.org>
-CC:     <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 10/16] pinctrl: armada-37xx: use new match_string() helper/macro
-Date:   Wed, 8 May 2019 14:28:36 +0300
-Message-ID: <20190508112842.11654-12-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190508112842.11654-1-alexandru.ardelean@analog.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IMVKRPD91r9MIGHIcHDIHWSb1J68VUuJeZtvfzj/19g=;
+        b=I10wVl1CdPh7kWFokwuyovaZ+UmagWP7YD/Dhe10KeZFPR0qRjqJeYYC86o1Xjjs4L
+         9yy8m7YhmNeK8rSM2gYAZQAxMjOda8oY/PPBrFxi6QI4J3LLfM0QJ2paFmkFh6kCfAbc
+         ehdgU1WtY17SjggNXUZkhKRGCo7ulImbzxVCBbB5hFHNt6g55qyYId9LkGrYORDt/VVO
+         Rb83SKJ3OHckwj2Vl5NeTcTymjgI0SGTeRAHkejU/Pg9jvEKAurI1tkOfYhlunywwZgY
+         UsTc2WZVXYDowmBZH9Laz1c6jJsyjMdZqsz8ACixPGjqUml9VHlOrSg6IIS3BtsoxfQL
+         d02g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IMVKRPD91r9MIGHIcHDIHWSb1J68VUuJeZtvfzj/19g=;
+        b=aScstWvVF/dmrL+xHP7R+zEcTmUBFTHX4S0KsCR1qk+ypXE+gQuBRgUhH6XR7Xw95p
+         VdMSb9XDU8f+PkshftlhCdZEoWtHH0QVMhH5VNBPN6m+2GPAsXeGWARGCP1oYO9z4nLV
+         4od7fq8CN73M4+xyLabaV09RXK8/QrYRnwgevVEP68h5ZXX/kaokAR6tOEP5YkO1Tg0o
+         uBL5xsPoFmfbQsvRMFnoitidgmx6cEF/WMjuXFZiHAYXWCEBktz+YEXgs09sRAc4OyIs
+         23V74Npz1PBgPYg9jRTks4oNIEWExp7amkm8j4xnLpmS3zadoajDzy8HjpLjadgQWyZo
+         HILA==
+X-Gm-Message-State: APjAAAXi5TLbBcBShNgQetHp14QKWKb8H0oSznwAQ0UPh4a+dlhQuVAV
+        qCSuBZu6BuBU69E5p6jTmOI=
+X-Google-Smtp-Source: APXvYqw2LBPCAHYIqpNhHHo5kr+IpuYVL75X2TT63GOSjrSZFBZo/7nAvyTEDfLPhBaeOsJ/3J0icg==
+X-Received: by 2002:a1c:9ec7:: with SMTP id h190mr2868289wme.105.1557315162937;
+        Wed, 08 May 2019 04:32:42 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id m6sm2926767wmc.32.2019.05.08.04.32.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 04:32:42 -0700 (PDT)
+Date:   Wed, 8 May 2019 13:32:39 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Andy Lutomirski <luto@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <20190508113239.GA33324@gmail.com>
+References: <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
+ <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
+ <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
+ <20190502150853.GA16779@gmail.com>
+ <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
+ <20190502164524.GB115950@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
+ <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C760A7@IRSMSX102.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(1496009)(396003)(376002)(346002)(39860400002)(136003)(2980300002)(189003)(199004)(50466002)(126002)(70586007)(476003)(246002)(106002)(2441003)(36756003)(478600001)(5660300002)(2906002)(70206006)(356004)(6666004)(44832011)(305945005)(53416004)(16586007)(446003)(11346002)(7636002)(316002)(2616005)(1076003)(486006)(51416003)(426003)(8936002)(7696005)(50226002)(336012)(2201001)(48376002)(107886003)(8676002)(86362001)(26005)(7416002)(4326008)(54906003)(110136005)(76176011)(186003)(47776003)(77096007)(921003)(83996005)(2101003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR03MB2272;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 54ae17f8-e934-4104-71ba-08d6d3a88946
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:SN2PR03MB2272;
-X-MS-TrafficTypeDiagnostic: SN2PR03MB2272:
-X-Microsoft-Antispam-PRVS: <SN2PR03MB2272F1E636EAB1142DBF6EF8F9320@SN2PR03MB2272.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:221;
-X-Forefront-PRVS: 0031A0FFAF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: xfAt8yPIASeIU4SWpAqv7wYVf6rgReoRasBfXu5VkYF5De6r3ChaB98QtwmzFohT7XLUcZv/paBIBGQNzEFCX/rtqn6SNp5cB2YDe1+lv35blIEB09SYcVLlHsYG9cnjNobxye4mP+4dqP11iC3pADRTivOXvbA+Tp0kI3oa4q5J5BL/KnwnnV9B5YLYrUzgEVd4bfoVd7faUQkPXj/dE3Vaf7ISG1AGagwFjfSKKsCgRru7kvI+k/bvrGow8wB5BEPLRNA7GLImCROlk0ZyBozdsEtLuar+oZzScBl6Q+M52D0eHyDc06BKyfl3wepAHxzTYDdZ5odpexJoia97/Y2agzfCyaYjbE1Nby4ArE3NQ7GcIz5zZeXT3zQbIOkDzZYrDXqhS0aaP4Yn31I6ed817wNoRQ0uge0Z2pdkt6I=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2019 11:30:12.0247
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54ae17f8-e934-4104-71ba-08d6d3a88946
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR03MB2272
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C760A7@IRSMSX102.ger.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change is mostly cosmetic.
 
-The `armada_37xx_pin_group` struct is defined as.
-struct armada_37xx_pin_group {
-        const char      *name;
-        unsigned int    start_pin;
-        unsigned int    npins;
-        u32             reg_mask;
-        u32             val[NB_FUNCS];
-        unsigned int    extra_pin;
-        unsigned int    extra_npins;
-        const char      *funcs[NB_FUNCS];
-        unsigned int    *pins;
-};
+* Reshetova, Elena <elena.reshetova@intel.com> wrote:
 
-The `funcs` field is a static array of strings, so using the
-new `match_string()` helper (which does an implicit ARRAY_SIZE(gp->funcs))
-should be fine.
+> CONFIG_PAGE_TABLE_ISOLATION=n:
+> 
+> base:                                  Simple syscall: 0.0510 microseconds
+> get_random_bytes(4096 bytes buffer):   Simple syscall: 0.0597 microseconds
+> 
+> So, pure speed wise get_random_bytes() with 1 page per-cpu buffer wins. 
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It still adds +17% overhead to the system call path, which is sad.
+Why is it so expensive?
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 07a5bcaa0067..68b0db5ef5e9 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -348,7 +348,7 @@ static int armada_37xx_pmx_set_by_name(struct pinctrl_dev *pctldev,
- 	dev_dbg(info->dev, "enable function %s group %s\n",
- 		name, grp->name);
- 
--	func = __match_string(grp->funcs, NB_FUNCS, name);
-+	func = match_string(grp->funcs, name);
- 	if (func < 0)
- 		return -ENOTSUPP;
- 
-@@ -938,7 +938,7 @@ static int armada_37xx_fill_func(struct armada_37xx_pinctrl *info)
- 			struct armada_37xx_pin_group *gp = &info->groups[g];
- 			int f;
- 
--			f = __match_string(gp->funcs, NB_FUNCS, name);
-+			f = match_string(gp->funcs, name);
- 			if (f < 0)
- 				continue;
- 
--- 
-2.17.1
+Thanks,
 
+	Ingo
