@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF030C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BDDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8802F21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDFF21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfEHREM (ORCPT
+        id S1729180AbfEHREW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 13:04:12 -0400
-Received: from mga03.intel.com ([134.134.136.65]:5319 "EHLO mga03.intel.com"
+        Wed, 8 May 2019 13:04:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:5321 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728963AbfEHRDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728953AbfEHRDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 13:03:04 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 10:03:03 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 10:03:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
-   d="scan'208";a="169697556"
+   d="scan'208";a="169697546"
 Received: from chang-linux-3.sc.intel.com ([172.25.66.171])
   by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 10:03:02 -0700
 From:   "Chang S. Bae" <chang.seok.bae@intel.com>
@@ -36,12 +36,10 @@ To:     Andy Lutomirski <luto@kernel.org>,
         "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>
 Cc:     Ravi Shankar <ravi.v.shankar@intel.com>,
         "Chang S . Bae" <chang.seok.bae@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v7 03/18] x86/fsgsbase/64: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
-Date:   Wed,  8 May 2019 03:02:18 -0700
-Message-Id: <1557309753-24073-4-git-send-email-chang.seok.bae@intel.com>
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 01/18] x86/fsgsbase/64: Fix ARCH_SET_FS/GS behaviors for a remote task
+Date:   Wed,  8 May 2019 03:02:16 -0700
+Message-Id: <1557309753-24073-2-git-send-email-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
 References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
@@ -50,83 +48,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+When a ptracer writes to a ptracee's FS/GSBASE with a different value,
+the selector is also cleared. This behavior is not straightforward.
 
-This is temporary.  It will allow the next few patches to be tested
-incrementally.
+The change will make the behavior simple and sensible, as it will
+(only) update the base when requested. Also, the condition check for
+comparing the base is removed to make more simple. It might save a few
+cycles, but this path is not performance critical.
 
-Setting unsafe_fsgsbase is a root hole.  Don't do it.
+The only recognizable downside of this change is when writing the base
+if the selector is already nonzero. The base will be reloaded according
+to the selector. But the case is highly unexpected in real usages.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  3 +++
- arch/x86/kernel/cpu/common.c                    | 24 ++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ arch/x86/kernel/process_64.c | 21 +++++++++------------
+ arch/x86/kernel/ptrace.c     | 14 ++------------
+ 2 files changed, 11 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fd03e2b..7fe1da0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2827,6 +2827,9 @@
- 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
- 			kernel to use 4-level paging instead.
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index f8e1af3..32d12c6 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -719,13 +719,13 @@ long do_arch_prctl_64(struct task_struct *task, int option, unsigned long arg2)
+ 			return -EPERM;
  
-+	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
-+			replaced with a nofsgsbase flag.
-+
- 	no_console_suspend
- 			[HW] Never suspend the console
- 			Disable suspending of consoles during suspend and
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 8739bdf..5743cb9 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -366,6 +366,22 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
- }
+ 		preempt_disable();
+-		/*
+-		 * ARCH_SET_GS has always overwritten the index
+-		 * and the base. Zero is the most sensible value
+-		 * to put in the index, and is the only value that
+-		 * makes any sense if FSGSBASE is unavailable.
+-		 */
+ 		if (task == current) {
++			/*
++			 * For the request to set the current task's base,
++			 * first to load with zero selector, then write
++			 * the base value to be effective on a non-FSGSBASE
++			 * system.
++			 */
+ 			loadseg(GS, 0);
+ 			x86_gsbase_write_cpu_inactive(arg2);
  
- /*
-+ * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
-+ * updated. This allows us to get the kernel ready incrementally.
-+ *
-+ * Once all the pieces are in place, these will go away and be replaced with
-+ * a nofsgsbase chicken flag.
-+ */
-+static bool unsafe_fsgsbase;
-+
-+static __init int setup_unsafe_fsgsbase(char *arg)
-+{
-+	unsafe_fsgsbase = true;
-+	return 1;
-+}
-+__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
-+
-+/*
-  * Protection Keys are not available in 32-bit mode.
-  */
- static bool pku_disabled;
-@@ -1344,6 +1360,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	setup_smap(c);
- 	setup_umip(c);
+@@ -736,7 +736,6 @@ long do_arch_prctl_64(struct task_struct *task, int option, unsigned long arg2)
+ 			task->thread.gsbase = arg2;
  
-+	/* Enable FSGSBASE instructions if available. */
-+	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
-+		if (unsafe_fsgsbase)
-+			cr4_set_bits(X86_CR4_FSGSBASE);
-+		else
-+			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
-+	}
-+
- 	/*
- 	 * The vendor-specific functions might have changed features.
- 	 * Now we do "generic changes."
+ 		} else {
+-			task->thread.gsindex = 0;
+ 			x86_gsbase_write_task(task, arg2);
+ 		}
+ 		preempt_enable();
+@@ -751,11 +750,10 @@ long do_arch_prctl_64(struct task_struct *task, int option, unsigned long arg2)
+ 			return -EPERM;
+ 
+ 		preempt_disable();
+-		/*
+-		 * Set the selector to 0 for the same reason
+-		 * as %gs above.
+-		 */
+ 		if (task == current) {
++			/*
++			 * Same here as %gs handling above
++			 */
+ 			loadseg(FS, 0);
+ 			x86_fsbase_write_cpu(arg2);
+ 
+@@ -765,7 +763,6 @@ long do_arch_prctl_64(struct task_struct *task, int option, unsigned long arg2)
+ 			 */
+ 			task->thread.fsbase = arg2;
+ 		} else {
+-			task->thread.fsindex = 0;
+ 			x86_fsbase_write_task(task, arg2);
+ 		}
+ 		preempt_enable();
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 4b8ee05..3309cfe 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -396,22 +396,12 @@ static int putreg(struct task_struct *child,
+ 	case offsetof(struct user_regs_struct,fs_base):
+ 		if (value >= TASK_SIZE_MAX)
+ 			return -EIO;
+-		/*
+-		 * When changing the FS base, use do_arch_prctl_64()
+-		 * to set the index to zero and to set the base
+-		 * as requested.
+-		 */
+-		if (child->thread.fsbase != value)
+-			return do_arch_prctl_64(child, ARCH_SET_FS, value);
++		x86_fsbase_write_cpu(child, value);
+ 		return 0;
+ 	case offsetof(struct user_regs_struct,gs_base):
+-		/*
+-		 * Exactly the same here as the %fs handling above.
+-		 */
+ 		if (value >= TASK_SIZE_MAX)
+ 			return -EIO;
+-		if (child->thread.gsbase != value)
+-			return do_arch_prctl_64(child, ARCH_SET_GS, value);
++		x86_gsbase_write_cpu(child, value);
+ 		return 0;
+ #endif
+ 	}
 -- 
 2.7.4
 
