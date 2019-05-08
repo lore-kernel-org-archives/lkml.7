@@ -8,116 +8,105 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC2DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05326C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5E62173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A8021726
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXEIRHCY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwtO8Y0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfEHUoA (ORCPT
+        id S1727899AbfEHUoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:44:00 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38619 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfEHUn6 (ORCPT
+        Wed, 8 May 2019 16:44:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42451 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbfEHUoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:43:58 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a64so144398qkg.5;
-        Wed, 08 May 2019 13:43:57 -0700 (PDT)
+        Wed, 8 May 2019 16:44:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 13so53324pfw.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:44:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D+5a7yIWfQM2RvqyQS12Uu7fVHTzOqx14y8Bsmfizjw=;
-        b=PXEIRHCYBAhc/MI+OVHSqQ/OUK0FRyA6cewJp/JxCuqKhxrD8xflX/xYjakuSRlV+j
-         bzHoRlNx4GFNyr08V2kvI/4lM6I7pR2Prx/hnUbwntSECCYxbZtLDy5nqKGHoxA2jJnR
-         OBqMmCSgzw1FD8ho4L/G/2RpClWH07txtknw+rLfb91XD5WBEYAv34JlkjZ4Ump9shRK
-         xtukBuq3opyrXSjbhg3OQIhlFWAVxGl0wfEYTXiqJ6ZxAQT7zxm8xXNhpRuOVUTuwb6S
-         7849sMDcPeGt911RbZvMqWtBmgDUHKEYvR9I2ajWYjeDjvjt8pT6uV77orYWlkIvPQM5
-         WxmA==
+        h=from:to:cc:subject:date:message-id;
+        bh=YYyoKQzwtxr9MifM5oym/pC4UmAt0s6fSNFjRNQVLRo=;
+        b=gwtO8Y0bubAMhz9zxXsOtqaL0DI1zXLSHYBYM/Z804yvYg8XIgUu6q1UOM69XENTTl
+         mgmsv17uve0OWx0fXibqjyBbI4CEtJUDVIUfha79ep88QBJQgb+JzUJawBcj182IU+ul
+         07bYNAQogmHK0O3pNF7YU9Quh/zJJLmWbzlPCrxRhW1OoxdXU0L9BHL7MSQH63Jp3uIh
+         KoBwuZv9fiI/GODXoz3ObByp4U6CGjhnUzzQShFXcJ8jodJWLkJmclXz0Na85M8h5Qva
+         RZiUug47mxWA/6MWL14HZvv+F8PZdoE3F8Jfnf6I0sDWvsJwPuBC/Rz9eYpWarFkcd9/
+         0CMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D+5a7yIWfQM2RvqyQS12Uu7fVHTzOqx14y8Bsmfizjw=;
-        b=fyX6gBHpauc7lPQJxrx3Wb5LLtxUWh59dh9KtGuXNn9xlDON5sbJMabts/N4zUWloL
-         N+x4bLO3XHABsxgp/5a4U6s8Sqi31V8D/nNCGDgEbR4qTGw3/O6auy6We/rKn88o8an/
-         tDeuRyBB1HO6jnnwRUmzLh0z0pvK6xr7/feiGggNbf9Ia3OmCmedFS2d+VyiHWPGrIxf
-         iUbMkWg0KCrr825CrNI46xC1OOwL9EHmKDUHGznEFegFuWNyWV2uHgQq3C1P3HXzouWP
-         Vrwp7qjJ7aILk3Xgf9U74za9zHIXlZI64RwON9u1LW5e0NG8Xcr1TLhPk6azjLJMrkGA
-         tG7g==
-X-Gm-Message-State: APjAAAUHiHQobMP2miY9SHnzEiAL3m99Rr90KKx+6fIq8QU+estUVWLN
-        yYNkepz2rHecJRfkYzjV8AI=
-X-Google-Smtp-Source: APXvYqxuSaA7O0Kfvow7bS6+66Q1kCm9xtHIqoJya9G35v6+67pZVluGYmgVIgRVikVrU1R2Ow08rw==
-X-Received: by 2002:a37:b4c6:: with SMTP id d189mr7925772qkf.173.1557348237279;
-        Wed, 08 May 2019 13:43:57 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:6268:7a0b:50be:cebc])
-        by smtp.gmail.com with ESMTPSA id u2sm14131qkb.37.2019.05.08.13.43.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YYyoKQzwtxr9MifM5oym/pC4UmAt0s6fSNFjRNQVLRo=;
+        b=sC5nkDbK+MCx6GX9zSaWgcVFklXSKEMqSIGYI/iVrDGZV+pynyLe8vr/BoTwQLFcF5
+         wo4dTH++MpeC5oTqYhIyzqSVcCV4uh/ugFY2CaPgJsmxqeBGOCj17Ld803S9bBNWTZVP
+         sIqsGT6wp9RIAn3nncYrf4HFJk+kCC5DHL7/XsqzgeMoVTWOKSycqI8TgYYKm4YI9U6N
+         VhvSkRxKm9EJZ6SwSaXlPfPdhCZUaXJ0PuHEEf6q0av+bX2oR7YuZF2pKnxC4t/Cil2l
+         S6vGPi4bjYcJ/bc1jdG2gtIGUD2K634gg5vXL4Ugz2c7z6J/6vwFE/qd/0fyxo6u0R7G
+         7NjQ==
+X-Gm-Message-State: APjAAAVq/RyDFjXp/Ah1OTsdZ3I+czaSh6omr6aXFze3OQv2ARaHOcqO
+        JQgFDHxl8KJlYIuzEHXzoOA=
+X-Google-Smtp-Source: APXvYqzoiar0i2NxWfO9Gjo41XQ6H+7CmgQOaVLAB3REYxNuAgc4W2POVCZ/yjIv4nHriaUdjs9B8w==
+X-Received: by 2002:a65:430a:: with SMTP id j10mr201131pgq.133.1557348254734;
+        Wed, 08 May 2019 13:44:14 -0700 (PDT)
+Received: from localhost ([2601:640:0:ebed:19d3:11c4:475e:3daa])
+        by smtp.gmail.com with ESMTPSA id 8sm128977pfn.158.2019.05.08.13.44.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 13:43:56 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] drm/msm/mdp5: Use the interconnect API
-Date:   Wed,  8 May 2019 13:42:15 -0700
-Message-Id: <20190508204219.31687-6-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190508204219.31687-1-robdclark@gmail.com>
-References: <20190508204219.31687-1-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 08 May 2019 13:44:14 -0700 (PDT)
+From:   Yury Norov <yury.norov@gmail.com>
+X-Google-Original-From: Yury Norov <ynorov@marvell.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Cc:     Yury Norov <ynorov@marvell.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86: fix double definition for __VIRTUAL_MASK_SHIFT
+Date:   Wed,  8 May 2019 13:44:11 -0700
+Message-Id: <20190508204411.13452-1-ynorov@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgi Djakov <georgi.djakov@linaro.org>
+__VIRTUAL_MASK_SHIFT is defined twice to the same valie in
+arch/x86/include/asm/page_32_types.h. Fix it.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Yury Norov <ynorov@marvell.com>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/include/asm/page_32_types.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 97179bec8902..54d2b4c2b09f 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -16,6 +16,7 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
+diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
+index 0d5c739eebd7..9bfac5c80d89 100644
+--- a/arch/x86/include/asm/page_32_types.h
++++ b/arch/x86/include/asm/page_32_types.h
+@@ -28,6 +28,8 @@
+ #define MCE_STACK 0
+ #define N_EXCEPTION_STACKS 1
+ 
++#define __VIRTUAL_MASK_SHIFT	32
++
+ #ifdef CONFIG_X86_PAE
+ /*
+  * This is beyond the 44 bit limit imposed by the 32bit long pfns,
+@@ -36,11 +38,8 @@
+  * The real limit is still 44 bits.
   */
+ #define __PHYSICAL_MASK_SHIFT	52
+-#define __VIRTUAL_MASK_SHIFT	32
+-
+ #else  /* !CONFIG_X86_PAE */
+ #define __PHYSICAL_MASK_SHIFT	32
+-#define __VIRTUAL_MASK_SHIFT	32
+ #endif	/* CONFIG_X86_PAE */
  
-+#include <linux/interconnect.h>
- #include <linux/of_irq.h>
- 
- #include "msm_drv.h"
-@@ -1050,6 +1051,19 @@ static const struct component_ops mdp5_ops = {
- 
- static int mdp5_dev_probe(struct platform_device *pdev)
- {
-+	struct icc_path *path0 = of_icc_get(&pdev->dev, "port0");
-+	struct icc_path *path1 = of_icc_get(&pdev->dev, "port1");
-+	struct icc_path *path_rot = of_icc_get(&pdev->dev, "rotator");
-+
-+	if (IS_ERR(path0))
-+		return PTR_ERR(path0);
-+	icc_set_bw(path0, 0, MBps_to_icc(6400));
-+
-+	if (!IS_ERR(path1))
-+		icc_set_bw(path1, 0, MBps_to_icc(6400));
-+	if (!IS_ERR(path_rot))
-+		icc_set_bw(path_rot, 0, MBps_to_icc(6400));
-+
- 	DBG("");
- 	return component_add(&pdev->dev, &mdp5_ops);
- }
+ /*
 -- 
-2.20.1
+2.17.1
 
