@@ -2,89 +2,143 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33E7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8352EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35C2216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC3E216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3t4EFAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbfEHQix (ORCPT
+        id S1728383AbfEHQjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:38:53 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:42155 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725889AbfEHQix (ORCPT
+        Wed, 8 May 2019 12:39:42 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38607 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfEHQjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:38:53 -0400
-Received: from [IPv6:2001:983:e9a7:1:1542:3ab9:816d:970b] ([IPv6:2001:983:e9a7:1:1542:3ab9:816d:970b])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id OPajhzfge3qlsOPakhLnRq; Wed, 08 May 2019 18:38:51 +0200
-Subject: Re: [PATCH v2] v4l: Add source event change for bit-depth
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <20190508113759.19168-1-stanimir.varbanov@linaro.org>
- <d6dcee9a-0308-855c-9819-3e7413cb617d@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a63d1c5f-806e-92c3-a6f7-e70f0686a27d@xs4all.nl>
-Date:   Wed, 8 May 2019 18:38:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 12:39:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id y6so17653129ior.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xu3J6eI9YLyb944dtXSWpBpCLJN0nrV0r6Vm0VQQ9gQ=;
+        b=T3t4EFADgm+deSPmD7ufZCY5hGmKwOgHct0KLcslcbnCkpC1AL67cQgdcIw9SW0FNZ
+         hW4ZHC9W/BgoxLIsXc4egBsLd6KplP2uJDramkLPJ5iQipJzckhpceum3LKqwRA+cMDA
+         /Rk1sDFN+OEueV7uiaCm8B4KHisDvDtunqANHv5C8RpeH2sgzGu1k2w03tYujkVEEJOS
+         ivGM+zc6xb/g33h6073ueh2TI0wkAhlCDNAIEqIVwEugYVlXxtnqaHFYdBpr5t6vOCHj
+         4ni/CXM33+/XefpawlCA2TkiV9yyo/rdZAC3XG0hIAhkMOntWo5Js0HVQoSpYcL/7rSS
+         ve4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xu3J6eI9YLyb944dtXSWpBpCLJN0nrV0r6Vm0VQQ9gQ=;
+        b=Qo3WLIvnbckMu1QJimpljIGdV+A5jMyFKEGOLSrvO7z2KNK1nkVPyGCR1X2pAb9JSs
+         BZTZwsMsLOGwUeRi2rgqaw48mGBYlTR2JcA3mnXNE75CQzxUeFB7CfB1oFLa4k2Gk5q+
+         Q1lry4weQCV6CWyq8mZb23ON8V4ZiWNZb6GDL1VqsUQ+K+HEK1Zrnud47BnTCsoDVAOZ
+         mLUP75HonPrfx8Y9bmU2EZF/Z9gU0b5UhovSNI1o2yN+e/2I0RBBzOGM81ex/VutOOSW
+         X14S8LsguNuN6QahxWZGqC6ynWs7CrNQbsUdRAWeIwM7gbiWI1dRY5ZTKXW3Nv2+P7vJ
+         SH8Q==
+X-Gm-Message-State: APjAAAWQT0x/NPa1keEccPJRI8yDAI3zsyoWVU/bDnnYFh9SBUrFVT8t
+        g9kC2UwuZOfDLuPhK5kPxdLX0KbvbwYQU1ZqBtQDHW3o
+X-Google-Smtp-Source: APXvYqznO+r3GY4eu2dyOQXLeapEbXWlznUlhxXvlK5nhKconmio83XGvtE2VgAT/1UhV6MP0P+4rJaLxXgPsMc+FAU=
+X-Received: by 2002:a6b:6d06:: with SMTP id a6mr10717892iod.11.1557333580937;
+ Wed, 08 May 2019 09:39:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d6dcee9a-0308-855c-9819-3e7413cb617d@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfA2G6OTFamVBKLYKYcEXPMd55QMkc85iZIPxrM91Ve0+9dGD8w/wHJD//upbepQx/xWZ4EsVFzzPsUfiOGkQRMIcqOSEjkdRBeC2TuAJ6BRqM0NjJBlC
- V3K45LT9RPhChatrXpv+tT4o3aP1AK1jDnBYJiuo0YvQYTun4T/U+70wagWERUFtQFtRt3TkPDBRseOF7cMdzNJ6FV1yQAIbHFnu8YhpU0lHXPzTaydgi1rw
- aQPrcYN4XXkiKaZ+WwWKb9NZa8KHkwovd0sN0bpHC61JQMB+ZTmoT1bByVfnNfV65BabiHkiYG9nGv/ZI2xIsBVzh1DUtSYxZy2qK7T8ZTnMV5c0mDIBSk23
- l/pHJG6jF980ZvTElO74Bpb1m4SFGJRQ7kPBg9Z2EAlU3gEjs/e8xA8Uc0iaJwRTdKdWgvCOM9nM4lYIRyQmovJE7no+m1F+nV1LRhs3ZCrnn5d9MPL+NcrT
- Ib06TuXCHdx7yNNS
+References: <1556899459-27785-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1556899459-27785-1-git-send-email-suzuki.poulose@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 8 May 2019 10:39:30 -0600
+Message-ID: <CANLsYkyxDY8g9zyhTyTqALgF5dmVX1F7DA_93ECpnvAaACYX8g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] coresight: Do not call smp_processor_id() from preemptible
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/19 5:34 PM, Stanimir Varbanov wrote:
-> Hi Hans,
-> 
-> On 5/8/19 2:37 PM, Stanimir Varbanov wrote:
->> This event indicate that the source bit-depth is changed during
->> run-time. The client must get the new format and re-allocate buffers
->> for it. This can usually happens with video decoder (encoders) when
->> the bit-stream depth is changed from 8 to 10bits or vice versa.
->>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->> Change since v1: s/BITDEPTH/BIT_DEPTH
->>
->>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 7 +++++++
->>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>  include/uapi/linux/videodev2.h                  | 1 +
->>  3 files changed, 9 insertions(+)
->>
->> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> index dea9c0cc00ab..f7782cbddc5f 100644
->> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> @@ -397,6 +397,13 @@ call.
->>  	that many devices are not able to recover from a temporary loss of
->>  	signal and so restarting streaming I/O is required in order for the
->>  	hardware to synchronize to the video signal.
->> +    * - ``V4L2_EVENT_SRC_CH_BIT_DEPTH``
-> 
-> I started to wonder isn't COLOR_DEPTH more appropriate? Bit-depth
-> doesn't describe what is actually deep.
-> 
+Hi Suzuki,
 
-I agree. COLOR_DEPTH is a better name.
+On Fri, 3 May 2019 at 10:04, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> Instead of using smp_processor_id() to figure out the node,
+> use the numa_node_id() for the current CPU node to avoid
+> splats like :
+>
+>  BUG: using smp_processor_id() in preemptible [00000000] code: perf/1743
+>  caller is alloc_etr_buf.isra.6+0x80/0xa0
+>  CPU: 1 PID: 1743 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
+>  Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
+>   Call trace:
+>    dump_backtrace+0x0/0x150
+>    show_stack+0x14/0x20
+>    dump_stack+0x9c/0xc4
+>    debug_smp_processor_id+0x10c/0x110
+>    alloc_etr_buf.isra.6+0x80/0xa0
+>    tmc_alloc_etr_buffer+0x12c/0x1f0
+>    etm_setup_aux+0x1c4/0x230
+>    rb_alloc_aux+0x1b8/0x2b8
+>    perf_mmap+0x35c/0x478
+>    mmap_region+0x34c/0x4f0
+>    do_mmap+0x2d8/0x418
+>    vm_mmap_pgoff+0xd0/0xf8
+>    ksys_mmap_pgoff+0x88/0xf8
+>    __arm64_sys_mmap+0x28/0x38
+>    el0_svc_handler+0xd8/0x138
+>    el0_svc+0x8/0xc
+>
 
-Regards,
+That is very interesting...
 
-	Hans
+> Fixes: 855ab61c16bf70b646 ("coresight: tmc-etr: Refactor function tmc_etr_setup_perf_buf()")
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index 793639f..74578bd 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1323,13 +1323,11 @@ static struct etr_perf_buffer *
+>  tmc_etr_setup_perf_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
+>                        int nr_pages, void **pages, bool snapshot)
+>  {
+> -       int node, cpu = event->cpu;
+> +       int node;
+>         struct etr_buf *etr_buf;
+>         struct etr_perf_buffer *etr_perf;
+>
+> -       if (cpu == -1)
+> -               cpu = smp_processor_id();
+> -       node = cpu_to_node(cpu);
+> +       node = (event->cpu == -1)? numa_node_id() : cpu_to_node(event->cpu);
+
+Seems to me using numa_node_id() simply circumvent function
+debug_smp_processor_id() and using get_cpu() and put_cpu() would be
+more appropriate.  But I'll trust the NUMA people have thought about
+this long before me.  Would you mind sending another revision that fix
+the same code for ETB and ETF?
+
+Thanks,
+Mathieu
+
+>
+>         etr_perf = kzalloc_node(sizeof(*etr_perf), GFP_KERNEL, node);
+>         if (!etr_perf)
+> --
+> 2.7.4
+>
