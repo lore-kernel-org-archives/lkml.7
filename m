@@ -2,249 +2,102 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12559C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35C1C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFADE21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2FF21479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfEHJlZ (ORCPT
+        id S1727297AbfEHJlb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:41:25 -0400
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:32947 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfEHJlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:41:22 -0400
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 08 May 2019 17:41:21 +0800
-Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
-        by mse.ite.com.tw with ESMTP id x489fGDQ056127;
-        Wed, 8 May 2019 17:41:16 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
- id 14.3.352.0; Wed, 8 May 2019 17:41:17 +0800
-From:   allen <allen.chen@ite.com.tw>
-To:     <allen.chen@ite.com.tw>
-CC:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] drm/bridge: it6505 driver add char device feature.
-Date:   Wed, 8 May 2019 17:31:58 +0800
-Message-ID: <1557307985-21228-4-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557307985-21228-1-git-send-email-allen.chen@ite.com.tw>
-References: <1557307985-21228-1-git-send-email-allen.chen@ite.com.tw>
+        Wed, 8 May 2019 05:41:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51370 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726544AbfEHJlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 05:41:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D0738ADC7;
+        Wed,  8 May 2019 09:41:21 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch\/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 0/3] x86_64/ftrace: Emulate calls from int3 when patching functions
+References: <20190508015559.767152678@goodmis.org>
+Date:   Wed, 08 May 2019 11:41:19 +0200
+In-Reply-To: <20190508015559.767152678@goodmis.org> (Steven Rostedt's message
+        of "Tue, 07 May 2019 21:55:59 -0400")
+Message-ID: <87lfzhwaf4.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-MAIL: mse.ite.com.tw x489fGDQ056127
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Chen <allen.chen@ite.com.tw>
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-This add can let us find it6505 char device in the /dev file and use read/write function to let the driver be hold.
+> [
+>   This is the non-RFC version.
+>
+>   It went through and passed all my tests. If there's no objections
+>   I'm going to include this in my pull request. I still have patches
+>   in my INBOX that may still be included, so I need to run those through
+>   my tests as well, so a pull request wont be immediate.
+> ]
 
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+<snip />
 
----
- drivers/gpu/drm/bridge/ite-it6505.c | 131 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+> Josh Poimboeuf (1):
+>       x86_64: Add gap to int3 to allow for call emulation
+>
+> Peter Zijlstra (2):
+>       x86_64: Allow breakpoints to emulate call instructions
+>       ftrace/x86_64: Emulate call function while updating in breakpoint handler
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 13079a8..1529e61 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -70,6 +70,13 @@
- /* if use this define will enable SHA debug */
- /* #define SHA_DEBUG */
- 
-+/* register char device for it6505 */
-+#define IT6505_CLASS_NAME "it6505_class"
-+#define IT6505_DEVICE_NAME "it6505_device"
-+#define IT6505_MAX_DEV 128
-+/* The device major number */
-+static int it6505_major_num;
-+
- enum sys_status {
- 	SYS_UNPLUG = 0,
- 	SYS_HPD,
-@@ -144,6 +151,8 @@ struct it6505 {
- 	struct it6505_platform_data pdata;
- 	struct mutex lock;
- 	struct regmap *regmap;
-+	struct cdev cdev;
-+	struct device class_dev;
- 	struct it6505_dp_port *port;
- 	/* thread sequence control */
- 	struct semaphore sem_notifier;
-@@ -2502,6 +2511,80 @@ static int it6505_init_pdata(struct it6505 *it6505)
- 	return PTR_ERR_OR_ZERO(pdata->gpiod_reset);
- }
- 
-+static int it6505_open(struct inode *inode, struct file *file)
-+{
-+	struct it6505 *ctx = container_of(inode->i_cdev, struct it6505, cdev);
-+
-+	DRM_DEBUG_DRIVER("[%s]: successful", __func__);
-+	if (!ctx)
-+		DRM_DEBUG_DRIVER("[%s]:get it6505 struct fail!", __func__);
-+	file->private_data = ctx;
-+	get_device(&ctx->class_dev);
-+	return 0;
-+}
-+
-+static int it6505_release(struct inode *inode, struct file *file)
-+{
-+	struct it6505 *ctx = file->private_data;
-+
-+	DRM_DEBUG_DRIVER("[%s]: successful", __func__);
-+	put_device(&ctx->class_dev);
-+	return 0;
-+}
-+
-+static ssize_t it6505_read(struct file *file, char *buf,
-+			   size_t count, loff_t *ptr)
-+{
-+	struct it6505 *ctx = file->private_data;
-+	char kbuff[16];
-+	size_t len;
-+
-+	DRM_DEBUG_DRIVER("[%s]start count=%zu", __func__, count);
-+	DRM_DEBUG_DRIVER("it6505_drv_hold:%d", ctx->it6505_drv_hold);
-+	len = snprintf(kbuff, sizeof(kbuff), "%d", ctx->it6505_drv_hold);
-+	len = min3(count, len, sizeof(kbuff));
-+	return copy_to_user(buf, kbuff, len) ? -EFAULT : len;
-+}
-+
-+static ssize_t it6505_write(struct file *file, const char *buff,
-+			    size_t count, loff_t *ptr)
-+{
-+	struct it6505 *ctx = file->private_data;
-+	char kbuff[16];
-+	int num;
-+
-+	DRM_DEBUG_DRIVER("[%s]start count=%zu", __func__, count);
-+	count = min(count, sizeof(kbuff) - 1);
-+	if (copy_from_user(kbuff, buff, count))
-+		return -EFAULT;
-+	kbuff[count] = '\0';
-+	if (kstrtoint(kbuff, 10, &num) < 0)
-+		return -EINVAL;
-+	ctx->it6505_drv_hold = num;
-+	DRM_DEBUG_DRIVER("set it6505_drv_hold:%d", ctx->it6505_drv_hold);
-+	return count;
-+}
-+
-+static struct class it6505_class_file = {
-+	.owner          = THIS_MODULE,
-+	.name           = IT6505_CLASS_NAME,
-+};
-+
-+static const struct file_operations it6505_fops = {
-+	.owner = THIS_MODULE,
-+	.read  = it6505_read,
-+	.write = it6505_write,
-+	.open  = it6505_open,
-+	.release = it6505_release
-+};
-+
-+static void it6505_release_device(struct device *dev)
-+{
-+	struct it6505 *ctx = container_of(dev, struct it6505, class_dev);
-+
-+	kfree(ctx);
-+}
-+
- static int it6505_i2c_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -2575,8 +2658,38 @@ static int it6505_i2c_probe(struct i2c_client *client,
- 	ctx->bridge.funcs = &it6505_bridge_funcs;
- 
- 	drm_bridge_add(&ctx->bridge);
-+	device_initialize(&ctx->class_dev);
-+	ctx->class_dev.parent = &client->dev;
-+	ctx->class_dev.release = it6505_release_device;
-+	cdev_init(&ctx->cdev, &it6505_fops);
-+	err = dev_set_name(&ctx->class_dev, "%s", IT6505_DEVICE_NAME);
-+	DRM_DEBUG_DRIVER("[%s] dev_set_name:%s",
-+			 __func__, err ? "failed" : "success");
-+	if (err) {
-+		DRM_DEBUG_DRIVER("dev_set_name failed => %d", err);
-+		goto put_class_dev;
-+	}
-+	/*
-+	 * Add the class device
-+	 * Link to the character device for creating the /dev entry
-+	 * in devtmpfs.
-+	 */
-+	ctx->class_dev.devt = MKDEV(it6505_major_num, 0);
-+	ctx->class_dev.class = &it6505_class_file;
-+
-+	/* We can now add the sysfs class, we know which parameter to show */
-+	err = cdev_device_add(&ctx->cdev, &ctx->class_dev);
-+	if (err) {
-+		DRM_DEBUG_DRIVER("cdev_device_add failed => %d",
-+				 err);
-+		goto put_class_dev;
-+	}
- 	DRM_DEBUG_DRIVER("[%s]end", __func__);
- 	return 0;
-+
-+put_class_dev:
-+	put_device(&ctx->class_dev);
-+	return err;
- }
- 
- static int it6505_remove(struct i2c_client *client)
-@@ -2616,16 +2729,34 @@ struct i2c_driver it6505_i2c_driver = {
- 
- static int __init it6505_init(void)
- {
-+	int err;
-+	dev_t dev = 0;
-+
- 	DRM_DEBUG_DRIVER("[%s]start", __func__);
-+	/* Register the device class */
-+	err = class_register(&it6505_class_file);
-+	err = alloc_chrdev_region(&dev, 0, IT6505_MAX_DEV,
-+			IT6505_DEVICE_NAME);
-+	it6505_major_num = MAJOR(dev);
-+	if (err < 0) {
-+		DRM_DEBUG_DRIVER("alloc_chrdev_region() fail!");
-+		goto failed_chrdevreg;
-+	}
- 	i2c_add_driver(&it6505_i2c_driver);
- 	DRM_DEBUG_DRIVER("[%s]end", __func__);
- 	return 0;
-+
-+failed_chrdevreg:
-+	class_unregister(&it6505_class_file);
-+	return err;
- }
- 
- static void __exit it6505_exit(void)
- {
- 	DRM_DEBUG_DRIVER("[%s]start", __func__);
- 	i2c_del_driver(&it6505_i2c_driver);
-+	unregister_chrdev(it6505_major_num, IT6505_DEVICE_NAME);
-+	class_unregister(&it6505_class_file);
- 	DRM_DEBUG_DRIVER("[%s]end", __func__);
- }
- 
+Reviewed-and-tested-by: Nicolai Stange <nstange@suse.de>
+
+for the whole series. Many, many thanks to everybody involved!
+
+I'll resend that live patching selftest once this fix here has been
+merged.
+
+Nicolai
+
 -- 
-1.9.1
-
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB
+21284 (AG Nürnberg)
