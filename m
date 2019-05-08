@@ -2,125 +2,189 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDB6C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C99C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB07321479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4AD21655
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfEHMWM (ORCPT
+        id S1728514AbfEHMXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:22:12 -0400
-Received: from mx.socionext.com ([202.248.49.38]:8119 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbfEHMWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:22:09 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 08 May 2019 21:22:07 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 603886117D;
-        Wed,  8 May 2019 21:22:07 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 8 May 2019 21:22:07 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id D14B81A04E1;
-        Wed,  8 May 2019 21:22:06 +0900 (JST)
-Received: from [127.0.0.1] (unknown [10.213.119.83])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id BCB33121BCE;
-        Wed,  8 May 2019 21:22:06 +0900 (JST)
-Subject: Re: [PATCH v3] serial: Add Milbeaut serial control
-To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <1555555916-22251-1-git-send-email-sugaya.taichi@socionext.com>
- <20190426191515.757e6015@alans-desktop>
-From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Message-ID: <93002681-37f8-cb12-725c-48c1695d29a0@socionext.com>
-Date:   Wed, 8 May 2019 21:22:05 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190426191515.757e6015@alans-desktop>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 8 May 2019 08:23:41 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:61947 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727575AbfEHMXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:23:41 -0400
+X-UUID: 0258ad8330e14eaa8eb091acd65846a1-20190508
+X-UUID: 0258ad8330e14eaa8eb091acd65846a1-20190508
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 235792297; Wed, 08 May 2019 20:23:37 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 8 May 2019 20:23:35 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 May 2019 20:23:35 +0800
+Message-ID: <1557318215.29634.7.camel@mtksdccf07>
+Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Matthias Kaehlcke <mka@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>, <fan.chen@mediatek.com>,
+        <jamesjj.liao@mediatek.com>, <dawei.chien@mediatek.com>,
+        <louis.yu@mediatek.com>, <roger.lu@mediatek.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
+Date:   Wed, 8 May 2019 20:23:35 +0800
+In-Reply-To: <c6cf6170-331d-8ffc-d272-e5d8ee648eda@linaro.org>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
+         <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
+         <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+         <20190503164651.GB40515@google.com>
+         <c6cf6170-331d-8ffc-d272-e5d8ee648eda@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: AA13AA691B0CF73F1B5A1F4F47777D55CE9FB045FE730AE38B5FDF7571CED59C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Thank you for pointing out.
-
-On 2019/04/27 3:15, Alan Cox wrote:
-> O
->> +static void mlb_usio_set_termios(struct uart_port *port,
->> +			struct ktermios *termios, struct ktermios *old)
->> +{
->> +	unsigned int escr, smr = MLB_USIO_SMR_SOE;
->> +	unsigned long flags, baud, quot;
->> +
->> +	switch (termios->c_cflag & CSIZE) {
->> +	case CS5:
->> +		escr = MLB_USIO_ESCR_L_5BIT;
->> +		break;
->> +	case CS6:
->> +		escr = MLB_USIO_ESCR_L_6BIT;
->> +		break;
->> +	case CS7:
->> +		escr = MLB_USIO_ESCR_L_7BIT;
->> +		break;
->> +	case CS8:
->> +	default:
->> +		escr = MLB_USIO_ESCR_L_8BIT;
->> +		break;
->> +	}
->> +
->> +	if (termios->c_cflag & CSTOPB)
->> +		smr |= MLB_USIO_SMR_SBL;
->> +
->> +	if (termios->c_cflag & PARENB) {
->> +		escr |= MLB_USIO_ESCR_PEN;
->> +		if (termios->c_cflag & PARODD)
->> +			escr |= MLB_USIO_ESCR_P;
->> +	}
+On Mon, 2019-05-06 at 12:43 +0200, Daniel Lezcano wrote:
+> On 03/05/2019 18:46, Matthias Kaehlcke wrote:
+> > Hi,
+> > 
+> > On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
+> >> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+> >>>
+> >>> Add thermal zone node to Mediatek MT8183 dts file.
+> >>>
+> >>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> >>> ---
+> >>>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
+> >>>  1 file changed, 64 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> index 926df75..b92116f 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> @@ -334,6 +334,67 @@
+> >>>                         status = "disabled";
+> >>>                 };
+> >>>
+> >>> +               thermal: thermal@1100b000 {
+> >>> +                       #thermal-sensor-cells = <1>;
+> >>> +                       compatible = "mediatek,mt8183-thermal";
+> >>> +                       reg = <0 0x1100b000 0 0x1000>;
+> >>> +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
+> >>> +                       clocks = <&infracfg CLK_INFRA_THERM>,
+> >>> +                                <&infracfg CLK_INFRA_AUXADC>;
+> >>> +                       clock-names = "therm", "auxadc";
+> >>> +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
+> >>> +                       mediatek,auxadc = <&auxadc>;
+> >>> +                       mediatek,apmixedsys = <&apmixedsys>;
+> >>> +                       mediatek,hw-reset-temp = <117000>;
+> >>> +                       nvmem-cells = <&thermal_calibration>;
+> >>> +                       nvmem-cell-names = "calibration-data";
+> >>> +               };
+> >>> +
+> >>> +               thermal-zones {
+> >>> +                       cpu_thermal: cpu_thermal {
+> >>> +                               polling-delay-passive = <1000>;
+> >>> +                               polling-delay = <1000>;
+> >>> +
+> >>> +                               thermal-sensors = <&thermal 0>;
+> >>> +                               sustainable-power = <1500>;
+> >>> +                       };
+> >>> +
+> >>> +                       tzts1: tzts1 {
+> >>> +                               polling-delay-passive = <1000>;
+> >>> +                               polling-delay = <1000>;
+> >>> +                               thermal-sensors = <&thermal 1>;
+> >> Is sustainable-power required for tzts? Though it's an optional
+> >> property, kernel would have warning:
+> >> [    0.631556] thermal thermal_zone1: power_allocator:
+> >> sustainable_power will be estimated
+> >> [    0.639586] thermal thermal_zone2: power_allocator:
+> >> sustainable_power will be estimated
+> >> [    0.647611] thermal thermal_zone3: power_allocator:
+> >> sustainable_power will be estimated
+> >> [    0.655635] thermal thermal_zone4: power_allocator:
+> >> sustainable_power will be estimated
+> >> [    0.663658] thermal thermal_zone5: power_allocator:
+> >> sustainable_power will be estimated
+> >> if no sustainable-power assigned.
+> > 
+> > The property is indeed optional, if it isn't specified IPA will use
+> > the sum of the minimum power of all 'power actors' of the zone as
+> > estimate (see estimate_sustainable_power()). This may lead to overly
+> > agressive throttling, since the nominal sustainable power will always
+> > be <= the requested power.
+> > 
+> > In my understanding the sustainable power may varies between devices,
+> > even for the same SoC. One could have all the hardware crammed into a
+> > tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
+> > laptop form factor and a metal enclosure (e.g. ASUS C201). Both
+> > examples are based on an Rockchip rk3288, but they have completely
+> > different thermal behavior, and would likely have different values for
+> > 'sustainable-power'.
+> > 
+> > In this sense I tend to consider 'sustainable-power' more a device,
+> > than a SoC property. You could specify a 'reasonable' value as a
+> > starting point, but it will likely not be optimal for all or even most
+> > devices. The warning might even be useful for device makers by
+> > indicating them that there is room for tweaking.
 > 
-> If you don't suport CMSPAR then clear that bit in termios as well
 > 
-
-OK, clear the bit because of not supported.
-
->> +	/* Set hard flow control */
->> +	if (of_property_read_bool(port->dev->of_node, "auto-flow-control") ||
->> +			(termios->c_cflag & CRTSCTS))
->> +		escr |= MLB_USIO_ESCR_FLWEN;
+> The sustainable power is the power dissipated by the devices belonging
+> to the thermal zone at the given trip temperature.
 > 
-> That's just broken. The termios bits are the definitive things for the
-> port, and in addition even if they are forced you need to correct the
-> termios data.
+> With the power numbers and the cooling devices, the IPA will change the
+> states of the cooling devices to leverage the dissipated power to the
+> sustainable power.
 > 
-> You might want to control flow control *at boot* with an OF property but
-> doing it post boot is just busted.
+> The contribution is the cooling effect of the cooling device.
 > 
-
-Ah, Yes.
-I think OF property should not be here, and it may only be used to determine
-the characteristics of the port.
-I try to make a fixes patch.
-
-Thanks,
-Sugaya Taichi
-
-
-> Alan
+> However, the IPA is limited to one thermal zone and the cooling device
+> is the cpu cooling device. There is the devfreq cooling device but as
+> the graphic driver is not upstream, it is found in the android tree only
+> for the moment.
 > 
+> As you mentioned the sustainable power can vary depending on the form
+> factor and the production process for the same SoC (they can go to
+> higher frequencies thus dissipate more power). That is the reason why we
+> split the DT per SoC and we override the values on a per SoC version basis.
+> 
+> You can have a look the rk3399.dtsi and their variant for experimental
+> board (*-rock960.dts) and the chromebook version (*-gru-kevin.dts).
+> 
+> Do you want a empiric procedure to find out the sustainable power ?
+> 
+> 
+> 
+OK, I will add the cooling map. But the tzts1 ~ tzts6 don't need to binding cooler.
+The "cpu_thermal" is max value of tzts1 ~tzts6. And cpu_thermal bind
+cooler with IPA. tzts1~6 don't need to add cooler. So, do I just add
+cooling map without any binding any cooling-cell?
+
+I think thermal framework will add estimated sustainable power. Maybe I
+should add by myself. What's procedure do you recommend to find
+sustainable power?
+
 
