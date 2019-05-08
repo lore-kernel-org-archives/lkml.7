@@ -2,162 +2,149 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E35C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F603C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3681521019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1ZESEjZO"
+	by mail.kernel.org (Postfix) with ESMTP id D6D79214AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfEHDod (ORCPT
+        id S1727032AbfEHDq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 23:44:33 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:55088 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfEHDoc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 23:44:32 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x483iAfQ000467;
-        Wed, 8 May 2019 12:44:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x483iAfQ000467
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557287051;
-        bh=GtYEji5+EE71+LZjKDY0sxmohdZ0g+Z5/jFvjX0CHzk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1ZESEjZOrbdTa5+bMjMIxX7JKfYmQ/Y+dVySrIFat/BgQw0mbSCMDzXGSvjMWFz/n
-         avfYjmfH7jmGaI5QdsMqFVxzcZu8izw/LpK1K5OCkgm8I5KWmyRvu9UHOa8gxKoDZt
-         m+aRszBtUwNrViHlN1ejn9NLZd5sBn8LipsbVhKP/EmJklWC8d0SClpntEUdswPbO0
-         uxHDUcYmEs99d3dEYaGWHtzJe4sW3DhiZbWvfKF+a3i+oGn774ldgNtYyHqsLu0LUi
-         wdmGRah9iOVXGv/gkE0XnKA1+0cx7FHv6uxS86y+Yf+qd+CK0/DwFFePzuMXVm07lT
-         NS2Z5t8WpH/UA==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id g127so11777172vsd.6;
-        Tue, 07 May 2019 20:44:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAUR3AuX3SmgwdBFiodM0SXGkP8nbnBJI942Jhx3gtbPtTPGtQfc
-        gQJhKeLMYD4sno69/A9o8/2bWOLvuRdWYJQxHWE=
-X-Google-Smtp-Source: APXvYqz4ub6AwdOUIv3IBI3Jv6hdIY2r3aV/UeyA9Lf21f53omFZix/UHdWvee9kuR48UmUZmxkT6DyZqggTTN2/rBA=
-X-Received: by 2002:a67:fd89:: with SMTP id k9mr7071343vsq.54.1557287050111;
- Tue, 07 May 2019 20:44:10 -0700 (PDT)
+        Tue, 7 May 2019 23:46:27 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2580 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726688AbfEHDq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 23:46:27 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 3DD319077D78086EC061;
+        Wed,  8 May 2019 11:46:25 +0800 (CST)
+Received: from dggeme754-chm.china.huawei.com (10.3.19.100) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 8 May 2019 11:46:24 +0800
+Received: from [127.0.0.1] (10.184.212.80) by dggeme754-chm.china.huawei.com
+ (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 8
+ May 2019 11:46:24 +0800
+Subject: Re: [PATCH] fix use-after-free in perf_sched__lat
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     <acme@kernel.org>, <namhyung@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <xiezhipeng1@huawei.com>
+References: <20190503023555.24736-1-liwei391@huawei.com>
+ <20190507085153.GC17416@krava>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <87032042-d814-dde9-8c35-31794e91209f@huawei.com>
+Date:   Wed, 8 May 2019 11:45:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190506013456.86061-1-joel@joelfernandes.org>
-In-Reply-To: <20190506013456.86061-1-joel@joelfernandes.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 8 May 2019 12:43:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQesyT-vspoGKdgRqycZfhtJm5Upx2T6ij-yB5i4Nx5nw@mail.gmail.com>
-Message-ID: <CAK7LNAQesyT-vspoGKdgRqycZfhtJm5Upx2T6ij-yB5i4Nx5nw@mail.gmail.com>
-Subject: Re: [PATCH v3] kheaders: Move from proc to sysfs
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
-        Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190507085153.GC17416@krava>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.212.80]
+X-ClientProxiedBy: dggeme767-chm.china.huawei.com (10.3.19.113) To
+ dggeme754-chm.china.huawei.com (10.3.19.100)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 10:37 AM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> The kheaders archive consisting of the kernel headers used for compiling
-> bpf programs is in /proc. However there is concern that moving it here
-> will make it permanent. Let us move it to /sys/kernel as discussed [1].
->
-> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
->
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
-> This patch applies on top of the previous patch that was applied to the
-> driver tree:
-> https://lore.kernel.org/patchwork/patch/1067310/
->
-> v2->v3: Fixed sysfs file mode nit (Greg).
-> v1->v2: Fixed some kconfig nits.
->
->  init/Kconfig                                | 16 ++++-----
->  kernel/Makefile                             |  4 +--
->  kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
->  kernel/kheaders.c                           | 40 +++++++++------------
->  4 files changed, 26 insertions(+), 36 deletions(-)
->  rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 26a364a95b57..c3661991b089 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -579,15 +579,13 @@ config IKCONFIG_PROC
->           This option enables access to the kernel configuration file
->           through /proc/config.gz.
->
-> -config IKHEADERS_PROC
-> -       tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
-> -       depends on PROC_FS
-> -       help
-> -         This option enables access to the kernel header and other artifacts that
-> -         are generated during the build process. These can be used to build eBPF
-> -         tracing programs, or similar programs.  If you build the headers as a
-> -         module, a module called kheaders.ko is built which can be loaded on-demand
-> -         to get access to the headers.
-> +config IKHEADERS
-> +       tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
+Hi Jiri，
+Thanks for your reply.
 
+On 2019/5/7 16:51, Jiri Olsa wrote:
+> On Fri, May 03, 2019 at 10:35:55AM +0800, Wei Li wrote:
+>> After thread is added to machine->threads[i].dead in
+>> __machine__remove_thread, the machine->threads[i].dead is freed
+>> when calling free(session) in perf_session__delete(). So it get a
+>> Segmentation fault when accessing it in thread__put().
+>>
+>> In this patch, we delay the perf_session__delete until all threads
+>> have been deleted.
+>>
+>> This can be reproduced by following steps:
+>> 	ulimit -c unlimited
+>> 	export MALLOC_MMAP_THRESHOLD_=0
+> 
+> what's this for?
 
-I suggested "depends on SYSFS" twice, both in v1 and v2.
+When we set env "MALLOC_MMAP_THRESHOLD_=0"，the memory-allocation functions employ
+mmap instead of increasing the program break using sbrk what may be maintained
+with cache. Thus it can report "Segmentation fault" immediately when going into
+this use-after-free code.
 
-https://lore.kernel.org/patchwork/patch/1069806/#1266147
-https://lore.kernel.org/patchwork/patch/1070005/#1266279
+> 
+>> 	perf sched record sleep 10
+>> 	perf sched latency --sort max
+>> 	Segmentation fault (core dumped)
+>>
+>> Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+>> Signed-off-by: Wei Li <liwei391@huawei.com>
+>> ---
+>>  tools/perf/builtin-sched.c | 44 ++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 42 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+>> index cbf39dab19c1..17849ae2eb1e 100644
+>> --- a/tools/perf/builtin-sched.c
+>> +++ b/tools/perf/builtin-sched.c
+>> @@ -3130,11 +3130,48 @@ static void perf_sched__merge_lat(struct perf_sched *sched)
+>>  static int perf_sched__lat(struct perf_sched *sched)
+>>  {
+>>  	struct rb_node *next;
+>> +	const struct perf_evsel_str_handler handlers[] = {
+>> +		{ "sched:sched_switch",	      process_sched_switch_event, },
+>> +		{ "sched:sched_stat_runtime", process_sched_runtime_event, },
+>> +		{ "sched:sched_wakeup",	      process_sched_wakeup_event, },
+>> +		{ "sched:sched_wakeup_new",   process_sched_wakeup_event, },
+>> +		{ "sched:sched_migrate_task", process_sched_migrate_task_event, },
+>> +	};
+>> +	struct perf_session *session;
+>> +	struct perf_data data = {
+>> +		.file      = {
+>> +			.path = input_name,
+>> +		},
+> 
+> I can't compile this:
+> 
+> builtin-sched.c: In function ‘perf_sched__lat’:
+> builtin-sched.c:3144:12: error: initialization discards ‘const’ qualifier from pointer target type [-Werror=discarded-qualifiers]
+>     .path = input_name,
+> 
+Sorry, this place has been changed recently in mainline code, i will update to
+the latest code.
 
+> 
+>> +		.mode      = PERF_DATA_MODE_READ,
+>> +		.force     = sched->force,
+>> +	};
+>> +	int rc = -1;
+>>  
+>>  	setup_pager();
+>>  
+>> -	if (perf_sched__read_events(sched))
+> 
+> so it's basically perf_sched__read_events code in here now, right?
+> 
+> might be better to add __perf_sched__read_events function
+> that would take session argument, something like:
+> 
+>         session = perf_session__new(&data, false, &sched->tool);
+> 	...
+> 	__perf_sched__read_events(sched, session)
+> 	...
+> 	perf_session__delete(session);
+> 
+> to avoid the code ducplication
 
+Yes, what you suggest is reasonable, i will send a v2 with your suggestion soon.
 
-> +       help
-> +         This option enables access to the in-kernel headers that are generated during
-> +         the build process. These can be used to build eBPF tracing programs,
-> +         or similar programs.  If you build the headers as a module, a module called
-> +         kheaders.ko is built which can be loaded on-demand to get access to headers.
->
->  config LOG_BUF_SHIFT
->         int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+Thanks，
+Wei
 
-
--- 
-Best Regards
-Masahiro Yamada
