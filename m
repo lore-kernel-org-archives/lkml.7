@@ -2,155 +2,125 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C387C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8ACC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0F620644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557319613;
-	bh=V/wyus1bL0ZJyz8W09lYgpIIFps0pH8A6E/vDhbllSE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I1yM22K6fJTF5Jm91qtaxmPDaXmvqh7tDwwQqtMHBxVPmxBOSdi5MJBapO3LaDQxj
-	 +ilczapu6DsbYJBvdMyfQwcicvIlWM1Vlt9pLs1doeUXUkVmIpI2vlzcKuwztSuiCs
-	 XauxK2go3IGNJStyTji2v1qqN+9DFVPl0laFYpIM=
+	by mail.kernel.org (Postfix) with ESMTP id 89A9C20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfEHMqv (ORCPT
+        id S1728652AbfEHMre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:46:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51848 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfEHMqv (ORCPT
+        Wed, 8 May 2019 08:47:34 -0400
+Received: from ms01.santannapisa.it ([193.205.80.98]:53417 "EHLO
+        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfEHMre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:46:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o189so3147386wmb.1;
-        Wed, 08 May 2019 05:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Bm1cOOnpCkh2FlDqhwYvU0/AEyKSRffy/xUjCrLDeZ8=;
-        b=nuMdcRX6WR7VhmoHMpuxcaTYW1dmox9Kge7s+s8Zh+5rBMmSymZlctQ5NZkKzFT8iu
-         xF35GgZfVb6Oo3fA8I8Kaf04a5nqtVkTMyub31HP1pwFnbFlGRSERsZ9nrT+HZQYMgZf
-         /gzWUGfeqIs8YxFQsEQIabRBuBFvcV5S8EMXckkWRAWoH2uj+vssikcFu4od859QUffx
-         kHhvxtQUx4vp+TeZqeJ1Z8nUg9PQPIj+lDkjwSPZaTiPT3fUTxl796POe4kr4yx2tHFI
-         rLa3zJTbQpYFBD9Ev+eC02s19os/xeRYbi09ALvOoRZhupOsuJLv49ot78vZj5EQXGtv
-         6Jow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Bm1cOOnpCkh2FlDqhwYvU0/AEyKSRffy/xUjCrLDeZ8=;
-        b=pKIrm5UkjCexM6CNI/TlymbBClCKz4Wrh+DvM5wUB/Me9RHgs67+CrkLzoytHVQjuA
-         +MR/XfupAncIsSRJZlgOYPy1BxUBTLFaZFxOc0WFmqArXvoU0pccfE4AM8KFB5QQdKWx
-         VNPP1D+oHUCSorzbWq+9yDKDAjcDYdkC8dT5i2kNNAQM30+296xYxllAy1b255IkuqVY
-         mgGRhkDEM6Xb1ZnvChsv0tzLdyykszsgbVmqXFSvtigAV2fLpeTTEVLyb5XZ/rc83rtc
-         IFkGyhHPZ2MPHvqMkH3BwwVkng/O/G4xUKhXT9TjL2lVXF8PFyS4g9BjCDPQRg9R+pPM
-         lXUg==
-X-Gm-Message-State: APjAAAV5cu+7AsYYzhieNhbaa/3tCdhOX/HTCqslLDnT90PVTuTYrSUd
-        kXPclHjQtghCdODSa1WVXTI=
-X-Google-Smtp-Source: APXvYqwUU1y1pe4s72bwQcNoxCebumtEv6ZDDo306mjX8AQjvF5HwCY+MM0cy+C369LDLTUR9c5YzA==
-X-Received: by 2002:a1c:ca01:: with SMTP id a1mr3180470wmg.30.1557319609169;
-        Wed, 08 May 2019 05:46:49 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id o13sm30605972wrg.40.2019.05.08.05.46.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 05:46:48 -0700 (PDT)
-Date:   Wed, 8 May 2019 14:46:45 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        linux-kselftest@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC][PATCH 4/4] x86_32: Provide consistent pt_regs
-Message-ID: <20190508124645.GA76848@gmail.com>
-References: <20190508074901.982470324@infradead.org>
- <20190508080612.832694080@infradead.org>
- <20190508115759.yvxjgsqriez4z22l@treble>
+        Wed, 8 May 2019 08:47:34 -0400
+Received: from [83.43.182.198] (account l.abeni@santannapisa.it HELO nowhere)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPSA id 138929448; Wed, 08 May 2019 14:47:23 +0200
+Date:   Wed, 8 May 2019 14:47:16 +0200
+From:   luca abeni <luca.abeni@santannapisa.it>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC PATCH 4/6] sched/dl: Improve capacity-aware wakeup
+Message-ID: <20190508144716.5cc8445d@nowhere>
+In-Reply-To: <20190508120526.GI6551@localhost.localdomain>
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+        <20190506044836.2914-5-luca.abeni@santannapisa.it>
+        <20190508090855.GG6551@localhost.localdomain>
+        <20190508112437.74661fa8@nowhere>
+        <20190508120526.GI6551@localhost.localdomain>
+Organization: Scuola Superiore S.Anna
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508115759.yvxjgsqriez4z22l@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Juri,
 
-* Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-
-> On Wed, May 08, 2019 at 09:49:05AM +0200, Peter Zijlstra wrote:
-> > Currently pt_regs on x86_32 has an oddity in that kernel regs
-> > (!user_mode(regs)) are short two entries (esp/ss). This means that any
-> > code trying to use them (typically: regs->sp) needs to jump through
-> > some unfortunate hoops.
+On Wed, 8 May 2019 14:05:26 +0200
+Juri Lelli <juri.lelli@redhat.com> wrote:
+[...]
+> > > > +	if ((rel_deadline < 0) || (rel_deadline *
+> > > > dl_se->dl_runtime < dl_se->dl_deadline * rem_runtime)) {
+> > > > +		rel_deadline = dl_se->dl_deadline;
+> > > > +		rem_runtime  = dl_se->dl_runtime;
+> > > > +	}    
+> > > 
+> > > So, are you basically checking if current remaining bw can be
+> > > consumed safely?  
 > > 
-> > Change the entry code to fix this up and create a full pt_regs frame.
+> > I check if the current runtime (rescaled based on the capacity) is
+> > smaller than the time to the current scheduling deadline
+> > (basically, if it can be consumed in time).
 > > 
-> > This then simplifies:
-> > 
-> >   - ftrace
-> >   - kprobes
-> >   - stack unwinder
-> >   - ptrace
-> >   - kdump
-> >   - kgdb
-> > 
-> > Hated-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/x86/entry/entry_32.S         |  105 ++++++++++++++++++++++++++++++++++----
-> >  arch/x86/include/asm/kexec.h      |   17 ------
-> >  arch/x86/include/asm/ptrace.h     |   17 ------
-> >  arch/x86/include/asm/stacktrace.h |    2 
-> >  arch/x86/kernel/crash.c           |    8 --
-> >  arch/x86/kernel/ftrace_32.S       |   81 ++++++++++++++++-------------
-> >  arch/x86/kernel/kgdb.c            |    8 --
-> >  arch/x86/kernel/kprobes/common.h  |    4 -
-> >  arch/x86/kernel/kprobes/core.c    |   29 ++++------
-> >  arch/x86/kernel/kprobes/opt.c     |   20 ++++---
-> >  arch/x86/kernel/process_32.c      |   16 +----
-> >  arch/x86/kernel/ptrace.c          |   29 ----------
-> >  arch/x86/kernel/time.c            |    3 -
-> >  arch/x86/kernel/unwind_frame.c    |   32 +----------
-> >  arch/x86/kernel/unwind_orc.c      |    2 
-> >  15 files changed, 181 insertions(+), 192 deletions(-)
+> > However, if
+> > 	q / (d - t) > Q / P 
+> > (where "q" is the current runtime, "d" is the scheduling deadline,
+> > "Q" is the maximum runtime, and "P" is the CBS period), then a new
+> > scheduling deadline will be generated (later), and the runtime will
+> > be reset to Q... So, I need to use the maximum budget and CBS
+> > period for checking if the task fits in the core.  
 > 
-> Very nice diffstat.  This moves all the pain to the 32-bit entry code
-> where it belongs.
+> OK. I'd add a comment about it.
 
-Yes, that's very convincing and looks like a nice simplification of 
-32-bit x86 entry concepts overall.
+Ok; I'll add a comment in the next version of the patchset.
 
-Assuming it's correct, the question is whether Linus still hates it? :-)
 
-Thanks,
+[...]
+> > > I'm not actually sure if looking at dynamic values is what we
+> > > need to do at this stage. By considering static values we fix
+> > > admission control (and scheduling). Aren't dynamic values more to
+> > > do with energy tradeoffs (and so to be introduced when starting
+> > > to look at the energy model)?  
+> > 
+> > Using the current runtime and scheduling deadline might allow to
+> > migrate a task to SMALL cores (if its remaining runtime is small
+> > enough), even if the rescaled Q is larger than P.
+> > So, in theory it might allow to reduce the load on big cores.
+> > 
+> > If we decide that this is overkilling, I can just drop the patch.  
+> 
+> So, my first impression was that we shouldn't be too clever until we
+> start using info from the energy model (using which one should be able
+> to understand if, for example, reducing load on big cores is a winning
+> power/perf decision).
 
-	Ingo
+Ok.
+
+
+> However, I was also wondering if we should actually compare dynamic
+> parameters with {running,this}_bw (per-rq) the moment we search for
+> potential migration candidates (so that we are not overloading rqs).
+
+Notice that all this logic is used only to select one of the idle cores
+(instead of picking the first idle core, we select the less powerful
+core on which the task "fits").
+
+So, running_bw does not provide any useful information, in this case;
+maybe this_bw can be more useful.
+
+
+
+				Luca
