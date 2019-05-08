@@ -2,110 +2,250 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F464C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3463DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E037321019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0405121479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfEHIEZ (ORCPT
+        id S1726891AbfEHIEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:04:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfEHIEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:04:24 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3797681DE5;
-        Wed,  8 May 2019 08:04:24 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-18.pek2.redhat.com [10.72.12.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23F2462671;
-        Wed,  8 May 2019 08:04:20 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
-        hpa@zytor.com, kirill.shutemov@linux.intel.com,
-        keescook@chromium.org, Baoquan He <bhe@redhat.com>
-Subject: [PATCH v4] x86/mm/KASLR: Fix the size of vmemmap section
-Date:   Wed,  8 May 2019 16:04:17 +0800
-Message-Id: <20190508080417.15074-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 08 May 2019 08:04:24 +0000 (UTC)
+        Wed, 8 May 2019 04:04:30 -0400
+Received: from HC210-202-87-179.vdslpro.static.apol.com.tw ([210.202.87.179]:37363
+        "EHLO ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726428AbfEHIE3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:04:29 -0400
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 08 May 2019 15:55:05 +0800
+Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
+        by mse.ite.com.tw with ESMTP id x487sx1P075750;
+        Wed, 8 May 2019 15:54:59 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
+ id 14.3.352.0; Wed, 8 May 2019 15:55:00 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH 3/3] drm/bridge: it6505 driver add char device feature.
+Date:   Wed, 8 May 2019 15:48:42 +0800
+Message-ID: <1557301722-20827-4-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
+References: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-MAIL: mse.ite.com.tw x487sx1P075750
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
-to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
+From: Allen Chen <allen.chen@ite.com.tw>
 
-However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
-the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
-64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
-stamping into the following cpu_entry_area section, if KASLR puts vmemmap
-very close to cpu_entry_area , and the actual area of vmemmap is much
-bigger than 1 TB.
+This add can let us find it6505 char device in the /dev file and use read/write function to let the driver be hold.
 
-So here calculate the actual size of vmemmap region, then align up to 1 TB
-boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
-The current code reserves 0.5 PB for vmemmap in 5-level. In this new way,
-the left space can be saved to join randomization to increase the entropy.
+Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Acked-by: Kirill A. Shutemov <kirill@linux.intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
-v3->v4:
-  Fix the incorrect style of code comment;
-  Add ack tags from Kirill and Kees.
-v3 discussion is here:
-  http://lkml.kernel.org/r/20190422091045.GB3584@localhost.localdomain
+ drivers/gpu/drm/bridge/ite-it6505.c | 131 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 131 insertions(+)
 
- arch/x86/mm/kaslr.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index dc3f058bdf9b..c0eedb85a92f 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
- } kaslr_regions[] = {
- 	{ &page_offset_base, 0 },
- 	{ &vmalloc_base, 0 },
--	{ &vmemmap_base, 1 },
-+	{ &vmemmap_base, 0 },
- };
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index 13079a8..1529e61 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -70,6 +70,13 @@
+ /* if use this define will enable SHA debug */
+ /* #define SHA_DEBUG */
  
- /* Get size in bytes used by the memory region */
-@@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
- 	unsigned long rand, memory_tb;
- 	struct rnd_state rand_state;
- 	unsigned long remain_entropy;
-+	unsigned long vmemmap_size;
- 
- 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
- 	vaddr = vaddr_start;
-@@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
- 	if (memory_tb < kaslr_regions[0].size_tb)
- 		kaslr_regions[0].size_tb = memory_tb;
- 
-+	/*
-+	 * Calculate how many TB vmemmap region needs, and aligned to
-+	 * 1TB boundary.
-+	 */
-+	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
-+		sizeof(struct page);
-+	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
++/* register char device for it6505 */
++#define IT6505_CLASS_NAME "it6505_class"
++#define IT6505_DEVICE_NAME "it6505_device"
++#define IT6505_MAX_DEV 128
++/* The device major number */
++static int it6505_major_num;
 +
- 	/* Calculate entropy available between regions */
- 	remain_entropy = vaddr_end - vaddr_start;
- 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
+ enum sys_status {
+ 	SYS_UNPLUG = 0,
+ 	SYS_HPD,
+@@ -144,6 +151,8 @@ struct it6505 {
+ 	struct it6505_platform_data pdata;
+ 	struct mutex lock;
+ 	struct regmap *regmap;
++	struct cdev cdev;
++	struct device class_dev;
+ 	struct it6505_dp_port *port;
+ 	/* thread sequence control */
+ 	struct semaphore sem_notifier;
+@@ -2502,6 +2511,80 @@ static int it6505_init_pdata(struct it6505 *it6505)
+ 	return PTR_ERR_OR_ZERO(pdata->gpiod_reset);
+ }
+ 
++static int it6505_open(struct inode *inode, struct file *file)
++{
++	struct it6505 *ctx = container_of(inode->i_cdev, struct it6505, cdev);
++
++	DRM_DEBUG_DRIVER("[%s]: successful", __func__);
++	if (!ctx)
++		DRM_DEBUG_DRIVER("[%s]:get it6505 struct fail!", __func__);
++	file->private_data = ctx;
++	get_device(&ctx->class_dev);
++	return 0;
++}
++
++static int it6505_release(struct inode *inode, struct file *file)
++{
++	struct it6505 *ctx = file->private_data;
++
++	DRM_DEBUG_DRIVER("[%s]: successful", __func__);
++	put_device(&ctx->class_dev);
++	return 0;
++}
++
++static ssize_t it6505_read(struct file *file, char *buf,
++			   size_t count, loff_t *ptr)
++{
++	struct it6505 *ctx = file->private_data;
++	char kbuff[16];
++	size_t len;
++
++	DRM_DEBUG_DRIVER("[%s]start count=%zu", __func__, count);
++	DRM_DEBUG_DRIVER("it6505_drv_hold:%d", ctx->it6505_drv_hold);
++	len = snprintf(kbuff, sizeof(kbuff), "%d", ctx->it6505_drv_hold);
++	len = min3(count, len, sizeof(kbuff));
++	return copy_to_user(buf, kbuff, len) ? -EFAULT : len;
++}
++
++static ssize_t it6505_write(struct file *file, const char *buff,
++			    size_t count, loff_t *ptr)
++{
++	struct it6505 *ctx = file->private_data;
++	char kbuff[16];
++	int num;
++
++	DRM_DEBUG_DRIVER("[%s]start count=%zu", __func__, count);
++	count = min(count, sizeof(kbuff) - 1);
++	if (copy_from_user(kbuff, buff, count))
++		return -EFAULT;
++	kbuff[count] = '\0';
++	if (kstrtoint(kbuff, 10, &num) < 0)
++		return -EINVAL;
++	ctx->it6505_drv_hold = num;
++	DRM_DEBUG_DRIVER("set it6505_drv_hold:%d", ctx->it6505_drv_hold);
++	return count;
++}
++
++static struct class it6505_class_file = {
++	.owner          = THIS_MODULE,
++	.name           = IT6505_CLASS_NAME,
++};
++
++static const struct file_operations it6505_fops = {
++	.owner = THIS_MODULE,
++	.read  = it6505_read,
++	.write = it6505_write,
++	.open  = it6505_open,
++	.release = it6505_release
++};
++
++static void it6505_release_device(struct device *dev)
++{
++	struct it6505 *ctx = container_of(dev, struct it6505, class_dev);
++
++	kfree(ctx);
++}
++
+ static int it6505_i2c_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -2575,8 +2658,38 @@ static int it6505_i2c_probe(struct i2c_client *client,
+ 	ctx->bridge.funcs = &it6505_bridge_funcs;
+ 
+ 	drm_bridge_add(&ctx->bridge);
++	device_initialize(&ctx->class_dev);
++	ctx->class_dev.parent = &client->dev;
++	ctx->class_dev.release = it6505_release_device;
++	cdev_init(&ctx->cdev, &it6505_fops);
++	err = dev_set_name(&ctx->class_dev, "%s", IT6505_DEVICE_NAME);
++	DRM_DEBUG_DRIVER("[%s] dev_set_name:%s",
++			 __func__, err ? "failed" : "success");
++	if (err) {
++		DRM_DEBUG_DRIVER("dev_set_name failed => %d", err);
++		goto put_class_dev;
++	}
++	/*
++	 * Add the class device
++	 * Link to the character device for creating the /dev entry
++	 * in devtmpfs.
++	 */
++	ctx->class_dev.devt = MKDEV(it6505_major_num, 0);
++	ctx->class_dev.class = &it6505_class_file;
++
++	/* We can now add the sysfs class, we know which parameter to show */
++	err = cdev_device_add(&ctx->cdev, &ctx->class_dev);
++	if (err) {
++		DRM_DEBUG_DRIVER("cdev_device_add failed => %d",
++				 err);
++		goto put_class_dev;
++	}
+ 	DRM_DEBUG_DRIVER("[%s]end", __func__);
+ 	return 0;
++
++put_class_dev:
++	put_device(&ctx->class_dev);
++	return err;
+ }
+ 
+ static int it6505_remove(struct i2c_client *client)
+@@ -2616,16 +2729,34 @@ struct i2c_driver it6505_i2c_driver = {
+ 
+ static int __init it6505_init(void)
+ {
++	int err;
++	dev_t dev = 0;
++
+ 	DRM_DEBUG_DRIVER("[%s]start", __func__);
++	/* Register the device class */
++	err = class_register(&it6505_class_file);
++	err = alloc_chrdev_region(&dev, 0, IT6505_MAX_DEV,
++			IT6505_DEVICE_NAME);
++	it6505_major_num = MAJOR(dev);
++	if (err < 0) {
++		DRM_DEBUG_DRIVER("alloc_chrdev_region() fail!");
++		goto failed_chrdevreg;
++	}
+ 	i2c_add_driver(&it6505_i2c_driver);
+ 	DRM_DEBUG_DRIVER("[%s]end", __func__);
+ 	return 0;
++
++failed_chrdevreg:
++	class_unregister(&it6505_class_file);
++	return err;
+ }
+ 
+ static void __exit it6505_exit(void)
+ {
+ 	DRM_DEBUG_DRIVER("[%s]start", __func__);
+ 	i2c_del_driver(&it6505_i2c_driver);
++	unregister_chrdev(it6505_major_num, IT6505_DEVICE_NAME);
++	class_unregister(&it6505_class_file);
+ 	DRM_DEBUG_DRIVER("[%s]end", __func__);
+ }
+ 
 -- 
-2.17.2
+1.9.1
 
