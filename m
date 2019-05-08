@@ -2,135 +2,162 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C842C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6792FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D53216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF6B216C8
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:16:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X5NQ6RaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfEHXPx (ORCPT
+        id S1728068AbfEHXQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 19:15:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725910AbfEHXPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 19:15:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7B7EAAF0C;
-        Wed,  8 May 2019 23:15:51 +0000 (UTC)
-Message-ID: <1557357332.3028.42.camel@suse.de>
-Subject: Re: [PATCH v8 09/12] mm/sparsemem: Support sub-section hotplug
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 09 May 2019 01:15:32 +0200
-In-Reply-To: <155718601407.130019.14248061058774128227.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <155718601407.130019.14248061058774128227.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Wed, 8 May 2019 19:16:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39171 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727623AbfEHXQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 19:16:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q10so353436ljc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 16:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rx0y6PQtDWpMB7dE4WTzT3yISSxb8pJ6fS91KAAE2fs=;
+        b=X5NQ6RaS8EC1nu4gRLBpTlEsIT2tkLIDGg4XxjwiydTb8snqc62j9xFF8wCOh7pkB0
+         9BLcr+9EcmSb2RPI6aO3m0J4z/WywXTZFadApdwuBPXBNXC32ndqwy65kQcXzxbNWIg6
+         6nyUBMNH5r/JOXk6cfeXzR/SnqvmaXFwclvSn5sM9unSletf/hXLnY/pDo5ImF3IcWg5
+         CTy/QJL8Xb2681vVVWGR94h8Q836lCuFMG8o/04E0Du+4E3DpecfA269C60AW1i1Vr1R
+         osMDUJkl2oh5fOAI2uHQhu5iIDzMxz9Zzk2TB8CAgLhVtJwVcZbTQq8vA8YNv+kB8ZLT
+         59oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rx0y6PQtDWpMB7dE4WTzT3yISSxb8pJ6fS91KAAE2fs=;
+        b=p27GWFtoDl74aVKuabEfBpux1JFRTOP+DxVQK0n63BCocqSek863BHLzk2P5CDHNPu
+         YBr2yqJGGG3eJ5fCGZT5Tkb5/aBJBfHKWWFVSQLljeP6Vdrvk1LxiQHNqivyflS4orUD
+         GjaO+XA8iZJc+AxoMCgwzbUR0+mraIjY17FMo0hcz1tnVuhmf5SYOUzKM6lM7SRDmSjT
+         fdBiG8QqK7KthAGX9rlrm2o74hn6vmnMhra6bb41+2pLc9IvNeaNeJgbZ+2kl+qswhOd
+         8C7ukMveE54Xh9tj2nvvaSvaTcSvLLDx7mkZrWeEvgftwFUDVeItqtt+Oxn4FWVFvOwi
+         +cdA==
+X-Gm-Message-State: APjAAAXwCXKYdgiYEmEgArcVlrwR2+UJm53LHIjsHLWDxS8wZvGYkGul
+        BMF0lSEhGvAgGpQW3iFCUBmMPFvzD0bDnytCp5ZV0Q==
+X-Google-Smtp-Source: APXvYqwZdNmKqMgi/4nybYZl5Ciq1NCyMxq91349TSdCaOjV7hPZdrVfPjRjB1apQm5mL4vL/Yt2N2sG5ISkiDHeyVA=
+X-Received: by 2002:a2e:8583:: with SMTP id b3mr267032lji.136.1557357358357;
+ Wed, 08 May 2019 16:15:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190508173403.6088d0db@canb.auug.org.au> <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
+ <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
+In-Reply-To: <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Wed, 8 May 2019 16:15:21 -0700
+Message-ID: <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com>
+Subject: Re: linux-next: Tree for May 8 (drivers/platform/x86/intel_pmc_core_plat_drv.c)
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-06 at 16:40 -0700, Dan Williams wrote:
-> @@ -741,49 +895,31 @@ int __meminit sparse_add_section(int nid,
-> unsigned long start_pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap)
->  {
->  	unsigned long section_nr = pfn_to_section_nr(start_pfn);
-> -	struct mem_section_usage *usage;
->  	struct mem_section *ms;
->  	struct page *memmap;
->  	int ret;
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, May 8, 2019 at 2:22 PM
+To: Randy Dunlap
+Cc: Stephen Rothwell, Linux Next Mailing List, Linux Kernel Mailing
+List, Rajat Jain, Platform Driver, Rajneesh Bhardwaj, Vishwanath
+Somayaji
 
-I already pointed this out in v7, but:
+> On Wed, May 8, 2019 at 11:45 PM Randy Dunlap <rdunlap@infradead.org> wrot=
+e:
+> >
+> > On 5/8/19 12:34 AM, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > Changes since 20190507:
+> > >
+> > > The ubifs tree gained a conflict against Linus' tree.
+> > >
+> >
+> > on i386 or x86_64:
+>
+> Thank you for report. Can you provide what is the config option for
+> this module? I suppose it's built-in.
+> Rajat, I will drop this from the repo, because I don't see it would
+> have a chance to be tested in time.
 
->  
-> -	/*
-> -	 * no locking for this, because it does its own
-> -	 * plus, it does a kmalloc
-> -	 */
->  	ret = sparse_index_init(section_nr, nid);
->  	if (ret < 0 && ret != -EEXIST)
->  		return ret;
 
-sparse_index_init() only returns either -ENOMEM or 0, so the above can
-be:
+OK, NP. Just to be sure I understand,
 
-	if (ret < 0) or if (ret)
+1) Please let me know if I should send in a fix (it would be
+#include/linux/module.h and also add MODULE_LICENSE() I believe)?
+2) Would this be lined up for next version though?
 
-> -	ret = 0;
-> -	memmap = populate_section_memmap(start_pfn,
-> PAGES_PER_SECTION, nid,
-> -			altmap);
-> -	if (!memmap)
-> -		return -ENOMEM;
-> -	usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
-> -	if (!usage) {
-> -		depopulate_section_memmap(start_pfn,
-> PAGES_PER_SECTION, altmap);
-> -		return -ENOMEM;
-> -	}
->  
-> -	ms = __pfn_to_section(start_pfn);
-> -	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
-> -		ret = -EEXIST;
-> -		goto out;
-> -	}
-> +	memmap = section_activate(nid, start_pfn, nr_pages, altmap);
-> +	if (IS_ERR(memmap))
-> +		return PTR_ERR(memmap);
-> +	ret = 0;
+Thanks,
+Rajat
 
-If we got here, sparse_index_init must have returned 0, so ret already
-contains 0.
-We can remove the assignment.
 
->  
->  	/*
->  	 * Poison uninitialized struct pages in order to catch
-> invalid flags
->  	 * combinations.
->  	 */
-> -	page_init_poison(memmap, sizeof(struct page) *
-> PAGES_PER_SECTION);
-> +	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page)
-> * nr_pages);
->  
-> +	ms = __pfn_to_section(start_pfn);
->  	section_mark_present(ms);
-> -	sparse_init_one_section(ms, section_nr, memmap, usage);
-> +	sparse_init_one_section(ms, section_nr, memmap, ms->usage);
->  
-> -out:
-> -	if (ret < 0) {
-> -		kfree(usage);
-> -		depopulate_section_memmap(start_pfn,
-> PAGES_PER_SECTION, altmap);
-> -	}
-> +	if (ret < 0)
-> +		section_deactivate(start_pfn, nr_pages, nid,
-> altmap);
-
-AFAICS, ret is only set by the return code from sparse_index_init, so
-we cannot really get to this code being ret different than 0.
-So we can remove the above two lines.
-
-I will start reviewing the patches that lack review from this version
-soon.
-
--- 
-Oscar Salvador
-SUSE L3
+>
+>
+> >
+> >
+> >   CC      drivers/platform/x86/intel_pmc_core_plat_drv.o
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: data d=
+efinition has no type or storage class [enabled by default]
+> >  MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
+> >  ^
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: error: type def=
+aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98MODULE_DEVICE_TAB=
+LE=E2=80=99 [-Werror=3Dimplicit-int]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: parame=
+ter names (without types) in function declaration [enabled by default]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: data d=
+efinition has no type or storage class [enabled by default]
+> >  module_init(pmc_core_platform_init);
+> >  ^
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: error: type def=
+aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98module_init=E2=80=
+=99 [-Werror=3Dimplicit-int]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: parame=
+ter names (without types) in function declaration [enabled by default]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: data d=
+efinition has no type or storage class [enabled by default]
+> >  module_exit(pmc_core_platform_exit);
+> >  ^
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: error: type def=
+aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98module_exit=E2=80=
+=99 [-Werror=3Dimplicit-int]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: parame=
+ter names (without types) in function declaration [enabled by default]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:42:19: warning: =E2=
+=80=98pmc_core_platform_init=E2=80=99 defined but not used [-Wunused-functi=
+on]
+> >  static int __init pmc_core_platform_init(void)
+> >                    ^
+> >
+> > and
+> > WARNING: modpost: missing MODULE_LICENSE() in drivers/platform/x86/inte=
+l_pmc_core_plat_drv.o
+> >
+> > --
+> > ~Randy
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
