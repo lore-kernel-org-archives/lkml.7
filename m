@@ -2,98 +2,68 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFF5C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB78C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6C0216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC8120989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfEHQGT (ORCPT
+        id S1727577AbfEHQGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 12:06:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48332 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfEHQGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:06:19 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725889AbfEHQGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 12:06:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8BF720989;
-        Wed,  8 May 2019 16:06:15 +0000 (UTC)
-Date:   Wed, 8 May 2019 12:06:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 0/3] x86_64/ftrace: Emulate calls from int3 when
- patching functions
-Message-ID: <20190508120614.037779be@gandalf.local.home>
-In-Reply-To: <20190508133022.78cd9c9b8fcb7838fc0280d0@kernel.org>
-References: <20190508015559.767152678@goodmis.org>
-        <20190508133022.78cd9c9b8fcb7838fc0280d0@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id D99E281F2F;
+        Wed,  8 May 2019 16:06:41 +0000 (UTC)
+Received: from localhost (ovpn-204-161.brq.redhat.com [10.40.204.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 736FC5DAAF;
+        Wed,  8 May 2019 16:06:38 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH] vfio: add myself as reviewer
+Date:   Wed,  8 May 2019 18:06:32 +0200
+Message-Id: <20190508160632.20441-1-cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 08 May 2019 16:06:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 13:30:22 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+I'm trying to look at vfio patches, and it's easier if
+I'm cc:ed.
 
-> > To solve this, an int3_emulate_call() is created for x86_64 to allow
-> > ftrace on x86_64 to emulate the call to ftrace_regs_caller() which will
-> > make sure all the registered handlers to that function are still called.
-> > And this keeps live kernel patching happy!  
-> 
-> Out of curiosity, would you have any idea to re-use these function for
-> other use-case? Maybe kprobes can reuse it, but very limited use-case.
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, but only for x86_64.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 920a0a1545b7..9c0cd7a49309 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16454,6 +16454,7 @@ F:	fs/fat/
+ 
+ VFIO DRIVER
+ M:	Alex Williamson <alex.williamson@redhat.com>
++R:	Cornelia Huck <cohuck@redhat.com>
+ L:	kvm@vger.kernel.org
+ T:	git git://github.com/awilliam/linux-vfio.git
+ S:	Maintained
+-- 
+2.20.1
 
-> 
-> > To mimimize the changes, and to avoid controversial patches, this
-> > only changes x86_64. Due to the way x86_32 implements the regs->sp
-> > the complexity of emulating calls on that platform is too much for
-> > stable patches, and live kernel patching does not support x86_32 anyway.  
-> 
-> This series looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thanks Masami!
-
--- Steve
