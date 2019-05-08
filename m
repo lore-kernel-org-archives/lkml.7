@@ -3,22 +3,22 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B836C04AAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94004C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06347217F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF05217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbfEHOpV (ORCPT
+        id S1728921AbfEHOp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:45:21 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59551 "EHLO mga03.intel.com"
+        Wed, 8 May 2019 10:45:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59548 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbfEHOo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:57 -0400
+        id S1728530AbfEHOpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:45:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
@@ -27,7 +27,7 @@ X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:49 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id CA21811F7; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id A1F3611C1; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 62/62] x86/mktme: Demonstration program using the MKTME APIs
-Date:   Wed,  8 May 2019 17:44:22 +0300
-Message-Id: <20190508144422.13171-63-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 59/62] x86/mktme: Document the MKTME kernel configuration requirements
+Date:   Wed,  8 May 2019 17:44:19 +0300
+Message-Id: <20190508144422.13171-60-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -62,79 +62,43 @@ From: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- Documentation/x86/mktme/index.rst      |  1 +
- Documentation/x86/mktme/mktme_demo.rst | 53 ++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/x86/mktme/mktme_demo.rst
+ Documentation/x86/mktme/index.rst               |  1 +
+ Documentation/x86/mktme/mktme_configuration.rst | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
+ create mode 100644 Documentation/x86/mktme/mktme_configuration.rst
 
 diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
-index ca3c76adc596..3af322d13225 100644
+index a3a29577b013..0f021cc4a2db 100644
 --- a/Documentation/x86/mktme/index.rst
 +++ b/Documentation/x86/mktme/index.rst
-@@ -10,3 +10,4 @@ Multi-Key Total Memory Encryption (MKTME)
-    mktme_configuration
-    mktme_keys
-    mktme_encrypt
-+   mktme_demo
-diff --git a/Documentation/x86/mktme/mktme_demo.rst b/Documentation/x86/mktme/mktme_demo.rst
+@@ -7,3 +7,4 @@ Multi-Key Total Memory Encryption (MKTME)
+ 
+    mktme_overview
+    mktme_mitigations
++   mktme_configuration
+diff --git a/Documentation/x86/mktme/mktme_configuration.rst b/Documentation/x86/mktme/mktme_configuration.rst
 new file mode 100644
-index 000000000000..49377ad648e7
+index 000000000000..91d2f80c736e
 --- /dev/null
-+++ b/Documentation/x86/mktme/mktme_demo.rst
-@@ -0,0 +1,53 @@
-+Demonstration Program using MKTME API's
-+=======================================
++++ b/Documentation/x86/mktme/mktme_configuration.rst
+@@ -0,0 +1,17 @@
++MKTME Configuration
++===================
 +
-+/* Compile with the keyutils library: cc -o mdemo mdemo.c -lkeyutils */
++CONFIG_X86_INTEL_MKTME
++        MKTME is enabled by selecting CONFIG_X86_INTEL_MKTME on Intel
++        platforms supporting the MKTME feature.
 +
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <keyutils.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <unistd.h>
++mktme_storekeys
++        mktme_storekeys is a kernel cmdline parameter.
 +
-+#define PAGE_SIZE sysconf(_SC_PAGE_SIZE)
-+#define sys_encrypt_mprotect 428
-+
-+void main(void)
-+{
-+	char *options_CPU = "algorithm=aes-xts-128 type=cpu";
-+	long size = PAGE_SIZE;
-+        key_serial_t key;
-+	void *ptra;
-+	int ret;
-+
-+        /* Allocate an MKTME Key */
-+	key = add_key("mktme", "testkey", options_CPU, strlen(options_CPU),
-+                      KEY_SPEC_THREAD_KEYRING);
-+
-+	if (key == -1) {
-+		printf("addkey FAILED\n");
-+		return;
-+	}
-+        /* Map a page of ANONYMOUS memory */
-+	ptra = mmap(NULL, size, PROT_NONE, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
-+	if (!ptra) {
-+		printf("failed to mmap");
-+		goto inval_key;
-+	}
-+        /* Encrypt that page of memory with the MKTME Key */
-+	ret = syscall(sys_encrypt_mprotect, ptra, size, PROT_NONE, key);
-+	if (ret)
-+		printf("mprotect error [%d]\n", ret);
-+
-+        /* Enjoy that page of encrypted memory */
-+
-+        /* Free the memory */
-+	ret = munmap(ptra, size);
-+
-+inval_key:
-+        /* Free the Key */
-+	if (keyctl(KEYCTL_INVALIDATE, key) == -1)
-+		printf("invalidate failed on key [%d]\n", key);
-+}
++        This parameter allows the kernel to store the user specified
++        MKTME key payload. Storing this payload means that the MKTME
++        Key Service can always allow the addition of new physical
++        packages. If the mktme_storekeys parameter is not present,
++        users key data will not be stored, and new physical packages
++        may only be added to the system if no user type MKTME keys
++        are programmed.
 -- 
 2.20.1
 
