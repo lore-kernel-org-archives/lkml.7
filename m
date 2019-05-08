@@ -2,73 +2,116 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642F4C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9B8C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B11A204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC3120C01
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:43:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouY5V6d1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfEHAmn (ORCPT
+        id S1726634AbfEHAnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:42:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33673 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfEHAmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:42:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zHkQ6mGQz9s00;
-        Wed,  8 May 2019 10:42:38 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Yury Norov <yury.norov@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Breno Leitao <leitao@debian.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Yury Norov <ynorov@marvell.com>
-Subject: Re: [PATCH] powerpc: restore current_thread_info()
-In-Reply-To: <20190507230746.GA19259@yury-thinkpad>
-References: <20190507225121.18676-1-ynorov@marvell.com> <20190507225856.GP23075@ZenIV.linux.org.uk> <20190507230746.GA19259@yury-thinkpad>
-Date:   Wed, 08 May 2019 10:42:37 +1000
-Message-ID: <87h8a5wzcy.fsf@concordia.ellerman.id.au>
+        Tue, 7 May 2019 20:43:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35975 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHAnJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:43:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v80so9531939pfa.3;
+        Tue, 07 May 2019 17:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ojYi+dPraKZx0o3Y02X9nQD+qD5NgpGE9+yj+drgmpM=;
+        b=ouY5V6d13EeaCznWYKiFrV+PuT6jOR4Dh3kzNHNMm1PBOQ7BVYPaMNzG1Eiq1yFZ1X
+         rauW70V9LWCc88qz3Sav6PMZB6Sjnzz4xiYnPIJ6sAXKsug/N+og6asxEj+ksSM9GqTX
+         hjyapc12YgWVu2ol2R5x9RkzpXRwcU5r6T2V9LvFkQ68isuoFELKg6n/ccTxHjVAyFQe
+         K2Fqc1Zcq9sImA+ooGhpYsJRUHuC2GKF2wCh4zOlG9ThBpFvKhSLdghjevPJD+DUKcOL
+         fWtmPS3ZsdNHKvYTlajwX3pPCci/XLfUWduK7qG17XMEKf4EfVSB2/aqGFPR8aBhGzOa
+         3HDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ojYi+dPraKZx0o3Y02X9nQD+qD5NgpGE9+yj+drgmpM=;
+        b=XusL5mN5G3BQ8HLBdhHk6oJ2TQKl35FRi//ew1XDZ7OkNCamEG/YpUKZ7XRdGTyiI/
+         l1z6YAtf0q1B5ev26INDXWM+zL4C02Ia/uXNMgJtM4JDM+I1tlviehVQbHw1d9vQigpB
+         usGBRX36k+53E6MFd/pDzS8HPos7bHB+45k4at8jQ8JBj6ejli2/qKP0NBNzGY2VTaxr
+         ZgSlAbo+ARG/UISAYv7VbL4q7iwOc2ACXABYnRFy/Nd9cXB4/UbXzGlFCcli/FLVT8QO
+         HOX8ezlY539FhOTGidI49DGzDdZPLwpdF0AB4PN/4uYceK3uR2ru+SvInLh6BGlR42za
+         oFMw==
+X-Gm-Message-State: APjAAAW2s/5uJ15bRE5Ym/WA/2trdUEYDkvbuBzPIfuFtJVwEuSEHSCQ
+        e6siVHV2qtAyoNLWcjIAPbE=
+X-Google-Smtp-Source: APXvYqybRlhJcf/lCjFKazuw6n2T6ikfBGHhOuruQSWAsvUy8UMxUBLMLVIqr9tPCpfWCD85IdJFZA==
+X-Received: by 2002:a62:ae05:: with SMTP id q5mr20467618pff.13.1557276188425;
+        Tue, 07 May 2019 17:43:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l83sm15304176pfi.150.2019.05.07.17.43.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 17:43:06 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] watchdog: Enforce that at least one pretimeout governor is enabled
+Date:   Tue,  7 May 2019 17:43:03 -0700
+Message-Id: <1557276183-8309-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yury Norov <yury.norov@gmail.com> writes:
-> On Tue, May 07, 2019 at 11:58:56PM +0100, Al Viro wrote:
->> On Tue, May 07, 2019 at 03:51:21PM -0700, Yury Norov wrote:
->> > Commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
->> > removes the function current_thread_info(). It's wrong because the
->> > function is used in non-arch code and is part of API.
->> 
->> In include/linux/thread_info.h:
->> 
->> #ifdef CONFIG_THREAD_INFO_IN_TASK
->> /*
->>  * For CONFIG_THREAD_INFO_IN_TASK kernels we need <asm/current.h> for the
->>  * definition of current, but for !CONFIG_THREAD_INFO_IN_TASK kernels,
->>  * including <asm/current.h> can cause a circular dependency on some platforms.
->>  */
->> #include <asm/current.h>
->> #define current_thread_info() ((struct thread_info *)current)
->> #endif
->
-> Ah, sorry. Then it might be my rebase issue. I was confused because Christophe
-> didn't remove the comment to current_thread_info(), so I decided he
-> removed it erroneously.
+Since commit "watchdog: Use depends instead of select for pretimeout
+governors", it was possible to enable pretimeout governors but keep all
+of them disabled. Doing this results in the following build failure.
 
-Yeah you're right, that comment should have been removed too.
+../drivers/watchdog/watchdog_pretimeout.c:
+	In function ‘watchdog_register_governor’:
+../drivers/watchdog/watchdog_pretimeout.c:139:26: error:
+	‘WATCHDOG_PRETIMEOUT_DEFAULT_GOV’ undeclared
+   if (!strncmp(gov->name, WATCHDOG_PRETIMEOUT_DEFAULT_GOV,
 
-cheers
+Since it does not make sense to enable pretimeout support but disable
+all pretimeout governors, enforce that at least one of them is always
+enabled.
+
+Fixes: f627ac0e12cd ("watchdog: Use depends instead of select for pretimeout governors")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+Fixes: sha is from next-20190507.
+
+ drivers/watchdog/Kconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index e19960ace0c0..4a3461afa96f 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -71,6 +71,12 @@ config WATCHDOG_PRETIMEOUT_GOV
+ 	help
+ 	  The option allows to select watchdog pretimeout governors.
+ 
++config WATCHDOG_PRETIMEOUT_GOV_SEL
++	tristate
++	depends on WATCHDOG_PRETIMEOUT_GOV
++	default m
++	select WATCHDOG_PRETIMEOUT_GOV_PANIC if WATCHDOG_PRETIMEOUT_GOV_NOOP=n
++
+ if WATCHDOG_PRETIMEOUT_GOV
+ 
+ config WATCHDOG_PRETIMEOUT_GOV_NOOP
+-- 
+2.7.4
+
