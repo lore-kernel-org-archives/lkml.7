@@ -2,147 +2,103 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CCDC04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5AAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7949A21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2975121019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557296943;
+	bh=mIyxU7VnNV8jDbGTYSn2QuAAnMlpGNdTTNr/w7EuXoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VhoMO0p8qy4YtySxNNNyMRv0OywdFT/HExQGZUh9sDr3xHMebuhnGuxju93hO9Xju
+	 R7h1LQjeJbE991x2tpwmUrz56mw8G6MbtntkTJ9GjkpDhNC+0isDJ+zpmBnttNxOni
+	 MDdEuaciaVs9TskuCxYXCMbWXrcx045y22TiepUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfEHG2b (ORCPT
+        id S1727231AbfEHG3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:28:31 -0400
-Received: from www.osadl.org ([62.245.132.105]:47282 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfEHG2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:28:30 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x486R0jv016762;
-        Wed, 8 May 2019 08:27:00 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        peter enderborg <peter.enderborg@sony.com>,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH RFC] selinux: provide __le variables explicitly
-Date:   Wed,  8 May 2019 08:21:17 +0200
-Message-Id: <1557296477-4694-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Wed, 8 May 2019 02:29:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42426 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbfEHG3B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 02:29:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mIyxU7VnNV8jDbGTYSn2QuAAnMlpGNdTTNr/w7EuXoo=; b=LI15PkuFSDAwbSF9sshVlzmJX
+        QALNE7xOrNA6nuZRUucLtQg4wVYxMeP61ahRZ3LFT0wPTskjpQU+6+ZzCN7LEJkgfYpaQgz9n3JkK
+        +ERpQ0L4huR0X72bzTE89TxViqK81uX0ZHf5wS+6/KUmYerW1t3vbvmcOMCVOalm2CvTA=;
+Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hOG4Y-00077p-FD; Wed, 08 May 2019 06:28:58 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id D462C440017; Wed,  8 May 2019 07:11:36 +0100 (BST)
+Date:   Wed, 8 May 2019 15:11:36 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] spi updates for v5.2
+Message-ID: <20190508061136.GI14916@sirena.org.uk>
+References: <20190506143301.GU14916@sirena.org.uk>
+ <CAADWXX_k_D7=SPd=bi-=3EtBjeG6fe0EaTb4U4ZZgoOoRSub-Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BX5bBAwwbKvz0cyO"
+Content-Disposition: inline
+In-Reply-To: <CAADWXX_k_D7=SPd=bi-=3EtBjeG6fe0EaTb4U4ZZgoOoRSub-Q@mail.gmail.com>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the endiannes is being handled properly sparse was unable to verify
-this due to type inconsistency. So introduce an additional __le32
-respectively _le64 variable to be passed to le32/64_to_cpu() to allow
-sparse to verify proper typing. Note that this patch does not change
-the generated binary on little-endian systems - on 32bit powerpc it
-does change the binary.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
----
+--BX5bBAwwbKvz0cyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Problem located by an experimental coccinelle script to locate
-patters that make sparse unhappy (false positives):
+On Tue, May 07, 2019 at 08:08:50AM -0700, Linus Torvalds wrote:
+> On Mon, May 6, 2019 at 7:33 AM Mark Brown <broonie@kernel.org> wrote:
 
-sparse complaints on different architectures fixed by this patch are:
+> > spi: Updates for v5.2
 
-ppc6xx_defconfig
-  CHECK   security/selinux/ss/ebitmap.c
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
+> Hmm. Please be more careful. Commit 1dfbf334f123 ("spi: ep93xx:
+> Convert to use CS GPIO descriptors") caused a new warning because it
+> removed a "for ()" loop, but left the now unused variable 'i' around.
 
-Little-endian systems:
+> I fixed it up in the merge, because I hate warnings that may hide real
+> problems. But I also expect maintainers to check their warnings,
+> exactly because the normal build is supposed to have none. So a new
+> warning does stand out.
 
-loongson3_defconfig
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
+Sorry, I've actually got a fix for that queued but obviously didn't
+manage to make sure it made it all the way through the process to the
+pull request.
 
-x86_64_defconfig
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
+--BX5bBAwwbKvz0cyO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Patch was compile-tested with: x86_64_defconfig,loongson3_defconfig (both
-little-endian) and ppc603_defconfig (big-endian).
+-----BEGIN PGP SIGNATURE-----
 
-On little-endian systems the patch has no impact on the generated binary 
-(which is expected) but on the 32bit powerpc it does change the binary
-which is not expected but since I'm not able to generate the .lst files
-in security/selinux/ss/ due to the lack of a Makefile it is not clear
-if this is an unexpected side-effect or due only to the introduction of
-the additional variables. From my understanding the patch does not change
-the program logic so if the code was correct on big-endian systems before
-it should still be correct now.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzScxgACgkQJNaLcl1U
+h9CnJwf/eKpzIkTbhVcC7J2Bb3sJsMXD6vuBkkbnkgLlu4ajKp9FJx+eTtd4eETY
+NobQp2PD84TpU62FmkQxvxvCMNezwtGN+IcttLV0o7I6MvJKbFU6vJwKTBztXawA
+pcd43PWu9rI9KearSLkkGdVGAQAbY6CurPPJNeG3/JElOHkUgoEt04PW2DE6OoyX
+lSHkynrdR+R+EmYtDXj9ZJO2Hd8ebDodBd/XB2Ay+VQubqzFY7rHiHI/q+zRDD6V
+LLRkDphcmwVOnurHYGeYNoi56XYidEmvTN9dkjP+Jzu5l5K03kXf1Q2xo7LQPhZk
+s96tTYvAn0pM7gu2JM7zy8m1BR9pOg==
+=VZ8j
+-----END PGP SIGNATURE-----
 
-Patch is against 5.1 (localversion-next is next-20190506)
-
- security/selinux/ss/ebitmap.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/security/selinux/ss/ebitmap.c b/security/selinux/ss/ebitmap.c
-index 8f624f8..09929fc 100644
---- a/security/selinux/ss/ebitmap.c
-+++ b/security/selinux/ss/ebitmap.c
-@@ -347,7 +347,9 @@ int ebitmap_read(struct ebitmap *e, void *fp)
- {
- 	struct ebitmap_node *n = NULL;
- 	u32 mapunit, count, startbit, index;
-+	__le32 ebitmap_start;
- 	u64 map;
-+	__le64 mapbits;
- 	__le32 buf[3];
- 	int rc, i;
- 
-@@ -381,12 +383,12 @@ int ebitmap_read(struct ebitmap *e, void *fp)
- 		goto bad;
- 
- 	for (i = 0; i < count; i++) {
--		rc = next_entry(&startbit, fp, sizeof(u32));
-+		rc = next_entry(&ebitmap_start, fp, sizeof(u32));
- 		if (rc < 0) {
- 			pr_err("SELinux: ebitmap: truncated map\n");
- 			goto bad;
- 		}
--		startbit = le32_to_cpu(startbit);
-+		startbit = le32_to_cpu(ebitmap_start);
- 
- 		if (startbit & (mapunit - 1)) {
- 			pr_err("SELinux: ebitmap start bit (%d) is "
-@@ -423,12 +425,12 @@ int ebitmap_read(struct ebitmap *e, void *fp)
- 			goto bad;
- 		}
- 
--		rc = next_entry(&map, fp, sizeof(u64));
-+		rc = next_entry(&mapbits, fp, sizeof(u64));
- 		if (rc < 0) {
- 			pr_err("SELinux: ebitmap: truncated map\n");
- 			goto bad;
- 		}
--		map = le64_to_cpu(map);
-+		map = le64_to_cpu(mapbits);
- 
- 		index = (startbit - n->startbit) / EBITMAP_UNIT_SIZE;
- 		while (map) {
--- 
-2.1.4
-
+--BX5bBAwwbKvz0cyO--
