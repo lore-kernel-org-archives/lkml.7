@@ -2,207 +2,221 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8537EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F346C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F9E20449
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5DA20449
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:40:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rHfMNiUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfEHMkX (ORCPT
+        id S1728617AbfEHMk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:40:23 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:50793 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbfEHMkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:40:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id C0045FB03;
-        Wed,  8 May 2019 14:40:20 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nZU3glKHYqCD; Wed,  8 May 2019 14:40:18 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 566BE47B7D; Wed,  8 May 2019 14:40:18 +0200 (CEST)
-Date:   Wed, 8 May 2019 14:40:18 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     Jacky Bai <ping.bai@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [RFC PATCH] soc: imx: Try harder to get imq8mq SoC revisions
-Message-ID: <20190508124018.GA16859@bogon.m.sigxcpu.org>
+        Wed, 8 May 2019 08:40:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48540 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfEHMk0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:40:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LYKoqpJMlMO57vcE4nAKzPxnDzGZFaIp9M1SEgLNgCw=; b=rHfMNiUq+0Mt899oc+tcdryYT
+        sZmOi0MTs73jiU1Hyr32wPvXQaQRHSTDj9rQI2KyeinVpYvaMeST8vyH74hi9RIbEkBuJM1v9qXmj
+        U+EDlzUm5fSyrtZex0IIZTUBwoe9thV83JGvs+qcYfbY9MjRwv0xoWdY/mALkD+vPyUDQ7qUaD/rg
+        GszAEYwEuExk+h5vfd3euSGKVlko0+Lya5ikG+hf0rDtA5xHroA7PvyoUGtPaQkujYp4iLu1+S6lH
+        0OWhZWP0EUiVYeU2BkysUroFycGANvd76JCz6yhPzQ6RGD879O4lhwUWRdDBClcdFTHnRjbX86CTG
+        A1jGot0TQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOLrh-0007Ad-AI; Wed, 08 May 2019 12:40:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9BD062029F87A; Wed,  8 May 2019 14:40:02 +0200 (CEST)
+Date:   Wed, 8 May 2019 14:40:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        linux-kselftest@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190508124002.GJ2650@hirez.programming.kicks-ass.net>
+References: <20190508074901.982470324@infradead.org>
+ <20190508080612.721269814@infradead.org>
+ <20190508115416.nblx7c2kocidpytm@treble>
+ <20190508120416.GL2589@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB6434517A0235C8308D86B050EE310@AM0PR04MB6434.eurprd04.prod.outlook.com>
+In-Reply-To: <20190508120416.GL2589@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leonard,
+On Wed, May 08, 2019 at 02:04:16PM +0200, Peter Zijlstra wrote:
+> On Wed, May 08, 2019 at 06:54:16AM -0500, Josh Poimboeuf wrote:
 
-Thanks for your comments. Let's try s.th. different then: identify by
-bootrom, ocotop and anatop and fall back to ATF afterwards (I'll split
-out the DT part and add binding docs if this makes sense). I'm also
-happy to drop the whole ATF logic until mailine ATF catched up:
+> > We should put these macros in a header file somewhere (including
+> > stringified versions).
+> 
+> Probably a good idea. I'll frob them into asm/frame.h.
 
-The mainline ATF doesn't currently support the FSL_SIP_GET_SOC_INFO call
-nor does it have the code to identify different imx8mq SOC revisions so
-mimic what NXPs ATF does here.
-
-As a fallback use ATF so we can identify new revisions once it gains
-support or when using NXPs ATF.
-
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 12 ++++
- drivers/soc/imx/soc-imx8.c                | 68 ++++++++++++++++++-----
- 2 files changed, 67 insertions(+), 13 deletions(-)
+Subject: x86: Move ENCODE_FRAME_POINTER to asm/frame.h
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Wed May 8 14:30:48 CEST 2019
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 6d635ba0904c..52aa1600b33b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -246,6 +246,18 @@
- 		ranges = <0x0 0x0 0x0 0x3e000000>;
- 		dma-ranges = <0x40000000 0x0 0x40000000 0xc0000000>;
+In preparation for wider use, move the ENCODE_FRAME_POINTER macros to
+a common header and provide inline asm versions.
+
+These macros are used to encode a pt_regs frame for the unwinder; see
+unwind_frame.c:decode_frame_pointer().
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/entry/calling.h     |   15 --------------
+ arch/x86/entry/entry_32.S    |   16 --------------
+ arch/x86/include/asm/frame.h |   46 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 31 deletions(-)
+
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -172,21 +172,6 @@ For 32-bit we have the following convent
+ 	.endif
+ .endm
  
-+		bus@00000000 { /* ROM */
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x00000000 0x00000000 0x20000>;
+-/*
+- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+- * is just setting the LSB, which makes it an invalid stack address and is also
+- * a signal to the unwinder that it's a pt_regs pointer in disguise.
+- *
+- * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
+- * the original rbp.
+- */
+-.macro ENCODE_FRAME_POINTER ptregs_offset=0
+-#ifdef CONFIG_FRAME_POINTER
+-	leaq 1+\ptregs_offset(%rsp), %rbp
+-#endif
+-.endm
+-
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ 
+ /*
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -246,22 +246,6 @@
+ .Lend_\@:
+ .endm
+ 
+-/*
+- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+- * is just clearing the MSB, which makes it an invalid stack address and is also
+- * a signal to the unwinder that it's a pt_regs pointer in disguise.
+- *
+- * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
+- * original rbp.
+- */
+-.macro ENCODE_FRAME_POINTER
+-#ifdef CONFIG_FRAME_POINTER
+-	mov %esp, %ebp
+-	andl $0x7fffffff, %ebp
+-#endif
+-.endm
+-
+ .macro RESTORE_INT_REGS
+ 	popl	%ebx
+ 	popl	%ecx
+--- a/arch/x86/include/asm/frame.h
++++ b/arch/x86/include/asm/frame.h
+@@ -22,6 +22,39 @@
+ 	pop %_ASM_BP
+ .endm
+ 
++#ifdef CONFIG_X86_64
++/*
++ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
++ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
++ * is just setting the LSB, which makes it an invalid stack address and is also
++ * a signal to the unwinder that it's a pt_regs pointer in disguise.
++ *
++ * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
++ * the original rbp.
++ */
++.macro ENCODE_FRAME_POINTER ptregs_offset=0
++#ifdef CONFIG_FRAME_POINTER
++	leaq 1+\ptregs_offset(%rsp), %rbp
++#endif
++.endm
++#else /* !CONFIG_X86_64 */
++/*
++ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
++ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
++ * is just clearing the MSB, which makes it an invalid stack address and is also
++ * a signal to the unwinder that it's a pt_regs pointer in disguise.
++ *
++ * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
++ * original ebp.
++ */
++.macro ENCODE_FRAME_POINTER
++#ifdef CONFIG_FRAME_POINTER
++	mov %esp, %ebp
++	andl $0x7fffffff, %ebp
++#endif
++.endm
++#endif /* CONFIG_X86_64 */
 +
-+			rom@00000000 {
-+				compatible = "fsl,imx8mq-bootrom";
-+				reg = <0x00000000 0x1e800>;
-+			};
-+		};
+ #else /* !__ASSEMBLY__ */
+ 
+ #define FRAME_BEGIN				\
+@@ -30,6 +63,19 @@
+ 
+ #define FRAME_END "pop %" _ASM_BP "\n"
+ 
++#ifdef CONFIG_FRAME_POINTER
++#ifdef CONFIG_X86_64
++#define ENCODE_FRAME_POINTER			\
++	"lea 1(%rsp), %rbp\n\t"
++#else /* !CONFIG_X86_64 */
++#define ENCODE_FRAME_POINTER			\
++	"movl %esp, %ebp\n\t"			\
++	"andl $0x7fffffff, %ebp\n\t"
++#endif /* CONFIG_X86_64 */
++#else /* CONFIG_FRAME_POINTER */
++#define ENCODE_FRAME_POINTER
++#endif /* CONFIG_FRAME_POINTER */
 +
- 		bus@30000000 { /* AIPS1 */
- 			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
- 			#address-cells = <1>;
-diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
-index fc6429f9170a..0a1fe82efe86 100644
---- a/drivers/soc/imx/soc-imx8.c
-+++ b/drivers/soc/imx/soc-imx8.c
-@@ -3,6 +3,7 @@
-  * Copyright 2019 NXP.
-  */
+ #endif /* __ASSEMBLY__ */
  
-+#include <linux/arm-smccc.h>
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/of_address.h>
-@@ -11,39 +12,80 @@
- #include <linux/platform_device.h>
- #include <linux/of.h>
- 
-+#define REV_A0				0x10
-+#define REV_B0				0x20
- #define REV_B1				0x21
- 
-+#define IMX8MQ_SW_INFO_A0		0x800
-+#define IMX8MQ_SW_INFO_B0		0x83C
- #define IMX8MQ_SW_INFO_B1		0x40
- #define IMX8MQ_SW_MAGIC_B1		0xff0055aa
- 
-+#define FSL_SIP_GET_SOC_INFO		0xc2000006
-+
- struct imx8_soc_data {
- 	char *name;
- 	u32 (*soc_revision)(void);
- };
- 
--static u32 __init imx8mq_soc_revision(void)
-+static u32 __init imx8mq_soc_revision_atf(void)
-+{
-+	struct arm_smccc_res res = { 0 };
-+
-+	arm_smccc_smc(FSL_SIP_GET_SOC_INFO, 0, 0, 0, 0, 0, 0, 0, &res);
-+	/*
-+	 * Bit [23:16] is the silicon ID
-+	 * Bit[7:4] is the base layer revision,
-+	 * Bit[3:0] is the metal layer revision
-+	 * e.g. 0x10 stands for Tapeout 1.0
-+	 */
-+	return res.a0 & 0xff;
-+}
-+
-+static u32 __init imx8mq_soc_magic_node(const char *node, u32 offset)
- {
- 	struct device_node *np;
--	void __iomem *ocotp_base;
-+	void __iomem *base;
- 	u32 magic;
--	u32 rev = 0;
- 
--	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-ocotp");
-+	np = of_find_compatible_node(NULL, NULL, node);
- 	if (!np)
--		goto out;
-+		return 0;
-+	base = of_iomap(np, 0);
-+	WARN_ON(!base);
-+
-+	magic = readl_relaxed(base + offset);
-+	iounmap(base);
-+	of_node_put(np);
-+
-+	return magic;
-+}
- 
--	ocotp_base = of_iomap(np, 0);
--	WARN_ON(!ocotp_base);
-+static u32 __init imx8mq_soc_revision(void)
-+{
-+	u32 magic;
- 
--	magic = readl_relaxed(ocotp_base + IMX8MQ_SW_INFO_B1);
-+	/* B1 revision identified by ocotop */
-+	magic = imx8mq_soc_magic_node("fsl,imx8mq-ocotp", IMX8MQ_SW_INFO_B1);
- 	if (magic == IMX8MQ_SW_MAGIC_B1)
--		rev = REV_B1;
-+		return REV_B1;
- 
--	iounmap(ocotp_base);
-+	/* B0 identified by bootrom */
-+	magic = imx8mq_soc_magic_node("fsl,imx8mq-bootrom", IMX8MQ_SW_INFO_B0);
-+	if ((magic & 0xff) == REV_B0)
-+		return REV_B0;
- 
--out:
--	of_node_put(np);
--	return rev;
-+	/* A0 identified by anatop */
-+	magic = imx8mq_soc_magic_node("fsl,imx8mq-anatop", IMX8MQ_SW_INFO_A0);
-+	if ((magic & 0xff) == REV_A0)
-+		return REV_A0;
-+
-+	/* Read revision from ATF as fallback */
-+	magic = imx8mq_soc_revision_atf();
-+	if (magic != 0xff)
-+		return magic;
-+
-+	return 0;
- }
- 
- static const struct imx8_soc_data imx8mq_soc_data = {
--- 
-2.20.1
+ #define FRAME_OFFSET __ASM_SEL(4, 8)
