@@ -2,51 +2,83 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02886C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02481C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2750216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B0621530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uDRhoNuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfEHSAF (ORCPT
+        id S1727600AbfEHSCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:00:05 -0400
-Received: from verein.lst.de ([213.95.11.211]:41065 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbfEHSAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:00:05 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id D6BED67358; Wed,  8 May 2019 19:59:44 +0200 (CEST)
-Date:   Wed, 8 May 2019 19:59:44 +0200
+        Wed, 8 May 2019 14:02:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34144 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727515AbfEHSCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 14:02:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z175ufgHfKNpVPfjQ5KBrbanxr8MORY0umGXUAhhLNA=; b=uDRhoNuzBQQGvsYBHhUiWCGw6
+        PZjQtP2+4ZRKNW0b1dWOp3LkIjR9dc3tHQpBnu+Mryw23ZYpUyTvjRMRbQ2PFTXfMmA5gwAO3MImO
+        pw3YtmXiFlIZ10hufp/Tdn5LM+RuPl2RPJ41/PylmuC8wNU8lznNOd+S0T6B6/VepyI4ehSONIIwB
+        CR4RCUreuFC9rtpbHdqiC8qk2jO2QrhUMesNR7Ac7tFpldyyOT/85KNv8es9A5O8mQrizDX89vdoZ
+        i+AEQ54CzPbJHAzPhblPZ7jgOfcMSXcCh5VEfLGstJZiB+tMtq9AhUtyh/gO1vVF6p1EecJwMDq+O
+        mTi7ye5OQ==;
+Received: from 089144210233.atnat0019.highway.a1.net ([89.144.210.233] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOQta-0000Jf-2R; Wed, 08 May 2019 18:02:22 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jon Mason <jdmason@kudzu.us>
-Cc:     Christoph Hellwig <hch@lst.de>, Muli Ben-Yehuda <mulix@mulix.org>,
-        x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: status of the calgary iommu driver
-Message-ID: <20190508175944.GA32128@lst.de>
-References: <20190409140347.GA11524@lst.de> <CAPoiz9wwMCRkzM5FWm18kecC1=kt+5qPNHmQ7eUFhH=3ZNAqYw@mail.gmail.com> <20190508175219.GA32030@lst.de> <CAPoiz9zQuJ0-9wJBNo=Wvi9qquyid9vjmHODy=VJad_PE=cgdA@mail.gmail.com>
+To:     davem@davemloft.net
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ide: officially deprecated the legacy IDE driver
+Date:   Wed,  8 May 2019 20:01:40 +0200
+Message-Id: <20190508180140.12364-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPoiz9zQuJ0-9wJBNo=Wvi9qquyid9vjmHODy=VJad_PE=cgdA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 06:56:46PM +0100, Jon Mason wrote:
-> I do have a system.  So, it could be tested.  However given the age of
-> the HW, I would say it is not worth the effort to update and it would
-> be best to remove it from the kernel.
-> 
-> I can send a patch to do this, unless you would prefer to do it (or
-> already have something handy).
+After a recent chat with Dave we agreed to try to finally kill off the
+legacy IDE code base.  Set a two year grace period in which we try
+to move everyone over.  There are a few pieces of hardware not
+supported by libata yet, but for many of them we aren't even sure
+if there are any users.  For those that have users we have usually
+found a volunteer to add libata support.
 
-I don't have anything, and at least to me it is not urgent.  So feel
-free to send it.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/ide/ide-probe.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/ide/ide-probe.c b/drivers/ide/ide-probe.c
+index 5aeaca24a28f..4ad824984581 100644
+--- a/drivers/ide/ide-probe.c
++++ b/drivers/ide/ide-probe.c
+@@ -1437,6 +1437,9 @@ int ide_host_register(struct ide_host *host, const struct ide_port_info *d,
+ 	ide_hwif_t *hwif, *mate = NULL;
+ 	int i, j = 0;
+ 
++	pr_warn("legacy IDE will be removed in 2021, please switch to libata\n"
++		"Report any missing HW support to linux-ide@vger.kernel.org\n");
++
+ 	ide_host_for_each_port(i, hwif, host) {
+ 		if (hwif == NULL) {
+ 			mate = NULL;
+-- 
+2.20.1
+
