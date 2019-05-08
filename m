@@ -2,157 +2,93 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8592C46470
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3C2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB4D21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216C821655
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LdfpPzMp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K8kJxphP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfEHLLZ (ORCPT
+        id S1727376AbfEHLLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:11:25 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54633 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfEHLLX (ORCPT
+        Wed, 8 May 2019 07:11:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39564 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbfEHLLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:11:23 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b203so1577342wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:11:21 -0700 (PDT)
+        Wed, 8 May 2019 07:11:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so2719389wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=CudbcozzaeKUq3DWNZdG3otz0fZIRmL0q4NFD8op3gI=;
-        b=LdfpPzMpiacfFiok1ZAPTSkSm9gekwnzSeXjerAyeO0EAl44atgySrwVK/1S3+uCov
-         T3QeYquOu1rc/U7S9MyQJYcbrOO+VAzuk8rA+/3lW9nb2alaY5LzfobBRWzJiAmXZkKu
-         hTJIlBO231WRZs79AjSvRUfx0OpsNqkEYL513MG0J0KhdOQst9BdM7T6zzUyK8R0OhKL
-         xChXW/vqzCZ4GTacIH9O6Px/opCR1VpAVwMZ2wxfC3E57mhtY4e8S2URnK7gsH6SLUeN
-         /QQ1uD7lJ+M5tN9U8/o7lGBSZgf824SiapzizJ7sMNwq/H03OAWfztRuzAdZo/m/+mJs
-         Ircg==
+        bh=NVYGOZcqjk78nflqXOFona2LfzGNJNT4gdq4AY8AIEw=;
+        b=K8kJxphPZjrzRcD2kCbNStQL12MyFr4laIHIBXmGtmvmN258PuBxH/FJNcYbFMtrmP
+         FeV0S7uUVLg02wK0UetEetYIweB43aAQKVZeSAaQmRF927HZUaajugaHChRjZuVFn/ef
+         PUPuC/+GDuUDPgRCnPoyOVezIVNSNKDbXJ8iWBgMiMB713ZW10Dnk7j02m/S2WK0aJCk
+         QS/ZrrwnbpjLazij1KtO/KTDmsBEgexPdIb1pqqXd+7sFcslFJDlY8aVgwZzn9ITsQeI
+         6IzrzfkSTCB6/5F/QHWood4P5k/0d1s1qHNGm0mAOePeGioKocrZqReKqUujVOKLF73a
+         8vwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=CudbcozzaeKUq3DWNZdG3otz0fZIRmL0q4NFD8op3gI=;
-        b=pMCBMjptgVXRBCZ4jvww2dPN0hsv1etl8DNHI3mZFRwcq/S+GRJ/6TQH36IgdcbDwM
-         w+5pXGwsmQzXWKxezpMhtyCtnYemiHHezorOiX3enmkVveNLybrBTjHGY7VO7hYuGvBA
-         Vwe6dSIkCAytYBdGlrMX8RSy1oCjmvRYUDBNA8+i29LRYgOfmo9gHnMjNA33tj9PymW9
-         0vcjey3k5DJDI7qxRE/YSIRZT4ZOBDjLH+KpKwyyXbvis8ADyywmlGy/1kFtiAGsjrvQ
-         UccFVyU9vvMezY9vVtesvWKu5sxImALNZXIp+I8yIE86gS3/t5Ge5+6kUNyz0tp1rCHd
-         AuAQ==
-X-Gm-Message-State: APjAAAXB9ViBwP/clrJlZI/eNf5TF0KBpEP3UhLKTa5+QmK5/tR1Iwcw
-        WhNpvHlwCAE983pBeJ5Xmuj9BA==
-X-Google-Smtp-Source: APXvYqwHxHzg+VsUu59uDR7g3sMlAR+jrJYJ2RFcO1V8dYuCtcSCuVY9lJnp+qeleM4eFH7vIfajHw==
-X-Received: by 2002:a1c:9942:: with SMTP id b63mr2739095wme.116.1557313880609;
-        Wed, 08 May 2019 04:11:20 -0700 (PDT)
+        bh=NVYGOZcqjk78nflqXOFona2LfzGNJNT4gdq4AY8AIEw=;
+        b=PXd40jNo64eyjWHbSGBUcWkiMj7AYfUd4rN37YpUIiLCnBocLNUHzqsU9DoV2l1nwI
+         qGMHIA7V8XyXrDyGR+Q0Ac+Xqs7dg9Ft4nnoDYN2qGR820vWtkxhIidyrj+e52aRil9d
+         Te5AVRuPd9MKwtNhufK88700dunHbO1mPfNlmFTn7OfqKS2u9yNH1EIo/y95hdTPxqvq
+         6UujGBWhfH1a1kvdsTCtNqgvxljS476JUt/WvcdOwinL68hW6f5VZxeePAloJwP0OOlE
+         sEWVVKAh4zQvy30jnPJCQ+bmbovtJzVFiQfLs2bBR5C5eVIzF16SWw5wZRUDo1Vlc1OV
+         jeeQ==
+X-Gm-Message-State: APjAAAWi3u6HY2EoHK/0x+Sy89AoZelitV4pltGcFtL2anUlN4GVaqRW
+        /+3ysFmmeJgNSN0x4Cw/LLy8yIM9IJY=
+X-Google-Smtp-Source: APXvYqwcU01G6ndTzQz1Y4MJtFrGZO15pRBrIU8F1lFAZGr6QxxEeMP9xnO/lLu31doNjDITWUsOPg==
+X-Received: by 2002:a1c:67c1:: with SMTP id b184mr2623521wmc.12.1557313912890;
+        Wed, 08 May 2019 04:11:52 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id n4sm2944764wmk.24.2019.05.08.04.11.19
+        by smtp.gmail.com with ESMTPSA id c10sm35550508wrd.69.2019.05.08.04.11.51
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 04:11:20 -0700 (PDT)
-Date:   Wed, 8 May 2019 12:11:18 +0100
+        Wed, 08 May 2019 04:11:52 -0700 (PDT)
+Date:   Wed, 8 May 2019 12:11:50 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] Immutable branch between MFD, GPIO, Input, LEDs and Power
- due for the v5.2 merge window
-Message-ID: <20190508111118.GR3995@dell>
-References: <20190423090451.23711-1-brgl@bgdev.pl>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] mfd: ab8500-debugfs: Fix a typo ("deubgfs")
+Message-ID: <20190508111150.GS3995@dell>
+References: <20190430151726.7032-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190423090451.23711-1-brgl@bgdev.pl>
+In-Reply-To: <20190430151726.7032-1-j.neuschaefer@gmx.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
+On Tue, 30 Apr 2019, Jonathan Neuschäfer wrote:
 
-The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
+> "debugfs" was misspelled.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+>  drivers/mfd/ab8500-debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Linux 5.1 (2019-05-05 17:42:58 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-input-leds-power-v5.2
-
-for you to fetch changes up to 796fad0101d370567c2968bd933b865aa57efaa3:
-
-  MAINTAINERS: Add an entry for MAX77650 PMIC driver (2019-05-08 12:07:12 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, GPIO, Input, LEDs and Power due for the v5.2 merge window
-
-----------------------------------------------------------------
-Bartosz Golaszewski (11):
-      dt-bindings: mfd: Add DT bindings for max77650
-      dt-bindings: power: supply: Add DT bindings for max77650
-      dt-bindings: leds: Add DT bindings for max77650
-      dt-bindings: input: Add DT bindings for max77650
-      mfd: mfd-core: Document mfd_add_devices()
-      mfd: Add new driver for MAX77650 PMIC
-      power: supply: max77650: Add support for battery charger
-      gpio: max77650: Add GPIO support
-      leds: max77650: Add LEDs support
-      input: max77650: Add onkey support
-      MAINTAINERS: Add an entry for MAX77650 PMIC driver
-
- .../devicetree/bindings/input/max77650-onkey.txt   |  26 ++
- .../devicetree/bindings/leds/leds-max77650.txt     |  57 ++++
- Documentation/devicetree/bindings/mfd/max77650.txt |  46 +++
- .../bindings/power/supply/max77650-charger.txt     |  28 ++
- MAINTAINERS                                        |  14 +
- drivers/gpio/Kconfig                               |   7 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-max77650.c                       | 190 +++++++++++
- drivers/input/misc/Kconfig                         |   9 +
- drivers/input/misc/Makefile                        |   1 +
- drivers/input/misc/max77650-onkey.c                | 121 +++++++
- drivers/leds/Kconfig                               |   6 +
- drivers/leds/Makefile                              |   1 +
- drivers/leds/leds-max77650.c                       | 147 ++++++++
- drivers/mfd/Kconfig                                |  14 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/max77650.c                             | 232 +++++++++++++
- drivers/mfd/mfd-core.c                             |  13 +
- drivers/power/supply/Kconfig                       |   7 +
- drivers/power/supply/Makefile                      |   1 +
- drivers/power/supply/max77650-charger.c            | 368 +++++++++++++++++++++
- include/linux/mfd/max77650.h                       |  59 ++++
- 22 files changed, 1349 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
- create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
- create mode 100644 drivers/gpio/gpio-max77650.c
- create mode 100644 drivers/input/misc/max77650-onkey.c
- create mode 100644 drivers/leds/leds-max77650.c
- create mode 100644 drivers/mfd/max77650.c
- create mode 100644 drivers/power/supply/max77650-charger.c
- create mode 100644 include/linux/mfd/max77650.h
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
