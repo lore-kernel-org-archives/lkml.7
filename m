@@ -2,250 +2,122 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3463DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E1CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0405121479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0247021479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfEHIEa (ORCPT
+        id S1726937AbfEHIEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:04:30 -0400
-Received: from HC210-202-87-179.vdslpro.static.apol.com.tw ([210.202.87.179]:37363
-        "EHLO ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726428AbfEHIE3 (ORCPT
+        Wed, 8 May 2019 04:04:42 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35973 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfEHIEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:04:29 -0400
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 08 May 2019 15:55:05 +0800
-Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
-        by mse.ite.com.tw with ESMTP id x487sx1P075750;
-        Wed, 8 May 2019 15:54:59 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
- id 14.3.352.0; Wed, 8 May 2019 15:55:00 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] drm/bridge: it6505 driver add char device feature.
-Date:   Wed, 8 May 2019 15:48:42 +0800
-Message-ID: <1557301722-20827-4-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
-References: <1557301722-20827-1-git-send-email-allen.chen@ite.com.tw>
+        Wed, 8 May 2019 04:04:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o4so25907680wra.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:04:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9quD3rUlId3s9xE5WQ9qfoKtV1iDyOxaETbvD2qMUps=;
+        b=ptAXye10M1bTT8akY8EXX5jtyYLwORy6rwfrSlsTJzqZ7GHUn9wO+9SKoI1CKY45IV
+         JtOmzO0R+UVVEiJ5+IvGEZzgqz+9NjVh7UZd1b2Po/ucAUXK1QSfw4Y1OrHi8eEQhd0j
+         b0ZvyxOut/TqonmqGKZWwKZTjyVTlswqRxHL9g0rGKDwKi+88UMLyTIs6mZY858BUwmM
+         XcbICoRe16IpBB117JvRxknvJHxYaYvQAdK26xT1k85DeBmbaXghNlijPZKszMLIhC+k
+         VEB2njJWBudSTZiEQ3PQ2Mu9sDb36lORdUSZtN9qm6LTaupO1lxkqvcSaaTCUB4vLEKQ
+         F+oA==
+X-Gm-Message-State: APjAAAXHsJdFKisAqPKHHYCUxVHCUTilvU24CAmS6WcRA3rYjpwT/6dW
+        gwGXdDXKbePA6/M6dBjHyXpLQQ==
+X-Google-Smtp-Source: APXvYqzAEwmmUYMoGs4NEbM6WU7pAt/xG2XWKvEyTFAozN1NCDztWyNXuGXYGqCVLdIj3/dOobUUZA==
+X-Received: by 2002:adf:f803:: with SMTP id s3mr5103478wrp.153.1557302679450;
+        Wed, 08 May 2019 01:04:39 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.174.33])
+        by smtp.gmail.com with ESMTPSA id t15sm1407934wmt.2.2019.05.08.01.04.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 01:04:38 -0700 (PDT)
+Date:   Wed, 8 May 2019 10:04:36 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Luca Abeni <luca.abeni@santannapisa.it>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
+Message-ID: <20190508080436.GF6551@localhost.localdomain>
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+ <20190506044836.2914-3-luca.abeni@santannapisa.it>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-MAIL: mse.ite.com.tw x487sx1P075750
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506044836.2914-3-luca.abeni@santannapisa.it>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Chen <allen.chen@ite.com.tw>
+Hi Luca,
 
-This add can let us find it6505 char device in the /dev file and use read/write function to let the driver be hold.
+On 06/05/19 06:48, Luca Abeni wrote:
+> From: luca abeni <luca.abeni@santannapisa.it>
+> 
+> Currently, the SCHED_DEADLINE scheduler uses a global EDF scheduling
+> algorithm, migrating tasks to CPU cores without considering the core
+> capacity and the task utilization. This works well on homogeneous
+> systems (SCHED_DEADLINE tasks are guaranteed to have a bounded
+> tardiness), but presents some issues on heterogeneous systems. For
+> example, a SCHED_DEADLINE task might be migrated on a core that has not
+> enough processing capacity to correctly serve the task (think about a
+> task with runtime 70ms and period 100ms migrated to a core with
+> processing capacity 0.5)
+> 
+> This commit is a first step to address the issue: When a task wakes
+> up or migrates away from a CPU core, the scheduler tries to find an
+> idle core having enough processing capacity to serve the task.
+> 
+> Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+> ---
+>  kernel/sched/cpudeadline.c | 31 +++++++++++++++++++++++++++++--
+>  kernel/sched/deadline.c    |  8 ++++++--
+>  kernel/sched/sched.h       |  7 ++++++-
+>  3 files changed, 41 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
+> index 50316455ea66..d21f7905b9c1 100644
+> --- a/kernel/sched/cpudeadline.c
+> +++ b/kernel/sched/cpudeadline.c
+> @@ -110,6 +110,22 @@ static inline int cpudl_maximum(struct cpudl *cp)
+>  	return cp->elements[0].cpu;
+>  }
+>  
+> +static inline int dl_task_fit(const struct sched_dl_entity *dl_se,
+> +			      int cpu, u64 *c)
+> +{
+> +	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) * arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;
+> +	s64 rel_deadline = dl_se->dl_deadline;
+> +	u64 rem_runtime  = dl_se->dl_runtime;
 
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+This is not the dynamic remaining one, is it?
 
----
- drivers/gpu/drm/bridge/ite-it6505.c | 131 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+I see however 4/6.. lemme better look at that.
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 13079a8..1529e61 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -70,6 +70,13 @@
- /* if use this define will enable SHA debug */
- /* #define SHA_DEBUG */
- 
-+/* register char device for it6505 */
-+#define IT6505_CLASS_NAME "it6505_class"
-+#define IT6505_DEVICE_NAME "it6505_device"
-+#define IT6505_MAX_DEV 128
-+/* The device major number */
-+static int it6505_major_num;
-+
- enum sys_status {
- 	SYS_UNPLUG = 0,
- 	SYS_HPD,
-@@ -144,6 +151,8 @@ struct it6505 {
- 	struct it6505_platform_data pdata;
- 	struct mutex lock;
- 	struct regmap *regmap;
-+	struct cdev cdev;
-+	struct device class_dev;
- 	struct it6505_dp_port *port;
- 	/* thread sequence control */
- 	struct semaphore sem_notifier;
-@@ -2502,6 +2511,80 @@ static int it6505_init_pdata(struct it6505 *it6505)
- 	return PTR_ERR_OR_ZERO(pdata->gpiod_reset);
- }
- 
-+static int it6505_open(struct inode *inode, struct file *file)
-+{
-+	struct it6505 *ctx = container_of(inode->i_cdev, struct it6505, cdev);
-+
-+	DRM_DEBUG_DRIVER("[%s]: successful", __func__);
-+	if (!ctx)
-+		DRM_DEBUG_DRIVER("[%s]:get it6505 struct fail!", __func__);
-+	file->private_data = ctx;
-+	get_device(&ctx->class_dev);
-+	return 0;
-+}
-+
-+static int it6505_release(struct inode *inode, struct file *file)
-+{
-+	struct it6505 *ctx = file->private_data;
-+
-+	DRM_DEBUG_DRIVER("[%s]: successful", __func__);
-+	put_device(&ctx->class_dev);
-+	return 0;
-+}
-+
-+static ssize_t it6505_read(struct file *file, char *buf,
-+			   size_t count, loff_t *ptr)
-+{
-+	struct it6505 *ctx = file->private_data;
-+	char kbuff[16];
-+	size_t len;
-+
-+	DRM_DEBUG_DRIVER("[%s]start count=%zu", __func__, count);
-+	DRM_DEBUG_DRIVER("it6505_drv_hold:%d", ctx->it6505_drv_hold);
-+	len = snprintf(kbuff, sizeof(kbuff), "%d", ctx->it6505_drv_hold);
-+	len = min3(count, len, sizeof(kbuff));
-+	return copy_to_user(buf, kbuff, len) ? -EFAULT : len;
-+}
-+
-+static ssize_t it6505_write(struct file *file, const char *buff,
-+			    size_t count, loff_t *ptr)
-+{
-+	struct it6505 *ctx = file->private_data;
-+	char kbuff[16];
-+	int num;
-+
-+	DRM_DEBUG_DRIVER("[%s]start count=%zu", __func__, count);
-+	count = min(count, sizeof(kbuff) - 1);
-+	if (copy_from_user(kbuff, buff, count))
-+		return -EFAULT;
-+	kbuff[count] = '\0';
-+	if (kstrtoint(kbuff, 10, &num) < 0)
-+		return -EINVAL;
-+	ctx->it6505_drv_hold = num;
-+	DRM_DEBUG_DRIVER("set it6505_drv_hold:%d", ctx->it6505_drv_hold);
-+	return count;
-+}
-+
-+static struct class it6505_class_file = {
-+	.owner          = THIS_MODULE,
-+	.name           = IT6505_CLASS_NAME,
-+};
-+
-+static const struct file_operations it6505_fops = {
-+	.owner = THIS_MODULE,
-+	.read  = it6505_read,
-+	.write = it6505_write,
-+	.open  = it6505_open,
-+	.release = it6505_release
-+};
-+
-+static void it6505_release_device(struct device *dev)
-+{
-+	struct it6505 *ctx = container_of(dev, struct it6505, class_dev);
-+
-+	kfree(ctx);
-+}
-+
- static int it6505_i2c_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -2575,8 +2658,38 @@ static int it6505_i2c_probe(struct i2c_client *client,
- 	ctx->bridge.funcs = &it6505_bridge_funcs;
- 
- 	drm_bridge_add(&ctx->bridge);
-+	device_initialize(&ctx->class_dev);
-+	ctx->class_dev.parent = &client->dev;
-+	ctx->class_dev.release = it6505_release_device;
-+	cdev_init(&ctx->cdev, &it6505_fops);
-+	err = dev_set_name(&ctx->class_dev, "%s", IT6505_DEVICE_NAME);
-+	DRM_DEBUG_DRIVER("[%s] dev_set_name:%s",
-+			 __func__, err ? "failed" : "success");
-+	if (err) {
-+		DRM_DEBUG_DRIVER("dev_set_name failed => %d", err);
-+		goto put_class_dev;
-+	}
-+	/*
-+	 * Add the class device
-+	 * Link to the character device for creating the /dev entry
-+	 * in devtmpfs.
-+	 */
-+	ctx->class_dev.devt = MKDEV(it6505_major_num, 0);
-+	ctx->class_dev.class = &it6505_class_file;
-+
-+	/* We can now add the sysfs class, we know which parameter to show */
-+	err = cdev_device_add(&ctx->cdev, &ctx->class_dev);
-+	if (err) {
-+		DRM_DEBUG_DRIVER("cdev_device_add failed => %d",
-+				 err);
-+		goto put_class_dev;
-+	}
- 	DRM_DEBUG_DRIVER("[%s]end", __func__);
- 	return 0;
-+
-+put_class_dev:
-+	put_device(&ctx->class_dev);
-+	return err;
- }
- 
- static int it6505_remove(struct i2c_client *client)
-@@ -2616,16 +2729,34 @@ struct i2c_driver it6505_i2c_driver = {
- 
- static int __init it6505_init(void)
- {
-+	int err;
-+	dev_t dev = 0;
-+
- 	DRM_DEBUG_DRIVER("[%s]start", __func__);
-+	/* Register the device class */
-+	err = class_register(&it6505_class_file);
-+	err = alloc_chrdev_region(&dev, 0, IT6505_MAX_DEV,
-+			IT6505_DEVICE_NAME);
-+	it6505_major_num = MAJOR(dev);
-+	if (err < 0) {
-+		DRM_DEBUG_DRIVER("alloc_chrdev_region() fail!");
-+		goto failed_chrdevreg;
-+	}
- 	i2c_add_driver(&it6505_i2c_driver);
- 	DRM_DEBUG_DRIVER("[%s]end", __func__);
- 	return 0;
-+
-+failed_chrdevreg:
-+	class_unregister(&it6505_class_file);
-+	return err;
- }
- 
- static void __exit it6505_exit(void)
- {
- 	DRM_DEBUG_DRIVER("[%s]start", __func__);
- 	i2c_del_driver(&it6505_i2c_driver);
-+	unregister_chrdev(it6505_major_num, IT6505_DEVICE_NAME);
-+	class_unregister(&it6505_class_file);
- 	DRM_DEBUG_DRIVER("[%s]end", __func__);
- }
- 
--- 
-1.9.1
+Best,
 
+- Juri
