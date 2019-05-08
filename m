@@ -6,28 +6,30 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E06EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1961C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDB62184D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD201216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfEHOup (ORCPT
+        id S1728842AbfEHOun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:50:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
+        Wed, 8 May 2019 10:50:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57654 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbfEHOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728267AbfEHOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:44 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656541"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:40 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:40 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 06098AD9; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id E5276ABE; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +46,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 27/62] keys/mktme: Strengthen the entropy of CPU generated MKTME keys
-Date:   Wed,  8 May 2019 17:43:47 +0300
-Message-Id: <20190508144422.13171-28-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 25/62] keys/mktme: Instantiate and destroy MKTME keys
+Date:   Wed,  8 May 2019 17:43:45 +0300
+Message-Id: <20190508144422.13171-26-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,54 +61,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-If users request CPU generated keys, mix additional entropy bits
-from the kernel into the key programming fields used by the
-hardware. This additional entropy may compensate for weak user
-supplied, or CPU generated, entropy.
+Instantiating and destroying are two Kernel Key Service methods
+that are invoked by the kernel key service when a key is added
+(add_key, request_key) or removed (invalidate, revoke, timeout).
+
+During instantiation, MKTME needs to allocate an available hardware
+KeyID and map it to the Userspace Key.
+
+During destroy, MKTME wil returned the hardware KeyID to the pool of
+available keys.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ security/keys/mktme_keys.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index a7ca32865a1c..9fdf482ea3e6 100644
+index 92a047caa829..14bc4e600978 100644
 --- a/security/keys/mktme_keys.c
 +++ b/security/keys/mktme_keys.c
-@@ -7,6 +7,7 @@
- #include <linux/key-type.h>
- #include <linux/mm.h>
- #include <linux/parser.h>
-+#include <linux/random.h>
- #include <linux/string.h>
- #include <asm/intel_pconfig.h>
- #include <keys/mktme-type.h>
-@@ -102,7 +103,8 @@ struct mktme_payload {
- static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
- {
- 	struct mktme_key_program *kprog = NULL;
--	int ret;
-+	u8 kern_entropy[MKTME_AES_XTS_SIZE];
-+	int ret, i;
+@@ -14,6 +14,8 @@
  
- 	kprog = kmem_cache_zalloc(mktme_prog_cache, GFP_ATOMIC);
- 	if (!kprog)
-@@ -114,6 +116,14 @@ static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
- 	memcpy(kprog->key_field_1, payload->data_key, MKTME_AES_XTS_SIZE);
- 	memcpy(kprog->key_field_2, payload->tweak_key, MKTME_AES_XTS_SIZE);
+ #include "internal.h"
  
-+	/* Strengthen the entropy fields for CPU generated keys */
-+	if ((payload->keyid_ctrl & 0xff) == MKTME_KEYID_SET_KEY_RANDOM) {
-+		get_random_bytes(&kern_entropy, sizeof(kern_entropy));
-+		for (i = 0; i < (MKTME_AES_XTS_SIZE); i++) {
-+			kprog->key_field_1[i] ^= kern_entropy[i];
-+			kprog->key_field_2[i] ^= kern_entropy[i];
-+		}
-+	}
- 	ret = MKTME_PROG_SUCCESS;	/* Future programming call */
- 	kmem_cache_free(mktme_prog_cache, kprog);
- 	return ret;
++static DEFINE_SPINLOCK(mktme_lock);
++
+ /* 1:1 Mapping between Userspace Keys (struct key) and Hardware KeyIDs */
+ struct mktme_mapping {
+ 	unsigned int	mapped_keyids;
+@@ -95,6 +97,26 @@ struct mktme_payload {
+ 	u8		tweak_key[MKTME_AES_XTS_SIZE];
+ };
+ 
++/* Key Service Method called when a Userspace Key is garbage collected. */
++static void mktme_destroy_key(struct key *key)
++{
++	mktme_release_keyid(mktme_keyid_from_key(key));
++}
++
++/* Key Service Method to create a new key. Payload is preparsed. */
++int mktme_instantiate_key(struct key *key, struct key_preparsed_payload *prep)
++{
++	unsigned long flags;
++	int keyid;
++
++	spin_lock_irqsave(&mktme_lock, flags);
++	keyid = mktme_reserve_keyid(key);
++	spin_unlock_irqrestore(&mktme_lock, flags);
++	if (!keyid)
++		return -ENOKEY;
++	return 0;
++}
++
+ /* Make sure arguments are correct for the TYPE of key requested */
+ static int mktme_check_options(struct mktme_payload *payload,
+ 			       unsigned long token_mask, enum mktme_type type)
+@@ -236,7 +258,9 @@ struct key_type key_type_mktme = {
+ 	.name		= "mktme",
+ 	.preparse	= mktme_preparse_payload,
+ 	.free_preparse	= mktme_free_preparsed_payload,
++	.instantiate	= mktme_instantiate_key,
+ 	.describe	= user_describe,
++	.destroy	= mktme_destroy_key,
+ };
+ 
+ static int __init init_mktme(void)
 -- 
 2.20.1
 
