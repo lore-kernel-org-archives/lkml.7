@@ -2,66 +2,133 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704A1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B790C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3219A20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:18:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gIdJrGJV"
+	by mail.kernel.org (Postfix) with ESMTP id 70FA420656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfEHJSL (ORCPT
+        id S1727178AbfEHJT4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:18:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46392 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfEHJSL (ORCPT
+        Wed, 8 May 2019 05:19:56 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43606 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726589AbfEHJT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:18:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3LSYsm/AoaNz9zk5fxrJoak93p76dPKvNnBLyYEkieU=; b=gIdJrGJVitjfUD1zPU/Q/t4iy
-        gA3aL4teavogs3o153RVgKbmmSVYQVH68kYVVnYl3JOdfFmvfEoMXru9CQgk8x691aKXQOk63qgRy
-        GwmN9ilOSZngcVYX/fZk2ZBMsCqZCYXd1N4h981HLPciBT1TaOzKzFqFeNqoSjTPBCIHZFT5iBLoj
-        fvi96FantsgfVYBSABPupGuuHDpzpinDjZCGdBIGN9cbwO0NVZ3sIhGO5Pf+cBLukU44ADfqW9RH2
-        KfxdIllbdkpZZdvSur8TSZrb3svM9SSNy2vve7wj8JcrDDE9ZFCieJjoK5XIOkbkoS0FoZrfXXCUt
-        26L+It7BA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOIiE-0004qy-90; Wed, 08 May 2019 09:18:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 160262029F886; Wed,  8 May 2019 11:18:05 +0200 (CEST)
-Date:   Wed, 8 May 2019 11:18:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, adrian.hunter@intel.com
-Subject: Re: [PATCH 2/2] perf/x86/intel: Support PEBS output to PT
-Message-ID: <20190508091805.GC2606@hirez.programming.kicks-ass.net>
-References: <20190502105022.15534-1-alexander.shishkin@linux.intel.com>
- <20190502105022.15534-3-alexander.shishkin@linux.intel.com>
+        Wed, 8 May 2019 05:19:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-20-fr8XoZJNPVSqTqULhvI6mg-1; Wed, 08 May 2019 10:19:52 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 8 May 2019 10:19:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 8 May 2019 10:19:51 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alastair D'Silva' <alastair@au1.ibm.com>,
+        "alastair@d-silva.org" <alastair@d-silva.org>
+CC:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jose Abreu" <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "Stanislaw Gruszka" <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        "Enric Balletbo i Serra" <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH v2 4/7] lib/hexdump.c: Replace ascii bool in
+ hex_dump_to_buffer with flags
+Thread-Topic: [PATCH v2 4/7] lib/hexdump.c: Replace ascii bool in
+ hex_dump_to_buffer with flags
+Thread-Index: AQHVBWwP4v5z/92cRUaSHokPgMaM4aZg8Maw
+Date:   Wed, 8 May 2019 09:19:51 +0000
+Message-ID: <c98a499a4e824bcd824d5ad53d037c67@AcuMS.aculab.com>
+References: <20190508070148.23130-1-alastair@au1.ibm.com>
+ <20190508070148.23130-5-alastair@au1.ibm.com>
+In-Reply-To: <20190508070148.23130-5-alastair@au1.ibm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502105022.15534-3-alexander.shishkin@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: fr8XoZJNPVSqTqULhvI6mg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 01:50:22PM +0300, Alexander Shishkin wrote:
-> The output setting is per-CPU, so all PEBS events must be either writing
-> to PT or to the DS area, so in order to not mess up the event scheduling,
-> we fall back to the latter in case both types of events are scheduled in.
+From: Alastair D'Silva
+> Sent: 08 May 2019 08:02
+> To: alastair@d-silva.org
+...
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -480,13 +480,13 @@ enum {
+>  	DUMP_PREFIX_OFFSET
+>  };
+> 
+> -extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
+> -			      int groupsize, char *linebuf, size_t linebuflen,
+> -			      bool ascii);
+> -
+>  #define HEXDUMP_ASCII			(1 << 0)
+>  #define HEXDUMP_SUPPRESS_REPEATED	(1 << 1)
 
-Urgh, that blows... I really don't like that.
+These ought to be BIT(0) and BIT(1)
+
+> +extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
+> +			      int groupsize, char *linebuf, size_t linebuflen,
+> +			      u64 flags);
+
+Why 'u64 flags' ?
+How many flags do you envisage ??
+Your HEXDUMP_ASCII (etc) flags are currently signed values and might
+get sign extended causing grief.
+'unsigned int flags' is probably sufficient.
+
+I've not really looked at the code, it seems OTT in places though.
+
+If someone copies it somewhere where the performance matters
+(I've user space code which is dominated by its tracing!)
+then you don't want all the function calls and conditionals
+even if you want some of the functionality.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
