@@ -2,472 +2,85 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8255C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4DDC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6452221019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071BC21019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:24:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jAUUEfYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfEHGXo (ORCPT
+        id S1727163AbfEHGYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:23:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28575 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726644AbfEHGXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:23:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 May 2019 23:23:41 -0700
-X-ExtLoop1: 1
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga006.fm.intel.com with ESMTP; 07 May 2019 23:23:37 -0700
-Date:   Wed, 8 May 2019 14:07:17 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH v2 15/18] fpga: dfl: fme: add thermal management support
-Message-ID: <20190508060717.GA32255@hao-dev>
-References: <1556528151-17221-1-git-send-email-hao.wu@intel.com>
- <1556528151-17221-16-git-send-email-hao.wu@intel.com>
- <CANk1AXR+wRoQB40ZFTAPPp4mmkzZY+03bTwdB24fL0mYNck2Ug@mail.gmail.com>
- <20190507183536.GB29510@roeck-us.net>
+        Wed, 8 May 2019 02:24:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35392 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfEHGYY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 02:24:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Yd4Wnh9vxeMCyESuNOhTBbsgDnGnCPY1zhBjGYoqdQY=; b=jAUUEfYmfCpe5e8h/svS9coVC8
+        TDOWiRHpciwkr9F7GGsRyZdt/hooATI/1MQ5mgItc8rdLTEy7HOw8qY3g33CXcY3c97JFBR8Y9WzU
+        TKfiq0Zqx+HF+G23AdT/r60i0S582szfIHjfJG1xFrBRXOK0btXx+xQ/NKLaaVqO7xyxGdNetHIOW
+        rd08no5poo8z1cOdFD1AF97c/wtKz1NEntssUpQ3VHknZa8txXqYhQG0OdrAmsmo/aBXfuTi8GC/E
+        iIak60hD783FpskXBixeXeMDaV54EIe6g45j5VsHRm0LlOnOXjweAn/b8CPGPE1SW4FDwnhjZtmHK
+        3IbMyfOg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOG04-0004h5-Nd; Wed, 08 May 2019 06:24:20 +0000
+Date:   Tue, 7 May 2019 23:24:20 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 00/3] MIPS: SGI-IP27 rework part2
+Message-ID: <20190508062420.GD19227@infradead.org>
+References: <20190319154755.31049-1-tbogendoerfer@suse.de>
+ <20190418205726.GB126710@google.com>
+ <20190507153117.GA21665@e121166-lin.cambridge.arm.com>
+ <20190507174820.381fd56f678609416fd8b617@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190507183536.GB29510@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190507174820.381fd56f678609416fd8b617@suse.de>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:35:36AM -0700, Guenter Roeck wrote:
-> On Tue, May 07, 2019 at 01:20:52PM -0500, Alan Tull wrote:
-> > On Mon, Apr 29, 2019 at 4:13 AM Wu Hao <hao.wu@intel.com> wrote:
-> > 
-> > + The hwmon people
-> > 
-> > >
-> > > This patch adds support to thermal management private feature for DFL
-> > > FPGA Management Engine (FME). This private feature driver registers
-> > > a hwmon for thermal/temperature monitoring (hwmon temp1_input).
-> > > If hardware automatic throttling is supported by this hardware, then
-> > > driver also exposes sysfs interfaces under hwmon for thresholds
-> > > (temp1_alarm/ crit/ emergency), threshold status (temp1_alarm_status/
-> > > temp1_crit_status) and throttling policy (temp1_alarm_policy).
-> > >
-> > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > ---
-> > > v2: create a dfl_fme_thermal hwmon to expose thermal information.
-> > >     move all sysfs interfaces under hwmon
-> > >         tempareture       --> hwmon temp1_input
-> > >         threshold1        --> hwmon temp1_alarm
-> > >         threshold2        --> hwmon temp1_crit
-> > >         trip_threshold    --> hwmon temp1_emergency
-> > >         threshold1_status --> hwmon temp1_alarm_status
-> > >         threshold2_status --> hwmon temp1_crit_status
-> > >         threshold1_policy --> hwmon temp1_alarm_policy
+On Tue, May 07, 2019 at 05:48:20PM +0200, Thomas Bogendoerfer wrote:
+> > I had a look and the code is really, really MIPS specific, actually
+> > I would be interested in understanding how many platforms it supports,
+> > it is not even FW configurable.
 > 
-> You should not write a hwmon driver if you don't want to follow the ABI.
-> The implementation will only confuse the sensors command, so what exactly
-> is the point ?
-> 
-> More on that below.
+> it's MIPS only and used in basically 3 different SGI platforms.
 
-Hi Guenter,
+Actually this isn't quite true, this whole infraѕtructure was also
+shared by the SGI IA64 systems.
 
-Thanks a lot for the review comments. Yes, I should use the standard ABI of
-the hwmon. I will fix them in the next version patch.
+The early SN1 prototypes were basically just IP35 systems with IA64
+CPUs glued in, and even the later SN2 that were released as Altix
+shared the same xtalk + bridge infrastructure, just with some hardware
+updates.  It just turned out SGI at some point decided to hide all that
+in firmware.  Linux 2.4 was still accessing this natively, but the code
+was a mess.  I tried to consolidate it with the mips version at that
+point, but SGI decided that hiding it under firmware calls was easier
+as they could just move the messy code there.
 
-For thermal hwmon
-
- tempareture       --> hwmon temp1_input
- threshold1        --> hwmon temp1_alarm          ---> temp1_max
- threshold2        --> hwmon temp1_crit          
- trip_threshold    --> hwmon temp1_emergency
- threshold1_status --> hwmon temp1_alarm_status   ---> temp1_max_alarm
- threshold2_status --> hwmon temp1_crit_status    ---> temp1_crit_alarm
- threshold1_policy --> hwmon temp1_alarm_policy   ---> temp1_max_policy
-
-and power hwmon
-
- consumed          --> hwmon power1_input
- threshold1        --> hwmon power1_cap           ---> power1_max
- threshold2        --> hwmon power1_crit
- threshold1_status --> hwmon power1_cap_status    ---> power1_max_alarm
- threshold2_status --> hwmon power1_crit_status   ---> power1_crit_alarm
- xeon_limit        --> hwmon power1_xeon_limit
- fpga_limit        --> hwmon power1_fpga_limit
- ltr               --> hwmon power1_ltr
-
-switch to power1_max in power hwmon to make it aligned with thermal hwmon on
-threshold1.
-
-Thanks
-Hao
-
-> 
-> Guenter
-> 
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  64 +++++++
-> > >  drivers/fpga/Kconfig                             |   2 +-
-> > >  drivers/fpga/dfl-fme-main.c                      | 212 +++++++++++++++++++++++
-> > >  3 files changed, 277 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > index d1aa375..dfbd315 100644
-> > > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > @@ -44,3 +44,67 @@ Description: Read-only. It returns socket_id to indicate which socket
-> > >                 this FPGA belongs to, only valid for integrated solution.
-> > >                 User only needs this information, in case standard numa node
-> > >                 can't provide correct information.
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/name
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Only. Read this file to get the name of hwmon device, it
-> > > +               supports values:
-> > > +                   'dfl_fme_thermal' - thermal hwmon device name
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_input
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Only. It returns FPGA device temperature in millidegrees
-> > > +               Celsius.
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_alarm
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Only. It returns hardware threshold1 temperature in
-> > > +               millidegrees Celsius. If temperature rises at or above this
-> > > +               threshold, hardware starts 50% or 90% throttling (see
-> > > +               'temp1_alarm_policy').
-> > > +
-> 
-> This does not follow the ABI. temp1_alarm is the alarm status, not the alarm
-> temperature. The ABI attribute name would be temp1_max.
-> 
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_crit
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Only. It returns hardware threshold2 temperature in
-> > > +               millidegrees Celsius. If temperature rises at or above this
-> > > +               threshold, hardware starts 100% throttling.
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_emergency
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Only. It returns hardware trip threshold temperature in
-> > > +               millidegrees Celsius. If temperature rises at or above this
-> > > +               threshold, a fatal event will be triggered to board management
-> > > +               controller (BMC) to shutdown FPGA.
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_alarm_status
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. It returns 1 if temperature is currently at or above
-> > > +               hardware threshold1 (see 'temp1_alarm'), otherwise 0.
-> > > +
-> 
-> Why not follow the ABI and use temp1_alarm ?
-> 
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_crit_status
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. It returns 1 if temperature is currently at or above
-> > > +               hardware threshold2 (see 'temp1_crit'), otherwise 0.
-> > > +
-> 
-> Why not follow the ABI and use temp1_crit_alarm ?
-> 
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_alarm_policy
-> > > +Date:          April 2019
-> > > +KernelVersion: 5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Only. Read this file to get the policy of hardware threshold1
-> > > +               (see 'temp1_alarm'). It only supports two values (policies):
-> > > +                   0 - AP2 state (90% throttling)
-> > > +                   1 - AP1 state (50% throttling)
-> > > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> > > index c20445b..a6d7588 100644
-> > > --- a/drivers/fpga/Kconfig
-> > > +++ b/drivers/fpga/Kconfig
-> > > @@ -154,7 +154,7 @@ config FPGA_DFL
-> > >
-> > >  config FPGA_DFL_FME
-> > >         tristate "FPGA DFL FME Driver"
-> > > -       depends on FPGA_DFL
-> > > +       depends on FPGA_DFL && HWMON
-> > >         help
-> > >           The FPGA Management Engine (FME) is a feature device implemented
-> > >           under Device Feature List (DFL) framework. Select this option to
-> > > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > > index 8339ee8..b9a68b8 100644
-> > > --- a/drivers/fpga/dfl-fme-main.c
-> > > +++ b/drivers/fpga/dfl-fme-main.c
-> > > @@ -14,6 +14,8 @@
-> > >   *   Henry Mitchel <henry.mitchel@intel.com>
-> > >   */
-> > >
-> > > +#include <linux/hwmon.h>
-> > > +#include <linux/hwmon-sysfs.h>
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/uaccess.h>
-> > > @@ -217,6 +219,212 @@ static long fme_hdr_ioctl(struct platform_device *pdev,
-> > >         .ioctl = fme_hdr_ioctl,
-> > >  };
-> > >
-> > > +#define FME_THERM_THRESHOLD    0x8
-> > > +#define TEMP_THRESHOLD1                GENMASK_ULL(6, 0)
-> > > +#define TEMP_THRESHOLD1_EN     BIT_ULL(7)
-> > > +#define TEMP_THRESHOLD2                GENMASK_ULL(14, 8)
-> > > +#define TEMP_THRESHOLD2_EN     BIT_ULL(15)
-> > > +#define TRIP_THRESHOLD         GENMASK_ULL(30, 24)
-> > > +#define TEMP_THRESHOLD1_STATUS BIT_ULL(32)             /* threshold1 reached */
-> > > +#define TEMP_THRESHOLD2_STATUS BIT_ULL(33)             /* threshold2 reached */
-> > > +/* threshold1 policy: 0 - AP2 (90% throttle) / 1 - AP1 (50% throttle) */
-> > > +#define TEMP_THRESHOLD1_POLICY BIT_ULL(44)
-> > > +
-> > > +#define FME_THERM_RDSENSOR_FMT1        0x10
-> > > +#define FPGA_TEMPERATURE       GENMASK_ULL(6, 0)
-> > > +
-> > > +#define FME_THERM_CAP          0x20
-> > > +#define THERM_NO_THROTTLE      BIT_ULL(0)
-> > > +
-> > > +#define MD_PRE_DEG
-> > > +
-> > > +static bool fme_thermal_throttle_support(void __iomem *base)
-> > > +{
-> > > +       u64 v = readq(base + FME_THERM_CAP);
-> > > +
-> > > +       return FIELD_GET(THERM_NO_THROTTLE, v) ? false : true;
-> > > +}
-> > > +
-> > > +static umode_t thermal_hwmon_attrs_visible(const void *drvdata,
-> > > +                                          enum hwmon_sensor_types type,
-> > > +                                          u32 attr, int channel)
-> > > +{
-> > > +       const struct dfl_feature *feature = drvdata;
-> > > +
-> > > +       /* temperature is always supported, and check hardware cap for others */
-> > > +       if (attr == hwmon_temp_input)
-> > > +               return 0444;
-> > > +
-> > > +       return fme_thermal_throttle_support(feature->ioaddr) ? 0444 : 0;
-> > > +}
-> > > +
-> > > +static int thermal_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> > > +                             u32 attr, int channel, long *val)
-> > > +{
-> > > +       struct dfl_feature *feature = dev_get_drvdata(dev);
-> > > +       u64 v;
-> > > +
-> > > +       switch (attr) {
-> > > +       case hwmon_temp_input:
-> > > +               v = readq(feature->ioaddr + FME_THERM_RDSENSOR_FMT1);
-> > > +               *val = (long)(FIELD_GET(FPGA_TEMPERATURE, v) * 1000);
-> > > +               break;
-> > > +       case hwmon_temp_alarm:
-> > > +               v = readq(feature->ioaddr + FME_THERM_THRESHOLD);
-> > > +               *val = (long)(FIELD_GET(TEMP_THRESHOLD1, v) * 1000);
-> 
-> This is supposed to return 0 or 1.
-> 
-> > > +               break;
-> > > +       case hwmon_temp_crit:
-> > > +               v = readq(feature->ioaddr + FME_THERM_THRESHOLD);
-> > > +               *val = (long)(FIELD_GET(TEMP_THRESHOLD2, v) * 1000);
-> > > +               break;
-> > > +       case hwmon_temp_emergency:
-> > > +               v = readq(feature->ioaddr + FME_THERM_THRESHOLD);
-> > > +               *val = (long)(FIELD_GET(TRIP_THRESHOLD, v) * 1000);
-> > > +               break;
-> > > +       default:
-> > > +               return -EOPNOTSUPP;
-> > > +       }
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static const struct hwmon_ops thermal_hwmon_ops = {
-> > > +       .is_visible = thermal_hwmon_attrs_visible,
-> > > +       .read = thermal_hwmon_read,
-> > > +};
-> > > +
-> > > +static const u32 thermal_hwmon_temp_config[] = {
-> > > +       HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_CRIT | HWMON_T_EMERGENCY,
-> > > +       0
-> > > +};
-> > > +
-> > > +static const struct hwmon_channel_info hwmon_temp_info = {
-> > > +       .type = hwmon_temp,
-> > > +       .config = thermal_hwmon_temp_config,
-> > > +};
-> > > +
-> > > +static const struct hwmon_channel_info *thermal_hwmon_info[] = {
-> > > +       &hwmon_temp_info,
-> > > +       NULL
-> > > +};
-> > > +
-> > > +static const struct hwmon_chip_info thermal_hwmon_chip_info = {
-> > > +       .ops = &thermal_hwmon_ops,
-> > > +       .info = thermal_hwmon_info,
-> > > +};
-> > > +
-> > > +static ssize_t temp1_alarm_status_show(struct device *dev,
-> > > +                                      struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       struct dfl_feature *feature = dev_get_drvdata(dev);
-> > > +       u64 v;
-> > > +
-> > > +       v = readq(feature->ioaddr + FME_THERM_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(TEMP_THRESHOLD1_STATUS, v));
-> > > +}
-> > > +
-> > > +static ssize_t temp1_crit_status_show(struct device *dev,
-> > > +                                     struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       struct dfl_feature *feature = dev_get_drvdata(dev);
-> > > +       u64 v;
-> > > +
-> > > +       v = readq(feature->ioaddr + FME_THERM_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(TEMP_THRESHOLD2_STATUS, v));
-> > > +}
-> > > +
-> > > +static ssize_t temp1_alarm_policy_show(struct device *dev,
-> > > +                                      struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       struct dfl_feature *feature = dev_get_drvdata(dev);
-> > > +       u64 v;
-> > > +
-> > > +       v = readq(feature->ioaddr + FME_THERM_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(TEMP_THRESHOLD1_POLICY, v));
-> > > +}
-> > > +
-> > > +static DEVICE_ATTR_RO(temp1_alarm_status);
-> > > +static DEVICE_ATTR_RO(temp1_crit_status);
-> > > +static DEVICE_ATTR_RO(temp1_alarm_policy);
-> > > +
-> > > +static struct attribute *thermal_extra_attrs[] = {
-> > > +       &dev_attr_temp1_alarm_status.attr,
-> > > +       &dev_attr_temp1_crit_status.attr,
-> 
-> Why not use standard attributes for the above ?
-> 
-> > > +       &dev_attr_temp1_alarm_policy.attr,
-> > > +       NULL,
-> > > +};
-> > > +
-> > > +static umode_t thermal_extra_attrs_visible(struct kobject *kobj,
-> > > +                                          struct attribute *attr, int index)
-> > > +{
-> > > +       struct device *dev = kobj_to_dev(kobj);
-> > > +       struct dfl_feature *feature = dev_get_drvdata(dev);
-> > > +
-> > > +       return fme_thermal_throttle_support(feature->ioaddr) ? attr->mode : 0;
-> > > +}
-> > > +
-> > > +static const struct attribute_group thermal_extra_group = {
-> > > +       .attrs          = thermal_extra_attrs,
-> > > +       .is_visible     = thermal_extra_attrs_visible,
-> > > +};
-> > > +__ATTRIBUTE_GROUPS(thermal_extra);
-> > > +
-> > > +static int fme_thermal_mgmt_init(struct platform_device *pdev,
-> > > +                                struct dfl_feature *feature)
-> > > +{
-> > > +       struct device *hwmon;
-> > > +
-> > > +       dev_dbg(&pdev->dev, "FME Thermal Management Init.\n");
-> > > +
-> > > +       /*
-> > > +        * create hwmon to allow userspace monitoring temperature and other
-> > > +        * threshold information.
-> > > +        *
-> > > +        * temp1_alarm     -> hardware threshold 1 -> 50% or 90% throttling
-> > > +        * temp1_crit      -> hardware threshold 2 -> 100% throttling
-> > > +        * temp1_emergency -> hardware trip_threshold to shutdown FPGA
-> > > +        *
-> > > +        * create device specific sysfs interfaces, e.g. read temp1_alarm_policy
-> > > +        * to understand the actual hardware throttling action (50% vs 90%).
-> > > +        *
-> > > +        * If hardware doesn't support automatic throttling per thresholds,
-> > > +        * then all above sysfs interfaces are not visible except temp1_input
-> > > +        * for temperature.
-> > > +        */
-> > > +       hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
-> > > +                                                    "dfl_fme_thermal", feature,
-> > > +                                                    &thermal_hwmon_chip_info,
-> > > +                                                    thermal_extra_groups);
-> > > +       if (IS_ERR(hwmon)) {
-> > > +               dev_err(&pdev->dev, "Fail to register thermal hwmon\n");
-> > > +               return PTR_ERR(hwmon);
-> > > +       }
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
-> > > +                                  struct dfl_feature *feature)
-> > > +{
-> > > +       dev_dbg(&pdev->dev, "FME Thermal Management UInit.\n");
-> > > +}
-> > > +
-> > > +static const struct dfl_feature_id fme_thermal_mgmt_id_table[] = {
-> > > +       {.id = FME_FEATURE_ID_THERMAL_MGMT,},
-> > > +       {0,}
-> > > +};
-> > > +
-> > > +static const struct dfl_feature_ops fme_thermal_mgmt_ops = {
-> > > +       .init = fme_thermal_mgmt_init,
-> > > +       .uinit = fme_thermal_mgmt_uinit,
-> > > +};
-> > > +
-> > >  static struct dfl_feature_driver fme_feature_drvs[] = {
-> > >         {
-> > >                 .id_table = fme_hdr_id_table,
-> > > @@ -227,6 +435,10 @@ static long fme_hdr_ioctl(struct platform_device *pdev,
-> > >                 .ops = &fme_pr_mgmt_ops,
-> > >         },
-> > >         {
-> > > +               .id_table = fme_thermal_mgmt_id_table,
-> > > +               .ops = &fme_thermal_mgmt_ops,
-> > > +       },
-> > > +       {
-> > >                 .ops = NULL,
-> > >         },
-> > >  };
-> > > --
-> > > 1.8.3.1
-> > >
+So, not it isn't really MIPS only in theory, although in practice it
+very much is..
