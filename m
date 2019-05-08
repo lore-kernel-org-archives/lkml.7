@@ -2,121 +2,148 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB18EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2D6C04AAE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE7F21743
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB25120578
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557347729;
-	bh=5aJG1c6vlheNdOqjrdl3fJiyQzUboYjwPsleuLlW+7s=;
+	s=default; t=1557347848;
+	bh=S0dbb590IBkbgNs7FT++/9eUgoS9Sg0EXTvi3gjJWiQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tBJR+st+3LPQ3JlQh9XT3fYzA0k7g2t86Xvl9FBdnPaLLFBjbtkf27aHXOXpOacs3
-	 H20QTyj+Us5ljcgBYeEsN3FoJ4JjECBRWUVTql7z3Pyi3N9xUYkVRpdwHTF+pI88t0
-	 Xwfb+5e78Mpjk2nB31U/Rvh9H40Nv6ycBvrC9dUc=
+	b=OT3NSFSlwII6uxNT0VLJWy8z5VbjZiflm2yuiG60A8eLnXJ1e7J+hfObUZIkWXbpj
+	 CBgIKgqO53Pv0tejSWPy//vOhLOnE4hlMBlb2gkKmbfRL0FFx56tvV8Gu1qP2NCGVI
+	 ssRCJikLd3y4NBBZee4D1Qlpl9tTiEztGgXmpyLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbfEHUf2 (ORCPT
+        id S1727970AbfEHUh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:35:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfEHUf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:35:28 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 679042173E;
-        Wed,  8 May 2019 20:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557347727;
-        bh=5aJG1c6vlheNdOqjrdl3fJiyQzUboYjwPsleuLlW+7s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NVRkrMZZAMA55Yn9gLTgQc1JSqU32PF1aw5Z7lEUXbLaF1VOaCTYr9NN7g3zR6eek
-         Yjjc6KY51ZTFSq1SER63IvktW0DkDb8dxTcniSKWMv4PnFFKTZ1AfopaDuHQbcukfc
-         +Spl7TjXmM0Qt8o/7LLIhRQbcixnrtiLiBoKdZ+I=
-Received: by mail-qt1-f172.google.com with SMTP id a17so27733qth.3;
-        Wed, 08 May 2019 13:35:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAUw7oLSJEXNcU+ry8adEGCxx0LqQVuUNwcXjFX1rYqUlYRFcXq0
-        yQ2bPkcHTAryVEEhsa2NV3VGxpnwAjM3clcbxg==
-X-Google-Smtp-Source: APXvYqzhynLu+eXujmCNyMI9GKUO6g2F1Q4xurKMelb8wXbTG2ZjDze7NlPsYU0W4Z2FLpF7y9/rCsLlKkgEOI2kSY4=
-X-Received: by 2002:a0c:f68e:: with SMTP id p14mr182544qvn.77.1557347726619;
- Wed, 08 May 2019 13:35:26 -0700 (PDT)
+        Wed, 8 May 2019 16:37:28 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42065 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfEHUh1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 16:37:27 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 188so63928ljf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IrFkw6283Zi8oefwq8lUxwFDaNKBwwzjBLXpJ0o3wyI=;
+        b=HucpZu3G2A3y2jBqde10VM/HUWq1bWiHbhqIU/Jwo8GB+shkJSCZmQJ/qISI3zZ3rY
+         ogduhkM5PErzigqiuw3A7DJyN2f4v//R0pDs1NgWKdNuhwiA/XYtrETqxmjvUGuuxfDR
+         sMVc+PvkxAkgFWgYSSD70zSV8Y8Vk76osMdMs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IrFkw6283Zi8oefwq8lUxwFDaNKBwwzjBLXpJ0o3wyI=;
+        b=YBUvy1teWdPUKV+0Iyb0DJ4do0uAo+0AYT7KcAye8VJr1kWYpV5I5HypJa04XL1RmX
+         2ICVRvDkKJuaTmXZGo/w5xeZJ3n7Kho4VdNVMPfBk98Pf8NbDcLDiuuMPChExTwk6JCG
+         NSR/qbplfhlI/qHM11csdqk6Y0lJr7MShp+G/YdnF9eURQoyFUE/RvuoPlT16AAbL5Wq
+         6dvhhWEj2O/6hozS5vH0ht3CjqWLD+IwF2fBsWkZskbZBVxV3Tu3RaXm8wG6cX4Mjhk3
+         n9CgAC5rbhodkDwKBRs5vmIXqCt6X/GOBKl2rl0X2stA98HAboB1xtJcg2628GdweV8r
+         72Sw==
+X-Gm-Message-State: APjAAAX/RHjVevHtacYobb1xYtOWBQy2TXwXJJ+Tnuw3XkYaMR35yvV5
+        cw+Iyp1Mq3H3U/NdH3os9VC7xeuvNBM=
+X-Google-Smtp-Source: APXvYqwVwCDRfHftFYCs4XCbx29aM1IyGuPxyeyHnu7mifRewo79G6CEIl3X2kukLZuwJ1JcCNpzdQ==
+X-Received: by 2002:a05:651c:97:: with SMTP id 23mr10964931ljq.143.1557347844965;
+        Wed, 08 May 2019 13:37:24 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id q7sm4646lfc.0.2019.05.08.13.37.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 13:37:24 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id y19so7947957lfy.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:37:23 -0700 (PDT)
+X-Received: by 2002:a19:ec07:: with SMTP id b7mr86936lfa.62.1557347843674;
+ Wed, 08 May 2019 13:37:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
- <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
- <20190507170422.GA25179@bogus> <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
- <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-In-Reply-To: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 8 May 2019 15:35:15 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJSbi5jNZSRhiE-h74DdbsgM7O+tqP9HOf037pyN7TbFA@mail.gmail.com>
-Message-ID: <CAL_JsqJSbi5jNZSRhiE-h74DdbsgM7O+tqP9HOf037pyN7TbFA@mail.gmail.com>
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
+References: <CAH2r5mv=4JsaF-8v=U4JR3jrOyPfhtUsJPogNudLejDh09xGSA@mail.gmail.com>
+In-Reply-To: <CAH2r5mv=4JsaF-8v=U4JR3jrOyPfhtUsJPogNudLejDh09xGSA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 8 May 2019 13:37:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiKoePP_9CM0fn_Vv1bYom7iB5N=ULaLLz7yOST3K+k5g@mail.gmail.com>
+Message-ID: <CAHk-=wiKoePP_9CM0fn_Vv1bYom7iB5N=ULaLLz7yOST3K+k5g@mail.gmail.com>
+Subject: Re: [GIT PULL] CIFS/SMB3 fixes
+To:     Steve French <smfrench@gmail.com>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 4:45 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+On Wed, May 8, 2019 at 11:32 AM Steve French <smfrench@gmail.com> wrote:
 >
->
-> On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
-> > On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
-> >>> +- devfreq-events : phandles of the PPMU events used by the controller.
-> >>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
-> >>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
-> >>
-> >> Looks like a hack. Can't you get this from the clocks property? What is
-> >> this for?
-> >
-> > Hi Rob,
-> >
-> > Lukasz uses these two syscon regmaps to read certain registers. For
-> > chipid he reads it to check the size of attached memory (only 2 GB
-> > version is supported). This indeed looks like a hack. However the
-> > second regmap (clk) is needed to get the timing data from registers
-> > from DMC clock driver address space. These are registers with memory
-> > timing so their data is not exposed anyway in common clk framework.
+>    [..] Our
+> build verification tests passed (and continue to be extended to
+> include more tests).  See e.g. our 'buildbot' results at:
+> http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/199
 
-Okay, please just explain what your accessing. Consider adding the
-offset as a cell in case stuff moves around on another chip.
+Still, is there any reason for that very late rebase?
 
-> >
-> > Best regards,
-> > Krzysztof
->
-> Thank you Krzysztof for a fast response. I have also responded to Rob.
-> I wouldn't call accessing chipid registers as a hack, though. The DMC
-> registers do not contain information about the memory chip since it is
-> in phase of production the board not the chip. Thus, chipid regs (which
-> loads from e-fuses) are best place to put information about memory
-> type/size.
+Why are all the commits so recent?
 
-For efuses, we have a binding (nvmem). Maybe you should use it.
+And perhaps even more importantly, why is the base for that rebase is
+some completely random and inappropriate commit in the middle of the
+merge window?
 
-Rob
+That's *INSANE*. And it's against everything I've always told people to do:
+
+    DO NOT BASE YOUR DEVELOPMENT WORK ON SOME RANDOM "KERNEL OF THE DAY"
+    DURING THE MERGE WINDOW !!
+
+who knows what horrendous bugs we've introduced at that random point
+in the merge window, and you now based all your work on that unstable
+random commit.
+
+There is *no* excuse for this kind of crazy development. Even if you
+use something else than git to develop (some patch-queue based
+inferior system or whatever) and even if you then import it into git
+later
+
+     PICK A SANE AND STABLE IMPORT POINT
+
+and if you *do* use git for development, but you have to rebase
+because you've made some silly mistake and need to undo something
+
+    PICK A SANE AND STABLE REBASE POINT
+
+I don't know how much clearer I can be about this, and I do not
+understand why this keeps on happening. We've been using git for just
+about 15 years now, and I've said this for pretty much all that time.
+
+Some random googling found this lwn article based on some random old
+email of mine from ten years ago:
+
+    https://lwn.net/Articles/328436/
+
+and while it is about general rebasing and merging issues, it does
+talk about how to "allow development to be based on a (hopefully)
+relatively stable point where the issues are known". That is as
+important for a rebase point as it is for a merge point.
+
+Rebasing on top of random kernel versions should not be done. EVER.
+
+And if you did it to avoid some merge conflict, DON'T. I'd much rather
+get a pull request for something that is *STABLE* and *WELL-TESTED*,
+than get a pull request that has been syntactically cleaned up, but is
+based on something that might not work at all under certain
+circumstances.
+
+Even if *your* code were to be perfect, that doesn't matter if the
+thing you based your code on is a quicksand of memory corruption and
+general flakiness.
+
+So don't do the whole "rebase the day before" in the first place, but
+*DEFINITELY* don't do it when you then pick a random and bad point to
+rebase things on top of!
+
+                   Linus
