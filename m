@@ -2,130 +2,167 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF67DC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75164C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F5020656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D25120656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Wx6Lz/ss"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bO3R80TS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfEHBym (ORCPT
+        id S1726494AbfEHB7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:54:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41283 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbfEHBym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:54:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zKKT5hzNz9s3l;
-        Wed,  8 May 2019 11:54:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557280478;
-        bh=uoaM4/kFzgSgOBal6RL10pdCs262sqiKKMIevH31Us0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Wx6Lz/ssAHJOmbV3p2X/ZFdVoZe+zNiKRt1vYZW/EDr6iKD+ZNmDcR7jwH1OEnreo
-         1kZxGstI1UCFA3kmknosfHl8tzVusmngHQoMTNx2jRZ1uwWE0QujYoJQPJWq68Sqav
-         dN7CzaOqrhRR9dyktrih29c+AcfOL8V6kZ3W3j4q9Vw4Fe13JSXapBmYiboWM+YmfC
-         OpAFGeiFhFnlddcynv8C3yiPPVbMzT6y+qt1tOnLgrWQu7JW9vI1w6jMSvA9UQgqDL
-         glJrQgaR9nAo0Wn2enlzmiM28bdJ9XcItD1XlBALgN2OVZtImcv5wYDbQ6FviTYH/1
-         hqSSsL+JvlsEA==
-Date:   Wed, 8 May 2019 11:54:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Cristiano Borges Cardoso <cristianoborgescardoso@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Sanjana Sanikommu <sanjana99reddy99@gmail.com>,
-        Vatsala Narang <vatsalanarang@gmail.com>,
-        Bhanusree Pola <bhanusreemahesh@gmail.com>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: Re: linux-next: manual merge of the staging tree with the v4l-dvb
- tree
-Message-ID: <20190508115436.43cd6bc0@canb.auug.org.au>
-In-Reply-To: <20190426160658.4929d1ad@canb.auug.org.au>
-References: <20190426160658.4929d1ad@canb.auug.org.au>
+        Tue, 7 May 2019 21:59:39 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34225 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbfEHB7j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 21:59:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n19so1074225pfa.1;
+        Tue, 07 May 2019 18:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LKDYwa6gUv5wCTyZ99PrxN7F5ZX+WfRDRB+TBVrMR/M=;
+        b=bO3R80TSFgE++pk0ozdsgJgulasRz6lSf+dyLKEVUTZnfrzKlw4n41cPixoi/YaXAm
+         qDKvTGfvQ+qMhD+bh7vb7BD5GTw+DMtuB25imranm80XSc2CleG5G0YkZ8T1DDB59CeE
+         bILBcf4cuYFCFWQFJnz02u5w12qvjgsFJeB3LpSXWcQbS63aSCBVz8sNJA2+XT3F8uyf
+         /WPfZpv53QTIJLeOG97HFQkXLaKUlzppqEogTcYfC9a4r/0Ane+aLN/ScxQNT3mWRuly
+         5dI+eBPVKfxjv5p/hCZu610r2FW/KiwoGYi2/rPiTcRBXNP8uBHaE/KH93zXb8w9CEWK
+         dmAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LKDYwa6gUv5wCTyZ99PrxN7F5ZX+WfRDRB+TBVrMR/M=;
+        b=C+kcWKfM4RtoXnyXtmHvVArc6muUqb8qSsp/VdcXLTxqAzzd/jfRaYHzNwRmBQnA0Z
+         v6ekA3c99cjNQVANjTaPBolMa+d+RVAQlLtT8Yl5O8Iw3D8ILuHUpWWnt5Qied3dOBUc
+         FCNOR1XMKKlmOzenRMTCFqz/MeYKcXrgq1oek5r9Oc9BJIZVllyuq/qQOWVKz+IKY3FJ
+         CGpUb+UI1SDfSy4tR3gC6Wfm35/djreg1wteCrNIXrs1h7ZKjiFyr0zpB19MDMaQi2Mm
+         maT5KwfRvHXFN4zOoiKvGBzKl5DDw7LQo+M3RyhTkZiLKW34SnRk5vpkyoe9H4sePHS+
+         dwpA==
+X-Gm-Message-State: APjAAAWRRo/GFDVTm/wKOfoMC+fs2L6/HHoYnAzD3SovpflVbXG+hOXe
+        BiiPRCD0ugYPHAC3NPbVZLPpR2zX
+X-Google-Smtp-Source: APXvYqxDuhJVVTLedW1BLuHfADxWqaSKHmzJSrRoR+NS1/eEc5b2m3SHitJ4rvGEcpem027CijC6qA==
+X-Received: by 2002:a63:fb01:: with SMTP id o1mr43420797pgh.135.1557280778532;
+        Tue, 07 May 2019 18:59:38 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a18sm14455836pfr.22.2019.05.07.18.59.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 18:59:37 -0700 (PDT)
+Subject: Re: [PATCH 1/1] usb: typec: tcpci: add functions to read the VBUS
+ voltage
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190508004027.16558-1-angus@akkea.ca>
+ <20190508004027.16558-2-angus@akkea.ca>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <f70df755-9462-54af-cd7d-83d35c1dd3f8@roeck-us.net>
+Date:   Tue, 7 May 2019 18:59:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/y2.zRoqKy//H05ubAmjuWI6"; protocol="application/pgp-signature"
+In-Reply-To: <20190508004027.16558-2-angus@akkea.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/y2.zRoqKy//H05ubAmjuWI6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/7/19 5:40 PM, Angus Ainslie (Purism) wrote:
+> Show an error when the VBUS voltage is out of range.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+>   drivers/usb/typec/tcpm/tcpci.c | 35 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+> index a5746657b190..223941e11ef3 100644
+> --- a/drivers/usb/typec/tcpm/tcpci.c
+> +++ b/drivers/usb/typec/tcpm/tcpci.c
+> @@ -261,6 +261,26 @@ static int tcpci_set_pd_rx(struct tcpc_dev *tcpc, bool enable)
+>   	return 0;
+>   }
+>   
+> +static int tcpci_get_vbus_voltage(struct tcpc_dev *tcpc)
+> +{
+> +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> +	u16 vbus_reg;
+> +	unsigned int vbus_voltage;
+> +	int ret, scale;
+> +
+> +	ret = tcpci_read16(tcpci, TCPC_VBUS_VOLTAGE, &vbus_reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	vbus_voltage = vbus_reg & 0x3f;
+> +
+> +	scale = (vbus_reg >> 10) & 3;
+> +	if (scale == 3)
+> +		return -EIO;
+> +
+> +	return (vbus_voltage << scale) * 25;
+> +}
+> +
+>   static int tcpci_get_vbus(struct tcpc_dev *tcpc)
+>   {
+>   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> @@ -401,6 +421,7 @@ static int tcpci_init(struct tcpc_dev *tcpc)
+>   irqreturn_t tcpci_irq(struct tcpci *tcpci)
+>   {
+>   	u16 status;
+> +	int ret;
+>   
+>   	tcpci_read16(tcpci, TCPC_ALERT, &status);
+>   
+> @@ -474,6 +495,20 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
+>   		tcpci_write16(tcpci, TCPC_FAULT_STATUS, fault_status);
+>   	}
+>   
+> +	if (status & (TCPC_ALERT_V_ALARM_LO | TCPC_ALERT_V_ALARM_HI)) {
+> +		ret = tcpci_get_vbus_voltage(&tcpci->tcpc);
+> +
+Extra empty line.
 
-Hi all,
+> +		if (ret >= 0) {
+> +			if (status & TCPC_ALERT_V_ALARM_LO)
+> +				dev_err(tcpci->dev, "Low VBUS voltage %d mV\n",
+> +						ret);
+> +
+> +			if (status & TCPC_ALERT_V_ALARM_HI)
+> +				dev_err(tcpci->dev, "High VBUS voltage %d mV\n",
+> +						ret);
+> +		}
 
-On Fri, 26 Apr 2019 16:06:58 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the staging tree got conflicts in:
->=20
->   drivers/staging/media/zoran/Kconfig
->   drivers/staging/media/zoran/videocodec.c
->   drivers/staging/media/zoran/videocodec.h
->   drivers/staging/media/zoran/zoran.h
->   drivers/staging/media/zoran/zoran_card.c
->   drivers/staging/media/zoran/zoran_card.h
->   drivers/staging/media/zoran/zoran_device.c
->   drivers/staging/media/zoran/zoran_device.h
->   drivers/staging/media/zoran/zoran_driver.c
->   drivers/staging/media/zoran/zoran_procfs.c
->   drivers/staging/media/zoran/zoran_procfs.h
->   drivers/staging/media/zoran/zr36016.c
->   drivers/staging/media/zoran/zr36016.h
->   drivers/staging/media/zoran/zr36050.c
->   drivers/staging/media/zoran/zr36050.h
->   drivers/staging/media/zoran/zr36057.h
->   drivers/staging/media/zoran/zr36060.c
->   drivers/staging/media/zoran/zr36060.h
->=20
-> between commit:
->=20
->   8dce4b265a53 ("media: zoran: remove deprecated driver")
->=20
-> from the v4l-dvb tree and various commits from the staging tree.
->=20
-> I fixed it up (I just removed the files) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+This doesn't report anything if reading the VBUS voltage
+returns an error.
 
-This is now a conflict between the v4l-dvb tree and Linus' tree.
---=20
-Cheers,
-Stephen Rothwell
+Also, per TCPCI specification, you probably want to check
+POWER_CONTROL.VBUS_VOLTAGE Monitor to see if it is enabled
+in the first place.
 
---Sig_/y2.zRoqKy//H05ubAmjuWI6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+On a higher level, the driver doesn't currently set limits for low
+and high voltage alarms, and it doesn't enable those alarms. As such,
+I wonder if/how you can get those alerts. Can you clarify ?
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Guenter
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzSNtwACgkQAVBC80lX
-0Gw93AgAgXI+L7EKmqLwU/ffg+z9s8iyRFRYmx/S71Paap7Z9yoMxFDmQwgviuLU
-hDT3h92tucDNb5eeFRg67dc+2pJ04VrcJMt9+X2euBqHKW6XXdxIIqx+CErWzqdi
-zhcetUB1Y9S8ULEOaKX+WYhntTJBERFEBKWYA9dCVOGlZOZXLrzrt8Rc5yY8IflB
-CCr2t3XL1BqF1S2ncuu457EydOKu1t/oJ+Qz9svxTTCowQKEjFqMIrJ6VQVZe16Y
-1hQEbpmHbuIB6FlH+wzDfbex7qB5xGCTevesmk2YiFQ4tx8+aJ2GSFQpwfJRFVAI
-teswJyi+AY3dB8oQhifiZmafApIqwQ==
-=xf3A
------END PGP SIGNATURE-----
+> +	}
+> +
+>   	return IRQ_HANDLED;
+>   }
+>   EXPORT_SYMBOL_GPL(tcpci_irq);
+> 
 
---Sig_/y2.zRoqKy//H05ubAmjuWI6--
