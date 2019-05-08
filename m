@@ -2,69 +2,322 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_HK_NAME_DR,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CF7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1775EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFED21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEA521019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfEHKui (ORCPT
+        id S1726914AbfEHKuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:50:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55293 "EHLO mga18.intel.com"
+        Wed, 8 May 2019 06:50:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57648 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbfEHKui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:50:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 03:50:38 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2019 03:50:35 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hOK9i-0007k0-UC; Wed, 08 May 2019 13:50:34 +0300
-Date:   Wed, 8 May 2019 13:50:34 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     hotwater438@tutanota.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hdegoede <hdegoede@redhat.com>,
-        Linux Gpio <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] pinctrl: intel: Clear interrupt status in mask/unmask
- callback
-Message-ID: <20190508105034.GF9224@smile.fi.intel.com>
-References: <20190430083753.18197-1-kai.heng.feng@canonical.com>
- <20190430164813.GP9224@smile.fi.intel.com>
- <LeL0N_d--3-1@tutanota.com>
+        id S1726544AbfEHKuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 06:50:50 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2CFAA89C36;
+        Wed,  8 May 2019 10:50:49 +0000 (UTC)
+Received: from work-vm (ovpn-117-175.ams2.redhat.com [10.36.117.175])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3588A6013B;
+        Wed,  8 May 2019 10:50:36 +0000 (UTC)
+Date:   Wed, 8 May 2019 11:50:33 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, cohuck@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: export mdev device version to sysfs
+ for Intel vGPU
+Message-ID: <20190508105032.GE2718@work-vm>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+ <20190506015102.3691-1-yan.y.zhao@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <LeL0N_d--3-1@tutanota.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190506015102.3691-1-yan.y.zhao@intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 08 May 2019 10:50:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 07:58:26AM +0200, hotwater438@tutanota.com wrote:
-> Hello guys, any updates on suspend issue?
+* Yan Zhao (yan.y.zhao@intel.com) wrote:
+> This feature implements the version attribute for Intel's vGPU mdev
+> devices.
+> 
+> version attribute is rw.
+> It's used to check device compatibility for two mdev devices.
+> version string format and length are private for vendor driver. vendor
+> driver is able to define them freely.
+> 
+> For Intel vGPU of gen8 and gen9, the mdev device version
+> consists of 3 fields: "vendor id" + "device id" + "mdev type".
+> 
+> Reading from a vGPU's version attribute, a string is returned in below
+> format: <vendor id>-<device id>-<mdev type>. e.g.
+> 8086-193b-i915-GVTg_V5_2.
+> 
+> Writing a string to a vGPU's version attribute will trigger GVT to check
+> whether a vGPU identified by the written string is compatible with
+> current vGPU owning this version attribute. errno is returned if the two
+> vGPUs are incompatible. The length of written string is returned in
+> compatible case.
+> 
+> For other platforms, and for GVT not supporting vGPU live migration
+> feature, errnos are returned when read/write of mdev devices' version
+> attributes.
+> 
+> For old GVT versions where no version attributes exposed in sysfs, it is
+> regarded as not supporting vGPU live migration.
+> 
+> For future platforms, besides the current 2 fields in vendor proprietary
+> part, more fields may be added to identify Intel vGPU well for live
+> migration purpose.
+> 
+> v2:
+> 1. removed 32 common part of version string
+> (Alex Williamson)
+> 2. do not register version attribute for GVT not supporting live
+> migration.(Cornelia Huck)
+> 3. for platforms out of gen8, gen9, return -EINVAL --> -ENODEV for
+> incompatible. (Cornelia Huck)
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> c: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
+>  drivers/gpu/drm/i915/gvt/device_version.c | 87 +++++++++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/gvt.c            | 51 +++++++++++++
+>  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
+>  4 files changed, 145 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
+> 
+> diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
+> index 271fb46d4dd0..54e209a23899 100644
+> --- a/drivers/gpu/drm/i915/gvt/Makefile
+> +++ b/drivers/gpu/drm/i915/gvt/Makefile
+> @@ -3,7 +3,7 @@ GVT_DIR := gvt
+>  GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
+>  	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
+>  	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
+> -	fb_decoder.o dmabuf.o page_track.o
+> +	fb_decoder.o dmabuf.o page_track.o device_version.o
+>  
+>  ccflags-y				+= -I$(src) -I$(src)/$(GVT_DIR)
+>  i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
+> diff --git a/drivers/gpu/drm/i915/gvt/device_version.c b/drivers/gpu/drm/i915/gvt/device_version.c
+> new file mode 100644
+> index 000000000000..bd4cdcbdba95
+> --- /dev/null
+> +++ b/drivers/gpu/drm/i915/gvt/device_version.c
+> @@ -0,0 +1,87 @@
+> +/*
+> + * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
+> + *
+> + * Permission is hereby granted, free of charge, to any person obtaining a
+> + * copy of this software and associated documentation files (the "Software"),
+> + * to deal in the Software without restriction, including without limitation
+> + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+> + * and/or sell copies of the Software, and to permit persons to whom the
+> + * Software is furnished to do so, subject to the following conditions:
+> + *
+> + * The above copyright notice and this permission notice (including the next
+> + * paragraph) shall be included in all copies or substantial portions of the
+> + * Software.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+> + * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> + * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> + * SOFTWARE.
+> + *
+> + * Authors:
+> + *    Yan Zhao <yan.y.zhao@intel.com>
+> + */
+> +#include <linux/vfio.h>
+> +#include "i915_drv.h"
+> +
+> +static bool is_compatible(const char *self, const char *remote)
+> +{
+> +	if (strlen(remote) != strlen(self))
+> +		return false;
+> +
+> +	return (strncmp(self, remote, strlen(self))) ? false : true;
+> +}
+> +
+> +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv)
+> +{
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	return PAGE_SIZE;
+> +}
+> +
+> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_priv,
+> +		char *buf, const char *mdev_type)
+> +{
+> +	int cnt = 0, ret = 0;
+> +	const char *str = NULL;
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	/* vendor id + device id + mdev type */
+> +	/* vendor id */
+> +	cnt = snprintf(buf, 5, "%04x", PCI_VENDOR_ID_INTEL);
+> +	buf += cnt;
+> +	ret += cnt;
+> +
+> +	/* device id */
+> +	cnt = snprintf(buf, 6, "-%04x", INTEL_DEVID(dev_priv));
+> +	buf += cnt;
+> +	ret += cnt;
+> +
+> +	/* mdev type */
+> +	str = mdev_type;
+> +	cnt = snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
+> +	buf += cnt;
+> +	ret += cnt;
 
-Please, do not top-post.
+Why not just one big snprintf?
 
-The patch you mentioned is in a queue to be submitted after merge window closes.
-Be patient.
+Dave
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +	return ret;
+> +}
+> +
+> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
+> +		const char *self, const char *remote)
+> +{
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	if (!is_compatible(self, remote))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
+> index 43f4242062dd..19f16eec5a4c 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.c
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
+> @@ -105,14 +105,65 @@ static ssize_t description_show(struct kobject *kobj, struct device *dev,
+>  		       type->weight);
+>  }
+>  
+> +#ifdef GVT_MIGRATION_VERSION
+> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> +		char *buf)
+> +{
+> +	struct drm_i915_private *i915 = kdev_to_i915(dev);
+> +	const char *mdev_type = kobject_name(kobj);
+> +
+> +	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
+> +}
+> +
+> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> +		const char *buf, size_t count)
+> +{
+> +	char *remote = NULL, *self = NULL;
+> +	int len, ret = 0;
+> +	struct drm_i915_private *i915 = kdev_to_i915(dev);
+> +	const char *mdev_type = kobject_name(kobj);
+> +
+> +	len = intel_gvt_get_vfio_device_version_len(i915);
+> +	if (len < 0)
+> +		return len;
+> +
+> +	self = kmalloc(len, GFP_KERNEL);
+> +	if (!self)
+> +		return -ENOMEM;
+> +
+> +	ret = intel_gvt_get_vfio_device_version(i915, self, mdev_type);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	remote = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!remote) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ret = intel_gvt_check_vfio_device_version(i915, self, remote);
+> +
+> +out:
+> +	kfree(self);
+> +	kfree(remote);
+> +	return (ret < 0 ? ret : count);
+> +}
+> +#endif
+> +
+>  static MDEV_TYPE_ATTR_RO(available_instances);
+>  static MDEV_TYPE_ATTR_RO(device_api);
+>  static MDEV_TYPE_ATTR_RO(description);
+> +#ifdef GVT_MIGRATION_VERSION
+> +static MDEV_TYPE_ATTR_RW(version);
+> +#endif
+>  
+>  static struct attribute *gvt_type_attrs[] = {
+>  	&mdev_type_attr_available_instances.attr,
+>  	&mdev_type_attr_device_api.attr,
+>  	&mdev_type_attr_description.attr,
+> +#ifdef GVT_MIGRATION_VERSION
+> +	&mdev_type_attr_version.attr,
+> +#endif
+>  	NULL,
+>  };
+>  
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
+> index f5a328b5290a..4062f6b26acf 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> @@ -687,6 +687,12 @@ void intel_gvt_debugfs_remove_vgpu(struct intel_vgpu *vgpu);
+>  int intel_gvt_debugfs_init(struct intel_gvt *gvt);
+>  void intel_gvt_debugfs_clean(struct intel_gvt *gvt);
+>  
+> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *i915,
+> +		char *buf, const char *mdev_type);
+> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
+> +		const char *self, const char *remote);
+> +ssize_t
+> +intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv);
+>  
+>  #include "trace.h"
+>  #include "mpt.h"
+> -- 
+> 2.17.1
+> 
+--
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
