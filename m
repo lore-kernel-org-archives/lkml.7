@@ -2,277 +2,159 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99528C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAF9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6605321479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C826321743
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g+oJJAlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfEHJmz (ORCPT
+        id S1726901AbfEHJpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:42:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39156 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726603AbfEHJmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:42:54 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E2271E1F38C9344801A4;
-        Wed,  8 May 2019 17:42:49 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
- 17:42:39 +0800
-Subject: Re: [PATCH v6 1/1] iommu: enhance IOMMU dma mode build options
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190418135701.24668-1-thunder.leizhen@huawei.com>
- <20190418135701.24668-2-thunder.leizhen@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ca30a698-8047-9a86-a2f1-0b3e1c8692bf@huawei.com>
-Date:   Wed, 8 May 2019 10:42:25 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Wed, 8 May 2019 05:45:22 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59980 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfEHJpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 05:45:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190508094520euoutp01c9f73a54c28d836269970e06e38d77ca~crAeycguI0436704367euoutp01w
+        for <linux-kernel@vger.kernel.org>; Wed,  8 May 2019 09:45:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190508094520euoutp01c9f73a54c28d836269970e06e38d77ca~crAeycguI0436704367euoutp01w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557308720;
+        bh=MuOs/E311PhekgRKOAjqsoOM7+A3YKyosF5AEe5N4s4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=g+oJJAlRKq0kzE5WpoGqeUzQLxEWMjMxtwj6p6FTXyH3OlZe1tmQGxq9MULwZamoa
+         F1ow9VENuuZ9nNPTkLnAjhLBcObtu44YxCr44Kwv9YA0MQYAVzjb30aNLmmGl7FQkA
+         aijO1gJgj+1I57OQgAauzDrK2wtQNUkSrB9DjCZg=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190508094519eucas1p240af845e3456e87dcdb7fbe8906af8a2~crAd9UfRW1448714487eucas1p23;
+        Wed,  8 May 2019 09:45:19 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 47.3A.04298.E25A2DC5; Wed,  8
+        May 2019 10:45:19 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190508094518eucas1p29c68c439a387132f9de555f39540851a~crAdKS6S11451814518eucas1p28;
+        Wed,  8 May 2019 09:45:18 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190508094518eusmtrp1b01d2e17125f5bb912ae7518937ef45a~crAc786DA1256112561eusmtrp1c;
+        Wed,  8 May 2019 09:45:18 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-1f-5cd2a52e2865
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E5.99.04146.E25A2DC5; Wed,  8
+        May 2019 10:45:18 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190508094517eusmtip247caadf547383ab469f9c86a4ba1487c~crAb-PHi42390423904eusmtip21;
+        Wed,  8 May 2019 09:45:17 +0000 (GMT)
+Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+Date:   Wed, 8 May 2019 11:45:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190418135701.24668-2-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH++3eu11H135OzYNJwQh7oTMr+kUPCiMuRVEQFCbU0ptZzmw3
+        K7NgPX3k0hIqpzJ7Kqt8LCvTHrBES5dLk0orekyozBWls6LQut5J/vc5v+/3/L7nwGEpTS8T
+        yial7BKMKfpkrVJN32z81Rqhu9QeF3XfpCDVZysZ8rz/A0OsDa0MufLNjUhBc4mCOI8bSJ77
+        M0VcrioVeXyoV0We1hUrSZ+5AZGzrnsKcq3htYq8PFiuJEN3alXkQW8mQ+53LCcvf/uTgYfv
+        0eJAfsB7iuaLTG00f9vyWsXbbdlK3nz4i5I/UWND/PWWDL7PPnE1G6tekCAkJ+0WjLpFm9Rb
+        8zqrUWqZeu+zz7NNyMrmID8W8GywejtQDlKzGlyOwHv5j6/oR/DGXugr+hDkmZ8xIy3Oo1+R
+        xBpchsBRekA2eRCc6LZRkhCIt4DjYpdK4iDMg7O0k5JMFK6m4VZt3T+BZZU4EmptOyXk8DK4
+        O8BJSOPJ4P25TuoMxuvhTWPVcCyHA+BRYTctsR9eA66a78NJFA6Brm6rQuZJcMtTPJwEuISF
+        jw/dSJ55KWRlZvo4EHqaalQyh0FLQS4tswgm8zmfZz+480p8nvnwoKmNkWaj8DSorNNJCHgJ
+        VLauldEfXngC5An84dTNM5T8zEHWMY38x1SoyX2ikHk8lF09rcpHWsuovSyjdrGM2sXyP7YU
+        0TYUIqSJhkRBnJki7IkU9QYxLSUxMn6HwY7+3WDLYNP3WuRt3+xAmEXasdzH1LY4DaPfLaYb
+        HAhYShvEPT/ZHqfhEvTp+wTjjo3GtGRBdKAJLK0N4TLGvN2gwYn6XcJ2QUgVjCOqgvULNaGC
+        xKhj6STt3q/SnZ1zZkVHvXs/kO83JX6QSY1pjl/o+dbyqvWS81O5VRH+NeL8hKyY3IoM3YGe
+        H+nBT5rDPFOyOlZU7InNXekJi7C/G5qRXH8ke968xjXTo/u6LoTvNxTV93C/PeE687h8k9N1
+        44U+xjC352KOt2TVZs22xo5Cd3Gvlha36mdOp4yi/i9JJHR/fwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4PV29pZdiDDq3c1hsnLGe1eL6l+es
+        FvOPnGO1WP3xMaPF5FNzmSzOdOda9D9+zWxx/vwGdouzTW/YLS7vmsNm8bn3CKPFjPP7mCzW
+        HrnLbnG7cQWbxf89O9gtDr9pZ7XYf8XL4vZvPotvJx4xOgh7fPs6icVjdsNFFo+ds+6ye2xa
+        1cnm0dv8js2jb8sqRo/Np6s9Pm+SC+CI0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2
+        j7UyMlXSt7NJSc3JLEst0rdL0Mvov7mRsWA5V8W11yYNjPM5uhg5OSQETCTOtL5n7GLk4hAS
+        WMooMbnzJhNEQkxi0r7t7BC2sMSfa11sEEWvGSVWrdkHViQskCZxY8lUNhBbRMBD4syCm8wg
+        RcwCG1kkLr7qZYLoOM4kceTya9YuRg4ONgE9iR2rCkFMXgE3ib3feEFMFgEVia8/wkHGiApE
+        SJx5v4IFxOYVEJQ4OfMJmM0pEChxfssnZhCbWcBMYt7mh1C2uMStJ/OZIGx5ie1v5zBPYBSa
+        haR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMw/rcd+7l5B+OljcGH
+        GAU4GJV4eCfMuhQjxJpYVlyZe4hRgoNZSYT3+kSgEG9KYmVValF+fFFpTmrxIUZToN8mMkuJ
+        JucDU1NeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGwfxtO7t/
+        f7s73ezXidQaXu/DahOcMqIV1X/bTds2n+Pukv52D11xuZATpzdOum13d1Xg6deLjvZyp+9x
+        VUrsdOrZs1qX90Xx0vB/kzSjbnMsfvhZw77ma4cg27SiNeHP3xf+ThI5Mfcjl7RJ4pzDGnsF
+        kudzn1/+4N3JFcYH1R+s0zwjXrfujRJLcUaioRZzUXEiAIRUUrEVAwAA
+X-CMS-MailID: 20190508094518eucas1p29c68c439a387132f9de555f39540851a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
+        <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+        <20190507170422.GA25179@bogus>
+        <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/04/2019 14:57, Zhen Lei wrote:
-> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
-> opportunity to set {lazy|strict} mode as default at build time. Then put
-> the three config options in an choice, make people can only choose one of
-> the three at a time.
->
-> The default IOMMU dma modes on each ARCHs have no change.
->
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  arch/ia64/kernel/pci-dma.c                |  2 +-
->  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
->  arch/s390/pci/pci_dma.c                   |  2 +-
->  arch/x86/kernel/pci-dma.c                 |  7 ++---
->  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
->  drivers/iommu/amd_iommu_init.c            |  3 ++-
->  drivers/iommu/intel-iommu.c               |  2 +-
->  drivers/iommu/iommu.c                     |  3 ++-
->  8 files changed, 48 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-> index fe988c49f01ce6a..655511dbf3c3b34 100644
-> --- a/arch/ia64/kernel/pci-dma.c
-> +++ b/arch/ia64/kernel/pci-dma.c
-> @@ -22,7 +22,7 @@
->  int force_iommu __read_mostly;
->  #endif
->
-> -int iommu_pass_through;
-> +int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->
->  static int __init pci_iommu_init(void)
->  {
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 3ead4c237ed0ec9..383e082a9bb985c 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->  	va_end(args);
->  }
->
-> -static bool pnv_iommu_bypass_disabled __read_mostly;
-> +static bool pnv_iommu_bypass_disabled __read_mostly =
-> +			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->  static bool pci_reset_phbs __read_mostly;
->
->  static int __init iommu_setup(char *str)
-> diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-> index 9e52d1527f71495..784ad1e0acecfb1 100644
-> --- a/arch/s390/pci/pci_dma.c
-> +++ b/arch/s390/pci/pci_dma.c
-> @@ -17,7 +17,7 @@
->
->  static struct kmem_cache *dma_region_table_cache;
->  static struct kmem_cache *dma_page_table_cache;
-> -static int s390_iommu_strict;
-> +static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  static int zpci_refresh_global(struct zpci_dev *zdev)
->  {
-> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-> index d460998ae828514..fb2bab42a0a3173 100644
-> --- a/arch/x86/kernel/pci-dma.c
-> +++ b/arch/x86/kernel/pci-dma.c
-> @@ -43,11 +43,8 @@
->   * It is also possible to disable by default in kernel config, and enable with
->   * iommu=nopt at boot time.
->   */
-> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
-> -int iommu_pass_through __read_mostly = 1;
-> -#else
-> -int iommu_pass_through __read_mostly;
-> -#endif
-> +int iommu_pass_through __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->
->  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
->
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 6f07f3b21816c64..8a1f1793cde76b4 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
->  	  debug/iommu directory, and then populate a subdirectory with
->  	  entries as required.
->
-> -config IOMMU_DEFAULT_PASSTHROUGH
-> -	bool "IOMMU passthrough by default"
-> +choice
-> +	prompt "IOMMU dma mode"
 
-/s/dma/DMA/
+On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
+> On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
+>>> +- devfreq-events : phandles of the PPMU events used by the controller.
+>>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
+>>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+>>
+>> Looks like a hack. Can't you get this from the clocks property? What is
+>> this for?
+> 
+> Hi Rob,
+> 
+> Lukasz uses these two syscon regmaps to read certain registers. For
+> chipid he reads it to check the size of attached memory (only 2 GB
+> version is supported). This indeed looks like a hack. However the
+> second regmap (clk) is needed to get the timing data from registers
+> from DMC clock driver address space. These are registers with memory
+> timing so their data is not exposed anyway in common clk framework.
+> 
+> Best regards,
+> Krzysztof
 
-And how about add "default", as in "Default IOMMU DMA mode" or "IOMMU 
-default DMA mode"?
+Thank you Krzysztof for a fast response. I have also responded to Rob.
+I wouldn't call accessing chipid registers as a hack, though. The DMC
+registers do not contain information about the memory chip since it is
+in phase of production the board not the chip. Thus, chipid regs (which
+loads from e-fuses) are best place to put information about memory
+type/size.
 
->  	depends on IOMMU_API
-> -        help
-> -	  Enable passthrough by default, removing the need to pass in
-> -	  iommu.passthrough=on or iommu=pt through command line. If this
-> -	  is enabled, you can still disable with iommu.passthrough=off
-> -	  or iommu=nopt depending on the architecture.
-> +	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
-> +	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
-> +	default IOMMU_DEFAULT_STRICT
-> +	help
-> +	  This option allows IOMMU dma mode to be chose at build time, to
-
-again, capitalize acronyms, i.e. /s/dma/DMA/ (more of these above and below)
-
-> +	  override the default dma mode of each ARCHs, removing the need to
-> +	  pass in kernel parameters through command line. You can still use
-> +	  ARCHs specific boot options to override this option again.
-> +
-> +config IOMMU_DEFAULT_PASSTHROUGH
-
-I think that it may need to be indented, along with the other choices
-
-> +	bool "passthrough"
-> +	help
-> +	  In this mode, the dma access through IOMMU without any addresses
-> +	  transformation. That means, the wrong or illegal dma access can not
-
-transformation, or translation?
-
-> +	  be caught, no error information will be reported.
->
->  	  If unsure, say N here.
->
-> +config IOMMU_DEFAULT_LAZY
-> +	bool "lazy"
-> +	help
-> +	  Support lazy mode, where for every IOMMU DMA unmap operation, the
-> +	  flush operation of IOTLB and the free operation of IOVA are deferred.
-> +	  They are only guaranteed to be done before the related IOVA will be
-> +	  reused.
-> +
-> +config IOMMU_DEFAULT_STRICT
-> +	bool "strict"
-> +	help
-> +	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
-> +	  the free operation of IOVA are guaranteed to be done in the unmap
-> +	  function.
-> +
-> +	  This mode is safer than the two above, but it maybe slow in some high
-
-slow, or slower? And passthough is not safe, so anything is implicitly 
-safer.
-
-> +	  performace scenarios.
-> +
-> +endchoice
-> +
->  config OF_IOMMU
->         def_bool y
->         depends on OF && IOMMU_API
-> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-> index ff40ba758cf365e..16c02b08adb4cb2 100644
-> --- a/drivers/iommu/amd_iommu_init.c
-> +++ b/drivers/iommu/amd_iommu_init.c
-> @@ -166,7 +166,8 @@ struct ivmd_header {
->  					   to handle */
->  LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
->  					   we find in ACPI */
-> -bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
-> +bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-> +					/* if true, flush on every unmap */
->
->  LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
->  					   system */
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 28cb713d728ceef..0c3cc716210f35a 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
->
->  static int dmar_map_gfx = 1;
->  static int dmar_forcedac;
-> -static int intel_iommu_strict;
-> +static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->  static int intel_iommu_superpage = 1;
->  static int intel_iommu_sm;
->  static int iommu_identity_mapping;
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 109de67d5d727c2..0ec5952ac60e2a3 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -43,7 +43,8 @@
->  #else
->  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->  #endif
-> -static bool iommu_dma_strict __read_mostly = true;
-> +static bool iommu_dma_strict __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  struct iommu_callback_data {
->  	const struct iommu_ops *ops;
-> --
-> 1.8.3
->
->
->
-> .
->
-
-
+Regards,
+Lukasz
