@@ -2,105 +2,142 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D6CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C8AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D1D21655
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BEB21019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FUOjwihO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9dBQ1b9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfEHLUt (ORCPT
+        id S1727492AbfEHLX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:20:49 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54611 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbfEHLUt (ORCPT
+        Wed, 8 May 2019 07:23:58 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36209 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfEHLX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:20:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x48BKgpI978856
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 8 May 2019 04:20:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x48BKgpI978856
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1557314442;
-        bh=C4WHQwbl2oWoZi0mnbtIuFRC+Y3pKDxsSvH0cz0TndE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=FUOjwihOxURfYaM/38wW4c0slTl94sdwQQJFIysYqrOCDJs8Zhb1FNf6lkOkbrGwF
-         BwE1M/UQEtFVX3TOCgy7urkbJ/dyqKC0sIg0ajUjmHEptxqpQVKbhKiNDZyNhPgeQa
-         rm+kSOEAchrQacyu7QLoMx/FMM+oCVNJXjab9/h2g7TbTYp/Y5pkkrwTYBqs9iFM07
-         rpQ0xli8dEL29l8a9gnC8KzAil+dN1bfKIOnVDGB06n075D6EgvYALQ1eTZxxvdGYo
-         0BF+pGM/OeE8ljHJnaW6+Wa1XCe9zpQTC1C3z/mX1aEPz9hkXEeDXdYMwP8rd280Dg
-         /SScivc6RP9kw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x48BKf6j978853;
-        Wed, 8 May 2019 04:20:41 -0700
-Date:   Wed, 8 May 2019 04:20:41 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-0e72499c3cc0cead32f88b94a02204d2b80768bf@git.kernel.org>
-Cc:     mingo@kernel.org, ak@linux.intel.com, hpa@zytor.com,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de
-Reply-To: mhiramat@kernel.org, hpa@zytor.com, ak@linux.intel.com,
-          mingo@kernel.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190330004743.29541-7-andi@firstfloor.org>
-References: <20190330004743.29541-7-andi@firstfloor.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/kprobes: Make trampoline_handler() global and
- visible
-Git-Commit-ID: 0e72499c3cc0cead32f88b94a02204d2b80768bf
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 8 May 2019 07:23:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id e19so7007334iob.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d644zZtPZpj+iL/O+tRuouNZQQ4CHCP7vp/WgV362Xc=;
+        b=I9dBQ1b9fZElQqTaOP/mLPnw/WHMH+3+vU3bKIBkdC5z+XDjpa5XW4+pqXDH2Yirdh
+         lVHzKExZIKY1Ce90rffFlZEQOt7jMAWQDbUiDjF5HE0wViOga6ncr88kIutVR58iaZfI
+         uBxquUEK9MRuMZHslVRyiLW4gSD0PFci7RYj/GjHSR2fEsT0p6KUYmpHs9nEJm4GOPee
+         P5n38Gxn2qoo8db7HRhafcb3w8Ond4eCsOz5YITIB4/LcaolMrlLzcOTxkK8B/BauI/8
+         tDXgrbveQcxNc+yCfGXlJcZyA3yJOhjkjI+gGv2K2W3q5+YO2mflV0dVTUXcBuviIMnU
+         7K6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d644zZtPZpj+iL/O+tRuouNZQQ4CHCP7vp/WgV362Xc=;
+        b=HJNuPK2M7hymKYj4CbCa2yMQAzjhVxKKBMetllkSvcMANZTVGETP6QBxpgDFI5g00r
+         9JBvsc8pwMgj1EIOEXocIbiJteF4KEOC9VkJWEXhLIy5CwMqmAvKN7iaLj36KAN2GO0v
+         psTo3N5gAPUtMc0L+A7U/mZsFngK+4YlUGAPqVlwFEBHPvBgu3W2qZ34hUozP6lZueRw
+         dw2nTj5HOIQYB1y7jgNfslZ/cZFteSO7fVTGBiNL3af8VjOAjwIH/BVoIBBAaYMlsACO
+         /1GoIbdPxpWHa1oQdvrHr49nRTzXtwwJGQfsGF4CIWimp2vynFPcYSN3DGte2UNrF3vT
+         MqvA==
+X-Gm-Message-State: APjAAAUad0p7ToNSAUVJVyW6/BZevUJv/yHauOBBbi4SXNcYFoxOABR3
+        SDFjW5ySpDquG9DP36GRfB6XT219EaCGtlQiVbwnZA==
+X-Google-Smtp-Source: APXvYqwg7I6hW8AKf3IWv5UtmdgFgvMUcDZ+7raMWEIqgiSPe/rVBGmNOr28sn4pxVkFKWiOMyzK697YC3urwpXbK9E=
+X-Received: by 2002:a6b:f305:: with SMTP id m5mr17786558ioh.271.1557314637068;
+ Wed, 08 May 2019 04:23:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <000000000000fb78720587d46fe9@google.com> <20190502023426.GA804@sol.localdomain>
+ <20190501231051.50eeccd6@oasis.local.home>
+In-Reply-To: <20190501231051.50eeccd6@oasis.local.home>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 8 May 2019 13:23:45 +0200
+Message-ID: <CACT4Y+a=yA56CgQqGGSSQRqF9z8y-et=t-uwrjCDYiG8p-BCzQ@mail.gmail.com>
+Subject: Re: BUG: soft lockup in kvm_vm_ioctl
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        syzbot <syzbot+8d9bb6157e7b379f740e@syzkaller.appspotmail.com>,
+        KVM list <kvm@vger.kernel.org>, adrian.hunter@intel.com,
+        David Miller <davem@davemloft.net>,
+        Artem Bityutskiy <dedekind1@gmail.com>, jbaron@redhat.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Rik van Riel <riel@surriel.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0e72499c3cc0cead32f88b94a02204d2b80768bf
-Gitweb:     https://git.kernel.org/tip/0e72499c3cc0cead32f88b94a02204d2b80768bf
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Fri, 29 Mar 2019 17:47:41 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 8 May 2019 13:13:58 +0200
+From: Steven Rostedt <rostedt@goodmis.org>
+Date: Thu, May 2, 2019 at 5:10 AM
+To: Eric Biggers
+Cc: syzbot, Dmitry Vyukov, <kvm@vger.kernel.org>,
+<adrian.hunter@intel.com>, <davem@davemloft.net>,
+<dedekind1@gmail.com>, <jbaron@redhat.com>, <jpoimboe@redhat.com>,
+<linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+<luto@kernel.org>, <mingo@kernel.org>, <peterz@infradead.org>,
+<richard@nod.at>, <riel@surriel.com>,
+<syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>
 
-x86/kprobes: Make trampoline_handler() global and visible
+> On Wed, 1 May 2019 19:34:27 -0700
+> Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> > > Call Trace:
+> > >  smp_call_function_many+0x750/0x8c0 kernel/smp.c:434
+> > >  smp_call_function+0x42/0x90 kernel/smp.c:492
+> > >  on_each_cpu+0x31/0x200 kernel/smp.c:602
+> > >  text_poke_bp+0x107/0x19b arch/x86/kernel/alternative.c:821
+> > >  __jump_label_transform+0x263/0x330 arch/x86/kernel/jump_label.c:91
+> > >  arch_jump_label_transform+0x2b/0x40 arch/x86/kernel/jump_label.c:99
+> > >  __jump_label_update+0x16a/0x210 kernel/jump_label.c:389
+> > >  jump_label_update kernel/jump_label.c:752 [inline]
+> > >  jump_label_update+0x1ce/0x3d0 kernel/jump_label.c:731
+> > >  static_key_slow_inc_cpuslocked+0x1c1/0x250 kernel/jump_label.c:129
+> > >  static_key_slow_inc+0x1b/0x30 kernel/jump_label.c:144
+> > >  kvm_arch_vcpu_init+0x6b7/0x870 arch/x86/kvm/x86.c:9068
+> > >  kvm_vcpu_init+0x272/0x370 arch/x86/kvm/../../../virt/kvm/kvm_main.c:320
+> > >  vmx_create_vcpu+0x191/0x2540 arch/x86/kvm/vmx/vmx.c:6577
+> > >  kvm_arch_vcpu_create+0x80/0x120 arch/x86/kvm/x86.c:8755
+> > >  kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:2569
+> > > [inline]
+> > >  kvm_vm_ioctl+0x5ce/0x19c0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3105
+> > >  vfs_ioctl fs/ioctl.c:46 [inline]
+> > >  file_ioctl fs/ioctl.c:509 [inline]
+> > >  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+> > >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+> > >  __do_sys_ioctl fs/ioctl.c:720 [inline]
+> > >  __se_sys_ioctl fs/ioctl.c:718 [inline]
+> > >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+> > >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> >
+> > I'm also curious how syzbot found the list of people to send this to, as it
+> > seems very random.  This should obviously have gone to the kvm mailing list, but
+> > it wasn't sent there; I had to manually add it.
+>
+> My guess is that it went down the call stack, and picked those that
+> deal with the functions that are listed at the deepest part of the
+> stack. kvm doesn't appear for 12 functions up from the crash. It
+> probably stopped its search before that.
 
-This function is referenced from assembler, so in LTO
-it needs to be global and visible to not be optimized away.
+Hi,
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Link: https://lkml.kernel.org/r/20190330004743.29541-7-andi@firstfloor.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/kprobes/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index cf52ee0d8711..9e4fa2484d10 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -768,7 +768,7 @@ static struct kprobe kretprobe_kprobe = {
- /*
-  * Called from kretprobe_trampoline
-  */
--static __used void *trampoline_handler(struct pt_regs *regs)
-+__used __visible void *trampoline_handler(struct pt_regs *regs)
- {
- 	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
+What we do now is the following. We take all filenames in the report
+starting from top to bottom, and then apply a blacklist to filter out
+utility functions and bug detection facilities:
+https://github.com/google/syzkaller/blob/master/pkg/report/linux.go#L59-L89
+The first file name that is not blacklisted is used with get_maintainers.pl.
