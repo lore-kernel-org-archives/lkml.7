@@ -2,151 +2,91 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A7AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5CFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5139E21773
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FADB205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="mE/KQgnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfEHOzD (ORCPT
+        id S1727742AbfEHOzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:55:03 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34891 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbfEHOzC (ORCPT
+        Wed, 8 May 2019 10:55:07 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:42194 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726956AbfEHOzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:55:02 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c15so3382159qkl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 07:55:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=1h5qqXP2zKn4t+f1DgpRlCP0iFG+3OcxmOSi/5AQUKo=;
-        b=tk6oDHT73pu6SMTKwnQOaWf8yPDMH+BbvJPAA7m3WlFsn8v1+7r6wEFFT2DpflS3Ue
-         jgbEljPr5rN+3Btkhn3w1BbnxbZ5bUr5c89Zwwq7pgb8EOAfxpSOwKJTeNKDC7CgGbda
-         dWcHvfruk4tdKF08n0J8e3LbQyG2chHaq+USO+oIx3qmWiCq2YfNPHFfUBd/PB8hkTxI
-         1vW+X6ArnipkLJ/x15+mDlJItaumlRBgmVqbb271KPzfIM0DVpdjdJFDP2ksn8YHg/M/
-         oE8mDN48OT5y4lWSDYJxldg7N5V8gb0NewK+aN+3WrEIOdf4vYZHegSacWDPdNfCgNbE
-         +oEA==
-X-Gm-Message-State: APjAAAXgtOzrC9cz9WiStA1x1xVmI8gY/YzbV60rM1Y3r4unYzRbWWis
-        arVpIP3edf5ZWvZiYc36MpEUsSfatlc=
-X-Google-Smtp-Source: APXvYqwKgHm3q5ceZf5k5cSq2FHnWs797Gib8eSwius8UF2SFBaMznBrZTcbOD1FM9mG93SE3TpYwQ==
-X-Received: by 2002:a05:620a:15ad:: with SMTP id f13mr21262690qkk.101.1557327301283;
-        Wed, 08 May 2019 07:55:01 -0700 (PDT)
-Received: from vitty.brq.redhat.com ([64.251.121.244])
-        by smtp.gmail.com with ESMTPSA id v185sm275704qkb.0.2019.05.08.07.55.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 07:55:00 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>
-Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] x86: hv: hv_init.c: Replace alloc_page() with kmem_cache_alloc()
-In-Reply-To: <20190508064559.GA54416@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
-References: <cover.1554426039.git.m.maya.nakamura@gmail.com> <bdbacc872e369762a877af4415ad1b07054826db.1554426040.git.m.maya.nakamura@gmail.com> <87wok8it8p.fsf@vitty.brq.redhat.com> <20190412072401.GA69620@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net> <87mukvfynk.fsf@vitty.brq.redhat.com> <20190508064559.GA54416@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
-Date:   Wed, 08 May 2019 10:54:59 -0400
-Message-ID: <87mujxro70.fsf@vitty.brq.redhat.com>
+        Wed, 8 May 2019 10:55:05 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5EBEDC011E;
+        Wed,  8 May 2019 14:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557327308; bh=OyuDIlKKF19OaJlrS+fbwBer3egeSY4j1jMCaPU9OqM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=mE/KQgnnVbLcjfK6l2q22Gh+f4KyshSYb/1jCZQu8FXNfwbYjpoyzGmNAoBlB+4jF
+         iq5oadnTtsHq8KwxUFg/uc74JVkdKTeVg6oDArX7PGxWcRS0GtNJDlMjz5SkEadRBp
+         O33NPEtMZhOlh65vkFV2bXjhXnn8F57k0ksA1U+a9Hz4hIxi+HEWjlgb2jxUY5DD/i
+         yPTu2KicQWyNdxj2nlWkgv4AE8gG4k0Bwo/gxV9OIXZeieaK3VOm91CF/sk2biIAQ0
+         3NmLetBLM0RPiOUF53pjfjyX+vBdh2yNw+hOHMiV3gmokPstq9bczklZ1HS9ML+7Xz
+         WgFzEfVHCcJYA==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 1BC79A0328;
+        Wed,  8 May 2019 14:55:03 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 May 2019 07:54:22 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
+ 8 May 2019 16:54:20 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>
+CC:     "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>,
+        "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+Subject: RE: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
+ number to GMAC node
+Thread-Topic: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
+ number to GMAC node
+Thread-Index: AQHVAMdCOflFMqXaVU6/uA7yDRRMYqZX2A8AgAZ1TQCAApAzUIAAFfkAgABmh6A=
+Date:   Wed, 8 May 2019 14:54:19 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B479FD8@DE02WEMBXB.internal.synopsys.com>
+References: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
+         <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
+ <1557166759.17021.9.camel@synopsys.com>
+ <78EB27739596EE489E55E81C33FEC33A0B478870@DE02WEMBXB.internal.synopsys.com>
+ <CY4PR1201MB01206801C1C2B8272ABE9B17A1320@CY4PR1201MB0120.namprd12.prod.outlook.com>
+In-Reply-To: <CY4PR1201MB01206801C1C2B8272ABE9B17A1320@CY4PR1201MB0120.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maya Nakamura <m.maya.nakamura@gmail.com> writes:
-
-> On Fri, Apr 12, 2019 at 09:52:47AM +0200, Vitaly Kuznetsov wrote:
->> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
->> 
->> > On Fri, Apr 05, 2019 at 01:31:02PM +0200, Vitaly Kuznetsov wrote:
->> >> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
->> >> 
->> >> > @@ -98,18 +99,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
->> >> >  u32 hv_max_vp_index;
->> >> >  EXPORT_SYMBOL_GPL(hv_max_vp_index);
->> >> >  
->> >> > +struct kmem_cache *cachep;
->> >> > +EXPORT_SYMBOL_GPL(cachep);
->> >> > +
->> >> >  static int hv_cpu_init(unsigned int cpu)
->> >> >  {
->> >> >  	u64 msr_vp_index;
->> >> >  	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
->> >> >  	void **input_arg;
->> >> > -	struct page *pg;
->> >> >  
->> >> >  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
->> >> > -	pg = alloc_page(GFP_KERNEL);
->> >> > -	if (unlikely(!pg))
->> >> > +	*input_arg = kmem_cache_alloc(cachep, GFP_KERNEL);
->> >> 
->> >> I'm not sure use of kmem_cache is justified here: pages we allocate are
->> >> not cache-line and all these allocations are supposed to persist for the
->> >> lifetime of the guest. In case you think that even on x86 it will be
->> >> possible to see PAGE_SIZE != HV_HYP_PAGE_SIZE you can use alloc_pages()
->> >> instead.
->> >> 
->> > Thank you for your feedback, Vitaly!
->> >
->> > Will you please tell me how cache-line relates to kmem_cache?
->> >
->> > I understand that alloc_pages() would work when PAGE_SIZE <=
->> > HV_HYP_PAGE_SIZE, but I think that it would not work if PAGE_SIZE >
->> > HV_HYP_PAGE_SIZE.
->> 
->> Sorry, my bad: I meant to say "not cache-like" (these allocations are
->> not 'cache') but the typo made it completely incomprehensible. 
->  
-> No worries! Thank you for sharing your thoughts with me, Vitaly.
->
-> Do you know of any alternatives to kmem_cache that can allocate memory
-> in a specified size (different than a guest page size) with alignment?
-> Memory allocated by alloc_page() is aligned but limited to the guest
-> page size, and kmalloc() can allocate a particular size but it seems
-> that it does not guarantee alignment. I am asking this while considering
-> the changes for architecture independent code.
->
-
-I think we can consider these allocations being DMA-like (because
-Hypervisor accesses this memory too) so you can probably take a look at
-dma_pool_create()/dma_pool_alloc() and friends.
-
->> >> Also, in case the idea is to generalize stuff, what will happen if
->> >> PAGE_SIZE > HV_HYP_PAGE_SIZE? Who will guarantee proper alignment?
->> >> 
->> >> I think we can leave hypercall arguments, vp_assist and similar pages
->> >> alone for now: the code is not going to be shared among architectures
->> >> anyways.
->> >> 
->> > About the alignment, kmem_cache_create() aligns memory with its third
->> > parameter, offset.
->> 
->> Yes, I know, I was trying to think about a (hypothetical) situation when
->> page sizes differ: what would be the memory alignment requirements from
->> the hypervisor for e.g. hypercall arguments? In case it's always
->> HV_HYP_PAGE_SIZE we're good but could it be PAGE_SIZE (for e.g. TLB
->> flush hypercall)? I don't know. For x86 this discussion probably makes
->> no sense. I'm, however, struggling to understand what benefit we will
->> get from the change. Maybe just leave it as-is for now and fix
->> arch-independent code only? And later, if we decide to generalize this
->> code, make another approach? (Not insisting, just a suggestion)
->
-> Thank you for the suggestion, Vitaly!
->
-> The introduction of HV_HYP_PAGE_SIZE is weighing the assumption of the
-> future page size—it can be bigger based on the general trend, not
-> smaller, which is a reasonable assumption, I think.
->
-
-Let's spell it out (as BUILD_BUG_ON(HV_HYP_PAGE_SIZE < PAGE_SIZE) or
-something like that) then to make it clear.
-
--- 
-Vitaly
+RnJvbTogQWxleGV5IEJyb2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4NCkRhdGU6IFdlZCwg
+TWF5IDA4LCAyMDE5IGF0IDExOjQ2OjM2DQoNCj4gQ291bGQgeW91IHBsZWFzZSBwcm9wb3NlIGEg
+cGF0Y2g/DQoNCkkgY291bGRuJ3QgeWV0IGZpbmQgdGhlIGV4YWN0IEZJRk8gc2l6ZSBvZiB0aGUg
+SFcgKGl0J3Mgbm90IGRlc2NyaWJlZCBpbiANCnRoZSBkb2N1bWVudHMgSSBoYXZlKS4gRG8geW91
+IGhhdmUgdGhlIHZhbHVlcyA/DQoNClRoYW5rcywNCkpvc2UgTWlndWVsIEFicmV1DQo=
