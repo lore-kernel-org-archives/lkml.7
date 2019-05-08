@@ -2,66 +2,68 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDE4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF4720989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD11214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hjj/96MQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVTDq0Vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfEHPyy (ORCPT
+        id S1727617AbfEHP4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:54:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44713 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbfEHPyy (ORCPT
+        Wed, 8 May 2019 11:56:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44991 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfEHP4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:54:54 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d3so6107045plj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:54:53 -0700 (PDT)
+        Wed, 8 May 2019 11:56:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z16so10297508pgv.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UO6VSipa/vxLnsHx2jHyOWY71noSHX2RiG7VVCaq85k=;
-        b=Hjj/96MQ0SFne889FlFXkcvcTJkOxSdQVL1Blf4CleWMC2Zv2xNO+eofyYTRunO6k8
-         ykHVDgQVKXJV7YYQ0vL0ecq0xDMvDCCZXTLM2/5Oem0Rft51zSEtLTl/QwTfM32af0UD
-         xCweiercawjfhsslE1qu4Ib5UtxxuNe7IJoBX6HuEu/bSnx9dczZDv8TIncfl1mE1mQE
-         IuZ6Qq9mVTFUrKBCCO7A4iWGjDMdSWQP8RntBGBQsdHLDGJDJBp90bO29OHM6iCPDYlg
-         AZEB2tFUVI/NTDHEFNmKzQnJZc7SmABaQPPU6mvXAkaFBZHOYJuUJTju5OeQrz7sSphM
-         BVkQ==
+        bh=iBHtYpRsc712Jhf8r1jzS0KUOogBgaASzE45fG6Wcrk=;
+        b=oVTDq0VgZYvgpI1y9y4+DccGKoeBrl6DvatY0dzm2NiYUXphf/oYmeygPHZCSY2QvA
+         pmz0UOwGi93pZPyP7X4Gy2XPKYYVjHQVuG37fccJvZbAdlGUzB9c75qKridESGgLPD4M
+         lse3wmXa1uCUzlwmoichBtUOV9S86GKIE0562diLN8zZlzmZA2Z7/d9zqCVsmqrq7yxm
+         v4LFcVsRg1TgtMoXaM2aem82JBVmNWyeu5PXsWjILO1lbGo/WIFjjSj/pTIcSBb0JFhQ
+         3e/xomKGMP+8lUxxl/1eIR/OXH8kqXqg35zZcR9uE+KKG+Gf22knKmo7VnWYP9hKNvnQ
+         F3uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UO6VSipa/vxLnsHx2jHyOWY71noSHX2RiG7VVCaq85k=;
-        b=ZWkWe2FKSU8vn2Aw/49+y5cSz53kTcTf0xnfoiTOgCbN9xEwbkzpNlCz0qPEQiDs9C
-         npdsiYp8WUeV1AtGmqLtPNjsLLYUDQLkSFuEeMA0Vs7VU/sl7LeU3RmZx52pWpb9tZu7
-         XzxRWlPhYfgsloqxZsiJ+jWQARsO1bTleRlVP7rEkEdVwvYKfVULnj7VH3Xxzqo8dTjo
-         B22unrSL5q+Kzwv/N4sgdRopmktvQN3npWFr5Ch2eVhzB+ObFLoJFKZSrvRWygV3stZh
-         TykgLqwWuwTadS8BMCxkY0S9KfKDoieGODSt41+wipb0tUwQtpVzql+WtKDA/AAiZH+l
-         CVAA==
-X-Gm-Message-State: APjAAAUWMh+sUsZRcItWutUvdLauPj65h0h3hSARtD5HppP5FRttsW0r
-        u0+WM/XYk2V3eczd1uu3GGnI9sJ/HBZZFwlAKHg=
-X-Google-Smtp-Source: APXvYqzDDPjGn5SpAL9Wxd+yu1BRD8IWih0UstZYuhIOzBj2+3kbwyXrH23GiiqkLUklVwk7kOo5YieYktVP9zWP8tU=
-X-Received: by 2002:a17:902:7047:: with SMTP id h7mr49072884plt.177.1557330893382;
- Wed, 08 May 2019 08:54:53 -0700 (PDT)
+        bh=iBHtYpRsc712Jhf8r1jzS0KUOogBgaASzE45fG6Wcrk=;
+        b=BUHDmzkBB2snzX55fu54miHmn5i3NUkkvig3Ove6AXJa1/97SwpO5IKCtFKr12p+Fb
+         p0ZzjA775XSzqT2CzLCUYsgoumb9UGtd9fORiK5vjodLOVmzrFDFBOP5b4RNglnXIHYS
+         G49zO+1u7uTc4s+1Q7eQF4BDcNCbtBkInaVuPFl/SE26aisLrWE6plPwFgjbB9cCZt8D
+         2YcV1Mfy1vyyhRpl1HQia1zYht0uoodUxudcHsbHxCv+iICl1RixP9nzDqOHObjy8qXO
+         u/u8cvkwIi7BK0Hchh5LAzI7+QKeNqxfszvufPE8QcgOdWi7MB7ZPj9P8Ow1RF3JSbiO
+         zghQ==
+X-Gm-Message-State: APjAAAXnkUgi6/Q/Tlx7nZSn9fqj/N5xPDuS5pCRI8NmZRTtxtzzHcwT
+        QclaDvQSnlNxnY1givt2B8isotTNw8ZoLWmfoyUk6lWS
+X-Google-Smtp-Source: APXvYqyqfPaJ8sWq2tO5xRtoUCLKX/06gKK05XCIY4tOxB0M86pv/YGaMfPEDT0DgIx+zQ+kSmjz8JdAoJq8HUjzSWc=
+X-Received: by 2002:a65:480c:: with SMTP id h12mr46853626pgs.266.1557330995251;
+ Wed, 08 May 2019 08:56:35 -0700 (PDT)
 MIME-Version: 1.0
 References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
- <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com> <67f0d1ab-2edb-24ea-a4b5-62c90c1ef0fb@intel.com>
-In-Reply-To: <67f0d1ab-2edb-24ea-a4b5-62c90c1ef0fb@intel.com>
+ <1557248314-4238-7-git-send-email-akinobu.mita@gmail.com> <a4ec2c1a-1ff7-52fe-07bd-179613411536@intel.com>
+ <20190507212241.GA7113@localhost.localdomain>
+In-Reply-To: <20190507212241.GA7113@localhost.localdomain>
 From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Thu, 9 May 2019 00:54:42 +0900
-Message-ID: <CAC5umyi032svV31SmvcR3+MgQarvhg2x9mNrYH1_2svDBzE51g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] nvme.h: add telemetry log page definisions
-To:     "Heitke, Kenneth" <kenneth.heitke@intel.com>
-Cc:     linux-nvme@lists.infradead.org,
+Date:   Thu, 9 May 2019 00:56:24 +0900
+Message-ID: <CAC5umyhkeqD6ndh0OXauibZfz+BTd_EU9X81uebttp9gmxEYhg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] nvme-pci: add device coredump support
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     "Heitke, Kenneth" <kenneth.heitke@intel.com>,
+        linux-nvme@lists.infradead.org,
         LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
         Sagi Grimberg <sagi@grimberg.me>,
         Keith Busch <keith.busch@intel.com>,
@@ -75,55 +77,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B45=E6=9C=888=E6=97=A5(=E6=B0=B4) 2:53 Heitke, Kenneth <kenneth.=
-heitke@intel.com>:
+2019=E5=B9=B45=E6=9C=888=E6=97=A5(=E6=B0=B4) 6:28 Keith Busch <kbusch@kerne=
+l.org>:
 >
+> On Tue, May 07, 2019 at 02:31:41PM -0600, Heitke, Kenneth wrote:
+> > On 5/7/2019 10:58 AM, Akinobu Mita wrote:
+> > > +
+> > > +static int nvme_get_telemetry_log_blocks(struct nvme_ctrl *ctrl, voi=
+d *buf,
+> > > +                                    size_t bytes, loff_t offset)
+> > > +{
+> > > +   const size_t chunk_size =3D ctrl->max_hw_sectors * ctrl->page_siz=
+e;
+> >
+> > Just curious if chunk_size is correct since page size and block size ca=
+n
+> > be different.
 >
->
-> On 5/7/2019 10:58 AM, Akinobu Mita wrote:
-> > Copy telemetry log page definisions from nvme-cli.
-> >
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Jens Axboe <axboe@fb.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Sagi Grimberg <sagi@grimberg.me>
-> > Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > ---
-> > * v2
-> > - New patch in this version.
-> >
-> >   include/linux/nvme.h | 23 +++++++++++++++++++++++
-> >   1 file changed, 23 insertions(+)
-> >
-> > diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-> > index c40720c..5217fe4 100644
-> > --- a/include/linux/nvme.h
-> > +++ b/include/linux/nvme.h
-> > @@ -396,6 +396,28 @@ enum {
-> >       NVME_NIDT_UUID          =3D 0x03,
-> >   };
-> >
-> > +/* Derived from 1.3a Figure 101: Get Log Page =E2=80=93 Telemetry Host
-> > + * -Initiated Log (Log Identifier 07h)
-> > + */
->
-> Is this Host Initiated or Controller Initiated? The comment says host
-> initiated but everything else seems to indicated controller initiated.
+> They're always different. ctrl->page_size is hard-coded to 4k, while
+> sectors are always 512b.
 
-Both telemetry host initiated and controller initiated log headers have
-the same structure.  If this comment is confusing, it is also considered
-to be removed.
-
-> Is controller initiated even the correct choice because the controller
-> would have sent an AER to indicate that the host should pull the
-> telemetry data.
-
-It seems useful to retrieve telemetry log continually with the aid of
-user space tool reacting an Asynchronous Event.
-
-Similarly, it could be useful to retrieve telemetry log as soon as the
-device is successfully recovered from the crash.  (Although I still do
-not find the device that has Telemetry Controller-Initiated Data Available
-field is set to 1h.)
+Oops.  I misunderstood how ctrl->max_hw_sectors is initialized from MDTS.
+Also overflow check was required here for the architectures that use
+"unsigned int" size_t.
