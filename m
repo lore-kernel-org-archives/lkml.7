@@ -2,134 +2,147 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0250BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF3620656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92C220578
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="h/onXt5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfEHJYt (ORCPT
+        id S1727036AbfEHJbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:24:49 -0400
-Received: from mail.santannapisa.it ([193.205.80.98]:62470 "EHLO
-        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfEHJYs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:24:48 -0400
-Received: from [83.43.182.198] (account l.abeni@santannapisa.it HELO nowhere)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 138922343; Wed, 08 May 2019 11:24:45 +0200
-Date:   Wed, 8 May 2019 11:24:37 +0200
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 4/6] sched/dl: Improve capacity-aware wakeup
-Message-ID: <20190508112437.74661fa8@nowhere>
-In-Reply-To: <20190508090855.GG6551@localhost.localdomain>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
-        <20190506044836.2914-5-luca.abeni@santannapisa.it>
-        <20190508090855.GG6551@localhost.localdomain>
-Organization: Scuola Superiore S.Anna
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 8 May 2019 05:31:12 -0400
+Received: from mail-eopbgr680062.outbound.protection.outlook.com ([40.107.68.62]:62070
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726706AbfEHJbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 05:31:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QyqtR7B2Lf1TKwEbmc/6VL5N+9sbm0Ga7ske+385XgU=;
+ b=h/onXt5uytBSimHhzh5iN7dIuUyuq3/r6tUfVb+DalgmLH9/fVzJhwji7cnasTFGevTTR4Ic1OYpfzYR1/p4mAbOsxD8BEA73oTxH7HysnCIh4wlUUT05AFxT15dtN1yjTfx4aPeQ8eq/isUANhkpjY+oRBhF+VbxnEKzPnjFZ0=
+Received: from SN6PR02MB5135.namprd02.prod.outlook.com (52.135.99.152) by
+ SN6PR02MB4175.namprd02.prod.outlook.com (52.135.70.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 8 May 2019 09:31:09 +0000
+Received: from SN6PR02MB5135.namprd02.prod.outlook.com
+ ([fe80::2c30:d205:7e7e:adc7]) by SN6PR02MB5135.namprd02.prod.outlook.com
+ ([fe80::2c30:d205:7e7e:adc7%4]) with mapi id 15.20.1878.019; Wed, 8 May 2019
+ 09:31:09 +0000
+From:   Kalyani Akula <kalyania@xilinx.com>
+To:     Stephan Mueller <smueller@chronox.de>
+CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sarat Chand Savitala <saratcha@xilinx.com>
+Subject: RE: [RFC PATCH 4/5] crypto: Adds user space interface for
+ ALG_SET_KEY_TYPE
+Thread-Topic: [RFC PATCH 4/5] crypto: Adds user space interface for
+ ALG_SET_KEY_TYPE
+Thread-Index: AQHUrjLRC0KQY4vUUEiutylzuXEA7qWzVM+AgJUjQyCAA8MlgIAVaNiQ
+Date:   Wed, 8 May 2019 09:31:08 +0000
+Message-ID: <SN6PR02MB5135CE53C3E3FB34CA5E6BA8AF320@SN6PR02MB5135.namprd02.prod.outlook.com>
+References: <1547708541-23730-1-git-send-email-kalyani.akula@xilinx.com>
+ <4735882.YQOrfzxm5S@tauon.chronox.de>
+ <BN7PR02MB5124AC0C75B15E5FB66DF2B6AF220@BN7PR02MB5124.namprd02.prod.outlook.com>
+ <18759853.IUaQuE38eh@tauon.chronox.de>
+In-Reply-To: <18759853.IUaQuE38eh@tauon.chronox.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kalyania@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23aae62e-b2ff-4387-c1ec-08d6d397e72f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR02MB4175;
+x-ms-traffictypediagnostic: SN6PR02MB4175:
+x-microsoft-antispam-prvs: <SN6PR02MB4175109B704A62A3B398BDB3AF320@SN6PR02MB4175.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(366004)(39860400002)(346002)(199004)(189003)(13464003)(76176011)(6436002)(76116006)(26005)(102836004)(186003)(6506007)(229853002)(14444005)(53546011)(446003)(486006)(256004)(476003)(11346002)(2906002)(99286004)(316002)(7696005)(81156014)(8676002)(81166006)(68736007)(71200400001)(3846002)(71190400001)(6116002)(54906003)(25786009)(86362001)(14454004)(53936002)(6246003)(478600001)(9686003)(8936002)(107886003)(55016002)(33656002)(66556008)(73956011)(66476007)(66446008)(66946007)(74316002)(305945005)(7736002)(64756008)(6916009)(66066001)(4326008)(5660300002)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4175;H:SN6PR02MB5135.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cs4DEVNuEoMLh/XAw8Vh/k9p4FIu43uAgeZFTIEuw/jWtJcRypBkk/lpeC2RlpgIzXYaF5IZFJt6wnOKMhRHwauwmyqpmEY78GjaeyCeuSoUUXHrR2oHNklMSh/EWnOfUuuySO1zBBfBLs+pOq7ljLnFEU8d3IRQdzHUd8zXckj5jkqwueQf1CfdnFqGgbxbODhLWAmmwhfkQALtcuoovRoOkSXwXiqfb82jpEfOs9NggkPt8hD8CgdejcH+b75jAYQKjs8/06Z6kyqAQDRbaiccImGKcx5JJ1z0s6MiNjVU4F7nuddBhVPOY0fZe8ZQaTv4zWe0cqg28t216kbiTkBjry7fcjAOgnCactXbo3HYuq2QCmgB1DMjswwm1eegY/BJPOxEThkYPyOcSBVW1TYCOfkoKhahnp9xr0d7kks=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23aae62e-b2ff-4387-c1ec-08d6d397e72f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 09:31:08.9611
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 11:08:55 +0200
-Juri Lelli <juri.lelli@redhat.com> wrote:
+Hi Stephan,
 
-> On 06/05/19 06:48, Luca Abeni wrote:
-> > From: luca abeni <luca.abeni@santannapisa.it>
-> > 
-> > Instead of considering the "static CPU bandwidth" allocated to
-> > a SCHED_DEADLINE task (ratio between its maximum runtime and
-> > reservation period), try to use the remaining runtime and time
-> > to scheduling deadline.
-> > 
-> > Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
-> > ---
-> >  kernel/sched/cpudeadline.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-> > index d21f7905b9c1..111dd9ac837b 100644
-> > --- a/kernel/sched/cpudeadline.c
-> > +++ b/kernel/sched/cpudeadline.c
-> > @@ -114,8 +114,13 @@ static inline int dl_task_fit(const struct
-> > sched_dl_entity *dl_se, int cpu, u64 *c)
-> >  {
-> >  	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) *
-> > arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;
-> > -	s64 rel_deadline = dl_se->dl_deadline;
-> > -	u64 rem_runtime  = dl_se->dl_runtime;
-> > +	s64 rel_deadline = dl_se->deadline -
-> > sched_clock_cpu(smp_processor_id());
-> > +	u64 rem_runtime  = dl_se->runtime;
-> > +
-> > +	if ((rel_deadline < 0) || (rel_deadline *
-> > dl_se->dl_runtime < dl_se->dl_deadline * rem_runtime)) {
-> > +		rel_deadline = dl_se->dl_deadline;
-> > +		rem_runtime  = dl_se->dl_runtime;
-> > +	}  
-> 
-> So, are you basically checking if current remaining bw can be consumed
-> safely?
+Keyrings is in-kernel key-management and retention facility. User can use i=
+t to manage keys used for applications.=20
 
-I check if the current runtime (rescaled based on the capacity) is
-smaller than the time to the current scheduling deadline (basically, if
-it can be consumed in time).
+Xilinx cryptographic hardware has a mechanism to store keys in its internal=
+ hardware and do not have mechanism to read it back due to security reasons=
+.=20
+It stores key internally in different forms like simple key, key encrypted =
+with unique hardware DNA, key encrypted with hardware family key,=20
+key stored in eFUSEs/BBRAM etc.=20
+Based on security level expected, user can select one of the key for AES op=
+eration. Since AES hardware internally has access to these keys,=20
+user do not require to provide key to hardware, but need to tell which inte=
+rnal hardware key user application like to use for AES operation.=20
 
-However, if
-	q / (d - t) > Q / P 
-(where "q" is the current runtime, "d" is the scheduling deadline, "Q"
-is the maximum runtime, and "P" is the CBS period), then a new
-scheduling deadline will be generated (later), and the runtime will be
-reset to Q... So, I need to use the maximum budget and CBS period for
-checking if the task fits in the core.
+Basic need is to pass information to AES hardware about which internal hard=
+ware key to be used for AES operation.=20
 
-> 
-> I'm not actually sure if looking at dynamic values is what we need to
-> do at this stage. By considering static values we fix admission
-> control (and scheduling). Aren't dynamic values more to do with
-> energy tradeoffs (and so to be introduced when starting to look at
-> the energy model)?
+I agree that from general use case perspective we are not selecting key typ=
+e but selecting internal hardware keys provided by user.=20
+How about providing option to select custom hardware keys provided by hardw=
+are (AES_SEL_HW_KEY)?
 
-Using the current runtime and scheduling deadline might allow to
-migrate a task to SMALL cores (if its remaining runtime is small
-enough), even if the rescaled Q is larger than P.
-So, in theory it might allow to reduce the load on big cores.
+Thanks
+kalyani
 
-If we decide that this is overkilling, I can just drop the patch.
-
-
-
-			Luca
-
-> Another pair of hands maybe is to look at the dynamic spare bw of CPUs
-> (to check that we don't overload CPUs).
-> 
-> Thanks,
-> 
-> - Juri
+> -----Original Message-----
+> From: Stephan Mueller <smueller@chronox.de>
+> Sent: Thursday, April 25, 2019 12:01 AM
+> To: Kalyani Akula <kalyania@xilinx.com>
+> Cc: herbert@gondor.apana.org.au; davem@davemloft.net; linux-
+> crypto@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for
+> ALG_SET_KEY_TYPE
+>=20
+> Am Montag, 22. April 2019, 11:17:55 CEST schrieb Kalyani Akula:
+>=20
+> Hi Kalyani,
+>=20
+> > > Besides, seem to be more a key handling issue. Wouldn't it make
+> > > sense to rather have such issue solved with key rings than in the
+> > > kernel crypto API?
+> >
+> > [kalyani] Can you please elaborate on this further ?
+>=20
+> The kernel has a keyring support in security/keys which has a user space
+> interface with keyutils. That interface is commonly used for any sort of =
+key
+> manipulation.
+>=20
+> Ciao
+> Stephan
+>=20
 
