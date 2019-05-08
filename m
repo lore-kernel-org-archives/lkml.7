@@ -7,94 +7,86 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005C9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC473C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA0220578
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E9C20578
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+Ul5cwr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFTppKxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfEHKwe (ORCPT
+        id S1727200AbfEHKxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:52:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38906 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfEHKwd (ORCPT
+        Wed, 8 May 2019 06:53:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45740 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfEHKxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:52:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f2so2653783wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:52:32 -0700 (PDT)
+        Wed, 8 May 2019 06:53:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s15so26550293wra.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=DoWEPa4D0OSvUEE47Yf9/XCh/YlhwJezOh6SvUkD/So=;
-        b=u+Ul5cwr0LHrvRJAV8/UQGYNtmubpCurdF0qaFRziyaHRzUGD6Y/L0UlfSkj+vxy+j
-         zn7dF41uHi61sPTf/01CP49pUeP9CcJHr8S1mnHGmwaG8+7akA4E9w3K/gldUhi9e0sz
-         eY3qKDrJrnI3XCep2e5GdaRz9C/G2WGz4nOpsSuzt+24jxj59yNLVrfE6Ag8+mhkKfu0
-         E4HNTqt7IbqI5Cj0E/OxZMxQnfdDxco7L3KvEoxZJX/NmOXFc4yk+rthsRpw50DmiFwK
-         LXCiOrlPrOvofI70WPvNgOOgZX7p5IUEYA3aeTsVUayLC9XFFEkp1hPrdMG8yYthKRdV
-         Gg5g==
+        bh=JKIh0OlhwogoLb2gFyisL8SYZblJ6QPDpG/wRuDQA24=;
+        b=mFTppKxWA4GeHfy4yFj5epQB5aB96Y+vW6eCsgWlUQuqcLEh+9LwYIFeZA2ImEO0jk
+         DhlXwKXhcqQQOEcbfLvglZtWb1CHB/CVlKNID+KGJkfKLZjvwuufkyAhCOs2CElWSqhc
+         DH0w5P+Ka+ee9+xjmx/uy2aVvjd0YGli9fHjM4TwIzLS/d3HO44zy4JgrxOmHB02hEV4
+         OfdZl4PfvUpZKTMHCapmyD6XHsbWfnFO5a3Bo9yCPQNEuEm3kfMjo7dsC8OryU6e+/JM
+         pgXpDOmguZrm4X83TulKDQzPmxdVGGZQGz+07HfTdXm5whns+Mgr7EyE5TVWy5arX/Gu
+         e6SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=DoWEPa4D0OSvUEE47Yf9/XCh/YlhwJezOh6SvUkD/So=;
-        b=lPF75f9wCETXQ8z4scmGVQq/A+GlXLV+sPdGia5bxydKEG8Vgff8rVQPlvgHxTO2gM
-         nNcPogxNXe41s69g1RuciEgmxDFUQOZeGrRrpQxwGQtMLLDdS3fzULGNAVTmKHZgaGis
-         vfcAQOTU1chkuLyofwEoxhWPI22wHxeCrI4JBIlZDVrNgNhIS3OAsCFq4JzBumcRgBTW
-         B5RwaI6GJifg7HRtFHa7rMDMHp5CqowK0SvF6HsZjI25owwpKZoi1wv6qRglSozKPdXv
-         ikmi3ads/B1vViFmwanYX4PhZ2xf60NM2/wGIXHtyhhysUf1vKCDbt4zh8UfNjOYX9ZL
-         Df7w==
-X-Gm-Message-State: APjAAAUTx0XOBhi0Mbrq8I7EjE+JWcgO1uern9h+r6PB3sj3g9FYduSp
-        qACIkLehis+xDyT6/5M+8d3MAQ==
-X-Google-Smtp-Source: APXvYqx8cs/kEeM8xskGvtE+5ioqNdy7RohTccspIxj99TLUIQ0478a8fiv4of2TD3GtPVekCIc/ZA==
-X-Received: by 2002:a1c:9cd5:: with SMTP id f204mr2473691wme.145.1557312751725;
-        Wed, 08 May 2019 03:52:31 -0700 (PDT)
+        bh=JKIh0OlhwogoLb2gFyisL8SYZblJ6QPDpG/wRuDQA24=;
+        b=XBKFuOGzPHzgv6lBJBpHjfinDAIgYGJ70iXQ5PtagQG/3cA9Vw9V1I4prNHdixVX1T
+         S5cnm1Sp0l5MiAH14O+WxxbVmSS1DFJrYeDSKnhA9xkaqNLBylpdRhBv7lQy9YyF2oAp
+         5jtPOOBceh1NhYiJxAls6HoAhMtK/IE9OtxWYIOwWc59gGdowLOq/6fJ/BSwnwEKI0lN
+         eVM6mvYSfEq3178Xwdq8fO8zleRH+vr+uLr0VUEYrY6xD5sfou0QcdkXG5EEGVxRaBnI
+         8/EZTsNRcV6Pyc9EtVkNQGeev/7Cy6YV68M6T9c9nkoQhPBGCFK2ZaDyZZ+NoecEfQ/S
+         jyAQ==
+X-Gm-Message-State: APjAAAWhvo6dtJ531f1FjudsiW6TFETcjmzZrkkTx0yTDSCBiDeeaGcX
+        YQumiZ3nS+PwdpF4w3jvLSmt1w==
+X-Google-Smtp-Source: APXvYqwlZiLdXlAEfznjHpk8nEAvN3fWmgxnXEvPPeJPbdOBuNx4TYP/ubkjdyqBdKeqCDOr/OLFRA==
+X-Received: by 2002:adf:c6c3:: with SMTP id c3mr27422586wrh.267.1557312821690;
+        Wed, 08 May 2019 03:53:41 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id c139sm2333188wmd.26.2019.05.08.03.52.30
+        by smtp.gmail.com with ESMTPSA id j46sm5210579wre.54.2019.05.08.03.53.40
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 03:52:31 -0700 (PDT)
-Date:   Wed, 8 May 2019 11:52:29 +0100
+        Wed, 08 May 2019 03:53:40 -0700 (PDT)
+Date:   Wed, 8 May 2019 11:53:39 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mfd: imx6sx: add MQS register definition for iomuxc gpr
-Message-ID: <20190508105229.GO3995@dell>
-References: <1556445161-29477-1-git-send-email-shengjiu.wang@nxp.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: LMU: Fix lm3632 dt binding example
+Message-ID: <20190508105339.GP3995@dell>
+References: <20190405141907.3348-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556445161-29477-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <20190405141907.3348-1-dmurphy@ti.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 28 Apr 2019, S.j. Wang wrote:
+On Fri, 05 Apr 2019, Dan Murphy wrote:
 
-> Add macros to define masks and bits for imx6sx MQS registers
+> Fix the lm3632 dt binding examples as the LCM enable GPIOs
+> are defined as enable GPIOs per the regulator/lm363x-regulator.txt
+> bindings document.
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  Documentation/devicetree/bindings/mfd/ti-lmu.txt | 4 ++--
 
 Applied, thanks.
 
