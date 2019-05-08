@@ -2,147 +2,107 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C819DC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8E4C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961E820656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:18:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FjutGs8U"
+	by mail.kernel.org (Postfix) with ESMTP id A2CF720656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557278370;
+	bh=5i7eIdNJojfxilMNzT3UE9tdBE1lo9TP3u6VAZ/7kpA=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=YJHlVkRxRQB47QIBgX3Y8n/O7t/pHW9EvRjne4FLfoUMl2z0OcFoN30bIVzQj0m5J
+	 PnVTxB2VtMc5uLEamkCrNfcy5KN71pbMeEv4sTrUELhjBjZl9HkOUFw+qDv6W7LhGo
+	 DAA4ueMhKIRBAL/6p6Z45VsXpl5G2eJNg9pxfx+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfEHBSB (ORCPT
+        id S1726548AbfEHBT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:18:01 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37399 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEHBSA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:18:00 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c1so2145976qkk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 18:18:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O+01/fhDqtai1N/X2yLycMXv1SIs+oDpJCrUUWcrjMA=;
-        b=FjutGs8Upc4X6Ku/pI/PhsHhXsb8sSJIphZ2Bg6gKbUsba2yYhZiL0CQ1dmLmyiNMY
-         1DoyzoBrbX/9wIuVbbJxqDoh6T5/SjSLneERnFf2MvvZ4dEnh5JkyfUIml41Djky5/16
-         mUowZUTgIE3HBR+V4Tj+h5zLTs801GBy08Ld8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O+01/fhDqtai1N/X2yLycMXv1SIs+oDpJCrUUWcrjMA=;
-        b=BdJ6iVoBzZRCK4GcjXOaUTnRrgq+8TcTEPEi/wE3O8f4y7VL+2vU7E8d96BKUcMfii
-         IMaEI8S8FXrS8U9sxEaGyvi52Vfy1aZfXiiiYCN0pTZeZ8VNwuE6nHliYO7vwD00LxeT
-         ZJcr0Uq0LdjId41QGjVimLeQpvr1qDWqaVt+2dnsOvEA4IAHXaN9Vy3/i+DisEKklSYy
-         xTixx2qGbwnP0PpzTYABDWUiuSyEhDTrcKrQFTBjZYPrjLRX86+UCoHxWzOuIlnXE/gm
-         kC0WkjkEnP9P6ztWf92ZFAnM1cbhs+qDEbfoTiAv0+SNXXs6HQZkiIltLJ3y4RPGj5Ae
-         mWiA==
-X-Gm-Message-State: APjAAAVd6q1OqaAVA09AnsJoQZGE05OhHHnaUeiZKM1TGdVC5wkSeuhk
-        y6XR8mw0WmecrdEvx2OcN1T5Q2map1ButUvggWcaQQ==
-X-Google-Smtp-Source: APXvYqxL08Ax+gOyBauc0IC54ns9XncT6heXSua50dh6BBwY1PpGYWMo0JAbDc87rrA5Nn7hmelfVODRA0RtyuYUK6Y=
-X-Received: by 2002:a37:2e05:: with SMTP id u5mr6103515qkh.124.1557278279873;
- Tue, 07 May 2019 18:17:59 -0700 (PDT)
+        Tue, 7 May 2019 21:19:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbfEHBT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 21:19:29 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3175E20656;
+        Wed,  8 May 2019 01:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557278368;
+        bh=5i7eIdNJojfxilMNzT3UE9tdBE1lo9TP3u6VAZ/7kpA=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=JYdGFClK/wS4M5ijJBMSwaK8Mu6pTg5H++MARjasZEHgAR8S6nHJ5DMWCqwc2jZCw
+         2+o1lo+jFhIy0HTpGNchX60m5H2jikXm0Z8yeGq/1G/h0DMFO8xiU/ahQrCt0gqUIA
+         YISABQF5qhc0tKuIUHpLxG9yPjt0jUOTTjL6bCg0=
+Date:   Tue, 7 May 2019 18:19:26 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Theodore Ts'o <tytso@mit.edu>, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org
+Subject: Re: [GIT PULL] fscrypt updates for 5.2
+Message-ID: <20190508011925.GB7528@sol.localdomain>
+References: <20190507233042.GA28476@mit.edu>
 MIME-Version: 1.0
-References: <20190502045631.229386-1-drinkcat@chromium.org> <6844539f-3d5e-e3ff-b498-390cdc731880@linux.intel.com>
-In-Reply-To: <6844539f-3d5e-e3ff-b498-390cdc731880@linux.intel.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 May 2019 10:17:48 +0900
-Message-ID: <CANMq1KArM_sttW0-hq9sS4gVfWnZbHevfJ+YEg0YQ3ML_Okygg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] usb: xhci: Make it possible to not have a secondary
- HCD (3.0)
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        chunfeng.yun@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507233042.GA28476@mit.edu>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 10:19 PM Mathias Nyman
-<mathias.nyman@linux.intel.com> wrote:
->
-> On 2.5.2019 7.56, Nicolas Boichat wrote:
-> > Some XHCI controllers may not have any USB 3.0 port, in this case, it
-> > is not useful to create add hcd->shared_hcd, which has 2 main
-> > downsides:
-> >   - A useless USB 3.0 root hub is created.
-> >   - A warning is thrown on boot:
-> > hub 2-0:1.0: config failed, hub doesn't have any ports! (err -19)
-> >
-> > The change is mostly about checking if hcd->shared_hcd is NULL before
-> > accessing it. The one special case is in xhci_run, where we need to
-> > call xhci_run_finished immediately, if there is no secondary hcd.
->
-> To me it looks like this creates an controller starting issue for
-> xHC hardware that have both usb2 and usb3 ports.
->
-> When we have usb3 ports xhci->shared_hcd is not set yet when xhci_run is called
-> the first time. We will end up starting the xHC before properly setting up the secondary hcd.
->
-> See further down for details
+On Tue, May 07, 2019 at 07:30:42PM -0400, Theodore Ts'o wrote:
+> The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
+> 
+>   Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt_for_linus
+> 
+> for you to fetch changes up to 2c58d548f5706d085c4b009f6abb945220460632:
+> 
+>   fscrypt: cache decrypted symlink target in ->i_link (2019-04-17 12:43:29 -0400)
+> 
+> ----------------------------------------------------------------
+> Clean up fscrypt's dcache revalidation support, and other
+> miscellaneous cleanups.
+> 
+> ----------------------------------------------------------------
+> Eric Biggers (10):
+>       fscrypt: drop inode argument from fscrypt_get_ctx()
+>       fscrypt: remove WARN_ON_ONCE() when decryption fails
+>       fscrypt: use READ_ONCE() to access ->i_crypt_info
+>       fscrypt: clean up and improve dentry revalidation
+>       fscrypt: fix race allowing rename() and link() of ciphertext dentries
+>       fs, fscrypt: clear DCACHE_ENCRYPTED_NAME when unaliasing directory
+>       fscrypt: only set dentry_operations on ciphertext dentries
+>       fscrypt: fix race where ->lookup() marks plaintext dentry as ciphertext
+>       vfs: use READ_ONCE() to access ->i_link
+>       fscrypt: cache decrypted symlink target in ->i_link
+> 
 
-Thanks Mathias and Chunfeng, I need to test this on platforms that
-actually support USB 3.0 (both PCI and MTK), as you both highlighted,
-there might be issues.
+There will be a merge conflict between "fscrypt: cache decrypted symlink target
+in ->i_link", and "ext4: make use of ->free_inode()" and "f2fs: switch to
+->free_inode()".  The correct resolutions should be fairly straightforward:
 
-I'll do that a spin a v2. It might take a while though (this is not a
-very critical issue).
+	static void ext4_free_in_core_inode(struct inode *inode)
+	{
+		fscrypt_free_inode(inode);
+		kmem_cache_free(ext4_inode_cachep, EXT4_I(inode));
+	}
 
+and
 
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > ---
-> >
-> > This is a respin of https://lore.kernel.org/patchwork/patch/863993/,
-> > hopefully addressing the comments there. Note that I dropped the change
-> > in xhci-plat.c, as I do not have a device to test it, but made a
-> > similar change in xhci-mtk.c, in the next patch.
-> >
-> > (the @apm.com addresses seem to bounce, so I added some
-> > @amperecomputing.com instead, if somebody there can track back the
-> > original issue, I'm happy to provide a patch for xhci-plat.c as well)
-> >
-> > drivers/usb/host/xhci-hub.c |  7 ++++--
-> >   drivers/usb/host/xhci.c     | 45 +++++++++++++++++++++++++++----------
-> >   2 files changed, 38 insertions(+), 14 deletions(-)
-> >
->
-> ...
->
-> > @@ -698,6 +703,10 @@ int xhci_run(struct usb_hcd *hcd)
-> >
-> >       xhci_debugfs_init(xhci);
-> >
-> > +     /* There is no secondary HCD, start the host controller immediately. */
-> > +     if (!xhci->shared_hcd)
-> > +             return xhci_run_finished(xhci);
-> > +
->
-> PCI xHC controllers with both usb2 and usb3 ports will be started before usb3 parts are properly set up.
->
-> xhci_pci_probe()
->    usb_hcd_pci_probe()
->      usb_add_hcd()
->        hcd->driver->start(hcd)  // .start = xhci_run
->          xhci_run()
->            if (!xhci->shared_hcd)  // TRUE as xhci->shared_hcd is not yet set,
->             return xhci_run_finished(xhci)  // starting controller too early here
->    xhci->shared_hcd = usb_create_shared_hcd()   // now xhci->shared_hcd is set.
->
-> -Mathias
+	static void f2fs_free_inode(struct inode *inode)
+	{
+		fscrypt_free_inode(inode);
+		kmem_cache_free(f2fs_inode_cachep, F2FS_I(inode));
+	}
+
+- Eric
