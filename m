@@ -6,28 +6,30 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A6FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9CF20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CB120989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfEHOsn (ORCPT
+        id S1728412AbfEHOot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:48:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1393 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbfEHOot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57649 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728159AbfEHOok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:40 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:49 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656525"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id CCCC7D8A; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 15EF358A; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +45,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 42/62] mm: Generalize the mprotect implementation to support extensions
-Date:   Wed,  8 May 2019 17:44:02 +0300
-Message-Id: <20190508144422.13171-43-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 09/62] x86/mm: Preserve KeyID on pte_modify() and pgprot_modify()
+Date:   Wed,  8 May 2019 17:43:29 +0300
+Message-Id: <20190508144422.13171-10-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,65 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+An encrypted VMA will have KeyID stored in vma->vm_page_prot. This way
+we don't need to do anything special to setup encrypted page table
+entries and don't need to reserve space for KeyID in a VMA.
 
-Today mprotect is implemented to support legacy mprotect behavior
-plus an extension for memory protection keys. Make it more generic
-so that it can support additional extensions in the future.
+This patch changes _PAGE_CHG_MASK to include KeyID bits. Otherwise they
+are going to be stripped from vm_page_prot on the first pgprot_modify().
 
-This is done is preparation for adding a new system call for memory
-encyption keys. The intent is that the new encrypted mprotect will be
-another extension to legacy mprotect.
+Define PTE_PFN_MASK_MAX similar to PTE_PFN_MASK but based on
+__PHYSICAL_MASK_SHIFT. This way we include whole range of bits
+architecturally available for PFN without referencing physical_mask and
+mktme_keyid_mask variables.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- mm/mprotect.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/pgtable_types.h | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index e768cd656a48..23e680f4b1d5 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -35,6 +35,8 @@
- 
- #include "internal.h"
- 
-+#define NO_KEY	-1
-+
- static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 		unsigned long addr, unsigned long end, pgprot_t newprot,
- 		int dirty_accountable, int prot_numa)
-@@ -452,9 +454,9 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
- }
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index d6ff0bbdb394..7d6f68431538 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -117,12 +117,25 @@
+ 				 _PAGE_ACCESSED | _PAGE_DIRTY)
  
  /*
-- * pkey==-1 when doing a legacy mprotect()
-+ * When pkey==NO_KEY we get legacy mprotect behavior here.
+- * Set of bits not changed in pte_modify.  The pte's
+- * protection key is treated like _PAGE_RW, for
+- * instance, and is *not* included in this mask since
+- * pte_modify() does modify it.
++ * Set of bits not changed in pte_modify.
++ *
++ * The pte's protection key is treated like _PAGE_RW, for instance, and is
++ * *not* included in this mask since pte_modify() does modify it.
++ *
++ * They include the physical address and the memory encryption keyID.
++ * The paddr and the keyID never occupy the same bits at the same time.
++ * But, a given bit might be used for the keyID on one system and used for
++ * the physical address on another. As an optimization, we manage them in
++ * one unit here since their combination always occupies the same hardware
++ * bits. PTE_PFN_MASK_MAX stores combined mask.
++ *
++ * Cast PAGE_MASK to a signed type so that it is sign-extended if
++ * virtual addresses are 32-bits but physical addresses are larger
++ * (ie, 32-bit PAE).
   */
--static int do_mprotect_pkey(unsigned long start, size_t len,
-+static int do_mprotect_ext(unsigned long start, size_t len,
- 		unsigned long prot, int pkey)
- {
- 	unsigned long nstart, end, tmp, reqprot;
-@@ -578,7 +580,7 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
- 		unsigned long, prot)
- {
--	return do_mprotect_pkey(start, len, prot, -1);
-+	return do_mprotect_ext(start, len, prot, NO_KEY);
- }
- 
- #ifdef CONFIG_ARCH_HAS_PKEYS
-@@ -586,7 +588,7 @@ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
- SYSCALL_DEFINE4(pkey_mprotect, unsigned long, start, size_t, len,
- 		unsigned long, prot, int, pkey)
- {
--	return do_mprotect_pkey(start, len, prot, pkey);
-+	return do_mprotect_ext(start, len, prot, pkey);
- }
- 
- SYSCALL_DEFINE2(pkey_alloc, unsigned long, flags, unsigned long, init_val)
+-#define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
++#define PTE_PFN_MASK_MAX \
++	(((signed long)PAGE_MASK) & ((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
++#define _PAGE_CHG_MASK	(PTE_PFN_MASK_MAX | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+ 			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
 -- 
 2.20.1
 
