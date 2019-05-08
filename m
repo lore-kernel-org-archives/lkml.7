@@ -2,42 +2,42 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F25C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45488C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F8E21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C8E21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557322319;
-	bh=6SqqVrYzWTK+YoKmBvviC94vExCJXee2HMET0tL2OQU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KyPHyrn1WR1n23msszI6Csy58eDTCTz9uSaSglNw5DyWX08nImtD1zq/0u0VrRQuy
-	 EpFi7vnJK+DbCmGuafEp34QjY9J2WJEu7xepEHpsgNGtfU5PLTgkaUkdZYYewgFHo7
-	 rvbPQjLyhL53tHgn+397+JtR5uYebrybQdyRwRqM=
+	s=default; t=1557322331;
+	bh=rU/iHRxN7bFo6mkmI5rjfeZUhjBfRfMxbQW/mz8LX9g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SkkZI/TOeZQBbfZuHOSixJ5gIowu//yMVjom4ANHTVngFe0MJ2PbKGg6iW8n7fH64
+	 j4j5QuXxDbhIt6sxjDQEfWPCj8fg5n5s+uSJVRMehVGzEzzbxkyyaNDuFm4z1mXIwQ
+	 lc5SdDMECkc24LpjZBTiEKfSBR+6YdKkX0XHxMn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfEHNb6 (ORCPT
+        id S1728216AbfEHNcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50974 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 09:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfEHNb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:31:58 -0400
+        id S1725778AbfEHNcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:32:09 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5283205ED;
-        Wed,  8 May 2019 13:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB22320644;
+        Wed,  8 May 2019 13:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557322317;
-        bh=6SqqVrYzWTK+YoKmBvviC94vExCJXee2HMET0tL2OQU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=F1TkQBBcELv5TIIk4+YNR3CJ6Wd9khr6tnIieEBcJnsf8FtS8p2I8bZOLeKlYS66L
-         aMFgPdcNCsZaqF9CCwX5JRlpqzQ9ofylkfzh3wFZm5zTTQAv0PVO9MVQhrE9aEDcFP
-         /0SyOodD3ybg3ddr7AS0VpMdXJrFnS0jJV7HV7nc=
+        s=default; t=1557322328;
+        bh=rU/iHRxN7bFo6mkmI5rjfeZUhjBfRfMxbQW/mz8LX9g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BEjge+nDQ/Zd2QV2h43aZstY+qUkKs2ZUhIRCvBiTyW/2mt2grWKGmPWfMisLsc59
+         fkyNGVja7ZmrodKg2gGnfL8UvJynWefpTBSGN3psBz3ZHShHHgxxo6rhGgjHZ4OcU/
+         4Ig68Nyix6FiCc3u5xEPvIO8trDe4jNL/lpgWmIU=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -55,10 +55,12 @@ Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Nadav Amit <namit@vmware.com>,
         Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: [PATCH v7 0/6] tracing/probes: uaccess: Add support user-space access
-Date:   Wed,  8 May 2019 22:31:41 +0900
-Message-Id: <155732230159.12756.15040196512285621636.stgit@devnote2>
+Subject: [PATCH v7 1/6] x86/uaccess: Allow access_ok() in irq context if pagefault_disabled
+Date:   Wed,  8 May 2019 22:32:02 +0900
+Message-Id: <155732232257.12756.4973477342508107797.stgit@devnote2>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <155732230159.12756.15040196512285621636.stgit@devnote2>
+References: <155732230159.12756.15040196512285621636.stgit@devnote2>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -68,117 +70,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+WARN_ON_IN_IRQ() assumes that the access_ok() and following
+user memory access can sleep. But this assumption is not
+always correct; when the pagefault is disabled, following
+memory access will just returns -EFAULT and never sleep.
 
-Here is the v7 series of probe-event to support user-space access.
-Previous version is here.
+Add pagefault_disabled() check in WARN_ON_ONCE() so that
+it can ignore the case we call it with disabling pagefault.
+For this purpose, this modified pagefault_disabled() as
+an inline function.
 
-https://lkml.kernel.org/r/155289137555.7218.9282784065958321058.stgit@devnote2
-
-In this version, I fixed some documentation according to Steve's
-comment. This can be applied against the latest tracing/for-next
-+ probeevent bugfix.
-
-https://lkml.kernel.org/r/155723732200.9149.10482668315693777743.stgit@devnote2
-
-Changes in v7:
- - [4/6] Fix typos and update document according to Steve's comment. 
-
-In summary, strncpy_from_user() should work as below
-
- - strncpy_from_user() can access user memory with set_fs(USER_DS)
-   in task context
-
- - strncpy_from_user() can access kernel memory with set_fs(KERNEL_DS)
-   in task context (e.g. devtmpfsd and init)
-
- - strncpy_from_user() can access user/kernel memory (depends on DS)
-   in IRQ context if pagefault is disabled. (both verified)
-
-Note that this changes the warning behavior when
-CONFIG_DEBUG_ATOMIC_SLEEP=y, it still warns when
-__copy_from_user_inatomic() is called in IRQ context, but don't
-warn if pagefault is disabled because it will not sleep in
-atomic.
-
-====
-Kprobe event user-space memory access features:
-
-For user-space access extension, this series adds 2 features,
-"ustring" type and user-space dereference syntax. "ustring" is
-used for recording a null-terminated string in user-space from
-kprobe events.
-
-"ustring" type is easy, it is able to use instead of "string"
-type, so if you want to record a user-space string via
-"__user char *", you can use ustring type instead of string.
-For example,
-
-echo 'p do_sys_open path=+0($arg2):ustring' >> kprobe_events
-
-will record the path string from user-space.
-
-The user-space dereference syntax is also simple. Thi just
-adds 'u' prefix before an offset value.
-
-   +|-u<OFFSET>(<FETCHARG>)
-
-e.g. +u8(%ax), +u0(+0(%si))
-
-This is more generic. If you want to refer the variable in user-
-space from its address or access a field in data structure in
-user-space, you need to use this.
-
-For example, if you probe do_sched_setscheduler(pid, policy,
-param) and record param->sched_priority, you can add new
-probe as below;
-    
-   p do_sched_setscheduler priority=+u0($arg3)
-
-Actually, with this feature, "ustring" type is not absolutely
-necessary, because these are same meanings.
-
-  +0($arg2):ustring == +u0($arg2):string
-
-Note that kprobe event provides these methods, but it doesn't
-change it from kernel to user automatically because we do not
-know whether the given address is in userspace or kernel on
-some arch.
-
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ arch/x86/include/asm/uaccess.h |    4 +++-
+ include/linux/uaccess.h        |    5 ++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-Masami Hiramatsu (6):
-      x86/uaccess: Allow access_ok() in irq context if pagefault_disabled
-      uaccess: Add non-pagefault user-space read functions
-      tracing/probe: Add ustring type for user-space string
-      tracing/probe: Support user-space dereference
-      selftests/ftrace: Add user-memory access syntax testcase
-      perf-probe: Add user memory access attribute support
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 1954dd5552a2..11581dc098d5 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -66,7 +66,9 @@ static inline bool __chk_range_not_ok(unsigned long addr, unsigned long size, un
+ })
+ 
+ #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+-# define WARN_ON_IN_IRQ()	WARN_ON_ONCE(!in_task())
++static inline bool pagefault_disabled(void);
++# define WARN_ON_IN_IRQ()	\
++	WARN_ON_ONCE(!in_task() && !pagefault_disabled())
+ #else
+ # define WARN_ON_IN_IRQ()
+ #endif
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 37b226e8df13..ef3032db1aef 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -203,7 +203,10 @@ static inline void pagefault_enable(void)
+ /*
+  * Is the pagefault handler disabled? If so, user access methods will not sleep.
+  */
+-#define pagefault_disabled() (current->pagefault_disabled != 0)
++static inline bool pagefault_disabled(void)
++{
++	return current->pagefault_disabled != 0;
++}
+ 
+ /*
+  * The pagefault handler is in general disabled by pagefault_disable() or
 
-
- Documentation/trace/kprobetrace.rst                |   28 ++++-
- Documentation/trace/uprobetracer.rst               |   10 +-
- arch/x86/include/asm/uaccess.h                     |    4 +
- include/linux/uaccess.h                            |   19 +++
- kernel/trace/trace.c                               |    7 +
- kernel/trace/trace_kprobe.c                        |   35 ++++++
- kernel/trace/trace_probe.c                         |   37 +++++-
- kernel/trace/trace_probe.h                         |    3 +
- kernel/trace/trace_probe_tmpl.h                    |   37 +++++-
- kernel/trace/trace_uprobe.c                        |   19 +++
- mm/maccess.c                                       |  117 +++++++++++++++++++-
- tools/perf/Documentation/perf-probe.txt            |    3 -
- tools/perf/util/probe-event.c                      |   11 ++
- tools/perf/util/probe-event.h                      |    2 
- tools/perf/util/probe-file.c                       |    7 +
- tools/perf/util/probe-file.h                       |    1 
- tools/perf/util/probe-finder.c                     |   19 ++-
- .../ftrace/test.d/kprobe/kprobe_args_user.tc       |   32 +++++
- 18 files changed, 350 insertions(+), 41 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
