@@ -2,99 +2,116 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10329C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D36921530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:53:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AykjrtNq"
+	by mail.kernel.org (Postfix) with ESMTP id DF8B921479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfEHLxc (ORCPT
+        id S1728367AbfEHLyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:53:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53768 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbfEHLxb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:53:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 198so2897451wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lQpYdKueKd5GodvUSuXNOvFoEgO6IktebbFb9QN9iWA=;
-        b=AykjrtNqhwZKTNyKdi3loPGsyOQ6pj6vMupWy72eN3oJnHqGLGcu3N4HSjLt6+F9B/
-         sXQP5z3gHPaE36AnKDkgHDwgrHW95o8rv7UJHhpY2j32hgC/BDwGF5Dy3xx+aKgdPxDq
-         m2bP5sY219WiO1MRcLKWD6QMIEDN6/rIrfuZ/olk4HbYwV1ECPMkgonPEHbs6NJB6Kat
-         8gcmLnzQ0ULxTePPDXi/Cz6zVyLjoRcGbkDdbhvE0D+lBMN3Ah7kw3ii2F7mfn8TRbra
-         lerPjTbi7INob6Ci8zBxyjpAJ6xAmlyZ9JuqW7gbzqUyA8/n6mNr/EpjHv7D9FMANs0I
-         tqBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lQpYdKueKd5GodvUSuXNOvFoEgO6IktebbFb9QN9iWA=;
-        b=a8usHu/NljtKyyxbAyC0FII99AecfB2naFCOVr4Gf+M4pzwy9rKAC1VH0V3BGMEkym
-         pib9Q9eQkIoFycBhOi7Ui8K+UEWVx8K1fz9nKJhSqQ/al7MyDBa9zCDpsVbsBk27Pz7P
-         /MCTSpN8KWr1M/UhJvZ+7f0ZL9hryiTGldsZNxia7pBRtVvWzFg0bt76Wv1598e2Xjvq
-         /Pbi+VjKJy7o4ctV4wIQ39GOxEzj2C146iAYoBCHDzwCy7R0wZhg98qskWX78RLfHGLJ
-         NfypAD5PpoHkoCB3aDW5Hb5lONONnquVy/1jirv4w5AbxYjz9Sn1A3jX6Dl42NW6jWIZ
-         8bQg==
-X-Gm-Message-State: APjAAAW77nVd7mmomAZj74jmakPFYWTWJysyikDtxEhiX5Dvb0vrjPLD
-        p0Je/dkyTPDu7H6ha27fTKVTwA==
-X-Google-Smtp-Source: APXvYqxHUiE2SWdc0d3qosb62vYh2L55jvapOGaR1hhteA8wydi1budIpEccC8GDTAtWGKYT1zyPcQ==
-X-Received: by 2002:a7b:cb58:: with SMTP id v24mr2614038wmj.121.1557316409784;
-        Wed, 08 May 2019 04:53:29 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id d4sm34521361wrf.7.2019.05.08.04.53.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 04:53:29 -0700 (PDT)
-Date:   Wed, 8 May 2019 12:53:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, rdunlap@infradead.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/6] mfd: ti-lmu: Add LM36274 support to the ti-lmu
-Message-ID: <20190508115327.GO31645@dell>
-References: <20190507201159.13940-1-dmurphy@ti.com>
- <20190507201159.13940-4-dmurphy@ti.com>
+        Wed, 8 May 2019 07:54:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58632 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727909AbfEHLyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 07:54:25 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DC2C4307E04C;
+        Wed,  8 May 2019 11:54:24 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D89E5D9C8;
+        Wed,  8 May 2019 11:54:18 +0000 (UTC)
+Date:   Wed, 8 May 2019 06:54:16 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        linux-kselftest@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190508115416.nblx7c2kocidpytm@treble>
+References: <20190508074901.982470324@infradead.org>
+ <20190508080612.721269814@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190507201159.13940-4-dmurphy@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190508080612.721269814@infradead.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 08 May 2019 11:54:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 May 2019, Dan Murphy wrote:
-
-> Add the LM36274 register support to the ti-lmu MFD driver.
+On Wed, May 08, 2019 at 09:49:03AM +0200, Peter Zijlstra wrote:
+> The kprobe trampolines have a FRAME_POINTER annotation that makes no
+> sense. It marks the frame in the middle of pt_regs, at the place of
+> saving BP.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Change it to mark the pt_regs frame as per the ENCODE_FRAME_POINTER
+> from the respective entry_*.S.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  drivers/mfd/Kconfig                 |  5 ++---
->  drivers/mfd/ti-lmu.c                | 14 ++++++++++++++
->  include/linux/mfd/ti-lmu-register.h | 23 +++++++++++++++++++++++
->  include/linux/mfd/ti-lmu.h          |  4 ++++
->  4 files changed, 43 insertions(+), 3 deletions(-)
+>  arch/x86/kernel/kprobes/common.h |   32 +++++++++++++++++++++++---------
+>  1 file changed, 23 insertions(+), 9 deletions(-)
+> 
+> --- a/arch/x86/kernel/kprobes/common.h
+> +++ b/arch/x86/kernel/kprobes/common.h
+> @@ -6,14 +6,15 @@
+>  
+>  #include <asm/asm.h>
+>  
+> +#ifdef CONFIG_X86_64
+> +
+>  #ifdef CONFIG_FRAME_POINTER
+> -# define SAVE_RBP_STRING "	push %" _ASM_BP "\n" \
+> -			 "	mov  %" _ASM_SP ", %" _ASM_BP "\n"
+> +#define ENCODE_FRAME_POINTER			\
+> +	"	leaq 1(%rsp), %rbp\n"
+>  #else
+> -# define SAVE_RBP_STRING "	push %" _ASM_BP "\n"
+> +#define ENCODE_FRAME_POINTER
+>  #endif
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> +#ifdef CONFIG_FRAME_POINTER
+> +#define ENCODE_FRAME_POINTER			\
+> +	"	movl %esp, %ebp\n"		\
+> +	"	andl $0x7fffffff, %ebp\n"
+> +#else
+> +#define ENCODE_FRAME_POINTER
+> +#endif
+
+We should put these macros in a header file somewhere (including
+stringified versions).
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Josh
