@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3B0C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198CDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1295E2175B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D1B217D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfEHOpM (ORCPT
+        id S1728754AbfEHOpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:45:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33088 "EHLO mga07.intel.com"
+        Wed, 8 May 2019 10:45:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59536 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728352AbfEHOor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:47 -0400
+        id S1728433AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:46 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:48 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2019 07:44:41 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 5EB75BC1; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 9F78EC1D; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 34/62] acpi/hmat: Determine existence of an ACPI HMAT
-Date:   Wed,  8 May 2019 17:43:54 +0300
-Message-Id: <20190508144422.13171-35-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 39/62] keys/mktme: Find new PCONFIG targets during memory hotplug
+Date:   Wed,  8 May 2019 17:43:59 +0300
+Message-Id: <20190508144422.13171-40-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,54 +59,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Platforms that need to confirm the presence of an HMAT table
-can use this function that simply reports the HMATs existence.
-
-This is added in support of the Multi-Key Total Memory Encryption
-(MKTME), a feature on future Intel platforms. These platforms will
-need to confirm an HMAT is present at init time.
+Introduce a helper function that detects a newly added PCONFIG
+target. This will be used in the MKTME memory hotplug notifier
+to determine if a new PCONFIG target has been added that needs
+to have its Key Table programmed.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- drivers/acpi/hmat/hmat.c | 13 +++++++++++++
- include/linux/acpi.h     |  4 ++++
- 2 files changed, 17 insertions(+)
+ security/keys/mktme_keys.c | 39 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index 96b7d39a97c6..38e3341f569f 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -664,3 +664,16 @@ static __init int hmat_init(void)
- 	return 0;
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index 3dfc0647f1e5..2c975c48fe44 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -543,6 +543,45 @@ static int mktme_cpu_teardown(unsigned int cpu)
+ 	return ret;
  }
- subsys_initcall(hmat_init);
-+
-+bool acpi_hmat_present(void)
-+{
-+	struct acpi_table_header *tbl;
-+	acpi_status status;
-+
-+	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
-+	if (ACPI_FAILURE(status))
-+		return false;
-+
-+	acpi_put_table(tbl);
-+	return true;
-+}
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 75078fc9b6b3..fe3ad4ca5bb3 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1339,4 +1339,8 @@ acpi_platform_notify(struct device *dev, enum kobject_action action)
- }
- #endif
  
-+#ifdef CONFIG_X86_INTEL_MKTME
-+extern bool acpi_hmat_present(void);
-+#endif /* CONFIG_X86_INTEL_MKTME */
++static int mktme_get_new_pconfig_target(void)
++{
++	unsigned long *prev_map, *tmp_map;
++	int new_target;		/* New PCONFIG target to program */
 +
- #endif	/*_LINUX_ACPI_H*/
++	/* Save the current mktme_target_map bitmap */
++	prev_map = bitmap_alloc(topology_max_packages(), GFP_KERNEL);
++	bitmap_copy(prev_map, mktme_target_map, sizeof(mktme_target_map));
++
++	/* Update the global targets - includes mktme_target_map */
++	mktme_update_pconfig_targets();
++
++	/* Nothing to do if the target bitmap is unchanged */
++	if (bitmap_equal(prev_map, mktme_target_map, sizeof(prev_map))) {
++		new_target = -1;
++		goto free_prev;
++	}
++
++	/* Find the change in the target bitmap */
++	tmp_map = bitmap_alloc(topology_max_packages(), GFP_KERNEL);
++	bitmap_andnot(tmp_map, prev_map, mktme_target_map,
++		      sizeof(prev_map));
++
++	/* There should only be one new target */
++	if (bitmap_weight(tmp_map, sizeof(tmp_map)) != 1) {
++		pr_err("%s: expected %d new target, got %d\n", __func__, 1,
++		       bitmap_weight(tmp_map, sizeof(tmp_map)));
++		new_target = -1;
++		goto free_tmp;
++	}
++	new_target = find_first_bit(tmp_map, sizeof(tmp_map));
++
++free_tmp:
++	bitmap_free(tmp_map);
++free_prev:
++	bitmap_free(prev_map);
++	return new_target;
++}
++
+ static int __init init_mktme(void)
+ {
+ 	int ret, cpuhp;
 -- 
 2.20.1
 
