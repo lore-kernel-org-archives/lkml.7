@@ -2,77 +2,116 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DFAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54B3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC8F20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557297447;
-	bh=T0FrpxoRHBchoQt2g4MiY1olLJ9HjffT47QH8iMBIkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o/k2/Pfk6YkPEuXp2n1ScZCDJyYfYBV9o7yCjoZCWRwEiq3PqgumEssbje+BDRj6u
-	 pfR/29HHuB+1W0FyfbjWofRVn924WRVw03ln5FsIoQideo+TiZibhKv8Vx6hrAX4G9
-	 wJmNUJQFZ0ssmWGIbilY+H9c3D2r3PnkWPrtgFNc=
+	by mail.kernel.org (Postfix) with ESMTP id 7F3C920989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="35Kf+kiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfEHGh0 (ORCPT
+        id S1726814AbfEHGim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:37:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725910AbfEHGhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:37:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3E32054F;
-        Wed,  8 May 2019 06:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557297445;
-        bh=T0FrpxoRHBchoQt2g4MiY1olLJ9HjffT47QH8iMBIkw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ek2LsxxVpZtrm8idGE2/+QUmm8gmMmawn3+cQfl8wpTQrSsfu8qxG31xPYY5D5Gc7
-         DBFU17xMcgPEq5sdQOyOV1vDjG+rUvBO5WUozXb6tEhx84Ql4BCgLvmfCdQJ4vqkb5
-         0dBIY6mB4mG4thokr9BGHrvXvq7uhzL4IVBgY24U=
-Date:   Wed, 8 May 2019 08:37:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] usb: typec: tcpci: Clear the fault status register
-Message-ID: <20190508063723.GA14085@kroah.com>
-References: <20190508002749.14816-1-angus@akkea.ca>
- <20190508002749.14816-2-angus@akkea.ca>
- <5f0bec69-9579-f153-c3fd-d7b8deea75c4@roeck-us.net>
+        Wed, 8 May 2019 02:38:42 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36616 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725910AbfEHGil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 02:38:41 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x486cLb0189048;
+        Wed, 8 May 2019 06:38:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=5mw4iLZCxZsPvWBywmREwMoaRrDcvmRx4Soriv+tdGk=;
+ b=35Kf+kiC7b10mhUrnDAZFNorPBXFBBDd9C5YTqLo8l194OJqPa7OMI9HHDNz2SqrpqLB
+ 3jAPrM3v8FKFoljdVUF9Mrxdxy/+7bAuZySByd2hw5iIVZxz7aKZ+E+X4iMtiXhhLdLU
+ 1zgIfN/ZFks4SuLJuajEiZwK9iX+nR8M79fOWb3npQ+OG5OuQsbTB8v22hNm02CePq8p
+ K033SP7rCOE+QTxckgmkMBOzoZmknUP4ZSnwPga9uDr10nW6bm3yOX3lca9LF9uqUsSy
+ StPTsyjgMgqgcv13PitZRs4HdOQgT0XDmYc1CNWG5j4QIm2FVk8sTXw/PM+Lt8QWrqUy 7w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2s94bg1rr3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 May 2019 06:38:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x486btm4158779;
+        Wed, 8 May 2019 06:38:33 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2sagyuc6b4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 May 2019 06:38:33 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x486cWI6009183;
+        Wed, 8 May 2019 06:38:32 GMT
+Received: from [10.182.69.248] (/10.182.69.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 May 2019 23:38:32 -0700
+Subject: Re: [PATCH 1/3] jbd2: fix potential double free
+To:     Chengguang Xu <cgxu519@gmail.com>, jack@suse.com, tytso@mit.edu
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1557054064-3504-1-git-send-email-cgxu519@gmail.com>
+From:   "sunny.s.zhang" <sunny.s.zhang@oracle.com>
+Message-ID: <a931ed92-763c-0a18-ed3d-4ac1c4fbcb8d@oracle.com>
+Date:   Wed, 8 May 2019 14:38:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f0bec69-9579-f153-c3fd-d7b8deea75c4@roeck-us.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1557054064-3504-1-git-send-email-cgxu519@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9250 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905080043
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9250 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905080043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 05:49:14PM -0700, Guenter Roeck wrote:
-> On 5/7/19 5:27 PM, Angus Ainslie (Purism) wrote:
-> > If the fault status register doesn't get cleared then
-> > the ptn5110 interrupt gets stuck on. As the fault register gets
-> > set everytime the ptn5110 powers on the interrupt is always stuck.
-> > 
-> > Fixes: fault status register stuck
-> 
-> That is not how Fixes: tags are supposed to work. This should probably be
-> 
-> Fixes: 74e656d6b0551 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
+Hi Chengguang,
 
-Nit:
-Fixes: 74e656d6b055 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
+在 2019年05月05日 19:01, Chengguang Xu 写道:
+> When fail from creating cache jbd2_inode_cache, we will
+> destroy previously created cache jbd2_handle_cache twice.
+> This patch fixes it by removing first destroy in error path.
+>
+> Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+> ---
+>   fs/jbd2/journal.c | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+> index 382c030cc78b..49797854ccb8 100644
+> --- a/fs/jbd2/journal.c
+> +++ b/fs/jbd2/journal.c
+> @@ -2642,7 +2642,6 @@ static int __init jbd2_journal_init_handle_cache(void)
+>   	jbd2_inode_cache = KMEM_CACHE(jbd2_inode, 0);
+>   	if (jbd2_inode_cache == NULL) {
+>   		printk(KERN_EMERG "JBD2: failed to create inode cache\n");
+> -		kmem_cache_destroy(jbd2_handle_cache);
+Maybe we should keep it, and set the jbd2_handle_cache to NULL.
+If there are some changes in the future,  we may forget to change the 
+function
+of jbd2_journal_destroy_handle_cache.
 
-You only need 12 characters of the sha1 :)
+Thanks,
+Sunny
+
+>   		return -ENOMEM;
+>   	}
+>   	return 0;
 
