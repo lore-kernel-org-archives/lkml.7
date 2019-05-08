@@ -2,88 +2,165 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86487C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA20C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB5B21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD782089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="fyhKJivb"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="dwVJVYB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfEHWPY (ORCPT
+        id S1728865AbfEHW1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 18:15:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44057 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbfEHWPY (ORCPT
+        Wed, 8 May 2019 18:27:33 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:13602 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfEHW1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 18:15:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z16so79106pgv.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 15:15:23 -0700 (PDT)
+        Wed, 8 May 2019 18:27:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j5oqTOZfM/wzYkzYzHKN4Rn4v0RHvVg75TpBk2POYs8=;
-        b=fyhKJivbwhCNIxGWD9VvTgGZQKjleKYyb9Mn+KQlAHxbqmDCtpFfjUN+uV+YZydqi6
-         6QNoy9xTULEVo7egm+6oSo/kP1mma7wOVte3SkokmKZpTqcGUSdSrJofu+C7TGf77luN
-         7hqDemaQ+tC7BD2IsCHwP/6/zOl8D9PIgQG8PZsxyjlTpvM0NfJ1wk9l5IdVnmd0ebEY
-         JGa3qbnMtOiSQ5QGWd2wzjZB/XZHf3Jtv4LGKjfOxLO91YWz8YzNUh/KICQl1FbTbwGM
-         sahQDpNsbW2EBDgbLR4Lmi0uxMxyAOey+VHa5qodIMBEx4Lk8LxRb8E1Z7A6ISs4Ok9B
-         P38Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=j5oqTOZfM/wzYkzYzHKN4Rn4v0RHvVg75TpBk2POYs8=;
-        b=DqYGtldPbCjeJ+nYgqQLAMmOIlHIDzmxgiJVDbtKaQHqdphQfytNeKa9yfQkShTNae
-         rHxsg8qNgUbQj2Fg0W0DRubZzot8JUYd40snx9rCqWw0fa8TB5vSk/YSL6Js3xyXVyec
-         gEE8uEuaRklaZvcZM30pSGdDHuLXPwG6AYfysPj9+R4ob87JsnZxTbWIqHqt+ATYw2zH
-         F7k2zbWD0FoB1XTX7DlWXHQbwoSHfv4zfd/rMzYF71l1++uRL680oKDjKZprVz+Cf84e
-         Ze8Pds7bB9KtOH9+j7olmCyBSGHEmKN9rrsFSvnykVoOA+G0mMu4sUT+OFh15t2byL70
-         r5dw==
-X-Gm-Message-State: APjAAAU95GL9rUARLn6LgUMXdbpsz3X+4MsL22iRNkVTMYyuCky/IZ1q
-        fqa9sbO1jhXBfDEdXy8VL66hHQ==
-X-Google-Smtp-Source: APXvYqxxMN7qFq9/AX3hvnuCjjJhcGy7LMd0mKniOf3SMu7iVKLc5c62dSki5omVauPXQnvl0Rs9uQ==
-X-Received: by 2002:aa7:8083:: with SMTP id v3mr53782264pff.135.1557353723141;
-        Wed, 08 May 2019 15:15:23 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id r138sm347933pfr.2.2019.05.08.15.15.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 15:15:21 -0700 (PDT)
-Date:   Wed, 08 May 2019 15:15:21 -0700 (PDT)
-X-Google-Original-Date: Wed, 08 May 2019 15:06:47 PDT (-0700)
-Subject:     Re: linux-next: Signed-off-by missing for commit in the risc-v tree
-In-Reply-To: <20190509074745.65336288@canb.auug.org.au>
-CC:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Message-ID: <mhng-11a7c796-1d78-4c6f-8b27-e85a6aab3a45@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1557354452; x=1588890452;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=cc3iF2rKFnOXjc//hOXLvQ08PQaVcNXzHDybdjruEbQ=;
+  b=dwVJVYB4/449toBO4fYzfpHwFCpDog9nF1ky9sew4PXZmaBjR0Qu5btV
+   guvRgUcPGoTXL6qKD1Hyfk0hyoYt2UbTI1brF3zGFJ1HHvpljIzaInZ/t
+   P5+IYWMlFSQkSWI55EI+MgJkMXVb6+/3oyFJa57+AL6wnLHZl8y/+HVMb
+   M=;
+X-IronPort-AV: E=Sophos;i="5.60,447,1549929600"; 
+   d="scan'208";a="401390028"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 08 May 2019 22:27:29 +0000
+Received: from u7588a65da6b65f.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
+        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x48MRR58051082
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Wed, 8 May 2019 22:27:28 GMT
+Received: from u7588a65da6b65f.ant.amazon.com (localhost [127.0.0.1])
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x48MRPM6012270;
+        Thu, 9 May 2019 00:27:25 +0200
+Subject: Re: [PATCH 4/6] kvm: lapic: Add apicv activate/deactivate helper
+ function
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
+References: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
+ <20190322115702.10166-5-suravee.suthikulpanit@amd.com>
+From:   =?UTF-8?Q?Jan_H=2e_Sch=c3=b6nherr?= <jschoenh@amazon.de>
+Openpgp: preference=signencrypt
+Message-ID: <813c8c15-af74-6d77-4a30-2e0ee4b05006@amazon.de>
+Date:   Thu, 9 May 2019 00:27:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190322115702.10166-5-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 May 2019 14:47:45 PDT (-0700), Stephen Rothwell wrote:
-> Hi all,
->
-> Commits
->
->   da8e7c379659 ("riscv: Support BUG() in kernel module")
->   564bd22ea4e5 ("riscv: Add the support for c.ebreak check in is_valid_bugaddr()")
->   67363778b72c ("riscv: support trap-based WARN()")
->   efd48cf0b393 ("riscv: fix sbi_remote_sfence_vma{,_asid}.")
->   89f7840cf346 ("riscv: move switch_mm to its own file")
->   8c0e1593f15d ("riscv: move flush_icache_{all,mm} to cacheflush.c")
->
-> are missing a Signed-off-by from their committer.
+On 22/03/2019 12.57, Suthikulpanit, Suravee wrote:
+> Introduce a helper function for setting lapic parameters when
+> activate/deactivate apicv.
+> 
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> ---
+>  arch/x86/kvm/lapic.c | 23 ++++++++++++++++++-----
+>  arch/x86/kvm/lapic.h |  1 +
+>  2 files changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 95295cf81283..9c5cd1a98928 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -2126,6 +2126,22 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
+>  
+>  }
+>  
+> +void kvm_apic_update_apicv(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +	bool active = vcpu->arch.apicv_active;
+> +
+> +	if (active) {
+> +		/* irr_pending is always true when apicv is activated. */
+> +		apic->irr_pending = true;
+> +		apic->isr_count = 1;
+> +	} else {
+> +		apic->irr_pending = !!count_vectors(apic->regs + APIC_IRR);
 
-Sorry about that, these should be fixed now.
+What about:
+		apic->irr_pending = apic_search_irr(apic) != -1;
+instead? (more in line with the logic in apic_clear_irr())
+
+
+Related to this, I wonder if we need to ensure to execute
+kvm_x86_ops->sync_pir_to_irr() just before apicv_active transitions
+from true to false, so that we don't miss an interrupt and irr_pending
+is set correctly in this function (on Intel at least).
+
+Hmm... there seems to be other stuff as well, that depends on
+vcpu->arch.apicv_active, which is not updated on a transition. For
+example: posted interrupts, CR8 intercept, and a potential asymmetry
+via avic_vcpu_load()/avic_vcpu_put() because the bottom half
+of just one of the two functions may be skipped...
+
+Do these need to be handled in some way?
+
+Regards
+Jan
+
+> +		apic->isr_count = count_vectors(apic->regs + APIC_ISR);
+> +	}
+> +}
+> +EXPORT_SYMBOL(kvm_apic_update_apicv);
+> +
+>  void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+> @@ -2170,8 +2186,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  		kvm_lapic_set_reg(apic, APIC_ISR + 0x10 * i, 0);
+>  		kvm_lapic_set_reg(apic, APIC_TMR + 0x10 * i, 0);
+>  	}
+> -	apic->irr_pending = vcpu->arch.apicv_active;
+> -	apic->isr_count = vcpu->arch.apicv_active ? 1 : 0;
+> +	kvm_apic_update_apicv(vcpu);
+>  	apic->highest_isr_cache = -1;
+>  	update_divide_count(apic);
+>  	atomic_set(&apic->lapic_timer.pending, 0);
+> @@ -2433,9 +2448,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+>  	apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
+>  	update_divide_count(apic);
+>  	start_apic_timer(apic);
+> -	apic->irr_pending = true;
+> -	apic->isr_count = vcpu->arch.apicv_active ?
+> -				1 : count_vectors(apic->regs + APIC_ISR);
+> +	kvm_apic_update_apicv(vcpu);
+>  	apic->highest_isr_cache = -1;
+>  	if (vcpu->arch.apicv_active) {
+>  		kvm_x86_ops->apicv_post_state_restore(vcpu);
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index ff6ef9c3d760..b657605cfec0 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -88,6 +88,7 @@ void kvm_apic_update_ppr(struct kvm_vcpu *vcpu);
+>  int kvm_apic_set_irq(struct kvm_vcpu *vcpu, struct kvm_lapic_irq *irq,
+>  		     struct dest_map *dest_map);
+>  int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type);
+> +void kvm_apic_update_apicv(struct kvm_vcpu *vcpu);
+>  
+>  bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+>  		struct kvm_lapic_irq *irq, int *r, struct dest_map *dest_map);
+> 
+
