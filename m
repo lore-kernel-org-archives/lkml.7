@@ -2,169 +2,236 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FBEC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDF5C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5EC204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C37220C01
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZozwdce"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O8tU0NT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfEHBi1 (ORCPT
+        id S1726452AbfEHBnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:38:27 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42470 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfEHBi1 (ORCPT
+        Tue, 7 May 2019 21:43:42 -0400
+Received: from mail-oi1-f201.google.com ([209.85.167.201]:45843 "EHLO
+        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHBnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:38:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x15so9061363pln.9;
-        Tue, 07 May 2019 18:38:26 -0700 (PDT)
+        Tue, 7 May 2019 21:43:42 -0400
+Received: by mail-oi1-f201.google.com with SMTP id v13so2586938oie.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 18:43:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=+pgQLypyY2Fj2S5dVJnqSt5dqi0gQft1+N33h98eRBw=;
-        b=KZozwdcebhBe8qErPUIBActm1dRPR7vJ9wGcKKrfkTm+dNPx5zmipJIKSFY/jy5Zl5
-         saSqmk8h1O7lJh1RdP32+3M/daq6vt0aExqBu7JVMsCvtyoKYGA/nMG4mu6y6sfoK1qA
-         B3a8E4wCrR1JpxZKdp26Pb+HNZ2gAEOiDYUX9CjDJVTTmaZt++u+rmGoKgGHqjkBlg8X
-         dTqRf5LeahXmPKB8kb5QYLqgA//JYm/JxIC4WUnww7c6jIwNhkbAHsr7Bzql+DpO3WKM
-         lp+yHHYMDnz4u2sNQI66a8xTrhvDDTY521XDCFe9qBI99z0+aJ8bt9QVV53fO8oWKxEp
-         R0SA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=NduO8ogfu84h+oAWfquIvduxd06JrUFONyQu1hpKcT0=;
+        b=O8tU0NT/SnusHzYpn83+BS2INjb5OytF8gAd4PLpKrAc9pjd2fZnknioiaczIYOhDJ
+         kqmrXrN/YvIGLjts1jSeuSmkp1uTOeINhUa1ucsyXlWwjkjnAeF6m/3YvepnG5i3wttk
+         XlHEi3gsXL9QXY2xn8mAR5nCLqTZ3U6q1VSIr1b6u8sJTz3AYVvctLlqrQ9la6PyMSAS
+         6jt74pchJ9l4VlKsUNpsjfMCzLz5H7bfGaCezd7vHHTp7Uqo9i+weuqDexDfbARs/oof
+         waGeWYqGvHY6RXH6DxKIxzCoZUgbJKTgaiadsPYjNQe3JH6FKp3TQCNROaOVOKI333B8
+         5Qpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=+pgQLypyY2Fj2S5dVJnqSt5dqi0gQft1+N33h98eRBw=;
-        b=fsxcguZZTP0KP9kaNSBVrDc8qIKcbYlDCoHzSRknLBu0Vf7vEnTlU9HoC1l8K1/D+e
-         5zm0aJCrYQBwbtTkm8nikuQCPQWKyU915PLGBVdMFahiw9AGw7hnQQ2zGzjErTCIc1Zg
-         qQJDriv8f9Od3/yXJnC2SfB83sJEVFiYO1hSDt54kNr+zE3I8R1bx9nn9GN20WcSYi64
-         uZ40xSbztZS1b8Dt9JqiwgKx3vBoxhFwKkA99pIy/iGQT5/6GZ4VAFbdBNiFe35vJQLr
-         U2814YcaJgzXjP4EF50pXDS1g3LNaclgtQ5oZ4Yv1enRFYiJgtawLzKLA1dtt0NTW7NN
-         86Pw==
-X-Gm-Message-State: APjAAAV1/b4mAnkhqvspUkDtWpaqxRrDw9ZV+9DNF8Kmq92rTRULiwvy
-        YSGtvTMGg6N7IsrvUKShilk=
-X-Google-Smtp-Source: APXvYqyVmi92X1RVuwvJNIiD6zN6JseBToIkWtzou/aEJSMt4X9iuenstQsSzHGfz4EDdZ6cPRc2rg==
-X-Received: by 2002:a17:902:e407:: with SMTP id ci7mr43581347plb.219.1557279505814;
-        Tue, 07 May 2019 18:38:25 -0700 (PDT)
-Received: from localhost ([203.63.161.72])
-        by smtp.gmail.com with ESMTPSA id v1sm20766595pff.81.2019.05.07.18.38.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 18:38:24 -0700 (PDT)
-Date:   Wed, 08 May 2019 11:38:18 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [tip:sched/core] sched/isolation: Require a present CPU in
- housekeeping mask
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     fweisbec@gmail.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        linux-tip-commits@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, rafael.j.wysocki@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org
-References: <20190411033448.20842-5-npiggin@gmail.com>
-        <tip-9219565aa89033a9cfdae788c1940473a1253d6c@git.kernel.org>
-        <20190504002733.GB19076@lenoir> <1556952021.2xpa7joi2y.astroid@bobo.none>
-        <20190506151615.GA14529@lenoir> <1557186148.ocs72ssdjc.astroid@bobo.none>
-        <20190508003458.GA21658@lenoir>
-In-Reply-To: <20190508003458.GA21658@lenoir>
-MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1557279164.6speg3hhsy.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=NduO8ogfu84h+oAWfquIvduxd06JrUFONyQu1hpKcT0=;
+        b=kmsFID0ihYsD/u2KaHNDtnGkkSu6fiYcevDBEi/6dJIqSp/izglRhd3dLMXNfgPEsm
+         PRgAr4EFerjpVUCNObA2eDNAQw+3ya+fzBvKUGhrNAeZ3u7d5yi3jJbADQHSUW0w0D7F
+         mMD2L7r1sgdUrASwTtw6T6kTVSvEjuCEFKDKl7IB5577krF/RdGL6KsMvL28kK4MXt1a
+         WxVhmmawwq8LcnSAhEvZoWk4Glpuf/LlnqTTmnzZX9G6tMIIYjVgIFdKlj2Wp9ourJ9y
+         awyMM4PgO0lNAiOiuBB2p3TRtsd0NlVCHghee54S80bPWvGcR//EU7ldM03Zdd+3sA6S
+         LDew==
+X-Gm-Message-State: APjAAAVYDTJJDeX3LxcaccUhMEXLBcteRbbypbJ+SU6VFOEkbslc4KnO
+        ZgyYa+mDd4UDTEVHsWSH2RlMx2jSR6Ssqnc=
+X-Google-Smtp-Source: APXvYqy7YZ/qZ/UMekXTXuLrAXn8JpizuXc1mSFZ4ETgnqDFgY80Xo1eHkGpsnbBKMdktWPM4OzZNXIljJO9vbE=
+X-Received: by 2002:a9d:7d88:: with SMTP id j8mr3292175otn.39.1557279821060;
+ Tue, 07 May 2019 18:43:41 -0700 (PDT)
+Date:   Tue,  7 May 2019 18:43:20 -0700
+Message-Id: <20190508014320.55404-1-jsperbeck@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] percpu: remove spurious lock dependency between percpu and sched
+From:   John Sperbeck <jsperbeck@google.com>
+To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>
+Cc:     Eric Dumazet <edumazet@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, John Sperbeck <jsperbeck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frederic Weisbecker's on May 8, 2019 10:35 am:
-> On Tue, May 07, 2019 at 09:50:24AM +1000, Nicholas Piggin wrote:
->> Frederic Weisbecker's on May 7, 2019 1:16 am:
->> > On Sat, May 04, 2019 at 04:59:12PM +1000, Nicholas Piggin wrote:
->> >> Frederic Weisbecker's on May 4, 2019 10:27 am:
->> >> > On Fri, May 03, 2019 at 10:47:37AM -0700, tip-bot for Nicholas Pigg=
-in wrote:
->> >> >> Commit-ID:  9219565aa89033a9cfdae788c1940473a1253d6c
->> >> >> Gitweb:     https://git.kernel.org/tip/9219565aa89033a9cfdae788c19=
-40473a1253d6c
->> >> >> Author:     Nicholas Piggin <npiggin@gmail.com>
->> >> >> AuthorDate: Thu, 11 Apr 2019 13:34:47 +1000
->> >> >> Committer:  Ingo Molnar <mingo@kernel.org>
->> >> >> CommitDate: Fri, 3 May 2019 19:42:58 +0200
->> >> >>=20
->> >> >> sched/isolation: Require a present CPU in housekeeping mask
->> >> >>=20
->> >> >> During housekeeping mask setup, currently a possible CPU is requir=
-ed.
->> >> >> That does not guarantee the CPU would be available at boot time, s=
-o
->> >> >> check to ensure that at least one present CPU is in the mask.
->> >> >=20
->> >> > I have a doubt about the requirements and semantics of cpu_present_=
-mask.
->> >> > IIUC a present CPU means that it is physically plugged in (from ACP=
-I
->> >> > perspective) but might not be logically plugged in (set on cpu_onli=
-ne_mask).
->> >>=20
->> >> Right, a superset of cpu_possible_mask, subset of cpu_online_mask. It=
-=20
->> >> means that CPU can be brought online at any time.
->> >>=20
->> >> > But do we have the guarantee that a present CPU _will_ be online at=
- least once
->> >> > right after the boot? After all, kernel parameters such as "maxcpus=
-=3D" can prevent
->> >> > from turning some CPUs on. I guess there are even more creative way=
-s to achieve
->> >> > that.
->> >> >=20
->> >> > In any case we really require the housekeeper to be forced online. =
-Perhaps
->> >> > I missed that enforcement somewhere in the patchset?
->> >>=20
->> >> No I think you're right, that may be able to boot without anything in
->> >> the housekeeping mask. Maybe we can just cpu_up() a CPU in the=20
->> >> housekeeping mask with a warning that it has overidden their SMP
->> >> command line option. I'll take a look at it.
->> >=20
->> > But then what if cpu_up() fails? In this case I can think of only two
->> > answers:
->> >=20
->> > * Force the boot CPU as the housekeeper.
->> > * Rollback the whole thing: nohz and all isolation.
->>=20
->> If cpu_up fails despite being in the present map and we explicitly
->> selected it as the housekeeper? I think it would be okay to print
->> a message telling admin to correct the config, and panic.
->>=20
->> We try a best effort to make the system boot and limp along, but if
->> you misconfigure it, crashing is not unreasonable. There's lots of
->> command line option misconfiguration that will cause the same thing.
->>=20
->> The primary problem with my patch that needs to be addressed is that
->> the error is not explicitly caught and printed if the housekeeper
->> does not come up, so the system might die in non-obvious ways.
->=20
-> I usually reserve panic and BUG_ON() to last resort when data integrity i=
-s
-> directly threatened. But indeed I guess that's all we have for now.
+In free_percpu() we sometimes call pcpu_schedule_balance_work() to
+queue a work item (which does a wakeup) while holding pcpu_lock.
+This creates an unnecessary lock dependency between pcpu_lock and
+the scheduler's pi_lock.  There are other places where we call
+pcpu_schedule_balance_work() without hold pcpu_lock, and this case
+doesn't need to be different.
 
-Right, specifying a CPU for housekeeping that excluded from coming
-up at boot with maxcpus=3D or whatever, is not such a big deal to
-panic I think. Just need to have a clear error message.
+Moving the call outside the lock prevents the following lockdep splat
+when running tools/testing/selftests/bpf/{test_maps,test_progs} in
+sequence with lockdep enabled:
 
-> If we take that path, I'd rather not call that cpu_up() and simply panic =
-if
-> the given CPU happens not to be online after SMP bootup.
+======================================================
+WARNING: possible circular locking dependency detected
+5.1.0-dbg-DEV #1 Not tainted
+------------------------------------------------------
+kworker/23:255/18872 is trying to acquire lock:
+000000000bc79290 (&(&pool->lock)->rlock){-.-.}, at: __queue_work+0xb2/0x520
 
-Sure that's fine by me too.
+but task is already holding lock:
+00000000e3e7a6aa (pcpu_lock){..-.}, at: free_percpu+0x36/0x260
 
-Thanks,
-Nick
+which lock already depends on the new lock.
 
-=
+the existing dependency chain (in reverse order) is:
+
+-> #4 (pcpu_lock){..-.}:
+       lock_acquire+0x9e/0x180
+       _raw_spin_lock_irqsave+0x3a/0x50
+       pcpu_alloc+0xfa/0x780
+       __alloc_percpu_gfp+0x12/0x20
+       alloc_htab_elem+0x184/0x2b0
+       __htab_percpu_map_update_elem+0x252/0x290
+       bpf_percpu_hash_update+0x7c/0x130
+       __do_sys_bpf+0x1912/0x1be0
+       __x64_sys_bpf+0x1a/0x20
+       do_syscall_64+0x59/0x400
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #3 (&htab->buckets[i].lock){....}:
+       lock_acquire+0x9e/0x180
+       _raw_spin_lock_irqsave+0x3a/0x50
+       htab_map_update_elem+0x1af/0x3a0
+
+-> #2 (&rq->lock){-.-.}:
+       lock_acquire+0x9e/0x180
+       _raw_spin_lock+0x2f/0x40
+       task_fork_fair+0x37/0x160
+       sched_fork+0x211/0x310
+       copy_process.part.43+0x7b1/0x2160
+       _do_fork+0xda/0x6b0
+       kernel_thread+0x29/0x30
+       rest_init+0x22/0x260
+       arch_call_rest_init+0xe/0x10
+       start_kernel+0x4fd/0x520
+       x86_64_start_reservations+0x24/0x26
+       x86_64_start_kernel+0x6f/0x72
+       secondary_startup_64+0xa4/0xb0
+
+-> #1 (&p->pi_lock){-.-.}:
+       lock_acquire+0x9e/0x180
+       _raw_spin_lock_irqsave+0x3a/0x50
+       try_to_wake_up+0x41/0x600
+       wake_up_process+0x15/0x20
+       create_worker+0x16b/0x1e0
+       workqueue_init+0x279/0x2ee
+       kernel_init_freeable+0xf7/0x288
+       kernel_init+0xf/0x180
+       ret_from_fork+0x24/0x30
+
+-> #0 (&(&pool->lock)->rlock){-.-.}:
+       __lock_acquire+0x101f/0x12a0
+       lock_acquire+0x9e/0x180
+       _raw_spin_lock+0x2f/0x40
+       __queue_work+0xb2/0x520
+       queue_work_on+0x38/0x80
+       free_percpu+0x221/0x260
+       pcpu_freelist_destroy+0x11/0x20
+       stack_map_free+0x2a/0x40
+       bpf_map_free_deferred+0x3c/0x50
+       process_one_work+0x1f7/0x580
+       worker_thread+0x54/0x410
+       kthread+0x10f/0x150
+       ret_from_fork+0x24/0x30
+
+other info that might help us debug this:
+
+Chain exists of:
+  &(&pool->lock)->rlock --> &htab->buckets[i].lock --> pcpu_lock
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(pcpu_lock);
+                               lock(&htab->buckets[i].lock);
+                               lock(pcpu_lock);
+  lock(&(&pool->lock)->rlock);
+
+ *** DEADLOCK ***
+
+3 locks held by kworker/23:255/18872:
+ #0: 00000000b36a6e16 ((wq_completion)events){+.+.},
+     at: process_one_work+0x17a/0x580
+ #1: 00000000dfd966f0 ((work_completion)(&map->work)){+.+.},
+     at: process_one_work+0x17a/0x580
+ #2: 00000000e3e7a6aa (pcpu_lock){..-.},
+     at: free_percpu+0x36/0x260
+
+stack backtrace:
+CPU: 23 PID: 18872 Comm: kworker/23:255 Not tainted 5.1.0-dbg-DEV #1
+Hardware name: ...
+Workqueue: events bpf_map_free_deferred
+Call Trace:
+ dump_stack+0x67/0x95
+ print_circular_bug.isra.38+0x1c6/0x220
+ check_prev_add.constprop.50+0x9f6/0xd20
+ __lock_acquire+0x101f/0x12a0
+ lock_acquire+0x9e/0x180
+ _raw_spin_lock+0x2f/0x40
+ __queue_work+0xb2/0x520
+ queue_work_on+0x38/0x80
+ free_percpu+0x221/0x260
+ pcpu_freelist_destroy+0x11/0x20
+ stack_map_free+0x2a/0x40
+ bpf_map_free_deferred+0x3c/0x50
+ process_one_work+0x1f7/0x580
+ worker_thread+0x54/0x410
+ kthread+0x10f/0x150
+ ret_from_fork+0x24/0x30
+
+Signed-off-by: John Sperbeck <jsperbeck@google.com>
+---
+ mm/percpu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 68dd2e7e73b5..d832793bf83a 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -1738,6 +1738,7 @@ void free_percpu(void __percpu *ptr)
+ 	struct pcpu_chunk *chunk;
+ 	unsigned long flags;
+ 	int off;
++	bool need_balance = false;
+ 
+ 	if (!ptr)
+ 		return;
+@@ -1759,7 +1760,7 @@ void free_percpu(void __percpu *ptr)
+ 
+ 		list_for_each_entry(pos, &pcpu_slot[pcpu_nr_slots - 1], list)
+ 			if (pos != chunk) {
+-				pcpu_schedule_balance_work();
++				need_balance = true;
+ 				break;
+ 			}
+ 	}
+@@ -1767,6 +1768,9 @@ void free_percpu(void __percpu *ptr)
+ 	trace_percpu_free_percpu(chunk->base_addr, off, ptr);
+ 
+ 	spin_unlock_irqrestore(&pcpu_lock, flags);
++
++	if (need_balance)
++		pcpu_schedule_balance_work();
+ }
+ EXPORT_SYMBOL_GPL(free_percpu);
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
