@@ -2,106 +2,146 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DFCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31472C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A943521479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Be2niih7"
+	by mail.kernel.org (Postfix) with ESMTP id EEE3C21479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557311660;
+	bh=mQKX0vLjsBbqhGE5p2VtSbC35ky+3zj3DzZuDIRx5Dk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=dUmP/2HtVdMZFQuCP5muKkwr633OLfWDoEbqFp3ji0o7iPr86WZfUQkFkg3yvwBc3
+	 W4urQ+ozgZsWDBL6AvF4XzIOP35az5gJ2sUzQPiURTa2B/wogoscZ3W/B3Gsb94AcZ
+	 zxTR9bh8OKqjOpmKroXuB/V4AmcSgOac72xARM/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfEHKda (ORCPT
+        id S1727364AbfEHKeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:33:30 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36700 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfEHKd3 (ORCPT
+        Wed, 8 May 2019 06:34:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59364 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfEHKeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:33:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id j187so2586336wmj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=u09Da640KqSkrdZYs8DECu/Bzf+Ww59St0M09Us2fGQ=;
-        b=Be2niih7B4DByVjdgqX+dg8QTAY8Kl8RXd3+z3W7jO+u03cYq6rYg77pxVVRvc1gLs
-         4q0+k92qjcG0AP4WDyOU2JZhtNExs2NFCLW9y93VhjQ5/74gyKDnog9Uw0p0hmRLfoRG
-         rAE5CxebdSHujZRmA4JnWWXKdX1nWN9qynCy8jyyp1vxILbIiYiaSEKv4Ho4AScJ8/H5
-         g2rA0ovrD/RBxSfSPu8JYX/m7UKVweSmv2yU/3Ao3Ctc9VMZDfPEwegdlMxj0k30aNql
-         HMtttT8QBuvd8pRKyiuSRnqjbXxEW0UX7XwzgGkXRG0YAKaSEVV0OLDvYFP/KmbgnmUv
-         JXFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=u09Da640KqSkrdZYs8DECu/Bzf+Ww59St0M09Us2fGQ=;
-        b=H6VDB+eUrwB+VUnRP5KhSZVeM2/eXNRGMOjThRrW6X+2pkNRPQ14hqg9Hoaq8eq68d
-         +mkLqbNa3nnm6o2/eL71JkwO8iZ1blaCPyLATlrgHHv3vvSFvtKX8P8xetPvFmyoJTNc
-         K9v4xvewMKMD4C93OUzFTbZGsfGokePBWX+7uCFx+f8l5lXAtKqpLstGbyTtj8WMKDlr
-         nxZWiNGttgQbVrG/vQ4CTCe6lZv5Rspolh8rJptfu+DgY2Hh9TIg1Tzjj9TKFO69mZUW
-         5aUrZ+nZbRSlOWsiKb3J3E5nDkTc0PFM0ycWCJXrTFVUc/iVa5PUE1egKk8yZbiH0aDx
-         6tIQ==
-X-Gm-Message-State: APjAAAU6/IoUbt6kXu6he+STWDhAOrY6dGo3M8NZTzEXKT9ph3Pg+48r
-        38HFJn9zKrS0Yad/BnM4gCjHRA==
-X-Google-Smtp-Source: APXvYqzxuJ2KqqN6NrV+qd2Pme1JUODqn+ZhWzdvhIb81eMIsZTmWyibQ7wk7+LslTUXyNmsTHTu3Q==
-X-Received: by 2002:a1c:23d2:: with SMTP id j201mr2477222wmj.139.1557311607739;
-        Wed, 08 May 2019 03:33:27 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id t18sm33811390wrg.19.2019.05.08.03.33.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 03:33:27 -0700 (PDT)
-Date:   Wed, 8 May 2019 11:33:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Su Bao Cheng <baocheng.su@siemens.com>
-Subject: Re: [PATCH] mfd: intel_quark_i2c_gpio: Adjust IOT2000 matching
-Message-ID: <20190508103325.GL3995@dell>
-References: <06b89c06-462a-788e-20f9-aa71ac1507b4@siemens.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06b89c06-462a-788e-20f9-aa71ac1507b4@siemens.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 8 May 2019 06:34:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=5XX6yQwWLlHH3i6hXnK8Nh0JB85+4JdaLeEd/oN5bak=; b=Ryv6B6KJvKip
+        Yr6+OPtL0vJu1hWewaMYdus0SKmvm9gLodp3sqYolTMw+a28cOU22u1q5wCkHDIpeZCfwqpP/asaI
+        42Ii1ED1Xe10k482gZn4rYmBeeagDH2LPGd3hL4ay1WvQwfnWlH/76mcqs+u0AUAhVvBFCy1bWEaC
+        AbVfE=;
+Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hOJto-0007t9-RK; Wed, 08 May 2019 10:34:09 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 5C7EB440010; Wed,  8 May 2019 11:33:58 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>
+Subject: Applied "spi: rockchip: turn down tx dma bursts" to the spi tree
+In-Reply-To:  <20190412105320.2924-1-kernel@esmil.dk>
+X-Patchwork-Hint: ignore
+Message-Id: <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
+Date:   Wed,  8 May 2019 11:33:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019, Jan Kiszka wrote:
+The patch
 
-> From: Su Bao Cheng <baocheng.su@siemens.com>
-> 
-> Since there are more IOT2040 variants with identical hardware but
-> different asset tags, the asset tag matching should be adjusted to
-> support them.
-> 
-> For the board name "SIMATIC IOT2000", currently there are 2 types of
-> hardware, IOT2020 and IOT2040. Both are identical regarding the
-> intel_quark_i2c_gpio. In the future there will be no other devices with
-> the "SIMATIC IOT2000" DMI board name but different hardware. So remove
-> the asset tag matching from this driver.
-> 
-> Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
-> Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
->  drivers/mfd/intel_quark_i2c_gpio.c | 10 ----------
->  1 file changed, 10 deletions(-)
+   spi: rockchip: turn down tx dma bursts
 
-Applied, thanks.
+has been applied to the spi tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 47300728fb213486a830565d2af49da967c9d16a Mon Sep 17 00:00:00 2001
+From: Emil Renner Berthing <kernel@esmil.dk>
+Date: Fri, 12 Apr 2019 12:53:20 +0200
+Subject: [PATCH] spi: rockchip: turn down tx dma bursts
+
+This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
+
+It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
+signal is generated or it might skip some words. This in turn makes
+the rx dma channel never complete for bi-directional transfers.
+
+Fix it by setting tx burst length to fifo_len / 4 and the dma
+watermark to fifo_len / 2.
+
+However the rk3399 TRM says (sic):
+"DMAC support incrementing-address burst and fixed-address burst. But in
+the case of access SPI and UART at byte or halfword size, DMAC only
+support fixed-address burst and the address must be aligned to word."
+
+So this relies on fifo_len being a multiple of 16 such that the
+burst length (= fifo_len / 4) is a multiple of 4 and the addresses
+will be word-aligned.
+
+Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-rockchip.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 3912526ead66..19f6a76f1c07 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -425,7 +425,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
+ 			.direction = DMA_MEM_TO_DEV,
+ 			.dst_addr = rs->dma_addr_tx,
+ 			.dst_addr_width = rs->n_bytes,
+-			.dst_maxburst = rs->fifo_len / 2,
++			.dst_maxburst = rs->fifo_len / 4,
+ 		};
+ 
+ 		dmaengine_slave_config(master->dma_tx, &txconf);
+@@ -526,7 +526,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
+ 	else
+ 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
+ 
+-	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
++	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
+ 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
+ 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
