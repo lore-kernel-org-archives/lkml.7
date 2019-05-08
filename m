@@ -2,146 +2,141 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31472C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA92C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE3C21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557311660;
-	bh=mQKX0vLjsBbqhGE5p2VtSbC35ky+3zj3DzZuDIRx5Dk=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=dUmP/2HtVdMZFQuCP5muKkwr633OLfWDoEbqFp3ji0o7iPr86WZfUQkFkg3yvwBc3
-	 W4urQ+ozgZsWDBL6AvF4XzIOP35az5gJ2sUzQPiURTa2B/wogoscZ3W/B3Gsb94AcZ
-	 zxTR9bh8OKqjOpmKroXuB/V4AmcSgOac72xARM/0=
+	by mail.kernel.org (Postfix) with ESMTP id 6D2EF214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ODb/aVkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfEHKeT (ORCPT
+        id S1727369AbfEHKfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:34:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59364 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfEHKeS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:34:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=5XX6yQwWLlHH3i6hXnK8Nh0JB85+4JdaLeEd/oN5bak=; b=Ryv6B6KJvKip
-        Yr6+OPtL0vJu1hWewaMYdus0SKmvm9gLodp3sqYolTMw+a28cOU22u1q5wCkHDIpeZCfwqpP/asaI
-        42Ii1ED1Xe10k482gZn4rYmBeeagDH2LPGd3hL4ay1WvQwfnWlH/76mcqs+u0AUAhVvBFCy1bWEaC
-        AbVfE=;
-Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hOJto-0007t9-RK; Wed, 08 May 2019 10:34:09 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 5C7EB440010; Wed,  8 May 2019 11:33:58 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vicente Bergas <vicencb@gmail.com>
-Subject: Applied "spi: rockchip: turn down tx dma bursts" to the spi tree
-In-Reply-To:  <20190412105320.2924-1-kernel@esmil.dk>
-X-Patchwork-Hint: ignore
-Message-Id: <20190508103358.5C7EB440010@finisterre.sirena.org.uk>
-Date:   Wed,  8 May 2019 11:33:58 +0100 (BST)
+        Wed, 8 May 2019 06:35:30 -0400
+Received: from mail-eopbgr130044.outbound.protection.outlook.com ([40.107.13.44]:23427
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726986AbfEHKfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 06:35:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zuyGBdsvb1ZSS+ut8oGSo82qb7LY29W3sX+054MBzfY=;
+ b=ODb/aVkOUgriQE+UD1H5MRcQQ29SijjVXMXGk52Dn+g8Qy8ogatw7Wy3NaTYdQHwcoVudvn5/kMe4j6WZaapf/HeebGI/Rqi4Glli8Ll4/7GDWwrlwakSIxpCmsyqMlUNWqSuo0lWXIzA+odw/3ZKvwHNdpmGARaHblbL1NN/BA=
+Received: from AM0PR04MB4865.eurprd04.prod.outlook.com (20.176.215.158) by
+ AM0PR04MB4962.eurprd04.prod.outlook.com (20.177.41.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.12; Wed, 8 May 2019 10:35:25 +0000
+Received: from AM0PR04MB4865.eurprd04.prod.outlook.com
+ ([fe80::f496:84c1:30b5:43be]) by AM0PR04MB4865.eurprd04.prod.outlook.com
+ ([fe80::f496:84c1:30b5:43be%7]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 10:35:25 +0000
+From:   Wen He <wen.he_1@nxp.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     Leo Li <leoyang.li@nxp.com>, Wen He <wen.he_1@nxp.com>
+Subject: [v1 1/4] dt-bindings: display: Add DT bindings for LS1028A HDP-TX
+ PHY.
+Thread-Topic: [v1 1/4] dt-bindings: display: Add DT bindings for LS1028A
+ HDP-TX PHY.
+Thread-Index: AQHVBYm/GjgqdY4+pUuRDaU4fFYL0Q==
+Date:   Wed, 8 May 2019 10:35:25 +0000
+Message-ID: <20190508103703.40885-1-wen.he_1@nxp.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR03CA0037.apcprd03.prod.outlook.com
+ (2603:1096:203:2f::25) To AM0PR04MB4865.eurprd04.prod.outlook.com
+ (2603:10a6:208:c4::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=wen.he_1@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 911ccc03-accb-4ffd-c8cf-08d6d3a0e148
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4962;
+x-ms-traffictypediagnostic: AM0PR04MB4962:
+x-microsoft-antispam-prvs: <AM0PR04MB49628E074373A37AF7D53BB7E2320@AM0PR04MB4962.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(376002)(39860400002)(199004)(189003)(478600001)(14444005)(66946007)(186003)(2616005)(476003)(53936002)(66556008)(99286004)(4326008)(66066001)(73956011)(1076003)(66446008)(36756003)(64756008)(305945005)(316002)(7736002)(54906003)(2501003)(110136005)(52116002)(6506007)(386003)(256004)(2201001)(102836004)(86362001)(66476007)(5660300002)(26005)(6116002)(3846002)(14454004)(2906002)(6512007)(8936002)(71190400001)(71200400001)(486006)(50226002)(6486002)(6436002)(68736007)(25786009)(8676002)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4962;H:AM0PR04MB4865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XSzdo0y2m/pSCRaGq6hkDofDKsRmTh3kWiliwEWtoXNkCLXhwvI7s0dxEBnSaUbHFWTwprkWDN6OGtWPLUdExcTLzDaArBt7CgR9Kwi1Ksle4+7n91GilnOOyF3Y6HB6SOkKpwXXjkJO/PgiEZdKXveCL1tb5BGOwt6Lc8Oy1MwNE91YTYxgU0bZDCzXSAEI7UyMDo5ESRHT17hYEzxCEOkVfKx9rVHWN5is7iTUA02d/cgtL0E0JdkmfrmEVXjybcoUf/LvFPRF61g0YHm5S9yfNrTQaXUj8wkBE6zfomSaetOQY5xqQSjmwNiBdSUCzc9etYztA/AVf0nnuX0pSn8ZsDurJQRi8ZfqIatWIxpBj4dFHbSF+d6vCBngmD7iekV6KJCL73xhRaDIcvp0saYW+qAA5oe7a1CPRIt39ts=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 911ccc03-accb-4ffd-c8cf-08d6d3a0e148
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 10:35:25.1443
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4962
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
-
-   spi: rockchip: turn down tx dma bursts
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 47300728fb213486a830565d2af49da967c9d16a Mon Sep 17 00:00:00 2001
-From: Emil Renner Berthing <kernel@esmil.dk>
-Date: Fri, 12 Apr 2019 12:53:20 +0200
-Subject: [PATCH] spi: rockchip: turn down tx dma bursts
-
-This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
-
-It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
-signal is generated or it might skip some words. This in turn makes
-the rx dma channel never complete for bi-directional transfers.
-
-Fix it by setting tx burst length to fifo_len / 4 and the dma
-watermark to fifo_len / 2.
-
-However the rk3399 TRM says (sic):
-"DMAC support incrementing-address burst and fixed-address burst. But in
-the case of access SPI and UART at byte or halfword size, DMAC only
-support fixed-address burst and the address must be aligned to word."
-
-So this relies on fifo_len being a multiple of 16 such that the
-burst length (= fifo_len / 4) is a multiple of 4 and the addresses
-will be word-aligned.
-
-Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-rockchip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 3912526ead66..19f6a76f1c07 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -425,7 +425,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
- 			.direction = DMA_MEM_TO_DEV,
- 			.dst_addr = rs->dma_addr_tx,
- 			.dst_addr_width = rs->n_bytes,
--			.dst_maxburst = rs->fifo_len / 2,
-+			.dst_maxburst = rs->fifo_len / 4,
- 		};
- 
- 		dmaengine_slave_config(master->dma_tx, &txconf);
-@@ -526,7 +526,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
- 	else
- 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
- 
--	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
-+	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
- 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
- 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
- 
--- 
-2.20.1
-
+QWRkIERUIGJpbmRpbmdzIGRvY3VtZW50bWF0aW9uIGZvciB0aGUgSERQLVRYIFBIWSBjb250cm9s
+bGVyLiBUaGUgZGVzY3JpYmVzDQp3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBOWFAgTGF5ZXJzY2Fw
+ZSBsczEwMjhhIHBsYXRmb3JtLg0KDQpTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdlbi5oZV8xQG54
+cC5jb20+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0
+ICAgfCA1NiArKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDU2IGluc2VydGlv
+bnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0
+DQppbmRleCAwMDAwMDAwMDAwMDAuLjM2YjU2ODdhMTI2MQ0KLS0tIC9kZXYvbnVsbA0KKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCkBA
+IC0wLDAgKzEsNTYgQEANCitOWFAgTGF5ZXJzY3BhZSBsczEwMjhhIEhEUC1UWCBQSFkgQ29udHJv
+bGxlcg0KKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQorDQor
+VGhlIGZvbGxvd2luZyBiaW5kaW5ncyBkZXNjcmliZSB0aGUgQ2FkZW5jZSBIRFAgVFggUEhZIG9u
+IGxzMTAyOGEgdGhhdA0KK29mZmVyIG11bHRpLXByb3RvY29sIHN1cHBvcnQgb2Ygc3RhbmRhcnMg
+c3VjaCBhcyBlRFAgYW5kIERpc3BsYXlwb3J0LA0KK3N1cHBvcnRzIGZvciAyNS02MDBNSHogcGl4
+ZWwgY2xvY2sgYW5kIHVwIHRvIDRrMmsgYXQgNjBNSHogcmVzb2x1dGlvbi4NCitUaGUgSERQIHRy
+YW5zbWl0dGVyIGlzIGEgQ2FkZW5jZSBIRFAgVFggY29udHJvbGxlciBJUCB3aXRoIGEgY29tcGFu
+aW9uDQorUEhZIElQLg0KKw0KK1JlcXVpcmVkIHByb3BlcnRpZXM6DQorICAtIGNvbXBhdGlibGU6
+ICAgU2hvdWxkIGJlICJmc2wsbHMxMDI4YS1kcCIgZm9yIGxzMTAyOGEuDQorICAtIHJlZzogICAg
+ICAgICAgUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBibG9jayBvZiByZWdp
+c3RlcnMgdXNlZA0KKyAgYnkgdGhlIHByb2Nlc3Nvci4NCisgIC0gaW50ZXJydXB0czogICBIRFAg
+aG90cGx1ZyBpbi9vdXQgZGV0ZWN0IGludGVycnVwdCBudW1iZXINCisgIC0gY2xvY2tzOiAgICAg
+ICBBIGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNo
+IGVudHJ5DQorICBpbiAnY2xvY2stbmFtZXMnDQorICAtIGNsb2NrLW5hbWVzOiAgQSBsaXN0IG9m
+IGNsb2NrIG5hbWVzLiBJdCBzaG91bGQgY29udGFpbjoNCisgICAgICAtICJjbGtfaXBnIjogaW50
+ZXItSW50ZWdyYXRlZCBjaXJjdWl0IGNsb2NrDQorICAgICAgLSAiY2xrX2NvcmUiOiBmb3IgdGhl
+IE1haW4gRGlzcGxheSBUWCBjb250cm9sbGVyIGNsb2NrDQorICAgICAgLSAiY2xrX3B4bCI6IGZv
+ciB0aGUgcGl4ZWwgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUgcHJvY2Vzc29y
+DQorICAgICAgLSAiY2xrX3B4bF9tdXgiOiBmb3IgdGhlIGhpZ2ggUGVyZlBMTCBieXBhc3MgY2xv
+Y2sNCisgICAgICAtICJjbGtfcHhsX2xpbmsiOiBmb3IgdGhlIGxpbmsgcmF0ZSBwaXhlbCBjbG9j
+aw0KKyAgICAgIC0gImNsa19hcGIiOiBmb3IgdGhlIEFQQiBpbnRlcmZhY2UgY2xvY2sNCisgICAg
+ICAtICJjbGtfdmlmIjogZm9yIHRoZSBWaWRlbyBwaXhlbCBjbG9jaw0KKw0KK1JlcXVpcmVkIHN1
+Yi1ub2RlczoNCisgIC0gcG9ydDogVGhlIEhEUCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgb3V0
+cHV0IHBvcnQuIFRoZSBjb25uZWN0aW9uDQorICAgIGlzIG1vZGVsbGVkIHVzaW5nIHRoZSBPRiBn
+cmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4NCisgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dyYXBoLnR4dA0KKw0KKw0KK0V4YW1wbGU6DQorDQorLyB7DQorICAgICAgICAu
+Li4NCisNCisJaGRwOiBkaXNwbGF5QGYyMDAwMDAgew0KKyAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gImZzbCxsczEwMjhhLWRwIjsNCisJCXJlZyA9IDwweDAgMHhmMWYwMDAwIDB4MCAweGZm
+ZmY+LA0KKwkJICAgIDwweDAgMHhmMjAwMDAwIDB4MCAweGZmZmZmPjsNCisgICAgICAgICAgICAg
+ICAgaW50ZXJydXB0cyA9IDwwIDIyMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCisJCWNsb2NrcyA9
+IDwmc3lzY2xrPiwgPCZoZHBjbGs+LCA8JmRwY2xrPiwNCisgICAgICAgICAgICAgICAgICAgICAg
+ICAgPCZkcGNsaz4sIDwmZHBjbGs+LCA8JnBjbGs+LCA8JmRwY2xrPjsNCisJCWNsb2NrLW5hbWVz
+ID0gImNsa19pcGciLCAiY2xrX2NvcmUiLCAiY2xrX3B4bCIsDQorICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgImNsa19weGxfbXV4IiwgImNsa19weGxfbGluayIsICJjbGtfYXBiIiwNCisg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiY2xrX3ZpZiI7DQorDQorCQlwb3J0IHsNCisJ
+CQlkcDFfb3V0cHV0OiBlbmRwb2ludCB7DQorCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHAwX2lu
+cHV0PjsNCisJCQl9Ow0KKwkJfTsNCisgICAgICAgIH07DQorDQorICAgICAgICAuLi4NCit9Ow0K
+LS0gDQoyLjE3LjENCg0K
