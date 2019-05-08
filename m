@@ -2,140 +2,259 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A7DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB29BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071CB214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557323039;
-	bh=OJmgP1E+mmtjTsf1WtejtNwHG6Y398f4yIiaqFrrEiI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWjvgw55Yrq73er4qaI80Tn7SwiBK0WurJ+oB91l8HsGX6AdEd8q3GaItzFs1OWSP
-	 /eFoUsXrbRb4buehSfMV5+DnMWkA0/btr0tDbtORjt3qO2kpMfKA4C1/y58l2D0AMT
-	 XlGijjVt2rxR+oPdjbz5VFvIa/TKhoNEX1bsvBoo=
+	by mail.kernel.org (Postfix) with ESMTP id 7A117214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfEHNn6 (ORCPT
+        id S1727744AbfEHNn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbfEHNnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:43:53 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B762216B7;
-        Wed,  8 May 2019 13:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557323033;
-        bh=OJmgP1E+mmtjTsf1WtejtNwHG6Y398f4yIiaqFrrEiI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdP1f7ILZqBPw2BMpB4qJDVKL+7JgHgaXfvD05pl9bLGdggralLbG1nqusElIuLzk
-         +V4NFW49BWaHn0+jNsT3dT7A6EcCbx1yJHNdEHM1DR9ZK5EZO2KMnyVP2rZ9dIz0Zn
-         GSMp1fayn7tbMI5icg6rWM+bxbIsWbmdYPpmY70U=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-mtd@lists.infradead.org
-Cc:     dinguyen@kernel.org, marex@denx.de, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Tien-Fong Chee <tien.fong.chee@intel.com>
-Subject: [PATCHv4 2/2] mtd: spi-nor: cadence-quadspi: add reset control
-Date:   Wed,  8 May 2019 08:43:38 -0500
-Message-Id: <20190508134338.20565-2-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190508134338.20565-1-dinguyen@kernel.org>
-References: <20190508134338.20565-1-dinguyen@kernel.org>
+        Wed, 8 May 2019 09:43:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57592 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727706AbfEHNnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:43:55 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D63364D9A7FA07365607;
+        Wed,  8 May 2019 21:43:51 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 8 May 2019 21:43:43 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH next v2] mfd: Use dev_get_drvdata()
+Date:   Wed, 8 May 2019 21:52:57 +0800
+Message-ID: <20190508135257.134747-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190508103202.GJ3995@dell>
+References: <20190508103202.GJ3995@dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get the reset control properties for the QSPI controller and bring them
-out of reset. Most will have just one reset bit, but there is an additional
-OCP reset bit that is used ECC. The OCP reset bit will also need to get
-de-asserted as well. [1]
+Using dev_get_drvdata directly.
 
-[1] https://www.intel.com/content/www/us/en/programmable/hps/arria-10/hps.html#reg_soc_top/sfo1429890575955.html
-
-Suggested-by: Tien-Fong Chee <tien.fong.chee@intel.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
-v4: fix compile error
-v3: return full error by using PTR_ERR(rtsc)
-    move reset control calls until after the clock enables
-    use udelay(2) to be safe
-    Add optional OCP(Open Core Protocol) reset signal
-v2: use devm_reset_control_get_optional_exclusive
-    print an error message
-    return -EPROBE_DEFER
----
- drivers/mtd/spi-nor/cadence-quadspi.c | 30 +++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+v2:
+-use dev_get_drvdata() instead of to_ssbi()
 
-diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-index 792628750eec..d3906e5a1d44 100644
---- a/drivers/mtd/spi-nor/cadence-quadspi.c
-+++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-@@ -34,6 +34,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/sched.h>
- #include <linux/spi/spi.h>
- #include <linux/timer.h>
-@@ -1336,6 +1337,8 @@ static int cqspi_probe(struct platform_device *pdev)
- 	struct cqspi_st *cqspi;
- 	struct resource *res;
- 	struct resource *res_ahb;
-+	struct reset_control *rstc;
-+	struct reset_control *rstc_ocp;
- 	const struct cqspi_driver_platdata *ddata;
- 	int ret;
- 	int irq;
-@@ -1402,6 +1405,33 @@ static int cqspi_probe(struct platform_device *pdev)
- 		goto probe_clk_failed;
- 	}
+ drivers/mfd/ssbi.c     |  6 ++----
+ drivers/mfd/t7l66xb.c  | 12 ++++--------
+ drivers/mfd/tc6387xb.c | 12 ++++--------
+ drivers/mfd/tc6393xb.c | 21 +++++++--------------
+ 4 files changed, 17 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/mfd/ssbi.c b/drivers/mfd/ssbi.c
+index 36b96fee4ce6..0ae27cd30268 100644
+--- a/drivers/mfd/ssbi.c
++++ b/drivers/mfd/ssbi.c
+@@ -80,8 +80,6 @@ struct ssbi {
+ 	int (*write)(struct ssbi *, u16 addr, const u8 *buf, int len);
+ };
  
-+	/* Obtain QSPI reset control */
-+	rstc = devm_reset_control_get_optional_exclusive(dev, "qspi");
-+	if (IS_ERR(rstc)) {
-+		dev_err(dev, "Cannot get QSPI reset.\n");
-+		if (PTR_ERR(rstc) == -EPROBE_DEFER)
-+			return PTR_ERR(rstc);
-+	}
-+
-+	rstc_ocp = devm_reset_control_get_optional_exclusive(dev, "qspi-ocp");
-+	if (IS_ERR(rstc_ocp)) {
-+		dev_err(dev, "Cannot get QSPI OCP reset.\n");
-+		if (PTR_ERR(rstc_ocp) == -EPROBE_DEFER)
-+			return PTR_ERR(rstc_ocp);
-+	}
-+
-+	if (rstc) {
-+		reset_control_assert(rstc);
-+		udelay(2);
-+		reset_control_deassert(rstc);
-+	}
-+
-+	if (rstc_ocp) {
-+		reset_control_assert(rstc_ocp);
-+		udelay(2);
-+		reset_control_deassert(rstc_ocp);
-+	}
-+
- 	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
- 	ddata  = of_device_get_match_data(dev);
- 	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
+-#define to_ssbi(dev)	platform_get_drvdata(to_platform_device(dev))
+-
+ static inline u32 ssbi_readl(struct ssbi *ssbi, u32 reg)
+ {
+ 	return readl(ssbi->base + reg);
+@@ -243,7 +241,7 @@ ssbi_pa_write_bytes(struct ssbi *ssbi, u16 addr, const u8 *buf, int len)
+ 
+ int ssbi_read(struct device *dev, u16 addr, u8 *buf, int len)
+ {
+-	struct ssbi *ssbi = to_ssbi(dev);
++	struct ssbi *ssbi = dev_get_drvdata(dev);
+ 	unsigned long flags;
+ 	int ret;
+ 
+@@ -257,7 +255,7 @@ EXPORT_SYMBOL_GPL(ssbi_read);
+ 
+ int ssbi_write(struct device *dev, u16 addr, const u8 *buf, int len)
+ {
+-	struct ssbi *ssbi = to_ssbi(dev);
++	struct ssbi *ssbi = dev_get_drvdata(dev);
+ 	unsigned long flags;
+ 	int ret;
+ 
+diff --git a/drivers/mfd/t7l66xb.c b/drivers/mfd/t7l66xb.c
+index 43d8683266de..e9cfb147345e 100644
+--- a/drivers/mfd/t7l66xb.c
++++ b/drivers/mfd/t7l66xb.c
+@@ -82,8 +82,7 @@ struct t7l66xb {
+ 
+ static int t7l66xb_mmc_enable(struct platform_device *mmc)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
++	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
+ 	unsigned long flags;
+ 	u8 dev_ctl;
+ 	int ret;
+@@ -108,8 +107,7 @@ static int t7l66xb_mmc_enable(struct platform_device *mmc)
+ 
+ static int t7l66xb_mmc_disable(struct platform_device *mmc)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
++	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
+ 	unsigned long flags;
+ 	u8 dev_ctl;
+ 
+@@ -128,16 +126,14 @@ static int t7l66xb_mmc_disable(struct platform_device *mmc)
+ 
+ static void t7l66xb_mmc_pwr(struct platform_device *mmc, int state)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
++	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_pwr(t7l66xb->scr + 0x200, 0, state);
+ }
+ 
+ static void t7l66xb_mmc_clk_div(struct platform_device *mmc, int state)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
++	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_clk_div(t7l66xb->scr + 0x200, 0, state);
+ }
+diff --git a/drivers/mfd/tc6387xb.c b/drivers/mfd/tc6387xb.c
+index 85fab3729102..f417c6fecfe2 100644
+--- a/drivers/mfd/tc6387xb.c
++++ b/drivers/mfd/tc6387xb.c
+@@ -80,16 +80,14 @@ static int tc6387xb_resume(struct platform_device *dev)
+ 
+ static void tc6387xb_mmc_pwr(struct platform_device *mmc, int state)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
++	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_pwr(tc6387xb->scr + 0x200, 0, state);
+ }
+ 
+ static void tc6387xb_mmc_clk_div(struct platform_device *mmc, int state)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
++	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_clk_div(tc6387xb->scr + 0x200, 0, state);
+ }
+@@ -97,8 +95,7 @@ static void tc6387xb_mmc_clk_div(struct platform_device *mmc, int state)
+ 
+ static int tc6387xb_mmc_enable(struct platform_device *mmc)
+ {
+-	struct platform_device *dev      = to_platform_device(mmc->dev.parent);
+-	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
++	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	clk_prepare_enable(tc6387xb->clk32k);
+ 
+@@ -110,8 +107,7 @@ static int tc6387xb_mmc_enable(struct platform_device *mmc)
+ 
+ static int tc6387xb_mmc_disable(struct platform_device *mmc)
+ {
+-	struct platform_device *dev      = to_platform_device(mmc->dev.parent);
+-	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
++	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	clk_disable_unprepare(tc6387xb->clk32k);
+ 
+diff --git a/drivers/mfd/tc6393xb.c b/drivers/mfd/tc6393xb.c
+index 0c9f0390e891..ad0351f22675 100644
+--- a/drivers/mfd/tc6393xb.c
++++ b/drivers/mfd/tc6393xb.c
+@@ -122,8 +122,7 @@ enum {
+ 
+ static int tc6393xb_nand_enable(struct platform_device *nand)
+ {
+-	struct platform_device *dev = to_platform_device(nand->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(nand->dev.parent);
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&tc6393xb->lock, flags);
+@@ -312,8 +311,7 @@ static int tc6393xb_fb_disable(struct platform_device *dev)
+ 
+ int tc6393xb_lcd_set_power(struct platform_device *fb, bool on)
+ {
+-	struct platform_device *dev = to_platform_device(fb->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(fb->dev.parent);
+ 	u8 fer;
+ 	unsigned long flags;
+ 
+@@ -334,8 +332,7 @@ EXPORT_SYMBOL(tc6393xb_lcd_set_power);
+ 
+ int tc6393xb_lcd_mode(struct platform_device *fb,
+ 					const struct fb_videomode *mode) {
+-	struct platform_device *dev = to_platform_device(fb->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(fb->dev.parent);
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&tc6393xb->lock, flags);
+@@ -351,8 +348,7 @@ EXPORT_SYMBOL(tc6393xb_lcd_mode);
+ 
+ static int tc6393xb_mmc_enable(struct platform_device *mmc)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_enable(tc6393xb->scr + 0x200, 0,
+ 		tc6393xb_mmc_resources[0].start & 0xfffe);
+@@ -362,8 +358,7 @@ static int tc6393xb_mmc_enable(struct platform_device *mmc)
+ 
+ static int tc6393xb_mmc_resume(struct platform_device *mmc)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_resume(tc6393xb->scr + 0x200, 0,
+ 		tc6393xb_mmc_resources[0].start & 0xfffe);
+@@ -373,16 +368,14 @@ static int tc6393xb_mmc_resume(struct platform_device *mmc)
+ 
+ static void tc6393xb_mmc_pwr(struct platform_device *mmc, int state)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_pwr(tc6393xb->scr + 0x200, 0, state);
+ }
+ 
+ static void tc6393xb_mmc_clk_div(struct platform_device *mmc, int state)
+ {
+-	struct platform_device *dev = to_platform_device(mmc->dev.parent);
+-	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
++	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
+ 
+ 	tmio_core_mmc_clk_div(tc6393xb->scr + 0x200, 0, state);
+ }
 -- 
-2.20.0
+2.20.1
 
