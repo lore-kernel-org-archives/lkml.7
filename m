@@ -2,102 +2,74 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10292C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D804C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E8E206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E586021019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:50:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nEg6COYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfEHStB (ORCPT
+        id S1727431AbfEHSuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:49:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52062 "EHLO mx1.redhat.com"
+        Wed, 8 May 2019 14:50:19 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41652 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725910AbfEHStB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:49:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725910AbfEHSuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 14:50:18 -0400
+Received: from zn.tnic (p200300EC2F0F5800C5ADF1C39910BD59.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5800:c5ad:f1c3:9910:bd59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 535FA34CF;
-        Wed,  8 May 2019 18:49:00 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C15166266F;
-        Wed,  8 May 2019 18:48:50 +0000 (UTC)
-Date:   Wed, 8 May 2019 13:48:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        linux-kselftest@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190508184848.qerg3flv3ej3xsev@treble>
-References: <20190508074901.982470324@infradead.org>
- <20190508080612.721269814@infradead.org>
- <20190508115416.nblx7c2kocidpytm@treble>
- <20190508120416.GL2589@hirez.programming.kicks-ass.net>
- <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F1C61EC0235;
+        Wed,  8 May 2019 20:50:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557341417;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=hmUZn3xegPKbeKM49ymYgt6RrEMncxgci4HJk+S/yic=;
+        b=nEg6COYvY0pLSQLlOSybiKiYfzc+YwwXngwo6C/2enUwRcBSxnntsYogNtqyj8e2rTu/iS
+        Fs827fkeO4DDvDM/cI/3/PXQ4sTowOG+5iCHZyZ2pjCwlCeXTkrweMBmRwwJJpiEdLUO5Q
+        ZOCzs1/zoFaall43ABAlfqUrr6xQJNA=
+Date:   Wed, 8 May 2019 20:50:07 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     PanBian <bianpan2016@163.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: EDAC: Fix memory leak in creating CSROW object
+Message-ID: <20190508185007.GH19015@zn.tnic>
+References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
+ <20190418172548.GL27160@zn.tnic>
+ <20190419003536.GA57795@bianpan2016@163.com>
+ <20190419004516.GC559@zn.tnic>
+ <20190427214925.GE16338@kroah.com>
+ <20190508105743.GC19015@zn.tnic>
+ <20190508124754.GD8646@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190508153907.GM2589@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 08 May 2019 18:49:01 +0000 (UTC)
+In-Reply-To: <20190508124754.GD8646@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:39:07PM +0200, Peter Zijlstra wrote:
-> On Wed, May 08, 2019 at 07:42:48AM -0500, Josh Poimboeuf wrote:
-> > On Wed, May 08, 2019 at 02:04:16PM +0200, Peter Zijlstra wrote:
-> 
-> > > Do the x86_64 variants also want some ORC annotation?
-> > 
-> > Maybe so.  Though it looks like regs->ip isn't saved.  The saved
-> > registers might need to be tweaked.  I'll need to look into it.
-> 
-> What all these sites do (and maybe we should look at unifying them
-> somehow) is turn a CALL frame (aka RET-IP) into an exception frame (aka
-> pt_regs).
-> 
-> So regs->ip will be the return address (which is fixed up to be the CALL
-> address in the handler).
+On Wed, May 08, 2019 at 02:47:54PM +0200, Greg KH wrote:
+> Looks good to me, ship it!
 
-But from what I can tell, trampoline_handler() hard-codes regs->ip to
-point to kretprobe_trampoline(), and the original return address is
-placed in regs->sp.
+Thx, done!
 
-Masami, is there a reason why regs->ip doesn't have the original return
-address and regs->sp doesn't have the original SP?  I think that would
-help the unwinder understand things.
+:-)
 
 -- 
-Josh
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
