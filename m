@@ -2,133 +2,85 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B790C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E03DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA420656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB74321479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfEHJT4 convert rfc822-to-8bit (ORCPT
+        id S1727196AbfEHJUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:19:56 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43606 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726589AbfEHJT4 (ORCPT
+        Wed, 8 May 2019 05:20:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42056 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfEHJUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:19:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-20-fr8XoZJNPVSqTqULhvI6mg-1; Wed, 08 May 2019 10:19:52 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 8 May 2019 10:19:51 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 8 May 2019 10:19:51 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Alastair D'Silva' <alastair@au1.ibm.com>,
-        "alastair@d-silva.org" <alastair@d-silva.org>
-CC:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jose Abreu" <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "Stanislaw Gruszka" <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        "Enric Balletbo i Serra" <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH v2 4/7] lib/hexdump.c: Replace ascii bool in
- hex_dump_to_buffer with flags
-Thread-Topic: [PATCH v2 4/7] lib/hexdump.c: Replace ascii bool in
- hex_dump_to_buffer with flags
-Thread-Index: AQHVBWwP4v5z/92cRUaSHokPgMaM4aZg8Maw
-Date:   Wed, 8 May 2019 09:19:51 +0000
-Message-ID: <c98a499a4e824bcd824d5ad53d037c67@AcuMS.aculab.com>
-References: <20190508070148.23130-1-alastair@au1.ibm.com>
- <20190508070148.23130-5-alastair@au1.ibm.com>
-In-Reply-To: <20190508070148.23130-5-alastair@au1.ibm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 8 May 2019 05:20:05 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 743EC260DB0
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     lee.jones@linaro.org
+Cc:     gwendal@chromium.org, bleung@chromium.org,
+        linux-kernel@vger.kernel.org, groeck@chromium.org,
+        kernel@collabora.com, dtor@chromium.org,
+        rushikesh.s.kadam@intel.com
+Subject: [PATCH v4 0/3] mfd: cros_ec: Instantiate CrOS FP and TP devices
+Date:   Wed,  8 May 2019 11:19:53 +0200
+Message-Id: <20190508091956.5261-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MC-Unique: fr8XoZJNPVSqTqULhvI6mg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva
-> Sent: 08 May 2019 08:02
-> To: alastair@d-silva.org
-...
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -480,13 +480,13 @@ enum {
->  	DUMP_PREFIX_OFFSET
->  };
-> 
-> -extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
-> -			      int groupsize, char *linebuf, size_t linebuflen,
-> -			      bool ascii);
-> -
->  #define HEXDUMP_ASCII			(1 << 0)
->  #define HEXDUMP_SUPPRESS_REPEATED	(1 << 1)
+Hi Lee,
 
-These ought to be BIT(0) and BIT(1)
+Sorry for the delay, this is a new version rebased on top of
+for-mfd-next tree solvind the conflicts with due the already applied
+patches.
 
-> +extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
-> +			      int groupsize, char *linebuf, size_t linebuflen,
-> +			      u64 flags);
+The first version depends on:
 
-Why 'u64 flags' ?
-How many flags do you envisage ??
-Your HEXDUMP_ASCII (etc) flags are currently signed values and might
-get sign extended causing grief.
-'unsigned int flags' is probably sufficient.
+- mfd: cros: Update EC protocol to match current EC code
+  - https://lore.kernel.org/patchwork/patch/1046363
 
-I've not really looked at the code, it seems OTT in places though.
+But there were some concerns on how to update this file properly, so
+meanwhile we figure out the proper way, let's introduce only the required
+fields for this series.
 
-If someone copies it somewhere where the performance matters
-(I've user space code which is dominated by its tracing!)
-then you don't want all the function calls and conditionals
-even if you want some of the functionality.
+The series adds support to instantiate two special CrOS EC devices, a
+fingerprint and a touchpad.
 
-	David
+Best regards,
+ Enric
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Changes in v4:
+- Removed the patch to instantiate the ISH device as was already applied.
+- Rebased on top of for-mfd-next branch.
+
+Changes in v3:
+- Fix Andy Shevchenko email.
+
+Changes in v2:
+- Add a patch to introduce the required enums to build.
+
+Enric Balletbo i Serra (3):
+  mfd: cros_ec: Update the EC feature codes
+  mfd: cros_ec: instantiate properly CrOS FP MCU device
+  mfd: cros_ec: instantiate properly CrOS Touchpad MCU device
+
+ drivers/mfd/cros_ec_dev.c            | 20 +++++++++++++++++
+ include/linux/mfd/cros_ec.h          |  2 ++
+ include/linux/mfd/cros_ec_commands.h | 32 +++++++++++++++++++++++++++-
+ 3 files changed, 53 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
 
