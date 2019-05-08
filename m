@@ -2,133 +2,163 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CE9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D218C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4613D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41D320850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rcQmVEai"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEz3TTQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfEHDrc (ORCPT
+        id S1727037AbfEHDwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 23:47:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:34711 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726653AbfEHDrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 23:47:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zMqh2nGWz9s4V;
-        Wed,  8 May 2019 13:47:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557287248;
-        bh=R1RqJ1ImOmpys8/DGBYwmYPTH8oCYtZjVOwBbuB7jEg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rcQmVEaiSda2Xu6lLzFzzHBWm6Ly4ljbqFB9dSb34KN7oZCP4G4cInaXdIkaecogB
-         Ec35BSUvBnsBEnx59nCKjtaz4bVOYFxfbKQ4ZDXOGKqlX/RgiV58nfqTqphvckmyir
-         MfYuZtVsAwJMYJpAPy8DAUZia/Xxyjx5HARPiD0cVejOWBKPRit7V5UFDDssu5JpzH
-         pt+dr9vfpOMrqaRs8CT/17yqmoBYJVp6KDuElRuMrjokxP9SjtgXEkCEenrA1mq76W
-         w+s55lXw+BxS205Uv2mgZyjlKxFehkQ0O40iAtmwBxw55WGFadFnlVta2Wqhjat1ra
-         lcmuau1aiFlHQ==
-Date:   Wed, 8 May 2019 13:47:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Greg KH <greg@kroah.com>, Shawn Guo <shawn.guo@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Robert Yang <decatf@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan =?UTF-8?B?TmV1c2Now6Rm?= =?UTF-8?B?ZXI=?= 
-        <j.neuschaefer@gmx.net>
-Subject: Re: linux-next: manual merge of the staging tree with the imx-mxs
- tree
-Message-ID: <20190508134727.7ca1e390@canb.auug.org.au>
-In-Reply-To: <20190412144921.3a152478@canb.auug.org.au>
-References: <20190412144921.3a152478@canb.auug.org.au>
+        Tue, 7 May 2019 23:52:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39797 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbfEHDwU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 23:52:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v10so12873287wrt.6;
+        Tue, 07 May 2019 20:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DcGjXeg0eS0q2STrcadngNVQ19GQsSpa7hlcxfI3B4w=;
+        b=SEz3TTQ7P2fSn4ugPwi0u6SQOWHqRtYz8f4ZGwYieVz5K3SjWGJPrErDMJS4stvwSZ
+         OARjhZ/OIEnr/3bpPLKh1WdHeShbiiDh2Phc6T95Mvoy95VOozlZq83lh/nhZ2lFwwgv
+         FY7RLe/HvYIrtxBiIUT7WHXwkc5BIq+y8gPKOhbUjUCuRoVp1sKpDUMWAVZ4BE5oEXmx
+         LqzyZkO+JuyK+QWYm0vu41jP2fo6aE1SIutPDQ9ioZlHg2Lf+7NpRcwoxRMowNl+9Qj2
+         7Pqtbi5NB5z/Ksy4IWy+171sqFjP0wuUymU15ayk+m/PLl7ijHxHPudc/qzpVcekQdgQ
+         Tz/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DcGjXeg0eS0q2STrcadngNVQ19GQsSpa7hlcxfI3B4w=;
+        b=Ab9VB9MXum2uRXCpIp+FxXKGTnsn+TAodLapPr5bfjmVreqyW3g/gbnubmHfdC+/cI
+         9ERbgxGpPGVWwK53hZ9+NmPrGBsEk3a5daVxwpzOI2IwUF7kk2weG8DArwWDmxO1lcsp
+         VFnP9zK1Kl5ymitm0fcHw2PzZJkh3+DXAor8r9I2/A7S5fncebhH2+qjajYZ0pfgkLd9
+         qmIIMbVdA5uGpNexgIplGyyhtmLTIGtuJwe2Kd9l3j7XMQvXCazjmKMdr9GQIxnnA9ga
+         CkKrB6h1bPhsjvTDE1Sc5ff7e2Dab9EsXMZ6JQys0Cq7gHO+PglR4EeXNSHzVk8BLON4
+         n4dA==
+X-Gm-Message-State: APjAAAVL8KzmaaAIiFlHUvt8Tx9YEYCm9aFYx2dXCWisf017XxL+r8wH
+        0ZAO1qNmF5WSYvPgIyrPDmr0FgWx
+X-Google-Smtp-Source: APXvYqx/aEcgcunoBQTZXNUA4Wom6qxK/g7oa+Sgks4LYMYFspUoBy8SPjla86B/3DjIchWkMU6L4Q==
+X-Received: by 2002:adf:c6c3:: with SMTP id c3mr25955128wrh.267.1557287538368;
+        Tue, 07 May 2019 20:52:18 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-110-70.net.upcbroadband.cz. [86.49.110.70])
+        by smtp.gmail.com with ESMTPSA id b124sm875376wmg.21.2019.05.07.20.52.16
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 20:52:17 -0700 (PDT)
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+To:     masonccyang@mxic.com.tw, Lee Jones <lee.jones@linaro.org>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-spi@vger.kernel.org, mark.rutland@arm.com,
+        Rob Herring <robh@kernel.org>,
+        sergei.shtylyov@cogentembedded.com, zhengxunli@mxic.com.tw
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus>
+ <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell>
+ <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com>
+Date:   Wed, 8 May 2019 05:52:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/1V1pV/zWcmIrgm4TFnFSdey"; protocol="application/pgp-signature"
+In-Reply-To: <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1V1pV/zWcmIrgm4TFnFSdey
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/8/19 4:48 AM, masonccyang@mxic.com.tw wrote:
+> Hi Jones,
+> 
+>> "Lee Jones" <lee.jones@linaro.org>
+>> 2019/05/07 下午 08:58
+>>
+>> To
+>>
+>> "Marek Vasut" <marek.vasut@gmail.com>,
+>>
+>> cc
+>>
+>> "Rob Herring" <robh@kernel.org>, "Mason Yang"
+>> <masonccyang@mxic.com.tw>, broonie@kernel.org, linux-
+>> kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+>> bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, "Geert
+>> Uytterhoeven" <geert+renesas@glider.be>,
+>> sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com,
+>> devicetree@vger.kernel.org, juliensu@mxic.com.tw, "Simon Horman"
+>> <horms@verge.net.au>, zhengxunli@mxic.com.tw
+>>
+>> Subject
+>>
+>> Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+>> RPC-IF MFD bindings
+>>
+>> On Wed, 24 Apr 2019, Marek Vasut wrote:
+>>
+>> > On 4/24/19 11:23 PM, Rob Herring wrote:
+>> > > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
+>> > >> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
+>> > >>
+>> > >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> > >> ---
+>> > >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++
+>> ++++++++++++++++
+>> > >>  1 file changed, 40 insertions(+)
+>> > >>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
+>> renesas-rpc.txt
+>> > >>
+>> > >> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
+>> rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>> > >> new file mode 100644
+>> > >> index 0000000..668b822
+>> > >> --- /dev/null
+>> > >> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>> > >> @@ -0,0 +1,40 @@
+>> > >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
+>> > >> +--------------------------------------------------
+>> > >
+>> > > Looks like a SPI flash controller from the example. What makes it an
+>> > > MFD?
+>> >
+>> > It supports both SPI NOR and HyperFlash (CFI-compliant flash with
+>> > different bus interface).
+>>
+>> Looks like you're registering one OR the other.
+>>
+>> Why don't you just do this from DT?
+>>
+>> No reason for this to be an MFD IMHO.
+> 
+> 
+> okay, I will patch it back to SPI mode only.
 
-Hi all,
+I don't think that's what Lee meant . The controller supports _both_
+modes , hence it would have the same compatible string. You just need to
+extract the mode of operation from the DT.
 
-On Fri, 12 Apr 2019 14:49:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the staging tree got a conflict in:
->=20
->   Documentation/devicetree/bindings/vendor-prefixes.txt
->=20
-> between commit:
->=20
->   189733b0a7e4 ("dt-bindings: Add vendor prefix for Rakuten Kobo, Inc.")
->=20
-> from the imx-mxs tree and commit:
->=20
->   2e5cee6c7622 ("dt-bindings: Add vendor prefix for Kionix, Inc.")
->=20
-> from the staging tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 5f2b185a04e6,93753f447c20..000000000000
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@@ -211,7 -210,7 +211,8 @@@ kiebackpeter    Kieback & Peter Gmb
->   kinetic Kinetic Technologies
->   kingdisplay	King & Display Technology Co., Ltd.
->   kingnovel	Kingnovel Technology Co., Ltd.
-> + kionix	Kionix, Inc.
->  +kobo	Rakuten Kobo Inc.
->   koe	Kaohsiung Opto-Electronics Inc.
->   kosagi	Sutajio Ko-Usagi PTE Ltd.
->   kyo	Kyocera Corporation
-
-This is now a conflict between the arm-soc tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1V1pV/zWcmIrgm4TFnFSdey
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzSUU8ACgkQAVBC80lX
-0GwTPAf/cEVh8RWOnK9RS7qYoOibc+Ud8w21cx8GoOiArXG95S1BgP+HUekZMS/m
-gy13w1VEqM1L391i+d/lrBuEQR/D5dQCXkIF6DzjBqmSUZ2X4D6y9IIFjXde5+21
-Fq8F0bShBq8XI4zKbaUGT5BpbEEq/7Z+PU63tPL5jTuIdoA4666mMRUFPhcCoHj4
-ajRQORxZsEdLv6MsTGQ6LLnTcfzbPMKT/B2M/aPFp8NolcHIvSt2lk+HjOeD5MJo
-ltA1BMt6Tgwguq44o9IZIMGrfMwVYZNm3fY55zc8+jINsj+Ysb7gsLGAjwbEvQHB
-PSrvQNm/09DAs+ziVUOhB3/uGroe9A==
-=cTIR
------END PGP SIGNATURE-----
-
---Sig_/1V1pV/zWcmIrgm4TFnFSdey--
+-- 
+Best regards,
+Marek Vasut
