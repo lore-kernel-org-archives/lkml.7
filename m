@@ -7,72 +7,71 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0360DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713CAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFF721479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D36921530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tKX/lzAE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AykjrtNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfEHLwf (ORCPT
+        id S1728331AbfEHLxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:52:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36761 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727586AbfEHLwf (ORCPT
+        Wed, 8 May 2019 07:53:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53768 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbfEHLxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:52:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id j187so2893166wmj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:52:34 -0700 (PDT)
+        Wed, 8 May 2019 07:53:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 198so2897451wme.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=bgzoKqv2vMCjmxJ3xMeLrXg9m73MgNn3EHeek8J9Jxg=;
-        b=tKX/lzAEg5dvRlrWNl6NKBcTzikX0amTt12YXTGKL08kUnoqwQ9a0d+7hrlLVD0t8R
-         I6I/NiseKd4g+RvEp9uB0Sq1XIhBfuCNsweM7c5q4mC4qxFr8IlELCRbHl5rTPcBAjzK
-         vFkCiBrF7iWZeCj+EqPqEr3kqXHNE4Gh6ZhSp/Swr5jGPSLMLyVkLHOKjpdHRylphX5m
-         Nu2n2+9AuUIiT/L622qQadZQctHkxLKzFTIKPNmZu3I6QuwpOhoqhLpfqKiUp11uv2fw
-         kjEddNH13fQa7MM4ZM1a74kxReMnDA+T2EM9EYRAv6pk6QxMrQI7VyraWPK73DJbNnUF
-         qgOQ==
+        bh=lQpYdKueKd5GodvUSuXNOvFoEgO6IktebbFb9QN9iWA=;
+        b=AykjrtNqhwZKTNyKdi3loPGsyOQ6pj6vMupWy72eN3oJnHqGLGcu3N4HSjLt6+F9B/
+         sXQP5z3gHPaE36AnKDkgHDwgrHW95o8rv7UJHhpY2j32hgC/BDwGF5Dy3xx+aKgdPxDq
+         m2bP5sY219WiO1MRcLKWD6QMIEDN6/rIrfuZ/olk4HbYwV1ECPMkgonPEHbs6NJB6Kat
+         8gcmLnzQ0ULxTePPDXi/Cz6zVyLjoRcGbkDdbhvE0D+lBMN3Ah7kw3ii2F7mfn8TRbra
+         lerPjTbi7INob6Ci8zBxyjpAJ6xAmlyZ9JuqW7gbzqUyA8/n6mNr/EpjHv7D9FMANs0I
+         tqBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=bgzoKqv2vMCjmxJ3xMeLrXg9m73MgNn3EHeek8J9Jxg=;
-        b=DSQas2jdznuZfeGbaPFZon/Eh3YCjdzgIX9BFS5Qg+B1z1RAdYWggbCMCnhD14FXXJ
-         75FD2M9/T6anh9p563GFBJ+W+R6QaqafIRJZKpGV1kwkyOCfEj2Xc7EWG2Efhce7+dPy
-         W1B6IeN72iCXcELD4PADvf1cKqpNfOjgryZ4/jIA9yQwzA98MumBn4603foTqhntkaY5
-         BdW8V1OBG02N3qjcjp6T9rcB22Zod9EU4d9O9k3Hxmdy4I/xjuar8xr2rOpZgCgVUpFp
-         Osv0zRfYwJYaPoSFXed4GzGNHK6BRd/cQUekna52eL0FdEUDjcLnVzKwASfJcSYZMBqD
-         HeNg==
-X-Gm-Message-State: APjAAAW+q2Q+xANncp1902S2yPxZ7qTxbhue7FSZujn5SnlbQmiru+UE
-        UKV350skq9eBfiNzBlbLJXnmdg==
-X-Google-Smtp-Source: APXvYqzdG+CtYf6DOkiIqnOU8XWoNkkbpTTeRfLOp2Jj920q5O5hA+jcM9Fx2TLWUq5GF5da3ZHklA==
-X-Received: by 2002:a1c:f70e:: with SMTP id v14mr2916093wmh.74.1557316353693;
-        Wed, 08 May 2019 04:52:33 -0700 (PDT)
+        bh=lQpYdKueKd5GodvUSuXNOvFoEgO6IktebbFb9QN9iWA=;
+        b=a8usHu/NljtKyyxbAyC0FII99AecfB2naFCOVr4Gf+M4pzwy9rKAC1VH0V3BGMEkym
+         pib9Q9eQkIoFycBhOi7Ui8K+UEWVx8K1fz9nKJhSqQ/al7MyDBa9zCDpsVbsBk27Pz7P
+         /MCTSpN8KWr1M/UhJvZ+7f0ZL9hryiTGldsZNxia7pBRtVvWzFg0bt76Wv1598e2Xjvq
+         /Pbi+VjKJy7o4ctV4wIQ39GOxEzj2C146iAYoBCHDzwCy7R0wZhg98qskWX78RLfHGLJ
+         NfypAD5PpoHkoCB3aDW5Hb5lONONnquVy/1jirv4w5AbxYjz9Sn1A3jX6Dl42NW6jWIZ
+         8bQg==
+X-Gm-Message-State: APjAAAW77nVd7mmomAZj74jmakPFYWTWJysyikDtxEhiX5Dvb0vrjPLD
+        p0Je/dkyTPDu7H6ha27fTKVTwA==
+X-Google-Smtp-Source: APXvYqxHUiE2SWdc0d3qosb62vYh2L55jvapOGaR1hhteA8wydi1budIpEccC8GDTAtWGKYT1zyPcQ==
+X-Received: by 2002:a7b:cb58:: with SMTP id v24mr2614038wmj.121.1557316409784;
+        Wed, 08 May 2019 04:53:29 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id a184sm2953209wmh.36.2019.05.08.04.52.32
+        by smtp.gmail.com with ESMTPSA id d4sm34521361wrf.7.2019.05.08.04.53.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 04:52:33 -0700 (PDT)
-Date:   Wed, 8 May 2019 12:52:31 +0100
+        Wed, 08 May 2019 04:53:29 -0700 (PDT)
+Date:   Wed, 8 May 2019 12:53:27 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Dan Murphy <dmurphy@ti.com>
 Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, rdunlap@infradead.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-Message-ID: <20190508115231.GN31645@dell>
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] mfd: ti-lmu: Add LM36274 support to the ti-lmu
+Message-ID: <20190508115327.GO31645@dell>
 References: <20190507201159.13940-1-dmurphy@ti.com>
- <20190507201159.13940-3-dmurphy@ti.com>
+ <20190507201159.13940-4-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190507201159.13940-3-dmurphy@ti.com>
+In-Reply-To: <20190507201159.13940-4-dmurphy@ti.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,21 +80,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, 07 May 2019, Dan Murphy wrote:
 
-> Add the LM36274 backlight driver with regulator support.
-> This is a multi-function device for backlight applications.
+> Add the LM36274 register support to the ti-lmu MFD driver.
 > 
-> Backlight properties will be documented in it's a supplemental
-> bindings document.
-> 
-> Regulator support is documented in the regulator/lm363x-regulator.txt
-> 
-> http://www.ti.com/lit/ds/symlink/lm36274.pdf
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../devicetree/bindings/mfd/ti-lmu.txt        | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
+>  drivers/mfd/Kconfig                 |  5 ++---
+>  drivers/mfd/ti-lmu.c                | 14 ++++++++++++++
+>  include/linux/mfd/ti-lmu-register.h | 23 +++++++++++++++++++++++
+>  include/linux/mfd/ti-lmu.h          |  4 ++++
+>  4 files changed, 43 insertions(+), 3 deletions(-)
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
