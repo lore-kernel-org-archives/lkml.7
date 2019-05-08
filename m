@@ -2,171 +2,136 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2241BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DFA21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F248621019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfEHDn0 convert rfc822-to-8bit (ORCPT
+        id S1727047AbfEHDoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 23:43:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45134 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbfEHDnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 23:43:25 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 94D853087944;
-        Wed,  8 May 2019 03:43:25 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82EFC60C4E;
-        Wed,  8 May 2019 03:43:25 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 28F5E65D13;
-        Wed,  8 May 2019 03:43:25 +0000 (UTC)
-Date:   Tue, 7 May 2019 23:43:24 -0400 (EDT)
-From:   Jason Wang <jasowang@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Message-ID: <1430527294.27174562.1557287004441.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190507154753.GA8809@infradead.org>
-References: <20190507154753.GA8809@infradead.org>
-Subject: Re: [PATCH RFC] vhost: don't use kmap() to log dirty pages
+        Tue, 7 May 2019 23:44:16 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51797 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726516AbfEHDoP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 23:44:15 -0400
+X-UUID: 86b810c50c0f40feb7a66dc923344c34-20190508
+X-UUID: 86b810c50c0f40feb7a66dc923344c34-20190508
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1838829485; Wed, 08 May 2019 11:43:56 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 8 May 2019 11:43:55 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 May 2019 11:43:55 +0800
+Message-ID: <1557287035.3936.2.camel@mtksdaap41>
+Subject: Re: [PATCH v5 03/12] dt-binding: gce: add binding for gce subsys
+ property
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Wed, 8 May 2019 11:43:55 +0800
+In-Reply-To: <20190507081355.52630-4-bibby.hsieh@mediatek.com>
+References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
+         <20190507081355.52630-4-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.68.5.20, 10.4.195.23]
-Thread-Topic: vhost: don't use kmap() to log dirty pages
-Thread-Index: K7z0d3UL1bhTV/QW5Sb3gPqIWKhUvg==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 08 May 2019 03:43:25 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/7 下午11:47, Christoph Hellwig wrote:
-> On Mon, May 06, 2019 at 10:23:29PM -0400, Jason Wang wrote:
->> Note: there're archs (few non popular ones) that don't implement
->> futex helper, we can't log dirty pages. We can fix them on top or
->> simply disable LOG_ALL features of vhost.
->
-> That means vhost now has to depend on HAVE_FUTEX_CMPXCHG to make
-> sure we have a working implementation.
+Hi, Bibby:
 
-I found HAVE_FUTEX_CMPXCHG is not a must for arch that has the
-implementation and futex does some kind of runtime detection like:
+On Tue, 2019-05-07 at 16:13 +0800, Bibby Hsieh wrote:
+> tcmdq driver provide a function that get the relationship
+> of sub system number from device node for client.
+> add specification for #subsys-cells, mediatek,gce-subsys.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  .../devicetree/bindings/mailbox/mtk-gce.txt       | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index 1f7f8f2a3f49..8fd9479bc9f6 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -21,11 +21,19 @@ Required properties:
+>  	priority: Priority of GCE thread.
+>  	atomic_exec: GCE processing continuous packets of commands in atomic
+>  		way.
+> +- #subsys-cells: Should be 3.
+> +	<&phandle subsys_number start_offset size>
+> +	phandle: Label name of a gce node.
+> +	subsys_number: specify the sub-system id which is corresponding
+> +		       to the register address.
+> +	start_offset: the start offset of register address that GCE can access.
+> +	size: the total size of register address that GCE can access.
+>  
+>  Required properties for a client device:
+>  - mboxes: Client use mailbox to communicate with GCE, it should have this
+>    property and list of phandle, mailbox specifiers.
+> -- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+> +Optional propertier for a client device:
 
-static void __init futex_detect_cmpxchg(void)
-{
-#ifndef CONFIG_HAVE_FUTEX_CMPXCHG
-	u32 curval;
+properties
 
-	/*
-	 * This will fail and we want it. Some arch implementations do
-	 * runtime detection of the futex_atomic_cmpxchg_inatomic()
-	 * functionality. We want to know that before we call in any
-	 * of the complex code paths. Also we want to prevent
-	 * registration of robust lists in that case. NULL is
-	 * guaranteed to fault and we get -EFAULT on functional
-	 * implementation, the non-functional ones will return
-	 * -ENOSYS.
-	 */
-	if (cmpxchg_futex_value_locked(&curval, NULL, 0, 0) == -EFAULT)
-		futex_cmpxchg_enabled = 1;
-#endif
-}
+Regards,
+CK
+
+> +- mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+>    to the register address.
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+> @@ -40,6 +48,7 @@ Example:
+>  		clocks = <&infracfg CLK_INFRA_GCE>;
+>  		clock-names = "gce";
+>  		#mbox-cells = <3>;
+> +		#subsys-cells = <3>;
+>  	};
+>  
+>  Example for a client device:
+> @@ -48,9 +57,9 @@ Example for a client device:
+>  		compatible = "mediatek,mt8173-mmsys";
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+>  		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+>  				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> -
+> +		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
+> +					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+>  		...
+>  	};
 
 
->
->
->>  #include <linux/sched/signal.h>
->>  #include <linux/interval_tree_generic.h>
->>  #include <linux/nospec.h>
->> +#include <asm/futex.h>
->
-> Also please include the futex maintainers to make sure they are fine
-> with this first usage of <asm/futex.h> outside of kernel/futex.c.
->
-
-Thanks for ccing them. Will do for next version.
-
-If we decide to go this way, we probably need to move it to uaccess
-for a more generic helper.
-
->
->> +static int set_bit_to_user(int nr, u32 __user *addr)
->>  {
->>  	unsigned long log = (unsigned long)addr;
->>  	struct page *page;
->> +	u32 old_log;
->>  	int r;
->>  
->>  	r = get_user_pages_fast(log, 1, 1, &page);
->>  	if (r < 0)
->>  		return r;
->>  	BUG_ON(r != 1);
->> +
->> +	r = futex_atomic_cmpxchg_inatomic(&old_log, addr, 0, 0);
->> +	if (r < 0)
->> +		return r;
->> +
->> +	old_log |= 1 << nr;
->> +	r = put_user(old_log, addr);
->> +	if (r < 0)
->> +		return r;
->
-> And this just looks odd to me.  Why do we need the futex call to
-> replace a 0 value with 0?  Why does it still duplicate the
-> put_user?  This doesn't look like actually working code to me.
-
-Yes, this is a bug. Should be something like:
-
-static int set_bit_to_user(int nr, u32 __user *addr)
-{
-        unsigned long log = (unsigned long)addr;
-        struct page *page;
-        u32 old_log, new_log, l;
-        int r;
-
-        r = get_user_pages_fast(log, 1, 1, &page);
-        if (r < 0)
-                return r;
-	BUG_ON(r != 1);
-
-        do {
-                r = get_user(old_log, addr);
-                if (r < 0)
-                        return r;
-                new_log = old_log | (1 << nr);
-		r = futex_atomic_cmpxchg_inatomic(&l, addr, old_log, new_log);
-                if (r < 0)
-                        return r;
-        } while(l != new_log);
-
-	set_page_dirty_lock(page);
-        put_page(page);
-        return 0;
-}
-
->
-> Also don't we need a pagefault_disable() around
-> futex_atomic_cmpxchg_inatomic?
-
-Since we don't want to deal with pagefault, so the page has been
-pinned before futex_atomic_cmpxchg_inatomic().
-
-Thanks
