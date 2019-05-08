@@ -2,133 +2,205 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC693C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BD3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D5121530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apWVfaiD"
+	by mail.kernel.org (Postfix) with ESMTP id 7B20120989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557301009;
+	bh=ThkQvnNCpv/6wAvWb1xyrMlqBXv3RUbZuyaHynsld9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=grvolhRX66FQdagIdO4yvdm2oon7jUiXv+A+L16s6fYMK3R+RH8OSrANXnZRNdaim
+	 Rw8TbOrVNxhGnkyQa7A5CpezC72xqVmYIJQCZbEp1Qs/qKHjlZ8NHlYyfvEnmkuOsY
+	 RIbFS31dNmj2XBkSa/F4X8iMHFpSvFT8vAQ3BB6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfEHHe6 (ORCPT
+        id S1727084AbfEHHgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:34:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44589 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfEHHe6 (ORCPT
+        Wed, 8 May 2019 03:36:48 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43314 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfEHHgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:34:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id v9so12488839ion.11;
-        Wed, 08 May 2019 00:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=06vNhGWmXv8aMKwZVKHjsvRsD+uYUkrBPC/S7+NBkoE=;
-        b=apWVfaiDZ1exPIwVVASJ59UGwhjBA1P2k6aCr1J79HXmlETcO4h4+8A3DyPvaXxtP6
-         fw4y8+fGxb4LyrRdyX+6xiWjwG389N+mdjgKCCb4W7AVXEmhrcudC6rHkrGHLri0BdjL
-         I4NTI4Y6kDVR9F9So8ZW2+jhqhA52TSCtIhHdf9uPULVaqUzAliGmBdCYqZZn+R9xaD+
-         3UePL7TQHw3sRBUHY9X8AhEQurjjCJTYQ7WD/B6gu3tTQsJ0lqTKqWbvpSNpj3zo6Krf
-         /UA+vaCQYxMCjOBotAe90BID+G/PPngIBiWd/w3YfQjLYX487puI1u8KsX/QtxyHLFO1
-         e/dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=06vNhGWmXv8aMKwZVKHjsvRsD+uYUkrBPC/S7+NBkoE=;
-        b=SN9nV6k/TYFejxInHBmuzGPfuHZFj+G+bss0hAMeh8PcyjFB3kenU0/9AjZ45N5+/o
-         28CnWXp3m9q16pMQc6EXUxJQaX+XJFGsAslL7w6fmxRra2wfdwO13WyF3D+mpslJ5Tmv
-         PjqNQlFJytbLhZew5Ndl2lDtdaA1RaCiCdEXhZGYxPdWwHZ2K6VkXN09c3t5REA22JYh
-         kmPVH2O75hnlpKijtxdoPToyeQ3rpo0nHf/Bb0bmEgDCeChhMywBr34KRD5vXMsk3P0f
-         5cWTnakMdcSbefHSa9EGs9VmAMg1fUYKy9+jTcug+aaksT+/2vqt1jl6IRPU238/tOHJ
-         ClTw==
-X-Gm-Message-State: APjAAAVV8Q0HbN77WON1HGbByARBx2mLdEd80Oc9MiUYK4EouzUVorKg
-        VQ22Agnx6TgNYb2kcSyGK7U=
-X-Google-Smtp-Source: APXvYqwF9H/7HCZIz5Tn+Hj7eOSVa+HOFngsAGECdBjmi6GEuIUO3hqq+2bK57608GUBAZptqroXbQ==
-X-Received: by 2002:a6b:5814:: with SMTP id m20mr11060978iob.293.1557300897335;
-        Wed, 08 May 2019 00:34:57 -0700 (PDT)
-Received: from icarus ([2001:268:c1c0:b600:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id 81sm799787itv.23.2019.05.08.00.34.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 00:34:56 -0700 (PDT)
-Date:   Wed, 8 May 2019 16:34:34 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
- trigger driver
-Message-ID: <20190508073434.GA3277@icarus>
-References: <20190507091224.17781-1-benjamin.gaignard@st.com>
- <20190507101729.GA3420@icarus>
- <CA+M3ks4LhOFTeArnh3d=C02qLJWj_u6tWDDOhD8kZnJPRkXC8w@mail.gmail.com>
+        Wed, 8 May 2019 03:36:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZiWcasPm1r2b4sKHBSWaozu7gf20hyaggoSjXvuAE+U=; b=qJ9VCp/5kZD21xj4QImVIAvXv
+        lpZLQVpEmQJAaamUzpK+VydJ4Hvq5xBaXO1rEb2DImuedAjlOtI+kExyKOJe+IJcQVuhx80hbOx26
+        WqrG8lv/pETTIfxydUIqZFXZHG49UxHsyJa4iEPDLMaq996kjpiS5bW/shQ6lwHG1YiXo=;
+Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hOH7t-0007Kv-2E; Wed, 08 May 2019 07:36:32 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 1C2D7440035; Wed,  8 May 2019 08:36:23 +0100 (BST)
+Date:   Wed, 8 May 2019 16:36:23 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Fletcher Woodruff <fletcherw@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v5 1/3] ASoC: rt5677: allow multiple interrupt sources
+Message-ID: <20190508073623.GT14916@sirena.org.uk>
+References: <20190507220115.90395-1-fletcherw@chromium.org>
+ <20190507220115.90395-2-fletcherw@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lfL9iWt62hyVv4Jn"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+M3ks4LhOFTeArnh3d=C02qLJWj_u6tWDDOhD8kZnJPRkXC8w@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190507220115.90395-2-fletcherw@chromium.org>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 02:37:07PM +0200, Benjamin Gaignard wrote:
-> Le mar. 7 mai 2019 à 12:19, William Breathitt Gray
-> <vilhelm.gray@gmail.com> a écrit :
-> >
-> > On Tue, May 07, 2019 at 11:12:24AM +0200, Benjamin Gaignard wrote:
-> > > Quadrature feature is now hosted on it own framework.
-> > > Remove quadrature related code from stm32-trigger driver to avoid
-> > > code duplication and simplify the ABI.
-> > >
-> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >
-> > Although this functionality is now provided by the Counter subsystem, we
-> > should keep the IIO Counter interface for this driver intact since
-> > existing user applications may depend on it; this is the same reason why
-> > the IIO Counter code in the 104-QUAD-8 device driver was not removed
-> > despite moving to the Counter subsystem.
-> >
-> > Once user applications have had enough time to migrate to the Generic
-> > Counter interface, we can consider removing the deprecated IIO Counter
-> > interface.
-> 
-> Hi William,
-> 
-> This SoC is not yet in production so their is no legacy on the old interface
-> and I would like to avoid to create one.
-> 
-> Benjamin
 
-Ah, I see what you mean, this driver is for future devices. Do the
-earlier STM32 H7 series devices have a quadrature feature as well, or is
-this functionality only available with the new devices?
+--lfL9iWt62hyVv4Jn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-William Breathitt Gray
+On Tue, May 07, 2019 at 04:01:13PM -0600, Fletcher Woodruff wrote:
 
-> 
-> >
-> > William Breathitt Gray
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> This patch does not add polarity flipping support within regmap-irq
+> because there is extra work that must be done within the irq handler
+> to support hotword detection. On the Chromebook Pixel, the firmware will
+> disconnect GPIO1 from the jack detection irq when a hotword is detected
+> and trigger the interrupt handler. Inside the handler, we will need to
+> detect this, report the hotword event, and re-connect GPIO1 to the jack
+> detection irq.
+
+Please have a conversation with your firmware team about the concept of
+abstraction - this is clearly a problematic thing to do as it's causing
+the state of the system to change for devices that are mostly managed
+=66rom the operating system.  It's not clear to me that this shouldn't be
+split off somehow so that it doesn't impact other systems using this
+hardware.
+
+I'm actually not entirely clear what the code that does the "reconnect
+GPIO1 to the jack detection IRQ" bit is, I couldn't find anything
+outside of the initial probe.
+
+> -	if (rt5677->irq_data) {
+> -		regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1, 0x8000,
+> -			0x8000);
+> -		regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC, 0x0018,
+> -			0x0008);
+> -
+> -		if (rt5677->pdata.jd1_gpio)
+> -			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
+> -				RT5677_SEL_GPIO_JD1_MASK,
+> -				rt5677->pdata.jd1_gpio <<
+> -				RT5677_SEL_GPIO_JD1_SFT);
+> -
+> -		if (rt5677->pdata.jd2_gpio)
+> -			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
+> -				RT5677_SEL_GPIO_JD2_MASK,
+> -				rt5677->pdata.jd2_gpio <<
+> -				RT5677_SEL_GPIO_JD2_SFT);
+> -
+> -		if (rt5677->pdata.jd3_gpio)
+> -			regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1,
+> -				RT5677_SEL_GPIO_JD3_MASK,
+> -				rt5677->pdata.jd3_gpio <<
+> -				RT5677_SEL_GPIO_JD3_SFT);
+> -	}
+> -
+
+There's a lot of refactoring in the patch here which makes it very hard
+to follow what the actual change is.
+
+> +		}
+> +	}
+> +exit:
+> +	mutex_unlock(&rt5677->irq_lock);
+> +	return IRQ_HANDLED;
+> +}
+
+We uncondtionally report the interrupt as handled?
+
+> +static void rt5677_irq_work(struct work_struct *work)
+>  {
+> -	int ret;
+> -	struct rt5677_priv *rt5677 =3D i2c_get_clientdata(i2c);
+> +	struct rt5677_priv *rt5677 =3D
+> +		container_of(work, struct rt5677_priv, irq_work.work);
+> =20
+> -	if (!rt5677->pdata.jd1_gpio &&
+> -		!rt5677->pdata.jd2_gpio &&
+> -		!rt5677->pdata.jd3_gpio)
+> -		return 0;
+> +	rt5677_irq(0, rt5677);
+> +}
+
+I couldn't find anything that schedules this.  What is it doing, why is
+it here (and this is an example of a really complex to review bit of the
+change due to refactoring BTW, the diff is really unhelpful)?
+
+> +static void rt5677_irq_bus_sync_unlock(struct irq_data *data)
+> +{
+> +	struct rt5677_priv *rt5677 =3D irq_data_get_irq_chip_data(data);
+> +
+> +	regmap_update_bits(rt5677->regmap, RT5677_IRQ_CTRL1,
+> +			RT5677_EN_IRQ_GPIO_JD1 | RT5677_EN_IRQ_GPIO_JD2 |
+> +			RT5677_EN_IRQ_GPIO_JD3, rt5677->irq_en);
+> +	mutex_unlock(&rt5677->irq_lock);
+> +}
+
+Is this the bit that reenables the interrupt?  Isn't this just a quirk
+to rewrite the masks frequently, that'd seem easier than doing so much
+open coding?
+
+> +	/* Select and enable jack detection sources per platform data */
+> +	if (rt5677->pdata.jd1_gpio) {
+> +		jd_mask	|=3D RT5677_SEL_GPIO_JD1_MASK;
+> +		jd_val	|=3D rt5677->pdata.jd1_gpio << RT5677_SEL_GPIO_JD1_SFT;
+> +	}
+> +	if (rt5677->pdata.jd2_gpio) {
+> +		jd_mask	|=3D RT5677_SEL_GPIO_JD2_MASK;
+> +		jd_val	|=3D rt5677->pdata.jd2_gpio << RT5677_SEL_GPIO_JD2_SFT;
+> +	}
+> +	if (rt5677->pdata.jd3_gpio) {
+> +		jd_mask	|=3D RT5677_SEL_GPIO_JD3_MASK;
+> +		jd_val	|=3D rt5677->pdata.jd3_gpio << RT5677_SEL_GPIO_JD3_SFT;
+> +	}
+> +	regmap_update_bits(rt5677->regmap, RT5677_JD_CTRL1, jd_mask, jd_val);
+> +
+> +	/* Set GPIO1 pin to be IRQ output */
+> +	regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1,
+> +			RT5677_GPIO1_PIN_MASK, RT5677_GPIO1_PIN_IRQ);
+
+Are other GPIO outputs supported by the chip?  How does this interact
+with the jdN_gpio settings above?
+
+--lfL9iWt62hyVv4Jn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzShvYACgkQJNaLcl1U
+h9Akegf9EmRVQ8cOM0I85C0Md26UevTf1xeVygJTSaK3D7zYEY7AZikGu56Bifnb
+3hSo0k2ReKPTd3OvIvBB7EEO4qtxpTtC6sSgehRJCyMTRcZwVjHFVyyIoVANr7Df
+sEu5tpreRSUaOMbpXCxervtk0o0TrwPVZGcrSAGPrElU5ZqF4A+9okT2w1okMF/f
+jfNc8amvzxrPb7PNMs3Wa514eKoFftmaKWKD5mLQA6/GDEhAK9O8eWaaIItmC7Qv
+iXnJ8msdv52xvDaaQ0eyMcJPLy/HwVMtswVuIef1FP8SpboBC/2ZP6kpStf4oeph
+hbbnKPTlo3ir7D3JnFqqYWoeZcvVnQ==
+=QWkD
+-----END PGP SIGNATURE-----
+
+--lfL9iWt62hyVv4Jn--
