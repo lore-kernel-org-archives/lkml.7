@@ -2,174 +2,163 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB90FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7466C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919CF20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89017216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="z43jXtqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbfEHOs0 (ORCPT
+        id S1727679AbfEHOsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:48:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728423AbfEHOou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
-   d="scan'208";a="169656569"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id BF156D4A; Wed,  8 May 2019 17:44:30 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 41/62] keys/mktme: Support memory hotplug for MKTME keys
-Date:   Wed,  8 May 2019 17:44:01 +0300
-Message-Id: <20190508144422.13171-42-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+        Wed, 8 May 2019 10:48:31 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:39246 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbfEHOs3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:48:29 -0400
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x48EmGpG024668;
+        Wed, 8 May 2019 23:48:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x48EmGpG024668
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557326897;
+        bh=bvhIzKTBk7J7G5vBUDLEluKtD7GGfNPxDgXcxobOlIc=;
+        h=From:Date:Subject:To:Cc:From;
+        b=z43jXtqkgteM1xlmOkJyxm2un0WT+AhcpqisbhN5b06nPNrbJYTWQ0yNDMn6MHx0C
+         dgPaCvJT+c/X3uIqK6gCF87MDimnk9PcrbjpXK/s/ft7vsfRlRQNXBi7/3+9niHh6I
+         5JE2Z3fbMpiaO5cvkCXMmpBdiV7iYVcmv1DcRWfzxOxbB63qyVJ6lUYaSP4JWTgrpq
+         dXc/wUFUeGVz8z/+MfoI0OtVOR9klA9aGYJvj0lWe0DEUy6YOlJ/mMj6iBi1vRMjip
+         pT1yjqD9d0mcqH/EQv//cS8ZI1zYXDL82Zjp/4cjnKkm+8KBl/OOsfv070icifoTrI
+         yrb1NCEhjnIOw==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id f9so7474935ual.1;
+        Wed, 08 May 2019 07:48:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAU3WnZ7zn3NWV/6Ge3+ffnaLT3m1M3dBA/GdsvgVWJTnSLs/SiP
+        d5B7//Gnnu/fXmW/BPciI2FpcpHjgEHwjwtyClg=
+X-Google-Smtp-Source: APXvYqwUWCY6aKZnPtjSqhmvmAfR0yJMJ4bo5LR32qxpRyorxFmfisaUBe+2YkB18BzWwcd+ce0Re28cAa3bTUtMM8w=
+X-Received: by 2002:ab0:1309:: with SMTP id g9mr20917504uae.40.1557326895915;
+ Wed, 08 May 2019 07:48:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 8 May 2019 23:47:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARG6if48VWsFTYmKstm+2jPSbrZRimVbD2W4a4AmBqmOA@mail.gmail.com>
+Message-ID: <CAK7LNARG6if48VWsFTYmKstm+2jPSbrZRimVbD2W4a4AmBqmOA@mail.gmail.com>
+Subject: [GIT PULL] Kbuild updates for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     masahiroy@kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Hi Linus,
 
-Newly added memory may mean that there is a newly added physical
-package.  Intel platforms supporting MKTME need to know about the
-new physical packages that may appear during MEM_GOING_ONLINE
-events.
+Please pull Kbuild updates for v5.2
 
-Add a memory notifier for MEM_GOING_ONLINE events where MKTME
-can evaluate this new memory before it goes online.
+Thanks.
 
-MKTME will quickly NOTIFY_OK in MEM_GOING_ONLINE events if no MKTME
-keys are currently programmed. If the newly added memory presents
-an unsafe MKTME topology, that will be found and reported during the
-next key creation attempt. (User can repair and retry.)
 
-When MKTME keys are currently programmed, MKTME will evaluate the
-platform topology, detect if a new PCONFIG target has been added,
-and program that new pconfig target if allowable.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- security/keys/mktme_keys.c | 57 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index 489dddb8c623..904748b540c6 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -8,6 +8,7 @@
- #include <linux/init.h>
- #include <linux/key.h>
- #include <linux/key-type.h>
-+#include <linux/memory.h>
- #include <linux/mm.h>
- #include <linux/parser.h>
- #include <linux/percpu-refcount.h>
-@@ -626,6 +627,56 @@ static int mktme_program_new_pconfig_target(int new_pkg)
- 	return ret;
- }
- 
-+static int mktme_memory_callback(struct notifier_block *nb,
-+				 unsigned long action, void *arg)
-+{
-+	unsigned long flags;
-+	int ret, new_target;
-+
-+	/* MEM_GOING_ONLINE is the only mem event of interest to MKTME */
-+	if (action != MEM_GOING_ONLINE)
-+		return NOTIFY_OK;
-+
-+	/* Do not allow key programming during hotplug event */
-+	spin_lock_irqsave(&mktme_lock, flags);
-+
-+	/*
-+	 * If no keys are actually programmed let this event proceed.
-+	 * The topology will be checked on the next key creation attempt.
-+	 */
-+	if (!mktme_map->mapped_keyids) {
-+		mktme_allow_keys = false;
-+		ret = NOTIFY_OK;
-+		goto out;
-+	}
-+	/* Do not allow this event if it creates an unsafe MKTME topology */
-+	if (!mktme_hmat_evaluate()) {
-+		ret = NOTIFY_BAD;
-+		goto out;
-+	}
-+	/* Topology is safe. Is there a new pconfig target? */
-+	new_target = mktme_get_new_pconfig_target();
-+
-+	/* No new target to program */
-+	if (new_target < 0) {
-+		ret = NOTIFY_OK;
-+		goto out;
-+	}
-+	if (mktme_program_new_pconfig_target(new_target))
-+		ret = NOTIFY_BAD;
-+	else
-+		ret = NOTIFY_OK;
-+
-+out:
-+	spin_unlock_irqrestore(&mktme_lock, flags);
-+	return ret;
-+}
-+
-+static struct notifier_block mktme_memory_nb = {
-+	.notifier_call = mktme_memory_callback,
-+	.priority = 99,				/* priority ? */
-+};
-+
- static int __init init_mktme(void)
- {
- 	int ret, cpuhp;
-@@ -679,10 +730,16 @@ static int __init init_mktme(void)
- 	if (cpuhp < 0)
- 		goto free_store;
- 
-+	/* Memory hotplug */
-+	if (register_memory_notifier(&mktme_memory_nb))
-+		goto remove_cpuhp;
-+
- 	ret = register_key_type(&key_type_mktme);
- 	if (!ret)
- 		return ret;			/* SUCCESS */
- 
-+	unregister_memory_notifier(&mktme_memory_nb);
-+remove_cpuhp:
- 	cpuhp_remove_state_nocalls(cpuhp);
- free_store:
- 	kfree(mktme_key_store);
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.2
+
+for you to fetch changes up to 7fb1fc420f3b1cb27cce5aa1050eb5d9161d0944:
+
+  .gitignore: add more all*.config patterns (2019-05-08 09:47:46 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.2
+
+- allow users to invoke 'make' out of the source tree
+
+- refactor scripts/mkmakefile
+
+- deprecate KBUILD_SRC, which was used to track the source tree
+  location for O= build.
+
+- fix recordmcount.pl in case objdump output is localized
+
+- turn unresolved symbols in external modules to errors from warnings
+  by default; pass KBUILD_MODPOST_WARN=1 to get them back to warnings
+
+- generate modules.builtin.modinfo to collect .modinfo data from
+  built-in modules
+
+- misc Makefile cleanups
+
+----------------------------------------------------------------
+Alexey Gladkov (1):
+      moduleparam: Save information about built-in modules in separate file
+
+Daniel Dadap (1):
+      scripts: override locale from environment when running recordmcount.pl
+
+Masahiro Yamada (18):
+      kbuild: move RETPOLINE flags below config-targets
+      kbuild: fix warning "overriding recipe for target 'Makefile'"
+      kbuild: pass $(MAKECMDGOALS) to sub-make as is
+      kbuild: allow Kbuild to start from any directory
+      kbuild: mkmakefile: do not check the generated Makefile marker
+      kbuild: mkmakefile: generate a simple wrapper of top Makefile
+      kbuild: use $(srctree) instead of KBUILD_SRC to check out-of-tree build
+      memory: squash drivers/memory/Makefile.asm-offsets
+      kbuild: remove unneeded dependency for include/config/kernel.release
+      kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build
+      kbuild: move samples/ to KBUILD_VMLINUX_OBJS
+      kbuild: move Documentation to vmlinux-alldirs
+      samples: seccomp: turn CONFIG_SAMPLE_SECCOMP into a bool option
+      samples: kobject: allow CONFIG_SAMPLE_KOBJECT to become y
+      scripts/tags.sh: fix direct execution of scripts/tags.sh
+      .gitignore: add leading and trailing slashes to generated directories
+      Remove MODULE_ALIAS() calls that take undefined macro
+      .gitignore: add more all*.config patterns
+
+Wiebe, Wladislav (Nokia - DE/Ulm) (1):
+      modpost: make KBUILD_MODPOST_WARN also configurable for external modules
+
+ .gitignore                          |  16 ++-
+ Documentation/dontdiff              |   1 +
+ Documentation/kbuild/kbuild.txt     |   5 +
+ Makefile                            | 146 +++++++++++++++-------------
+ arch/arm/plat-omap/dma.c            |   1 -
+ drivers/clocksource/timer-ti-dm.c   |   1 -
+ drivers/memory/Makefile             |   7 +-
+ drivers/memory/Makefile.asm-offsets |   4 -
+ drivers/mfd/omap-usb-tll.c          |   1 -
+ include/asm-generic/vmlinux.lds.h   |   1 +
+ include/linux/module.h              |   1 +
+ include/linux/moduleparam.h         |  12 +--
+ samples/Kconfig                     |   7 +-
+ samples/Makefile                    |   2 +-
+ samples/seccomp/Makefile            |   2 +-
+ scripts/Makefile.build              |   2 +-
+ scripts/Makefile.host               |   2 +-
+ scripts/Makefile.lib                |   2 +-
+ scripts/Makefile.modbuiltin         |   2 +-
+ scripts/Makefile.modpost            |   2 +-
+ scripts/gdb/linux/Makefile          |   2 +-
+ scripts/link-vmlinux.sh             |   3 +
+ scripts/mkmakefile                  |  26 +----
+ scripts/recordmcount.pl             |   2 +-
+ scripts/tags.sh                     |   2 +-
+ 25 files changed, 128 insertions(+), 124 deletions(-)
+ delete mode 100644 drivers/memory/Makefile.asm-offsets
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
