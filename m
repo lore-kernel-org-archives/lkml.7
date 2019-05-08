@@ -2,114 +2,335 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD97C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221CCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8552053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ecDRc3FP"
+	by mail.kernel.org (Postfix) with ESMTP id DD8282053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557306770;
+	bh=jl0mT6y6nKdDt7H2ieyS3AKA0hSG+d6Xc+24imfCRy8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=tKFKF8ZFW5nQNHXtAjFYhz26TAzsJt6tDzppTOn14icr61C1vFFDcZfCq+UanEhl7
+	 yy5o1QQRPh2aa/vfpn8LQEYgY6BsMK1nwCVp9/GNNw3ezfa/hy1iPL0jDtoPREyGhZ
+	 e+5/gwQ59ecGR5L6WfBOL5y0Opl2lboNqMaBqZjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfEHJMf (ORCPT
+        id S1726956AbfEHJMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:12:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46362 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfEHJMe (ORCPT
+        Wed, 8 May 2019 05:12:48 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35394 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfEHJMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:12:34 -0400
+        Wed, 8 May 2019 05:12:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ti/GvQ2fpzLJs51fiijjX5Y8RLoGHui9LgUr7AvseL0=; b=ecDRc3FP8L9eN5fGH7g83Ukb+
-        wx/775+ecbnvFj26epsJIiHft6Yy6iZmvwDT0QTaFm4f4ZUCj9z1VK1E95ToIqOxle37TliV3TEZG
-        rV35mHPqg4NmYKqti8SNH+WqWroFs7Hh69j8sAQ5sJfQin80qHdxBoa5V+nKp02lbrgvLm8RLdxWM
-        AlLGREEhabNknBqnjzOPjC/E4dYhR9Izc3KtDlILG4mSamLpXt97TG9QDQDzlxJwy7uCtyIfF1luB
-        SIrM+KibQ0w2QelLBqabBu13ASDSxglmWKcyy46D29DriOz4b1UN2ge1uzwaYkVSLRykV6MrFplNz
-        Ft820X0kA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOIcn-0004n2-30; Wed, 08 May 2019 09:12:29 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9194A2029F886; Wed,  8 May 2019 11:12:27 +0200 (CEST)
-Date:   Wed, 8 May 2019 11:12:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, adrian.hunter@intel.com
-Subject: Re: [PATCH 2/2] perf/x86/intel: Support PEBS output to PT
-Message-ID: <20190508091227.GB2606@hirez.programming.kicks-ass.net>
-References: <20190502105022.15534-1-alexander.shishkin@linux.intel.com>
- <20190502105022.15534-3-alexander.shishkin@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502105022.15534-3-alexander.shishkin@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=ogddXFSZso4GSk0uUQ4JEECk2Q3KnghE6of2/9riZcQ=; b=v5jnOGw3qbmh
+        p78ZTznaPa8cBgn4eJMPaR6TGQ4F9d/gNi5/oAN2rTz4U3mz+KyVOOYSLXpSDLQbRAV/JCubOw58h
+        TSFfA+9SWvEmFW4u0E0ouL/lxLHkOMPZq6xKeZR0gwAnf8ONWMaYU/DTY7tl95KGTnWy587eKBKSe
+        ghf1Q=;
+Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hOIcq-0007hv-OS; Wed, 08 May 2019 09:12:44 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id D2C36440033; Wed,  8 May 2019 10:01:27 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        patchwork-bot+notify@kernel.org
+Subject: Applied "ASoC: hdmi-codec: remove ops dependency on the dai id" to the asoc tree
+In-Reply-To: <20190506095815.24578-5-jbrunet@baylibre.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190508090127.D2C36440033@finisterre.sirena.org.uk>
+Date:   Wed,  8 May 2019 10:01:27 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 01:50:22PM +0300, Alexander Shishkin wrote:
-> If PEBS declares ability to output its data to Intel PT stream, use the
-> aux_source attribute bit to enable PEBS data output to PT. This requires
-> a PT event to be present and scheduled in the same context. Unlike the
-> DS area, the kernel does not extract PEBS records from the PT stream to
-> generate corresponding records in the perf stream, because that would
-> require real time in-kernel PT decoding, which is not feasible. The PMI,
-> however, can still be used.
-> 
-> The output setting is per-CPU, so all PEBS events must be either writing
-> to PT or to the DS area, so in order to not mess up the event scheduling,
-> we fall back to the latter in case both types of events are scheduled in.
-> 
-> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> ---
->  arch/x86/events/intel/core.c     | 13 +++++++
->  arch/x86/events/intel/ds.c       | 59 +++++++++++++++++++++++++++++++-
->  arch/x86/events/perf_event.h     |  9 +++++
->  arch/x86/include/asm/msr-index.h |  3 ++
->  4 files changed, 83 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 4b4dac089635..949a589fd9b1 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3291,6 +3291,19 @@ static int intel_pmu_hw_config(struct perf_event *event)
->  		}
->  	}
->  
-> +	if (event->attr.aux_source) {
-> +		if (!event->attr.precise_ip)
-> +			return -EINVAL;
-> +
-> +		if (!x86_pmu.intel_cap.pebs_output_pt_available)
-> +			return -EOPNOTSUPP;
-> +
-> +		event->hw.flags |= PERF_X86_EVENT_PEBS_VIA_PT;
-> +
-> +		/* Signal to the core that we handled it */
-> +		event->attr.aux_source = 0;
+The patch
 
-That's a bit yuck, ideally we'd not modify attrs.
+   ASoC: hdmi-codec: remove ops dependency on the dai id
 
-Can't we change that test in perf_event_alloc() to something like:
+has been applied to the asoc tree at
 
-	if (event->attr.aux_source &&
-	    !(pmu->capabilities & PERF_PMU_CAP_AUX_SOURCE))
-		// error
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
-?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +	}
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 0cf4610b9f297e570da4d98514b310f076ecc8ab Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Mon, 6 May 2019 11:58:15 +0200
+Subject: [PATCH] ASoC: hdmi-codec: remove ops dependency on the dai id
+
+The dependency on the dai_id can be removed by setting different ops
+for the i2s and spdif dai and storing the dai format information in
+each dai structure. It simplies the code a bit.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/hdmi-codec.c | 100 +++++++++++++++++++++++-----------
+ 1 file changed, 67 insertions(+), 33 deletions(-)
+
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 9408e6bc4d3e..90a892766625 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -278,7 +278,6 @@ static const struct hdmi_codec_cea_spk_alloc hdmi_codec_channel_alloc[] = {
+ 
+ struct hdmi_codec_priv {
+ 	struct hdmi_codec_pdata hcd;
+-	struct hdmi_codec_daifmt daifmt[2];
+ 	uint8_t eld[MAX_ELD_BYTES];
+ 	struct snd_pcm_chmap *chmap_info;
+ 	unsigned int chmap_idx;
+@@ -445,6 +444,7 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+ 				struct snd_soc_dai *dai)
+ {
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
++	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+ 	struct hdmi_codec_params hp = {
+ 		.iec = {
+ 			.status = { 0 },
+@@ -489,28 +489,27 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+ 	hp.channels = params_channels(params);
+ 
+ 	return hcp->hcd.ops->hw_params(dai->dev->parent, hcp->hcd.data,
+-				       &hcp->daifmt[dai->id], &hp);
++				       cf, &hp);
+ }
+ 
+-static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
+-			      unsigned int fmt)
++static int hdmi_codec_i2s_set_fmt(struct snd_soc_dai *dai,
++				  unsigned int fmt)
+ {
+-	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+-	struct hdmi_codec_daifmt cf = { 0 };
++	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+ 
+-	if (dai->id == DAI_ID_SPDIF)
+-		return 0;
++	/* Reset daifmt */
++	memset(cf, 0, sizeof(*cf));
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+-		cf.bit_clk_master = 1;
+-		cf.frame_clk_master = 1;
++		cf->bit_clk_master = 1;
++		cf->frame_clk_master = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+-		cf.frame_clk_master = 1;
++		cf->frame_clk_master = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+-		cf.bit_clk_master = 1;
++		cf->bit_clk_master = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		break;
+@@ -522,43 +521,41 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
+ 	case SND_SOC_DAIFMT_NB_NF:
+ 		break;
+ 	case SND_SOC_DAIFMT_NB_IF:
+-		cf.frame_clk_inv = 1;
++		cf->frame_clk_inv = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_IB_NF:
+-		cf.bit_clk_inv = 1;
++		cf->bit_clk_inv = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_IB_IF:
+-		cf.frame_clk_inv = 1;
+-		cf.bit_clk_inv = 1;
++		cf->frame_clk_inv = 1;
++		cf->bit_clk_inv = 1;
+ 		break;
+ 	}
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+-		cf.fmt = HDMI_I2S;
++		cf->fmt = HDMI_I2S;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+-		cf.fmt = HDMI_DSP_A;
++		cf->fmt = HDMI_DSP_A;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_B:
+-		cf.fmt = HDMI_DSP_B;
++		cf->fmt = HDMI_DSP_B;
+ 		break;
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+-		cf.fmt = HDMI_RIGHT_J;
++		cf->fmt = HDMI_RIGHT_J;
+ 		break;
+ 	case SND_SOC_DAIFMT_LEFT_J:
+-		cf.fmt = HDMI_LEFT_J;
++		cf->fmt = HDMI_LEFT_J;
+ 		break;
+ 	case SND_SOC_DAIFMT_AC97:
+-		cf.fmt = HDMI_AC97;
++		cf->fmt = HDMI_AC97;
+ 		break;
+ 	default:
+ 		dev_err(dai->dev, "Invalid DAI interface format\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	hcp->daifmt[dai->id] = cf;
+-
+ 	return 0;
+ }
+ 
+@@ -573,14 +570,20 @@ static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
+ 	return 0;
+ }
+ 
+-static const struct snd_soc_dai_ops hdmi_dai_ops = {
++static const struct snd_soc_dai_ops hdmi_codec_i2s_dai_ops = {
+ 	.startup	= hdmi_codec_startup,
+ 	.shutdown	= hdmi_codec_shutdown,
+ 	.hw_params	= hdmi_codec_hw_params,
+-	.set_fmt	= hdmi_codec_set_fmt,
++	.set_fmt	= hdmi_codec_i2s_set_fmt,
+ 	.digital_mute	= hdmi_codec_digital_mute,
+ };
+ 
++static const struct snd_soc_dai_ops hdmi_codec_spdif_dai_ops = {
++	.startup	= hdmi_codec_startup,
++	.shutdown	= hdmi_codec_shutdown,
++	.hw_params	= hdmi_codec_hw_params,
++	.digital_mute	= hdmi_codec_digital_mute,
++};
+ 
+ #define HDMI_RATES	(SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |\
+ 			 SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_88200 |\
+@@ -648,20 +651,52 @@ static int hdmi_codec_pcm_new(struct snd_soc_pcm_runtime *rtd,
+ static int hdmi_dai_probe(struct snd_soc_dai *dai)
+ {
+ 	struct snd_soc_dapm_context *dapm;
++	struct hdmi_codec_daifmt *daifmt;
+ 	struct snd_soc_dapm_route route = {
+ 		.sink = "TX",
+ 		.source = dai->driver->playback.stream_name,
+ 	};
++	int ret;
+ 
+ 	dapm = snd_soc_component_get_dapm(dai->component);
++	ret = snd_soc_dapm_add_routes(dapm, &route, 1);
++	if (ret)
++		return ret;
++
++	daifmt = kzalloc(sizeof(*daifmt), GFP_KERNEL);
++	if (!daifmt)
++		return -ENOMEM;
+ 
+-	return snd_soc_dapm_add_routes(dapm, &route, 1);
++	dai->playback_dma_data = daifmt;
++	return 0;
++}
++
++static int hdmi_dai_spdif_probe(struct snd_soc_dai *dai)
++{
++	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
++	int ret;
++
++	ret = hdmi_dai_probe(dai);
++	if (ret)
++		return ret;
++
++	cf = dai->playback_dma_data;
++	cf->fmt = HDMI_SPDIF;
++
++	return 0;
++}
++
++static int hdmi_codec_dai_remove(struct snd_soc_dai *dai)
++{
++	kfree(dai->playback_dma_data);
++	return 0;
+ }
+ 
+ static const struct snd_soc_dai_driver hdmi_i2s_dai = {
+ 	.name = "i2s-hifi",
+ 	.id = DAI_ID_I2S,
+ 	.probe = hdmi_dai_probe,
++	.remove = hdmi_codec_dai_remove,
+ 	.playback = {
+ 		.stream_name = "I2S Playback",
+ 		.channels_min = 2,
+@@ -670,14 +705,15 @@ static const struct snd_soc_dai_driver hdmi_i2s_dai = {
+ 		.formats = I2S_FORMATS,
+ 		.sig_bits = 24,
+ 	},
+-	.ops = &hdmi_dai_ops,
++	.ops = &hdmi_codec_i2s_dai_ops,
+ 	.pcm_new = hdmi_codec_pcm_new,
+ };
+ 
+ static const struct snd_soc_dai_driver hdmi_spdif_dai = {
+ 	.name = "spdif-hifi",
+ 	.id = DAI_ID_SPDIF,
+-	.probe = hdmi_dai_probe,
++	.probe = hdmi_dai_spdif_probe,
++	.remove = hdmi_codec_dai_remove,
+ 	.playback = {
+ 		.stream_name = "SPDIF Playback",
+ 		.channels_min = 2,
+@@ -685,7 +721,7 @@ static const struct snd_soc_dai_driver hdmi_spdif_dai = {
+ 		.rates = HDMI_RATES,
+ 		.formats = SPDIF_FORMATS,
+ 	},
+-	.ops = &hdmi_dai_ops,
++	.ops = &hdmi_codec_spdif_dai_ops,
+ 	.pcm_new = hdmi_codec_pcm_new,
+ };
+ 
+@@ -747,10 +783,8 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		i++;
+ 	}
+ 
+-	if (hcd->spdif) {
++	if (hcd->spdif)
+ 		daidrv[i] = hdmi_spdif_dai;
+-		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
+-	}
+ 
+ 	dev_set_drvdata(dev, hcp);
+ 
+-- 
+2.20.1
+
