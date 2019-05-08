@@ -2,146 +2,448 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4114CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45497C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFF220449
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="TLzWsZT5"
+	by mail.kernel.org (Postfix) with ESMTP id 0C09720644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfEHH5t (ORCPT
+        id S1726598AbfEHIAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:57:49 -0400
-Received: from mail-eopbgr50093.outbound.protection.outlook.com ([40.107.5.93]:2542
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725860AbfEHH5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:57:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ENo8AJONM22XGe8TsR7VWj338UKilLJmk7uWAyPh4eU=;
- b=TLzWsZT5o3TgSiWoorymv74lAcUPCJaiO1dOM2MprMb4ZhPNiaNL7RL46a/iAgbKp77OmXiI02coLX7h1MDSH8ZytEEE2F1uFi9KM1bzSKOIMTcMQZGe4HEUkJCXLaHoAE2cRzOZhVvaGG4D6cYdu6XnB8q4O3jqwqryybok8KA=
-Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
- VI1PR10MB2735.EURPRD10.PROD.OUTLOOK.COM (20.178.127.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Wed, 8 May 2019 07:57:39 +0000
-Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::48b8:9cff:182:f3d8]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::48b8:9cff:182:f3d8%2]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 07:57:38 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [RFC PATCH 1/5] net: dsa: mv88e6xxx: introduce support for two
- chips using direct smi addressing
-Thread-Topic: [RFC PATCH 1/5] net: dsa: mv88e6xxx: introduce support for two
- chips using direct smi addressing
-Thread-Index: AQHVAFSRDSaXDG0750O+aewkwJZ2+6ZWtaaAgAoxFgA=
-Date:   Wed, 8 May 2019 07:57:38 +0000
-Message-ID: <f5924091-352c-c14a-f959-6bb8a32746e3@prevas.dk>
-References: <20190501193126.19196-1-rasmus.villemoes@prevas.dk>
- <20190501193126.19196-2-rasmus.villemoes@prevas.dk>
- <20190501201919.GC19809@lunn.ch>
-In-Reply-To: <20190501201919.GC19809@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0701CA0053.eurprd07.prod.outlook.com
- (2603:10a6:3:9e::21) To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e3::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 39cbdb05-87ed-4f5d-b832-08d6d38ad6e8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB2735;
-x-ms-traffictypediagnostic: VI1PR10MB2735:
-x-microsoft-antispam-prvs: <VI1PR10MB2735405A1DB67DACD2F6372A8A320@VI1PR10MB2735.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39850400004)(366004)(346002)(376002)(189003)(199004)(44832011)(476003)(446003)(11346002)(14454004)(66476007)(42882007)(66446008)(64756008)(2616005)(486006)(66946007)(73956011)(478600001)(316002)(14444005)(256004)(6512007)(72206003)(31696002)(6436002)(71190400001)(71200400001)(26005)(36756003)(6486002)(186003)(386003)(6506007)(81166006)(81156014)(305945005)(25786009)(66556008)(76176011)(8976002)(5660300002)(68736007)(52116002)(74482002)(66066001)(229853002)(8936002)(8676002)(31686004)(7736002)(99286004)(54906003)(3846002)(6116002)(6916009)(6246003)(102836004)(2906002)(53936002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2735;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QdVc4ECyVIqHZFwiSWCdSsAVlQPVLruvrsjkSpFIhlpJao0DA+wLredLDSccc22SHesvFsL8oM9D5y9lHLI7yoHmx7xl7fdo2xUhrcsb0QaTsJ8xwpqGwHxJDh0ahTGuww67JsggIOEmzrDlFJg0swt0oJ95ifxu5lMb8LUaPy82LEWenKnP+e+qKf7GKpWKgvoYdUpOggGgA5fK7u43heVRt4k6K82QJX3u+uk1t4HbYt7un/9cRG0MoCod6O5bCxZ1V271MKbjvqRsklKTF5e8M0YP2/rDcRJfHDx09HgOYP+JVVd2/hF8sNL1Oenqim7LdmV5VKdsKB+n/aF+WT34E0hTmOED2GMkXhgzW1eL4vI7KPUbqvodDLyC3RvvYiBJHDDlv5b81UMauMeeSe5B9emPPxP3ci43jbtl74c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F611D2F7F520DF478196BA2B1E6005A9@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Wed, 8 May 2019 04:00:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7791 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725910AbfEHIAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:00:55 -0400
+X-UUID: f9d29b6a6cb445dfb6f50a135c6d7032-20190508
+X-UUID: f9d29b6a6cb445dfb6f50a135c6d7032-20190508
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 315186190; Wed, 08 May 2019 16:00:42 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n2.mediatek.inc
+ (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 8 May
+ 2019 16:00:40 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 May 2019 16:00:39 +0800
+Message-ID: <1557302439.22641.4.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 08/10] arm64: dts: mt6358: add PMIC MT6358 related
+ nodes
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        <linux-rtc@vger.kernel.org>
+Date:   Wed, 8 May 2019 16:00:39 +0800
+In-Reply-To: <20190503093117.54830-9-hsin-hsiung.wang@mediatek.com>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+         <20190503093117.54830-9-hsin-hsiung.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39cbdb05-87ed-4f5d-b832-08d6d38ad6e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 07:57:38.8620
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2735
+X-TM-SNTS-SMTP: AD1F05E2E033372105E63A636EB902B46C8DA9CE0938F5E6DBD825BE23C881332000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDEvMDUvMjAxOSAyMi4xOSwgQW5kcmV3IEx1bm4gd3JvdGU6DQo+IE9uIFdlZCwgTWF5IDAx
-LCAyMDE5IGF0IDA3OjMyOjEwUE0gKzAwMDAsIFJhc211cyBWaWxsZW1vZXMgd3JvdGU6DQo+PiBU
-aGUgODhlNjI1MCAoYXMgd2VsbCBhcyA2MjIwLCA2MDcxLCA2MDcwLCA2MDIwKSBkbyBub3Qgc3Vw
-cG9ydA0KPj4gbXVsdGktY2hpcCAoaW5kaXJlY3QpIGFkZHJlc3NpbmcuIEhvd2V2ZXIsIG9uZSBj
-YW4gc3RpbGwgaGF2ZSB0d28gb2YNCj4+IHRoZW0gb24gdGhlIHNhbWUgbWRpbyBidXMsIHNpbmNl
-IHRoZSBkZXZpY2Ugb25seSB1c2VzIDE2IG9mIHRoZSAzMg0KPj4gcG9zc2libGUgYWRkcmVzc2Vz
-LCBlaXRoZXIgYWRkcmVzc2VzIDB4MDAtMHgwRiBvciAweDEwLTB4MUYgZGVwZW5kaW5nDQo+PiBv
-biB0aGUgQUREUjQgcGluIGF0IHJlc2V0IFtzaW5jZSBBRERSNCBpcyBpbnRlcm5hbGx5IHB1bGxl
-ZCBoaWdoLCB0aGUNCj4+IGxhdHRlciBpcyB0aGUgZGVmYXVsdF0uDQo+Pg0KPj4gSW4gb3JkZXIg
-dG8gcHJlcGFyZSBmb3Igc3VwcG9ydGluZyB0aGUgODhlNjI1MCBhbmQgZnJpZW5kcywgaW50cm9k
-dWNlDQo+PiBtdjg4ZTZ4eHhfaW5mbzo6ZHVhbF9jaGlwIHRvIGFsbG93IGhhdmluZyBhIG5vbi16
-ZXJvIHN3X2FkZHIgd2hpbGUNCj4+IHN0aWxsIHVzaW5nIGRpcmVjdCBhZGRyZXNzaW5nLg0KPj4N
-Cj4+IFNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJl
-dmFzLmRrPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9jaGlwLmMgfCAx
-MCArKysrKysrLS0tDQo+PiAgZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9jaGlwLmggfCAgNSAr
-KysrKw0KPj4gIDIgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
-LSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9jaGlwLmMg
-Yi9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2NoaXAuYw0KPj4gaW5kZXggYzA3OGM3OTFmNDgx
-Li5mNjZkYWE3Nzc3NGIgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4
-L2NoaXAuYw0KPj4gKysrIGIvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9jaGlwLmMNCj4+IEBA
-IC02Miw2ICs2MiwxMCBAQCBzdGF0aWMgdm9pZCBhc3NlcnRfcmVnX2xvY2soc3RydWN0IG12ODhl
-Nnh4eF9jaGlwICpjaGlwKQ0KPj4gICAqIFdoZW4gQUREUiBpcyBub24temVybywgdGhlIGNoaXAg
-dXNlcyBNdWx0aS1jaGlwIEFkZHJlc3NpbmcgTW9kZSwgYWxsb3dpbmcNCj4+ICAgKiBtdWx0aXBs
-ZSBkZXZpY2VzIHRvIHNoYXJlIHRoZSBTTUkgaW50ZXJmYWNlLiBJbiB0aGlzIG1vZGUgaXQgcmVz
-cG9uZHMgdG8gb25seQ0KPj4gICAqIDIgcmVnaXN0ZXJzLCB1c2VkIHRvIGluZGlyZWN0bHkgYWNj
-ZXNzIHRoZSBpbnRlcm5hbCBTTUkgZGV2aWNlcy4NCj4+ICsgKg0KPj4gKyAqIFNvbWUgY2hpcHMg
-dXNlIGEgZGlmZmVyZW50IHNjaGVtZTogT25seSB0aGUgQUREUjQgcGluIGlzIHVzZWQgZm9yDQo+
-PiArICogY29uZmlndXJhdGlvbiwgYW5kIHRoZSBkZXZpY2UgcmVzcG9uZHMgdG8gMTYgb2YgdGhl
-IDMyIFNNSQ0KPj4gKyAqIGFkZHJlc3NlcywgYWxsb3dpbmcgdHdvIHRvIGNvZXhpc3Qgb24gdGhl
-IHNhbWUgU01JIGludGVyZmFjZS4NCj4+ICAgKi8NCj4+ICANCj4+ICBzdGF0aWMgaW50IG12ODhl
-Nnh4eF9zbWlfcmVhZChzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAsDQo+PiBAQCAtODcsNyAr
-OTEsNyBAQCBzdGF0aWMgaW50IG12ODhlNnh4eF9zbWlfc2luZ2xlX2NoaXBfcmVhZChzdHJ1Y3Qg
-bXY4OGU2eHh4X2NoaXAgKmNoaXAsDQo+PiAgew0KPj4gIAlpbnQgcmV0Ow0KPj4gIA0KPj4gLQly
-ZXQgPSBtZGlvYnVzX3JlYWRfbmVzdGVkKGNoaXAtPmJ1cywgYWRkciwgcmVnKTsNCj4+ICsJcmV0
-ID0gbWRpb2J1c19yZWFkX25lc3RlZChjaGlwLT5idXMsIGFkZHIgKyBjaGlwLT5zd19hZGRyLCBy
-ZWcpOw0KPj4gIAlpZiAocmV0IDwgMCkNCj4+ICAJCXJldHVybiByZXQ7DQo+PiAgDQo+PiBAQCAt
-MTAxLDcgKzEwNSw3IEBAIHN0YXRpYyBpbnQgbXY4OGU2eHh4X3NtaV9zaW5nbGVfY2hpcF93cml0
-ZShzdHJ1Y3QgbXY4OGU2eHh4X2NoaXAgKmNoaXAsDQo+PiAgew0KPj4gIAlpbnQgcmV0Ow0KPj4g
-IA0KPj4gLQlyZXQgPSBtZGlvYnVzX3dyaXRlX25lc3RlZChjaGlwLT5idXMsIGFkZHIsIHJlZywg
-dmFsKTsNCj4+ICsJcmV0ID0gbWRpb2J1c193cml0ZV9uZXN0ZWQoY2hpcC0+YnVzLCBhZGRyICsg
-Y2hpcC0+c3dfYWRkciwgcmVnLCB2YWwpOw0KPj4gIAlpZiAocmV0IDwgMCkNCj4+ICAJCXJldHVy
-biByZXQ7DQo+IA0KPiBIaSBSYXNtdXMNCj4gDQo+IFRoaXMgd29ya3MsIGJ1dCBpIHRoaW5rIGkg
-cHJlZmVyIGFkZGluZyBtdjg4ZTZ4eHhfc21pX2R1YWxfY2hpcF93cml0ZSwNCj4gbXY4OGU2eHh4
-X3NtaV9kdWFsX2NoaXBfcmVhZCwgYW5kIGNyZWF0ZSBhDQo+IG12ODhlNnh4eF9zbWlfc2luZ2xl
-X2NoaXBfb3BzLg0KDQpIaSBBbmRyZXcNCg0KTm93IHRoYXQgVml2aWVuJ3MgIm5ldDogZHNhOiBt
-djg4ZTZ4eHg6IHJlZmluZSBTTUkgc3VwcG9ydCIgaXMgaW4NCm1hc3RlciwgZG8geW91IHN0aWxs
-IHByZWZlciBpbnRyb2R1Y2luZyBhIHRoaXJkIGJ1c19vcHMgc3RydWN0dXJlDQoobXY4OGU2eHh4
-X3NtaV9kdWFsX2RpcmVjdF9vcHMgPyksIG9yIHdvdWxkIHRoZSBhcHByb2FjaCBvZiBhZGRpbmcN
-CmNoaXAtPnN3X2FkZHIgaW4gdGhlIHNtaV9kaXJlY3Rfe3JlYWQvd3JpdGV9IGZ1bmN0aW9ucyBi
-ZSBvayAod2hpY2gNCndvdWxkIHRoZW4gcmVxdWlyZSBjaGFuZ2luZyB0aGUgaW5kaXJlY3QgY2Fs
-bGVycyB0byBwYXNzIDAgaW5zdGVhZCBvZg0KY2hpcC0+c3dhZGRyKS4NCg0KVGhhbmtzLA0KUmFz
-bXVzDQo=
+On Fri, 2019-05-03 at 17:31 +0800, Hsin-Hsiung Wang wrote:
+> add PMIC MT6358 related nodes which is for MT8183 platform
+> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt6358.dtsi | 358 +++++++++++++++++++++++
+>  1 file changed, 358 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+> new file mode 100644
+> index 000000000000..74da59de3794
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+> @@ -0,0 +1,358 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
+> +
+> +&pwrap {
+> +	pmic: mt6358 {
+> +		compatible = "mediatek,mt6358";
+> +		interrupt-controller;
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <182 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <2>;
+> +
+> +		mt6358codec: mt6358codec {
+> +			compatible = "mediatek,mt6358-sound";
+> +		};
+> +
+> +		mt6358regulator: mt6358regulator {
+> +			compatible = "mediatek,mt6358-regulator";
+> +
+> +			mt6358_vdram1_reg: buck_vdram1 {
+> +				regulator-compatible = "buck_vdram1";
+> +				regulator-name = "vdram1";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2087500>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-enable-ramp-delay = <0>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vcore_reg: buck_vcore {
+> +				regulator-name = "vcore";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vpa_reg: buck_vpa {
+> +				regulator-name = "vpa";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <3650000>;
+> +				regulator-ramp-delay = <50000>;
+> +				regulator-enable-ramp-delay = <250>;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vproc11_reg: buck_vproc11 {
+> +				regulator-name = "vproc11";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vproc12_reg: buck_vproc12 {
+> +				regulator-name = "vproc12";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vgpu_reg: buck_vgpu {
+> +				regulator-name = "vgpu";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <200>;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vs2_reg: buck_vs2 {
+> +				regulator-name = "vs2";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <2087500>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-enable-ramp-delay = <0>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vmodem_reg: buck_vmodem {
+> +				regulator-name = "vmodem";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <900>;
+> +				regulator-always-on;
+> +				regulator-allowed-modes = <0 1>;
+> +			};
+> +
+> +			mt6358_vs1_reg: buck_vs1 {
+> +				regulator-name = "vs1";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <2587500>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-enable-ramp-delay = <0>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vdram2_reg: ldo_vdram2 {
+> +				regulator-name = "vdram2";
+> +				regulator-min-microvolt = <600000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <3300>;
+> +			};
+> +
+> +			mt6358_vsim1_reg: ldo_vsim1 {
+> +				regulator-name = "vsim1";
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <3100000>;
+> +				regulator-enable-ramp-delay = <540>;
+> +			};
+> +
+> +			mt6358_vibr_reg: ldo_vibr {
+> +				regulator-name = "vibr";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +			};
+> +
+> +			mt6358_vrf12_reg: ldo_vrf12 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vrf12";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +			};
+> +
+> +			mt6358_vio18_reg: ldo_vio18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vio18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <2700>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vusb_reg: ldo_vusb {
+> +				regulator-name = "vusb";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3100000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vcamio_reg: ldo_vcamio {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vcamio";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcamd_reg: ldo_vcamd {
+> +				regulator-name = "vcamd";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcn18_reg: ldo_vcn18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vcn18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vfe28_reg: ldo_vfe28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vfe28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsram_proc11_reg: ldo_vsram_proc11 {
+> +				regulator-name = "vsram_proc11";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vcn28_reg: ldo_vcn28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vcn28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsram_others_reg: ldo_vsram_others {
+> +				regulator-name = "vsram_others";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vsram_gpu_reg: ldo_vsram_gpu {
+> +				regulator-name = "vsram_gpu";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +			};
+> +
+> +			mt6358_vxo22_reg: ldo_vxo22 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vxo22";
+> +				regulator-min-microvolt = <2200000>;
+> +				regulator-max-microvolt = <2200000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vefuse_reg: ldo_vefuse {
+> +				regulator-name = "vefuse";
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <1900000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vaux18_reg: ldo_vaux18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vaux18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vmch_reg: ldo_vmch {
+> +				regulator-name = "vmch";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +			};
+> +
+> +			mt6358_vbif28_reg: ldo_vbif28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vbif28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsram_proc12_reg: ldo_vsram_proc12 {
+> +				regulator-name = "vsram_proc12";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <1293750>;
+> +				regulator-ramp-delay = <6250>;
+> +				regulator-enable-ramp-delay = <240>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vcama1_reg: ldo_vcama1 {
+> +				regulator-name = "vcama1";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vemc_reg: ldo_vemc {
+> +				regulator-name = "vemc";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vio28_reg: ldo_vio28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vio28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_va12_reg: ldo_va12 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "va12";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			mt6358_vrf18_reg: ldo_vrf18 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vrf18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +			};
+> +
+> +			mt6358_vcn33_bt_reg: ldo_vcn33_bt {
+> +				regulator-name = "vcn33_bt";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3500000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcn33_wifi_reg: ldo_vcn33_wifi {
+> +				regulator-name = "vcn33_wifi";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3500000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vcama2_reg: ldo_vcama2 {
+> +				regulator-name = "vcama2";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vmc_reg: ldo_vmc {
+> +				regulator-name = "vmc";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <60>;
+> +			};
+> +
+> +			mt6358_vldo28_reg: ldo_vldo28 {
+> +				regulator-name = "vldo28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vaud28_reg: ldo_vaud28 {
+> +				compatible = "regulator-fixed";
+> +				regulator-name = "vaud28";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-enable-ramp-delay = <270>;
+> +			};
+> +
+> +			mt6358_vsim2_reg: ldo_vsim2 {
+> +				regulator-name = "vsim2";
+> +				regulator-min-microvolt = <1700000>;
+> +				regulator-max-microvolt = <3100000>;
+> +				regulator-enable-ramp-delay = <540>;
+> +			};
+> +		};
+
+Missing mt6358 rtc node here:
++		mt6358rtc: mt6358rtc {
++			compatible = "mediatek,mt6358-rtc";
++		};
+
+> +	};
+> +};
+
+
