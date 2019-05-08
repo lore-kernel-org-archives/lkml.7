@@ -6,30 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC29C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CAFC04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1405216B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C53216B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfEHOqk (ORCPT
+        id S1728248AbfEHOq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:46:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19928 "EHLO mga02.intel.com"
+        Wed, 8 May 2019 10:46:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48407 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728504AbfEHOoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:55 -0400
+        id S1728529AbfEHOoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:53 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
-   d="scan'208";a="169656578"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:49 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 08 May 2019 07:44:48 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 9448E11B3; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id 721A41175; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -45,199 +43,140 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 58/62] x86/mktme: Document the MKTME provided security mitigations
-Date:   Wed,  8 May 2019 17:44:18 +0300
-Message-Id: <20190508144422.13171-59-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 55/62] x86/mm: Disable MKTME if not all system memory supports encryption
+Date:   Wed,  8 May 2019 17:44:15 +0300
+Message-Id: <20190508144422.13171-56-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+UEFI memory attribute EFI_MEMORY_CPU_CRYPTO indicates whether the memory
+region supports encryption.
 
-Describe the security benefits of Multi-Key Total Memory
-Encryption (MKTME) over Total Memory Encryption (TME) alone.
+Kernel doesn't handle situation when only part of the system memory
+supports encryption.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Disable MKTME if not all system memory supports encryption.
+
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- Documentation/x86/mktme/index.rst             |   1 +
- Documentation/x86/mktme/mktme_mitigations.rst | 150 ++++++++++++++++++
- 2 files changed, 151 insertions(+)
- create mode 100644 Documentation/x86/mktme/mktme_mitigations.rst
+ arch/x86/mm/mktme.c        | 29 +++++++++++++++++++++++++++++
+ drivers/firmware/efi/efi.c | 25 +++++++++++++------------
+ include/linux/efi.h        |  1 +
+ 3 files changed, 43 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
-index 1614b52dd3e9..a3a29577b013 100644
---- a/Documentation/x86/mktme/index.rst
-+++ b/Documentation/x86/mktme/index.rst
-@@ -6,3 +6,4 @@ Multi-Key Total Memory Encryption (MKTME)
- .. toctree::
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index 12f4266cf7ea..60b479686ea5 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -1,6 +1,7 @@
+ #include <linux/mm.h>
+ #include <linux/highmem.h>
+ #include <linux/rmap.h>
++#include <linux/efi.h>
+ #include <asm/mktme.h>
+ #include <asm/pgalloc.h>
+ #include <asm/tlbflush.h>
+@@ -33,9 +34,37 @@ void mktme_disable(void)
  
-    mktme_overview
-+   mktme_mitigations
-diff --git a/Documentation/x86/mktme/mktme_mitigations.rst b/Documentation/x86/mktme/mktme_mitigations.rst
-new file mode 100644
-index 000000000000..90699c38750a
---- /dev/null
-+++ b/Documentation/x86/mktme/mktme_mitigations.rst
-@@ -0,0 +1,150 @@
-+MKTME-Provided Mitigations
-+==========================
+ static bool need_page_mktme(void)
+ {
++	int nid;
 +
-+MKTME adds a few mitigations against attacks that are not
-+mitigated when using TME alone.  The first set are mitigations
-+against software attacks that are familiar today:
+ 	/* Make sure keyid doesn't collide with extended page flags */
+ 	BUILD_BUG_ON(__NR_PAGE_EXT_FLAGS > 16);
+ 
++	for_each_node_state(nid, N_MEMORY) {
++		const efi_memory_desc_t *md;
++		unsigned long node_start, node_end;
 +
-+ * Kernel Mapping Attacks: information disclosures that leverage
-+   the kernel direct map are mitigated against disclosing user
-+   data.
-+ * Freed Data Leak Attacks: removing an encryption key from the
-+   hardware mitigates future user information disclosure.
++		node_start = node_start_pfn(nid) << PAGE_SHIFT;
++		node_end = node_end_pfn(nid) << PAGE_SHIFT;
 +
-+The next set are attacks that depend on specialized hardware,
-+such as an “evil DIMM” or a DDR interposer:
++		for_each_efi_memory_desc(md) {
++			u64 efi_start = md->phys_addr;
++			u64 efi_end = md->phys_addr + PAGE_SIZE * md->num_pages;
 +
-+ * Cross-Domain Replay Attack: data is captured from one domain
-+(guest) and replayed to another at a later time.
-+ * Cross-Domain Capture and Delayed Compare Attack: data is
-+   captured and later analyzed to discover secrets.
-+ * Key Wear-out Attack: data is captured and analyzed in order
-+   to Weaken the AES encryption itself.
++			if (md->attribute & EFI_MEMORY_CPU_CRYPTO)
++				continue;
++			if (efi_start > node_end)
++				continue;
++			if (efi_end  < node_start)
++				continue;
 +
-+More details on these attacks are below.
++			printk("Memory range %#llx-%#llx: doesn't support encryption\n",
++					efi_start, efi_end);
++			printk("Disable MKTME\n");
++			mktme_disable();
++			break;
++		}
++	}
 +
-+Kernel Mapping Attacks
-+----------------------
-+Information disclosure vulnerabilities leverage the kernel direct
-+map because many vulnerabilities involve manipulation of kernel
-+data structures (examples: CVE-2017-7277, CVE-2017-9605).  We
-+normally think of these bugs as leaking valuable *kernel* data,
-+but they can leak application data when application pages are
-+recycled for kernel use.
-+
-+With this MKTME implementation, there is a direct map created for
-+each MKTME KeyID which is used whenever the kernel needs to
-+access plaintext.  But, all kernel data structures are accessed
-+via the direct map for KeyID-0.  Thus, memory reads which are not
-+coordinated with the KeyID get garbage (for example, accessing
-+KeyID-4 data with the KeyID-0 mapping).
-+
-+This means that if sensitive data encrypted using MKTME is leaked
-+via the KeyID-0 direct map, ciphertext decrypted with the wrong
-+key will be disclosed.  To disclose plaintext, an attacker must
-+“pivot” to the correct direct mapping, which is non-trivial
-+because there are no kernel data structures in the KeyID!=0
-+direct mapping.
-+
-+Freed Data Leak Attack
-+----------------------
-+The kernel has a history of bugs around uninitialized data.
-+Usually, we think of these bugs as leaking sensitive kernel data,
-+but they can also be used to leak application secrets.
-+
-+MKTME can help mitigate the case where application secrets are
-+leaked:
-+
-+ * App (or VM) places a secret in a page * App exits or frees
-+memory to kernel allocator * Page added to allocator free list *
-+Attacker reallocates page to a purpose where it can read the page
-+
-+Now, imagine MKTME was in use on the memory being leaked.  The
-+data can only be leaked as long as the key is programmed in the
-+hardware.  If the key is de-programmed, like after all pages are
-+freed after a guest is shut down, any future reads will just see
-+ciphertext.
-+
-+Basically, the key is a convenient choke-point: you can be more
-+confident that data encrypted with it is inaccessible once the
-+key is removed.
-+
-+Cross-Domain Replay Attack
-+--------------------------
-+MKTME mitigates cross-domain replay attacks where an attacker
-+replaces an encrypted block owned by one domain with a block
-+owned by another domain.  MKTME does not prevent this replacement
-+from occurring, but it does mitigate plaintext from being
-+disclosed if the domains use different keys.
-+
-+With TME, the attack could be executed by:
-+ * A victim places secret in memory, at a given physical address.
-+   Note: AES-XTS is what restricts the attack to being performed
-+   at a single physical address instead of across different
-+   physical addresses
-+ * Attacker captures victim secret’s ciphertext * Later on, after
-+   victim frees the physical address, attacker gains ownership 
-+ * Attacker puts the ciphertext at the address and get the secret
-+   plaintext
-+
-+But, due to the presumably different keys used by the attacker
-+and the victim, the attacker can not successfully decrypt old
-+ciphertext.
-+
-+Cross-Domain Capture and Delayed Compare Attack
-+-----------------------------------------------
-+This is also referred to as a kind of dictionary attack.
-+
-+Similarly, MKTME protects against cross-domain capture-and-compare
-+attacks.  Consider the following scenario:
-+ * A victim places a secret in memory, at a known physical address
-+ * Attacker captures victim’s ciphertext
-+ * Attacker gains control of the target physical address, perhaps
-+   after the victim’s VM is shut down or its memory reclaimed.
-+ * Attacker computes and writes many possible plaintexts until new
-+   ciphertext matches content captured previously.
-+
-+Secrets which have low (plaintext) entropy are more vulnerable to
-+this attack because they reduce the number of possible plaintexts
-+an attacker has to compute and write.
-+
-+The attack will not work if attacker and victim uses different
-+keys.
-+
-+Key Wear-out Attack
-+-------------------
-+Repeated use of an encryption key might be used by an attacker to
-+infer information about the key or the plaintext, weakening the
-+encryption.  The higher the bandwidth of the encryption engine,
-+the more vulnerable the key is to wear-out.  The MKTME memory
-+encryption hardware works at the speed of the memory bus, which
-+has high bandwidth.
-+
-+Such a weakness has been demonstrated[1] on a theoretical cipher
-+with similar properties as AES-XTS.
-+
-+An attack would take the following steps:
-+ * Victim system is using TME with AES-XTS-128
-+ * Attacker repeatedly captures ciphertext/plaintext pairs (can
-+   be Performed with online hardware attack like an interposer).
-+ * Attacker compels repeated use of the key under attack for a
-+   sustained time period without a system reboot[2].
-+ * Attacker discovers a cipertext collision (two plaintexts
-+   translating to the same ciphertext)
-+ * Attacker can induce controlled modifications to the targeted
-+   plaintext by modifying the colliding ciphertext
-+
-+MKTME mitigates key wear-out in two ways:
-+ * Keys can be rotated periodically to mitigate wear-out.  Since
-+   TME keys are generated at boot, rotation of TME keys requires a
-+   reboot.  In contrast, MKTME allows rotation while the system is
-+   booted.  An application could implement a policy to rotate keys
-+   at a frequency which is not feasible to attack.
-+ * In the case that MKTME is used to encrypt two guests’ memory
-+   with two different keys, an attack on one guest’s key would not
-+   weaken the key used in the second guest.
-+
-+--
-+1. http://web.cs.ucdavis.edu/~rogaway/papers/offsets.pdf
-+2. This sustained time required for an attack could vary from days
-+   to years depending on the attacker’s goals.
+ 	return !!mktme_nr_keyids;
+ }
+ 
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 55b77c576c42..239b2edc78d3 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -848,25 +848,26 @@ char * __init efi_md_typeattr_format(char *buf, size_t size,
+ 	if (attr & ~(EFI_MEMORY_UC | EFI_MEMORY_WC | EFI_MEMORY_WT |
+ 		     EFI_MEMORY_WB | EFI_MEMORY_UCE | EFI_MEMORY_RO |
+ 		     EFI_MEMORY_WP | EFI_MEMORY_RP | EFI_MEMORY_XP |
+-		     EFI_MEMORY_NV |
++		     EFI_MEMORY_NV | EFI_MEMORY_CPU_CRYPTO |
+ 		     EFI_MEMORY_RUNTIME | EFI_MEMORY_MORE_RELIABLE))
+ 		snprintf(pos, size, "|attr=0x%016llx]",
+ 			 (unsigned long long)attr);
+ 	else
+ 		snprintf(pos, size,
+-			 "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
++			 "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
+ 			 attr & EFI_MEMORY_RUNTIME ? "RUN" : "",
+ 			 attr & EFI_MEMORY_MORE_RELIABLE ? "MR" : "",
+-			 attr & EFI_MEMORY_NV      ? "NV"  : "",
+-			 attr & EFI_MEMORY_XP      ? "XP"  : "",
+-			 attr & EFI_MEMORY_RP      ? "RP"  : "",
+-			 attr & EFI_MEMORY_WP      ? "WP"  : "",
+-			 attr & EFI_MEMORY_RO      ? "RO"  : "",
+-			 attr & EFI_MEMORY_UCE     ? "UCE" : "",
+-			 attr & EFI_MEMORY_WB      ? "WB"  : "",
+-			 attr & EFI_MEMORY_WT      ? "WT"  : "",
+-			 attr & EFI_MEMORY_WC      ? "WC"  : "",
+-			 attr & EFI_MEMORY_UC      ? "UC"  : "");
++			 attr & EFI_MEMORY_NV         ? "NV"  : "",
++			 attr & EFI_MEMORY_CPU_CRYPTO ? "CR"  : "",
++			 attr & EFI_MEMORY_XP         ? "XP"  : "",
++			 attr & EFI_MEMORY_RP         ? "RP"  : "",
++			 attr & EFI_MEMORY_WP         ? "WP"  : "",
++			 attr & EFI_MEMORY_RO         ? "RO"  : "",
++			 attr & EFI_MEMORY_UCE        ? "UCE" : "",
++			 attr & EFI_MEMORY_WB         ? "WB"  : "",
++			 attr & EFI_MEMORY_WT         ? "WT"  : "",
++			 attr & EFI_MEMORY_WC         ? "WC"  : "",
++			 attr & EFI_MEMORY_UC         ? "UC"  : "");
+ 	return buf;
+ }
+ 
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 6ebc2098cfe1..4b2d0b1a75dc 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -112,6 +112,7 @@ typedef	struct {
+ #define EFI_MEMORY_MORE_RELIABLE \
+ 				((u64)0x0000000000010000ULL)	/* higher reliability */
+ #define EFI_MEMORY_RO		((u64)0x0000000000020000ULL)	/* read-only */
++#define EFI_MEMORY_CPU_CRYPTO 	((u64)0x0000000000080000ULL)	/* memory encryption supported */
+ #define EFI_MEMORY_RUNTIME	((u64)0x8000000000000000ULL)	/* range requires runtime mapping */
+ #define EFI_MEMORY_DESCRIPTOR_VERSION	1
+ 
 -- 
 2.20.1
 
