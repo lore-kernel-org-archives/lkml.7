@@ -2,112 +2,129 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58249C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBC3C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2743421479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F157C21726
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IBeZgb+5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OLIvWECN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bI+OTnFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfEHIeS (ORCPT
+        id S1726795AbfEHIfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:34:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48558 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfEHIeS (ORCPT
+        Wed, 8 May 2019 04:35:25 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40646 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfEHIfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:34:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0582C60D35; Wed,  8 May 2019 08:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557304457;
-        bh=mDhuWudJppV+tmXjscDKqdwNpRqZ0VH+uYhZq8ihmDo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IBeZgb+5WCYEaQG9Gm5AujgPNZ8sqb1PsDyN3WPBvSp5VAosXWuzOt4zKoDqF0CiF
-         dkEsICItQb9JjMmpZPj9/ZfbV2q7ing/3leaTrdRaAqEsq7Y9E8y4BODfqTWI8GITW
-         W7XoRp6CfJKgGrOpPMMkojYSFy6Og8XyyGo8Opdg=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87E2B60850;
-        Wed,  8 May 2019 08:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557304456;
-        bh=mDhuWudJppV+tmXjscDKqdwNpRqZ0VH+uYhZq8ihmDo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OLIvWECNUQ1mm8tprveMc+0l/bj3J6y5R5U2EhfVH3PR6wfbZTuG+mu32Z31RyYC6
-         iWyQJJbny2xy11JtRbqhVazxy3BiYz/+tcymHbCPJbtaXmwpToeSmBfZWeykTzXJLs
-         6iPisyyQAAUi2ma7STpMt9zel+FJJ+P6A7I6VQpM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87E2B60850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sahitya Tummala <stummala@codeaurora.org>
-Subject: [PATCH v2] ext4: fix use-after-free in dx_release()
-Date:   Wed,  8 May 2019 14:04:03 +0530
-Message-Id: <1557304443-18653-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 8 May 2019 04:35:24 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e56so21269131ede.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:35:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O82OgpfzeDh2UEeB/vmic+hMxc9DH+yp719HK/Iv7xI=;
+        b=bI+OTnFQBhAMy/Fosn0WFLRAjME86sn9+AY2pJSC/YisVJpsAi3ITxRhfc+MXIkAcO
+         2xPP+zbqNdgib/BoAt3L0GfsYBQ5EAC4h+HB97Ud18Rm8WZSEl1Jala96sRo/86WW6BW
+         NLiHu2roFj/eR4y3VgLe5lQ3BFFna8Yrm2nvI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=O82OgpfzeDh2UEeB/vmic+hMxc9DH+yp719HK/Iv7xI=;
+        b=pJNd/3HDgxnZVlAOBLJdk9qJmnS9aJ4LfMY7kZNNSFUhtoDnN10bYsFWJR8TC3henD
+         h/iVR+NUrRUp4520NGARN+S2DC+HWEC2V7qa5La8CTbVh2AvRwa0tQbdpAN6d53345s1
+         3i0NzsROof5k/X3kk45LZSCRl8mMXT/rAI/C32VUsRVug0Y7Igd282/bmU7gXdlURKqa
+         /tJd8xmtpNPz3SwPaM0ix9uxEItX642t0dgNd43TOoYi04h0xzVfdnEjTX6BUSZxbsTX
+         62nGTJzzJXSwZl2aymAf25EW8iFdnnLyuBeRWfeO6RcPiJBNfJjsTgl92doivWPS5VxZ
+         qiZQ==
+X-Gm-Message-State: APjAAAWTg3dIoGlhPbG2Ftw1fFsYlT5KhxIHx81OslxketyR9Ebp96N5
+        irx6o6q0zB4yS0moRAYc1ro6TQ==
+X-Google-Smtp-Source: APXvYqxGx8OsiIdz2sy8/idKb8APDa8zpodaXm0vDZ+ekASTAgEhxUCZYEn7hnen6RqRvgXKmM2T6g==
+X-Received: by 2002:a50:87ab:: with SMTP id a40mr36539324eda.188.1557304523070;
+        Wed, 08 May 2019 01:35:23 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id y13sm3739593edp.77.2019.05.08.01.35.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 01:35:22 -0700 (PDT)
+Date:   Wed, 8 May 2019 10:35:19 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/atomic: Check that the config funcs exist
+ drm_mode_alloc
+Message-ID: <20190508083519.GS17751@phenom.ffwll.local>
+Mail-Followup-To: Jordan Crouse <jcrouse@codeaurora.org>,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+References: <1557256451-24950-1-git-send-email-jcrouse@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557256451-24950-1-git-send-email-jcrouse@codeaurora.org>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The buffer_head (frames[0].bh) and it's corresping page can be
-potentially free'd once brelse() is done inside the for loop
-but before the for loop exits in dx_release(). It can be free'd
-in another context, when the page cache is flushed via
-drop_caches_sysctl_handler(). This results into below data abort
-when accessing info->indirect_levels in dx_release().
+On Tue, May 07, 2019 at 01:14:11PM -0600, Jordan Crouse wrote:
+> An error while initializing the msm driver ends up calling
+> drm_atomic_helper_shutdown() without first initializing the funcs
+> in mode_config. While I'm not 100% sure this isn't a ordering
+> problem in msm adding a check to drm_mode_alloc seems like
+> a nice and safe solution.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-Unable to handle kernel paging request at virtual address ffffffc17ac3e01e
-Call trace:
- dx_release+0x70/0x90
- ext4_htree_fill_tree+0x2d4/0x300
- ext4_readdir+0x244/0x6f8
- iterate_dir+0xbc/0x160
- SyS_getdents64+0x94/0x174
+Hm yeah this looks a bit too much like ducttape. I think Noralf started
+working on some ideas of devm-like automatic cleanup for drm stuff (we
+cannot use devm, that has the wrong lifetimes, despite all the drivers
+using it).
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
-v2:
-add a comment in dx_release()
+Simple fix would be to move up the assignment of config.funcs to be much
+earlier in your driver load I guess.
+-Daniel
 
- fs/ext4/namei.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> ---
+> 
+>  drivers/gpu/drm/drm_atomic.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
+> index 5eb4013..1729428 100644
+> --- a/drivers/gpu/drm/drm_atomic.c
+> +++ b/drivers/gpu/drm/drm_atomic.c
+> @@ -114,6 +114,9 @@ drm_atomic_state_alloc(struct drm_device *dev)
+>  {
+>  	struct drm_mode_config *config = &dev->mode_config;
+>  
+> +	if (!config->funcs)
+> +		return NULL;
+> +
+>  	if (!config->funcs->atomic_state_alloc) {
+>  		struct drm_atomic_state *state;
+>  
+> -- 
+> 2.7.4
+> 
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 980166a..5d9ffa8 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -871,12 +871,15 @@ static void dx_release(struct dx_frame *frames)
- {
- 	struct dx_root_info *info;
- 	int i;
-+	unsigned int indirect_levels;
- 
- 	if (frames[0].bh == NULL)
- 		return;
- 
- 	info = &((struct dx_root *)frames[0].bh->b_data)->info;
--	for (i = 0; i <= info->indirect_levels; i++) {
-+	/* save local copy, "info" may be freed after brelse() */
-+	indirect_levels = info->indirect_levels;
-+	for (i = 0; i <= indirect_levels; i++) {
- 		if (frames[i].bh == NULL)
- 			break;
- 		brelse(frames[i].bh);
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
