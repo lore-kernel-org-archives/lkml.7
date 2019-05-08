@@ -2,360 +2,161 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F89C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3E2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223E4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557288713;
-	bh=tHqw+CrlyCnQ9Kul+HvSNIOFOD0JGJrQQfAZyS4/bR8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Le6gYtdA5nxZ4Mnqxa9rnqzMkmUp95OI/wmaG3A6oGInruMHXqDmGmZSr342KKYYr
-	 IE4CidHbrq/KDeBEgXhYrFNmEj6Lif5b2pdrghWzZmrswnJ2m6WYo03PWBIDqqwAEv
-	 T3KJa/JyWZdQ+ERje2DqURy/xNp1PxkNtFNjyuhs=
+	by mail.kernel.org (Postfix) with ESMTP id 159E5214AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfEHELv (ORCPT
+        id S1727084AbfEHEMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:11:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfEHELv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:11:51 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09EA421479;
-        Wed,  8 May 2019 04:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557288710;
-        bh=tHqw+CrlyCnQ9Kul+HvSNIOFOD0JGJrQQfAZyS4/bR8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qg9acp58twME2EehcDiyqU7+sGxcbS/bYFvuFIOtCKc4lIEEkLrz8BuRjbzGY0nXa
-         g2kkTH9wb1/gAUHgpMLaA1PLRM/Nno3mtP9fmkLTr34LefE1+qirkJGkahB1oZtF9j
-         41dR9n5xeux8J9zXuujc/QvkYPhdmHAKKH2KKBJo=
-Date:   Wed, 8 May 2019 13:11:43 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: Re: [RFC PATCH v6 4/6] tracing/probe: Support user-space
- dereference
-Message-Id: <20190508131143.6f69abddd4c11b47bea138fb@kernel.org>
-In-Reply-To: <20190506115226.70c62f7a@gandalf.local.home>
-References: <155289137555.7218.9282784065958321058.stgit@devnote2>
-        <155289143224.7218.6083289081805224583.stgit@devnote2>
-        <20190506115226.70c62f7a@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 8 May 2019 00:12:54 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42119 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfEHEMx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 00:12:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j53so2606567qta.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:12:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xwhy2yN3rc/R/GaGy+1UFq4MiREMOPekIWW9QNkmDr0=;
+        b=s4vDIHGEOeowkb4gSAdVrETj15udiHBiGis+myRZUfxHaVDpustlI1Ta5hIW03tP/f
+         PAK+KiB20KXTUmN7RoJlcpgaQklv3fmOM9YLCtQ+caDV1xCF0cSC7WalKNivcARkj+/T
+         kN/oIx0WqlrUtTLrj5VvrgWGoBIjzxHyx901BK/VPUCZz9ok8YjR7H0ZA6HhXoMVuhRy
+         riTzf575TC8xG60nSgpsD57//FGWTI6DXRJ7i1p0o38T54MWc10GCGIEp2TXXk9OGYWj
+         33qwReEz/j/FmTAs5M3LKvoNrwWlSIQYc3Bko56pA71s9nXZBivIrguofUvBGj3HZwZ4
+         nuSg==
+X-Gm-Message-State: APjAAAXJi0i+QGvWI/H4nlUXqM5o6XZcsgePg/nIiX5TyKo1ZoXsoRSc
+        SpzkcfGX6od1aiDVoOZBxQUcaQ==
+X-Google-Smtp-Source: APXvYqx0Vjhjwje7JRCwbHR2bgsffeWuD7uDRdzXBHVgbWnmt5fE0ab1QpEFLunM5VrcyQy1j/ZmKg==
+X-Received: by 2002:ac8:65cf:: with SMTP id t15mr16582014qto.12.1557288772916;
+        Tue, 07 May 2019 21:12:52 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id j25sm9725830qtc.24.2019.05.07.21.12.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 07 May 2019 21:12:51 -0700 (PDT)
+Date:   Wed, 8 May 2019 00:12:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH RFC] vhost: don't use kmap() to log dirty pages
+Message-ID: <20190507220526-mutt-send-email-mst@kernel.org>
+References: <1557195809-12373-1-git-send-email-jasowang@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557195809-12373-1-git-send-email-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 11:52:26 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Mon, 18 Mar 2019 15:43:52 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Mon, May 06, 2019 at 10:23:29PM -0400, Jason Wang wrote:
+> Vhost log dirty pages directly to a userspace bitmap through GUP and
+> kmap_atomic() since kernel doesn't have a set_bit_to_user()
+> helper. This will cause issues for the arch that has virtually tagged
+> caches. The way to fix is to keep using userspace virtual address.
 > 
-> > +.. _user_mem_access:
-> > +User Memory Access
-> > +------------------
-> > +Kprobe events supports user-space memory access. For that purpose, you can use
-> > +either user-space dereference syntax or 'ustring' type.
-> > +
-> > +The user-space dereference syntax allows you to access a field of a data
-> > +structure in user-space. This is done by adding the "u" prefix to the
-> > +dereference syntax. For example, +u4(%si) means it will read memory from the
-> > +address in the register %si offset by 4, and the mory is expected to be in
+> Fortunately, futex has a cmpxchg to userspace memory helper
+> futex_atomic_cmpxchg_inatomic(). So switch to use it to exchange the
+> userspace bitmap with zero, set the bit and then write it back through
+> put_user().
 > 
->                                                     ^^^^
->  "memory"
+> Note: there're archs (few non popular ones) that don't implement
+> futex helper, we can't log dirty pages. We can fix them on top or
+> simply disable LOG_ALL features of vhost.
 
-OK, thanks!
+Or implement futex_atomic_cmpxchg using kmap if they don't have
+virtually tagged caches.
 
 > 
-> > +user-space. You can use this for strings too, e.g. +u0(%si):string will read
-> > +a string from the address in the register %si that is expected to be in user-
-> > +space. 'ustring' is a shortcut way of performing the same task. That is,
-> > ++0(%si):ustring is equivalent to +u0(%si):string.
-> > +
-> > +Note that kprobe-event provides the user-memory access syntax but it doesn't
-> > +use it transparently. This means if you use normal dereference or string type
-> > +for user memory, it might fail, and always fails on some arch. So user has to
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/vhost/vhost.c | 27 +++++++++++++++------------
+>  1 file changed, 15 insertions(+), 12 deletions(-)
 > 
->   "and may always fail on some archs. The user has to carefully check
->   if the target data is in kernel or user space."
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 351af88..9c94c41 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/interval_tree_generic.h>
+>  #include <linux/nospec.h>
+> +#include <asm/futex.h>
+>  
+>  #include "vhost.h"
+>  
+> @@ -1692,25 +1693,27 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
+>  }
+>  EXPORT_SYMBOL_GPL(vhost_dev_ioctl);
+>  
+> -/* TODO: This is really inefficient.  We need something like get_user()
+> - * (instruction directly accesses the data, with an exception table entry
+> - * returning -EFAULT). See Documentation/x86/exception-tables.txt.
+> - */
+> -static int set_bit_to_user(int nr, void __user *addr)
+> +static int set_bit_to_user(int nr, u32 __user *addr)
+>  {
+>  	unsigned long log = (unsigned long)addr;
+>  	struct page *page;
+> -	void *base;
+> -	int bit = nr + (log % PAGE_SIZE) * 8;
+> +	u32 old_log;
+>  	int r;
+>  
+>  	r = get_user_pages_fast(log, 1, 1, &page);
+>  	if (r < 0)
+>  		return r;
+>  	BUG_ON(r != 1);
+> -	base = kmap_atomic(page);
+> -	set_bit(bit, base);
+> -	kunmap_atomic(base);
+> +
+> +	r = futex_atomic_cmpxchg_inatomic(&old_log, addr, 0, 0);
+> +	if (r < 0)
+> +		return r;
 
-OK. I'll update.
+So I think this is a great idea!
 
-> > +check if the targe data is in kernel or in user space carefully.
-> >  
-> >  Per-Probe Event Filtering
-> >  -------------------------
-> > diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
-> > index 4346e23e3ae7..de8812c932bc 100644
-> > --- a/Documentation/trace/uprobetracer.rst
-> > +++ b/Documentation/trace/uprobetracer.rst
-> > @@ -42,16 +42,17 @@ Synopsis of uprobe_tracer
-> >     @+OFFSET	: Fetch memory at OFFSET (OFFSET from same file as PATH)
-> >     $stackN	: Fetch Nth entry of stack (N >= 0)
-> >     $stack	: Fetch stack address.
-> > -   $retval	: Fetch return value.(*)
-> > +   $retval	: Fetch return value.(\*1)
-> >     $comm	: Fetch current task comm.
-> > -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
-> > +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
-> >     NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
-> >     FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
-> >  		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-> >  		       (x8/x16/x32/x64), "string" and bitfield are supported.
-> 
-> Hmm, shouldn't uprobes default to userspace. Isn't the purpose mostly
-> to find out what's going on in userspace. Perhaps we should add a 'k'
-> annotation to uprobes to denote that it's for kernel space, as that
-> should be the exception and not the norm.
+However one issue here is that futex_atomic_cmpxchg_inatomic will fail if the
+page is swapped out. I suspect we need a variant that blocks the thread
+instead.
 
-No, uprobe can not access kernel space, because it doesn't have the
-current kernel context. Note that all registers, stacks which
-can be accessed from uprobe handler are user-space. We can not access
-kernel context from that. See below
-
-> > -  (*) only for return probe.
-> > -  (**) this is useful for fetching a field of data structures.
-> > +  (\*1) only for return probe.
-> > +  (\*2) this is useful for fetching a field of data structures.
-> > +  (\*3) Unlike kprobe event, "u" prefix will just be ignored.
-
-Thus the 'u' is just ignored on uprobe event.
-
-> >  
-> >  Types
-> >  -----
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 7a6ed76ba104..b595d5ef099a 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -4815,10 +4815,11 @@ static const char readme_msg[] =
-> >  	"\t     args: <name>=fetcharg[:type]\n"
-> >  	"\t fetcharg: %<register>, @<address>, @<symbol>[+|-<offset>],\n"
-> >  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-> > -	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>\n"
-> > +	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
-> >  #else
-> > -	"\t           $stack<index>, $stack, $retval, $comm\n"
-> > +	"\t           $stack<index>, $stack, $retval, $comm,\n"
-> >  #endif
-> > +	"\t           +|-[u]<offset>(<fetcharg>)\n"
-> >  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, string, symbol,\n"
-> >  	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
-> >  	"\t           <type>\\[<array-size>\\]\n"
-> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> > index e346229ddbba..9456f4ca3b8a 100644
-> > --- a/kernel/trace/trace_kprobe.c
-> > +++ b/kernel/trace/trace_kprobe.c
-> > @@ -930,6 +930,12 @@ probe_mem_read(void *dest, void *src, size_t size)
-> >  	return probe_kernel_read(dest, src, size);
-> >  }
-> >  
-> > +static nokprobe_inline int
-> > +probe_mem_read_user(void *dest, void *src, size_t size)
-> > +{
-> > +	return probe_user_read(dest, src, size);
-> > +}
-> > +
-> >  /* Note that we don't verify it, since the code does not come from user space */
-> >  static int
-> >  process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index 30054136cfde..00771e7b6ef8 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -253,6 +253,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
-> >  {
-> >  	struct fetch_insn *code = *pcode;
-> >  	unsigned long param;
-> > +	int deref = FETCH_OP_DEREF;
-> >  	long offset = 0;
-> >  	char *tmp;
-> >  	int ret = 0;
-> > @@ -315,9 +316,14 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
-> >  		break;
-> >  
-> >  	case '+':	/* deref memory */
-> > -		arg++;	/* Skip '+', because kstrtol() rejects it. */
-> > -		/* fall through */
-> >  	case '-':
-> > +		if (arg[1] == 'u') {
-> > +			deref = FETCH_OP_UDEREF;
-> > +			arg[1] = arg[0];
-> > +			arg++;
-> > +		}
-> 
-> It should be fine to add a 'k' version here too.
-> 
-> > +		if (arg[0] == '+')
-> > +			arg++;	/* Skip '+', because kstrtol() rejects it. */
-> >  		tmp = strchr(arg, '(');
-> >  		if (!tmp)
-> >  			return -EINVAL;
-> > @@ -343,7 +349,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
-> >  				return -E2BIG;
-> >  			*pcode = code;
-> >  
-> > -			code->op = FETCH_OP_DEREF;
-> > +			code->op = deref;
-> >  			code->offset = offset;
-> >  		}
-> >  		break;
-> > @@ -459,13 +465,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
-> >  	/* Store operation */
-> >  	if (!strcmp(parg->type->name, "string") ||
-> >  	    !strcmp(parg->type->name, "ustring")) {
-> > -		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_IMM &&
-> > -		    code->op != FETCH_OP_COMM) {
-> > +		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_UDEREF
-> > +		    && code->op != FETCH_OP_IMM && code->op != FETCH_OP_COMM) {
-> >  			pr_info("string only accepts memory or address.\n");
-> >  			ret = -EINVAL;
-> >  			goto fail;
-> >  		}
-> > -		if (code->op != FETCH_OP_DEREF || parg->count) {
-> > +		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM)
-> > +		    || parg->count) {
-> >  			/*
-> >  			 * IMM and COMM is pointing actual address, those must
-> >  			 * be kept, and if parg->count != 0, this is an array
-> > @@ -478,7 +485,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
-> >  			}
-> >  		}
-> >  		/* If op == DEREF, replace it with STRING */
-> > -		if (!strcmp(parg->type->name, "ustring"))
-> > +		if (!strcmp(parg->type->name, "ustring") ||
-> 
-> Perhaps have a "kstring" for kernel strings in uprobes.
-> 
-> > +		    code->op == FETCH_OP_UDEREF)
-> >  			code->op = FETCH_OP_ST_USTRING;
-> >  		else
-> >  			code->op = FETCH_OP_ST_STRING;
-> > @@ -487,6 +495,9 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
-> >  	} else if (code->op == FETCH_OP_DEREF) {
-> >  		code->op = FETCH_OP_ST_MEM;
-> >  		code->size = parg->type->size;
-> > +	} else if (code->op == FETCH_OP_UDEREF) {
-> > +		code->op = FETCH_OP_ST_UMEM;
-> > +		code->size = parg->type->size;
-> >  	} else {
-> >  		code++;
-> >  		if (code->op != FETCH_OP_NOP) {
-> > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> > index 94cdcfdaced0..0feac0a81f82 100644
-> > --- a/kernel/trace/trace_probe.h
-> > +++ b/kernel/trace/trace_probe.h
-> > @@ -92,9 +92,11 @@ enum fetch_op {
-> >  	FETCH_OP_FOFFS,		/* File offset: .immediate */
-> >  	// Stage 2 (dereference) op
-> >  	FETCH_OP_DEREF,		/* Dereference: .offset */
-> > +	FETCH_OP_UDEREF,	/* User-space Dereference: .offset */
-> >  	// Stage 3 (store) ops
-> >  	FETCH_OP_ST_RAW,	/* Raw: .size */
-> >  	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
-> > +	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
-> >  	FETCH_OP_ST_STRING,	/* String: .offset, .size */
-> >  	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
-> >  	// Stage 4 (modify) op
-> > diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-> > index 7526f6f8d7b0..06f2d901c4cf 100644
-> > --- a/kernel/trace/trace_probe_tmpl.h
-> > +++ b/kernel/trace/trace_probe_tmpl.h
-> > @@ -64,6 +64,8 @@ static nokprobe_inline int
-> >  fetch_store_string_user(unsigned long addr, void *dest, void *base);
-> >  static nokprobe_inline int
-> >  probe_mem_read(void *dest, void *src, size_t size);
-> > +static nokprobe_inline int
-> > +probe_mem_read_user(void *dest, void *src, size_t size);
-> >  
-> >  /* From the 2nd stage, routine is same */
-> >  static nokprobe_inline int
-> > @@ -77,14 +79,21 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
-> >  
-> >  stage2:
-> >  	/* 2nd stage: dereference memory if needed */
-> > -	while (code->op == FETCH_OP_DEREF) {
-> > -		lval = val;
-> > -		ret = probe_mem_read(&val, (void *)val + code->offset,
-> > -					sizeof(val));
-> > +	do {
-> > +		if (code->op == FETCH_OP_DEREF) {
-> > +			lval = val;
-> > +			ret = probe_mem_read(&val, (void *)val + code->offset,
-> > +					     sizeof(val));
-> > +		} else if (code->op == FETCH_OP_UDEREF) {
-> > +			lval = val;
-> > +			ret = probe_mem_read_user(&val,
-> > +				 (void *)val + code->offset, sizeof(val));
-> > +		} else
-> > +			break;
-> >  		if (ret)
-> >  			return ret;
-> >  		code++;
-> > -	}
-> > +	} while (1);
-> >  
-> >  	s3 = code;
-> >  stage3:
-> > @@ -109,6 +118,10 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
-> >  	case FETCH_OP_ST_MEM:
-> >  		probe_mem_read(dest, (void *)val + code->offset, code->size);
-> >  		break;
-> > +	case FETCH_OP_ST_UMEM:
-> > +		probe_mem_read_user(dest, (void *)val + code->offset,
-> > +				    code->size);
-> > +		break;
-> >  	case FETCH_OP_ST_STRING:
-> >  		loc = *(u32 *)dest;
-> >  		ret = fetch_store_string(val + code->offset, dest, base);
-> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> > index f4e37c4f8a21..5bc8c3686f6f 100644
-> > --- a/kernel/trace/trace_uprobe.c
-> > +++ b/kernel/trace/trace_uprobe.c
-> > @@ -140,6 +140,13 @@ probe_mem_read(void *dest, void *src, size_t size)
-> >  
-> >  	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
-> >  }
-> > +
-> > +static nokprobe_inline int
-> > +probe_mem_read_user(void *dest, void *src, size_t size)
-> > +{
-> > +	return probe_mem_read(dest, src, size);
-> 
-> Hmm, if probe_mem_read() is the same as probe_mem_read_user(), perhaps
-> not even have a 'u' version for uprobes.
-
-Yes, this is just a hack for sharing the template code.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> +
+> +	old_log |= 1 << nr;
+> +	r = put_user(old_log, addr);
+> +	if (r < 0)
+> +		return r;
+> +
+>  	set_page_dirty_lock(page);
+>  	put_page(page);
+>  	return 0;
+> @@ -1727,8 +1730,8 @@ static int log_write(void __user *log_base,
+>  	write_length += write_address % VHOST_PAGE_SIZE;
+>  	for (;;) {
+>  		u64 base = (u64)(unsigned long)log_base;
+> -		u64 log = base + write_page / 8;
+> -		int bit = write_page % 8;
+> +		u64 log = base + write_page / 32;
+> +		int bit = write_page % 32;
+>  		if ((u64)(unsigned long)log != log)
+>  			return -EFAULT;
+>  		r = set_bit_to_user(bit, (void __user *)(unsigned long)log);
+> -- 
+> 1.8.3.1
