@@ -2,213 +2,353 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1C6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF7DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72FC2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7378B21479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Uy6wXrmQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hQEiu9Nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfEHI2A (ORCPT
+        id S1726734AbfEHI24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:28:00 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:47195 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfEHI17 (ORCPT
+        Wed, 8 May 2019 04:28:56 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46706 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfEHI24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:27:59 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190508082756euoutp0248d1d9b0efbba8e9e884ddef2cd2fde3~cp85v3--q0645206452euoutp02h
-        for <linux-kernel@vger.kernel.org>; Wed,  8 May 2019 08:27:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190508082756euoutp0248d1d9b0efbba8e9e884ddef2cd2fde3~cp85v3--q0645206452euoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557304076;
-        bh=M4mu9eJCCybXEe/MwRtmtZ/unoWjTw3QHUKRuPZGCq8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Uy6wXrmQTcEYe9xqOBq0vV9FpWIc/SXhUaCR32DFsAqXD38gbdCi+HlPdgOOYD7kR
-         ATuj9mLPXp/DRCRx88R46Y68RbMOahz0qMptUiSfybacBYowYM1AU03zqN/DsQq6ay
-         DZnAKOp9/MYYQO4kE1MfplzRB/mW9N6Mp3JvGjic=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190508082755eucas1p2903df84538b5040ee65b5a63a7df0271~cp846_nvr0525005250eucas1p2U;
-        Wed,  8 May 2019 08:27:55 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 05.2F.04325.B0392DC5; Wed,  8
-        May 2019 09:27:55 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190508082754eucas1p1e2cd519164630da5c563d523a57335fb~cp84ECnnR2412224122eucas1p1t;
-        Wed,  8 May 2019 08:27:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190508082754eusmtrp2dc29a29dfafd2669df0b9310997d1013~cp83w7pXG0448304483eusmtrp2A;
-        Wed,  8 May 2019 08:27:54 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-94-5cd2930be523
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 80.6E.04146.90392DC5; Wed,  8
-        May 2019 09:27:54 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190508082753eusmtip206c1e39f35a9bc347c80d2cf32caaf53~cp83DWoZ01049510495eusmtip2W;
-        Wed,  8 May 2019 08:27:53 +0000 (GMT)
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
- description
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <d48d6629-f171-aae3-ba5a-ae4c13d29407@partner.samsung.com>
-Date:   Wed, 8 May 2019 10:28:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Wed, 8 May 2019 04:28:56 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h21so149222ljk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=Li2d49mzUCijRdjBZvZl5BfDZelXl1h8JGrIA0GByPA=;
+        b=hQEiu9NwZ9a4IbxhU6owGDpKuil/IxbGA5l+3dGnkJrMWRKyDArU011X4k/LyLnur0
+         Xstppkl66cEtx54D/LyMU9iAlJfz/9WED5xVKGAw6xgUDbOl4WNdUz8qwLNvjcNmA8+F
+         5nO9XpanANu7X2s9BM5FEN/IxsdH4uu1Z5QoKCduOP0Ccf9VJ/Va8j/sPyPv2G/z5GyY
+         PNRG1VlWHkubDDw6MsZN5tSA7TIuZP19Nk+6fLD4GTb7b2ZHqFtbm2CRCddO1ipsiM2P
+         OKjGokhvhGZzj0RXBmhSGIHgOx2I+tPDK3PopsDiIXtl6nRx2x019djnYQPw/IN2CAMe
+         L7iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=Li2d49mzUCijRdjBZvZl5BfDZelXl1h8JGrIA0GByPA=;
+        b=Xk8WiMv0QEtra0ZSe6d3diatYEp/BWTpDD4z7RspWv25/l2lruBv/NGpHTR8Zcv6pU
+         YMuSv1v36voZFdtBJ8VSAILuDRWttx88iESmrIutk3A2+XGBV8nbNizFnp1s5SuLgTrl
+         1N+hOP1nHppjdP8S6TPkwImEK6UKazTppGpnNPgvdQqhOpIl5nw/WZTB7mkBSGBrZz5F
+         vPzW8kRI0/XldN8t9moo0psxBkVaaD/oMhPxoNVOX9/o/lSEDi1joVT/FlO4UzPFQD4J
+         iCT1reFtrE1ISkipIB4ToWvKeEJwhXRWzVQW0OrW1YkZL3mVqUtRBvXQEv4j+tQnrBQN
+         HFuQ==
+X-Gm-Message-State: APjAAAXgjQ+FSw/+xOBZ+csR8D9DOsHAJ5MLZcNn5BKn8/FB5o/M87Hk
+        zT038ENKIrVtGY3SBedpuSi9wb0IX9U5iaturR2FxMDgWSM=
+X-Google-Smtp-Source: APXvYqwdytMSTAaaAsjidNhN+zTs9tk31m2UbS9Ja2jgOUZBFtflTnWYtm4JdDbQvZvHCWgTW1UuIDhC/4ynh9i5QP0=
+X-Received: by 2002:a2e:834d:: with SMTP id l13mr21017713ljh.97.1557304132981;
+ Wed, 08 May 2019 01:28:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1dTrTAa0+CsoVXGLxQ4yCCwkvEQkao/3wA4OJRkmwyFiIbHYE
-        RTQWNxREcZcK1CYoUNksjVBiiKksilhADBUIaiwKYXEBl7gi7dTI33lnybkneSwl66Z92LjE
-        /Zw6URkvZ9zF95q+W5dPv/QsckWOhSF3r1fSxPZ5gCa6BitNztuHKdLWViUhT4+NSIjR3kWT
-        zrp8hoznNCByva1eRMob+iTklq1DRHozShgycb9WQh6OZNLk66M3KAwrygrLkMKs7ZMojIYz
-        jKK66KjinMmAFOPGBeHMDveQGC4+LpVTB4buco+tbbokTtbBwYrHNSIN6vXMQm4s4CB4ndFI
-        ZyF3VoZLEFy7YxA5BBn+jOD92whBGJ/EZTb0L9FUk4cEoRjBx8ELYuExiqDiRK4z7om3QsXL
-        LokDe+FF8PPUVWcHhVtpaNdmTiZYlsEBUGvY5/BI8UbI/HSFcWAxXgxjtz848Wy8HV41VdGC
-        xwMe5/U7o254Cwz3hTloCntDT79OJOCFUDOaTzmqAGewMNhiFglXb4CL74rEAvaEoWaTRMDz
-        YMKsc3l40OToXSsPg/18gcuzBh42d9COXgr7Q2VdoECvg+qS38hBA54JL0Y9hBNmwsV71yiB
-        lsLpUzLBvQRMZ9tdRXOguOyqJBfJtVN2aaeM0U4Zo/3fexOJDcibS+ETVBy/OpE7EMArE/iU
-        RFXA7qQEI5r8cE/+NH+pRfW/oi0Is0g+QzqY3BEpo5WpfFqCBQFLyb2ktgvPImXSGGXaIU6d
-        FKVOied4C/JlxXJvafq01ztlWKXcz+3luGRO/U8VsW4+GnTc+lx/OGjB5tJcg6ZrBfbv1D+3
-        qqOUXuunVQ11b8uKXPbj8tqeiaO707IjWnuGo0vTb/QcCYkNDgN9mC/XPfKg/tW3uar8+fZ2
-        TXyLucAazIXqC8fCT4Yn+/kfU23KztY3zhoY8zXP2+PHdD6QrzGJHg2t9wsOKSWK4zPKYRUv
-        F/OxypVLKTWv/AuvsEkVbAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SXUhTYRjHe3fO2Y7W4jhnvgilji4icHb82jtZKl3ELozKLMoWNvSg5j50
-        Z5PsJtPQWpTaSnSIBqXJMNucuRUhZssUzbEFW000TEvwAykziEpzjsC7H8///7t4eB4SEyzj
-        MWSJRs/oNEqViBuOj62/nU4IN3kVhx4fQLbmpwTy/5gnULtrgkD1s4sYcrutPPSueomHemd9
-        BHr/opWLVm+7AGp2D3DQE9cUD3X4PRw0ea2LizZeOnno9VIdgX6OfAZZlLy7rRvIn5unePJe
-        y02u3P7oqvxOnwXIV3v3neDmiWU6rUHPxBVrWf1h0XkaJYlpKRInpUjFdLLkQnpSqigxQ1bI
-        qEoqGF1ixkVxsXPYhJe1w8s9ow5OFZiMNIIwElIpcNjRAowgnBRQHQDOrX/CQ8EeeHfAwQtx
-        JPzjM3JDpUUA19z3OMEgksqFPdO+rZKQioe/a5uIYAmjvAR81l9NhIw3OPww+xAzApLkUmLo
-        tJQHBT51FNZ9u88NMk7th987V7Y4ijoLx1e68FAnAo62zOFBNYw6CRensoJjjEqDbfYZLMTR
-        MDDXzglxLHQst2INQGDeZpu3KeZtinmb8gDgFiBkDKy6SM3SYlapZg2aInGBVt0LNk/dP/zL
-        7gRe26khQJFAtIvfoPEoBISygq1UDwFIYiIh39/oVQj4hcrKK4xOm68zqBh2CKRu7taIxUQV
-        aDcfR6PPp1NpCZLSkmRJchoSRfNvUK8UAqpIqWdKGaaM0f33OGRYTBU4QkyCQE2gdnBMsTMh
-        FzZZd3wp/xpYO5fD0n/LRwbyHPJ6aBc1npnJNDGZgzPKZmgd9I9Z82TDy3GsbUE2v9GZnmOa
-        +MjZ3aDOXrjEjgdWrdm8UnfraWHEgzKfk7h1rMURZ9SYY1XxQ0IPf0DqqdEe97YV7nXZ+ubX
-        r4twtlhJH8R0rPIfFFgdEwADAAA=
-X-CMS-MailID: 20190508082754eucas1p1e2cd519164630da5c563d523a57335fb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
-        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
-        <20190430223629.GA22317@bogus>
-        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
-        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
-        <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
-        <3d221027-292b-7d0d-2510-f230a81f4b52@partner.samsung.com>
-        <CAL_Jsq+K-bdhTBnW5R4M0nDoikfFRdz-BeZf9Rf-hSmACj4B2w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 8 May 2019 10:28:41 +0200
+Message-ID: <CACRpkdYMDCQEhWUGGqKs6SM-TB_dtPtjcAL7RJnLuHu4Wto=kA@mail.gmail.com>
+Subject: [GIT PULL] pin control changes for v5.2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Linus,
 
-On 5/7/19 6:50 PM, Rob Herring wrote:
-> On Tue, May 7, 2019 at 4:05 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/6/19 12:29 PM, Lukasz Luba wrote:
->>> Hi Rob,
->>>
->>> On 5/2/19 10:24 PM, Rob Herring wrote:
->>>> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba
->>>> <l.luba@partner.samsung.com> wrote:
->>>>>
->>>>> Hi Rob,
->>>>>
->>>>> On 5/1/19 12:36 AM, Rob Herring wrote:
->>>>>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
->>>>>>> Extend the documenation by events description with new
->>>>>>> 'event-data-type'
->>>>>>> field. Add example how the event might be defined in DT.
->>>>>>
->>>>>> Why do we need event types in DT? We don't do this for other h/w
->>>>>> such as
->>>>>> ARM PMU.
->>>>> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
->>>>> arch/arm/kernel/perf_event_v7.c
->>>>> and are seen from perf. They are different type and for different
->>>>> purpose. The Ecynos PPMU events are not seen in perf, they are
->>>>> for internal monitoring and must not be reset by other actors like perf.
->>>>> They are used by the 'bus drivers' to made some heuristics and tune the
->>>>> internal settings, like frequency.
->>>>>
->>>>> Chanwoo has written PPMU driver which relies on DT definition.
->>>>> The DT events are used by other DT devices by phandle.
->>>>
->>>> How is that done? I don't see anything in the binding for that.
->>> Here are the DT devices and how they are pinned together:
->>> - declared devfreq events:
->>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
->>>
->>> - devfreq events pinned to the bus device:
->>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107
->>>
->>> - the bus device itself:
->>> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457
->>>
->>>
->>> Regards,
->>> Lukasz
->>>
->>>>
->>>> Rob
->>>>
->>>>
->> Can I send the next version of the patch set, which has Chanwoo's
->> suggestions, or do you have some objections to this PPMU entries?
-> 
-> I think the existing binding which this is based on needs some
-> changes, so it's pointless really for me to comment on additions.
-Maybe the bindings description is not perfect, but it contains
-examples which might help clarifying the idea.
-Regarding the real value of the patch set, it is needed for some
-research. Currently, the Odroid xu3/4 is the best 'mainline' platform
-with big.LITTLE, has good performance and these counters.
-Willy, who is doing his PhD, wants to experiment with it. I agree that
-it could be better documented but it requires more effort.
-I will extend the documentation it in my free time slots (it is not my
-main task for now).
+here is the bulk changes for pin control for this merge window.
+It is pretty calm and chill in pin control for the moment. Just incremental
+development.
 
-For now, I have received comments and parts of code from Chanwoo which
-made the next patch set mature and ready to merge (IMHO).
+There is an odd patch to the Super-H architecture, it's coming from
+the maintainers so should be fine.
 
-If you have suggestions how to improve these bindings or links for good
-examples, I would really appreciate. Thank you for your time and review.
+More details are in the signed tag.
 
-Regards,
-Lukasz
+Please pull it in!
 
+Yours,
+Linus Walleij
+
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b=
+:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.2-1
+
+for you to fetch changes up to e0e31695b53b649dc2784c4dd517bcdd09bce189:
+
+  pinctrl: mcp23s08: Do not complain about unsupported params
+(2019-05-07 11:47:14 +0200)
+
+----------------------------------------------------------------
+Pin control changes for v5.2:
+
+Nex drivers:
+- New driver for Bitmain BM1880 pin controller
+- New driver for Mediatek MT8516
+- New driver for Cirrus Logich Lochnagar PMIC pins
+
+Updates:
+- Incremental development on Renesas SH-PFC
+- Incremental development on Intel pin controller and some
+  particular updates for Cedarfork.
+- Pin configuration support in Allwinner SunXi drivers
+- Suspend/resume support in the NXP/Freescale i.MX8MQ driver
+- Support for more packaging of the ST Micro STM32
+
+----------------------------------------------------------------
+Abel Vesa (1):
+      pinctrl: imx8mq: Add suspend/resume ops
+
+Aditya Pakki (2):
+      pinctrl: baytrail: Fix potential NULL pointer dereference
+      pinctrl: axp209: Fix NULL pointer dereference after allocation
+
+Alexandre Torgue (4):
+      dt-bindings: pinctrl: stm32: add new entry for package information
+      pinctrl: stm32: introduce package support
+      pinctrl: stm32: add package information for stm32mp157c
+      pinctrl: stm32: align stm32mp157 pin names
+
+Andy Shevchenko (2):
+      pinctrl: cedarfork: Update pin names according to v1.13c
+      pinctrl: intel: Increase readability of intel_gpio_update_pad_mode()
+
+Anson Huang (1):
+      pinctrl: freescale: use devm_platform_ioremap_resource() to simplify =
+code
+
+Binbin Wu (1):
+      pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
+
+Charles Keepax (2):
+      pinctrl: lochnagar: Add initial binding documentation
+      pinctrl: lochnagar: Add support for the Cirrus Logic Lochnagar
+
+Chris Chiu (1):
+      pinctrl: intel: Retain HOSTSW_OWN for requested gpio pin
+
+Christina Quast (1):
+      dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
+
+Dan Carpenter (1):
+      pinctrl: imx: remove an unnecessary NULL check
+
+Fabien Dessenne (1):
+      pinctrl: stm32: check irq controller availability at probe
+
+Fabien Parent (2):
+      pinctrl: mt65xx: add OF bindings for MT8516
+      pinctrl: mediatek: Add MT8516 Pinctrl driver
+
+Fabrizio Castro (2):
+      pinctrl: sh-pfc: r8a7796: Move CANFD pin groups and functions
+      pinctrl: sh-pfc: r8a77990: Move CANFD pin groups and functions
+
+Geert Uytterhoeven (16):
+      pinctrl: sh-pfc: r8a77970: Rename IOCTRLx registers
+      pinctrl: sh-pfc: r8a77980: Rename IOCTRLx registers
+      pinctrl: sh-pfc: r8a77990: Rename IOCTRLx registers
+      pinctrl: sh-pfc: Validate pinmux tables at runtime when debugging
+      pinctrl: sh-pfc: Introduce PINCTRL_SH_FUNC_GPIO helper symbol
+      pinctrl: sh-pfc: Add missing #include <linux/errno.h>
+      sh: sh7786: Add explicit I/O cast to sh7786_mm_sel()
+      pinctrl: sh-pfc: Allow compile-testing of all drivers
+      pinctrl: sh-pfc: Absorb enum IDs in PINMUX_CFG_REG() macro
+      pinctrl: sh-pfc: Absorb enum IDs in PINMUX_CFG_REG_VAR() macro
+      pinctrl: sh-pfc: Absorb enum IDs in PINMUX_DATA_REG() macro
+      pinctrl: sh-pfc: Validate enum IDs for regs with fixed-width fields
+      pinctrl: sh-pfc: Validate enum IDs for regs with variable-width field=
+s
+      pinctrl: rza1: Remove unneeded spinlock acquisitions
+      pinctrl: sh-pfc: Improve PINMUX_IPSR_PHYS() documentation
+      pinctrl: sh-pfc: r8a77970: Fix spacing
+
+Jan Kundr=C3=A1t (2):
+      gpiolib: export devprop_gpiochip_set_names()
+      pinctrl: mcp23s08: Do not complain about unsupported params
+
+Linus Walleij (4):
+      Merge tag 'sh-pfc-for-v5.2-tag1' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      gpiolib: devprop: Fix syntax error
+      pinctrl: artpec6: Drop unused function and rename
+      Merge tag 'intel-pinctrl-v5.2-1' of
+git://git.kernel.org/.../pinctrl/intel into devel
+
+Manivannan Sadhasivam (4):
+      dt-bindings: pinctrl: Add BM1880 pinctrl binding
+      pinctrl: Add pinctrl support for BM1880 SoC
+      MAINTAINERS: Add entry for BM1880 pinctrl
+      pinctrl: Rework Kconfig dependency for BM1880 pinctrl driver
+
+Marek Vasut (1):
+      pinctrl: sh-pfc: rcar-gen3: Retain TDSELCTRL register across
+suspend/resume
+
+Maxime Ripard (4):
+      pinctrl: sunxi: implement pin_config_set
+      pinctrl: sunxi: Fix variable assignment syntax
+      pinctrl: sunxi: Declare set_config on the GPIO chip
+      pinctrl: sunxi: Allow to disable pinctrl drivers
+
+Ondrej Jirman (2):
+      pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+      pinctrl: sunxi: Support I/O bias voltage setting on H6
+
+Sandeep Singh (1):
+      pinctrl: Added IRQF_SHARED flag for amd-pinctrl driver
+
+Takeshi Kihara (9):
+      pinctrl: sh-pfc: r8a77990: Fix MOD_SEL0 bit16 when using NFALE and NF=
+RB_N
+      pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D
+      pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit30 when using
+SSI_SCK2 and SSI_WS2
+      pinctrl: sh-pfc: rcar-gen3: Remove HDMI CEC pins, groups, and functio=
+ns
+      pinctrl: sh-pfc: rcar-gen3: Remove CC5_OSCOUT pin
+      pinctrl: sh-pfc: rcar-gen3: Rename RTS{0,1,3,4}# pin function definit=
+ions
+      pinctrl: sh-pfc: rcar-gen3: Rename SEL_ADG_{A,B,C} to SEL_ADG{A,B,C}
+      pinctrl: sh-pfc: rcar-gen3: Rename SEL_NDFC to SEL_NDF
+      pinctrl: sh-pfc: r8a77965: Add I2C{0,3,5} pins, groups and functions
+
+Ulrich Hecht (2):
+      pinctrl: sh-pfc: r8a7779: Add HSCIF0/1 pins
+      pinctrl: sh-pfc: r8a7796: Remove placeholder I2C pin data
+
+Wen Yang (4):
+      pinctrl: samsung: fix leaked of_node references
+      pinctrl: st: fix leaked of_node references
+      pinctrl: pistachio: fix leaked of_node references
+      pinctrl: zte: fix leaked of_node references
+
+YueHaibing (2):
+      pinctrl: fsl: Make pinctrl_ipc_handle static
+      pinctrl: artpec6: Make two functions static
+
+Zhiyong Tao (2):
+      pinctrl: mt8183: add DT binding document
+      pinctrl: add drive for I2C related pins on MT8183
+
+ .../bindings/pinctrl/bitmain,bm1880-pinctrl.txt    |   98 ++
+ .../bindings/pinctrl/cirrus,lochnagar.txt          |  141 +++
+ .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         |    6 +-
+ .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    1 +
+ .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt |  132 +++
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |    2 +
+ MAINTAINERS                                        |    2 +
+ arch/sh/include/cpu-sh4/cpu/sh7786.h               |    2 +-
+ drivers/gpio/gpiolib-devprop.c                     |    2 +
+ drivers/gpio/gpiolib.h                             |    3 -
+ drivers/pinctrl/Kconfig                            |    8 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/cirrus/Kconfig                     |   10 +
+ drivers/pinctrl/cirrus/Makefile                    |    2 +
+ drivers/pinctrl/cirrus/pinctrl-lochnagar.c         | 1235 ++++++++++++++++=
+++++
+ drivers/pinctrl/freescale/pinctrl-imx.c            |   25 +-
+ drivers/pinctrl/freescale/pinctrl-imx.h            |    1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c         |    1 +
+ drivers/pinctrl/freescale/pinctrl-scu.c            |    2 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |    2 +
+ drivers/pinctrl/intel/pinctrl-cedarfork.c          |   18 +-
+ drivers/pinctrl/intel/pinctrl-intel.c              |   66 +-
+ drivers/pinctrl/intel/pinctrl-intel.h              |   11 +-
+ drivers/pinctrl/mediatek/Kconfig                   |    7 +
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8183.c          |   50 +
+ drivers/pinctrl/mediatek/pinctrl-mt8516.c          |  362 ++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |   49 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h   |   11 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8516.h      | 1182 ++++++++++++++++=
++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |   21 +
+ drivers/pinctrl/pinctrl-amd.c                      |    4 +-
+ drivers/pinctrl/pinctrl-artpec6.c                  |   19 +-
+ drivers/pinctrl/pinctrl-axp209.c                   |    2 +
+ drivers/pinctrl/pinctrl-bm1880.c                   |  965 +++++++++++++++
+ drivers/pinctrl/pinctrl-mcp23s08.c                 |    3 +-
+ drivers/pinctrl/pinctrl-pistachio.c                |    2 +
+ drivers/pinctrl/pinctrl-rza1.c                     |   18 +-
+ drivers/pinctrl/pinctrl-st.c                       |   15 +-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c       |    1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |  204 ++--
+ drivers/pinctrl/sh-pfc/Makefile                    |   15 +
+ drivers/pinctrl/sh-pfc/core.c                      |  130 +++
+ drivers/pinctrl/sh-pfc/gpio.c                      |    8 +-
+ drivers/pinctrl/sh-pfc/pfc-emev2.c                 |   67 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a73a4.c               |   64 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7740.c               |   56 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c              |  136 ++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |  101 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7779.c               |  235 +++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  132 ++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c               |  156 +--
+ drivers/pinctrl/sh-pfc/pfc-r8a7792.c               |  134 ++-
+ drivers/pinctrl/sh-pfc/pfc-r8a7794.c               |  127 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c           |  222 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a7795.c               |  201 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a7796.c               |  225 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |  294 +++--
+ drivers/pinctrl/sh-pfc/pfc-r8a77970.c              |  123 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77980.c              |  135 +--
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c              |  214 ++--
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c              |  120 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7203.c                |  152 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                |  232 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c                |  252 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c                |   52 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7720.c                |  144 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7722.c                |  220 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7723.c                |  200 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7724.c                |  204 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c                |  140 ++-
+ drivers/pinctrl/sh-pfc/pfc-sh7757.c                |  244 ++--
+ drivers/pinctrl/sh-pfc/pfc-sh7785.c                |  136 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7786.c                |   80 +-
+ drivers/pinctrl/sh-pfc/pfc-shx3.c                  |   32 +-
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   68 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  105 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   14 +
+ drivers/pinctrl/stm32/pinctrl-stm32mp157.c         | 1089 +++++++++-------=
+-
+ drivers/pinctrl/sunxi/Kconfig                      |   57 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          |    1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c        |    2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c          |    2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   96 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |   18 +-
+ drivers/pinctrl/zte/pinctrl-zx.c                   |    1 +
+ include/dt-bindings/pinctrl/stm32-pinfunc.h        |    6 +
+ include/linux/gpio/driver.h                        |    3 +
+ 88 files changed, 8120 insertions(+), 3012 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt818=
+3.txt
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-lochnagar.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8516.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8516.h
+ create mode 100644 drivers/pinctrl/pinctrl-bm1880.c
