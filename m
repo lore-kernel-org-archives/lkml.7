@@ -2,204 +2,93 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3C0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86894C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6191720644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDC021019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfEHHDo (ORCPT
+        id S1726703AbfEHHJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:03:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726503AbfEHHCw (ORCPT
+        Wed, 8 May 2019 03:09:16 -0400
+Received: from ivanoab6.miniserver.com ([5.153.251.140]:51094 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfEHHJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:02:52 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48723N6075936
-        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 03:02:50 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sbt87revr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:02:50 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 8 May 2019 08:02:46 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 May 2019 08:02:39 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4872cK750200764
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 May 2019 07:02:38 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18D2242047;
-        Wed,  8 May 2019 07:02:38 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64E874204B;
-        Wed,  8 May 2019 07:02:37 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 May 2019 07:02:37 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1AAB5A03AA;
-        Wed,  8 May 2019 17:02:35 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 1/7] lib/hexdump.c: Fix selftests
-Date:   Wed,  8 May 2019 17:01:41 +1000
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190508070148.23130-1-alastair@au1.ibm.com>
-References: <20190508070148.23130-1-alastair@au1.ibm.com>
+        Wed, 8 May 2019 03:09:15 -0400
+Received: from [192.168.17.6] (helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1hOGhU-0004P0-0x; Wed, 08 May 2019 07:09:12 +0000
+Received: from erebus.kot-begemot.co.uk ([192.168.3.72])
+        by jain.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1hOGhM-00080l-AJ; Wed, 08 May 2019 08:09:09 +0100
+Subject: Re: [RESEND PATCH 4/4] um: irq: don't set the chip for all irqs
+To:     Richard Weinberger <richard.weinberger@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-um@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190411094944.12245-1-brgl@bgdev.pl>
+ <20190411094944.12245-5-brgl@bgdev.pl>
+ <CAFLxGvwb8YzNiXCXru8Tw9pxH9qoc7gAO4sk0MXK1Xmp7fm-2g@mail.gmail.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Organization: Cambridge Greys
+Message-ID: <0e8fbdf3-c40d-e4e8-6235-c744ec7317c3@cambridgegreys.com>
+Date:   Wed, 8 May 2019 08:09:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050807-0012-0000-0000-000003196F9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050807-0013-0000-0000-00002151EFD5
-Message-Id: <20190508070148.23130-2-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=947 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080046
+In-Reply-To: <CAFLxGvwb8YzNiXCXru8Tw9pxH9qoc7gAO4sk0MXK1Xmp7fm-2g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On 07/05/2019 22:26, Richard Weinberger wrote:
+> On Thu, Apr 11, 2019 at 11:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> Setting a chip for an interrupt marks it as allocated. Since UM doesn't
+>> support dynamic interrupt numbers (yet), it means we cannot simply
+>> increase NR_IRQS and then use the free irqs between LAST_IRQ and NR_IRQS
+>> with gpio-mockup or iio testing drivers as irq_alloc_descs() will fail
+>> after not being able to neither find an unallocated range of interrupts
+>> nor expand the range.
+>>
+>> Only call irq_set_chip_and_handler() for irqs until LAST_IRQ.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> Reviewed-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+>> Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> 
+> Just noticed that this triggers the following errors while bootup:
+> Trying to reregister IRQ 11 FD 8 TYPE 0 ID           (null)
+> write_sigio_irq : um_request_irq failed, err = -16
+> Trying to reregister IRQ 11 FD 8 TYPE 0 ID           (null)
+> write_sigio_irq : um_request_irq failed, err = -16
+> VFS: Mounted root (hostfs filesystem) readonly on
+> 
+> Can you please check?
+> This patch is already queued in -next. So we need to decide whether to
+> revert or fix it now.
+> 
+I am looking at it. It passed tests in my case (I did the usual round).
 
-The overflow tests did not account for the situation where no
-overflow occurs and len < rowsize.
-
-This patch renames the cryptic variables and accounts for the
-above case.
-
-The selftests now pass.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- lib/test_hexdump.c | 47 ++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
-
-diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
-index 5144899d3c6b..d78ddd62ffd0 100644
---- a/lib/test_hexdump.c
-+++ b/lib/test_hexdump.c
-@@ -163,45 +163,52 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
- {
- 	char test[TEST_HEXDUMP_BUF_SIZE];
- 	char buf[TEST_HEXDUMP_BUF_SIZE];
--	int rs = rowsize, gs = groupsize;
--	int ae, he, e, f, r;
--	bool a;
-+	int ascii_len, hex_len, expected_len, fill_point, ngroups, rc;
-+	bool match;
- 
- 	total_tests++;
- 
- 	memset(buf, FILL_CHAR, sizeof(buf));
- 
--	r = hex_dump_to_buffer(data_b, len, rs, gs, buf, buflen, ascii);
-+	rc = hex_dump_to_buffer(data_b, len, rowsize, groupsize, buf, buflen, ascii);
- 
- 	/*
- 	 * Caller must provide the data length multiple of groupsize. The
- 	 * calculations below are made with that assumption in mind.
- 	 */
--	ae = rs * 2 /* hex */ + rs / gs /* spaces */ + 1 /* space */ + len /* ascii */;
--	he = (gs * 2 /* hex */ + 1 /* space */) * len / gs - 1 /* no trailing space */;
-+	ngroups = rowsize / groupsize;
-+	hex_len = (groupsize * 2 /* hex */ + 1 /* spaces */) * ngroups
-+		  - 1 /* no trailing space */;
-+	ascii_len = hex_len + 2 /* space */ + len /* ascii */;
-+
-+	if (len < rowsize) {
-+		ngroups = len / groupsize;
-+		hex_len = (groupsize * 2 /* hex */ + 1 /* spaces */) * ngroups
-+		  - 1 /* no trailing space */;
-+	}
- 
--	if (ascii)
--		e = ae;
--	else
--		e = he;
-+	expected_len = (ascii) ? ascii_len : hex_len;
- 
--	f = min_t(int, e + 1, buflen);
-+	fill_point = min_t(int, expected_len + 1, buflen);
- 	if (buflen) {
--		test_hexdump_prepare_test(len, rs, gs, test, sizeof(test), ascii);
--		test[f - 1] = '\0';
-+		test_hexdump_prepare_test(len, rowsize, groupsize, test,
-+					  sizeof(test), ascii);
-+		test[fill_point - 1] = '\0';
- 	}
--	memset(test + f, FILL_CHAR, sizeof(test) - f);
-+	memset(test + fill_point, FILL_CHAR, sizeof(test) - fill_point);
- 
--	a = r == e && !memcmp(test, buf, TEST_HEXDUMP_BUF_SIZE);
-+	match = rc == expected_len && !memcmp(test, buf, TEST_HEXDUMP_BUF_SIZE);
- 
- 	buf[sizeof(buf) - 1] = '\0';
- 
--	if (!a) {
--		pr_err("Len: %zu buflen: %zu strlen: %zu\n",
--			len, buflen, strnlen(buf, sizeof(buf)));
--		pr_err("Result: %d '%s'\n", r, buf);
--		pr_err("Expect: %d '%s'\n", e, test);
-+	if (!match) {
-+		pr_err("rowsize: %u groupsize: %u ascii: %d Len: %zu buflen: %zu strlen: %zu\n",
-+			rowsize, groupsize, ascii, len, buflen,
-+			strnlen(buf, sizeof(buf)));
-+		pr_err("Result: %d '%-.*s'\n", rc, (int)buflen, buf);
-+		pr_err("Expect: %d '%-.*s'\n", expected_len, (int)buflen, test);
- 		failed_tests++;
-+
- 	}
- }
- 
 -- 
-2.21.0
-
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
