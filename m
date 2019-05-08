@@ -2,151 +2,123 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1562C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019B3C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFCD20C01
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C790C20C01
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jctlZOQg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8rQiUnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfEHAsQ (ORCPT
+        id S1726657AbfEHAtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:48:16 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36034 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEHAsQ (ORCPT
+        Tue, 7 May 2019 20:49:18 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35363 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHAtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:48:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z1so3725439ljb.3;
-        Tue, 07 May 2019 17:48:14 -0700 (PDT)
+        Tue, 7 May 2019 20:49:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so9019400plp.2;
+        Tue, 07 May 2019 17:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zDsGYPoT10zcoaw7zKF1KxTzhQDQ/PtKnWBsa9AMzeQ=;
-        b=jctlZOQggo8njTK8HjNPVGiNeZgTcWprJj5wbSL3bPQ1oMCl0Ur3feGrujtK98FUnC
-         6e6A89S64g95uhDZpxisWSLPIQGcRuJ5IwyN1ep49AqjKooyQIcObWcV9+FwQxenCf+K
-         QrzgTQHDCBmGSOjjEcLwe6aC9WObAT0kCEVrgfjrHAFvnrvigeuMZqKKHee0cM0LAFxO
-         k7n94oACJkkTP2j65TWKQJmbFwRLyPgSGGJKF/3iioYwJCX6UwRSpgPNCI9LrDve+CxW
-         yf1RH0X2t1Y32XFj7gQtgocITC/M9QovOc0FSAzXgbNU/PeI7YVRUxyFtNwTdvFy1/Hp
-         QUtQ==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t4DaXEI4RXMI2Ha+KEPle/O32l3yeez/gfD+bCb4ZQ4=;
+        b=F8rQiUnmcH2ZQ6T6EsdGNIYwJaFrYnhANeh2O3g9QAtOyXM951IYNgzhCNRT8I7Dxo
+         I1sI2H4OI51rJvym7+GjIqXnlKt0+/w7bSjayfEop/ZNb9pBXwQwcafhE2DRYSZk5Iq9
+         jRL+SRAYOyz/+UL6VlymYt/W6+skYtN4rm5LinKbLi09DCzFoJCe5xSSBVeq5iJuF7UR
+         FK1Q0pCeb/C0uAGTOKzA9qQ2TaXN4DZgEe0i1A8c3kj06SwUOCXaHvuzChRzXvBYZTOr
+         NybUy3MD0fhlWaebK+uftz87dUIyy58dJwL2H0c3D4zJ1bc+tgMSGT9P+ASV+humz7aD
+         Z6WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zDsGYPoT10zcoaw7zKF1KxTzhQDQ/PtKnWBsa9AMzeQ=;
-        b=eFEND6rbq3CHEO+Ck31jVPKUIufv6yglep0IqVpTttGHxwPRQreMfXo4QxwmEKJu10
-         r722uUWIUYXBm43G2/ms1EX5BZPfRbhKlbhUBzutM3SOeWPo/iSBWoMNx8GBhpAcYIJK
-         p+YIpNdjPR1umVmV+lhuYy6dj5Yq9ZaZVxF5TZxg5IH9s3IDjNg+ZlzHyVnT+fmYkn/w
-         I1ZH6jZdjNJS6SAen+smea1g/lB0LHMuaH+XzopmaI+fmXArNbGIAzcZMoTR6xdMpJCi
-         yQEm1STRsxquIEoZgVGRxCT0pnS/ZBvSn2pqKS1nKXkQ6a7LEaKR9O9ICycj/K0xuTZy
-         anrA==
-X-Gm-Message-State: APjAAAXiFATZAsPNh/yWdjeH50Ktk+ceD9R3Gk6a7jU1Rq55LaVOtW62
-        pzRRvjKpP7rutgkZAMK3/fE=
-X-Google-Smtp-Source: APXvYqx0ApigIVip9I0r/bC/fc78dmsUVrfg0LCoEpxETQe76gNb2M36Dj77WqxXW+wK5a3hlCwy4w==
-X-Received: by 2002:a2e:9954:: with SMTP id r20mr9579998ljj.24.1557276493681;
-        Tue, 07 May 2019 17:48:13 -0700 (PDT)
-Received: from mobilestation ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id u11sm3167779lfb.60.2019.05.07.17.48.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 07 May 2019 17:48:12 -0700 (PDT)
-Date:   Wed, 8 May 2019 03:48:10 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] net: phy: realtek: Change TX-delay setting for
- RGMII modes only
-Message-ID: <20190508004809.qhiz4bpqtxe34276@mobilestation>
-References: <20190426212112.5624-1-fancer.lancer@gmail.com>
- <20190426212112.5624-2-fancer.lancer@gmail.com>
- <20190426214631.GV4041@lunn.ch>
- <20190426233511.qnkgz75ag7axt5lp@mobilestation>
- <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
- <CA+h21hpTRCrD=FxDr=ihDPr+Pdhu6hXT3xcKs47-NZZZ3D9zyg@mail.gmail.com>
- <20190429211225.ce7cspqwvlhwdxv6@mobilestation>
- <CA+h21hrbrc7NKrdhrEk-t7+atj-EdNfEpmy85XK7dOr4Cyj-ag@mail.gmail.com>
- <CAFBinCC14+b_nnAMLf0RAET440jGMGz2KRheioffjM+-ftifRQ@mail.gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t4DaXEI4RXMI2Ha+KEPle/O32l3yeez/gfD+bCb4ZQ4=;
+        b=eYSB4Yuhr5I/oD/lsLiows3651w9q+DoIzdWp4HOgirIR7EtvqgVZ7S93mlOPoG6f6
+         B2V+8W00pRY7/0eG/BBLUexfKcJ0NKqXrlVHNcwX8ZRzJAy9f6ZtwJcZcl5pFLOVYAPQ
+         rNb4aGl0m7eGw+5IAmYX7DfGCtuqeiqtWSRW7kKduNRBlrrADZqQitHzvJRudhaRh1pF
+         4FF0GzYlS8A2Of91UUFYIeTVkKzQ6qOMKVl/bNSwzEU7avj0n6SW2SqNBATSit6rGYKI
+         FTjIU9R+rkWlsQh9JWMo049siUGpFRMnNDXxBDFh6foZLxDfxLThhSbdUGvwplH/OuPi
+         6Ztg==
+X-Gm-Message-State: APjAAAWSSXQn3waHduxEWBkf6gbyWzOtXdvxhPWG7kL3hL/yUYOmXYP4
+        LKZa0179wGOc4bocDxl4jv0XzDer
+X-Google-Smtp-Source: APXvYqw/aIXMWSlLjL40RmduVaHWQFjjTA4VY4w9rLLBTv02WyjtlPhVUAfRy1dooDCIHTvF6/9j7w==
+X-Received: by 2002:a17:902:a3:: with SMTP id a32mr43580938pla.111.1557276556732;
+        Tue, 07 May 2019 17:49:16 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j22sm18332187pfn.129.2019.05.07.17.49.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 17:49:15 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] usb: typec: tcpci: Clear the fault status register
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190508002749.14816-1-angus@akkea.ca>
+ <20190508002749.14816-2-angus@akkea.ca>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <5f0bec69-9579-f153-c3fd-d7b8deea75c4@roeck-us.net>
+Date:   Tue, 7 May 2019 17:49:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFBinCC14+b_nnAMLf0RAET440jGMGz2KRheioffjM+-ftifRQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190508002749.14816-2-angus@akkea.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello folks
+On 5/7/19 5:27 PM, Angus Ainslie (Purism) wrote:
+> If the fault status register doesn't get cleared then
+> the ptn5110 interrupt gets stuck on. As the fault register gets
+> set everytime the ptn5110 powers on the interrupt is always stuck.
+> 
+> Fixes: fault status register stuck
 
-On Tue, Apr 30, 2019 at 10:44:00PM +0200, Martin Blumenstingl wrote:
-> Hello Vladimir,
-> 
-> On Tue, Apr 30, 2019 at 12:37 AM Vladimir Oltean <olteanv@gmail.com> wrote:
-> [...]
-> > Moreover, RGMII *always* needs clock skew. As a fact, all delays
-> > applied on RX and RX, by the PHY, MAC or traces, should always amount
-> > to a logical "rgmii-id". There's nothing that needs to be described
-> > about that. Everybody knows it.
-> thank you for mentioning this - I didn't know about it. I thought that
-> the delays have to be added in "some cases" only (without knowing the
-> definition of "some cases").
-> 
-> > What Linux gets told through the phy-mode property for RGMII is where
-> > there's extra stuff to do, and where there's nothing to do. There are
-> > also unwritten rules about whose job it is to apply the clock skew
-> > (MAC or PHY).That is 100% configuration and 0% description.
-> the phy-mode property is documented here [0] and the rgmii modes have
-> a short explanation about the delays.
-> that said: the documentation currently ignores the fact that a PCB
-> designer might have added a delay
-> 
-> > > Then in accordance with the phy-mode property value MAC and PHY drivers
-> > > determine which way the MAC and PHY are connected to each other and how
-> > > their settings are supposed to be customized to comply with it. This
-> > > interpretation perfectly fits with the "DT is the hardware description"
-> > > rule.
-> > >
-> >
-> > Most of the phy-mode properties really mean nothing. I changed the
-> > phy-mode from "sgmii" to "rgmii" on a PHY binding I had at hand and
-> > nothing happened (traffic still runs normally). I think this behavior
-> > is 100% within expectation.
-> the PHY drivers I know of don't complain if the phy-mode is not supported.
-> however, there are MAC drivers which complain in this case, see [1]
-> for one example
-> 
-> 
-> Martin
-> 
-> 
-> [0] https://github.com/torvalds/linux/blob/bf3bd966dfd7d9582f50e9bd08b15922197cd277/Documentation/devicetree/bindings/net/ethernet.txt#L17
-> [1] https://github.com/torvalds/linux/blob/bf3bd966dfd7d9582f50e9bd08b15922197cd277/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c#L187
+That is not how Fixes: tags are supposed to work. This should probably be
 
-So as far as I can conclude from the whole discussion, we don't really
-want the realtek driver to return an error in case if any unsupported
-mode is passed to the config_init method including the RGMII_RXID one,
-which in some cases could be enabled via RXDLY pin strapping (like on
-rtl8211F). The reason is quite justified: even though there is no
-known way to alter the RX-delay on the rtl8211F PHY side, the delay
-can be enabled via external pin. In this case rgmii-rxid mode can be
-enabled in dts and should be considered a correct error-less PHY node
-property.
+Fixes: 74e656d6b0551 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
 
-In order to have this all summed up, I'll shortly send a v3 patchset with
-alterations based on the discussion results. Maintainers then will be able
-to post their comments in reply to it.
+Otherwise
 
-Cheers.
--Sergey
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+>   drivers/usb/typec/tcpm/tcpci.c | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+> index c1f7073a56de..a5746657b190 100644
+> --- a/drivers/usb/typec/tcpm/tcpci.c
+> +++ b/drivers/usb/typec/tcpm/tcpci.c
+> @@ -463,6 +463,17 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
+>   	else if (status & TCPC_ALERT_TX_FAILED)
+>   		tcpm_pd_transmit_complete(tcpci->port, TCPC_TX_FAILED);
+>   
+> +	if (status & TCPC_ALERT_FAULT) {
+> +		u16 fault_status;
+> +
+> +		tcpci_read16(tcpci, TCPC_FAULT_STATUS, &fault_status);
+> +
+> +		dev_warn(tcpci->dev, "FAULT ALERT status 0x%x\n", fault_status);
+> +
+> +		/* clear the fault status */
+> +		tcpci_write16(tcpci, TCPC_FAULT_STATUS, fault_status);
+> +	}
+> +
+>   	return IRQ_HANDLED;
+>   }
+>   EXPORT_SYMBOL_GPL(tcpci_irq);
+> 
+
