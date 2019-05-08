@@ -2,34 +2,35 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EAFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1034AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E39D20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC8020989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfEHIql (ORCPT
+        id S1726963AbfEHIrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:46:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:36811 "EHLO mga06.intel.com"
+        Wed, 8 May 2019 04:47:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58102 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfEHIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:46:41 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1726387AbfEHIrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:47:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 01:46:41 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 01:47:10 -0700
 X-ExtLoop1: 1
 Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga004.jf.intel.com with ESMTP; 08 May 2019 01:46:34 -0700
+  by orsmga004.jf.intel.com with ESMTP; 08 May 2019 01:47:04 -0700
 Received: from andy by smile with local (Exim 4.92)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hOIDg-0006Uw-NY; Wed, 08 May 2019 11:46:32 +0300
-Date:   Wed, 8 May 2019 11:46:32 +0300
+        id 1hOIEA-0006VF-P7; Wed, 08 May 2019 11:47:02 +0300
+Date:   Wed, 8 May 2019 11:47:02 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Yury Norov <yury.norov@gmail.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -50,14 +51,14 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Yury Norov <ynorov@marvell.com>,
         Jens Axboe <axboe@kernel.dk>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH 5/7] lib: rework bitmap_parse()
-Message-ID: <20190508084632.GY9224@smile.fi.intel.com>
+Subject: Re: [PATCH 1/7] lib/string: add strnchrnul()
+Message-ID: <20190508084702.GZ9224@smile.fi.intel.com>
 References: <20190501010636.30595-1-ynorov@marvell.com>
- <20190501010636.30595-6-ynorov@marvell.com>
+ <20190501010636.30595-2-ynorov@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501010636.30595-6-ynorov@marvell.com>
+In-Reply-To: <20190501010636.30595-2-ynorov@marvell.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,27 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 06:06:34PM -0700, Yury Norov wrote:
-> bitmap_parse() is ineffective and full of opaque variables and opencoded
-> parts. It leads to hard understanding and usage of it. This rework
-> includes:
->  - remove bitmap_shift_left() call from the cycle. Now it makes the
->    complexity of the algorithm as O(nbits^2). In the suggested approach
->    the input string is parsed in reverse direction, so no shifts needed;
->  - relax requirement on a single comma and no white spaces between chunks.
->    It is considered useful in scripting, and it aligns with
->    bitmap_parselist();
->  - split bitmap_parse() to small readable helpers;
->  - make an explicit calculation of the end of input line at the
->    beginning, so users of the bitmap_parse() won't bother doing this.
+On Tue, Apr 30, 2019 at 06:06:30PM -0700, Yury Norov wrote:
+> New function works like strchrnul() with a length limited strings.
+> 
 
-> +static inline bool in_str(const char *start, const char *ptr)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Yury Norov <ynorov@marvell.com>
+> ---
+>  include/linux/string.h |  1 +
+>  lib/string.c           | 17 +++++++++++++++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 4deb11f7976b..ae934d6c50bf 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -62,6 +62,7 @@ extern char * strchr(const char *,int);
+>  #ifndef __HAVE_ARCH_STRCHRNUL
+>  extern char * strchrnul(const char *,int);
+>  #endif
+> +extern char * strnchrnul(const char *, size_t, int);
+>  #ifndef __HAVE_ARCH_STRNCHR
+>  extern char * strnchr(const char *, size_t, int);
+>  #endif
+> diff --git a/lib/string.c b/lib/string.c
+> index 6016eb3ac73d..eee521ad1f40 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -429,6 +429,23 @@ char *strchrnul(const char *s, int c)
+>  EXPORT_SYMBOL(strchrnul);
+>  #endif
+>  
+> +/**
+> + * strnchrnul - Find and return a character in a length limited string,
+> + * or end of string
+> + * @s: The string to be searched
+> + * @count: The number of characters to be searched
+> + * @c: The character to search for
+> + *
+> + * Returns pointer to the first occurrence of 'c' in s. If c is not found,
+> + * then return a pointer to the last character of the string.
+> + */
+> +char *strnchrnul(const char *s, size_t count, int c)
 > +{
-> +	return start <= ptr;
+> +	while (count-- && *s && *s != (char)c)
+> +		s++;
+> +	return (char *)s;
 > +}
 > +
-
-The explicit use of the conditional is better.
+>  #ifndef __HAVE_ARCH_STRRCHR
+>  /**
+>   * strrchr - Find the last occurrence of a character in a string
+> -- 
+> 2.17.1
+> 
 
 -- 
 With Best Regards,
