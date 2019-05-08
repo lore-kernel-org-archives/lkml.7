@@ -2,259 +2,91 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB29BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BB4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A117214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCFC214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfEHNn5 (ORCPT
+        id S1727614AbfEHNpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:43:57 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57592 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727706AbfEHNnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:43:55 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D63364D9A7FA07365607;
-        Wed,  8 May 2019 21:43:51 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 8 May 2019 21:43:43 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH next v2] mfd: Use dev_get_drvdata()
-Date:   Wed, 8 May 2019 21:52:57 +0800
-Message-ID: <20190508135257.134747-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190508103202.GJ3995@dell>
-References: <20190508103202.GJ3995@dell>
+        Wed, 8 May 2019 09:45:44 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29239 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfEHNpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:45:43 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 06:45:42 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by orsmga003.jf.intel.com with ESMTP; 08 May 2019 06:45:35 -0700
+Date:   Wed, 8 May 2019 16:45:34 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        nhorman@redhat.com, npmccallum@redhat.com,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-sgx-owner@vger.kernel.org
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190508134534.GA12114@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190423115611.GA5604@linux.intel.com>
+ <CALCETrV9SOLNw0d2tXOW1Ntmwaqso2xA2YVOvr60btR9G7Wgxg@mail.gmail.com>
+ <97f057aa56be342448980a2b1e68a891@iki.fi>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97f057aa56be342448980a2b1e68a891@iki.fi>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using dev_get_drvdata directly.
+On Wed, Apr 24, 2019 at 03:17:47PM +0300, Jarkko Sakkinen wrote:
+> For me easier path to get something done would to do ELF DSO
+> first. As you said they both could be done, which means that
+> Windows COFF could be upstreamed later on.
+> 
+> If this approach works, it'd mean that no ioctl's would be
+> required except SGX_ENCLAVE_SET_ATTRIBUTE.
+> 
+> PS. This quote from LWN got a bit into my feelings:
+> 
+> "After 20 revisions of the patch set over three years, the
+> authors of this work (which was posted by Jarkko Sakkinen)
+> might well be forgiven for thinking that it must be about
+> ready for merging."
+> 
+> I seriously do not make any pre-conclusions ever for any patch
+> that I post when it should be merged, no matter how big or
+> small :-) For me this is just work...
 
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
-v2:
--use dev_get_drvdata() instead of to_ssbi()
+Just throwing this out of my head so that all options are considered but
+wouldn't one alternative to get things right be to replace ioctl with a
+syscall? Not endorsing this option in particular but I think you could
+get security right by doing this.
 
- drivers/mfd/ssbi.c     |  6 ++----
- drivers/mfd/t7l66xb.c  | 12 ++++--------
- drivers/mfd/tc6387xb.c | 12 ++++--------
- drivers/mfd/tc6393xb.c | 21 +++++++--------------
- 4 files changed, 17 insertions(+), 34 deletions(-)
+Even with dlopen() you need ioctl's for setting attributes (e.g.
+provisioning) and EINIT. A syscall would be in some ways more sound.
 
-diff --git a/drivers/mfd/ssbi.c b/drivers/mfd/ssbi.c
-index 36b96fee4ce6..0ae27cd30268 100644
---- a/drivers/mfd/ssbi.c
-+++ b/drivers/mfd/ssbi.c
-@@ -80,8 +80,6 @@ struct ssbi {
- 	int (*write)(struct ssbi *, u16 addr, const u8 *buf, int len);
- };
- 
--#define to_ssbi(dev)	platform_get_drvdata(to_platform_device(dev))
--
- static inline u32 ssbi_readl(struct ssbi *ssbi, u32 reg)
- {
- 	return readl(ssbi->base + reg);
-@@ -243,7 +241,7 @@ ssbi_pa_write_bytes(struct ssbi *ssbi, u16 addr, const u8 *buf, int len)
- 
- int ssbi_read(struct device *dev, u16 addr, u8 *buf, int len)
- {
--	struct ssbi *ssbi = to_ssbi(dev);
-+	struct ssbi *ssbi = dev_get_drvdata(dev);
- 	unsigned long flags;
- 	int ret;
- 
-@@ -257,7 +255,7 @@ EXPORT_SYMBOL_GPL(ssbi_read);
- 
- int ssbi_write(struct device *dev, u16 addr, const u8 *buf, int len)
- {
--	struct ssbi *ssbi = to_ssbi(dev);
-+	struct ssbi *ssbi = dev_get_drvdata(dev);
- 	unsigned long flags;
- 	int ret;
- 
-diff --git a/drivers/mfd/t7l66xb.c b/drivers/mfd/t7l66xb.c
-index 43d8683266de..e9cfb147345e 100644
---- a/drivers/mfd/t7l66xb.c
-+++ b/drivers/mfd/t7l66xb.c
-@@ -82,8 +82,7 @@ struct t7l66xb {
- 
- static int t7l66xb_mmc_enable(struct platform_device *mmc)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
-+	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
- 	unsigned long flags;
- 	u8 dev_ctl;
- 	int ret;
-@@ -108,8 +107,7 @@ static int t7l66xb_mmc_enable(struct platform_device *mmc)
- 
- static int t7l66xb_mmc_disable(struct platform_device *mmc)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
-+	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
- 	unsigned long flags;
- 	u8 dev_ctl;
- 
-@@ -128,16 +126,14 @@ static int t7l66xb_mmc_disable(struct platform_device *mmc)
- 
- static void t7l66xb_mmc_pwr(struct platform_device *mmc, int state)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
-+	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_pwr(t7l66xb->scr + 0x200, 0, state);
- }
- 
- static void t7l66xb_mmc_clk_div(struct platform_device *mmc, int state)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
-+	struct t7l66xb *t7l66xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_clk_div(t7l66xb->scr + 0x200, 0, state);
- }
-diff --git a/drivers/mfd/tc6387xb.c b/drivers/mfd/tc6387xb.c
-index 85fab3729102..f417c6fecfe2 100644
---- a/drivers/mfd/tc6387xb.c
-+++ b/drivers/mfd/tc6387xb.c
-@@ -80,16 +80,14 @@ static int tc6387xb_resume(struct platform_device *dev)
- 
- static void tc6387xb_mmc_pwr(struct platform_device *mmc, int state)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
-+	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_pwr(tc6387xb->scr + 0x200, 0, state);
- }
- 
- static void tc6387xb_mmc_clk_div(struct platform_device *mmc, int state)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
-+	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_clk_div(tc6387xb->scr + 0x200, 0, state);
- }
-@@ -97,8 +95,7 @@ static void tc6387xb_mmc_clk_div(struct platform_device *mmc, int state)
- 
- static int tc6387xb_mmc_enable(struct platform_device *mmc)
- {
--	struct platform_device *dev      = to_platform_device(mmc->dev.parent);
--	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
-+	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	clk_prepare_enable(tc6387xb->clk32k);
- 
-@@ -110,8 +107,7 @@ static int tc6387xb_mmc_enable(struct platform_device *mmc)
- 
- static int tc6387xb_mmc_disable(struct platform_device *mmc)
- {
--	struct platform_device *dev      = to_platform_device(mmc->dev.parent);
--	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
-+	struct tc6387xb *tc6387xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	clk_disable_unprepare(tc6387xb->clk32k);
- 
-diff --git a/drivers/mfd/tc6393xb.c b/drivers/mfd/tc6393xb.c
-index 0c9f0390e891..ad0351f22675 100644
---- a/drivers/mfd/tc6393xb.c
-+++ b/drivers/mfd/tc6393xb.c
-@@ -122,8 +122,7 @@ enum {
- 
- static int tc6393xb_nand_enable(struct platform_device *nand)
- {
--	struct platform_device *dev = to_platform_device(nand->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(nand->dev.parent);
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&tc6393xb->lock, flags);
-@@ -312,8 +311,7 @@ static int tc6393xb_fb_disable(struct platform_device *dev)
- 
- int tc6393xb_lcd_set_power(struct platform_device *fb, bool on)
- {
--	struct platform_device *dev = to_platform_device(fb->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(fb->dev.parent);
- 	u8 fer;
- 	unsigned long flags;
- 
-@@ -334,8 +332,7 @@ EXPORT_SYMBOL(tc6393xb_lcd_set_power);
- 
- int tc6393xb_lcd_mode(struct platform_device *fb,
- 					const struct fb_videomode *mode) {
--	struct platform_device *dev = to_platform_device(fb->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(fb->dev.parent);
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&tc6393xb->lock, flags);
-@@ -351,8 +348,7 @@ EXPORT_SYMBOL(tc6393xb_lcd_mode);
- 
- static int tc6393xb_mmc_enable(struct platform_device *mmc)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_enable(tc6393xb->scr + 0x200, 0,
- 		tc6393xb_mmc_resources[0].start & 0xfffe);
-@@ -362,8 +358,7 @@ static int tc6393xb_mmc_enable(struct platform_device *mmc)
- 
- static int tc6393xb_mmc_resume(struct platform_device *mmc)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_resume(tc6393xb->scr + 0x200, 0,
- 		tc6393xb_mmc_resources[0].start & 0xfffe);
-@@ -373,16 +368,14 @@ static int tc6393xb_mmc_resume(struct platform_device *mmc)
- 
- static void tc6393xb_mmc_pwr(struct platform_device *mmc, int state)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_pwr(tc6393xb->scr + 0x200, 0, state);
- }
- 
- static void tc6393xb_mmc_clk_div(struct platform_device *mmc, int state)
- {
--	struct platform_device *dev = to_platform_device(mmc->dev.parent);
--	struct tc6393xb *tc6393xb = platform_get_drvdata(dev);
-+	struct tc6393xb *tc6393xb = dev_get_drvdata(mmc->dev.parent);
- 
- 	tmio_core_mmc_clk_div(tc6393xb->scr + 0x200, 0, state);
- }
--- 
-2.20.1
-
+/Jarkko
