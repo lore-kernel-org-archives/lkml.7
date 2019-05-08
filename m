@@ -2,132 +2,127 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB797C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F37C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8207A20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1493E20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lt7bJnDB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SrfcNIKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfEHVwm (ORCPT
+        id S1728695AbfEHVxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 17:52:42 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43259 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfEHVwm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 17:52:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u27so13642lfg.10;
-        Wed, 08 May 2019 14:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d18b4qWh4HEgcu9wcn/OtecpmPx7NVhpCmeccDtOwuY=;
-        b=Lt7bJnDBzGiz370T8FOk2I9C3A2+FarSZXJjYhRZatAdfVga39QIRPOOGVnsyGs6uP
-         mOV4+uMPBI94/+dg2apRA2rnZV0pvKqwRRbzT2pltns/+ajxhtxu/Udjtm3T3jLIz0x5
-         oDLdIoHH8kywuRzSOWJyrzbq4FVnZCBmYPKLPUFZo9XhLX4Aq7BzdBpADaE5cCjQIbOu
-         4WYSwc43nkoLYqUBmhZEsx7nLkDjvz4nZlJ1vut4+r4rXQSRQKo7/W2ccHK92kKEP1hd
-         eZwplAFZbCjMypEPqzJtD9kWlTPrwp+MPc6gw5WE+AU4C9CY+z8HThO5W/HGSHSNtSuE
-         Jb+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d18b4qWh4HEgcu9wcn/OtecpmPx7NVhpCmeccDtOwuY=;
-        b=Jy7gzXMFAInkvXj5q6mUdP4Cib8E1S9gYXlxo2CnbkDla6tyNjKMFlbq/fXX1Gkkkg
-         ux4fKNqY91EhG8YJAmRsgV8aycdYGHB72zdY1635/q0E9YspNMmaaXckHI9FjeLkMA/Y
-         jdnEjiX0MJFd6Elxj2j1nnmEJsq9VmO/6Gd/ySOU1yp93NffhQxiE32ye8JL9IFLIOxa
-         JIjwJ3chwmAAQz7hy8DBhhHksW1ZXaftgq66r35Jkm49y4QPQivPHUT7qllIkLtvYAcz
-         vtgupZW8A8NMwaBZh1XJybFZXMC8AEVHnwk8pwFoTjhwxuE4RwYGdl8OKI3LoXaCUiC0
-         K8YQ==
-X-Gm-Message-State: APjAAAVnM7CK9RB+0VzfR+DGbI5NyZnqUeYRyxQbj1HrLkDnlGiLxG3d
-        sbDEL3bgltOM7u7OfmCXuP4=
-X-Google-Smtp-Source: APXvYqwE86+xTrNYoh9mO07ThJZjjH/w7wrrJMBEcGpcgybBv1dl6BSjQWtEuD9HOyG1Zt8+/h+WyA==
-X-Received: by 2002:a19:189:: with SMTP id 131mr237509lfb.74.1557352360316;
-        Wed, 08 May 2019 14:52:40 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id l5sm28279lfh.70.2019.05.08.14.52.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 14:52:39 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] net: phy: realtek: Change TX-delay setting for RGMII modes only
-Date:   Thu,  9 May 2019 00:51:17 +0300
-Message-Id: <20190508215115.19802-3-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190508215115.19802-1-fancer.lancer@gmail.com>
-References: <20190508215115.19802-1-fancer.lancer@gmail.com>
+        Wed, 8 May 2019 17:53:18 -0400
+Received: from ozlabs.org ([203.11.71.1]:36937 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727486AbfEHVxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 17:53:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zqwV5L36z9s5c;
+        Thu,  9 May 2019 07:53:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557352395;
+        bh=t68SMhMlojtdWXHtZ81TNturMPkafFqx2s//xlsE/y8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SrfcNIKafzMJ19gtwJ2kWSPjuLVHTMjVEahLAqNNgwURC6Eab0sT6TlpSl24pVWwh
+         T9z0pzFipUZBwTk1WG3CtDw75aZ2g+4LkhZvZWbm2Oa9UnO0nZ2ZYy7PFj9V5tYDvC
+         l7Thx/UeLlpG+3Wnf2TPmwf8ta07SpluICf+o9yS92scFef1oHWEqBbbboQLpfD1NJ
+         LpxquIHgwbi4g4t2to7QdUeHwukImqcrqBnCTin5PUD38CowQl8nEYX6dmczmGSdvn
+         eOwCjB0FmAzKmEmG0cW5F8JoagaQkcZdTlHqIXuGqWgMKSAeYz55TERHVEF9JLxEEH
+         YsO80J87Z9zvg==
+Date:   Thu, 9 May 2019 07:53:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Eugen Hristev <eugen.hristev@microchip.com>
+Subject: linux-next: Fixes tags need some work in the v4l-dvb tree
+Message-ID: <20190509075311.1865ca8b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/FHpSzG6JJhO86JmkIl_PTbX"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's prone to problems if delay is cleared out for other than RGMII
-modes. So lets set/clear the TX-delay in the config register only
-if actually RGMII-like interface mode is requested. This only
-concerns rtl8211f chips.
+--Sig_/FHpSzG6JJhO86JmkIl_PTbX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Hi all,
 
----
-Changelog v3
-- Accept id and rxid interface mode by clearing the TX_DELAY bit
-  in this case.
+In commit
 
-Changelog v4
-- Rebase onto net-next
----
- drivers/net/phy/realtek.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+  1199fa8c0ddd ("media: tegra-cec: fix cec_notifier_parse_hdmi_phandle retu=
+rn check")
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index cfbc0ca61123..761ce3b1e7bd 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -161,12 +161,23 @@ static int rtl8211c_config_init(struct phy_device *phydev)
- 
- static int rtl8211f_config_init(struct phy_device *phydev)
- {
--	u16 val = 0;
-+	u16 val;
- 
--	/* enable TX-delay for rgmii-id and rgmii-txid, otherwise disable it */
--	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+	/* enable TX-delay for rgmii-{id,txid}, and disable it for rgmii and
-+	 * rgmii-rxid. The RX-delay can be enabled by the external RXDLY pin.
-+	 */
-+	switch (phydev->interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+		val = 0;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		val = RTL8211F_TX_DELAY;
-+		break;
-+	default: /* the rest of the modes imply leaving delay as is. */
-+		return 0;
-+	}
- 
- 	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
- }
--- 
-2.21.0
+Fixes tag
 
+  Fixes: 4d34c9267db7: ("media: tegra_cec: use new cec_notifier_parse_hdmi_=
+phandle helper")
+
+has these problem(s):
+
+  - the ':' after teh SHA1 is unexpected
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+In commit
+
+  1e4e25c4959c ("media: atmel: atmel-isc: fix asd memory allocation")
+
+Fixes tag
+
+  Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller co=
+de")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+In commit
+
+  79199002db5c ("media: atmel: atmel-isc: fix INIT_WORK misplacement")
+
+Fixes tag
+
+  Fixes: 93d4a26c3d ("[media] atmel-isc: add the isc pipeline function")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FHpSzG6JJhO86JmkIl_PTbX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzTT8cACgkQAVBC80lX
+0Gzd/wf+OnEgksfPQzlPlH6WxyYgQzboNgR8RrbKfxgDPPLdkINV/fXwGvacw12Z
+pTLvj8hk6DINl2H1R59AsIkVu/mX43fNF8+hIz+VFsAQiKFiGapIMkIb+GfWPAGp
+wZok4LXIdNcATZvmr9xBlNEObbhG345AbgN/fUpP1spM/sOOYZYnzo/WSc9bOcWE
+lKZ1KJTPIES/G6ixuqILFn0DRllxV5Z3C8FrEwLdvFE0eArkDvW5PKorsb9keTQ2
+lvT/KitWYvwqmoTnQLoKCe5+38gxmpFHDUKPNvVRa6peICJIj0i3qeEeGq4Yz50v
+UEpr7kVwXPRUOi3jOwasUB4K5hs5xA==
+=n53M
+-----END PGP SIGNATURE-----
+
+--Sig_/FHpSzG6JJhO86JmkIl_PTbX--
