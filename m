@@ -2,116 +2,96 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751EAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777C6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459E7214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F9E20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3QJktUz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/NSxz7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfEHKcH (ORCPT
+        id S1727316AbfEHKcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:32:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53660 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfEHKcG (ORCPT
+        Wed, 8 May 2019 06:32:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35674 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbfEHKcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:32:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so2589200wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:32:05 -0700 (PDT)
+        Wed, 8 May 2019 06:32:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y197so2581880wmd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 03:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=lTYtWH+vlDq1C8tSZ2s1Nk4aplc77EuzahEQKqSXH1w=;
-        b=o3QJktUzhea3lHbIefLX+aNhSNRGeqRunVeT2IHCizVIXFqfS4luvNVPnBU4Lsq0Qi
-         rc2thhYpQepQUtsSnj2eMPg2szR+6J8k4+Yolyo8IFppvYYW/bdqj4GRO6Efjo4pI4pj
-         jrBu6D3zKyl0TBtGICj41PuFsd+FUSrfIbzVqyobDIaFu/anZw1N3T51qBBSkxLP9d3C
-         Us1fIzm2jYVr+ZJoSYMWkaZsChb2XTQ8uIVRswge1AqtWk4ao8SmmIqETb5qYNAxMxX6
-         qHG8mgVTKaT+qS2DvV9ME6uSWg8iOUbcr3/ozePgoTr1AilUiQljdYFXt8afs++LW40h
-         7CgA==
+        bh=1r7P9UsZbgNqNY1l6abhHXfspcGLO10OT1tcOU7stKw=;
+        b=k/NSxz7Z77jhksjFxSrX6bJzVJZGjt8NFTY171SnzReQAlWVan0HMuPMFKRDSuklIW
+         YMUYxL4jxsTBcWSu1YtuPiZhLPuVliNY2lrqebyVl/Fb72hpmxeK8GBVbueliPnEh+GF
+         elpFQuGbMkIbNA3xbaMsQg8KSiZBlXhi6IlYcKoUJsSIQY7+b+kZ2C07EROGtOYf/vkq
+         7/EHa1WERb39h7wISiuO1r46G4TLssXQKI20UufV1yaSdOau3zD5JB5Rd6ITjlyCRnlq
+         kvDE5C94BPJPYelTCiqWVy4UYGwWpWmlYgohJV74HDd9gMNVUzokLyfR2OlTe05YTbJb
+         DP5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=lTYtWH+vlDq1C8tSZ2s1Nk4aplc77EuzahEQKqSXH1w=;
-        b=PzWrmk6Cb+TDPT0ABzdEK+TCvyO9OsaHMiSu8AYYJZpwN8c205yhAvPp4I/4tA+JY0
-         vLYrmevdsAKdEgrxm4ucltNkK0pnGTGYwQu8ElvXhLOxSws59FqK3LpEokESEptcDycN
-         DhM1lsqhCLATQh0jX6MoGMb/P9g9Ac6MvpZDjUagL12XiRnv1ULNY/1TmdphZGVhWvcO
-         WLQRo+nbtf3ZFvrSDNIO/baXGLKkIwqKztSanpd8/ACHsSLVo7EKmylF9IlqiElusDhs
-         7v4Nj4eGzzU1T4jNNjXOOThwxgl8kNQs/AcXAwxKd/Kue62YFCAAeb2P6DM+20OQBYuW
-         t8cA==
-X-Gm-Message-State: APjAAAX3sE+6HDC/7QsRjguf2EOX7mwmOpp0MsBpP7ujrnYVCRo+Zai4
-        4Jnul2u1U3K+YWiXhDir5qhSTUac9EE=
-X-Google-Smtp-Source: APXvYqyS2UuaH9kJHYVFIWfTSezTKbwt3gNBCgfakaqiMBVfMgfAFs5aOs/71Y4Ld7OaOjbph6TsxQ==
-X-Received: by 2002:a1c:b756:: with SMTP id h83mr1245637wmf.64.1557311524716;
-        Wed, 08 May 2019 03:32:04 -0700 (PDT)
+        bh=1r7P9UsZbgNqNY1l6abhHXfspcGLO10OT1tcOU7stKw=;
+        b=bXz+1qMDRYN9WSaQcmtEDCB4hkQdNxbonDUdBRhp6x8xSKo05augp91TnbtKzazOus
+         hiQZPhxcVLAXWWgSEs6lYuCvNPCzETw+pqkKVitgXmZWl/AP8vpta/NN4W8kcy/fHB+U
+         RC7oE3FaCNgq6HE55RkE+dy2fQOEj/9VsKTUtF1CxupkzGXYEdiAzxMUtOIFXIaU5Tj9
+         MytKL/grilDb2eWOzToCJ4xoXiLPvJKxWqWOI0fYzxsEPnaNffpK2oR6MvSKMubEynDT
+         6qqHxi9XuN6LyamL+u0nq6ZH3M4BxWI016dDxaeLBcHHNVzSxpoPtUP9hENg0OTcO3Ho
+         yqhQ==
+X-Gm-Message-State: APjAAAXVoPhU2Zk33ATtF/8s+UqI1vq9iTxBxIPG2dSvGxmHDBGVxEZS
+        d1Oo++3RxpslQepxyf9xk07nN7LTln4=
+X-Google-Smtp-Source: APXvYqxeg6+Lpg/EWNmgS98GOVvRTH8s8Zf/pDOjnLsBZJws8UU9v9xDgbwcDKg54dh83FoESlVVJA==
+X-Received: by 2002:a1c:5fc2:: with SMTP id t185mr2564178wmb.95.1557311565420;
+        Wed, 08 May 2019 03:32:45 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id f128sm2896834wme.28.2019.05.08.03.32.03
+        by smtp.gmail.com with ESMTPSA id f7sm2513280wrv.17.2019.05.08.03.32.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 03:32:03 -0700 (PDT)
-Date:   Wed, 8 May 2019 11:32:02 +0100
+        Wed, 08 May 2019 03:32:44 -0700 (PDT)
+Date:   Wed, 8 May 2019 11:32:43 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH next 16/25] mfd: Use dev_get_drvdata()
-Message-ID: <20190508103202.GJ3995@dell>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
- <20190423075020.173734-17-wangkefeng.wang@huawei.com>
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mfd: da9063: Fix OTP control register names to match
+ datasheets for DA9063/63L
+Message-ID: <20190508103243.GK3995@dell>
+References: <20190426140607.9D2553FBD0@swsrvapps-01.diasemi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190423075020.173734-17-wangkefeng.wang@huawei.com>
+In-Reply-To: <20190426140607.9D2553FBD0@swsrvapps-01.diasemi.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019, Kefeng Wang wrote:
+On Fri, 26 Apr 2019, Steve Twiss wrote:
 
-> Using dev_get_drvdata directly.
+> Mismatch between what is found in the Datasheets for DA9063 and DA9063L
+> provided by Dialog Semiconductor, and the register names provided in the
+> MFD registers file. The changes are for the OTP (one-time-programming)
+> control registers. The two naming errors are OPT instead of OTP, and
+> COUNT instead of CONT (i.e. control).
 > 
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> Cc: Stable <stable@vger.kernel.org>
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 > ---
->  drivers/mfd/ssbi.c     |  2 +-
->  drivers/mfd/t7l66xb.c  | 12 ++++--------
->  drivers/mfd/tc6387xb.c | 12 ++++--------
->  drivers/mfd/tc6393xb.c | 21 +++++++--------------
->  4 files changed, 16 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/mfd/ssbi.c b/drivers/mfd/ssbi.c
-> index 36b96fee4ce6..50f87d0f9151 100644
-> --- a/drivers/mfd/ssbi.c
-> +++ b/drivers/mfd/ssbi.c
-> @@ -80,7 +80,7 @@ struct ssbi {
->  	int (*write)(struct ssbi *, u16 addr, const u8 *buf, int len);
->  };
->  
-> -#define to_ssbi(dev)	platform_get_drvdata(to_platform_device(dev))
-> +#define to_ssbi(dev)	dev_get_drvdata(dev)
+>  include/linux/mfd/da9063/registers.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-If you could replace 'to_ssbi(dev)' with 'dev_get_drvdata(dev)' it
-would be better.
-
-The rest of the changes look fine.
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
