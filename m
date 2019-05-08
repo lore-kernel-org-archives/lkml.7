@@ -2,63 +2,108 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEE5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD4F214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B289214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:52:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gZGR55yo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfEHHvy convert rfc822-to-8bit (ORCPT
+        id S1726776AbfEHHwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:51:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59542 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725910AbfEHHvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:51:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CD031AEEA;
-        Wed,  8 May 2019 07:51:49 +0000 (UTC)
-Date:   Wed, 8 May 2019 09:51:49 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/3] MIPS: SGI-IP27 rework part2
-Message-Id: <20190508095149.6503bde3f33fb5d76ca827be@suse.de>
-In-Reply-To: <20190508061629.GA19227@infradead.org>
-References: <20190507210917.4691-1-tbogendoerfer@suse.de>
-        <20190508061629.GA19227@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Wed, 8 May 2019 03:52:00 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:56524 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726476AbfEHHva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 03:51:30 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3AE11C00F3;
+        Wed,  8 May 2019 07:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557301893; bh=fWgB9Ny93mClVBJJxGQQRvjftxPGjarT+amG5YS65hU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=gZGR55yooVWA/914gOAPIRyJxELMhjeQGdutBW5bx+blJEtYIgIOHUob9uVlQoq1v
+         zDsR7kmxVEU/ALEdALsPZ7+CoUwxM87BRWr5tEGRi4R7B76tXlVImqlld7zuU4jkCZ
+         DiLtbIVv43roBXztNOBeSMT+8KPJTxMJ/VjiucmuF83iF3wHVa1BnsDkaMoEwbOK+z
+         wTHk3tAWtlZxF5yTDmkYoKGXWVgv+PafG0cVUKEbCtYsVdA6ICGi4xvMcg5MW49mka
+         hwVdEH28MklG+FgHMX+cYrhenq0zoXQOwqypNyIaVo5dvGLEao5iOrUirTWaDK2G4W
+         d6RMjJd2EoPOg==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 72605A02D4;
+        Wed,  8 May 2019 07:51:29 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id C70853D52B;
+        Wed,  8 May 2019 09:51:27 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH net-next 07/11] net: stmmac: dwmac1000: Also pass control frames while in promisc mode
+Date:   Wed,  8 May 2019 09:51:07 +0200
+Message-Id: <c6c1449e173dc4805f5fc785f1906e4392ccc66f.1557300602.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
+References: <cover.1557300602.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
+References: <cover.1557300602.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 23:16:29 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
+In order for the selftests to run the Flow Control selftest we need to
+also pass control frames to the stack.
 
-> On Tue, May 07, 2019 at 11:09:12PM +0200, Thomas Bogendoerfer wrote:
-> > architecture and share some hardware (ioc3/bridge). To share
-> 
-> Isn't much of this also shared by IP35, the next generation Origin/Onyx
-> and and co?  A quick web search shows there even is an early port to
-> IP35 here:
+Pass this type of frames while in promiscuous mode.
 
-yes it is, and IP35 is my next target after IP30 is done.
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h      | 1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Thomas.
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h b/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
+index 184ca13c8f79..56a69fb6f0b9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
+@@ -146,6 +146,7 @@ enum inter_frame_gap {
+ #define GMAC_FRAME_FILTER_DAIF	0x00000008	/* DA Inverse Filtering */
+ #define GMAC_FRAME_FILTER_PM	0x00000010	/* Pass all multicast */
+ #define GMAC_FRAME_FILTER_DBF	0x00000020	/* Disable Broadcast frames */
++#define GMAC_FRAME_FILTER_PCF	0x00000080	/* Pass Control frames */
+ #define GMAC_FRAME_FILTER_SAIF	0x00000100	/* Inverse Filtering */
+ #define GMAC_FRAME_FILTER_SAF	0x00000200	/* Source Address Filter */
+ #define GMAC_FRAME_FILTER_HPF	0x00000400	/* Hash or perfect Filter */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 398303c783f4..8ca73bd15e07 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -172,7 +172,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 	memset(mc_filter, 0, sizeof(mc_filter));
+ 
+ 	if (dev->flags & IFF_PROMISC) {
+-		value = GMAC_FRAME_FILTER_PR;
++		value = GMAC_FRAME_FILTER_PR | GMAC_FRAME_FILTER_PCF;
+ 	} else if (dev->flags & IFF_ALLMULTI) {
+ 		value = GMAC_FRAME_FILTER_PM;	/* pass all multi */
+ 	} else if (!netdev_mc_empty(dev)) {
 -- 
-SUSE Linux GmbH
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+2.7.4
+
