@@ -2,169 +2,101 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5B9C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01B9C46460
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D588214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4AA20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTVy54EL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfEHAza (ORCPT
+        id S1726648AbfEHA4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:55:30 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:15292 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfEHAza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:55:30 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 43F7D4DE51;
-        Wed,  8 May 2019 02:55:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id aH1WSlgN_x_O; Wed,  8 May 2019 02:55:13 +0200 (CEST)
-Date:   Wed, 8 May 2019 10:54:56 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
-Message-ID: <20190508005456.th5pkxljz536cq6w@yavin>
-References: <20190506165439.9155-1-cyphar@cyphar.com>
- <20190506165439.9155-6-cyphar@cyphar.com>
- <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
- <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+        Tue, 7 May 2019 20:56:03 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55733 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHA4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:56:03 -0400
+Received: by mail-it1-f194.google.com with SMTP id q132so1279339itc.5;
+        Tue, 07 May 2019 17:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PiA2GgebXiGNdOioGbkk07AYvlMPPYqr0D+S0vlim3g=;
+        b=PTVy54ELFIhLsI8bp1RMULWZyQb5ZZU3fwT8GVCOMiIn48rF8VsnJET3EQhpASGnqo
+         1KZcEFLuywYruJsTRL/Mg+7BIoPuGMcXJMpQpgRj8gNRN0y5aYsa2Qp7en62B5rtAO7m
+         UjQ/uZeWF1UrMDYhzh0ngUDTvqvL9rrJ/P5ZK3mn8KhImUW42SZUNzvNDU9lL6/lU1nw
+         dyF5bBBw7lFOyS1XAkWNe5j43bLlZ0p94xN3FQHveHgWHvlmzE0tUzd7b2i4HQhf+S5e
+         qCg/kYlCbn6AjY6S2Hc+bcYciFjUPJATmd+POI362jsBsSkK6P5W1qxuw+tVy73gDFdU
+         UT/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PiA2GgebXiGNdOioGbkk07AYvlMPPYqr0D+S0vlim3g=;
+        b=baex1q2a3J35/j8cEh24Vk2ZGuEcs5cUvAXlowAnfy72Z5Yb7oJ2ihyW+uezdr1BQW
+         w3KhG2MrXlr3e11FWtEJTJUDICVOJRxOLlTFz83pzFSM4ReYF3SXOsiQB1+d7WHPL6yi
+         soNMUa2JDxtPZTi35iR+VDF/Ri1eMlHxwDkGx2IzLYkNMDwLofAj5dJp6cFSTsuFam3K
+         KOr0rM0jcK/U31EBykqqmDP9CSile/i7m64R5bcwsfq5KTBpW4o4KgTkPDYYvwWBTQ8d
+         72CiqLZKUxA7Xmn/QL8OHAlvcH67pYzPDASPAxEgK4WsuewITvtuZ2srexlSe7zOxtfg
+         ppfw==
+X-Gm-Message-State: APjAAAX9TJj9PHBSMGj+2EDuS8sO/IEruvtP+JPzztMX4jxuDShHToQQ
+        iJEIi0MSEIiHmxqbH4XdEak=
+X-Google-Smtp-Source: APXvYqyywlxZxShrE23vVOV73uE/g8MoECS3kQY2Ve8zo9PGQ1+e74AISFNwf0PRfF/AqUZWdTReag==
+X-Received: by 2002:a24:c3c2:: with SMTP id s185mr1040884itg.156.1557276962433;
+        Tue, 07 May 2019 17:56:02 -0700 (PDT)
+Received: from asus (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id n138sm358940itb.32.2019.05.07.17.56.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 17:56:01 -0700 (PDT)
+Date:   Tue, 7 May 2019 18:56:00 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.0 000/122] 5.0.14-stable review
+Message-ID: <20190508005558.GA2689@asus>
+References: <20190506143054.670334917@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m3sipayj4evvlhxl"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 06, 2019 at 04:30:58PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.0.14 release.
+> There are 122 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 08 May 2019 02:29:09 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.14-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
---m3sipayj4evvlhxl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 2019-05-07, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-05-06, Jann Horn <jannh@google.com> wrote:
-> > On Mon, May 6, 2019 at 6:56 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > > The need to be able to scope path resolution of interpreters became
-> > > clear with one of the possible vectors used in CVE-2019-5736 (which
-> > > most major container runtimes were vulnerable to).
-> > >
-> > > Naively, it might seem that openat(2) -- which supports path scoping =
---
-> > > can be combined with execveat(AT_EMPTY_PATH) to trivially scope the
-> > > binary being executed. Unfortunately, a "bad binary" (usually a symli=
-nk)
-> > > could be written as a #!-style script with the symlink target as the
-> > > interpreter -- which would be completely missed by just scoping the
-> > > openat(2). An example of this being exploitable is CVE-2019-5736.
-> > >
-> > > In order to get around this, we need to pass down to each binfmt_*
-> > > implementation the scoping flags requested in execveat(2). In order to
-> > > maintain backwards-compatibility we only pass the scoping AT_* flags.
-> > >
-> > > To avoid breaking userspace (in the exceptionally rare cases where you
-> > > have #!-scripts with a relative path being execveat(2)-ed with dfd !=
-=3D
-> > > AT_FDCWD), we only pass dfd down to binfmt_* if any of our new flags =
-are
-> > > set in execveat(2).
-> >=20
-> > This seems extremely dangerous. I like the overall series, but not this=
- patch.
-> >=20
-> > > @@ -1762,6 +1774,12 @@ static int __do_execve_file(int fd, struct fil=
-ename *filename,
-> > >
-> > >         sched_exec();
-> > >
-> > > +       bprm->flags =3D flags & (AT_XDEV | AT_NO_MAGICLINKS | AT_NO_S=
-YMLINKS |
-> > > +                              AT_THIS_ROOT);
-> > [...]
-> > > +#define AT_THIS_ROOT           0x100000 /* - Scope ".." resolution t=
-o dirfd (like chroot(2)). */
-> >=20
-> > So now what happens if there is a setuid root ELF binary with program
-> > interpreter "/lib64/ld-linux-x86-64.so.2" (like /bin/su), and an
-> > unprivileged user runs it with execveat(..., AT_THIS_ROOT)? Is that
-> > going to let the unprivileged user decide which interpreter the
-> > setuid-root process should use? From a high-level perspective, opening
-> > the interpreter should be controlled by the program that is being
-> > loaded, not by the program that invoked it.
->=20
-> I went a bit nuts with openat_exec(), and I did end up adding it to the
-> ELF interpreter lookup (and you're completely right that this is a bad
-> idea -- I will drop it from this patch if it's included in the next
-> series).
->=20
-> The proposed solutions you give below are much nicer than this patch so
-> I can drop it and work on fixing those issues separately.
+Compiled, booted, and no dmesg regressions on my system. 
 
-Another possible solution would be to only allow (for instance)
-AT_NO_MAGICLINKS for execveat(2). That way you cannot scope the
-resolution but you can block the most concerning cases -- those
-involving /proc-related access.
-
-I've posted a v7 with this patch dropped (because we can always add AT_*
-flags later in time), but I think having at least NO_MAGICLINKS would be
-useful.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---m3sipayj4evvlhxl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzSKOAACgkQSnvnv3De
-m5+sVw//bA9Tf90p30BmnpG1nXFGi3o1Bvcw4bBtju6je0jL0EhCa6/D3MOOfYS3
-6Hy2pArRB/bP7Q2EWPS9xcoB65JMLigAMxa2kMiNjbHW12fShWBidjFqMEVBM6cS
-mitc+utlJWYL0HYPOvyGz6POpDofulAvfiYBVgFeqlJA+/C3EvdEOAGTBCv705aM
-7cNPTRJj+bcJ0Yvu6oXERxC+txG0AaM7CHeONhkZMxlkziZvwGyZYpui8pQgGm9D
-6aMp++KpubhSiRZVq3XHEJtg1323ujlQBDW8Y2i5LtjizwXWCf1x+gj5yKbM7Yzt
-gVDcVDOrTfunC3DP9eiJtjVm4y722CBR+XSyGi/iGY9cs5GOWwkhtI7LV98/d6B+
-N6P9V2HhAeRFWId1exLYlD03qwesXUSiMymObj0zsKhRotJ8dcUx66wJtOvrumZf
-lUf9FKXZF5b8cbUOAnSCcVZ/YdZcwwItWAD0ZT2sGD5ZttnC0sKnrFtEkbeMGGpN
-NG9v1lNYhqpmVE9jsSBXFSKVaDB1ipqqtxB0mSaK0/6aTOg8YMwKqxonuBra9sz3
-SqXwP25Qk5++syB2vZVdJNFAl9gjlapYrtTAqdYdrTQCSkIHeyiEIl9IT4lMupWR
-JgdYo6OEjpob11GKYnNjixo0REwy2cDXSqWvauZEBbriQ2b0jbI=
-=YctX
------END PGP SIGNATURE-----
-
---m3sipayj4evvlhxl--
+-Kelsey 
