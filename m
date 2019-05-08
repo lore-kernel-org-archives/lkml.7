@@ -2,208 +2,122 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2530FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5E2C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0BC21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BA221019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfEHIXv (ORCPT
+        id S1726773AbfEHIYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:23:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36152 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfEHIXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:23:50 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hOHrg-0008JA-8N
-        for linux-kernel@vger.kernel.org; Wed, 08 May 2019 08:23:48 +0000
-Received: by mail-pg1-f199.google.com with SMTP id l13so12220182pgp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:23:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PEIP3gzGSTUOPGUL36azQMiRELQm/3Z3XxB+EuCVXM4=;
-        b=L5J16JnRaJay87jjf5qlxPa2T3KmczcJfGfexGY8Hfp6iF7WXq1E+FPFc/NDiWQczN
-         yGtBGqZCwGpXew2dpCtybYAJYh+lx5l1oZtM6ZP2YS/8WZAQH+U/G2nXlVTLu2d+P2ri
-         PPEmxDd2PZImpk7K1gdIu0TfQoYHTZ+kkYaA+UQv1BiD5gonPkv8qUxvGbVfCykk1sRT
-         znhcCUYo6ANkESDAT7QKmhvvYBuJIyOl3TqBUGUcoWAoWGNVA6NeXpaullauuiCZP0Eo
-         0ITCPFT/PoYrr9TJc7YRx+y8xumQaNiJ77jrCHOu//JOM/L8JQl1vVyrxR1V+L0JJsfQ
-         NIkQ==
-X-Gm-Message-State: APjAAAXOOaD7JqYMofgvVKACk1QsLLBiMuJKfWxMowvcfrJdErCeS0r1
-        QsTrTJj6+jngMIpNu/mFt8uH6GFpNBWvzJKVr7204axiokJR5VdahY/gEfE9z5c0UqsIiKDCow/
-        kVWukOELDjooMm6hVsNJDfvR4xMcKDVVcHqRDD/ZhZg==
-X-Received: by 2002:a63:3dcf:: with SMTP id k198mr25762681pga.60.1557303826937;
-        Wed, 08 May 2019 01:23:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyxzhLHFuD0/5jYnF7tVi3Faefw6K5WL0tRgY1tpWQhiz2W2YgPkH4OzkcSI8SRr949cSYYKw==
-X-Received: by 2002:a63:3dcf:: with SMTP id k198mr25762653pga.60.1557303826650;
-        Wed, 08 May 2019 01:23:46 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-cd39-5529-36b9-d37f.dynamic-ip6.hinet.net (2001-b011-380f-14b9-cd39-5529-36b9-d37f.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:cd39:5529:36b9:d37f])
-        by smtp.gmail.com with ESMTPSA id e23sm19429414pfi.159.2019.05.08.01.23.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 01:23:45 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH v2] cifs: fix strcat buffer overflow and reduce raciness
- in smb21_set_oplock_level()
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAKywueSJCs2B2cGmZvGNfxDU7KNvkBOsuyuaOSV=3GWG80f+kw@mail.gmail.com>
-Date:   Wed, 8 May 2019 16:23:42 +0800
-Cc:     Steve French <smfrench@gmail.com>,
-        Christoph Probst <kernel@probst.it>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <A4165E00-AA20-4550-96FE-651271B7091B@canonical.com>
-References: <1557242200-26194-1-git-send-email-kernel@probst.it>
- <CAH2r5mtqkHYbHJkf_LbAjhujnNRQP6Zmkmqhj1dUHomwsc3e=w@mail.gmail.com>
- <CAKywueSJCs2B2cGmZvGNfxDU7KNvkBOsuyuaOSV=3GWG80f+kw@mail.gmail.com>
-To:     Pavel Shilovsky <piastryyy@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 8 May 2019 04:24:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60560 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbfEHIYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:24:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 55ACB308620F;
+        Wed,  8 May 2019 08:24:22 +0000 (UTC)
+Received: from localhost (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AE0F6600D4;
+        Wed,  8 May 2019 08:24:21 +0000 (UTC)
+Date:   Wed, 8 May 2019 16:24:18 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, kirill.shutemov@linux.intel.com,
+        keescook@chromium.org
+Subject: Re: [PATCH v4] x86/mm/KASLR: Fix the size of vmemmap section
+Message-ID: <20190508082418.GC24922@MiWiFi-R3L-srv>
+References: <20190508080417.15074-1-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508080417.15074-1-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 08 May 2019 08:24:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 02:28, Pavel Shilovsky <piastryyy@gmail.com> wrote:
+On 05/08/19 at 04:04pm, Baoquan He wrote:
+> kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
+> to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
+> 
+> However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+> the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+> 64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
+> stamping into the following cpu_entry_area section, if KASLR puts vmemmap
+> very close to cpu_entry_area , and the actual area of vmemmap is much
+> bigger than 1 TB.
+> 
+> So here calculate the actual size of vmemmap region, then align up to 1 TB
+> boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
+> The current code reserves 0.5 PB for vmemmap in 5-level. In this new way,
+> the left space can be saved to join randomization to increase the entropy.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Kirill A. Shutemov <kirill@linux.intel.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> вт, 7 мая 2019 г. в 09:13, Steve French via samba-technical
-> <samba-technical@lists.samba.org>:
->> merged into cifs-2.6.git for-next
->>
->> On Tue, May 7, 2019 at 10:17 AM Christoph Probst via samba-technical
->> <samba-technical@lists.samba.org> wrote:
->>> Change strcat to strncpy in the "None" case to fix a buffer overflow
->>> when cinode->oplock is reset to 0 by another thread accessing the same
->>> cinode. It is never valid to append "None" to any other message.
->>>
->>> Consolidate multiple writes to cinode->oplock to reduce raciness.
->>>
->>> Signed-off-by: Christoph Probst <kernel@probst.it>
->>> ---
->>>  fs/cifs/smb2ops.c | 14 ++++++++------
->>>  1 file changed, 8 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
->>> index c36ff0d..aa61dcf 100644
->>> --- a/fs/cifs/smb2ops.c
->>> +++ b/fs/cifs/smb2ops.c
->>> @@ -2917,26 +2917,28 @@ smb21_set_oplock_level(struct cifsInodeInfo  
->>> *cinode, __u32 oplock,
->>>                        unsigned int epoch, bool *purge_cache)
->>>  {
->>>         char message[5] = {0};
->>> +       unsigned int new_oplock = 0;
->>>
->>>         oplock &= 0xFF;
->>>         if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
->>>                 return;
->>>
->>> -       cinode->oplock = 0;
->>>         if (oplock & SMB2_LEASE_READ_CACHING_HE) {
->>> -               cinode->oplock |= CIFS_CACHE_READ_FLG;
->>> +               new_oplock |= CIFS_CACHE_READ_FLG;
->>>                 strcat(message, "R");
->>>         }
->>>         if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
->>> -               cinode->oplock |= CIFS_CACHE_HANDLE_FLG;
->>> +               new_oplock |= CIFS_CACHE_HANDLE_FLG;
->>>                 strcat(message, "H");
->>>         }
->>>         if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
->>> -               cinode->oplock |= CIFS_CACHE_WRITE_FLG;
->>> +               new_oplock |= CIFS_CACHE_WRITE_FLG;
->>>                 strcat(message, "W");
->>>         }
->>> -       if (!cinode->oplock)
->>> -               strcat(message, "None");
->>> +       if (!new_oplock)
->>> +               strncpy(message, "None", sizeof(message));
->>> +
->>> +       cinode->oplock = new_oplock;
->>>         cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
->>>                  &cinode->vfs_inode);
->>>  }
->>> --
->>> 2.1.4
->
+I think this's worth noticing stable tree:
 
-Doesn’t the race still happen, but implicitly here?
-cinode->oplock = new_oplock;
+Cc: stable@vger.kernel.org
 
-Is it possible to just introduce a lock to force its proper ordering?
-e.g.
-
-diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-index bf5b8264e119..a3c3c6156d17 100644
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -267,6 +267,7 @@ cifs_alloc_inode(struct super_block *sb)
-          * server, can not assume caching of file data or metadata.
-          */
-         cifs_set_oplock_level(cifs_inode, 0);
-+       mutex_init(&cifs_inode->oplock_mutex);
-         cifs_inode->flags = 0;
-         spin_lock_init(&cifs_inode->writers_lock);
-         cifs_inode->writers = 0;
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 37b5ddf27ff1..6dfd4ab16c4f 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1214,6 +1214,7 @@ struct cifsInodeInfo {
-         struct list_head openFileList;
-         __u32 cifsAttrs; /* e.g. DOS archive bit, sparse, compressed, system */
-         unsigned int oplock;            /* oplock/lease level we have */
-+       struct mutex oplock_mutex;
-         unsigned int epoch;             /* used to track lease state changes */
-  #define CIFS_INODE_PENDING_OPLOCK_BREAK   (0) /* oplock break in progress */
-  #define CIFS_INODE_PENDING_WRITERS       (1) /* Writes in progress */
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index b20063cf774f..796b23712e71 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1901,6 +1901,7 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode,  
-__u32 oplock,
-         if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
-                 return;
- 
-+       mutex_lock(&cinode->oplock_mutex);
-         cinode->oplock = 0;
-         if (oplock & SMB2_LEASE_READ_CACHING_HE) {
-                 cinode->oplock |= CIFS_CACHE_READ_FLG;
-@@ -1916,6 +1917,8 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode,  
-__u32 oplock,
-         }
-         if (!cinode->oplock)
-                 strcat(message, "None");
-+       mutex_unlock(&cinode->oplock_mutex);
-+
-         cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
-                  &cinode->vfs_inode);
-  }
-
-Kai-Heng
-
-> Thanks for cleaning it up!
->
-> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
->
-> --
-> Best regards,
-> Pavel Shilovsky
-
-
+> ---
+> v3->v4:
+>   Fix the incorrect style of code comment;
+>   Add ack tags from Kirill and Kees.
+> v3 discussion is here:
+>   http://lkml.kernel.org/r/20190422091045.GB3584@localhost.localdomain
+> 
+>  arch/x86/mm/kaslr.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+> index dc3f058bdf9b..c0eedb85a92f 100644
+> --- a/arch/x86/mm/kaslr.c
+> +++ b/arch/x86/mm/kaslr.c
+> @@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
+>  } kaslr_regions[] = {
+>  	{ &page_offset_base, 0 },
+>  	{ &vmalloc_base, 0 },
+> -	{ &vmemmap_base, 1 },
+> +	{ &vmemmap_base, 0 },
+>  };
+>  
+>  /* Get size in bytes used by the memory region */
+> @@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
+>  	unsigned long rand, memory_tb;
+>  	struct rnd_state rand_state;
+>  	unsigned long remain_entropy;
+> +	unsigned long vmemmap_size;
+>  
+>  	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+>  	vaddr = vaddr_start;
+> @@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
+>  	if (memory_tb < kaslr_regions[0].size_tb)
+>  		kaslr_regions[0].size_tb = memory_tb;
+>  
+> +	/*
+> +	 * Calculate how many TB vmemmap region needs, and aligned to
+> +	 * 1TB boundary.
+> +	 */
+> +	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
+> +		sizeof(struct page);
+> +	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
+> +
+>  	/* Calculate entropy available between regions */
+>  	remain_entropy = vaddr_end - vaddr_start;
+>  	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
+> -- 
+> 2.17.2
+> 
