@@ -2,140 +2,135 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08845C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F18C20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE3A20656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LsbnxUg1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksWsDbG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfEHKor (ORCPT
+        id S1727385AbfEHKo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:44:47 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38781 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfEHKop (ORCPT
+        Wed, 8 May 2019 06:44:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42668 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfEHKoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:44:45 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190508104443euoutp02f6a8cfe642d54062fdacb785e8ed7051~cr0VfeNqE1605816058euoutp02Y;
-        Wed,  8 May 2019 10:44:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190508104443euoutp02f6a8cfe642d54062fdacb785e8ed7051~cr0VfeNqE1605816058euoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557312283;
-        bh=dgpyXP29E0frg5Fb1yn3nfCEe+lXMK1zNnGILlOg4wE=;
-        h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=LsbnxUg12a3jsWUhy7ktPsHEqRK5IKOfeM9BQmfeAxHVuvlEP7nsFLJsj/3EQgJLB
-         9uLR6RZyr6pPNPL6NjVur2GIhcceJFLISHRfH9TLZ7dLaHqxNn2ASmzq9RwW5mBoT5
-         TORTCdH8Dst2+AoJjgvFwrDueIos3W37rAvKRnTs=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190508104443eucas1p2cb672c979c05cf0208787536c9c60eeb~cr0VH7jsW3139531395eucas1p2W;
-        Wed,  8 May 2019 10:44:43 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 37.32.04325.A13B2DC5; Wed,  8
-        May 2019 11:44:42 +0100 (BST)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190508104442eucas1p2ebdffa348465f2c28177601014614853~cr0UfcbQI3139631396eucas1p2U;
-        Wed,  8 May 2019 10:44:42 +0000 (GMT)
-X-AuditID: cbfec7f5-fbbf09c0000010e5-90-5cd2b31a8b7a
-Received: from eusync4.samsung.com ( [203.254.199.214]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E2.E0.04146.A13B2DC5; Wed,  8
-        May 2019 11:44:42 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local ([106.120.51.73]) by
-        eusync4.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
-        (built May  5 2014)) with ESMTPA id <0PR600EL2LUETP60@eusync4.samsung.com>;
-        Wed, 08 May 2019 11:44:42 +0100 (BST)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mans Rullgard <mans@mansr.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] usb: core: verify devicetree nodes for disabled
- interfaces
-Date:   Wed, 08 May 2019 12:44:34 +0200
-Message-id: <20190508104434.3409-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-reply-to: <106fc58c-1a4f-6605-41d7-b6031c5751a3@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7djP87pSmy/FGJzvtrHYOGM9q0Xz4vVs
-        FufPb2C3uLxrDpvFjPP7mCwWLWtltnh55Aejxdojd9ktfjyczuTA6XHrTr3HplWdbB77565h
-        93hz+hS7R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGXMWL+KseAwX0XPpc8sDYxLeLoYOTkk
-        BEwkFmy+zdjFyMUhJLCCUeJs438WCOczo8TN6XNZYKpar52HqlrGKPHh50Goqv+MEvunLmUG
-        qWITMJToetvFBmKLCCRIHNn8HizOLNDNJPFlmQCILSwQIHHkXTMjiM0ioCpx/Md/sBpeARuJ
-        ibvuM0Nsk5dYveEAmM0pYC/xYfcsVoj4AjaJa0fjIGwXiQWLlrFB2DISnR0HmUAOkhBoZpR4
-        eG4tO4TTwyhxuWkGI0SVtcTh4xdZIS7ik5i0bTrQBg6gOK9ER5sQRImHxLmrv1khPpvEKHH+
-        5y22CYwSCxgZVjGKp5YW56anFhvnpZbrFSfmFpfmpesl5+duYgTG4el/x7/uYNz3J+kQowAH
-        oxIP74uCizFCrIllxZW5hxglOJiVRHivT7wUI8SbklhZlVqUH19UmpNafIhRmoNFSZy3muFB
-        tJBAemJJanZqakFqEUyWiYNTqoFxptpe/fXP0u9rnd34IO3WpeQ8/orVR50/GXwzC3K+WOt7
-        7mHL3+TTlydLvLlSk+B9KSvujfR1wbLr7rPvvpyYb18cwRX8Y6WAAY/K5Oa5qmuOs0ZLxM6P
-        P7ro7Ash3um/RMtyNrrELd/Z2MKuc/zOr3bWtIb8Y8duRJesyn/Tv81I5Yo2w+ZzSizFGYmG
-        WsxFxYkAAQGh178CAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKLMWRmVeSWpSXmKPExsVy+t/xa7pSmy/FGLQtErLYOGM9q0Xz4vVs
-        FufPb2C3uLxrDpvFjPP7mCwWLWtltnh55Aejxdojd9ktfjyczuTA6XHrTr3HplWdbB77565h
-        93hz+hS7R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGXMWL+KseAwX0XPpc8sDYxLeLoYOTkk
-        BEwkWq+dZ+xi5OIQEljCKDH3/RcmCKeRSaLj8zE2kCo2AUOJrrddYLaIQILEkreb2UGKmAW6
-        mSSam36zdjFycAgL+EkcmSMNUsMioCpx/Md/ZhCbV8BGYuKu+8wQ2+QlVm84AGZzCthLfNg9
-        ixXEFhKwk9h38iLrBEaeBYwMqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQIDa9uxn5t3MF7a
-        GHyIUYCDUYmHd8KsSzFCrIllxZW5hxglOJiVRHivTwQK8aYkVlalFuXHF5XmpBYfYpTmYFES
-        5+0QOBgjJJCeWJKanZpakFoEk2Xi4JRqYOy/rba+8LNe1+Quo582XCn/98dOKHmeyuE8/5mT
-        sZ/nl+f+3RbZjMmmlt2VkSdU+e4JzdTeEsibsijslMbBmc7mj1wX2dn66S/Zznlr4jaD42u7
-        LyQeyRJfO//l3QMVnE8FrGTCWxRDV3EvSGFZOMXCRHnmHImKvZPXqh2dznvj6tN7awuPuyix
-        FGckGmoxFxUnAgB3PLddKAIAAA==
-X-CMS-MailID: 20190508104442eucas1p2ebdffa348465f2c28177601014614853
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190508104442eucas1p2ebdffa348465f2c28177601014614853
-References: <106fc58c-1a4f-6605-41d7-b6031c5751a3@samsung.com>
-        <CGME20190508104442eucas1p2ebdffa348465f2c28177601014614853@eucas1p2.samsung.com>
+        Wed, 8 May 2019 06:44:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y10so10520511lji.9;
+        Wed, 08 May 2019 03:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uo6IowrDKy5xO74vMPNp+4alps7YeBhIIa0E2z+OC4I=;
+        b=ksWsDbG033ZNAM/bhOkqJv7bItU8lGJLybn6jQjQ0FJCjLlKLUmUMYW+g+dH8syvr7
+         SRGckmSOrT+RwIZdM9Oq4jMwufhX7fWyPb+gzLRg+92UaZjvFbZROf9MfwGNs4sRS9b6
+         J9hloBDnwBwCg9eb0PpLz76GGThiYP0h+dMzi9hnUg3hYgiH/FfVepP0JOLJCVXSvYqC
+         Wp8IYf1VrWc9WbR7B7frq+VUUNat5Ya1qh9pOFQE2uz4V3H52HHBU+9oTkFhKwnG0VOL
+         WSJQv0lckvTBXG3iMKB51dkAbMMfCQyFfm2hzgISbcasBiApgAaIXMWt5NO0dkQHXldT
+         hWsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uo6IowrDKy5xO74vMPNp+4alps7YeBhIIa0E2z+OC4I=;
+        b=U8Va7KL3lcKsqt8rZ8KcM962SqMdTQdUcNzqpaVxWnhgEt6maF7uzGIBHHPzsbUuZ+
+         7mU+8mORrmc9q/ORnH+x2vDefb1LtVV6iTGbgiNEBfpoHUwph+CphQslVXBQHtwJQzYg
+         mB77kYNWm9mdKUH8larOHEe+e/Z1eS6xQxIREduY4QsbHbeGNUrKFjK5QyNS4NzKI7wT
+         iCOpI9YGw10bqJtpJmj97JAWmn4WF66HWm3ktah/C5NSNzmRYURQdbovlgUwytq2QCQG
+         f4DFsp7XvJALWqyKG74YYX4+5BKW8iM8z4B+PCzlfJ+F4XPed7WGvZwLkDIe10+6wnOK
+         JKUw==
+X-Gm-Message-State: APjAAAVKpsskHF19Ry6pHpP3CI3nXJZH2HRe/Xl8F9acY0gnfpGpqksL
+        8BJvooFQGBtbZb5UIr/Hc80=
+X-Google-Smtp-Source: APXvYqz1yV3Og4tgavJ7jYF8TahNSxe9f0BkuWTgO7caJeJH4zHFwUizxFbRctkv5B94vfYcHinruQ==
+X-Received: by 2002:a2e:1b8a:: with SMTP id c10mr14788678ljf.139.1557312293344;
+        Wed, 08 May 2019 03:44:53 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id 17sm2081193lju.3.2019.05.08.03.44.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 03:44:52 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: serial_core: Set port active bit in uart_port_activate
+Date:   Wed,  8 May 2019 13:44:41 +0300
+Message-Id: <20190508104441.16842-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
-add support for disabling given USB device interface by adding nodes to
-the USB host controller device. The mentioned commit however identifies
-the given USB interface node only by the 'reg' property in the host
-controller children nodes and then checks for their the 'status'. The USB
-device interface nodes however also has to have a 'compatible' property as
-described in Documentation/devicetree/bindings/usb/usb-device.txt. This is
-important, because USB host controller might have child-nodes for other
-purposes. For example, Exynos EHCI and OHCI drivers already define
-child-nodes for each physical root hub port and assigns respective PHY
-controller and parameters for them. This conflicts with the proposed
-approach and verifying for the presence of the compatible property fixes
-this issue without changing the bindings and the way the PHY controllers
-are handled by Exynos EHCI/OHCI drivers.
+A bug was introduced by commit b3b576461864 ("tty: serial_core: convert
+uart_open to use tty_port_open"). It caused a constant warning printed
+into the system log regarding the tty and port counter mismatch:
 
-Reported-by: Markus Reichl <m.reichl@fivetechno.de>
-Fixes: 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+[   21.644197] ttyS ttySx: tty_port_close_start: tty->count = 1 port count = 2
+
+in case if session hangup was detected so the warning is printed starting
+from the second open-close iteration.
+
+Particularly the problem was discovered in situation when there is a
+serial tty device without hardware back-end being setup. It is considered
+by the tty-serial subsystems as a hardware problem with session hang up.
+In this case uart_startup() will return a positive value with TTY_IO_ERROR
+flag set in corresponding tty_struct instance. The same value will get
+passed to be returned from the activate() callback and then being returned
+from tty_port_open(). But since in this case tty_port_block_til_ready()
+isn't called the TTY_PORT_ACTIVE flag isn't set (while the method had been
+called before tty_port_open conversion was introduced and the rest of the
+subsystem code expected the bit being set in this case), which prevents the
+uart_hangup() method to perform any cleanups including the tty port
+counter setting to zero. So the next attempt to open/close the tty device
+will discover the counters mismatch.
+
+In order to fix the problem we need to manually set the TTY_PORT_ACTIVE
+flag in case if uart_startup() returned a positive value. In this case
+the hang up procedure will perform a full set of cleanup actions including
+the port ref-counter resetting.
+
+Fixes: b3b576461864 "tty: serial_core: convert uart_open to use tty_port_open"
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/usb/core/message.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/serial_core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
-index e844bb7b5676..6f7d047392bd 100644
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -2009,6 +2009,7 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
- 		struct usb_interface *intf = cp->interface[i];
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 351843f847c0..9113e07952d1 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1776,6 +1776,7 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
+ {
+ 	struct uart_state *state = container_of(port, struct uart_state, port);
+ 	struct uart_port *uport;
++	int ret;
  
- 		if (intf->dev.of_node &&
-+		    of_find_property(intf->dev.of_node, "compatible", NULL) &&
- 		    !of_device_is_available(intf->dev.of_node)) {
- 			dev_info(&dev->dev, "skipping disabled interface %d\n",
- 				 intf->cur_altsetting->desc.bInterfaceNumber);
+ 	uport = uart_port_check(state);
+ 	if (!uport || uport->flags & UPF_DEAD)
+@@ -1786,7 +1787,11 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
+ 	/*
+ 	 * Start up the serial port.
+ 	 */
+-	return uart_startup(tty, state, 0);
++	ret = uart_startup(tty, state, 0);
++	if (ret > 0)
++		tty_port_set_active(port, 1);
++
++	return ret;
+ }
+ 
+ static const char *uart_type(struct uart_port *port)
 -- 
-2.17.1
+2.21.0
 
