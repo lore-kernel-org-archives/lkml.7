@@ -2,85 +2,105 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15C3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496E9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D7721726
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FA4216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:53:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jN1XFAMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfEHQwD (ORCPT
+        id S1728776AbfEHQxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:52:03 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:54432 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbfEHQwB (ORCPT
+        Wed, 8 May 2019 12:53:32 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35518 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbfEHQxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:52:01 -0400
-Received: by mail-it1-f200.google.com with SMTP id w1so2683655itk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:52:01 -0700 (PDT)
+        Wed, 8 May 2019 12:53:31 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so10213635plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1VcQ/lfM08SXvOgnrylDwHXID+O2QS5SQTEiTY7pKR4=;
+        b=jN1XFAMDjh462U6OA3bEn3+sOAOeu2mFwIEJudjbEPRy8O94uCF1olVHEjD2qH7zIX
+         TTPJ1TZoT/s3boPM44QZ+tENF2k8vNVHzQ1lE1iTIuCdWyKtdwXQM8OYvqJc11Kp/56s
+         KNaB4KfPG1zkYr8T2yV/Zmrb1T1j9wYdKbmRcKh8DIq53a6IiEUgJkuGwMpo/aB+25Lb
+         A8uRkgjVxmypEqaeUtKKNknQIYHBICCRWbR0ccMpMvWp+eNFHw3oXLF2aA02UD91EzGH
+         aKD8+5WPacr6QLCkOQNebiM1WIHTLMOaj4JzjoavAdZRHcXw5U+mWzBUMhr+1Cf+aWWq
+         NRNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=0mythnzPfhPVWyHlhf2vS5jhrjHuHUNNfUDlg+aYw9A=;
-        b=eSDsfN4JkFHLdvt0HpYNhY/0HbaACSddfmaXFjr7Uod0nI3hI6TJYIXpNYb8nKbMd2
-         eUMdGNawAmXbzVMfuvbCbBGkkChRdxMJyDSxhuJl1jLwQbQIOdY8jTX7de7iSONsXcc7
-         htKfUeYH1qOIby3JYgX/oZJfyj95c6HBvnGUvWhNPWAE+hLopkJoNiX1oh7bZNL0P9/W
-         95Qpe7gVZhTTCo96mfM8uFe6JkHiENkAFPnRAsGGjSYM2tx+t4vTzui0mG0HXkrWuh+T
-         S2tUULNDZqmj3BjGQLDREpCaZ/If4jaYNIA0KEF5P3GePWBv2kxYgXE7zwETLlTVnFmr
-         IlPA==
-X-Gm-Message-State: APjAAAVg2kfiOyAHx9JEDST1CszMoHdNl+gJVlyqg8goHoT9HSckFPhy
-        +ATBFj/puL3yHVxUIr5vlH5KBf/mzthLiUA3D+bJTJ+qL3tL
-X-Google-Smtp-Source: APXvYqzn8EGCMk5VzujP7HVqRUmMSRCGOcAA/AZcz33of0OiGm4u2Q+CbAdIyc3cECPxBabsd8wQ6BLVyHwoK22/ZFtvHA6zWcpP
-MIME-Version: 1.0
-X-Received: by 2002:a02:b088:: with SMTP id v8mr30068575jah.21.1557334320874;
- Wed, 08 May 2019 09:52:00 -0700 (PDT)
-Date:   Wed, 08 May 2019 09:52:00 -0700
-In-Reply-To: <000000000000a573da058858083c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fe103805886326ea@google.com>
-Subject: Re: WARNING in cgroup_exit
-From:   syzbot <syzbot+f14868630901fc6151d3@syzkaller.appspotmail.com>
-To:     alexander.h.duyck@intel.com, amritha.nambiar@intel.com,
-        andriy.shevchenko@linux.intel.com, ast@kernel.org,
-        bpf@vger.kernel.org, cgroups@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, dmitry.torokhov@gmail.com,
-        f.fainelli@gmail.com, guro@fb.com, hannes@cmpxchg.org,
-        idosch@mellanox.com, kafai@fb.com, linux-kernel@vger.kernel.org,
-        lizefan@huawei.com, netdev@vger.kernel.org, sfr@canb.auug.org.au,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tj@kernel.org, tyhicks@canonical.com, wanghai26@huawei.com,
-        yhs@fb.com, yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1VcQ/lfM08SXvOgnrylDwHXID+O2QS5SQTEiTY7pKR4=;
+        b=MgKXbg7BZW2C5OgP/VrdArCGlhR52PNeRB7n7dzNs/u9fnIU0oPihMWouQAbFUHDRH
+         i4wmYmhi1XUcabp6mOghJV2U98bMgrUrZviJ9u7iN8SywgqynqosXJ3iY9noLRhnV5EW
+         gxJw4cA3hmmEI4OAPDPrV1M6DiVqOSpCbfVRYHFJCTUQzd3vxmtZ3Z1d1nQUManKr6Ne
+         Y9aOthsRQf+KQM1svFuMqo86RgWw+AWeRIQorP8Z+fXsqcXYLm5FBKsWhqBUrUWtzWxO
+         mrSGv8HsIHy85uzyhOxsjTmu7I7mBz+uvLVVst9UzJfdfZKAfPJV3OoTuLMNUxwoSozF
+         cVVQ==
+X-Gm-Message-State: APjAAAWDn4971rfyJjySWhLR2TYg5UdkIWRG7xGp7NS8wOBNivZr1TDq
+        JGWrWSBebg2wfc4w1zurE5F62Ig7cg==
+X-Google-Smtp-Source: APXvYqw5M4RV8ZNy/CF3V1SZqj526bLnkLBNlYsA5DALAlbnfTvqNGI5VFJpDWDlA4dyk1hBsISLsA==
+X-Received: by 2002:a17:902:e407:: with SMTP id ci7mr48331151plb.219.1557334410313;
+        Wed, 08 May 2019 09:53:30 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6000:7ab1:cd79:1ccc:df38:79c0])
+        by smtp.gmail.com with ESMTPSA id m2sm25180676pfi.24.2019.05.08.09.53.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 09:53:29 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/4] Add reset controller support for BM1880 SoC
+Date:   Wed,  8 May 2019 22:23:15 +0530
+Message-Id: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hello,
 
-commit e42940e8559c8bbffa8286cc78067c75eb42b374
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Tue May 7 01:03:30 2019 +0000
+This patchset adds reset controller support for Bitmain BM1880 SoC.
+BM1880 SoC has two reset controllers each controlling reset lines of
+different peripherals. And the reset-simple driver has been reused here.
 
-     Merge remote-tracking branch 'rdma/for-next'
+This patchset has been tested on 96Boards Sophon Edge board.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1746b4e8a00000
-start commit:   00c3bc00 Add linux-next specific files for 20190507
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14c6b4e8a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10c6b4e8a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=63cd766601c6c9fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=f14868630901fc6151d3
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fcf758a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1202ffa4a00000
+Thanks,
+Mani
 
-Reported-by: syzbot+f14868630901fc6151d3@syzkaller.appspotmail.com
-Fixes: e42940e8559c ("Merge remote-tracking branch 'rdma/for-next'")
+Changes in v2:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+As per review from Philipp:
+
+* Reused reset_simple_active_low struct instead of a new one for bm1880
+* Splitted the SPDX license change to a separate commit
+* Added Reviewed-by tags from Rob and Philipp
+
+Manivannan Sadhasivam (4):
+  dt-bindings: reset: Add devicetree binding for BM1880 reset controller
+  arm64: dts: bitmain: Add reset controller support for BM1880 SoC
+  reset: Add reset controller support for BM1880 SoC
+  reset: Switch to SPDX license identifier for reset-simple
+
+ .../bindings/reset/bitmain,bm1880-reset.txt   |  18 +++
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  17 +++
+ drivers/reset/Kconfig                         |   3 +-
+ drivers/reset/reset-simple.c                  |   8 +-
+ .../dt-bindings/reset/bitmain,bm1880-reset.h  | 106 ++++++++++++++++++
+ 5 files changed, 146 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/bitmain,bm1880-reset.txt
+ create mode 100644 include/dt-bindings/reset/bitmain,bm1880-reset.h
+
+-- 
+2.17.1
+
