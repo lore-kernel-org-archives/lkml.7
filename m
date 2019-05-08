@@ -6,28 +6,30 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A75C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB90FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE9020989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919CF20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfEHOrt (ORCPT
+        id S1728814AbfEHOs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:47:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57670 "EHLO mga06.intel.com"
+        Wed, 8 May 2019 10:48:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:51 -0400
+        id S1728423AbfEHOou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:50 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:51 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656569"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 08 May 2019 07:44:46 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 474571101; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id BF156D4A; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +46,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 51/62] iommu/vt-d: Support MKTME in DMA remapping
-Date:   Wed,  8 May 2019 17:44:11 +0300
-Message-Id: <20190508144422.13171-52-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 41/62] keys/mktme: Support memory hotplug for MKTME keys
+Date:   Wed,  8 May 2019 17:44:01 +0300
+Message-Id: <20190508144422.13171-42-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,111 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-When MKTME is enabled, keyid is stored in the high order bits of physical
-address. For DMA transactions targeting encrypted physical memory, keyid
-must be included in the IOVA to physical address translation.
+Newly added memory may mean that there is a newly added physical
+package.  Intel platforms supporting MKTME need to know about the
+new physical packages that may appear during MEM_GOING_ONLINE
+events.
 
-This patch appends page keyid when setting up the IOMMU PTEs. On the
-reverse direction, keyid bits are cleared in the physical address lookup.
-Mapping functions of both DMA ops and IOMMU ops are covered.
+Add a memory notifier for MEM_GOING_ONLINE events where MKTME
+can evaluate this new memory before it goes online.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+MKTME will quickly NOTIFY_OK in MEM_GOING_ONLINE events if no MKTME
+keys are currently programmed. If the newly added memory presents
+an unsafe MKTME topology, that will be found and reported during the
+next key creation attempt. (User can repair and retry.)
+
+When MKTME keys are currently programmed, MKTME will evaluate the
+platform topology, detect if a new PCONFIG target has been added,
+and program that new pconfig target if allowable.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- drivers/iommu/intel-iommu.c | 29 +++++++++++++++++++++++++++--
- include/linux/intel-iommu.h |  9 ++++++++-
- 2 files changed, 35 insertions(+), 3 deletions(-)
+ security/keys/mktme_keys.c | 57 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 28cb713d728c..1ff7e87e25f1 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -862,6 +862,28 @@ static void free_context_table(struct intel_iommu *iommu)
- 	spin_unlock_irqrestore(&iommu->lock, flags);
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index 489dddb8c623..904748b540c6 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -8,6 +8,7 @@
+ #include <linux/init.h>
+ #include <linux/key.h>
+ #include <linux/key-type.h>
++#include <linux/memory.h>
+ #include <linux/mm.h>
+ #include <linux/parser.h>
+ #include <linux/percpu-refcount.h>
+@@ -626,6 +627,56 @@ static int mktme_program_new_pconfig_target(int new_pkg)
+ 	return ret;
  }
  
-+static inline void set_pte_mktme_keyid(unsigned long phys_pfn,
-+		phys_addr_t *pteval)
++static int mktme_memory_callback(struct notifier_block *nb,
++				 unsigned long action, void *arg)
 +{
-+	unsigned long keyid;
++	unsigned long flags;
++	int ret, new_target;
 +
-+	if (!pfn_valid(phys_pfn))
-+		return;
++	/* MEM_GOING_ONLINE is the only mem event of interest to MKTME */
++	if (action != MEM_GOING_ONLINE)
++		return NOTIFY_OK;
 +
-+	keyid = page_keyid(pfn_to_page(phys_pfn));
++	/* Do not allow key programming during hotplug event */
++	spin_lock_irqsave(&mktme_lock, flags);
 +
-+#ifdef CONFIG_X86_INTEL_MKTME
 +	/*
-+	 * When MKTME is enabled, set keyid in PTE such that DMA
-+	 * remapping will include keyid in the translation from IOVA
-+	 * to physical address. This applies to both user and kernel
-+	 * allocated DMA memory.
++	 * If no keys are actually programmed let this event proceed.
++	 * The topology will be checked on the next key creation attempt.
 +	 */
-+	*pteval &= ~mktme_keyid_mask;
-+	*pteval |= keyid << mktme_keyid_shift;
-+#endif
++	if (!mktme_map->mapped_keyids) {
++		mktme_allow_keys = false;
++		ret = NOTIFY_OK;
++		goto out;
++	}
++	/* Do not allow this event if it creates an unsafe MKTME topology */
++	if (!mktme_hmat_evaluate()) {
++		ret = NOTIFY_BAD;
++		goto out;
++	}
++	/* Topology is safe. Is there a new pconfig target? */
++	new_target = mktme_get_new_pconfig_target();
++
++	/* No new target to program */
++	if (new_target < 0) {
++		ret = NOTIFY_OK;
++		goto out;
++	}
++	if (mktme_program_new_pconfig_target(new_target))
++		ret = NOTIFY_BAD;
++	else
++		ret = NOTIFY_OK;
++
++out:
++	spin_unlock_irqrestore(&mktme_lock, flags);
++	return ret;
 +}
 +
- static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 				      unsigned long pfn, int *target_level)
- {
-@@ -888,7 +910,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 			break;
- 
- 		if (!dma_pte_present(pte)) {
--			uint64_t pteval;
-+			phys_addr_t pteval;
- 
- 			tmp_page = alloc_pgtable_page(domain->nid);
- 
-@@ -896,7 +918,8 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 				return NULL;
- 
- 			domain_flush_cache(domain, tmp_page, VTD_PAGE_SIZE);
--			pteval = ((uint64_t)virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
-+			pteval = (virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
-+			set_pte_mktme_keyid(virt_to_dma_pfn(tmp_page), &pteval);
- 			if (cmpxchg64(&pte->val, 0ULL, pteval))
- 				/* Someone else set it while we were thinking; use theirs. */
- 				free_pgtable_page(tmp_page);
-@@ -2289,6 +2312,8 @@ static int __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
- 			}
- 
- 		}
-+		set_pte_mktme_keyid(phys_pfn, &pteval);
++static struct notifier_block mktme_memory_nb = {
++	.notifier_call = mktme_memory_callback,
++	.priority = 99,				/* priority ? */
++};
 +
- 		/* We don't need lock here, nobody else
- 		 * touches the iova range
- 		 */
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index fa364de9db18..48a377a2b896 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -34,6 +34,8 @@
- 
- #include <asm/cacheflush.h>
- #include <asm/iommu.h>
-+#include <asm/page.h>
-+
- 
- /*
-  * VT-d hardware uses 4KiB page size regardless of host page size.
-@@ -603,7 +605,12 @@ static inline void dma_clear_pte(struct dma_pte *pte)
- static inline u64 dma_pte_addr(struct dma_pte *pte)
+ static int __init init_mktme(void)
  {
- #ifdef CONFIG_64BIT
--	return pte->val & VTD_PAGE_MASK;
-+	u64 addr = pte->val;
-+	addr &= VTD_PAGE_MASK;
-+#ifdef CONFIG_X86_INTEL_MKTME
-+	addr &= ~mktme_keyid_mask;
-+#endif
-+	return addr;
- #else
- 	/* Must have a full atomic 64-bit read */
- 	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) & VTD_PAGE_MASK;
+ 	int ret, cpuhp;
+@@ -679,10 +730,16 @@ static int __init init_mktme(void)
+ 	if (cpuhp < 0)
+ 		goto free_store;
+ 
++	/* Memory hotplug */
++	if (register_memory_notifier(&mktme_memory_nb))
++		goto remove_cpuhp;
++
+ 	ret = register_key_type(&key_type_mktme);
+ 	if (!ret)
+ 		return ret;			/* SUCCESS */
+ 
++	unregister_memory_notifier(&mktme_memory_nb);
++remove_cpuhp:
+ 	cpuhp_remove_state_nocalls(cpuhp);
+ free_store:
+ 	kfree(mktme_key_store);
 -- 
 2.20.1
 
