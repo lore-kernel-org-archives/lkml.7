@@ -6,62 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7541DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA44BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BA820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CD6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557345611;
-	bh=+RbsCVc0D1Vp7kPBcoQ7WWuR9heN09HLyUNJwzQyv84=;
+	s=default; t=1557345617;
+	bh=jU00zmojyJrH3PQ4UK53p79SwLBRlj9HrE1gGey9lX0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=jZSa6QynYnR/r4KWsrdHWAz8vwmhTkMesAIzj+S6fKYYtOV34ZVvZ32b0qVFGfuvQ
-	 ovmlrIjpa2HcjJ39paIyAT8EAPjyw+VBBuRWeLG+82IocRXBC4JYUgN20aTXm0x+YK
-	 Ump/iezp1Un/sUlW4tKfJ5IOvhtLiOKv1G3BXUs0=
+	b=vV+my3RdbIH8ssI0o2sr6sEXe5A0day+o4RQWW2wRP4dS4OcqWCCRaJ3RiQ5DDQ8l
+	 QtZIdNW7m39DsZQlStMNNrTwA1k8td9t1EWFdN5GKFadJ6gVW8QW1dXaSaDTN8E7cQ
+	 dWY1ZENCK6QG0IIX3Y4S/NXF9FJhSvpKIyerl/BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfEHUAK (ORCPT
+        id S1728523AbfEHUAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 16:00:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbfEHUAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:00:10 -0400
-Subject: Re: [GIT PULL] csky fixes for v5.1-rc7
+        id S1728184AbfEHUAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 16:00:15 -0400
+Subject: Re: [GIT PULL] Kbuild updates for v5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557345609;
-        bh=+RbsCVc0D1Vp7kPBcoQ7WWuR9heN09HLyUNJwzQyv84=;
+        s=default; t=1557345614;
+        bh=jU00zmojyJrH3PQ4UK53p79SwLBRlj9HrE1gGey9lX0=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=d8moxosP8NBek18dTydTkVX3VU5pCp5oCRcneipYd4mFVMSTKbpfF68Euhn5MKmUF
-         By1JpNIMvG/ZnQw9uNg299GZ+ttJ0RlYFSkmTJzUNoaNyNJMZh9t03MC4eYejU7335
-         4jXMrnemPsCSFjShPqqhTX+PO4jJkDUkpoZuQ0LY=
+        b=mH8oAV4QF7JmSp8gPUP+pSwVJwCG+0HtCb+P9zFUESZoiLLCqx1K/yGeWblqQ7oNa
+         wFdgAP6PdH5NKkZwhS71IWTHC9CJaIijXT7CZhssPA2i/lsiejbzpERrw55PXwp2y7
+         paQSfKG+zrx4DbCTy3mzE1xQvpyhhk2QgRybiS3w=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1556181403-3881-1-git-send-email-guoren@kernel.org>
-References: <1556181403-3881-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <CAK7LNARG6if48VWsFTYmKstm+2jPSbrZRimVbD2W4a4AmBqmOA@mail.gmail.com>
+References: <CAK7LNARG6if48VWsFTYmKstm+2jPSbrZRimVbD2W4a4AmBqmOA@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1556181403-3881-1-git-send-email-guoren@kernel.org>
-X-PR-Tracked-Remote: https://github.com/c-sky/csky-linux.git
- tags/csky-for-linus-5.1-rc7
-X-PR-Tracked-Commit-Id: a691f3334d58b833e41d56de1b9820e687edcd78
+X-PR-Tracked-Message-Id: <CAK7LNARG6if48VWsFTYmKstm+2jPSbrZRimVbD2W4a4AmBqmOA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ tags/kbuild-v5.2
+X-PR-Tracked-Commit-Id: 7fb1fc420f3b1cb27cce5aa1050eb5d9161d0944
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ce45327ca044415a5832dacfb76cdcfb747e3240
-Message-Id: <155734560963.27473.1371616025731122852.pr-tracker-bot@kernel.org>
-Date:   Wed, 08 May 2019 20:00:09 +0000
-To:     guoren@kernel.org
-Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        ren_guo@c-sky.com
+X-PR-Merge-Commit-Id: 2646719a48c21ba0cae82a3f57382a9573fd8400
+Message-Id: <155734561473.27473.17805337229531164111.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 May 2019 20:00:14 +0000
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        masahiroy@kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 25 Apr 2019 16:36:43 +0800:
+The pull request you sent on Wed, 8 May 2019 23:47:39 +0900:
 
-> https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.1-rc7
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-v5.2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ce45327ca044415a5832dacfb76cdcfb747e3240
+https://git.kernel.org/torvalds/c/2646719a48c21ba0cae82a3f57382a9573fd8400
 
 Thank you!
 
