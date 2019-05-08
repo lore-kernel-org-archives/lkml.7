@@ -2,226 +2,170 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81305C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4201C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CC02053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6628C21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:14:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="KDSw0uk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfEHTI1 (ORCPT
+        id S1727813AbfEHTOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:08:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51282 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfEHTI1 (ORCPT
+        Wed, 8 May 2019 15:14:52 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:44158 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfEHTOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:08:27 -0400
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hORvU-0002By-8Y
-        for linux-kernel@vger.kernel.org; Wed, 08 May 2019 19:08:24 +0000
-Received: by mail-pl1-f200.google.com with SMTP id 94so10305062plc.19
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:08:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=u/gtimdpE5wVGQt8oZN/N6N0CKaogPVcjLKdVZGvG9E=;
-        b=fXCWknfUs3Gb/J0oOB/MqZ3YM5BzCgLHUWPvZdCz3gaNOmEOrh3KeSIJWR3aAOld0w
-         zuAB38bp1Ji0SXep1fY4miCLcH+chGIZo8VX83h08YvUAqmwCKD9Q3+PS4UDvdZnbFDm
-         e26PZowrBvtEZ9KA/kI4B0bXN6KWdUUF8koea9sajs7esFY/HQOnDXlVOBjJpMkiDnGs
-         bD5kd01rcIDSN22zOU7gG8upsZTeMQneYa42Zd9PiEMrLM+Sw9fFWbyMeABKKfcDEvf6
-         a6cwWLUJZqABKzWqHZJk7TGPDVVQTM2RCFCSzfqvh0WsFbdK1FH18af9NwWa/v4I9G0Z
-         sH+g==
-X-Gm-Message-State: APjAAAVRDWxGrbFQqQC4VekAgoqCdL/A4dP7/S+weSCavVNFApChm01a
-        KkwJ02RdzJSM+u6UTLeFn3hMr72dt9yZghmn0kS1vlMKWKiiWtiV22FY5WKFGR5Q+/OBtXkX4nn
-        ths3huWQqi4Ev5coM5Y0/a9aL4kix4dNkjHFbBcLjIw==
-X-Received: by 2002:a63:8c7:: with SMTP id 190mr48430406pgi.447.1557342502960;
-        Wed, 08 May 2019 12:08:22 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqybhQXIJdlYLGtbjf8SC7522IGPOdrLeEqwhZ5H8NJ8sWCH5gYWRVz6Hx2MyA9svIMhLccu+A==
-X-Received: by 2002:a63:8c7:: with SMTP id 190mr48430360pgi.447.1557342502590;
-        Wed, 08 May 2019 12:08:22 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-6c77-9209-16a5-cedd.dynamic-ip6.hinet.net (2001-b011-380f-14b9-6c77-9209-16a5-cedd.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:6c77:9209:16a5:cedd])
-        by smtp.gmail.com with ESMTPSA id m11sm23260306pgd.12.2019.05.08.12.08.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 12:08:22 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH v2] cifs: fix strcat buffer overflow and reduce raciness
- in smb21_set_oplock_level()
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAKywueQmjm3vhGZkLdB6J2rpjmKA6m0=N4A6bnsq3MW4acYHLQ@mail.gmail.com>
-Date:   Thu, 9 May 2019 03:08:19 +0800
-Cc:     Steve French <smfrench@gmail.com>,
-        Christoph Probst <kernel@probst.it>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <01E2E7DE-526D-4AA2-9C88-7BED8DE4A8E9@canonical.com>
-References: <1557242200-26194-1-git-send-email-kernel@probst.it>
- <CAH2r5mtqkHYbHJkf_LbAjhujnNRQP6Zmkmqhj1dUHomwsc3e=w@mail.gmail.com>
- <CAKywueSJCs2B2cGmZvGNfxDU7KNvkBOsuyuaOSV=3GWG80f+kw@mail.gmail.com>
- <A4165E00-AA20-4550-96FE-651271B7091B@canonical.com>
- <CAKywueQmjm3vhGZkLdB6J2rpjmKA6m0=N4A6bnsq3MW4acYHLQ@mail.gmail.com>
-To:     Pavel Shilovsky <piastryyy@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 8 May 2019 15:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1557342890; x=1588878890;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Pj0HWixZ6+yIXE3o4SR/2SPNG+WUOrfPGAwhPHfn3cs=;
+  b=KDSw0uk0sMAnboYsrWkGMW3LgNxjK/+4e1FJAlENF0tLUeQmYroq5x1i
+   D9yiALAcMi2m0zXQiq/DGjucu6G6AO1IGPcYL8K/kdZuz//z78YNQ04ho
+   uS1EoEJG4oFHIm64CEi5kEau8JRsr0Ol/AuZwNdExQo9jx4imttYkYeLx
+   4=;
+X-IronPort-AV: E=Sophos;i="5.60,447,1549929600"; 
+   d="scan'208";a="401369792"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 08 May 2019 19:14:47 +0000
+Received: from u7588a65da6b65f.ant.amazon.com (pdx2-ws-svc-lb17-vlan2.amazon.com [10.247.140.66])
+        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x48JEi2a082802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Wed, 8 May 2019 19:14:46 GMT
+Received: from u7588a65da6b65f.ant.amazon.com (localhost [127.0.0.1])
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x48JEh44024546;
+        Wed, 8 May 2019 21:14:43 +0200
+Subject: Re: [PATCH 3/6] svm: Add support for APIC_ACCESS_PAGE_PRIVATE_MEMSLOT
+ setup/destroy
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
+References: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
+ <20190322115702.10166-4-suravee.suthikulpanit@amd.com>
+From:   =?UTF-8?Q?Jan_H=2e_Sch=c3=b6nherr?= <jschoenh@amazon.de>
+Openpgp: preference=signencrypt
+Message-ID: <5b786dde-1fc4-9abc-ae95-8360e033fb97@amazon.de>
+Date:   Wed, 8 May 2019 21:14:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190322115702.10166-4-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 02:42, Pavel Shilovsky <piastryyy@gmail.com> wrote:
+On 22/03/2019 12.57, Suthikulpanit, Suravee wrote:
+> Activate/deactivate AVIC requires setting/unsetting the memory region used
+> for APIC_ACCESS_PAGE_PRIVATE_MEMSLOT. So, re-factor avic_init_access_page()
+> to avic_setup_access_page() and add srcu_read_lock/unlock, which are needed
+> to allow this function to be called during run-time.
+> 
+> Also, introduce avic_destroy_access_page() to unset the page when
+> deactivate AVIC.
+> 
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> ---
+>  arch/x86/kvm/svm.c | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 4cf93a729ad8..f41f34f70dde 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -1666,7 +1666,7 @@ static u64 *avic_get_physical_id_entry(struct kvm_vcpu *vcpu,
+>   * field of the VMCB. Therefore, we set up the
+>   * APIC_ACCESS_PAGE_PRIVATE_MEMSLOT (4KB) here.
+>   */
+> -static int avic_init_access_page(struct kvm_vcpu *vcpu)
+> +static int avic_setup_access_page(struct kvm_vcpu *vcpu, bool init)
+>  {
+>  	struct kvm *kvm = vcpu->kvm;
+>  	int ret = 0;
+> @@ -1675,10 +1675,14 @@ static int avic_init_access_page(struct kvm_vcpu *vcpu)
+>  	if (kvm->arch.apic_access_page_done)
+>  		goto out;
+>  
+> +	if (!init)
+> +		srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+>  	ret = __x86_set_memory_region(kvm,
+>  				      APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
+>  				      APIC_DEFAULT_PHYS_BASE,
+>  				      PAGE_SIZE);
+> +	if (!init)
+> +		vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
+>  	if (ret)
+>  		goto out;
+>  
+> @@ -1688,6 +1692,26 @@ static int avic_init_access_page(struct kvm_vcpu *vcpu)
+>  	return ret;
+>  }
+>  
+> +static void avic_destroy_access_page(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +
+> +	mutex_lock(&kvm->slots_lock);
+> +
+> +	if (!kvm->arch.apic_access_page_done)
+> +		goto out;
+> +
+> +	srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+> +	__x86_set_memory_region(kvm,
+> +				APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
+> +				APIC_DEFAULT_PHYS_BASE,
+> +				0);
+> +	vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
 
-> ср, 8 мая 2019 г. в 01:23, Kai-Heng Feng <kai.heng.feng@canonical.com>:
->> at 02:28, Pavel Shilovsky <piastryyy@gmail.com> wrote:
->>
->>> вт, 7 мая 2019 г. в 09:13, Steve French via samba-technical
->>> <samba-technical@lists.samba.org>:
->>>> merged into cifs-2.6.git for-next
->>>>
->>>> On Tue, May 7, 2019 at 10:17 AM Christoph Probst via samba-technical
->>>> <samba-technical@lists.samba.org> wrote:
->>>>> Change strcat to strncpy in the "None" case to fix a buffer overflow
->>>>> when cinode->oplock is reset to 0 by another thread accessing the same
->>>>> cinode. It is never valid to append "None" to any other message.
->>>>>
->>>>> Consolidate multiple writes to cinode->oplock to reduce raciness.
->>>>>
->>>>> Signed-off-by: Christoph Probst <kernel@probst.it>
->>>>> ---
->>>>>  fs/cifs/smb2ops.c | 14 ++++++++------
->>>>>  1 file changed, 8 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
->>>>> index c36ff0d..aa61dcf 100644
->>>>> --- a/fs/cifs/smb2ops.c
->>>>> +++ b/fs/cifs/smb2ops.c
->>>>> @@ -2917,26 +2917,28 @@ smb21_set_oplock_level(struct cifsInodeInfo
->>>>> *cinode, __u32 oplock,
->>>>>                        unsigned int epoch, bool *purge_cache)
->>>>>  {
->>>>>         char message[5] = {0};
->>>>> +       unsigned int new_oplock = 0;
->>>>>
->>>>>         oplock &= 0xFF;
->>>>>         if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
->>>>>                 return;
->>>>>
->>>>> -       cinode->oplock = 0;
->>>>>         if (oplock & SMB2_LEASE_READ_CACHING_HE) {
->>>>> -               cinode->oplock |= CIFS_CACHE_READ_FLG;
->>>>> +               new_oplock |= CIFS_CACHE_READ_FLG;
->>>>>                 strcat(message, "R");
->>>>>         }
->>>>>         if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
->>>>> -               cinode->oplock |= CIFS_CACHE_HANDLE_FLG;
->>>>> +               new_oplock |= CIFS_CACHE_HANDLE_FLG;
->>>>>                 strcat(message, "H");
->>>>>         }
->>>>>         if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
->>>>> -               cinode->oplock |= CIFS_CACHE_WRITE_FLG;
->>>>> +               new_oplock |= CIFS_CACHE_WRITE_FLG;
->>>>>                 strcat(message, "W");
->>>>>         }
->>>>> -       if (!cinode->oplock)
->>>>> -               strcat(message, "None");
->>>>> +       if (!new_oplock)
->>>>> +               strncpy(message, "None", sizeof(message));
->>>>> +
->>>>> +       cinode->oplock = new_oplock;
->>>>>         cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
->>>>>                  &cinode->vfs_inode);
->>>>>  }
->>>>> --
->>>>> 2.1.4
->>
->> Doesn’t the race still happen, but implicitly here?
->> cinode->oplock = new_oplock;
->>
->> Is it possible to just introduce a lock to force its proper ordering?
->> e.g.
->>
->> diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
->> index bf5b8264e119..a3c3c6156d17 100644
->> --- a/fs/cifs/cifsfs.c
->> +++ b/fs/cifs/cifsfs.c
->> @@ -267,6 +267,7 @@ cifs_alloc_inode(struct super_block *sb)
->>           * server, can not assume caching of file data or metadata.
->>           */
->>          cifs_set_oplock_level(cifs_inode, 0);
->> +       mutex_init(&cifs_inode->oplock_mutex);
->>          cifs_inode->flags = 0;
->>          spin_lock_init(&cifs_inode->writers_lock);
->>          cifs_inode->writers = 0;
->> diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
->> index 37b5ddf27ff1..6dfd4ab16c4f 100644
->> --- a/fs/cifs/cifsglob.h
->> +++ b/fs/cifs/cifsglob.h
->> @@ -1214,6 +1214,7 @@ struct cifsInodeInfo {
->>          struct list_head openFileList;
->>          __u32 cifsAttrs; /* e.g. DOS archive bit, sparse, compressed, system */
->>          unsigned int oplock;            /* oplock/lease level we have */
->> +       struct mutex oplock_mutex;
->>          unsigned int epoch;             /* used to track lease state changes */
->>   #define CIFS_INODE_PENDING_OPLOCK_BREAK   (0) /* oplock break in progress */
->>   #define CIFS_INODE_PENDING_WRITERS       (1) /* Writes in progress */
->> diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
->> index b20063cf774f..796b23712e71 100644
->> --- a/fs/cifs/smb2ops.c
->> +++ b/fs/cifs/smb2ops.c
->> @@ -1901,6 +1901,7 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode,
->> __u32 oplock,
->>          if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
->>                  return;
->>
->> +       mutex_lock(&cinode->oplock_mutex);
->>          cinode->oplock = 0;
->>          if (oplock & SMB2_LEASE_READ_CACHING_HE) {
->>                  cinode->oplock |= CIFS_CACHE_READ_FLG;
->> @@ -1916,6 +1917,8 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode,
->> __u32 oplock,
->>          }
->>          if (!cinode->oplock)
->>                  strcat(message, "None");
->> +       mutex_unlock(&cinode->oplock_mutex);
->> +
->>          cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
->>                   &cinode->vfs_inode);
->>   }
->>
->> Kai-Heng
->
-> Unless you calculations on the oplock value or accessing it multiple
-> times with some logic involved I don't think locking will help much.
-> If two threads are assigning the same variable, you can end up with
-> two possible outcomes regardless of whether locking is used or not.
+This pattern of "unlock, do something, re-lock" strikes me as odd --
+here and in the setup function.
 
-Yes you are right, didn’t think of this case.
+There seem to be a few assumptions for this to work:
+a) SRCU read-side critical sections must not be nested.
+b) We must not keep any pointer to a SRCU protected structure
+   across a call to this function.
 
->
-> Locking will be needed once we start to make proper decisions based on
-> previous and new values of the oplock to purge a page cache or flush
-> buffered data. This still needs to be done and is out of the scope of
-> this patch which aims to fix the buffer overflow error.
+Can we guarantee these assumptions? Now and in the future (given that this is already
+a bit hidden in the call stack)?
 
-Thanks for your explanation.
+(And if we can guarantee them, why are we holding the SRCU lock in the first place?)
 
-Kai-Heng
+Or is there maybe a nicer way to do this?
 
->
-> --
-> Best regards,
-> Pavel Shilovsky
+Regards
+Jan
 
+> +	kvm->arch.apic_access_page_done = false;
+> +out:
+> +	mutex_unlock(&kvm->slots_lock);
+> +}
+> +
+>  static int avic_init_backing_page(struct kvm_vcpu *vcpu)
+>  {
+>  	int ret;
+> @@ -1695,7 +1719,7 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
+>  	int id = vcpu->vcpu_id;
+>  	struct vcpu_svm *svm = to_svm(vcpu);
+>  
+> -	ret = avic_init_access_page(vcpu);
+> +	ret = avic_setup_access_page(vcpu, true);
+>  	if (ret)
+>  		return ret;
+>  
+> 
 
