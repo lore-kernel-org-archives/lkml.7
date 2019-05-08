@@ -2,122 +2,118 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8714C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DAAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD1E2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4C220644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T0ZJTlKT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VPH/1rlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfEHP1k convert rfc822-to-8bit (ORCPT
+        id S1727315AbfEHP3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:27:40 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:36280 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfEHP1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:27:39 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id CDBEB149B7; Wed,  8 May 2019 16:27:37 +0100 (BST)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] usb: core: verify devicetree nodes for disabled interfaces
-References: <106fc58c-1a4f-6605-41d7-b6031c5751a3@samsung.com>
-        <CGME20190508104442eucas1p2ebdffa348465f2c28177601014614853@eucas1p2.samsung.com>
-        <20190508104434.3409-1-m.szyprowski@samsung.com>
-        <yw1xtve5uq1y.fsf@mansr.com>
-        <e7f32280-57ec-6298-1a5d-8d2d4dc26667@samsung.com>
-Date:   Wed, 08 May 2019 16:27:37 +0100
-In-Reply-To: <e7f32280-57ec-6298-1a5d-8d2d4dc26667@samsung.com> (Marek
-        Szyprowski's message of "Wed, 8 May 2019 15:49:22 +0200")
-Message-ID: <yw1xpnotufti.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Wed, 8 May 2019 11:29:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35338 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfEHP3e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 11:29:34 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7F06D6087D; Wed,  8 May 2019 15:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557329373;
+        bh=7s2pzhCNZ9x0/hSSdDjvRYrf+MYMnUeTbIypuArEr8A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T0ZJTlKTD7V34mxz7FhDYPOAP+XlTr/gqTHttgwzn83YaZXZfmF78XmQ/LNvECPpO
+         7j2qG208hoyoF3r8fEmIU/pMthtOIvB2OgRRXyKgRWhkgdrQ3QbT76x4r3g1nLW/U1
+         p5t6aZzi79ej8P4GqCpAq09qkbxJdHxY/HSW/JlQ=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CFD8C60128;
+        Wed,  8 May 2019 15:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557329372;
+        bh=7s2pzhCNZ9x0/hSSdDjvRYrf+MYMnUeTbIypuArEr8A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VPH/1rlvg4lvwko2hcz0Z5CHc5Tq8VyoRiS6YLTcBbPf6OZhzxY3nA8Q1viWRruel
+         39jPtQFwHKiARq4RD6p/d/GmSqt94R3w+YEgiVDQoB7hxJkhr2DUHByITBXxOhG4/v
+         4ey+jUCqwB5yq/IrI5iEGD1cJRJ7hdJEX0iCg1Ww=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CFD8C60128
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 8 May 2019 09:29:30 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/a6xx: No zap shader is not an error
+Message-ID: <20190508152929.GB24137@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190508130726.27557-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508130726.27557-1-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marek Szyprowski <m.szyprowski@samsung.com> writes:
+On Wed, May 08, 2019 at 06:06:52AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Depending on platform firmware, a zap shader may not be required to take
+> the GPU out of secure mode on boot, in which case we can just write
+> RBBM_SECVID_TRUST_CNTL directly.  Which we *mostly* handled, but missed
+> clearing 'ret' resulting that hw_init() returned an error on these
+> devices.
+> 
+> Fixes: abccb9fe3267 drm/msm/a6xx: Add zap shader load
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-> Hi
->
-> On 2019-05-08 13:46, Måns Rullgård wrote:
->> Marek Szyprowski <m.szyprowski@samsung.com> writes:
->>> Commit 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
->>> add support for disabling given USB device interface by adding nodes to
->>> the USB host controller device. The mentioned commit however identifies
->>> the given USB interface node only by the 'reg' property in the host
->>> controller children nodes and then checks for their the 'status'. The USB
->>> device interface nodes however also has to have a 'compatible' property as
->>> described in Documentation/devicetree/bindings/usb/usb-device.txt. This is
->>> important, because USB host controller might have child-nodes for other
->>> purposes. For example, Exynos EHCI and OHCI drivers already define
->>> child-nodes for each physical root hub port and assigns respective PHY
->>> controller and parameters for them. This conflicts with the proposed
->>> approach and verifying for the presence of the compatible property fixes
->>> this issue without changing the bindings and the way the PHY controllers
->>> are handled by Exynos EHCI/OHCI drivers.
->>>
->>> Reported-by: Markus Reichl <m.reichl@fivetechno.de>
->>> Fixes: 01fdf179f4b0 ("usb: core: skip interfaces disabled in devicetree")
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> ---
->>>   drivers/usb/core/message.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
->>> index e844bb7b5676..6f7d047392bd 100644
->>> --- a/drivers/usb/core/message.c
->>> +++ b/drivers/usb/core/message.c
->>> @@ -2009,6 +2009,7 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
->>>   		struct usb_interface *intf = cp->interface[i];
->>>
->>>   		if (intf->dev.of_node &&
->>> +		    of_find_property(intf->dev.of_node, "compatible", NULL) &&
->>>   		    !of_device_is_available(intf->dev.of_node)) {
->>>   			dev_info(&dev->dev, "skipping disabled interface %d\n",
->>>   				 intf->cur_altsetting->desc.bInterfaceNumber);
->>> -- 
->> I don't think this is the right approach.  We don't want to be adding
->> such checks everywhere the of_node is used.  A better way might be to
->> not set of_node at all in the absence of a proper "compatible" string.
->
-> Right, this will be a better approach. I've just checked the code and a 
-> simple check for 'compatible' property presence can be easily added in 
-> drivers/usb/core/of.c in usb_of_get_device_node() and 
-> usb_of_get_interface_node() functions.
->
-> The second check could be added in drivers/usb/core/hub.c in 
-> usb_new_device() - to ensure that the device's vid/pid matches of_node 
-> compatible string.
->
-> Is this okay? Or just add a latter one?
+Woo, I'm glad we finally got a chance to verify this on both types of systems.
 
-I'm not sure where the best place to check is.  Someone else will have
-to weigh in on that.
+Acked-by: Jordan Crouse <jcrouse@codeaurora.org>
 
->> Then there's the problem of how to resolve the incompatibility between
->> the generic USB and Exynos bindings.  One possible fix could be to use
->> a child node of the controller node to represent the root hub.  Since
->> the driver currently doesn't work at all if a devicetree has nodes for
->> USB devices, there should be no compatibility concerns.
->
-> So far we don't have any use case for adding devicetree nodes for usb 
-> devices under Exynos EHCI/OHCI hcd, so this shouldn't be a problem for now.
-
-None that you know of, that is.  Regardless, the bindings are
-inconsistent, and that needs to be fixed.
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index ec24508b9d68..e74dce474250 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -527,6 +527,7 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+>  		dev_warn_once(gpu->dev->dev,
+>  			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
+>  		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
+> +		ret = 0;
+>  	}
+>  
+>  out:
+> -- 
+> 2.20.1
+> 
 
 -- 
-Måns Rullgård
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
