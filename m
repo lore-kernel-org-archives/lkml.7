@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AD0C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0109AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0332F216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10E4216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfEHOpT (ORCPT
+        id S1728770AbfEHOpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:45:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33094 "EHLO mga07.intel.com"
+        Wed, 8 May 2019 10:45:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59540 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfEHOoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:54 -0400
+        id S1728452AbfEHOow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:51 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:49 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2019 07:44:46 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 5D8901124; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id E5DBEEAA; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 53/62] x86/mm: Use common code for DMA memory encryption
-Date:   Wed,  8 May 2019 17:44:13 +0300
-Message-Id: <20190508144422.13171-54-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 44/62] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
+Date:   Wed,  8 May 2019 17:44:04 +0300
+Message-Id: <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,140 +57,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-Replace sme_ code with x86 memory encryption common code such that
-Intel MKTME can be supported underneath generic DMA code.
-dma_to_phys() & phys_to_dma() results will be runtime modified by
-memory encryption code.
+MKTME architecture requires the KeyID to be placed in PTE bits 51:46.
+To create an encrypted VMA, place the KeyID in the upper bits of
+vm_page_prot that matches the position of those PTE bits.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+When the VMA is assigned a KeyID it is always considered a KeyID
+change. The VMA is either going from not encrypted to encrypted,
+or from encrypted with any KeyID to encrypted with any other KeyID.
+To make the change safely, remove the user pages held by the VMA
+and unlink the VMA's anonymous chain.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mem_encrypt.h | 29 +++++++++++++++++++++++++++++
- arch/x86/mm/mem_encrypt_common.c   |  2 +-
- include/linux/dma-direct.h         |  4 ++--
- include/linux/mem_encrypt.h        | 23 ++++++++++-------------
- 4 files changed, 42 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/mktme.h |  4 ++++
+ arch/x86/mm/mktme.c          | 26 ++++++++++++++++++++++++++
+ include/linux/mm.h           |  6 ++++++
+ 3 files changed, 36 insertions(+)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 616f8e637bc3..a2b69cbb0e41 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -55,8 +55,19 @@ bool sev_active(void);
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index bd6707e73219..0e6df07f1921 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -12,6 +12,10 @@ extern phys_addr_t mktme_keyid_mask;
+ extern int mktme_nr_keyids;
+ extern int mktme_keyid_shift;
  
- #define __bss_decrypted __attribute__((__section__(".bss..decrypted")))
- 
-+/*
-+ * The __sme_set() and __sme_clr() macros are useful for adding or removing
-+ * the encryption mask from a value (e.g. when dealing with pagetable
-+ * entries).
-+ */
-+#define __sme_set(x)		((x) | sme_me_mask)
-+#define __sme_clr(x)		((x) & ~sme_me_mask)
++/* Set the encryption keyid bits in a VMA */
++extern void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
++				unsigned long start, unsigned long end);
 +
- #else	/* !CONFIG_AMD_MEM_ENCRYPT */
- 
-+#define __sme_set(x)		(x)
-+#define __sme_clr(x)		(x)
-+
- #define sme_me_mask	0ULL
- 
- static inline void __init sme_early_encrypt(resource_size_t paddr,
-@@ -97,4 +108,22 @@ extern char __start_bss_decrypted[], __end_bss_decrypted[], __start_bss_decrypte
- 
- #endif	/* __ASSEMBLY__ */
- 
-+#ifdef CONFIG_X86_MEM_ENCRYPT_COMMON
-+
-+extern dma_addr_t __mem_encrypt_dma_set(dma_addr_t daddr, phys_addr_t paddr);
-+extern phys_addr_t __mem_encrypt_dma_clear(phys_addr_t paddr);
-+
-+#else
-+static inline dma_addr_t __mem_encrypt_dma_set(dma_addr_t daddr, phys_addr_t paddr)
-+{
-+	return daddr;
-+}
-+
-+static inline phys_addr_t __mem_encrypt_dma_clear(phys_addr_t paddr)
-+{
-+	return paddr;
-+}
-+#endif /* CONFIG_X86_MEM_ENCRYPT_COMMON */
-+
-+
- #endif	/* __X86_MEM_ENCRYPT_H__ */
-diff --git a/arch/x86/mm/mem_encrypt_common.c b/arch/x86/mm/mem_encrypt_common.c
-index 2adee65eec46..dcc5c710a235 100644
---- a/arch/x86/mm/mem_encrypt_common.c
-+++ b/arch/x86/mm/mem_encrypt_common.c
-@@ -1,5 +1,5 @@
+ DECLARE_STATIC_KEY_FALSE(mktme_enabled_key);
+ static inline bool mktme_enabled(void)
+ {
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index 024165c9c7f3..91b49e88ca3f 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -1,5 +1,6 @@
  #include <linux/mm.h>
--#include <linux/mem_encrypt.h>
-+#include <asm/mem_encrypt.h>
+ #include <linux/highmem.h>
++#include <linux/rmap.h>
  #include <asm/mktme.h>
- 
- /*
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index b7338702592a..a949adeb6558 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -40,12 +40,12 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
-  */
- static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
- {
--	return __sme_set(__phys_to_dma(dev, paddr));
-+	return __mem_encrypt_dma_set(__phys_to_dma(dev, paddr), paddr);
+ #include <asm/pgalloc.h>
+ #include <asm/tlbflush.h>
+@@ -53,6 +54,31 @@ int __vma_keyid(struct vm_area_struct *vma)
+ 	return (prot & mktme_keyid_mask) >> mktme_keyid_shift;
  }
  
- static inline phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
- {
--	return __sme_clr(__dma_to_phys(dev, daddr));
-+	return __mem_encrypt_dma_clear(__dma_to_phys(dev, daddr));
- }
- 
- u64 dma_direct_get_required_mask(struct device *dev);
-diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
-index b310a9c18113..ce8ff0ead16c 100644
---- a/include/linux/mem_encrypt.h
-+++ b/include/linux/mem_encrypt.h
-@@ -26,6 +26,16 @@
- static inline bool sme_active(void) { return false; }
- static inline bool sev_active(void) { return false; }
- 
-+static inline dma_addr_t __mem_encrypt_dma_set(dma_addr_t daddr, phys_addr_t paddr)
++/* Set the encryption keyid bits in a VMA */
++void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
++			  unsigned long start, unsigned long end)
 +{
-+	return daddr;
++	int oldkeyid = vma_keyid(vma);
++	pgprotval_t newprot;
++
++	/* Unmap pages with old KeyID if there's any. */
++	zap_page_range(vma, start, end - start);
++
++	if (oldkeyid == newkeyid)
++		return;
++
++	newprot = pgprot_val(vma->vm_page_prot);
++	newprot &= ~mktme_keyid_mask;
++	newprot |= (unsigned long)newkeyid << mktme_keyid_shift;
++	vma->vm_page_prot = __pgprot(newprot);
++
++	/*
++	 * The VMA doesn't have any inherited pages.
++	 * Start anon VMA tree from scratch.
++	 */
++	unlink_anon_vmas(vma);
 +}
 +
-+static inline phys_addr_t __mem_encrypt_dma_clear(phys_addr_t paddr)
-+{
-+	return paddr;
-+}
-+
- #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
+ /* Prepare page to be used for encryption. Called from page allocator. */
+ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+ {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 2684245f8503..c027044de9bf 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2825,5 +2825,11 @@ void __init setup_nr_node_ids(void);
+ static inline void setup_nr_node_ids(void) {}
+ #endif
  
- static inline bool mem_encrypt_active(void)
-@@ -38,19 +48,6 @@ static inline u64 sme_get_me_mask(void)
- 	return sme_me_mask;
- }
- 
--#ifdef CONFIG_AMD_MEM_ENCRYPT
--/*
-- * The __sme_set() and __sme_clr() macros are useful for adding or removing
-- * the encryption mask from a value (e.g. when dealing with pagetable
-- * entries).
-- */
--#define __sme_set(x)		((x) | sme_me_mask)
--#define __sme_clr(x)		((x) & ~sme_me_mask)
--#else
--#define __sme_set(x)		(x)
--#define __sme_clr(x)		(x)
--#endif
--
- #endif	/* __ASSEMBLY__ */
- 
- #endif	/* __MEM_ENCRYPT_H__ */
++#ifndef CONFIG_X86_INTEL_MKTME
++static inline void mprotect_set_encrypt(struct vm_area_struct *vma,
++					int newkeyid,
++					unsigned long start,
++					unsigned long end) {}
++#endif /* CONFIG_X86_INTEL_MKTME */
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
 -- 
 2.20.1
 
