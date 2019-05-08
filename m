@@ -2,155 +2,117 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA69DC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65565C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9876521479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557275708;
-	bh=J4N6YixzLwWCIbnu1gTRVFrYygdkP5Qoy+v9blwiCnU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BiO4VNy6I4DFxjPrhu9hX9KpyRQvQIfuIZV+hZlrNEElrpZ5kPFFUf9h5QJKWi9Z0
-	 7mWPV5SnNToX936MfYK645xJq2o9Z58qxkNLVnrS4bqFr2ibXJp2qL03823ipJ2llQ
-	 PY+dEu1RXbFI26q86f3v+h2mZYfUMfWO7swMyBTY=
+	by mail.kernel.org (Postfix) with ESMTP id 311D2214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="P9wByt6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfEHAfG (ORCPT
+        id S1726428AbfEHAjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfEHAfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:35:06 -0400
-Received: from localhost (lfbn-1-18355-218.w90-101.abo.wanadoo.fr [90.101.143.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E3920656;
-        Wed,  8 May 2019 00:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557275705;
-        bh=J4N6YixzLwWCIbnu1gTRVFrYygdkP5Qoy+v9blwiCnU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LuRKN9wPEKKLZvOibZROu4a6gr3gRVdYBLb6GV8Wm3z1opDiINjO1iBAw9hpZAPGe
-         ZnvWI9/x9RQ95gUq+8VSEfUycNt20ENxTTpULLcycFKF0cV1XJq976ssdl06jE+frq
-         trsXC5dAZuscfHYy0pkO3Ia/edWyGRA7220n5kik=
-Date:   Wed, 8 May 2019 02:35:02 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     fweisbec@gmail.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        linux-tip-commits@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, rafael.j.wysocki@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org
-Subject: Re: [tip:sched/core] sched/isolation: Require a present CPU in
- housekeeping mask
-Message-ID: <20190508003458.GA21658@lenoir>
-References: <20190411033448.20842-5-npiggin@gmail.com>
- <tip-9219565aa89033a9cfdae788c1940473a1253d6c@git.kernel.org>
- <20190504002733.GB19076@lenoir>
- <1556952021.2xpa7joi2y.astroid@bobo.none>
- <20190506151615.GA14529@lenoir>
- <1557186148.ocs72ssdjc.astroid@bobo.none>
+        Tue, 7 May 2019 20:39:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35022 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHAjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:39:05 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c15so2195041qkl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 17:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v9eQGAXN/pUrwyhsEw4eGQ0SnWi81FsI3CN7zGHdMUY=;
+        b=P9wByt6X7/7EYnOVIL+L4niq5xhOsA7fNdy5JhqzkC2EDOnh6kD8+oRsJPsdP6yTAn
+         hLOOu+3ZGncE0jEbvAgByRNnn70mDcYt296iT4kYbIIRgE08hQwnom7YGmfQFAlW7PuJ
+         AVzyFOjo2yMMctzMlPy4UQ2Fmb9VpcnsvuYK+LZq8s+L4PYPPbPbnkUHyECTP0kIK0dp
+         QEKXyP6+DptIl+Lf3PfBMTTdDKxsia6+spQ8TnQAz+BbJ3V3To/mQEbKLRPX/n61dog3
+         aLGMxm+ZD71/nRb/gNTB/S1yrclRU6Q4FfuaDiG8F82F17ceo/iPfDSsqiOwQ5uC/C6P
+         iKNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v9eQGAXN/pUrwyhsEw4eGQ0SnWi81FsI3CN7zGHdMUY=;
+        b=oQ7p6/3a1U7nX95u+R0SeMyYNouQ3C458U4vy6FHbKbPHdbMjPvIIbgjZXpZJ8ftmM
+         kVrpWeTlBaMb9mvJfwF0TTuII2OKrWJnCWzvnFR4x+BcKgDPE9Rgm3nCZIt219Nt/Bsd
+         yY3X0XFQX4aTQzZj4ANxjnv/Z6Txp4ExKu8D4QVOQp90DNpyG1BCOpEICn8Wyw2iZ1NZ
+         mPyVKifIROivM/X7F+EjQXH/2crA7FUpelIHdP7UMVCnADM9Y96emZQt1GteBs2HfLZ9
+         ILxTK8YVAfwGhSZMOoKzM4CvjQa5cfICCKWZ/i88kruaiXkV04KKFldt/fe6DEVh+Be1
+         7xOg==
+X-Gm-Message-State: APjAAAWI+yBLYijlh/5WuFe+bH/3R5r3ZqUekP+9lJLfqNrWfpIbXIEM
+        r26vMBEbAnrqZjIIyOXSBSBwWA==
+X-Google-Smtp-Source: APXvYqx3wh7S/VSM6RE3kBIPQ5Eso3w/I/f0YhknfHS271wzjV4Ff5Ktu4I1WFAP3qSFDXkbyyk1vw==
+X-Received: by 2002:ae9:d844:: with SMTP id u65mr25749828qkf.310.1557275944782;
+        Tue, 07 May 2019 17:39:04 -0700 (PDT)
+Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id o37sm8153984qte.55.2019.05.07.17.39.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 17:39:03 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, catalin.marinas@arm.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] slab: skip kmemleak_object in leaks_show()
+Date:   Tue,  7 May 2019 20:38:38 -0400
+Message-Id: <20190508003838.62264-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557186148.ocs72ssdjc.astroid@bobo.none>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:50:24AM +1000, Nicholas Piggin wrote:
-> Frederic Weisbecker's on May 7, 2019 1:16 am:
-> > On Sat, May 04, 2019 at 04:59:12PM +1000, Nicholas Piggin wrote:
-> >> Frederic Weisbecker's on May 4, 2019 10:27 am:
-> >> > On Fri, May 03, 2019 at 10:47:37AM -0700, tip-bot for Nicholas Piggin wrote:
-> >> >> Commit-ID:  9219565aa89033a9cfdae788c1940473a1253d6c
-> >> >> Gitweb:     https://git.kernel.org/tip/9219565aa89033a9cfdae788c1940473a1253d6c
-> >> >> Author:     Nicholas Piggin <npiggin@gmail.com>
-> >> >> AuthorDate: Thu, 11 Apr 2019 13:34:47 +1000
-> >> >> Committer:  Ingo Molnar <mingo@kernel.org>
-> >> >> CommitDate: Fri, 3 May 2019 19:42:58 +0200
-> >> >> 
-> >> >> sched/isolation: Require a present CPU in housekeeping mask
-> >> >> 
-> >> >> During housekeeping mask setup, currently a possible CPU is required.
-> >> >> That does not guarantee the CPU would be available at boot time, so
-> >> >> check to ensure that at least one present CPU is in the mask.
-> >> > 
-> >> > I have a doubt about the requirements and semantics of cpu_present_mask.
-> >> > IIUC a present CPU means that it is physically plugged in (from ACPI
-> >> > perspective) but might not be logically plugged in (set on cpu_online_mask).
-> >> 
-> >> Right, a superset of cpu_possible_mask, subset of cpu_online_mask. It 
-> >> means that CPU can be brought online at any time.
-> >> 
-> >> > But do we have the guarantee that a present CPU _will_ be online at least once
-> >> > right after the boot? After all, kernel parameters such as "maxcpus=" can prevent
-> >> > from turning some CPUs on. I guess there are even more creative ways to achieve
-> >> > that.
-> >> > 
-> >> > In any case we really require the housekeeper to be forced online. Perhaps
-> >> > I missed that enforcement somewhere in the patchset?
-> >> 
-> >> No I think you're right, that may be able to boot without anything in
-> >> the housekeeping mask. Maybe we can just cpu_up() a CPU in the 
-> >> housekeeping mask with a warning that it has overidden their SMP
-> >> command line option. I'll take a look at it.
-> > 
-> > But then what if cpu_up() fails? In this case I can think of only two
-> > answers:
-> > 
-> > * Force the boot CPU as the housekeeper.
-> > * Rollback the whole thing: nohz and all isolation.
-> 
-> If cpu_up fails despite being in the present map and we explicitly
-> selected it as the housekeeper? I think it would be okay to print
-> a message telling admin to correct the config, and panic.
-> 
-> We try a best effort to make the system boot and limp along, but if
-> you misconfigure it, crashing is not unreasonable. There's lots of
-> command line option misconfiguration that will cause the same thing.
-> 
-> The primary problem with my patch that needs to be addressed is that
-> the error is not explicitly caught and printed if the housekeeper
-> does not come up, so the system might die in non-obvious ways.
+Running tests on a debug kernel will usually generate a large number of
+kmemleak objects.
 
-I usually reserve panic and BUG_ON() to last resort when data integrity is
-directly threatened. But indeed I guess that's all we have for now.
+  # grep kmemleak /proc/slabinfo
+  kmemleak_object   2243606 3436210 ...
 
-If we take that path, I'd rather not call that cpu_up() and simply panic if
-the given CPU happens not to be online after SMP bootup.
+As the result, reading /proc/slab_allocators could easily loop forever
+while processing the kmemleak_object cache and any additional freeing or
+allocating objects will trigger a reprocessing. To make a situation
+worse, soft-lockups could easily happen in this sitatuion which will
+call printk() to allocate more kmemleak objects to guarantee a livelock.
 
-> 
-> > 
-> > The second solution looks sane to me. After all if the user doesn't
-> > include CPU 0 in the housekeeping set, forcing it isn't going to
-> > help much.
-> > 
-> > But that means we must enhance the isolation code (nohz included)
-> > to be able to dynamically add/del CPUs to the houseeeping/isolation
-> > set. That's not going to be easy but it's a necessary evolution
-> > of that subsystem since we want to drive it through cpusets.
-> > 
-> > I should start working on that.
-> 
-> I considered that when looking at the series, but couldn't justify
-> the complexity based on my usage (which is static boot time).
-> 
-> If you have other uses for it, then that would solve all these boot
-> time issues as well, which will be nice.
+Since kmemleak_object has a single call site (create_object()), there
+isn't much new information compared with slabinfo. Just skip it.
 
-Yeah cpuset is going to be a usecase.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/slab.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-I'm going to work on that so that the boot CPU is always the housekeeper
-in the beginning, then that duty can be later passed to any secondary CPU
-or the whole can be rolled back. The current situation with the temporary
-housekeeper that isn't a real one makes me a bit uncomfortable.
+diff --git a/mm/slab.c b/mm/slab.c
+index 20f318f4f56e..85d1d223f879 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4285,6 +4285,15 @@ static int leaks_show(struct seq_file *m, void *p)
+ 	if (!(cachep->flags & SLAB_RED_ZONE))
+ 		return 0;
+ 
++	/*
++	 * /proc/slabinfo has the same information, so skip kmemleak here due to
++	 * a high volume and its RCU free could make cachep->store_user_clean
++	 * dirty all the time.
++	 */
++	if (IS_ENABLED(CONFIG_DEBUG_KMEMLEAK) &&
++	    !strcmp("kmemleak_object", cachep->name))
++		return 0;
++
+ 	/*
+ 	 * Set store_user_clean and start to grab stored user information
+ 	 * for all objects on this cache. If some alloc/free requests comes
+-- 
+2.20.1 (Apple Git-117)
 
-Thanks.
