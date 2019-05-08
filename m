@@ -2,105 +2,115 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915C7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7F0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62189214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32F020578
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557310760;
+	bh=KgiLwHa8c628XCTksNuq14BZQuGqDsnA4pu3qRgYcxQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PSe2FhPSKniEykav0O9hAJrIfPWlO1JbEGGnZrovzQMwER3LI0Ual+amU910Eddzw
+	 S0W+8oqVKhrohS694p0twuwQT8OCbYthxk5qAxrK8aIWqfplQNFfSsWkop2d0emI4U
+	 iu868o/iLyMjnpBQ8/X+mqcshqy0r4y7YwQgHy6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfEHKSd (ORCPT
+        id S1727106AbfEHKTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:18:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3477 "EHLO mga02.intel.com"
+        Wed, 8 May 2019 06:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfEHKSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:18:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 03:18:31 -0700
-X-ExtLoop1: 1
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2019 03:18:28 -0700
-Subject: Re: [PATCH v4 1/1] usb: xhci: Add Clear_TT_Buffer
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Jim Lin <jilin@nvidia.com>, gregkh@linuxfoundation.org,
-        mathias.nyman@intel.com, hminas@synopsys.com,
-        kai.heng.feng@canonical.com, drinkcat@chromium.org,
-        prime.zeng@hisilicon.com, malat@debian.org, nsaenzjulienne@suse.de,
-        jflat@chromium.org, linus.walleij@linaro.org, clabbe@baylibre.com,
-        colin.king@canonical.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <Pine.LNX.4.44L0.1905071022140.1632-100000@iolanthe.rowland.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <6164e645-dce7-27a8-70b0-5e37a540f288@linux.intel.com>
-Date:   Wed, 8 May 2019 13:21:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1725778AbfEHKTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 06:19:19 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F2D216C4;
+        Wed,  8 May 2019 10:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557310758;
+        bh=KgiLwHa8c628XCTksNuq14BZQuGqDsnA4pu3qRgYcxQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2wft5YmM3CM2rKVQmpR6hOXN83mEVRAGkfTMAnH44HifrmzxdXs+02+K45kkV3yXn
+         SvHDi2skTrO4pZqoo9fwE+uG5WIJDdk33/r0LrAJsE606iivCAE2HAmf2kBc4cwQEU
+         7Zu6tEOESBQf/upZesMJd6wJb1Pb3iqzL6f13vfE=
+Received: by mail-lj1-f176.google.com with SMTP id y10so10458062lji.9;
+        Wed, 08 May 2019 03:19:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAXgi3EkamGkdwSyIYhaXl/j71xt21dN/Bnzc6qsQ/4L/R2NwiJv
+        GtiYwcES88ib3iU1KwpsJYoqxB/mJ+aFwv1b45I=
+X-Google-Smtp-Source: APXvYqwYkt5J0rET0wyrGnqJH8poPsUWaDooXeIeenTxmEqd6U1lzC8GOwJ2ZxmNmgblZZPq0m1QyUUqoG45zpuRE0s=
+X-Received: by 2002:a2e:82cb:: with SMTP id n11mr20509505ljh.183.1557310756058;
+ Wed, 08 May 2019 03:19:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44L0.1905071022140.1632-100000@iolanthe.rowland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
+ <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+ <20190507170422.GA25179@bogus> <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+ <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+In-Reply-To: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 8 May 2019 12:19:04 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPc2Swoi+xc_=QTMdY8p2DTtf5SprpfMFC6B9QCNUtxm-w@mail.gmail.com>
+Message-ID: <CAJKOXPc2Swoi+xc_=QTMdY8p2DTtf5SprpfMFC6B9QCNUtxm-w@mail.gmail.com>
+Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
+ DMC device description
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7.5.2019 17.29, Alan Stern wrote:
-> On Tue, 7 May 2019, Mathias Nyman wrote:
-> 
->> On 6.5.2019 17.57, Alan Stern wrote:
->>> On Mon, 6 May 2019, Jim Lin wrote:
->>>
->>>> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
->>>> processing for full-/low-speed endpoints connected via a TT, the host
->>>> software must use the Clear_TT_Buffer request to the TT to ensure
->>>> that the buffer is not in the busy state".
->>>>
->>>> In our case, a full-speed speaker (ConferenceCam) is behind a high-
->>>> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
->>>> request we may continue to get STALL with the folllowing requests,
->>>> like Set_Interface.
->>>>
->>>> Here we add Clear_TT_Buffer for the following Set_Interface requests
->>>> to get ACK successfully.
->>>>
->>>> Originally usb_hub_clear_tt_buffer uses urb->dev->devnum as device
->>>> address while sending Clear_TT_Buffer command, but this doesn't work
->>>> for XHCI.
->>>
->>> Why doesn't it work for xHCI?  Clear-TT-Buffer is part of the USB 2.0
->>> spec; it should work exactly the same for xHCI as for a USB-2.0 host
->>> controller.
->>>
->>> Alan Stern
->>>
->>
->> For other host controllers udev->devnum is the same as the address of the
->> usb device, chosen and set by usb core.
->>
->> With xHC the controller hardware assigns the address, and won't be the same as
->> devnum.
->>
->> The Clear-TT-Buffer request sent to the hub includes the address of the LS/FS
->> child device in wValue field. usb_hub_clear_tt_buffer() uses udev->devnum to set the
->> address wValue. This won't work for devices connected to xHC
-> 
-> I see.  Thanks for the explanation; it makes sense now.  The patch
-> description should explain this too.
-> 
-> Wouldn't it be better to add a field containing the device address to
-> struct usb_device?  And also export it, either in sysfs or debugfs?
-> It seems like the kind of thing that might be important for debugging.
-> If we did this then the usb_hub_clear_tt_buffer API wouldn't need to be
-> changed.
-> 
+On Wed, 8 May 2019 at 11:45, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+>
+> On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
+> > On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
+> >>> +- devfreq-events : phandles of the PPMU events used by the controller.
+> >>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
+> >>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+> >>
+> >> Looks like a hack. Can't you get this from the clocks property? What is
+> >> this for?
+> >
+> > Hi Rob,
+> >
+> > Lukasz uses these two syscon regmaps to read certain registers. For
+> > chipid he reads it to check the size of attached memory (only 2 GB
+> > version is supported). This indeed looks like a hack. However the
+> > second regmap (clk) is needed to get the timing data from registers
+> > from DMC clock driver address space. These are registers with memory
+> > timing so their data is not exposed anyway in common clk framework.
+> >
+> > Best regards,
+> > Krzysztof
+>
+> Thank you Krzysztof for a fast response. I have also responded to Rob.
+> I wouldn't call accessing chipid registers as a hack, though. The DMC
+> registers do not contain information about the memory chip since it is
+> in phase of production the board not the chip. Thus, chipid regs (which
+> loads from e-fuses) are best place to put information about memory
+> type/size.
 
-Agree, adding address to struct usb_device sounds better.
+By hack I meant that you have to read chipid instead of DTS... but as
+you pointed, the DTS could not match the real fused values so actually
+it makes sense to read them.
 
--Mathias
-
+Best regards,
+Krzysztof
