@@ -2,237 +2,104 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85140C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9577FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542B3216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6744F205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1wAnDEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfEHOiU (ORCPT
+        id S1727951AbfEHOkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:38:20 -0400
-Received: from foss.arm.com ([217.140.101.70]:36400 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727354AbfEHOiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:38:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F32DFA78;
-        Wed,  8 May 2019 07:38:18 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 830FF3F238;
-        Wed,  8 May 2019 07:38:14 -0700 (PDT)
-Subject: Re: [PATCH v7 13/23] iommu/smmuv3: Implement
- attach/detach_pasid_table
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-14-eric.auger@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <acde8b95-9cbc-c5e6-eb28-37bff7431e40@arm.com>
-Date:   Wed, 8 May 2019 15:38:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 10:40:24 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34016 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfEHOkY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:40:24 -0400
+Received: by mail-pf1-f193.google.com with SMTP id n19so2060219pfa.1;
+        Wed, 08 May 2019 07:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qU+b830HjTDROUNUT/+w1uv0y2kFrc/lnnYO3ZmFuyQ=;
+        b=n1wAnDEoWZeIZveeMXxtGy1V2bRZ4r92eFhDUCyLpO2y4n2tZdYl1zOSrUDeVDVwPT
+         FIlxCREmkh0hDpQn+0AH9X4/g0xloD3hCY0JQwQAa6LqRb+XMB9sKbcjg+HQxOaS1p4N
+         KcooeenPbGttAMpVjWaN47R8FmUIFv3ckNBHn2+bCaCYXbpCpPE0O1e0qChY5eqvWVPJ
+         bI3dfe7UV1QesyxqSFRWDWdgdqlQ5U18hnq6nJIh5/gd07qzwlbEpyUasfpDOKy1iyDH
+         SRo2TN8jyPNN5yZXUZx/KSttbSQv6qwda7NUD7RkvDktdG7WOLXhiaC/UEmUaLcLs7D6
+         61MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qU+b830HjTDROUNUT/+w1uv0y2kFrc/lnnYO3ZmFuyQ=;
+        b=ocwr6Y21+wu4BdverycZZTrSlUWL5NM3WsEFINA0GBdc7c6KQpblOCc39mNdfKo183
+         ALz+Ysn1Jcn0emYZoKpVBgJxNhKeJ2M/SVhakc/Y5Iij1UWlkO2NEXc5ucoo2JC6izFp
+         9GWCm2HdzLvB8rskCiVzzLUByq8qDgSnW/S3DLDRwdkNllVvISKDRM4hHUoq2M/c8AzG
+         9Ae9GdAqXVInW4U6DZ2xPaYpzHjJ7fxE4FXDjt7Rfxm2l07Hs/r+X660hBOePWRx2iX6
+         EvkYp/6uJGe/GAJQZdfBgFUmDbaF8hul4YEMY8Wt7ikyX1IXg/SpnWacL/lpt0nLdW5I
+         guWg==
+X-Gm-Message-State: APjAAAV3b2PChhnC8M7Ia7T+xUOm3E5nv3AX6Pj0ma7tx6wP1UhZRGxi
+        92EeQu+YZdoGuQADETJ4M6t4/12dstA=
+X-Google-Smtp-Source: APXvYqyP65HG3rORTR+4E+EuA4ikj7IagPu+Hf+70+EumxbD21ROxTl1cat427U0GyTRpgH1XjK5kA==
+X-Received: by 2002:a63:10c:: with SMTP id 12mr48465705pgb.276.1557326423339;
+        Wed, 08 May 2019 07:40:23 -0700 (PDT)
+Received: from localhost.localdomain ([125.142.23.13])
+        by smtp.gmail.com with ESMTPSA id o73sm7255366pfi.137.2019.05.08.07.40.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 07:40:22 -0700 (PDT)
+Date:   Wed, 8 May 2019 23:40:18 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v2] usb: host: xhci: Support running urb giveback in
+ tasklet context
+Message-ID: <20190508144016.GA2569@localhost.localdomain>
+References: <20190401141611.10087-1-suwan.kim027@gmail.com>
+ <20190507160219.GB2427@localhost.localdomain>
+ <0529be1d-57d6-18b8-6f62-49f4b3931e1a@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408121911.24103-14-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0529be1d-57d6-18b8-6f62-49f4b3931e1a@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 13:19, Eric Auger wrote:
-> On attach_pasid_table() we program STE S1 related info set
-> by the guest into the actual physical STEs. At minimum
-> we need to program the context descriptor GPA and compute
-> whether the stage1 is translated/bypassed or aborted.
+On Wed, May 08, 2019 at 03:04:33PM +0300, Mathias Nyman wrote:
+> On 7.5.2019 19.02, Suwan Kim wrote:
+> > On Mon, Apr 01, 2019 at 11:16:11PM +0900, Suwan Kim wrote:
+> > > Patch "USB: HCD: support giveback of URB in tasklet context"[1]
+> > > introduced giveback of urb in tasklet context. [1] This patch was
+> > > applied to ehci but not xhci. [2] This patch significantly reduces
+> > > the hard irq time of xhci. Especially for uvc driver, the hard irq
+> > > including the uvc completion function runs quite long but applying
+> > > this patch reduces the hard irq time of xhci.
+> > > 
+> > 
+> > I sent this patch a month ago but got no answer.
+> > Is there any feedback for this?
+> > Please let me know if there are any faults or it needs more tests.
+> > 
 > 
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> 
-> ---
-> v6 -> v7:
-> - check versions and comment the fact we don't need to take
->    into account s1dss and s1fmt
-> v3 -> v4:
-> - adapt to changes in iommu_pasid_table_config
-> - different programming convention at s1_cfg/s2_cfg/ste.abort
-> 
-> v2 -> v3:
-> - callback now is named set_pasid_table and struct fields
->    are laid out differently.
-> 
-> v1 -> v2:
-> - invalidate the STE before changing them
-> - hold init_mutex
-> - handle new fields
-> ---
->   drivers/iommu/arm-smmu-v3.c | 121 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 121 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index e22e944ffc05..1486baf53425 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2207,6 +2207,125 @@ static void arm_smmu_put_resv_regions(struct device *dev,
->   		kfree(entry);
->   }
->   
-> +static int arm_smmu_attach_pasid_table(struct iommu_domain *domain,
-> +				       struct iommu_pasid_table_config *cfg)
-> +{
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +	struct arm_smmu_master_data *entry;
-> +	struct arm_smmu_s1_cfg *s1_cfg;
-> +	struct arm_smmu_device *smmu;
-> +	unsigned long flags;
-> +	int ret = -EINVAL;
-> +
-> +	if (cfg->format != IOMMU_PASID_FORMAT_SMMUV3)
-> +		return -EINVAL;
-> +
-> +	if (cfg->version != PASID_TABLE_CFG_VERSION_1 ||
-> +	    cfg->smmuv3.version != PASID_TABLE_SMMUV3_CFG_VERSION_1)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&smmu_domain->init_mutex);
-> +
-> +	smmu = smmu_domain->smmu;
-> +
-> +	if (!smmu)
-> +		goto out;
-> +
-> +	if (!((smmu->features & ARM_SMMU_FEAT_TRANS_S1) &&
-> +	      (smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
-> +		dev_info(smmu_domain->smmu->dev,
-> +			 "does not implement two stages\n");
-> +		goto out;
-> +	}
+> I'll add this to a internal tree first, and let it sit there for a few
+> weeks, trying to catch possible bugs this change could expose.
 
-That check is redundant (and frankly looks a little bit spammy). If the 
-one below is not enough, there is a problem elsewhere - if it's possible 
-for smmu_domain->stage to ever get set to ARM_SMMU_DOMAIN_NESTED without 
-both stages of translation present, we've already gone fundamentally wrong.
+Thank you for spending your time for it! I also have been testing it
+in my daily desktop and until now, there are no special issues.
+If some bugs occur, i will report it to the mailing list.
 
-> +
-> +	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
-> +		goto out;
-> +
-> +	switch (cfg->config) {
-> +	case IOMMU_PASID_CONFIG_ABORT:
-> +		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> +		list_for_each_entry(entry, &smmu_domain->devices, list) {
-> +			entry->ste.s1_cfg = NULL;
-> +			entry->ste.abort = true;
-> +			arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
-> +		}
-> +		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-> +		ret = 0;
-> +		break;
-> +	case IOMMU_PASID_CONFIG_BYPASS:
-> +		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> +		list_for_each_entry(entry, &smmu_domain->devices, list) {
-> +			entry->ste.s1_cfg = NULL;
-> +			entry->ste.abort = false;
-> +			arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
-> +		}
-> +		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-> +		ret = 0;
-> +		break;
-> +	case IOMMU_PASID_CONFIG_TRANSLATE:
-> +		/*
-> +		 * we currently support a single CD so s1fmt and s1dss
-> +		 * fields are also ignored
-> +		 */
-> +		if (cfg->pasid_bits)
-> +			goto out;
-> +
-> +		s1_cfg = &smmu_domain->s1_cfg;
-> +		s1_cfg->cdptr_dma = cfg->base_ptr;
-> +
-> +		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> +		list_for_each_entry(entry, &smmu_domain->devices, list) {
-> +			entry->ste.s1_cfg = s1_cfg;
+Regards
 
-Either we reject valid->valid transitions outright, or we need to remove 
-and invalidate the existing S1 context from the STE at this point, no?
-
-> +			entry->ste.abort = false;
-> +			arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
-> +		}
-> +		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-> +		ret = 0;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +out:
-> +	mutex_unlock(&smmu_domain->init_mutex);
-> +	return ret;
-> +}
-> +
-> +static void arm_smmu_detach_pasid_table(struct iommu_domain *domain)
-> +{
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +	struct arm_smmu_master_data *entry;
-> +	struct arm_smmu_device *smmu;
-> +	unsigned long flags;
-> +
-> +	mutex_lock(&smmu_domain->init_mutex);
-> +
-> +	smmu = smmu_domain->smmu;
-> +
-> +	if (!smmu)
-> +		return;
-> +
-> +	if (!((smmu->features & ARM_SMMU_FEAT_TRANS_S1) &&
-> +	      (smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
-> +		dev_info(smmu_domain->smmu->dev,
-> +			 "does not implement two stages\n");
-> +		return;
-> +	}
-
-Same comment as before.
-
-Robin.
-
-> +
-> +	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
-> +		return;
-> +
-> +	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> +	list_for_each_entry(entry, &smmu_domain->devices, list) {
-> +		entry->ste.s1_cfg = NULL;
-> +		entry->ste.abort = true;
-> +		arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
-> +	}
-> +	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-> +
-> +	memset(&smmu_domain->s1_cfg, 0, sizeof(struct arm_smmu_s1_cfg));
-> +	mutex_unlock(&smmu_domain->init_mutex);
-> +}
-> +
->   static struct iommu_ops arm_smmu_ops = {
->   	.capable		= arm_smmu_capable,
->   	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -2225,6 +2344,8 @@ static struct iommu_ops arm_smmu_ops = {
->   	.of_xlate		= arm_smmu_of_xlate,
->   	.get_resv_regions	= arm_smmu_get_resv_regions,
->   	.put_resv_regions	= arm_smmu_put_resv_regions,
-> +	.attach_pasid_table	= arm_smmu_attach_pasid_table,
-> +	.detach_pasid_table	= arm_smmu_detach_pasid_table,
->   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->   };
->   
-> 
+Suwan Kim
