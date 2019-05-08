@@ -2,90 +2,196 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2095BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B7CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3BA2089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm2N3nQ5"
+	by mail.kernel.org (Postfix) with ESMTP id 9A09E2089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfEHSKZ (ORCPT
+        id S1727859AbfEHSNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:10:25 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40190 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726544AbfEHSKZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:10:25 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so10290522plr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 11:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5zLWZfJCoIg5TeUT0Jt2rwSpfAhD7R9q7eCYI7YHf40=;
-        b=Tm2N3nQ5R4MhS+8rDGVu/boYYfOVT9eIZUs60lgVugsa12xyjFshqIWhczZyFQwzYF
-         Ym9H3mmMhQzLUib+TUxO5mS0LpNapV2Zy81WXsYoFwNV+rdA6rOEnixV+TXKtAggW5lK
-         QDSEMsjaxPVnY6u3e/z7047pG6rP96Ay9RL1uwxSRF/22zO+7kd1MqxLXfdrrhPThSRA
-         mY7VHAWoPNgVv22UCIzmgaNRexxreIebf/jobba8vTVTF9A1vGdOTUvINtIZ8Ly5Xsib
-         JDr4j9KfbpUyW4/2fktvOOqSl8/YIGfpKUC/87WCEwPw7Dh3+HZrmyWQrHn3UotZRAP4
-         vOjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5zLWZfJCoIg5TeUT0Jt2rwSpfAhD7R9q7eCYI7YHf40=;
-        b=aN6ohe+t1x9moigQaBv+E/fugIPLYeCg3gxEcmHQCPgeNkkVk9wNEZP1IrGjntZ35g
-         wrXvJ09o1PEtCJZT5WjVTtUGpUGSa+7j3DIS5weiScopYECIo+nfuU23h1G8m2SU/18+
-         pC02vPlPOH9o2/Z2fuYtUsRU1xj0zReKHDTEhV8wLzVzQM9p27oIVaGOiGutaV9siao1
-         4x4n97aGVhbvmXogercfTXUJgqeux0ePesClHYOYk1R6VSKCpK+QEpci53zFJZKR7g0U
-         TYCGZxKQXyicBbcJrn5XLwwAqshWaeGIFcTEizNZ9wlsd692WBiA2E38o02TzqcKiUVf
-         Dklg==
-X-Gm-Message-State: APjAAAU0Vva1l+I3ffosaRI7fN7WRVPMDiGPtT2aR4vvacCKlrNmVJwu
-        7a604VoKm7cv2uRbU7h37/k=
-X-Google-Smtp-Source: APXvYqx2Wb4CB0KCpVy419mUcctEXRtv9dVAdNA+TWZj7LlWHc7EV1/KC6TAZsJVn2A5r991XqqT8A==
-X-Received: by 2002:a17:902:5ac9:: with SMTP id g9mr14087995plm.134.1557339023983;
-        Wed, 08 May 2019 11:10:23 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id j189sm31400665pfc.72.2019.05.08.11.10.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 11:10:23 -0700 (PDT)
-Date:   Wed, 8 May 2019 11:08:53 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     robin.murphy@arm.com, m.szyprowski@samsung.com, vdumpa@nvidia.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will.deacon@arm.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        joro@8bytes.org, dwmw2@infradead.org, tony@atomide.com,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v2 0/2] Optimize dma_*_from_contiguous calls
-Message-ID: <20190508180852.GA2298@Asurada-Nvidia.nvidia.com>
-References: <20190506223334.1834-1-nicoleotsuka@gmail.com>
- <20190508125254.GA26785@lst.de>
+        Wed, 8 May 2019 14:13:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:34688 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfEHSNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 14:13:40 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 11:13:39 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga003.jf.intel.com with ESMTP; 08 May 2019 11:13:40 -0700
+Date:   Wed, 8 May 2019 11:13:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Aaron Lewis <aaronlewis@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Peter Shier <pshier@google.com>
+Subject: Re: [PATCH v2] kvm: nVMX: Set nested_run_pending in
+ vmx_set_nested_state after checks complete
+Message-ID: <20190508181339.GD19656@linux.intel.com>
+References: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
+ <20190508142023.GA13834@linux.intel.com>
+ <CAAAPnDE0ujH4eTX=4umTTEmUMyaZ7M0B3qxWa7oUUD-Ls7Ta+A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="zYM0uCDKw75PZbzx"
 Content-Disposition: inline
-In-Reply-To: <20190508125254.GA26785@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAAAPnDE0ujH4eTX=4umTTEmUMyaZ7M0B3qxWa7oUUD-Ls7Ta+A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 02:52:54PM +0200, Christoph Hellwig wrote:
-> modulo a trivial comment typo I found this looks fine to me.  I plan
-> to apply it with that fixed up around -rc2 time when I open the
-> dma mapping tree opens for the the 5.3 merge window, unless someone
-> finds an issue until then.
 
-Thanks for the help all the way.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, May 08, 2019 at 10:53:12AM -0700, Aaron Lewis wrote:
+> nested_run_pending is also checked in
+> nested_vmx_check_vmentry_postreqs
+> (https://elixir.bootlin.com/linux/v5.1/source/arch/x86/kvm/vmx/nested.c#L2709)
+> so I think the setting needs to be moved to just prior to that call
+> with Paolo's rollback along with another for if the prereqs and
+> postreqs fail.  I put a patch together below:
+
+Gah, I missed that usage (also, it's now nested_vmx_check_guest_state()).
+
+Side topic, I think the VM_ENTRY_LOAD_BNDCFGS check should be gated by
+nested_run_pending, a la the EFER check.'
+
+> ------------------------------------
+> 
+> nested_run_pending=1 implies we have successfully entered guest mode.
+> Move setting from external state in vmx_set_nested_state() until after
+> all other checks are complete.
+> 
+> Signed-off-by: Aaron Lewis <aaronlewis@google.com>
+> Reviewed-by: Peter Shier <pshier@google.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 6401eb7ef19c..cf1f810223d2 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5460,9 +5460,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>   if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
+>   return 0;
+> 
+> - vmx->nested.nested_run_pending =
+> - !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+
+Alternatively, it might be better to leave nested_run_pending where it
+is and instead add a label to handle clearing the flag on error.  IIUC,
+the real issue is that nested_run_pending is left set after a failed
+vmx_set_nested_state(), not that its shouldn't be set in the shadow
+VMCS handling.
+
+Patch attached, though it's completely untested.  The KVM selftests are
+broken for me right now, grrr.
+
+> -
+>   if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+>       vmcs12->vmcs_link_pointer != -1ull) {
+>   struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+> @@ -5480,14 +5477,21 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>   return -EINVAL;
+>   }
+> 
+> + vmx->nested.nested_run_pending =
+> + !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+> +
+>   if (nested_vmx_check_vmentry_prereqs(vcpu, vmcs12) ||
+> -     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual))
+> +     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual)) {
+> +     vmx->nested.nested_run_pending = 0;
+>   return -EINVAL;
+> + }
+> 
+>   vmx->nested.dirty_vmcs12 = true;
+>   ret = nested_vmx_enter_non_root_mode(vcpu, false);
+> - if (ret)
+> + if (ret) {
+> + vmx->nested.nested_run_pending = 0;
+>   return -EINVAL;
+> + }
+> 
+>   return 0;
+>  }
+
+--zYM0uCDKw75PZbzx
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-KVM-nVMX-Clear-nested_run_pending-if-setting-nested-.patch"
+
+From 279ce1be96d74aee41e93b597572e612a143cf3c Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Date: Wed, 8 May 2019 11:04:32 -0700
+Subject: [PATCH] KVM: nVMX: Clear nested_run_pending if setting nested state
+ fails
+
+VMX's nested_run_pending flag is subtly consumed when stuffing state to
+enter guest mode, i.e. needs to be set according before KVM knows if
+setting guest state is successful.  If setting guest state fails, clear
+the flag as a nested run is obviously not pending.
+
+Reported-by: Aaron Lewis <aaronlewis@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 04b40a98f60b..1a2a2f91b7e0 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5428,29 +5428,33 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+ 
+ 		if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
+-			return -EINVAL;
++			goto error_guest_mode;
+ 
+ 		if (copy_from_user(shadow_vmcs12,
+ 				   user_kvm_nested_state->data + VMCS12_SIZE,
+ 				   sizeof(*vmcs12)))
+-			return -EFAULT;
++			goto error_guest_mode;
+ 
+ 		if (shadow_vmcs12->hdr.revision_id != VMCS12_REVISION ||
+ 		    !shadow_vmcs12->hdr.shadow_vmcs)
+-			return -EINVAL;
++			goto error_guest_mode;
+ 	}
+ 
+ 	if (nested_vmx_check_controls(vcpu, vmcs12) ||
+ 	    nested_vmx_check_host_state(vcpu, vmcs12) ||
+ 	    nested_vmx_check_guest_state(vcpu, vmcs12, &exit_qual))
+-		return -EINVAL;
++		goto error_guest_mode;
+ 
+ 	vmx->nested.dirty_vmcs12 = true;
+ 	ret = nested_vmx_enter_non_root_mode(vcpu, false);
+ 	if (ret)
+-		return -EINVAL;
++		goto error_guest_mode;
+ 
+ 	return 0;
++
++error_guest_mode:
++	vmx->nested.nested_run_pending = 0;
++	return -EINVAL;
+ }
+ 
+ void nested_vmx_vcpu_setup(void)
+-- 
+2.21.0
+
+
+--zYM0uCDKw75PZbzx--
