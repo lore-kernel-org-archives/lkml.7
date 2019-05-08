@@ -2,46 +2,46 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A69AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E8FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA4521530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF42B21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mqZ5E0l9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3WxxXTCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfEHIM4 (ORCPT
+        id S1727028AbfEHIM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:12:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45984 "EHLO
+        Wed, 8 May 2019 04:12:59 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45990 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfEHIMz (ORCPT
+        with ESMTP id S1727000AbfEHIM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:12:55 -0400
+        Wed, 8 May 2019 04:12:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Subject:Cc:To:From:Date:Message-Id:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tvP/6NuFlFM89pXE/PuYGYzrB1plsvWPob9WkJA9B2Q=; b=mqZ5E0l90NUp+w1nYgpdRsdq9
-        CyRcegZTrwBH9+BgwX6fByfyCCTL8aM7JRdhqK6ehkdpe2mfoSlJV+S2LI8hBUQsm2s/kk8y179iw
-        UPeQopLSFpMAbQcRYzxBe831tEtkmk2vCAROU+atYxkhmUMZolsxny/yUta8R2MMlP0fMaC0OpWA5
-        /bIS/gvqVSFB/RcNFF7tcQ2A7YLXpw+XgS49JUzVrhD2Lq15u9ZLxU/kvFSryjsVY5+WJjFwFNE9F
-        uERBebXSfb+PJabv1qMzznPuU7sD3ocZvZhVDqP5lR3bF/zoLIfU5GOTTv7nIIxaZ4E5vjgCl/Ysy
-        q67qwyK3w==;
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2bDRX7PYK5Dk86gEBZtmcvWHD7+nFguvE7Xdy+wqe5s=; b=3WxxXTCoBDDtxdYWtMh2VsFB+w
+        qbS7GuZM+Rci2jb22PH86KqEazAtt7yL/KkQkSJl9PKrQ33Ue6VoCregogNVPDdJPwACUhZO8D7k/
+        jAkjHDjb30pLhrsgoRasiwELAJlq+uPdBnK2oymEGdQfwT7xpoC//lj8Vy+fRnzdvAL6NNWBD+XiV
+        LjC25eWQLyberoewVE5o07K3LteFRHW2fP2ZKkvL2uUDFHrS5sQ7Ss85EyqEiENpjmnvudEjMV0Ug
+        m31Ipt7taF5pd1LPC4RwM/nWBVIDJNuRXTsK6FvJgrKZNhRPUOXKVZpx3X3k0Hz07rVZPULX78BhU
+        MceazB3w==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOHgM-000453-L9; Wed, 08 May 2019 08:12:07 +0000
+        id 1hOHgM-000455-Kk; Wed, 08 May 2019 08:12:07 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 26E552029F87A; Wed,  8 May 2019 10:12:05 +0200 (CEST)
-Message-Id: <20190508074901.982470324@infradead.org>
+        id 3262A2029F884; Wed,  8 May 2019 10:12:05 +0200 (CEST)
+Message-Id: <20190508080612.776845854@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 08 May 2019 09:49:01 +0200
+Date:   Wed, 08 May 2019 09:49:04 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -70,19 +70,49 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Joerg Roedel <jroedel@suse.de>,
         linux-kselftest@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 0/4] x86: int3 fallout
+Subject: [PATCH 3/4] x86/ftrace: Add pt_regs frame annotations
+References: <20190508074901.982470324@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So the first 3 patches are cleanups and fixes and should probably just go in.
+When CONFIG_FRAME_POINTER, we should mark pt_regs frames.
 
-The last patch however is the one Linus hates, it converts i386 to always have
-a complete pt_regs. Both Josh and me did a bunch of cleanups and the patch is
-now a net reduction in lines.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/ftrace_32.S |    6 ++++++
+ arch/x86/kernel/ftrace_64.S |    3 +++
+ 2 files changed, 9 insertions(+)
 
-I still think it is the right thing to do; it removes a whole lot of magic from
-the C code (and avoids future surprises), but if this cannot convince Linus,
-I'll not pursue this further.
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -138,6 +138,12 @@ ENTRY(ftrace_regs_caller)
+ #else
+ 	movl	0x4(%ebp), %edx			/* Load parent ip (2nd parameter) */
+ #endif
++
++#ifdef CONFIG_FRAME_POINTER
++	movl	%esp, %ebp
++	andl	$0x7fffffff, %ebp
++#endif
++
+ 	movl	function_trace_op, %ecx		/* Save ftrace_pos in 3rd parameter */
+ 	pushl	%esp				/* Save pt_regs as 4th parameter */
+ 
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -222,6 +222,9 @@ GLOBAL(ftrace_regs_caller_op_ptr)
+ 	leaq MCOUNT_REG_SIZE+8*2(%rsp), %rcx
+ 	movq %rcx, RSP(%rsp)
+ 
++#ifdef CONFIG_FRAME_POINTER
++	leaq 1(%rsp), %rbp
++#endif
+ 	/* regs go into 4th parameter */
+ 	leaq (%rsp), %rcx
+ 
+
 
