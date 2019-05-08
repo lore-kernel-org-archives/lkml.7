@@ -2,167 +2,159 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75164C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DD6C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D25120656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bO3R80TS"
+	by mail.kernel.org (Postfix) with ESMTP id EE9C821479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfEHB7j (ORCPT
+        id S1726572AbfEHCAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:59:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34225 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfEHB7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:59:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id n19so1074225pfa.1;
-        Tue, 07 May 2019 18:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LKDYwa6gUv5wCTyZ99PrxN7F5ZX+WfRDRB+TBVrMR/M=;
-        b=bO3R80TSFgE++pk0ozdsgJgulasRz6lSf+dyLKEVUTZnfrzKlw4n41cPixoi/YaXAm
-         qDKvTGfvQ+qMhD+bh7vb7BD5GTw+DMtuB25imranm80XSc2CleG5G0YkZ8T1DDB59CeE
-         bILBcf4cuYFCFWQFJnz02u5w12qvjgsFJeB3LpSXWcQbS63aSCBVz8sNJA2+XT3F8uyf
-         /WPfZpv53QTIJLeOG97HFQkXLaKUlzppqEogTcYfC9a4r/0Ane+aLN/ScxQNT3mWRuly
-         5dI+eBPVKfxjv5p/hCZu610r2FW/KiwoGYi2/rPiTcRBXNP8uBHaE/KH93zXb8w9CEWK
-         dmAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LKDYwa6gUv5wCTyZ99PrxN7F5ZX+WfRDRB+TBVrMR/M=;
-        b=C+kcWKfM4RtoXnyXtmHvVArc6muUqb8qSsp/VdcXLTxqAzzd/jfRaYHzNwRmBQnA0Z
-         v6ekA3c99cjNQVANjTaPBolMa+d+RVAQlLtT8Yl5O8Iw3D8ILuHUpWWnt5Qied3dOBUc
-         FCNOR1XMKKlmOzenRMTCFqz/MeYKcXrgq1oek5r9Oc9BJIZVllyuq/qQOWVKz+IKY3FJ
-         CGpUb+UI1SDfSy4tR3gC6Wfm35/djreg1wteCrNIXrs1h7ZKjiFyr0zpB19MDMaQi2Mm
-         maT5KwfRvHXFN4zOoiKvGBzKl5DDw7LQo+M3RyhTkZiLKW34SnRk5vpkyoe9H4sePHS+
-         dwpA==
-X-Gm-Message-State: APjAAAWRRo/GFDVTm/wKOfoMC+fs2L6/HHoYnAzD3SovpflVbXG+hOXe
-        BiiPRCD0ugYPHAC3NPbVZLPpR2zX
-X-Google-Smtp-Source: APXvYqxDuhJVVTLedW1BLuHfADxWqaSKHmzJSrRoR+NS1/eEc5b2m3SHitJ4rvGEcpem027CijC6qA==
-X-Received: by 2002:a63:fb01:: with SMTP id o1mr43420797pgh.135.1557280778532;
-        Tue, 07 May 2019 18:59:38 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a18sm14455836pfr.22.2019.05.07.18.59.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 18:59:37 -0700 (PDT)
-Subject: Re: [PATCH 1/1] usb: typec: tcpci: add functions to read the VBUS
- voltage
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190508004027.16558-1-angus@akkea.ca>
- <20190508004027.16558-2-angus@akkea.ca>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f70df755-9462-54af-cd7d-83d35c1dd3f8@roeck-us.net>
-Date:   Tue, 7 May 2019 18:59:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 22:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbfEHCAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 22:00:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A46452173C;
+        Wed,  8 May 2019 02:00:01 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hOBsG-0005rW-Mw; Tue, 07 May 2019 22:00:00 -0400
+Message-Id: <20190508020000.595360124@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Tue, 07 May 2019 21:56:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 2/3] x86_64: Allow breakpoints to emulate call instructions
+References: <20190508015559.767152678@goodmis.org>
 MIME-Version: 1.0
-In-Reply-To: <20190508004027.16558-2-angus@akkea.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 5:40 PM, Angus Ainslie (Purism) wrote:
-> Show an error when the VBUS voltage is out of range.
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->   drivers/usb/typec/tcpm/tcpci.c | 35 ++++++++++++++++++++++++++++++++++
->   1 file changed, 35 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-> index a5746657b190..223941e11ef3 100644
-> --- a/drivers/usb/typec/tcpm/tcpci.c
-> +++ b/drivers/usb/typec/tcpm/tcpci.c
-> @@ -261,6 +261,26 @@ static int tcpci_set_pd_rx(struct tcpc_dev *tcpc, bool enable)
->   	return 0;
->   }
->   
-> +static int tcpci_get_vbus_voltage(struct tcpc_dev *tcpc)
-> +{
-> +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> +	u16 vbus_reg;
-> +	unsigned int vbus_voltage;
-> +	int ret, scale;
-> +
-> +	ret = tcpci_read16(tcpci, TCPC_VBUS_VOLTAGE, &vbus_reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	vbus_voltage = vbus_reg & 0x3f;
-> +
-> +	scale = (vbus_reg >> 10) & 3;
-> +	if (scale == 3)
-> +		return -EIO;
-> +
-> +	return (vbus_voltage << scale) * 25;
-> +}
-> +
->   static int tcpci_get_vbus(struct tcpc_dev *tcpc)
->   {
->   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> @@ -401,6 +421,7 @@ static int tcpci_init(struct tcpc_dev *tcpc)
->   irqreturn_t tcpci_irq(struct tcpci *tcpci)
->   {
->   	u16 status;
-> +	int ret;
->   
->   	tcpci_read16(tcpci, TCPC_ALERT, &status);
->   
-> @@ -474,6 +495,20 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
->   		tcpci_write16(tcpci, TCPC_FAULT_STATUS, fault_status);
->   	}
->   
-> +	if (status & (TCPC_ALERT_V_ALARM_LO | TCPC_ALERT_V_ALARM_HI)) {
-> +		ret = tcpci_get_vbus_voltage(&tcpci->tcpc);
-> +
-Extra empty line.
+From: Peter Zijlstra <peterz@infradead.org>
 
-> +		if (ret >= 0) {
-> +			if (status & TCPC_ALERT_V_ALARM_LO)
-> +				dev_err(tcpci->dev, "Low VBUS voltage %d mV\n",
-> +						ret);
-> +
-> +			if (status & TCPC_ALERT_V_ALARM_HI)
-> +				dev_err(tcpci->dev, "High VBUS voltage %d mV\n",
-> +						ret);
-> +		}
+In order to allow breakpoints to emulate call instructions, they need to push
+the return address onto the stack. The x86_64 int3 handler adds a small gap
+to allow the stack to grow some. Use this gap to add the return address to
+be able to emulate a call instruction at the breakpoint location.
 
-This doesn't report anything if reading the VBUS voltage
-returns an error.
+These helper functions are added:
 
-Also, per TCPCI specification, you probably want to check
-POWER_CONTROL.VBUS_VOLTAGE Monitor to see if it is enabled
-in the first place.
+  int3_emulate_jmp(): changes the location of the regs->ip to return there.
 
-On a higher level, the driver doesn't currently set limits for low
-and high voltage alarms, and it doesn't enable those alarms. As such,
-I wonder if/how you can get those alerts. Can you clarify ?
+ (The next two are only for x86_64)
+  int3_emulate_push(): to push the address onto the gap in the stack
+  int3_emulate_call(): push the return address and change regs->ip
 
-Thanks,
-Guenter
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: the arch/x86 maintainers <x86@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[ Modified to only work for x86_64 and added comment to int3_emulate_push() ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ arch/x86/include/asm/text-patching.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-> +	}
-> +
->   	return IRQ_HANDLED;
->   }
->   EXPORT_SYMBOL_GPL(tcpci_irq);
-> 
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index e85ff65c43c3..05861cc08787 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -39,4 +39,32 @@ extern int poke_int3_handler(struct pt_regs *regs);
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+ extern int after_bootmem;
+ 
++static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
++{
++	regs->ip = ip;
++}
++
++#define INT3_INSN_SIZE 1
++#define CALL_INSN_SIZE 5
++
++#ifdef CONFIG_X86_64
++static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
++{
++	/*
++	 * The int3 handler in entry_64.S adds a gap between the
++	 * stack where the break point happened, and the saving of
++	 * pt_regs. We can extend the original stack because of
++	 * this gap. See the idtentry macro's create_gap option.
++	 */
++	regs->sp -= sizeof(unsigned long);
++	*(unsigned long *)regs->sp = val;
++}
++
++static inline void int3_emulate_call(struct pt_regs *regs, unsigned long func)
++{
++	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
++	int3_emulate_jmp(regs, func);
++}
++#endif
++
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
+-- 
+2.20.1
+
 
