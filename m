@@ -2,171 +2,191 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4EDC04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF051C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F80216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C5F2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+8Jx8jc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csOjKCZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbfEHScs (ORCPT
+        id S1729306AbfEHScu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:32:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35484 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbfEHScr (ORCPT
+        Wed, 8 May 2019 14:32:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44647 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfEHScs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:32:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t87so10352297pfa.2;
+        Wed, 8 May 2019 14:32:48 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g9so789446pfo.11;
         Wed, 08 May 2019 11:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Q/xfg+nFGLhPsGBWl9LacPjF3U7jjM06H75mJzsV2Q0=;
-        b=O+8Jx8jcGtkDWgQF5nFQioz658bj+cLJrSm07lLlrnbp3uJE1Gtsu3a+FAEUTPQutZ
-         YN2+2H/uS1o+z6k13VMwXoQjq+to1/uWKLHAlZPf9PMxOsUZ45JsOOLY2rsBScBo3hF8
-         8rCAmDgc5Ajnm/t949yqMSAEhwXDdi+ls+FWEaM9y1XD434UspTi/XANIWIpiUNjA5Uq
-         bhe8g7tGmbDEH2UFF7Oo5W7uPZkmiLXGVy3psqK07G+Qk7Nuqb0dYnkVE/4KQ+e5UKz8
-         99Mygt6uyy27PX9tNDNZtHU5LHY6OEHWENnzQVCnpTS7jOmnzOXDwHVE1gQCFH+mPN52
-         o/vQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w8iERNhjq4OzlLmPnHYUtIOOz9hjBDMOTj3lfmGbD88=;
+        b=csOjKCZWFc7h/tvZm5iqctBGtliiS0aJWn6m4UCGgErAj3BADJf1b/pOoDIi2xbnLk
+         IUIQYP6o81N8xJmmjgjWTtJ54UqTLLEO+Q6vJdk0VLZ5+cz3urCOJzaz5bp2Cm9yprNt
+         o+2/m/66V1r0iUNn0RS6rP8/24NeN8EPVNbB3egVuSaIuLcmYrtsVy+TxCq0auMO8fqj
+         NFie/xcxbkhm05WJn2Imb3IxYvSpU3p5ZIhcCPHwn+6KncdSHWZ/4EPVgsRHetsuW3/S
+         Xnuorw9H65DeKNFlp052rMx8UZJSl1ttTHO3LukVYiJhNYSDN7NU+MtEcF1Oqa7nS2mr
+         Ednw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Q/xfg+nFGLhPsGBWl9LacPjF3U7jjM06H75mJzsV2Q0=;
-        b=RI6ITcX53crEr3ZJ5n4PxU9xOjSOAA0Y0LvCLvYJJKDczPLW3gEYuA4OLgXVUANXZg
-         NdQhNykYNlXmpg+3pUYUfX/H9B/QrQsXHp7+mquZwv7vaHSR/WfdwEKrizCnyJoFfTcl
-         YYsMiY2AztAAkq8i4CiTs0KMbd03d7Qv0t2FRc5rbZS4cLPIdPOicDuJm5p/WamH3fMq
-         fhwYxEDe5ewgpAgb3fomGB8OZVZRTDwGSTDUHIbUvjI1eVNT+yNAwidee26N8lzWwMox
-         kCxbp8GRLtgrHIq0eah4E+yPlD1RQp8OtUosc7mdC9yVDRbhUWE9fmWiYN1gcGX8a5SW
-         IM3w==
-X-Gm-Message-State: APjAAAXlJKuEjS+Jt9ctruZEaHWGH9SMiCMnbCiUt40+C00g0TtLy4nD
-        RZrRFHhZ4Y7es3tXgYL7D5YRfQ+djlbh/ki9ettpHPfZ
-X-Google-Smtp-Source: APXvYqwADUUxUTdF7fGUVlq+RIXr2nmGzMCbzcpUeBSut5zQOkNNZVPNkSFqhOfNHe3dERpdFVLtRIkyZLYB+5SO/ts=
-X-Received: by 2002:a62:2fc7:: with SMTP id v190mr49717413pfv.10.1557340366290;
- Wed, 08 May 2019 11:32:46 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w8iERNhjq4OzlLmPnHYUtIOOz9hjBDMOTj3lfmGbD88=;
+        b=Zfy45Pkuqwlqje6cTRvqXCk3Cx73ms8kuugpOHpSfFp8WxQxs19zW4TW8Gcp10hjE8
+         A/Q4XFSHzAli74SsRK7EnblDeMTc2cZPw99DVEEsdzOjFtvkU/y4b93co0OGzi+HXGX9
+         l3t/tvj/7RhPU1eB+yd+9fFewOHl2Qq7Cq5B6Rx7YY4i5xoxlCUp18gSzkjoXwSnpijE
+         lF+DZTPRgeI4stWxLUwLacSejYjoiPoCoheZOREa3s8GZpiVfeVizhW048mU9vbQdqVB
+         Ji4RdRfGWlIlI3b1OyXjEdDgbBtksm3P7qmTh44XCN0n/L5R6+CSdf+KDWEsgWBTflkV
+         VE4g==
+X-Gm-Message-State: APjAAAXjypzMwpXTRrIFX8ECpi+zscGYVjLQY1Fey2b4Jc3Sx2DXgBB3
+        hz68tY+gZ+miz8y6U55ziw8=
+X-Google-Smtp-Source: APXvYqwLYUVaKYkkXyJSAw3vwXScZuxYcOcqIn/p6Q7XM2+c5JUQm0gApMQMJJweVC7xeA+dHN91Sw==
+X-Received: by 2002:aa7:8252:: with SMTP id e18mr50800633pfn.105.1557340367126;
+        Wed, 08 May 2019 11:32:47 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a18sm22025285pff.6.2019.05.08.11.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 11:32:45 -0700 (PDT)
+Date:   Wed, 8 May 2019 11:32:44 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] hwmon: scmi: Scale values to target desired HWMON
+ units
+Message-ID: <20190508183244.GA25133@roeck-us.net>
+References: <20190508170035.19671-1-f.fainelli@gmail.com>
+ <20190508170035.19671-3-f.fainelli@gmail.com>
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 8 May 2019 13:32:35 -0500
-Message-ID: <CAH2r5mv=4JsaF-8v=U4JR3jrOyPfhtUsJPogNudLejDh09xGSA@mail.gmail.com>
-Subject: [GIT PULL] CIFS/SMB3 fixes
-To:     CIFS <linux-cifs@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508170035.19671-3-f.fainelli@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-d3511f53bb2475f2a4e8460bee5a1ae6dea2a433:
+Hi Florian,
 
-  Merge branch 'parisc-5.2-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux
-(2019-05-07 19:34:17 -0700)
+On Wed, May 08, 2019 at 10:00:35AM -0700, Florian Fainelli wrote:
+> If the SCMI firmware implementation is reporting values in a scale that
+> is different from the HWMON units, we need to scale up or down the value
+> according to how far appart they are.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/hwmon/scmi-hwmon.c | 46 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+> 
+> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+> index a80183a488c5..4399372e2131 100644
+> --- a/drivers/hwmon/scmi-hwmon.c
+> +++ b/drivers/hwmon/scmi-hwmon.c
+> @@ -7,6 +7,7 @@
+>   */
+>  
+>  #include <linux/hwmon.h>
+> +#include <linux/limits.h>
+>  #include <linux/module.h>
+>  #include <linux/scmi_protocol.h>
+>  #include <linux/slab.h>
+> @@ -18,6 +19,47 @@ struct scmi_sensors {
+>  	const struct scmi_sensor_info **info[hwmon_max];
+>  };
+>  
+> +static inline u64 __pow10(u8 x)
+> +{
+> +	u64 r = 1;
+> +
+> +	while (x--)
+> +		r *= 10;
+> +
+> +	return r;
+> +}
+> +
+> +static int scmi_hwmon_scale(const struct scmi_sensor_info *sensor, u64 *value)
+> +{
+> +	s8 scale = sensor->scale;
+> +	u64 f;
+> +
+> +	switch (sensor->type) {
+> +	case TEMPERATURE_C:
+> +	case VOLTAGE:
+> +	case CURRENT:
+> +		scale += 3;
+> +		break;
+> +	case POWER:
+> +	case ENERGY:
+> +		scale += 6;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	f = __pow10(abs(scale));
+> +	if (f == U64_MAX)
+> +		return -E2BIG;
 
-are available in the Git repository at:
+Unfortunately that is not how integer overflows work.
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.2-smb3
+A test program with increasing values of scale reports:
 
-for you to fetch changes up to cb4f7bf6be10b35510e6b2e60f80d85ebc22a578:
+0: 1
+...
+18: 1000000000000000000
+19: 10000000000000000000
+20: 7766279631452241920
+21: 3875820019684212736
+22: 1864712049423024128
+23: 200376420520689664
+24: 2003764205206896640
+...
+61: 11529215046068469760
+62: 4611686018427387904
+63: 9223372036854775808
+64: 0
+...
 
-  cifs: update module internal version number (2019-05-07 23:24:56 -0500)
+You'll have to check for abs(scale) > 19 if you want to report overflows.
 
-----------------------------------------------------------------
-CIFS/SMB3 changes, three for stable, adds fiemap support, improves
-zero-range support, and includes various RDMA (smb direct fixes).  Our
-build verification tests passed (and continue to be extended to
-include more tests).  See e.g. our 'buildbot' results at:
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/199
+Guenter
 
-Have an additional set of fixes (for improved handling of sparse
-files, mode bits, POSIX extensions) that are still being tested that
-are not included in this pull request but I expect to send in the next
-week.
-----------------------------------------------------------------
-Aurelien Aptel (1):
-      CIFS: check CIFS_MOUNT_NO_DFS when trying to reuse existing sb
-
-Christoph Probst (1):
-      cifs: fix strcat buffer overflow and reduce raciness in
-smb21_set_oplock_level()
-
-Jeff Layton (1):
-      cifs: remove superfluous inode_lock in cifs_{strict_}fsync
-
-Kenneth D'souza (1):
-      CIFS: Show locallease in /proc/mounts for cifs shares mounted
-with locallease feature.
-
-Long Li (7):
-      smbd: Make upper layer decide when to destroy the transport
-      cifs: smbd: Don't destroy transport on RDMA disconnect
-      cifs: smbd: Return EINTR when interrupted
-      cifs: smbd: Indicate to retry on transport sending failure
-      cifs: smbd: Retry on memory registration failure
-      cifs: Call MID callback before destroying transport
-      cifs: smbd: take an array of reqeusts when sending upper layer data
-
-Paulo Alcantara (SUSE) (1):
-      cifs: Fix DFS cache refresher for DFS links
-
-Ronnie Sahlberg (8):
-      cifs: Add support for FSCTL passthrough that write data to the server
-      cifs: fix bi-directional fsctl passthrough calls
-      cifs: add fiemap support
-      cifs: zero-range does not require the file is sparse
-      cifs: fix smb3_zero_range for Azure
-      cifs: fix credits leak for SMB1 oplock breaks
-      cifs: rename and clarify CIFS_ASYNC_OP and CIFS_NO_RESP
-      SMB3: Clean up query symlink when reparse point
-
-Sergey Senozhatsky (1):
-      cifs: don't use __constant_cpu_to_le32()
-
-Steve French (8):
-      SMB3: Track total time spent on roundtrips for each SMB3 command
-      SMB3: update comment to clarify enumerating snapshots
-      SMB3: Add handling for different FSCTL access flags
-      SMB3: Add defines for new negotiate contexts
-      Add new flag on SMB3.1.1 read
-      smb3: Add protocol structs for change notify support
-      Negotiate and save preferred compression algorithms
-      cifs: update module internal version number
-
- fs/cifs/cifs_debug.c |   33 +-
- fs/cifs/cifsfs.c     |    3 +
- fs/cifs/cifsfs.h     |    4 +-
- fs/cifs/cifsglob.h   |   27 +-
- fs/cifs/cifsproto.h  |    9 +
- fs/cifs/cifssmb.c    |   98 +--
- fs/cifs/connect.c    |   63 +-
- fs/cifs/dfs_cache.c  |  140 ++++-
- fs/cifs/dfs_cache.h  |    5 +-
- fs/cifs/file.c       |    5 -
- fs/cifs/inode.c      |   37 ++
- fs/cifs/link.c       |   13 +-
- fs/cifs/smb1ops.c    |    9 +-
- fs/cifs/smb2ops.c    |  309 ++++++---
- fs/cifs/smb2pdu.c    |   72 ++-
- fs/cifs/smb2pdu.h    |   71 +++
- fs/cifs/smb2status.h | 3480
-++++++++++++++++++++++++++++++++++++++++++++++++++---------------------------------------------------
- fs/cifs/smbdirect.c  |  292 ++++-----
- fs/cifs/smbdirect.h  |   19 +-
- fs/cifs/smbfsctl.h   |   29 +-
- fs/cifs/transport.c  |   48 +-
- 21 files changed, 2582 insertions(+), 2184 deletions(-)
-
-
--- 
-Thanks,
-
-Steve
+> +
+> +	if (scale > 0)
+> +		*value *= f;
+> +	else
+> +		*value = div64_u64(*value, f);
+> +
+> +        return 0;
+> +}
+> +
+>  static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  			   u32 attr, int channel, long *val)
+>  {
+> @@ -29,6 +71,10 @@ static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  
+>  	sensor = *(scmi_sensors->info[type] + channel);
+>  	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = scmi_hwmon_scale(sensor, value);
+>  	if (!ret)
+>  		*val = value;
+>  
+> -- 
+> 2.17.1
+> 
