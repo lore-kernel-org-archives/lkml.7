@@ -2,88 +2,86 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A56C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FC7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD15216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805DF214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Mfvex9BF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+9P7Ywn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfEHWmO (ORCPT
+        id S1728593AbfEHWnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 18:42:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45676 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfEHWmN (ORCPT
+        Wed, 8 May 2019 18:43:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41263 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfEHWnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 18:42:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so181890pfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 15:42:12 -0700 (PDT)
+        Wed, 8 May 2019 18:43:13 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d9so99706pls.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 15:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=BFe1QuxITumk3NtRUI5j6KVRf7tiVcFp6Ull8WpK1V0=;
-        b=Mfvex9BFV2UhWcSvsxNqdfZF62RCtCtQrieU/ecep5z0+LlSwxbxe65oc8BqrABrVY
-         D0GgFHhiO8JYLmuzd9gChNaLR/+E/4/JuekTQG9zwQPg75Bs8vW3zLWyFJjZSmvU3Wzh
-         Rw4Yswz3b3zvMXAyyBahCY4JHGXRMcXjnuW49PAE3sO3I/urY9+uZjhcCAD0YoN02F6N
-         3LLwm9nr6HAM+XI30F0kWBh2vNMSNm4yJqmJOHo6mrUCXT1peZ6OWylRIId699L57jnG
-         WGOAag2H5f5NQtfOGri0KFAlW8SBMISCuDMeOc6pZx1RGPgYRw64zuvWYZZXU53m/Hof
-         Kzyg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=M1B48uz7naoSYHk9LojprOtp1192ghEYyzqs88NhVJI=;
+        b=h+9P7YwnWLHHuSzwZ2sv+mHuB4E7XG6CChvg3sGv62F6onzVd8jsOqcaxIj2LjxAxT
+         1ih5EJ3MJS7PnnZRuZwNt1YaoH9DcM30vzWTUoeflEIv6Dtf+THHd7Dr9E7hf6W9csKg
+         Vu3g+Y9+GRgL5yrh35U0cu+myItVdw3MBEagZyQR8I50s79J9yhmnYjkT59vTrAxxaqk
+         FukJqSfQzJiaoXyGzZMhWXOpJimlLTZT7sSrjSuWAHzMaT0zTfC+NYPO1AIc1PwERqrs
+         WyvT1sz9SepKCxf4jVE5FphxE5a1H+ih/psUoxAFHpztysaGC2/EN3eO+8kHFvpzno6b
+         xibw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=BFe1QuxITumk3NtRUI5j6KVRf7tiVcFp6Ull8WpK1V0=;
-        b=GYzd804lEbsnHmb+eJyI8sWlKVuYsJ3U1i/AkWtrDmyUcqupO8YwQfLw98loWAWwc+
-         pPdrn8dUsaLgaGHTwtYdYwlAcbaAXgXG9cE4RPLjG8t6aG3A4ClUAsI6D9PRCI3eYixi
-         meA+REA2Nq6GOZYDcHR/eb1TAX0QfT692L0XLQKnpT8h/uajlmJ1Tl3x/iQz2kJ+hpG6
-         hcePb/U0cDV/6X8Hrlb5iAAgRMRyidAm5IDkhC88aUN45Xwk6MYCFPgpyjrVf1n4Dp4a
-         NMzteTxQ9dfcQibbaH2UYprNnSDkosOrFWnPgCgavFgwnNj1Cd/50wp+72gFfC/fo0F6
-         rTCQ==
-X-Gm-Message-State: APjAAAWvnAk33M6r8z3HGURSE5lyc4AMIK9itsVJhg0Hb9vee1l4kzuB
-        +oYlEEaM32FnoLt1iCmdFyqElg==
-X-Google-Smtp-Source: APXvYqx/VVXouF8rOT0oIb+thKazr2gkUBTz+7SSmre3OHZnik0jMYM3EW1igez7W+lucMT7jJVS3Q==
-X-Received: by 2002:a63:1558:: with SMTP id 24mr900283pgv.126.1557355332383;
-        Wed, 08 May 2019 15:42:12 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:a864:57af:5348:a6ea])
-        by smtp.googlemail.com with ESMTPSA id u123sm376416pfu.67.2019.05.08.15.42.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 15:42:11 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, thierry.reding@gmail.com
-Cc:     baylibre-upstreaming@groups.io,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: meson-g12a: Add PWM nodes
-In-Reply-To: <20190423133646.5705-4-narmstrong@baylibre.com>
-References: <20190423133646.5705-1-narmstrong@baylibre.com> <20190423133646.5705-4-narmstrong@baylibre.com>
-Date:   Wed, 08 May 2019 15:42:10 -0700
-Message-ID: <7h7eb0in5p.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M1B48uz7naoSYHk9LojprOtp1192ghEYyzqs88NhVJI=;
+        b=q2S9zXbEduopCFcofTTvP8MjDx+FOFNET1bkm2GHZ7N3uu6vzTItI8K8HtP16gaKD7
+         YxwLw7NsID0EMacsYuNVyg01Pob6Wa4qaJ7VGOybj75lafrcWfsKl2SN1x7LGCS2fhG0
+         a7dQg8zwdlh3SsMVwHHUbtyN8DFzMHlDFFGfDoEnxRBKrs1CLTnzpTMWHZXvNOaejfTG
+         bNEts5xbIttabZQygGAuH7tMFT4X8vrZ8l+V4c4Hi2WbVVbbsbiOGqxlTVKeeHdJd4xJ
+         c75GZ8qQAbBXNu/458dg0fOk2rYAUwB0AMYRJZQtQ1Xu11oPFEGl4gc94FbuGqha7/Db
+         ceOQ==
+X-Gm-Message-State: APjAAAUIJgjl+xGedImegHnZfw+uzqRXBBNlOjxabwHPGO1kpMCEFRoK
+        Rs++uoTlCmXwSym66wU0jPuU8g==
+X-Google-Smtp-Source: APXvYqz6XWnNCnlZ4X+G7jjSasgvgF5m5Y/cdkIfjOx3lW+QBURzx9kbXupReuOJrB75rdT3Ubkfpw==
+X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr470608plr.130.1557355393196;
+        Wed, 08 May 2019 15:43:13 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 25sm320494pfo.145.2019.05.08.15.43.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 15:43:12 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] arm64: dts: qcom: qcs404: Enable PCIe
+Date:   Wed,  8 May 2019 15:43:06 -0700
+Message-Id: <20190508224309.5744-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+This series defines the PCIe PHY and controller on QCS404 and enable them for
+EVB. This was 1 commit, but per Vinod's request its split up in its individual
+pieces.
 
-> This adds the EE and AO PWM nodes and the possible pinctrl settings.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+Bjorn Andersson (3):
+  arm64: dts: qcom: qcs404: Make gcc as reset-controller
+  arm64: dts: qcom: qcs404: Add PCIe related nodes
+  arm64: dts: qcom: qcs404-evb: Enable PCIe
 
-Since bindings are acked, and there's no build dependency on the driver
-itself, queuing this for v5.3 (branch: v5.3/dt64)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 26 ++++++++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi     | 66 ++++++++++++++++++++++++
+ 2 files changed, 92 insertions(+)
 
-Thanks,
+-- 
+2.18.0
 
-Kevin
