@@ -2,80 +2,166 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A68C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495FCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525C7214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128E221530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="IW+d8qjE";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="QjPuaOYm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fjjDRnMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfEHILC (ORCPT
+        id S1726934AbfEHIMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:11:02 -0400
-Received: from mail133-31.atl131.mandrillapp.com ([198.2.133.31]:47199 "EHLO
-        mail133-31.atl131.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726082AbfEHILB (ORCPT
+        Wed, 8 May 2019 04:12:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44242 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbfEHIMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:11:01 -0400
-X-Greylist: delayed 1801 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 May 2019 04:11:00 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=k6xxt/3kcIYL7oHUmKqKRsF4bdAZAtMRpKsnmgM5468=;
- b=IW+d8qjEwQLiRgF1R0fpdH+E0syL0FeSIXjYIdGcoqsXvBqswEsnEONUtBbhrc4mz2GrLcQEM+55
-   89sVT7w9PSq3rS+fPc9nsZLkv8H5MVr+h6UYBbaxBeFAjK3jfR6DrK+jQst7yanxBNpG/bTrL5zz
-   fqXgxqyy8GyD+VHDR2o=
-Received: from pmta02.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail133-31.atl131.mandrillapp.com id hqa7h81sar8r for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 07:40:58 +0000 (envelope-from <bounce-md_31050260.5cd2880a.v1-f2b1a75a65bd42d4b7976fd4d60cb28b@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1557301258; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=k6xxt/3kcIYL7oHUmKqKRsF4bdAZAtMRpKsnmgM5468=; 
- b=QjPuaOYmbFNdd3rQYgdgpjdY/b5tnKtpVWuncfR7KaxxD9/3MyIa/+68WW8FGWDsbn6T5T
- 2tUc+nxAKjVsef8d5jWvrK6tRZIapMWA9U/AEyRrjWk76eyRheLwPIJoxmZUB1TqFofcD/A5
- 6Gn2oW9jUw1l9HY2UHlS1+ppKoPuA=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH 0/3] stream_open bits for Linux 5.2
-Received: from [87.98.221.171] by mandrillapp.com id f2b1a75a65bd42d4b7976fd4d60cb28b; Wed, 08 May 2019 07:40:58 +0000
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@denx.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Message-Id: <20190508074048.GA2907@deco.navytux.spb.ru>
-References: <cover.1557162679.git.kirr@nexedi.com> <CAHk-=wg1tFzcaX2v9Z91vPJiBR486ddW5MtgDL02-fOen2F0Aw@mail.gmail.com> <20190507190939.GA12729@deco.navytux.spb.ru> <CAHk-=wgWusqMfU25eBofgBHVSrQaVxr-EwCPCWcBaFMjzf_=Cg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgWusqMfU25eBofgBHVSrQaVxr-EwCPCWcBaFMjzf_=Cg@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.f2b1a75a65bd42d4b7976fd4d60cb28b
-X-Mandrill-User: md_31050260
-Date:   Wed, 08 May 2019 07:40:58 +0000
+        Wed, 8 May 2019 04:12:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dH7jDipyW2/IbT3T+4Br1AsjxNtqsrnnxXKC+NJUiRQ=; b=fjjDRnMkcQRy/bSUsLCt6Ym7yK
+        1hmF4nCFE7d0aIWZH3ieSyJOFK25ztJ3uXxJJKTKPR/1E0b6SkEWdz9/j7grE4D6Be5tjlqZ2e4HS
+        p0Mw9Vj84H2NlOSFsWk6ZRYkFUjQiqrBpS9X2KQIOIbAtAyCL1urRXNYZ1mL8mlFj0LgiFNlyvP3f
+        NrhCjQmyOizKgr9LYKePNGdg7eykF1nJw6EZPzQt7z0l2w8RbUXaU0lyDAwGpamuHgEInI8odH7ex
+        OqA75UmlhaxJEKFqBXpF+Q5aiGWB0i04q6F9+JK6LQWqEx85jO1bwWQabnvPwHsXQD3R5x/YacSmr
+        1HjhRaTA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOHgM-00012a-TP; Wed, 08 May 2019 08:12:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 2D5072029F87E; Wed,  8 May 2019 10:12:05 +0200 (CEST)
+Message-Id: <20190508080612.721269814@infradead.org>
+User-Agent: quilt/0.65
+Date:   Wed, 08 May 2019 09:49:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        linux-kselftest@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+References: <20190508074901.982470324@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 12:18:03PM -0700, Linus Torvalds wrote:
-> On Tue, May 7, 2019 at 12:09 PM Kirill Smelkov <kirr@nexedi.com> wrote:
-> >
-> > I've pushed corresponding gpg-signed tag (stream_open-5.2) to my tree. I
-> > did not go the gpg way initially because we do not have a gpg-trust
-> > relation established and so I thought that signing was useless.
-> 
-> Ok, since I hadn't pushed out my pull yet, I just re-did it with your
-> signature, so that the key is visible in the git tree.
+The kprobe trampolines have a FRAME_POINTER annotation that makes no
+sense. It marks the frame in the middle of pt_regs, at the place of
+saving BP.
 
-Thanks.
+Change it to mark the pt_regs frame as per the ENCODE_FRAME_POINTER
+from the respective entry_*.S.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/kprobes/common.h |   32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
+
+--- a/arch/x86/kernel/kprobes/common.h
++++ b/arch/x86/kernel/kprobes/common.h
+@@ -6,14 +6,15 @@
+ 
+ #include <asm/asm.h>
+ 
++#ifdef CONFIG_X86_64
++
+ #ifdef CONFIG_FRAME_POINTER
+-# define SAVE_RBP_STRING "	push %" _ASM_BP "\n" \
+-			 "	mov  %" _ASM_SP ", %" _ASM_BP "\n"
++#define ENCODE_FRAME_POINTER			\
++	"	leaq 1(%rsp), %rbp\n"
+ #else
+-# define SAVE_RBP_STRING "	push %" _ASM_BP "\n"
++#define ENCODE_FRAME_POINTER
+ #endif
+ 
+-#ifdef CONFIG_X86_64
+ #define SAVE_REGS_STRING			\
+ 	/* Skip cs, ip, orig_ax. */		\
+ 	"	subq $24, %rsp\n"		\
+@@ -27,11 +28,13 @@
+ 	"	pushq %r10\n"			\
+ 	"	pushq %r11\n"			\
+ 	"	pushq %rbx\n"			\
+-	SAVE_RBP_STRING				\
++	"	pushq %rbp\n"			\
+ 	"	pushq %r12\n"			\
+ 	"	pushq %r13\n"			\
+ 	"	pushq %r14\n"			\
+-	"	pushq %r15\n"
++	"	pushq %r15\n"			\
++	ENCODE_FRAME_POINTER
++
+ #define RESTORE_REGS_STRING			\
+ 	"	popq %r15\n"			\
+ 	"	popq %r14\n"			\
+@@ -51,19 +54,30 @@
+ 	/* Skip orig_ax, ip, cs */		\
+ 	"	addq $24, %rsp\n"
+ #else
++
++#ifdef CONFIG_FRAME_POINTER
++#define ENCODE_FRAME_POINTER			\
++	"	movl %esp, %ebp\n"		\
++	"	andl $0x7fffffff, %ebp\n"
++#else
++#define ENCODE_FRAME_POINTER
++#endif
++
+ #define SAVE_REGS_STRING			\
+ 	/* Skip cs, ip, orig_ax and gs. */	\
+-	"	subl $16, %esp\n"		\
++	"	subl $4*4, %esp\n"		\
+ 	"	pushl %fs\n"			\
+ 	"	pushl %es\n"			\
+ 	"	pushl %ds\n"			\
+ 	"	pushl %eax\n"			\
+-	SAVE_RBP_STRING				\
++	"	pushl %ebp\n"			\
+ 	"	pushl %edi\n"			\
+ 	"	pushl %esi\n"			\
+ 	"	pushl %edx\n"			\
+ 	"	pushl %ecx\n"			\
+-	"	pushl %ebx\n"
++	"	pushl %ebx\n"			\
++	ENCODE_FRAME_POINTER
++
+ #define RESTORE_REGS_STRING			\
+ 	"	popl %ebx\n"			\
+ 	"	popl %ecx\n"			\
+
+
