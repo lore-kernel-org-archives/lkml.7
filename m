@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F997C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD23C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B1320989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED1320989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfEHOvP (ORCPT
+        id S1728209AbfEHOon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:51:15 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9094 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbfEHOon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61868 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728136AbfEHOol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:43 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:40 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 08 May 2019 07:44:39 -0700
+  by orsmga005.jf.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 6629B926; Wed,  8 May 2019 17:44:29 +0300 (EEST)
+        id 323C8739; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 15/62] x86/mm: Rename CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING
-Date:   Wed,  8 May 2019 17:43:35 +0300
-Message-Id: <20190508144422.13171-16-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 11/62] x86/mm: Add a helper to retrieve KeyID for a page
+Date:   Wed,  8 May 2019 17:43:31 +0300
+Message-Id: <20190508144422.13171-12-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,41 +57,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the option to CONFIG_MEMORY_PHYSICAL_PADDING. It will be used
-not only for KASLR.
+page_ext allows to store additional per-page information without growing
+main struct page. The additional space can be requested at boot time.
+
+Store KeyID in bits 31:16 of extended page flags. These bits are unused.
+
+page_keyid() returns zero until page_ext is ready. page_ext initializer
+enables a static branch to indicate that page_keyid() can use page_ext.
+The same static branch will gate MKTME readiness in general.
+
+We don't yet set KeyID for the page. It will come in the following
+patch that implements prep_encrypted_page(). All pages have KeyID-0 for
+now.
+
+page_keyid() will be used by KVM which can be built as a module. We need
+to export mktme_enabled_key to be able to inline page_keyid().
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/Kconfig    | 2 +-
- arch/x86/mm/kaslr.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/mktme.h | 28 ++++++++++++++++++++++++++++
+ arch/x86/include/asm/page.h  |  1 +
+ arch/x86/mm/mktme.c          | 21 +++++++++++++++++++++
+ include/linux/mm.h           |  2 +-
+ include/linux/page_ext.h     | 11 ++++++++++-
+ mm/page_ext.c                |  3 +++
+ 6 files changed, 64 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 62fc3fda1a05..62cfb381fee3 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2201,7 +2201,7 @@ config RANDOMIZE_MEMORY
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index df31876ec48c..51f831b94179 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -2,15 +2,43 @@
+ #define	_ASM_X86_MKTME_H
  
- 	   If unsure, say Y.
+ #include <linux/types.h>
++#include <linux/page_ext.h>
++#include <linux/jump_label.h>
  
--config RANDOMIZE_MEMORY_PHYSICAL_PADDING
-+config MEMORY_PHYSICAL_PADDING
- 	hex "Physical memory mapping padding" if EXPERT
- 	depends on RANDOMIZE_MEMORY
- 	default "0xa" if MEMORY_HOTPLUG
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index d669c5e797e0..2228cc7d6b42 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -103,7 +103,7 @@ void __init kernel_randomize_memory(void)
- 	 */
- 	BUG_ON(kaslr_regions[0].base != &page_offset_base);
- 	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
--		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
-+		CONFIG_MEMORY_PHYSICAL_PADDING;
+ #ifdef CONFIG_X86_INTEL_MKTME
+ extern phys_addr_t mktme_keyid_mask;
+ extern int mktme_nr_keyids;
+ extern int mktme_keyid_shift;
++
++DECLARE_STATIC_KEY_FALSE(mktme_enabled_key);
++static inline bool mktme_enabled(void)
++{
++	return static_branch_unlikely(&mktme_enabled_key);
++}
++
++extern struct page_ext_operations page_mktme_ops;
++
++#define page_keyid page_keyid
++static inline int page_keyid(const struct page *page)
++{
++	if (!mktme_enabled())
++		return 0;
++
++	return lookup_page_ext(page)->keyid;
++}
++
++
+ #else
+ #define mktme_keyid_mask	((phys_addr_t)0)
+ #define mktme_nr_keyids		0
+ #define mktme_keyid_shift	0
++
++#define page_keyid(page) 0
++
++static inline bool mktme_enabled(void)
++{
++	return false;
++}
+ #endif
  
- 	/* Adapt phyiscal memory region size based on available memory */
- 	if (memory_tb < kaslr_regions[0].size_tb)
+ #endif
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index 7555b48803a8..39af59487d5f 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -19,6 +19,7 @@
+ struct page;
+ 
+ #include <linux/range.h>
++#include <asm/mktme.h>
+ extern struct range pfn_mapped[];
+ extern int nr_pfn_mapped;
+ 
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index 91a415612519..9dc256e3654b 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -9,3 +9,24 @@ phys_addr_t mktme_keyid_mask;
+ int mktme_nr_keyids;
+ /* Shift of KeyID within physical address. */
+ int mktme_keyid_shift;
++
++DEFINE_STATIC_KEY_FALSE(mktme_enabled_key);
++EXPORT_SYMBOL_GPL(mktme_enabled_key);
++
++static bool need_page_mktme(void)
++{
++	/* Make sure keyid doesn't collide with extended page flags */
++	BUILD_BUG_ON(__NR_PAGE_EXT_FLAGS > 16);
++
++	return !!mktme_nr_keyids;
++}
++
++static void init_page_mktme(void)
++{
++	static_branch_enable(&mktme_enabled_key);
++}
++
++struct page_ext_operations page_mktme_ops = {
++	.need = need_page_mktme,
++	.init = init_page_mktme,
++};
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 07c36f4673f6..2684245f8503 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1607,7 +1607,7 @@ static inline int vma_keyid(struct vm_area_struct *vma)
+ #endif
+ 
+ #ifndef page_keyid
+-static inline int page_keyid(struct page *page)
++static inline int page_keyid(const struct page *page)
+ {
+ 	return 0;
+ }
+diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+index f84f167ec04c..d9c5aae9523f 100644
+--- a/include/linux/page_ext.h
++++ b/include/linux/page_ext.h
+@@ -23,6 +23,7 @@ enum page_ext_flags {
+ 	PAGE_EXT_YOUNG,
+ 	PAGE_EXT_IDLE,
+ #endif
++	__NR_PAGE_EXT_FLAGS
+ };
+ 
+ /*
+@@ -33,7 +34,15 @@ enum page_ext_flags {
+  * then the page_ext for pfn always exists.
+  */
+ struct page_ext {
+-	unsigned long flags;
++	union {
++		unsigned long flags;
++#ifdef CONFIG_X86_INTEL_MKTME
++		struct {
++			unsigned short __pad;
++			unsigned short keyid;
++		};
++#endif
++	};
+ };
+ 
+ extern void pgdat_page_ext_init(struct pglist_data *pgdat);
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index d8f1aca4ad43..1af8b82087f2 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -68,6 +68,9 @@ static struct page_ext_operations *page_ext_ops[] = {
+ #if defined(CONFIG_IDLE_PAGE_TRACKING) && !defined(CONFIG_64BIT)
+ 	&page_idle_ops,
+ #endif
++#ifdef CONFIG_X86_INTEL_MKTME
++	&page_mktme_ops,
++#endif
+ };
+ 
+ static unsigned long total_usage;
 -- 
 2.20.1
 
