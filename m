@@ -2,69 +2,126 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227C1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4FDC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A87216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5871421726
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfEHQhb (ORCPT
+        id S1728318AbfEHQhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:37:31 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:48674 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbfEHQhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:37:31 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 51B4C14015144;
-        Wed,  8 May 2019 09:37:30 -0700 (PDT)
-Date:   Wed, 08 May 2019 09:37:29 -0700 (PDT)
-Message-Id: <20190508.093729.1392898151729084665.davem@davemloft.net>
-To:     fancer.lancer@gmail.com
-Cc:     f.fainelli@gmail.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        olteanv@gmail.com, martin.blumenstingl@googlemail.com,
-        Sergey.Semin@t-platforms.ru, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] net: phy: realtek: Fix RGMII TX/RX-delays
- initial config of rtl8211(e|f)
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190508012920.13710-1-fancer.lancer@gmail.com>
-References: <20190426212112.5624-1-fancer.lancer@gmail.com>
-        <20190508012920.13710-1-fancer.lancer@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 8 May 2019 12:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727502AbfEHQhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 12:37:54 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E5BB216F4;
+        Wed,  8 May 2019 16:37:50 +0000 (UTC)
+Date:   Wed, 8 May 2019 12:37:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190508123748.1737b8b5@gandalf.local.home>
+In-Reply-To: <CAHk-=wg5_fwx_-ybD9TLQE4rAUqtYzO2CAmpciWTkDn3dtKMOw@mail.gmail.com>
+References: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
+        <20190506225819.11756974@oasis.local.home>
+        <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
+        <20190506232158.13c9123b@oasis.local.home>
+        <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
+        <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
+        <20190507111227.1d4268d7@gandalf.local.home>
+        <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
+        <20190507163440.GV2606@hirez.programming.kicks-ass.net>
+        <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
+        <20190507172159.5t3bm3mjkwagvite@treble>
+        <20190507172418.67ef6fc3@gandalf.local.home>
+        <CAHk-=wg5_fwx_-ybD9TLQE4rAUqtYzO2CAmpciWTkDn3dtKMOw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 May 2019 09:37:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
-Date: Wed,  8 May 2019 04:29:18 +0300
+On Tue, 7 May 2019 21:50:52 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> It has been discovered that RX/TX delays of rtl8211e ethernet PHY
-> can be configured via a MDIO register hidden in the extension pages
-> layout. Particularly the extension page 0xa4 provides a register 0x1c,
-> which bits 1 and 2 control the described delays. They are used to
-> implement the "rgmii-{id,rxid,txid}" phy-mode support in patch 1.
+> > It's been a bane of mine for some time.  
 > 
-> The second patch makes sure the rtl8211f TX-delay is configured only
-> if RGMII interface mode is specified including the rgmii-rxid one.
-> In other cases (most importantly for NA mode) the delays are supposed
-> to be preconfigured by some other software or hardware and should be
-> left as is without any modification. The similar thing is also done
-> for rtl8211e in the patch 1 of this series.
+> Guys, I have basically a one-liner patch for your hangups.
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> It's called "rename 'sp' to 'user_sp' on x86-32".
+> 
+> Then we make the 'sp' field on x86-64 be a union, so that you can call
+> it user_sp or sp as you wish.
+> 
+> Yeah, it's really more than one line, because obviously the users will
+> need chaning, but honestly, that would be a _real_ cleanup. Make the
+> register match what it actually is.
 
-These patches do not apply to the current net GIT tree, please respin.
+But is it? Sure, it will be a reminder that it's different for x86-32,
+but that still doesn't take away the fact that pt_regs on x86_32 is an
+anomaly! Where else do we have part of a data structure that can't be
+read because it can possibly fault? If regs is a valid pointer, one
+would think that simply reading regs->sp (or regs->user_sp) would be no
+more dangerous than reading regs->ip.
+
+The difference between entry_32.S from entry_64.S causes it to spill
+into C code, making the x86_64 code more difficult to deal with. Sure,
+10 to 15 years ago, all your arguments would make sense. But today, who
+uses x86_32?  Perhaps you may use it in a VM, but I asked a few
+developers when was the last time they used one, they told me 5 to 7
+years ago. I only boot x86_32 to test to make sure I didn't break it.
+
+Yes, your diffstat is really nice to the changes to entry_32.S, but at
+what cost? To make the x86_64 code more complex? That whole returning
+the regs in the int3 handler makes no sense on x86_64, but yet we would
+need to do it to handle x86_32. Why burden the architecture of today
+and tomorrow with the architecture of yesterday? x86_32 is becoming
+more obsolete by the day. It baffles me why we wouldn't want to contain
+its complexity in a single file then to spread it out like wildfire
+across the generic x86 code.
+
+The &regs->sp hack is just one more rung in the complex learning curve
+ladder of becoming a Linux kernel developer.
+
+-- Steve
