@@ -2,132 +2,111 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A47C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B32A21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652A321019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:42:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MfvNU5LG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfEHDgI (ORCPT
+        id S1726845AbfEHDmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 23:36:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:43864 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfEHDgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 23:36:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id y15so7265310iod.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 20:36:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5dZSJzVyB2gZ6t0seAHk5Qi3NpAEiExb1GD1A6ohrB8=;
-        b=L34SkKmrr4FVfjpWNlKRb6MwEMmnFHb780IQJMWVUR3RPH4mcJ9k8JQz9dHKmOeMMp
-         rgv4XQSFQskTyytNLxcHmO6VzWLK5s5k4rp+drdjGVfELpDMacVWo5IL/VA4MvYCXqdm
-         GjY/SX9GkaNBkG7iu4AKLPXT7Ml/KjPxLQKHqu/Qa9ajWXrrRQffBEbMy1XBwh+n/WaZ
-         fTseyxyRqdexpOxFKm2H//2O57Qm2RFru9DxvI2iMHKJ9t/CE14BXcsD0WtUN3uM6Vib
-         NNKZpT8RctNm/74cqMZ+DFCx3RBN1Unh0FF17ATxhzv+cEpL1cNgeg8iDEcBRsJXgXTb
-         tA/Q==
-X-Gm-Message-State: APjAAAUCjlglAFezSKOYMdPJQF3ut2toB8lNJ0ul3TZhO5LV5uMeXemb
-        8/NWImHQsQ4vxSFbz6FNlkQRbDX05NC/se/CYXAYqiVA/XAb
-X-Google-Smtp-Source: APXvYqyvDopLdusXrW7Wfp1Y5mfs8uWUq8XNTfgSfTejHF8cNKXeZaZUCwr3DFE+0yNkV3zvh+Hm2tCGTH8I1ctUgFdD0idYHzH6
+        Tue, 7 May 2019 23:42:23 -0400
+Received: from mail-eopbgr20059.outbound.protection.outlook.com ([40.107.2.59]:20228
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726516AbfEHDmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 23:42:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q/zUq08HnW7dhwD6miK7ZR98RL0VOqWKdF+9oKHCrtw=;
+ b=MfvNU5LGdRwsjpkmWxI8KmVv3Vs9WDmXq40V8x1I7F2mKEO4mhVx/8skF+5MAK9krJcwTlkg/wjxkAXlCj8fWllfwMnHjskjBs14VGb7uUE7bMxzrKQtO9r++N2anMxpUuDqrbgCrhHl7IgPK0VyWFe8HZK9SarCu9MaBJxq5+U=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
+ VI1PR0402MB2733.eurprd04.prod.outlook.com (10.175.22.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 8 May 2019 03:42:19 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::9889:fa82:4172:14df]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::9889:fa82:4172:14df%6]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 03:42:13 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>, Kay-Liu <liuk@cetca.net.cn>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for
+ fec 'ahb' clock
+Thread-Topic: [EXT] Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for
+ fec 'ahb' clock
+Thread-Index: AQHVAmkSkfnHjuPrDUuL+rGIVj8MEqZcLD7wgAABdICABCF2AIAAS6QQ
+Date:   Wed, 8 May 2019 03:42:12 +0000
+Message-ID: <VI1PR0402MB3600C57B5922EC20D87DF913FF320@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
+ <CAOMZO5BbA6oq8okTR-r800k4XY76XxxEdufd1mjcV6HdTpVotA@mail.gmail.com>
+ <AM0PR04MB421133A3F3C6B534B6ECEA7880370@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <VI1PR0402MB360058CE70AD60C116EE0634FF370@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
+In-Reply-To: <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e71f75e2-0754-41d6-1d7e-08d6d367284d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2733;
+x-ms-traffictypediagnostic: VI1PR0402MB2733:
+x-microsoft-antispam-prvs: <VI1PR0402MB2733BF7F84DB9E963392C06BFF320@VI1PR0402MB2733.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(102836004)(6506007)(305945005)(8676002)(6436002)(6116002)(1411001)(11346002)(446003)(6246003)(8936002)(74316002)(7416002)(53546011)(3846002)(68736007)(81156014)(81166006)(186003)(99286004)(25786009)(7696005)(54906003)(14454004)(256004)(2906002)(26005)(86362001)(14444005)(52536014)(7736002)(71190400001)(229853002)(76176011)(55016002)(71200400001)(4326008)(476003)(9686003)(486006)(66446008)(53936002)(316002)(6916009)(33656002)(73956011)(66946007)(76116006)(66476007)(66556008)(64756008)(5660300002)(4744005)(478600001)(66066001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2733;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZSAMTL0OwWaYPbDHFGtgOyBO1Pgg2Rrs7t9a/Rx3oTiDjK290TxKgzq/NeT5oKQuFjHJsA+d32m8AEaBYdKtW2k21N8via+30Mh5qY5g+AWIxOBtn5yFKW3OB1d8TmOZXkmF+LJDHU8YPpRN0zRenWo6DpRd/zqpl7wSCaIQDInDq96SzMrgQnYjZoV+UUWPCzP4I5tZ8k+Cs4vCRhucDLrzg/gy7/ACm2mDgt57JPx2YYnHCvUXRa6FvRMfekUNQW8Xk3NJSRep5tWqqgzrisP9GdM6spbXOdqf8mfokQZgX1jUdYJYcCDcerOpBy5c7X/sL6T3GPJ/Lq4Oy/g84UdZwfRk51n7B9TEsmR/V6sxVXFk59niZkt7VFaVaktEZEpPpvJnXyNf/2MWchxQVgw2SosfdtP8PJlG3VZZdsc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a24:b701:: with SMTP id h1mr1646271itf.178.1557286567110;
- Tue, 07 May 2019 20:36:07 -0700 (PDT)
-Date:   Tue, 07 May 2019 20:36:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a573da058858083c@google.com>
-Subject: WARNING in cgroup_exit
-From:   syzbot <syzbot+f14868630901fc6151d3@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
-        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e71f75e2-0754-41d6-1d7e-08d6d367284d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 03:42:12.9527
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2733
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    00c3bc00 Add linux-next specific files for 20190507
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15220ec8a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=63cd766601c6c9fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=f14868630901fc6151d3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fcf758a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1202ffa4a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f14868630901fc6151d3@syzkaller.appspotmail.com
-
-WARNING: CPU: 0 PID: 8653 at kernel/cgroup/cgroup.c:6008  
-cgroup_exit+0x51a/0x5d0 kernel/cgroup/cgroup.c:6008
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8653 Comm: syz-executor076 Not tainted 5.1.0-next-20190507 #2
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x75a kernel/panic.c:218
-  __warn.cold+0x20/0x47 kernel/panic.c:575
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:cgroup_exit+0x51a/0x5d0 kernel/cgroup/cgroup.c:6008
-Code: 00 48 c7 c2 20 7f 6d 87 be d3 01 00 00 48 c7 c7 20 80 6d 87 c6 05 01  
-93 f1 07 01 e8 fb 03 ed ff e9 b1 fb ff ff e8 96 f9 05 00 <0f> 0b e9 75 fc  
-ff ff e8 8a f9 05 00 48 c7 c2 e0 82 6d 87 be 85 02
-RSP: 0018:ffff888086c17a80 EFLAGS: 00010093
-RAX: ffff88808e99a000 RBX: 0000000000000001 RCX: ffffffff816b0b5e
-RDX: 0000000000000000 RSI: ffffffff816b0eea RDI: 0000000000000001
-RBP: ffff888086c17b18 R08: ffff88808e99a000 R09: ffffed1010d82f3e
-R10: ffffed1010d82f3d R11: 0000000000000003 R12: ffff88808e99a000
-R13: ffff8880981c3200 R14: ffff888086c17af0 R15: 1ffff11010d82f52
-  do_exit+0x97a/0x2fa0 kernel/exit.c:889
-  do_group_exit+0x135/0x370 kernel/exit.c:980
-  get_signal+0x425/0x2270 kernel/signal.c:2638
-  do_signal+0x87/0x1900 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:198 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:276 [inline]
-  do_syscall_64+0x57e/0x670 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4471e9
-Code: e8 3c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 ab 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f479f748db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00000000006dcc38 RCX: 00000000004471e9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dcc38
-RBP: 00000000006dcc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc3c
-R13: 00007ffd1ab0c31f R14: 00007f479f7499c0 R15: 0000000000000001
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+RnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBIaSBBbmR5LA0KPiAN
+Cj4gT24gU3VuLCBNYXkgNSwgMjAxOSBhdCA1OjE1IEFNIEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5A
+bnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+IE5hY2sgdGhlIHBhdGNoICENCj4gPg0KLi4uDQo+ID4g
+U2Vjb25kbHksICBmb3IgeW91ciBpc3N1ZSB5b3UgY2F1Z2h0LCB3aGljaCB3YXMgZml4ZWQgYnkg
+cGF0Y2g6DQo+ID4gY29tbWl0IGQ3YzNhMjA2ZTYzMzhlNGNjZGYwMzA3MTlkZWMwMjhlMjZhNTIx
+ZDUNCj4gPiBBdXRob3I6IEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT4NCj4gPiBEYXRl
+OiAgIFR1ZSBBcHIgOSAwMzo0MDo1NiAyMDE5ICswMDAwDQo+ID4NCj4gPiAgICAgbmV0OiBmZWM6
+IG1hbmFnZSBhaGIgY2xvY2sgaW4gcnVudGltZSBwbQ0KPiANCj4gV291bGQgdGhpcyBhbHNvIGZp
+eCB0aGUgY2FzZSB3aGVyZSBwb3dlciBtYW5hZ2VtZW50IHN1cHBvcnQgaXMgZGlzYWJsZWQ/DQo+
+IA0KPiBJZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5IHRoZSBleHBsYW5hdGlvbiBmcm9tIEtheS1M
+aXUgaGUgd291bGQgc3RpbGwgc2VlIGENCj4gaGFuZyBpbiB0aGUgY2FzZSB3aGVuIFBNIGlzIGRp
+c2FibGVkLg0KPiANCj4gVGhhbmtzDQpGcm9tIGN1cnJlbnQgZGVzaWduLCBpdCBzdGlsbCB3b3Jr
+IGV2ZW4gaWYgZGlzYWJsZSBQTS4NClBsZWFzZSBkb3VibGUgY2hlY2sgaXQuDQoNCkFuZHkNCg==
