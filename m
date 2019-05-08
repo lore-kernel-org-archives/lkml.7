@@ -2,210 +2,235 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E03C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A904C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0D7216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6619216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Ia/K4UzR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ri7VOMAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfEHQdY (ORCPT
+        id S1728070AbfEHQde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:33:24 -0400
-Received: from node.akkea.ca ([192.155.83.177]:41192 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfEHQdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:33:23 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 84A8E4E204B; Wed,  8 May 2019 16:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1557333202; bh=4SQesqSlZceCFZdTlMD8rgA4AJ+KuZo+jJu7RWe8mCE=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=Ia/K4UzRnZRb4lS6Bvzu0iXlAdtXHflvqL/KcHpKkDctcB4+BeotNllat3VElckYk
-         GP5hmniUHeZop6mZhZz2Kodkww8fpVNBITYs5hW9AT+NlvH4LA5QAKEJmdihR8I3vm
-         SPolcIOCh2f6X/brbb4n79YgXjxYsZNF0IcHlOcQ=
-To:     Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 1/1] usb: typec: tcpci: Clear the fault status register
-X-PHP-Originating-Script: 1000:rcube.php
+        Wed, 8 May 2019 12:33:34 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38160 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfEHQdd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 12:33:33 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w11so22663507edl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:33:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZcsMiLErKaFVa4DPIlZBROc/Wds0ecbUxqe0YDds6g8=;
+        b=Ri7VOMAbcFRETs5rGEuiiLrWpZr3CbXRfFtdy/PJHMThA+QrxS/zV5fVLToaJDA6hn
+         8eX166Fk/huwRPsPN9yiWFpWFBVjJSOnJnHqrukYX752ET7xTtuHMq4lqc8Zw5ijMcY8
+         lXLHCYnC+ndvBgpy0hq4WUZEIA54L+owc2UUE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ZcsMiLErKaFVa4DPIlZBROc/Wds0ecbUxqe0YDds6g8=;
+        b=hDGDWtB2tvkfcPEr4ehBeEGrMvoWGmKEfeeyXuAUIIq3/czbVM1cUl+uvUbv36I6Ra
+         lwOdyHraJBoR+/YfuTRUU8mT4lr1RO2l+sxaBVxQlXQQzEJV+T6uv5+7+D3dD8UydSN/
+         9Ytc7jMoq69bGSMjNUNT2GhwJiup8ptByePQn06aTh7ukI97qSk9f6OVjUrCb8l3T3V3
+         7DP9ZywTwRdySTVq2XUnXOUfaMcJ182YQBr7pExhxNfWqV0/t5hXkAU0GPxSjn3v3Pb5
+         ZNpOzg7l6ovgRshel/5cRWAnTJmuTV674Fx8OAweIo/e3cXi1Kghui1fDfinwJlGFYVP
+         dpXg==
+X-Gm-Message-State: APjAAAXxrV6jRFbdfzUd3sdpBhScW3HWt69Vg9TLHfoHAxxr+xgAfhd3
+        N51ncTXHs9u6AAqLEl+8yJebQA==
+X-Google-Smtp-Source: APXvYqzInFyxKdOVxAKBeuqv0AqML3lDquvEq1Sqlsip3vAyBuCJ4K9iW94Wf+0c0l5MhxdsVgnY+w==
+X-Received: by 2002:a50:b835:: with SMTP id j50mr40247358ede.63.1557333211517;
+        Wed, 08 May 2019 09:33:31 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id h17sm2792222ejc.34.2019.05.08.09.33.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 09:33:30 -0700 (PDT)
+Date:   Wed, 8 May 2019 18:33:27 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Sean Paul <sean@poorly.run>
+Cc:     dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/11] drm: Add
+ drm_atomic_get_(old|new-_connector_for_encoder() helpers
+Message-ID: <20190508163327.GZ17751@phenom.ffwll.local>
+Mail-Followup-To: Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+References: <20190508160920.144739-1-sean@poorly.run>
+ <20190508160920.144739-3-sean@poorly.run>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 08 May 2019 10:33:22 -0600
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <groeck7@gmail.com>, linux-imx@nxp.com
-In-Reply-To: <20190508162211.GA5495@roeck-us.net>
-References: <20190508002749.14816-1-angus@akkea.ca>
- <20190508002749.14816-2-angus@akkea.ca>
- <aed487a4-3f7c-55e8-9c84-feaa1c7f583d@roeck-us.net>
- <3fd046562f3bea2cb85354f8d3c420fc@www.akkea.ca>
- <3918f78b-15ec-9204-b2fc-f371157bc29c@roeck-us.net>
- <b1e568714632bc3be89f1452299873d2@www.akkea.ca>
- <20190508162211.GA5495@roeck-us.net>
-Message-ID: <1ba8244c4cfe5723c601c5e0416d6ffc@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508160920.144739-3-sean@poorly.run>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-08 10:22, Guenter Roeck wrote:
-> On Wed, May 08, 2019 at 07:48:43AM -0600, Angus Ainslie wrote:
->> Hi Guenter
->> 
->> On 2019-05-07 23:18, Guenter Roeck wrote:
->> >On 5/7/19 7:49 PM, Angus Ainslie wrote:
->> >>On 2019-05-07 20:03, Guenter Roeck wrote:
->> >>>On 5/7/19 5:27 PM, Angus Ainslie (Purism) wrote:
->> >>>>If the fault status register doesn't get cleared then
->> >>>>the ptn5110 interrupt gets stuck on. As the fault register gets
->> >>>>set everytime the ptn5110 powers on the interrupt is always stuck.
->> >>>>
->> >>>>Fixes: fault status register stuck
->> >>>>Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
->> >>>>---
->> >>>>  drivers/usb/typec/tcpm/tcpci.c | 11 +++++++++++
->> >>>>  1 file changed, 11 insertions(+)
->> >>>>
->> >>>>diff --git a/drivers/usb/typec/tcpm/tcpci.c
->> >>>>b/drivers/usb/typec/tcpm/tcpci.c
->> >>>>index c1f7073a56de..a5746657b190 100644
->> >>>>--- a/drivers/usb/typec/tcpm/tcpci.c
->> >>>>+++ b/drivers/usb/typec/tcpm/tcpci.c
->> >>>>@@ -463,6 +463,17 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
->> >>>>      else if (status & TCPC_ALERT_TX_FAILED)
->> >>>>          tcpm_pd_transmit_complete(tcpci->port, TCPC_TX_FAILED);
->> >>>>  +    if (status & TCPC_ALERT_FAULT) {
->> >>>
->> >>>Wait - the driver doesn't set TCPC_ALERT_FAULT in the alert mask
->> >>>register. How can the chip report it if fault alerts are not enabled ?
->> >>
->> >>Well that I didn't check. But I know this code gets executed so
->> >>something must be turning it on.
->> >>
->> >>Also if I don't clear it I get an unlimited number of interrupts.
->> >>
->> >>>What am I missing here ?
->> >>
->> >>Can the power on fault be masked ?
->> >>
->> >
->> >There is a TCPC_ALERT_FAULT mask bit, so I would think so.
->> >Can you dump register contents in the irq function and at the end of
->> >tcpci_init() ?
->> >
->> 
->> Ok so this seems to be related to imx8mq errata e7805:
->> 
->> I2C: When the I2C clock speed is configured for 400 kHz, the SCL low 
->> period
->> violates the I2C spec of
->> 1.3 uS min
->> 
->> The work around suggested by NXP is to set the clock to 384 kHz so 
->> that is
->> what I did and this is the output:
->> 
->> [    4.091512] device: 'tcpm-source-psy-0-0052': device_add
->> [    4.091581] PM: Adding info for No Bus:tcpm-source-psy-0-0052
->> [    4.091596] device: 'tcpm-source-psy-0-0052': dev_uevent: class 
->> uevent()
->> returned -11
->> [    4.094774] tcpci 0-0052: ALERT MASK 0x7f
->> [    4.107869] driver: 'tcpci': driver_bound: bound to device '0-0052'
->> [    4.107935] bus: 'i2c': really_probe: bound device 0-0052 to driver 
->> tcpci
->> [    4.110994] tcpci 0-0052: ALERT MASK 0x7f
->> [    4.115511] tcpci 0-0052: FAULT ALERT status 0x80
->> [    4.126332] tcpci 0-0052: ALERT MASK 0x7f
->> [    4.130784] tcpci 0-0052: FAULT ALERT status 0x0
->> 
->> The first "ALERT MASK" is in the init function immediately after 
->> setting
->> 
->>         reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
->>                 TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
->>                 TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
->>         if (tcpci->controls_vbus)
->>                 reg |= TCPC_ALERT_POWER_STATUS;
->>         ret = tcpci_write16(tcpci, TCPC_ALERT_MASK, reg);
->> 
->> 
->> So it looks like the register is correct but the fault interrupt still
->> fires. At 200 kHz I get the following output.
->> 
->> [    4.136845] device: 'tcpm-source-psy-0-0052': device_add
->> [    4.136943] PM: Adding info for No Bus:tcpm-source-psy-0-0052
->> [    4.136966] device: 'tcpm-source-psy-0-0052': dev_uevent: class 
->> uevent()
->> returned -11
->> [    4.178510] tcpci 0-0052: ALERT MASK 0x7f
->> [    4.217197] driver: 'tcpci': driver_bound: bound to device '0-0052'
->> [    4.217371] bus: 'i2c': really_probe: bound device 0-0052 to driver 
->> tcpci
->> 
->> So this is what is expected no fault interrupt.
->> 
->> Maybe errata e7805 needs an update.
->> 
->> Sorry for the noise.
->> 
+On Wed, May 08, 2019 at 12:09:07PM -0400, Sean Paul wrote:
+> From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > 
-> Let's not jump to conclusions; I don't think this is noise. It is more
-> likely that the i2c problem uncovers a race condition in tcpci_init().
+> Add functions to the atomic core to retrieve the old and new connectors
+> associated with an encoder in a drm_atomic_state. This is useful for
+> encoders and bridges that need to access the connector, for instance for
+> the drm_display_info.
 > 
-> In tcpci_init(), we first clear TCPC_ALERT by writing 0xffff into it.
-> Subsequently, we set TCPC_ALERT_MASK. I suspect what may happen is
-> that the chip has FAULT_ALERT enabled, and that a fault was logged.
-> We don't clear the FAULT_STATUS register in tcpci_init(), thus
-> FAULT_ALERT is immediately set again, before we clear the FAULT_ALERT
-> mask bit.
+> The CRTC associated with the encoder can also be retrieved through the
+> connector state, and from it, the old and new CRTC states.
+> 
+> Changed in v4:
+> - Added to the set
+> 
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> [seanpaul removed WARNs from helpers and added docs to explain why
+> returning NULL might be valid]
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_atomic.c | 70 ++++++++++++++++++++++++++++++++++++
+>  include/drm/drm_atomic.h     |  7 ++++
+>  2 files changed, 77 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
+> index 5eb40130fafb..936002495523 100644
+> --- a/drivers/gpu/drm/drm_atomic.c
+> +++ b/drivers/gpu/drm/drm_atomic.c
+> @@ -797,6 +797,76 @@ drm_atomic_get_private_obj_state(struct drm_atomic_state *state,
+>  }
+>  EXPORT_SYMBOL(drm_atomic_get_private_obj_state);
+>  
+> +/**
+> + * drm_atomic_get_old_connector_for_encoder - Get old connector for an encoder
+> + * @state: Atomic state
+> + * @encoder: The encoder to fetch the connector state for
+> + *
+> + * This function finds and returns the connector that was connected to @encoder
+> + * as specified by the @state.
+> + *
+> + * If there is no connector in @state which previously had @encoder connected to
+> + * it, this function will return NULL. While this may seem like an invalid use
+> + * case, it is sometimes a useful to differentiate commits which had no prior
+> + * connectors attached to @encoder vs ones that did (and to inspect their
+> + * @state). This is especially true in enable hooks because the pipeline has
+> + * changed/will change.
+
+s/has changed// ... I meant you'll pick the right ver tense :-)
+
+> + *
+> + * Returns: The old connector connected to @encoder, or NULL if the encoder is
+> + * not connected.
+> + */
+> +struct drm_connector *
+> +drm_atomic_get_old_connector_for_encoder(struct drm_atomic_state *state,
+> +					 struct drm_encoder *encoder)
+> +{
+> +	struct drm_connector_state *conn_state;
+> +	struct drm_connector *connector;
+> +	unsigned int i;
+> +
+> +	for_each_old_connector_in_state(state, connector, conn_state, i) {
+> +		if (conn_state->best_encoder == encoder)
+> +			return connector;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_get_old_connector_for_encoder);
+> +
+> +/**
+> + * drm_atomic_get_new_connector_for_encoder - Get new connector for an encoder
+> + * @state: Atomic state
+> + * @encoder: The encoder to fetch the connector state for
+> + *
+> + * This function finds and returns the connector that will be connected to
+> + * @encoder as specified by the @state.
+> + *
+> + * If there is no connector in @state which will have @encoder connected to it,
+> + * this function will return NULL. While this may seem like an invalid use case,
+> + * it is sometimes a useful to differentiate commits which have no connectors
+> + * attached to @encoder vs ones that do (and to inspect their state). This is
+> + * especially true in disable hooks because the pipeline has changed/will
+> + * change.
+
+s/will change//
+
+> + *
+> + * Returns: The new connector connected to @encoder, or NULL if the encoder is
+> + * not connected.
+> + */
+> +struct drm_connector *
+> +drm_atomic_get_new_connector_for_encoder(struct drm_atomic_state *state,
+> +					 struct drm_encoder *encoder)
+> +{
+> +	struct drm_connector_state *conn_state;
+> +	struct drm_connector *connector;
+> +	unsigned int i;
+> +
+> +	for_each_new_connector_in_state(state, connector, conn_state, i) {
+> +		if (conn_state->best_encoder == encoder)
+> +			return connector;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_get_new_connector_for_encoder);
+
+Maybe also add a "See also drm_atomic_get_old_connector_for_encoder() and
+drm_atomic_get_new_connector_for_encoder()." to the kerneldoc of
+drm_connector_state.best_encoder.
+
+With these doc nits:
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+> +
+>  /**
+>   * drm_atomic_get_connector_state - get connector state
+>   * @state: global atomic state object
+> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
+> index 824a5ed4e216..d6b3acd34e1c 100644
+> --- a/include/drm/drm_atomic.h
+> +++ b/include/drm/drm_atomic.h
+> @@ -453,6 +453,13 @@ struct drm_private_state * __must_check
+>  drm_atomic_get_private_obj_state(struct drm_atomic_state *state,
+>  				 struct drm_private_obj *obj);
+>  
+> +struct drm_connector *
+> +drm_atomic_get_old_connector_for_encoder(struct drm_atomic_state *state,
+> +					 struct drm_encoder *encoder);
+> +struct drm_connector *
+> +drm_atomic_get_new_connector_for_encoder(struct drm_atomic_state *state,
+> +					 struct drm_encoder *encoder);
+> +
+>  /**
+>   * drm_atomic_get_existing_crtc_state - get crtc state, if it exists
+>   * @state: global atomic state object
+> -- 
+> Sean Paul, Software Engineer, Google / Chromium OS
 > 
 
-Ok but wouldn't slowing down the bus speed make this more likely to 
-happen than less ?
-
-> The standard says that the alert pin shall not be set if the respective
-> interrupt is masked, but maybe the chip doesn't follow that. Either 
-> case,
-> the standard does say that masked alerts are still reported in the 
-> status
-> registers, so it is not surprising that the fault status is reported.
-> 
-> What we should probably do in tcpci_init() is to change the register
-> initialization order, and to clear the fault status register.
-> 
-> - Set TCPC_ALERT_MASK
-> - Set FAULT_STATUS_MASK (to 0)
-> - Clear TCPC_FAULT_STATUS
-> - Clear TCPC_ALERT
-> 
-> I suspect that will fix your problem.
-> 
-
-I'll try and get time to give that a shot.
-
-> Another question is if TCPC_ALERT_FAULT (together with appropriate
-> FAULT_STATUS_MASK bits) should be enabled, and if faults should be
-> logged. But that would be a separate patch or patch series.
-> 
-
-I was thinking this too but it also falls into the if I can find time 
-category.
-
-Angus
-
-> Thanks,
-> Guenter
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
