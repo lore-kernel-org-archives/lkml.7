@@ -2,111 +2,114 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55E5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD97C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6DC21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8552053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:12:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ecDRc3FP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfEHJLI convert rfc822-to-8bit (ORCPT
+        id S1726771AbfEHJMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:11:08 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41551 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfEHJLI (ORCPT
+        Wed, 8 May 2019 05:12:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46362 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfEHJMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:11:08 -0400
-Received: by mail-vs1-f66.google.com with SMTP id g187so12198664vsc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 02:11:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9zvqXQzn3SLsVtTH+qrWy/dpjXSSADrZyCG/zclGFrk=;
-        b=OjXpJ7qUsFyNmGZmvDeOv2DQb8w1ZVfQQluSWpkuf2Ij1OGY6TxleVbhBnDqj54Cso
-         ge8zGZ2EdRdVLmEmNabw8LD5m4iprp/Y1+qfHLwlGReLXUoBiML5ZDEwWDjWTkFqiuag
-         Nc1YQEe2sKjnesEiYWM6gvxlEaEFVr2HlPpUXQZB+zrPM0XFFXlbDpXBsz3ntW95yfKB
-         F9kM0D6v9uKFzq+ddixoNxT+2bQVgC34P83QJC6O5jc8iSxbHGyoMFlOPENNPTuYv+oC
-         bsrLAaWWn0DAhW4/i1LhPQvWiD4loT2rhnb9M4RIjf3t43KQxvjrI892NZMlD8wS5pci
-         9xJQ==
-X-Gm-Message-State: APjAAAU/jxe+oXqIyTdyCYgAs0K67rrc1Y+rlchYy042HkK+uc1KKBZS
-        y9Dg2YjRZUQiBetIjF0RfnDy9JPN10HNaALSci31ZfR2
-X-Google-Smtp-Source: APXvYqxYeb5Azwgv1CuO52oUvy4D+Pb3NnsFkuzTzZ7jpSvPO6zuoR64XiNPduTANQ/xIpRLFKwi7OZpSBDcUBGZZQY=
-X-Received: by 2002:a67:e2ca:: with SMTP id i10mr11629908vsm.96.1557306667170;
- Wed, 08 May 2019 02:11:07 -0700 (PDT)
+        Wed, 8 May 2019 05:12:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ti/GvQ2fpzLJs51fiijjX5Y8RLoGHui9LgUr7AvseL0=; b=ecDRc3FP8L9eN5fGH7g83Ukb+
+        wx/775+ecbnvFj26epsJIiHft6Yy6iZmvwDT0QTaFm4f4ZUCj9z1VK1E95ToIqOxle37TliV3TEZG
+        rV35mHPqg4NmYKqti8SNH+WqWroFs7Hh69j8sAQ5sJfQin80qHdxBoa5V+nKp02lbrgvLm8RLdxWM
+        AlLGREEhabNknBqnjzOPjC/E4dYhR9Izc3KtDlILG4mSamLpXt97TG9QDQDzlxJwy7uCtyIfF1luB
+        SIrM+KibQ0w2QelLBqabBu13ASDSxglmWKcyy46D29DriOz4b1UN2ge1uzwaYkVSLRykV6MrFplNz
+        Ft820X0kA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOIcn-0004n2-30; Wed, 08 May 2019 09:12:29 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9194A2029F886; Wed,  8 May 2019 11:12:27 +0200 (CEST)
+Date:   Wed, 8 May 2019 11:12:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, adrian.hunter@intel.com
+Subject: Re: [PATCH 2/2] perf/x86/intel: Support PEBS output to PT
+Message-ID: <20190508091227.GB2606@hirez.programming.kicks-ass.net>
+References: <20190502105022.15534-1-alexander.shishkin@linux.intel.com>
+ <20190502105022.15534-3-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-References: <20190507135233.31836-1-anders.roxell@linaro.org>
-In-Reply-To: <20190507135233.31836-1-anders.roxell@linaro.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 8 May 2019 11:10:55 +0200
-Message-ID: <CAMuHMdUEaNto48rxq_8=zx3+9cuMp4UxY=dL0TjbqYo=9dxB9A@mail.gmail.com>
-Subject: Re: [PATCH] intel_th: msu: fix unused variables
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502105022.15534-3-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 3:53 PM Anders Roxell <anders.roxell@linaro.org> wrote:
-> When building and CONFIG_X86 isn't set the compiler rightly complains
-> about an unused varable 'i', see the warning below:
->
-> ../drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_alloc’:
-> ../drivers/hwtracing/intel_th/msu.c:783:21: warning: unused variable ‘i’ [-Wunused-variable]
->   int ret = -ENOMEM, i;
->                      ^
-> ../drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_free’:
-> ../drivers/hwtracing/intel_th/msu.c:863:6: warning: unused variable ‘i’ [-Wunused-variable]
->   int i;
->       ^
->
-> Rework so that an else part is added where empty functions are created
-> for set_memory_uc() and set_memory_wb(), in that way we could remove
-> '#ifdef CONFIG_X86' in function msc_buffer_win_alloc() and
-> msc_buffer_win_free().
->
-> Fixes: ba39bd830605 ("intel_th: msu: Switch over to scatterlist")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+On Thu, May 02, 2019 at 01:50:22PM +0300, Alexander Shishkin wrote:
+> If PEBS declares ability to output its data to Intel PT stream, use the
+> aux_source attribute bit to enable PEBS data output to PT. This requires
+> a PT event to be present and scheduled in the same context. Unlike the
+> DS area, the kernel does not extract PEBS records from the PT stream to
+> generate corresponding records in the perf stream, because that would
+> require real time in-kernel PT decoding, which is not feasible. The PMI,
+> however, can still be used.
+> 
+> The output setting is per-CPU, so all PEBS events must be either writing
+> to PT or to the DS area, so in order to not mess up the event scheduling,
+> we fall back to the latter in case both types of events are scheduled in.
+> 
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> ---
+>  arch/x86/events/intel/core.c     | 13 +++++++
+>  arch/x86/events/intel/ds.c       | 59 +++++++++++++++++++++++++++++++-
+>  arch/x86/events/perf_event.h     |  9 +++++
+>  arch/x86/include/asm/msr-index.h |  3 ++
+>  4 files changed, 83 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 4b4dac089635..949a589fd9b1 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3291,6 +3291,19 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>  		}
+>  	}
+>  
+> +	if (event->attr.aux_source) {
+> +		if (!event->attr.precise_ip)
+> +			return -EINVAL;
+> +
+> +		if (!x86_pmu.intel_cap.pebs_output_pt_available)
+> +			return -EOPNOTSUPP;
+> +
+> +		event->hw.flags |= PERF_X86_EVENT_PEBS_VIA_PT;
+> +
+> +		/* Signal to the core that we handled it */
+> +		event->attr.aux_source = 0;
 
-Thanks for your patch!
+That's a bit yuck, ideally we'd not modify attrs.
 
-> --- a/drivers/hwtracing/intel_th/msu.c
-> +++ b/drivers/hwtracing/intel_th/msu.c
-> @@ -21,6 +21,11 @@
->
->  #ifdef CONFIG_X86
->  #include <asm/set_memory.h>
-> +#else
-> +static void set_memory_uc(unsigned long addr, int numpages)
+Can't we change that test in perf_event_alloc() to something like:
 
-static inline?
+	if (event->attr.aux_source &&
+	    !(pmu->capabilities & PERF_PMU_CAP_AUX_SOURCE))
+		// error
 
-> +{}
-> +static void set_memory_wb(unsigned long addr, int numpages)
+?
 
-static inline?
 
-> +{}
->  #endif
-
-Regardless:
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +	}
