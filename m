@@ -2,119 +2,293 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F34C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4609CC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A0021479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0641621479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UjCs3Hs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfEHIg1 (ORCPT
+        id S1726878AbfEHIga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 8 May 2019 04:36:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42085 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfEHIg1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 04:36:27 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:47104 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfEHIg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:36:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id D5F24FB03;
-        Wed,  8 May 2019 10:36:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uXuJkEUUAiLW; Wed,  8 May 2019 10:36:22 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 403EA47B7D; Wed,  8 May 2019 10:36:22 +0200 (CEST)
-Date:   Wed, 8 May 2019 10:36:22 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+Received: by mail-wr1-f66.google.com with SMTP id l2so26032510wrb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ejPFMkOH4nB71JZvtpUtWYEnESDbhR46KwiTRhKlpYY=;
+        b=UjCs3Hs1A1TJz4DrCCO/HqxUmNOfQ6FSRZ6sFMN9YJDCePqd/HmwzWjhu7RpcoJwz+
+         /JrIpB2YpWQew4DEl2ZtyDTQjS8b/+zlowtBmkd+OIAOQ3YcIle1pp7r2vJu3NmKNc0j
+         hVlTGg1hIBxDH6ycl5Hk/z3g0ZOC2iW/6nMd7KkivdoOe+9V0ZxuREZtObMxQE46caxV
+         k4SmJQGioYFNyG/icUmOgrVLKM6fCbZq62FFRVi7YLE9GyK7MF2HL0nYaTMrbVyL8epH
+         3IUgVewddBCo5bPUl6gEqxyJDSBF1f1gO38Cqgao1xyAVsrS+ReMQk36AoEMtQFXKd3N
+         daPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ejPFMkOH4nB71JZvtpUtWYEnESDbhR46KwiTRhKlpYY=;
+        b=D30oyXdZkuEmq+ht2nUM610nQT0F97ctpAF0u3wpGUISNXNRgo8D7j+KNz5/zKw59E
+         NAfyoyiC3u9NhG9v0cDIto0NnFkNZYeGH9dOkGY+Jaj1diFe2+JDvMITiDsf85mNA628
+         Y9FbGU7aR1Ahx30DNpVVZoH5vFPPSg0eL85r1eHGG/B4Mvai4fLROTbJ9kNYs+BuVBbP
+         xPAVRNaECxmvsmipuQAmhnpkiQFr3WT3y2dO0L4ge5yI1aLP62S1s6GRQMn5WTc936af
+         lMnJX0AWSQyEUWP+GHyFU9jOyfDz89XXgo+RPEsFCZU0Kh8IkHO8/MH74IZZ2+H7GrFC
+         PT4g==
+X-Gm-Message-State: APjAAAXFRy94Al8WBTEigSIubqjEFGuQ8L9BHECaC/iSAD5eAxXP0EVM
+        GptO1IXlDo7eVzSW7yin0mmSog==
+X-Google-Smtp-Source: APXvYqwlWje+MSQTBFRqBzBoroHEdoXKAKxsvLDPUcZCTX9f2N+4cHc99gR6xe83PLsRey3KS/pjTw==
+X-Received: by 2002:adf:eb87:: with SMTP id t7mr19904084wrn.39.1557304585426;
+        Wed, 08 May 2019 01:36:25 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id r9sm7673925wrj.57.2019.05.08.01.36.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 01:36:24 -0700 (PDT)
+Date:   Wed, 8 May 2019 09:36:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Hovold <johan@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v10 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Message-ID: <20190508083622.GA3948@bogon.m.sigxcpu.org>
-References: <cover.1557215047.git.agx@sigxcpu.org>
- <299e28042e0a24c0cde593873bdfb15e18187a92.1557215047.git.agx@sigxcpu.org>
- <20190507181223.GC15122@ravnborg.org>
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v5 2/9] mfd: Add ST Multi-Function eXpander (STMFX) core
+ driver
+Message-ID: <20190508083622.GE3995@dell>
+References: <1554794651-6874-1-git-send-email-amelie.delaunay@st.com>
+ <1554794651-6874-3-git-send-email-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190507181223.GC15122@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1554794651-6874-3-git-send-email-amelie.delaunay@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Tue, May 07, 2019 at 08:12:23PM +0200, Sam Ravnborg wrote:
-> Hi Guido.
-> 
-> Looks good now, stumbled upon a few details I missed in last round.
-> With these considered / fixed you can add my
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> 
-> 	Sam
-> 
-> > +#define CM(x)	(				\
-> > +		((x) <	32)?0xe0|((x)-16) :	\
-> > +		((x) <	64)?0xc0|((x)-32) :	\
-> > +		((x) < 128)?0x80|((x)-64) :	\
-> > +		((x) - 128))
-> > +#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
-> > +#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
-> 
-> A few spaces around the operators may help readability a little.
-> 
-> > +static int phy_write(struct phy *phy, u32 value, unsigned int reg)
-> > +{
-> > +	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = regmap_write(priv->regmap, reg, value);
-> > +	if (ret < 0)
-> > +		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
-> 
-> I have recently learned that one has to remember trailign "\n"- please
-> add.
-> Check all other dev_xxx as I noticed the newline is missing in a few
-> more places.
+On Tue, 09 Apr 2019, Amelie Delaunay wrote:
 
-Argh...I thought I've fixed these up already but that was in the
-corresponding NWL driver only. Fixed now, thanks.
-
+> STMicroelectronics Multi-Function eXpander (STMFX) is a slave controller
+> using I2C for communication with the main MCU. Main features are:
+> - 16 fast GPIOs individually configurable in input/output
+> - 8 alternate GPIOs individually configurable in input/output when other
+> STMFX functions are not used
+> - Main MCU IDD measurement
+> - Resistive touchscreen controller
 > 
-> > +
-> > +	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
->                                                    ^
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  drivers/mfd/Kconfig       |  13 ++
+>  drivers/mfd/Makefile      |   2 +-
+>  drivers/mfd/stmfx.c       | 566 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/stmfx.h | 123 ++++++++++
+>  4 files changed, 703 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/stmfx.c
+>  create mode 100644 include/linux/mfd/stmfx.h
 > 
-> There was another of the symbols my terminal cannot show.
-> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3443f1a..9783e18 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1907,6 +1907,19 @@ config MFD_STPMIC1
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called stpmic1.
+>  
+> +config MFD_STMFX
+> +	tristate "Support for STMicroelectronics Multi-Function eXpander (STMFX)"
+> +	depends on I2C
+> +	depends on OF || COMPILE_TEST
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	help
+> +	  Support for the STMicroelectronics Multi-Function eXpander.
+> +
+> +	  This driver provides common support for accessing the device,
+> +	  additional drivers must be enabled in order to use the functionality
+> +	  of the device.
+> +
+>  menu "Multimedia Capabilities Port drivers"
+>  	depends on ARCH_SA1100
+>  
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index b4569ed7..614eea8 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -246,4 +246,4 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+>  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
+>  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
+>  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+> -
+> +obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+> new file mode 100644
+> index 0000000..59f0a03
+> --- /dev/null
+> +++ b/drivers/mfd/stmfx.c
+> @@ -0,0 +1,566 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for STMicroelectronics Multi-Function eXpander (STMFX) core
+> + *
+> + * Copyright (C) 2019 STMicroelectronics
+> + * Author(s): Amelie Delaunay <amelie.delaunay@st.com>.
+> + */
+> +#include <linux/bitfield.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/stmfx.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
 
-Thanks! I've incorporated your suggestions and will send out a v11 by
-the end of the week in case there's more comments coming in.
-Cheers,
- -- Guido
+[...]
 
+> +static int stmfx_chip_init(struct i2c_client *client)
+> +{
+> +	struct stmfx *stmfx = i2c_get_clientdata(client);
+> +	u32 id;
+> +	u8 version[2];
+> +	int ret;
+> +
+> +	stmfx->vdd = devm_regulator_get_optional(&client->dev, "vdd");
+> +	if (IS_ERR(stmfx->vdd)) {
+> +		ret = PTR_ERR(stmfx->vdd);
+> +		if (ret != -ENODEV) {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(&client->dev,
+> +					"Can't get VDD regulator:%d\n", ret);
+> +			return ret;
+> +		}
+
+Any reason you've decided to stick with this 3-layer nested if instead
+of going with my suggestion?
+
+> +	} else {
+> +		ret = regulator_enable(stmfx->vdd);
+> +		if (ret) {
+> +			dev_err(&client->dev, "VDD enable failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+
+[...]
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int stmfx_backup_regs(struct stmfx *stmfx)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_raw_read(stmfx->map, STMFX_REG_SYS_CTRL,
+> +			      &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_raw_read(stmfx->map, STMFX_REG_IRQ_OUT_PIN,
+> +			      &stmfx->bkp_irqoutpin,
+> +			      sizeof(stmfx->bkp_irqoutpin));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_restore_regs(struct stmfx *stmfx)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
+> +			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_IRQ_OUT_PIN,
+> +			       &stmfx->bkp_irqoutpin,
+> +			       sizeof(stmfx->bkp_irqoutpin));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_raw_write(stmfx->map, STMFX_REG_IRQ_SRC_EN,
+> +			       &stmfx->irq_src, sizeof(stmfx->irq_src));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_suspend(struct device *dev)
+> +{
+> +	struct stmfx *stmfx = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = stmfx_backup_regs(stmfx);
+> +	if (ret) {
+> +		dev_err(stmfx->dev, "Registers backup failure\n");
+> +		return ret;
+> +	}
+
+This doesn't need to be an extra function.  You're just adding more
+lines of code for no real gain in reusability/readability.
+
+> +	if (!IS_ERR(stmfx->vdd)) {
+> +		ret = regulator_disable(stmfx->vdd);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int stmfx_resume(struct device *dev)
+> +{
+> +	struct stmfx *stmfx = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (!IS_ERR(stmfx->vdd)) {
+> +		ret = regulator_enable(stmfx->vdd);
+> +		if (ret) {
+> +			dev_err(stmfx->dev,
+> +				"VDD enable failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = stmfx_restore_regs(stmfx);
+> +	if (ret) {
+> +		dev_err(stmfx->dev, "Registers restoration failure\n");
+> +		return ret;
+> +	}
+
+This doesn't need to be an extra function.  You're just adding more
+lines of code for no real gain in reusability/readability.
+
+> +	return 0;
+> +}
+> +#endif
+
+[...]
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
