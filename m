@@ -2,126 +2,189 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B6C04AAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17888C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEEA821726
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:08:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYd+rQOR"
+	by mail.kernel.org (Postfix) with ESMTP id D816821726
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfEHUIa (ORCPT
+        id S1727523AbfEHUNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:08:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34193 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfEHUI3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:08:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id g84so10162835ioa.1;
-        Wed, 08 May 2019 13:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fO0KWnimMpo8SBCLE4EyOOofpfWQrLjsWFfvlM20p+U=;
-        b=dYd+rQORDN+M7OSLpC0QH70WCdWVklZkT/b9XrcsRudrPsK1e/WSGZwJ2fPkwhMWBj
-         8LWikOVzwnBKBt0kF6yhfvOLSlMVgiL6MuVwWZM9l76xFLsmh1N844gqH7rj27Nsb9e4
-         iFUwF3gRpRdj1Q0DGPMmuvxd1kELfqwqSUYFdmMNqRHOTs7KVVNUwfwEt9tXgOzGip0m
-         t+S67L0sEvyKsge6zq9pnIjINxq/96ioroRl+K4tj4ReIH6Md0WuFHN/jU/ppim8VeDk
-         StgIXhUWzrKLLls8Tj0WiiBCNfMobIrg1K8WnQiG6i6sn1HijIAeR8RhZeXwy41I1tin
-         C9sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fO0KWnimMpo8SBCLE4EyOOofpfWQrLjsWFfvlM20p+U=;
-        b=QEdQ/4x/QlmtJUjU4HhfX4Wt8pJP0Lq+iPt04z2W8LnLjo3wFeQDGEBpvVSO3e+Z3N
-         jGbpdX/2sQuRNCQ4t96AGlyg0YHc+2YYLhdJ/+/KU7KSjfzRQ0Sf8PdD48wXoSR5gv1z
-         NJMvPmkOf2xhp5abSm3mKHVQbddHBuhJpjGIIguobedE4Qw2w1trWzQ1Tg7+W8o6OXbS
-         x7LQD9TENGy93kmO1yM2F1vhWYV58QvyHzSYN/jQFPLgyhe5KtAHZAdGf5AOd9jlGnc3
-         Kz+yCDE2qgBb/88ly7VeQmfGAlomwyQtYGMbyt5y0CGgXMq3A2MR0wrTA2NrSn4ZX4hc
-         Y2+A==
-X-Gm-Message-State: APjAAAW8OZoVzA0mL3ge21WI3R4flNts/lrmop9QEcDau55aw4OPXpOJ
-        9f44LkSFyOKZoqgh9ddVnVt9lc4me7k=
-X-Google-Smtp-Source: APXvYqwkAgLczpi8tdZK/LeU5anvflI3b3b1dummkV5A9JA/iRkPqLw0ZXE1OkxOPucc8pFO6bN71w==
-X-Received: by 2002:a6b:7112:: with SMTP id q18mr13022991iog.9.1557346108661;
-        Wed, 08 May 2019 13:08:28 -0700 (PDT)
-Received: from ubu (2600-6c48-437f-c81d-f514-433e-0658-d461.dhcp6.chtrptr.net. [2600:6c48:437f:c81d:f514:433e:658:d461])
-        by smtp.gmail.com with ESMTPSA id u26sm6946iob.78.2019.05.08.13.08.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 13:08:27 -0700 (PDT)
-From:   Kimberly Brown <kimbrownkd@gmail.com>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca, gregkh@linuxfoundation.org
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: replace ktype default_attrs with default_groups
-Date:   Wed,  8 May 2019 16:07:48 -0400
-Message-Id: <20190508200748.3907-1-kimbrownkd@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 May 2019 16:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbfEHUNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 16:13:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B73E020989;
+        Wed,  8 May 2019 20:13:05 +0000 (UTC)
+Date:   Wed, 8 May 2019 16:13:04 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [PATCH v7 0/6] tracing/probes: uaccess: Add support user-space
+ access
+Message-ID: <20190508161304.54559086@gandalf.local.home>
+In-Reply-To: <155732230159.12756.15040196512285621636.stgit@devnote2>
+References: <155732230159.12756.15040196512285621636.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kobj_type default_attrs field is being replaced by the
-default_groups field. Replace the default_attrs field in ext4_sb_ktype
-and ext4_feat_ktype with default_groups. Use the ATTRIBUTE_GROUPS macro
-to create ext4_groups and ext4_feat_groups.
 
-Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
----
+Ingo,
 
-This patch depends on a patch in the driver-core tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=aa30f47cf666111f6bbfd15f290a27e8a7b9d854
+Can you take this. You can add:
 
-Greg KH can take this patch through the driver-core tree, or this patch
-can wait a release cycle and go through the subsystem's tree, whichever
-the subsystem maintainer is more comfortable with.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+to the entire series.
+
+Thanks!
+
+-- Steve
 
 
- fs/ext4/sysfs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Wed,  8 May 2019 22:31:41 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
-index 616c075da062..ef3b82dba59b 100644
---- a/fs/ext4/sysfs.c
-+++ b/fs/ext4/sysfs.c
-@@ -230,6 +230,7 @@ static struct attribute *ext4_attrs[] = {
- 	ATTR_LIST(journal_task),
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(ext4);
- 
- /* Features this copy of ext4 supports */
- EXT4_ATTR_FEATURE(lazy_itable_init);
-@@ -250,6 +251,7 @@ static struct attribute *ext4_feat_attrs[] = {
- 	ATTR_LIST(metadata_csum_seed),
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(ext4_feat);
- 
- static void *calc_ptr(struct ext4_attr *a, struct ext4_sb_info *sbi)
- {
-@@ -368,13 +370,13 @@ static const struct sysfs_ops ext4_attr_ops = {
- };
- 
- static struct kobj_type ext4_sb_ktype = {
--	.default_attrs	= ext4_attrs,
-+	.default_groups = ext4_groups,
- 	.sysfs_ops	= &ext4_attr_ops,
- 	.release	= ext4_sb_release,
- };
- 
- static struct kobj_type ext4_feat_ktype = {
--	.default_attrs	= ext4_feat_attrs,
-+	.default_groups = ext4_feat_groups,
- 	.sysfs_ops	= &ext4_attr_ops,
- 	.release	= (void (*)(struct kobject *))kfree,
- };
--- 
-2.17.1
+> Hi,
+> 
+> Here is the v7 series of probe-event to support user-space access.
+> Previous version is here.
+> 
+> https://lkml.kernel.org/r/155289137555.7218.9282784065958321058.stgit@devnote2
+> 
+> In this version, I fixed some documentation according to Steve's
+> comment. This can be applied against the latest tracing/for-next
+> + probeevent bugfix.
+> 
+> https://lkml.kernel.org/r/155723732200.9149.10482668315693777743.stgit@devnote2
+> 
+> Changes in v7:
+>  - [4/6] Fix typos and update document according to Steve's comment. 
+> 
+> In summary, strncpy_from_user() should work as below
+> 
+>  - strncpy_from_user() can access user memory with set_fs(USER_DS)
+>    in task context
+> 
+>  - strncpy_from_user() can access kernel memory with set_fs(KERNEL_DS)
+>    in task context (e.g. devtmpfsd and init)
+> 
+>  - strncpy_from_user() can access user/kernel memory (depends on DS)
+>    in IRQ context if pagefault is disabled. (both verified)
+> 
+> Note that this changes the warning behavior when
+> CONFIG_DEBUG_ATOMIC_SLEEP=y, it still warns when
+> __copy_from_user_inatomic() is called in IRQ context, but don't
+> warn if pagefault is disabled because it will not sleep in
+> atomic.
+> 
+> ====
+> Kprobe event user-space memory access features:
+> 
+> For user-space access extension, this series adds 2 features,
+> "ustring" type and user-space dereference syntax. "ustring" is
+> used for recording a null-terminated string in user-space from
+> kprobe events.
+> 
+> "ustring" type is easy, it is able to use instead of "string"
+> type, so if you want to record a user-space string via
+> "__user char *", you can use ustring type instead of string.
+> For example,
+> 
+> echo 'p do_sys_open path=+0($arg2):ustring' >> kprobe_events
+> 
+> will record the path string from user-space.
+> 
+> The user-space dereference syntax is also simple. Thi just
+> adds 'u' prefix before an offset value.
+> 
+>    +|-u<OFFSET>(<FETCHARG>)
+> 
+> e.g. +u8(%ax), +u0(+0(%si))
+> 
+> This is more generic. If you want to refer the variable in user-
+> space from its address or access a field in data structure in
+> user-space, you need to use this.
+> 
+> For example, if you probe do_sched_setscheduler(pid, policy,
+> param) and record param->sched_priority, you can add new
+> probe as below;
+>     
+>    p do_sched_setscheduler priority=+u0($arg3)
+> 
+> Actually, with this feature, "ustring" type is not absolutely
+> necessary, because these are same meanings.
+> 
+>   +0($arg2):ustring == +u0($arg2):string
+> 
+> Note that kprobe event provides these methods, but it doesn't
+> change it from kernel to user automatically because we do not
+> know whether the given address is in userspace or kernel on
+> some arch.
+> 
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (6):
+>       x86/uaccess: Allow access_ok() in irq context if pagefault_disabled
+>       uaccess: Add non-pagefault user-space read functions
+>       tracing/probe: Add ustring type for user-space string
+>       tracing/probe: Support user-space dereference
+>       selftests/ftrace: Add user-memory access syntax testcase
+>       perf-probe: Add user memory access attribute support
+> 
+> 
+>  Documentation/trace/kprobetrace.rst                |   28 ++++-
+>  Documentation/trace/uprobetracer.rst               |   10 +-
+>  arch/x86/include/asm/uaccess.h                     |    4 +
+>  include/linux/uaccess.h                            |   19 +++
+>  kernel/trace/trace.c                               |    7 +
+>  kernel/trace/trace_kprobe.c                        |   35 ++++++
+>  kernel/trace/trace_probe.c                         |   37 +++++-
+>  kernel/trace/trace_probe.h                         |    3 +
+>  kernel/trace/trace_probe_tmpl.h                    |   37 +++++-
+>  kernel/trace/trace_uprobe.c                        |   19 +++
+>  mm/maccess.c                                       |  117 +++++++++++++++++++-
+>  tools/perf/Documentation/perf-probe.txt            |    3 -
+>  tools/perf/util/probe-event.c                      |   11 ++
+>  tools/perf/util/probe-event.h                      |    2 
+>  tools/perf/util/probe-file.c                       |    7 +
+>  tools/perf/util/probe-file.h                       |    1 
+>  tools/perf/util/probe-finder.c                     |   19 ++-
+>  .../ftrace/test.d/kprobe/kprobe_args_user.tc       |   32 +++++
+>  18 files changed, 350 insertions(+), 41 deletions(-)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
 
