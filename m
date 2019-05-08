@@ -2,116 +2,152 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AD2C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BC6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB962173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEC7216C8
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sLmnrLoj"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Pew+PYZM";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="MV69l51g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfEHXRU (ORCPT
+        id S1728429AbfEHXV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 19:17:20 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38811 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfEHXRT (ORCPT
+        Wed, 8 May 2019 19:21:28 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35986 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727763AbfEHXV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 19:17:19 -0400
-Received: by mail-yw1-f66.google.com with SMTP id b74so346217ywe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 16:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s0XmE/SSKgdB2Zi6D0Xro94Z8cgKXXoHmAWbL6G9FWo=;
-        b=sLmnrLoj9lksRIXKKwys/IS3j0vPyEkYExfwLWVWdBx4HZSJVlsq6V+Vcf0ziNQQXz
-         tLNKweEYQZF5GPp1himBK4SukfKMRv8LNyieGXS9Q4p1HiRGZOSAgzaLM70MkdANCFQw
-         AQoOZauRkNQ7f08wPTDIbVVbeXycI6ItQ4bsLu4BBd48f5j66b4Q2cy4cY30dpXqvtmI
-         3rDnWpAwEynr3nOGBGWDrWG+3tscb8+2mNShKm9w2EsL4pzymELY3CkHRmw95lrldL7E
-         m6zskT1VxOvRzv1Bisnr3WAbliDNqSKsBQDpuoy5IoynKxtd6+D8jt/dxoaccO1izrH7
-         GMSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s0XmE/SSKgdB2Zi6D0Xro94Z8cgKXXoHmAWbL6G9FWo=;
-        b=Qkz6ur8nQw/0LpfSvRATcKaPeGLD8zWcT8cU9ZgkUUJnXnlVuURSI5wXbzEd5TkTYu
-         Jn9FJbkriMzOGK3nC19ilVHx8p7bFyXkCzyw7ffkm+pbTBN3SYKd2BeyJdVAdryL1E+i
-         pncfc3YGaOZhOl26CYRb85WIgytM8mhn2LLZvP/J254d7eRaVMiwHeOSw76DARannP7w
-         m/l2Lj7lGF/t9w1KvEFWnQb1cSBeR6GqZWEnP1ufOwReNHsIG/6phBNq5L+sp+hQnmzr
-         P9z2K6xrs9/zXcHSqZK4OOFcdKAyYXlc32k59rlx4zsDK9+2IXBTubJ9jZolAvFmczE3
-         fzXw==
-X-Gm-Message-State: APjAAAVrUGW3xpfZjp787yBQKXV3c/64/F+yGHs8opFL7TgrKLgPkrGu
-        UKUKF+2JIQHmUQlxWBSyyY6FWQ==
-X-Google-Smtp-Source: APXvYqwCScrOtsn/r0nbplNIVpXXh8yEgVNfGi8tKe9k+OX0Y8w8/cROWDlp9BASceZ1pGqP2kWGog==
-X-Received: by 2002:a81:170e:: with SMTP id 14mr232136ywx.238.1557357438787;
-        Wed, 08 May 2019 16:17:18 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li931-65.members.linode.com. [45.56.113.65])
-        by smtp.gmail.com with ESMTPSA id v128sm110717ywd.24.2019.05.08.16.17.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 16:17:17 -0700 (PDT)
-Date:   Thu, 9 May 2019 07:17:06 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        xuwei5@hisilicon.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        agross@kernel.org, david.brown@linaro.org,
-        linus.walleij@linaro.org, liviu.dudau@arm.com,
-        Sudeep.Holla@arm.com, Lorenzo.Pieralisi@arm.com,
-        orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        guodong.xu@linaro.org, zhangfei.gao@linaro.org,
-        haojian.zhuang@linaro.org, cphealy@gmail.com, andrew@lunn.ch,
-        lee.jones@linaro.org, zhang.chunyan@linaro.org
-Subject: Re: [PATCH v2 00/11] dts: Update DT bindings for CoreSight
- replicator and funnel
-Message-ID: <20190508231706.GA5840@leoy-ThinkPad-X240s>
-References: <20190508021902.10358-1-leo.yan@linaro.org>
- <9c56323b-7b14-c662-b824-ed60fbb1638f@arm.com>
+        Wed, 8 May 2019 19:21:27 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x48NIRsb026484;
+        Wed, 8 May 2019 16:20:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=lCdKIPHMGvGvKmpk8HbdROgwQl29v5EI3TaR7mBLsA0=;
+ b=Pew+PYZM1QGT2MtjUHc5cGi8l27SXBbToaK7F9TuFPp3oTTYU+whHtRiRc3QZAO5Zuu1
+ O+MxB7AZEYfkVoTz21gowViQXBz1TniDPynF8clJOnKu22xUcpufxvXwEI1iwlx9OTuY
+ EKpgc24XYoU+S1doILWUQMg6jkQ4SFtmL9Q= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2sc7t2r5db-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 08 May 2019 16:20:55 -0700
+Received: from prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 8 May 2019 16:20:54 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 8 May 2019 16:20:53 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 8 May 2019 16:20:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lCdKIPHMGvGvKmpk8HbdROgwQl29v5EI3TaR7mBLsA0=;
+ b=MV69l51gbUsBTwbnHJhapq3cSvmtIF6OxMJgTP04A32LqgR4dYeyPH63cZRVrC3GfPJ5P8F/P94ub8sNEEN6CcRQV9xTwmZztlRocVVyOzm3OLkwYjA1daGex7FkEcXwwuqElHkpL3p6Uu049K1vL8/3Gp5MkTrVbw2PHJ3oKTA=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2678.namprd15.prod.outlook.com (20.179.156.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.20; Wed, 8 May 2019 23:20:51 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ddd2:172e:d688:b5b7]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ddd2:172e:d688:b5b7%3]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 23:20:51 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2] memcg, fsnotify: no oom-kill for remote memcg charging
+Thread-Topic: [PATCH v2] memcg, fsnotify: no oom-kill for remote memcg
+ charging
+Thread-Index: AQHVAokQTI6+FEdd6UGTORMvAHxc7KZh5EEA
+Date:   Wed, 8 May 2019 23:20:51 +0000
+Message-ID: <20190508232042.GA1104@tower.DHCP.thefacebook.com>
+References: <20190504145242.258875-1-shakeelb@google.com>
+In-Reply-To: <20190504145242.258875-1-shakeelb@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR08CA0035.namprd08.prod.outlook.com
+ (2603:10b6:301:5f::48) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:524d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf008100-e7c3-4e95-aded-08d6d40bcf73
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2678;
+x-ms-traffictypediagnostic: BYAPR15MB2678:
+x-microsoft-antispam-prvs: <BYAPR15MB2678AB6FB8BA07664B988789BE320@BYAPR15MB2678.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(396003)(376002)(39860400002)(199004)(189003)(54534003)(6916009)(1076003)(86362001)(2906002)(102836004)(7736002)(6506007)(386003)(71190400001)(33656002)(71200400001)(25786009)(6246003)(305945005)(446003)(14454004)(4326008)(7416002)(68736007)(46003)(73956011)(478600001)(6116002)(5660300002)(66946007)(186003)(66446008)(64756008)(66556008)(66476007)(14444005)(256004)(53936002)(8936002)(6486002)(99286004)(52116002)(229853002)(11346002)(76176011)(6436002)(316002)(486006)(54906003)(8676002)(81166006)(81156014)(9686003)(6512007)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2678;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: M9ViFNyD/FCUCLUJj4EkV9tPxnfSYa1qKvRE+Dut1F1h5GU8e2828C3QhQncfW4qAWfT8O8S013bCbISnnrTQaj73Z/2z8mj0OPfbOP7pL7QZnO9/+JFq/Qss6tCl8oWbM87NSOrWO4gCfPbzMavhcAKIY/fXvY8z6ckJ+G+ys/1c9tq/6KVpwqhHgOotzHwJRAHnhnInB7drqHvB9xcS76uWuiNWe9HOgL4JXl4FS7nyvsPVzmuF24FXH2HMlSkZSGylnyU+EnDx4fGajZ16euc0btpq68mGpe+wVAzAFGT+2bDJ4PuncwXvR36kInToCsZQ8+l1pdHAS+FFu3qCxkjR3SvkGLRr48eQ6uMFQUbLY/A9TFYZP92vMLbVRW2BpXzndx4YCkEf6FwHOohc4+8NXTeI4Bk4gh/Jm+WVTU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FAA360BA6EA9A646B5F14EE9A945F468@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c56323b-7b14-c662-b824-ed60fbb1638f@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf008100-e7c3-4e95-aded-08d6d40bcf73
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 23:20:51.3370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2678
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_12:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 03:29:12PM +0100, Suzuki K Poulose wrote:
-> 
-> On 08/05/2019 03:18, Leo Yan wrote:
-> > Since the DT bindings consolidatoins for CoreSight replicator and funnel
-> > is ready for kernel v5.2 merge window [1], this patch set is to update
-> > the related CoreSight DT bindings for platforms; IIUC, this patch set
-> > will be safe for merging into kernel v5.2 because the dependency
-> > patches in [1] will be landed into mainline kernel v5.2 cycle.
-> > 
-> > In this patch set, it tries to update below two compatible strings to
-> > the latest strings:
-> > 
-> >    s/"arm,coresight-replicator"/"arm,coresight-static-replicator"
-> >    s/"arm,coresight-funnel"/"arm,coresight-dynamic-funnel"
-> > 
-> > Please note, some platforms have two continuous patches, one is for
-> > updating static replicator compatible string and another is for dynamic
-> > funnel change; and other platforms have only one patch since it only
-> > needs to change for dynamic funnel.
-> 
-> This is now misleading ;-), but that doesn't matter.
+On Sat, May 04, 2019 at 07:52:42AM -0700, Shakeel Butt wrote:
+> The commit d46eb14b735b ("fs: fsnotify: account fsnotify metadata to
+> kmemcg") added remote memcg charging for fanotify and inotify event
+> objects. The aim was to charge the memory to the listener who is
+> interested in the events but without triggering the OOM killer.
+> Otherwise there would be security concerns for the listener. At the
+> time, oom-kill trigger was not in the charging path. A parallel work
+> added the oom-kill back to charging path i.e. commit 29ef680ae7c2
+> ("memcg, oom: move out_of_memory back to the charge path"). So to not
+> trigger oom-killer in the remote memcg, explicitly add
+> __GFP_RETRY_MAYFAIL to the fanotigy and inotify event allocations.
+>=20
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> ---
+> Changelog since v1:
+> - Fixed usage of __GFP_RETRY_MAYFAIL flag.
+>=20
+>  fs/notify/fanotify/fanotify.c        | 5 ++++-
+>  fs/notify/inotify/inotify_fsnotify.c | 7 +++++--
+>  2 files changed, 9 insertions(+), 3 deletions(-)
 
-Oops ...
+Hi Shakeel,
 
-> For the entire series :
-> 
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+the patch looks good to me!
 
-Thanks for reviewing!
+Reviewed-by: Roman Gushchin <guro@fb.com>
+
+Thanks!
