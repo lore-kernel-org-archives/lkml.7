@@ -2,124 +2,134 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5A5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751C3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08ACC20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4E920989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GG8f5Ejd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/Wvgz5O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbfEHHwy (ORCPT
+        id S1726916AbfEHHxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:52:54 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53836 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726221AbfEHHv3 (ORCPT
+        Wed, 8 May 2019 03:53:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43855 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbfEHHxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:51:29 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 59476C010D;
-        Wed,  8 May 2019 07:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557301883; bh=g7s+I8un+FY7/k4BwweRm2ebGOtvijMXRTX2Cm1zU7Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=GG8f5Ejd9f/sSqYsb8EorFjzCYpYd4ZBW9Mom0NEUOPexU6sV2dSiJOXzstwEAStI
-         MKuaW66yRRFP6nAeiaPq1FI9qb11Lhwb6AZuSATaFB6cl+3LhDrQHxZiTsWJa9v28r
-         1Aji3UMz9pKmPqwizDUieFcdccWoMnNey/OwD8kPEaKFh8NDzCal/dI4zQeS7OWUr7
-         sEaibAs9qWHZQaklbX7VPx2WtPQfB1qJw0/CiLacOkv1N+Pm4obC3qjBduKOon10qm
-         Y2WVteEz00GSkZJ8M3Erglf2kUpmWzfX1lBHci7MwkLDxK7Y0t+hsb5BMNoZuKw1pz
-         diEbZlj7f/8iA==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 5EE9EA02D0;
-        Wed,  8 May 2019 07:51:29 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 9DAE63D523;
-        Wed,  8 May 2019 09:51:27 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 05/11] net: stmmac: dwxgmac2: Add MAC loopback support
-Date:   Wed,  8 May 2019 09:51:05 +0200
-Message-Id: <12299cb8b9fdd4d4f482ab10e90b77625d70093e.1557300602.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
-References: <cover.1557300602.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
-References: <cover.1557300602.git.joabreu@synopsys.com>
+        Wed, 8 May 2019 03:53:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c6so4860649pfa.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 00:53:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VWVIY3U4u87uBqpX8q3XHH6irKlOA03Q7B0W5k01mmw=;
+        b=F/Wvgz5Ok8Ade93VsE4p7w+Bw3YwJPVymRMeMtr3idBsR65KEMoDUPgkAxJDjODqh2
+         NCU2ljU1CibfGKtC6+4e0CuxOZEUHfyF0QCsjJoRLAVvTgxPIGsR84KCo3hX8eqQpYnZ
+         9XlBrrxLETEgiqxySINsWxhFCngcwGiiEr17Qb90AVUcg4uZOzVemsQY8Y8Y3LJQFHum
+         73AJ/xAs7BGEHD27PyQiGLER/jiVrofcPNCU0Ts3cUNmxXwn89O08WroF/GC0uSM1ki0
+         Ped6qCHD2anWdTmTxwfRlSfe1grxvKzXlV4Ae1MM2a9zOyvpMc+E0qxb65ZyFwPa7iHa
+         KvIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VWVIY3U4u87uBqpX8q3XHH6irKlOA03Q7B0W5k01mmw=;
+        b=PCp6q7UN4i7wUBudD0BuukEBjsIObYX+egAu5cdz6Jm2Hvcp70NxClh+hR2LgotsqH
+         3mC0LOlbFfgIVW+vVCmMqTgA4pvh5JFJWVZCV0kRW82OgiD7eMUcNYUBsE5Tg8w23PoX
+         uV9EW1SzxT0vnEoiiPsxOB+LJ1KyrH2xqhirY4ab+fj35ri1CUI1f6QSxQkX8gBqOKJv
+         Xi9xqcQ75kUkSofpijrCdIYE7YFCOgVyWGq69G5Tl+ms4Rh0VUZOE3J5NnLTShoM1k/9
+         E7zxbjOneMSrMfpL1KDNLaFPjLSadStTbWdqPwSWOnDSxcjXN9jSnoAA6WyN2bdkeD9u
+         kldA==
+X-Gm-Message-State: APjAAAXAlr4nU7wjSMeJSB0U1qAcNJ4lJIfpudJIPPbl/yjJMQJbFVP2
+        MNnUqLBM85I1IMh0ASx70ZU=
+X-Google-Smtp-Source: APXvYqzAmP0nAR6CZNHoHx0W3A+nIMSCramZJYYQeHEy6EPzBVkni9q0bq/QjXyW83MSBKe9XPk/1w==
+X-Received: by 2002:a63:4a66:: with SMTP id j38mr15898170pgl.199.1557301987341;
+        Wed, 08 May 2019 00:53:07 -0700 (PDT)
+Received: from localhost ([175.223.21.172])
+        by smtp.gmail.com with ESMTPSA id x30sm3026318pgl.76.2019.05.08.00.53.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 00:53:06 -0700 (PDT)
+Date:   Wed, 8 May 2019 16:53:02 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH] RFC: x86/smp: use printk_deferred in
+ native_smp_send_reschedule
+Message-ID: <20190508075302.GC15704@jagdpanzerIV>
+References: <20190507173329.17031-1-daniel.vetter@ffwll.ch>
+ <20190508074420.GB15704@jagdpanzerIV>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508074420.GB15704@jagdpanzerIV>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for the addition of stmmac selftests we implement the MAC
-loopback callback in dwxgmac2 core.
+On (05/08/19 16:44), Sergey Senozhatsky wrote:
+> [..]
+> >  static void native_smp_send_reschedule(int cpu)
+> >  {
+> >  	if (unlikely(cpu_is_offline(cpu))) {
+> > -		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
+> > +		printk_deferred(KERN_WARNING
+> > +				"sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
+> >  		return;
+> >  	}
+> >  	apic->send_IPI(cpu, RESCHEDULE_VECTOR);
+> 
+> Hmm,
+> One thing to notice here is that the CPU in question is offline-ed,
+> and printk_deferred() is a per-CPU type of deferred printk(). So the
+> following thing
+> 
+> 	__this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
+> 	irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
+> 
+> might not print anything at all. In this particular case we always
+> need another CPU to do console_unlock(), since this_cpu() is not
+> really expected to do wake_up_klogd_work_func()->console_unlock().
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
+D'oh... It's remote CPU which is offline, not this_cpu().
+Sorry, my bad!
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 085b700a4994..f629ccc8932a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -29,6 +29,7 @@
- #define XGMAC_CONFIG_GPSL		GENMASK(29, 16)
- #define XGMAC_CONFIG_GPSL_SHIFT		16
- #define XGMAC_CONFIG_S2KP		BIT(11)
-+#define XGMAC_CONFIG_LM			BIT(10)
- #define XGMAC_CONFIG_IPC		BIT(9)
- #define XGMAC_CONFIG_JE			BIT(8)
- #define XGMAC_CONFIG_WD			BIT(7)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 64b8cb88ea45..c27b3ca052ea 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -321,6 +321,18 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
- 	writel(value, ioaddr + XGMAC_PACKET_FILTER);
- }
- 
-+static void dwxgmac2_set_mac_loopback(void __iomem *ioaddr, bool enable)
-+{
-+	u32 value = readl(ioaddr + XGMAC_RX_CONFIG);
-+
-+	if (enable)
-+		value |= XGMAC_CONFIG_LM;
-+	else
-+		value &= ~XGMAC_CONFIG_LM;
-+
-+	writel(value, ioaddr + XGMAC_RX_CONFIG);
-+}
-+
- const struct stmmac_ops dwxgmac210_ops = {
- 	.core_init = dwxgmac2_core_init,
- 	.set_mac = dwxgmac2_set_mac,
-@@ -350,6 +362,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.pcs_get_adv_lp = NULL,
- 	.debug = NULL,
- 	.set_filter = dwxgmac2_set_filter,
-+	.set_mac_loopback = dwxgmac2_set_mac_loopback,
- };
- 
- int dwxgmac2_setup(struct stmmac_priv *priv)
--- 
-2.7.4
+Any printk-related patch in this area will make PeterZ really-really
+angry :)
 
+printk_deferred(), just like prinkt_safe(), depends on IRQ work;
+printk_safe(), however, can redirect multiple lines, unlike
+printk_deferred(). So if you want to keep the backtrace, you may
+do something like
+
+	if (unlikely(cpu_is_offline(cpu))) {
+		printk_safe_enter(...);
+		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n",
+			 cpu);
+		printk_safe_exit(...);
+		return;
+	}
+
+I think, in this case John's reworked-printk can do better than
+printk_safe/printk_deferred.
+
+	-ss
