@@ -2,131 +2,102 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00B4C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDFDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7AB20850
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2F420850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bHdHAm1+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSRC3csH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfEHEmG (ORCPT
+        id S1726628AbfEHEnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:42:06 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40224 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfEHEmG (ORCPT
+        Wed, 8 May 2019 00:43:01 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37359 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfEHEnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:42:06 -0400
-Received: by mail-vs1-f68.google.com with SMTP id c24so4962389vsp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:42:05 -0700 (PDT)
+        Wed, 8 May 2019 00:43:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id u2so12615856ioc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:43:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vLH+/uAC3vUrfOPxTEYrno+A0sUf0tEBN5RGNCkywlE=;
-        b=bHdHAm1+CelPIzEDiciBV1JovJqMomr8rEGeKkRsjJmBBl+YaJDuqnA64n/UEQJ27y
-         e5HyHtdd6RG2xiy/5+q3RRVK93nri8iCQNPdH/WqBXk6KrQk2VfpY8uXAtmChJX11ssc
-         EgDUjLKx4PRFbBOiGGd8EsU5V56bBc+vANs4V3wMLZm6Ys10DKms8N7/4Ba3hxWILbkD
-         ikaEpvTcRJcw4C/0m/i/lyfwc11qGoXXUTGqEkuuUAIoMh9MXUCEgJxm6KlrrIZQyZ/7
-         FcSyueeJaH68nLZxyi2A7IwD9TK3jckpkhBguSFJJmMphf8oIpMlJGMOjkvHBGCGoyt/
-         352w==
+        bh=0WCwzVUAfPRUJz4fPZuWZIqE5cUDRL0qnnun9aptMzE=;
+        b=TSRC3csHbrdmnBA++3zFijCDqlgp4NfYnu68g3wIx2wJnZxn0DixJdQMODYpe0a+v0
+         dKaYTfe36UDmtBA7d0p+MAS3cQ051S9ZJ3hX056cNqYgr4ANYYbx4HdbLEyqpUJ6IS5d
+         wNMwdXyOjh1xNAd+iFWQrHd9HSSVhZyIx7nLdvncmvJClyfPtKv6nI4+5xb62zQBhlcK
+         gbX3Vj4iL16OnwROTT8+igQ0+CfFg94HX1guy4SQa6C5M6Q/DK3pyrmbOW/TOeQ/BuSm
+         slTGtQwNmhh+A+yjSVJSpPM4Ig9UBDl0guj5EW24eyj2mNBiLDEM2IMo6q2AIh5qDrmI
+         uqMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vLH+/uAC3vUrfOPxTEYrno+A0sUf0tEBN5RGNCkywlE=;
-        b=MNBSXPpPi+2L2GQQoeTCI+Ei5a023ETU2oucpRfJUTT0f09znVZhHPm6/3DBguHjAm
-         NDUDxrkSyIExbEpe8cgvYCYL7CcVG6ewGbwUu7bqkGJAz9DHHtkB/ExailPyrVwprph3
-         DXzp6BFqtVr0TnYhg7VJEinygtmWKOB1A0CD8oY/MFBI0ZhEe4o46Lrlc4Fn+owkJb7g
-         2kAtdVY997JS1x87ES6YYTpKqQDKgeLtRWJzrpY7fGQEfG8BKzddmEqe9++Vh59C6wVg
-         WFzTpdKenffdJb1m7jA9LCC00WRcJqIIPRGI+YSpQDVXc0xiSFHv0loATrbIIsDTD7PA
-         d1mA==
-X-Gm-Message-State: APjAAAWpLunQb3mONW5uC+1zdIpMq+Q9+swIsxsKmLS6/GT7JfwzUFUj
-        MLmQbKv294qHJlQ1J7e+WdI5WeBod2OoxhUwyyZ+Gg==
-X-Google-Smtp-Source: APXvYqwfoRhHzPIyICbbAUAN4AgwVMMPziNZGoNKELTPvfctvJKaLAIj1Gjmz92THJDNw0ZtgSbKRFrqhQVYj54vsBE=
-X-Received: by 2002:a67:d887:: with SMTP id f7mr9258563vsj.141.1557290525198;
- Tue, 07 May 2019 21:42:05 -0700 (PDT)
+        bh=0WCwzVUAfPRUJz4fPZuWZIqE5cUDRL0qnnun9aptMzE=;
+        b=e2cV6kTx8pdBy+Syl2htdYWSJ2xc8y9bZniztTgnzDvIYhtkX0eqLIQ+kBfs1PTByq
+         bX0VLfj42gUCYVTwcUKnuFXiKiFm8Zu+ACQ+hTkIJK7eEOjO4kDTp8AZDwdmJAtYaC0r
+         oqmn1fV5vYjWguiCFNK/PaT+vU1gaJwb7KFx6eYnu1iBl3gAzT0msDBrlTPJnjsOe3Gm
+         VFpvalqqa9XN6BE2tnM8DmMSEfLT3iQORsxjxM1Ay7jR2iLlFnTJT4W5BCVKaJXbUue5
+         Z926kUmwHcZIP8++SsTdU2zU+IB6UV1ZL8fxMYXZUv4pf1XCQk3vSdOpr5vTm2fdAPqL
+         0FRw==
+X-Gm-Message-State: APjAAAU/quyadc3LgFnXg8k9qITfHNADdTsQXHXQD/8VQR2tIPNjOgCq
+        r9LF7dHJHv1+IckMTcsj37zm0Sh7wTrXe6fAiw==
+X-Google-Smtp-Source: APXvYqxgcAPlK8eAIzaA6Y4YNWlH8aXlOm5ev0pdKSUav1mrAgdnGcQRAOamFpNARCHgCX7/boEvmNQ5MkXyeCqfJW0=
+X-Received: by 2002:a6b:7d08:: with SMTP id c8mr14495246ioq.259.1557290579930;
+ Tue, 07 May 2019 21:42:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190415155636.32748-1-sashal@kernel.org> <20190507174020.GH1747@sasha-vm>
-In-Reply-To: <20190507174020.GH1747@sasha-vm>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 8 May 2019 10:11:54 +0530
-Message-ID: <CAFA6WYPk5Bm11RfaC72g_C8rnMQEPyp-MhtopmDM3Of31v1Z_w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        corbet@lwn.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org
+References: <1557208860-12846-1-git-send-email-kernelfans@gmail.com> <20190507082808.GB125993@gmail.com>
+In-Reply-To: <20190507082808.GB125993@gmail.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Wed, 8 May 2019 12:42:48 +0800
+Message-ID: <CAFgQCTvFawbT0NwKbWe+1R-GP6NxSEhsfejJOPk37B=h0AckBA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/boot: move early_serial_base to .data section
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Kees Cook <keescook@chromium.org>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ TEE ML
-
-Hi Sasha,
-
-Firstly apologies for my comments here as I recently joined
-linux-integrity ML so I don't have other patches in my inbox. Also, it
-would be nice if you could cc TEE ML in future patches, so that people
-are aware of such interesting use-cases and may provide some feedback.
-
-On Tue, 7 May 2019 at 23:10, Sasha Levin <sashal@kernel.org> wrote:
+On Tue, May 7, 2019 at 4:28 PM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> On Mon, Apr 15, 2019 at 11:56:34AM -0400, Sasha Levin wrote:
-> >From: "Sasha Levin (Microsoft)" <sashal@kernel.org>
-> >
-> >Changes since v2:
-> >
-> > - Drop the devicetree bindings patch (we don't add any new ones).
-> > - More code cleanups based on Jason Gunthorpe's review.
-> >
-> >Sasha Levin (2):
-> >  ftpm: firmware TPM running in TEE
-> >  ftpm: add documentation for ftpm driver
 >
-> Ping? Does anyone have any objections to this?
+> * Pingfan Liu <kernelfans@gmail.com> wrote:
 >
+> > arch/x86/boot/compressed/head_64.S clears BSS after relocated. If early
+> > serial is set up before clearing BSS, the early_serial_base will be reset
+> > to 0.
+> >
+> > Initializing early_serial_base as -1 to push it to .data section.
+>
+> I'm wondering whether it's wise to clear the BSS after relocation to
+> begin with. It already gets cleared once, and an implicit zeroing of all
+> fields on kernel relocation sounds dubious to me.
+>
+After reading the code more closely, I think that the BSS is not fully
+initialized to 0, exception the stack and heap.
 
-From [PATCH v3 1/2] ftpm: firmware TPM running in TEE:
+Furthermore the BSS is not copied to the target address. We just copy [0, _bss).
+> Is there a strong reason for that? I.e. is there some uninitialized or
+> otherwise important-to-clear data there?
+>
+I guess the reason may be stack or heap can contain some position
+dependent data. (While in practice, there is no such kind of data in
+the code now days)
 
-> +static const struct of_device_id of_ftpm_tee_ids[] = {
-> + { .compatible = "microsoft,ftpm" },
-> + { }
-> +};
-> +MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
-> +
-> +static struct platform_driver ftpm_tee_driver = {
-> + .driver = {
-> + .name = DRIVER_NAME,
-> + .of_match_table = of_match_ptr(of_ftpm_tee_ids),
-> + },
-> + .probe = ftpm_tee_probe,
-> + .remove = ftpm_tee_remove,
-> +};
-> +
-> +module_platform_driver(ftpm_tee_driver);
-
-Here this fTPM driver (seems to communicate with OP-TEE based TA)
-should register on TEE bus [1] rather than platform bus as its actual
-dependency is on TEE driver rather than using deferred probe to meet
-its dependency. Have a look at OP-TEE based RNG driver here [2].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0fc1db9d105915021260eb241661b8e96f5c0f1a
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5fe8b1cc6a03c46b3061e808256d39dcebd0d0f0
-
--Sumit
-
-> --
-> Thanks,
-> Sasha
+Thanks,
+Pingfan
