@@ -2,141 +2,237 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221A0C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85140C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32CE205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542B3216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfEHOiI (ORCPT
+        id S1728039AbfEHOiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:38:08 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:45300 "EHLO gloria.sntech.de"
+        Wed, 8 May 2019 10:38:20 -0400
+Received: from foss.arm.com ([217.140.101.70]:36400 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727354AbfEHOhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:37:51 -0400
-Received: from we0048.dip.tu-dresden.de ([141.76.176.48] helo=phil.dip.tu-dresden.de)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hONha-0006TE-SP; Wed, 08 May 2019 16:37:46 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     broonie@kernel.org, lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tony.xie@rock-chips.com, zhangqing@rock-chips.com,
-        huangtao@rock-chips.com, Rob Herring <robh@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v8 3/5] dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
-Date:   Wed,  8 May 2019 16:37:11 +0200
-Message-Id: <20190508143713.27954-4-heiko@sntech.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190508143713.27954-1-heiko@sntech.de>
-References: <20190508143713.27954-1-heiko@sntech.de>
+        id S1727354AbfEHOiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:38:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F32DFA78;
+        Wed,  8 May 2019 07:38:18 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 830FF3F238;
+        Wed,  8 May 2019 07:38:14 -0700 (PDT)
+Subject: Re: [PATCH v7 13/23] iommu/smmuv3: Implement
+ attach/detach_pasid_table
+To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
+ <20190408121911.24103-14-eric.auger@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <acde8b95-9cbc-c5e6-eb28-37bff7431e40@arm.com>
+Date:   Wed, 8 May 2019 15:38:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190408121911.24103-14-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Xie <tony.xie@rock-chips.com>
+On 08/04/2019 13:19, Eric Auger wrote:
+> On attach_pasid_table() we program STE S1 related info set
+> by the guest into the actual physical STEs. At minimum
+> we need to program the context descriptor GPA and compute
+> whether the stage1 is translated/bypassed or aborted.
+> 
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> 
+> ---
+> v6 -> v7:
+> - check versions and comment the fact we don't need to take
+>    into account s1dss and s1fmt
+> v3 -> v4:
+> - adapt to changes in iommu_pasid_table_config
+> - different programming convention at s1_cfg/s2_cfg/ste.abort
+> 
+> v2 -> v3:
+> - callback now is named set_pasid_table and struct fields
+>    are laid out differently.
+> 
+> v1 -> v2:
+> - invalidate the STE before changing them
+> - hold init_mutex
+> - handle new fields
+> ---
+>   drivers/iommu/arm-smmu-v3.c | 121 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 121 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index e22e944ffc05..1486baf53425 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2207,6 +2207,125 @@ static void arm_smmu_put_resv_regions(struct device *dev,
+>   		kfree(entry);
+>   }
+>   
+> +static int arm_smmu_attach_pasid_table(struct iommu_domain *domain,
+> +				       struct iommu_pasid_table_config *cfg)
+> +{
+> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> +	struct arm_smmu_master_data *entry;
+> +	struct arm_smmu_s1_cfg *s1_cfg;
+> +	struct arm_smmu_device *smmu;
+> +	unsigned long flags;
+> +	int ret = -EINVAL;
+> +
+> +	if (cfg->format != IOMMU_PASID_FORMAT_SMMUV3)
+> +		return -EINVAL;
+> +
+> +	if (cfg->version != PASID_TABLE_CFG_VERSION_1 ||
+> +	    cfg->smmuv3.version != PASID_TABLE_SMMUV3_CFG_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&smmu_domain->init_mutex);
+> +
+> +	smmu = smmu_domain->smmu;
+> +
+> +	if (!smmu)
+> +		goto out;
+> +
+> +	if (!((smmu->features & ARM_SMMU_FEAT_TRANS_S1) &&
+> +	      (smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
+> +		dev_info(smmu_domain->smmu->dev,
+> +			 "does not implement two stages\n");
+> +		goto out;
+> +	}
 
-Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
+That check is redundant (and frankly looks a little bit spammy). If the 
+one below is not enough, there is a problem elsewhere - if it's possible 
+for smmu_domain->stage to ever get set to ARM_SMMU_DOMAIN_NESTED without 
+both stages of translation present, we've already gone fundamentally wrong.
 
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../devicetree/bindings/mfd/rk808.txt         | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+> +
+> +	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
+> +		goto out;
+> +
+> +	switch (cfg->config) {
+> +	case IOMMU_PASID_CONFIG_ABORT:
+> +		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+> +		list_for_each_entry(entry, &smmu_domain->devices, list) {
+> +			entry->ste.s1_cfg = NULL;
+> +			entry->ste.abort = true;
+> +			arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
+> +		}
+> +		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+> +		ret = 0;
+> +		break;
+> +	case IOMMU_PASID_CONFIG_BYPASS:
+> +		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+> +		list_for_each_entry(entry, &smmu_domain->devices, list) {
+> +			entry->ste.s1_cfg = NULL;
+> +			entry->ste.abort = false;
+> +			arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
+> +		}
+> +		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+> +		ret = 0;
+> +		break;
+> +	case IOMMU_PASID_CONFIG_TRANSLATE:
+> +		/*
+> +		 * we currently support a single CD so s1fmt and s1dss
+> +		 * fields are also ignored
+> +		 */
+> +		if (cfg->pasid_bits)
+> +			goto out;
+> +
+> +		s1_cfg = &smmu_domain->s1_cfg;
+> +		s1_cfg->cdptr_dma = cfg->base_ptr;
+> +
+> +		spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+> +		list_for_each_entry(entry, &smmu_domain->devices, list) {
+> +			entry->ste.s1_cfg = s1_cfg;
 
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 1683ec3245bc..04df07f6f793 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
- The rk8xx family current members:
- rk805
- rk808
-+rk809
-+rk817
- rk818
- 
- Required properties:
- - compatible: "rockchip,rk805"
- - compatible: "rockchip,rk808"
-+- compatible: "rockchip,rk809"
-+- compatible: "rockchip,rk817"
- - compatible: "rockchip,rk818"
- - reg: I2C slave address
- - interrupts: the interrupt outputs of the controller.
-@@ -45,6 +49,23 @@ Optional RK808 properties:
-   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-   very quickly with no slow ramp time.
- 
-+Optional shared RK809 and RK817 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
-+- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
-+- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
-+
-+Optional RK809 properties:
-+- vcc8-supply:  The input supply for SWITCH_REG1
-+- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
-+
-+Optional RK817 properties:
-+- vcc8-supply:  The input supply for BOOST
-+- vcc9-supply:  The input supply for OTG_SWITCH
-+
- Optional RK818 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
-@@ -86,6 +107,21 @@ number as described in RK808 datasheet.
- 	- SWITCH_REGn
- 		- valid values for n are 1 to 2
- 
-+Following regulators of the RK809 and RK817 PMIC blocks are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK809 and RK817 datasheets.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 5 for RK809.
-+		- valid values for n are 1 to 4 for RK817.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9 for RK809.
-+		- valid values for n are 1 to 9 for RK817.
-+	- SWITCH_REGn
-+		- valid values for n are 1 to 2 for RK809.
-+	- BOOST for RK817
-+	- OTG_SWITCH for RK817
-+
- Following regulators of the RK818 PMIC block are supported. Note that
- the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
- number as described in RK818 datasheet.
-@@ -98,6 +134,14 @@ number as described in RK818 datasheet.
- 	- HDMI_SWITCH
- 	- OTG_SWITCH
- 
-+It is necessary to configure three pins for both the RK809 and RK817, the three
-+pins are "gpio_ts" "gpio_gt" "gpio_slp".
-+	The gpio_gt and gpio_ts pins support the gpio function.
-+	The gpio_slp pin is for controlling the pmic states, as below:
-+		- reset
-+		- power down
-+		- sleep
-+
- Standard regulator bindings are used inside regulator subnodes. Check
-   Documentation/devicetree/bindings/regulator/regulator.txt
- for more details
--- 
-2.20.1
+Either we reject valid->valid transitions outright, or we need to remove 
+and invalidate the existing S1 context from the STE at this point, no?
 
+> +			entry->ste.abort = false;
+> +			arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
+> +		}
+> +		spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+> +		ret = 0;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +out:
+> +	mutex_unlock(&smmu_domain->init_mutex);
+> +	return ret;
+> +}
+> +
+> +static void arm_smmu_detach_pasid_table(struct iommu_domain *domain)
+> +{
+> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> +	struct arm_smmu_master_data *entry;
+> +	struct arm_smmu_device *smmu;
+> +	unsigned long flags;
+> +
+> +	mutex_lock(&smmu_domain->init_mutex);
+> +
+> +	smmu = smmu_domain->smmu;
+> +
+> +	if (!smmu)
+> +		return;
+> +
+> +	if (!((smmu->features & ARM_SMMU_FEAT_TRANS_S1) &&
+> +	      (smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
+> +		dev_info(smmu_domain->smmu->dev,
+> +			 "does not implement two stages\n");
+> +		return;
+> +	}
+
+Same comment as before.
+
+Robin.
+
+> +
+> +	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
+> +		return;
+> +
+> +	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+> +	list_for_each_entry(entry, &smmu_domain->devices, list) {
+> +		entry->ste.s1_cfg = NULL;
+> +		entry->ste.abort = true;
+> +		arm_smmu_install_ste_for_dev(entry->dev->iommu_fwspec);
+> +	}
+> +	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+> +
+> +	memset(&smmu_domain->s1_cfg, 0, sizeof(struct arm_smmu_s1_cfg));
+> +	mutex_unlock(&smmu_domain->init_mutex);
+> +}
+> +
+>   static struct iommu_ops arm_smmu_ops = {
+>   	.capable		= arm_smmu_capable,
+>   	.domain_alloc		= arm_smmu_domain_alloc,
+> @@ -2225,6 +2344,8 @@ static struct iommu_ops arm_smmu_ops = {
+>   	.of_xlate		= arm_smmu_of_xlate,
+>   	.get_resv_regions	= arm_smmu_get_resv_regions,
+>   	.put_resv_regions	= arm_smmu_put_resv_regions,
+> +	.attach_pasid_table	= arm_smmu_attach_pasid_table,
+> +	.detach_pasid_table	= arm_smmu_detach_pasid_table,
+>   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+>   };
+>   
+> 
