@@ -2,152 +2,254 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E2BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDC2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82A820644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746A020644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="UMtRA7bt"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="NQIlrTy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfEHNWV (ORCPT
+        id S1728989AbfEHNWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:22:21 -0400
-Received: from mail-eopbgr780051.outbound.protection.outlook.com ([40.107.78.51]:38598
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725778AbfEHNWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:22:18 -0400
+        Wed, 8 May 2019 09:22:33 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43979 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfEHNWc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:22:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so11895079wro.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 06:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=57n0axMWfSppjRKnE2U+vW//5BLzA4EzmC99Z5lXAeE=;
- b=UMtRA7btjltIWs48hXkIv4/4HA4IV3jQ8cBnXHCpLfp1I3Z4Akzil07iQIkMOgwEDQXTy0tz3IdYXq0FC5hSRTvvuT1Xev4r2cg33hAk4ofoV6UgoZNKh+NcLw6xgdfmxGeEwPGz/hf9ACdPlcTPaDajdfqjDPJ4X5c+Lq4NkTc=
-Received: from BN6PR03CA0059.namprd03.prod.outlook.com (2603:10b6:404:4c::21)
- by CY4PR03MB3125.namprd03.prod.outlook.com (2603:10b6:910:53::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.15; Wed, 8 May
- 2019 13:22:07 +0000
-Received: from CY1NAM02FT028.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::204) by BN6PR03CA0059.outlook.office365.com
- (2603:10b6:404:4c::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1878.21 via Frontend
- Transport; Wed, 8 May 2019 13:22:06 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.57)
- smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT028.mail.protection.outlook.com (10.152.75.132) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
- via Frontend Transport; Wed, 8 May 2019 13:22:05 +0000
-Received: from NWD2HUBCAS9.ad.analog.com (nwd2hubcas9.ad.analog.com [10.64.69.109])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x48DM4Hp020338
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 8 May 2019 06:22:04 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS9.ad.analog.com ([fe80::44a2:871b:49ab:ea47%12]) with mapi id
- 14.03.0415.000; Wed, 8 May 2019 09:22:04 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 03/16] lib,treewide: add new match_string() helper/macro
-Thread-Topic: [PATCH 03/16] lib,treewide: add new match_string() helper/macro
-Thread-Index: AQHVBZFQXT7pBvOEwE+osXNwuBSvQKZhdwMAgAACFgCAAADdAA==
-Date:   Wed, 8 May 2019 13:22:03 +0000
-Message-ID: <b2440bc9485456a7a90a488c528997587b22088b.camel@analog.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
-         <20190508112842.11654-5-alexandru.ardelean@analog.com>
-         <20190508131128.GL9224@smile.fi.intel.com>
-         <20190508131856.GB10138@kroah.com>
-In-Reply-To: <20190508131856.GB10138@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.50.1.244]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1E6885BF46859D4BA859205743820E9A@analog.com>
-Content-Transfer-Encoding: base64
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6ohE2xbTpUYzLEqPlShDMeZUkRblKnapcCYi2034pYU=;
+        b=NQIlrTy4z9jZyQQXlcz/rN7Lqf9MmMk1JIr30W0TLNui5ub3oP7KGK7nJSFBZtGmfF
+         IVLv8rfHGiq31nZDgot2yHyJQgJko4j+dUo9txR4DV7SNJZwzcuWuBHnB04WOrFYYvZH
+         7s8iy607QyK28ukYrHNmH+uAnoZFxG2qfN9ZTryqOoSsj453vgDHaIYuF90cVxPadMAK
+         yKtwq1K7oFvuvWZS9cr0B0bPpp4ABSG3tXffQtg4b5xflnoDo/oiRdTrshrYupRNUtDH
+         MjD1yZn77vIK7rObsU1zzNPfZ7Rx3Ghxl7ueOoLFhJKVWD5SkOQSOJRRRkl0Hh6kaPL/
+         ekag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6ohE2xbTpUYzLEqPlShDMeZUkRblKnapcCYi2034pYU=;
+        b=n9T4pULMTPvjcywhznz7f+LNuvG4Kjcv7s0vd5GUTNq8YAHMjeIyG2NjHEA6SsQCfW
+         Zp63SWyftvfgFW4GyEbFUSw2QnB01+aHom3NF88O+JXT3AM9IWwZgzyvW07xifHk6jYb
+         GfGAh2u9yF1dbEbgVRe7gxcS9iA5ujVRVzQT0kL0zKUAs6K07hMDIp5IaSE3A1LAXe8+
+         9bCdesAL6w3jZp6VgrGrLuejkbmAU1D2SYtNo0GTf2UddpZ7jZDrwJi11GmKUYTsVFzr
+         zmMxHpQtZU+AoS2sOwu2ay5ICsKlCKK1wB9PEjVo0XJl3GuoaBLqu+8NMmSunb/GHlUQ
+         iD6Q==
+X-Gm-Message-State: APjAAAUKOLEt510HKJirCShB9CnO0nyj7ajXAfVgZt2xN8Z+MZ/BKcCp
+        k1RGkEYCo7aISC59CP8Ck0NF+A==
+X-Google-Smtp-Source: APXvYqxHkHuqm9N7LvcRDGJ3bK0VMl7t9TXHcMXpUw9vdDb3HAQ6mBgXXpIkglR1aEboyylnKqnCOQ==
+X-Received: by 2002:adf:df88:: with SMTP id z8mr26199414wrl.209.1557321749191;
+        Wed, 08 May 2019 06:22:29 -0700 (PDT)
+Received: from localhost.localdomain (v22018046084765073.goodsrv.de. [185.183.158.195])
+        by smtp.gmail.com with ESMTPSA id o4sm3144193wmo.20.2019.05.08.06.22.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 06:22:28 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian@brauner.io>
+Subject: [PATCH] fs: make all new mount api fds cloexec by default
+Date:   Wed,  8 May 2019 15:22:18 +0200
+Message-Id: <20190508132218.3617-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(1496009)(396003)(136003)(376002)(346002)(39860400002)(2980300002)(189003)(199004)(486006)(70586007)(246002)(26005)(126002)(2906002)(6246003)(2501003)(316002)(86362001)(70206006)(54906003)(7416002)(11346002)(36756003)(110136005)(5660300002)(476003)(4744005)(50466002)(102836004)(356004)(446003)(478600001)(436003)(186003)(106002)(426003)(4326008)(2616005)(229853002)(8936002)(7736002)(14454004)(336012)(7636002)(3846002)(76176011)(118296001)(6116002)(7696005)(8676002)(2486003)(305945005)(47776003)(23676004)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB3125;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bf20b47f-7a5e-4fec-5507-08d6d3b82ade
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:CY4PR03MB3125;
-X-MS-TrafficTypeDiagnostic: CY4PR03MB3125:
-X-Microsoft-Antispam-PRVS: <CY4PR03MB3125B0A44595D00ED95BC72FF9320@CY4PR03MB3125.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0031A0FFAF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: Y23xOtmneh07yASE+/blELoCkrmoUK2VWWlwgfLPI2XEB7HSNAG31rJcUjy0gmVYvxrvWAJWix4tCmwxJND2sMhli4fdVGFvwA+r1WjwvaHAApuJYd3VNN4OWSQT/CJhB+OvvdFJJwQlGID7fD9BmmAUUIz44XSoq5JB1yP3qTQOjUc9QybzLdR4/w1V8KZgHUgitxp1f85Fsq6Gp/t7tpe3x9bohvD3luQWpxzuQodTpuIoNkt9J/0jNcc4OJcpeiQYGsEMFn1Wm6GweN4qfiaHcfFLjzADZt7JchoV72QH3aogegojaUXzeYue5Y1hMAswgJmlCCOkjQNQRyvvx6iYA32Asn2Wy2nCRCMqaFN0wb4+EM9SyjG0jUY9CnHEEttETR6crG7QDiTZNLtDe3Op5pVyuXYipjCRAcV6uKw=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2019 13:22:05.0484
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf20b47f-7a5e-4fec-5507-08d6d3b82ade
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB3125
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTA4IGF0IDE1OjE4ICswMjAwLCBHcmVnIEtIIHdyb3RlOg0KPiANCj4g
-DQo+IE9uIFdlZCwgTWF5IDA4LCAyMDE5IGF0IDA0OjExOjI4UE0gKzAzMDAsIEFuZHkgU2hldmNo
-ZW5rbyB3cm90ZToNCj4gPiBPbiBXZWQsIE1heSAwOCwgMjAxOSBhdCAwMjoyODoyOVBNICswMzAw
-LCBBbGV4YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gPiBUaGlzIGNoYW5nZSByZS1pbnRyb2R1
-Y2VzIGBtYXRjaF9zdHJpbmcoKWAgYXMgYSBtYWNybyB0aGF0IHVzZXMNCj4gPiA+IEFSUkFZX1NJ
-WkUoKSB0byBjb21wdXRlIHRoZSBzaXplIG9mIHRoZSBhcnJheS4NCj4gPiA+IFRoZSBtYWNybyBp
-cyBhZGRlZCBpbiBhbGwgdGhlIHBsYWNlcyB0aGF0IGRvDQo+ID4gPiBgbWF0Y2hfc3RyaW5nKF9h
-LCBBUlJBWV9TSVpFKF9hKSwgcylgLCBzaW5jZSB0aGUgY2hhbmdlIGlzIHByZXR0eQ0KPiA+ID4g
-c3RyYWlnaHRmb3J3YXJkLg0KPiA+IA0KPiA+IENhbiB5b3Ugc3BsaXQgaW5jbHVkZS9saW51eC8g
-Y2hhbmdlIGZyb20gdGhlIHJlc3Q/DQo+IA0KPiBUaGF0IHdvdWxkIGJyZWFrIHRoZSBidWlsZCwg
-d2h5IGRvIHlvdSB3YW50IGl0IHNwbGl0IG91dD8gIFRoaXMgbWFrZXMNCj4gc2Vuc2UgYWxsIGFz
-IGEgc2luZ2xlIHBhdGNoIHRvIG1lLg0KPiANCg0KTm90IHJlYWxseS4NCkl0IHdvdWxkIGJlIGp1
-c3QgYmUgdGhlIG5ldyBtYXRjaF9zdHJpbmcoKSBoZWxwZXIvbWFjcm8gaW4gYSBuZXcgY29tbWl0
-Lg0KQW5kIHRoZSBjb252ZXJzaW9ucyBvZiB0aGUgc2ltcGxlIHVzZXJzIG9mIG1hdGNoX3N0cmlu
-ZygpICh0aGUgb25lcyB1c2luZw0KQVJSQVlfU0laRSgpKSBpbiBhbm90aGVyIGNvbW1pdC4NCg0K
-VGhhbmtzDQpBbGV4DQoNCj4gdGhhbmtzLA0KPiANCj4gZ3JlZyBrLWgNCg==
+This makes file descriptors returned from the new syscalls of the new mount
+api cloexec by default.
+
+From a userspace perspective it is rarely the case that fds are supposed to
+be inherited across exec. In fact, most of the time userspace either needs
+to remember to pass the <SPECIFIC>_CLOEXEC flag along or needs to invoke
+fcntl() on fd to prevent accidentally leaking the fd. This is a much bigger
+issue than accidentally forgetting to remove the cloexec flag to inherit
+the fd.
+For old file descriptor types we can't break userspace but new ones should
+- whenever reasonable - be cloexec by default. Examples of this policy are
+the new seccomp notify fds and also pidfds. If userspace wants to inherit
+fds across exec they can remove the O_CLOEXEC flag and need to opt in to
+inheritance explicitly.
+
+Note, this also has the advantage that we can get rid of all the special
+flags per file descriptor type for the new mount api. In total this lets us
+remove 4 flags:
+- FSMOUNT_CLOEXEC
+- FSOPEN_CLOEXEC
+- FSPICK_CLOEXEC
+- OPEN_TREE_CLOEXEC
+
+Ideally, this would be changed before rc1 is out since this would
+otherwise a UAPI break.
+
+Signed-off-by: Christian Brauner <christian@brauner.io>
+---
+ fs/fsopen.c                | 13 ++++++-------
+ fs/namespace.c             | 11 ++++-------
+ include/uapi/linux/mount.h | 18 +++---------------
+ 3 files changed, 13 insertions(+), 29 deletions(-)
+
+diff --git a/fs/fsopen.c b/fs/fsopen.c
+index 3bb9c0c8cbcc..a38fa8c616cf 100644
+--- a/fs/fsopen.c
++++ b/fs/fsopen.c
+@@ -88,12 +88,12 @@ const struct file_operations fscontext_fops = {
+ /*
+  * Attach a filesystem context to a file and an fd.
+  */
+-static int fscontext_create_fd(struct fs_context *fc, unsigned int o_flags)
++static int fscontext_create_fd(struct fs_context *fc)
+ {
+ 	int fd;
+ 
+ 	fd = anon_inode_getfd("fscontext", &fscontext_fops, fc,
+-			      O_RDWR | o_flags);
++			      O_RDWR | O_CLOEXEC);
+ 	if (fd < 0)
+ 		put_fs_context(fc);
+ 	return fd;
+@@ -126,7 +126,7 @@ SYSCALL_DEFINE2(fsopen, const char __user *, _fs_name, unsigned int, flags)
+ 	if (!ns_capable(current->nsproxy->mnt_ns->user_ns, CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-	if (flags & ~FSOPEN_CLOEXEC)
++	if (flags)
+ 		return -EINVAL;
+ 
+ 	fs_name = strndup_user(_fs_name, PAGE_SIZE);
+@@ -149,7 +149,7 @@ SYSCALL_DEFINE2(fsopen, const char __user *, _fs_name, unsigned int, flags)
+ 	if (ret < 0)
+ 		goto err_fc;
+ 
+-	return fscontext_create_fd(fc, flags & FSOPEN_CLOEXEC ? O_CLOEXEC : 0);
++	return fscontext_create_fd(fc);
+ 
+ err_fc:
+ 	put_fs_context(fc);
+@@ -169,8 +169,7 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
+ 	if (!ns_capable(current->nsproxy->mnt_ns->user_ns, CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-	if ((flags & ~(FSPICK_CLOEXEC |
+-		       FSPICK_SYMLINK_NOFOLLOW |
++	if ((flags & ~(FSPICK_SYMLINK_NOFOLLOW |
+ 		       FSPICK_NO_AUTOMOUNT |
+ 		       FSPICK_EMPTY_PATH)) != 0)
+ 		return -EINVAL;
+@@ -203,7 +202,7 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
+ 		goto err_fc;
+ 
+ 	path_put(&target);
+-	return fscontext_create_fd(fc, flags & FSPICK_CLOEXEC ? O_CLOEXEC : 0);
++	return fscontext_create_fd(fc);
+ 
+ err_fc:
+ 	put_fs_context(fc);
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 3357c3d65475..ab8cea5d745f 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2369,11 +2369,8 @@ SYSCALL_DEFINE3(open_tree, int, dfd, const char *, filename, unsigned, flags)
+ 	int error;
+ 	int fd;
+ 
+-	BUILD_BUG_ON(OPEN_TREE_CLOEXEC != O_CLOEXEC);
+-
+ 	if (flags & ~(AT_EMPTY_PATH | AT_NO_AUTOMOUNT | AT_RECURSIVE |
+-		      AT_SYMLINK_NOFOLLOW | OPEN_TREE_CLONE |
+-		      OPEN_TREE_CLOEXEC))
++		      AT_SYMLINK_NOFOLLOW | OPEN_TREE_CLONE))
+ 		return -EINVAL;
+ 
+ 	if ((flags & (AT_RECURSIVE | OPEN_TREE_CLONE)) == AT_RECURSIVE)
+@@ -2389,7 +2386,7 @@ SYSCALL_DEFINE3(open_tree, int, dfd, const char *, filename, unsigned, flags)
+ 	if (detached && !may_mount())
+ 		return -EPERM;
+ 
+-	fd = get_unused_fd_flags(flags & O_CLOEXEC);
++	fd = get_unused_fd_flags(flags | O_CLOEXEC);
+ 	if (fd < 0)
+ 		return fd;
+ 
+@@ -3352,7 +3349,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
+ 	if (!may_mount())
+ 		return -EPERM;
+ 
+-	if ((flags & ~(FSMOUNT_CLOEXEC)) != 0)
++	if (flags)
+ 		return -EINVAL;
+ 
+ 	if (attr_flags & ~(MOUNT_ATTR_RDONLY |
+@@ -3457,7 +3454,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
+ 	}
+ 	file->f_mode |= FMODE_NEED_UNMOUNT;
+ 
+-	ret = get_unused_fd_flags((flags & FSMOUNT_CLOEXEC) ? O_CLOEXEC : 0);
++	ret = get_unused_fd_flags(flags | O_CLOEXEC);
+ 	if (ret >= 0)
+ 		fd_install(ret, file);
+ 	else
+diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+index 96a0240f23fe..c688e4ac843b 100644
+--- a/include/uapi/linux/mount.h
++++ b/include/uapi/linux/mount.h
+@@ -59,7 +59,6 @@
+  * open_tree() flags.
+  */
+ #define OPEN_TREE_CLONE		1		/* Clone the target tree and attach the clone */
+-#define OPEN_TREE_CLOEXEC	O_CLOEXEC	/* Close the file on execve() */
+ 
+ /*
+  * move_mount() flags.
+@@ -72,18 +71,12 @@
+ #define MOVE_MOUNT_T_EMPTY_PATH		0x00000040 /* Empty to path permitted */
+ #define MOVE_MOUNT__MASK		0x00000077
+ 
+-/*
+- * fsopen() flags.
+- */
+-#define FSOPEN_CLOEXEC		0x00000001
+-
+ /*
+  * fspick() flags.
+  */
+-#define FSPICK_CLOEXEC		0x00000001
+-#define FSPICK_SYMLINK_NOFOLLOW	0x00000002
+-#define FSPICK_NO_AUTOMOUNT	0x00000004
+-#define FSPICK_EMPTY_PATH	0x00000008
++#define FSPICK_SYMLINK_NOFOLLOW	0x00000001
++#define FSPICK_NO_AUTOMOUNT	0x00000002
++#define FSPICK_EMPTY_PATH	0x00000004
+ 
+ /*
+  * The type of fsconfig() call made.
+@@ -99,11 +92,6 @@ enum fsconfig_command {
+ 	FSCONFIG_CMD_RECONFIGURE = 7,	/* Invoke superblock reconfiguration */
+ };
+ 
+-/*
+- * fsmount() flags.
+- */
+-#define FSMOUNT_CLOEXEC		0x00000001
+-
+ /*
+  * Mount attributes.
+  */
+-- 
+2.21.0
+
