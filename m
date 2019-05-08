@@ -2,99 +2,79 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4289C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BCBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F99320644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207CB20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o51eORyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfEHPZo (ORCPT
+        id S1727601AbfEHP0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:25:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40162 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbfEHPZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:25:42 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0DA21308795F;
-        Wed,  8 May 2019 15:25:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id F0BF0277DB;
-        Wed,  8 May 2019 15:25:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  8 May 2019 17:25:40 +0200 (CEST)
-Date:   Wed, 8 May 2019 17:25:36 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Qian Cai <cai@lca.pw>, "tj@kernel.org" <tj@kernel.org>,
-        "lizefan@huawei.com" <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: ptrace warning due to "cgroup: get rid of
- cgroup_freezer_frozen_exit()"
-Message-ID: <20190508152536.GA17058@redhat.com>
-References: <1557259462.6132.20.camel@lca.pw>
- <20190507213752.GA24308@tower.DHCP.thefacebook.com>
+        Wed, 8 May 2019 11:26:34 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40615 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfEHP0d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 11:26:33 -0400
+Received: by mail-lf1-f66.google.com with SMTP id o16so14836005lfl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0rIq7gmaA9NMXEjKGvXInNhUyh84RAmH4+jHxozM48g=;
+        b=o51eORyUc/vhgGowEBY3U1f1Wb0J5uTFKxXu3nbTQx9Pn1GdCap/WlYhOpEzhbOvO8
+         AQR+00NI9UWRVcxCLGEO1lnewXOg9b1WnGqkbt8hb1Ky8MUujd6eI7WDBPZywiS/LBT5
+         vYTEHYaIStdLN238AOZ2O2/WCK7qBSa1uQCECZGmH4krle+ofA2+EZQb85KdBHzH6qfA
+         pYKtKaQ1QvshzI6D6xyzddZaEEm0avJeoDzuNs1jUMMeUM7cj1eC7PowrHRfrPH14flk
+         8wvOm951TWSc34H+Gna+TYM4QXuN4I3TYpBq0s6X+9vWwxvrv+mXODGHS/0RcKR/fvZg
+         wxOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0rIq7gmaA9NMXEjKGvXInNhUyh84RAmH4+jHxozM48g=;
+        b=jWGDSkbElIUjYJpMGh0U3t0NLA9x9iyh20jwgAuq8vXRw1rebHUqAvMR9MtQw3fquG
+         78rZqFGacXF+NFbQ9N0h7hEJjVwS1hcPEOVyfbdqCfeAqBDRhZKDPwrfesSaD6VviE1E
+         uUDfwrEZOH1VEeCod/KeaN/QLT835IwVuxR+gogwTe8VLJ4R3KAKpsbcXEh70jlJFGnT
+         W1+tpHmfr0hvXj0/PW3qRzUvCieBWyHwLuNGNwwAni5gwwmAB6Fcbmo9Auhyr8/PjI1n
+         2siBQO/+NkHsHNOfuowxgHBFiIZG1xpEaWvWxUfIlaYfvpzToHbblXIng+2xTHx130GU
+         tu2Q==
+X-Gm-Message-State: APjAAAUVVx4KQlGbSnDtR6iZon2TxMIsGqR4SGRORHl+438oar7V+6sE
+        4tKx3/tKsbkEl56TGi/4P2+lQpj/BEmFA58RPV4=
+X-Google-Smtp-Source: APXvYqwFzfGEOLv/TUFRCcQy724y1VsJ5AB8wPfpn2R4E2hWKxIzzXDqZfDE77SPiWcRdbDZpHYQBzcjjdyOtdJzng8=
+X-Received: by 2002:a19:3f4b:: with SMTP id m72mr5192626lfa.32.1557329191896;
+ Wed, 08 May 2019 08:26:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507213752.GA24308@tower.DHCP.thefacebook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 08 May 2019 15:25:42 +0000 (UTC)
+References: <20190508122721.7513-1-borneo.antonio@gmail.com> <4517dfca6c4692b28c4914410f475d3f521cd230.camel@perches.com>
+In-Reply-To: <4517dfca6c4692b28c4914410f475d3f521cd230.camel@perches.com>
+From:   Antonio Borneo <borneo.antonio@gmail.com>
+Date:   Wed, 8 May 2019 17:26:11 +0200
+Message-ID: <CAAj6DX0Gaym5ftcAdsAwTiaN9qvfJWxX0UN==VKzUT-4GPDtHg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] checkpatch: fix multiple const * types
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07, Roman Gushchin wrote:
+On Wed, May 8, 2019 at 4:51 PM Joe Perches <joe@perches.com> wrote:
+...
+> It might be better to use a max match like {0,4} instead of *
 >
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2484,9 +2484,6 @@ bool get_signal(struct ksignal *ksig)
->                 sigdelset(&current->pending.signal, SIGKILL);
->                 recalc_sigpending();
->                 current->jobctl &= ~JOBCTL_TRAP_FREEZE;
+> perl is pretty memory intensive at multiple unrestricted matches
+> of somewhat complex patterns.
 
-just noticed... perhaps it makes more sense to clear JOBCTL_TRAP_FREEZE
-before recalc_sigpending(). Or simply not clear it at all, see below.
+Agree! Will send a V2!
+Thanks for the review!
 
-> -               spin_unlock_irq(&sighand->siglock);
-> -               if (unlikely(cgroup_task_frozen(current)))
-> -                       cgroup_leave_frozen(true);
->                 goto fatal;
->         }
->  
-> @@ -2608,8 +2605,10 @@ bool get_signal(struct ksignal *ksig)
->                         continue;
->                 }
->  
-> -               spin_unlock_irq(&sighand->siglock);
->         fatal:
-> +               spin_unlock_irq(&sighand->siglock);
-> +               if (unlikely(cgroup_task_frozen(current)))
-> +                       cgroup_leave_frozen(true);
-
-Yes, ptrace_signal() can return a fatal signal... and in this case we do not
-clear JOBCTL_TRAP_FREEZE. This doesn't look consistent with the code above.
-
-
-
-I can only repeat that somehow we need to cleanup/improve the whole logic.
-
-Say, a traced task reports syscall-enter. ptrace_stop() does enter_frozen().
-The cgroup can become CGRP_FROZEN after that. Now the debugger does PTRACE_CONT,
-the frozen task actually starts the syscall. Obviously not good.
-
-Heh, and if this syscall is sys_exit or sys_exit_group we can hit the same
-warning.
-
-Oleg.
-
+Antonio
