@@ -2,206 +2,73 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6EEC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342CEC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF1B21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEBA214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 02:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557283205;
+	bh=mVQqqor03PsQ/0g49kpj6ZbWX/FB5uKvaXa+qUbqkOw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=mKYkS6W3Lhk/a7Gv/+m7+qDO3lh9v+Ez4pFVgGE4Y1E1wafBQfPEBu3NO4LA7283s
+	 F5dlwnJJmIJhwu+OhbCSmkrcG+K9q3/dCPmHPPp8fj6XVxT+nk1s1v27E8k4dZJuj2
+	 1EsWCGEyM7mRztGDND2zW3mILHvoMrSuMVVxS8jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfEHCjO (ORCPT
+        id S1726753AbfEHCkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 22:39:14 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:14670 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726371AbfEHCjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 22:39:13 -0400
-X-UUID: 5c2410f0ce734c189fe4165f79ed32a3-20190508
-X-UUID: 5c2410f0ce734c189fe4165f79ed32a3-20190508
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1437165598; Wed, 08 May 2019 10:39:08 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 8 May 2019 10:39:05 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 8 May 2019 10:39:05 +0800
-Message-ID: <1557283144.31731.4.camel@mtksdaap41>
-Subject: Re: [v2 2/5] drm/mediatek: CMDQ reg address of mt8173 is different
- with mt2701
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Wed, 8 May 2019 10:39:04 +0800
-In-Reply-To: <20190416060501.76276-3-jitao.shi@mediatek.com>
-References: <20190416060501.76276-1-jitao.shi@mediatek.com>
-         <20190416060501.76276-3-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+        Tue, 7 May 2019 22:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbfEHCkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 22:40:03 -0400
+Subject: Re: [GIT PULL] parisc architecture updates for kernel v5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557283203;
+        bh=mVQqqor03PsQ/0g49kpj6ZbWX/FB5uKvaXa+qUbqkOw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XG2iDmuRZ0s6tm0ZE4gLMS3QcbH2VtGaJ9XkJww8yqrh5UtuD8TZrHdNnS5P3yoaG
+         oTcJN/eCQK36M4Nd5QfaRdMr1lov17Kebl2CKsSa4MTG40qzLi7aeGRTqSfA/YRNXT
+         REtUerIohI7PgFCo95J7FeSEFkvYFTBRdXh/6yE4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190507183818.GA17218@ls3530.dellerweb.de>
+References: <20190507183818.GA17218@ls3530.dellerweb.de>
+X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190507183818.GA17218@ls3530.dellerweb.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
+ parisc-5.2-1
+X-PR-Tracked-Commit-Id: 62217beb394e654bbd2bb87c533dadd2d8bf62c6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d3511f53bb2475f2a4e8460bee5a1ae6dea2a433
+Message-Id: <155728320302.19924.1994029648168846229.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 May 2019 02:40:03 +0000
+To:     Helge Deller <deller@gmx.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>,
+        Sven Schnelle <svens@stackframe.org>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Mikulas Patocka <mpatocka@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
-> Config the different CMDQ reg address in driver data.
-> 
-For MT8173, you change reg_cmd_off from 0x180 to 0x200, so this patch is
-a bug fix. You should add a 'Fixes' tag.
+The pull request you sent on Tue, 7 May 2019 20:38:18 +0200:
 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 39 +++++++++++++++++++++++-------
->  1 file changed, 30 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 6c4ac37f983d..573e6bec6d36 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -131,7 +131,6 @@
->  #define VM_CMD_EN			BIT(0)
->  #define TS_VFP_EN			BIT(5)
->  
-> -#define DSI_CMDQ0		0x180
->  #define CONFIG				(0xff << 0)
->  #define SHORT_PACKET			0
->  #define LONG_PACKET			2
-> @@ -156,6 +155,10 @@
->  
->  struct phy;
->  
-> +struct mtk_dsi_driver_data {
-> +	const u32 reg_cmdq_off;
-> +};
-> +
->  struct mtk_dsi {
->  	struct mtk_ddp_comp ddp_comp;
->  	struct device *dev;
-> @@ -182,6 +185,7 @@ struct mtk_dsi {
->  	bool enabled;
->  	u32 irq_data;
->  	wait_queue_head_t irq_wait_queue;
-> +	struct mtk_dsi_driver_data *driver_data;
->  };
->  
->  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
-> @@ -934,6 +938,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
->  	const char *tx_buf = msg->tx_buf;
->  	u8 config, cmdq_size, cmdq_off, type = msg->type;
->  	u32 reg_val, cmdq_mask, i;
-> +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
->  
->  	if (MTK_DSI_HOST_IS_READ(type))
->  		config = BTA;
-> @@ -953,9 +958,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
->  	}
->  
->  	for (i = 0; i < msg->tx_len; i++)
-> -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
-> +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
-> +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
-> +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
+> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.2-1
 
-You say you would follow Nicolas' suggestion here.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d3511f53bb2475f2a4e8460bee5a1ae6dea2a433
 
->  
-> -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
-> +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
->  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
->  }
->  
-> @@ -1074,10 +1081,27 @@ static const struct component_ops mtk_dsi_component_ops = {
->  	.unbind = mtk_dsi_unbind,
->  };
->  
-> +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
-> +	.reg_cmdq_off = 0x200,
-> +};
-> +
-> +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
-> +	.reg_cmdq_off = 0x180,
-> +};
-> +
-> +static const struct of_device_id mtk_dsi_of_match[] = {
-> +	{ .compatible = "mediatek,mt2701-dsi",
-> +	  .data = &mt2701_dsi_driver_data },
-> +	{ .compatible = "mediatek,mt8173-dsi",
-> +	  .data = &mt8173_dsi_driver_data },
-> +	{ },
-> +};
-> +
->  static int mtk_dsi_probe(struct platform_device *pdev)
->  {
->  	struct mtk_dsi *dsi;
->  	struct device *dev = &pdev->dev;
-> +	const struct of_device_id *of_id;
->  	struct resource *regs;
->  	int irq_num;
->  	int comp_id;
-> @@ -1101,6 +1125,9 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_unregister_host;
->  
-> +	of_id = of_match_device(mtk_dsi_of_match, &pdev->dev);
-> +	dsi->driver_data = of_id->data;
+Thank you!
 
-Maybe use of_device_get_match_data() is a more simple way. You could
-refer to [1].
-
-[1]
-https://elixir.bootlin.com/linux/v5.1/source/drivers/gpu/drm/mediatek/mtk_disp_ovl.c#L300
-
-Regards,
-CK
-
-> +
->  	dsi->engine_clk = devm_clk_get(dev, "engine");
->  	if (IS_ERR(dsi->engine_clk)) {
->  		ret = PTR_ERR(dsi->engine_clk);
-> @@ -1193,12 +1220,6 @@ static int mtk_dsi_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id mtk_dsi_of_match[] = {
-> -	{ .compatible = "mediatek,mt2701-dsi" },
-> -	{ .compatible = "mediatek,mt8173-dsi" },
-> -	{ },
-> -};
-> -
->  struct platform_driver mtk_dsi_driver = {
->  	.probe = mtk_dsi_probe,
->  	.remove = mtk_dsi_remove,
-
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
