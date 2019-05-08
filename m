@@ -2,111 +2,171 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652A321019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MfvNU5LG"
+	by mail.kernel.org (Postfix) with ESMTP id 85DFA21019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfEHDmX (ORCPT
+        id S1727036AbfEHDn0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 23:42:23 -0400
-Received: from mail-eopbgr20059.outbound.protection.outlook.com ([40.107.2.59]:20228
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726516AbfEHDmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 23:42:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q/zUq08HnW7dhwD6miK7ZR98RL0VOqWKdF+9oKHCrtw=;
- b=MfvNU5LGdRwsjpkmWxI8KmVv3Vs9WDmXq40V8x1I7F2mKEO4mhVx/8skF+5MAK9krJcwTlkg/wjxkAXlCj8fWllfwMnHjskjBs14VGb7uUE7bMxzrKQtO9r++N2anMxpUuDqrbgCrhHl7IgPK0VyWFe8HZK9SarCu9MaBJxq5+U=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
- VI1PR0402MB2733.eurprd04.prod.outlook.com (10.175.22.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Wed, 8 May 2019 03:42:19 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::9889:fa82:4172:14df]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::9889:fa82:4172:14df%6]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 03:42:13 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>, Kay-Liu <liuk@cetca.net.cn>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for
- fec 'ahb' clock
-Thread-Topic: [EXT] Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for
- fec 'ahb' clock
-Thread-Index: AQHVAmkSkfnHjuPrDUuL+rGIVj8MEqZcLD7wgAABdICABCF2AIAAS6QQ
-Date:   Wed, 8 May 2019 03:42:12 +0000
-Message-ID: <VI1PR0402MB3600C57B5922EC20D87DF913FF320@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
- <CAOMZO5BbA6oq8okTR-r800k4XY76XxxEdufd1mjcV6HdTpVotA@mail.gmail.com>
- <AM0PR04MB421133A3F3C6B534B6ECEA7880370@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <VI1PR0402MB360058CE70AD60C116EE0634FF370@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
-In-Reply-To: <CAOMZO5CSaRZEiaqxBTcBhaYjRLxMjb6Boyy0eO6OAEFBPv3_Kw@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e71f75e2-0754-41d6-1d7e-08d6d367284d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2733;
-x-ms-traffictypediagnostic: VI1PR0402MB2733:
-x-microsoft-antispam-prvs: <VI1PR0402MB2733BF7F84DB9E963392C06BFF320@VI1PR0402MB2733.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(102836004)(6506007)(305945005)(8676002)(6436002)(6116002)(1411001)(11346002)(446003)(6246003)(8936002)(74316002)(7416002)(53546011)(3846002)(68736007)(81156014)(81166006)(186003)(99286004)(25786009)(7696005)(54906003)(14454004)(256004)(2906002)(26005)(86362001)(14444005)(52536014)(7736002)(71190400001)(229853002)(76176011)(55016002)(71200400001)(4326008)(476003)(9686003)(486006)(66446008)(53936002)(316002)(6916009)(33656002)(73956011)(66946007)(76116006)(66476007)(66556008)(64756008)(5660300002)(4744005)(478600001)(66066001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2733;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZSAMTL0OwWaYPbDHFGtgOyBO1Pgg2Rrs7t9a/Rx3oTiDjK290TxKgzq/NeT5oKQuFjHJsA+d32m8AEaBYdKtW2k21N8via+30Mh5qY5g+AWIxOBtn5yFKW3OB1d8TmOZXkmF+LJDHU8YPpRN0zRenWo6DpRd/zqpl7wSCaIQDInDq96SzMrgQnYjZoV+UUWPCzP4I5tZ8k+Cs4vCRhucDLrzg/gy7/ACm2mDgt57JPx2YYnHCvUXRa6FvRMfekUNQW8Xk3NJSRep5tWqqgzrisP9GdM6spbXOdqf8mfokQZgX1jUdYJYcCDcerOpBy5c7X/sL6T3GPJ/Lq4Oy/g84UdZwfRk51n7B9TEsmR/V6sxVXFk59niZkt7VFaVaktEZEpPpvJnXyNf/2MWchxQVgw2SosfdtP8PJlG3VZZdsc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 7 May 2019 23:43:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45134 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726516AbfEHDnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 23:43:25 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 94D853087944;
+        Wed,  8 May 2019 03:43:25 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82EFC60C4E;
+        Wed,  8 May 2019 03:43:25 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 28F5E65D13;
+        Wed,  8 May 2019 03:43:25 +0000 (UTC)
+Date:   Tue, 7 May 2019 23:43:24 -0400 (EDT)
+From:   Jason Wang <jasowang@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Message-ID: <1430527294.27174562.1557287004441.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190507154753.GA8809@infradead.org>
+References: <20190507154753.GA8809@infradead.org>
+Subject: Re: [PATCH RFC] vhost: don't use kmap() to log dirty pages
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e71f75e2-0754-41d6-1d7e-08d6d367284d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 03:42:12.9527
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2733
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.68.5.20, 10.4.195.23]
+Thread-Topic: vhost: don't use kmap() to log dirty pages
+Thread-Index: K7z0d3UL1bhTV/QW5Sb3gPqIWKhUvg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 08 May 2019 03:43:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBIaSBBbmR5LA0KPiAN
-Cj4gT24gU3VuLCBNYXkgNSwgMjAxOSBhdCA1OjE1IEFNIEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5A
-bnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+IE5hY2sgdGhlIHBhdGNoICENCj4gPg0KLi4uDQo+ID4g
-U2Vjb25kbHksICBmb3IgeW91ciBpc3N1ZSB5b3UgY2F1Z2h0LCB3aGljaCB3YXMgZml4ZWQgYnkg
-cGF0Y2g6DQo+ID4gY29tbWl0IGQ3YzNhMjA2ZTYzMzhlNGNjZGYwMzA3MTlkZWMwMjhlMjZhNTIx
-ZDUNCj4gPiBBdXRob3I6IEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT4NCj4gPiBEYXRl
-OiAgIFR1ZSBBcHIgOSAwMzo0MDo1NiAyMDE5ICswMDAwDQo+ID4NCj4gPiAgICAgbmV0OiBmZWM6
-IG1hbmFnZSBhaGIgY2xvY2sgaW4gcnVudGltZSBwbQ0KPiANCj4gV291bGQgdGhpcyBhbHNvIGZp
-eCB0aGUgY2FzZSB3aGVyZSBwb3dlciBtYW5hZ2VtZW50IHN1cHBvcnQgaXMgZGlzYWJsZWQ/DQo+
-IA0KPiBJZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5IHRoZSBleHBsYW5hdGlvbiBmcm9tIEtheS1M
-aXUgaGUgd291bGQgc3RpbGwgc2VlIGENCj4gaGFuZyBpbiB0aGUgY2FzZSB3aGVuIFBNIGlzIGRp
-c2FibGVkLg0KPiANCj4gVGhhbmtzDQpGcm9tIGN1cnJlbnQgZGVzaWduLCBpdCBzdGlsbCB3b3Jr
-IGV2ZW4gaWYgZGlzYWJsZSBQTS4NClBsZWFzZSBkb3VibGUgY2hlY2sgaXQuDQoNCkFuZHkNCg==
+On 2019/5/7 下午11:47, Christoph Hellwig wrote:
+> On Mon, May 06, 2019 at 10:23:29PM -0400, Jason Wang wrote:
+>> Note: there're archs (few non popular ones) that don't implement
+>> futex helper, we can't log dirty pages. We can fix them on top or
+>> simply disable LOG_ALL features of vhost.
+>
+> That means vhost now has to depend on HAVE_FUTEX_CMPXCHG to make
+> sure we have a working implementation.
+
+I found HAVE_FUTEX_CMPXCHG is not a must for arch that has the
+implementation and futex does some kind of runtime detection like:
+
+static void __init futex_detect_cmpxchg(void)
+{
+#ifndef CONFIG_HAVE_FUTEX_CMPXCHG
+	u32 curval;
+
+	/*
+	 * This will fail and we want it. Some arch implementations do
+	 * runtime detection of the futex_atomic_cmpxchg_inatomic()
+	 * functionality. We want to know that before we call in any
+	 * of the complex code paths. Also we want to prevent
+	 * registration of robust lists in that case. NULL is
+	 * guaranteed to fault and we get -EFAULT on functional
+	 * implementation, the non-functional ones will return
+	 * -ENOSYS.
+	 */
+	if (cmpxchg_futex_value_locked(&curval, NULL, 0, 0) == -EFAULT)
+		futex_cmpxchg_enabled = 1;
+#endif
+}
+
+
+>
+>
+>>  #include <linux/sched/signal.h>
+>>  #include <linux/interval_tree_generic.h>
+>>  #include <linux/nospec.h>
+>> +#include <asm/futex.h>
+>
+> Also please include the futex maintainers to make sure they are fine
+> with this first usage of <asm/futex.h> outside of kernel/futex.c.
+>
+
+Thanks for ccing them. Will do for next version.
+
+If we decide to go this way, we probably need to move it to uaccess
+for a more generic helper.
+
+>
+>> +static int set_bit_to_user(int nr, u32 __user *addr)
+>>  {
+>>  	unsigned long log = (unsigned long)addr;
+>>  	struct page *page;
+>> +	u32 old_log;
+>>  	int r;
+>>  
+>>  	r = get_user_pages_fast(log, 1, 1, &page);
+>>  	if (r < 0)
+>>  		return r;
+>>  	BUG_ON(r != 1);
+>> +
+>> +	r = futex_atomic_cmpxchg_inatomic(&old_log, addr, 0, 0);
+>> +	if (r < 0)
+>> +		return r;
+>> +
+>> +	old_log |= 1 << nr;
+>> +	r = put_user(old_log, addr);
+>> +	if (r < 0)
+>> +		return r;
+>
+> And this just looks odd to me.  Why do we need the futex call to
+> replace a 0 value with 0?  Why does it still duplicate the
+> put_user?  This doesn't look like actually working code to me.
+
+Yes, this is a bug. Should be something like:
+
+static int set_bit_to_user(int nr, u32 __user *addr)
+{
+        unsigned long log = (unsigned long)addr;
+        struct page *page;
+        u32 old_log, new_log, l;
+        int r;
+
+        r = get_user_pages_fast(log, 1, 1, &page);
+        if (r < 0)
+                return r;
+	BUG_ON(r != 1);
+
+        do {
+                r = get_user(old_log, addr);
+                if (r < 0)
+                        return r;
+                new_log = old_log | (1 << nr);
+		r = futex_atomic_cmpxchg_inatomic(&l, addr, old_log, new_log);
+                if (r < 0)
+                        return r;
+        } while(l != new_log);
+
+	set_page_dirty_lock(page);
+        put_page(page);
+        return 0;
+}
+
+>
+> Also don't we need a pagefault_disable() around
+> futex_atomic_cmpxchg_inatomic?
+
+Since we don't want to deal with pagefault, so the page has been
+pinned before futex_atomic_cmpxchg_inatomic().
+
+Thanks
