@@ -2,100 +2,145 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D761C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D895C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2B6214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557306269;
-	bh=Xj7N6mDNL85rnZGjlCiHaaNhULhLAZxI2KNaCi8kYIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Eoe2tp+LwtvDvUFmR+t+JOk0hRLf57ErRGu6OQON68f/VOGDA49jxqwA047M4V3ri
-	 1xbNsJo//OufCFdH7dH8N+v3hnYXnfK9TV5HQcx9y8vvWEcPbCCL3DgoMJ0WjBIQvQ
-	 O2OtylQaWKRqZ6p2VSnumPtYyhI7MbgKus0ZY5HQ=
+	by mail.kernel.org (Postfix) with ESMTP id D9122216C8
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cAzcttZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfEHJE2 (ORCPT
+        id S1726723AbfEHJGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:04:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49518 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfEHJE1 (ORCPT
+        Wed, 8 May 2019 05:06:19 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:32912 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfEHJGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:04:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SLaCDPhxMMikTFAxLcu81CNC9LBPAJdG+62+3Qu31NA=; b=FQeEtDtIcZI9ZQMa/x0LAQ2ZC
-        Rnt8PX8I2lrNjW5u2IoCgI3gJ74gce8ps6jeYXvH2RfU0kglDYAqZyMnbNpdUAGOcHnlLmNPOYEs5
-        tHQO1Itm5msJT070ncRBpnC4rePdXjci8sEPJBTo1X50hKVSshtcqp/PPrtIA4MRV3rug=;
-Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hOIUm-0007fG-5K; Wed, 08 May 2019 09:04:12 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id D81CB44000C; Wed,  8 May 2019 10:04:06 +0100 (BST)
-Date:   Wed, 8 May 2019 18:04:06 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Fletcher Woodruff <fletcherw@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v5 3/3] ASoC: rt5677: fall back to DT prop names on error
-Message-ID: <20190508090406.GG14916@sirena.org.uk>
-References: <20190507220115.90395-1-fletcherw@chromium.org>
- <20190507220115.90395-4-fletcherw@chromium.org>
+        Wed, 8 May 2019 05:06:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id n17so21401843edb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 02:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=ZCByRjUdoltM6JQS2wK/k1Vsg/2ECYjryZKrL53UB1A=;
+        b=cAzcttZx8IOcmQDqtJutN0W3TZIg84Kt+H8yqc/dtHNn73Y2pzR4uGqqCerk+xxpRK
+         kCgJj/0Cr/9osHXLk0jMGb0DbsYQmdwOxkCRSgnYBTOS4elaRx1CcurT+vvHJOsLuOZf
+         kJPxniGaN7IRwAIl1yJA3kUC4nDvoPbGXpO0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=ZCByRjUdoltM6JQS2wK/k1Vsg/2ECYjryZKrL53UB1A=;
+        b=trpePSBYr4jGUPL3ChPYgfK2sG9H1AyzaBLWCQcw3CZ9uqfW7sHWuNWRm0tSAwYRBA
+         M5OgpVrkwgUDinJTgkmdB/JUBNtzorg6tUIW7FKtPKwXuaEfdmWLvzaMhjGObpWweg0R
+         R6v5XNaR5f//UEaMc2b+wpU2vKjclgGNjr8btzprtoGoMuI9DScIJxiM+pDVfzbce1z7
+         ASkT4JV4LG/jJkUlNH5t2dVem3f+Ew1qaPREohfoxYxjlSdA0Gj/K4Jf1UEvCQ+n5hoZ
+         0w4VkgHIpVG8+zwoGcMDovTxduWQ+QWieCN+QOoNR4fsWEJVFy5zltMuboEA1XQEsL1z
+         hghw==
+X-Gm-Message-State: APjAAAUirEKNipQInDyV4DrWmC8TAj+0nOGpA130EuUjmPCScwHvBvbo
+        oYIhPxVXkO3jpRdfyqOb8a0uvQ==
+X-Google-Smtp-Source: APXvYqyhIyJzQJ2/WQmKoGSeee8pS6Iu8b2u59hMI6uOyjAOYUPnEY7pFFD0PgsSnAjiyZEjRhbMSQ==
+X-Received: by 2002:a17:906:a48:: with SMTP id x8mr3642206ejf.247.1557306376650;
+        Wed, 08 May 2019 02:06:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id f44sm4982723eda.73.2019.05.08.02.06.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 02:06:15 -0700 (PDT)
+Date:   Wed, 8 May 2019 11:06:12 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        stable <stable@vger.kernel.org>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700
+ Adapt
+Message-ID: <20190508090612.GT17751@phenom.ffwll.local>
+Mail-Followup-To: Sam Ravnborg <sam@ravnborg.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        stable <stable@vger.kernel.org>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
+ <CAOMZO5B2nMsVNO6O_D+YTSjux=-DjNPGxhkEi3AQquOZVODumA@mail.gmail.com>
+ <20190507161950.GA24879@ravnborg.org>
+ <20190508083303.GR17751@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+if5tLMzDwmTCkiQ"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190507220115.90395-4-fletcherw@chromium.org>
-X-Cookie: -- I have seen the FUN --
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190508083303.GR17751@phenom.ffwll.local>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 08, 2019 at 10:33:03AM +0200, Daniel Vetter wrote:
+> On Tue, May 07, 2019 at 06:19:50PM +0200, Sam Ravnborg wrote:
+> > Hi Fabio
+> > 
+> > On Tue, May 07, 2019 at 12:33:39PM -0300, Fabio Estevam wrote:
+> > > [Adding Sam, who is helping to review/collect panel-simple patches]
+> > > 
+> > > On Tue, May 7, 2019 at 12:27 PM Sébastien Szymanski
+> > > <sebastien.szymanski@armadeus.com> wrote:
+> > > >
+> > > > This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+> > > > Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+> > > > that it can be connected on the TFT header of Armadeus Dev boards.
+> > > >
+> > > > Cc: stable@vger.kernel.org # v4.19
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > 
+> > If you wil lresend the patch I can apply it.
+> > I have lost the original mail.
+> 
+> Usually patchwork should have it already (and you can pipe the raw
+> patchwork mbox into dim apply), but somehow it's not there either.
+> Not sure why, sometimes this is because mails are stuck in moderation,
+> sometimes because people do interesting things with their mails (e.g. smtp
+> servers mangling formatting).
 
---+if5tLMzDwmTCkiQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+patchwork was just a bit slow, it's there now:
 
-On Tue, May 07, 2019 at 04:01:15PM -0600, Fletcher Woodruff wrote:
-> The rt5677 driver uses ACPI-style property names to read from the
-> device API. However, these do not match the property names in _DSD
-> used on the Chromebook Pixel 2015, which are closer to the Device Tree
-> style.  Unify the two functions for reading from the device API so that
-> they try ACPI-style names first and fall back to the DT names on error.
+https://patchwork.freedesktop.org/series/60408/
 
-This is OK and should probably be the first patch in the series since
-it's much simpler than the other ones but depends on them.
-
---+if5tLMzDwmTCkiQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzSm4UACgkQJNaLcl1U
-h9BXYgf9HL6kgqhLX5BgKf3C1D9thjRYiOmKbp5R2x6lp5KlyJkhLSBNUFaJVciZ
-6cshYtsU42VNjyT9ICN7OD3CoROo+HDvy5PaPfylSaNSUq180OQV6t4KE2SNrGZ8
-5O1GpwPLUJ2Q+0biQMPOp4eic90mz3usZtSIFgg9K8i0ZsYtmV2t75OeSETJY1au
-nxnYwLttQ1R73oRfaB7/uvYETekume/zHZ5BNi6xFPRgKY2cPoK+qUvWKH6CaaLa
-WOufUF3Os1nB7azLSxLfZvhRleqVmpv95d/jHtdYOH4920YbHqsImkyInJc8Uh0z
-tkxlqDjblH4PgakMTEmJ+T0M7JEAKA==
-=gN76
------END PGP SIGNATURE-----
-
---+if5tLMzDwmTCkiQ--
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
