@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320EFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CB120989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA3720989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfEHOot (ORCPT
+        id S1727823AbfEHOtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:44:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57649 "EHLO mga06.intel.com"
+        Wed, 8 May 2019 10:49:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbfEHOok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:40 -0400
+        id S1728402AbfEHOot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:49 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:48 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
-   d="scan'208";a="169656525"
+   d="scan'208";a="169656560"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 15EF358A; Wed,  8 May 2019 17:44:29 +0300 (EEST)
+        id 8506EBF5; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -45,10 +45,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 09/62] x86/mm: Preserve KeyID on pte_modify() and pgprot_modify()
-Date:   Wed,  8 May 2019 17:43:29 +0300
-Message-Id: <20190508144422.13171-10-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 37/62] keys/mktme: Do not allow key creation in unsafe topologies
+Date:   Wed,  8 May 2019 17:43:57 +0300
+Message-Id: <20190508144422.13171-38-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,58 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An encrypted VMA will have KeyID stored in vma->vm_page_prot. This way
-we don't need to do anything special to setup encrypted page table
-entries and don't need to reserve space for KeyID in a VMA.
+From: Alison Schofield <alison.schofield@intel.com>
 
-This patch changes _PAGE_CHG_MASK to include KeyID bits. Otherwise they
-are going to be stripped from vm_page_prot on the first pgprot_modify().
+MKTME feature depends upon at least one online CPU capable of
+programming each memory controller in the platform.
 
-Define PTE_PFN_MASK_MAX similar to PTE_PFN_MASK but based on
-__PHYSICAL_MASK_SHIFT. This way we include whole range of bits
-architecturally available for PFN without referencing physical_mask and
-mktme_keyid_mask variables.
+An unsafe topology for MKTME is a memory only package or a package
+with no online CPUs. Key creation with unsafe topologies will fail
+with EINVAL and a warning will be logged one time.
+For example:
+	[ ] MKTME: no online CPU in proximity domain
+	[ ] MKTME: topology does not support key creation
 
+These are recoverable errors. CPUs may be brought online that are
+capable of programming a previously unprogrammable memory controller,
+or an unprogrammable memory controller may be removed from the
+platform.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/pgtable_types.h | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ security/keys/mktme_keys.c | 39 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index d6ff0bbdb394..7d6f68431538 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -117,12 +117,25 @@
- 				 _PAGE_ACCESSED | _PAGE_DIRTY)
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index f5fc6cccc81b..734e1d28eb24 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -26,6 +26,7 @@ cpumask_var_t mktme_leadcpus;		/* One lead CPU per pconfig target */
+ static bool mktme_storekeys;		/* True if key payloads may be stored */
+ unsigned long *mktme_bitmap_user_type;	/* Shows presence of user type keys */
+ struct mktme_payload *mktme_key_store;	/* Payload storage if allowed */
++bool mktme_allow_keys;			/* True when topology supports keys */
  
- /*
-- * Set of bits not changed in pte_modify.  The pte's
-- * protection key is treated like _PAGE_RW, for
-- * instance, and is *not* included in this mask since
-- * pte_modify() does modify it.
-+ * Set of bits not changed in pte_modify.
-+ *
-+ * The pte's protection key is treated like _PAGE_RW, for instance, and is
-+ * *not* included in this mask since pte_modify() does modify it.
-+ *
-+ * They include the physical address and the memory encryption keyID.
-+ * The paddr and the keyID never occupy the same bits at the same time.
-+ * But, a given bit might be used for the keyID on one system and used for
-+ * the physical address on another. As an optimization, we manage them in
-+ * one unit here since their combination always occupies the same hardware
-+ * bits. PTE_PFN_MASK_MAX stores combined mask.
-+ *
-+ * Cast PAGE_MASK to a signed type so that it is sign-extended if
-+ * virtual addresses are 32-bits but physical addresses are larger
-+ * (ie, 32-bit PAE).
-  */
--#define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
-+#define PTE_PFN_MASK_MAX \
-+	(((signed long)PAGE_MASK) & ((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
-+#define _PAGE_CHG_MASK	(PTE_PFN_MASK_MAX | _PAGE_PCD | _PAGE_PWT |		\
- 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
- 			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
- #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ /* 1:1 Mapping between Userspace Keys (struct key) and Hardware KeyIDs */
+ struct mktme_mapping {
+@@ -278,33 +279,55 @@ static void mktme_destroy_key(struct key *key)
+ 	percpu_ref_kill(&encrypt_count[keyid]);
+ }
+ 
++static void mktme_update_pconfig_targets(void);
+ /* Key Service Method to create a new key. Payload is preparsed. */
+ int mktme_instantiate_key(struct key *key, struct key_preparsed_payload *prep)
+ {
+ 	struct mktme_payload *payload = prep->payload.data[0];
+ 	unsigned long flags;
++	int ret = -ENOKEY;
+ 	int keyid;
+ 
+ 	spin_lock_irqsave(&mktme_lock, flags);
++
++	/* Topology supports key creation */
++	if (mktme_allow_keys)
++		goto get_key;
++
++	/* Topology unknown, check it. */
++	if (!mktme_hmat_evaluate()) {
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++
++	/* Keys are now allowed. Update the programming targets. */
++	mktme_update_pconfig_targets();
++	mktme_allow_keys = true;
++
++get_key:
+ 	keyid = mktme_reserve_keyid(key);
+ 	spin_unlock_irqrestore(&mktme_lock, flags);
+ 	if (!keyid)
+-		return -ENOKEY;
++		goto out;
+ 
+ 	if (percpu_ref_init(&encrypt_count[keyid], mktme_percpu_ref_release,
+ 			    0, GFP_KERNEL))
+-		goto err_out;
++		goto out_free_key;
+ 
+-	if (!mktme_program_keyid(keyid, payload)) {
+-		mktme_store_payload(keyid, payload);
+-		return MKTME_PROG_SUCCESS;
+-	}
++	ret = mktme_program_keyid(keyid, payload);
++	if (ret == MKTME_PROG_SUCCESS)
++		goto out;
++
++	/* Key programming failed */
+ 	percpu_ref_exit(&encrypt_count[keyid]);
+-err_out:
++
++out_free_key:
+ 	spin_lock_irqsave(&mktme_lock, flags);
+ 	mktme_release_keyid(keyid);
++out_unlock:
+ 	spin_unlock_irqrestore(&mktme_lock, flags);
+-	return -ENOKEY;
++out:
++	return ret;
+ }
+ 
+ /* Make sure arguments are correct for the TYPE of key requested */
 -- 
 2.20.1
 
