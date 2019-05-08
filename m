@@ -2,129 +2,105 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC1BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED5F217D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7C5216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfEHOv4 (ORCPT
+        id S1728934AbfEHOwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:51:56 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.219]:35716 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727005AbfEHOvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:51:54 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id B001B61113
-        for <linux-kernel@vger.kernel.org>; Wed,  8 May 2019 09:51:53 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ONvFhLNbW2PzOONvFhnLBU; Wed, 08 May 2019 09:51:53 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.7] (port=33232 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hONvE-0030xo-Uy; Wed, 08 May 2019 09:51:53 -0500
-Subject: Re: [PATCH] nvme-pci: mark expected switch fall-through
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190507142300.GA25717@embeddedor>
- <20190508071810.GC21775@lst.de>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <f5d3b1d9-1242-8c00-c4a1-1bd612e845ba@embeddedor.com>
-Date:   Wed, 8 May 2019 09:51:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 10:52:03 -0400
+Received: from mga11.intel.com ([192.55.52.93]:7358 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728142AbfEHOok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
+X-ExtLoop1: 1
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 58DEC858; Wed,  8 May 2019 17:44:29 +0300 (EEST)
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 14/62] x86/mm: Map zero pages into encrypted mappings correctly
+Date:   Wed,  8 May 2019 17:43:34 +0300
+Message-Id: <20190508144422.13171-15-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190508071810.GC21775@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.7
-X-Source-L: No
-X-Exim-ID: 1hONvE-0030xo-Uy
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.7]:33232
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Zero pages are never encrypted. Keep KeyID-0 for them.
 
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/include/asm/pgtable.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-On 5/8/19 2:18 AM, Christoph Hellwig wrote:
-> Thanks,
-> 
-> applied to nvme-5.2.
-> 
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 50b3e2d963c9..59c3dd50b8d5 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -803,6 +803,19 @@ static inline unsigned long pmd_index(unsigned long address)
+  */
+ #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
+ 
++#define mk_zero_pte mk_zero_pte
++static inline pte_t mk_zero_pte(unsigned long addr, pgprot_t prot)
++{
++	extern unsigned long zero_pfn;
++	pte_t entry;
++
++	prot.pgprot &= ~mktme_keyid_mask;
++	entry = pfn_pte(zero_pfn, prot);
++	entry = pte_mkspecial(entry);
++
++	return entry;
++}
++
+ /*
+  * the pte page can be thought of an array like this: pte_t[PTRS_PER_PTE]
+  *
+@@ -1133,6 +1146,12 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm,
+ 
+ #define mk_pmd(page, pgprot)   pfn_pmd(page_to_pfn(page), (pgprot))
+ 
++#define mk_zero_pmd(zero_page, prot)					\
++({									\
++	prot.pgprot &= ~mktme_keyid_mask;				\
++	pmd_mkhuge(mk_pmd(zero_page, prot));				\
++})
++
+ #define  __HAVE_ARCH_PMDP_SET_ACCESS_FLAGS
+ extern int pmdp_set_access_flags(struct vm_area_struct *vma,
+ 				 unsigned long address, pmd_t *pmdp,
+-- 
+2.20.1
 
-Great. :)
-
-Thanks, Christoph.
---
-Gustavo
