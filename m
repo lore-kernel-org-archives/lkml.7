@@ -2,121 +2,160 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3708C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8592C46470
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C8021479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB4D21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KhU+nnqH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LdfpPzMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfEHLIS (ORCPT
+        id S1727351AbfEHLLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:08:18 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58466 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725891AbfEHLIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:08:18 -0400
-Received: from zn.tnic (p2E584D41.dip0.t-ipconnect.de [46.88.77.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6759D1EC0C12;
-        Wed,  8 May 2019 13:08:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557313696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=VAvkdEAhjrbk9stbIW++ThlQ9foWSny29PRehsUDR34=;
-        b=KhU+nnqH2ORWxbl99Wg34QsRvs7ky5ml1GVvrpb322vb4KEBZGi5r5V9GEkV3kSbeGLnxQ
-        e82bNOQ2QVQ54BX3oNZQukImRqe82pDQaSh5S1vBRT8kgPW986gRaWBkV7UyP4UM356XOW
-        ezL2hludxFYrlSfFkcXPebJPTYUKQ5o=
-Date:   Wed, 8 May 2019 13:06:05 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     PanBian <bianpan2016@163.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] EDAC/sysfs: Drop device references properly
-Message-ID: <20190508110605.GE19015@zn.tnic>
-References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
- <20190418172548.GL27160@zn.tnic>
- <20190419003536.GA57795@bianpan2016@163.com>
- <20190419004516.GC559@zn.tnic>
- <20190427214925.GE16338@kroah.com>
+        Wed, 8 May 2019 07:11:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54633 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfEHLLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 07:11:23 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b203so1577342wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=CudbcozzaeKUq3DWNZdG3otz0fZIRmL0q4NFD8op3gI=;
+        b=LdfpPzMpiacfFiok1ZAPTSkSm9gekwnzSeXjerAyeO0EAl44atgySrwVK/1S3+uCov
+         T3QeYquOu1rc/U7S9MyQJYcbrOO+VAzuk8rA+/3lW9nb2alaY5LzfobBRWzJiAmXZkKu
+         hTJIlBO231WRZs79AjSvRUfx0OpsNqkEYL513MG0J0KhdOQst9BdM7T6zzUyK8R0OhKL
+         xChXW/vqzCZ4GTacIH9O6Px/opCR1VpAVwMZ2wxfC3E57mhtY4e8S2URnK7gsH6SLUeN
+         /QQ1uD7lJ+M5tN9U8/o7lGBSZgf824SiapzizJ7sMNwq/H03OAWfztRuzAdZo/m/+mJs
+         Ircg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=CudbcozzaeKUq3DWNZdG3otz0fZIRmL0q4NFD8op3gI=;
+        b=pMCBMjptgVXRBCZ4jvww2dPN0hsv1etl8DNHI3mZFRwcq/S+GRJ/6TQH36IgdcbDwM
+         w+5pXGwsmQzXWKxezpMhtyCtnYemiHHezorOiX3enmkVveNLybrBTjHGY7VO7hYuGvBA
+         Vwe6dSIkCAytYBdGlrMX8RSy1oCjmvRYUDBNA8+i29LRYgOfmo9gHnMjNA33tj9PymW9
+         0vcjey3k5DJDI7qxRE/YSIRZT4ZOBDjLH+KpKwyyXbvis8ADyywmlGy/1kFtiAGsjrvQ
+         UccFVyU9vvMezY9vVtesvWKu5sxImALNZXIp+I8yIE86gS3/t5Ge5+6kUNyz0tp1rCHd
+         AuAQ==
+X-Gm-Message-State: APjAAAXB9ViBwP/clrJlZI/eNf5TF0KBpEP3UhLKTa5+QmK5/tR1Iwcw
+        WhNpvHlwCAE983pBeJ5Xmuj9BA==
+X-Google-Smtp-Source: APXvYqwHxHzg+VsUu59uDR7g3sMlAR+jrJYJ2RFcO1V8dYuCtcSCuVY9lJnp+qeleM4eFH7vIfajHw==
+X-Received: by 2002:a1c:9942:: with SMTP id b63mr2739095wme.116.1557313880609;
+        Wed, 08 May 2019 04:11:20 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id n4sm2944764wmk.24.2019.05.08.04.11.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 04:11:20 -0700 (PDT)
+Date:   Wed, 8 May 2019 12:11:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] Immutable branch between MFD, GPIO, Input, LEDs and Power
+ due for the v5.2 merge window
+Message-ID: <20190508111118.GR3995@dell>
+References: <20190423090451.23711-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190427214925.GE16338@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190423090451.23711-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---
-From: Greg KH <gregkh@linuxfoundation.org>
+Enjoy!
 
-Do put_device() if device_add() fails.
+The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
 
- [ bp: do device_del() for the successfully created devices in
-   edac_create_csrow_objects(), on the unwind path. ]
+  Linux 5.1 (2019-05-05 17:42:58 -0700)
 
-Signed-off-by: Greg KH <gregkh@linuxfoundation.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20190427214925.GE16338@kroah.com
----
- drivers/edac/edac_mc_sysfs.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 9b7d396f26e9..7c01e1cc030c 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -449,7 +449,8 @@ static int edac_create_csrow_objects(struct mem_ctl_info *mci)
- 		csrow = mci->csrows[i];
- 		if (!nr_pages_per_csrow(csrow))
- 			continue;
--		put_device(&mci->csrows[i]->dev);
-+
-+		device_del(&mci->csrows[i]->dev);
- 	}
- 
- 	return err;
-@@ -651,9 +652,11 @@ static int edac_create_dimm_object(struct mem_ctl_info *mci,
- 	dev_set_drvdata(&dimm->dev, dimm);
- 	pm_runtime_forbid(&mci->dev);
- 
--	err =  device_add(&dimm->dev);
-+	err = device_add(&dimm->dev);
-+	if (err)
-+		put_device(&dimm->dev);
- 
--	edac_dbg(0, "creating rank/dimm device %s\n", dev_name(&dimm->dev));
-+	edac_dbg(0, "created rank/dimm device %s\n", dev_name(&dimm->dev));
- 
- 	return err;
- }
-@@ -934,6 +937,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
- 	err = device_add(&mci->dev);
- 	if (err < 0) {
- 		edac_dbg(1, "failure: create device %s\n", dev_name(&mci->dev));
-+		put_device(&mci->dev);
- 		goto out;
- 	}
- 
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-input-leds-power-v5.2
+
+for you to fetch changes up to 796fad0101d370567c2968bd933b865aa57efaa3:
+
+  MAINTAINERS: Add an entry for MAX77650 PMIC driver (2019-05-08 12:07:12 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, GPIO, Input, LEDs and Power due for the v5.2 merge window
+
+----------------------------------------------------------------
+Bartosz Golaszewski (11):
+      dt-bindings: mfd: Add DT bindings for max77650
+      dt-bindings: power: supply: Add DT bindings for max77650
+      dt-bindings: leds: Add DT bindings for max77650
+      dt-bindings: input: Add DT bindings for max77650
+      mfd: mfd-core: Document mfd_add_devices()
+      mfd: Add new driver for MAX77650 PMIC
+      power: supply: max77650: Add support for battery charger
+      gpio: max77650: Add GPIO support
+      leds: max77650: Add LEDs support
+      input: max77650: Add onkey support
+      MAINTAINERS: Add an entry for MAX77650 PMIC driver
+
+ .../devicetree/bindings/input/max77650-onkey.txt   |  26 ++
+ .../devicetree/bindings/leds/leds-max77650.txt     |  57 ++++
+ Documentation/devicetree/bindings/mfd/max77650.txt |  46 +++
+ .../bindings/power/supply/max77650-charger.txt     |  28 ++
+ MAINTAINERS                                        |  14 +
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max77650.c                       | 190 +++++++++++
+ drivers/input/misc/Kconfig                         |   9 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max77650-onkey.c                | 121 +++++++
+ drivers/leds/Kconfig                               |   6 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-max77650.c                       | 147 ++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max77650.c                             | 232 +++++++++++++
+ drivers/mfd/mfd-core.c                             |  13 +
+ drivers/power/supply/Kconfig                       |   7 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/max77650-charger.c            | 368 +++++++++++++++++++++
+ include/linux/mfd/max77650.h                       |  59 ++++
+ 22 files changed, 1349 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+ create mode 100644 drivers/gpio/gpio-max77650.c
+ create mode 100644 drivers/input/misc/max77650-onkey.c
+ create mode 100644 drivers/leds/leds-max77650.c
+ create mode 100644 drivers/mfd/max77650.c
+ create mode 100644 drivers/power/supply/max77650-charger.c
+ create mode 100644 include/linux/mfd/max77650.h
+
 -- 
-2.21.0
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
