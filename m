@@ -2,149 +2,87 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409C0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193FAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1297320989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDQOPtuM"
+	by mail.kernel.org (Postfix) with ESMTP id DD59A20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfEHO6b (ORCPT
+        id S1727545AbfEHO7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:58:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35555 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfEHO6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:58:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t87so10060203pfa.2;
-        Wed, 08 May 2019 07:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yEQ3QDmG4J4aCqR8TE4zPyewDF8Wu8jUX8cEw4gcVRM=;
-        b=rDQOPtuMVcCa51KDjmVzZagDYZSJ7KpqkKLxG2aJAO67+Y2O0k/47H5A71Q4eOMDOj
-         /cpoNEZB5y+nLbzQ07zHdoyiBOAkA0U5Ku6iUXF+Sb5JCO0w984LdjQ9M8Ll42tq04jO
-         V2TBLFo54V07e8iPelizoBjbldJxs81qzR+m+bhy+VzckVkvLaWWqMjqBtBFRP5nPfCr
-         LZk90P0U2vNIInaVJ2nLlrUB+QRgarTVeisfP2uvlnmohAdiLzuM2sennX9t9qoHCOAn
-         268/ABq1HO20belSNgZGHvJE8WMCbzTtmBv/1bMzHZYDLal/IdAQjJx1N1GUcrt5uCqP
-         ck6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yEQ3QDmG4J4aCqR8TE4zPyewDF8Wu8jUX8cEw4gcVRM=;
-        b=sWtzw0cg/rsbzoKgxmbl6DpzAJAIRiSIh5R0HDFkE7B1Pspih4xF2DSJcZkO0qPqFR
-         zZ3dCFZVKzQlp1WywTjYFEs12glq64eXtIwq4IytSW6KoxZFPPtS2Bad11/0IgY3TkGN
-         +qREnmen+8gw2ZAubsCfWogTIYhPMJcwPgz6mhjueuSvuLhirZe3dlUxqcrviTICGaU+
-         24TtQto1zNcSaYQUB4r28ALw2oLCZDolNj+xW8CH31dGA3nrzCxkeJ5PdpwtWb13OzgZ
-         de2tUwYNIomwXnXyHjxxGqdesTIOKw9NeY+7OA7JDnSBUt7b/NL4AfwdHiFSrjQglcs/
-         uk2Q==
-X-Gm-Message-State: APjAAAWtnfxNxPKAqDhe47Nuxkj7ZAv1LT/tofLZ5XbK98m/nRjoM4HV
-        GspPHw2oFUW4nwpPZuGJFhc=
-X-Google-Smtp-Source: APXvYqzX9tfEM2lwPbl+tJ2jnH/8uKb0388ddWRDbaD3EtJA24j7l+BR6W/1NtQSeMBgWSe/SSUWEw==
-X-Received: by 2002:a63:2b0d:: with SMTP id r13mr47971764pgr.400.1557327510091;
-        Wed, 08 May 2019 07:58:30 -0700 (PDT)
-Received: from [192.168.84.92] (207.sub-166-167-102.myvzw.com. [166.167.102.207])
-        by smtp.gmail.com with ESMTPSA id h6sm11452931pfk.188.2019.05.08.07.58.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 07:58:29 -0700 (PDT)
-Subject: Re: [PATCH v2] netfilter: xt_owner: Add supplementary groups option
-To:     Lukasz Pawelczyk <l.pawelczyk@samsung.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lukasz Pawelczyk <havner@gmail.com>
-References: <CGME20190508141219eucas1p1e5a899714747b497499976113ea9681f@eucas1p1.samsung.com>
- <20190508141211.4191-1-l.pawelczyk@samsung.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <98f71c64-3887-b715-effb-894224a71ef9@gmail.com>
-Date:   Wed, 8 May 2019 07:58:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 10:59:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:32920 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726543AbfEHO7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:59:34 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E4DE4F78B63A55120F8E;
+        Wed,  8 May 2019 22:59:29 +0800 (CST)
+Received: from [127.0.0.1] (10.184.227.228) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
+ 22:59:21 +0800
+Subject: Re: [PATCH 3/3] net-sysfs: Fix error path for kobject_init_and_add()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Tobin C. Harding" <tobin@kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        "Ido Schimmel" <idosch@mellanox.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190430002817.10785-1-tobin@kernel.org>
+ <20190430002817.10785-4-tobin@kernel.org>
+ <20190430161124.GM9224@smile.fi.intel.com>
+From:   "wanghai (M)" <wanghai26@huawei.com>
+Message-ID: <2062f0d4-e51f-106e-cd0b-f0464d06f517@huawei.com>
+Date:   Wed, 8 May 2019 22:52:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <20190508141211.4191-1-l.pawelczyk@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190430161124.GM9224@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.227.228]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+在 2019/5/1 0:11, Andy Shevchenko 写道:
+> On Tue, Apr 30, 2019 at 10:28:17AM +1000, Tobin C. Harding wrote:
+>> Currently error return from kobject_init_and_add() is not followed by a
+>> call to kobject_put().  This means there is a memory leak.
+>>
+>> Add call to kobject_put() in error path of kobject_init_and_add().
+> It's not obvious to me if this will help to fix what is stated in the
+> (reverted) commit 6b70fc94afd1 ("net-sysfs: Fix memory leak in
+> netdev_register_kobject")?
+>
+> If so, perhaps we need to tell syzkaller guys about this.
+Thanks for reminding. It seems that the bug has not been completely fixed.
 
-On 5/8/19 10:12 AM, Lukasz Pawelczyk wrote:
-> The XT_SUPPL_GROUPS flag causes GIDs specified with XT_OWNER_GID to
-> be also checked in the supplementary groups of a process.
-> 
-> Signed-off-by: Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-> ---
->  include/uapi/linux/netfilter/xt_owner.h |  1 +
->  net/netfilter/xt_owner.c                | 23 ++++++++++++++++++++---
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/netfilter/xt_owner.h b/include/uapi/linux/netfilter/xt_owner.h
-> index fa3ad84957d5..d646f0dc3466 100644
-> --- a/include/uapi/linux/netfilter/xt_owner.h
-> +++ b/include/uapi/linux/netfilter/xt_owner.h
-> @@ -8,6 +8,7 @@ enum {
->  	XT_OWNER_UID    = 1 << 0,
->  	XT_OWNER_GID    = 1 << 1,
->  	XT_OWNER_SOCKET = 1 << 2,
-> +	XT_SUPPL_GROUPS = 1 << 3,
->  };
->  
->  struct xt_owner_match_info {
-> diff --git a/net/netfilter/xt_owner.c b/net/netfilter/xt_owner.c
-> index 46686fb73784..283a1fb5cc52 100644
-> --- a/net/netfilter/xt_owner.c
-> +++ b/net/netfilter/xt_owner.c
-> @@ -91,11 +91,28 @@ owner_mt(const struct sk_buff *skb, struct xt_action_param *par)
->  	}
->  
->  	if (info->match & XT_OWNER_GID) {
-> +		unsigned int i, match = false;
->  		kgid_t gid_min = make_kgid(net->user_ns, info->gid_min);
->  		kgid_t gid_max = make_kgid(net->user_ns, info->gid_max);
-> -		if ((gid_gte(filp->f_cred->fsgid, gid_min) &&
-> -		     gid_lte(filp->f_cred->fsgid, gid_max)) ^
-> -		    !(info->invert & XT_OWNER_GID))
-> +		struct group_info *gi = filp->f_cred->group_info;
-> +
-> +		if (gid_gte(filp->f_cred->fsgid, gid_min) &&
-> +		    gid_lte(filp->f_cred->fsgid, gid_max))
-> +			match = true;
-> +
-> +		if (!match && (info->match & XT_SUPPL_GROUPS) && gi) {
-> +			for (i = 0; i < gi->ngroups; ++i) {
-> +				kgid_t group = gi->gid[i];
-> +
-> +				if (gid_gte(group, gid_min) &&
-> +				    gid_lte(group, gid_max)) {
-> +					match = true;
-> +					break;
-> +				}
-> +			}
-> +		}
-> +
-> +		if (match ^ !(info->invert & XT_OWNER_GID))
->  			return false;
->  	}
->  
-> 
+in netdev_register_kobject():
 
-How can this be safe on SMP ?
+1746         error = device_add(dev);
+1747         if (error)
+1748                 return error;
+1749
+1750         error = register_queue_kobjects(ndev);
+1751         if (error) {
+1752                 device_del(dev);
+1753                 return error;
+1754         }
 
+This only fixes a memory leak after a failure in 
+register_queue_kobjects(). If device_add() fails, kobject_put() still 
+cann't be called, and the memory leak still exists.
 
