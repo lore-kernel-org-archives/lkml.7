@@ -2,129 +2,71 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C2BC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38C021019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEEA20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfEHMo1 (ORCPT
+        id S1727299AbfEHMom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:44:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43470 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfEHMo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:44:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 29F3D283978
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: Re: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-To:     John Stultz <john.stultz@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     "Yang, Fei" <fei.yang@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chen Yu <chenyu56@huawei.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "kernel@collabora.com" <kernel@collabora.com>
-References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
-Message-ID: <3b57eb64-4c25-4582-7b0d-59143060b5a5@collabora.com>
-Date:   Wed, 8 May 2019 14:44:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 08:44:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49513 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725889AbfEHMom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:44:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 05:44:41 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by orsmga005.jf.intel.com with ESMTP; 08 May 2019 05:44:37 -0700
+Date:   Wed, 8 May 2019 15:44:36 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com
+Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
+Message-ID: <20190508124436.GE7642@linux.intel.com>
+References: <20190415155636.32748-1-sashal@kernel.org>
+ <20190507174020.GH1747@sasha-vm>
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507174020.GH1747@sasha-vm>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
-
-W dniu 08.05.2019 o 04:18, John Stultz pisze:
-> Since commit 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather
-> buffers"), I've been seeing trouble with adb transfers in Android on
-> HiKey960, HiKey and now Dragonboard 845c.
+On Tue, May 07, 2019 at 01:40:20PM -0400, Sasha Levin wrote:
+> On Mon, Apr 15, 2019 at 11:56:34AM -0400, Sasha Levin wrote:
+> > From: "Sasha Levin (Microsoft)" <sashal@kernel.org>
+> > 
+> > Changes since v2:
+> > 
+> > - Drop the devicetree bindings patch (we don't add any new ones).
+> > - More code cleanups based on Jason Gunthorpe's review.
+> > 
+> > Sasha Levin (2):
+> >  ftpm: firmware TPM running in TEE
+> >  ftpm: add documentation for ftpm driver
 > 
-> Sometimes things crash, but often the transfers just stop w/o any
-> obvious error messages.
-> 
+> Ping? Does anyone have any objections to this?
 
-<snip>
+Sorry I've been on vacation week before last week and last week
+I was extremely busy because I had been on vacation. This in
+my TODO list. Will look into it tomorrow in detail.
 
-> 
-> Andrzej: Do you have any ideas or suggestions on this? I'm happy to
-> test or run any debug patches, if it would help narrow the issue down.
-> 
+Apologies for the delay with this!
 
-Can you please try the below patch?
-
-One more thing to consider is "functionfs read size 512 > requested size 24,
-splitting request into multiple reads." in your original report, but let's
-try this first:
-
- From f2b8f27cfa42cafe1f56d8abbe2c76fa0072e368 Mon Sep 17 00:00:00 2001
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Date: Wed, 8 May 2019 13:52:40 +0200
-Subject: [PATCH] usb: gadget: Zero ffs_io_data
-
-In some cases the "Allocate & copy" block in ffs_epfile_io() is not
-executed. Consequently, in such a case ffs_alloc_buffer() is never called
-and struct ffs_io_data is not initialized properly. This in turn leads to
-problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
-
-This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
-in non-aio case to properly initialize struct ffs_io_data.
-
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
----
-  drivers/usb/gadget/function/f_fs.c | 6 ++++--
-  1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 47be961f1bf3..41d57ae8bc15 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1182,11 +1182,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb 
-*kiocb, struct iov_iter *from)
-  	ENTER();
-
-  	if (!is_sync_kiocb(kiocb)) {
--		p = kmalloc(sizeof(io_data), GFP_KERNEL);
-+		p = kzalloc(sizeof(io_data), GFP_KERNEL);
-  		if (unlikely(!p))
-  			return -ENOMEM;
-  		p->aio = true;
-  	} else {
-+		memset(p, 0, sizeof(*p));
-  		p->aio = false;
-  	}
-
-@@ -1218,11 +1219,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, 
-struct iov_iter *to)
-  	ENTER();
-
-  	if (!is_sync_kiocb(kiocb)) {
--		p = kmalloc(sizeof(io_data), GFP_KERNEL);
-+		p = kzalloc(sizeof(io_data), GFP_KERNEL);
-  		if (unlikely(!p))
-  			return -ENOMEM;
-  		p->aio = true;
-  	} else {
-+		memset(p, 0, sizeof(*p));
-  		p->aio = false;
-  	}
-
--- 
-2.17.1
+/Jarkko
