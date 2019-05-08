@@ -2,258 +2,156 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A53C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF30C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801F821019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1239721019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ed6YBkns"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u2CwdPBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfEHTEZ (ORCPT
+        id S1727585AbfEHTFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:04:25 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:38338 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfEHTEZ (ORCPT
+        Wed, 8 May 2019 15:05:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44293 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfEHTFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:04:25 -0400
-Received: by mail-yw1-f67.google.com with SMTP id b74so16989127ywe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:04:24 -0700 (PDT)
+        Wed, 8 May 2019 15:05:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so830991pfo.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qjSy2g2nVVj6BCdNMVaDCCqCXAust5dkZBT7nTUp9+Y=;
-        b=Ed6YBkns1HRHDeVo6Z3Z7u0qlthRGEA/YbvoFs5FNS4sBcJhDmu/RlVV5YngZm8krj
-         M2IAXv/DtHcB5qrWfcyKXTl06cZ22QXFcnsJ+kPtZxALlEkDwevdlgQ9oz5zTpuEQqZa
-         O5ZoK6RMpVmgyFS6acCS7s9BOxKevhNUTIpRDJbSx/XpyTG/kNgGkLq8fHCHLA++d2Xn
-         asDZ/55oWSJvp1UZgo+xI0bJimACzS5X5tMyh7t1ZwgHGAraYEf4tr/nMQjqvitdQDFf
-         Am4QtCO6G4SSPtZjOgjgWeqbhTH1WQRM84u63IGOdM+beDLGPeU84nkhqmX5+Xy6919C
-         SoHg==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Xx1nBdwm/fMIaQ+XRMTVvJx4homKW8vOYVCrjJQah8c=;
+        b=u2CwdPBWUhvunu491lhDVH7O10yitnzRdNYTDcNKNGaaMw+pYsmkpn0J9MsT99d39Y
+         Q/Wk7PGyXcjoc1tha4UuyE89T0rOnD72kAWNnjYRKkjCa0DELX1ElQVVB5fGF3jmFGkX
+         uLZw9HuRYb+PEeZ/PPFrro1K3Iw9vCnd+ELZuZL2OKCDNAb8u9QKbTbbytR8kbwE4FBI
+         Zo/dlYVRRbaMO0EpBIfmHWL9EiKzdxDQc7t8r9e2EKWR9k2JLXoh6H4LfMbZMUTXsaF+
+         muQoMtmzSSBP8hE/rlSXFu27Me96rPxVPBbMGgvYpGy27lg+hjZKYMbf9BMngu5WO2ck
+         kXNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qjSy2g2nVVj6BCdNMVaDCCqCXAust5dkZBT7nTUp9+Y=;
-        b=g3wAqtOv3LblWKd5ItuE4d6n71wLdnpGqF6k9+EKly4d5DfFLE7ZKaFsTC4+Zvcsn8
-         lzAq9dPgbSaaf4pRrY1q+jbRyJ7oY7Tf9SeiybpdaVfgETABmOP9jXoMrxcx0UD/DzMt
-         0/dcTGLhahOH2TrmQjgPxhH9NOfyJfRR4M+Hea3RSv67WgkZaSJnhmW53QKNxPZ5Z/p5
-         Du+m6zl2nEZ6LiaUX3/+VIHmNWPd4V8lAY+qwYuopR5bgSqnFf/CTBxNulpZufHsyssh
-         XYYumaiz/gLE40J1QcpB1Ous5GjgLGWdfQEb/sKUGR8w1ZKO7KdK0yeH5e8IRYL4PnGu
-         Lp9Q==
-X-Gm-Message-State: APjAAAUEi9p3RcJN082Aa1j/SwmNP8y/pCQnlpYL6C3nGvS8UECBqdm/
-        ehfnmmchSwN1PgGS0L5I84G65vkvfk9COUxD/vnSJA==
-X-Google-Smtp-Source: APXvYqyl6Ue36OX0phhFb9K9Rb1J4iCEcxIE0y0rWmQLjQ2LUQVdRt5SXrKyrZgqDK3Crp/Krk9/D1icbX5l9McFw60=
-X-Received: by 2002:a81:2941:: with SMTP id p62mr11064125ywp.430.1557342263816;
- Wed, 08 May 2019 12:04:23 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xx1nBdwm/fMIaQ+XRMTVvJx4homKW8vOYVCrjJQah8c=;
+        b=g40LoiGaZwF/uglsZAt1YA9IDEn2hY0/yl8IoB3z5hMXpbbksXxLlVqg6d+G9rGFft
+         CadHpuL1iFq1B5YPAKoj61XE/zZ0FTtYB121nBRn/uutyiuus5obVBcP9+S0vMHHhMrm
+         m+fRgpgAT8snuB6x18EtJ+s2tIhNpf5TiBCFWzz6LH7K9vuWMwIhx0dyRVC+9XtypbIc
+         vBsgwheaCzbXiohiOyu9G+F4V08D08VPzPAYzeyHQ9SogBlEXVlU55+Fhrw774eHxnsJ
+         KdUB86YLADfs8fGOYJqpCjh9IXvUlgiIluXEQHf1eKJa8sKn2O02nWA7DfMYgQ7Zjkwz
+         65cQ==
+X-Gm-Message-State: APjAAAUfwZpucTefHUZeFdSR8wXVJvPFn3YTalEzTawe3TLo+08OzRCW
+        5bzfCC7ZJBMBGtdk0EqFu8CFJg==
+X-Google-Smtp-Source: APXvYqzypNLQt7uc54cFtZOQcJp0DaX+ClanYsAzKwneRj68EqOnfHTAe97HizrDj+ZvHjUmPOl5NA==
+X-Received: by 2002:a65:5cc8:: with SMTP id b8mr47363166pgt.36.1557342342253;
+        Wed, 08 May 2019 12:05:42 -0700 (PDT)
+Received: from jstaron2.mtv.corp.google.com ([2620:15c:202:201:b94f:2527:c39f:ca2d])
+        by smtp.gmail.com with ESMTPSA id 129sm23470533pff.140.2019.05.08.12.05.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 12:05:41 -0700 (PDT)
+From:   =?UTF-8?Q?Jakub_Staro=c5=84?= <jstaron@google.com>
+Subject: Re: [Qemu-devel] [PATCH v7 2/6] virtio-pmem: Add virtio pmem driver
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, jack@suse.cz, mst@redhat.com,
+        jasowang@redhat.com, david@fromorbit.com, lcapitulino@redhat.com,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        darrick wong <darrick.wong@oracle.com>,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, jmoyer@redhat.com,
+        nilal@redhat.com, lenb@kernel.org, kilobyte@angband.pl,
+        riel@surriel.com, yuval shaia <yuval.shaia@oracle.com>,
+        stefanha@redhat.com, pbonzini@redhat.com,
+        dan j williams <dan.j.williams@intel.com>, kwolf@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        cohuck@redhat.com, rjw@rjwysocki.net, imammedo@redhat.com,
+        smbarber@google.com
+References: <20190426050039.17460-1-pagupta@redhat.com>
+ <20190426050039.17460-3-pagupta@redhat.com>
+ <3d6479ae-6c39-d614-f1d9-aa1978e2e438@google.com>
+ <1555943483.27247564.1557313967518.JavaMail.zimbra@redhat.com>
+Message-ID: <3d643ac5-ea1b-efba-9f42-31b2ed3ab5b0@google.com>
+Date:   Wed, 8 May 2019 12:05:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190508014320.55404-1-jsperbeck@google.com> <20190508185932.GA68786@dennisz-mbp>
-In-Reply-To: <20190508185932.GA68786@dennisz-mbp>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 8 May 2019 12:04:08 -0700
-Message-ID: <CANn89iJa7qLqDjQOV9y_f3jsLogv9K0j1x=+eViKa2MQEcEjBw@mail.gmail.com>
-Subject: Re: [PATCH] percpu: remove spurious lock dependency between percpu
- and sched
-To:     Dennis Zhou <dennis@kernel.org>, Alexei Starovoitov <ast@fb.com>
-Cc:     John Sperbeck <jsperbeck@google.com>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1555943483.27247564.1557313967518.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 11:59 AM Dennis Zhou <dennis@kernel.org> wrote:
->
-> On Tue, May 07, 2019 at 06:43:20PM -0700, John Sperbeck wrote:
-> > In free_percpu() we sometimes call pcpu_schedule_balance_work() to
-> > queue a work item (which does a wakeup) while holding pcpu_lock.
-> > This creates an unnecessary lock dependency between pcpu_lock and
-> > the scheduler's pi_lock.  There are other places where we call
-> > pcpu_schedule_balance_work() without hold pcpu_lock, and this case
-> > doesn't need to be different.
-> >
-> > Moving the call outside the lock prevents the following lockdep splat
-> > when running tools/testing/selftests/bpf/{test_maps,test_progs} in
-> > sequence with lockdep enabled:
-> >
-> > ======================================================
-> > WARNING: possible circular locking dependency detected
-> > 5.1.0-dbg-DEV #1 Not tainted
-> > ------------------------------------------------------
-> > kworker/23:255/18872 is trying to acquire lock:
-> > 000000000bc79290 (&(&pool->lock)->rlock){-.-.}, at: __queue_work+0xb2/0x520
-> >
-> > but task is already holding lock:
-> > 00000000e3e7a6aa (pcpu_lock){..-.}, at: free_percpu+0x36/0x260
-> >
-> > which lock already depends on the new lock.
-> >
-> > the existing dependency chain (in reverse order) is:
-> >
-> > -> #4 (pcpu_lock){..-.}:
-> >        lock_acquire+0x9e/0x180
-> >        _raw_spin_lock_irqsave+0x3a/0x50
-> >        pcpu_alloc+0xfa/0x780
-> >        __alloc_percpu_gfp+0x12/0x20
-> >        alloc_htab_elem+0x184/0x2b0
-> >        __htab_percpu_map_update_elem+0x252/0x290
-> >        bpf_percpu_hash_update+0x7c/0x130
-> >        __do_sys_bpf+0x1912/0x1be0
-> >        __x64_sys_bpf+0x1a/0x20
-> >        do_syscall_64+0x59/0x400
-> >        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > -> #3 (&htab->buckets[i].lock){....}:
-> >        lock_acquire+0x9e/0x180
-> >        _raw_spin_lock_irqsave+0x3a/0x50
-> >        htab_map_update_elem+0x1af/0x3a0
-> >
-> > -> #2 (&rq->lock){-.-.}:
-> >        lock_acquire+0x9e/0x180
-> >        _raw_spin_lock+0x2f/0x40
-> >        task_fork_fair+0x37/0x160
-> >        sched_fork+0x211/0x310
-> >        copy_process.part.43+0x7b1/0x2160
-> >        _do_fork+0xda/0x6b0
-> >        kernel_thread+0x29/0x30
-> >        rest_init+0x22/0x260
-> >        arch_call_rest_init+0xe/0x10
-> >        start_kernel+0x4fd/0x520
-> >        x86_64_start_reservations+0x24/0x26
-> >        x86_64_start_kernel+0x6f/0x72
-> >        secondary_startup_64+0xa4/0xb0
-> >
-> > -> #1 (&p->pi_lock){-.-.}:
-> >        lock_acquire+0x9e/0x180
-> >        _raw_spin_lock_irqsave+0x3a/0x50
-> >        try_to_wake_up+0x41/0x600
-> >        wake_up_process+0x15/0x20
-> >        create_worker+0x16b/0x1e0
-> >        workqueue_init+0x279/0x2ee
-> >        kernel_init_freeable+0xf7/0x288
-> >        kernel_init+0xf/0x180
-> >        ret_from_fork+0x24/0x30
-> >
-> > -> #0 (&(&pool->lock)->rlock){-.-.}:
-> >        __lock_acquire+0x101f/0x12a0
-> >        lock_acquire+0x9e/0x180
-> >        _raw_spin_lock+0x2f/0x40
-> >        __queue_work+0xb2/0x520
-> >        queue_work_on+0x38/0x80
-> >        free_percpu+0x221/0x260
-> >        pcpu_freelist_destroy+0x11/0x20
-> >        stack_map_free+0x2a/0x40
-> >        bpf_map_free_deferred+0x3c/0x50
-> >        process_one_work+0x1f7/0x580
-> >        worker_thread+0x54/0x410
-> >        kthread+0x10f/0x150
-> >        ret_from_fork+0x24/0x30
-> >
-> > other info that might help us debug this:
-> >
-> > Chain exists of:
-> >   &(&pool->lock)->rlock --> &htab->buckets[i].lock --> pcpu_lock
-> >
-> >  Possible unsafe locking scenario:
-> >
-> >        CPU0                    CPU1
-> >        ----                    ----
-> >   lock(pcpu_lock);
-> >                                lock(&htab->buckets[i].lock);
-> >                                lock(pcpu_lock);
-> >   lock(&(&pool->lock)->rlock);
-> >
-> >  *** DEADLOCK ***
-> >
-> > 3 locks held by kworker/23:255/18872:
-> >  #0: 00000000b36a6e16 ((wq_completion)events){+.+.},
-> >      at: process_one_work+0x17a/0x580
-> >  #1: 00000000dfd966f0 ((work_completion)(&map->work)){+.+.},
-> >      at: process_one_work+0x17a/0x580
-> >  #2: 00000000e3e7a6aa (pcpu_lock){..-.},
-> >      at: free_percpu+0x36/0x260
-> >
-> > stack backtrace:
-> > CPU: 23 PID: 18872 Comm: kworker/23:255 Not tainted 5.1.0-dbg-DEV #1
-> > Hardware name: ...
-> > Workqueue: events bpf_map_free_deferred
-> > Call Trace:
-> >  dump_stack+0x67/0x95
-> >  print_circular_bug.isra.38+0x1c6/0x220
-> >  check_prev_add.constprop.50+0x9f6/0xd20
-> >  __lock_acquire+0x101f/0x12a0
-> >  lock_acquire+0x9e/0x180
-> >  _raw_spin_lock+0x2f/0x40
-> >  __queue_work+0xb2/0x520
-> >  queue_work_on+0x38/0x80
-> >  free_percpu+0x221/0x260
-> >  pcpu_freelist_destroy+0x11/0x20
-> >  stack_map_free+0x2a/0x40
-> >  bpf_map_free_deferred+0x3c/0x50
-> >  process_one_work+0x1f7/0x580
-> >  worker_thread+0x54/0x410
-> >  kthread+0x10f/0x150
-> >  ret_from_fork+0x24/0x30
-> >
-> > Signed-off-by: John Sperbeck <jsperbeck@google.com>
-> > ---
-> >  mm/percpu.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/percpu.c b/mm/percpu.c
-> > index 68dd2e7e73b5..d832793bf83a 100644
-> > --- a/mm/percpu.c
-> > +++ b/mm/percpu.c
-> > @@ -1738,6 +1738,7 @@ void free_percpu(void __percpu *ptr)
-> >       struct pcpu_chunk *chunk;
-> >       unsigned long flags;
-> >       int off;
-> > +     bool need_balance = false;
-> >
-> >       if (!ptr)
-> >               return;
-> > @@ -1759,7 +1760,7 @@ void free_percpu(void __percpu *ptr)
-> >
-> >               list_for_each_entry(pos, &pcpu_slot[pcpu_nr_slots - 1], list)
-> >                       if (pos != chunk) {
-> > -                             pcpu_schedule_balance_work();
-> > +                             need_balance = true;
-> >                               break;
-> >                       }
-> >       }
-> > @@ -1767,6 +1768,9 @@ void free_percpu(void __percpu *ptr)
-> >       trace_percpu_free_percpu(chunk->base_addr, off, ptr);
-> >
-> >       spin_unlock_irqrestore(&pcpu_lock, flags);
-> > +
-> > +     if (need_balance)
-> > +             pcpu_schedule_balance_work();
-> >  }
-> >  EXPORT_SYMBOL_GPL(free_percpu);
-> >
-> > --
-> > 2.21.0.1020.gf2820cf01a-goog
-> >
->
-> Hi John,
->
-> The free_percpu() function hasn't changed in a little under 2 years. So,
-> either lockdep has gotten smarter or something else has changed. There
-> was a workqueue change recently merged: 6d25be5782e4 ("sched/core,
-> workqueues: Distangle worker accounting from rq lock"). Would you mind
-> reverting this and then seeing if you still encounter deadlock?
->
+On 5/8/19 4:12 AM, Pankaj Gupta wrote:
+> 
+>>
+>> On 4/25/19 10:00 PM, Pankaj Gupta wrote:
+>>
+>>> +void host_ack(struct virtqueue *vq)
+>>> +{
+>>> +	unsigned int len;
+>>> +	unsigned long flags;
+>>> +	struct virtio_pmem_request *req, *req_buf;
+>>> +	struct virtio_pmem *vpmem = vq->vdev->priv;
+>>> +
+>>> +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+>>> +	while ((req = virtqueue_get_buf(vq, &len)) != NULL) {
+>>> +		req->done = true;
+>>> +		wake_up(&req->host_acked);
+>>> +
+>>> +		if (!list_empty(&vpmem->req_list)) {
+>>> +			req_buf = list_first_entry(&vpmem->req_list,
+>>> +					struct virtio_pmem_request, list);
+>>> +			list_del(&vpmem->req_list);
+>>
+>> Shouldn't it be rather `list_del(vpmem->req_list.next)`? We are trying to
+>> unlink
+>> first element of the list and `vpmem->req_list` is just the list head.
+> 
+> This looks correct. We are not deleting head but first entry in 'req_list'
+> which is device corresponding list of pending requests.
+> 
+> Please see below:
+> 
+> /**
+>  * Retrieve the first list entry for the given list pointer.
+>  *
+>  * Example:
+>  * struct foo *first;
+>  * first = list_first_entry(&bar->list_of_foos, struct foo, list_of_foos);
+>  *
+>  * @param ptr The list head
+>  * @param type Data type of the list element to retrieve
+>  * @param member Member name of the struct list_head field in the list element.
+>  * @return A pointer to the first list element.
+>  */
+> #define list_first_entry(ptr, type, member) \
+>     list_entry((ptr)->next, type, member)
 
-We have the issue even without 6d25be5782e4 in the picture.
+Please look at this StackOverflow question:
+https://stackoverflow.com/questions/19675419/deleting-first-element-of-a-list-h-list
 
-I sent the splat months ago to Alexei, because I thought it was BPF
-related at first
+Author asks about deleting first element of the queue. In our case
+(and also in the question's author case), `vpmem->req_list` is not element
+of any request struct and not an element of the list. It's just a list head storing 
+`next` and `prev` pointers which are then pointing to respectively first and
+last element of the list. We want to unlink the first element of the list,
+so we need to pass pointer to the first element of the list to
+the `list_del` function - that is, the `vpmem->req_list.next`.
+
+Thank you,
+Jakub Staron
