@@ -2,174 +2,108 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73600C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F50C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C0920989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD0621479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="oK2Vbdch"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QMbPlLtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfEHIuP (ORCPT
+        id S1726878AbfEHIzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:50:15 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45485 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfEHIuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:50:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a5so4645712pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=5d5V17MGkkXhbQVooPZEeK3rI9GaTjxWKgrgfO4W7NU=;
-        b=oK2VbdchfMN/Z121aI4DpnGVX7I/toPDA2VH+EAhjcemagVSNXQSlkpDJEbOUDDaUC
-         Bb2+K7gdaWaVhkJF9Yez6IFRT0BsJafLXd2GY8LRtPPkORX5lPsZUEd4b40EWTyAoN/N
-         YUWo7Gx1cSVf97JdqUmzZnVfhPzIRNPD0hqbAp7+hwj8XgXjtjYTLc816mom2haBgiRg
-         5tMZEQBK0rtab7Be1yJUVwUeT0JnD+vyOj831CxwraL5bG2kwXrMnwQZa5nODT8Vs7PV
-         MjPTotY1vxKd27ZCpOAJd8W6sRL8DFBarCfBCyTcufFNtzlO9Qe5jPbjBuofCL0/33vz
-         N0AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=5d5V17MGkkXhbQVooPZEeK3rI9GaTjxWKgrgfO4W7NU=;
-        b=lMBUaxn2bQH67XknnN3D3VxpP9YWK17ag7H5YmfJjmrnST6z0BQDQb7Sjp1/rZySsG
-         03LP3zZWAj404Z92ekDFDRTPTrcMRDy8pGfLl/QA/2gKjJaVyPnspQjXpoaQeHmvw7b8
-         yBKJ9HlKcQjUcKtXCLz01Ou4yBW0e9Uxs2+Bvsdi+0OjAGBchkEMR2ZFk+d6wSsfnkBe
-         +kUqWiXezjNI5bSErd3GZ4nbqo5H3QJsp7zPUNb0ePnUvWffB0OzrPq+vhz8hKsTqRHf
-         W9pKcUNgA/bTzX3t1J/g23W3sl1tyL1iE1NyyTt/JzeiFvkXObyLvvZ4dN2SK8J1Uu6Y
-         0tMw==
-X-Gm-Message-State: APjAAAVFGLucfJPBDF5lMpetEBOFKe54JRoNnamWFKaRiPHvhoWt0qBV
-        eW+IOnl2qVAX+88pYiTcXkNJhg==
-X-Google-Smtp-Source: APXvYqxoqw2Z5LwfOytfUEt2U9rKNSv1fk+E/0dHO2gWkSP9GR53UaQWI5Qc5WE5Q2WBA3eDmkJ+TQ==
-X-Received: by 2002:a17:902:4503:: with SMTP id m3mr43072190pld.97.1557305414030;
-        Wed, 08 May 2019 01:50:14 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id u123sm13464530pfu.67.2019.05.08.01.50.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 01:50:13 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <E7B70E7E-BE5D-4FD0-91CC-CED63146A43B@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_5E3DF030-97EF-40A5-998C-7DB64C39A74F";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v2] ext4: fix use-after-free in dx_release()
-Date:   Wed, 8 May 2019 02:49:25 -0600
-In-Reply-To: <1557304443-18653-1-git-send-email-stummala@codeaurora.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Sahitya Tummala <stummala@codeaurora.org>
-References: <1557304443-18653-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: Apple Mail (2.3273)
+        Wed, 8 May 2019 04:55:10 -0400
+Received: from mail-eopbgr130084.outbound.protection.outlook.com ([40.107.13.84]:60150
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbfEHIzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:55:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nHb5LJv20Q5O9jdPtsC9fwKknptDkDztqI238O1UoP8=;
+ b=QMbPlLttgabSxTINnzgwwjywd67Tpw1STZKX1DPozczORGzpTa16ecaO66sZ/44f2CaBDG1u4a6Xmn7efM7kV7eedDanRiyce/uGO1lN6GiAjjuSSd+ZXbGdtjVr09YAEVFy29OgS3OfVTdc13AsoK4OOGhwfqwNaw5vNUSjEJI=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB4625.eurprd04.prod.outlook.com (52.135.147.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 8 May 2019 08:55:05 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::c415:3cab:a042:2e13]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::c415:3cab:a042:2e13%6]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 08:55:05 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 1/4] dt-bindings: fsl: scu: add ocotp binding
+Thread-Topic: [PATCH V2 1/4] dt-bindings: fsl: scu: add ocotp binding
+Thread-Index: AQHVBUmS8YEY+TS9pUGxn5n6MqiHxaZg7LWw
+Date:   Wed, 8 May 2019 08:55:05 +0000
+Message-ID: <AM0PR04MB42115A523D5CD5FFF8144F0C80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190508030927.16668-1-peng.fan@nxp.com>
+In-Reply-To: <20190508030927.16668-1-peng.fan@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5f688312-cff9-4489-eac7-08d6d392dda0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4625;
+x-ms-traffictypediagnostic: AM0PR04MB4625:
+x-microsoft-antispam-prvs: <AM0PR04MB4625C4D6444B28B223A297EF80320@AM0PR04MB4625.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1013;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(396003)(366004)(39860400002)(189003)(199004)(8936002)(71190400001)(71200400001)(66066001)(44832011)(4744005)(102836004)(68736007)(446003)(11346002)(8676002)(486006)(81166006)(81156014)(476003)(2201001)(66476007)(26005)(76116006)(55016002)(229853002)(52536014)(73956011)(66446008)(66946007)(64756008)(66556008)(6436002)(7416002)(256004)(316002)(54906003)(53936002)(9686003)(2501003)(7736002)(86362001)(74316002)(6246003)(4326008)(33656002)(25786009)(305945005)(3846002)(99286004)(5660300002)(6506007)(478600001)(76176011)(6116002)(2906002)(110136005)(186003)(7696005)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4625;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8Evv7MNWjQaonCyYrzEwHAUNn+Unl+5TsajMFsvkfwvu7Z29MDwzfU4oqqeCcSamjPsXUiw6QMQO2jfBllwulLtuzoTyMWePueOqf8D8ua/YuViDf7xVBsnbL3VPYmejZagbGYlxhmtI7ydMadSH++nrFjXdz8IiNxUNTf3Bca0e61OzyGt+bY9VVhAv40s3xYVOP7mp9EEuROinq6HFWVeKMhFfF3G6Ie0wiwShJmWOREeQ/aD9QGKuFJoWVH5wsV6EOBxYYQRhrDfIsBWeshztvt0b5hD0GudlhsxGP5dEKaFbJWaUX233Q1ZEJ4+qumOAzFEjk2Pr9ZFTpveG6pME1lx/cDTuW2RFrWTz/gktjC1e9vmkIBQ2/UciPAFK6Q5+2/RvHtDWKZk+22CsNVfnIjHvaGekrdhk17yvePU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f688312-cff9-4489-eac7-08d6d392dda0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 08:55:05.5201
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4625
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Apple-Mail=_5E3DF030-97EF-40A5-998C-7DB64C39A74F
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-On May 8, 2019, at 2:34 AM, Sahitya Tummala <stummala@codeaurora.org> =
-wrote:
->=20
-> The buffer_head (frames[0].bh) and it's corresping page can be
-> potentially free'd once brelse() is done inside the for loop
-> but before the for loop exits in dx_release(). It can be free'd
-> in another context, when the page cache is flushed via
-> drop_caches_sysctl_handler(). This results into below data abort
-> when accessing info->indirect_levels in dx_release().
->=20
-> Unable to handle kernel paging request at virtual address =
-ffffffc17ac3e01e
-> Call trace:
-> dx_release+0x70/0x90
-> ext4_htree_fill_tree+0x2d4/0x300
-> ext4_readdir+0x244/0x6f8
-> iterate_dir+0xbc/0x160
-> SyS_getdents64+0x94/0x174
->=20
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-
-> ---
-> v2:
-> add a comment in dx_release()
->=20
-> fs/ext4/namei.c | 5 ++++-
-> 1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-> index 980166a..5d9ffa8 100644
-> --- a/fs/ext4/namei.c
-> +++ b/fs/ext4/namei.c
-> @@ -871,12 +871,15 @@ static void dx_release(struct dx_frame *frames)
-> {
-> 	struct dx_root_info *info;
-> 	int i;
-> +	unsigned int indirect_levels;
->=20
-> 	if (frames[0].bh =3D=3D NULL)
-> 		return;
->=20
-> 	info =3D &((struct dx_root *)frames[0].bh->b_data)->info;
-> -	for (i =3D 0; i <=3D info->indirect_levels; i++) {
-> +	/* save local copy, "info" may be freed after brelse() */
-> +	indirect_levels =3D info->indirect_levels;
-> +	for (i =3D 0; i <=3D indirect_levels; i++) {
-> 		if (frames[i].bh =3D=3D NULL)
-> 			break;
-> 		brelse(frames[i].bh);
-> --
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation =
-Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a =
-Linux Foundation Collaborative Project.
->=20
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_5E3DF030-97EF-40A5-998C-7DB64C39A74F
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlzSmC8ACgkQcqXauRfM
-H+Ce0xAAifydZyrx2PdbxVMOPr5hn78hZeezdDA/4f64tYel8rejddFxlXmVIAIc
-AoRjDXZcKMF80VxJ9yhp+lXSh5BLmOD7s//LnvmYgzSIX/FzG/13lzeuotaUprv3
-sOyh7eNYCaBtq6zI3/MmN6rYBNU/heoqMioX+RYtpayLGsqNiDM0brh0e4Q57HBB
-X8TEFO7oC2ZItxP+fbHs0SPSaaa5Ho+DhLwUXWNt/T0AgWFLnYwUoYSGf9b20hAm
-1g1+267dmtuNWWe6bcif9QFEA045FoFnPGSF69AJvx54wWMXzBz5qzLWtJx94ftk
-L1H8xuZVtiEk4KVkbwMyPK4ZtOr/yWb/1ly0Pgh1oZxdoxhMrS/eSGcBi7rhE4Oo
-yTRFec5X2ZiOVr/aah+d7GhhFkfyClbpOHlHiBv7RkrNQ11LMxOWtGtrZ2O/v3lJ
-3PjZLQUp47X1CJo1vQxwLCDPeGXjkduVewmZ/6BEIeOrdqNHm4mHABYV5fLrn9X5
-R+yio8kjkQNyIQt9yjwvb4KrbBDUt1FUDKUziRudlS82POJa9LGtlSJd8VbqjByX
-ZGpXg9/ey2lXjVgMYgSaavr4pwgRJWDpDxFNUX3x4xdI+MlFOP/ZgLrPcPeIWLBK
-SB46f8TCbnfSLF0fJvwyHo4qk6iZB4CuJNGkHjjE38bwMzu/LHU=
-=xufe
------END PGP SIGNATURE-----
-
---Apple-Mail=_5E3DF030-97EF-40A5-998C-7DB64C39A74F--
+PiBGcm9tOiBQZW5nIEZhbg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA4LCAyMDE5IDEwOjU2IEFN
+DQo+IA0KPiBOWFAgaS5NWDhRWFAgaXMgYW4gQVJNdjggU29DIHdpdGggYSBDb3J0ZXgtTTQgY29y
+ZSBpbnNpZGUgYXMgc3lzdGVtDQo+IGNvbnRyb2xsZXIoU0NVKSwgdGhlIG9jb3RwIGNvbnRyb2xs
+ZXIgaXMgYmVpbmcgY29udHJvbGxlZCBieSB0aGUgU0NVLCBzbyBMaW51eA0KPiBuZWVkIHVzZSBS
+UEMgdG8gU0NVIGZvciBvY290cCBoYW5kbGluZy4gVGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9j
+IGZvciBpLk1YOA0KPiBTQ1UgT0NPVFAgZHJpdmVyLg0KPiANCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
+b2JoK2R0QGtlcm5lbC5vcmc+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
+Y29tPg0KPiBDYzogQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gQ2M6IFNo
+YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IFVsZiBIYW5zc29uIDx1bGYuaGFu
+c3NvbkBsaW5hcm8ub3JnPg0KPiBDYzogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPg0K
+PiBDYzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5Abnhw
+LmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+
+DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
