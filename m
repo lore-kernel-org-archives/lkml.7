@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE62C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B44C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5078421479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A4A21479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557291319;
-	bh=XWiJafixRm/GHlU7alPE6TKP6lFV6i9YyfGzNa5UgYY=;
+	s=default; t=1557291322;
+	bh=aX5ppYvNsRtV46AjBaYiU9S7VmouoF+KcrC4LfVo1Kg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=aewz8M3V/Iy3KSXzLKBJVnvEuiiEZhjc3b7VAV5NFM4uy82BAcIJMwFJJ8A8W2KaX
-	 0EEumMGyc6/8WKV742+yRo4UYlADInFe7YKHBPzVH/1mO6Iy/Dw56D6UpgbZg6ShXL
-	 +YkQAT213v2ufqaywd7wYXfNR2ngPMNRbibSSAHg=
+	b=hiQ0zyrQeJfX9yXZocjcgyy6dKz7HIAiU4IVC3ywhHKdekPw4BAwXa+X5u68OeT43
+	 RHL54UBLrqdTJh/fuYH0DoqM40qcmfc056eGD5kvf4D5Jkas+NtavOFKGNvQ2GhBNr
+	 aEq8RT3M6639jlVDC4hnhCVTvnrYYsrR7qdnWdvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfEHEzS (ORCPT
+        id S1726860AbfEHEzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 00:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbfEHEzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:55:17 -0400
-Subject: Re: [GIT PULL] ext4 changes for 5.2
+        id S1726828AbfEHEzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 00:55:18 -0400
+Subject: Re: [GIT PULL] fscrypt updates for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557291316;
-        bh=XWiJafixRm/GHlU7alPE6TKP6lFV6i9YyfGzNa5UgYY=;
+        s=default; t=1557291317;
+        bh=aX5ppYvNsRtV46AjBaYiU9S7VmouoF+KcrC4LfVo1Kg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OqweP0BG/KA2mFcC07HjF+np5qnkUb5WM5ZtnIN6Jn2WiPg6ExnJAXOdUUrCiAKat
-         R3xoWq+aop5vSip06O/YeQwO/Pxx0TsYiStZg2FQzgGXHMGG5UaO2AxfvI62n4KKS4
-         K0QqDAvs2Hg2tWPCLxfCd2KuuEAabpN371iBI984=
+        b=XvwkgeDn8BZJyVWdqv8iCUlc937tbSaZGSBL9Jp7aJrvhqg9xVWgZztXKI1DiswHX
+         L1mOW+Tp67+C430G16lNPYOiLD65D3ri8LnHlBsSGo0oXAM5eDm3TU9bPWtXQXgfqM
+         Xd4whlhu32wmFE+DQbARZJpv6C0021xcMgB12FtY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190507232823.GA28416@mit.edu>
-References: <20190507232823.GA28416@mit.edu>
+In-Reply-To: <20190507233042.GA28476@mit.edu>
+References: <20190507233042.GA28476@mit.edu>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190507232823.GA28416@mit.edu>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
- tags/ext4_for_linus
-X-PR-Tracked-Commit-Id: db90f41916cf04c020062f8d8b0385942248283e
+X-PR-Tracked-Message-Id: <20190507233042.GA28476@mit.edu>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git
+ tags/fscrypt_for_linus
+X-PR-Tracked-Commit-Id: 2c58d548f5706d085c4b009f6abb945220460632
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5abe37954e9a315c35c9490f78d55f307c3c636b
-Message-Id: <155729131654.10324.4928528529149948067.pr-tracker-bot@kernel.org>
-Date:   Wed, 08 May 2019 04:55:16 +0000
+X-PR-Merge-Commit-Id: a9fbcd6728837268784439ad0b02ede2c024c516
+Message-Id: <155729131767.10324.7522991759546968756.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 May 2019 04:55:17 +0000
 To:     "Theodore Ts'o" <tytso@mit.edu>
 Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
+        linux-fscrypt@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 7 May 2019 19:28:23 -0400:
+The pull request you sent on Tue, 7 May 2019 19:30:42 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
+> git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt_for_linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5abe37954e9a315c35c9490f78d55f307c3c636b
+https://git.kernel.org/torvalds/c/a9fbcd6728837268784439ad0b02ede2c024c516
 
 Thank you!
 
