@@ -2,220 +2,205 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D929EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3AFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E85216B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C1420644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="BiI93sTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfEHQH7 (ORCPT
+        id S1727864AbfEHQJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:07:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727560AbfEHQH7 (ORCPT
+        Wed, 8 May 2019 12:09:26 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35589 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfEHQJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:07:59 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48G2lmK147224
-        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 12:07:58 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sc20195sc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:07:57 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Wed, 8 May 2019 17:07:55 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 May 2019 17:07:53 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48G7pRH60686470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 May 2019 16:07:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B940542045;
-        Wed,  8 May 2019 16:07:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CBA542047;
-        Wed,  8 May 2019 16:07:51 +0000 (GMT)
-Received: from [9.145.42.10] (unknown [9.145.42.10])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 May 2019 16:07:51 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v8 1/4] s390: ap: kvm: add PQAP interception for AQIC
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
- <1556818451-1806-2-git-send-email-pmorel@linux.ibm.com>
- <ab120d0f-2eb4-a95c-503b-edf6de283519@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Wed, 8 May 2019 18:07:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 12:09:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d20so6281307qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ATJVqwKnuJNVrskurSmrA7uNnNg1EGswZWkepzxe4V0=;
+        b=BiI93sTPDI48u09oo5aW642Ut7uWXIbHaxIRSxvko7OVMBUkzwcWiQ9SVCKGZjYKrM
+         b8BQoBiGYLq0iaQD8r2FC8gFTMdkXikTyh1wLqnQtRAoT7Ee3S68CBurfetg9JHg3lKw
+         cTVwH36YY5I0EWFgVcaEPEiZtqo5Yy/WVCpcQgQvvuBRhluDbtBis8Xng/wsRoQxtl2c
+         iYnYY6memCt2zMpj9lrDxmxGB+jtjUBQ5aUwSLCIFeWrEGWo8EYV8jgf+zyL16ql6dWs
+         7eKqObYCVHTy3fGe78lul8ytvnDE80Ils3oUQHPuqXVBTICNkraYZAR0x1+N5HTCFnAW
+         F5lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ATJVqwKnuJNVrskurSmrA7uNnNg1EGswZWkepzxe4V0=;
+        b=h6+hrhSUeS9D27kGwkak4PfFfSWAEFLY7mKAuTFIknNqZ+235NfK2o/aegWyjlSXhr
+         76Qk7miro2dqFaexDiXuB+cvnP46uYvMhxyY/ovlGMMr3OtIu0hAFv4PpaGdZYAmR2/M
+         KN9Rz0cC7JyoeudHrHKX7XyvtQqPL8ipZJRCDrqK1qYOa5tvOJGC9idvjSIwdf1/9MBI
+         vTOAnRoLzI3RpugvYsOUp7zvKw/4olcQXepLHqQeCVSS9fXCWGv35ODShke6jFWdy1w/
+         ZBTJG1Htdmv6N95SWFv+ry+t1YV1ovZW9p3dGxkLrtLFne0c772A8fW07TKiHRnsoGwn
+         Uqaw==
+X-Gm-Message-State: APjAAAWMVkNFpG7zLRc0g5Cd2fgLr97eBqo6UxC0kV3IroeU0IOM1nD5
+        dDdnjZ5Vyh0bslyLpbvSBX0kXg==
+X-Google-Smtp-Source: APXvYqxNAXHpT8n2TmVaIrnB5HPtlaM3y7yNdf916J/CD2CsowIaYFGsxsuJy5ivIO/l0/VIXTgvAQ==
+X-Received: by 2002:a0c:a944:: with SMTP id z4mr31106261qva.119.1557331764507;
+        Wed, 08 May 2019 09:09:24 -0700 (PDT)
+Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id s50sm10936877qts.39.2019.05.08.09.09.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 09:09:23 -0700 (PDT)
+From:   Sean Paul <sean@poorly.run>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 01/11] drm: Add atomic variants of enable/disable to encoder helper funcs
+Date:   Wed,  8 May 2019 12:09:06 -0400
+Message-Id: <20190508160920.144739-2-sean@poorly.run>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+In-Reply-To: <20190508160920.144739-1-sean@poorly.run>
+References: <20190508160920.144739-1-sean@poorly.run>
 MIME-Version: 1.0
-In-Reply-To: <ab120d0f-2eb4-a95c-503b-edf6de283519@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050816-4275-0000-0000-00000332B1EC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050816-4276-0000-0000-0000384221BF
-Message-Id: <b946b5ee-26d6-08fa-c0de-1d8c841b3a03@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/2019 17:48, Tony Krowiak wrote:
-> On 5/2/19 1:34 PM, Pierre Morel wrote:
->> We prepare the interception of the PQAP/AQIC instruction for
->> the case the AQIC facility is enabled in the guest.
->>
->> First of all we do not want to change existing behavior when
->> intercepting AP instructions without the SIE allowing the guest
->> to use AP instructions.
->>
->> In this patch we only handle the AQIC interception allowed by
->> facility 65 which will be enabled when the complete interception
->> infrastructure will be present.
->>
->> We add a callback inside the KVM arch structure for s390 for
->> a VFIO driver to handle a specific response to the PQAP
->> instruction with the AQIC command and only this command.
->>
->> But we want to be able to return a correct answer to the guest
->> even there is no VFIO AP driver in the kernel.
->> Therefor, we inject the correct exceptions from inside KVM for the
->> case the callback is not initialized, which happens when the vfio_ap
->> driver is not loaded.
->>
->> We do consider the responsability of the driver to always initialize
->> the PQAP callback if it defines queues by initializing the CRYCB for
->> a guest.
->> If the callback has been setup we call it.
->> If not we setup an answer considering that no queue is available
->> for the guest when no callback has been setup.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   arch/s390/include/asm/kvm_host.h      |  7 +++
->>   arch/s390/kvm/priv.c                  | 86 
->> +++++++++++++++++++++++++++++++++++
->>   drivers/s390/crypto/vfio_ap_private.h |  2 +
->>   3 files changed, 95 insertions(+)
->>
->> diff --git a/arch/s390/include/asm/kvm_host.h 
->> b/arch/s390/include/asm/kvm_host.h
->> index 9fff9ab..af10a11 100644
->> --- a/arch/s390/include/asm/kvm_host.h
->> +++ b/arch/s390/include/asm/kvm_host.h
->> @@ -18,6 +18,7 @@
->>   #include <linux/kvm_host.h>
->>   #include <linux/kvm.h>
->>   #include <linux/seqlock.h>
->> +#include <linux/module.h>
->>   #include <asm/debug.h>
->>   #include <asm/cpu.h>
->>   #include <asm/fpu/api.h>
->> @@ -722,8 +723,14 @@ struct kvm_s390_cpu_model {
->>       unsigned short ibc;
->>   };
->> +struct kvm_s390_module_hook {
->> +    int (*hook)(struct kvm_vcpu *vcpu);
->> +    struct module *owner;
->> +};
->> +
->>   struct kvm_s390_crypto {
->>       struct kvm_s390_crypto_cb *crycb;
->> +    struct kvm_s390_module_hook *pqap_hook;
->>       __u32 crycbd;
->>       __u8 aes_kw;
->>       __u8 dea_kw;
->> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
->> index 8679bd7..a9be84f 100644
->> --- a/arch/s390/kvm/priv.c
->> +++ b/arch/s390/kvm/priv.c
->> @@ -27,6 +27,7 @@
->>   #include <asm/io.h>
->>   #include <asm/ptrace.h>
->>   #include <asm/sclp.h>
->> +#include <asm/ap.h>
->>   #include "gaccess.h"
->>   #include "kvm-s390.h"
->>   #include "trace.h"
->> @@ -592,6 +593,89 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
->>       }
->>   }
->> +/*
->> + * handle_pqap: Handling pqap interception
->> + * @vcpu: the vcpu having issue the pqap instruction
->> + *
->> + * We now support PQAP/AQIC instructions and we need to correctly
->> + * answer the guest even if no dedicated driver's hook is available.
->> + *
->> + * The intercepting code calls a dedicated callback for this instruction
->> + * if a driver did register one in the CRYPTO satellite of the
->> + * SIE block.
->> + *
->> + * If no callback is available, the queues are not available, return 
->> this
->> + * response code to the caller and set CC to 3.
->> + * Else return the response code returned by the callback.
->> + */
->> +static int handle_pqap(struct kvm_vcpu *vcpu)
->> +{
->> +    struct ap_queue_status status = {};
->> +    unsigned long reg0;
->> +    int ret;
->> +    uint8_t fc;
->> +
->> +    /* Verify that the AP instruction are available */
->> +    if (!ap_instructions_available())
->> +        return -EOPNOTSUPP;
->> +    /* Verify that the guest is allowed to use AP instructions */
->> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->> +        return -EOPNOTSUPP;
->> +    /*
->> +     * The only possibly intercepted functions when AP instructions are
->> +     * available for the guest are AQIC and TAPQ with the t bit set
->> +     * since we do not set IC.3 (FIII) we currently will only intercept
->> +     * the AQIC function code.
->> +     */
->> +    reg0 = vcpu->run->s.regs.gprs[0];
->> +    fc = reg0 >> 24;
-> 
-> Should you also mask off bits 0-32 in case they might not be zeroes?
+From: Sean Paul <seanpaul@chromium.org>
 
-Yes I will.
+This patch adds atomic_enable and atomic_disable callbacks to the
+encoder helpers. This will allow encoders to make informed decisions in
+their start-up/shutdown based on the committed state.
 
-> 
-> Other than this, r-b
-> 
+Aside from the new hooks, this patch also introduces the new signature
+for .atomic_* functions going forward. Instead of passing object state
+(well, encoders don't have atomic state, but let's ignore that), we pass
+the entire atomic state so the driver can inspect more than what's
+happening locally.
 
-Thanks,
+This is particularly important for the upcoming self refresh helpers.
 
-Pierre
+Changes in v3:
+- Added patch to the set
+Changes in v4:
+- Move atomic_disable above prepare (Daniel)
+- Add breadcrumb to .enable() docbook (Daniel)
 
+Link to v3: https://patchwork.freedesktop.org/patch/msgid/20190502194956.218441-2-sean@poorly.run
+
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+---
+ drivers/gpu/drm/drm_atomic_helper.c      |  8 +++-
+ include/drm/drm_modeset_helper_vtables.h | 48 ++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 553415fe8ede..ccf01831f265 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -999,7 +999,9 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+ 
+ 		/* Right function depends upon target state. */
+ 		if (funcs) {
+-			if (new_conn_state->crtc && funcs->prepare)
++			if (funcs->atomic_disable)
++				funcs->atomic_disable(encoder, old_state);
++			else if (new_conn_state->crtc && funcs->prepare)
+ 				funcs->prepare(encoder);
+ 			else if (funcs->disable)
+ 				funcs->disable(encoder);
+@@ -1309,7 +1311,9 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 		drm_bridge_pre_enable(encoder->bridge);
+ 
+ 		if (funcs) {
+-			if (funcs->enable)
++			if (funcs->atomic_enable)
++				funcs->atomic_enable(encoder, old_state);
++			else if (funcs->enable)
+ 				funcs->enable(encoder);
+ 			else if (funcs->commit)
+ 				funcs->commit(encoder);
+diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+index 8f3602811eb5..aa509c107083 100644
+--- a/include/drm/drm_modeset_helper_vtables.h
++++ b/include/drm/drm_modeset_helper_vtables.h
+@@ -675,6 +675,51 @@ struct drm_encoder_helper_funcs {
+ 	enum drm_connector_status (*detect)(struct drm_encoder *encoder,
+ 					    struct drm_connector *connector);
+ 
++	/**
++	 * @atomic_disable:
++	 *
++	 * This callback should be used to disable the encoder. With the atomic
++	 * drivers it is called before this encoder's CRTC has been shut off
++	 * using their own &drm_crtc_helper_funcs.atomic_disable hook. If that
++	 * sequence is too simple drivers can just add their own driver private
++	 * encoder hooks and call them from CRTC's callback by looping over all
++	 * encoders connected to it using for_each_encoder_on_crtc().
++	 *
++	 * This callback is a variant of @disable that provides the atomic state
++	 * to the driver. It takes priority over @disable during atomic commits.
++	 *
++	 * This hook is used only by atomic helpers. Atomic drivers don't need
++	 * to implement it if there's no need to disable anything at the encoder
++	 * level. To ensure that runtime PM handling (using either DPMS or the
++	 * new "ACTIVE" property) works @atomic_disable must be the inverse of
++	 * @atomic_enable.
++	 */
++	void (*atomic_disable)(struct drm_encoder *encoder,
++			       struct drm_atomic_state *state);
++
++	/**
++	 * @atomic_enable:
++	 *
++	 * This callback should be used to enable the encoder. It is called
++	 * after this encoder's CRTC has been enabled using their own
++	 * &drm_crtc_helper_funcs.atomic_enable hook. If that sequence is
++	 * too simple drivers can just add their own driver private encoder
++	 * hooks and call them from CRTC's callback by looping over all encoders
++	 * connected to it using for_each_encoder_on_crtc().
++	 *
++	 * This callback is a variant of @enable that provides the atomic state
++	 * to the driver. It is called in place of @enable during atomic
++	 * commits.
++	 *
++	 * This hook is used only by atomic helpers, for symmetry with @disable.
++	 * Atomic drivers don't need to implement it if there's no need to
++	 * enable anything at the encoder level. To ensure that runtime PM
++	 * handling (using either DPMS or the new "ACTIVE" property) works
++	 * @enable must be the inverse of @disable for atomic drivers.
++	 */
++	void (*atomic_enable)(struct drm_encoder *encoder,
++			      struct drm_atomic_state *state);
++
+ 	/**
+ 	 * @disable:
+ 	 *
+@@ -691,6 +736,9 @@ struct drm_encoder_helper_funcs {
+ 	 * handling (using either DPMS or the new "ACTIVE" property) works
+ 	 * @disable must be the inverse of @enable for atomic drivers.
+ 	 *
++	 * For atomic drivers also consider @atomic_disable and save yourself
++	 * from having to read the NOTE below!
++	 *
+ 	 * NOTE:
+ 	 *
+ 	 * With legacy CRTC helpers there's a big semantic difference between
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+Sean Paul, Software Engineer, Google / Chromium OS
 
