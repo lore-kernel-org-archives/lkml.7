@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA7EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78309C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE8D2175B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A86217D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfEHUZA (ORCPT
+        id S1728998AbfEHUZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:25:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 16:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728851AbfEHUYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728839AbfEHUYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 16:24:55 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF7BF217D6;
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BBA21783;
         Wed,  8 May 2019 20:24:54 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hOT7V-0007kg-VJ; Wed, 08 May 2019 16:24:53 -0400
-Message-Id: <20190508202453.865843951@goodmis.org>
+        id 1hOT7V-0007kC-QQ; Wed, 08 May 2019 16:24:53 -0400
+Message-Id: <20190508202453.703532930@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 08 May 2019 16:24:40 -0400
+Date:   Wed, 08 May 2019 16:24:39 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>
-Subject: [for-next][PATCH 13/13] tracing: Fix documentation about disabling options using
- trace_options
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [for-next][PATCH 12/13] tracing: Replace kzalloc with kcalloc
 References: <20190508202427.252736423@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,33 +44,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-To disable a tracing option using the trace_options file, the option
-name needs to be prefixed with 'no', and not suffixed, as the README
-states. Fix it.
+Replace kzalloc() function with its 2-factor argument form, kcalloc().
 
-Link: http://lkml.kernel.org/r/154872690031.47356.5739053380942044586.stgit@srivatsa-ubuntu
+This patch replaces cases of:
 
-Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+	kzalloc(a * b, gfp)
+
+with:
+	kcalloc(a, b, gfp)
+
+This code was detected with the help of Coccinelle.
+
+Link: http://lkml.kernel.org/r/20190115043408.GA23456@embeddedor
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_probe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4269af5905e4..a3a6945a7732 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4755,7 +4755,7 @@ static const char readme_msg[] =
- 	"  instances\t\t- Make sub-buffers with: mkdir instances/foo\n"
- 	"\t\t\t  Remove sub-buffer with rmdir\n"
- 	"  trace_options\t\t- Set format or modify how tracing happens\n"
--	"\t\t\t  Disable an option by adding a suffix 'no' to the\n"
-+	"\t\t\t  Disable an option by prefixing 'no' to the\n"
- 	"\t\t\t  option name\n"
- 	"  saved_cmdlines_size\t- echo command number in here to store comm-pid list\n"
- #ifdef CONFIG_DYNAMIC_FTRACE
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index e0d1d5353464..a347faced959 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -558,7 +558,7 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 			 parg->count);
+ 	}
+ 
+-	code = tmp = kzalloc(sizeof(*code) * FETCH_INSN_MAX, GFP_KERNEL);
++	code = tmp = kcalloc(FETCH_INSN_MAX, sizeof(*code), GFP_KERNEL);
+ 	if (!code)
+ 		return -ENOMEM;
+ 	code[FETCH_INSN_MAX - 1].op = FETCH_OP_END;
+@@ -637,7 +637,7 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+ 	code->op = FETCH_OP_END;
+ 
+ 	/* Shrink down the code buffer */
+-	parg->code = kzalloc(sizeof(*code) * (code - tmp + 1), GFP_KERNEL);
++	parg->code = kcalloc(code - tmp + 1, sizeof(*code), GFP_KERNEL);
+ 	if (!parg->code)
+ 		ret = -ENOMEM;
+ 	else
 -- 
 2.20.1
 
