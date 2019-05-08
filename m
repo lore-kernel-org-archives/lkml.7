@@ -2,121 +2,147 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2B7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 05:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB652C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 05:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF7121019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 05:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD81214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 05:18:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7R0f/To"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfEHFK7 (ORCPT
+        id S1726448AbfEHFSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 01:10:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4779 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725778AbfEHFK6 (ORCPT
+        Wed, 8 May 2019 01:18:52 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41097 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfEHFSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 01:10:58 -0400
-X-UUID: 8e5cbaa0e7954bf0b747227c798ba95e-20190508
-X-UUID: 8e5cbaa0e7954bf0b747227c798ba95e-20190508
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1015861058; Wed, 08 May 2019 13:10:49 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 8 May 2019 13:10:47 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 8 May 2019 13:10:47 +0800
-Message-ID: <1557292247.3936.5.camel@mtksdaap41>
-Subject: Re: [PATCH v5 04/12] dt-binding: gce: add binding for gce event
- property
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Date:   Wed, 8 May 2019 13:10:47 +0800
-In-Reply-To: <20190507081355.52630-5-bibby.hsieh@mediatek.com>
-References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
-         <20190507081355.52630-5-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 8 May 2019 01:18:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z3so5783890pgp.8;
+        Tue, 07 May 2019 22:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=73FfoTOLHXtQiSt7oeshvDOGtuYdClBmA7yk/mrEiwo=;
+        b=D7R0f/TocA0qPoYPVumdkrnOdVyc2ZYj2FFqPRDQVTfDUiy4cGbdyIfxTVbWdOqxro
+         Jrs39xqNhB8VDcxxeTtHTtdflJeMyvSarjUqucbCCe7QaGmioHv0xSRN4jE5T2JAtnzy
+         7SwqPXMAhKCoCt7YgC9TieINwi1TuAG6p8/M+egPvdI3ggu98P/hFD+0efaq2hOTFp4t
+         p22yOsFSnthmXVvteAS4dWa6p4kK1XBGP7Kfq7GlZToyvpzP9CUJmFdG7U9xZVrl+2Tu
+         N0KzfHypRqI2I0q56ReE2wZgfIp7sVDNiJgd0h9Sr3XLvMyrQ9VXJ5XEcX/XmrGZpTWf
+         9Hpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=73FfoTOLHXtQiSt7oeshvDOGtuYdClBmA7yk/mrEiwo=;
+        b=H943MNORnvtlXOqrbVfj1RpyW6YxPpwHSHjT/aQ6qERRyZRrHoJJQTflY6SiORzRBp
+         O7ps25yXGVwULnLAsme7vpmcFskTGJ6vIZ+cFWBp1SdO8XlMGFqIt/L2gXOObrhK76hz
+         e80EuVJZjS5AD0Je0N7x/pARrvgpiCH6uW8+v4bJRPkmGrmjUOFY4m0e9cxJ3OLurTew
+         m/I3e9+u0e6UjOLSzkhSKOebli6MGOQJYAAqJLkEn1Pp+BTHz+ANq6oC4g/8gLRyMkzA
+         jKBZoqm9UPQaWS1VESGBaGVZ12MosF31NtFBOGAeoyrl38WLMHdd96qvXpsLItTUFiPG
+         F67A==
+X-Gm-Message-State: APjAAAXczi/r5/u8lWyPQ1nC1sx79EY4LDDqQkwCsh6abQfay09uhuTs
+        VgX2GkLt63rUww8hda5WFnE=
+X-Google-Smtp-Source: APXvYqx4i00WnVvDGs+Ho5q6HTAXAM8PqxI7Qw1ECO0zlRwXMqqFWQgJs79Tz3t5MFcbEOWYEkZHdw==
+X-Received: by 2002:a63:da14:: with SMTP id c20mr29465723pgh.191.1557292731734;
+        Tue, 07 May 2019 22:18:51 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i15sm20940804pfr.8.2019.05.07.22.18.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 22:18:50 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] usb: typec: tcpci: Clear the fault status register
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <groeck7@gmail.com>
+References: <20190508002749.14816-1-angus@akkea.ca>
+ <20190508002749.14816-2-angus@akkea.ca>
+ <aed487a4-3f7c-55e8-9c84-feaa1c7f583d@roeck-us.net>
+ <3fd046562f3bea2cb85354f8d3c420fc@www.akkea.ca>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3918f78b-15ec-9204-b2fc-f371157bc29c@roeck-us.net>
+Date:   Tue, 7 May 2019 22:18:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: CFEF6E4C8000EB0EEBA48929D835A093DAD685926104297EC42D763935B0D7792000:8
-X-MTK:  N
+In-Reply-To: <3fd046562f3bea2cb85354f8d3c420fc@www.akkea.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
-
-On Tue, 2019-05-07 at 16:13 +0800, Bibby Hsieh wrote:
-> Client hardware would send event to GCE hardware,
-> mediatek,gce-event-names and mediatek,gce-events
-> can be used to present the event.
+On 5/7/19 7:49 PM, Angus Ainslie wrote:
+> On 2019-05-07 20:03, Guenter Roeck wrote:
+>> On 5/7/19 5:27 PM, Angus Ainslie (Purism) wrote:
+>>> If the fault status register doesn't get cleared then
+>>> the ptn5110 interrupt gets stuck on. As the fault register gets
+>>> set everytime the ptn5110 powers on the interrupt is always stuck.
+>>>
+>>> Fixes: fault status register stuck
+>>> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+>>> ---
+>>>   drivers/usb/typec/tcpm/tcpci.c | 11 +++++++++++
+>>>   1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+>>> index c1f7073a56de..a5746657b190 100644
+>>> --- a/drivers/usb/typec/tcpm/tcpci.c
+>>> +++ b/drivers/usb/typec/tcpm/tcpci.c
+>>> @@ -463,6 +463,17 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
+>>>       else if (status & TCPC_ALERT_TX_FAILED)
+>>>           tcpm_pd_transmit_complete(tcpci->port, TCPC_TX_FAILED);
+>>>   +    if (status & TCPC_ALERT_FAULT) {
+>>
+>> Wait - the driver doesn't set TCPC_ALERT_FAULT in the alert mask
+>> register. How can the chip report it if fault alerts are not enabled ?
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> Well that I didn't check. But I know this code gets executed so something must be turning it on.
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 8fd9479bc9f6..76491f194c56 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -35,6 +35,9 @@ Required properties for a client device:
->  Optional propertier for a client device:
->  - mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
->    to the register address.
-> +- mediatek,gce-event-names: the event name can be defined by user.
+> Also if I don't clear it I get an unlimited number of interrupts.
+> 
+>> What am I missing here ?
+> 
+> Can the power on fault be masked ?
+> 
 
-gce-event is like an interrupt from client hardware to GCE hardware, we
-do not give a name to an interrupt, so do we need to give a name for
-gce-event?
+There is a TCPC_ALERT_FAULT mask bit, so I would think so.
+Can you dump register contents in the irq function and at the end of
+tcpci_init() ?
 
-Regards,
-CK
+Thanks,
+Guenter
 
-> +- mediatek,gce-events: u32, the event number defined in
-> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
->  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> @@ -57,8 +60,10 @@ Example for a client device:
->  		compatible = "mediatek,mt8173-mmsys";
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> +		mediatek,gce-event-names = "rdma0_sof",
-> +					   "rsz0_sof";
-> +		mediatek,gce-events = <CMDQ_EVENT_MDP_RDMA0_SOF>,
-> +				      <CMDQ_EVENT_MDP_RSZ0_SOF>;
->  		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
->  					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
->  		...
-
+> Angus
+> 
+>>
+>> Thanks,
+>> Guenter
+>>
+>>> +        u16 fault_status;
+>>> +
+>>> +        tcpci_read16(tcpci, TCPC_FAULT_STATUS, &fault_status);
+>>> +
+>>> +        dev_warn(tcpci->dev, "FAULT ALERT status 0x%x\n", fault_status);
+>>> +
+>>> +        /* clear the fault status */
+>>> +        tcpci_write16(tcpci, TCPC_FAULT_STATUS, fault_status);
+>>> +    }
+>>> +
+>>>       return IRQ_HANDLED;
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(tcpci_irq);
+>>>
+> 
+> 
 
