@@ -2,90 +2,142 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAD2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A34C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E83205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557295273;
-	bh=zfL1L4T+f2B/GrEBFTvI4y2maowzRfLdixLbC48iSN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jIfOL3ZwpywHk7f5S9PWdEEg/Xq+r8y9AcYICpex6oYxaFsOtjaq92YclYMwedWXF
-	 +B64DS6DaxPZeACIlQewTMIN5DxGccPDnrpalvgcpdu2tPLjGEk9fNJmm0ugaKhkCH
-	 VyF8pvWoGkAPkrygL7IvuzjFIKP2gfZL0Ygtg9aw=
+	by mail.kernel.org (Postfix) with ESMTP id 1401B205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfEHGBL (ORCPT
+        id S1726874AbfEHGCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:01:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37910 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfEHGBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:01:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id u21so7247431lja.5;
-        Tue, 07 May 2019 23:01:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sYD9+E/4/XoUDaRkYMUADiIJQQKhTQMiegLZBQCWdeQ=;
-        b=hxY9fMHp5/rO6PgFm+bLLhTEJOZlhH1uCpxVDBas08tJaNItd4/1FPBKSKnUS/FBO8
-         rYnpART9cui/8qLC2osCdKiAoSQNUCC0FoUjgqDwWxljnwNDKag3nkJ4PsTkaTxEaW7U
-         9Pna8VtvTdaQXWo4ori8YpSrCafUSasXaVCqeVqUb+a4V1x65bqh13DjKIW0b491zihI
-         UYMP+F7LQmiicUObYe6LSdCmo8DcnzIqeGwUZyfHqyMfZ9DWlcuYXfXOj9Ku982S+328
-         9bHUtOMcnXyMc1bKrqtL2pytaV2LMOQeoCiUdcmv57Lo1Pd/iEjyoivToQyg/LbaY36E
-         LJTQ==
-X-Gm-Message-State: APjAAAWuPwkRUlh5gZp0n800tNC0GUNiQ4NxoX/VG/jh0cUx8EcmuwFj
-        4muNXwxpp9VDKpxcQFl/XJ0=
-X-Google-Smtp-Source: APXvYqza0CZWlPSgLA7IgDuZhwVWblmudSgskyaj5E9KRpc6lD0fHoYM8Xp/sc1DRW72zYxmU4OrRw==
-X-Received: by 2002:a2e:8583:: with SMTP id b3mr15414491lji.136.1557295269233;
-        Tue, 07 May 2019 23:01:09 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id f12sm3783105lfk.6.2019.05.07.23.01.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 23:01:08 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hOFdc-0004Ox-3H; Wed, 08 May 2019 08:01:08 +0200
-Date:   Wed, 8 May 2019 08:01:08 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     mchehab@kernel.org, andreyknvl@google.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com, wen.yang99@zte.com.cn
-Subject: Re: [PATCH] media: usb: siano: Fix general protection fault in smsusb
-Message-ID: <20190508060108.GC29016@localhost>
-References: <0000000000004a08f805883ead54@google.com>
- <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
+        Wed, 8 May 2019 02:02:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726177AbfEHGCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 02:02:44 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3276EBA782003272E7F9;
+        Wed,  8 May 2019 14:02:42 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 8 May 2019
+ 14:02:37 +0800
+Subject: Re: linux-next: manual merge of the staging tree with the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Jens Axboe <axboe@kernel.dk>, Greg KH <greg@kroah.com>,
+        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190501170528.2d86d133@canb.auug.org.au>
+ <20190508134413.26a13d00@canb.auug.org.au>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <b864d776-d671-b95e-e8bc-85c00bfb669f@huawei.com>
+Date:   Wed, 8 May 2019 14:02:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1905071237310.1632-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190508134413.26a13d00@canb.auug.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 12:39:47PM -0400, Alan Stern wrote:
-> The syzkaller USB fuzzer found a general-protection-fault bug in the
-> smsusb part of the Siano DVB driver.  The fault occurs during probe
-> because the driver assumes without checking that the device has both
-> IN and OUT endpoints and the IN endpoint is ep1.
-> 
-> By slightly rearranging the driver's initialization code, we can make
-> the appropriate checks early on and thus avoid the problem.  If the
-> expected endpoints aren't present, the new code safely returns -ENODEV
-> from the probe routine.
-> 
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
-> CC: <stable@vger.kernel.org>
+Hi Stephen,
 
-Reviewed-by: Johan Hovold <johan@kernel.org>
+On 2019/5/8 11:44, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Wed, 1 May 2019 17:05:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> Today's linux-next merge of the staging tree got conflicts in:
+>>
+>>   drivers/staging/erofs/data.c
+>>   drivers/staging/erofs/unzip_vle.c
+>>
+>> between commit:
+>>
+>>   2b070cfe582b ("block: remove the i argument to bio_for_each_segment_all")
+>>
+>> from the block tree and commit:
+>>
+>>   14a56ec65bab ("staging: erofs: support IO read error injection")
+>>
+>> from the staging tree.
+>>
+>> I fixed it up (see below) and can carry the fix as necessary. This
+>> is now fixed as far as linux-next is concerned, but any non trivial
+>> conflicts should be mentioned to your upstream maintainer when your tree
+>> is submitted for merging.  You may also want to consider cooperating
+>> with the maintainer of the conflicting tree to minimise any particularly
+>> complex conflicts.
+>>
+>> -- 
+>> Cheers,
+>> Stephen Rothwell
+>>
+>> diff --cc drivers/staging/erofs/data.c
+>> index 9f04d7466c55,c64ec76643d4..000000000000
+>> --- a/drivers/staging/erofs/data.c
+>> +++ b/drivers/staging/erofs/data.c
+>> @@@ -17,11 -17,18 +17,17 @@@
+>>   
+>>   static inline void read_endio(struct bio *bio)
+>>   {
+>> + 	struct super_block *const sb = bio->bi_private;
+>>  -	int i;
+>>   	struct bio_vec *bvec;
+>> - 	const blk_status_t err = bio->bi_status;
+>> + 	blk_status_t err = bio->bi_status;
+>>   	struct bvec_iter_all iter_all;
+>>   
+>> + 	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
+>> + 		erofs_show_injection_info(FAULT_READ_IO);
+>> + 		err = BLK_STS_IOERR;
+>> + 	}
+>> + 
+>>  -	bio_for_each_segment_all(bvec, bio, i, iter_all) {
+>>  +	bio_for_each_segment_all(bvec, bio, iter_all) {
+>>   		struct page *page = bvec->bv_page;
+>>   
+>>   		/* page is already locked */
+>> diff --cc drivers/staging/erofs/unzip_vle.c
+>> index 59b9f37d5c00,a2e03c932102..000000000000
+>> --- a/drivers/staging/erofs/unzip_vle.c
+>> +++ b/drivers/staging/erofs/unzip_vle.c
+>> @@@ -843,14 -844,13 +844,12 @@@ static void z_erofs_vle_unzip_kickoff(v
+>>   
+>>   static inline void z_erofs_vle_read_endio(struct bio *bio)
+>>   {
+>> - 	const blk_status_t err = bio->bi_status;
+>> + 	struct erofs_sb_info *sbi = NULL;
+>> + 	blk_status_t err = bio->bi_status;
+>>  -	unsigned int i;
+>>   	struct bio_vec *bvec;
+>> - #ifdef EROFS_FS_HAS_MANAGED_CACHE
+>> - 	struct address_space *mc = NULL;
+>> - #endif
+>>   	struct bvec_iter_all iter_all;
+>>   
+>>  -	bio_for_each_segment_all(bvec, bio, i, iter_all) {
+>>  +	bio_for_each_segment_all(bvec, bio, iter_all) {
+>>   		struct page *page = bvec->bv_page;
+>>   		bool cachemngd = false;
+>>   
+> 
+> This conflict is now between the block tree and Linus' tree.
+
+It seems that the conflict has been resolved in linus' tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2b070cfe582b8e99fec6ada57d2e59e194aae202
+
+Thanks,
+Gao Xiang
+
+
+> 
