@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194A0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEB2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F8120989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9663320989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfEHOrU (ORCPT
+        id S1728369AbfEHOrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:47:20 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33094 "EHLO mga07.intel.com"
+        Wed, 8 May 2019 10:47:19 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59536 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfEHOow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728474AbfEHOow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:51 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2019 07:44:46 -0700
+  by orsmga005.jf.intel.com with ESMTP; 08 May 2019 07:44:46 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 3BB8410AA; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id 672C3116A; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +43,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 50/62] kvm, x86, mmu: setup MKTME keyID to spte for given PFN
-Date:   Wed,  8 May 2019 17:44:10 +0300
-Message-Id: <20190508144422.13171-51-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 54/62] x86/mm: Disable MKTME on incompatible platform configurations
+Date:   Wed,  8 May 2019 17:44:14 +0300
+Message-Id: <20190508144422.13171-55-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,57 +57,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Huang <kai.huang@linux.intel.com>
+Icelake Server requires additional check to make sure that MKTME usage
+is safe on Linux.
 
-Setup keyID to SPTE, which will be eventually programmed to shadow MMU
-or EPT table, according to page's associated keyID, so that guest is
-able to use correct keyID to access guest memory.
+Kernel needs a way to access encrypted memory. There can be different
+approaches to this: create a temporary mapping to access the page (using
+kmap() interface), modify kernel's direct mapping on allocation of
+encrypted page.
 
-Note current shadow_me_mask doesn't suit MKTME's needs, since for MKTME
-there's no fixed memory encryption mask, but can vary from keyID 1 to
-maximum keyID, therefore shadow_me_mask remains 0 for MKTME.
+In order to minimize runtime overhead, the Linux MKTME implementation
+uses multiple direct mappings, one per-KeyID. Kernel uses the direct
+mapping that is relevant for the page at the moment.
 
-Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
+Icelake Server in some configurations doesn't allow a page to be mapped
+with multiple KeyIDs at the same time. Even if only one of KeyIDs is
+actively used. It conflicts with the Linux MKTME implementation.
+
+OS can check if it's safe to map the same with multiple KeyIDs by
+examining bit 8 of MSR 0x6F. If the bit is set we cannot safely use
+MKTME on Linux.
+
+The user can disable the Directory Mode in BIOS setup to get the
+platform into Linux-compatible mode.
+
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/kvm/mmu.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/intel-family.h |  2 ++
+ arch/x86/kernel/cpu/intel.c         | 22 ++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index d9c7b45d231f..bfee0c194161 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -2899,6 +2899,22 @@ static bool kvm_is_mmio_pfn(kvm_pfn_t pfn)
- #define SET_SPTE_WRITE_PROTECTED_PT	BIT(0)
- #define SET_SPTE_NEED_REMOTE_TLB_FLUSH	BIT(1)
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9f15384c504a..6a633af144aa 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -53,6 +53,8 @@
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
  
-+static u64 get_phys_encryption_mask(kvm_pfn_t pfn)
-+{
-+#ifdef CONFIG_X86_INTEL_MKTME
-+	struct page *page;
-+
-+	if (!pfn_valid(pfn))
-+		return 0;
-+
-+	page = pfn_to_page(pfn);
-+
-+	return ((u64)page_keyid(page)) << mktme_keyid_shift;
-+#else
-+	return shadow_me_mask;
-+#endif
-+}
-+
- static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 		    unsigned pte_access, int level,
- 		    gfn_t gfn, kvm_pfn_t pfn, bool speculative,
-@@ -2945,7 +2961,7 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 		pte_access &= ~ACC_WRITE_MASK;
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++#define INTEL_FAM6_ICELAKE_X		0x6A
++#define INTEL_FAM6_ICELAKE_XEON_D	0x6C
  
- 	if (!kvm_is_mmio_pfn(pfn))
--		spte |= shadow_me_mask;
-+		spte |= get_phys_encryption_mask(pfn);
+ /* "Small Core" Processors (Atom) */
  
- 	spte |= (u64)pfn << PAGE_SHIFT;
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index f402a74c00a1..3fc318f699d3 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -19,6 +19,7 @@
+ #include <asm/microcode_intel.h>
+ #include <asm/hwcap2.h>
+ #include <asm/elf.h>
++#include <asm/cpu_device_id.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <linux/topology.h>
+@@ -531,6 +532,16 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
+ #define TME_ACTIVATE_CRYPTO_ALGS(x)	((x >> 48) & 0xffff)	/* Bits 63:48 */
+ #define TME_ACTIVATE_CRYPTO_AES_XTS_128	1
+ 
++#define MSR_ICX_MKTME_STATUS		0x6F
++#define MKTME_ALIASES_FORBIDDEN(x)	(x & BIT(8))
++
++/* Need to check MSR_ICX_MKTME_STATUS for these CPUs */
++static const struct x86_cpu_id mktme_status_msr_ids[] = {
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ICELAKE_X		},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ICELAKE_XEON_D	},
++	{}
++};
++
+ /* Values for mktme_status (SW only construct) */
+ #define MKTME_ENABLED			0
+ #define MKTME_DISABLED			1
+@@ -564,6 +575,17 @@ static void detect_tme(struct cpuinfo_x86 *c)
+ 		return;
+ 	}
+ 
++	/* Icelake Server quirk: do not enable MKTME if aliases are forbidden */
++	if (x86_match_cpu(mktme_status_msr_ids)) {
++		u64 mktme_status;
++		rdmsrl(MSR_ICX_MKTME_STATUS, mktme_status);
++
++		if (MKTME_ALIASES_FORBIDDEN(mktme_status)) {
++			pr_err_once("x86/tme: Directory Mode is enabled in BIOS\n");
++			mktme_status = MKTME_DISABLED;
++		}
++	}
++
+ 	if (mktme_status != MKTME_UNINITIALIZED)
+ 		goto detect_keyid_bits;
  
 -- 
 2.20.1
