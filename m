@@ -2,146 +2,69 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFD4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7541DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC70214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dCPKZqPu"
+	by mail.kernel.org (Postfix) with ESMTP id 47BA820675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557345611;
+	bh=+RbsCVc0D1Vp7kPBcoQ7WWuR9heN09HLyUNJwzQyv84=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=jZSa6QynYnR/r4KWsrdHWAz8vwmhTkMesAIzj+S6fKYYtOV34ZVvZ32b0qVFGfuvQ
+	 ovmlrIjpa2HcjJ39paIyAT8EAPjyw+VBBuRWeLG+82IocRXBC4JYUgN20aTXm0x+YK
+	 Ump/iezp1Un/sUlW4tKfJ5IOvhtLiOKv1G3BXUs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfEHTy7 (ORCPT
+        id S1728054AbfEHUAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:54:59 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38112 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbfEHTy6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:54:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x48JsntP091229;
-        Wed, 8 May 2019 14:54:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557345289;
-        bh=1HSSbjkn49htu7J0scqHJVwyKQjdVeMq0i/wqOSoiSA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dCPKZqPuuemoqejVI5vFQYMSEF9F6ms3xixOLRdNfUTNxCLJgouqYlBH79rsz/95i
-         Avo52K6wEhGJfMI62iEE+sEeyAs9HqTP8/7U9ESZ3QesPMeempSaZuy0r4g9I3yFS5
-         u8USSEIhpbwL88w49J60nncPcHAzy3SvxIOJdxsA=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x48JsnM7056173
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 May 2019 14:54:49 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 8 May
- 2019 14:54:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 8 May 2019 14:54:49 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x48JsmLG035228;
-        Wed, 8 May 2019 14:54:48 -0500
-Subject: Re: [PATCH v11 1/5] can: m_can: Create a m_can platform framework
-To:     Marc Kleine-Budde <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190319172651.10012-1-dmurphy@ti.com>
- <8b53474d-9dbf-4b81-defd-1587e022990b@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <35d179a7-2682-111e-638b-903559f0974a@ti.com>
-Date:   Wed, 8 May 2019 14:54:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <8b53474d-9dbf-4b81-defd-1587e022990b@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 8 May 2019 16:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727189AbfEHUAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 16:00:10 -0400
+Subject: Re: [GIT PULL] csky fixes for v5.1-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557345609;
+        bh=+RbsCVc0D1Vp7kPBcoQ7WWuR9heN09HLyUNJwzQyv84=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=d8moxosP8NBek18dTydTkVX3VU5pCp5oCRcneipYd4mFVMSTKbpfF68Euhn5MKmUF
+         By1JpNIMvG/ZnQw9uNg299GZ+ttJ0RlYFSkmTJzUNoaNyNJMZh9t03MC4eYejU7335
+         4jXMrnemPsCSFjShPqqhTX+PO4jJkDUkpoZuQ0LY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1556181403-3881-1-git-send-email-guoren@kernel.org>
+References: <1556181403-3881-1-git-send-email-guoren@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1556181403-3881-1-git-send-email-guoren@kernel.org>
+X-PR-Tracked-Remote: https://github.com/c-sky/csky-linux.git
+ tags/csky-for-linus-5.1-rc7
+X-PR-Tracked-Commit-Id: a691f3334d58b833e41d56de1b9820e687edcd78
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ce45327ca044415a5832dacfb76cdcfb747e3240
+Message-Id: <155734560963.27473.1371616025731122852.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 May 2019 20:00:09 +0000
+To:     guoren@kernel.org
+Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        ren_guo@c-sky.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+The pull request you sent on Thu, 25 Apr 2019 16:36:43 +0800:
 
-Thanks for the comments
+> https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.1-rc7
 
-On 5/8/19 9:35 AM, Marc Kleine-Budde wrote:
-> On 3/19/19 6:26 PM, Dan Murphy wrote:
->> Create a m_can platform framework that peripheral
->> devices can register to and use common code and register sets.
->> The peripheral devices may provide read/write and configuration
->> support of the IP.
->>
->> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> 
-> [...]
-> 
->> -/* m_can private data structure */
->> -struct m_can_priv {
->> -	struct can_priv can;	/* must be the first member */
->> -	struct napi_struct napi;
->> -	struct net_device *dev;
->> -	struct device *device;
->> -	struct clk *hclk;
->> -	struct clk *cclk;
->> -	void __iomem *base;
->> -	u32 irqstatus;
->> -	int version;
->> -
->> -	/* message ram configuration */
->> -	void __iomem *mram_base;
->> -	struct mram_cfg mcfg[MRAM_CFG_NUM];
->> -};
->> +static u32 m_can_read(struct m_can_priv *priv, enum m_can_reg reg)
->> +{
->> +	if (priv->ops->read_reg)
->> +		return priv->ops->read_reg(priv, reg);
->> +	else
->> +		return -EINVAL;
->> +}
-> 
-> How do you plan to check the return value here?
-> What's the difference between a register value of 0xffffffe9 and
-> returning -EINVAL?
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ce45327ca044415a5832dacfb76cdcfb747e3240
 
-Good point.  I could just inline this and return whatever is sent from the callback
-and as you said allow a backtrace to happen if read_reg is invalid.
+Thank you!
 
->>  
->> -static inline u32 m_can_read(const struct m_can_priv *priv, enum m_can_reg reg)
->> +static int m_can_write(struct m_can_priv *priv, enum m_can_reg reg, u32 val)
->>  {
->> -	return readl(priv->base + reg);
->> +	if (priv->ops->write_reg)
->> +		return priv->ops->write_reg(priv, reg, val);
->> +	else
->> +		return -EINVAL;
->>  }
-> 
-> I don't see anyone checking the return value. Better just dereference
-> the pointer and the kernel will produce a nice backtrace.
-> 
-> Same should be done for all read and write variants.
-> 
-
-I will need to go through this and see if there is any caller checking the return.  But
-I think you are correct.  If thats true I will just change this to a void, inline the function
-and allow a backtrace if the callback is null
-
-Dan
-
-
-
-> Marc
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
