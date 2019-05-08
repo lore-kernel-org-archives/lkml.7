@@ -2,167 +2,141 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251AAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D096C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B6821019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC4F214AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557289833;
+	bh=sgs6ytJVn9qBYplg2hYQ+XOt9DqBHh15P7mn2I3W6ac=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=L09Of1LYmJs6TaaT6c/Vmgu79NRPbxdW87yGwDY7DOMzxW5gBKINFGDbYl5ZUh/Ld
+	 DBnyP3CGNv8paR3mWcn/DAWx3WM6R/TOcE0BFLgZ+Ee0XAdoIrdwNfDi6C0OuK1W30
+	 NRuBXg4A4T08bVrA+9ao6LEL9nqJ01/bLfeHb1mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfEHE2v (ORCPT
+        id S1727117AbfEHEac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:28:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33908 "EHLO mx1.redhat.com"
+        Wed, 8 May 2019 00:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfEHE2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:28:51 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725825AbfEHEac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 00:30:32 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33DDB307D987;
-        Wed,  8 May 2019 04:28:51 +0000 (UTC)
-Received: from [10.72.12.176] (ovpn-12-176.pek2.redhat.com [10.72.12.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 650282E041;
-        Wed,  8 May 2019 04:28:44 +0000 (UTC)
-Subject: Re: [PATCH RFC] vhost: don't use kmap() to log dirty pages
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A07821019;
+        Wed,  8 May 2019 04:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557289830;
+        bh=sgs6ytJVn9qBYplg2hYQ+XOt9DqBHh15P7mn2I3W6ac=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NgH+vDrx//pebh1V6TMfYZeViVKqiJape+anma/JjnKItD3ZSXojjOoOUuYTSWKXR
+         +8zmAaoHcuu3391UqImrgZa8fESLt7q9yqhxXynu0zzuHRkOB41yUFB51EHNx7elpS
+         gI4w6Ui5tWAQey2rt3dz7TYq23OAaY8TXwAvkXxI=
+Date:   Wed, 8 May 2019 13:30:22 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-References: <1557195809-12373-1-git-send-email-jasowang@redhat.com>
- <20190507220526-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <84a2237e-d8cf-922c-0d0b-90009e99e8ee@redhat.com>
-Date:   Wed, 8 May 2019 12:28:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190507220526-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 08 May 2019 04:28:51 +0000 (UTC)
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 0/3] x86_64/ftrace: Emulate calls from int3 when
+ patching functions
+Message-Id: <20190508133022.78cd9c9b8fcb7838fc0280d0@kernel.org>
+In-Reply-To: <20190508015559.767152678@goodmis.org>
+References: <20190508015559.767152678@goodmis.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 07 May 2019 21:55:59 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 2019/5/8 下午12:12, Michael S. Tsirkin wrote:
-> On Mon, May 06, 2019 at 10:23:29PM -0400, Jason Wang wrote:
->> Vhost log dirty pages directly to a userspace bitmap through GUP and
->> kmap_atomic() since kernel doesn't have a set_bit_to_user()
->> helper. This will cause issues for the arch that has virtually tagged
->> caches. The way to fix is to keep using userspace virtual address.
->>
->> Fortunately, futex has a cmpxchg to userspace memory helper
->> futex_atomic_cmpxchg_inatomic(). So switch to use it to exchange the
->> userspace bitmap with zero, set the bit and then write it back through
->> put_user().
->>
->> Note: there're archs (few non popular ones) that don't implement
->> futex helper, we can't log dirty pages. We can fix them on top or
->> simply disable LOG_ALL features of vhost.
-> Or implement futex_atomic_cmpxchg using kmap if they don't have
-> virtually tagged caches.
+> 
+> [
+>   This is the non-RFC version.
+> 
+>   It went through and passed all my tests. If there's no objections
+>   I'm going to include this in my pull request. I still have patches
+>   in my INBOX that may still be included, so I need to run those through
+>   my tests as well, so a pull request wont be immediate.
+> ]
+> 
+> Nicolai Stange discovered that Live Kernel Patching can have unforseen
+> consequences if tracing is enabled when there are functions that are
+> patched. The reason being, is that Live Kernel patching is built on top
+> of ftrace, which will have the patched functions call the live kernel
+> trampoline directly, and that trampoline will modify the regs->ip address
+> to return to the patched function.
+> 
+> But in the transition between changing the call to the customized
+> trampoline, the tracing code is needed to have its handler called
+> an well, so the function fentry location must be changed from calling
+> the live kernel patching trampoline, to the ftrace_reg_caller trampoline
+> which will iterate through all the registered ftrace handlers for
+> that function.
+> 
+> During this transition, a break point is added to do the live code
+> modifications. But if that break point is hit, it just skips calling
+> any handler, and makes the call site act as a nop. For tracing, the
+> worse that can happen is that you miss a function being traced, but
+> for live kernel patching the affects are more severe, as the old buggy
+> function is now called.
+> 
+> To solve this, an int3_emulate_call() is created for x86_64 to allow
+> ftrace on x86_64 to emulate the call to ftrace_regs_caller() which will
+> make sure all the registered handlers to that function are still called.
+> And this keeps live kernel patching happy!
 
+Out of curiosity, would you have any idea to re-use these function for
+other use-case? Maybe kprobes can reuse it, but very limited use-case.
 
-Yes, this might work.
+> To mimimize the changes, and to avoid controversial patches, this
+> only changes x86_64. Due to the way x86_32 implements the regs->sp
+> the complexity of emulating calls on that platform is too much for
+> stable patches, and live kernel patching does not support x86_32 anyway.
 
+This series looks good to me.
 
->
->> Cc: Christoph Hellwig <hch@infradead.org>
->> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/vhost/vhost.c | 27 +++++++++++++++------------
->>   1 file changed, 15 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->> index 351af88..9c94c41 100644
->> --- a/drivers/vhost/vhost.c
->> +++ b/drivers/vhost/vhost.c
->> @@ -31,6 +31,7 @@
->>   #include <linux/sched/signal.h>
->>   #include <linux/interval_tree_generic.h>
->>   #include <linux/nospec.h>
->> +#include <asm/futex.h>
->>   
->>   #include "vhost.h"
->>   
->> @@ -1692,25 +1693,27 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
->>   }
->>   EXPORT_SYMBOL_GPL(vhost_dev_ioctl);
->>   
->> -/* TODO: This is really inefficient.  We need something like get_user()
->> - * (instruction directly accesses the data, with an exception table entry
->> - * returning -EFAULT). See Documentation/x86/exception-tables.txt.
->> - */
->> -static int set_bit_to_user(int nr, void __user *addr)
->> +static int set_bit_to_user(int nr, u32 __user *addr)
->>   {
->>   	unsigned long log = (unsigned long)addr;
->>   	struct page *page;
->> -	void *base;
->> -	int bit = nr + (log % PAGE_SIZE) * 8;
->> +	u32 old_log;
->>   	int r;
->>   
->>   	r = get_user_pages_fast(log, 1, 1, &page);
->>   	if (r < 0)
->>   		return r;
->>   	BUG_ON(r != 1);
->> -	base = kmap_atomic(page);
->> -	set_bit(bit, base);
->> -	kunmap_atomic(base);
->> +
->> +	r = futex_atomic_cmpxchg_inatomic(&old_log, addr, 0, 0);
->> +	if (r < 0)
->> +		return r;
-> So I think this is a great idea!
->
-> However one issue here is that futex_atomic_cmpxchg_inatomic will fail if the
-> page is swapped out. I suspect we need a variant that blocks the thread
-> instead.
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
+Thanks!
 
-I guess not since the patch still try to pin the page before.
-
-Thanks
-
-
->
->> +
->> +	old_log |= 1 << nr;
->> +	r = put_user(old_log, addr);
->> +	if (r < 0)
->> +		return r;
->> +
->>   	set_page_dirty_lock(page);
->>   	put_page(page);
->>   	return 0;
->> @@ -1727,8 +1730,8 @@ static int log_write(void __user *log_base,
->>   	write_length += write_address % VHOST_PAGE_SIZE;
->>   	for (;;) {
->>   		u64 base = (u64)(unsigned long)log_base;
->> -		u64 log = base + write_page / 8;
->> -		int bit = write_page % 8;
->> +		u64 log = base + write_page / 32;
->> +		int bit = write_page % 32;
->>   		if ((u64)(unsigned long)log != log)
->>   			return -EFAULT;
->>   		r = set_bit_to_user(bit, (void __user *)(unsigned long)log);
->> -- 
->> 1.8.3.1
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
