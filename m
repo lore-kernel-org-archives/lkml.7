@@ -2,159 +2,122 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAF9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3F1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C826321743
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B01216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g+oJJAlR"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RDKS6WCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfEHJpW (ORCPT
+        id S1726927AbfEHJro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:45:22 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59980 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfEHJpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:45:22 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190508094520euoutp01c9f73a54c28d836269970e06e38d77ca~crAeycguI0436704367euoutp01w
-        for <linux-kernel@vger.kernel.org>; Wed,  8 May 2019 09:45:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190508094520euoutp01c9f73a54c28d836269970e06e38d77ca~crAeycguI0436704367euoutp01w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557308720;
-        bh=MuOs/E311PhekgRKOAjqsoOM7+A3YKyosF5AEe5N4s4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=g+oJJAlRKq0kzE5WpoGqeUzQLxEWMjMxtwj6p6FTXyH3OlZe1tmQGxq9MULwZamoa
-         F1ow9VENuuZ9nNPTkLnAjhLBcObtu44YxCr44Kwv9YA0MQYAVzjb30aNLmmGl7FQkA
-         aijO1gJgj+1I57OQgAauzDrK2wtQNUkSrB9DjCZg=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190508094519eucas1p240af845e3456e87dcdb7fbe8906af8a2~crAd9UfRW1448714487eucas1p23;
-        Wed,  8 May 2019 09:45:19 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 47.3A.04298.E25A2DC5; Wed,  8
-        May 2019 10:45:19 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190508094518eucas1p29c68c439a387132f9de555f39540851a~crAdKS6S11451814518eucas1p28;
-        Wed,  8 May 2019 09:45:18 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190508094518eusmtrp1b01d2e17125f5bb912ae7518937ef45a~crAc786DA1256112561eusmtrp1c;
-        Wed,  8 May 2019 09:45:18 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-1f-5cd2a52e2865
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E5.99.04146.E25A2DC5; Wed,  8
-        May 2019 10:45:18 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190508094517eusmtip247caadf547383ab469f9c86a4ba1487c~crAb-PHi42390423904eusmtip21;
-        Wed,  8 May 2019 09:45:17 +0000 (GMT)
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add
- Exynos5422 DMC device description
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-Date:   Wed, 8 May 2019 11:45:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+        Wed, 8 May 2019 05:47:44 -0400
+Received: from mail-eopbgr150050.outbound.protection.outlook.com ([40.107.15.50]:42753
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726634AbfEHJro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 05:47:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MYKSw8E3S3YAcBWxSFu4j7WStB3i2e/0mj4lpwSvJ58=;
+ b=RDKS6WCpPv13kq+kVmnYdXH3VrZ5+IQMYhXC2A59w5WrA5dzlXMTOa0rI1DouXMNz3zwxpTGjTUijLRTMgDk20hN/TYSb8lbuAZS2viyxsUzXspKd+HRtzCfzjXU9FjmR7CY/LKORWtkZRaa/fq1cawVbaKYr/AsQav0sQtV5Iw=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB4462.eurprd04.prod.outlook.com (20.177.53.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Wed, 8 May 2019 09:47:38 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 09:47:38 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [EXT] Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add
+ i.mx6ul/6sx  compatible name
+Thread-Topic: [EXT] Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add
+ i.mx6ul/6sx  compatible name
+Thread-Index: AQHVBPXDrkhn+7eeekK+EpnqoHxjf6Zg+QNg
+Date:   Wed, 8 May 2019 09:47:38 +0000
+Message-ID: <VI1PR04MB45434F10FA0AC88AFE2DB09489320@VI1PR04MB4543.eurprd04.prod.outlook.com>
+References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+ <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
+ <20190507165601.GA17194@bogus>
+In-Reply-To: <20190507165601.GA17194@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH++3eu11H135OzYNJwQh7oTMr+kUPCiMuRVEQFCbU0ptZzmw3
-        K7NgPX3k0hIqpzJ7Kqt8LCvTHrBES5dLk0orekyozBWls6LQut5J/vc5v+/3/L7nwGEpTS8T
-        yial7BKMKfpkrVJN32z81Rqhu9QeF3XfpCDVZysZ8rz/A0OsDa0MufLNjUhBc4mCOI8bSJ77
-        M0VcrioVeXyoV0We1hUrSZ+5AZGzrnsKcq3htYq8PFiuJEN3alXkQW8mQ+53LCcvf/uTgYfv
-        0eJAfsB7iuaLTG00f9vyWsXbbdlK3nz4i5I/UWND/PWWDL7PPnE1G6tekCAkJ+0WjLpFm9Rb
-        8zqrUWqZeu+zz7NNyMrmID8W8GywejtQDlKzGlyOwHv5j6/oR/DGXugr+hDkmZ8xIy3Oo1+R
-        xBpchsBRekA2eRCc6LZRkhCIt4DjYpdK4iDMg7O0k5JMFK6m4VZt3T+BZZU4EmptOyXk8DK4
-        O8BJSOPJ4P25TuoMxuvhTWPVcCyHA+BRYTctsR9eA66a78NJFA6Brm6rQuZJcMtTPJwEuISF
-        jw/dSJ55KWRlZvo4EHqaalQyh0FLQS4tswgm8zmfZz+480p8nvnwoKmNkWaj8DSorNNJCHgJ
-        VLauldEfXngC5An84dTNM5T8zEHWMY38x1SoyX2ikHk8lF09rcpHWsuovSyjdrGM2sXyP7YU
-        0TYUIqSJhkRBnJki7IkU9QYxLSUxMn6HwY7+3WDLYNP3WuRt3+xAmEXasdzH1LY4DaPfLaYb
-        HAhYShvEPT/ZHqfhEvTp+wTjjo3GtGRBdKAJLK0N4TLGvN2gwYn6XcJ2QUgVjCOqgvULNaGC
-        xKhj6STt3q/SnZ1zZkVHvXs/kO83JX6QSY1pjl/o+dbyqvWS81O5VRH+NeL8hKyY3IoM3YGe
-        H+nBT5rDPFOyOlZU7InNXekJi7C/G5qRXH8ke968xjXTo/u6LoTvNxTV93C/PeE687h8k9N1
-        44U+xjC352KOt2TVZs22xo5Cd3Gvlha36mdOp4yi/i9JJHR/fwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4PV29pZdiDDq3c1hsnLGe1eL6l+es
-        FvOPnGO1WP3xMaPF5FNzmSzOdOda9D9+zWxx/vwGdouzTW/YLS7vmsNm8bn3CKPFjPP7mCzW
-        HrnLbnG7cQWbxf89O9gtDr9pZ7XYf8XL4vZvPotvJx4xOgh7fPs6icVjdsNFFo+ds+6ye2xa
-        1cnm0dv8js2jb8sqRo/Np6s9Pm+SC+CI0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2
-        j7UyMlXSt7NJSc3JLEst0rdL0Mvov7mRsWA5V8W11yYNjPM5uhg5OSQETCTOtL5n7GLk4hAS
-        WMooMbnzJhNEQkxi0r7t7BC2sMSfa11sEEWvGSVWrdkHViQskCZxY8lUNhBbRMBD4syCm8wg
-        RcwCG1kkLr7qZYLoOM4kceTya9YuRg4ONgE9iR2rCkFMXgE3ib3feEFMFgEVia8/wkHGiApE
-        SJx5v4IFxOYVEJQ4OfMJmM0pEChxfssnZhCbWcBMYt7mh1C2uMStJ/OZIGx5ie1v5zBPYBSa
-        haR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMw/rcd+7l5B+OljcGH
-        GAU4GJV4eCfMuhQjxJpYVlyZe4hRgoNZSYT3+kSgEG9KYmVValF+fFFpTmrxIUZToN8mMkuJ
-        JucDU1NeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGwfxtO7t/
-        f7s73ezXidQaXu/DahOcMqIV1X/bTds2n+Pukv52D11xuZATpzdOum13d1Xg6deLjvZyp+9x
-        VUrsdOrZs1qX90Xx0vB/kzSjbnMsfvhZw77ma4cg27SiNeHP3xf+ThI5Mfcjl7RJ4pzDGnsF
-        kudzn1/+4N3JFcYH1R+s0zwjXrfujRJLcUaioRZzUXEiAIRUUrEVAwAA
-X-CMS-MailID: 20190508094518eucas1p29c68c439a387132f9de555f39540851a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
-        <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
-        <20190507170422.GA25179@bogus>
-        <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bc0548f4-333e-4519-fe07-08d6d39a34f4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4462;
+x-ms-traffictypediagnostic: VI1PR04MB4462:
+x-microsoft-antispam-prvs: <VI1PR04MB446223DD4B9BE9D881B73A7089320@VI1PR04MB4462.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(396003)(376002)(366004)(189003)(199004)(8676002)(81156014)(81166006)(53936002)(71190400001)(4326008)(76176011)(102836004)(66066001)(8936002)(7696005)(6506007)(5660300002)(446003)(256004)(11346002)(478600001)(476003)(25786009)(6916009)(14454004)(486006)(6116002)(4744005)(3846002)(305945005)(66946007)(73956011)(76116006)(66476007)(7416002)(9686003)(71200400001)(54906003)(68736007)(86362001)(33656002)(2906002)(26005)(186003)(99286004)(229853002)(66556008)(6436002)(52536014)(64756008)(74316002)(66446008)(7736002)(6246003)(316002)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4462;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +Yl8u/xWF8nmY5CuTOD0yrKFVHCLe7vxfUCGAyUOGsf7dq9JERyXEW3j1sNgFd47DfPRADxiG3i+vCaha6weSAI+wsXp4Ok4XNR/WjZlrPUj87wQr3s8sH+0xLg6nRENpb2bCh0SwVo6DXImMpIMYJHYjXAkpgGHOEKUnv1lc5caD1vhNGnol3GzQteqbxv48IfgxzjBebinFO8De5yrcsgFp58KzAW2vLdBCuQwA1CgGgY06zJrEXw//E94ZcL17iyxfK2MlaQbFQZYbj1y0K+m6frfZ3fk1u7FUXiYxpfwz85C9BYj8oRn3NlLRxVVqS6Bb7lWiFJAVqmqzIKFg/vjJu/3OoiiN5HE7gYPzBE5MqPHn+tVA+E2Mq32ZAHHxOQ1LR9hKPI5cCJqqHfh9vqYD9Fy17XDrOPPWLSuZ3M=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc0548f4-333e-4519-fe07-08d6d39a34f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 09:47:38.5528
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4462
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
-> On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
->>> +- devfreq-events : phandles of the PPMU events used by the controller.
->>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
->>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
->>
->> Looks like a hack. Can't you get this from the clocks property? What is
->> this for?
-> 
-> Hi Rob,
-> 
-> Lukasz uses these two syscon regmaps to read certain registers. For
-> chipid he reads it to check the size of attached memory (only 2 GB
-> version is supported). This indeed looks like a hack. However the
-> second regmap (clk) is needed to get the timing data from registers
-> from DMC clock driver address space. These are registers with memory
-> timing so their data is not exposed anyway in common clk framework.
-> 
-> Best regards,
-> Krzysztof
-
-Thank you Krzysztof for a fast response. I have also responded to Rob.
-I wouldn't call accessing chipid registers as a hack, though. The DMC
-registers do not contain information about the memory chip since it is
-in phase of production the board not the chip. Thus, chipid regs (which
-loads from e-fuses) are best place to put information about memory
-type/size.
-
-Regards,
-Lukasz
+> On Wed, 8 May 2019 09:16:38 +0000, Rob Herring wrote:
+> On Tue, 7 May 2019 09:16:38 +0000, Robin Gong wrote:
+> > Add i.mx6ul and i.mx6sx compatible name.
+> >
+> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+Sorry, no tags and no comments get from V2 for this patch. Just resend the =
+whole
+patch set for v3 since other comments addressed from other patch.=20
+>=20
+> If a tag was not added on purpose, please state why and what changed.
