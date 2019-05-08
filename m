@@ -2,88 +2,116 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295DAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268EFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD5421734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="1621xZiZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0506821734
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfEHRmv (ORCPT
+        id S1729047AbfEHRnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 13:42:51 -0400
-Received: from mail-it1-f176.google.com ([209.85.166.176]:39641 "EHLO
-        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbfEHRmu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 13:42:50 -0400
-Received: by mail-it1-f176.google.com with SMTP id m186so5296763itd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 10:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2IlGq+6gtguZJVOFjxQj/IggiuNDOuJd20jQKcDFRYM=;
-        b=1621xZiZuThZBg+Z5gxWhbzM30zJuZJnRz0KAVksoJXBmEAj7gKSwmpLfcjNOAVm3H
-         DXDIYIHREbST5hmzVUyoPeMr/wyFP4LSxO8CGpS07w07QYd5tlrhx4w+e/CsIIC/r3Vn
-         SvsXZdTfOr/xunLw0wu4ExfI+txJ1eqchqbX1d1vnKG3zu0R4UhAGyfEGEIYvyNBrJOg
-         ageWg274C+HTgTMJuxaCPB6Z/97Th4ARa3M0XTc0sSURjJz1xxeLg6xQRv1uwbt7EKR1
-         RJpmcV0ix+FaI0kFiumLXG2Afr3YB1M0A8OgWjbogom1a405F6OJ82rv5f5T61OHXjvM
-         G/9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2IlGq+6gtguZJVOFjxQj/IggiuNDOuJd20jQKcDFRYM=;
-        b=io8Hfqy1UJUfX+SZE2HMH90+Zx5BuhJwhEQ8zHgFP8EURusiTEUXQmTwxw3Ro6UqP7
-         bAeNfBHUIBr9u2HPnES1vZ992PbN1ipyIdfv0dy3Ww63ngT2MyOJ/XOtlbWxr0wkfpGl
-         IsjQuIvZLwbOsOJ+tRoPnYEz4DkH2jnsDw5bgCRRs1jN6L2waGxwYlnGQNnescZ6J8rh
-         9uvoW5kkB1YSRgBSH7+epzNCME6Wyw4oWr84ykbhVJW7RZIs3D4AIKY1JgTJKSDovWJG
-         y1yq2dSuOK6oxAjph+yiO4S5dTohlImvJ2KyHZN5DTlUh/Mkp9BUDGgCyjBnl3TmFjLu
-         9o6A==
-X-Gm-Message-State: APjAAAVUUyGx1HfPuYI90hNTuWd2P7J5DUy+dua/0RdIpHXgpYrnUet/
-        PpaY3jPy8S9Ag5D2+jVZ/8gOp8k7bRlch/I6fnYjRNhckcAZcA==
-X-Google-Smtp-Source: APXvYqx+jsMK5tDaxKgEtyXbNr4w3JeLNuYDgOkwRW4V9J4+wBCtBzMFj5BWML3YXmErElHIl3iQasAYVjAPT45fcm4=
-X-Received: by 2002:a24:9d0d:: with SMTP id f13mr4941996itd.162.1557337369811;
- Wed, 08 May 2019 10:42:49 -0700 (PDT)
+        Wed, 8 May 2019 13:43:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:41780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbfEHRnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 13:43:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54E7580D;
+        Wed,  8 May 2019 10:43:08 -0700 (PDT)
+Received: from e107049-lin.arm.com (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CD4353F575;
+        Wed,  8 May 2019 10:43:06 -0700 (PDT)
+From:   douglas.raillard@arm.com
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+        quentin.perret@arm.com, douglas.raillard@arm.com,
+        patrick.bellasi@arm.com, dietmar.eggemann@arm.com
+Subject: [RFC PATCH 0/7] sched/cpufreq: Make schedutil energy aware
+Date:   Wed,  8 May 2019 18:42:54 +0100
+Message-Id: <20190508174301.4828-1-douglas.raillard@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190409140347.GA11524@lst.de>
-In-Reply-To: <20190409140347.GA11524@lst.de>
-From:   Jon Mason <jdmason@kudzu.us>
-Date:   Wed, 8 May 2019 18:42:39 +0100
-Message-ID: <CAPoiz9wwMCRkzM5FWm18kecC1=kt+5qPNHmQ7eUFhH=3ZNAqYw@mail.gmail.com>
-Subject: Re: status of the calgary iommu driver
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Muli Ben-Yehuda <mulix@mulix.org>, x86@kernel.org,
-        iommu@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 3:03 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Hi Muli and Jon,
->
-> do you know if there are user of systems with the Calgary iommu
-> around still? It seems like the last non-drive by changes to it
-> are from 2010 and I'm not sure how common these systems were.
+From: Douglas RAILLARD <douglas.raillard@arm.com>
+
+Make schedutil cpufreq governor energy-aware.
+
+- patch 1 introduces a function to retrieve a frequency given a base
+  frequency and an energy cost margin.
+- patch 2 links Energy Model perf_domain to sugov_policy.
+- patch 3 updates get_next_freq() to make use of the Energy Model.
+- patch 4 moves a static function around in cpufreq_schedutil.c to make
+  it available for subsequent patch.
+- patch 5 updates sugov_cpu_is_busy() to make it useable for shared
+  cpufreq policies.
+- patch 6 improves sugov_cpu_is_busy() to avoid some pitfalls when used
+  from shared policies.
+- patch 7 makes use of sugov_cpu_is_busy() for frequency selection of
+  shared cpufreq policies.
+
+The benefits of using the EM in schedutil are twofold:
+
+1) Selecting the highest possible frequency for a given cost. Some
+   platforms can have lower frequencies that are less efficient than
+   higher ones, in which case they should be skipped for most purposes.
+   They can still be useful to give more freedom to thermal throttling
+   mechanisms, but not under normal circumstances.
+   note: the EM framework will warn about such OPPs "hertz/watts ratio
+   non-monotonically decreasing"
+
+2) Drive the frequency selection with power in mind, in addition to
+   maximizing the utilization of the non-idle CPUs in the system.
+
+Point 1) is implemented in "PM: Introduce em_pd_get_higher_freq()" and
+enabled in schedutil by
+"sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()".
+
+Point 2) is enabled in
+"sched/cpufreq: Boost schedutil frequency ramp up". It allows using
+higher frequencies when a CPU is "busy" in the policy, reusing the
+existing sugov_cpu_is_busy() schedutil heuristic.  "busy" is defined
+here as not having any idle time since the last increase in frequency.
+The benefits of that are:
+
+* Boosting the frequency when it (seems) needed by a CPU to finish its
+  allocated work. That shortens the frequency ramp up duration, which in
+  turns allows the utilization signal to reach stable values quicker.
+  Since the allowed frequency boost is bounded in energy, it will behave
+  consistently across platforms, regardless of the OPP cost range.
+
+* The boost is only transient, and should not impact a lot the energy
+  consumed of workloads with very stable utilization signals.
 
 
-These systems were plentiful for 2-4 years after the original series
-made it in.  After that, the Intel and AMD IOMMUs should were shipped
-and were superior to this chip.  So, even in systems where these might
-be present, the AMD/Intel ones should be used (unknown if they were
-shipped on the same ones, as both Muli and I have left IBM).
+This has been ligthly tested with a rtapp task ramping from 10% to 75%
+utilisation on a big core. Improvements in frequency ramp-up time are
+somehow diminished by the shape of the utilisation signal, which gives a
+big oscillation to the signal after a fast ramp up with idle time. It
+however improves the time it takes to reach the final frequency, but
+some activations are still missed due to strong frequency decrease right
+after ramping up.
 
-You thinking about removing the code?
+Douglas RAILLARD (7):
+  PM: Introduce em_pd_get_higher_freq()
+  sched/cpufreq: Attach perf domain to sugov policy
+  sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()
+  sched/cpufreq: Move up sugov_cpu_is_busy()
+  sched/cpufreq: sugov_cpu_is_busy for shared policy
+  sched/cpufreq: Improve sugov_cpu_is_busy accuracy
+  sched/cpufreq: Boost schedutil frequency ramp up
 
-Thanks,
-Jon
+ include/linux/energy_model.h     |  48 +++++++++++
+ kernel/sched/cpufreq_schedutil.c | 136 +++++++++++++++++++++++++++----
+ 2 files changed, 166 insertions(+), 18 deletions(-)
+
+-- 
+2.21.0
