@@ -2,398 +2,103 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C342C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C88C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9622216B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB0A20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:13:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="AHoHpzUp"
+	dkim=pass (1024-bit key) header.d=darbyshire-bryant.me.uk header.i=@darbyshire-bryant.me.uk header.b="M/igsZV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfEHQKR (ORCPT
+        id S1727846AbfEHQNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:10:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35599 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfEHQJa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:09:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d20so6281575qto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:09:29 -0700 (PDT)
+        Wed, 8 May 2019 12:13:20 -0400
+Received: from mail-eopbgr00054.outbound.protection.outlook.com ([40.107.0.54]:58959
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727150AbfEHQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 12:13:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5YevbVXRhROWLczBu+rM4sdJCientt/mUS8uGJQbS74=;
-        b=AHoHpzUpkM9OwhZT9PcMUp82h3P0mRZIfFpc7JLJEVwyHNxIIm74K3+6t4CZQOvkXY
-         KGClZeTm8HiagCU5eeis8gCe40PWHmsFeKkZ5VYNbwpzKwJGtGP3UtslQh662/Wq+naG
-         aFPYnNsQ/jWDvkEv69MTVS+xE6pSPY+aZaGYVFoMzSnGirDmNp/WktWzbeBZApsDeErS
-         NyiUjyaqOJBniBQIfqyxu/+iEHGa6W2YeBS1ZR61RzwxLUN9QwhKNy+oikvttWKynYRO
-         2KMQuh6YLlxw1jk0pw+ACOOSoPHMeVMFWD2N4JkqoNptlce32kBMLP5htLWj58CaV1Z8
-         hGlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5YevbVXRhROWLczBu+rM4sdJCientt/mUS8uGJQbS74=;
-        b=uFA9Q/kB7BNs172AglGOVyqpmvqRnBdnEvgedLYTGzO1fy5WPcYg4IEdaLDvcDT6RC
-         ybK4dMFObh+jIdKC1yjgD/9sZ2yehOzIyTT27z5/EpJF7X6t1aed0GzWzOun8EswDeP+
-         WWTMyA87cUnY27kIq70RUCwBsuyUWa77VbkrxZdjjeHZlZrCBRsUt/aRRUS69Y9t0l9l
-         aUVNue24DGarV3S/MhMiv4JUExspv+/GZOo41lTqq9wOTj/S5nAi+sKzcamDDTK17k0f
-         Nas8Y8qV0Ao8TT88/1bfN5QVXn18me6ABz8oYjaERBAHri4vYYQKzhdgFVco600FXO+C
-         FT9Q==
-X-Gm-Message-State: APjAAAUoykMdGKmRAYYGOZzgGoHbmSAZsObnakAH+3JenNdPGd7TdJBB
-        yN57dh9JJcWBjky5kGAJuj2fpA==
-X-Google-Smtp-Source: APXvYqx9gjOwlYc8RgobItIWo9StUAhk3EVOON1A3lRGgkENYaJQym72KzhwCzlbNtFhWDXENR50qg==
-X-Received: by 2002:a0c:da04:: with SMTP id x4mr11882545qvj.136.1557331768631;
-        Wed, 08 May 2019 09:09:28 -0700 (PDT)
-Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id s50sm10936877qts.39.2019.05.08.09.09.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 09:09:27 -0700 (PDT)
-From:   Sean Paul <sean@poorly.run>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/11] drm: Add atomic variants for bridge enable/disable
-Date:   Wed,  8 May 2019 12:09:08 -0400
-Message-Id: <20190508160920.144739-4-sean@poorly.run>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190508160920.144739-1-sean@poorly.run>
-References: <20190508160920.144739-1-sean@poorly.run>
+ d=darbyshire-bryant.me.uk; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fRlCgllaeQFRhbw/4RWMMABHQbssZ5McwuHYWfho2V8=;
+ b=M/igsZV2MCYkLooVAiZQU5gvT0Owhxw5OSqF8RTs1szzNMgPJ029JkmgcgHVl33hU16d7bl5nd11+NHqppujeXbMQVdx1vhns8AqHd4SHKUBuByUlaDF7NMAMMcHv+gW4qb7J8S8ewMmYPKVbwTTWkGituhK0TEC4ntUXOdNp3Y=
+Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com (10.171.105.143) by
+ VI1PR0302MB2734.eurprd03.prod.outlook.com (10.171.108.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.20; Wed, 8 May 2019 16:12:54 +0000
+Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com
+ ([fe80::a096:fef7:568:7358]) by VI1PR0302MB2750.eurprd03.prod.outlook.com
+ ([fe80::a096:fef7:568:7358%7]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 16:12:54 +0000
+From:   Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+To:     David Miller <davem@davemloft.net>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        "jiri@resnulli.us" <jiri@resnulli.us>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH net-next v4] net: sched: Introduce act_ctinfo action
+Thread-Topic: [PATCH net-next v4] net: sched: Introduce act_ctinfo action
+Thread-Index: AQHVBREof9SUD1rIBEGMErsp08m2pKZgXWkAgAEKPIA=
+Date:   Wed, 8 May 2019 16:12:54 +0000
+Message-ID: <58168C49-177F-4F74-8E67-8B9CF9B23FD3@darbyshire-bryant.me.uk>
+References: <20190507.123952.2046042425594195721.davem@davemloft.net>
+ <20190507201154.97646-1-ldir@darbyshire-bryant.me.uk>
+ <20190507.172000.384528161562920463.davem@davemloft.net>
+In-Reply-To: <20190507.172000.384528161562920463.davem@davemloft.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ldir@darbyshire-bryant.me.uk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2a02:c7f:1268:6500::dc83]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5808bfce-3a59-4591-72ce-08d6d3d006fb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0302MB2734;
+x-ms-traffictypediagnostic: VI1PR0302MB2734:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <VI1PR0302MB2734B98BC407D48F3B3A4ECEC9320@VI1PR0302MB2734.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(376002)(39830400003)(346002)(189003)(199004)(305945005)(6246003)(229853002)(2906002)(5660300002)(6486002)(7736002)(476003)(2616005)(486006)(102836004)(36756003)(54906003)(6916009)(53936002)(6512007)(6306002)(68736007)(25786009)(6436002)(4326008)(256004)(86362001)(83716004)(186003)(71190400001)(71200400001)(4744005)(8676002)(82746002)(81166006)(81156014)(6116002)(8936002)(99286004)(64756008)(66556008)(66476007)(66446008)(316002)(508600001)(966005)(91956017)(33656002)(76176011)(53546011)(66946007)(73956011)(76116006)(6506007)(446003)(11346002)(46003)(14454004)(74482002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0302MB2734;H:VI1PR0302MB2750.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: darbyshire-bryant.me.uk does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xVk7iubFVfyUziI1HXR7vetzWBtRx9UHtxPxTqZYzxsQdBMLg9dM5Ks9EMIvSM1AHXCkaM75Fciie6GO3hqc3iKMYkdypany75Irull3wAxnl9QQQtNlIbcZi4qCWhMRxzykAEWAeWaW6bqfX2fexHuIoTLomptx8Nxd2ipjp9Nt2OGnFQ4qiUbmdkHab6L23M4MayPT2lEZ0PFyj8untI+TRc8xWImjninow2qUdZ0UVW/9OIYTjL8tijXQPACGN2zybXIRe+9Z0bg8J9+tp03ZK9GkR4rDat4QjB5/aHi6mCxfkUOQyt8ESkbDU5Odrn4BxGAjj3aKeK0wzFPVlt8oOg4bFy2KBhcCCqGty/QzvhnVyjPgWky14RMUd/Cm1iyq0eu8Cm96A8Yv1G+yOXegmEoRDrvWhBxQCKMucwM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0557ECDD62803F49B6325B1C33F92D61@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: darbyshire-bryant.me.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5808bfce-3a59-4591-72ce-08d6d3d006fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 16:12:54.1853
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9151708b-c553-406f-8e56-694f435154a4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0302MB2734
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
-
-This patch adds atomic variants for all of
-pre_enable/enable/disable/post_disable bridge functions. These will be
-called from the appropriate atomic helper functions. If the bridge
-driver doesn't implement the atomic version of the function, we will
-fall back to the vanilla implementation.
-
-Note that some drivers call drm_bridge_disable directly, and these cases
-are not covered. It's up to the driver to decide whether to implement
-both atomic_disable and disable, or if it's not necessary.
-
-Changes in v3:
-- Added to the patchset
-Changes in v4:
-- Fix up docbook references (Daniel)
-
-Link to v3: https://patchwork.freedesktop.org/patch/msgid/20190502194956.218441-4-sean@poorly.run
-
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
----
- drivers/gpu/drm/drm_atomic_helper.c |   8 +-
- drivers/gpu/drm/drm_bridge.c        | 110 ++++++++++++++++++++++++++++
- include/drm/drm_bridge.h            | 106 +++++++++++++++++++++++++++
- 3 files changed, 220 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index ccf01831f265..e8b7187a8494 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -995,7 +995,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 		 * Each encoder has at most one connector (since we always steal
- 		 * it away), so we won't call disable hooks twice.
- 		 */
--		drm_bridge_disable(encoder->bridge);
-+		drm_atomic_bridge_disable(encoder->bridge, old_state);
- 
- 		/* Right function depends upon target state. */
- 		if (funcs) {
-@@ -1009,7 +1009,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
- 		}
- 
--		drm_bridge_post_disable(encoder->bridge);
-+		drm_atomic_bridge_post_disable(encoder->bridge, old_state);
- 	}
- 
- 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-@@ -1308,7 +1308,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 		 * Each encoder has at most one connector (since we always steal
- 		 * it away), so we won't call enable hooks twice.
- 		 */
--		drm_bridge_pre_enable(encoder->bridge);
-+		drm_atomic_bridge_pre_enable(encoder->bridge, old_state);
- 
- 		if (funcs) {
- 			if (funcs->atomic_enable)
-@@ -1319,7 +1319,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 				funcs->commit(encoder);
- 		}
- 
--		drm_bridge_enable(encoder->bridge);
-+		drm_atomic_bridge_enable(encoder->bridge, old_state);
- 	}
- 
- 	drm_atomic_helper_commit_writebacks(dev, old_state);
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 138b2711d389..cba537c99e43 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -352,6 +352,116 @@ void drm_bridge_enable(struct drm_bridge *bridge)
- }
- EXPORT_SYMBOL(drm_bridge_enable);
- 
-+/**
-+ * drm_atomic_bridge_disable - disables all bridges in the encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_disable (falls back on
-+ * &drm_bridge_funcs.disable) op for all the bridges in the encoder chain,
-+ * starting from the last bridge to the first. These are called before calling
-+ * &drm_encoder_helper_funcs.atomic_disable
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_disable(struct drm_bridge *bridge,
-+			       struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	drm_atomic_bridge_disable(bridge->next, state);
-+
-+	if (bridge->funcs->atomic_disable)
-+		bridge->funcs->atomic_disable(bridge, state);
-+	else if (bridge->funcs->disable)
-+		bridge->funcs->disable(bridge);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_disable);
-+
-+/**
-+ * drm_atomic_bridge_post_disable - cleans up after disabling all bridges in the
-+ *				    encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_post_disable (falls back on
-+ * &drm_bridge_funcs.post_disable) op for all the bridges in the encoder chain,
-+ * starting from the first bridge to the last. These are called after completing
-+ * &drm_encoder_helper_funcs.atomic_disable
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_post_disable(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	if (bridge->funcs->atomic_post_disable)
-+		bridge->funcs->atomic_post_disable(bridge, state);
-+	else if (bridge->funcs->post_disable)
-+		bridge->funcs->post_disable(bridge);
-+
-+	drm_atomic_bridge_post_disable(bridge->next, state);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_post_disable);
-+
-+/**
-+ * drm_atomic_bridge_pre_enable - prepares for enabling all bridges in the
-+ *				  encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_pre_enable (falls back on
-+ * &drm_bridge_funcs.pre_enable) op for all the bridges in the encoder chain,
-+ * starting from the last bridge to the first. These are called before calling
-+ * &drm_encoder_helper_funcs.atomic_enable
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_pre_enable(struct drm_bridge *bridge,
-+				  struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	drm_atomic_bridge_pre_enable(bridge->next, state);
-+
-+	if (bridge->funcs->atomic_pre_enable)
-+		bridge->funcs->atomic_pre_enable(bridge, state);
-+	else if (bridge->funcs->pre_enable)
-+		bridge->funcs->pre_enable(bridge);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_pre_enable);
-+
-+/**
-+ * drm_atomic_bridge_enable - enables all bridges in the encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_enable (falls back on
-+ * &drm_bridge_funcs.enable) op for all the bridges in the encoder chain,
-+ * starting from the first bridge to the last. These are called after completing
-+ * &drm_encoder_helper_funcs.atomic_enable
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_enable(struct drm_bridge *bridge,
-+			      struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	if (bridge->funcs->atomic_enable)
-+		bridge->funcs->atomic_enable(bridge, state);
-+	else if (bridge->funcs->enable)
-+		bridge->funcs->enable(bridge);
-+
-+	drm_atomic_bridge_enable(bridge->next, state);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_enable);
-+
- #ifdef CONFIG_OF
- /**
-  * of_drm_find_bridge - find the bridge corresponding to the device node in
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index d4428913a4e1..322801884814 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -237,6 +237,103 @@ struct drm_bridge_funcs {
- 	 * The enable callback is optional.
- 	 */
- 	void (*enable)(struct drm_bridge *bridge);
-+
-+	/**
-+	 * @atomic_pre_enable:
-+	 *
-+	 * This callback should enable the bridge. It is called right before
-+	 * the preceding element in the display pipe is enabled. If the
-+	 * preceding element is a bridge this means it's called before that
-+	 * bridge's @atomic_pre_enable or @pre_enable function. If the preceding
-+	 * element is a &drm_encoder it's called right before the encoder's
-+	 * &drm_encoder_helper_funcs.atomic_enable hook.
-+	 *
-+	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
-+	 * will not yet be running when this callback is called. The bridge must
-+	 * not enable the display link feeding the next bridge in the chain (if
-+	 * there is one) when this callback is called.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_pre_enable. It
-+	 * would be prudent to also provide an implementation of @pre_enable if
-+	 * you are expecting driver calls into &drm_bridge_pre_enable.
-+	 *
-+	 * The @atomic_pre_enable callback is optional.
-+	 */
-+	void (*atomic_pre_enable)(struct drm_bridge *bridge,
-+				  struct drm_atomic_state *state);
-+
-+	/**
-+	 * @atomic_enable:
-+	 *
-+	 * This callback should enable the bridge. It is called right after
-+	 * the preceding element in the display pipe is enabled. If the
-+	 * preceding element is a bridge this means it's called after that
-+	 * bridge's @atomic_enable or @enable function. If the preceding element
-+	 * is a &drm_encoder it's called right after the encoder's
-+	 * &drm_encoder_helper_funcs.atomic_enable hook.
-+	 *
-+	 * The bridge can assume that the display pipe (i.e. clocks and timing
-+	 * signals) feeding it is running when this callback is called. This
-+	 * callback must enable the display link feeding the next bridge in the
-+	 * chain if there is one.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_enable. It
-+	 * would be prudent to also provide an implementation of @enable if
-+	 * you are expecting driver calls into &drm_bridge_enable.
-+	 *
-+	 * The enable callback is optional.
-+	 */
-+	void (*atomic_enable)(struct drm_bridge *bridge,
-+			      struct drm_atomic_state *state);
-+	/**
-+	 * @atomic_disable:
-+	 *
-+	 * This callback should disable the bridge. It is called right before
-+	 * the preceding element in the display pipe is disabled. If the
-+	 * preceding element is a bridge this means it's called before that
-+	 * bridge's @atomic_disable or @disable vfunc. If the preceding element
-+	 * is a &drm_encoder it's called right before the
-+	 * &drm_encoder_helper_funcs.atomic_disable hook.
-+	 *
-+	 * The bridge can assume that the display pipe (i.e. clocks and timing
-+	 * signals) feeding it is still running when this callback is called.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_disable. It
-+	 * would be prudent to also provide an implementation of @disable if
-+	 * you are expecting driver calls into &drm_bridge_disable.
-+	 *
-+	 * The disable callback is optional.
-+	 */
-+	void (*atomic_disable)(struct drm_bridge *bridge,
-+			       struct drm_atomic_state *state);
-+
-+	/**
-+	 * @atomic_post_disable:
-+	 *
-+	 * This callback should disable the bridge. It is called right after the
-+	 * preceding element in the display pipe is disabled. If the preceding
-+	 * element is a bridge this means it's called after that bridge's
-+	 * @atomic_post_disable or @post_disable function. If the preceding
-+	 * element is a &drm_encoder it's called right after the encoder's
-+	 * &drm_encoder_helper_funcs.atomic_disable hook.
-+	 *
-+	 * The bridge must assume that the display pipe (i.e. clocks and timing
-+	 * signals) feeding it is no longer running when this callback is
-+	 * called.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_post_disable.
-+	 * It would be prudent to also provide an implementation of
-+	 * @post_disable if you are expecting driver calls into
-+	 * &drm_bridge_post_disable.
-+	 *
-+	 * The post_disable callback is optional.
-+	 */
-+	void (*atomic_post_disable)(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state);
- };
- 
- /**
-@@ -314,6 +411,15 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
- void drm_bridge_pre_enable(struct drm_bridge *bridge);
- void drm_bridge_enable(struct drm_bridge *bridge);
- 
-+void drm_atomic_bridge_disable(struct drm_bridge *bridge,
-+			       struct drm_atomic_state *state);
-+void drm_atomic_bridge_post_disable(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state);
-+void drm_atomic_bridge_pre_enable(struct drm_bridge *bridge,
-+				  struct drm_atomic_state *state);
-+void drm_atomic_bridge_enable(struct drm_bridge *bridge,
-+			      struct drm_atomic_state *state);
-+
- #ifdef CONFIG_DRM_PANEL_BRIDGE
- struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
- 					u32 connector_type);
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
-
+SGkgRGF2aWQsDQoNCj4gT24gOCBNYXkgMjAxOSwgYXQgMDE6MjAsIERhdmlkIE1pbGxlciA8ZGF2
+ZW1AZGF2ZW1sb2Z0Lm5ldD4gd3JvdGU6DQo+IA0KPiANCj4gVGhlIG5ldC1uZXh0IHRyZWUgaXMg
+Y2xvc2VkLg0KDQpBcG9sb2dpZXMsIEkgZGlkbuKAmXQgdW5kZXJzdGFuZCB3aGF0IHRoaXMgbWVh
+bnQgaW4geW91ciBwcmlvciBtZXNzYWdlLCBoYXZpbmcgcmVhZCBodHRwczovL3d3dy5rZXJuZWwu
+b3JnL2RvYy9Eb2N1bWVudGF0aW9uL25ldHdvcmtpbmcvbmV0ZGV2LUZBUS50eHQgYW5kIHNlZW4g
+aHR0cDovL3ZnZXIua2VybmVsLm9yZy9+ZGF2ZW0vbmV0LW5leHQuaHRtbCBJIG5vdyBkby4NCg0K
+PiANCj4gWW91IHdpbGwgaGF2ZSB0byBzdWJtaXQgdGhpcyBhZ2FpbiB3aGVuIHRoZSBuZXQtbmV4
+dCB0cmVlIGlzIG9wZW4NCj4gYWdhaW4uDQoNCkNhdGNoIHlvdSBvbiB0aGUgZmxpcCBzaWRlLCBp
+biAyLWlzaCB3ZWVrcyB0aW1lIDotKQ0KDQo+IA0KPiBUaGFuayB5b3UuDQoNClRoYW5rcyBmb3Ig
+eW91ciBwYXRpZW5jZS4NCg0KS2V2aW4gRC1CDQoNCmdwZzogMDEyQyBBQ0IyIDI4QzYgQzUzRSA5
+Nzc1ICA5MTIzIEIzQTIgMzg5QiA5REUyIDMzNEENCg0K
