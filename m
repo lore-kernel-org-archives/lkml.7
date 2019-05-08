@@ -2,152 +2,134 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F7CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483A8C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68AB204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD6521655
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Xmve6yXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfEHOPO (ORCPT
+        id S1728009AbfEHOP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:15:14 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:39734 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726703AbfEHOPO (ORCPT
+        Wed, 8 May 2019 10:15:26 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:39708 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbfEHOPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:15:14 -0400
-Received: (qmail 1923 invoked by uid 2102); 8 May 2019 10:15:13 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 May 2019 10:15:13 -0400
-Date:   Wed, 8 May 2019 10:15:13 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>
-cc:     Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ramneek Mehresh <ramneek.mehresh@freescale.com>,
-        Nikhil Badola <nikhil.badola@freescale.com>,
-        Ran Wang <ran.wang_1@nxp.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiafei Pan <jiafei.pan@nxp.com>,
-        Suresh Gupta <B42813@freescale.com>
-Subject: Re: [PATCH v5 2/5] usb: phy: Workaround for USB erratum-A005728
-In-Reply-To: <20190508060608.33882-2-yinbo.zhu@nxp.com>
-Message-ID: <Pine.LNX.4.44L0.1905081013490.1699-100000@iolanthe.rowland.org>
+        Wed, 8 May 2019 10:15:25 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,446,1549954800"; 
+   d="scan'208";a="33789240"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 08 May 2019 07:15:24 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Wed, 8 May 2019 07:15:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c/Xx5YEhkVZVHwnhYrprUn4r0hi1bHDxXgY040TgjqE=;
+ b=Xmve6yXjOLui6N+bjWg68t3JwKG/LC2ULtvx5q52jgNAEmuytpu/GFdzWYPVoN6EM0ewow29o/JqrVRudXeQ+JwSW5MdMPeqY04gresZgKwiizpkBnshCshEpDzqi4Yo055cpTr9P9ciDrpEs/JYvTm+glUDXOqWMZYlcpnRj6A=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1898.namprd11.prod.outlook.com (10.175.92.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Wed, 8 May 2019 14:15:03 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e0e3:1d51:9e3e:6dc]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e0e3:1d51:9e3e:6dc%3]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 14:15:03 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <Nicolas.Ferre@microchip.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH] watchdog: sama5d4: fix WDD value to be always set to max
+Thread-Topic: [PATCH] watchdog: sama5d4: fix WDD value to be always set to max
+Thread-Index: AQHVBahu/JHAOFdIPEa7ks2ptdaG2g==
+Date:   Wed, 8 May 2019 14:15:03 +0000
+Message-ID: <1557324535-9050-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: ro-RO, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VE1PR08CA0031.eurprd08.prod.outlook.com
+ (2603:10a6:803:104::44) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93658306-6273-4ab6-6198-08d6d3bf9036
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR11MB1898;
+x-ms-traffictypediagnostic: DM5PR11MB1898:
+x-microsoft-antispam-prvs: <DM5PR11MB1898CDF2EFCDB172BF8C099FE8320@DM5PR11MB1898.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(53936002)(86362001)(66446008)(73956011)(2501003)(71200400001)(71190400001)(476003)(8936002)(50226002)(66066001)(25786009)(68736007)(2616005)(4326008)(6486002)(14454004)(6436002)(66946007)(66476007)(66556008)(64756008)(107886003)(256004)(72206003)(2201001)(6512007)(478600001)(110136005)(102836004)(26005)(6506007)(186003)(6116002)(3846002)(486006)(316002)(386003)(305945005)(7736002)(2906002)(99286004)(52116002)(36756003)(81156014)(8676002)(5660300002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1898;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nlAngoE0nfyuSR3CJm84CYXyO/+ypYnUSpYOqt03TJ9OZzv01Yu4sqVNeHSqmGN4UlgnygrduB6cpPnbuEiSYUe744Mu71rap1Cl+1zx2926kjeZhrobNEiOaGGWUY0uibE+Ngt07l5MglYsSFoOwNXzXNKD8TwRGbTsY8mNwZbwLNJYfdOJBJ0F01WLpFbIltT8vZad8Ljnua2JlD8oa9Cgyix8RyKJXzHlHnsfwZfTiNjXIZPxdM7FRbpWwW1wxaBMAhvloax1bzYCcuK8WQDIVd96BHR3WhYz7iMy09fFX+sjNbE1MrxnxfUozuPn4gaw8gFC2KAd8QhGXjD+rvasm/U8J2FCt1JFo04qhJTE6VkGglDkXpvLmL9kFD/1cWluqZDUofPfcQSnUwLLZL75CDI7rqS9oSevIMU1gu0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93658306-6273-4ab6-6198-08d6d3bf9036
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 14:15:03.6715
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1898
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019, Yinbo Zhu wrote:
-
-> From: Suresh Gupta <B42813@freescale.com>
-> 
-> PHY_CLK_VALID bit for UTMI PHY in USBDR does not set even
-> if PHY is providing valid clock. Workaround for this
-> involves resetting of PHY and check PHY_CLK_VALID bit
-> multiple times. If PHY_CLK_VALID bit is still not set even
-> after 5 retries, it would be safe to deaclare that PHY
-> clock is not available.
-> This erratum is applicable for USBDR less then ver 2.4.
-> 
-> Signed-off-by: Suresh Gupta <B42813@freescale.com>
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> ---
-> Change in v5:
-> 		remove dev_err function unnecessary parameters 
-> 
->  drivers/usb/host/ehci-fsl.c |   37 ++++++++++++++++++++++++++-----------
->  drivers/usb/host/ehci-fsl.h |    3 +++
->  2 files changed, 29 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
-> index 38674b7..1634ac8 100644
-> --- a/drivers/usb/host/ehci-fsl.c
-> +++ b/drivers/usb/host/ehci-fsl.c
-> @@ -183,6 +183,17 @@ static int fsl_ehci_drv_probe(struct platform_device *pdev)
->  	return retval;
->  }
->  
-> +static bool usb_phy_clk_valid(struct usb_hcd *hcd)
-> +{
-> +	void __iomem *non_ehci = hcd->regs;
-> +	bool ret = true;
-> +
-> +	if (!(ioread32be(non_ehci + FSL_SOC_USB_CTRL) & PHY_CLK_VALID))
-> +		ret = false;
-> +
-> +	return ret;
-> +}
-> +
->  static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
->  			       enum fsl_usb2_phy_modes phy_mode,
->  			       unsigned int port_offset)
-> @@ -226,6 +237,16 @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
->  		/* fall through */
->  	case FSL_USB2_PHY_UTMI:
->  	case FSL_USB2_PHY_UTMI_DUAL:
-> +		/* PHY_CLK_VALID bit is de-featured from all controller
-> +		 * versions below 2.4 and is to be checked only for
-> +		 * internal UTMI phy
-> +		 */
-> +		if (pdata->controller_ver > FSL_USB_VER_2_4 &&
-> +		    pdata->have_sysif_regs && !usb_phy_clk_valid(hcd)) {
-> +			dev_err(dev, "USB PHY clock invalid\n");
-> +			return -EINVAL;
-> +		}
-> +
->  		if (pdata->have_sysif_regs && pdata->controller_ver) {
->  			/* controller version 1.6 or above */
->  			tmp = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
-> @@ -249,17 +270,11 @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
->  		break;
->  	}
->  
-> -	/*
-> -	 * check PHY_CLK_VALID to determine phy clock presence before writing
-> -	 * to portsc
-> -	 */
-> -	if (pdata->check_phy_clk_valid) {
-> -		if (!(ioread32be(non_ehci + FSL_SOC_USB_CTRL) &
-> -		    PHY_CLK_VALID)) {
-> -			dev_warn(hcd->self.controller,
-> -				 "USB PHY clock invalid\n");
-> -			return -EINVAL;
-> -		}
-> +	if (pdata->have_sysif_regs &&
-> +	    pdata->controller_ver > FSL_USB_VER_1_6 &&
-> +		!usb_phy_clk_valid(hcd)) {
-
-This is still wrong.  The line above should be indented four characters 
-less than it is: the '!' should line up with the 'p' in the line above 
-it.
-
-Alan Stern
-
-> +		dev_warn(hcd->self.controller, "USB PHY clock invalid\n");
-> +		return -EINVAL;
->  	}
->  
->  	ehci_writel(ehci, portsc, &ehci->regs->port_status[port_offset]);
-> diff --git a/drivers/usb/host/ehci-fsl.h b/drivers/usb/host/ehci-fsl.h
-> index cbc4220..9d18c6e 100644
-> --- a/drivers/usb/host/ehci-fsl.h
-> +++ b/drivers/usb/host/ehci-fsl.h
-> @@ -50,4 +50,7 @@
->  #define UTMI_PHY_EN             (1<<9)
->  #define ULPI_PHY_CLK_SEL        (1<<10)
->  #define PHY_CLK_VALID		(1<<17)
-> +
-> +/* Retry count for checking UTMI PHY CLK validity */
-> +#define UTMI_PHY_CLK_VALID_CHK_RETRY 5
->  #endif				/* _EHCI_FSL_H */
-> 
-
+RnJvbTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KDQpXREQg
+dmFsdWUgbXVzdCBiZSBhbHdheXMgc2V0IHRvIG1heCAoMHhGRkYpIG90aGVyd2lzZSB0aGUgaGFy
+ZHdhcmUNCmJsb2NrIHdpbGwgcmVzZXQgdGhlIGJvYXJkIG9uIHRoZSBmaXJzdCBwaW5nIG9mIHRo
+ZSB3YXRjaGRvZy4NCg0KU2lnbmVkLW9mZi1ieTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3Rl
+dkBtaWNyb2NoaXAuY29tPg0KLS0tDQogZHJpdmVycy93YXRjaGRvZy9zYW1hNWQ0X3dkdC5jIHwg
+NCArLS0tDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAzIGRlbGV0aW9ucygtKQ0K
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9zYW1hNWQ0X3dkdC5jIGIvZHJpdmVycy93
+YXRjaGRvZy9zYW1hNWQ0X3dkdC5jDQppbmRleCAxZTkzYzFiLi5kNDk1MzM2IDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy93YXRjaGRvZy9zYW1hNWQ0X3dkdC5jDQorKysgYi9kcml2ZXJzL3dhdGNoZG9n
+L3NhbWE1ZDRfd2R0LmMNCkBAIC0xMTEsOSArMTExLDcgQEAgc3RhdGljIGludCBzYW1hNWQ0X3dk
+dF9zZXRfdGltZW91dChzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICp3ZGQsDQogCXUzMiB2YWx1ZSA9
+IFdEVF9TRUMyVElDS1ModGltZW91dCk7DQogDQogCXdkdC0+bXIgJj0gfkFUOTFfV0RUX1dEVjsN
+Ci0Jd2R0LT5tciAmPSB+QVQ5MV9XRFRfV0REOw0KIAl3ZHQtPm1yIHw9IEFUOTFfV0RUX1NFVF9X
+RFYodmFsdWUpOw0KLQl3ZHQtPm1yIHw9IEFUOTFfV0RUX1NFVF9XREQodmFsdWUpOw0KIA0KIAkv
+Kg0KIAkgKiBXRERJUyBoYXMgdG8gYmUgMCB3aGVuIHVwZGF0aW5nIFdERC9XRFYuIFRoZSBkYXRh
+c2hlZXQgc3RhdGVzOiBXaGVuDQpAQCAtMjUxLDcgKzI0OSw3IEBAIHN0YXRpYyBpbnQgc2FtYTVk
+NF93ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiANCiAJdGltZW91dCA9
+IFdEVF9TRUMyVElDS1Mod2RkLT50aW1lb3V0KTsNCiANCi0Jd2R0LT5tciB8PSBBVDkxX1dEVF9T
+RVRfV0REKHRpbWVvdXQpOw0KKwl3ZHQtPm1yIHw9IEFUOTFfV0RUX1NFVF9XREQoV0RUX1NFQzJU
+SUNLUyhNQVhfV0RUX1RJTUVPVVQpKTsNCiAJd2R0LT5tciB8PSBBVDkxX1dEVF9TRVRfV0RWKHRp
+bWVvdXQpOw0KIA0KIAlyZXQgPSBzYW1hNWQ0X3dkdF9pbml0KHdkdCk7DQotLSANCjIuNy40DQoN
+Cg==
