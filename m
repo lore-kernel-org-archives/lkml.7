@@ -2,134 +2,73 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8265C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642F4C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9832520C01
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="b8LO9ZO3";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="LeWSofyQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2B11A204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfEHAkt (ORCPT
+        id S1726558AbfEHAmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:40:49 -0400
-Received: from node.akkea.ca ([192.155.83.177]:43474 "EHLO node.akkea.ca"
+        Tue, 7 May 2019 20:42:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33673 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbfEHAks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:40:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 0A16C4E2050;
-        Wed,  8 May 2019 00:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1557276048; bh=FgMbez4kMW0wjlFdZNKQ9TjLWgAyTOJ4vTmDZ70BusA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=b8LO9ZO3BxdZwfMc4iyvuUDJSiR/CuuvhDm/DjCmADlr8peaqzk7QiSy6icxDSXeM
-         x4T0DK+nRL/rEs84ZDTP/QfiZE5n/SC+Rp9gYna816JDkEoytZTdAaPIQTjLiWKLf4
-         1iS2PEH5pHFWEXh9Xdh5Jr7FTjHjhi3oWN46dCw4=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hTtW_R1dT7LI; Wed,  8 May 2019 00:40:47 +0000 (UTC)
-Received: from localhost.localdomain (198-48-167-13.cpe.pppoe.ca [198.48.167.13])
-        by node.akkea.ca (Postfix) with ESMTPSA id 012F04E204B;
-        Wed,  8 May 2019 00:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1557276047; bh=FgMbez4kMW0wjlFdZNKQ9TjLWgAyTOJ4vTmDZ70BusA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=LeWSofyQZEzFkWf0+L0eN1obt5zQkeAYJCJ1RN0fWPpLGvUrtceOR4hBjma433FZK
-         bkY6UQdArZXUpGp47RaSjrYV+iZZhZC3UOvc9H+dmpmpFn5F0UCP5n44mmUm1QsgCW
-         vobaakV7bz3kjYfvJyQ2ERSd5BYjfb2duumaAKJw=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH 1/1] usb: typec: tcpci: add functions to read the VBUS voltage
-Date:   Tue,  7 May 2019 18:40:27 -0600
-Message-Id: <20190508004027.16558-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190508004027.16558-1-angus@akkea.ca>
-References: <20190508004027.16558-1-angus@akkea.ca>
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726276AbfEHAmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:42:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zHkQ6mGQz9s00;
+        Wed,  8 May 2019 10:42:38 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Yury Norov <yury.norov@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Breno Leitao <leitao@debian.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Yury Norov <ynorov@marvell.com>
+Subject: Re: [PATCH] powerpc: restore current_thread_info()
+In-Reply-To: <20190507230746.GA19259@yury-thinkpad>
+References: <20190507225121.18676-1-ynorov@marvell.com> <20190507225856.GP23075@ZenIV.linux.org.uk> <20190507230746.GA19259@yury-thinkpad>
+Date:   Wed, 08 May 2019 10:42:37 +1000
+Message-ID: <87h8a5wzcy.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show an error when the VBUS voltage is out of range.
+Yury Norov <yury.norov@gmail.com> writes:
+> On Tue, May 07, 2019 at 11:58:56PM +0100, Al Viro wrote:
+>> On Tue, May 07, 2019 at 03:51:21PM -0700, Yury Norov wrote:
+>> > Commit ed1cd6deb013 ("powerpc: Activate CONFIG_THREAD_INFO_IN_TASK")
+>> > removes the function current_thread_info(). It's wrong because the
+>> > function is used in non-arch code and is part of API.
+>> 
+>> In include/linux/thread_info.h:
+>> 
+>> #ifdef CONFIG_THREAD_INFO_IN_TASK
+>> /*
+>>  * For CONFIG_THREAD_INFO_IN_TASK kernels we need <asm/current.h> for the
+>>  * definition of current, but for !CONFIG_THREAD_INFO_IN_TASK kernels,
+>>  * including <asm/current.h> can cause a circular dependency on some platforms.
+>>  */
+>> #include <asm/current.h>
+>> #define current_thread_info() ((struct thread_info *)current)
+>> #endif
+>
+> Ah, sorry. Then it might be my rebase issue. I was confused because Christophe
+> didn't remove the comment to current_thread_info(), so I decided he
+> removed it erroneously.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- drivers/usb/typec/tcpm/tcpci.c | 35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Yeah you're right, that comment should have been removed too.
 
-diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index a5746657b190..223941e11ef3 100644
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -261,6 +261,26 @@ static int tcpci_set_pd_rx(struct tcpc_dev *tcpc, bool enable)
- 	return 0;
- }
- 
-+static int tcpci_get_vbus_voltage(struct tcpc_dev *tcpc)
-+{
-+	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-+	u16 vbus_reg;
-+	unsigned int vbus_voltage;
-+	int ret, scale;
-+
-+	ret = tcpci_read16(tcpci, TCPC_VBUS_VOLTAGE, &vbus_reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	vbus_voltage = vbus_reg & 0x3f;
-+
-+	scale = (vbus_reg >> 10) & 3;
-+	if (scale == 3)
-+		return -EIO;
-+
-+	return (vbus_voltage << scale) * 25;
-+}
-+
- static int tcpci_get_vbus(struct tcpc_dev *tcpc)
- {
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-@@ -401,6 +421,7 @@ static int tcpci_init(struct tcpc_dev *tcpc)
- irqreturn_t tcpci_irq(struct tcpci *tcpci)
- {
- 	u16 status;
-+	int ret;
- 
- 	tcpci_read16(tcpci, TCPC_ALERT, &status);
- 
-@@ -474,6 +495,20 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
- 		tcpci_write16(tcpci, TCPC_FAULT_STATUS, fault_status);
- 	}
- 
-+	if (status & (TCPC_ALERT_V_ALARM_LO | TCPC_ALERT_V_ALARM_HI)) {
-+		ret = tcpci_get_vbus_voltage(&tcpci->tcpc);
-+
-+		if (ret >= 0) {
-+			if (status & TCPC_ALERT_V_ALARM_LO)
-+				dev_err(tcpci->dev, "Low VBUS voltage %d mV\n",
-+						ret);
-+
-+			if (status & TCPC_ALERT_V_ALARM_HI)
-+				dev_err(tcpci->dev, "High VBUS voltage %d mV\n",
-+						ret);
-+		}
-+	}
-+
- 	return IRQ_HANDLED;
- }
- EXPORT_SYMBOL_GPL(tcpci_irq);
--- 
-2.17.1
-
+cheers
