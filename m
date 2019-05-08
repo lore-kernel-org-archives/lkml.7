@@ -2,83 +2,114 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE51C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37240C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4C821019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05779214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ks8R50Pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfEHMNg (ORCPT
+        id S1728466AbfEHMQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:13:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56132 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728031AbfEHMNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:13:36 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DAC28B007655174000B9;
-        Wed,  8 May 2019 20:13:32 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
- 20:13:24 +0800
-Subject: Re: [PATCH] net: hns3: remove redundant assignment of l2_hdr to
- itself
-To:     Colin King <colin.king@canonical.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190508105135.13170-1-colin.king@canonical.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <e4627235-16a8-60be-4e7b-0a7e36df55c9@huawei.com>
-Date:   Wed, 8 May 2019 20:13:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190508105135.13170-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        Wed, 8 May 2019 08:16:46 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39679 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfEHMQp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:16:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n25so2970944wmk.4;
+        Wed, 08 May 2019 05:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=+uSM2xfSQ11lGMP7BGRPKgpGed0cJqoT69USPPkz3jU=;
+        b=Ks8R50PmLH8B3wYlvGWd9xR78gXMG+K3RiXZmZt7IJD12HkAxPr+weWGElt2Pq+Oiq
+         6EHpYkYVNUldyBbIZgLFhgOmtmS1lGe+c9GmDXIkor1o/YKw6xVHI8Sge4HeT7Tz/rV3
+         pR28gQOzdSUa9+yUpzqGx6q6PlCNGjIjixJDSaBoHnvNNdkAwq23nu7EFHBSF4Eha/Eb
+         IvR/KLR1mfqxUM1oXCNLB4BPdN8PEucgB6GlmYyzZo6X/gWWn5S8FRxJ0Kc8QQ+cNbku
+         HRusIXxlJcTdO5OS/y1URHtWkC0tJ9KOPZZ1vgfTkHgmlJg8TBG1ZF7Avp9fuvLUVySE
+         BHWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=+uSM2xfSQ11lGMP7BGRPKgpGed0cJqoT69USPPkz3jU=;
+        b=mgLxjNRLmAF9eLTsXYWtPmArTk8zMLzPQQj2qxmf1KUbx1/ApDSOeoLZY3RG3fgHmo
+         Ucc+tl25krPFhrQv4J/fpJRBMdCX9b75V4zLDys+puU3V5q/k5XTjrebEdMXJSzZZ10o
+         8zTP1UJcWN3uCGA4qbjrOZVs+SIy3oE5Rr2+L/yItDeuy5NxHtKIu8uQ3liqtYzLCBu2
+         Yky6Pvdiq6FnOS6/taZYKL/4XZ+QdZXkQnhYhBgWJ+MSdOGA8DlAaDj7Uf/Y/PJJXhM0
+         IH3lPvOZSq4v4owurwjBLSOnOt11RuLT2JcdmSqJU4Bo4uqXn5qU+FSBGaDtBa7FMKEn
+         NWwg==
+X-Gm-Message-State: APjAAAUDsgdHmcja567XTzLJ+AXIHROZYsfSsAxl1rvQyHlNMhe1DUX3
+        Bbu4IEIuliICwMLUwxS86ZuVB7Id
+X-Google-Smtp-Source: APXvYqxQtVrDyVQTPETlefWXQ8Z0BnDc1dfeAnKn9pDyxLpMFspzLm3H8P5D9WhnPS9zWn6dt551/A==
+X-Received: by 2002:a1c:c7c8:: with SMTP id x191mr2860289wmf.146.1557317803365;
+        Wed, 08 May 2019 05:16:43 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id p24sm1509368wma.18.2019.05.08.05.16.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 05:16:42 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Shier <pshier@google.com>,
+        Aaron Lewis <aaronlewis@google.com>
+Subject: [PATCH v2] kvm: nVMX: Set nested_run_pending in vmx_set_nested_state after checks complete
+Date:   Wed,  8 May 2019 14:16:39 +0200
+Message-Id: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/8 18:51, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The pointer l2_hdr is being assigned to itself, this is redundant
-> and can be removed.
-> 
-> Addresses-Coverity: ("Evaluation order violation")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-> index 18711e0f9bdf..196a3d780dcf 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-> @@ -810,7 +810,7 @@ static int hns3_set_l2l3l4(struct sk_buff *skb, u8 ol4_proto,
->  			   u8 il4_proto, u32 *type_cs_vlan_tso,
->  			   u32 *ol_type_vlan_len_msec)
->  {
-> -	unsigned char *l2_hdr = l2_hdr = skb->data;
-> +	unsigned char *l2_hdr = skb->data;
+From: Aaron Lewis <aaronlewis@google.com>
 
-Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
+nested_run_pending=1 implies we have successfully entered guest mode.
+Move setting from external state in vmx_set_nested_state() until after
+all other checks are complete.
 
-Thanks.
+Based on a patch by Aaron Lewis.
 
->  	u32 l4_proto = ol4_proto;
->  	union l4_hdr_info l4;
->  	union l3_hdr_info l3;
-> 
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index cec77f30f61c..e58caff92694 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5420,9 +5420,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 	if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
+ 		return 0;
+ 
+-	vmx->nested.nested_run_pending =
+-		!!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+-
+ 	if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+ 	    vmcs12->vmcs_link_pointer != -1ull) {
+ 		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+@@ -5446,9 +5443,14 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
+ 
+ 	vmx->nested.dirty_vmcs12 = true;
++	vmx->nested.nested_run_pending =
++		!!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
++
+ 	ret = nested_vmx_enter_non_root_mode(vcpu, false);
+-	if (ret)
++	if (ret) {
++		vmx->nested.nested_run_pending = 0;
+ 		return -EINVAL;
++	}
+ 
+ 	return 0;
+ }
+-- 
+1.8.3.1
 
