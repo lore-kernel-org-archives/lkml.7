@@ -2,65 +2,165 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7677C04AAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D74C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBBE214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:18:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R7NnV+33"
+	by mail.kernel.org (Postfix) with ESMTP id 77926214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfEHGST (ORCPT
+        id S1728799AbfEHGSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:18:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47290 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbfEHGSR (ORCPT
+        Wed, 8 May 2019 02:18:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34106 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728708AbfEHGST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:18:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VIAWZU6cVFHfjuwthBq/3MQaVv2Psv1M/KiH+oFGKL8=; b=R7NnV+339SGEMtwX3dywO7BGA
-        UdYoVg6pQfiHAF9dTajljsHLLGu9YCBTXUP7E3itA6GS7CDnkN3wRwLElRUSykzJXaTw9IAaRs77O
-        RRp23dTSfhlomJ/0D0TO958wBqLP2NnTu7CfoMzh21SUH/Ui56tGtcvD5HMjhUPXzKmeKDmpbPhOB
-        pgttpOQ+30KP28idBfFggAAz6Q9xLeeo/icv9qmc4f3EefoTE3bGoc82vkwke0IW3/HXGdJxb3Tp4
-        Q34SB95M4cVUGCKStxwJkhdaKi0FBhXbz2O3OOsqVEMBMTdC2i4F6qbr3hrtS/bOMbrz5YpAt0atA
-        bsFLbM4Kg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOFuB-0000hS-HK; Wed, 08 May 2019 06:18:15 +0000
-Date:   Tue, 7 May 2019 23:18:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Wed, 8 May 2019 02:18:19 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x486Gc8t018090
+        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 02:18:18 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sbryuj2rn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 02:18:18 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 8 May 2019 07:18:15 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 May 2019 07:18:06 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x486I5Jq35324154
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 May 2019 06:18:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 354ACA4064;
+        Wed,  8 May 2019 06:18:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1164A4054;
+        Wed,  8 May 2019 06:18:00 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  8 May 2019 06:18:00 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Wed, 08 May 2019 09:18:00 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] MIPS: SGI-IP27: move IP27 specific code out of
- pci-ip27.c into new file
-Message-ID: <20190508061815.GB19227@infradead.org>
-References: <20190507210917.4691-1-tbogendoerfer@suse.de>
- <20190507210917.4691-2-tbogendoerfer@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507210917.4691-2-tbogendoerfer@suse.de>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Richard Kuo <rkuo@codeaurora.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-um@lists.infradead.org, nios2-dev@lists.rocketboards.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v2 12/14] riscv: switch to generic version of pte allocation
+Date:   Wed,  8 May 2019 09:17:09 +0300
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557296232-15361-1-git-send-email-rppt@linux.ibm.com>
+References: <1557296232-15361-1-git-send-email-rppt@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19050806-4275-0000-0000-000003328178
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050806-4276-0000-0000-00003841EF0A
+Message-Id: <1557296232-15361-13-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=967 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905080040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:09:13PM +0200, Thomas Bogendoerfer wrote:
-> Code in pci-ip27.c will be moved to drivers/pci/controller therefore
-> platform specific needs to be extracted and put to the right place.
+The only difference between the generic and RISC-V implementation of PTE
+allocation is the usage of __GFP_RETRY_MAYFAIL for both kernel and user
+PTEs and the absence of __GFP_ACCOUNT for the user PTEs.
 
-I thogh the drivers/pci/controller was nixed by Lorenzo?
+The conversion to the generic version removes the __GFP_RETRY_MAYFAIL and
+ensures that GFP_ACCOUNT is used for the user PTE allocations.
+
+The pte_free() and pte_free_kernel() versions are identical to the generic
+ones and can be simply dropped.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+---
+ arch/riscv/include/asm/pgalloc.h | 29 ++---------------------------
+ 1 file changed, 2 insertions(+), 27 deletions(-)
+
+diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+index 94043cf..48f28bb 100644
+--- a/arch/riscv/include/asm/pgalloc.h
++++ b/arch/riscv/include/asm/pgalloc.h
+@@ -18,6 +18,8 @@
+ #include <linux/mm.h>
+ #include <asm/tlb.h>
+ 
++#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
++
+ static inline void pmd_populate_kernel(struct mm_struct *mm,
+ 	pmd_t *pmd, pte_t *pte)
+ {
+@@ -82,33 +84,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ 
+ #endif /* __PAGETABLE_PMD_FOLDED */
+ 
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+-{
+-	return (pte_t *)__get_free_page(
+-		GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+-}
+-
+-static inline struct page *pte_alloc_one(struct mm_struct *mm)
+-{
+-	struct page *pte;
+-
+-	pte = alloc_page(GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+-	if (likely(pte != NULL))
+-		pgtable_page_ctor(pte);
+-	return pte;
+-}
+-
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-	free_page((unsigned long)pte);
+-}
+-
+-static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
+-{
+-	pgtable_page_dtor(pte);
+-	__free_page(pte);
+-}
+-
+ #define __pte_free_tlb(tlb, pte, buf)   \
+ do {                                    \
+ 	pgtable_page_dtor(pte);         \
+-- 
+2.7.4
+
