@@ -2,242 +2,187 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A4EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544D8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD6220989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="nui6JYUl"
+	by mail.kernel.org (Postfix) with ESMTP id 2531021530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557297703;
+	bh=5VfiQakJiPGMt0g71UJ5S0pfbX5f2t20n5P1wQDvFN0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h7PS81EVHv5Yw/KTv6fuPAtXRbhWXkP+EjZckPdvByFa+MoZ7okNO8tJO7HiLBJjv
+	 BVkGNrV581vkYDwf2l98eXcpS93Y+/sdDbz1Sn9DJraP1cpu6tJAn3waqGWjRTjTv7
+	 2YYwUwWwCwm8cwRiGefln49lSmxp2lqhbwwlYmx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfEHGkd (ORCPT
+        id S1726558AbfEHGlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:40:33 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:9945 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfEHGkd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:40:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1557297629;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=SsUTm1R7UUQ+bTJ7Pc64aIfy+AkoXx22RxCukswczwc=;
-        b=nui6JYUltmmXKziARr5q7vpF1EB//MpMo8eVgZwQnVBTiz3MeIBV9jb4+gAT660b6a
-        hY4WdVllifXJ8gCxjayJEMpvClZU5gV/CvXYxaE6Bd2DttzKVCuVRKSv8uCyi3m8nIB5
-        vs5AX06a+5+GDr3A+lqd+/IIhofulYuXeXGhXWEo4tjKI9zIRI0eBYATr7D+Srok8Pvi
-        ojkhb8wIxWAYFxu6u0ad66VEfH4NmesmHitzu962gfVp4j4Z8jaQTUQMFMDfNU4caukJ
-        S8T/Z6j2XIU7B0NyAE5tGqMcEOvI6X/a2jTmmJrOOxwAfBnKjpuw9aLsKcU1i3pBoHKD
-        C09Q==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbIvSbR/w="
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id R0373fv486YM8ZU
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 8 May 2019 08:34:22 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     neal.liu@mediatek.com
-Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        wsd_upstream@mediatek.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
-Date:   Wed, 08 May 2019 08:34:22 +0200
-Message-ID: <12193108.aNnqf5ydOJ@tauon.chronox.de>
-In-Reply-To: <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
-References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com> <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
+        Wed, 8 May 2019 02:41:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbfEHGll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 02:41:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD52B20989;
+        Wed,  8 May 2019 06:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557297700;
+        bh=5VfiQakJiPGMt0g71UJ5S0pfbX5f2t20n5P1wQDvFN0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tDLkuPR8VSii4fjwWcMr9fg94ONMRB5hpJvnSa87Oa3hccuRy32pBGb4LyAT15yzk
+         QV2aHRueURg58IZDAB42Hl2SDF1WgLagWJ/wekP/lgRSUmZLXTObbo1Ukdorou8E2V
+         eucffPVgoDqKyyF/aU2biwBn8het3WJLzcHPlAyU=
+Date:   Wed, 8 May 2019 08:41:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        Ramneek Mehresh <ramneek.mehresh@freescale.com>,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Suresh Gupta <suresh.gupta@freescale.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Suresh Gupta <B42813@freescale.com>
+Subject: Re: [PATCH v4 2/5] usb: phy: Workaround for USB erratum-A005728
+Message-ID: <20190508064138.GD14085@kroah.com>
+References: <20190125060356.14294-2-yinbo.zhu@nxp.com>
+ <Pine.LNX.4.44L0.1901281034080.1450-100000@iolanthe.rowland.org>
+ <VI1PR04MB4158EB9135C9536D612F0967E9320@VI1PR04MB4158.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB4158EB9135C9536D612F0967E9320@VI1PR04MB4158.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 8. Mai 2019, 05:58:57 CEST schrieb neal.liu@mediatek.com:
-
-Hi liu,
-
-> From: Neal Liu <neal.liu@mediatek.com>
+On Wed, May 08, 2019 at 03:26:09AM +0000, Yinbo Zhu wrote:
 > 
-> For Mediatek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> entropy sources is not accessible from normal world (linux) and
-> rather accessible from secure world (ATF/TEE) only. This driver aims
-> to provide a generic interface to ATF rng service.
 > 
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
->  drivers/char/hw_random/Kconfig      |   16 ++++++
->  drivers/char/hw_random/Makefile     |    1 +
->  drivers/char/hw_random/mt67xx-rng.c |  104
-> +++++++++++++++++++++++++++++++++++ 3 files changed, 121 insertions(+)
->  create mode 100644 drivers/char/hw_random/mt67xx-rng.c
+> > -----Original Message-----
+> > From: Alan Stern [mailto:stern@rowland.harvard.edu]
+> > Sent: 2019年1月28日 23:37
+> > To: Yinbo Zhu <yinbo.zhu@nxp.com>
+> > Cc: Xiaobo Xie <xiaobo.xie@nxp.com>; Jerry Huang <jerry.huang@nxp.com>;
+> > Ran Wang <ran.wang_1@nxp.com>; Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org>; Ramneek Mehresh
+> > <ramneek.mehresh@freescale.com>; Nikhil Badola
+> > <nikhil.badola@freescale.com>; Suresh Gupta <suresh.gupta@freescale.com>;
+> > linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; Suresh Gupta
+> > <B42813@freescale.com>
+> > Subject: Re: [PATCH v4 2/5] usb: phy: Workaround for USB erratum-A005728
+> > 
+> > On Fri, 25 Jan 2019, Yinbo Zhu wrote:
+> > 
+> > > From: Suresh Gupta <B42813@freescale.com>
+> > >
+> > > PHY_CLK_VALID bit for UTMI PHY in USBDR does not set even if PHY is
+> > > providing valid clock. Workaround for this involves resetting of PHY
+> > > and check PHY_CLK_VALID bit multiple times. If PHY_CLK_VALID bit is
+> > > still not set even after 5 retries, it would be safe to deaclare that
+> > > PHY clock is not available.
+> > > This erratum is applicable for USBDR less then ver 2.4.
+> > >
+> > > Signed-off-by: Suresh Gupta <B42813@freescale.com>
+> > > Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> > > ---
+> > > Change in v4:
+> > > 		Incorrect indentation of the continuation line.
+> > > 		replace pr_err with dev_err.
+> > >
+> > >  drivers/usb/host/ehci-fsl.c |   38
+> > +++++++++++++++++++++++++++-----------
+> > >  drivers/usb/host/ehci-fsl.h |    3 +++
+> > >  2 files changed, 30 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
+> > > index 38674b7..373a816 100644
+> > > --- a/drivers/usb/host/ehci-fsl.c
+> > > +++ b/drivers/usb/host/ehci-fsl.c
+> > > @@ -183,6 +183,17 @@ static int fsl_ehci_drv_probe(struct platform_device
+> > *pdev)
+> > >  	return retval;
+> > >  }
+> > >
+> > > +static bool usb_phy_clk_valid(struct usb_hcd *hcd) {
+> > > +	void __iomem *non_ehci = hcd->regs;
+> > > +	bool ret = true;
+> > > +
+> > > +	if (!(ioread32be(non_ehci + FSL_SOC_USB_CTRL) & PHY_CLK_VALID))
+> > > +		ret = false;
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > >  static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+> > >  			       enum fsl_usb2_phy_modes phy_mode,
+> > >  			       unsigned int port_offset)
+> > > @@ -226,6 +237,17 @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+> > >  		/* fall through */
+> > >  	case FSL_USB2_PHY_UTMI:
+> > >  	case FSL_USB2_PHY_UTMI_DUAL:
+> > > +		/* PHY_CLK_VALID bit is de-featured from all controller
+> > > +		 * versions below 2.4 and is to be checked only for
+> > > +		 * internal UTMI phy
+> > > +		 */
+> > > +		if (pdata->controller_ver > FSL_USB_VER_2_4 &&
+> > > +		    pdata->have_sysif_regs && !usb_phy_clk_valid(hcd)) {
+> > > +			dev_err(dev,
+> > > +				"%s: USB PHY clock invalid\n", dev_name(dev));
+> > 
+> > This looks silly; it prints the device name twice (once because that's what
+> > dev_err() does, and then again because you explicitly told it to print the device
+> > name).
+> > 
+> > Look at how dev_err() is used in other parts of the driver and do the same thing.
+> > 
+> > > +			return -EINVAL;
+> > > +		}
+> > > +
+> > >  		if (pdata->have_sysif_regs && pdata->controller_ver) {
+> > >  			/* controller version 1.6 or above */
+> > >  			tmp = ioread32be(non_ehci + FSL_SOC_USB_CTRL); @@ -249,17
+> > +271,11
+> > > @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+> > >  		break;
+> > >  	}
+> > >
+> > > -	/*
+> > > -	 * check PHY_CLK_VALID to determine phy clock presence before writing
+> > > -	 * to portsc
+> > > -	 */
+> > > -	if (pdata->check_phy_clk_valid) {
+> > > -		if (!(ioread32be(non_ehci + FSL_SOC_USB_CTRL) &
+> > > -		    PHY_CLK_VALID)) {
+> > > -			dev_warn(hcd->self.controller,
+> > > -				 "USB PHY clock invalid\n");
+> > > -			return -EINVAL;
+> > > -		}
+> > > +	if (pdata->have_sysif_regs &&
+> > > +	    pdata->controller_ver > FSL_USB_VER_1_6 &&
+> > > +		!usb_phy_clk_valid(hcd)) {
+> > > +		dev_warn(hcd->self.controller, "USB PHY clock invalid\n");
+> > 
+> > Once again, you have a continuation line that is indented by the same amount as
+> > the code in the inner block.  Please fix this properly.
+> Hi Alan stern,
 > 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 25a7d8f..98751d3 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -398,6 +398,22 @@ config HW_RANDOM_MTK
-> 
->  	  If unsure, say Y.
-> 
-> +config HW_RANDOM_MT67XX
-> +	tristate "Mediatek MT67XX Random Number Generator support"
-> +	depends on HW_RANDOM
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	default HW_RANDOM
-> +	help
-> +	  This driver provides kernel-side support for the Random Number
-> +	  Generator hardware found on Mediatek MT67xx SoCs. The difference
-> +	  with mtk-rng is the Random Number Generator hardware is secure
-> +	  access only.
-> +
-> +	  To compile this driver as a module, choose M here. the
-> +	  module will be called mt67xx-rng.
-> +
-> +	  If unsure, say Y.
-> +
->  config HW_RANDOM_S390
->  	tristate "S390 True Random Number Generator support"
->  	depends on S390
-> diff --git a/drivers/char/hw_random/Makefile
-> b/drivers/char/hw_random/Makefile index 7c9ef4a..4be95ab 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_HW_RANDOM_PIC32) += pic32-rng.o
->  obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
->  obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
->  obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
-> +obj-$(CONFIG_HW_RANDOM_MT67XX) += mt67xx-rng.o
->  obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
->  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
->  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
-> diff --git a/drivers/char/hw_random/mt67xx-rng.c
-> b/drivers/char/hw_random/mt67xx-rng.c new file mode 100644
-> index 0000000..e70cbbe
-> --- /dev/null
-> +++ b/drivers/char/hw_random/mt67xx-rng.c
-> @@ -0,0 +1,104 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/of.h>
-> +#include <linux/arm-smccc.h>
-> +#include <linux/soc/mediatek/mtk_sip_svc.h>
-> +
-> +#define PFX			KBUILD_MODNAME ": "
-> +#define MT67XX_RNG_MAGIC	0x74726e67
-> +#define SMC_RET_NUM		4
-> +
-> +struct mt67xx_rng_priv {
-> +	struct hwrng rng;
-> +};
-> +
-> +
-> +static void __rng_sec_read(uint32_t *val)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(MTK_SIP_KERNEL_GET_RND,
-> +		      MT67XX_RNG_MAGIC, 0, 0, 0, 0, 0, 0, &res);
-> +
-> +	val[0] = res.a0;
-> +	val[1] = res.a1;
-> +	val[2] = res.a2;
-> +	val[3] = res.a3;
-> +}
-> +
-> +static int mt67xx_rng_read(struct hwrng *rng, void *buf, size_t max, bool
-> wait) +{
-> +	int i, retval = 0;
-> +	uint32_t val[4] = {0};
-> +	size_t get_rnd_size = sizeof(u32) * SMC_RET_NUM;
-> +
-> +	if (!buf) {
-> +		pr_err("%s, buf is NULL\n", __func__);
-> +		return -EFAULT;
-> +	}
-> +
-> +	while (max >= get_rnd_size) {
-> +		__rng_sec_read(val);
-> +
-> +		for (i = 0; i < SMC_RET_NUM; i++) {
-> +			*(u32 *)buf = val[i];
+> Above code indented is in oder to ensure that every line less than 80 characters,
+> Otherwise, check-patch tool to check patch that will has error.
 
-I am not sure this cast is right - or how is it guaranteed that buf is word-
-aligned?
+No, that's is not what Alan is asking you to do here.  Please fix this
+up to match other multi-line if statements.
 
-> +			buf += sizeof(u32);
-> +		}
-> +
-> +		retval += get_rnd_size;
-> +		max -= get_rnd_size;
-> +	}
-> +
-> +	return retval;
-> +}
-> +
-> +static int mt67xx_rng_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct mt67xx_rng_priv *priv;
-> +
-> +	pr_info(PFX "driver registered\n");
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->rng.name = KBUILD_MODNAME;
-> +	priv->rng.read = mt67xx_rng_read;
-> +	priv->rng.priv = (unsigned long)&pdev->dev;
-> +	priv->rng.quality = 900;
-> +
-> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register rng device: %d\n", 
-ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mt67xx_rng_match[] = {
-> +	{ .compatible = "mediatek,mt67xx-rng", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, mt67xx_rng_match);
-> +
-> +static struct platform_driver mt67xx_rng_driver = {
-> +	.probe = mt67xx_rng_probe,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = mt67xx_rng_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(mt67xx_rng_driver);
-> +
-> +MODULE_DESCRIPTION("Mediatek MT67XX Random Number Generator Driver");
-> +MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
-> +MODULE_LICENSE("GPL");
-
-
-
-Ciao
-Stephan
-
-
+greg k-h
