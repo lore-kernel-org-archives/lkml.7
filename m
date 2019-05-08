@@ -2,102 +2,277 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35C1C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99528C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2FF21479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6605321479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 09:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfEHJlb convert rfc822-to-8bit (ORCPT
+        id S1726916AbfEHJmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 05:41:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51370 "EHLO mx1.suse.de"
+        Wed, 8 May 2019 05:42:55 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39156 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726544AbfEHJlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 05:41:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D0738ADC7;
-        Wed,  8 May 2019 09:41:21 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
+        id S1726603AbfEHJmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 05:42:54 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E2271E1F38C9344801A4;
+        Wed,  8 May 2019 17:42:49 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
+ 17:42:39 +0800
+Subject: Re: [PATCH v6 1/1] iommu: enhance IOMMU dma mode build options
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 0/3] x86_64/ftrace: Emulate calls from int3 when patching functions
-References: <20190508015559.767152678@goodmis.org>
-Date:   Wed, 08 May 2019 11:41:19 +0200
-In-Reply-To: <20190508015559.767152678@goodmis.org> (Steven Rostedt's message
-        of "Tue, 07 May 2019 21:55:59 -0400")
-Message-ID: <87lfzhwaf4.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+References: <20190418135701.24668-1-thunder.leizhen@huawei.com>
+ <20190418135701.24668-2-thunder.leizhen@huawei.com>
+CC:     Hanjun Guo <guohanjun@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ca30a698-8047-9a86-a2f1-0b3e1c8692bf@huawei.com>
+Date:   Wed, 8 May 2019 10:42:25 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190418135701.24668-2-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
-
-> [
->   This is the non-RFC version.
+On 18/04/2019 14:57, Zhen Lei wrote:
+> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
+> opportunity to set {lazy|strict} mode as default at build time. Then put
+> the three config options in an choice, make people can only choose one of
+> the three at a time.
 >
->   It went through and passed all my tests. If there's no objections
->   I'm going to include this in my pull request. I still have patches
->   in my INBOX that may still be included, so I need to run those through
->   my tests as well, so a pull request wont be immediate.
-> ]
-
-<snip />
-
-> Josh Poimboeuf (1):
->       x86_64: Add gap to int3 to allow for call emulation
+> The default IOMMU dma modes on each ARCHs have no change.
 >
-> Peter Zijlstra (2):
->       x86_64: Allow breakpoints to emulate call instructions
->       ftrace/x86_64: Emulate call function while updating in breakpoint handler
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  arch/ia64/kernel/pci-dma.c                |  2 +-
+>  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
+>  arch/s390/pci/pci_dma.c                   |  2 +-
+>  arch/x86/kernel/pci-dma.c                 |  7 ++---
+>  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
+>  drivers/iommu/amd_iommu_init.c            |  3 ++-
+>  drivers/iommu/intel-iommu.c               |  2 +-
+>  drivers/iommu/iommu.c                     |  3 ++-
+>  8 files changed, 48 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
+> index fe988c49f01ce6a..655511dbf3c3b34 100644
+> --- a/arch/ia64/kernel/pci-dma.c
+> +++ b/arch/ia64/kernel/pci-dma.c
+> @@ -22,7 +22,7 @@
+>  int force_iommu __read_mostly;
+>  #endif
+>
+> -int iommu_pass_through;
+> +int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+>
+>  static int __init pci_iommu_init(void)
+>  {
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 3ead4c237ed0ec9..383e082a9bb985c 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+>  	va_end(args);
+>  }
+>
+> -static bool pnv_iommu_bypass_disabled __read_mostly;
+> +static bool pnv_iommu_bypass_disabled __read_mostly =
+> +			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+>  static bool pci_reset_phbs __read_mostly;
+>
+>  static int __init iommu_setup(char *str)
+> diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
+> index 9e52d1527f71495..784ad1e0acecfb1 100644
+> --- a/arch/s390/pci/pci_dma.c
+> +++ b/arch/s390/pci/pci_dma.c
+> @@ -17,7 +17,7 @@
+>
+>  static struct kmem_cache *dma_region_table_cache;
+>  static struct kmem_cache *dma_page_table_cache;
+> -static int s390_iommu_strict;
+> +static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>
+>  static int zpci_refresh_global(struct zpci_dev *zdev)
+>  {
+> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
+> index d460998ae828514..fb2bab42a0a3173 100644
+> --- a/arch/x86/kernel/pci-dma.c
+> +++ b/arch/x86/kernel/pci-dma.c
+> @@ -43,11 +43,8 @@
+>   * It is also possible to disable by default in kernel config, and enable with
+>   * iommu=nopt at boot time.
+>   */
+> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+> -int iommu_pass_through __read_mostly = 1;
+> -#else
+> -int iommu_pass_through __read_mostly;
+> -#endif
+> +int iommu_pass_through __read_mostly =
+> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+>
+>  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
+>
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 6f07f3b21816c64..8a1f1793cde76b4 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
+>  	  debug/iommu directory, and then populate a subdirectory with
+>  	  entries as required.
+>
+> -config IOMMU_DEFAULT_PASSTHROUGH
+> -	bool "IOMMU passthrough by default"
+> +choice
+> +	prompt "IOMMU dma mode"
 
-Reviewed-and-tested-by: Nicolai Stange <nstange@suse.de>
+/s/dma/DMA/
 
-for the whole series. Many, many thanks to everybody involved!
+And how about add "default", as in "Default IOMMU DMA mode" or "IOMMU 
+default DMA mode"?
 
-I'll resend that live patching selftest once this fix here has been
-merged.
+>  	depends on IOMMU_API
+> -        help
+> -	  Enable passthrough by default, removing the need to pass in
+> -	  iommu.passthrough=on or iommu=pt through command line. If this
+> -	  is enabled, you can still disable with iommu.passthrough=off
+> -	  or iommu=nopt depending on the architecture.
+> +	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
+> +	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
+> +	default IOMMU_DEFAULT_STRICT
+> +	help
+> +	  This option allows IOMMU dma mode to be chose at build time, to
 
-Nicolai
+again, capitalize acronyms, i.e. /s/dma/DMA/ (more of these above and below)
 
--- 
-SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB
-21284 (AG Nürnberg)
+> +	  override the default dma mode of each ARCHs, removing the need to
+> +	  pass in kernel parameters through command line. You can still use
+> +	  ARCHs specific boot options to override this option again.
+> +
+> +config IOMMU_DEFAULT_PASSTHROUGH
+
+I think that it may need to be indented, along with the other choices
+
+> +	bool "passthrough"
+> +	help
+> +	  In this mode, the dma access through IOMMU without any addresses
+> +	  transformation. That means, the wrong or illegal dma access can not
+
+transformation, or translation?
+
+> +	  be caught, no error information will be reported.
+>
+>  	  If unsure, say N here.
+>
+> +config IOMMU_DEFAULT_LAZY
+> +	bool "lazy"
+> +	help
+> +	  Support lazy mode, where for every IOMMU DMA unmap operation, the
+> +	  flush operation of IOTLB and the free operation of IOVA are deferred.
+> +	  They are only guaranteed to be done before the related IOVA will be
+> +	  reused.
+> +
+> +config IOMMU_DEFAULT_STRICT
+> +	bool "strict"
+> +	help
+> +	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
+> +	  the free operation of IOVA are guaranteed to be done in the unmap
+> +	  function.
+> +
+> +	  This mode is safer than the two above, but it maybe slow in some high
+
+slow, or slower? And passthough is not safe, so anything is implicitly 
+safer.
+
+> +	  performace scenarios.
+> +
+> +endchoice
+> +
+>  config OF_IOMMU
+>         def_bool y
+>         depends on OF && IOMMU_API
+> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+> index ff40ba758cf365e..16c02b08adb4cb2 100644
+> --- a/drivers/iommu/amd_iommu_init.c
+> +++ b/drivers/iommu/amd_iommu_init.c
+> @@ -166,7 +166,8 @@ struct ivmd_header {
+>  					   to handle */
+>  LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
+>  					   we find in ACPI */
+> -bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
+> +bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+> +					/* if true, flush on every unmap */
+>
+>  LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
+>  					   system */
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 28cb713d728ceef..0c3cc716210f35a 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
+>
+>  static int dmar_map_gfx = 1;
+>  static int dmar_forcedac;
+> -static int intel_iommu_strict;
+> +static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>  static int intel_iommu_superpage = 1;
+>  static int intel_iommu_sm;
+>  static int iommu_identity_mapping;
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 109de67d5d727c2..0ec5952ac60e2a3 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -43,7 +43,8 @@
+>  #else
+>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+>  #endif
+> -static bool iommu_dma_strict __read_mostly = true;
+> +static bool iommu_dma_strict __read_mostly =
+> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>
+>  struct iommu_callback_data {
+>  	const struct iommu_ops *ops;
+> --
+> 1.8.3
+>
+>
+>
+> .
+>
+
+
