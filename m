@@ -7,162 +7,148 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A188C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4B0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3614020656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5858120850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/2JhBJi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnJ19AKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfEHPlR (ORCPT
+        id S1727495AbfEHPmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:41:17 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39629 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfEHPlQ (ORCPT
+        Wed, 8 May 2019 11:42:32 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38249 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEHPmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:41:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w22so8981119pgi.6;
-        Wed, 08 May 2019 08:41:16 -0700 (PDT)
+        Wed, 8 May 2019 11:42:31 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a59so10107807pla.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6nlZyrDFPAuXjOlK7kJCVfvkw03cc4Rw/z9UVKA0jkM=;
-        b=G/2JhBJiH3bwAo5cTbBJg+isnzV1nxr7HW6irNRUPpb+slECHMaqgFSBZb7IOMu4AP
-         8knEQ5cpwLvYp/YNRCpyeWZImGJoj+J53+aPioRUvfxor2Gpg4h4vP9it5nzkzkTUOUO
-         t2HQNzrTuV2nc5UgtbAR9C88kqtHMNKuiIDtuOEATEEn1soGfgtyYSdXJwVFJSih2Hdz
-         xLK8GZoOF5nGEMUDHlf0+TYSPHtzb2N2LS3EgzXrqz9rNe+32nox2JwMtlNl7XTVsc39
-         cbohI1KQsTaoYPtfmLPazbq2qQHRU2hw40RXukeO3M9bdzXDKqOQIH53R9IQR+UulcRJ
-         8FHA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TbpLBJwELA4ZhMuiXOVpcVpNwPXzU1eiQLAkmq/LVxI=;
+        b=mnJ19AKufOjGk8tvHoM9aQnTMOhsQHnP5jlo0s7U4n00Fk4GRGl0B2r4h+iwwuIY04
+         C7rWtS8ncyyTu6X5I7sqqocz9LoyrcjVgLXhIqzaA7JvgSYIy5HYMhCwYdOnQ0s04GUM
+         Fm8ni5HP59wCfQTyOMB1QRgHfwd7kMR8CpNWOdQ3vy9XESduTxsJBdR9XqydvnF5oPc/
+         S8dxkhy7UhYr8MZ/TfvSKnsYajpNn5M4XuMDbtG6Jjc9fhfjmmsLsEjmwM7Qka6Zf4IP
+         aVX/J3e/8m4G8Gr/pxxoHW9uPrsSg6M8kMHqJ2U5ElXhtK3AJyaGlWoCytik03n1GtVK
+         8gUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6nlZyrDFPAuXjOlK7kJCVfvkw03cc4Rw/z9UVKA0jkM=;
-        b=OEgqlbEPz0KhOCHpwWwWyvsD2Qe7nj4fqXIQh/UUhzEEcsP97JJ2uw9v6u0qd7ytci
-         nfsJWyxeiqEMuxiGSwcJz+GucDV7SRALWX3p5/miIr4kyn5hExk+zkiC6Y86Ty8Mgg28
-         hr6c8aHcw4lOP+8qg1kmho7+T3wHzsh8o4p3WTLbIXRoFC7TV7QkgC81wseAE40sCMIN
-         6D4QvHB0TGCw91HUY+Y3Or8s+GpZyHIK6/KjDimRuRQxWmGVDZEL58ZfNkFXFJEgqIW8
-         P1FVuUutFWxldH59rGv1gd0YJYZruopH0KA62e1m3YkXZA0ZKqHLpt0SbOckJKbFVy+n
-         xA7A==
-X-Gm-Message-State: APjAAAXlwE8PeVyl3xjJcRynEDTMW26odc2pRZXTKYcI9iHog/alZpfB
-        JVsePvBtQRyKdhYXJauNFak=
-X-Google-Smtp-Source: APXvYqwouA4u/g0nE8nv2+7NcLZWFYLytNjDxo8XzEPX8QhWsJZ/q3B0WtmIPClcZILTv8Jrxn2kiw==
-X-Received: by 2002:a65:500d:: with SMTP id f13mr49479600pgo.250.1557330075758;
-        Wed, 08 May 2019 08:41:15 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id l19sm21842612pff.1.2019.05.08.08.41.14
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 08:41:14 -0700 (PDT)
-Subject: Re: [PATCH v2] netfilter: xt_owner: Add supplementary groups option
-To:     Lukasz Pawelczyk <l.pawelczyk@samsung.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lukasz Pawelczyk <havner@gmail.com>
-References: <CGME20190508141219eucas1p1e5a899714747b497499976113ea9681f@eucas1p1.samsung.com>
- <20190508141211.4191-1-l.pawelczyk@samsung.com>
- <98f71c64-3887-b715-effb-894224a71ef9@gmail.com>
- <cdba4a3b7f31ae8ece81be270233032fe774bd86.camel@samsung.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <6a6e9754-4f2b-3433-6df0-bbb9d9915582@gmail.com>
-Date:   Wed, 8 May 2019 08:41:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TbpLBJwELA4ZhMuiXOVpcVpNwPXzU1eiQLAkmq/LVxI=;
+        b=mHOaUfEdoh6A3DkDqk3KvaTXJJ1rrkMDT/8Jrbw86ETW1Jw/V16h5wUHHpWrKmiXVD
+         gziVdzoMBQDxXi+iLIFmHMyHp3Jz5bcrnXlQZOTGzRm3oaGB0SLyYH/wZdVRtVYBaDie
+         s64IzNiDA9d1U6nVREVu1T7WHHB6KfB4QtKPQsSq/GSpPrKN2QQ6D2t0l0veC44M66YT
+         s4ll+uHwsUyAoFciAw/N4TqAKdvGbrSqpl9hCcTbzky1OLuKb53YULJhKrqa/LHUqjm2
+         WavrISecYRzB/Cz+OaM9BQXrZD6mM83wmwh63pxaA/EeSa93l06IGkMOUyA85g8InpFf
+         +dMg==
+X-Gm-Message-State: APjAAAULm6la1XPji6nN0Lq15yhzuIyerZBXuWumZZjhogBucYRwslAR
+        c7b9L7LVsnzZW7um2XNQT5tim6sJDHujW55OJHw=
+X-Google-Smtp-Source: APXvYqyxKFSFYNXcsOge68frjTC5/yNeYCovRt6Ak6bdoDpqBQFELMHZxCDw90irFErQVc9z04/EQxw9P36whBeHqS0=
+X-Received: by 2002:a17:902:9b98:: with SMTP id y24mr29157309plp.185.1557330151014;
+ Wed, 08 May 2019 08:42:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cdba4a3b7f31ae8ece81be270233032fe774bd86.camel@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
+ <1557248314-4238-5-git-send-email-akinobu.mita@gmail.com> <81c0d1bd-c117-3fcb-959b-4507504021dd@intel.com>
+In-Reply-To: <81c0d1bd-c117-3fcb-959b-4507504021dd@intel.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Thu, 9 May 2019 00:42:20 +0900
+Message-ID: <CAC5umyjDn579iu4V1pXhKJ_PUQdNgY3LBZWgWgqQw_ZoNd88FQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] nvme.h: add telemetry log page definisions
+To:     "Heitke, Kenneth" <kenneth.heitke@intel.com>
+Cc:     linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+2019=E5=B9=B45=E6=9C=888=E6=97=A5(=E6=B0=B4) 2:28 Heitke, Kenneth <kenneth.=
+heitke@intel.com>:
+>
+>
+>
+> On 5/7/2019 10:58 AM, Akinobu Mita wrote:
+> > Copy telemetry log page definisions from nvme-cli.
+> >
+> > Cc: Johannes Berg <johannes@sipsolutions.net>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Jens Axboe <axboe@fb.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Sagi Grimberg <sagi@grimberg.me>
+> > Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > ---
+> > * v2
+> > - New patch in this version.
+> >
+> >   include/linux/nvme.h | 23 +++++++++++++++++++++++
+> >   1 file changed, 23 insertions(+)
+> >
+> > diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+> > index c40720c..5217fe4 100644
+> > --- a/include/linux/nvme.h
+> > +++ b/include/linux/nvme.h
+> > @@ -396,6 +396,28 @@ enum {
+> >       NVME_NIDT_UUID          =3D 0x03,
+> >   };
+> >
+> > +/* Derived from 1.3a Figure 101: Get Log Page =E2=80=93 Telemetry Host
+> > + * -Initiated Log (Log Identifier 07h)
+> > + */
+> > +struct nvme_telemetry_log_page_hdr {
+> > +     __u8    lpi; /* Log page identifier */
+> > +     __u8    rsvd[4];
+> > +     __u8    iee_oui[3];
+> > +     __le16  dalb1; /* Data area 1 last block */
+> > +     __le16  dalb2; /* Data area 2 last block */
+> > +     __le16  dalb3; /* Data area 3 last block */
+> > +     __u8    rsvd1[368]; /* TODO verify */
+>
+> Remove the TODO
 
+OK.
 
-On 5/8/19 11:25 AM, Lukasz Pawelczyk wrote:
-> On Wed, 2019-05-08 at 07:58 -0700, Eric Dumazet wrote:
->>
->> On 5/8/19 10:12 AM, Lukasz Pawelczyk wrote:
->>> The XT_SUPPL_GROUPS flag causes GIDs specified with XT_OWNER_GID to
->>> be also checked in the supplementary groups of a process.
->>>
->>> Signed-off-by: Lukasz Pawelczyk <l.pawelczyk@samsung.com>
->>> ---
->>>  include/uapi/linux/netfilter/xt_owner.h |  1 +
->>>  net/netfilter/xt_owner.c                | 23 ++++++++++++++++++++-
->>> --
->>>  2 files changed, 21 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/include/uapi/linux/netfilter/xt_owner.h
->>> b/include/uapi/linux/netfilter/xt_owner.h
->>> index fa3ad84957d5..d646f0dc3466 100644
->>> --- a/include/uapi/linux/netfilter/xt_owner.h
->>> +++ b/include/uapi/linux/netfilter/xt_owner.h
->>> @@ -8,6 +8,7 @@ enum {
->>>  	XT_OWNER_UID    = 1 << 0,
->>>  	XT_OWNER_GID    = 1 << 1,
->>>  	XT_OWNER_SOCKET = 1 << 2,
->>> +	XT_SUPPL_GROUPS = 1 << 3,
->>>  };
->>>  
->>>  struct xt_owner_match_info {
->>> diff --git a/net/netfilter/xt_owner.c b/net/netfilter/xt_owner.c
->>> index 46686fb73784..283a1fb5cc52 100644
->>> --- a/net/netfilter/xt_owner.c
->>> +++ b/net/netfilter/xt_owner.c
->>> @@ -91,11 +91,28 @@ owner_mt(const struct sk_buff *skb, struct
->>> xt_action_param *par)
->>>  	}
->>>  
->>>  	if (info->match & XT_OWNER_GID) {
->>> +		unsigned int i, match = false;
->>>  		kgid_t gid_min = make_kgid(net->user_ns, info-
->>>> gid_min);
->>>  		kgid_t gid_max = make_kgid(net->user_ns, info-
->>>> gid_max);
->>> -		if ((gid_gte(filp->f_cred->fsgid, gid_min) &&
->>> -		     gid_lte(filp->f_cred->fsgid, gid_max)) ^
->>> -		    !(info->invert & XT_OWNER_GID))
->>> +		struct group_info *gi = filp->f_cred->group_info;
->>> +
->>> +		if (gid_gte(filp->f_cred->fsgid, gid_min) &&
->>> +		    gid_lte(filp->f_cred->fsgid, gid_max))
->>> +			match = true;
->>> +
->>> +		if (!match && (info->match & XT_SUPPL_GROUPS) && gi) {
->>> +			for (i = 0; i < gi->ngroups; ++i) {
->>> +				kgid_t group = gi->gid[i];
->>> +
->>> +				if (gid_gte(group, gid_min) &&
->>> +				    gid_lte(group, gid_max)) {
->>> +					match = true;
->>> +					break;
->>> +				}
->>> +			}
->>> +		}
->>> +
->>> +		if (match ^ !(info->invert & XT_OWNER_GID))
->>>  			return false;
->>>  	}
->>>  
->>>
->>
->> How can this be safe on SMP ?
->>
-> 
-> From what I see after the group_info rework some time ago this struct
-> is never modified. It's replaced. Would get_group_info/put_group_info
-> around the code be enough?
+> > +     __u8    ctrlavail; /* Controller initiated data avail?*/
+> > +     __u8    ctrldgn; /* Controller initiated telemetry Data Gen # */
+> > +     __u8    rsnident[128];
+> > +     /* We'll have to double fetch so we can get the header,
+> > +      * parse dalb1->3 determine how much size we need for the
+> > +      * log then alloc below. Or just do a secondary non-struct
+> > +      * allocation.
+> > +      */
+>
+> This comment isn't necessary. You usually can't read the entire
+> telemetry log at once and the header is a fixed size. You would likely
+> just read the header followed by reads of the different data areas.
 
-What prevents the data to be freed right after you fetch filp->f_cred->group_info ?
+This comment is derived from nvme-cli.  So firstly, I'll send a patch
+for nvme-cli.  If the changes are accepted, I'll update this comment, too.
 
-
+> > +     __u8    telemetry_dataarea[0];
+> > +};
+> > +
+> >   struct nvme_smart_log {
+> >       __u8                    critical_warning;
+> >       __u8                    temperature[2];
+> > @@ -832,6 +854,7 @@ enum {
+> >       NVME_LOG_FW_SLOT        =3D 0x03,
+> >       NVME_LOG_CHANGED_NS     =3D 0x04,
+> >       NVME_LOG_CMD_EFFECTS    =3D 0x05,
+> > +     NVME_LOG_TELEMETRY_CTRL =3D 0x08,
+> >       NVME_LOG_ANA            =3D 0x0c,
+> >       NVME_LOG_DISC           =3D 0x70,
+> >       NVME_LOG_RESERVATION    =3D 0x80,
+> >
