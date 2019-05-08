@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E33EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B3CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29931216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A888216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfEHOto (ORCPT
+        id S1728260AbfEHOoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:49:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24016 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbfEHOoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59507 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728170AbfEHOol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:45 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:40 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 08 May 2019 07:44:40 -0700
+  by orsmga003.jf.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 297B6B2F; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 3EF8574A; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +43,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 30/62] keys/mktme: Set up a percpu_ref_count for MKTME keys
-Date:   Wed,  8 May 2019 17:43:50 +0300
-Message-Id: <20190508144422.13171-31-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 12/62] x86/mm: Add a helper to retrieve KeyID for a VMA
+Date:   Wed,  8 May 2019 17:43:32 +0300
+Message-Id: <20190508144422.13171-13-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,111 +57,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+We store KeyID in upper bits for vm_page_prot that match position of
+KeyID in PTE. vma_keyid() extracts KeyID from vm_page_prot.
 
-The MKTME key service needs to keep usage counts on the encryption
-keys in order to know when it is safe to free a key for reuse.
+With KeyID in vm_page_prot we don't need to modify any page table helper
+to propagate the KeyID to page table entires.
 
-percpu_ref_count applies well here because the key service will
-take the initial reference and typically hold that reference while
-the intermediary references are get/put. The intermediaries in this
-case are the encrypted VMA's.
-
-Align the percpu_ref_init and percpu_ref_kill with the key service
-instantiate and destroy methods respectively.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 40 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/mktme.h | 12 ++++++++++++
+ arch/x86/mm/mktme.c          |  7 +++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index f70533b1a7fd..496b5c1b7461 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -8,6 +8,7 @@
- #include <linux/key-type.h>
- #include <linux/mm.h>
- #include <linux/parser.h>
-+#include <linux/percpu-refcount.h>
- #include <linux/random.h>
- #include <linux/string.h>
- #include <asm/intel_pconfig.h>
-@@ -80,6 +81,26 @@ int mktme_keyid_from_key(struct key *key)
- 	return 0;
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index 51f831b94179..b5afa31b4526 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -5,6 +5,8 @@
+ #include <linux/page_ext.h>
+ #include <linux/jump_label.h>
+ 
++struct vm_area_struct;
++
+ #ifdef CONFIG_X86_INTEL_MKTME
+ extern phys_addr_t mktme_keyid_mask;
+ extern int mktme_nr_keyids;
+@@ -28,6 +30,16 @@ static inline int page_keyid(const struct page *page)
  }
  
-+struct percpu_ref *encrypt_count;
-+void mktme_percpu_ref_release(struct percpu_ref *ref)
+ 
++#define vma_keyid vma_keyid
++int __vma_keyid(struct vm_area_struct *vma);
++static inline int vma_keyid(struct vm_area_struct *vma)
 +{
-+	unsigned long flags;
-+	int keyid;
++	if (!mktme_enabled())
++		return 0;
 +
-+	for (keyid = 1; keyid <= mktme_nr_keyids; keyid++) {
-+		if (&encrypt_count[keyid] == ref)
-+			break;
-+	}
-+	if (&encrypt_count[keyid] != ref) {
-+		pr_debug("%s: invalid ref counter\n", __func__);
-+		return;
-+	}
-+	percpu_ref_exit(ref);
-+	spin_lock_irqsave(&mktme_map_lock, flags);
-+	mktme_release_keyid(keyid);
-+	spin_unlock_irqrestore(&mktme_map_lock, flags);
++	return __vma_keyid(vma);
 +}
 +
- enum mktme_opt_id {
- 	OPT_ERROR,
- 	OPT_TYPE,
-@@ -225,7 +246,10 @@ static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
- /* Key Service Method called when a Userspace Key is garbage collected. */
- static void mktme_destroy_key(struct key *key)
- {
--	mktme_release_keyid(mktme_keyid_from_key(key));
-+	int keyid = mktme_keyid_from_key(key);
+ #else
+ #define mktme_keyid_mask	((phys_addr_t)0)
+ #define mktme_nr_keyids		0
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index 9dc256e3654b..d4a1a9e9b1c0 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -1,3 +1,4 @@
++#include <linux/mm.h>
+ #include <asm/mktme.h>
+ 
+ /* Mask to extract KeyID from physical address. */
+@@ -30,3 +31,9 @@ struct page_ext_operations page_mktme_ops = {
+ 	.need = need_page_mktme,
+ 	.init = init_page_mktme,
+ };
 +
-+	mktme_map->key[keyid] = (void *)-1;
-+	percpu_ref_kill(&encrypt_count[keyid]);
- }
- 
- /* Key Service Method to create a new key. Payload is preparsed. */
-@@ -241,9 +265,15 @@ int mktme_instantiate_key(struct key *key, struct key_preparsed_payload *prep)
- 	if (!keyid)
- 		return -ENOKEY;
- 
-+	if (percpu_ref_init(&encrypt_count[keyid], mktme_percpu_ref_release,
-+			    0, GFP_KERNEL))
-+		goto err_out;
-+
- 	if (!mktme_program_keyid(keyid, payload))
- 		return MKTME_PROG_SUCCESS;
- 
-+	percpu_ref_exit(&encrypt_count[keyid]);
-+err_out:
- 	spin_lock_irqsave(&mktme_lock, flags);
- 	mktme_release_keyid(keyid);
- 	spin_unlock_irqrestore(&mktme_lock, flags);
-@@ -447,10 +477,18 @@ static int __init init_mktme(void)
- 	/* Initialize first programming targets */
- 	mktme_update_pconfig_targets();
- 
-+	/* Reference counters to protect in use KeyIDs */
-+	encrypt_count = kvcalloc(mktme_nr_keyids + 1, sizeof(encrypt_count[0]),
-+				 GFP_KERNEL);
-+	if (!encrypt_count)
-+		goto free_targets;
-+
- 	ret = register_key_type(&key_type_mktme);
- 	if (!ret)
- 		return ret;			/* SUCCESS */
- 
-+	kvfree(encrypt_count);
-+free_targets:
- 	free_cpumask_var(mktme_leadcpus);
- 	bitmap_free(mktme_target_map);
- free_cache:
++int __vma_keyid(struct vm_area_struct *vma)
++{
++	pgprotval_t prot = pgprot_val(vma->vm_page_prot);
++	return (prot & mktme_keyid_mask) >> mktme_keyid_shift;
++}
 -- 
 2.20.1
 
