@@ -2,115 +2,142 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5369FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC92C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2379920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:01:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vLr9lpNr"
+	by mail.kernel.org (Postfix) with ESMTP id 4581320675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfEHLBm (ORCPT
+        id S1727199AbfEHLET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:01:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50447 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfEHLBl (ORCPT
+        Wed, 8 May 2019 07:04:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726608AbfEHLES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:01:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p21so2715797wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bqSOd5NdwH2sBo5UJZZvv7ez5x168vj6NoDWWxf39h8=;
-        b=vLr9lpNr81dJnJ4ki7Ofpz8YeDdWr5J7E+WbnN/TNKj2AV3rmoRX4bKe2x+R9pq/e6
-         rPwD07ephFcN39P8gkmRM8gmn9BylEndxfZ4ksrIRTw5ZW/qREgIVkccuqVGdZnOC8UO
-         R2CBVpx7dR8q4ZZSV0NxML8KhRgqyivdUNVwS5hIbb54TJ3/5cE6d1tIDK0o/wEkv8iz
-         8Ui+O+TZ3TcY+61yvIhzB1f5KHXZmSrWfMNdge130ZNe+k6xaZlxKDA0/sodnyn9u2wK
-         fotiY/BcQTzEs4psCyDrmZ/FJsiwdKE34X03fM56OH9BWd/Qhv6ezXJUVgz9MLzXnBha
-         rc9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bqSOd5NdwH2sBo5UJZZvv7ez5x168vj6NoDWWxf39h8=;
-        b=EoRh6cLNa0fVIj14qeBVzxvbgali6n3Vuvoh7zrwJFr5+AdRwBxVBCunxAeiTfsKu6
-         wi5uu1CUJT6wNpB119DoIUpShpRANEYlpZ1jI39ArlaiTz+wfhN2qYcQ5L/PxBfWt2yY
-         Cw9yoJ7eqPH35zkD1of6m8iYr+mnPYvuYLXl50fmH/IvyMDw83s/q0d7xopz8E+H/3I8
-         D0KgAeadvJZ9DYtZ9Ufap5ymWshGJKxAjBQzP+qVk2+ags9JimNRsFfTrvf4G5WGdAE5
-         TZyuB1PyjaicTOYAgZ6nksOd5MKPNADZyeXZ9Boq55o/JAasVwT97NWwqLb9y7zSanFd
-         eQHg==
-X-Gm-Message-State: APjAAAUej1Fup6CYgrzHTZbI+FGG+XS+OG/93uvpzCyz8pzUBg+EzmmJ
-        0DlqrxEtA6MfMqhDqBjQplDABalbcIs=
-X-Google-Smtp-Source: APXvYqw1fiLxjnK9R324L7VjjDByPPrSiZVo/OEiG702CWo1hF7gtinHSZSWaINQaniIOrY5HwsZVw==
-X-Received: by 2002:a1c:48d7:: with SMTP id v206mr1187312wma.38.1557313299959;
-        Wed, 08 May 2019 04:01:39 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id a125sm3243927wmc.47.2019.05.08.04.01.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 04:01:39 -0700 (PDT)
-Date:   Wed, 8 May 2019 12:01:37 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v10 06/11] mfd: max77650: new core mfd driver
-Message-ID: <20190508110137.GQ3995@dell>
-References: <20190423090451.23711-1-brgl@bgdev.pl>
- <20190423090451.23711-7-brgl@bgdev.pl>
+        Wed, 8 May 2019 07:04:18 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48B2NiH164193
+        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 07:04:17 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sbw8ka45n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 07:04:17 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Wed, 8 May 2019 12:04:14 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 May 2019 12:04:09 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48B48wv58327292
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 May 2019 11:04:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CB9AAE056;
+        Wed,  8 May 2019 11:04:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84F9DAE058;
+        Wed,  8 May 2019 11:04:07 +0000 (GMT)
+Received: from thinkpad (unknown [9.152.212.151])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 May 2019 11:04:07 +0000 (GMT)
+Date:   Wed, 8 May 2019 13:04:06 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize
+ struct pages for the full memory section
+In-Reply-To: <20190507171806.GG1747@sasha-vm>
+References: <20190507053826.31622-1-sashal@kernel.org>
+        <20190507053826.31622-62-sashal@kernel.org>
+        <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
+        <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
+        <20190507170208.GF1747@sasha-vm>
+        <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
+        <20190507171806.GG1747@sasha-vm>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190423090451.23711-7-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050811-0016-0000-0000-000002798757
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050811-0017-0000-0000-000032D63610
+Message-Id: <20190508130406.3c9237c1@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905080071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019, Bartosz Golaszewski wrote:
+On Tue, 7 May 2019 13:18:06 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Tue, May 07, 2019 at 10:15:19AM -0700, Linus Torvalds wrote:
+> >On Tue, May 7, 2019 at 10:02 AM Sasha Levin <sashal@kernel.org> wrote:
+> >>
+> >> I got it wrong then. I'll fix it up and get efad4e475c31 in instead.
+> >
+> >Careful. That one had a bug too, and we have 891cb2a72d82 ("mm,
+> >memory_hotplug: fix off-by-one in is_pageblock_removable").
+> >
+> >All of these were *horribly* and subtly buggy, and might be
+> >intertwined with other issues. And only trigger on a few specific
+> >machines where the memory map layout is just right to trigger some
+> >special case or other, and you have just the right config.
+> >
+> >It might be best to verify with Michal Hocko. Michal?
 > 
-> Add the core mfd driver for max77650 PMIC. We define five sub-devices
-> for which the drivers will be added in subsequent patches.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/mfd/Kconfig          |  14 +++
->  drivers/mfd/Makefile         |   1 +
->  drivers/mfd/max77650.c       | 232 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/max77650.h |  59 +++++++++
->  4 files changed, 306 insertions(+)
->  create mode 100644 drivers/mfd/max77650.c
->  create mode 100644 include/linux/mfd/max77650.h
+> Michal, is there a testcase I can plug into kselftests to make sure we
+> got this right (and don't regress)? We care a lot about memory hotplug
+> working right.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+We hit the panics on s390 with special z/VM memory layout, but they both
+can be triggered simply by using mem= kernel parameter (and
+CONFIG_DEBUG_VM_PGFLAGS=y).
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With "mem=3075M" (and w/o the commits efad4e475c31 + 24feb47c5fa5), it
+can be triggered by reading from
+/sys/devices/system/memory/memory<x>/valid_zones, or from
+/sys/devices/system/memory/memory<x>/removable, with <x> being the last
+memory block.
+
+This is with 256MB section size and memory block size. On LPAR, with
+256MB section size and 1GB memory block size, for some reason the
+"removable" issue doesn't trigger, only the "valid_zones" issue.
+
+Using lsmem will also trigger it, as it reads both the valid_zones and
+the removable attribute for all memory blocks. So, a test with
+not-section-aligned mem= parameter and using lsmem could be an option.
+
+Regards,
+Gerald
+
