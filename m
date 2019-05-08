@@ -2,124 +2,110 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F16C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F464C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4F621019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEkqFmBv"
+	by mail.kernel.org (Postfix) with ESMTP id E037321019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEHIEV (ORCPT
+        id S1726842AbfEHIEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:04:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33539 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfEHIEU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:04:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e11so12842859wrs.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4Acp/6oDD74k6p5VNFgaJ01iX7kpt0PfB8zkeh7h98U=;
-        b=vEkqFmBv0/MnEs1wycFGDbk/i9F7vCyBezB/oSZbZRfUhWLq528595rXLhxmRs6lmm
-         FMvTqKQS4rcAN4QGzesFif/NdhuBtx69eM6zOCPMHy+Qic83ZpWAPbroFJ/UdmMQUYgW
-         4efbraS2xE+8+XBk7ImVFMZW01KgR2dhA2ZI0xi9cEdVF3x9lFxhqC94uXtJp7kYTDD9
-         2F76ZM85WgFAb9dvKJ1xOvFSmsNKtQI6Oisx1hLROAoMhkMl37icfdjZBw5aabKsRv/8
-         HwKY4nPJB7PeEa0u+NUE5FvnY0iMUCvJYk1Mj5ykwfWs+aJcZjcWuNBcp+fUFqWe3dmu
-         uOYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4Acp/6oDD74k6p5VNFgaJ01iX7kpt0PfB8zkeh7h98U=;
-        b=Qw1bZexRtAAHlTmqEwV2VUVKlZNnDOLPqhQ9vEkmcOiyrtUMpFLb9j8H4d6oEQtn4e
-         uEZukizQFx9KbXRWNDMhRYb97oNBqIWwvN+cyVArkOEogX+L2aiPNOcCO3WMxfciI2or
-         +fEWipl5mG+djrVMj47OsNZJWygYYatHKgxXuzw6VyQyiqYH54mWCyeC5Xlud3w8+fOh
-         FpeK8xcA6ZL0AeTLV5TRVDzMPbhF+2HVVxSHyT7PStJbO6NBWJ0FBP1WkHf+/QdYkQ2E
-         QStG1riT5k0Lspg9dzKtZBzu9XrieyzJ+WfrwXMJMeSjYqyE2Q/loqYklVZ3dl7LvuM7
-         bCTQ==
-X-Gm-Message-State: APjAAAWjOzpFr3K11cauHnuvv/6GL2tBN3p1dDnJBOn5EEfT1s31LKA3
-        v3zy4/vnLE9uU53/+iX7rJogvw==
-X-Google-Smtp-Source: APXvYqz3jd+ocM4x9acmF1cNa5n8/12EvAdEySoeUdTT555Ig+z3xJUXDgi4uhThJqQ8+8N0Or8OiA==
-X-Received: by 2002:a5d:4fd2:: with SMTP id h18mr19311wrw.117.1557302659181;
-        Wed, 08 May 2019 01:04:19 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id t6sm12224246wrn.3.2019.05.08.01.04.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 01:04:18 -0700 (PDT)
-Date:   Wed, 8 May 2019 09:04:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     tony@atomide.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] LM3532 backlight support improvements and relocation
-Message-ID: <20190508080416.GB3995@dell>
-References: <20190407182514.15427-1-jacek.anaszewski@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190407182514.15427-1-jacek.anaszewski@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 8 May 2019 04:04:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52098 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbfEHIEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:04:24 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3797681DE5;
+        Wed,  8 May 2019 08:04:24 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23F2462671;
+        Wed,  8 May 2019 08:04:20 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, kirill.shutemov@linux.intel.com,
+        keescook@chromium.org, Baoquan He <bhe@redhat.com>
+Subject: [PATCH v4] x86/mm/KASLR: Fix the size of vmemmap section
+Date:   Wed,  8 May 2019 16:04:17 +0800
+Message-Id: <20190508080417.15074-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 08 May 2019 08:04:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 07 Apr 2019, Jacek Anaszewski wrote:
+kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
+to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
 
-> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-> 
->   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/lm3532-driver-improvements
+However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
+stamping into the following cpu_entry_area section, if KASLR puts vmemmap
+very close to cpu_entry_area , and the actual area of vmemmap is much
+bigger than 1 TB.
 
-Pulled, thanks.
+So here calculate the actual size of vmemmap region, then align up to 1 TB
+boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
+The current code reserves 0.5 PB for vmemmap in 5-level. In this new way,
+the left space can be saved to join randomization to increase the entropy.
 
-> for you to fetch changes up to b3e9d18dc4a5e4d329dea32b59bdde5e012ae64a:
-> 
->   leds: lm3532: Introduce the lm3532 LED driver (2019-04-06 21:06:07 +0200)
-> 
-> Thanks,
-> Jacek Anaszewski
-> 
-> ----------------------------------------------------------------
-> LM3532 backlight driver improvements and relocation.
-> ----------------------------------------------------------------
-> Dan Murphy (4):
->       dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
->       ARM: dts: omap4-droid4: Update backlight dt properties
->       mfd: ti-lmu: Remove LM3532 backlight driver references
->       leds: lm3532: Introduce the lm3532 LED driver
-> 
->  .../devicetree/bindings/leds/leds-lm3532.txt       | 101 +++
->  Documentation/devicetree/bindings/mfd/ti-lmu.txt   |  20 -
->  arch/arm/boot/dts/omap4-droid4-xt894.dts           |  27 +-
->  drivers/leds/Kconfig                               |  10 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-lm3532.c                         | 683 +++++++++++++++++++++
->  drivers/mfd/ti-lmu.c                               |  11 -
->  include/linux/mfd/ti-lmu-register.h                |  44 --
->  include/linux/mfd/ti-lmu.h                         |   1 -
->  9 files changed, 813 insertions(+), 85 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
->  create mode 100644 drivers/leds/leds-lm3532.c
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Acked-by: Kirill A. Shutemov <kirill@linux.intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+v3->v4:
+  Fix the incorrect style of code comment;
+  Add ack tags from Kirill and Kees.
+v3 discussion is here:
+  http://lkml.kernel.org/r/20190422091045.GB3584@localhost.localdomain
 
+ arch/x86/mm/kaslr.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index dc3f058bdf9b..c0eedb85a92f 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
+ } kaslr_regions[] = {
+ 	{ &page_offset_base, 0 },
+ 	{ &vmalloc_base, 0 },
+-	{ &vmemmap_base, 1 },
++	{ &vmemmap_base, 0 },
+ };
+ 
+ /* Get size in bytes used by the memory region */
+@@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
+ 	unsigned long rand, memory_tb;
+ 	struct rnd_state rand_state;
+ 	unsigned long remain_entropy;
++	unsigned long vmemmap_size;
+ 
+ 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+ 	vaddr = vaddr_start;
+@@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
+ 	if (memory_tb < kaslr_regions[0].size_tb)
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
++	/*
++	 * Calculate how many TB vmemmap region needs, and aligned to
++	 * 1TB boundary.
++	 */
++	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
++		sizeof(struct page);
++	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
++
+ 	/* Calculate entropy available between regions */
+ 	remain_entropy = vaddr_end - vaddr_start;
+ 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.2
+
