@@ -2,109 +2,296 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7744BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82CEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EA621019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCB0216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfEHTAG (ORCPT
+        id S1727937AbfEHTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:00:06 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:40689 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbfEHTAG (ORCPT
+        Wed, 8 May 2019 15:00:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51175 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbfEHTA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:00:06 -0400
-Received: by mail-it1-f196.google.com with SMTP id g71so5674197ita.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:00:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xFf9uuAjtBL9IH9yaswsFff4UsAX0yv8nQW3HavZOd0=;
-        b=P96IPVq7a+MzxzE6zhmUbfGS9F4NHE58wjnePj+tjakHQwISmw+gMoiR82a711Ya37
-         POtASZNuaDC6KyGpSokGHaYNwdwLJIFb3iQIAnViXDEoE7zvKUFTJpJ2S3fiyCgkLxKH
-         +oavXVtKl+P9bm/K8YcPTAg9bGn2GLUHvMgBdpAAM04K+IFPAhG3X7WAQWOVGPjuGxhj
-         /L6Nx+FdR9lfr4gOeKmZRijdEXRlza2d2TYOuvPfQXxm2BYISZzfhGRJmpuPiiiPZg/Q
-         3PSlvX8pplZ90RcbOl8F93tmffEqEXzeLZda8nnDk+O1buofetwqpuuMQcI8ERMYfW6z
-         cRrg==
-X-Gm-Message-State: APjAAAWGulrqEgw+qZJpG9aYwcw4njedYBClnWExSh8IuG1MZM1Az5+P
-        AN3D+9ATETMtLeHEexL9n8MzSA==
-X-Google-Smtp-Source: APXvYqw6OgdbT39YQKJ9xLRkJPqn9ZlqEwws+dWhkTy0exKzhj9IaRuEi42/6M1yafHGW//gpVp7CA==
-X-Received: by 2002:a24:2c8a:: with SMTP id i132mr4594039iti.130.1557342005215;
-        Wed, 08 May 2019 12:00:05 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id r22sm841996ioh.54.2019.05.08.12.00.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 08 May 2019 12:00:04 -0700 (PDT)
-Date:   Wed, 8 May 2019 13:00:00 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     linux-mmc@vger.kernel.org
-Cc:     djkurtz@chromium.org, hongjiefang <hongjiefang@asrmicro.com>,
-        Jennifer Dahm <jennifer.dahm@ni.com>,
-        linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        Kyle Roeschley <kyle.roeschley@ni.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, rrangel@chromium.org
-Subject: Re: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after
- reset
-Message-ID: <20190508190000.GA156909@google.com>
-References: <20190501175457.195855-1-rrangel@chromium.org>
- <20190503151224.GA3650@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503151224.GA3650@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 8 May 2019 15:00:28 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hORnL-0001aA-PC; Wed, 08 May 2019 19:00:00 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     keith.busch@intel.com, axboe@fb.com, hch@lst.de, sagi@grimberg.me
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] nvme-pci: Use non-operational power state instead of D3 on Suspend-to-Idle
+Date:   Thu,  9 May 2019 02:59:55 +0800
+Message-Id: <20190508185955.11406-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 09:12:24AM -0600, Raul Rangel wrote:
-> On Wed, May 01, 2019 at 11:54:56AM -0600, Raul E Rangel wrote:
-> > I am running into a kernel panic. A task gets stuck for more than 120
-> > seconds. I keep seeing blkdev_close in the stack trace, so maybe I'm not
-> > calling something correctly?
-> > 
-> > Here is the panic: https://privatebin.net/?8ec48c1547d19975#dq/h189w5jmTlbMKKAwZjUr4bhm7Q2AgvGdRqc5BxAc=
-> > 
-> > I sometimes see the following:
-> > [  547.943974] udevd[144]: seq 2350 '/devices/pci0000:00/0000:00:14.7/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1' is taking a long time
-> > 
-> > I was getting the kernel panic on a 4.14 kernel: https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f3dc032faf4d074f20ada437e2d081a28ac699da/drivers/mmc/host
-> > So I'm guessing I'm missing an upstream fix.
-> > 
-> 
-> I'll keep trying to track down the hung task I was seeing on 4.14. But I
-> don't think that's related to these patches. I might just end up
-> backporting the blk-mq patches to our 4.14 branch since I suspect that
-> fixes it.
+Several NVMes consume lots of power during Suspend-to-Idle.
 
-So I tracked down the hung task in 4.14, it's a resource leak.
-mmc_cleanup_queue stops the worker thread. If there were any requests in
-the queue they would be holding onto a reference of mmc_blk_data. When
-mmc_blk_remove_req calls mmc_blk_put, there are still references to md, so
-it never calls blk_cleanup_queue, and the requests stay in the queue
-forever.
+According to the NVMe vendors, APST should be used and there are two
+things that should be prevented:
+- Controller shutdown (CC.SHN)
+- PCI D3
 
-Fortunately Adrian already has a fix for this: https://lore.kernel.org/patchwork/patch/856512/
-I think we should cherry-pick 41e3efd07d5a02c80f503e29d755aa1bbb4245de
-into v4.14. I've tried it locally and it fixes the kernel panic I was
-seeing.
+I think that's because the Windows Modern Standby design document [1]
+states below as a requirement:
+"
+Akin to AHCI PCIe SSDs, NVMe SSDs need to provide the host with a
+non-operational power state that is comparable to DEVSLP (<5mW draw,
+<100ms exit latency) in order to allow the host to perform appropriate
+transitions into Modern Standby. Should the NVMe SSD not expose such a
+non-operational power state, autonomous power state transitions (APST)
+is the only other option to enter Modern Standby successfully.
+"
 
-I've also sent out two more patches for v4.14 that need to be applied
-with Adrian's patch:
-* https://patchwork.kernel.org/patch/10936439/
-* https://patchwork.kernel.org/patch/10936441/
+D3 wasn't mentioned at all, though for some vendors D3 still put the
+device into a low power state, others disable APST after trasition to
+D3.
 
-As for this patch, are there any comments? I have a test running that is
-doing random connect/disconnects, and it's over 6k iterations now.
+So instead of disabling NVMe controller in suspend callback we do the
+following instead:
+- Make sure all IRQs are quiesced
+- Stop all queues
+- Prevent the device entering D3
+- Use memory barrier to make sure DMA operations are flushed on HMB devices
 
-Thanks,
-Raul
+This patch has been verified on several different NVMes:
+- Intel
+- Hynix
+- LiteOn
+- Micron
+- WDC
+- Samsung
+- Tohiba
+
+With the new suspend routine, the laptop I tested use roughly 0.8W
+under Suspend-to-Idle, and resume time is faster than the original
+D3 scheme.
+
+The only one exception so far is Toshiba XG5, which works with the old
+suspend routine, so introduce a new quirk for XG5.
+We are working with Toshiba to root cause the issue on XG5.
+
+[1] https://docs.microsoft.com/en-us/windows-hardware/design/device-experiences/part-selection#ssd-storage
+
+Tested-by: Lucien Kao <Lucien_kao@compal.com>
+Tested-by: Mice Lin <mice_lin@wistron.com>
+Tested-by: Jason Tan <LiangChuan.Tan@wdc.com>
+Tested-by: Cody Liu (codyliu) <codyliu@micron.com>
+Tested-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/nvme/host/core.c |   8 +++
+ drivers/nvme/host/nvme.h |   8 +++
+ drivers/nvme/host/pci.c  | 102 +++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 115 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index a6644a2c3ef7..929db749da98 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3903,6 +3903,14 @@ static inline void _nvme_check_size(void)
+ 	BUILD_BUG_ON(sizeof(struct nvme_directive_cmd) != 64);
+ }
+ 
++void nvme_enter_deepest(struct nvme_ctrl *ctrl)
++{
++	int ret = nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, ctrl->npss,
++				    NULL, 0, NULL);
++	if (ret)
++		dev_warn(ctrl->device, "failed to set deepest non-operational state (%d)\n", ret);
++}
++EXPORT_SYMBOL_GPL(nvme_enter_deepest);
+ 
+ static int __init nvme_core_init(void)
+ {
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 5ee75b5ff83f..ea40a83314ae 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -92,6 +92,11 @@ enum nvme_quirks {
+ 	 * Broken Write Zeroes.
+ 	 */
+ 	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
++
++	/*
++	 * Use D3 on S2I regardless of NPSS.
++	 */
++	NVME_QUIRK_USE_D3_ON_S2I		= (1 << 10),
+ };
+ 
+ /*
+@@ -229,6 +234,7 @@ struct nvme_ctrl {
+ 	/* Power saving configuration */
+ 	u64 ps_max_latency_us;
+ 	bool apst_enabled;
++	bool suspend_to_idle;
+ 
+ 	/* PCIe only: */
+ 	u32 hmpre;
+@@ -467,6 +473,8 @@ int nvme_delete_ctrl(struct nvme_ctrl *ctrl);
+ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp,
+ 		void *log, size_t size, u64 offset);
+ 
++void nvme_enter_deepest(struct nvme_ctrl *ctrl);
++
+ extern const struct attribute_group *nvme_ns_id_attr_groups[];
+ extern const struct block_device_operations nvme_ns_head_ops;
+ 
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 3e4fb891a95a..dea42b41f9a8 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -23,6 +23,7 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/sed-opal.h>
+ #include <linux/pci-p2pdma.h>
++#include <linux/suspend.h>
+ 
+ #include "trace.h"
+ #include "nvme.h"
+@@ -2828,12 +2829,98 @@ static void nvme_remove(struct pci_dev *pdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
++static void nvme_do_suspend_to_idle(struct pci_dev *pdev)
++{
++	struct nvme_dev *ndev = pci_get_drvdata(pdev);
++
++	pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
++	ndev->ctrl.suspend_to_idle = true;
++
++	nvme_start_freeze(&ndev->ctrl);
++	nvme_wait_freeze_timeout(&ndev->ctrl, NVME_IO_TIMEOUT);
++	nvme_stop_queues(&ndev->ctrl);
++
++	nvme_enter_deepest(&ndev->ctrl);
++
++	if (ndev->ctrl.queue_count > 0) {
++		nvme_disable_io_queues(ndev);
++		nvme_poll_irqdisable(&ndev->queues[0], -1);
++	}
++
++	nvme_suspend_io_queues(ndev);
++	nvme_suspend_queue(&ndev->queues[0]);
++	pci_free_irq_vectors(pdev);
++
++	blk_mq_tagset_busy_iter(&ndev->tagset, nvme_cancel_request, &ndev->ctrl);
++	blk_mq_tagset_busy_iter(&ndev->admin_tagset, nvme_cancel_request, &ndev->ctrl);
++
++	/* Make sure all HMB DMA operations are done */
++	mb();
++}
++
++static int nvme_do_resume_from_idle(struct pci_dev *pdev)
++{
++	struct nvme_dev *ndev = pci_get_drvdata(pdev);
++	int result;
++
++	pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
++	ndev->ctrl.suspend_to_idle = false;
++
++	result = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
++	if (result < 0)
++		goto out;
++
++	result = nvme_pci_configure_admin_queue(ndev);
++	if (result)
++		goto out;
++
++	result = nvme_alloc_admin_tags(ndev);
++	if (result)
++		goto out;
++
++	ndev->ctrl.max_hw_sectors = NVME_MAX_KB_SZ << 1;
++	ndev->ctrl.max_segments = NVME_MAX_SEGS;
++	mutex_unlock(&ndev->shutdown_lock);
++
++	result = nvme_init_identify(&ndev->ctrl);
++	if (result)
++		goto out;
++
++	result = nvme_setup_io_queues(ndev);
++	if (result)
++		goto out;
++
++	if (ndev->online_queues < 2) {
++		dev_warn(ndev->ctrl.device, "IO queues not created\n");
++		nvme_kill_queues(&ndev->ctrl);
++		nvme_remove_namespaces(&ndev->ctrl);
++	} else {
++		nvme_start_queues(&ndev->ctrl);
++		nvme_wait_freeze(&ndev->ctrl);
++		nvme_dev_add(ndev);
++		nvme_unfreeze(&ndev->ctrl);
++	}
++
++	nvme_start_ctrl(&ndev->ctrl);
++
++	return 0;
++
++ out:
++	nvme_remove_dead_ctrl(ndev, result);
++	return result;
++}
++
+ static int nvme_suspend(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
+ 
+-	nvme_dev_disable(ndev, true);
++	if (IS_ENABLED(CONFIG_ACPI) && pm_suspend_via_s2idle() &&
++	    ndev->ctrl.npss && !(ndev->ctrl.quirks & NVME_QUIRK_USE_D3_ON_S2I))
++		nvme_do_suspend_to_idle(pdev);
++	else
++		nvme_dev_disable(ndev, true);
++
+ 	return 0;
+ }
+ 
+@@ -2841,9 +2928,16 @@ static int nvme_resume(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
++	int result = 0;
+ 
+-	nvme_reset_ctrl(&ndev->ctrl);
+-	return 0;
++	if (ndev->ctrl.suspend_to_idle) {
++		result = nvme_do_resume_from_idle(pdev);
++		if (result)
++			dev_warn(dev, "failed to resume from idle state (%d)\n", result);
++	} else
++		nvme_reset_ctrl(&ndev->ctrl);
++
++	return result;
+ }
+ #endif
+ 
+@@ -2921,6 +3015,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x5845),	/* Qemu emulated controller */
+ 		.driver_data = NVME_QUIRK_IDENTIFY_CNS |
+ 				NVME_QUIRK_DISABLE_WRITE_ZEROES, },
++	{ PCI_DEVICE(0x1179, 0x0116),	/* Toshiba XG5 */
++		.driver_data = NVME_QUIRK_USE_D3_ON_S2I, },
+ 	{ PCI_DEVICE(0x1bb1, 0x0100),   /* Seagate Nytro Flash Storage */
+ 		.driver_data = NVME_QUIRK_DELAY_BEFORE_CHK_RDY, },
+ 	{ PCI_DEVICE(0x1c58, 0x0003),	/* HGST adapter */
+-- 
+2.17.1
+
