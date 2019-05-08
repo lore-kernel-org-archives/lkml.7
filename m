@@ -2,96 +2,90 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D367C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BA4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52279204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557346896;
-	bh=HM8Zexg5fyYXYYnftIe90ImQAhfUbTY7yCvkGYUdcv0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LncXcubo2H/w4VeI9k9dnKgePoXI9TtXVMs+Xy6LtZRZgFlubpf5NknS3+yWjCsiu
-	 Uoa5agKIBdFeIuKGLwf/ibBr3TmKEKAbHc3CT4/ZGPcc3S4dmvMWaYB57ArRuPFGtl
-	 lZ07PKkfoWQTzAQlAEHaz48RPCKrusUN36rgw1OM=
+	by mail.kernel.org (Postfix) with ESMTP id B680820675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bdqEsys2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfEHUVf (ORCPT
+        id S1728303AbfEHUW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:21:35 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42975 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfEHUVe (ORCPT
+        Wed, 8 May 2019 16:22:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54714 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfEHUW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:21:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 188so28611ljf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YNifpvFw3YJp0jtYSAGlVH5MnjXwA/O9EoLNdihZ8Vk=;
-        b=iGbILcjlPkScfe3+kL4rx1YCDG0rLGj0OCxrAUVBg3IlsAhRS9DY04SkRQIoFsxih3
-         xRoNOXhZ1lu58a4WaA1997ouURMmXG/VMAMERNTrT4TJkEYC9+TcKMiCbpmJJW4U1Pp5
-         G8lMUyOfOoY8+mEM0ARD57qYPiTTCm+xulpbo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YNifpvFw3YJp0jtYSAGlVH5MnjXwA/O9EoLNdihZ8Vk=;
-        b=BC0v3yKXd0VdyyjLwcnAU/XhI8ozkOW10HyE7bL+dqrvCrgsRFFdXtBwBAADSAHq+N
-         CHXs5MG/DnwjRvEuc6Sy7BqRqcCd5VFeXnqx4Ovhh04tlCpJG9aSMMbSijPllSRj1x0F
-         GUIS+iExIwsfzG2ZHN7E3dZ3p3qJWoXTkdTHReYQAZ5pvHJJlHST8rtLHCrzS6IYUNhd
-         lXY0YcQk3iP3o4iUevGbgeTScWs6VS4h/B4k4DOPocOXve7n89kDgO2GpxwzQPwaxGpH
-         +o7sjlC2K9VTI4Cyscw6pR/ktskK9QsopjgrvGo1iF3GBGjCMXVkbVNQih23mOoWTM3y
-         YGVQ==
-X-Gm-Message-State: APjAAAVS5+yAuba3rOpEfwx2G/lDi4DQpcxL3IDtDfAZZXB5S1weDiJi
-        wONRpXhbnlGCixaFnF2V8JhHlSB3Q0M=
-X-Google-Smtp-Source: APXvYqyNlZOUIURzW8uhu3FOe3SFGac56kPhFfj8dLM4iu42oOCRLj26eLrS3loPJxbtTe6pVyXDng==
-X-Received: by 2002:a2e:9993:: with SMTP id w19mr9066949lji.111.1557346892086;
-        Wed, 08 May 2019 13:21:32 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id y131sm2596983lfc.76.2019.05.08.13.21.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 13:21:31 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id k8so32954lja.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:21:30 -0700 (PDT)
-X-Received: by 2002:a2e:801a:: with SMTP id j26mr12914689ljg.2.1557346890466;
- Wed, 08 May 2019 13:21:30 -0700 (PDT)
+        Wed, 8 May 2019 16:22:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hdT4nb0cGuPnHMbL5NAXdzYKa3DNcwqzJrUuCUCeNYs=; b=bdqEsys2xjpVja6b0AxAJI2Rl
+        TBGp2ktget+NTTuLaqPHkhJd2oCHu/91mNQ3ElPn3IP6sBv6y0NjKfGoB2ZjhI9jALeBZvMdi87IO
+        bdGYLSz67o+eM8pK685SWO8sxBq1B5Zy+5ib/A2HtVxrNG2ACM+UvmxoRpw43gaG+lqY9rmnDj5AT
+        yaTPCTKWZI6xAzxHGfl1QxyHIrE+abjWdcA08epLLoL1NtnrSWRBHuoqXYvYtJXMNKy4gBi2bEzOv
+        H+qxhboJJrmRjo5c0bkTMr9iTK3mfp5Gm8akWC9r9eyrime73Uo/Qriwi8rGH2wdd3mCpa6623EUU
+        +nm9qo15A==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOT5d-0007uG-4T; Wed, 08 May 2019 20:22:57 +0000
+Subject: Re: linux-next: Tree for May 8 (drivers/media/pci/meye/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20190508173403.6088d0db@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f4242ed8-971e-7d07-7df9-628c40d7dbf7@infradead.org>
+Date:   Wed, 8 May 2019 13:22:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
- <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
- <CAHk-=whbrADQrEezs=-t0QsKw-qaVU_2s2DqxLAkcczxc62SLQ@mail.gmail.com> <CAHc6FU40HucCUzx5k2obs8m6dXS08NmXBM-tFOq7fSbLduHiGw@mail.gmail.com>
-In-Reply-To: <CAHc6FU40HucCUzx5k2obs8m6dXS08NmXBM-tFOq7fSbLduHiGw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 8 May 2019 13:21:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whqKCxGfh8RfR15Xz-pB1SuyX3cJRAo90=Bww4rNS6bqA@mail.gmail.com>
-Message-ID: <CAHk-=whqKCxGfh8RfR15Xz-pB1SuyX3cJRAo90=Bww4rNS6bqA@mail.gmail.com>
-Subject: Re: GFS2: Pull Request
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     cluster-devel <cluster-devel@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Tobin C. Harding" <me@tobin.cc>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190508173403.6088d0db@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 1:17 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
->
-> Would it make sense to describe how to deal with merge conflicts in
-> Documentation/maintainer/pull-requests.rst to stop people from getting
-> this wrong over and over again?
+On 5/8/19 12:34 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20190507:
+> 
+> The ubifs tree gained a conflict against Linus' tree.
+> 
 
-Probably. I do think it got written up at some point (lwn or something
-like that), but it's possible it never got made into an actual
-documentation file..
 
-Anybody want to try to massage that email into the appropriate doc file?
+Hi Mauro,
 
-              Linus
+Commit 6159e12e11770fb25e748af90f6c5206c1df09ee:
+media: meye: allow building it with COMPILE_TEST on non-x86
+
+causes a build failure when
+CONFIG_VIDEO_MEYE=y
+CONFIG_SONY_LAPTOP=m
+
+
+ld: drivers/media/pci/meye/meye.o: in function `meye_s_ctrl':
+meye.c:(.text+0x5bb): undefined reference to `sony_pic_camera_command'
+ld: meye.c:(.text+0x5db): undefined reference to `sony_pic_camera_command'
+ld: meye.c:(.text+0x5fb): undefined reference to `sony_pic_camera_command'
+ld: meye.c:(.text+0x61b): undefined reference to `sony_pic_camera_command'
+ld: meye.c:(.text+0x63b): undefined reference to `sony_pic_camera_command'
+ld: drivers/media/pci/meye/meye.o:meye.c:(.text+0x65b): more undefined references to `sony_pic_camera_command' follow
+
+
+
+-- 
+~Randy
