@@ -2,87 +2,178 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B741C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C45EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6E7214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8cY6XrZ"
+	by mail.kernel.org (Postfix) with ESMTP id E315F214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfEHNqO (ORCPT
+        id S1727833AbfEHNrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:46:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35410 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbfEHNqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:46:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so9972920plp.2;
-        Wed, 08 May 2019 06:46:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L0vV4CXgxZrxMQI39HyAbLAuE39R1lIDGlJLQVLUiF4=;
-        b=C8cY6XrZEN+XwJeq8JGQToBjLffxQEdVeDyR1/+FCVSPVbhn2S1gSCRDQW9BpzMksx
-         nzXiYSBE8JQr45neyIp2zmUemrmjW2NYN6FlAkunL5lrZvlnj3g2cwjzX1Bj+nGhYe20
-         MyDXWWttDreiuqfIUSCbXThlNW4wYNCJSq2s+P/IHoHnmOhwKo2OzFePhtv1Clmysa3A
-         5Lq0h2UK7CWeTCVPZQwpFHzwYdRWyVLUg48xJYOb1/ZQXXxEoGuqJXgzU58IVNmk8o0i
-         cbnY1nPbsq6REpWJzSwvCQXGkYq2qMSdf/qOQSMQK4oHtzCpMfIkTvob9XZGwhGH/ehI
-         n70w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L0vV4CXgxZrxMQI39HyAbLAuE39R1lIDGlJLQVLUiF4=;
-        b=AvKKwQvINESdbUuKGeZoG7HTXVElUlQjxTYDCLZ1OrOW7Qlo0sJIGZ4qWvxETvhHXc
-         xrfrK4S+Qg+KzLoyukiAkS8LqDn7B0zLAgGZbAc5IFQLGCZg3c73u9A/DXN25EdCjJtL
-         uT3WGvuVPvqvNVcmw3RoBRSGGxQ8mZqgOMPwP6AKNIRh8LR3oQ09p2QSuBFbGRL0Ty/Z
-         B7c3B1PK/C2A43AsPyV0yIBrIJ+bBHvudWxzSMiiqhpntnAQI4bSO0/cxIFlsREYfeaz
-         Fpds68pkW+scQwYHrsYktVZ8SQOZRN8r2ZISjPZzyPugj0wBo8hPyc2Vnm/YWd0y6Gy1
-         G86A==
-X-Gm-Message-State: APjAAAUwAlwv27kWhBCEm6zc4gDKqG80CeV+A01Y04TyEXw1kXy34vt0
-        u3HrblqhdCcCnG2IhkKDAuIOHcixUByRR5NIeFCez21OQH0=
-X-Google-Smtp-Source: APXvYqxL17budVzpiZOBUwNHLqNtvu5dXiUwnYm6Wq/ZeS6BNxu3DAOKksiPiNY9uKw4EEoHuSoVJteDRdsB4TbARK4=
-X-Received: by 2002:a17:902:758b:: with SMTP id j11mr48233418pll.87.1557323173098;
- Wed, 08 May 2019 06:46:13 -0700 (PDT)
+        Wed, 8 May 2019 09:47:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33752 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbfEHNrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:47:19 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3174D307EA8C;
+        Wed,  8 May 2019 13:47:18 +0000 (UTC)
+Received: from x230.aquini.net (dhcp-17-61.bos.redhat.com [10.18.17.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3429660CA1;
+        Wed,  8 May 2019 13:47:16 +0000 (UTC)
+Date:   Wed, 8 May 2019 09:47:14 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Sandeep Patil <sspatil@android.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
+Message-ID: <20190508134714.GA27786@x230.aquini.net>
+References: <1557158023-23021-1-git-send-email-jsavitz@redhat.com>
+ <20190507125430.GA31025@x230.aquini.net>
+ <20190508063716.GA3096@yury-thinkpad>
 MIME-Version: 1.0
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com> <9a4351a5-ab04-2ebb-9961-1c50dda9800d@gmail.com>
-In-Reply-To: <9a4351a5-ab04-2ebb-9961-1c50dda9800d@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 May 2019 16:46:02 +0300
-Message-ID: <CAHp75VeWiP57iT_75F7mYNKAbBhxkzpBcWhJDd=tkVZb68uXgA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/11] platform/x86: asus-wmi: Organize code into sections
-To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508063716.GA3096@yury-thinkpad>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 08 May 2019 13:47:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 1:12 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
->
-> The driver has grown pretty big and will grow more, which makes it hard to
-> navigate and understand. Add uniform comments to the code and ensure that
-> it is sorted into logical sections.
+On Tue, May 07, 2019 at 11:37:16PM -0700, Yury Norov wrote:
+> On Tue, May 07, 2019 at 08:54:31AM -0400, Rafael Aquini wrote:
+> > On Mon, May 06, 2019 at 11:53:43AM -0400, Joel Savitz wrote:
+> > > There is currently no easy and architecture-independent way to find the
+> > > lowest unusable virtual address available to a process without
+> > > brute-force calculation. This patch allows a user to easily retrieve
+> > > this value via /proc/<pid>/status.
+> > > 
+> > > Using this patch, any program that previously needed to waste cpu cycles
+> > > recalculating a non-sensitive process-dependent value already known to
+> > > the kernel can now be optimized to use this mechanism.
+> > > 
+> > > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> > > ---
+> > >  Documentation/filesystems/proc.txt | 2 ++
+> > >  fs/proc/task_mmu.c                 | 2 ++
+> > >  2 files changed, 4 insertions(+)
+> > > 
+> > > diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> > > index 66cad5c86171..1c6a912e3975 100644
+> > > --- a/Documentation/filesystems/proc.txt
+> > > +++ b/Documentation/filesystems/proc.txt
+> > > @@ -187,6 +187,7 @@ read the file /proc/PID/status:
+> > >    VmLib:      1412 kB
+> > >    VmPTE:        20 kb
+> > >    VmSwap:        0 kB
+> > > +  VmTaskSize:	137438953468 kB
+> > >    HugetlbPages:          0 kB
+> > >    CoreDumping:    0
+> > >    THP_enabled:	  1
+> > > @@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
+> > >   VmPTE                       size of page table entries
+> > >   VmSwap                      amount of swap used by anonymous private data
+> > >                               (shmem swap usage is not included)
+> > > + VmTaskSize                  lowest unusable address in process virtual memory
+> > 
+> > Can we change this help text to "size of process' virtual address space memory" ?
+> 
+> Agree. Or go in other direction and make it VmEnd
+> 
+> > >   HugetlbPages                size of hugetlb memory portions
+> > >   CoreDumping                 process's memory is currently being dumped
+> > >                               (killing the process may lead to a corrupted core)
+> > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> > > index 95ca1fe7283c..0af7081f7b19 100644
+> > > --- a/fs/proc/task_mmu.c
+> > > +++ b/fs/proc/task_mmu.c
+> > > @@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+> > >  	seq_put_decimal_ull_width(m,
+> > >  		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
+> > >  	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
+> > > +	seq_put_decimal_ull_width(m,
+> > > +		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
+> > >  	seq_puts(m, " kB\n");
+> > >  	hugetlb_report_usage(m, mm);
+> > >  }
+> 
+> I'm OK with technical part, but I still have questions not answered
+> (or wrongly answered) in v1 and v2. Below is the very detailed
+> description of the concerns I have.
+> 
+> 1. What is the exact reason for it? Original version tells about some
+> test that takes so much time that you were able to drink a cup of
+> coffee before it was done. The test as you said implements linear
+> search to find the last page and so is of O(n). If it's only for some
+> random test, I think the kernel can survive without it. Do you have a
+> real example of useful programs that suffer without this information?
+> 
+> 
+> 2. I have nothing against taking breaks and see nothing weird if
+> ineffective algorithms take time. On my system (x86, Ubuntu) the last
+> mapped region according to /proc/<pid>/maps is:
+> ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0     [vsyscall]
+> So to find the required address, we have to inspect 2559 pages. With a
+> binary search it would take 12 iterations at max. If my calculation is
+> wrong or your environment is completely different - please elaborate.
+> 
+> 3. As far as I can see, Linux currently does not support dynamic
+> TASK_SIZE. It means that for any platform+ABI combination VmTaskSize
+> will be always the same. So VmTaskSize would be effectively useless waste
 
-It does slightly more than described. Please, split out to the
-separate patch(es) what is not suit to above description.
+Assuming you can have it fixed and decide upon one another at compile
+time also is not necessarely true, unfortunately. One could adjust PAGE_OFFSET, 
+at kernel config, to provide different splits for the virtual address space,
+which will affect TASK_SIZE, eventually. (see arch/x86/Kconfig)
 
--- 
-With Best Regards,
-Andy Shevchenko
+ 
+> of lines. In fact, TASK SIZE is compiler time information and should
+> be exposed to user in headers. In discussion to v2 Rafael Aquini answered
+> for this concern that TASK_SIZE is a runtime resolved macro. It's
+> true, but my main point is: GCC knows what type of binary it compiles
+> and is able to select proper value. We are already doing similar things
+> where appropriate. Refer for example to my arm64/ilp32 series:
+> arch/arm64/include/uapi/asm/bitsperlong.h:
+> -#define __BITS_PER_LONG 64
+> +#if defined(__LP64__)
+> +/* Assuming __LP64__ will be defined for native ELF64's and not for ILP32. */
+> +#  define __BITS_PER_LONG 64
+> +#elif defined(__ILP32__)
+> +#  define __BITS_PER_LONG 32
+> +#else
+> +#  error "Neither LP64 nor ILP32: unsupported ABI in asm/bitsperlong.h"
+> +#endif
+> 
+
+
+You are correct, but you miss the point Joel is trying to provide that
+value in an architectural agnostic way to avoid the hassle of keep adding
+more preprocessor complexity and being concerned about arch particularities.
+
+You were spot on pointing the issues with the prctl(2) approach before,
+but I don't see the need to overengineer the suggested approach here. 
+The cost of getting mm->task_size exported via /proc/<pid>/status is
+neglectable, and prevents further complexity going in for such simple
+task.
+
+
+Regards,
+-- Rafael
