@@ -2,220 +2,142 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3218C04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463AE217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557343261;
-	bh=JEXKCW5L7w6OoOQlhewbj4iGkmkFg82ukUt4kw+RI10=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uL+KJrUy8AGsS5lvvdjMPBXHhjhsHPOGaXNl2+mzQJzJtH3JqfSwbetMergZQtXdh
-	 n7BRUJgUQRwNA2+LUGhaHKY6WYkoMBfyk2V+kc4kmQj8WrPMsysP6fzcxNObst5A9M
-	 6yDBX+BxUIHz6pelxjOFCO9bxWIx7clQkYg6eZSw=
+	by mail.kernel.org (Postfix) with ESMTP id 9154121530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:21:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SVVtCFeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfEHTVA (ORCPT
+        id S1727615AbfEHTVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726709AbfEHTVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:21:00 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1926B21530;
-        Wed,  8 May 2019 19:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557343258;
-        bh=JEXKCW5L7w6OoOQlhewbj4iGkmkFg82ukUt4kw+RI10=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rDVx9ZSO/C87i4cnA1ZgCZ38pffSinJnWDe5YoOTvdLexCwroJCDtR4zKpW60VjuW
-         S2H1DRPJh/g6G9iK1+E1q7AEGo/FywWpt+VTYi1X4Pj76vYNxZKTEPCh4f1jibA/+p
-         7nHjaI2UizAnqNs/CA7+HeDVQCadFaM7Kg2uV+6g=
-Received: by mail-qt1-f180.google.com with SMTP id f24so14153774qtk.11;
-        Wed, 08 May 2019 12:20:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAWJsFvIo+fv4xLrZ8PD4Zv5yOXo3bgrrhkK7Lyl3eyKZ41XIpiL
-        x5RWGYSK/TluBQphihUnFDZEDpNxLRMEiyKX2A==
-X-Google-Smtp-Source: APXvYqxoInVXJJt0/BstYEOcZix2Gl6by62QRulKKatXe+f42hHLhFkqE5EWCI4+efyd6hsY6ZhMIFzc2w6DrhL+PkY=
-X-Received: by 2002:a0c:fe65:: with SMTP id b5mr13005207qvv.106.1557343257283;
- Wed, 08 May 2019 12:20:57 -0700 (PDT)
+        Wed, 8 May 2019 15:21:41 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52460 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfEHTVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 15:21:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k86bIbJQYyAtCnJQ/9r7wNszrHqG9KBOaSii4mKHzlw=; b=SVVtCFeU3ylj97tn0HhXzkEUO
+        dP3wY5ZEVrg1Zjk/SewUndpbZJYyav5FsXRHnS7xXFnDgaSHrrOPALGEH0HnZH27IVZ4MjclKV83K
+        kYv0WFJK9t0WsOf3TWiv1X2PLSQAcK4TVbauzOsfdkdQV+iZVpsjqfUWb2sKdfWBKQbo7f4PSWjtE
+        yE9LYpGpEjXMIkmNKu7AsHHUgx1NpdTsQE7PURNLqaoJ1YJ7obGfNwq4iRxY+Z0OLilehI0XD4L7y
+        +J/SbWmLOvHCI7hUOp8F/GKZbEFe+KYnimnUCsbmfcrhB0w6qi2q5mFZ0gnC13mHsVq5hbW/ioHje
+        100YUWVtg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOS8D-0003hQ-6K; Wed, 08 May 2019 19:21:33 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 368AD98030A; Wed,  8 May 2019 21:21:31 +0200 (CEST)
+Date:   Wed, 8 May 2019 21:21:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v8 05/16] sched/core: Allow sched_setattr() to use the
+ current policy
+Message-ID: <20190508192131.GD32547@worktop.programming.kicks-ass.net>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-6-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-References: <20190429224143.192506-1-sjg@chromium.org>
-In-Reply-To: <20190429224143.192506-1-sjg@chromium.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 8 May 2019 14:20:46 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL3HrX5K4A3bLBrkR7LKNTCSj+--ip7z-xiCrgpmdZN6A@mail.gmail.com>
-Message-ID: <CAL_JsqL3HrX5K4A3bLBrkR7LKNTCSj+--ip7z-xiCrgpmdZN6A@mail.gmail.com>
-Subject: Re: [PATCH] RFC: Example schema files written in Python
-To:     Simon Glass <sjg@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Frank Rowand <frank.rowand@sony.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402104153.25404-6-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 5:41 PM Simon Glass <sjg@chromium.org> wrote:
->
-> Most of these are hand-written, but xilinx-xadc.py is auto-generated by
-> binding_to_py.py as an example of the use of that tool.
->
-> This is part of a proof-of-concept device-tree validator. See the patch
-> on the dtc mailing list for details:
+On Tue, Apr 02, 2019 at 11:41:41AM +0100, Patrick Bellasi wrote:
+> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+> index 22627f80063e..075c610adf45 100644
+> --- a/include/uapi/linux/sched.h
+> +++ b/include/uapi/linux/sched.h
+> @@ -40,6 +40,8 @@
+>  /* SCHED_ISO: reserved but not implemented yet */
+>  #define SCHED_IDLE		5
+>  #define SCHED_DEADLINE		6
+> +/* Must be the last entry: used to sanity check attr.policy values */
+> +#define SCHED_POLICY_MAX	SCHED_DEADLINE
 
-Honestly, we are pretty far down the path of using json-schema to
-consider changing to something else. We've already gone thru plenty of
-concepts over the years with different languages for the schema.
+This is a wee bit sad to put in a uapi header; but yeah, where else :/
 
-While I think there are some cases where being able to do schema with
-code is useful or necessary, the vast majority of cases can be handled
-just fine with structured data. I'd rather see how we could augment
-the data with code. Maybe that's snippets of code within the schema or
-making the validation code more modular. I would like to see the dtc
-checks infrastructure be extendable without modifying dtc. That could
-include supporting checks written in python.
+Another option would be something like:
 
-One example where we need more than just schema data is validating
-properties that depend on a provider #.*-cells property. We can't
-really do that with json-schema. At least the number of cells being
-correct is covered by dtc already. So it would really be how do we
-validate the cell data itself. OTOH, I think that is pretty far down
-the list in priorities of things to validate. There's already
-thousands of warnings generated by dtc and the json-schema which are
-slow to get fixed (though some are really subjective and more what to
-avoid for new users).
+enum {
+	SCHED_NORMAL = 0,
+	SCHED_FIFO = 1,
+	SCHED_RR = 2,
+	SCHED_BATCH = 3,
+	/* SCHED_ISO = 4, reserved */
+	SCHED_IDLE = 5,
+	SCHED_DEADLINE = 6,
+	SCHED_POLICY_NR
+};
 
->
->    RFC: Python-based device-tree validation
->
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> ---
+>  /* Can be ORed in to make sure the process is reverted back to SCHED_NORMAL on fork */
+>  #define SCHED_RESET_ON_FORK     0x40000000
+> @@ -50,9 +52,11 @@
+>  #define SCHED_FLAG_RESET_ON_FORK	0x01
+>  #define SCHED_FLAG_RECLAIM		0x02
+>  #define SCHED_FLAG_DL_OVERRUN		0x04
+> +#define SCHED_FLAG_KEEP_POLICY		0x08
+>  
+>  #define SCHED_FLAG_ALL	(SCHED_FLAG_RESET_ON_FORK	| \
+>  			 SCHED_FLAG_RECLAIM		| \
+> -			 SCHED_FLAG_DL_OVERRUN)
+> +			 SCHED_FLAG_DL_OVERRUN		| \
+> +			 SCHED_FLAG_KEEP_POLICY)
+>  
+>  #endif /* _UAPI_LINUX_SCHED_H */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index d368ac26b8aa..20efb32e1a7e 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4907,8 +4907,17 @@ SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
+>  	if (retval)
+>  		return retval;
+>  
+> -	if ((int)attr.sched_policy < 0)
+> +	/*
+> +	 * A valid policy is always required from userspace, unless
+> +	 * SCHED_FLAG_KEEP_POLICY is set and the current policy
+> +	 * is enforced for this call.
+> +	 */
+> +	if (attr.sched_policy > SCHED_POLICY_MAX &&
+> +	    !(attr.sched_flags & SCHED_FLAG_KEEP_POLICY)) {
+>  		return -EINVAL;
+> +	}
 
-I'll use this one to comment on. Comments are most around goals for
-the binding doc format.
+And given I just looked at those darn SCHED_* things, I now note the
+above does 'funny' things when passed: attr.policy=4.
 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py
-> new file mode 100644
-> index 0000000000000..9f55f48f7cde7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.py
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +#
-> +
-> +# Xilinx XADC device driver
-
-Having some defined structure at the top-level is beneficial for
-extracting data and automating review checks.
-
-> +
-> +from kschema import NodeDesc, PropBool, PropClocks, PropInt, PropIntList, PropInterrupts, PropReg, PropStringList
-> +
-> +schema = [
-> +    NodeDesc('xilinx-xadc', ['xlnx,zynq-xadc-1.00.a', 'xlnx,axi-xadc-1.00.a'], False, desc=
-
-If one desires to generate a list of all possible compatible strings
-(to find undocumented ones), how would you do that?
-
-> +            'This binding document describes the bindings for both of them since the'
-> +            'bindings are very similar. The Xilinx XADC is a ADC that can be found in the'
-> +            'series 7 FPGAs from Xilinx. The XADC has a DRP interface for communication.'
-> +            'Currently two different frontends for the DRP interface exist. One that is only'
-> +            'available on the ZYNQ family as a hardmacro in the SoC portion of the ZYNQ. The'
-> +            'other one is available on all series 7 platforms and is a softmacro with a AXI'
-> +            'interface. This binding document describes the bindings for both of them since'
-> +            'the bindings are very similar.', elements=[
-
-One goal with the schema (at least core ones) is to generate
-documentation from it. That would need to be a format such as rST so
-we can have formatting. And we'd want to be able to parse the
-properties and generate tables from them.
-
-If someone really gets an itch, we'll rewrite sections of the DT spec
-in schema.
-
-> +        PropReg(required=True,
-> +            desc='Address and length of the register set for the device'),
-
-For any standard property, we'd have to create the class before
-bindings can use it.
-
-> +        PropInterrupts(required=True,
-
-How would you handle a property being conditionally required?
-
-> +            desc='Interrupt for the XADC control interface.'),
-> +        PropClocks(required=True,
-> +            desc='When using the ZYNQ this must be the ZYNQ PCAP clock,'
-> +            'when using the AXI-XADC pcore this must be the clock that provides the'
-> +            'clock to the AXI bus interface of the core.'),
-> +        PropStringList('xlnx,external-mux', str_pattern='none|single|dual',
-> +            desc=''),
-> +        PropIntList('xlnx,external-mux-channel', valid_list='0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16|1|2|3|4|5|6|8',
-> +            desc='Configures which pair of pins is used to'
-> +            'sample data in external mux mode.'
-> +            'Valid values for single external multiplexer mode are:'
-> +            'Valid values for dual external multiplexer mode are:'
-> +            ''
-> +            'This property needs to be present if the device is configured for'
-> +            'external multiplexer mode (either single or dual). If the device is'
-> +            'not using external multiplexer mode the property is ignored.'),
-> +        NodeDesc('xlnx,channels', None, False, desc=
-> +                'List of external channels that are connected to the ADC', elements=[
-> +            PropInt('#address-cells', required=True,
-> +                desc='Should be 1.'),
-> +            PropInt('#size-cells', required=True,
-> +                desc='Should be 0.'),
-> +            NodeDesc('None', None, False, desc=
-> +                    'The child nodes of this node represent the external channels which are'
-> +                    'connected to the ADC. If the property is no present no external'
-> +                    'channels will be assumed to be connected.', elements=[
-> +                NodeDesc('None', None, False, desc=
-> +                        'Each child node represents one channel and has the following'
-> +                        'properties:', elements=[
-> +                    PropIntList('reg', required=True, valid_list='0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16',
-
-We need a different method or arg for every possible way we need to
-express constraints? For example, say the value must be a power of 2.
-
-> +                        desc='Pair of pins the channel is connected to.'
-> +                        'Note each channel number should only be used at most'
-> +                        'once.'),
-> +                    PropBool('xlnx,bipolar',
-> +                        desc='If set the channel is used in bipolar'
-> +                        'mode.'),
-> +                    ]),
-> +                ]),
-> +            ]),
-> +        ]),
-> +    ]
-> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-> index e0e0755cabd8a..24def33e6d6b8 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-> @@ -32,24 +32,26 @@ Optional properties:
->         - xlnx,external-mux-channel: Configures which pair of pins is used to
->           sample data in external mux mode.
->           Valid values for single external multiplexer mode are:
-> -               0: VP/VN
-> -               1: VAUXP[0]/VAUXN[0]
-> -               2: VAUXP[1]/VAUXN[1]
-> +               * 0: VP/VN
-> +               * 1: VAUXP[0]/VAUXN[0]
-> +               * 2: VAUXP[1]/VAUXN[1]
-
-Not really automatic conversion if you have to tweak the source. Is
-your thought we'd make the txt files more structured to do automatic
-conversions or we'd commit the python files?
-
-Rob
+> +	if (attr.sched_flags & SCHED_FLAG_KEEP_POLICY)
+> +		attr.sched_policy = SETPARAM_POLICY;
+>  
+>  	rcu_read_lock();
+>  	retval = -ESRCH;
