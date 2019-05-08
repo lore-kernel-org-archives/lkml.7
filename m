@@ -7,105 +7,112 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7E1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6562C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03321019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7761D20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EkvDCMSA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KECUZFNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfEHLg5 (ORCPT
+        id S1727890AbfEHLh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:36:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53978 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfEHLg5 (ORCPT
+        Wed, 8 May 2019 07:37:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37493 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfEHLh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:36:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 198so2833741wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:36:55 -0700 (PDT)
+        Wed, 8 May 2019 07:37:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a12so16654371wrn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=1n5seRzjwFE2JAPpmlsAdvWESXCV7ha349PgP9YAChA=;
-        b=EkvDCMSAAIpIhNQTKWiogMgrvUCaKx1SisounhivI7e6cgiHDQOTuOpMYOpAekljrs
-         B8G2wIBZb83bRjCr4sMsepATJg2fM063cy/Ys8dXf0YkhF0CH/syRtdV6hsbwFq1neOX
-         p0Y1blshiXio8oIbPDNaAqsiYcc33OMuPY8nbeCgKaXw34HqZolYc3f2uiMgF2U6r53m
-         tV8EAFTwfpgw2iaglj/ZNjZ9GIFEc+WkE2qKWmjCjR/04RFgDq5kTJc9QNhpg2vgk6A7
-         TXbGd0ERt4MJ8Yfv9cyRY6kUIO2pH8L22oK8KP7kfPfbsg/E7GnKHHjsvSEQyC6dQ2NK
-         xuhA==
+        bh=eeVbE/nScJBLag5J/5uF3rhFiymQVd2Zd14j7hKs2Go=;
+        b=KECUZFNIH3rYUOtX1dlvmyFlTibofR3dC0G3z4LgOfu7EL81dRHDuGbinISBewHici
+         WTfqWBaOrepKmaPbAJab2EMLu2RaWGJ3wa3iyM7/eXcAHCDp5t34zDdlfgGdq0D77Q2m
+         19eRcJDyjmG6ZEfwbWO1ftM7r8fq7DFqfF87Xum9x1AHnDmhoEGCPc2qdIJTf0RaHSXT
+         7X1Xhk/AAoKKgjvae0fAl3bsa/jHjgZjWZIY8xlwyONYNTtN5rfYlsNhST6bqwbRRVyt
+         PgB1Vf9FG6amQy47sGdXd/Bv9PGr92BaUTNcWL+kwxvOM0Elm9FVE9p9IMpDMO+bFXs8
+         5Hmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=1n5seRzjwFE2JAPpmlsAdvWESXCV7ha349PgP9YAChA=;
-        b=ZYe5G0YUJH7bRiUoKdk75JnCBpIPBEFfTt4pbft4u/VzFi93KwLLnTPO+/ROuH6tKg
-         muA/WUeDeIb7bNmjH9ZiIs7fEJsfZdgdGiVMzr1jnqleVWvo9PfIRIEqMP/6eMbvNhmT
-         O+/+xHYTgqMr9o+gFjbNbdyuxofIaBAyjEEjotT/VVKl0SZAPdOTX4PAFulU9xnRfK2M
-         kxy05sh5cE7P69HnDtuUwxClism7t0jz0Yo99wHVNqyx5RmgHrfjsm1J32cVRw/5aXBg
-         qRIBQ5PQZJmjkG7eyUZfymCYzOde5OeeYS3wmBC/94rKc/Y8Eo4ImQ7FWPLR7oh36qFA
-         ZzQw==
-X-Gm-Message-State: APjAAAV3luKIt/qZ2xuDFRW+59UESKPQFeK1xgCORWut3ChRHqsXldeP
-        XpeUoo1ISFjM/74dbvah80Z55g==
-X-Google-Smtp-Source: APXvYqzdTuHQjmT/moThJdmQjilsHb4F5OpP8OfyK1Ch3EmrkCcjCc+533iIUmxF2dinFT5MliCHUA==
-X-Received: by 2002:a05:600c:21d2:: with SMTP id x18mr2741998wmj.81.1557315415262;
-        Wed, 08 May 2019 04:36:55 -0700 (PDT)
+        bh=eeVbE/nScJBLag5J/5uF3rhFiymQVd2Zd14j7hKs2Go=;
+        b=HDguBQVPkBrN5PjTQi6cQtrxeaBTPtJri54+gHidklzf7E2rOQk86XSXn3yusWzAAM
+         ji4qGe9AKwf5xBAdaSH1Fvucq9vB6zMCypKlZnh7IbM4VyD4asJ62X3qQGaeXc4rGuRa
+         aIFftPRH+JayzmJk3CCu2E9l7Zor6F6cYKnVw7/DWdh1A68rWsSCnbgw2XF32dEJc/jV
+         ROEUD2NpebzvPCJWO7b86rWrU6RnDfUmyENbc1Jz6rhAgzCxaKo6QmCXK/OORA2tdDJn
+         BSH20Mq2p68jK/S7QiDfhd2kCvLlYchP4ghqq2hDje/NDEYQ8LWISR+onSZymeWT1qsm
+         5Vnw==
+X-Gm-Message-State: APjAAAUV4/NGIqatgg7rm9z/DL0XDpBr3K8wETK4y6Z8Sln77ZEbNq4y
+        2UlBcL4cCaP7f2WmQIxwvLGHIw==
+X-Google-Smtp-Source: APXvYqylJd9JgQDs4no8oS1ib+tuQIB3A9RO89mbhrVWeCUcsCxdG1V6qUglLUHQmf1jJlbVfEJ7/g==
+X-Received: by 2002:adf:eb8e:: with SMTP id t14mr5248477wrn.113.1557315475173;
+        Wed, 08 May 2019 04:37:55 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id f6sm2784047wro.12.2019.05.08.04.36.54
+        by smtp.gmail.com with ESMTPSA id l21sm1379871wmh.35.2019.05.08.04.37.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 04:36:54 -0700 (PDT)
-Date:   Wed, 8 May 2019 12:36:53 +0100
+        Wed, 08 May 2019 04:37:54 -0700 (PDT)
+Date:   Wed, 8 May 2019 12:37:52 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, rdunlap@infradead.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 5/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-Message-ID: <20190508113653.GD31645@dell>
-References: <20190506191614.25051-1-dmurphy@ti.com>
- <20190506191614.25051-6-dmurphy@ti.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] Remove MODULE_ALIAS() calls that take undefined macro
+Message-ID: <20190508113752.GE31645@dell>
+References: <1557163697-17882-1-git-send-email-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190506191614.25051-6-dmurphy@ti.com>
+In-Reply-To: <1557163697-17882-1-git-send-email-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 May 2019, Dan Murphy wrote:
+On Tue, 07 May 2019, Masahiro Yamada wrote:
 
-> The LM3697 is a single function LED driver. The single function LED
-> driver needs to reside in the LED directory as a dedicated LED driver
-> and not as a MFD device.  The device does have common brightness and ramp
-> features and those can be accomodated by a TI LMU framework.
+> These files do not define (USBHS_)DRIVER_NAME. Yet, they can be
+> successfully compiled because they are never built as a module by
+> anyone, i.e, the MODULE_ALIAS() calls are always no-op.
 > 
-> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
-> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
-> reside in the Documentation/devicetree/bindings/leds directory and follow the
-> current LED and general bindings guidelines.
+> A problem showed up when a patch "moduleparam: Save information about
+> built-in modules in separate file" is applied. With this new feature,
+> MODULE_*() are populated even if the callers are built-in.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> To avoid the build errors, the lines referencing to the undefined
+> macro must be removed.
+> 
+> The complete fix is to remove all MODULE_* and #include <linux/module.h>
+> like many "make ... explicitly non-modular" commits did.
+> 
+> For now, I am touching the offending lines.
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
 > 
-> v4 - Made assiciated ramp bindings changes and capitalization issue otherwise
-> no change - https://lore.kernel.org/patchwork/patch/1068618/
+> I will insert this commit before
+> "moduleparam: Save information about built-in modules in separate file"
 > 
-> v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork/patch/1058762/
-> v2 - Made changes to reference ti,brightness-resolution to the ti-lmu.txt -
-> https://lore.kernel.org/patchwork/patch/1054501/
 > 
->  .../devicetree/bindings/leds/leds-lm3697.txt  | 73 +++++++++++++++++++
-
->  .../devicetree/bindings/mfd/ti-lmu.txt        | 27 +------
+>  arch/arm/plat-omap/dma.c          | 1 -
+>  drivers/clocksource/timer-ti-dm.c | 1 -
+>  drivers/mfd/omap-usb-tll.c        | 1 -
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
