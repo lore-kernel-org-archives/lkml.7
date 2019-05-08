@@ -2,223 +2,97 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED97C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DA1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C0C21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4595821530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbfEHREY (ORCPT
+        id S1729203AbfEHREc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 13:04:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:26495 "EHLO mga17.intel.com"
+        Wed, 8 May 2019 13:04:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30024 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbfEHRDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 13:03:04 -0400
+        id S1728935AbfEHREa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 13:04:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 10:03:03 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 10:04:29 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
-   d="scan'208";a="169697566"
-Received: from chang-linux-3.sc.intel.com ([172.25.66.171])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 10:03:02 -0700
-From:   "Chang S. Bae" <chang.seok.bae@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>
-Cc:     Ravi Shankar <ravi.v.shankar@intel.com>,
-        "Chang S . Bae" <chang.seok.bae@intel.com>,
+Received: from mayalewx-mobl1.amr.corp.intel.com (HELO [10.255.230.159]) ([10.255.230.159])
+  by fmsmga006.fm.intel.com with ESMTP; 08 May 2019 10:04:27 -0700
+Subject: Re: [PATCH v2 2/2] ASoC: Intel: Skylake: Add Cometlake PCI IDs
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, Naveen M <naveen.m@intel.com>,
+        Sathya Prakash <sathya.prakash.m.r@intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        Rakesh Ughreja <rakesh.a.ughreja@intel.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Yu Zhao <yuzhao@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [PATCH v7 06/18] x86/fsgsbase/64: Enable FSGSBASE instructions in the helper functions
-Date:   Wed,  8 May 2019 03:02:21 -0700
-Message-Id: <1557309753-24073-7-git-send-email-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
-References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
+        Takashi Iwai <tiwai@suse.com>, Jenny TC <jenny.tc@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>
+References: <20190507215359.113378-1-evgreen@chromium.org>
+ <20190507215359.113378-3-evgreen@chromium.org>
+ <866afac2-e457-375b-d745-88952b11d75e@linux.intel.com>
+ <CAE=gft4sDo1cLeU8Cm1CRZu2PzVG0iu-b7UaWxWVrsUeZ=SYhQ@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <6fd9ca2b-dcf6-801f-209e-11eba59203fe@linux.intel.com>
+Date:   Wed, 8 May 2019 12:04:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAE=gft4sDo1cLeU8Cm1CRZu2PzVG0iu-b7UaWxWVrsUeZ=SYhQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helper functions will switch on faster accesses to FSBASE and
-GSBASE when the FSGSBASE feature is enabled.
 
-Accessing user GSBASE needs a couple of SWAPGS operations. It is
-avoidable, if the user GSBASE is saved at kernel entry, being updated
-as changes, and restored back at kernel exit.
 
-However, this approach is more complicated than the SWAPGS-based.
-SWAGPS is used to swap the content of GSBASE and MSR_KERNEL_GS_BASE,
-contains the user space, on the transitions from and to user space.
-Across context switches, MSR_KERNEL_GS_BASE has to be updated.
+On 5/8/19 11:51 AM, Evan Green wrote:
+> On Tue, May 7, 2019 at 3:31 PM Pierre-Louis Bossart
+> <pierre-louis.bossart@linux.intel.com> wrote:
+>>
+>> On 5/7/19 4:53 PM, Evan Green wrote:
+>>> Add PCI IDs for Intel CometLake platforms, which from a software
+>>> point of view are extremely similar to Cannonlake platforms.
+>>
+>> Humm, I have mixed feelings here.
+>>
+>> Yes the hardware is nearly identical, with the exception of one detail
+>> that's not visible to the kernel, but there is no support for DMICs with
+>> the Skylake driver w/ HDaudio, and Chrome platforms are only going with
+>> SOF, so is it wise to add these two CometLake platforms to the default
+>> SND_SOC_INTEL_SKYLAKE selector, which is used by a number of distributions?
+>>
+>> I don't mind if we add those PCI IDs and people use this driver if they
+>> wish to, but it may be time for an explicit opt-in? The
+>> SND_SOC_INTEL_SKYLAKE definition should even be pruned to mean SKL, APL,
+>> KBL and GLK, and we can add DMI-based quirks for e.g. the Up2 board and
+>> GLK Chromebooks which work with SOF.
+> 
+> I don't have the context here, so feel free to ignore me. But it seems
+> like such a tiny amount of extra bits to add to make Cometlake work,
+> and then there's no hassle for the distributions when Cometlake
+> devices start showing up in the wild. So while things are more or less
+> the same, why not continue piggypacking off the default?
+> Or are you saying that the lack of DMIC support means the default
+> should be to use a different driver?
 
-With FSGSBSE, the SWAPGS-based needs to be modified with using the
-new instruction, on context switches and in the paranoid path for
-performance and functionality. On the context switches, the MSR read
-(or write) will be replaced by FSGSBASE instruction as shown in this
-change. The following patch details the performance benefit with this.
-In the paranoid path, the SWAPGS will not be used any more, as the
-existing differentiation logic for kernel and user GS will be
-broken. The paranoid path change will be also highlighed in the
-followon patches.
-
-Also, __{rd,wr}gsbase_inactive() are added as helpers to access user
-GSBASE with SWAPGS. Note, for Xen PV, paravirt hooks can be added,
-since it may allow a very efficient but different implementation.
-
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Any Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
----
- arch/x86/include/asm/fsgsbase.h | 27 ++++++++----------
- arch/x86/kernel/process_64.c    | 62 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/include/asm/fsgsbase.h b/arch/x86/include/asm/fsgsbase.h
-index fdd1177..aefd537 100644
---- a/arch/x86/include/asm/fsgsbase.h
-+++ b/arch/x86/include/asm/fsgsbase.h
-@@ -49,35 +49,32 @@ static __always_inline void wrgsbase(unsigned long gsbase)
- 	asm volatile("wrgsbase %0" :: "r" (gsbase) : "memory");
- }
- 
-+#include <asm/cpufeature.h>
-+
- /* Helper functions for reading/writing FS/GS base */
- 
- static inline unsigned long x86_fsbase_read_cpu(void)
- {
- 	unsigned long fsbase;
- 
--	rdmsrl(MSR_FS_BASE, fsbase);
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+		fsbase = rdfsbase();
-+	else
-+		rdmsrl(MSR_FS_BASE, fsbase);
- 
- 	return fsbase;
- }
- 
--static inline unsigned long x86_gsbase_read_cpu_inactive(void)
--{
--	unsigned long gsbase;
--
--	rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
--
--	return gsbase;
--}
--
- static inline void x86_fsbase_write_cpu(unsigned long fsbase)
- {
--	wrmsrl(MSR_FS_BASE, fsbase);
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+		wrfsbase(fsbase);
-+	else
-+		wrmsrl(MSR_FS_BASE, fsbase);
- }
- 
--static inline void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
--{
--	wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
--}
-+extern unsigned long x86_gsbase_read_cpu_inactive(void);
-+extern void x86_gsbase_write_cpu_inactive(unsigned long gsbase);
- 
- #endif /* CONFIG_X86_64 */
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 32d12c6..17421c3 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -161,6 +161,36 @@ enum which_selector {
- };
- 
- /*
-+ * Out of line to be protected from kprobes. It is not used on Xen
-+ * paravirt. When paravirt support is needed, it needs to be renamed
-+ * with native_ prefix.
-+ */
-+static noinline unsigned long __rdgsbase_inactive(void)
-+{
-+	unsigned long gsbase;
-+
-+	native_swapgs();
-+	gsbase = rdgsbase();
-+	native_swapgs();
-+
-+	return gsbase;
-+}
-+NOKPROBE_SYMBOL(__rdgsbase_inactive);
-+
-+/*
-+ * Out of line to be protected from kprobes. It is not used on Xen
-+ * paravirt. When paravirt support is needed, it needs to be renamed
-+ * with native_ prefix.
-+ */
-+static noinline void __wrgsbase_inactive(unsigned long gsbase)
-+{
-+	native_swapgs();
-+	wrgsbase(gsbase);
-+	native_swapgs();
-+}
-+NOKPROBE_SYMBOL(__wrgsbase_inactive);
-+
-+/*
-  * Saves the FS or GS base for an outgoing thread if FSGSBASE extensions are
-  * not available.  The goal is to be reasonably fast on non-FSGSBASE systems.
-  * It's forcibly inlined because it'll generate better code and this function
-@@ -338,6 +368,38 @@ static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
- 	return base;
- }
- 
-+unsigned long x86_gsbase_read_cpu_inactive(void)
-+{
-+	unsigned long gsbase;
-+
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-+		unsigned long flags;
-+
-+		/* Interrupts are disabled here. */
-+		local_irq_save(flags);
-+		gsbase = __rdgsbase_inactive();
-+		local_irq_restore(flags);
-+	} else {
-+		rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
-+	}
-+
-+	return gsbase;
-+}
-+
-+void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
-+{
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-+		unsigned long flags;
-+
-+		/* Interrupts are disabled here. */
-+		local_irq_save(flags);
-+		__wrgsbase_inactive(gsbase);
-+		local_irq_restore(flags);
-+	} else {
-+		wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
-+	}
-+}
-+
- unsigned long x86_fsbase_read_task(struct task_struct *task)
- {
- 	unsigned long fsbase;
--- 
-2.7.4
-
+Yes, it's the latter case, SOF will be the only driver supporting DMICs 
+on CometLake, so it'd be better to avoid creating a conflict with SOF or 
+enabling a configuration by default which is known to have restrictions. 
+It's fine to add the CML IDs, but better avoid adding CML under the 
+SKYLAKE all-you-can-eat selector.
