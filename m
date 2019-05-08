@@ -2,140 +2,269 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F48C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C08C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F32121530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:08:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="yxS7efzj"
+	by mail.kernel.org (Postfix) with ESMTP id B1D7921530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbfEHRIu (ORCPT
+        id S1729017AbfEHRKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 13:08:50 -0400
-Received: from mail-eopbgr680050.outbound.protection.outlook.com ([40.107.68.50]:43310
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728533AbfEHRIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 13:08:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kRc7c7bd+GcgAzXiJMvwdmCUjCV8vPrHIOjtJLuAVDo=;
- b=yxS7efzjBGGjejEywvNdSVcDRQ8hCFSDgOIUETRpRjJDdU7dV2NbgKd+Uj5jvLxPwvxS7s8pAwaEXtHl5sm0FqNaQxFKQVwUEHSF4R5j6OHCrD2ScKxAmtI7gJNO1SukNXNvUQr2lnClX3FjW8CZJTsrRsqYoxfC09CxWWRlSDU=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3900.namprd12.prod.outlook.com (10.255.174.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.15; Wed, 8 May 2019 17:08:44 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::c96d:c1dd:fd7a:ffd6]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::c96d:c1dd:fd7a:ffd6%4]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 17:08:44 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Borislav Petkov <bp@alien8.de>, LKML <linux-kernel@vger.kernel.org>
-CC:     "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] x86/kvm/pmu: Set AMD's virt PMU version to 1
-Thread-Topic: [PATCH] x86/kvm/pmu: Set AMD's virt PMU version to 1
-Thread-Index: AQHVBb/mS9VAzcalzkCSb/KPnXiDFKZhdd6A
-Date:   Wed, 8 May 2019 17:08:44 +0000
-Message-ID: <aba3fd5b-e1ba-df66-2414-3f1109b68bbb@amd.com>
-References: <20190508170248.15271-1-bp@alien8.de>
-In-Reply-To: <20190508170248.15271-1-bp@alien8.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR06CA0012.namprd06.prod.outlook.com
- (2603:10b6:805:8e::25) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a60e92c-1bb3-4bbc-96fb-08d6d3d7d38a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3900;
-x-ms-traffictypediagnostic: DM6PR12MB3900:
-x-microsoft-antispam-prvs: <DM6PR12MB3900743CE413AEF99AE7B21EEC320@DM6PR12MB3900.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(376002)(366004)(39860400002)(199004)(189003)(110136005)(4326008)(386003)(66574012)(6246003)(54906003)(31696002)(76176011)(86362001)(6506007)(14454004)(53546011)(71190400001)(71200400001)(5660300002)(2616005)(3846002)(486006)(6116002)(7416002)(476003)(11346002)(478600001)(446003)(36756003)(72206003)(8676002)(66946007)(81156014)(66556008)(26005)(81166006)(53936002)(66476007)(66446008)(64756008)(2906002)(316002)(256004)(14444005)(31686004)(6512007)(66066001)(6436002)(7736002)(25786009)(52116002)(102836004)(229853002)(6486002)(99286004)(68736007)(73956011)(186003)(305945005)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3900;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UPV4OFbRJY34pjL9TZqgLBmyGP5anJnQrtSHIk8z96v6fKOyGD34Rq1ADAADeN1OfUpMKSPHBZH/SFSTw14ksnUkgCUMyWRVja789YLNYmJ7M7OKlwo9TvBblov/caT7AVdDRwUdJt3GqmEOKXhe5pyp2zYbmXV92jsXqxnDQz71y8YcYKD3YNqRwrIsdTwA9UTCqrR1WuA8/tEIPGeBKKTiH5y4WopyIEW48UhRoOlfKQiLPvc4AQ/KVedNrbW0D2wddrcQgDvLfmpmtQSMyRjdZz9/f97gp8ttFPaACFUISul44xt9j/pakf50e0384aARbpFRP12O/5iU8y/PrvJxnKNU4e3HJ8kEA5sWQDldzZccQKlU8O/mxLfS9pDzMrQSpBQubTFrvTck7EvzxFSUunQjDbYXeUKnNHX7yQM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <64EC247CC08F0A49A4C351A1F4E3E622@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 8 May 2019 13:10:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55294 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728744AbfEHRKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 13:10:08 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C192081E06;
+        Wed,  8 May 2019 17:10:07 +0000 (UTC)
+Received: from gondolin (ovpn-204-161.brq.redhat.com [10.40.204.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 478BA62676;
+        Wed,  8 May 2019 17:10:01 +0000 (UTC)
+Date:   Wed, 8 May 2019 19:09:57 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
+Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove sequence
+Message-ID: <20190508190957.673dd948.cohuck@redhat.com>
+In-Reply-To: <20190430224937.57156-9-parav@mellanox.com>
+References: <20190430224937.57156-1-parav@mellanox.com>
+        <20190430224937.57156-9-parav@mellanox.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a60e92c-1bb3-4bbc-96fb-08d6d3d7d38a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 17:08:44.3460
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3900
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 08 May 2019 17:10:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNS84LzE5IDEyOjAyIFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+IEZyb206IEJvcmlz
-bGF2IFBldGtvdiA8YnBAc3VzZS5kZT4NCj4gDQo+IEFmdGVyIGNvbW1pdDoNCj4gDQo+ICAgNjcy
-ZmY2Y2ZmODBjICgiS1ZNOiB4ODY6IFJhaXNlICNHUCB3aGVuIGd1ZXN0IHZDUFUgZG8gbm90IHN1
-cHBvcnQgUE1VIikNCg0KWW91IHNob3VsZCBhZGQgdGhpcyBjb21taXQgYXMgYSBmaXhlcyB0YWcu
-IFNpbmNlIHRoYXQgY29tbWl0IHdlbnQgaW50byA1LjENCml0IHdvdWxkIGJlIHdvcnRoIHRoaXMg
-Zml4IGdvaW5nIGludG8gdGhlIDUuMSBzdGFibGUgdHJlZS4NCg0KVGhhbmtzLA0KVG9tDQoNCj4g
-DQo+IG15IEFNRCBndWVzdHMgc3RhcnRlZCAjR1BpbmcgbGlrZSB0aGlzOg0KPiANCj4gICBnZW5l
-cmFsIHByb3RlY3Rpb24gZmF1bHQ6IDAwMDAgWyMxXSBQUkVFTVBUIFNNUA0KPiAgIENQVTogMSBQ
-SUQ6IDQzNTUgQ29tbTogYmFzaCBOb3QgdGFpbnRlZCA1LjEuMC1yYzYrICMzDQo+ICAgSGFyZHdh
-cmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwgMTk5NiksIEJJT1MgMS4x
-Mi4wLTEgMDQvMDEvMjAxNA0KPiAgIFJJUDogMDAxMDp4ODZfcGVyZl9ldmVudF91cGRhdGUrMHgz
-Yi8weGEwDQo+IA0KPiB3aXRoIENvZGU6IHBvaW50aW5nIHRvIFJEUE1DLiBJdCBpcyBSRFBNQyBi
-ZWNhdXNlIHRoZSBndWVzdCBoYXMgdGhlDQo+IGhhcmR3YXJlIHdhdGNoZG9nIENPTkZJR19IQVJE
-TE9DS1VQX0RFVEVDVE9SX1BFUkYgZW5hYmxlZCB3aGljaCB1c2VzDQo+IHBlcmYuIEluc3RydW1l
-bnRpbmcga3ZtX3BtdV9yZHBtYygpIHNvbWUsIHNob3dlZCB0aGF0IGl0IGZhaWxzIGR1ZSB0bzoN
-Cj4gDQo+ICAgaWYgKCFwbXUtPnZlcnNpb24pDQo+ICAgICAgICAgcmV0dXJuIDE7DQo+IA0KPiB3
-aGljaCB0aGUgYWJvdmUgY29tbWl0IGFkZGVkLiBTaW5jZSBBTUQncyBQTVUgbGVhdmVzIHRoZSB2
-ZXJzaW9uIGF0IDAsDQo+IHRoYXQgY2F1c2VzIHRoZSAjR1AgaW5qZWN0aW9uIGludG8gdGhlIGd1
-ZXN0Lg0KPiANCj4gU2V0IHBtdS0+dmVyc2lvbiBhcmJpdHJhcmlseSB0byAxIGFuZCBtb3ZlIGl0
-IGFib3ZlIHRoZSBub24tYXBwbGljYWJsZQ0KPiBzdHJ1Y3Qga3ZtX3BtdSBtZW1iZXJzLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPg0KPiBDYzogIkgu
-IFBldGVyIEFudmluIiA8aHBhQHp5dG9yLmNvbT4NCj4gQ2M6IEluZ28gTW9sbmFyIDxtaW5nb0By
-ZWRoYXQuY29tPg0KPiBDYzogSmFuYWthcmFqYW4gTmF0YXJhamFuIDxKYW5ha2FyYWphbi5OYXRh
-cmFqYW5AYW1kLmNvbT4NCj4gQ2M6IGt2bUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IExpcmFuIEFs
-b24gPGxpcmFuLmFsb25Ab3JhY2xlLmNvbT4NCj4gQ2M6IE1paGFpIENhcmFiYXMgPG1paGFpLmNh
-cmFiYXNAb3JhY2xlLmNvbT4NCj4gQ2M6IFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5j
-b20+DQo+IENjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+IENjOiAi
-UmFkaW0gS3LEjW3DocWZIiA8cmtyY21hckByZWRoYXQuY29tPg0KPiBDYzogVGhvbWFzIEdsZWl4
-bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQo+IENjOiBUb20gTGVuZGFja3kgPHRob21hcy5sZW5k
-YWNreUBhbWQuY29tPg0KPiBDYzogeDg2QGtlcm5lbC5vcmcNCj4gLS0tDQo+ICBhcmNoL3g4Ni9r
-dm0vcG11X2FtZC5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3BtdV9hbWQuYyBi
-L2FyY2gveDg2L2t2bS9wbXVfYW1kLmMNCj4gaW5kZXggMTQ5NWE3MzViMzhlLi41MGZhOTQ1MGZj
-ZjEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gveDg2L2t2bS9wbXVfYW1kLmMNCj4gKysrIGIvYXJjaC94
-ODYva3ZtL3BtdV9hbWQuYw0KPiBAQCAtMjY5LDEwICsyNjksMTAgQEAgc3RhdGljIHZvaWQgYW1k
-X3BtdV9yZWZyZXNoKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkNCj4gDQo+ICAgICAgICAgcG11LT5j
-b3VudGVyX2JpdG1hc2tbS1ZNX1BNQ19HUF0gPSAoKHU2NCkxIDw8IDQ4KSAtIDE7DQo+ICAgICAg
-ICAgcG11LT5yZXNlcnZlZF9iaXRzID0gMHhmZmZmZmZmZjAwMjAwMDAwdWxsOw0KPiArICAgICAg
-IHBtdS0+dmVyc2lvbiA9IDE7DQo+ICAgICAgICAgLyogbm90IGFwcGxpY2FibGUgdG8gQU1EOyBi
-dXQgY2xlYW4gdGhlbSB0byBwcmV2ZW50IGFueSBmYWxsIG91dCAqLw0KPiAgICAgICAgIHBtdS0+
-Y291bnRlcl9iaXRtYXNrW0tWTV9QTUNfRklYRURdID0gMDsNCj4gICAgICAgICBwbXUtPm5yX2Fy
-Y2hfZml4ZWRfY291bnRlcnMgPSAwOw0KPiAtICAgICAgIHBtdS0+dmVyc2lvbiA9IDA7DQo+ICAg
-ICAgICAgcG11LT5nbG9iYWxfc3RhdHVzID0gMDsNCj4gIH0NCj4gDQo+IC0tDQo+IDIuMjEuMA0K
-PiANCg==
+On Tue, 30 Apr 2019 17:49:35 -0500
+Parav Pandit <parav@mellanox.com> wrote:
+
+> This patch addresses below two issues and prepares the code to address
+> 3rd issue listed below.
+> 
+> 1. mdev device is placed on the mdev bus before it is created in the
+> vendor driver. Once a device is placed on the mdev bus without creating
+> its supporting underlying vendor device, mdev driver's probe() gets triggered.
+> However there isn't a stable mdev available to work on.
+> 
+>    create_store()
+>      mdev_create_device()
+>        device_register()
+>           ...
+>          vfio_mdev_probe()
+>         [...]
+>         parent->ops->create()
+>           vfio_ap_mdev_create()
+>             mdev_set_drvdata(mdev, matrix_mdev);
+>             /* Valid pointer set above */
+> 
+> Due to this way of initialization, mdev driver who want to use the mdev,
+> doesn't have a valid mdev to work on.
+> 
+> 2. Current creation sequence is,
+>    parent->ops_create()
+>    groups_register()
+> 
+> Remove sequence is,
+>    parent->ops->remove()
+>    groups_unregister()
+> 
+> However, remove sequence should be exact mirror of creation sequence.
+> Once this is achieved, all users of the mdev will be terminated first
+> before removing underlying vendor device.
+> (Follow standard linux driver model).
+> At that point vendor's remove() ops shouldn't failed because device is
+> taken off the bus that should terminate the users.
+> 
+> 3. When remove operation fails, mdev sysfs removal attempts to add the
+> file back on already removed device. Following call trace [1] is observed.
+> 
+> [1] call trace:
+> kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327 sysfs_create_file_ns+0x7f/0x90
+> kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
+> kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
+> kernel: Call Trace:
+> kernel: remove_store+0xdc/0x100 [mdev]
+> kernel: kernfs_fop_write+0x113/0x1a0
+> kernel: vfs_write+0xad/0x1b0
+> kernel: ksys_write+0x5a/0xe0
+> kernel: do_syscall_64+0x5a/0x210
+> kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Therefore, mdev core is improved in following ways.
+> 
+> 1. Before placing mdev devices on the bus, perform vendor drivers
+> creation which supports the mdev creation.
+> This ensures that mdev specific all necessary fields are initialized
+> before a given mdev can be accessed by bus driver.
+> This follows standard Linux kernel bus and device model similar to other
+> widely used PCI bus.
+> 
+> 2. During remove flow, first remove the device from the bus. This
+> ensures that any bus specific devices and data is cleared.
+> Once device is taken of the mdev bus, perform remove() of mdev from the
+> vendor driver.
+> 
+> 3. Linux core device model provides way to register and auto unregister
+> the device sysfs attribute groups at dev->groups.
+> Make use of this groups to let core create the groups and simplify code
+> to avoid explicit groups creation and removal.
+> 
+> A below stack dump of a mdev device remove process also ensures that
+> vfio driver guards against device removal already in use.
+> 
+>  cat /proc/21962/stack
+> [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio]
+> [<0>] mdev_remove+0x21/0x40 [mdev]
+> [<0>] device_release_driver_internal+0xe8/0x1b0
+> [<0>] bus_remove_device+0xf9/0x170
+> [<0>] device_del+0x168/0x350
+> [<0>] mdev_device_remove_common+0x1d/0x50 [mdev]
+> [<0>] mdev_device_remove+0x8c/0xd0 [mdev]
+> [<0>] remove_store+0x71/0x90 [mdev]
+> [<0>] kernfs_fop_write+0x113/0x1a0
+> [<0>] vfs_write+0xad/0x1b0
+> [<0>] ksys_write+0x5a/0xe0
+> [<0>] do_syscall_64+0x5a/0x210
+> [<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [<0>] 0xffffffffffffffff
+> 
+> This prepares the code to eliminate calling device_create_file() in
+> subsquent patch.
+
+I'm afraid I have a bit of a problem following this explanation, so let
+me try to summarize what the patch does to make sure that I understand
+it correctly:
+
+- Add the sysfs groups to device->groups so that the driver core deals
+  with proper registration/deregistration.
+- Split the device registration/deregistration sequence so that some
+  things can be done between initialization of the device and hooking
+  it up to the infrastructure respectively after deregistering it from
+  the infrastructure but before giving up our final reference. In
+  particular, this means invoking the ->create and ->remove callback in
+  those new windows. This gives the vendor driver an initialized mdev
+  device to work with during creation.
+- Don't allow ->remove to fail, as the device is already removed from
+  the infrastructure at that point in time.
+
+> 
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
+>  drivers/vfio/mdev/mdev_private.h |  2 +-
+>  drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
+>  3 files changed, 27 insertions(+), 71 deletions(-)
+
+(...)
+
+> @@ -310,41 +265,43 @@ int mdev_device_create(struct kobject *kobj,
+>  
+>  	mdev->parent = parent;
+>  
+> +	device_initialize(&mdev->dev);
+>  	mdev->dev.parent  = dev;
+>  	mdev->dev.bus     = &mdev_bus_type;
+>  	mdev->dev.release = mdev_device_release;
+>  	dev_set_name(&mdev->dev, "%pUl", uuid);
+> +	mdev->dev.groups = parent->ops->mdev_attr_groups;
+
+I like that, that makes things much easier.
+
+> +	mdev->type_kobj = kobj;
+>  
+> -	ret = device_register(&mdev->dev);
+> -	if (ret) {
+> -		put_device(&mdev->dev);
+> -		goto mdev_fail;
+> -	}
+> +	ret = parent->ops->create(kobj, mdev);
+> +	if (ret)
+> +		goto ops_create_fail;
+>  
+> -	ret = mdev_device_create_ops(kobj, mdev);
+> +	ret = device_add(&mdev->dev);
+>  	if (ret)
+> -		goto create_fail;
+> +		goto add_fail;
+>  
+>  	ret = mdev_create_sysfs_files(&mdev->dev, type);
+> -	if (ret) {
+> -		mdev_device_remove_ops(mdev, true);
+> -		goto create_fail;
+> -	}
+> +	if (ret)
+> +		goto sysfs_fail;
+>  
+> -	mdev->type_kobj = kobj;
+>  	mdev->active = true;
+>  	dev_dbg(&mdev->dev, "MDEV: created\n");
+>  
+>  	return 0;
+>  
+> -create_fail:
+> -	device_unregister(&mdev->dev);
+> +sysfs_fail:
+> +	device_del(&mdev->dev);
+> +add_fail:
+> +	parent->ops->remove(mdev);
+> +ops_create_fail:
+> +	put_device(&mdev->dev);
+>  mdev_fail:
+>  	mdev_put_parent(parent);
+>  	return ret;
+>  }
+>  
+> -int mdev_device_remove(struct device *dev, bool force_remove)
+> +int mdev_device_remove(struct device *dev)
+>  {
+>  	struct mdev_device *mdev, *tmp;
+>  	struct mdev_parent *parent;
+> @@ -373,16 +330,15 @@ int mdev_device_remove(struct device *dev, bool force_remove)
+>  	mutex_unlock(&mdev_list_lock);
+>  
+>  	type = to_mdev_type(mdev->type_kobj);
+> +	mdev_remove_sysfs_files(dev, type);
+> +	device_del(&mdev->dev);
+>  	parent = mdev->parent;
+> +	ret = parent->ops->remove(mdev);
+> +	if (ret)
+> +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
+
+I think carrying on with removal regardless of the return code of the
+->remove callback makes sense, as it simply matches usual practice.
+However, are we sure that every vendor driver works well with that? I
+think it should, as removal from bus unregistration (vs. from the sysfs
+file) was always something it could not veto, but have you looked at
+the individual drivers?
+
+>  
+> -	ret = mdev_device_remove_ops(mdev, force_remove);
+> -	if (ret) {
+> -		mdev->active = true;
+> -		return ret;
+> -	}
+> -
+> -	mdev_remove_sysfs_files(dev, type);
+> -	device_unregister(dev);
+> +	/* Balances with device_initialize() */
+> +	put_device(&mdev->dev);
+>  	mdev_put_parent(parent);
+>  
+>  	return 0;
+
+I think that looks sane in general, but the commit message might
+benefit from tweaking.
