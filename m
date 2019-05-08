@@ -2,218 +2,96 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287E5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9317C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4FE21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06A821530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:24:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="g9J2++dy";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="g9J2++dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfEHOYG (ORCPT
+        id S1727856AbfEHOYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:24:06 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35932 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726914AbfEHOYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:24:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C235CA78;
-        Wed,  8 May 2019 07:24:05 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBF313F238;
-        Wed,  8 May 2019 07:24:02 -0700 (PDT)
-Subject: Re: [PATCH v7 12/23] iommu/smmuv3: Get prepared for nested stage
- support
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-13-eric.auger@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <66f873eb-35c0-d1e9-794e-9150dbdb13fe@arm.com>
-Date:   Wed, 8 May 2019 15:24:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190408121911.24103-13-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+        Wed, 8 May 2019 10:24:30 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51052 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726914AbfEHOYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:24:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D13058EE2B1;
+        Wed,  8 May 2019 07:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557325469;
+        bh=xydTi/hn1JDJTRyeJqcJB5CNRIzFduahaKTlPNfO1IM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=g9J2++dy2yHjw1VgAG+xuKtM3+Ffdl90VFrw8hMWS5OgnG15ZSG29vx3WWHYinwv9
+         NaciE0RfPfGVsVKEOEphmxnK7sbh/ih6GLZ8a7E9qR9BsXxXllu2adpGkb7yLMZFup
+         w6Bk1ctdc12FOZRshyvo/zvuvq7udEKyH3RQjoOs=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xgX-hAvPV0kW; Wed,  8 May 2019 07:24:29 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 22C688EE0D2;
+        Wed,  8 May 2019 07:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557325469;
+        bh=xydTi/hn1JDJTRyeJqcJB5CNRIzFduahaKTlPNfO1IM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=g9J2++dy2yHjw1VgAG+xuKtM3+Ffdl90VFrw8hMWS5OgnG15ZSG29vx3WWHYinwv9
+         NaciE0RfPfGVsVKEOEphmxnK7sbh/ih6GLZ8a7E9qR9BsXxXllu2adpGkb7yLMZFup
+         w6Bk1ctdc12FOZRshyvo/zvuvq7udEKyH3RQjoOs=
+Message-ID: <1557325468.3196.2.camel@HansenPartnership.com>
+Subject: Re: [PATCH] mptsas: fix undefined behaviour of a shift of an int by
+ more than 31 places
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Colin Ian King <colin.king@canonical.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 08 May 2019 07:24:28 -0700
+In-Reply-To: <de7e3aaf-0155-5007-c228-510f0d0de428@canonical.com>
+References: <20190504164010.24937-1-colin.king@canonical.com>
+         <1557027274.2821.2.camel@HansenPartnership.com>
+         <de7e3aaf-0155-5007-c228-510f0d0de428@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 13:19, Eric Auger wrote:
-> To allow nested stage support, we need to store both
-> stage 1 and stage 2 configurations (and remove the former
-> union).
+On Wed, 2019-05-08 at 14:07 +0100, Colin Ian King wrote:
+> On 05/05/2019 04:34, James Bottomley wrote:
+> > On Sat, 2019-05-04 at 17:40 +0100, Colin King wrote:
+> > > From: Colin Ian King <colin.king@canonical.com>
+> > > 
+> > > Currently the shift of int value 1 by more than 31 places can
+> > > result in undefined behaviour. Fix this by making the 1 a ULL
+> > > value before the shift operation.
+> > 
+> > Fusion SAS is pretty ancient.  I thought the largest one ever
+> > produced had four phys, so how did you produce the overflow?
 > 
-> A nested setup is characterized by both s1_cfg and s2_cfg
-> set.
-> 
-> We introduce a new ste.abort field that will be set upon
-> guest stage1 configuration passing. If s1_cfg is NULL and
-> ste.abort is set, traffic can't pass. If ste.abort is not set,
-> S1 is bypassed.
-> 
-> arm_smmu_write_strtab_ent() is modified to write both stage
-> fields in the STE and deal with the abort field.
-> 
-> In nested mode, only stage 2 is "finalized" as the host does
-> not own/configure the stage 1 context descriptor, guest does.
-> 
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> 
-> ---
-> 
-> v4 -> v5:
-> - reset ste.abort on detach
-> 
-> v3 -> v4:
-> - s1_cfg.nested_abort and nested_bypass removed.
-> - s/ste.nested/ste.abort
-> - arm_smmu_write_strtab_ent modifications with introduction
->    of local abort, bypass and translate local variables
-> - comment updated
-> 
-> v1 -> v2:
-> - invalidate the STE before moving from a live STE config to another
-> - add the nested_abort and nested_bypass fields
-> ---
->   drivers/iommu/arm-smmu-v3.c | 35 ++++++++++++++++++++---------------
->   1 file changed, 20 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 21d027695181..e22e944ffc05 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -211,6 +211,7 @@
->   #define STRTAB_STE_0_CFG_BYPASS		4
->   #define STRTAB_STE_0_CFG_S1_TRANS	5
->   #define STRTAB_STE_0_CFG_S2_TRANS	6
-> +#define STRTAB_STE_0_CFG_NESTED		7
->   
->   #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
->   #define STRTAB_STE_0_S1FMT_LINEAR	0
-> @@ -514,6 +515,7 @@ struct arm_smmu_strtab_ent {
->   	 * configured according to the domain type.
->   	 */
->   	bool				assigned;
-> +	bool				abort;
->   	struct arm_smmu_s1_cfg		*s1_cfg;
->   	struct arm_smmu_s2_cfg		*s2_cfg;
->   };
-> @@ -628,10 +630,8 @@ struct arm_smmu_domain {
->   	bool				non_strict;
->   
->   	enum arm_smmu_domain_stage	stage;
-> -	union {
-> -		struct arm_smmu_s1_cfg	s1_cfg;
-> -		struct arm_smmu_s2_cfg	s2_cfg;
-> -	};
-> +	struct arm_smmu_s1_cfg	s1_cfg;
-> +	struct arm_smmu_s2_cfg	s2_cfg;
->   
->   	struct iommu_domain		domain;
->   
-> @@ -1108,12 +1108,13 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
->   				      __le64 *dst, struct arm_smmu_strtab_ent *ste)
->   {
->   	/*
-> -	 * This is hideously complicated, but we only really care about
-> -	 * three cases at the moment:
-> +	 * We care about the following transitions:
->   	 *
->   	 * 1. Invalid (all zero) -> bypass/fault (init)
-> -	 * 2. Bypass/fault -> translation/bypass (attach)
-> -	 * 3. Translation/bypass -> bypass/fault (detach)
-> +	 * 2. Bypass/fault -> single stage translation/bypass (attach)
-> +	 * 3. single stage Translation/bypass -> bypass/fault (detach)
-> +	 * 4. S2 -> S1 + S2 (attach_pasid_table)
-> +	 * 5. S1 + S2 -> S2 (detach_pasid_table)
->   	 *
->   	 * Given that we can't update the STE atomically and the SMMU
->   	 * doesn't read the thing in a defined order, that leaves us
-> @@ -1124,7 +1125,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
->   	 * 3. Update Config, sync
->   	 */
->   	u64 val = le64_to_cpu(dst[0]);
-> -	bool ste_live = false;
-> +	bool abort, bypass, translate, ste_live = false;
->   	struct arm_smmu_cmdq_ent prefetch_cmd = {
->   		.opcode		= CMDQ_OP_PREFETCH_CFG,
->   		.prefetch	= {
-> @@ -1138,11 +1139,11 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
->   			break;
->   		case STRTAB_STE_0_CFG_S1_TRANS:
->   		case STRTAB_STE_0_CFG_S2_TRANS:
-> +		case STRTAB_STE_0_CFG_NESTED:
->   			ste_live = true;
->   			break;
->   		case STRTAB_STE_0_CFG_ABORT:
-> -			if (disable_bypass)
-> -				break;
-> +			break;
->   		default:
->   			BUG(); /* STE corruption */
->   		}
-> @@ -1152,8 +1153,13 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
->   	val = STRTAB_STE_0_V;
->   
->   	/* Bypass/fault */
-> -	if (!ste->assigned || !(ste->s1_cfg || ste->s2_cfg)) {
-> -		if (!ste->assigned && disable_bypass)
-> +
-> +	abort = (!ste->assigned && disable_bypass) || ste->abort;
-> +	translate = ste->s1_cfg || ste->s2_cfg;
-> +	bypass = !abort && !translate;
-> +
-> +	if (abort || bypass) {
-> +		if (abort)
->   			val |= FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_ABORT);
->   		else
->   			val |= FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_BYPASS);
-> @@ -1172,7 +1178,6 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
->   	}
->   
->   	if (ste->s1_cfg) {
-> -		BUG_ON(ste_live);
+> This was an issue found by static analysis with Coverity; so I guess
+> won't happen in the wild, in which case the patch could be ignored.
 
-Hmm, I'm a little uneasy about just removing these checks altogether, as 
-there are still cases where rewriting a live entry is bogus, that we'd 
-really like to keep catching. Is the problem that it's hard to tell when 
-you're 'rewriting' the S2 config of a nested entry with the same thing 
-on attaching/detaching its S1 context?
+The point I was more making is that if we thought this could ever
+happen in practice, we'd need more error handling than simply this:
+we'd be setting the phy_bitmap to zero which would be every bit as bad
+as some random illegal value.
 
-Robin.
+James
 
->   		dst[1] = cpu_to_le64(
->   			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
->   			 FIELD_PREP(STRTAB_STE_1_S1COR, STRTAB_STE_1_S1C_CACHE_WBRA) |
-> @@ -1191,7 +1196,6 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
->   	}
->   
->   	if (ste->s2_cfg) {
-> -		BUG_ON(ste_live);
->   		dst[2] = cpu_to_le64(
->   			 FIELD_PREP(STRTAB_STE_2_S2VMID, ste->s2_cfg->vmid) |
->   			 FIELD_PREP(STRTAB_STE_2_VTCR, ste->s2_cfg->vtcr) |
-> @@ -1773,6 +1777,7 @@ static void arm_smmu_detach_dev(struct device *dev)
->   	}
->   
->   	master->ste.assigned = false;
-> +	master->ste.abort = false;
->   	arm_smmu_install_ste_for_dev(fwspec);
->   }
->   
-> 
