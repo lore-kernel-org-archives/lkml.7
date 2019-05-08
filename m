@@ -2,114 +2,125 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02A7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDB6C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EBA21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:22:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rwrtMH5v"
+	by mail.kernel.org (Postfix) with ESMTP id BB07321479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfEHMWI (ORCPT
+        id S1728506AbfEHMWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:22:08 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:46886 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfEHMWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:22:06 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x48CJBEV086953;
-        Wed, 8 May 2019 12:20:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Vy0vJPC+R/qK4BTy9W8k2EK+1DkuBwwYmX4Im7RV/1I=;
- b=rwrtMH5vFY76MnriFuwWJRty7cv6d48ndLvoH9qa0iSpe18cQhaRn84K+EEAZ1el4f/y
- JYXzNPHiRG6Um3c2LeXmrh0vIUgokB68rrApoaQDWIhQiq3xdWk5gSEBW5t2CsNm+NQD
- vMj6o0elaMb6F0MU58KC4FWtRSn89CRe22TBfRL7zCGITD8/HSnJoDvmL6xh8b//HGVN
- 0/+i+9yb5Er16ot7xGaUWYdgVLnSKYTBDh5U+VgaaiAGanyy3YqtlO3+pRPaxxQxAHqK
- Taf9LSC6aD/fmeyve7zi016PT3fCR2HgfwqDVjH/4iBaBbfLBHPj+ptzQwZZXQN8uHEa Qg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2s94b63etg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 May 2019 12:20:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x48CJL8V107697;
-        Wed, 8 May 2019 12:20:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2s94ag20en-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 May 2019 12:20:30 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x48CKNew007185;
-        Wed, 8 May 2019 12:20:24 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 May 2019 05:20:22 -0700
-Date:   Wed, 8 May 2019 15:20:10 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-usb@vger.kernel.org, kvm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-mtd@lists.infradead.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH 09/16] mmc: sdhci-xenon: use new match_string()
- helper/macro
-Message-ID: <20190508122010.GC21059@kadam>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
- <20190508112842.11654-11-alexandru.ardelean@analog.com>
+        Wed, 8 May 2019 08:22:12 -0400
+Received: from mx.socionext.com ([202.248.49.38]:8119 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728469AbfEHMWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:22:09 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 08 May 2019 21:22:07 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 603886117D;
+        Wed,  8 May 2019 21:22:07 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 8 May 2019 21:22:07 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id D14B81A04E1;
+        Wed,  8 May 2019 21:22:06 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.119.83])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id BCB33121BCE;
+        Wed,  8 May 2019 21:22:06 +0900 (JST)
+Subject: Re: [PATCH v3] serial: Add Milbeaut serial control
+To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        Takao Orito <orito.takao@socionext.com>,
+        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <1555555916-22251-1-git-send-email-sugaya.taichi@socionext.com>
+ <20190426191515.757e6015@alans-desktop>
+From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Message-ID: <93002681-37f8-cb12-725c-48c1695d29a0@socionext.com>
+Date:   Wed, 8 May 2019 21:22:05 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508112842.11654-11-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9250 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=644
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905080079
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9250 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=665 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905080079
+In-Reply-To: <20190426191515.757e6015@alans-desktop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 02:28:35PM +0300, Alexandru Ardelean wrote:
-> -static const char * const phy_types[] = {
-> -	"emmc 5.0 phy",
-> -	"emmc 5.1 phy"
-> -};
-> -
->  enum xenon_phy_type_enum {
->  	EMMC_5_0_PHY,
->  	EMMC_5_1_PHY,
->  	NR_PHY_TYPES
+Hi,
 
-There is no need for NR_PHY_TYPES now so you could remove that as well.
+Thank you for pointing out.
 
-regards,
-dan carpenter
+On 2019/04/27 3:15, Alan Cox wrote:
+> O
+>> +static void mlb_usio_set_termios(struct uart_port *port,
+>> +			struct ktermios *termios, struct ktermios *old)
+>> +{
+>> +	unsigned int escr, smr = MLB_USIO_SMR_SOE;
+>> +	unsigned long flags, baud, quot;
+>> +
+>> +	switch (termios->c_cflag & CSIZE) {
+>> +	case CS5:
+>> +		escr = MLB_USIO_ESCR_L_5BIT;
+>> +		break;
+>> +	case CS6:
+>> +		escr = MLB_USIO_ESCR_L_6BIT;
+>> +		break;
+>> +	case CS7:
+>> +		escr = MLB_USIO_ESCR_L_7BIT;
+>> +		break;
+>> +	case CS8:
+>> +	default:
+>> +		escr = MLB_USIO_ESCR_L_8BIT;
+>> +		break;
+>> +	}
+>> +
+>> +	if (termios->c_cflag & CSTOPB)
+>> +		smr |= MLB_USIO_SMR_SBL;
+>> +
+>> +	if (termios->c_cflag & PARENB) {
+>> +		escr |= MLB_USIO_ESCR_PEN;
+>> +		if (termios->c_cflag & PARODD)
+>> +			escr |= MLB_USIO_ESCR_P;
+>> +	}
+> 
+> If you don't suport CMSPAR then clear that bit in termios as well
+> 
+
+OK, clear the bit because of not supported.
+
+>> +	/* Set hard flow control */
+>> +	if (of_property_read_bool(port->dev->of_node, "auto-flow-control") ||
+>> +			(termios->c_cflag & CRTSCTS))
+>> +		escr |= MLB_USIO_ESCR_FLWEN;
+> 
+> That's just broken. The termios bits are the definitive things for the
+> port, and in addition even if they are forced you need to correct the
+> termios data.
+> 
+> You might want to control flow control *at boot* with an OF property but
+> doing it post boot is just busted.
+> 
+
+Ah, Yes.
+I think OF property should not be here, and it may only be used to determine
+the characteristics of the port.
+I try to make a fixes patch.
+
+Thanks,
+Sugaya Taichi
+
+
+> Alan
+> 
 
