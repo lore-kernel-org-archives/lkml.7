@@ -2,141 +2,123 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100D7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DA7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC31921530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E6D21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 23:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6E0Q9JV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0rKvv/Xt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfEHW7E (ORCPT
+        id S1728575AbfEHXFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 18:59:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40898 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfEHW7D (ORCPT
+        Wed, 8 May 2019 19:05:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39957 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfEHXFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 18:59:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so210289pfn.7;
-        Wed, 08 May 2019 15:59:03 -0700 (PDT)
+        Wed, 8 May 2019 19:05:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so124125plr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 16:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3skeGRJ5pRr7+D0+GcBeYq1z7ba6TiYFkEy56aNuN4w=;
-        b=f6E0Q9JV/oK81qEUGBzLotW8ivaqqSHQj7zCw/2vC4n6WMxqICOe4J18CGHEnErqml
-         8wbXgFKBwRG1uwSDnr5Nkn/yCLqp0wlAiItz+AYTS7CWrdy3bMeTFC0yXK4CkYMks5yS
-         qQqA5u3k0/MIGmqy5d0sr/1l+9LuLYarLCbc3pZhwmpX2Emen/uTBbGAbtd0Sj5FXEaX
-         A3Tf/jGtFYql7ptoRop4ZSC4OQxhjEzN5jZ1VD4upkNn8MJoDEc31FtjJ3ZJmAWtNTas
-         B0DgM3KudTDi1acsEkSoFtPV66r3dP+Ak6uPJLO8/hT9sfmFREvZkxJ6qmkjWjC7axjn
-         2s/w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=JVzET3Mp0wgIwXsop3AibeqFnQBKBmeFUsVe5B/2igU=;
+        b=0rKvv/XtDafNC0HLsREuhHbQX3sZZdgl1ohKulh+yUeFrb3euPGdSWBs7/l+ot9V3V
+         VqiCWj20+FRqtwNZjVhj+DlDPTnhYqhtbYOBuaGnTN7n5/ecNAer8W9o+F+ll0OeQJGj
+         9za44ADWNvtCwycjOYleO1AsOP0tz8SVcGG5Ma7LT/bcmCLRI6w+MRk9ELoQ4wNNuHnx
+         FDOoqgfPTIf7N9IPIHs8razwrXAsUEKkm2fSSmZuOywQY5DjxB1w8xxqnB+DBESJld1g
+         Vn6K5/48kfvmfTjE3ExudhRgUx3LfAUsrV9zFk0kuxcA9wOU0KI7Joa6G1JMZ0iGqaYK
+         38xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3skeGRJ5pRr7+D0+GcBeYq1z7ba6TiYFkEy56aNuN4w=;
-        b=n1usrSXd36sRvrrDOMuXyl5P/DkJq7uK/sYBru4E3db4m+lJwqPdqMHannh3dTR7PT
-         Qy6SKIEMzEMveQNr6j4C3//6EFzamgaO+wmd3/+5x/+GO+RYL0GyRbSb6/ncpL8r97db
-         Wfntpr/K8CJp3M5ohwR20NKUxJCx88jA5KouK//7NgCE0KjHUa+gj1KV4BiNZhS3C+G6
-         3V/T+qhMcnN4SCAYexa/g4ND422BneztFzX0WgMy+2ufs83bfoZYYC1nLXRYxb2yssE7
-         8PiyFNJdQKGSevF67bSHXNPyPJwX5UnE8Z37Uhu8DFiN+1V1pfCU8P8CBWTOtSuOw02P
-         PvRw==
-X-Gm-Message-State: APjAAAXD97/6rs2Gqe3SFipR0jqEKO9cMpFsePL808kEN/xtq6hsBjZc
-        ASL6MoIup4HqEayfrBo7eXI=
-X-Google-Smtp-Source: APXvYqyrohy1M3ppdW6lU7eKE2owmntyLl4B+K6DHGaWoh7InMPIPpSi5AI1dedYXt/CdhdeAcHu/g==
-X-Received: by 2002:a63:6f8e:: with SMTP id k136mr969393pgc.104.1557356342554;
-        Wed, 08 May 2019 15:59:02 -0700 (PDT)
-Received: from localhost ([2601:640:0:ebed:19d3:11c4:475e:3daa])
-        by smtp.gmail.com with ESMTPSA id i65sm327948pgc.3.2019.05.08.15.59.01
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=JVzET3Mp0wgIwXsop3AibeqFnQBKBmeFUsVe5B/2igU=;
+        b=Iv2LEcMZxOsHamz8HGvVe8RGnOD0as6+oAWJbl/EHn4qfWIMlsWoJ/zNrFiH8LeRsF
+         VP+/sU1JSFvgIOART7v+7KZCfuKc295bBZhM/hB1lckARnhFavIuAHiP5sWsZ9YAGddk
+         7GuVjqeLei2wyc1aa+Y2aOeGuzoOUfDNf8UuExfS7NP3Cb2r4apd+u4cqUmMhN1Acyub
+         OPNjf5UrQChktxYO0j70posUpIoOG9xcSsTyLj28p64Nf5qf/b5syYJM2AcfG209AzBW
+         opyzS7wNvWZNujz3cuFQn8Vmq+tBUc9kZCOdDW3cmF/sHbM+JvryHSgAszsQ461iRBSl
+         xHow==
+X-Gm-Message-State: APjAAAXkBGtE7y3Y0oeN3zZTR/eFtxtoRB6GaIyoq/uwMfyfdVZzvlNN
+        T6BGV4WFiAvTQWjY1fy1iHwW6A==
+X-Google-Smtp-Source: APXvYqwzdLUIHtYovZPfiHC/rWX5PqOCpFvFETb+gOoJv6lyxwhlz3SYwF7UrkgeTr1V49rNHOuKxQ==
+X-Received: by 2002:a17:902:b20f:: with SMTP id t15mr446060plr.341.1557356745584;
+        Wed, 08 May 2019 16:05:45 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:a864:57af:5348:a6ea])
+        by smtp.googlemail.com with ESMTPSA id i65sm339785pgc.3.2019.05.08.16.05.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 15:59:01 -0700 (PDT)
-Date:   Wed, 8 May 2019 15:59:00 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Yury Norov <ynorov@caviumnetworks.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        Alexander Graf <agraf@suse.de>,
-        Alexey Klimov <klimov.linux@gmail.com>,
-        Andreas Schwab <schwab@suse.de>,
-        Andrew Pinski <pinskia@gmail.com>,
-        Bamvor Zhangjian <bamv2005@gmail.com>,
-        Chris Metcalf <cmetcalf@mellanox.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Weimer <fweimer@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        James Hogan <james.hogan@imgtec.com>,
-        James Morse <james.morse@arm.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Lin Yongting <linyongting@huawei.com>,
-        Manuel Montezelo <manuel.montezelo@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Nathan_Lynch <Nathan_Lynch@mentor.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
-        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
-        Steve Ellcey <sellcey@caviumnetworks.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Subject: Re: [PATCH v9 00/24] ILP32 for ARM64
-Message-ID: <20190508225900.GA14091@yury-thinkpad>
-References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
+        Wed, 08 May 2019 16:05:44 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     baylibre-upstreaming@groups.io,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: meson-g12a: Add IR nodes
+In-Reply-To: <20190412100518.24470-2-narmstrong@baylibre.com>
+References: <20190412100518.24470-1-narmstrong@baylibre.com> <20190412100518.24470-2-narmstrong@baylibre.com>
+Date:   Wed, 08 May 2019 16:05:44 -0700
+Message-ID: <7h1s18im2f.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180516081910.10067-1-ynorov@caviumnetworks.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-On Wed, May 16, 2018 at 11:18:45AM +0300, Yury Norov wrote:
-> This series enables AARCH64 with ILP32 mode.
-> 
-> As supporting work, it introduces ARCH_32BIT_OFF_T configuration
-> option that is enabled for existing 32-bit architectures but disabled
-> for new arches (so 64-bit off_t userspace type is used by new userspace).
-> Also it deprecates getrlimit and setrlimit syscalls prior to prlimit64.
-> 
-> Based on kernel v4.16. Tested with LTP, glibc testsuite, trinity, lmbench,
-> CPUSpec.
-> 
-> This series on github: 
-> https://github.com/norov/linux/tree/ilp32-4.16
-> Linaro toolchain:
-> http://snapshots.linaro.org/components/toolchain/binaries/7.3-2018.04-rc1/aarch64-linux-gnu_ilp32/
-> Debian repo:
-> http://people.linaro.org/~wookey/ilp32/
-> OpenSUSE repo:
-> https://build.opensuse.org/project/show/devel:ARM:Factory:Contrib:ILP32
+> Amlogic G12A SoCs uses the exact same IR decoder as previous
+> families, add the IR node and the pintctrl setting.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> index 734c5ee60efa..9cb76d325bb7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -559,6 +559,13 @@
+>  						mux {
+>  							groups = "pwm_ao_d_e";
+>  							function = "pwm_ao_d";
+> +						};
+> +					};
 
-This is the 5.1-based version.
-Changes comparing to 5.0:
- - drop arch patches that has been taken upstream:
-   80d7da1cac62 asm-generic: Drop getrlimit and setrlimit syscalls from default list
-   942fa985e9f1 32-bit userspace ABI: introduce ARCH_32BIT_OFF_T config option
-   0d0216c03a7a compat ABI: use non-compat openat and open_by_handle_at variants
- - in include/linux/thread_bits.h define current_thread_info() prior to
-   inclusion of asm/thread_info.h, to avoid circullar dependencies (thread: move
-   thread bits accessors to separated file);
- - enable old IPC interfaces for ilp32, according to mainline changes
-   (arm64: ilp32: introduce syscall table for ILP32).
+nit: you had applied this based on top of the PWM series, but didn't
+mention that in the cover letter.
 
-Thanks,
-Yury
+Kevin
+
+> +					remote_input_ao_pins: remote-input-ao {
+> +						mux {
+> +							groups = "remote_ao_input";
+> +							function = "remote_ao_input";
+>  							bias-disable;
+>  						};
+>  					};
+> @@ -623,6 +630,13 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			ir: ir@8000 {
+> +				compatible = "amlogic,meson-gxbb-ir";
+> +				reg = <0x0 0x8000 0x0 0x20>;
+> +				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
+> +				status = "disabled";
+> +			};
+> +
+>  			saradc: adc@9000 {
+>  				compatible = "amlogic,meson-g12a-saradc",
+>  					     "amlogic,meson-saradc";
+> -- 
+> 2.21.0
