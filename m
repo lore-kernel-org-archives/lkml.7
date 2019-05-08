@@ -2,136 +2,108 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C2FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B56EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAED120644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLwXX0id"
+	by mail.kernel.org (Postfix) with ESMTP id 6706221530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557301573;
+	bh=NsnfkXVI0T6faVZCvWn42jQMNpffXYblg42PO2k1kqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LBEtVCqTfQZ8DefkYyX3IRMKOPDP0+ISO9g5vLhz2ql/lkX1+zlhAb9zldhjbIy7k
+	 MudzKawd91GuAyb/KL1DSKAgwvN1WaVCe8IyrEWOTwlLsD8APn0xZnYjsZVW4Tww3L
+	 VYSB9lRi5yy47r5n8Sjp0AHL/nc1DgEKIKuQtBeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfEHHoZ (ORCPT
+        id S1727262AbfEHHqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:44:25 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44077 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfEHHoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:44:25 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d3so5484169plj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 00:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t80PqPxL5SXwBZR4z2Cp1FO/rGd8hfnknFlQn+mAx7Q=;
-        b=dLwXX0idD9lCs/qVE7sjTvQveBUcNyKoLV+y4Z8HPpDrcAqjSqUYhPhdTpWxo6R+IY
-         uYUIyNHoYDCTmlcDdaC6VM2oZqMsISaw4MmL4+O1toG1ZUipTASZpt8SxHLCnMwhhnfR
-         H7s9rqzEgDz4Y1yPplptZeINxTVu1YzizY21Skdkfi5JpNUfIeCPkUhGbKsoYwqh3D2z
-         ps1LcOKPZCSxbh7qiT83ZoeBkODuPVuZlIPwH5ufp9aW9vnW4u71BhVkNccANBCZO+3x
-         W2+lsR2oZkumAfM4p+9qhN2uHJtqjpUpuLpcjdPYHXfHRP+GmNnV3IvrRAcJXcZfraaw
-         ccng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t80PqPxL5SXwBZR4z2Cp1FO/rGd8hfnknFlQn+mAx7Q=;
-        b=cWL6wo9fvBVl/OIJCNw7OXOZNx61Z9ReiAeQu7AMPlh3/n3/zbGgA8EqXVGGaA3a+U
-         C7Sh6VoiQ7+MdbSpuySbwXtBs666mqJKGM/IL17SAWITrthSeL3ZqABtRqx/uDXmaW0g
-         Wl/tWLfN0jm8hQLL6okWF5Z0nVx/Mi3bzWWIYQSvSb2rfw0z6p7fWlhtDTf6ZV3euCvc
-         IbtVii28OqS03KkblbODJKoAADwTOXcw4uWurecIg1B/L63/6ZSiUhhCxyh3yL2MRnpc
-         PGKjWIivBzlHCQEdlLkXtXBVKmYkEXVrvQu2ixm+AcmEzbuK4AzpzyVKINv07UZOoN+I
-         S5zQ==
-X-Gm-Message-State: APjAAAWargPOtPfkSl6lOhPdnmMgwGk391ParQ6yCTkJ+ruN4AXn9wVJ
-        2OmMMjpPAZjr69oMZTornS0=
-X-Google-Smtp-Source: APXvYqxcME1oVZjtW+nCiWuli098ONKaXJvu5AqLaXfoYbyopBFcLqfHsgLE+0N+N+OLJJ9VHWCQeQ==
-X-Received: by 2002:a17:902:5c5:: with SMTP id f63mr44261175plf.327.1557301464646;
-        Wed, 08 May 2019 00:44:24 -0700 (PDT)
-Received: from localhost ([175.223.21.172])
-        by smtp.gmail.com with ESMTPSA id m11sm21390465pgd.12.2019.05.08.00.44.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 00:44:23 -0700 (PDT)
-Date:   Wed, 8 May 2019 16:44:20 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] RFC: x86/smp: use printk_deferred in
- native_smp_send_reschedule
-Message-ID: <20190508074420.GB15704@jagdpanzerIV>
-References: <20190507173329.17031-1-daniel.vetter@ffwll.ch>
+        Wed, 8 May 2019 03:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbfEHHqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 03:46:12 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C602520644;
+        Wed,  8 May 2019 07:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557301571;
+        bh=NsnfkXVI0T6faVZCvWn42jQMNpffXYblg42PO2k1kqE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aPhKURIO+Ao87Hes/VhOjfiC+GnqbbR2hJxjP9z1OPaP/5GKkTzut1CvgceUci/Zl
+         aEqurGRQcofhzWNHhJUImvtLT1SmaCTWJJzGJx7Vi8kxNg4Skn/+EDhxLyg50qylsQ
+         FG/qDCGibyoi84ZyB7vtr4q8278ldA1j0TrskY1c=
+Date:   Wed, 8 May 2019 13:16:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org,
+        tiwai@suse.de, linux-kernel@vger.kernel.org,
+        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 1/7] soundwire: Add sysfs support for
+ master(s)
+Message-ID: <20190508074606.GV16052@vkoul-mobl>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-2-pierre-louis.bossart@linux.intel.com>
+ <20190504065242.GA9770@kroah.com>
+ <b0059709-027e-26c4-25a1-bd55df7c507f@linux.intel.com>
+ <20190507052732.GD16052@vkoul-mobl>
+ <20190507055432.GB17986@kroah.com>
+ <20190507110331.GL16052@vkoul-mobl>
+ <20190507111956.GB1092@kroah.com>
+ <10fef156-7b01-7a08-77b4-ae3153eaaabc@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507173329.17031-1-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <10fef156-7b01-7a08-77b4-ae3153eaaabc@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/07/19 19:33), Daniel Vetter wrote:
-[..]
-> - make the console_trylock trylock also the spinlock. This works in
->   the limited case of the console_lock use-case, but doesn't fix the
->   same semaphore.lock acquisition in the up() path in console_unlock,
->   which we can't avoid with a trylock.
+On 07-05-19, 17:49, Pierre-Louis Bossart wrote:
 > 
-> - move the wake_up_process in up() out from under the semaphore.lock
->   spinlock critical section. Again this works for the limited case of
->   the console_lock, and does fully break the cycle for this lock.
->   Unfortunately there's still plenty of scheduler related locks that
->   wake_up_process needs, so the loop is still there, just with a few
->   less locks involved.
+> > > The model here is that Master device is PCI or Platform device and then
+> > > creates a bus instance which has soundwire slave devices.
+> > > 
+> > > So for any attribute on Master device (which has properties as well and
+> > > representation in sysfs), device specfic struct (PCI/platfrom doesn't
+> > > help). For slave that is not a problem as sdw_slave structure takes care
+> > > if that.
+> > > 
+> > > So, the solution was to create the psedo sdw_master device for the
+> > > representation and have device-specific structure.
+> > 
+> > Ok, much like the "USB host controller" type device.  That's fine, make
+> > such a device, add it to your bus, and set the type correctly.  And keep
+> > a pointer to that structure in your device-specific structure if you
+> > really need to get to anything in it.
 > 
-> Hence now third attempt, trying to fix this by using printk_deferred()
-> instead of the normal printk that WARN() uses.
-> native_smp_send_reschedule is only called from scheduler related code,
-> which has to use printk_deferred due to this locking recursion, so
-> this seems consistent.
-> 
-> It has the unfortunate downside that we're losing the backtrace though
-> (I didn't find a printk_deferred version of WARN, and I'm not sure
-> it's a bright idea to dump that much using printk_deferred.)
+> humm, you lost me on the last sentence. Did you mean using
+> set_drv/platform_data during the init and retrieving the bus information
+> with get_drv/platform_data as needed later? Or something else I badly need
+> to learn?
 
-I'm catching up with the emails now (was offline for almost 2 weeks),
-so I haven't seen [yet] all of the previous patches/discussions.
+IIUC Greg meant we should represent a soundwire master device type and
+use that here. Just like we have soundwire slave device type. Something
+like:
 
-[..]
->  static void native_smp_send_reschedule(int cpu)
->  {
->  	if (unlikely(cpu_is_offline(cpu))) {
-> -		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
-> +		printk_deferred(KERN_WARNING
-> +				"sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
->  		return;
->  	}
->  	apic->send_IPI(cpu, RESCHEDULE_VECTOR);
+struct sdw_master {
+        struct device dev;
+        struct sdw_master_prop *prop;
+        ...
+};
 
-Hmm,
-One thing to notice here is that the CPU in question is offline-ed,
-and printk_deferred() is a per-CPU type of deferred printk(). So the
-following thing
+In show function you get master from dev (container of) and then use
+that to access the master properties. So int.sdw.0 can be of this type.
 
-	__this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
-	irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
-
-might not print anything at all. In this particular case we always
-need another CPU to do console_unlock(), since this_cpu() is not
-really expected to do wake_up_klogd_work_func()->console_unlock().
-
-	-ss
+Thanks
+-- 
+~Vinod
