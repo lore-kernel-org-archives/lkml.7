@@ -2,94 +2,100 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F27FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115EFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E461221734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D135521734
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bP1jRGQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfEHSbn (ORCPT
+        id S1729239AbfEHScN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:31:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:42916 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbfEHSbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:31:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD66F80D;
-        Wed,  8 May 2019 11:31:41 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A02F23F575;
-        Wed,  8 May 2019 11:31:38 -0700 (PDT)
-Subject: Re: [PATCH v7 11/23] iommu/arm-smmu-v3: Maintain a SID->device
- structure
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, will.deacon@arm.com
-Cc:     peter.maydell@linaro.org, kevin.tian@intel.com,
-        vincent.stehle@arm.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-12-eric.auger@redhat.com>
- <e3b417b7-b69f-0121-fb72-6b6450e1b2f2@arm.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <ecb3725c-27c4-944b-b42c-f4e293521f94@arm.com>
-Date:   Wed, 8 May 2019 19:31:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <e3b417b7-b69f-0121-fb72-6b6450e1b2f2@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 8 May 2019 14:32:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37950 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729213AbfEHScM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 14:32:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so10514040pgl.5;
+        Wed, 08 May 2019 11:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qIetWDv4+uBIOVqkeb68fVDdokjhpaBl7wMXX9efLfc=;
+        b=bP1jRGQHKHAyV8RCpsbv3stlScbSzAWrWTJNP5jDmYq/hi9ac3BG1MIW/LEiOVrHgc
+         +AQw5EwKPlM+V1LPmo3q+tdS7LVvZ1yL06scRv+7eTqZkDFBHbeqJuBF3T0wGWBwjx60
+         vAoU8qFRjxWIkw3lu8T6ByInNowUzibQCHSlc4eHwIPz8yX0q9Cn21PV97vAB08mg6up
+         vAqpMeRyChIE59HTcJoFzayOEfR9YiEslvES1uJlQIbaYkZFxl1bXYNDdhxH/SmnOAzc
+         6427yCcTvJmll1K5JST3q3JpprycZuXZ4mrLfNcjAu4sNpDdUyel0vtxE6XCi0DA0eWL
+         XsBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qIetWDv4+uBIOVqkeb68fVDdokjhpaBl7wMXX9efLfc=;
+        b=VzPrsJrpiub8QthdI7rdHF4r1coR/jhc+u2hZViMauxvwC0DgHDRThBcNrDJ1OiudT
+         1I+iLbfCAfiB+0cUQYHvhMjjJ5nLekH/ZzvXmWyZ75FcAQpP310Bfb/r4AYvH/dbRWZ0
+         k/ecOPQkOUIRHssqbBAbwDD6PQ0nQ5OIktvVfOkN0IC3su6M87vikJb1iV9T1Qur/Faz
+         0tFF59IkzP9KhDTei9xQBLUGldpLUjgY1ML5YOhzovphKcZAAuqew/ek8BgKkD70OqxY
+         4LbDui1hezaPmk0Bp9J6MWnKz/PvIO1WcxuEeC82YwdR5EaFM8GO5R/FN/Tfj6IL3CX1
+         autQ==
+X-Gm-Message-State: APjAAAVXa5ZRia09n2fFc+UI6dg0MfW2eca2dDqzH7cql6JGOYoaZa17
+        BvYYGCReD8w8b1bp0gNBnascgE3R52Fz2A==
+X-Google-Smtp-Source: APXvYqzLucjYSQpwyBqCgLmkeo168GNWKZrn9juo302pblUlTwW1LeU7l306emrUEaRn5kCI4ZCW4Q==
+X-Received: by 2002:a65:6496:: with SMTP id e22mr49157168pgv.249.1557340331223;
+        Wed, 08 May 2019 11:32:11 -0700 (PDT)
+Received: from localhost.localdomain ([122.170.180.197])
+        by smtp.googlemail.com with ESMTPSA id 2sm12843903pgc.49.2019.05.08.11.32.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 11:32:10 -0700 (PDT)
+From:   Jagdish Motwani <j.k.motwani@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     j.k.motwani@gmail.com,
+        Jagdish Motwani <jagdish.motwani@sophos.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net] netfilter: nf_queue:fix reinject verdict handling
+Date:   Thu,  9 May 2019 00:01:14 +0530
+Message-Id: <20190508183114.7507-1-j.k.motwani@gmail.com>
+X-Mailer: git-send-email 2.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/2019 15:05, Robin Murphy wrote:
-> On 08/04/2019 13:18, Eric Auger wrote:
->> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->>
->> When handling faults from the event or PRI queue, we need to find the
->> struct device associated to a SID. Add a rb_tree to keep track of SIDs.
-> 
-> Out of curiosity, have you looked at whether an xarray might now be a
-> more efficient option for this?
+From: Jagdish Motwani <jagdish.motwani@sophos.com>
 
-I hadn't looked into it yet, but it's a welcome distraction.
+In case of more than 1 nf_queues, hooks between them are being executed
+more than once.
 
-* Searching by SID will be more efficient with xarray (which still is a
-radix tree, with a better API). Rather than O(log2(n)) we walk
-O(log_c(n)) nodes in the worst case, with c = XA_CHUNK_SIZE = 64. We
-don't care about insertion/deletion time.
+Signed-off-by: Jagdish Motwani <jagdish.motwani@sophos.com>
+---
+ net/netfilter/nf_queue.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-* Memory consumption is worse than rb-tree, when the SID space is a
-little sparse. For PCI devices the three LSBs (function number) might
-not be in use, meaning that 88% of the leaf slots would be unused. And
-it gets worse if the system has lots of bridges, as each bus number
-requires its own xa slot, ie. 98% unused.
+diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+index 9dc1d6e..b5b2be5 100644
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -255,6 +255,7 @@ static unsigned int nf_iterate(struct sk_buff *skb,
+ repeat:
+ 		verdict = nf_hook_entry_hookfn(hook, skb, state);
+ 		if (verdict != NF_ACCEPT) {
++			*index = i;
+ 			if (verdict != NF_REPEAT)
+ 				return verdict;
+ 			goto repeat;
+-- 
+2.9.5
 
-  It's not too bad though, and in general I think the distribution of
-SIDs would be good enough to justify using xarray. Plugging in more
-devices would increase the memory consumption fast, but creating virtual
-functions wouldn't. On one machine (TX2, a few discrete PCI cards) I
-need 16 xa slots to store 42 device IDs. That's 16 * 576 bytes = 9 kB,
-versus 42 * 40 bytes = 1.6 kB for the rb-tree. On another machine (x86,
-lots of RC integrated endpoints) I need 18 slots to store 181 device
-IDs, 10 kB vs. 7 kB with the rb-tree.
-
-* Using xa would make this code a lot nicer.
-
-Shame that we can't store the device pointer directly in the STE though,
-there is already plenty of unused space in there.
-
-Thanks,
-Jean
