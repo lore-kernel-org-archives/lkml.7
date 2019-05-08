@@ -2,102 +2,141 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDFDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA08C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2F420850
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSRC3csH"
+	by mail.kernel.org (Postfix) with ESMTP id 53F2B20850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557291081;
+	bh=pTyxrwECxa2pgGzrgPk/KLF+bllzOOCxIk3tiZXY+d0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GDJ2oMdQTYyMVWporvG+YGG0/vwONbco6QbHCoF3lJ7S5A64raqmMvxIE/SS3zFO9
+	 Fd3QXv1tRdnreM2UGnt2kqQbUlOWeOZhVs3WdNObOyDmb+VHuzLlFV9MRNRVcqEwQ2
+	 FAVaa9tjWgu4GBc65WGOJW3pQDmFJ0unUql07L/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfEHEnB (ORCPT
+        id S1725922AbfEHEvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:43:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37359 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfEHEnA (ORCPT
+        Wed, 8 May 2019 00:51:16 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34861 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfEHEvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:43:00 -0400
-Received: by mail-io1-f67.google.com with SMTP id u2so12615856ioc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:43:00 -0700 (PDT)
+        Wed, 8 May 2019 00:51:15 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j20so13521215lfh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0WCwzVUAfPRUJz4fPZuWZIqE5cUDRL0qnnun9aptMzE=;
-        b=TSRC3csHbrdmnBA++3zFijCDqlgp4NfYnu68g3wIx2wJnZxn0DixJdQMODYpe0a+v0
-         dKaYTfe36UDmtBA7d0p+MAS3cQ051S9ZJ3hX056cNqYgr4ANYYbx4HdbLEyqpUJ6IS5d
-         wNMwdXyOjh1xNAd+iFWQrHd9HSSVhZyIx7nLdvncmvJClyfPtKv6nI4+5xb62zQBhlcK
-         gbX3Vj4iL16OnwROTT8+igQ0+CfFg94HX1guy4SQa6C5M6Q/DK3pyrmbOW/TOeQ/BuSm
-         slTGtQwNmhh+A+yjSVJSpPM4Ig9UBDl0guj5EW24eyj2mNBiLDEM2IMo6q2AIh5qDrmI
-         uqMg==
+        bh=I5e/UfOxO1ET3GG/v6CYadKGMC4a8arhmGhydGAJn8s=;
+        b=fCVBMlCqXFaNG3/T7joMRaQg4ceXtuYdPorGYMf1oXOX02JSfkDNtMBZ392mp3Xa+w
+         XzLxNjp4lFJG4QNeeBTaE98AcmNY9mHk/ZS6OieHVwaCDyObPW9cGux/hc2VnbzcJFR6
+         4ExSRI8O2Vzt05xYgeQ6pkrUST7OnP3nm4W/A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0WCwzVUAfPRUJz4fPZuWZIqE5cUDRL0qnnun9aptMzE=;
-        b=e2cV6kTx8pdBy+Syl2htdYWSJ2xc8y9bZniztTgnzDvIYhtkX0eqLIQ+kBfs1PTByq
-         bX0VLfj42gUCYVTwcUKnuFXiKiFm8Zu+ACQ+hTkIJK7eEOjO4kDTp8AZDwdmJAtYaC0r
-         oqmn1fV5vYjWguiCFNK/PaT+vU1gaJwb7KFx6eYnu1iBl3gAzT0msDBrlTPJnjsOe3Gm
-         VFpvalqqa9XN6BE2tnM8DmMSEfLT3iQORsxjxM1Ay7jR2iLlFnTJT4W5BCVKaJXbUue5
-         Z926kUmwHcZIP8++SsTdU2zU+IB6UV1ZL8fxMYXZUv4pf1XCQk3vSdOpr5vTm2fdAPqL
-         0FRw==
-X-Gm-Message-State: APjAAAU/quyadc3LgFnXg8k9qITfHNADdTsQXHXQD/8VQR2tIPNjOgCq
-        r9LF7dHJHv1+IckMTcsj37zm0Sh7wTrXe6fAiw==
-X-Google-Smtp-Source: APXvYqxgcAPlK8eAIzaA6Y4YNWlH8aXlOm5ev0pdKSUav1mrAgdnGcQRAOamFpNARCHgCX7/boEvmNQ5MkXyeCqfJW0=
-X-Received: by 2002:a6b:7d08:: with SMTP id c8mr14495246ioq.259.1557290579930;
- Tue, 07 May 2019 21:42:59 -0700 (PDT)
+        bh=I5e/UfOxO1ET3GG/v6CYadKGMC4a8arhmGhydGAJn8s=;
+        b=m6R0SsysZ+qkGkv7H0dBzwhCeCn6W+0yaF1cZYpS62uMvW+Cp0uAPHPWE2Y3nDLJEr
+         5v1v03qj+YGk5JMLrMAm7hWJ0+9JRvT0vZrh9KbkVlsxPCmvR0rm5dpEgUens6WX3YkC
+         IgJPGnXtoDP6VkVmLooCBAnRluuMSwYow3oyV6vjJOHWYLRwXApk4HUCuHjVUKAargLS
+         wAZwruGKHcP8wE52m/YK9lC9zvZpGnX5G+Z9XE52olEPFwOefMmxU+k2VUksdnWLXkDR
+         ngoI4nZSHbtE6hFl5zXSv4c8Dn63GHU5yXQnOwhGwAXumw0IJGRk6U7mTK42VwIBk/Na
+         pmNw==
+X-Gm-Message-State: APjAAAWy9dm6OV5lh75b3wbpI/CKdmDjo67J3SWmwptdAWelerPKstvH
+        qUQbKauHIKy2+Qc6LKrwq3Z2eQxgeiY=
+X-Google-Smtp-Source: APXvYqyjxqn8KynGWaSRI5KdQm0PkOloiJi+wxLT9l8CGgq0EFp2vPfh257HitNLloKnRIhJWbbx+A==
+X-Received: by 2002:a19:c194:: with SMTP id r142mr17227167lff.41.1557291073473;
+        Tue, 07 May 2019 21:51:13 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id k8sm2110654ljc.91.2019.05.07.21.51.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 21:51:09 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id s7so10843974ljh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 21:51:08 -0700 (PDT)
+X-Received: by 2002:a2e:9d86:: with SMTP id c6mr17393609ljj.135.1557291068666;
+ Tue, 07 May 2019 21:51:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557208860-12846-1-git-send-email-kernelfans@gmail.com> <20190507082808.GB125993@gmail.com>
-In-Reply-To: <20190507082808.GB125993@gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Wed, 8 May 2019 12:42:48 +0800
-Message-ID: <CAFgQCTvFawbT0NwKbWe+1R-GP6NxSEhsfejJOPk37B=h0AckBA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/boot: move early_serial_base to .data section
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+References: <CAHk-=wjLXmOn=Cp=uOfO4gE01eN_-UcOUyrMTTw5-f_OfPO48Q@mail.gmail.com>
+ <20190506225819.11756974@oasis.local.home> <CAHk-=wh4FCNBLe8OyDZt2Tr+k9JhhTsg3H8R4b55peKcf0b6eQ@mail.gmail.com>
+ <20190506232158.13c9123b@oasis.local.home> <CAHk-=wi4vPg4pu6RvxQrUuBL4Vgwd2G2iaEJVVumny+cBOWMZw@mail.gmail.com>
+ <CAHk-=wg2_okyU8mpkGCUrudgfg8YmNetSD8=scNbOkN+imqZdQ@mail.gmail.com>
+ <20190507111227.1d4268d7@gandalf.local.home> <CAHk-=wjYdj+vvV8uUA8eaUSxOhu=xuQxdo-dtM927j0-3hSkEw@mail.gmail.com>
+ <20190507163440.GV2606@hirez.programming.kicks-ass.net> <CAHk-=wiuue37opWK5QaQ9f6twqDZuSratdP-1bK6kD9-Az5WnA@mail.gmail.com>
+ <20190507172159.5t3bm3mjkwagvite@treble> <20190507172418.67ef6fc3@gandalf.local.home>
+In-Reply-To: <20190507172418.67ef6fc3@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 May 2019 21:50:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg5_fwx_-ybD9TLQE4rAUqtYzO2CAmpciWTkDn3dtKMOw@mail.gmail.com>
+Message-ID: <CAHk-=wg5_fwx_-ybD9TLQE4rAUqtYzO2CAmpciWTkDn3dtKMOw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        LKML <linux-kernel@vger.kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 4:28 PM Ingo Molnar <mingo@kernel.org> wrote:
+On Tue, May 7, 2019 at 2:24 PM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
+> And there's been several times I forget that regs->sp can not be read
+> directly. Especially most of my bug reports are for x86_64 these days.
+> But when I had that seldom x86_32 one, and go debugging, I would print
+> out "regs->sp" and then the system would crash. And I spend some time
+> wondering why?
 >
-> * Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> > arch/x86/boot/compressed/head_64.S clears BSS after relocated. If early
-> > serial is set up before clearing BSS, the early_serial_base will be reset
-> > to 0.
-> >
-> > Initializing early_serial_base as -1 to push it to .data section.
->
-> I'm wondering whether it's wise to clear the BSS after relocation to
-> begin with. It already gets cleared once, and an implicit zeroing of all
-> fields on kernel relocation sounds dubious to me.
->
-After reading the code more closely, I think that the BSS is not fully
-initialized to 0, exception the stack and heap.
+> It's been a bane of mine for some time.
 
-Furthermore the BSS is not copied to the target address. We just copy [0, _bss).
-> Is there a strong reason for that? I.e. is there some uninitialized or
-> otherwise important-to-clear data there?
->
-I guess the reason may be stack or heap can contain some position
-dependent data. (While in practice, there is no such kind of data in
-the code now days)
+Guys, I have basically a one-liner patch for your hangups.
 
-Thanks,
-Pingfan
+It's called "rename 'sp' to 'user_sp' on x86-32".
+
+Then we make the 'sp' field on x86-64 be a union, so that you can call
+it user_sp or sp as you wish.
+
+Yeah, it's really more than one line, because obviously the users will
+need chaning, but honestly, that would be a _real_ cleanup. Make the
+register match what it actually is.
+
+And it doesn't mess up the stack frame, and it doesn't change the
+entry code. It just reminds people that the entry is the USER stack
+pointer.
+
+Problem solved.
+
+               Linus
