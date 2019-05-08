@@ -2,166 +2,93 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BDCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EAFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B1D20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:45:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eF1LM/Tz"
+	by mail.kernel.org (Postfix) with ESMTP id 8E39D20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfEHIpd (ORCPT
+        id S1726939AbfEHIql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:45:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34188 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfEHIpd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:45:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f7so15740849wrq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8J5bICABPTbsXmWljoJLSoNhK+HR7wlCA7LrU5o+qh4=;
-        b=eF1LM/TzoWgZLrTYcVpz/qL880npv8Bcp6BZpYW5++ITZw8QPVhIXUN2o0HvQNskoH
-         QtED3cWRXQirPX9JUM2/+G5VjT21tqHnunTl1L5J/fWUUgHCy1M+XtX+KGpJlKVwCh82
-         b64Z9x9rwgthGefh3Ak63JQ1/gMyexypEZpXjO4W8eTiSxnKuKwyXRgmPdcOvFyqyDrm
-         CikwFA4MIuIte8ZVsgxSiybGOlI34WeNK7hzkgw4v3HhC2lSyIPOw6IPEqTcXxsE0WVp
-         C10nsFkL1NMGbbyLiewLElxoP4vZWnr1M8kvrirepzdsUnXKidb5rQNWVBTL75Ws7aBD
-         EFGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8J5bICABPTbsXmWljoJLSoNhK+HR7wlCA7LrU5o+qh4=;
-        b=EMw3WXexVWdCEkM0HLc5gfyk61yhl2CFUgNzTIHtiiebs0FK362P1mthMFSl333hwe
-         omY0LtHJGW9P+/KsuofJMkO5omGdrM8lxAXmWXIp3QPzrYgXA6r47MPwEdPv+UqBp/DJ
-         NCngrAa2iZ8HNTFN3CKHGBzU2egZTCDEDU+J4gKTi7ETfqJ/iri5dwIjRSbh3DpXygmH
-         5LbqIHn3YPNU+UR4oTmRk94cLUL2pNbxP10QP752xtB5FX4dy/u4BU+IrpPCUc8ftOS1
-         x92Mbblbk+NgyYDv3YuslVZAGat1fTyjmC6UlJRK+DzHNWzNmFfJe9QSI3CMvXjRad95
-         fXrA==
-X-Gm-Message-State: APjAAAXAb/pfqovxj3uHm+s6psXcjIrF6xE7d2m5fUDzAYA1vaObGGFA
-        5I5i5sgKIgmY9YQBejYyJkcSiS9B
-X-Google-Smtp-Source: APXvYqxy5KU8btQxhZyHMyTAqFVvwUCpfVEhUyITWI0evVEc4FOSBnMbVmI51170igiyz2b2ZVRCLQ==
-X-Received: by 2002:a5d:6642:: with SMTP id f2mr16305430wrw.75.1557305131382;
-        Wed, 08 May 2019 01:45:31 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id j46sm4467531wre.54.2019.05.08.01.45.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 01:45:30 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: remove dead code in habanalabs_drv.c
-Date:   Wed,  8 May 2019 11:45:29 +0300
-Message-Id: <20190508084529.22819-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 May 2019 04:46:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36811 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbfEHIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 04:46:41 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 01:46:41 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga004.jf.intel.com with ESMTP; 08 May 2019 01:46:34 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hOIDg-0006Uw-NY; Wed, 08 May 2019 11:46:32 +0300
+Date:   Wed, 8 May 2019 11:46:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org, Yury Norov <ynorov@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH 5/7] lib: rework bitmap_parse()
+Message-ID: <20190508084632.GY9224@smile.fi.intel.com>
+References: <20190501010636.30595-1-ynorov@marvell.com>
+ <20190501010636.30595-6-ynorov@marvell.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190501010636.30595-6-ynorov@marvell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes some dead code that performs checks about variables
-with hard-coded values.
+On Tue, Apr 30, 2019 at 06:06:34PM -0700, Yury Norov wrote:
+> bitmap_parse() is ineffective and full of opaque variables and opencoded
+> parts. It leads to hard understanding and usage of it. This rework
+> includes:
+>  - remove bitmap_shift_left() call from the cycle. Now it makes the
+>    complexity of the algorithm as O(nbits^2). In the suggested approach
+>    the input string is parsed in reverse direction, so no shifts needed;
+>  - relax requirement on a single comma and no white spaces between chunks.
+>    It is considered useful in scripting, and it aligns with
+>    bitmap_parselist();
+>  - split bitmap_parse() to small readable helpers;
+>  - make an explicit calculation of the end of input line at the
+>    beginning, so users of the bitmap_parse() won't bother doing this.
 
-The patch also moves the initialization of those variables to a separate
-function, that will possibly have different values per ASIC.
+> +static inline bool in_str(const char *start, const char *ptr)
+> +{
+> +	return start <= ptr;
+> +}
+> +
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/habanalabs_drv.c | 56 +++++++++++-------------
- 1 file changed, 26 insertions(+), 30 deletions(-)
+The explicit use of the conditional is better.
 
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 42a8c0b7279a..6f6dbe93f1df 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -172,6 +172,17 @@ int hl_device_open(struct inode *inode, struct file *filp)
- 	return rc;
- }
- 
-+static void set_driver_behavior_per_device(struct hl_device *hdev)
-+{
-+	hdev->mmu_enable = 1;
-+	hdev->cpu_enable = 1;
-+	hdev->fw_loading = 1;
-+	hdev->cpu_queues_enable = 1;
-+	hdev->heartbeat = 1;
-+
-+	hdev->reset_pcilink = 0;
-+}
-+
- /*
-  * create_hdev - create habanalabs device instance
-  *
-@@ -196,29 +207,25 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
- 	if (!hdev)
- 		return -ENOMEM;
- 
-+	/* First, we must find out which ASIC are we handling. This is needed
-+	 * to configure the behavior of the driver (kernel parameters)
-+	 */
-+	if (pdev) {
-+		hdev->asic_type = get_asic_type(pdev->device);
-+		if (hdev->asic_type == ASIC_INVALID) {
-+			dev_err(&pdev->dev, "Unsupported ASIC\n");
-+			rc = -ENODEV;
-+			goto free_hdev;
-+		}
-+	} else {
-+		hdev->asic_type = asic_type;
-+	}
-+
- 	hdev->major = hl_major;
- 	hdev->reset_on_lockup = reset_on_lockup;
--
--	/* Parameters for bring-up - set them to defaults */
--	hdev->mmu_enable = 1;
--	hdev->cpu_enable = 1;
--	hdev->reset_pcilink = 0;
--	hdev->cpu_queues_enable = 1;
--	hdev->fw_loading = 1;
- 	hdev->pldm = 0;
--	hdev->heartbeat = 1;
--
--	/* If CPU is disabled, no point in loading FW */
--	if (!hdev->cpu_enable)
--		hdev->fw_loading = 0;
- 
--	/* If we don't load FW, no need to initialize CPU queues */
--	if (!hdev->fw_loading)
--		hdev->cpu_queues_enable = 0;
--
--	/* If CPU queues not enabled, no way to do heartbeat */
--	if (!hdev->cpu_queues_enable)
--		hdev->heartbeat = 0;
-+	set_driver_behavior_per_device(hdev);
- 
- 	if (timeout_locked)
- 		hdev->timeout_jiffies = msecs_to_jiffies(timeout_locked * 1000);
-@@ -228,17 +235,6 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
- 	hdev->disabled = true;
- 	hdev->pdev = pdev; /* can be NULL in case of simulator device */
- 
--	if (pdev) {
--		hdev->asic_type = get_asic_type(pdev->device);
--		if (hdev->asic_type == ASIC_INVALID) {
--			dev_err(&pdev->dev, "Unsupported ASIC\n");
--			rc = -ENODEV;
--			goto free_hdev;
--		}
--	} else {
--		hdev->asic_type = asic_type;
--	}
--
- 	/* Set default DMA mask to 32 bits */
- 	hdev->dma_mask = 32;
- 
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
