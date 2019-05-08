@@ -2,142 +2,128 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C8AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B579C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BEB21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBB121479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9dBQ1b9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLf0GeJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfEHLX6 (ORCPT
+        id S1727529AbfEHLYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:23:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36209 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfEHLX6 (ORCPT
+        Wed, 8 May 2019 07:24:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42038 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727504AbfEHLYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:23:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id e19so7007334iob.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:23:57 -0700 (PDT)
+        Wed, 8 May 2019 07:24:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l2so26720327wrb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:24:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d644zZtPZpj+iL/O+tRuouNZQQ4CHCP7vp/WgV362Xc=;
-        b=I9dBQ1b9fZElQqTaOP/mLPnw/WHMH+3+vU3bKIBkdC5z+XDjpa5XW4+pqXDH2Yirdh
-         lVHzKExZIKY1Ce90rffFlZEQOt7jMAWQDbUiDjF5HE0wViOga6ncr88kIutVR58iaZfI
-         uBxquUEK9MRuMZHslVRyiLW4gSD0PFci7RYj/GjHSR2fEsT0p6KUYmpHs9nEJm4GOPee
-         P5n38Gxn2qoo8db7HRhafcb3w8Ond4eCsOz5YITIB4/LcaolMrlLzcOTxkK8B/BauI/8
-         tDXgrbveQcxNc+yCfGXlJcZyA3yJOhjkjI+gGv2K2W3q5+YO2mflV0dVTUXcBuviIMnU
-         7K6Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1ZGlp40IsYtFAaBk0HZMbzf6li3dlBM1JeMgqqz53qI=;
+        b=dLf0GeJ5oO2/qzJ2OPJsKrWb1jddayoko2NnzJa2Ao0wHEnYkkD8bC0lix+E4KUog5
+         HOSpNmLXFhms8Zmf2MqLUVR/SIre28mjmpqCw0GpbXExy/GCCt6KMXZV0hBW2LdlWKwT
+         7ZFCxPZpm7P84TjCBKoZGANS9gelWb+IKZbJatQAyAoRb8MH+1nr64aMFbyvnGBfXJwr
+         GqslgS+cGoVeRyvj4mPtx+uWfDCQQW+nOpgXrXe/dZQ/R3ho6OE4oZ55uJS8+bpTiD4+
+         1Ae5IR323BjGtWXzuIoKQfjrO7/XwnCxaL67+t4ZWnZk5Rhm+IhvBeQFLh3eU4b4/E0I
+         a/3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d644zZtPZpj+iL/O+tRuouNZQQ4CHCP7vp/WgV362Xc=;
-        b=HJNuPK2M7hymKYj4CbCa2yMQAzjhVxKKBMetllkSvcMANZTVGETP6QBxpgDFI5g00r
-         9JBvsc8pwMgj1EIOEXocIbiJteF4KEOC9VkJWEXhLIy5CwMqmAvKN7iaLj36KAN2GO0v
-         psTo3N5gAPUtMc0L+A7U/mZsFngK+4YlUGAPqVlwFEBHPvBgu3W2qZ34hUozP6lZueRw
-         dw2nTj5HOIQYB1y7jgNfslZ/cZFteSO7fVTGBiNL3af8VjOAjwIH/BVoIBBAaYMlsACO
-         /1GoIbdPxpWHa1oQdvrHr49nRTzXtwwJGQfsGF4CIWimp2vynFPcYSN3DGte2UNrF3vT
-         MqvA==
-X-Gm-Message-State: APjAAAUad0p7ToNSAUVJVyW6/BZevUJv/yHauOBBbi4SXNcYFoxOABR3
-        SDFjW5ySpDquG9DP36GRfB6XT219EaCGtlQiVbwnZA==
-X-Google-Smtp-Source: APXvYqwg7I6hW8AKf3IWv5UtmdgFgvMUcDZ+7raMWEIqgiSPe/rVBGmNOr28sn4pxVkFKWiOMyzK697YC3urwpXbK9E=
-X-Received: by 2002:a6b:f305:: with SMTP id m5mr17786558ioh.271.1557314637068;
- Wed, 08 May 2019 04:23:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1ZGlp40IsYtFAaBk0HZMbzf6li3dlBM1JeMgqqz53qI=;
+        b=pRRHt4ZFOBTYZCduYNMrHYIx5/Zq3ipbbOeUVZLRz+G3M7RoAanla7/ad4NhCFvBwL
+         mlrFRHAfBHsLwWQcF+ymLqAhm66MfnXLr8gxxQr1SDG/NutbkcZ+c9DjjcTXY//AGXDz
+         UL7y/k8lVHp49BJbdgX5BVNQzCvHrv3szvMjO7QR0dME9XZZxSM/b+CLRdcmqhG8b2b6
+         5b+UsAptKuts1QgN9RBfEpbSiFfX9luXIEAFRiu3Jxql7sz1W93BvVAAIUf2RxPtxAsX
+         ilcr1JXZ6rLiwZ9eiPPKaZUGpW9o1pUvIDxw2yJeVkb92h3Rcx9Xf7+2V43uQymw8usH
+         8Kzg==
+X-Gm-Message-State: APjAAAWH8QzX9CWLsWtPj/5LIJiYZxsQhUXaU/Pwa2maYHcjRr42MrpX
+        iqqmrCX0gpKX6QIfpi9G9YVA1w==
+X-Google-Smtp-Source: APXvYqwRRnCpg9Buqa4k1dpgkoWwP+tLwA3WGNYrjxvZ7tkjnD7LulMPynsnUSKYyb73BEvs2F6yFg==
+X-Received: by 2002:adf:ebd0:: with SMTP id v16mr20468589wrn.175.1557314662357;
+        Wed, 08 May 2019 04:24:22 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id i17sm3726274wmb.0.2019.05.08.04.24.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 04:24:21 -0700 (PDT)
+Date:   Wed, 8 May 2019 12:24:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Subject: Re: [PATCH v14 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
+Message-ID: <20190508112419.GU3995@dell>
+References: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
+ <a666794d68b846a5527fc37e80cce5010615f54a.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <000000000000fb78720587d46fe9@google.com> <20190502023426.GA804@sol.localdomain>
- <20190501231051.50eeccd6@oasis.local.home>
-In-Reply-To: <20190501231051.50eeccd6@oasis.local.home>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 8 May 2019 13:23:45 +0200
-Message-ID: <CACT4Y+a=yA56CgQqGGSSQRqF9z8y-et=t-uwrjCDYiG8p-BCzQ@mail.gmail.com>
-Subject: Re: BUG: soft lockup in kvm_vm_ioctl
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        syzbot <syzbot+8d9bb6157e7b379f740e@syzkaller.appspotmail.com>,
-        KVM list <kvm@vger.kernel.org>, adrian.hunter@intel.com,
-        David Miller <davem@davemloft.net>,
-        Artem Bityutskiy <dedekind1@gmail.com>, jbaron@redhat.com,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Rik van Riel <riel@surriel.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a666794d68b846a5527fc37e80cce5010615f54a.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt <rostedt@goodmis.org>
-Date: Thu, May 2, 2019 at 5:10 AM
-To: Eric Biggers
-Cc: syzbot, Dmitry Vyukov, <kvm@vger.kernel.org>,
-<adrian.hunter@intel.com>, <davem@davemloft.net>,
-<dedekind1@gmail.com>, <jbaron@redhat.com>, <jpoimboe@redhat.com>,
-<linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-<luto@kernel.org>, <mingo@kernel.org>, <peterz@infradead.org>,
-<richard@nod.at>, <riel@surriel.com>,
-<syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>
+On Thu, 02 May 2019, Matti Vaittinen wrote:
 
-> On Wed, 1 May 2019 19:34:27 -0700
-> Eric Biggers <ebiggers@kernel.org> wrote:
->
-> > > Call Trace:
-> > >  smp_call_function_many+0x750/0x8c0 kernel/smp.c:434
-> > >  smp_call_function+0x42/0x90 kernel/smp.c:492
-> > >  on_each_cpu+0x31/0x200 kernel/smp.c:602
-> > >  text_poke_bp+0x107/0x19b arch/x86/kernel/alternative.c:821
-> > >  __jump_label_transform+0x263/0x330 arch/x86/kernel/jump_label.c:91
-> > >  arch_jump_label_transform+0x2b/0x40 arch/x86/kernel/jump_label.c:99
-> > >  __jump_label_update+0x16a/0x210 kernel/jump_label.c:389
-> > >  jump_label_update kernel/jump_label.c:752 [inline]
-> > >  jump_label_update+0x1ce/0x3d0 kernel/jump_label.c:731
-> > >  static_key_slow_inc_cpuslocked+0x1c1/0x250 kernel/jump_label.c:129
-> > >  static_key_slow_inc+0x1b/0x30 kernel/jump_label.c:144
-> > >  kvm_arch_vcpu_init+0x6b7/0x870 arch/x86/kvm/x86.c:9068
-> > >  kvm_vcpu_init+0x272/0x370 arch/x86/kvm/../../../virt/kvm/kvm_main.c:320
-> > >  vmx_create_vcpu+0x191/0x2540 arch/x86/kvm/vmx/vmx.c:6577
-> > >  kvm_arch_vcpu_create+0x80/0x120 arch/x86/kvm/x86.c:8755
-> > >  kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:2569
-> > > [inline]
-> > >  kvm_vm_ioctl+0x5ce/0x19c0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3105
-> > >  vfs_ioctl fs/ioctl.c:46 [inline]
-> > >  file_ioctl fs/ioctl.c:509 [inline]
-> > >  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-> > >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-> > >  __do_sys_ioctl fs/ioctl.c:720 [inline]
-> > >  __se_sys_ioctl fs/ioctl.c:718 [inline]
-> > >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> > >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> >
-> > I'm also curious how syzbot found the list of people to send this to, as it
-> > seems very random.  This should obviously have gone to the kvm mailing list, but
-> > it wasn't sent there; I had to manually add it.
->
-> My guess is that it went down the call stack, and picked those that
-> deal with the functions that are listed at the deepest part of the
-> stack. kvm doesn't appear for 12 functions up from the crash. It
-> probably stopped its search before that.
+> ROHM BD70528MWV is an ultra-low quiescent current general
+> purpose single-chip power management IC for battery-powered
+> portable devices.
+> 
+> Add MFD core which enables chip access for following subdevices:
+> 	- regulators/LED drivers
+> 	- battery-charger
+> 	- gpios
+> 	- 32.768kHz clk
+> 	- RTC
+> 	- watchdog
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> Changelog v14: No changes
+> 
+>  drivers/mfd/Kconfig              |  17 ++
+>  drivers/mfd/Makefile             |   1 +
+>  drivers/mfd/rohm-bd70528.c       | 316 ++++++++++++++++++++++++
+>  include/linux/mfd/rohm-bd70528.h | 408 +++++++++++++++++++++++++++++++
+>  4 files changed, 742 insertions(+)
+>  create mode 100644 drivers/mfd/rohm-bd70528.c
+>  create mode 100644 include/linux/mfd/rohm-bd70528.h
 
-Hi,
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-What we do now is the following. We take all filenames in the report
-starting from top to bottom, and then apply a blacklist to filter out
-utility functions and bug detection facilities:
-https://github.com/google/syzkaller/blob/master/pkg/report/linux.go#L59-L89
-The first file name that is not blacklisted is used with get_maintainers.pl.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
