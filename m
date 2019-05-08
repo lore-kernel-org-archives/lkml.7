@@ -2,124 +2,115 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36235C46460
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD5FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E7D2173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557344739;
-	bh=xkLmc4siqsVmABXBRPQeKKcDg8DMy/EAQ4jHsHQCGUo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pzH0X48F3s6WGg+IyEInZIFnsLrIZ8n2zRtOERq+mAFUgsAj9/iKfym+zegmKc+/K
-	 FDP3pf1UoeetH0TRa6cFV4QQKV2GhOv2/6aqXYrg25SvkyVw23Ybb5vSgcdfmnxBbf
-	 BQSydOwBJcdj4dtdB80neqJtKLk9izGDAJeYFFwY=
+	by mail.kernel.org (Postfix) with ESMTP id 04EF321726
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oijb849r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbfEHTpi (ORCPT
+        id S1727338AbfEHTuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:45:38 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34204 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfEHTph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:45:37 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p27so8238773eda.1;
-        Wed, 08 May 2019 12:45:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yitxjkm3ONtDJREvfE6xg0fXV+nnA9Az4IHdTCNNvfQ=;
-        b=eonf0jQ5XthJBh6OmdwQM7KXIjl71S5NRGoaKPXeA+h0jllDQe85o0po25peOD+Dud
-         ldudydtuMM+HRTlijXctL9DQRkAN8WPWdk3trM3H8U3BeCg5XtZy2N6dsd4hdJtbvmR+
-         BE5Po4oG+wf+oVpPtqfyAdrzCq2GOzF6lxLPB5L0CAeblY5C9y1i5yHfPgQWZoiUI46d
-         ZAZvelhqXmJhaFx/338SjLrs40g2YmfIEZXUp7ag1zeMryOMZ788DIrH3eclK5IZaIQz
-         vwCqD5yMN9NjpfgMatFJ59ulKvClA5uZjBlidhInGdSCzkMO0282qB7Z5ATe8cfyk7Cy
-         wTJg==
-X-Gm-Message-State: APjAAAX83BTwaKkfdUBK9F2B1CLINcUwCMuj7cCAQgzvBTpkeCDoAdby
-        /3wVwho/hEqkre+iCC39z+r7YIk4+8QHF4+jnDJOuXvT
-X-Google-Smtp-Source: APXvYqz8LW5nHfH2mnvBZtxMVLEhN1TwIKxFB8H1P3gMPsykwiHUpYN65Pj0BaNL+kTO2QAINo7Eov9jmOi02rYkar0=
-X-Received: by 2002:a17:906:899:: with SMTP id n25mr31559270eje.131.1557344736097;
- Wed, 08 May 2019 12:45:36 -0700 (PDT)
+        Wed, 8 May 2019 15:50:15 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58807 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726852AbfEHTuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 15:50:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=5DOmx//fzezxXgA6dXN4cXOSgxB/Losdvoy8bCClEOA=; b=oijb849rOm0vwPxJ/7MRCE3fwS
+        OaJ6Z+jCbi0UjJwtOezbYLCkNIRF/My7PBlpqOSQd1Q0yzUQMaOZ9e02lKGkZ1oMGvccaeU+qDsq/
+        I7DkChQVJDsHTk3IENfEkBiXRnzBhPUBqXEk2QjInxyfWs+Hd0NjGiY0dIdDCirEcyKg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hOSZv-0004Mv-45; Wed, 08 May 2019 21:50:11 +0200
+Date:   Wed, 8 May 2019 21:50:11 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next 00/11] net: stmmac: Selftests
+Message-ID: <20190508195011.GK25013@lunn.ch>
+References: <cover.1557300602.git.joabreu@synopsys.com>
 MIME-Version: 1.0
-References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
- <9f6958c231347e639e322de8d8c3de6859559345.1557177585.git.len.brown@intel.com> <20190507121459.GL2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190507121459.GL2623@hirez.programming.kicks-ass.net>
-From:   Len Brown <lenb@kernel.org>
-Date:   Wed, 8 May 2019 15:45:24 -0400
-Message-ID: <CAJvTdKndWcuq+hbJS+ksnUeqqzt-tgXxUYikgLqWeUYG1PuuRA@mail.gmail.com>
-Subject: Re: [PATCH 10/22] powercap/intel_rapl: Support multi-die/package
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 8:15 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, May 06, 2019 at 05:26:05PM -0400, Len Brown wrote:
-> > From: Zhang Rui <rui.zhang@intel.com>
-> >
-> > RAPL "package" domains are actually implemented in hardware per-die.
-> > Thus, the new multi-die/package systems have mulitple domains
-> > within each physical package.
-> >
-> > Update the intel_rapl driver to be "die aware" -- exporting multiple
-> > domains within a single package, when present.
-> > No change on single die/package systems.
-> >
-> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> > Signed-off-by: Len Brown <len.brown@intel.com>
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Cc: linux-pm@vger.kernel.org
-> > ---
-> >  drivers/powercap/intel_rapl.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-> > index 3c3c0c23180b..9202dbcef96d 100644
-> > --- a/drivers/powercap/intel_rapl.c
-> > +++ b/drivers/powercap/intel_rapl.c
-> > @@ -266,7 +266,7 @@ static struct rapl_domain *platform_rapl_domain; /* Platform (PSys) domain */
-> >  /* caller to ensure CPU hotplug lock is held */
-> >  static struct rapl_package *rapl_find_package_domain(int cpu)
-> >  {
-> > -     int id = topology_physical_package_id(cpu);
-> > +     int id = topology_logical_die_id(cpu);
-> >       struct rapl_package *rp;
+On Wed, May 08, 2019 at 09:51:00AM +0200, Jose Abreu wrote:
+> [ Submitting with net-next closed for proper review and testing. ]
+> 
+> This introduces selftests support in stmmac driver. We add 4 basic sanity
+> checks and MAC loopback support for all cores within the driver. This way
+> more tests can easily be added in the future and can be run in virtually
+> any MAC/GMAC/QoS/XGMAC platform.
+> 
+> Having this we can find regressions and missing features in the driver
+> while at the same time we can check if the IP is correctly working.
+> 
+> We have been using this for some time now and I do have more tests to
+> submit in the feature. My experience is that although writing the tests
+> adds more development time, the gain results are obvious.
+> 
+> I let this feature optional within the driver under a Kconfig option.
+> 
+> For this series the output result will be something like this
+> (e.g. for dwmac1000):
+> ----
+> # ethtool -t eth0
+> The test result is PASS
+> The test extra info:
+> 1. MAC Loopback                 0
+> 2. PHY Loopback                 -95
+> 3. MMC Counters                 0
+> 4. EEE                          -95
+> 5. Hash Filter MC               0
+> 6. Perfect Filter UC            0
+> 7. Flow Control                 0
 
-> Both functions are still misnomers. rapl_find_package_domain() does in
-> fact now do rapl_find_die_domain(), right? Same for rapl_add_package()
+Hi Jose
 
-A "RAPL Package Domain" (rapl_package, above) is a known proper noun --
-it is a known documented capability.
+The man page says:
 
-When there could be just 1 die in a package, the name of this capability
-also always matched the scope of a physical package.
+       -t --test
+              Executes adapter selftest on the specified network
+              device. Possible test modes are:
 
-Now that some products have two die in the same package, there
-can be two of these inside a package, and they are associated with
-each die.
+           offline
+                  Perform full set of tests, possibly interrupting
+                  normal operation during the tests,
 
-There are no plans to re-name the Package RAPL Domain capability
-in the hardware documentation.
+           online Perform limited set of tests, not interrupting
+                  normal operation,
 
-Similarly, there are no plans to re-name any of the other "PACKAGE"
-scoped MSRs to have "DIE" in their name instead.  The ship with
-those names sailed long ago.
+           external_lb
+                  Perform full set of tests, as for offline, and
+                  additionally an external-loopback test.
 
-I think the code above reflects its function, and that somebody maintaining
-it will be clear on this.  That is important, because in the future, there will
-be a concept of PACKAGE scoped MSRs that span multiple DIE...
+The normal operation is interrupted by the tests you carry out
+here. But i don't see any code looking for ETH_TEST_FL_OFFLINE
 
-cheers,
-Len Brown, Intel Open Source Technology Center
+> (Error code -95 means EOPNOTSUPP in current HW).
+
+How deep do you have to go before you know about EOPNOTSUPP?  It would
+be better to not return the string and result at all. Or patch ethtool
+to call strerror(3).
+
+   Andrew
