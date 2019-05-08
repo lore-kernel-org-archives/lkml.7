@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAADCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC62C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F4E21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9787521734
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfEHOri (ORCPT
+        id S1728391AbfEHOru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:47:38 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59536 "EHLO mga03.intel.com"
+        Wed, 8 May 2019 10:47:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57660 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728425AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:51 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 08 May 2019 07:44:46 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 08 May 2019 07:44:43 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 51F061123; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id 78815BD3; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 52/62] x86/mm: introduce common code for mem encryption
-Date:   Wed,  8 May 2019 17:44:12 +0300
-Message-Id: <20190508144422.13171-53-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 36/62] acpi/hmat: Evaluate topology presented in ACPI HMAT for MKTME
+Date:   Wed,  8 May 2019 17:43:56 +0300
+Message-Id: <20190508144422.13171-37-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,84 +57,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-Both Intel MKTME and AMD SME have needs to support DMA address
-translation with encryption related bits. Common functions are
-introduced in this patch to keep DMA generic code abstracted.
+MKTME, Multi-Key Total Memory Encryption, is a feature on Intel
+platforms. The ACPI HMAT table can be used to verify that the
+platform topology is safe for the usage of MKTME.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+The kernel must be capable of programming every memory controller
+on the platform. This means that there must be a CPU online, in
+the same proximity domain of each memory controller.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/Kconfig                 |  4 ++++
- arch/x86/mm/Makefile             |  1 +
- arch/x86/mm/mem_encrypt_common.c | 28 ++++++++++++++++++++++++++++
- 3 files changed, 33 insertions(+)
- create mode 100644 arch/x86/mm/mem_encrypt_common.c
+ drivers/acpi/hmat/hmat.c | 54 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h     |  1 +
+ 2 files changed, 55 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 62cfb381fee3..ce9642e2c31b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1505,11 +1505,15 @@ config X86_CPA_STATISTICS
- config ARCH_HAS_MEM_ENCRYPT
- 	def_bool y
- 
-+config X86_MEM_ENCRYPT_COMMON
-+	def_bool n
+diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+index 38e3341f569f..936a403c0694 100644
+--- a/drivers/acpi/hmat/hmat.c
++++ b/drivers/acpi/hmat/hmat.c
+@@ -677,3 +677,57 @@ bool acpi_hmat_present(void)
+ 	acpi_put_table(tbl);
+ 	return true;
+ }
 +
- config AMD_MEM_ENCRYPT
- 	bool "AMD Secure Memory Encryption (SME) support"
- 	depends on X86_64 && CPU_SUP_AMD
- 	select DYNAMIC_PHYSICAL_MASK
- 	select ARCH_USE_MEMREMAP_PROT
-+	select X86_MEM_ENCRYPT_COMMON
- 	---help---
- 	  Say yes to enable support for the encryption of system memory.
- 	  This requires an AMD processor that supports Secure Memory
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 4ebee899c363..89dddbc01b1b 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -55,3 +55,4 @@ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_identity.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_boot.o
- 
- obj-$(CONFIG_X86_INTEL_MKTME)	+= mktme.o
-+obj-$(CONFIG_X86_MEM_ENCRYPT_COMMON)	+= mem_encrypt_common.o
-diff --git a/arch/x86/mm/mem_encrypt_common.c b/arch/x86/mm/mem_encrypt_common.c
-new file mode 100644
-index 000000000000..2adee65eec46
---- /dev/null
-+++ b/arch/x86/mm/mem_encrypt_common.c
-@@ -0,0 +1,28 @@
-+#include <linux/mm.h>
-+#include <linux/mem_encrypt.h>
-+#include <asm/mktme.h>
-+
-+/*
-+ * Encryption bits need to be set and cleared for both Intel MKTME and
-+ * AMD SME when converting between DMA address and physical address.
-+ */
-+dma_addr_t __mem_encrypt_dma_set(dma_addr_t daddr, phys_addr_t paddr)
++static int mktme_parse_proximity_domains(union acpi_subtable_headers *header,
++					 const unsigned long end)
 +{
-+	unsigned long keyid;
++	struct acpi_hmat_proximity_domain *mar = (void *)header;
++	struct acpi_hmat_structure *hdr = (void *)header;
 +
-+	if (sme_active())
-+		return __sme_set(daddr);
-+	keyid = page_keyid(pfn_to_page(__phys_to_pfn(paddr)));
++	const struct cpumask *tmp_mask;
 +
-+	return (daddr & ~mktme_keyid_mask) | (keyid << mktme_keyid_shift);
++	if (!hdr || hdr->type != ACPI_HMAT_TYPE_PROXIMITY)
++		return -EINVAL;
++
++	if (mar->header.length != sizeof(*mar)) {
++		pr_warn("MKTME: invalid header length in HMAT\n");
++		return -1;
++	}
++	/*
++	 * Require a valid processor proximity domain.
++	 * This will catch memory only physical packages with
++	 * no processor capable of programming the key table.
++	 */
++	if (!(mar->flags & ACPI_HMAT_PROCESSOR_PD_VALID)) {
++		pr_warn("MKTME: no valid processor proximity domain\n");
++		return -1;
++	}
++	/* Require an online CPU in the processor proximity domain. */
++	tmp_mask = cpumask_of_node(pxm_to_node(mar->processor_PD));
++	if (!cpumask_intersects(tmp_mask, cpu_online_mask)) {
++		pr_warn("MKTME: no online CPU in proximity domain\n");
++		return -1;
++	}
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(__mem_encrypt_dma_set);
 +
-+phys_addr_t __mem_encrypt_dma_clear(phys_addr_t paddr)
++/* Returns true if topology is safe for MKTME key creation */
++bool mktme_hmat_evaluate(void)
 +{
-+	if (sme_active())
-+		return __sme_clr(paddr);
++	struct acpi_table_header *tbl;
++	bool ret = true;
++	acpi_status status;
 +
-+	return paddr & ~mktme_keyid_mask;
++	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
++	if (ACPI_FAILURE(status))
++		return -EINVAL;
++
++	if (acpi_table_parse_entries(ACPI_SIG_HMAT,
++				     sizeof(struct acpi_table_hmat),
++				     ACPI_HMAT_TYPE_PROXIMITY,
++				     mktme_parse_proximity_domains, 0) < 0) {
++		ret = false;
++	}
++	acpi_put_table(tbl);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(__mem_encrypt_dma_clear);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index fe3ad4ca5bb3..82b270dfb785 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1341,6 +1341,7 @@ acpi_platform_notify(struct device *dev, enum kobject_action action)
+ 
+ #ifdef CONFIG_X86_INTEL_MKTME
+ extern bool acpi_hmat_present(void);
++extern bool mktme_hmat_evaluate(void);
+ #endif /* CONFIG_X86_INTEL_MKTME */
+ 
+ #endif	/*_LINUX_ACPI_H*/
 -- 
 2.20.1
 
