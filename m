@@ -4,30 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E2C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0E9C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C5321734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D46221734
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfEHOpF (ORCPT
+        id S1728558AbfEHOo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:45:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59520 "EHLO mga03.intel.com"
+        Wed, 8 May 2019 10:44:56 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57649 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfEHOop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:45 -0400
+        id S1728176AbfEHOom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656527"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:40 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 11A32AF7; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 4C59F79C; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +45,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 28/62] keys/mktme: Set up PCONFIG programming targets for MKTME keys
-Date:   Wed,  8 May 2019 17:43:48 +0300
-Message-Id: <20190508144422.13171-29-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free encrypted pages
+Date:   Wed,  8 May 2019 17:43:33 +0300
+Message-Id: <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,105 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Hook up into page allocator to allocate and free encrypted page
+properly.
 
-MKTME Key service maintains the hardware key tables. These key tables
-are package scoped per the MKTME hardware definition. This means that
-each physical package on the system needs its key table programmed.
+The hardware/CPU does not enforce coherency between mappings of the same
+physical page with different KeyIDs or encryption keys.
+We are responsible for cache management.
 
-These physical packages are the targets of the new PCONFIG programming
-command. So, introduce a PCONFIG targets bitmap as well as a CPU mask
-that includes the lead CPUs capable of programming the targets.
+Flush cache on allocating encrypted page and on returning the page to
+the free pool.
 
-The lead CPU mask will be used every time a new key is programmed into
-the hardware.
+prep_encrypted_page() also takes care about zeroing the page. We have to
+do this after KeyID is set for the page.
 
-Keep the PCONFIG targets bit map around for future use during hotplug
-events.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 42 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/x86/include/asm/mktme.h | 17 +++++++++++++
+ arch/x86/mm/mktme.c          | 49 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+)
 
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index 9fdf482ea3e6..b5b44decfd3e 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -2,6 +2,7 @@
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index b5afa31b4526..6e604126f0bc 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -40,6 +40,23 @@ static inline int vma_keyid(struct vm_area_struct *vma)
+ 	return __vma_keyid(vma);
+ }
  
- /* Documentation/x86/mktme_keys.rst */
- 
-+#include <linux/cpu.h>
- #include <linux/init.h>
- #include <linux/key.h>
- #include <linux/key-type.h>
-@@ -17,6 +18,8 @@
- 
- static DEFINE_SPINLOCK(mktme_lock);
- struct kmem_cache *mktme_prog_cache;	/* Hardware programming cache */
-+unsigned long *mktme_target_map;	/* Pconfig programming targets */
-+cpumask_var_t mktme_leadcpus;		/* One lead CPU per pconfig target */
- 
- /* 1:1 Mapping between Userspace Keys (struct key) and Hardware KeyIDs */
- struct mktme_mapping {
-@@ -303,6 +306,33 @@ struct key_type key_type_mktme = {
- 	.destroy	= mktme_destroy_key,
- };
- 
-+static void mktme_update_pconfig_targets(void)
++#define prep_encrypted_page prep_encrypted_page
++void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero);
++static inline void prep_encrypted_page(struct page *page, int order,
++		int keyid, bool zero)
 +{
-+	int cpu, target_id;
++	if (keyid)
++		__prep_encrypted_page(page, order, keyid, zero);
++}
 +
-+	cpumask_clear(mktme_leadcpus);
-+	bitmap_clear(mktme_target_map, 0, sizeof(mktme_target_map));
++#define HAVE_ARCH_FREE_PAGE
++void free_encrypted_page(struct page *page, int order);
++static inline void arch_free_page(struct page *page, int order)
++{
++	if (page_keyid(page))
++		free_encrypted_page(page, order);
++}
 +
-+	for_each_online_cpu(cpu) {
-+		target_id = topology_physical_package_id(cpu);
-+		if (!__test_and_set_bit(target_id, mktme_target_map))
-+			__cpumask_set_cpu(cpu, mktme_leadcpus);
+ #else
+ #define mktme_keyid_mask	((phys_addr_t)0)
+ #define mktme_nr_keyids		0
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index d4a1a9e9b1c0..43489c098e60 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -1,4 +1,5 @@
+ #include <linux/mm.h>
++#include <linux/highmem.h>
+ #include <asm/mktme.h>
+ 
+ /* Mask to extract KeyID from physical address. */
+@@ -37,3 +38,51 @@ int __vma_keyid(struct vm_area_struct *vma)
+ 	pgprotval_t prot = pgprot_val(vma->vm_page_prot);
+ 	return (prot & mktme_keyid_mask) >> mktme_keyid_shift;
+ }
++
++/* Prepare page to be used for encryption. Called from page allocator. */
++void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
++{
++	int i;
++
++	/*
++	 * The hardware/CPU does not enforce coherency between mappings
++	 * of the same physical page with different KeyIDs or
++	 * encryption keys. We are responsible for cache management.
++	 */
++	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
++
++	for (i = 0; i < (1 << order); i++) {
++		/* All pages coming out of the allocator should have KeyID 0 */
++		WARN_ON_ONCE(lookup_page_ext(page)->keyid);
++		lookup_page_ext(page)->keyid = keyid;
++
++		/* Clear the page after the KeyID is set. */
++		if (zero)
++			clear_highpage(page);
++
++		page++;
 +	}
 +}
 +
-+static int mktme_alloc_pconfig_targets(void)
++/*
++ * Handles freeing of encrypted page.
++ * Called from page allocator on freeing encrypted page.
++ */
++void free_encrypted_page(struct page *page, int order)
 +{
-+	if (!alloc_cpumask_var(&mktme_leadcpus, GFP_KERNEL))
-+		return -ENOMEM;
++	int i;
 +
-+	mktme_target_map = bitmap_alloc(topology_max_packages(), GFP_KERNEL);
-+	if (!mktme_target_map) {
-+		free_cpumask_var(mktme_leadcpus);
-+		return -ENOMEM;
++	/*
++	 * The hardware/CPU does not enforce coherency between mappings
++	 * of the same physical page with different KeyIDs or
++	 * encryption keys. We are responsible for cache management.
++	 */
++	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
++
++	for (i = 0; i < (1 << order); i++) {
++		/* Check if the page has reasonable KeyID */
++		WARN_ON_ONCE(lookup_page_ext(page)->keyid > mktme_nr_keyids);
++		lookup_page_ext(page)->keyid = 0;
++		page++;
 +	}
-+	return 0;
 +}
-+
- static int __init init_mktme(void)
- {
- 	int ret;
-@@ -320,9 +350,21 @@ static int __init init_mktme(void)
- 	if (!mktme_prog_cache)
- 		goto free_map;
- 
-+	/* Hardware programming targets */
-+	if (mktme_alloc_pconfig_targets())
-+		goto free_cache;
-+
-+	/* Initialize first programming targets */
-+	mktme_update_pconfig_targets();
-+
- 	ret = register_key_type(&key_type_mktme);
- 	if (!ret)
- 		return ret;			/* SUCCESS */
-+
-+	free_cpumask_var(mktme_leadcpus);
-+	bitmap_free(mktme_target_map);
-+free_cache:
-+	kmem_cache_destroy(mktme_prog_cache);
- free_map:
- 	kvfree(mktme_map);
- 
 -- 
 2.20.1
 
