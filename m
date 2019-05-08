@@ -2,107 +2,113 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8E4C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C751FC004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CF720656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557278370;
-	bh=5i7eIdNJojfxilMNzT3UE9tdBE1lo9TP3u6VAZ/7kpA=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=YJHlVkRxRQB47QIBgX3Y8n/O7t/pHW9EvRjne4FLfoUMl2z0OcFoN30bIVzQj0m5J
-	 PnVTxB2VtMc5uLEamkCrNfcy5KN71pbMeEv4sTrUELhjBjZl9HkOUFw+qDv6W7LhGo
-	 DAA4ueMhKIRBAL/6p6Z45VsXpl5G2eJNg9pxfx+w=
+	by mail.kernel.org (Postfix) with ESMTP id 8B61720C01
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYJnF/vd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfEHBT3 (ORCPT
+        id S1726438AbfEHBaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfEHBT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:19:29 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3175E20656;
-        Wed,  8 May 2019 01:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557278368;
-        bh=5i7eIdNJojfxilMNzT3UE9tdBE1lo9TP3u6VAZ/7kpA=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=JYdGFClK/wS4M5ijJBMSwaK8Mu6pTg5H++MARjasZEHgAR8S6nHJ5DMWCqwc2jZCw
-         2+o1lo+jFhIy0HTpGNchX60m5H2jikXm0Z8yeGq/1G/h0DMFO8xiU/ahQrCt0gqUIA
-         YISABQF5qhc0tKuIUHpLxG9yPjt0jUOTTjL6bCg0=
-Date:   Tue, 7 May 2019 18:19:26 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org
-Subject: Re: [GIT PULL] fscrypt updates for 5.2
-Message-ID: <20190508011925.GB7528@sol.localdomain>
-References: <20190507233042.GA28476@mit.edu>
+        Tue, 7 May 2019 21:30:20 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38674 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHBaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 21:30:20 -0400
+Received: by mail-lj1-f195.google.com with SMTP id u21so6867941lja.5;
+        Tue, 07 May 2019 18:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZHTiBxRO8PZN7WRvOIH6EO3lTDXQqkdpmwve/AMQ14s=;
+        b=NYJnF/vdWYY3+45C4CS5RhJAjXCsEAPxIulDLLQ6iYVtPYnLWxPVxq9CqNc0HmxTJB
+         XBxF3wcT03xkWNcbkSwwDJQXgxwaeMNuGY1dQdpnlEfqGrXZ2lxFETWb3ZH4vCcakHxM
+         Vj3zn7IeaKzaY1stGwMiZjg/4sm9KYw9MUkVVcObZBa99z0oc7DTNQbh4MhlxLl0gWWr
+         KgtppJtMXlnzJj3WJElmtoUPdzTagnmndXfapovsJoTplDpDgmGLrkHS0k+U5jhprTqz
+         CtqeXHFtztVbbHu0gu3gPIdA2EuQAFY7laydNlOeqVyKzf/2VT+vrDj4yv94jc/WKVF0
+         cQvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZHTiBxRO8PZN7WRvOIH6EO3lTDXQqkdpmwve/AMQ14s=;
+        b=h+WVREzjyQXdVHBDeG0nivq0azQxfazyDhUwBGOvlF8yeLKxBs3/o9M4HK1ouCuoQ9
+         S95JtNfs+oQy/zEX6jXx302P3dwkndm3U7hvtoTgUcXdjEKLtI+Rtx1ukELyf4dqDN6M
+         Eo8NAQCiKNr0g50BLNQETkdgZtzlKXrrvRm3cv5hRDEViyIpCpuvFFPQ3n+pQc4stwgX
+         jV50zhjrBP1aDxu5Ycwt/WKQW8TEJ/o1GJvBlDg4QbQifDIez9YErlm60qBAgOX89gK2
+         sarcWaFHIvOC6ECS9KmXd5dw6WhkZPk3WL6plZ3h/qvnh/kRWMWyHthiLSXkcSqdsh/D
+         gl7Q==
+X-Gm-Message-State: APjAAAWtD2Tcvi8asmiPzc+mNQkR+mQIIr9AoSQ4yKnFD0Cp/N33bitF
+        +vZiD8rQ3tw5bulFi53XRsc=
+X-Google-Smtp-Source: APXvYqyAsUMwpWXAOtdhDEmxGIZRIN4yMb7ur/EOIjbTpfMKkRewkvBSXg5TPY/sFB6yvFz3z36mSA==
+X-Received: by 2002:a2e:5b18:: with SMTP id p24mr5710942ljb.50.1557279017872;
+        Tue, 07 May 2019 18:30:17 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id o1sm3524339ljd.74.2019.05.07.18.30.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 18:30:16 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] net: phy: realtek: Fix RGMII TX/RX-delays initial config of rtl8211(e|f)
+Date:   Wed,  8 May 2019 04:29:18 +0300
+Message-Id: <20190508012920.13710-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190426212112.5624-1-fancer.lancer@gmail.com>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507233042.GA28476@mit.edu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 07:30:42PM -0400, Theodore Ts'o wrote:
-> The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2:
-> 
->   Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt_for_linus
-> 
-> for you to fetch changes up to 2c58d548f5706d085c4b009f6abb945220460632:
-> 
->   fscrypt: cache decrypted symlink target in ->i_link (2019-04-17 12:43:29 -0400)
-> 
-> ----------------------------------------------------------------
-> Clean up fscrypt's dcache revalidation support, and other
-> miscellaneous cleanups.
-> 
-> ----------------------------------------------------------------
-> Eric Biggers (10):
->       fscrypt: drop inode argument from fscrypt_get_ctx()
->       fscrypt: remove WARN_ON_ONCE() when decryption fails
->       fscrypt: use READ_ONCE() to access ->i_crypt_info
->       fscrypt: clean up and improve dentry revalidation
->       fscrypt: fix race allowing rename() and link() of ciphertext dentries
->       fs, fscrypt: clear DCACHE_ENCRYPTED_NAME when unaliasing directory
->       fscrypt: only set dentry_operations on ciphertext dentries
->       fscrypt: fix race where ->lookup() marks plaintext dentry as ciphertext
->       vfs: use READ_ONCE() to access ->i_link
->       fscrypt: cache decrypted symlink target in ->i_link
-> 
+It has been discovered that RX/TX delays of rtl8211e ethernet PHY
+can be configured via a MDIO register hidden in the extension pages
+layout. Particularly the extension page 0xa4 provides a register 0x1c,
+which bits 1 and 2 control the described delays. They are used to
+implement the "rgmii-{id,rxid,txid}" phy-mode support in patch 1.
 
-There will be a merge conflict between "fscrypt: cache decrypted symlink target
-in ->i_link", and "ext4: make use of ->free_inode()" and "f2fs: switch to
-->free_inode()".  The correct resolutions should be fairly straightforward:
+The second patch makes sure the rtl8211f TX-delay is configured only
+if RGMII interface mode is specified including the rgmii-rxid one.
+In other cases (most importantly for NA mode) the delays are supposed
+to be preconfigured by some other software or hardware and should be
+left as is without any modification. The similar thing is also done
+for rtl8211e in the patch 1 of this series.
 
-	static void ext4_free_in_core_inode(struct inode *inode)
-	{
-		fscrypt_free_inode(inode);
-		kmem_cache_free(ext4_inode_cachep, EXT4_I(inode));
-	}
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
-and
+Changelog v3
+- Add this cover-letter.
+- Add Andrew' Reviewed-by tag to patch 1.
+- Accept RGMII_RXID interface mode for rtl8211f and clear the TX_DELAY
+  bit in this case.
+- Initialize ret variable with 0 to prevent the "may be used uninitialized"
+  warning in patch 1.
 
-	static void f2fs_free_inode(struct inode *inode)
-	{
-		fscrypt_free_inode(inode);
-		kmem_cache_free(f2fs_inode_cachep, F2FS_I(inode));
-	}
 
-- Eric
+Serge Semin (2):
+  net: phy: realtek: Add rtl8211e rx/tx delays config
+  net: phy: realtek: Change TX-delay setting for RGMII modes only
+
+ drivers/net/phy/realtek.c | 70 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 66 insertions(+), 4 deletions(-)
+
+-- 
+2.21.0
+
