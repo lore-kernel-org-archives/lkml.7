@@ -2,100 +2,152 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A6CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F7CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2A1204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="dLgN7Mwf"
+	by mail.kernel.org (Postfix) with ESMTP id A68AB204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfEHONv (ORCPT
+        id S1728005AbfEHOPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:13:51 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51951 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfEHONu (ORCPT
+        Wed, 8 May 2019 10:15:14 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:39734 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726703AbfEHOPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:13:50 -0400
-Received: by mail-it1-f193.google.com with SMTP id s3so4298623itk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 07:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=OELUENc3UGFI4n64xtHyWctIjuS1FHXlpju+VHmaEhI=;
-        b=dLgN7MwfahWL5KRvq3nO48znS+N9vOxoLsZ0QKbz7QjqM81X6SYBt5biQTM7+yWxNn
-         61hwvNv4/Xge+ia6X9lVvgneqZgtbYVP2Fu0ONbXMlWp9sMU4vqYUuo0GiNV349YSA2l
-         oiebe0j3GbK+pGQNSEjH0cQ+geiyC6ydVuvIjaZmTua1E2WPE0b1k3VP/lh0cTvcJ/Px
-         Nl4FNQ8D6JkogwX2s8u8O8CZ/VlqG8itnONJUFQoHub+tPKUqEXZ4rUDrkPQFZWPNfOm
-         VzpBSYTemWyOdzXnZ++1T28ctbhpB5M7GrKg9Ws5SQgbnaArchI0+JMZvrI4IdIDQaPD
-         4ycQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=OELUENc3UGFI4n64xtHyWctIjuS1FHXlpju+VHmaEhI=;
-        b=IMbsDQXBp8J71P5AsX4e/DJAfHakepg0vCUxJyPilSOTDYA9io53hU2lWPYzAX86ZF
-         qGB4lj3ggf0+1Ul/fXnSjIXaCJg3/b/uYza1iubuwZeQk3GtahBUIEI/sikNhq9J+32V
-         W7gt0o/Q+35hVTmn82QnbdRSI16o3vjxfuNigDSkincHhvUYJ12By5Uj0RoZVVYmZa9U
-         sKw+2Zwt5bBXKo74U1QAu64XCgx2jQ5cwyhpzGLFz4AHHUpH+rwzdhFk5KYY9WP/v4eO
-         B8E0sbPAVKh91wfU4xmVm88XhiCP2we1q/zDi/jkmeHkMChWEHxiKGHfCWasULWWq2bA
-         K6Uw==
-X-Gm-Message-State: APjAAAUGMoHFOJgvtO/Gc+migPu9cfhr/3cJJJCblY9LMxcevSeQE7e5
-        /oiL5i2YnswKGcPcd+fcOB6r9w==
-X-Google-Smtp-Source: APXvYqxyZFk7D1oD/2eJU/YNb79OWIUwIVwdt2F+Z5X5GYcbtQ+wiIBOk/azDs0gGrN5+XNcPkN1bg==
-X-Received: by 2002:a05:6638:94:: with SMTP id v20mr27688629jao.2.1557324829960;
-        Wed, 08 May 2019 07:13:49 -0700 (PDT)
-Received: from [26.66.241.113] ([172.56.12.182])
-        by smtp.gmail.com with ESMTPSA id r6sm2554802iog.38.2019.05.08.07.13.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 07:13:48 -0700 (PDT)
-Date:   Wed, 08 May 2019 16:13:32 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <4158.1557324343@warthog.procyon.org.uk>
-References: <20190508132218.3617-1-christian@brauner.io> <4158.1557324343@warthog.procyon.org.uk>
+        Wed, 8 May 2019 10:15:14 -0400
+Received: (qmail 1923 invoked by uid 2102); 8 May 2019 10:15:13 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 8 May 2019 10:15:13 -0400
+Date:   Wed, 8 May 2019 10:15:13 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+cc:     Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ramneek Mehresh <ramneek.mehresh@freescale.com>,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
+        Suresh Gupta <B42813@freescale.com>
+Subject: Re: [PATCH v5 2/5] usb: phy: Workaround for USB erratum-A005728
+In-Reply-To: <20190508060608.33882-2-yinbo.zhu@nxp.com>
+Message-ID: <Pine.LNX.4.44L0.1905081013490.1699-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fs: make all new mount api fds cloexec by default
-To:     David Howells <dhowells@redhat.com>
-CC:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <937AFC55-9B52-44C1-893E-CE396F1BD5B7@brauner.io>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 8, 2019 4:05:43 PM GMT+02:00, David Howells <dhowells@redhat=2Ecom> =
-wrote:
->Christian Brauner <christian@brauner=2Eio> wrote:
->
->> -	fd =3D get_unused_fd_flags(flags & O_CLOEXEC);
->> +	fd =3D get_unused_fd_flags(flags | O_CLOEXEC);
->
->That'll break if there are any flags other than O_CLOEXEC=2E
->
->> -	ret =3D get_unused_fd_flags((flags & FSMOUNT_CLOEXEC) ? O_CLOEXEC :
->0);
->> +	ret =3D get_unused_fd_flags(flags | O_CLOEXEC);
->
->That'll break because flags is not compatible with what
->get_unused_fd_flags()
->is expecting=2E
+On Wed, 8 May 2019, Yinbo Zhu wrote:
 
-Technically only when new flags are added=2E
-Right now it works correctly=2E
-I'll send a v1 soon=2E
+> From: Suresh Gupta <B42813@freescale.com>
+> 
+> PHY_CLK_VALID bit for UTMI PHY in USBDR does not set even
+> if PHY is providing valid clock. Workaround for this
+> involves resetting of PHY and check PHY_CLK_VALID bit
+> multiple times. If PHY_CLK_VALID bit is still not set even
+> after 5 retries, it would be safe to deaclare that PHY
+> clock is not available.
+> This erratum is applicable for USBDR less then ver 2.4.
+> 
+> Signed-off-by: Suresh Gupta <B42813@freescale.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+> Change in v5:
+> 		remove dev_err function unnecessary parameters 
+> 
+>  drivers/usb/host/ehci-fsl.c |   37 ++++++++++++++++++++++++++-----------
+>  drivers/usb/host/ehci-fsl.h |    3 +++
+>  2 files changed, 29 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
+> index 38674b7..1634ac8 100644
+> --- a/drivers/usb/host/ehci-fsl.c
+> +++ b/drivers/usb/host/ehci-fsl.c
+> @@ -183,6 +183,17 @@ static int fsl_ehci_drv_probe(struct platform_device *pdev)
+>  	return retval;
+>  }
+>  
+> +static bool usb_phy_clk_valid(struct usb_hcd *hcd)
+> +{
+> +	void __iomem *non_ehci = hcd->regs;
+> +	bool ret = true;
+> +
+> +	if (!(ioread32be(non_ehci + FSL_SOC_USB_CTRL) & PHY_CLK_VALID))
+> +		ret = false;
+> +
+> +	return ret;
+> +}
+> +
+>  static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+>  			       enum fsl_usb2_phy_modes phy_mode,
+>  			       unsigned int port_offset)
+> @@ -226,6 +237,16 @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+>  		/* fall through */
+>  	case FSL_USB2_PHY_UTMI:
+>  	case FSL_USB2_PHY_UTMI_DUAL:
+> +		/* PHY_CLK_VALID bit is de-featured from all controller
+> +		 * versions below 2.4 and is to be checked only for
+> +		 * internal UTMI phy
+> +		 */
+> +		if (pdata->controller_ver > FSL_USB_VER_2_4 &&
+> +		    pdata->have_sysif_regs && !usb_phy_clk_valid(hcd)) {
+> +			dev_err(dev, "USB PHY clock invalid\n");
+> +			return -EINVAL;
+> +		}
+> +
+>  		if (pdata->have_sysif_regs && pdata->controller_ver) {
+>  			/* controller version 1.6 or above */
+>  			tmp = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
+> @@ -249,17 +270,11 @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+>  		break;
+>  	}
+>  
+> -	/*
+> -	 * check PHY_CLK_VALID to determine phy clock presence before writing
+> -	 * to portsc
+> -	 */
+> -	if (pdata->check_phy_clk_valid) {
+> -		if (!(ioread32be(non_ehci + FSL_SOC_USB_CTRL) &
+> -		    PHY_CLK_VALID)) {
+> -			dev_warn(hcd->self.controller,
+> -				 "USB PHY clock invalid\n");
+> -			return -EINVAL;
+> -		}
+> +	if (pdata->have_sysif_regs &&
+> +	    pdata->controller_ver > FSL_USB_VER_1_6 &&
+> +		!usb_phy_clk_valid(hcd)) {
 
-Thanks for catching that, David=2E
-Christian
+This is still wrong.  The line above should be indented four characters 
+less than it is: the '!' should line up with the 'p' in the line above 
+it.
+
+Alan Stern
+
+> +		dev_warn(hcd->self.controller, "USB PHY clock invalid\n");
+> +		return -EINVAL;
+>  	}
+>  
+>  	ehci_writel(ehci, portsc, &ehci->regs->port_status[port_offset]);
+> diff --git a/drivers/usb/host/ehci-fsl.h b/drivers/usb/host/ehci-fsl.h
+> index cbc4220..9d18c6e 100644
+> --- a/drivers/usb/host/ehci-fsl.h
+> +++ b/drivers/usb/host/ehci-fsl.h
+> @@ -50,4 +50,7 @@
+>  #define UTMI_PHY_EN             (1<<9)
+>  #define ULPI_PHY_CLK_SEL        (1<<10)
+>  #define PHY_CLK_VALID		(1<<17)
+> +
+> +/* Retry count for checking UTMI PHY CLK validity */
+> +#define UTMI_PHY_CLK_VALID_CHK_RETRY 5
+>  #endif				/* _EHCI_FSL_H */
+> 
 
