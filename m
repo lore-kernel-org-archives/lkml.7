@@ -2,112 +2,123 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC71C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6D4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F6B20449
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE2D20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ug84rc6u"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fl4PTXyW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfEHMhU (ORCPT
+        id S1728594AbfEHMh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:37:20 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44097 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbfEHMhT (ORCPT
+        Wed, 8 May 2019 08:37:57 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44632 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfEHMh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:37:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id n134so12590422lfn.11;
-        Wed, 08 May 2019 05:37:17 -0700 (PDT)
+        Wed, 8 May 2019 08:37:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id v9so13092168ion.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 05:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v7au5CCe/tAVeWfzeYAbhgqBsx7YkJZIcyvifTQduLU=;
-        b=Ug84rc6uRecC9IhQA2zooKkTs0rIUlxauvTqkH+dlX9dxpCxyx5rBCNGf2CLSmnwk5
-         Fyt6rYUqydF1K1DNTu8ltn/T68y/fvkHOx0davtUcDSz9trOYZdNGm9RXPZpJTz/VR/G
-         uzZbRUnQzTenqOxXqfHEr5e2Oiz9VONPUYv0hGb+8aZl5nvysk06ARZy0iPbTZe30GjS
-         r0RgihlqPzsCdlMUKOxcAhHDwCCU8CabSh7YHlTpxXruWDcqHJq02PVSM0fR59d/d35u
-         K4YiNi7/eKrogkhmIQ01nGZ6b8i9/1UmEzeXbbgDVomk9eOgOzrjg5nDn4zr5gGdFUv0
-         5Eug==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0VSLwYO4ajiCw1Y1sGYTbNpEZFeZdK3LyxgFKcQp7zw=;
+        b=Fl4PTXyWhYB3k7R9TiGqUO3gRiqHndIFQx5R/XH4YBppV2hu7K24dX31qw3e3yFsXy
+         gu1lb1qkaH7CVg8ns8F4x2VFATP4t2ksvNFcuwqG0E5sVgmMMQQAKY+vAFk2f4SKwVhb
+         SuFD9vUX3LBGQvUXQInG8fGA/r+xOsbS4JGpWt9KVFd32gCUvEGaquV9QGWcw8bJqAJC
+         5CiUkBfNndHNPa5EqKWQHJS/wfUDJGgD837bHNQf7WGoZlXiRm0Kp2LM9H4V+m8uyob5
+         aGRtOS0J9+pmsnWOi9Ec1EznWi34ylxBaPH2R8jN5aPjPO3tu3Kk05EO7itnAU5v8KQu
+         s+6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v7au5CCe/tAVeWfzeYAbhgqBsx7YkJZIcyvifTQduLU=;
-        b=t3ZDtQKPbtQaJ2y6NFf1bT4ceJ2U99jn0r/PsOngQBU6AEHO03PfOCIuIVl8UZOt1S
-         Ha2Y3U6utHy+oi2WJTlBvGgn1L8Ibtii0L+XZwTrT2XQTFH+1o4CHC1GRIipPEn5aUDo
-         NSSlXlTexMi7ekMOMedP/CiEpjjvWe1oZ1x1xnrDDks23V7JuSVvkoBrC0Jp7QE8Oq3g
-         1d8TUDuwf8q4xd91tTiWIW0zyUxw8nGIy2Edf/TVJRe4XKeWXwLD2+45AzQInW7qRL07
-         EwIOIisDIbCw6E5qB8jaIlhY8gkx2YgPGMtRa5k0g47f1P6mH+lmk0lxSvsJNoc2QLd6
-         iWVA==
-X-Gm-Message-State: APjAAAXIuCd9LYKvArdpQT5c/M7Xq0w+IdDBlstjxvt2zJ/09TutLmql
-        FeqtzWVKYeP3N0ylU5xd6LiIMXOv
-X-Google-Smtp-Source: APXvYqzaQoM2ZOXGyH8zy4/azzZrir3MBRJu2rAdTrgWh8SPV96vqARK/cGoOxkCRZPDEuF9X6N9KQ==
-X-Received: by 2002:ac2:4148:: with SMTP id c8mr17889881lfi.2.1557319036956;
-        Wed, 08 May 2019 05:37:16 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id d23sm3675396ljj.38.2019.05.08.05.37.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 05:37:15 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Handle DMA_PREP_INTERRUPT flag
- properly
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190505181235.14798-1-digetx@gmail.com>
- <287d7e67-1572-b4f2-d4bb-b1f02f534d47@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <cbe8352c-c1c7-12a7-c658-82e7ffee0be8@gmail.com>
-Date:   Wed, 8 May 2019 15:37:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0VSLwYO4ajiCw1Y1sGYTbNpEZFeZdK3LyxgFKcQp7zw=;
+        b=if+aanh5Ak+IBd1+orQRFjkxipyFC6Ahic0Z4OQLBTJjk1YXjlbxGFzpFYKX4GVK4t
+         zjZ0MBwJAMWCndcQxW0HvJ7ADFFn9kQ1ol7HEKjMig4SxxoPJ3dnCFx6VD8Ghu7it84o
+         6F72oqRQMqkvIKrGzDRA3GIj9K0anbYWqmRB6aMkDFnuXjDfCbQoUnuU+KbnoxLjiZ5E
+         Ro2vKMYR9wTRKxpSu6Ogq867tHQX6l6tD/h4skFm250P+q05Ua3u4+rL3Hsnl6mHcJde
+         Ci4gE9goncuWbW0w8l8KUy7G7qjtllNZhdm0TTHrKEmlXJegT1sJPSH/yqBz/6zzYVIx
+         YT/g==
+X-Gm-Message-State: APjAAAUMY0EN51GL7vddK4gFIeiCZyiJvPIKSghfcHd/irPOfjGjgZql
+        rSpOFZRFaOXjsMywBySdOUno9Q0EsdSk+ikt7ASVrw==
+X-Google-Smtp-Source: APXvYqwqgwN1WWnNZT1cKjwLh1pp35JJJ6nWlhlapspRTelB16v8EwXOj1fRgTsrnQ96pGz0gUiC6BN8mPrfk7czTNo=
+X-Received: by 2002:a6b:6d06:: with SMTP id a6mr9810801iod.11.1557319075568;
+ Wed, 08 May 2019 05:37:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <287d7e67-1572-b4f2-d4bb-b1f02f534d47@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <000000000000f70a0e0571ad8ffb@google.com> <0000000000007b03eb058653caea@google.com>
+ <20190412130112.GA8384@amd> <alpine.DEB.2.20.1904121520350.22857@hadrien>
+In-Reply-To: <alpine.DEB.2.20.1904121520350.22857@hadrien>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 8 May 2019 14:37:44 +0200
+Message-ID: <CACT4Y+bcdEg_M5RNVKQvYPVLs1skvatGW-yTht7yDexR=Hjnyw@mail.gmail.com>
+Subject: Re: WARNING in untrack_pfn
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        syzbot <syzbot+e1a4f80c370d2381e49f@syzkaller.appspotmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Haozhong Zhang <haozhong.zhang@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, jacek.anaszewski@gmail.com,
+        LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        rpurdie@rpsys.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.05.2019 12:24, Jon Hunter пишет:
-> 
-> On 05/05/2019 19:12, Dmitry Osipenko wrote:
->> The DMA_PREP_INTERRUPT flag means that descriptor's callback should be
->> invoked upon transfer completion and that's it. For some reason driver
->> completely disables the hardware interrupt handling, leaving channel in
->> unusable state if transfer is issued with the flag being unset. Note
->> that there are no occurrences in the relevant drivers that do not set
->> the flag, hence this patch doesn't fix any actual bug and merely fixes
->> potential problem.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> From having a look at this, I am guessing that we have never really
-> tested the case where DMA_PREP_INTERRUPT flag is not set because as you
-> mentioned it does not look like this will work at all!
-> 
-> Is there are use-case you are looking at where you don't set the
-> DMA_PREP_INTERRUPT flag?
+From: Julia Lawall
+Date: Fri, Apr 12, 2019 at 3:21 PM
 
-No. I just noticed it while was checking whether we really need to
-handle the BUSY bit state for the Ben's "accurate reporting" patch.
+> On Fri, 12 Apr 2019, Pavel Machek wrote:
+>
+> > On Fri 2019-04-12 04:42:01, syzbot wrote:
+> > > syzbot has bisected this bug to:
+> > >
+> > > commit c68729119f4d2993bec3c9cb999ad76de5aeddba
+> > > Author: Julia Lawall <Julia.Lawall@lip6.fr>
+> > > Date:   Sat Jul 15 09:58:19 2017 +0000
+> > >
+> > >     leds: tlc591xx: add missing of_node_put
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12cda0f3200000
+> > > start commit:   23203e3f Merge branch 'akpm' (patches from Andrew)
+> > > git tree:       upstream
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=11cda0f3200000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=16cda0f3200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=861a3573f4e78ba1
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e1a4f80c370d2381e49f
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17836d15400000
+> > >
+> > > Reported-by: syzbot+e1a4f80c370d2381e49f@syzkaller.appspotmail.com
+> > > Fixes: c68729119f4d ("leds: tlc591xx: add missing of_node_put")
+> > >
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> >
+> > Can you revert c68729119f4d2993bec3c9cb999ad76de5aeddba on master and
+> > see  if it fixes the problem? Because this is hard to believe...
+>
+> Likewise, it seems hard to believe that the change is a problem.  But
+> could the problem be elsewhere and triggered by this code?
 
-> If not I am wondering if we should even bother supporting this and warn
-> if it is not set. AFAICT it does not appear to be mandatory, but maybe
-> Vinod can comment more on this.
-
-The warning message will be also okay if it's not mandatory.
+Looking at the bisection log, this looks like a hard to reproduce,
+flaky crash. Most likely the crash did not fire on one of the commits
+and that diverted bisection in the wrong direction.
