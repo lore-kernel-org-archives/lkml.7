@@ -6,43 +6,44 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742A7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECBCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3482173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E473621734
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wtLgATrI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AwjkqeDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfEHTlS (ORCPT
+        id S1728235AbfEHTot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:41:18 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52676 "EHLO
+        Wed, 8 May 2019 15:44:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52722 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbfEHTlS (ORCPT
+        with ESMTP id S1727097AbfEHTos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:41:18 -0400
+        Wed, 8 May 2019 15:44:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WE7PWt8XQUOE1iIf+nqgocNKuCDwRmDW4pa8qW0IuZU=; b=wtLgATrII14gdyI/9X1YYN12B
-        HTDrwNfjyilOXj7+MQJTZ91z7KGepszlLSmXSkvekXnAFWWjgBMdsfz6o62eUvIaU3YoUX86ybJAR
-        39ZvGe66mPGJkxTmMmoXJlHbMiUKbvskQKYex7ba6mC59cpjSShQGuL+nSr/onCR/phYbk1lvUSTB
-        ngsxzH3AGZSLy3leEdAkTb8rwoAs5p/eQe4NSPwyCArdEhxlLOPG2feLAiuE8ji25vxdUHM2WfCkw
-        yDB7lEUWORWlsvjWWXYO7H19MhT/VJv9sG1NB28Os1FrtxoMsZ4gt6kN/i3IR3o3rcl2ylJEprwUR
-        pGmZZH9+g==;
+         bh=uKC1JyjjYtwBLaIzRTzlSvw/gzaX0p25IvXJ52mSqSs=; b=AwjkqeDEmIXQOdcKAOI6y0NAg
+        ycueoqeqjWgFk2U10qsfzTOI+HmvK10yNcdV7CW2VqvXGpz38vTnWqccy5aCNcb6avXKkZBNXeFwf
+        BqKLO1CBEKC4KYkmhW970DUS15DtlrRe2qSOmV2bPZbEFJjuO5kxtpxalwQleqoVn8L2zaIs7tUd2
+        i/ztBkermxB8Q0B0yRYogV7I76ZQo/IbKI7j/yA6yw49gN8OGzNYc7NtqeLR7669CAj9Pprhb+5rr
+        QqYdMuCUakroUHM7yUh7YTAaBjiV35HsCRqf7QZKtzGEnVo+Q2b2O9SaUFc/UQuRdvVnKQr/zRZD/
+        Fa4xuRCKQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOSRA-0003w1-Ul; Wed, 08 May 2019 19:41:09 +0000
+        id 1hOSUb-0003yo-HJ; Wed, 08 May 2019 19:44:41 +0000
 Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 358AF98030A; Wed,  8 May 2019 21:41:07 +0200 (CEST)
-Date:   Wed, 8 May 2019 21:41:07 +0200
+        id 8FB0F98030A; Wed,  8 May 2019 21:44:39 +0200 (CEST)
+Date:   Wed, 8 May 2019 21:44:39 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
         linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         Tejun Heo <tj@kernel.org>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
@@ -55,33 +56,40 @@ Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         Juri Lelli <juri.lelli@redhat.com>,
         Todd Kjos <tkjos@google.com>,
         Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
+        Steve Muckle <smuckle@google.com>
 Subject: Re: [PATCH v8 06/16] sched/core: uclamp: Extend sched_setattr() to
  support utilization clamping
-Message-ID: <20190508194107.GE32547@worktop.programming.kicks-ass.net>
+Message-ID: <20190508194439.GF32547@worktop.programming.kicks-ass.net>
 References: <20190402104153.25404-1-patrick.bellasi@arm.com>
  <20190402104153.25404-7-patrick.bellasi@arm.com>
+ <CAJuCfpH3htcr3xB_Y4nr7HXCdQd1hOdOAXbtZJB1SOt7Of_qbw@mail.gmail.com>
+ <20190507111347.4ivnjwbymsf7i3e6@e110439-lin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402104153.25404-7-patrick.bellasi@arm.com>
+In-Reply-To: <20190507111347.4ivnjwbymsf7i3e6@e110439-lin>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 11:41:42AM +0100, Patrick Bellasi wrote:
-> @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
->  #else /* CONFIG_UCLAMP_TASK */
->  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
->  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
-> +static inline int uclamp_validate(struct task_struct *p,
-> +				  const struct sched_attr *attr)
-> +{
-> +	return -ENODEV;
+On Tue, May 07, 2019 at 12:13:47PM +0100, Patrick Bellasi wrote:
+> On 17-Apr 15:26, Suren Baghdasaryan wrote:
+> > On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
 
-Does that maybe want to be -EOPNOTSUPP ?
+> > > @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
+> > >  #else /* CONFIG_UCLAMP_TASK */
+> > >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+> > >  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
+> > > +static inline int uclamp_validate(struct task_struct *p,
+> > > +                                 const struct sched_attr *attr)
+> > > +{
+> > > +       return -ENODEV;
+> > 
+> > ENOSYS might be more appropriate?
+> 
+> Yep, agree, thanks!
 
-> +}
+No, -ENOSYS (see the comment) is special in that it indicates the whole
+system call is unavailable; that is most certainly not the case!
