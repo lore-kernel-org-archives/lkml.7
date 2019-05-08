@@ -2,168 +2,112 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59C1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151EBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C3820989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31E620656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfEHPBV (ORCPT
+        id S1727145AbfEHPFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:01:21 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37402 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbfEHPBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:01:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BBEFA78;
-        Wed,  8 May 2019 08:01:20 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 744F03F238;
-        Wed,  8 May 2019 08:01:16 -0700 (PDT)
-Subject: Re: [PATCH v7 14/23] iommu/smmuv3: Implement cache_invalidate
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-15-eric.auger@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a53d72f5-c8a2-a9e9-eb0b-2fac65964caf@arm.com>
-Date:   Wed, 8 May 2019 16:01:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 11:05:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726543AbfEHPFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 11:05:35 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8C7C87885B1C5FA26FE;
+        Wed,  8 May 2019 23:05:32 +0800 (CST)
+Received: from [127.0.0.1] (10.184.38.59) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
+ 23:05:26 +0800
+Subject: Re: [PATCH] ftrace: enable trampoline when rec count decrement to one
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <linux-kernel@vger.kernel.org>, <huawei.libin@huawei.com>,
+        <xiexiuqi@huawei.com>, <mingo@redhat.com>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        <bobo.shaobowang@huawei.com>
+References: <1556969979-111047-1-git-send-email-cj.chengjian@huawei.com>
+ <20190505153447.594d4eab@oasis.local.home>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <e45dec40-d068-be47-7cbb-1b897e48c306@huawei.com>
+Date:   Wed, 8 May 2019 23:02:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <20190408121911.24103-15-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20190505153447.594d4eab@oasis.local.home>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.38.59]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 13:19, Eric Auger wrote:
-> Implement domain-selective and page-selective IOTLB invalidations.
-> 
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> 
-> ---
-> v6 -> v7
-> - check the uapi version
-> 
-> v3 -> v4:
-> - adapt to changes in the uapi
-> - add support for leaf parameter
-> - do not use arm_smmu_tlb_inv_range_nosync or arm_smmu_tlb_inv_context
->    anymore
-> 
-> v2 -> v3:
-> - replace __arm_smmu_tlb_sync by arm_smmu_cmdq_issue_sync
-> 
-> v1 -> v2:
-> - properly pass the asid
-> ---
->   drivers/iommu/arm-smmu-v3.c | 60 +++++++++++++++++++++++++++++++++++++
->   1 file changed, 60 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 1486baf53425..4366921d8318 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2326,6 +2326,65 @@ static void arm_smmu_detach_pasid_table(struct iommu_domain *domain)
->   	mutex_unlock(&smmu_domain->init_mutex);
->   }
->   
-> +static int
-> +arm_smmu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-> +			  struct iommu_cache_invalidate_info *inv_info)
-> +{
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> +
-> +	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
-> +		return -EINVAL;
-> +
-> +	if (!smmu)
-> +		return -EINVAL;
-> +
-> +	if (inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-> +		return -EINVAL;
-> +
-> +	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_IOTLB) {
-> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID) {
-> +			struct arm_smmu_cmdq_ent cmd = {
-> +				.opcode = CMDQ_OP_TLBI_NH_ASID,
-> +				.tlbi = {
-> +					.vmid = smmu_domain->s2_cfg.vmid,
-> +					.asid = inv_info->pasid,
-> +				},
-> +			};
-> +
-> +			arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-> +			arm_smmu_cmdq_issue_sync(smmu);
+Hi, Steven
 
-I'd much rather make arm_smmu_tlb_inv_context() understand nested 
-domains than open-code commands all over the place.
 
-> +
-> +		} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR) {
-> +			struct iommu_inv_addr_info *info = &inv_info->addr_info;
-> +			size_t size = info->nb_granules * info->granule_size;
-> +			bool leaf = info->flags & IOMMU_INV_ADDR_FLAGS_LEAF;
-> +			struct arm_smmu_cmdq_ent cmd = {
-> +				.opcode = CMDQ_OP_TLBI_NH_VA,
-> +				.tlbi = {
-> +					.addr = info->addr,
-> +					.vmid = smmu_domain->s2_cfg.vmid,
-> +					.asid = info->pasid,
-> +					.leaf = leaf,
-> +				},
-> +			};
-> +
-> +			do {
-> +				arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-> +				cmd.tlbi.addr += info->granule_size;
-> +			} while (size -= info->granule_size);
-> +			arm_smmu_cmdq_issue_sync(smmu);
+On 2019/5/6 3:34, Steven Rostedt wrote:
+>
+> Thanks for the patch. There was some race condition that prevented me
+> from doing this in the first place, but unfortunately, I don't remember
+> what that was :-/
+>
+> I'll have to think about this before applying this patch.
+>
+> Maybe there isn't a race condition, and I was just playing it safe, as
+> there was a race condition between switching from regs caller back to
+> non regs caller.
+>
+> -- Steve
+> .
 
-An this in particular I would really like to go all the way through 
-io_pgtable_tlb_add_flush()/io_pgtable_sync() if at all possible. Hooking 
-up range-based invalidations is going to be a massive headache if the 
-abstraction isn't solid.
 
-Robin.
+function tracer uses ftrace_caller() and livepatch uses 
+ftrace_regs_caller().
 
-> +		} else {
-> +			return -EINVAL;
-> +		}
-> +	}
-> +	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_PASID ||
-> +	    inv_info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB) {
-> +		return -ENOENT;
-> +	}
-> +	return 0;
-> +}
-> +
->   static struct iommu_ops arm_smmu_ops = {
->   	.capable		= arm_smmu_capable,
->   	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -2346,6 +2405,7 @@ static struct iommu_ops arm_smmu_ops = {
->   	.put_resv_regions	= arm_smmu_put_resv_regions,
->   	.attach_pasid_table	= arm_smmu_attach_pasid_table,
->   	.detach_pasid_table	= arm_smmu_detach_pasid_table,
-> +	.cache_invalidate	= arm_smmu_cache_invalidate,
->   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->   };
->   
-> 
+I can modify my testcase to trigger this race condition.
+
+
+#enable livepatch
+insmod klp_unshare_files.ko
+cat /sys/kernel/debug/tracing/enabled_functions
+         unshare_files (1) R I	tramp: 0xffffffffc0008000 (klp_ftrace_handler+0x0/0xa0) ->ftrace_ops_assist_func+0x0/0xf0
+[NOW, the rec caller is ftracer_regs_caller TRAMPOLINE]
+
+#function tracer
+echo unshare_files > /sys/kernel/debug/tracing/set_ftrace_filter
+echo function > /sys/kernel/debug/tracing/current_tracer
+cat /sys/kernel/debug/tracing/enabled_functions
+         unshare_files (2) R I ->ftrace_ops_list_func+0x0/0x170
+[NOW, the rec caller is ftracer_regs_caller]
+
+
+# disable livepatch
+echo 0 > /sys/kernel/livepatch/klp_unshare_files/enabled
+rmmod klp_unshare_files
+
+
+cat /sys/kernel/debug/tracing/enabled_functions
+         unshare_files (1)    	tramp: 0xffffffffc0005000 (function_trace_call+0x0/0x120) ->function_trace_call+0x0/0x120
+[NOW, the rec caller is ftrace_caller TRAMPOLINE]
+
+So, the caller switch from regs caller back to non regs caller
+when disable the livepatch. Could this testcase cause the race
+condition ? BUT, Nothing happened here.
+
+What will happen when the race triggers ? What can I do.
+
+
+Thanks.
+
+Cheng Jian.
+
+
+
+
