@@ -2,189 +2,115 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F66C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DFCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A1321019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cNZhoOVh"
+	by mail.kernel.org (Postfix) with ESMTP id BF91D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfEHNF4 (ORCPT
+        id S1728709AbfEHNHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:05:56 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7445 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfEHNFz (ORCPT
+        Wed, 8 May 2019 09:07:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42123 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725910AbfEHNHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:05:55 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd2d40e0000>; Wed, 08 May 2019 06:05:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 08 May 2019 06:05:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 08 May 2019 06:05:53 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 May
- 2019 13:05:53 +0000
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 May
- 2019 13:05:44 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 8 May 2019 13:05:44 +0000
-Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.147]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cd2d4270000>; Wed, 08 May 2019 06:05:44 -0700
-From:   Jim Lin <jilin@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
-        <stern@rowland.harvard.edu>, <kai.heng.feng@canonical.com>,
-        <drinkcat@chromium.org>, <keescook@chromium.org>,
-        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jim Lin <jilin@nvidia.com>
-Subject: [PATCH v6 1/1] usb: xhci: Add Clear_TT_Buffer
-Date:   Wed, 8 May 2019 21:05:40 +0800
-Message-ID: <1557320740-17853-1-git-send-email-jilin@nvidia.com>
-X-Mailer: git-send-email 2.1.4
+        Wed, 8 May 2019 09:07:19 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hOMI0-0001aa-Po; Wed, 08 May 2019 13:07:16 +0000
+Subject: Re: [PATCH] mptsas: fix undefined behaviour of a shift of an int by
+ more than 31 places
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190504164010.24937-1-colin.king@canonical.com>
+ <1557027274.2821.2.camel@HansenPartnership.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <de7e3aaf-0155-5007-c228-510f0d0de428@canonical.com>
+Date:   Wed, 8 May 2019 14:07:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557320718; bh=/FVEb59wikJoX7BaHTsMpWroI5KnrSWScZxrVwCl8e4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=cNZhoOVhfp1NcyMcbcItOHLHfXuzZ+Mwm8X19KXu2l/Ox+yTkDkZXFZy9TCi8Awph
-         nqk2UY23Ref5udOUqn+aw6Uav08E6FHzGw4lADxm6Eu9gU12IIAM3kFf62P6ZEDuxv
-         r0UY+ViH1ZbjNgT3Zsa5f8wFb2EOGTyMyocrszn2aGIiRCy4Tqqju2hWbfpk4KFrxw
-         V00GJ8rcR2WHn4/BRCJwN0yONDTQvDZ/Iw5R/9eLaHvIImvfuugnAAR4YPgVVNdFGb
-         +C6qaXCNjnRz++Pb1/hDB9FZQNXf/NJ0YHIw/LzOlewnDJp/5n6TC7EVVGlCEssBfG
-         +5tW/IHOrziVA==
+In-Reply-To: <1557027274.2821.2.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-processing for full-/low-speed endpoints connected via a TT, the host
-software must use the Clear_TT_Buffer request to the TT to ensure
-that the buffer is not in the busy state".
+On 05/05/2019 04:34, James Bottomley wrote:
+> On Sat, 2019-05-04 at 17:40 +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Currently the shift of int value 1 by more than 31 places can result
+>> in undefined behaviour. Fix this by making the 1 a ULL value before
+>> the shift operation.
+> 
+> Fusion SAS is pretty ancient.  I thought the largest one ever produced
+> had four phys, so how did you produce the overflow?
 
-In our case, a full-speed speaker (ConferenceCam) is behind a high-
-speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-request we may continue to get STALL with the folllowing requests,
-like Set_Interface.
+This was an issue found by static analysis with Coverity; so I guess
+won't happen in the wild, in which case the patch could be ignored.
 
-Solution is for XHCI driver to invoke usb_hub_clear_tt_buffer() to
-send Clear_TT_Buffer request to the hub of the device for the
-following Set_Interface requests to the device to get ACK
-successfully.
+Colin
 
-The Clear_TT_Buffer request sent to the hub includes the address of
-the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
-uses udev->devnum to set the address wValue. This won't work for
-devices connected to xHC.
-
-For other host controllers udev->devnum is the same as the address of
-the usb device, chosen and set by usb core. With xHC the controller
-hardware assigns the address, and won't be the same as devnum.
-
-In the fix we get that address from slot context if it's XHC.
-
-Signed-off-by: Jim Lin <jilin@nvidia.com>
----
-v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
-    , remove its claiming in xhci.h
-v3: Add description for clearing_tt (xhci.h)
-v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
-    to protect for Clear_TT_Buffer to be run serially.
-    Remove xhci_clear_tt_buffer_complete as it's not necessary.
-    Same reason as the above.
-    Extend usb_hub_clear_tt_buffer parameter
-v5: Not extending usb_hub_clear_tt_buffer parameter
-    Add description.
-v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
-
- drivers/usb/core/hub.c       | 17 ++++++++++++++++-
- drivers/usb/host/xhci-ring.c | 12 ++++++++++++
- 2 files changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 15a2934dc29d..00d994908217 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -35,6 +35,7 @@
- 
- #include "hub.h"
- #include "otg_whitelist.h"
-+#include "../host/xhci.h"
- 
- #define USB_VENDOR_GENESYS_LOGIC		0x05e3
- #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
-@@ -858,6 +859,10 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
- 	struct usb_tt		*tt = udev->tt;
- 	unsigned long		flags;
- 	struct usb_tt_clear	*clear;
-+	struct xhci_hcd *xhci;
-+	struct xhci_virt_device *dev;
-+	struct xhci_slot_ctx *slot_ctx;
-+	int devnum;
- 
- 	/* we've got to cope with an arbitrary number of pending TT clears,
- 	 * since each TT has "at least two" buffers that can need it (and
-@@ -873,7 +878,17 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
- 	/* info that CLEAR_TT_BUFFER needs */
- 	clear->tt = tt->multi ? udev->ttport : 1;
- 	clear->devinfo = usb_pipeendpoint (pipe);
--	clear->devinfo |= udev->devnum << 4;
-+	/* If slot_id is nonzero, then it's XHCI */
-+	if (udev->slot_id) {
-+		xhci = hcd_to_xhci(bus_to_hcd(udev->bus));
-+		dev = xhci->devs[udev->slot_id];
-+		slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
-+		/* Device address is assigned by XHC */
-+		devnum = (int) le32_to_cpu(slot_ctx->dev_state) &
-+			DEV_ADDR_MASK;
-+		clear->devinfo |= devnum << 4;
-+	} else
-+		clear->devinfo |= udev->devnum << 4;
- 	clear->devinfo |= usb_pipecontrol(pipe)
- 			? (USB_ENDPOINT_XFER_CONTROL << 11)
- 			: (USB_ENDPOINT_XFER_BULK << 11);
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 9215a28dad40..739737faf752 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1786,6 +1786,17 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
- 	return NULL;
- }
- 
-+static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci, struct xhci_td *td)
-+{
-+	/*
-+	 * As part of low/full-speed endpoint-halt processing
-+	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-+	 */
-+	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-+	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub))
-+		usb_hub_clear_tt_buffer(td->urb);
-+}
-+
- static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 		unsigned int slot_id, unsigned int ep_index,
- 		unsigned int stream_id, struct xhci_td *td,
-@@ -1804,6 +1815,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 	if (reset_type == EP_HARD_RESET) {
- 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
- 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-+		xhci_clear_hub_tt_buffer(xhci, td);
- 	}
- 	xhci_ring_cmd_db(xhci);
- }
--- 
-2.1.4
+> 
+> James
+> 
 
