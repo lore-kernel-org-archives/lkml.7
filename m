@@ -3,151 +3,256 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B2BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63025C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D862420989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318AE21019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfEHMFd (ORCPT
+        id S1728409AbfEHMIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:05:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38203 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbfEHMFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:05:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f2so2937854wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 05:05:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=69qxMd9w/VPIB594fPnsC8YI+TS1muSCPwX6VOqGegI=;
-        b=tavEtlEbrCFise/le8XKYlO1Gd/0UP7FRXcyYp+QHbAVNuTOTxiqR+G1aq1A/ROYxk
-         ZAQvYpKPz0s7jZT0h8mymvsWLVhPSnIvENkC3BHWch9hnh3uHg7AknNCJgRUbXLN2Rsc
-         K2HckGBeN1DM2S1rG4N9tXvdhkNvGP4W+7gUUlhIg7Qk+LKjniwVKzAc6DHAdPDiHjlx
-         ICMsh43GhwsZh++o7CfIo+T9NpJhWUVUFbCZFU7auiXzEkfvwjxVLlD568L5+lO5YQgG
-         3OFNRfQowBTKX+ZI/Dj7MOnbizehbHBl7P6ZoHYPL/sHSiAgB8bFfQNHd6fKEwEYIDSR
-         ew3w==
-X-Gm-Message-State: APjAAAWGlvDPfHnPKjyXXPDtM6PNWf+qx+kUoZUW2L60grE/VQ4Ak5KQ
-        csAO/lsdlV1lmCowbHsS2qr0qQ==
-X-Google-Smtp-Source: APXvYqyn6Ss7vNnGcKR380rTa/68guZqWHRBGYZ2w0ALvBH5B0Mcsp4ABxQvfzGSGqT6A04hTDBT2A==
-X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr2707545wmf.125.1557317130212;
-        Wed, 08 May 2019 05:05:30 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.174.33])
-        by smtp.gmail.com with ESMTPSA id e7sm2256151wme.37.2019.05.08.05.05.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 05:05:28 -0700 (PDT)
-Date:   Wed, 8 May 2019 14:05:26 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     luca abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 4/6] sched/dl: Improve capacity-aware wakeup
-Message-ID: <20190508120526.GI6551@localhost.localdomain>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-5-luca.abeni@santannapisa.it>
- <20190508090855.GG6551@localhost.localdomain>
- <20190508112437.74661fa8@nowhere>
+        Wed, 8 May 2019 08:08:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62605 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfEHMIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:08:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 05:08:37 -0700
+X-ExtLoop1: 1
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by fmsmga004.fm.intel.com with ESMTP; 08 May 2019 05:08:32 -0700
+Date:   Wed, 8 May 2019 08:02:55 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: export mdev device version to sysfs
+ for Intel vGPU
+Message-ID: <20190508120255.GC24397@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+ <20190506015102.3691-1-yan.y.zhao@intel.com>
+ <20190507112753.2699d0b5.cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508112437.74661fa8@nowhere>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190507112753.2699d0b5.cohuck@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/19 11:24, luca abeni wrote:
-> On Wed, 8 May 2019 11:08:55 +0200
-> Juri Lelli <juri.lelli@redhat.com> wrote:
+On Tue, May 07, 2019 at 05:27:53PM +0800, Cornelia Huck wrote:
+> On Sun,  5 May 2019 21:51:02 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> > On 06/05/19 06:48, Luca Abeni wrote:
-> > > From: luca abeni <luca.abeni@santannapisa.it>
-> > > 
-> > > Instead of considering the "static CPU bandwidth" allocated to
-> > > a SCHED_DEADLINE task (ratio between its maximum runtime and
-> > > reservation period), try to use the remaining runtime and time
-> > > to scheduling deadline.
-> > > 
-> > > Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
-> > > ---
-> > >  kernel/sched/cpudeadline.c | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-> > > index d21f7905b9c1..111dd9ac837b 100644
-> > > --- a/kernel/sched/cpudeadline.c
-> > > +++ b/kernel/sched/cpudeadline.c
-> > > @@ -114,8 +114,13 @@ static inline int dl_task_fit(const struct
-> > > sched_dl_entity *dl_se, int cpu, u64 *c)
-> > >  {
-> > >  	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) *
-> > > arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;
-> > > -	s64 rel_deadline = dl_se->dl_deadline;
-> > > -	u64 rem_runtime  = dl_se->dl_runtime;
-> > > +	s64 rel_deadline = dl_se->deadline -
-> > > sched_clock_cpu(smp_processor_id());
-> > > +	u64 rem_runtime  = dl_se->runtime;
-> > > +
-> > > +	if ((rel_deadline < 0) || (rel_deadline *
-> > > dl_se->dl_runtime < dl_se->dl_deadline * rem_runtime)) {
-> > > +		rel_deadline = dl_se->dl_deadline;
-> > > +		rem_runtime  = dl_se->dl_runtime;
-> > > +	}  
+> > This feature implements the version attribute for Intel's vGPU mdev
+> > devices.
 > > 
-> > So, are you basically checking if current remaining bw can be consumed
-> > safely?
+> > version attribute is rw.
+> > It's used to check device compatibility for two mdev devices.
+> > version string format and length are private for vendor driver. vendor
+> > driver is able to define them freely.
+> > 
+> > For Intel vGPU of gen8 and gen9, the mdev device version
+> > consists of 3 fields: "vendor id" + "device id" + "mdev type".
+> > 
+> > Reading from a vGPU's version attribute, a string is returned in below
+> > format: <vendor id>-<device id>-<mdev type>. e.g.
+> > 8086-193b-i915-GVTg_V5_2.
+> > 
+> > Writing a string to a vGPU's version attribute will trigger GVT to check
+> > whether a vGPU identified by the written string is compatible with
+> > current vGPU owning this version attribute. errno is returned if the two
+> > vGPUs are incompatible. The length of written string is returned in
+> > compatible case.
+> > 
+> > For other platforms, and for GVT not supporting vGPU live migration
+> > feature, errnos are returned when read/write of mdev devices' version
+> > attributes.
+> > 
+> > For old GVT versions where no version attributes exposed in sysfs, it is
+> > regarded as not supporting vGPU live migration.
+> > 
+> > For future platforms, besides the current 2 fields in vendor proprietary
+> > part, more fields may be added to identify Intel vGPU well for live
+> > migration purpose.
+> > 
+> > v2:
+> > 1. removed 32 common part of version string
+> > (Alex Williamson)
+> > 2. do not register version attribute for GVT not supporting live
+> > migration.(Cornelia Huck)
+> > 3. for platforms out of gen8, gen9, return -EINVAL --> -ENODEV for
+> > incompatible. (Cornelia Huck)
 > 
-> I check if the current runtime (rescaled based on the capacity) is
-> smaller than the time to the current scheduling deadline (basically, if
-> it can be consumed in time).
+> Should go below '---'.
+>
+got it. will change it in next revision.
+
+> > 
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Erik Skultety <eskultet@redhat.com>
+> > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>
+> > Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> > c: Neo Jia <cjia@nvidia.com>
+> > Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
+> >  drivers/gpu/drm/i915/gvt/device_version.c | 87 +++++++++++++++++++++++
+> >  drivers/gpu/drm/i915/gvt/gvt.c            | 51 +++++++++++++
+> >  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
+> >  4 files changed, 145 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
+> > 
 > 
-> However, if
-> 	q / (d - t) > Q / P 
-> (where "q" is the current runtime, "d" is the scheduling deadline, "Q"
-> is the maximum runtime, and "P" is the CBS period), then a new
-> scheduling deadline will be generated (later), and the runtime will be
-> reset to Q... So, I need to use the maximum budget and CBS period for
-> checking if the task fits in the core.
-
-OK. I'd add a comment about it.
-
-> > I'm not actually sure if looking at dynamic values is what we need to
-> > do at this stage. By considering static values we fix admission
-> > control (and scheduling). Aren't dynamic values more to do with
-> > energy tradeoffs (and so to be introduced when starting to look at
-> > the energy model)?
+> (...)
 > 
-> Using the current runtime and scheduling deadline might allow to
-> migrate a task to SMALL cores (if its remaining runtime is small
-> enough), even if the rescaled Q is larger than P.
-> So, in theory it might allow to reduce the load on big cores.
+> > diff --git a/drivers/gpu/drm/i915/gvt/device_version.c b/drivers/gpu/drm/i915/gvt/device_version.c
+> > new file mode 100644
+> > index 000000000000..bd4cdcbdba95
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/i915/gvt/device_version.c
+> > @@ -0,0 +1,87 @@
+> > +/*
+> > + * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
+> > + *
+> > + * Permission is hereby granted, free of charge, to any person obtaining a
+> > + * copy of this software and associated documentation files (the "Software"),
+> > + * to deal in the Software without restriction, including without limitation
+> > + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+> > + * and/or sell copies of the Software, and to permit persons to whom the
+> > + * Software is furnished to do so, subject to the following conditions:
+> > + *
+> > + * The above copyright notice and this permission notice (including the next
+> > + * paragraph) shall be included in all copies or substantial portions of the
+> > + * Software.
+> > + *
+> > + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> > + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> > + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+> > + * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> > + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> > + * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> > + * SOFTWARE.
+> > + *
+> > + * Authors:
+> > + *    Yan Zhao <yan.y.zhao@intel.com>
+> > + */
+> > +#include <linux/vfio.h>
+> > +#include "i915_drv.h"
+> > +
+> > +static bool is_compatible(const char *self, const char *remote)
+> > +{
+> > +	if (strlen(remote) != strlen(self))
+> > +		return false;
+> > +
+> > +	return (strncmp(self, remote, strlen(self))) ? false : true;
+> > +}
+> > +
+> > +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv)
+> > +{
+> > +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> > +		return -ENODEV;
+> > +
+> > +	return PAGE_SIZE;
+> > +}
+> > +
+> > +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_priv,
+> > +		char *buf, const char *mdev_type)
+> > +{
+> > +	int cnt = 0, ret = 0;
+> > +	const char *str = NULL;
+> > +
+> > +	/* currently only gen8 & gen9 are supported */
+> > +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> > +		return -ENODEV;
+> > +
+> > +	/* vendor id + device id + mdev type */
+> > +	/* vendor id */
+> > +	cnt = snprintf(buf, 5, "%04x", PCI_VENDOR_ID_INTEL);
+> > +	buf += cnt;
+> > +	ret += cnt;
+> > +
+> > +	/* device id */
+> > +	cnt = snprintf(buf, 6, "-%04x", INTEL_DEVID(dev_priv));
+> > +	buf += cnt;
+> > +	ret += cnt;
+> > +
+> > +	/* mdev type */
+> > +	str = mdev_type;
+> > +	cnt = snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
+> > +	buf += cnt;
+> > +	ret += cnt;
+> > +
+> > +	return ret;
 > 
-> If we decide that this is overkilling, I can just drop the patch.
+> I'm not familiar with this driver; but would it make sense to pre-build
+> the version on init? It does not look to me like the values could
+> change dynamically.
+>
+yes. I intended to save some memory by not pre-building the version on init, as
+migration is a rare event. but as these version strings are not big, moving them
+to init is also good. I'll do it in next revision.
+thanks:)
 
-So, my first impression was that we shouldn't be too clever until we
-start using info from the energy model (using which one should be able
-to understand if, for example, reducing load on big cores is a winning
-power/perf decision).
 
-However, I was also wondering if we should actually compare dynamic
-parameters with {running,this}_bw (per-rq) the moment we search for
-potential migration candidates (so that we are not overloading rqs).
+> > +}
+> > +
+> > +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
+> > +		const char *self, const char *remote)
+> > +{
+> > +
+> > +	/* currently only gen8 & gen9 are supported */
+> > +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> > +		return -ENODEV;
+> > +
+> > +	if (!is_compatible(self, remote))
+> > +		return -EINVAL;
+> > +
+> > +	return 0;
+> > +}
+> 
+> Return values look reasonable to me. I'll leave discussions regarding
+> where the attribute should go to folks familiar with this driver.
+ok. thanks :)
