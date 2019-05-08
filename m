@@ -2,187 +2,220 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE09C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D929EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883A1205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:07:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557331646;
-	bh=te54V3NhPkNW+a43eelFgW7lbyLaibO+I4GVSEk3qXw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t3sD+GvXMSq8dYujRW1QI5unuKpb9T52EgJmAhvWbaI/Tax/m3L1IK/E7dazUJoyi
-	 oPj++M6/9fo6RH9LZoZYI4cf5SLt2JMelALe+N0BKzhcMdWCXe+flv0I6mOTb0jT7o
-	 UhueO6qlWONf69wt6lz/sWbUmVMsMAb1DMSZ/XL0=
+	by mail.kernel.org (Postfix) with ESMTP id A7E85216B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfEHQHZ (ORCPT
+        id S1727803AbfEHQH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbfEHQHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:07:25 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87689205ED;
-        Wed,  8 May 2019 16:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557331643;
-        bh=te54V3NhPkNW+a43eelFgW7lbyLaibO+I4GVSEk3qXw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Q+o+ivGOYKnJ6b9ykMfgbS4vzA3BGLl54ww2Xofcm0UOV9TJSpmuz5F9D3Va8ADqc
-         csApdokkVNkGQ2FL4NZXGAqKizZZW74HoBvJ9kxmVsGFAzM9suNf1IYrZH0x+/2xBl
-         B57SZ8QwTMsU1/WC+f4/5t4RKXpohO4l0bKdkDS4=
-Received: by mail-qk1-f169.google.com with SMTP id z6so3173391qkl.10;
-        Wed, 08 May 2019 09:07:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAXBQxbitoNuPL/CfG9OuOIE5MZZNxiB99Je5qWAwJT9j2SeHN7c
-        oe9KMmYm84f//UBXJpUgRK9eWMm1i0gb7o7Njg==
-X-Google-Smtp-Source: APXvYqwEF0OtcZ6zJJFdozw4W+iSEB9XlfGbMQuQNP+kKQQ/TIN/ccVX5EntxaCaQHOQ+VPuQmHdYBurhou8rFCVTgc=
-X-Received: by 2002:a37:4a12:: with SMTP id x18mr29573795qka.184.1557331642793;
- Wed, 08 May 2019 09:07:22 -0700 (PDT)
+        Wed, 8 May 2019 12:07:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50004 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727560AbfEHQH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 12:07:59 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48G2lmK147224
+        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 12:07:58 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sc20195sc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:07:57 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 8 May 2019 17:07:55 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 May 2019 17:07:53 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48G7pRH60686470
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 May 2019 16:07:51 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B940542045;
+        Wed,  8 May 2019 16:07:51 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CBA542047;
+        Wed,  8 May 2019 16:07:51 +0000 (GMT)
+Received: from [9.145.42.10] (unknown [9.145.42.10])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 May 2019 16:07:51 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v8 1/4] s390: ap: kvm: add PQAP interception for AQIC
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
+ <1556818451-1806-2-git-send-email-pmorel@linux.ibm.com>
+ <ab120d0f-2eb4-a95c-503b-edf6de283519@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Wed, 8 May 2019 18:07:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
- <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
- <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com> <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
-In-Reply-To: <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 8 May 2019 11:07:11 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
-Message-ID: <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ab120d0f-2eb4-a95c-503b-edf6de283519@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050816-4275-0000-0000-00000332B1EC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050816-4276-0000-0000-0000384221BF
+Message-Id: <b946b5ee-26d6-08fa-c0de-1d8c841b3a03@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905080099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 10:06 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> On Wed, May 8, 2019 at 10:04 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, May 7, 2019 at 11:08 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > >
-> > > On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > +boot-architecture list as there was some discussion about this IIRC.
-> > > >
-> > > > On Mon, May 6, 2019 at 11:54 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > > > >
-> > > > > Introducing a chosen node, rng-seed, which is an 64 bytes entropy
-> > > > > that can be passed to kernel called very early to increase device
-> > > > > randomness. Bootloader should provide this entropy and the value is
-> > > > > read from /chosen/rng-seed in DT.
-> > > > >
-> > > > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > > >
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
-> > > >
-> > > > Actually, this file has been converted to json-schema and lives
-> > > > here[1]. I need to remove this one (or leave it with a reference to
-> > > > the new one).
-> > > >
-> > > > >  arch/arm64/kernel/setup.c                    |  2 ++
-> > > > >  drivers/of/fdt.c                             | 33 ++++++++++++++++++++
-> > > > >  include/linux/of_fdt.h                       |  1 +
-> > > > >  4 files changed, 50 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > > > > index 45e79172a646..bfd360691650 100644
-> > > > > --- a/Documentation/devicetree/bindings/chosen.txt
-> > > > > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > > > > @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
-> > > > >  the Linux EFI stub (which will populate the property itself, using
-> > > > >  EFI_RNG_PROTOCOL).
-> > > > >
-> > > > > +rng-seed
-> > > > > +-----------
-> > > > > +
-> > > > > +This property served as an entropy to add device randomness. It is parsed
-> > > > > +as a 64 byte value, e.g.
-> > > >
-> > > > Why only 64-bytes?
-> > > We can also not specify size and read what bootloader can provide.
-> > > >
-> > > > > +
-> > > > > +/ {
-> > > > > +       chosen {
-> > > > > +               rng-seed = <0x31951b3c 0xc9fab3a5 0xffdf1660 ...>
-> > > > > +       };
-> > > > > +};
-> > > > > +
-> > > > > +This random value should be provided by bootloader.
-> > > > > +
-> > > > >  stdout-path
-> > > > >  -----------
-> > > > >
-> > > > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > > > > index 413d566405d1..ade4261516dd 100644
-> > > > > --- a/arch/arm64/kernel/setup.c
-> > > > > +++ b/arch/arm64/kernel/setup.c
-> > > > > @@ -292,6 +292,8 @@ void __init setup_arch(char **cmdline_p)
-> > > > >         early_fixmap_init();
-> > > > >         early_ioremap_init();
-> > > > >
-> > > > > +       early_init_dt_rng_seed(__fdt_pointer);
-> > > > > +
-> > > >
-> > > > I'm trying to reduce or eliminate all these early_init_dt_* calls.
-> > > >
-> > > > Why is this arch specific and why can't this be done after
-> > > > unflattening? It doesn't look like add_device_randomness() needs
-> > > > anything early.
-> > > Currently unflattening is called after setup_machine_fdt(), which
-> > > called fixmap_remap_fdt() //__fixmap_remap_fdt(dt_phys, &size,
-> > > PAGE_KERNEL_RO), and we can't modify DT after that since it's read
-> > > only. But we need to clear (eg. write 0 to it) the rng-seed after
-> > > reading from DT.
-> >
-> > Why do you need to clear it? That wasn't necessary for kaslr-seed.
-> I think it's for security purpose. If we know the random seed, it's
-> more likely we can predict randomness.
-> Currently on arm64, kaslr-seed will be wiped out (in
-> arch/arm64/kernel/kaslr.c#get_kaslr_seed(), it's set to 0) so we can't
-> read from sysfs (eg. /sys/firmware/devicetree/.../kaslr-seed)
-> I'm not sure on other arch if it will be wiped out.
+On 08/05/2019 17:48, Tony Krowiak wrote:
+> On 5/2/19 1:34 PM, Pierre Morel wrote:
+>> We prepare the interception of the PQAP/AQIC instruction for
+>> the case the AQIC facility is enabled in the guest.
+>>
+>> First of all we do not want to change existing behavior when
+>> intercepting AP instructions without the SIE allowing the guest
+>> to use AP instructions.
+>>
+>> In this patch we only handle the AQIC interception allowed by
+>> facility 65 which will be enabled when the complete interception
+>> infrastructure will be present.
+>>
+>> We add a callback inside the KVM arch structure for s390 for
+>> a VFIO driver to handle a specific response to the PQAP
+>> instruction with the AQIC command and only this command.
+>>
+>> But we want to be able to return a correct answer to the guest
+>> even there is no VFIO AP driver in the kernel.
+>> Therefor, we inject the correct exceptions from inside KVM for the
+>> case the callback is not initialized, which happens when the vfio_ap
+>> driver is not loaded.
+>>
+>> We do consider the responsability of the driver to always initialize
+>> the PQAP callback if it defines queues by initializing the CRYCB for
+>> a guest.
+>> If the callback has been setup we call it.
+>> If not we setup an answer considering that no queue is available
+>> for the guest when no callback has been setup.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   arch/s390/include/asm/kvm_host.h      |  7 +++
+>>   arch/s390/kvm/priv.c                  | 86 
+>> +++++++++++++++++++++++++++++++++++
+>>   drivers/s390/crypto/vfio_ap_private.h |  2 +
+>>   3 files changed, 95 insertions(+)
+>>
+>> diff --git a/arch/s390/include/asm/kvm_host.h 
+>> b/arch/s390/include/asm/kvm_host.h
+>> index 9fff9ab..af10a11 100644
+>> --- a/arch/s390/include/asm/kvm_host.h
+>> +++ b/arch/s390/include/asm/kvm_host.h
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/kvm_host.h>
+>>   #include <linux/kvm.h>
+>>   #include <linux/seqlock.h>
+>> +#include <linux/module.h>
+>>   #include <asm/debug.h>
+>>   #include <asm/cpu.h>
+>>   #include <asm/fpu/api.h>
+>> @@ -722,8 +723,14 @@ struct kvm_s390_cpu_model {
+>>       unsigned short ibc;
+>>   };
+>> +struct kvm_s390_module_hook {
+>> +    int (*hook)(struct kvm_vcpu *vcpu);
+>> +    struct module *owner;
+>> +};
+>> +
+>>   struct kvm_s390_crypto {
+>>       struct kvm_s390_crypto_cb *crycb;
+>> +    struct kvm_s390_module_hook *pqap_hook;
+>>       __u32 crycbd;
+>>       __u8 aes_kw;
+>>       __u8 dea_kw;
+>> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+>> index 8679bd7..a9be84f 100644
+>> --- a/arch/s390/kvm/priv.c
+>> +++ b/arch/s390/kvm/priv.c
+>> @@ -27,6 +27,7 @@
+>>   #include <asm/io.h>
+>>   #include <asm/ptrace.h>
+>>   #include <asm/sclp.h>
+>> +#include <asm/ap.h>
+>>   #include "gaccess.h"
+>>   #include "kvm-s390.h"
+>>   #include "trace.h"
+>> @@ -592,6 +593,89 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
+>>       }
+>>   }
+>> +/*
+>> + * handle_pqap: Handling pqap interception
+>> + * @vcpu: the vcpu having issue the pqap instruction
+>> + *
+>> + * We now support PQAP/AQIC instructions and we need to correctly
+>> + * answer the guest even if no dedicated driver's hook is available.
+>> + *
+>> + * The intercepting code calls a dedicated callback for this instruction
+>> + * if a driver did register one in the CRYPTO satellite of the
+>> + * SIE block.
+>> + *
+>> + * If no callback is available, the queues are not available, return 
+>> this
+>> + * response code to the caller and set CC to 3.
+>> + * Else return the response code returned by the callback.
+>> + */
+>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct ap_queue_status status = {};
+>> +    unsigned long reg0;
+>> +    int ret;
+>> +    uint8_t fc;
+>> +
+>> +    /* Verify that the AP instruction are available */
+>> +    if (!ap_instructions_available())
+>> +        return -EOPNOTSUPP;
+>> +    /* Verify that the guest is allowed to use AP instructions */
+>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
+>> +        return -EOPNOTSUPP;
+>> +    /*
+>> +     * The only possibly intercepted functions when AP instructions are
+>> +     * available for the guest are AQIC and TAPQ with the t bit set
+>> +     * since we do not set IC.3 (FIII) we currently will only intercept
+>> +     * the AQIC function code.
+>> +     */
+>> +    reg0 = vcpu->run->s.regs.gprs[0];
+>> +    fc = reg0 >> 24;
+> 
+> Should you also mask off bits 0-32 in case they might not be zeroes?
 
-The difference is if I have the kaslr seed, I can calculate the kernel
-base address.
+Yes I will.
 
-In your case, you are feeding an RNG which continually has entropy
-added to it. I can't see that knowing one piece of the entropy data is
-a security hole. It looks more like you've just copied what what done
-for kaslr-seed.
+> 
+> Other than this, r-b
+> 
 
-> > Why not change the mapping to RW? It would be nice if this worked on
-> > more than one arch.
+Thanks,
 
-Still wondering on this question. Mapping it R/W would mean rng-seed
-could be handled later and completely out of the arch code and so
-could the zeroing of the kaslr-seed. Also, we generally assume the FDT
-is modifiable for any fixups. This happens on arm32 and powerpc, but I
-guess we haven't needed that yet on arm64.
+Pierre
 
-Rob
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
