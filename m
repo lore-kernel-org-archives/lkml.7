@@ -6,192 +6,200 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B7CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A09E2089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C488020850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfEHSNk (ORCPT
+        id S1727899AbfEHSQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:13:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34688 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfEHSNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:13:40 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 11:13:39 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga003.jf.intel.com with ESMTP; 08 May 2019 11:13:40 -0700
-Date:   Wed, 8 May 2019 11:13:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Aaron Lewis <aaronlewis@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Peter Shier <pshier@google.com>
-Subject: Re: [PATCH v2] kvm: nVMX: Set nested_run_pending in
- vmx_set_nested_state after checks complete
-Message-ID: <20190508181339.GD19656@linux.intel.com>
-References: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
- <20190508142023.GA13834@linux.intel.com>
- <CAAAPnDE0ujH4eTX=4umTTEmUMyaZ7M0B3qxWa7oUUD-Ls7Ta+A@mail.gmail.com>
+        Wed, 8 May 2019 14:16:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726559AbfEHSQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 14:16:43 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48ICKH2033611
+        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 14:16:41 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sc3vr0vb3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 14:16:41 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 8 May 2019 19:16:40 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 May 2019 19:16:38 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48IGbn431719532
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 May 2019 18:16:37 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E2B3B205F;
+        Wed,  8 May 2019 18:16:37 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71029B2067;
+        Wed,  8 May 2019 18:16:37 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  8 May 2019 18:16:37 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id E6DC116C343E; Wed,  8 May 2019 11:16:38 -0700 (PDT)
+Date:   Wed, 8 May 2019 11:16:38 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] doc/rcu: Correct field_count field naming in examples
+Reply-To: paulmck@linux.ibm.com
+References: <20190505020328.165839-1-joel@joelfernandes.org>
+ <20190507000453.GB3923@linux.ibm.com>
+ <20190508162635.GD187505@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="zYM0uCDKw75PZbzx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAAPnDE0ujH4eTX=4umTTEmUMyaZ7M0B3qxWa7oUUD-Ls7Ta+A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190508162635.GD187505@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19050818-2213-0000-0000-0000038AA190
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011072; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01200459; UDB=6.00629877; IPR=6.00981345;
+ MB=3.00026796; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-08 18:16:40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050818-2214-0000-0000-00005E5B2D6C
+Message-Id: <20190508181638.GY3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905080111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, May 08, 2019 at 10:53:12AM -0700, Aaron Lewis wrote:
-> nested_run_pending is also checked in
-> nested_vmx_check_vmentry_postreqs
-> (https://elixir.bootlin.com/linux/v5.1/source/arch/x86/kvm/vmx/nested.c#L2709)
-> so I think the setting needs to be moved to just prior to that call
-> with Paolo's rollback along with another for if the prereqs and
-> postreqs fail.  I put a patch together below:
-
-Gah, I missed that usage (also, it's now nested_vmx_check_guest_state()).
-
-Side topic, I think the VM_ENTRY_LOAD_BNDCFGS check should be gated by
-nested_run_pending, a la the EFER check.'
-
-> ------------------------------------
+On Wed, May 08, 2019 at 12:26:35PM -0400, Joel Fernandes wrote:
+> On Mon, May 06, 2019 at 05:04:53PM -0700, Paul E. McKenney wrote:
+> > On Sat, May 04, 2019 at 10:03:10PM -0400, Joel Fernandes (Google) wrote:
+> > > I believe this field should be called field_count instead of file_count.
+> > > Correct the doc with the same.
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > But if we are going to update this, why not update it with the current
+> > audit_filter_task(), audit_del_rule(), and audit_add_rule() code?
+> > 
+> > Hmmm...  One reason is that some of them have changed beyond recognition.
 > 
-> nested_run_pending=1 implies we have successfully entered guest mode.
-> Move setting from external state in vmx_set_nested_state() until after
-> all other checks are complete.
+> It seems to me that these 3 functions are just structured differently but is
+> conceptually the same.
 > 
-> Signed-off-by: Aaron Lewis <aaronlewis@google.com>
-> Reviewed-by: Peter Shier <pshier@google.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+> There is now an array of lists stored in audit_filter_list. Each list is a
+> set of rules. Versus in the listRCU.txt, there is only one global.
 > 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 6401eb7ef19c..cf1f810223d2 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5460,9 +5460,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
->   if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
->   return 0;
+> The other difference is there is a mutex held &audit_filter_mutex
+> audit_{add,del}_rule. Where as in listRCU, it says that is not needed since
+> another mutex is already held.
+
+Agreed.
+
+> > And this example code predates v2.6.12.  ;-)
+> > 
+> > So good eyes, but I believe that this really does reflect the ancient
+> > code...
+> > 
+> > On the other hand, would you have ideas for more modern replacement
+> > examples?
 > 
-> - vmx->nested.nested_run_pending =
-> - !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
-
-Alternatively, it might be better to leave nested_run_pending where it
-is and instead add a label to handle clearing the flag on error.  IIUC,
-the real issue is that nested_run_pending is left set after a failed
-vmx_set_nested_state(), not that its shouldn't be set in the shadow
-VMCS handling.
-
-Patch attached, though it's completely untested.  The KVM selftests are
-broken for me right now, grrr.
-
-> -
->   if (nested_cpu_has_shadow_vmcs(vmcs12) &&
->       vmcs12->vmcs_link_pointer != -1ull) {
->   struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
-> @@ -5480,14 +5477,21 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
->   return -EINVAL;
->   }
+> There are 3 cases I can see in listRCU.txt:
+>   (1) action taken outside of read_lock (can tolerate stale data), no in-place update.
+>                 this is the best possible usage of RCU.
+>   (2) action taken outside of read_lock, in-place updates
+>                 this is good as long as not too many in-place updates.
+>                 involves copying creating new list node and replacing the
+>                 node being updated with it.
+>   (3) cannot tolerate stale data: here a deleted or obsolete flag can be used
+>                                   protected by a per-entry lock. reader
+> 				  aborts if object is stale.
 > 
-> + vmx->nested.nested_run_pending =
-> + !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
-> +
->   if (nested_vmx_check_vmentry_prereqs(vcpu, vmcs12) ||
-> -     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual))
-> +     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual)) {
-> +     vmx->nested.nested_run_pending = 0;
->   return -EINVAL;
-> + }
+> Any replacement example must make satisfy (3) too?
+
+It would be OK to have a separate example for (3).  It would of course
+be nicer to have one example for all three, but not all -that- important.
+
+> The only example for (3) that I know of is sysvipc sempahores which you also
+> mentioned in the paper. Looking through this code, it hasn't changed
+> conceptually and it could be a fit for an example (ipc_valid_object() checks
+> for whether the object is stale).
+
+That is indeed the classic canonical example.  ;-)
+
+> The other example could be dentry look up which uses seqlocks for the
+> RCU-walk case? But that could be too complex. This is also something I first
+> learnt from the paper and then the excellent path-lookup.rst document in
+> kernel sources.
+
+This is a great example, but it would need serious simplification for
+use in the Documentation/RCU directory.  Note that dcache uses it to
+gain very limited and targeted consistency -- only a few types of updates
+acquire the write-side of that seqlock.
+
+Might be quite worthwhile to have a simplified example, though!
+Perhaps a trivial hash table where write-side sequence lock is acquired
+only when moving an element from one chain to another?
+
+> I will keep any eye out for other examples in the kernel code as well.
+
+Very good!
+
+							Thanx, Paul
+
+> Let me know what you think, thanks!
 > 
->   vmx->nested.dirty_vmcs12 = true;
->   ret = nested_vmx_enter_non_root_mode(vcpu, false);
-> - if (ret)
-> + if (ret) {
-> + vmx->nested.nested_run_pending = 0;
->   return -EINVAL;
-> + }
+>  - Joel
 > 
->   return 0;
->  }
+> 
+> > > ---
+> > >  Documentation/RCU/listRCU.txt | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/RCU/listRCU.txt b/Documentation/RCU/listRCU.txt
+> > > index adb5a3782846..190e666fc359 100644
+> > > --- a/Documentation/RCU/listRCU.txt
+> > > +++ b/Documentation/RCU/listRCU.txt
+> > > @@ -175,7 +175,7 @@ otherwise, the added fields would need to be filled in):
+> > >  		list_for_each_entry(e, list, list) {
+> > >  			if (!audit_compare_rule(rule, &e->rule)) {
+> > >  				e->rule.action = newaction;
+> > > -				e->rule.file_count = newfield_count;
+> > > +				e->rule.field_count = newfield_count;
+> > >  				write_unlock(&auditsc_lock);
+> > >  				return 0;
+> > >  			}
+> > > @@ -204,7 +204,7 @@ RCU ("read-copy update") its name.  The RCU code is as follows:
+> > >  					return -ENOMEM;
+> > >  				audit_copy_rule(&ne->rule, &e->rule);
+> > >  				ne->rule.action = newaction;
+> > > -				ne->rule.file_count = newfield_count;
+> > > +				ne->rule.field_count = newfield_count;
+> > >  				list_replace_rcu(&e->list, &ne->list);
+> > >  				call_rcu(&e->rcu, audit_free_rule);
+> > >  				return 0;
+> > > -- 
+> > > 2.21.0.1020.gf2820cf01a-goog
+> > > 
+> > 
+> 
 
---zYM0uCDKw75PZbzx
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-KVM-nVMX-Clear-nested_run_pending-if-setting-nested-.patch"
-
-From 279ce1be96d74aee41e93b597572e612a143cf3c Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Date: Wed, 8 May 2019 11:04:32 -0700
-Subject: [PATCH] KVM: nVMX: Clear nested_run_pending if setting nested state
- fails
-
-VMX's nested_run_pending flag is subtly consumed when stuffing state to
-enter guest mode, i.e. needs to be set according before KVM knows if
-setting guest state is successful.  If setting guest state fails, clear
-the flag as a nested run is obviously not pending.
-
-Reported-by: Aaron Lewis <aaronlewis@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 04b40a98f60b..1a2a2f91b7e0 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5428,29 +5428,33 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
- 
- 		if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
--			return -EINVAL;
-+			goto error_guest_mode;
- 
- 		if (copy_from_user(shadow_vmcs12,
- 				   user_kvm_nested_state->data + VMCS12_SIZE,
- 				   sizeof(*vmcs12)))
--			return -EFAULT;
-+			goto error_guest_mode;
- 
- 		if (shadow_vmcs12->hdr.revision_id != VMCS12_REVISION ||
- 		    !shadow_vmcs12->hdr.shadow_vmcs)
--			return -EINVAL;
-+			goto error_guest_mode;
- 	}
- 
- 	if (nested_vmx_check_controls(vcpu, vmcs12) ||
- 	    nested_vmx_check_host_state(vcpu, vmcs12) ||
- 	    nested_vmx_check_guest_state(vcpu, vmcs12, &exit_qual))
--		return -EINVAL;
-+		goto error_guest_mode;
- 
- 	vmx->nested.dirty_vmcs12 = true;
- 	ret = nested_vmx_enter_non_root_mode(vcpu, false);
- 	if (ret)
--		return -EINVAL;
-+		goto error_guest_mode;
- 
- 	return 0;
-+
-+error_guest_mode:
-+	vmx->nested.nested_run_pending = 0;
-+	return -EINVAL;
- }
- 
- void nested_vmx_vcpu_setup(void)
--- 
-2.21.0
-
-
---zYM0uCDKw75PZbzx--
