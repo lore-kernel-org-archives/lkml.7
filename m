@@ -2,104 +2,85 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0867EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C5AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8C8214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B2920989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xJVgfbsk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoIdT6ev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfEHIkh (ORCPT
+        id S1726882AbfEHIko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:40:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35869 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfEHIkg (ORCPT
+        Wed, 8 May 2019 04:40:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38564 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfEHIkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:40:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o4so26048091wra.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:40:35 -0700 (PDT)
+        Wed, 8 May 2019 04:40:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so9744636pgl.5;
+        Wed, 08 May 2019 01:40:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5iV39oc7txFj1z14zStSzaic9qElbV7eM3bDdq2xNNs=;
-        b=xJVgfbskTFpOrVO5RDoCGZrBXAQvJ7kr9yPJqSZVrEPUOuf48XOQL0xxm2Vx46zXbc
-         +hG2kyg6u1/4yWPAwHu9AAnlGLSET2uQbA64QFgbNe4FBMqYbP5QWgmCgoHNOcWDNpFX
-         hB9h3Kv5A/1bl6F8REG+lJSe/guSxnIZ73zrYHp8tENPVnROsePUZiVVjK7rcc+m70DK
-         J/tTuiQTJdo11FqR5+F31zeGdMzTbQKOVEyQx7lku6gVFKzVTB9CloBBDQEEtR6iuUef
-         E93Sd8aWp+Of26Z7kvQhkX8KwKy6Y+brLkL5Edua8zQhB8rV41ic3lyIpi4vvHnsFBDz
-         gl9w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rX6ucNl5H/QLYT5MirDdIdADtlybrhpXP2ffdTKqLlA=;
+        b=HoIdT6evN4j/sBXYzP0MOsSz0/32FftHywFEyONPKeqbcOqjCzyxnfQDAjCXTFSS6G
+         ao6dBjp/AXmt2K54mASLesuSjTbnztNkHfeC5CMGR3YI27PUU43V5TzjqqzCUYGt/4oJ
+         orrTcPd7cqMiJtB54BkbMbjOB4sm+UccQ3wAupd8MKq4wdHl0vla2WD0U7xo7wG5LkPg
+         JvR9UM/TfYorWS78Wlyk4c8CEEsOU+Y4BznxJVHuJV+K1xG1L8JmaFQpJPWduKlkBa/i
+         IN78iCIfeHAglip8C8RmgCyzxN7Tp8y2TDqWjLZ0cfXHeh4j6qRHIfZEPSrlZgyLcHvB
+         zaSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5iV39oc7txFj1z14zStSzaic9qElbV7eM3bDdq2xNNs=;
-        b=bqzE8xDbbFLPGRHGycV++pbeT+cEYsw7oSRPonqHlBlGaIVUmYVo2WNDzGAQ2axrjT
-         SQAbwH56bVSbq+lUKXCQaoK9clXSnW+bnhYRy6klpXhzMPbcX5wQZSlnjaqu6Tx38hT7
-         rRituWwNwVYDbfkYuvywqg9cY8+Sn5KRd+M/nV/0Q73wiYuCE3XvMyuQuVZepxRX5z4h
-         qmYVwcP4NkAWKeBXlg22nn2RSoE3tdqP2/XVSrH1kF/ayom6HBfEwisjfpXAan6pa72K
-         2DcfNHDDJZyCfB3/HYoSY9xem+97zXCpjTDbUwgaKnNUoBa+fAQqXxZpNjoK2SyzIbOd
-         v49Q==
-X-Gm-Message-State: APjAAAUR9FuZt0ZQegnfpwRBWtdJct17OhOVPGH0J3IAvnA7VAfzbTS+
-        qhJEF/5uu4pUk+qOsf+o/ANmZw==
-X-Google-Smtp-Source: APXvYqxT+p0H0/0rz0V5Jy4z/rmjEc/g5TciAjBtClxe3ObnYCxgA/8wzzmEJYlDAKpAIRAW1Pb3vw==
-X-Received: by 2002:adf:f508:: with SMTP id q8mr7952043wro.225.1557304834919;
-        Wed, 08 May 2019 01:40:34 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id i9sm2526835wmb.4.2019.05.08.01.40.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 01:40:34 -0700 (PDT)
-Date:   Wed, 8 May 2019 09:40:32 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: sun6i-prcm: fix build warning for non-OF
- configurations
-Message-ID: <20190508084032.GF3995@dell>
-References: <20190416122506.3180853-1-arnd@arndb.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rX6ucNl5H/QLYT5MirDdIdADtlybrhpXP2ffdTKqLlA=;
+        b=tEkPKQ/ulZ6t4CFWc2BocTCVbmMkoWkTtn38rixSBuWETjrm2F9XSMdPfsxGS0tvhR
+         2Uyuh1f60RDv3/0GqaMFhAlob50/GgiHSXVz+I3qmrXxxfz2uEwD5Tux4l4bYvZ1UtRj
+         buGd7UJabh7CIHoWfmJ3hQ67QRq9VsROGkJbbGxbM8rcVCSBLRBrFdbQ5dPRcHsTF1fc
+         ZFEiIBgISiS2g82O8GsyyE17a4LFKCqi2JyUoqg7jNe5fwnNAx2KQ2swmOlL3jJ4TJ3n
+         AoZqWXtvL71YAH7K8/SjUCC2oCPNKeGfKyPqAhdaWzp22xWGkmYpsvI3kvZ8f8r5ZX+Z
+         ve0g==
+X-Gm-Message-State: APjAAAVaLEaCLBxidJxllU/zOFh/nltEgtF7iUG1vnGBvo4kQ551iiu8
+        ZDqNNA29YjkAkeTIObXmbNR0W+EkAgXJuxiQ2yo=
+X-Google-Smtp-Source: APXvYqxu74Z3Cfg0rOWll+OMmbusjO4FWCxvJ5UFfTJOChpSYAnZiFfg8XZ2TfgwcAVbw+q2PoUwXqLbN0N4Sdc5lPM=
+X-Received: by 2002:a63:dd58:: with SMTP id g24mr45029848pgj.161.1557304842196;
+ Wed, 08 May 2019 01:40:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190416122506.3180853-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190508082319.GA8817@hjy-HP-Notebook>
+In-Reply-To: <20190508082319.GA8817@hjy-HP-Notebook>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 May 2019 11:40:30 +0300
+Message-ID: <CAHp75VeZgWxEvrVGajiosPCZNMwobYV9OjC4sVyW_pajK5B3Zw@mail.gmail.com>
+Subject: Re: [PATCH] fix double fetch in wmi_ioctl.
+To:     JingYi Hou <houjingyi647@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, Arnd Bergmann wrote:
+On Wed, May 8, 2019 at 11:23 AM JingYi Hou <houjingyi647@gmail.com> wrote:
+> There is a double fetch problem in function wmi_ioctl.
+> After second fetch overwrite the length to avoid this.
+> buf->length is not used now,but it may in the future.
+> It is good to get it fixed up.
 
-> When CONFIG_OF is disabled, we get a harmless warning about an
-> unused variable:
-> 
-> drivers/mfd/sun6i-prcm.c: In function 'sun6i_prcm_probe':
-> drivers/mfd/sun6i-prcm.c:151:22: error: unused variable 'np' [-Werror=unused-variable]
-> 
-> Remove the variable and open-code the value in the only place
-> it is used, so it can get left out as well without CONFIG_OF.
-> 
-> Fixes: a05a2e7998ab ("mfd: sun6i-prcm: Allow to compile with COMPILE_TEST")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/mfd/sun6i-prcm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+So, there is no issue right now.
+Patch is not needed then.
 
-Applied, thanks.
+Thanks!
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
