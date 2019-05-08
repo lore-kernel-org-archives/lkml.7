@@ -2,196 +2,393 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFFEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874FEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634DE216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:04:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="p8DbHIUO";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RUfn8/Oz"
+	by mail.kernel.org (Postfix) with ESMTP id 517D5216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfEHSEZ (ORCPT
+        id S1727669AbfEHSEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:04:25 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51594 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726883AbfEHSEY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:04:24 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48Hvl8c000352;
-        Wed, 8 May 2019 11:03:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=5Pvqd9AFIVjCFfG5s63rkla6Tj4DPV/b5/s/sPs/rHY=;
- b=p8DbHIUOazGolxZyeasMMbcaXJtJA0PHW9glC7dJvVSOo5q/F6BMDz090El/VnQj68LZ
- kR/zPxN2e6HNOGu/Tpd1DEm0AYxH9r8sPlgqc4rEBE/gGW1f+u5XV0ZZZTlXmeljoKvt
- gwiycTj7AUS68EGk11F7t8FpPuTiOMNzGkQ= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sbyyxgyyv-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 08 May 2019 11:03:28 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 8 May 2019 11:03:15 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 8 May 2019 11:03:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Pvqd9AFIVjCFfG5s63rkla6Tj4DPV/b5/s/sPs/rHY=;
- b=RUfn8/OzwB3S2QCJ5TcRFeCB31mqe+/dtmhYPkML2gh+R+bgRwYY6mtM4Cu7x5RXo4oz0GkjJZRBZP0SO2PQ7m0Bywr/RNWtp20da7EMQDfoV1wZlqiiuZ6XZfeNtt/a1SMByLzCrN29WVYuLT0cHbfuEkiKKjIzq+Ng60FSbio=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2392.namprd15.prod.outlook.com (52.135.198.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Wed, 8 May 2019 18:03:13 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ddd2:172e:d688:b5b7]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ddd2:172e:d688:b5b7%3]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 18:03:13 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     Qian Cai <cai@lca.pw>, "tj@kernel.org" <tj@kernel.org>,
-        "lizefan@huawei.com" <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: ptrace warning due to "cgroup: get rid of
- cgroup_freezer_frozen_exit()"
-Thread-Topic: ptrace warning due to "cgroup: get rid of
- cgroup_freezer_frozen_exit()"
-Thread-Index: AQHVBRAdiRV9e0TuJUe+IcFJ/bKLuqZfusgAgAGfqQCAACwFgA==
-Date:   Wed, 8 May 2019 18:03:12 +0000
-Message-ID: <20190508180307.GA25433@tower.DHCP.thefacebook.com>
-References: <1557259462.6132.20.camel@lca.pw>
- <20190507213752.GA24308@tower.DHCP.thefacebook.com>
- <20190508152536.GA17058@redhat.com>
-In-Reply-To: <20190508152536.GA17058@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0093.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::34) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::f251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: de57a2a2-5eb1-471e-863a-08d6d3df6fcc
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2392;
-x-ms-traffictypediagnostic: BYAPR15MB2392:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BYAPR15MB239269F670B1F8A15105B464BE320@BYAPR15MB2392.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(376002)(346002)(366004)(189003)(199004)(6246003)(25786009)(64756008)(66446008)(66556008)(66476007)(316002)(5660300002)(6486002)(6116002)(66946007)(6916009)(6306002)(86362001)(6512007)(9686003)(71200400001)(71190400001)(256004)(52116002)(14444005)(14454004)(1076003)(2906002)(76176011)(6506007)(386003)(6436002)(54906003)(73956011)(99286004)(478600001)(486006)(8676002)(81166006)(229853002)(966005)(476003)(33656002)(4326008)(186003)(81156014)(8936002)(7736002)(53936002)(305945005)(11346002)(446003)(102836004)(68736007)(46003)(26583001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2392;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wPVGkpVbd6RRPTvNgKa9kBhrU4R3dB7vRihdnRzBG5ImC+ekeubWh4akWAXCYBUhpnTliAXbrxqX6TxAQMU9K1ZHnZ/O61w45wt1XwBjs4N1Gffi0JDy9vkKGh7o/cMnxJezLlwjWTkacsxAnoibN/AHfE6njih+XTJCdEWexrG31XcCG4zX4gia4azBCp6UwEW59YJ2ge+F7Qo0cBm6klBW/JL3lmw0AZwRLUjNWxZpRhIeREh3+7ILhPvaGlUARja5L9fMMAIk/NGu2JfO4t2f2S1emQRXQQKH83nskGOwrJbJBBEUok/ZvJAoRne+/WMqRWD2RO+IFjSyP1sR4bv22NMODxQHg9wInburKuxKRQ1mvSmDD/PcAb5gjYOAOjsuwmQH5kBMMcY5L/wG2zpwPF9lfFN6GCiOoj03IpY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4EFE5CF94ED0C649A5834C40271345C7@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 May 2019 14:04:53 -0400
+Received: from ms.lwn.net ([45.79.88.28]:54146 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726883AbfEHSEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 14:04:53 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id D39302C5;
+        Wed,  8 May 2019 18:04:51 +0000 (UTC)
+Date:   Wed, 8 May 2019 12:04:50 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: [GIT PULL] Docs for 5.2
+Message-ID: <20190508120450.197d4e8e@lwn.net>
+Organization: LWN.net
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: de57a2a2-5eb1-471e-863a-08d6d3df6fcc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 18:03:12.9758
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2392
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=526 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080110
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Oleg!
+The following changes since commit
+9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-On Wed, May 08, 2019 at 05:25:36PM +0200, Oleg Nesterov wrote:
-> On 05/07, Roman Gushchin wrote:
-> >
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -2484,9 +2484,6 @@ bool get_signal(struct ksignal *ksig)
-> >                 sigdelset(&current->pending.signal, SIGKILL);
-> >                 recalc_sigpending();
-> >                 current->jobctl &=3D ~JOBCTL_TRAP_FREEZE;
->=20
-> just noticed... perhaps it makes more sense to clear JOBCTL_TRAP_FREEZE
-> before recalc_sigpending(). Or simply not clear it at all, see below.
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
-Agree, we don't need to clear it, because there is no way back for the task
-at this moment, only exiting. I'm dropping this line.
+are available in the Git repository at:
 
->=20
-> > -               spin_unlock_irq(&sighand->siglock);
-> > -               if (unlikely(cgroup_task_frozen(current)))
-> > -                       cgroup_leave_frozen(true);
-> >                 goto fatal;
-> >         }
-> > =20
-> > @@ -2608,8 +2605,10 @@ bool get_signal(struct ksignal *ksig)
-> >                         continue;
-> >                 }
-> > =20
-> > -               spin_unlock_irq(&sighand->siglock);
-> >         fatal:
-> > +               spin_unlock_irq(&sighand->siglock);
-> > +               if (unlikely(cgroup_task_frozen(current)))
-> > +                       cgroup_leave_frozen(true);
->=20
-> Yes, ptrace_signal() can return a fatal signal... and in this case we do =
-not
-> clear JOBCTL_TRAP_FREEZE. This doesn't look consistent with the code abov=
-e.
+  git://git.lwn.net/linux.git tags/docs-5.2
 
-The same here.
+for you to fetch changes up to d9defe448f4c7b88ca2ae636a321ef8970fa718d:
 
->=20
->=20
->=20
-> I can only repeat that somehow we need to cleanup/improve the whole logic=
-.
->=20
-> Say, a traced task reports syscall-enter. ptrace_stop() does enter_frozen=
-().
-> The cgroup can become CGRP_FROZEN after that. Now the debugger does PTRAC=
-E_CONT,
-> the frozen task actually starts the syscall. Obviously not good.
->=20
-> Heh, and if this syscall is sys_exit or sys_exit_group we can hit the sam=
-e
-> warning.
+  docs/livepatch: Unify style of livepatch documentation in the ReST format (2019-05-07 16:06:28 -0600)
 
-Ok, I totally agree, but let's fix this noisy WARN_ON() for now,
-to have some time to think about the rest.
+----------------------------------------------------------------
+A reasonably busy cycle for docs, including:
 
-I believe this will fix it for now:
-https://github.com/rgushchin/linux/commit/3f65507e407c81d3cdf4a9145f36a8d0f=
-755ca04
+ - Lots of work on the Chinese and Italian translations
+ - Some license-rules clarifications from Christoph
+ - Various build-script fixes
+ - A new document on memory models
+ - RST conversion of the live-patching docs
+ - The usual collection of typo fixes and corrections.
 
-Please, let me know if you have any concerns here, otherwise I'll ask Tejun=
- to
-pull it asap.
+Expect a trivial conflict in the .mailmap file due to the modification
+of two adjacent entries.
+----------------------------------------------------------------
+Alessia Mantegazza (1):
+      doc:it_IT: translation for maintainer-pgp-guide
 
-Thank you for looking into it!
+Alex Shi (93):
+      docs/zh_CN: add disclaimer file
+      docs/zh_CN: move process related docs into process dir
+      docs/zh_CN: change Chinese index to know process dir
+      docs/zh_CN: add index file into process dir
+      docs/zh_CN: rename HOWTO into process directory
+      docs/zh_CN: howto format changes
+      docs/zh_CN: rename SubmittingPatches for html links
+      docs/zh_CN: format the submitting-patches doc to rst
+      docs/zh_CN: rename stable_kernel_rules doc
+      docs/zh_CN: rst format change for stable-kernel-rules
+      docs/zh_CN: rename email-clients.txt as email-clients.rst
+      docs/zh_CN: do rst format for email-clients.rst
+      docs/zh_CN: rename volatile-consider-harmful doc
+      docs/zh_CN: volatile doc format changes
+      docs/zh_CN: rename SubmittingDrivers
+      docs/zh_CN: format submitting drivers as rst
+      docs/zh_CN: rename magic-numbers as rst doc
+      docs/zh_CN: format the magic-number doc as rst
+      docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
+      docs/zh_CN: format stable-api-nonsense
+      docs/zh_CN: update Li Yang's email address
+      mailmap: update Li Yang's email address
+      docs/zh_CN: update Zhang Wei's email address
+      mailmap: update email address for Triplex
+      docs/zh_CN: update TripleX chung's email address
+      docs/zh_CN: fix indent issue in stable-api-nonsense file
+      docs/zh_CN: fix indent issue in submitting-drivers
+      docs/zh_CN: remove zh-kernel.org in MAINTAINERS
+      mailmap: update my obsolete email address
+      docs/zh_CN: fix rst format issue in submitting-patch
+      docs/zh_CN: fix rst format errors in howto.rst
+      docs/zh_CN: translate development-process into Chinese
+      docs/zh_CN: add disclaimer and translator info in development-process
+      docs/zh_CN: link development-process into process index
+      docs/zh_CN: add Chinese 1.Intro file
+      docs/zh_CN: add disclaimer and translator info into 1.Intro
+      docs/zh_CN: add 2.Process.rst for development-process
+      docs/zh_CN: add disclaimer and translator info in 2.Process
+      docs/zh_CN: translate 3.Early-stage of development process
+      docs/zh_CN: add disclaimer/translator info in 3.Early-stage
+      docs/zh_CN: add 4.Coding.rst
+      docs/zh_CN: add disclaimer and translator info in 4.Coding
+      docs/zh_CN: add 5.Posting.rst into development-process
+      docs/zh_CN: add disclaimer and translator info in 5.Posting
+      docs/zh_CN: add the 6th doc 6.Followthrought.rst
+      docs/zh_CN: add disclaimer and translator info in 6.Followthrough
+      docs/zh_CN: translate 7.AdvanceTopics.rst
+      docs/zh_CN: add disclaimer and translator info in 7.Advancedtopics
+      docs/zh_CN: add 8.Conclusion.rst in development-process
+      docs/zh_CN: add disclaimer and translator info in 8.Conclusion
+      docs/zh_CN: add license-rules Chinese translation
+      docs/zh_CN: fix links failure in license-rules
+      docs/zh_CN: include Chinese translation header for license-rules
+      docs/zh_CN: link the license-rules file into process index
+      docs/zh_CN: add submit-checklist file
+      docs/zh_CN: add disclaimer and transtlator info in submit-checklist
+      docs/zh_CN: link the submit-checklist into process/index
+      docs/zh_CN: add CoC doc
+      docs/zh_CN: add disclaimer and translator info in CoC
+      docs/zh_CN: link the CoC into process/index
+      docs/zh_CN: add CoC interpretation
+      docs/zh_CN: add disclaim and translator into CoC interp
+      docs/zh_CN: link CoC interpretation into index
+      docs/zh_CN: fix link issue in howto.rst
+      docs/zh_CN: update howto.rst to latest version
+      docs/zh_CN: update translator info and comments in howto
+      docs/zh_CN: redirect license-rules to Chinese doc
+      docs/zh_CN: redirect howto.rst link to Chinese version
+      docs/zh_CN: update to latest submitting-patches.rst
+      docs/zh_CN: update translator info in submitting-patches
+      docs/zh_CN: redirect the submitting-patches to Chinese doc
+      docs/zh_CN: redirect submit-checklist
+      docs/zh_CN: update co-developed-by info after English version
+      docs/zh_CN: add programming-language.rst
+      docs/zh_CN: link programming-language into process/index
+      docs/zh_CN: add disclaimer and translator info into programming-language
+      docs/zh_CN: add git setting in email-clients
+      docs/zh_CN: Update mutt setting info in email-clients
+      docs/zh_CN: add Alex into translator in email-clients
+      docs/zh_CN: redirect the email-clients link to Chinese version
+      docs/zh_CN: add management-style.rst in Chinese
+      docs/zh_CN: add disclaimer and translator info in management-style
+      docs/zh_CN: link management-style into process/index
+      docs/zh_CN: redirect management-style to Chinese one
+      docs/zh_CN: Cleanup stable-api-nonscense in Chinese
+      docs/zh_CN: redirect stable-api-nonsense to Chinese version
+      docs/zh_CN: update coding-sytle.rst
+      docs/zh_CN: redirect coding-sytle to Chinese version
+      docs/zh_CN: correct the disclaimer file
+      docs/zh_CN: add Alex Shi as Chinese documentation maintainer
+      docs/zh_CN: correct a word in managment-style.
+      docs/zh_CN: redirect CoC docs to Chinese version
+      docs/zh_CN: fix typos in 1.Intro.rst file
 
-Roman
+Christoph Hellwig (3):
+      docs: Don't reference the ZLib license in license-rules.rst
+      LICENSES: Clearly mark dual license only licenses
+      LICENSES: Rename other to deprecated
+
+Federico Vaga (6):
+      doc: add translation disclaimer
+      doc:it_IT: translations for documents in process/
+      doc: minor fixes to translation's disclaimer
+      doc:it: alignement clarification about sign-off and Co-developed-by
+      doc: fix typo in PGP guide
+      doc:it_IT: translation alignment
+
+Jakub Wilk (3):
+      Documentation: seccomp: fix reST markup
+      Documentation: seccomp: unify list indentation
+      Documentation: fix core_pattern max length
+
+Joe Perches (1):
+      coding-style.rst: Generic alloc functions do not need OOM logging
+
+Joel Stanley (1):
+      Documentation: rtc: Correct location of rtctest.c
+
+Jonathan Corbet (1):
+      docs: Fix a build error in coding-style.rst
+
+Jonathan Neuschäfer (3):
+      docs: core-api: Drop reference to flexible-arrays
+      Documentation: soundwire: Ensure that code is inside the code blocks
+      Documentation: kernel-docs: Remove entry for vfs.txt
+
+Juergen Gross (1):
+      doc: add boot protocol 2.13 description to Documentation/x86/boot.txt
+
+Masahiro Yamada (1):
+      dontdiff: update with Kconfig build artifacts
+
+Mauro Carvalho Chehab (15):
+      docs: Makefile: use latexmk if available
+      docs: scripts/sphinx-pre-install: suggest latexmk for building pdf
+      docs: DMA-API-HOWTO: add a missing "="
+      docs: atomic_bitops.txt: add a title for this document
+      docs: clearing-warn-once.txt: add a title for this document
+      docs: ntb.txt: use Sphinx notation for the two ascii figures
+      docs: unaligned-memory-access.txt: use a lowercase title
+      docs: video-output.txt: convert it to ReST format
+      docs: ntb.txt: add blank lines to clean up some Sphinx warnings
+      docs: speculation.txt: mark example blocks as such
+      docs: trace: fix some Sphinx warnings
+      docs: doc-guide: remove the extension from .rst files
+      scripts/documentation-file-ref-check: don't parse Next/ dir
+      scripts/documentation-file-ref-check: detect broken :doc:`foo`
+      docs: livepatch: convert docs to ReST and rename to *.rst
+
+Mike Rapoport (1):
+      docs/vm: add documentation of memory models
+
+Petr Mladek (1):
+      docs/livepatch: Unify style of livepatch documentation in the ReST format
+
+Ralph Campbell (1):
+      docs/vm: Minor editorial changes in the THP and hugetlbfs
+
+Sean Christopherson (2):
+      docs: Clarify the usage and sign-off requirements for Co-developed-by
+      checkpatch: Warn on improper usage of Co-developed-by
+
+Shuah Khan (1):
+      doc: kselftest: Fix KBUILD_OUTPUT usage instructions
+
+Tobin C. Harding (3):
+      docs: Fix spelling mistake
+      docs: Add colon clearing sphinx warning
+      docs: Use reference to link to rst file
+
+Tom Levy (1):
+      docs: remove spaces from shell variable assignment
+
+Yang Shi (1):
+      doc: mm: migration doesn't use FOLL_SPLIT anymore
+
+ .mailmap                                           |   6 +
+ Documentation/ABI/testing/sysfs-kernel-livepatch   |   2 +-
+ Documentation/DMA-API-HOWTO.txt                    |   2 +-
+ Documentation/Makefile                             |   9 +-
+ Documentation/atomic_bitops.txt                    |   6 +-
+ Documentation/clearing-warn-once.txt               |   2 +
+ Documentation/core-api/index.rst                   |   1 -
+ Documentation/dev-tools/kselftest.rst              |  42 +-
+ Documentation/doc-guide/index.rst                  |   6 +-
+ Documentation/dontdiff                             |   8 +-
+ Documentation/driver-api/soundwire/stream.rst      |  16 +-
+ .../livepatch/{callbacks.txt => callbacks.rst}     |  45 +-
+ ...mulative-patches.txt => cumulative-patches.rst} |  14 +-
+ Documentation/livepatch/index.rst                  |  21 +
+ .../livepatch/{livepatch.txt => livepatch.rst}     |  62 +-
+ ...module-elf-format.txt => module-elf-format.rst} | 353 ++++----
+ .../livepatch/{shadow-vars.txt => shadow-vars.rst} |  65 +-
+ Documentation/ntb.txt                              |  14 +-
+ Documentation/process/5.Posting.rst                |  10 +-
+ Documentation/process/coding-style.rst             |   6 +-
+ Documentation/process/deprecated.rst               |   2 +
+ Documentation/process/howto.rst                    |   2 +-
+ Documentation/process/kernel-docs.rst              |  12 -
+ Documentation/process/license-rules.rst            |  61 +-
+ Documentation/process/maintainer-pgp-guide.rst     |   2 +-
+ Documentation/process/submitting-patches.rst       |  46 +-
+ Documentation/rtc.txt                              |   2 +-
+ Documentation/speculation.txt                      |   8 +-
+ Documentation/sysctl/kernel.txt                    |   2 +-
+ Documentation/trace/ftrace.rst                     |   1 +
+ Documentation/trace/histogram.rst                  |  94 ++-
+ Documentation/translations/index.rst               |  40 +
+ .../it_IT/core-api/memory-allocation.rst           |  13 +
+ .../translations/it_IT/disclaimer-ita.rst          |  13 +-
+ .../translations/it_IT/doc-guide/index.rst         |   6 +-
+ Documentation/translations/it_IT/index.rst         |  65 +-
+ .../translations/it_IT/networking/netdev-FAQ.rst   |  13 +
+ .../translations/it_IT/process/5.Posting.rst       |  10 +-
+ .../translations/it_IT/process/coding-style.rst    |   8 +-
+ .../translations/it_IT/process/deprecated.rst      | 129 +++
+ .../it_IT/process/kernel-enforcement-statement.rst | 168 +++-
+ .../translations/it_IT/process/license-rules.rst   | 452 ++++++++++
+ .../it_IT/process/maintainer-pgp-guide.rst         | 939 ++++++++++++++++++++-
+ .../it_IT/process/stable-kernel-rules.rst          | 194 ++++-
+ .../it_IT/process/submitting-patches.rst           |  47 +-
+ Documentation/translations/ja_JP/SubmittingPatches |   6 +-
+ Documentation/translations/zh_CN/SubmittingPatches | 412 ---------
+ .../translations/zh_CN/disclaimer-zh_CN.rst        |   9 +
+ Documentation/translations/zh_CN/index.rst         |  17 +-
+ Documentation/translations/zh_CN/magic-number.txt  | 153 ----
+ Documentation/translations/zh_CN/oops-tracing.txt  |   2 +-
+ .../translations/zh_CN/process/1.Intro.rst         | 186 ++++
+ .../translations/zh_CN/process/2.Process.rst       | 360 ++++++++
+ .../translations/zh_CN/process/3.Early-stage.rst   | 161 ++++
+ .../translations/zh_CN/process/4.Coding.rst        | 290 +++++++
+ .../translations/zh_CN/process/5.Posting.rst       | 240 ++++++
+ .../translations/zh_CN/process/6.Followthrough.rst | 145 ++++
+ .../zh_CN/process/7.AdvancedTopics.rst             | 124 +++
+ .../translations/zh_CN/process/8.Conclusion.rst    |  64 ++
+ .../process/code-of-conduct-interpretation.rst     | 108 +++
+ .../translations/zh_CN/process/code-of-conduct.rst |  72 ++
+ .../zh_CN/{ => process}/coding-style.rst           |  21 +-
+ .../zh_CN/process/development-process.rst          |  26 +
+ .../email-clients.rst}                             | 104 ++-
+ .../zh_CN/{HOWTO => process/howto.rst}             | 265 +++---
+ Documentation/translations/zh_CN/process/index.rst |  60 ++
+ .../translations/zh_CN/process/license-rules.rst   | 370 ++++++++
+ .../translations/zh_CN/process/magic-number.rst    | 151 ++++
+ .../zh_CN/process/management-style.rst             | 207 +++++
+ .../zh_CN/process/programming-language.rst         |  41 +
+ .../stable-api-nonsense.rst}                       |  68 +-
+ .../stable-kernel-rules.rst}                       |  34 +-
+ .../zh_CN/process/submit-checklist.rst             | 107 +++
+ .../submitting-drivers.rst}                        |  36 +-
+ .../zh_CN/process/submitting-patches.rst           | 682 +++++++++++++++
+ .../volatile-considered-harmful.rst}               |  35 +-
+ Documentation/translations/zh_CN/sparse.txt        |   6 +-
+ Documentation/unaligned-memory-access.txt          |   2 +-
+ Documentation/userspace-api/seccomp_filter.rst     |   8 +-
+ Documentation/video-output.txt                     |  52 +-
+ Documentation/vm/hugetlbfs_reserv.rst              |  17 +-
+ Documentation/vm/index.rst                         |   1 +
+ Documentation/vm/memory-model.rst                  | 183 ++++
+ Documentation/vm/numa.rst                          |   4 +-
+ Documentation/vm/transhuge.rst                     |  81 +-
+ Documentation/x86/boot.txt                         |   4 +
+ LICENSES/{other => deprecated}/GPL-1.0             |   0
+ LICENSES/{other => deprecated}/ISC                 |   0
+ LICENSES/{other => deprecated}/Linux-OpenIB        |   0
+ LICENSES/{other => deprecated}/X11                 |   0
+ LICENSES/{other => dual}/Apache-2.0                |   4 +
+ LICENSES/{other => dual}/CDDL-1.0                  |   4 +-
+ LICENSES/{other => dual}/MPL-1.1                   |   4 +
+ MAINTAINERS                                        |   2 +-
+ include/linux/wait.h                               |   2 +-
+ scripts/checkpatch.pl                              |  18 +
+ scripts/documentation-file-ref-check               |  32 +
+ scripts/sphinx-pre-install                         |   1 +
+ tools/objtool/Documentation/stack-validation.txt   |   2 +-
+ 99 files changed, 6606 insertions(+), 1396 deletions(-)
+ rename Documentation/livepatch/{callbacks.txt => callbacks.rst} (87%)
+ rename Documentation/livepatch/{cumulative-patches.txt => cumulative-patches.rst} (89%)
+ create mode 100644 Documentation/livepatch/index.rst
+ rename Documentation/livepatch/{livepatch.txt => livepatch.rst} (93%)
+ rename Documentation/livepatch/{module-elf-format.txt => module-elf-format.rst} (55%)
+ rename Documentation/livepatch/{shadow-vars.txt => shadow-vars.rst} (87%)
+ create mode 100644 Documentation/translations/it_IT/core-api/memory-allocation.rst
+ create mode 100644 Documentation/translations/it_IT/networking/netdev-FAQ.rst
+ create mode 100644 Documentation/translations/it_IT/process/deprecated.rst
+ create mode 100644 Documentation/translations/it_IT/process/license-rules.rst
+ delete mode 100644 Documentation/translations/zh_CN/SubmittingPatches
+ create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+ delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
+ create mode 100644 Documentation/translations/zh_CN/process/1.Intro.rst
+ create mode 100644 Documentation/translations/zh_CN/process/2.Process.rst
+ create mode 100644 Documentation/translations/zh_CN/process/3.Early-stage.rst
+ create mode 100644 Documentation/translations/zh_CN/process/4.Coding.rst
+ create mode 100644 Documentation/translations/zh_CN/process/5.Posting.rst
+ create mode 100644 Documentation/translations/zh_CN/process/6.Followthrough.rst
+ create mode 100644 Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
+ create mode 100644 Documentation/translations/zh_CN/process/8.Conclusion.rst
+ create mode 100644 Documentation/translations/zh_CN/process/code-of-conduct-interpretation.rst
+ create mode 100644 Documentation/translations/zh_CN/process/code-of-conduct.rst
+ rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (97%)
+ create mode 100644 Documentation/translations/zh_CN/process/development-process.rst
+ rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (74%)
+ rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (70%)
+ create mode 100644 Documentation/translations/zh_CN/process/index.rst
+ create mode 100644 Documentation/translations/zh_CN/process/license-rules.rst
+ create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
+ create mode 100644 Documentation/translations/zh_CN/process/management-style.rst
+ create mode 100644 Documentation/translations/zh_CN/process/programming-language.rst
+ rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (78%)
+ rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (74%)
+ create mode 100644 Documentation/translations/zh_CN/process/submit-checklist.rst
+ rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (85%)
+ create mode 100644 Documentation/translations/zh_CN/process/submitting-patches.rst
+ rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
+ create mode 100644 Documentation/vm/memory-model.rst
+ rename LICENSES/{other => deprecated}/GPL-1.0 (100%)
+ rename LICENSES/{other => deprecated}/ISC (100%)
+ rename LICENSES/{other => deprecated}/Linux-OpenIB (100%)
+ rename LICENSES/{other => deprecated}/X11 (100%)
+ rename LICENSES/{other => dual}/Apache-2.0 (97%)
+ rename LICENSES/{other => dual}/CDDL-1.0 (99%)
+ rename LICENSES/{other => dual}/MPL-1.1 (99%)
