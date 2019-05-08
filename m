@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9412C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A75C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DCE20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE9020989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfEHOr6 (ORCPT
+        id S1727692AbfEHOrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:47:58 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24016 "EHLO mga05.intel.com"
+        Wed, 8 May 2019 10:47:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57670 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728430AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728449AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:51 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 08 May 2019 07:44:45 -0700
+  by orsmga003.jf.intel.com with ESMTP; 08 May 2019 07:44:46 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 311E210A5; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id 474571101; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 49/62] mm, x86: export several MKTME variables
-Date:   Wed,  8 May 2019 17:44:09 +0300
-Message-Id: <20190508144422.13171-50-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 51/62] iommu/vt-d: Support MKTME in DMA remapping
+Date:   Wed,  8 May 2019 17:44:11 +0300
+Message-Id: <20190508144422.13171-52-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,37 +57,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Huang <kai.huang@linux.intel.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-KVM needs those variables to get/set memory encryption mask.
+When MKTME is enabled, keyid is stored in the high order bits of physical
+address. For DMA transactions targeting encrypted physical memory, keyid
+must be included in the IOVA to physical address translation.
 
-Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
+This patch appends page keyid when setting up the IOMMU PTEs. On the
+reverse direction, keyid bits are cleared in the physical address lookup.
+Mapping functions of both DMA ops and IOMMU ops are covered.
+
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/mm/mktme.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iommu/intel-iommu.c | 29 +++++++++++++++++++++++++++--
+ include/linux/intel-iommu.h |  9 ++++++++-
+ 2 files changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index df70651816a1..12f4266cf7ea 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -7,13 +7,16 @@
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 28cb713d728c..1ff7e87e25f1 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -862,6 +862,28 @@ static void free_context_table(struct intel_iommu *iommu)
+ 	spin_unlock_irqrestore(&iommu->lock, flags);
+ }
  
- /* Mask to extract KeyID from physical address. */
- phys_addr_t mktme_keyid_mask;
-+EXPORT_SYMBOL_GPL(mktme_keyid_mask);
++static inline void set_pte_mktme_keyid(unsigned long phys_pfn,
++		phys_addr_t *pteval)
++{
++	unsigned long keyid;
++
++	if (!pfn_valid(phys_pfn))
++		return;
++
++	keyid = page_keyid(pfn_to_page(phys_pfn));
++
++#ifdef CONFIG_X86_INTEL_MKTME
++	/*
++	 * When MKTME is enabled, set keyid in PTE such that DMA
++	 * remapping will include keyid in the translation from IOVA
++	 * to physical address. This applies to both user and kernel
++	 * allocated DMA memory.
++	 */
++	*pteval &= ~mktme_keyid_mask;
++	*pteval |= keyid << mktme_keyid_shift;
++#endif
++}
++
+ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 				      unsigned long pfn, int *target_level)
+ {
+@@ -888,7 +910,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 			break;
+ 
+ 		if (!dma_pte_present(pte)) {
+-			uint64_t pteval;
++			phys_addr_t pteval;
+ 
+ 			tmp_page = alloc_pgtable_page(domain->nid);
+ 
+@@ -896,7 +918,8 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 				return NULL;
+ 
+ 			domain_flush_cache(domain, tmp_page, VTD_PAGE_SIZE);
+-			pteval = ((uint64_t)virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
++			pteval = (virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
++			set_pte_mktme_keyid(virt_to_dma_pfn(tmp_page), &pteval);
+ 			if (cmpxchg64(&pte->val, 0ULL, pteval))
+ 				/* Someone else set it while we were thinking; use theirs. */
+ 				free_pgtable_page(tmp_page);
+@@ -2289,6 +2312,8 @@ static int __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+ 			}
+ 
+ 		}
++		set_pte_mktme_keyid(phys_pfn, &pteval);
++
+ 		/* We don't need lock here, nobody else
+ 		 * touches the iova range
+ 		 */
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index fa364de9db18..48a377a2b896 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -34,6 +34,8 @@
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/iommu.h>
++#include <asm/page.h>
++
+ 
  /*
-  * Number of KeyIDs available for MKTME.
-  * Excludes KeyID-0 which used by TME. MKTME KeyIDs start from 1.
-  */
- int mktme_nr_keyids;
-+EXPORT_SYMBOL_GPL(mktme_nr_keyids);
- /* Shift of KeyID within physical address. */
- int mktme_keyid_shift;
-+EXPORT_SYMBOL_GPL(mktme_keyid_shift);
- 
- DEFINE_STATIC_KEY_FALSE(mktme_enabled_key);
- EXPORT_SYMBOL_GPL(mktme_enabled_key);
+  * VT-d hardware uses 4KiB page size regardless of host page size.
+@@ -603,7 +605,12 @@ static inline void dma_clear_pte(struct dma_pte *pte)
+ static inline u64 dma_pte_addr(struct dma_pte *pte)
+ {
+ #ifdef CONFIG_64BIT
+-	return pte->val & VTD_PAGE_MASK;
++	u64 addr = pte->val;
++	addr &= VTD_PAGE_MASK;
++#ifdef CONFIG_X86_INTEL_MKTME
++	addr &= ~mktme_keyid_mask;
++#endif
++	return addr;
+ #else
+ 	/* Must have a full atomic 64-bit read */
+ 	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) & VTD_PAGE_MASK;
 -- 
 2.20.1
 
