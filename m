@@ -2,157 +2,110 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C933C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28F7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C5F21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9415A214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxblosv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfEHHKU (ORCPT
+        id S1727030AbfEHHKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:10:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7732 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbfEHHKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:10:20 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 410D641BD71046C7F0A4;
-        Wed,  8 May 2019 15:10:18 +0800 (CST)
-Received: from [127.0.0.1] (10.177.219.49) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
- 15:10:08 +0800
-Subject: Re: [PATCH] hugetlbfs: always use address space in inode for resv_map
- pointer
-To:     Mike Kravetz <mike.kravetz@oracle.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <stable@vger.kernel.org>, <yuyufen@huawei.com>
-References: <20190416065058.GB11561@dhcp22.suse.cz>
- <20190419204435.16984-1-mike.kravetz@oracle.com>
-From:   yuyufen <yuyufen@huawei.com>
-Message-ID: <fafe9985-7db1-b65c-523d-875ab4b3b3b8@huawei.com>
-Date:   Wed, 8 May 2019 15:10:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Wed, 8 May 2019 03:10:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39487 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfEHHKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 03:10:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so1762659wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 00:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fGuAYgw5EIXhHcZe4wZO7BCOH5ehGx59NX/kTz3Mzg4=;
+        b=vxblosv9H/aGlrk4vcuDokn0HyXXH4dyVKTZwU7VFFKTuc3QQbQeuPi6PhHmWXStYH
+         vf/RDu/V21NnuGswDhvwpcC8+gG8o8FquTCI8kz32GbrGhs0tbzYU8oQLuzFpN/Sp82k
+         zum7qvsx0VxQIMty1P+rvflIt1GHjx3bxNrtWrrJk14YehgQKbuS/9lcCF53QCuJs5bu
+         E5Lm9+Gio1zsGYDW7suw8WTnVu7Zh1ctO0wrUyHKohKmglGNWYgOjLkyYLbc5H+Ix//H
+         oR0XfBtQy6lPBLnf5nP2Ze0ahXA4P3hn7ABRjzpB8H14DkeqD20YZhewsI7pWXaiNCwA
+         hEaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fGuAYgw5EIXhHcZe4wZO7BCOH5ehGx59NX/kTz3Mzg4=;
+        b=o1bvUdfZQltriSxlJPJLD9S7mSjp0E97fro4LoABOetKTZ3u2A0fxOAhJuqqiCOCLC
+         kBBZg2OkpMGRNYF8mt7JJCuoZDg52NMc5J6inXGiZ80rTLbw2NtT0NnETQt9QHfMnu/O
+         zCn4Brj5J7RC2su8sm8Gb9V0xNrtkD4UbUWPqK0/JT1pVMqo6jXVb/ip8gbpuundxAR7
+         naCvc7BlAghdXlELxJS9coj/MCs47Fjp6nvCLuVejUvDL2knXJLHDTmRKy4bdqMV+/VQ
+         W2hjphD4DN+6qFC4i30d9Pw9oRmMA9ZkAyObw2f6DTJSWEvQi3oIIzUuRbAtT27mAgFX
+         orrQ==
+X-Gm-Message-State: APjAAAW68tBjhq5AVE3+LfkDnT9jG8chF2ibcZFpkOKua/kmSpA6sSyx
+        B8y+8m61kL+FVgVhYFvM46eTuA==
+X-Google-Smtp-Source: APXvYqxPLdM3f/kTKxoVlqUZDFR1kdq3D0/akXTslI/7UWvyMQ0wjP8c35kJTxztmLoJlFFbbEEYBA==
+X-Received: by 2002:a1c:1941:: with SMTP id 62mr1695345wmz.100.1557299423324;
+        Wed, 08 May 2019 00:10:23 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id c2sm13872530wrr.13.2019.05.08.00.10.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 00:10:22 -0700 (PDT)
+Date:   Wed, 8 May 2019 08:10:21 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v3 1/2] mfd: cros_ec: Add host_sleep_event_v1 command
+Message-ID: <20190508071021.GI7627@dell>
+References: <20190403213428.89920-1-evgreen@chromium.org>
+ <20190403213428.89920-2-evgreen@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190419204435.16984-1-mike.kravetz@oracle.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.177.219.49]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190403213428.89920-2-evgreen@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 03 Apr 2019, Evan Green wrote:
 
-
-On 2019/4/20 4:44, Mike Kravetz wrote:
-> Continuing discussion about commit 58b6e5e8f1ad ("hugetlbfs: fix memory
-> leak for resv_map") brought up the issue that inode->i_mapping may not
-> point to the address space embedded within the inode at inode eviction
-> time.  The hugetlbfs truncate routine handles this by explicitly using
-> inode->i_data.  However, code cleaning up the resv_map will still use
-> the address space pointed to by inode->i_mapping.  Luckily, private_data
-> is NULL for address spaces in all such cases today but, there is no
-> guarantee this will continue.
->
-> Change all hugetlbfs code getting a resv_map pointer to explicitly get
-> it from the address space embedded within the inode.  In addition, add
-> more comments in the code to indicate why this is being done.
->
-> Reported-by: Yufen Yu <yuyufen@huawei.com>
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Introduce the command and response structures for the second revision
+> of the host sleep event. These structures are part of a new EC change
+> that enables detection of failure to enter S0ix. The EC waits a
+> kernel-specified timeout (or a default amount of time) for the S0_SLP
+> pin to change, and wakes the system if that change does not occur in
+> time.
+> 
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> 
 > ---
->   fs/hugetlbfs/inode.c | 11 +++++++++--
->   mm/hugetlb.c         | 19 ++++++++++++++++++-
->   2 files changed, 27 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index 9285dd4f4b1c..cbc649cd1722 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -499,8 +499,15 @@ static void hugetlbfs_evict_inode(struct inode *inode)
->   	struct resv_map *resv_map;
->   
->   	remove_inode_hugepages(inode, 0, LLONG_MAX);
-> -	resv_map = (struct resv_map *)inode->i_mapping->private_data;
-> -	/* root inode doesn't have the resv_map, so we should check it */
-> +
-> +	/*
-> +	 * Get the resv_map from the address space embedded in the inode.
-> +	 * This is the address space which points to any resv_map allocated
-> +	 * at inode creation time.  If this is a device special inode,
-> +	 * i_mapping may not point to the original address space.
-> +	 */
-> +	resv_map = (struct resv_map *)(&inode->i_data)->private_data;
-> +	/* Only regular and link inodes have associated reserve maps */
->   	if (resv_map)
->   		resv_map_release(&resv_map->refs);
->   	clear_inode(inode);
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 6cdc7b2d9100..b30e97b0ef37 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -740,7 +740,15 @@ void resv_map_release(struct kref *ref)
->   
->   static inline struct resv_map *inode_resv_map(struct inode *inode)
->   {
-> -	return inode->i_mapping->private_data;
-> +	/*
-> +	 * At inode evict time, i_mapping may not point to the original
-> +	 * address space within the inode.  This original address space
-> +	 * contains the pointer to the resv_map.  So, always use the
-> +	 * address space embedded within the inode.
-> +	 * The VERY common case is inode->mapping == &inode->i_data but,
-> +	 * this may not be true for device special inodes.
-> +	 */
-> +	return (struct resv_map *)(&inode->i_data)->private_data;
->   }
->   
->   static struct resv_map *vma_resv_map(struct vm_area_struct *vma)
-> @@ -4477,6 +4485,11 @@ int hugetlb_reserve_pages(struct inode *inode,
->   	 * called to make the mapping read-write. Assume !vma is a shm mapping
->   	 */
->   	if (!vma || vma->vm_flags & VM_MAYSHARE) {
-> +		/*
-> +		 * resv_map can not be NULL as hugetlb_reserve_pages is only
-> +		 * called for inodes for which resv_maps were created (see
-> +		 * hugetlbfs_get_inode).
-> +		 */
->   		resv_map = inode_resv_map(inode);
->   
->   		chg = region_chg(resv_map, from, to);
-> @@ -4568,6 +4581,10 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
->   	struct hugepage_subpool *spool = subpool_inode(inode);
->   	long gbl_reserve;
->   
-> +	/*
-> +	 * Since this routine can be called in the evict inode path for all
-> +	 * hugetlbfs inodes, resv_map could be NULL.
-> +	 */
->   	if (resv_map) {
->   		chg = region_del(resv_map, start, end);
->   		/*
+> 
+> Changes in v3: None
+> Changes in v2:
+> - Made unions anonymous
+> - Replaced reserved union members with a comment
+> 
+>  include/linux/mfd/cros_ec_commands.h | 57 ++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 
-Dose this patch have been applied?
+Applied, thanks.
 
-I think it is better to add fixes label, like:
-Fixes: 58b6e5e8f1ad ("hugetlbfs: fix memory leak for resv_map")
-
-Since the commit 58b6e5e8f1a has been merged to stable, this patch also 
-be needed.
-https://www.spinics.net/lists/stable/msg298740.html
-
-
-
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
