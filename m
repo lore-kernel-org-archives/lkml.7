@@ -2,91 +2,90 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A57C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06D0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4897B21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E8F216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 18:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oy7PTsrG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RIdf54AQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cUkf6ob1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfEHSUF (ORCPT
+        id S1728043AbfEHSZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 14:20:05 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45000 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfEHSUF (ORCPT
+        Wed, 8 May 2019 14:25:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54172 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfEHSZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 14:20:05 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n134so13414021lfn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 11:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j1WmOHHPEdJ3yi2p5J+Oh8mr/EtgaDeprnRifRsdYb8=;
-        b=oy7PTsrGWxgx4kbV0MYFtgfgxmTytAoHH7E1+r/ZLaAnp73jKA+ExWmgHyQcnGvZ+8
-         aZf0ZReKWnTZoN6ettL98+v3Bl4zG4B5BHQnbVzfwtGip97b0bXQEY7gG+SLsUvvnArA
-         glPMTIBT9k1FZ8AHue8U2u8RfkhUOtSFJk+yO/IaZdtU2RD+sJPfMuFv+0dbVp6F0/b0
-         sFIS/Lj0X1pjDeppEo/1H3ryYslYR/sL7LIpv5HulSUQeXtJh60e6rBU9Ehgj4HpeXUh
-         8LvFcCZZD/Rtjuo0AK57FwTf1AlpJToHW58kyAsW98/o/nslJz/b7S677ZIz3NdBT1Xs
-         1eZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j1WmOHHPEdJ3yi2p5J+Oh8mr/EtgaDeprnRifRsdYb8=;
-        b=B/WD1kHbmxxgsNs3jLSLxDHIq5UXYjQRTXjVWGmubUsUOHW2pf4FBQAbY26bkYRPeJ
-         l94FN3BYgG1pmM71v5IBwElpdVQlTmGWI2B8VbgWH7xIsZz/F6EhLSF69p9XCIAdLprF
-         PZ7AsyRRvMJM1OjqYhAq5ynep8aip2yJ52e8nW9itOPu8t7i73Cr0UDlIEhfevWKK1WP
-         g6546b+5XNRuWfS7xLoG0g/cNIFz68rjvODcvWva80XoPe/7S6Z8+lP7Y6731noXV+5t
-         3t9NkELQLweqjYPp7idYVWK20jddaai06Ftr9V7vwN+WJEj0y0++CNVxiHrygkNMZ7DP
-         Y/Dw==
-X-Gm-Message-State: APjAAAU2N7ZhOxL2Cl+y2Wgizq5Ja0sqXuvk5sMCJ8NJVh88pe3ZpEez
-        +8eEIzQ/fcG6Gs2XEV0HfeKPUyJIOytuynSq+Sg=
-X-Google-Smtp-Source: APXvYqx9K2KxbFhGltAks9qNDSNYnSv1emsQTgfF3DGp7bgkfI0HKSB7KVwYHgGTct0X8W2jL3Hq+HyEJoDsRaJbeG0=
-X-Received: by 2002:a19:6b03:: with SMTP id d3mr14380616lfa.137.1557339602914;
- Wed, 08 May 2019 11:20:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190508174356.13952-1-borneo.antonio@gmail.com> <e9cccc6630eb2fd273e7aa47a635717041b92d05.camel@perches.com>
-In-Reply-To: <e9cccc6630eb2fd273e7aa47a635717041b92d05.camel@perches.com>
-From:   Antonio Borneo <borneo.antonio@gmail.com>
-Date:   Wed, 8 May 2019 20:19:41 +0200
-Message-ID: <CAAj6DX2=KYJb1_CmyDFra5gpufb2KHU8mT4Nd1UMTHhYs9N1zw@mail.gmail.com>
-Subject: Re: [PATCH v2] checkpatch: add command-line option for TAB size
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 May 2019 14:25:10 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1857A60132; Wed,  8 May 2019 18:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557339910;
+        bh=mn5g6iGvI2jmQwQ92iHJz0YqAINmEWshw7aWFCQfT8w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RIdf54AQ1bGrooB1DtKFLhtCG7SO0ZHb3S1CBOLJ4xUOnPQl6/wmNgr7R/9/OWgDx
+         163ILqkJRgVwrYByux0Wxm1kaMhYggcEM14wZQFX/R00Bw8EA2dH4T7QWxj8DCoOk2
+         lliYvEIQCcvHHFaFJ1lvuSwaulWmku3lFc//fddo=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EFA7060300;
+        Wed,  8 May 2019 18:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557339909;
+        bh=mn5g6iGvI2jmQwQ92iHJz0YqAINmEWshw7aWFCQfT8w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cUkf6ob1eVuJfc9srVi59Ws6hszxrQGe8uxQIxlAFVEBEX81xI5fwgdzMj5HmAPbw
+         zbfCA5S3lo8HcmhgdhtHRIrl+lawI8jA+EU6zIr5gJBq80XH4QxIKTFchJzZBksg0K
+         bJG6HSXcpYLsYA3RdaSPpGOuJ3QqeA2YHJ/FDJXM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EFA7060300
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 0/3] clk: qcom: Misc updates for Root Clock Generators
+Date:   Wed,  8 May 2019 23:54:52 +0530
+Message-Id: <1557339895-21952-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 7:56 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2019-05-08 at 19:43 +0200, Antonio Borneo wrote:
-> > The size of 8 characters used for both TAB and indentation is
-> > embedded as magic value allover the checkpatch script, and this
-> > makes the script less readable.
->
-> I doubt this bit of the commit message is proper.
->
-> Tabs _are_ 8 in the linux-kernel sources and checkpatch
-> was written for the linux-kernel.
->
-> Using a variable _could_ reasonably be described as an
-> improvement, but readability wasn't and isn't really an
-> issue here.
+This patch adds support for the below
 
-Well, it depends on own skill with regular expressions in perl :-)
+1) There could be failure while updating the RCG and not returning the
+   failure could cause the consumer to assume the clock update is a
+   success and not handling the failure gracefully.
+2) There are few clocks in certain clock controllers which might require
+   the hardware control mode to be enabled explicitly.
+3) Update the DFS macro as per the hardware plans.
 
-I will change the commit message focusing on the new command line flag
-and drop this part.
+Taniya Das (3):
+  clk: qcom: rcg: Return failure for RCG update
+  clk: qcom: rcg2: Add support for hardware control mode
+  clk: qcom: rcg: update the DFS macro for RCG
 
-Thanks
-Antonio
+ drivers/clk/qcom/clk-rcg.h    |  5 ++-
+ drivers/clk/qcom/clk-rcg2.c   |  5 ++-
+ drivers/clk/qcom/gcc-sdm845.c | 96 +++++++++++++++++++++----------------------
+ 3 files changed, 56 insertions(+), 50 deletions(-)
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
