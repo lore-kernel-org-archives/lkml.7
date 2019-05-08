@@ -2,70 +2,90 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403FDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3759C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08096205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DC8205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HHzW0/0h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfEHOwu (ORCPT
+        id S1727635AbfEHOxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:52:50 -0400
-Received: from smtprelay0246.hostedemail.com ([216.40.44.246]:53832 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727224AbfEHOws (ORCPT
+        Wed, 8 May 2019 10:53:25 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:42140 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726747AbfEHOxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:52:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 0A3E7180A814F;
-        Wed,  8 May 2019 14:52:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sand63_18313cd388c03
-X-Filterd-Recvd-Size: 1786
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  8 May 2019 14:52:46 +0000 (UTC)
-Message-ID: <73a79b49d0183468a63876b170d1318d38c78d73.camel@perches.com>
-Subject: Re: [PATCH 4/4] checkpatch: replace magic value for TAB size
-From:   Joe Perches <joe@perches.com>
-To:     Antonio Borneo <borneo.antonio@gmail.com>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 08 May 2019 07:52:45 -0700
-In-Reply-To: <20190508122721.7513-4-borneo.antonio@gmail.com>
-References: <20190508122721.7513-1-borneo.antonio@gmail.com>
-         <20190508122721.7513-4-borneo.antonio@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 8 May 2019 10:53:24 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1BD09C00D4;
+        Wed,  8 May 2019 14:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557327207; bh=AzTYHeJKASjlwCwioI8MqZT2M/656QyxqvxLNLUOSJk=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=HHzW0/0heleLIqLJFRLN3CHo2zyols5ZIzlJNYZrwqUhIQAKB5PDAstO1e4l0U5Zi
+         qAJz9I+fW6G0h9NsRffdBM+xSmyPNcBAtLSnrb0pEFbVJGokADC1JYsnI/Vb7V0jzs
+         PlSyj2WHQgYjKTCEr/QqAoI1VJYp4Ks+ZFgOdZwjH1ZxqnNPC9wtvfEgsWtcH2owTt
+         e5ayto95sswKkSEfTV5tEqsfq6WJaHwWlc4LQ2EB0X8ogjVedls6nJXZvwlOgtpJXo
+         IwUG1m5VBbOuxPJUkFHkn25SBMQlVafYsM9ZXwOpJQsAAFNTAKIZJ7LGIsx8sm/lHh
+         1Wtz6nBehXYRg==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id A26C8A0097;
+        Wed,  8 May 2019 14:53:18 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 May 2019 07:53:18 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
+ 8 May 2019 16:53:16 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next 07/11] net: stmmac: dwmac1000: Also pass
+ control frames while in promisc mode
+Thread-Topic: [PATCH net-next 07/11] net: stmmac: dwmac1000: Also pass
+ control frames while in promisc mode
+Thread-Index: AQHVBXLaRE4he0xXQEOeXEPfIQeeHaZhABYAgABQZIA=
+Date:   Wed, 8 May 2019 14:53:15 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B479FB0@DE02WEMBXB.internal.synopsys.com>
+References: <cover.1557300602.git.joabreu@synopsys.com>
+ <c6c1449e173dc4805f5fc785f1906e4392ccc66f.1557300602.git.joabreu@synopsys.com>
+ <20190508120458.GD30557@lunn.ch>
+In-Reply-To: <20190508120458.GD30557@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-08 at 14:27 +0200, Antonio Borneo wrote:
-> The size of 8 characters used for both TAB and indentation is
-> embedded as magic value allover the checkpatch script, and this
-> makes the script less readable.
-> 
-> Replace the magic value 8 with the perl variable "$tabsize".
-> From the context of the code it's clear if it is used for
-> indentation or tabulation, so no need to use two separate
-> variables.
-> 
-> As side benefit of this change, it makes easy to replace the TAB
-> size when this script is used by other projects with different
-> requirements in their coding style (e.g. OpenOCD [1] requires
-> TAB size of 4 characters [2]).
-> In these cases the script will be probably modified and adapted,
-> so there is no need (at least for the moment) to expose this
-> setting on the script's command line.
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Wed, May 08, 2019 at 13:04:58
 
-Disagree.  Probably getter to add a --tabsize=<foo> option now.
+> Do you mean pause frames?
 
+Yes in order for the test to pass the MAC has to pass the pause frames to=20
+the stack.
 
+Thanks,
+Jose Miguel Abreu
