@@ -2,214 +2,156 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC474C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D55EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83456216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB0A214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rWn4EYCT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQmxEZhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfEHPx2 (ORCPT
+        id S1727628AbfEHPxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:53:28 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41785 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfEHPx2 (ORCPT
+        Wed, 8 May 2019 11:53:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44124 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfEHPxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:53:28 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d9so10123208pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:53:27 -0700 (PDT)
+        Wed, 8 May 2019 11:53:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c5so2642241wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:53:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=gGXsTdjP+fUkiebykwxfC5FGbwspwxsc8Wncr6AUPyY=;
-        b=rWn4EYCTFLw/NYEbH3zTIHY05Mw2dmGSbk1wDnkD2WV8sojqKU2YeSX6UXOOJfv7Bv
-         gmjHPd+J7L0/jiRu0/nePahsE5CW82P52d+8kH6lQp37LMFq96SfZAxOCHL0d6yRK+Qs
-         0ThWTG6sCpJuAlPcDOt9cguqK+KW4dKZSBgqoz03La9n+HR5ckQZHJH/VOXX1wnAomZM
-         8F0oZktTRQtnAHuM9Yu6m5t+Ab0yS3bs+0/JHQlIr+jALD7NUAlBcQp8fsZPV4TPT9v3
-         hCVknGkaAvfRIHYSZOBRVmutr4HfoplWwCWIHgjT+CN2UusHH+noE3tHZAh5h0HCM9L2
-         xJIw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=/INLHFLoO3fwx8sE75gtH7ePrD+/xqNv4SqcqLzKke8=;
+        b=GQmxEZhssi+c6wCO0ryHOulQS9xtfLbea9bWWK3dnWvZa1Mr2LayNbiBL//0MiXoGR
+         QvkuGYnR5H06nWZPMiGl/Er6W0EVzKZWGW8lURQRfQUfixDOOy7loSZ5fP1FnPlFzprJ
+         8Wsr4/99zcCql7GKJRwPZmXvvVA0MUCG9PBEppYJqoBq5l6O3RX9VJU6XjYTEBC2c4Ul
+         771AipqXZZ01pvfx3O8ZdqY0wze0k31qsdzDy6tcHFTSle4CjV4u2fUAavAudvmi6ngA
+         WcIgemZm1zxjwXmhB+7e3WNbtaPpcKwa4Obmeo8+5DtqmFg2KstIrkkKiHyB8M1CSrDo
+         GQHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gGXsTdjP+fUkiebykwxfC5FGbwspwxsc8Wncr6AUPyY=;
-        b=jLScZWrPBAYeoKVO3XysCo6eIN6B6VocMd6TNGu8irDNr5HsR099VOCXsKXioTQSOj
-         MQUSp45TkqK7bUrdHbdytsWNElj3Pq3PP0dW45aTvABQKtv29+t/oJ+quEZH0tz27+Dy
-         nKRLutPURT6LkI/WsPRQVjNRTuaFJClmjJ9gkB0uFVf4ymV9+bNouU7DkpJaCy3zUxE9
-         RpWWYcFmZI+uEIJKjKAgzzh0gTVpWhL54yi9xyqUw105k7p5phLJ3vSpdBfwFi7r3dHe
-         si4j9hMcuVK1SgDYEAQHYPKzYHRtycuBYpf8GW01HzfUhuCp8lPsixUSgUXyYJXQZAUN
-         b1Fg==
-X-Gm-Message-State: APjAAAVq1tNq5ztOP62u51DnqpmHfzJiFVApDc/UfjsnmQx2kzVBZO2r
-        YEGlQJfyF5Bvd80JcCfJ5MRp
-X-Google-Smtp-Source: APXvYqwMqGURNfsR3BWkxYNWstQBS32qs1434INfBDIj0JyPlf0G1T0g0VuYZ31489ayPVkXrp4uVw==
-X-Received: by 2002:a17:902:20e2:: with SMTP id v31mr44608807plg.138.1557330807220;
-        Wed, 08 May 2019 08:53:27 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6000:7ab1:cd79:1ccc:df38:79c0])
-        by smtp.gmail.com with ESMTPSA id o73sm7613819pfi.137.2019.05.08.08.53.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 08:53:26 -0700 (PDT)
-Date:   Wed, 8 May 2019 21:23:19 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, haitao.suo@bitmain.com,
-        darren.tsao@bitmain.com
-Subject: Re: [PATCH 3/3] reset: Add reset controller support for BM1880 SoC
-Message-ID: <20190508155319.GA3962@Mani-XPS-13-9360>
-References: <20190425125508.5965-1-manivannan.sadhasivam@linaro.org>
- <20190425125508.5965-4-manivannan.sadhasivam@linaro.org>
- <1556895321.3046.3.camel@pengutronix.de>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/INLHFLoO3fwx8sE75gtH7ePrD+/xqNv4SqcqLzKke8=;
+        b=JI0RLYw98FsInFg/j72QSAUKPEN3Sk5IN+xNoHpluozkgf5bcgkWrSiicM4TWbdXVY
+         qQcml/mx10zbJIieG3bZn2ojlKZzt6YNB5AGTlh/91JiEhYESeYXNEGIGMwufy8jilZS
+         2aVr47CaMwe30tgyVsOYsBfDYLLVWg3uOzCv0xXj7Y7RGacWtdWbRtadjJNt5rWm7oRn
+         WRbP++i/IxLNvdbPPe7mddBVoTMKEBfWYGS34n/LNPZUKcQTX1TYxWPpp/Pu8grWJuQk
+         vvWINfIBfXtavMseLqf2io/VveSOlQn+7Rk+i7bv+A7GyeomRQoTSO71zub/jVoZqpFq
+         kZVA==
+X-Gm-Message-State: APjAAAXodlFc/BsSZrEnztxewJvvg13+X/vbD5KW7tsoEOcxug0md73I
+        peXICoYViVMZ8Cin4dMfoNg=
+X-Google-Smtp-Source: APXvYqyuKISPo+x4BFl9nEqc/t4WkE6l5uUP6rQxJIgo0rWfg1qBLWT64oRs+vPdbL/TkD99TG/c6w==
+X-Received: by 2002:adf:edc8:: with SMTP id v8mr28669098wro.206.1557330824343;
+        Wed, 08 May 2019 08:53:44 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id c10sm36912386wrd.69.2019.05.08.08.53.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 08:53:43 -0700 (PDT)
+Date:   Wed, 8 May 2019 17:53:41 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Loys Ollivier <lollivier@baylibre.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH] gnss: get serial speed from subdrivers
+Message-ID: <20190508155341.GA1605@Red>
+References: <1557322788-10403-1-git-send-email-lollivier@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556895321.3046.3.camel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1557322788-10403-1-git-send-email-lollivier@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
-
-On Fri, May 03, 2019 at 04:55:21PM +0200, Philipp Zabel wrote:
-> Hi Manivannan,
+On Wed, May 08, 2019 at 03:39:48PM +0200, Loys Ollivier wrote:
+> The default serial speed was hardcoded in the code.
+> Rename current-speed to default-speed.
+> Add a function parameter that lets the subdrivers specify their
+> default speed.
+> If not specified fallback to the device-tree default-speed.
 > 
-> thank you for the patch. A few issues below:
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+> ---
+> Hello,
 > 
-> On Thu, 2019-04-25 at 18:25 +0530, Manivannan Sadhasivam wrote:
-> > Add reset controller support for Bitmain BM1880 SoC reusing the
-> > reset-simple driver. While we are at it, this driver has also been
-> > modified to make use of the SPDX license identifier.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/reset/Kconfig        |  3 ++-
-> >  drivers/reset/Makefile       |  1 +
-> >  drivers/reset/reset-simple.c | 16 +++++++++++-----
-> >  3 files changed, 14 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> > index 2c8c23db92fb..b25e8d139f0d 100644
-> > --- a/drivers/reset/Kconfig
-> > +++ b/drivers/reset/Kconfig
-> > @@ -117,7 +117,7 @@ config RESET_QCOM_PDC
-> >  
-> >  config RESET_SIMPLE
-> >  	bool "Simple Reset Controller Driver" if COMPILE_TEST
-> > -	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-> > +	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
-> >  	help
-> >  	  This enables a simple reset controller driver for reset lines that
-> >  	  that can be asserted and deasserted by toggling bits in a contiguous,
-> > @@ -129,6 +129,7 @@ config RESET_SIMPLE
-> >  	   - RCC reset controller in STM32 MCUs
-> >  	   - Allwinner SoCs
-> >  	   - ZTE's zx2967 family
-> > +	   - Bitmain BM1880 SoC
-> >  
-> >  config RESET_STM32MP157
-> >  	bool "STM32MP157 Reset Driver" if COMPILE_TEST
-> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> > index 61456b8f659c..b87968771166 100644
-> > --- a/drivers/reset/Makefile
-> > +++ b/drivers/reset/Makefile
-> > @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
-> >  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
-> >  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
-> >  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-> > +#obj-$(CONFIG_RESET_BM1880) += reset-bm1880.o
+> This patch moves the currently hardcoded, default serial speed
+> to the subdrivers.
+> If the default speed is not specified by the subdriver then it is read
+> from the device tree.
 > 
-> Leftover from a previous patch version? You can remove this.
+> Cheers,
+> Loys
 > 
-
-Ah, yes!
-
-> >  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
-> >  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
-> >  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-> > diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-> > index 77fbba3100c8..fd1fa4984d76 100644
-> > --- a/drivers/reset/reset-simple.c
-> > +++ b/drivers/reset/reset-simple.c
-> > @@ -1,3 +1,4 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> >  /*
-> >   * Simple Reset Controller Driver
-> >   *
-> > @@ -8,11 +9,6 @@
-> >   * Copyright 2013 Maxime Ripard
-> >   *
-> >   * Maxime Ripard <maxime.ripard@free-electrons.com>
-> > - *
-> > - * This program is free software; you can redistribute it and/or modify
-> > - * it under the terms of the GNU General Public License as published by
-> > - * the Free Software Foundation; either version 2 of the License, or
-> > - * (at your option) any later version.
-> >   */
+>  drivers/gnss/mtk.c    |  6 +++++-
+>  drivers/gnss/serial.c | 21 +++++++++++++--------
+>  drivers/gnss/serial.h |  3 ++-
+>  drivers/gnss/ubx.c    |  3 ++-
+>  4 files changed, 22 insertions(+), 11 deletions(-)
 > 
-> Please split this change into a separate patch and add Maxime to Cc:
+> diff --git a/drivers/gnss/mtk.c b/drivers/gnss/mtk.c
+> index d1fc55560daf..a1a89f0cc75c 100644
+> --- a/drivers/gnss/mtk.c
+> +++ b/drivers/gnss/mtk.c
+> @@ -16,6 +16,10 @@
 >  
+>  #include "serial.h"
+>  
+> +static uint serial_speed = 9600; /* Serial speed (baud rate) */
+> +module_param(serial_speed, uint, 0644);
+> +MODULE_PARM_DESC(serial_speed, "Serial baud rate (bit/s), (default = 9600)");
+> +
+>  struct mtk_data {
+>  	struct regulator *vbackup;
+>  	struct regulator *vcc;
+> @@ -69,7 +73,7 @@ static int mtk_probe(struct serdev_device *serdev)
+>  	struct mtk_data *data;
+>  	int ret;
+>  
+> -	gserial = gnss_serial_allocate(serdev, sizeof(*data));
+> +	gserial = gnss_serial_allocate(serdev, sizeof(*data), serial_speed);
+>  	if (IS_ERR(gserial)) {
+>  		ret = PTR_ERR(gserial);
+>  		return ret;
+> diff --git a/drivers/gnss/serial.c b/drivers/gnss/serial.c
+> index def64b36d994..706fc5b46811 100644
+> --- a/drivers/gnss/serial.c
+> +++ b/drivers/gnss/serial.c
+> @@ -103,17 +103,13 @@ static int gnss_serial_set_power(struct gnss_serial *gserial,
+>  	return gserial->ops->set_power(gserial, state);
+>  }
+>  
+> -/*
+> - * FIXME: need to provide subdriver defaults or separate dt parsing from
+> - * allocation.
+> - */
+>  static int gnss_serial_parse_dt(struct serdev_device *serdev)
+>  {
+>  	struct gnss_serial *gserial = serdev_device_get_drvdata(serdev);
+>  	struct device_node *node = serdev->dev.of_node;
+> -	u32 speed = 4800;
+> +	uint speed;
+>  
+> -	of_property_read_u32(node, "current-speed", &speed);
+> +	of_property_read_u32(node, "default-speed", &speed);
 
-Okay
+Hello
 
-> >  #include <linux/device.h>
-> > @@ -119,6 +115,14 @@ static const struct reset_simple_devdata reset_simple_active_low = {
-> >  	.status_active_low = true,
-> >  };
-> >  
-> > +#define BM1880_NR_BANKS		2
-> > +
-> > +static const struct reset_simple_devdata reset_simple_bm1880 = {
-> > +	.nr_resets = BM1880_NR_BANKS * 32,
-> 
-> This is not necessary, given your device tree changes, the
-> 
->         data->rcdev.nr_resets = resource_size(res) * BITS_PER_BYTE;
-> 
-> in reset_simple_probe should already do the right thing.
-> You can remove the .nr_resets from reset_simple_bm1880 and the
-> BM1880_NR_BANKS #define.
-> 
+of_property_read_u32 use u32, so no reason to use uint instead.
 
-I read BITS_PER_BYTE wrong :/ Without nr_resets I can reuse the
-reset_simple_active_low struct.
+Regards
 
-> > +	.active_low = true,
-> > +	.status_active_low = true,
-> > +};
-> > +
-> >  static const struct of_device_id reset_simple_dt_ids[] = {
-> >  	{ .compatible = "altr,stratix10-rst-mgr",
-> >  		.data = &reset_simple_socfpga },
-> > @@ -129,6 +133,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
-> >  		.data = &reset_simple_active_low },
-> >  	{ .compatible = "aspeed,ast2400-lpc-reset" },
-> >  	{ .compatible = "aspeed,ast2500-lpc-reset" },
-> > +	{ .compatible = "bitmain,bm1880-reset",
-> > +		.data = &reset_simple_bm1880 },
-> >  	{ /* sentinel */ },
-> >  };
-> 
-> With these changes,
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> for both parts. 
-> 
-
-Thanks!
-
-Regards,
-Mani
-
-> regards
-> Philipp
