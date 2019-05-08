@@ -2,92 +2,166 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352CCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BDCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04772204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B1D20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZ0Sl/1e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eF1LM/Tz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfEHImV (ORCPT
+        id S1726900AbfEHIpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:42:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45863 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfEHImU (ORCPT
+        Wed, 8 May 2019 04:45:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34188 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfEHIpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:42:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i21so9730631pgi.12;
-        Wed, 08 May 2019 01:42:20 -0700 (PDT)
+        Wed, 8 May 2019 04:45:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f7so15740849wrq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RRQ5RNNGW8Mx//5L1gh6ddvvzKGMuy8npBda/7vOraw=;
-        b=dZ0Sl/1e46iI77qiFe4IK7c+yvMbUHLTAQ+0DPsWD3WD/+E/peoNRNT5DPB+RYVGhJ
-         oA4sjxQLxrGA3Ka4SG3S8ssxXJP1nGZ3LOn+Qagt3aMrnjCPxgFjImKT96FDbRQBR76e
-         WWUb2ZlrOYB1jXLuDdWskmUwxc/MK5Hd5E2pnbIpqCyUqEFR9ZTz9pGGPe/6Vyhi8va9
-         JXDF+7rtuQzqi76+SxoujHC5KgCCaA/jk/3xRJ+ex9eZwG4IN4HU1Qf33YXlFKXt0PvF
-         Yxmqu2rqueO2Xc4i77EoULoFrtzZDOi363MCsF/+3UYMKBHZiiRFX2G0A6ioAHT1fxfo
-         qFgQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=8J5bICABPTbsXmWljoJLSoNhK+HR7wlCA7LrU5o+qh4=;
+        b=eF1LM/TzoWgZLrTYcVpz/qL880npv8Bcp6BZpYW5++ITZw8QPVhIXUN2o0HvQNskoH
+         QtED3cWRXQirPX9JUM2/+G5VjT21tqHnunTl1L5J/fWUUgHCy1M+XtX+KGpJlKVwCh82
+         b64Z9x9rwgthGefh3Ak63JQ1/gMyexypEZpXjO4W8eTiSxnKuKwyXRgmPdcOvFyqyDrm
+         CikwFA4MIuIte8ZVsgxSiybGOlI34WeNK7hzkgw4v3HhC2lSyIPOw6IPEqTcXxsE0WVp
+         C10nsFkL1NMGbbyLiewLElxoP4vZWnr1M8kvrirepzdsUnXKidb5rQNWVBTL75Ws7aBD
+         EFGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RRQ5RNNGW8Mx//5L1gh6ddvvzKGMuy8npBda/7vOraw=;
-        b=ZMt6AwHRcyUptH9uuxZy6F94mzUZynlg2DKeUpbl5gCalaPOnmMlrDgjE9rJ233BG4
-         D9FLd3GiXgUkZXYQtg5E5cDgFW+/Ma+ncRh5cvYYeLWjbGH7/FaF6LpiE0svWDZ0c071
-         yUiMOqwif8KdjlIda7UFRXkeuyuWuepAuIEzEkXBGY+8zTcT9MaeeD2eptbCGXO3SN4x
-         nwL7oqKL1UZRmdHH5OJiVIwCTnXFyQJeCoXtSUrO+y0DwZh4t3RiEh43mTjSflSH/fti
-         zfL/RTbCJZCL/wg6F7FegAWdsO83R22buFGmvr+vEkVaaD66nvY4i6VeRVxp3B06uxGk
-         o9Tg==
-X-Gm-Message-State: APjAAAW8C+QE9RiA4rvMQldiP2pyCW24lsS7CFXLW/DQNuE312Otj8HR
-        A3YA3gCn8gQoY/RTpx72dJ/SetIG2pTu+f7aY1s=
-X-Google-Smtp-Source: APXvYqy2nIPIHZlYOlLqYgJAaSO4cmDpBhuQySZvIpT/pt6tP++9AZNkiv2qigARYGPfav2e0Rk6zC7YChZK2xp53P4=
-X-Received: by 2002:a62:30c2:: with SMTP id w185mr47431034pfw.175.1557304940122;
- Wed, 08 May 2019 01:42:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190429150135.15070-1-hdegoede@redhat.com> <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
- <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com> <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
- <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com> <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
- <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com>
-In-Reply-To: <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 May 2019 11:42:09 +0300
-Message-ID: <CAHp75VdnxRQi3X6J9hLGUjGsOYTkjoPN5MakJc=mUSumoC+wag@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
- critclk_systems DMI table
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Semyon Verchenko <semverchenko@factor-ts.ru>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8J5bICABPTbsXmWljoJLSoNhK+HR7wlCA7LrU5o+qh4=;
+        b=EMw3WXexVWdCEkM0HLc5gfyk61yhl2CFUgNzTIHtiiebs0FK362P1mthMFSl333hwe
+         omY0LtHJGW9P+/KsuofJMkO5omGdrM8lxAXmWXIp3QPzrYgXA6r47MPwEdPv+UqBp/DJ
+         NCngrAa2iZ8HNTFN3CKHGBzU2egZTCDEDU+J4gKTi7ETfqJ/iri5dwIjRSbh3DpXygmH
+         5LbqIHn3YPNU+UR4oTmRk94cLUL2pNbxP10QP752xtB5FX4dy/u4BU+IrpPCUc8ftOS1
+         x92Mbblbk+NgyYDv3YuslVZAGat1fTyjmC6UlJRK+DzHNWzNmFfJe9QSI3CMvXjRad95
+         fXrA==
+X-Gm-Message-State: APjAAAXAb/pfqovxj3uHm+s6psXcjIrF6xE7d2m5fUDzAYA1vaObGGFA
+        5I5i5sgKIgmY9YQBejYyJkcSiS9B
+X-Google-Smtp-Source: APXvYqxy5KU8btQxhZyHMyTAqFVvwUCpfVEhUyITWI0evVEc4FOSBnMbVmI51170igiyz2b2ZVRCLQ==
+X-Received: by 2002:a5d:6642:: with SMTP id f2mr16305430wrw.75.1557305131382;
+        Wed, 08 May 2019 01:45:31 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id j46sm4467531wre.54.2019.05.08.01.45.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 01:45:30 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: remove dead code in habanalabs_drv.c
+Date:   Wed,  8 May 2019 11:45:29 +0300
+Message-Id: <20190508084529.22819-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 10:48 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 07-05-19 22:17, Stephen Boyd wrote:
-> > Quoting Hans de Goede (2019-05-06 08:05:42)
+This patch removes some dead code that performs checks about variables
+with hard-coded values.
 
-> > I guess this is urgent?
->
-> Somewhat, getting this into e.g. rc2 would be fine too, waiting till 5.3
-> would be bad.
+The patch also moves the initialization of those variables to a separate
+function, that will possibly have different values per ASIC.
 
-So, I can do it as a fixes for rc2, just ping me after merge window.
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/habanalabs_drv.c | 56 +++++++++++-------------
+ 1 file changed, 26 insertions(+), 30 deletions(-)
 
+diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
+index 42a8c0b7279a..6f6dbe93f1df 100644
+--- a/drivers/misc/habanalabs/habanalabs_drv.c
++++ b/drivers/misc/habanalabs/habanalabs_drv.c
+@@ -172,6 +172,17 @@ int hl_device_open(struct inode *inode, struct file *filp)
+ 	return rc;
+ }
+ 
++static void set_driver_behavior_per_device(struct hl_device *hdev)
++{
++	hdev->mmu_enable = 1;
++	hdev->cpu_enable = 1;
++	hdev->fw_loading = 1;
++	hdev->cpu_queues_enable = 1;
++	hdev->heartbeat = 1;
++
++	hdev->reset_pcilink = 0;
++}
++
+ /*
+  * create_hdev - create habanalabs device instance
+  *
+@@ -196,29 +207,25 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
+ 	if (!hdev)
+ 		return -ENOMEM;
+ 
++	/* First, we must find out which ASIC are we handling. This is needed
++	 * to configure the behavior of the driver (kernel parameters)
++	 */
++	if (pdev) {
++		hdev->asic_type = get_asic_type(pdev->device);
++		if (hdev->asic_type == ASIC_INVALID) {
++			dev_err(&pdev->dev, "Unsupported ASIC\n");
++			rc = -ENODEV;
++			goto free_hdev;
++		}
++	} else {
++		hdev->asic_type = asic_type;
++	}
++
+ 	hdev->major = hl_major;
+ 	hdev->reset_on_lockup = reset_on_lockup;
+-
+-	/* Parameters for bring-up - set them to defaults */
+-	hdev->mmu_enable = 1;
+-	hdev->cpu_enable = 1;
+-	hdev->reset_pcilink = 0;
+-	hdev->cpu_queues_enable = 1;
+-	hdev->fw_loading = 1;
+ 	hdev->pldm = 0;
+-	hdev->heartbeat = 1;
+-
+-	/* If CPU is disabled, no point in loading FW */
+-	if (!hdev->cpu_enable)
+-		hdev->fw_loading = 0;
+ 
+-	/* If we don't load FW, no need to initialize CPU queues */
+-	if (!hdev->fw_loading)
+-		hdev->cpu_queues_enable = 0;
+-
+-	/* If CPU queues not enabled, no way to do heartbeat */
+-	if (!hdev->cpu_queues_enable)
+-		hdev->heartbeat = 0;
++	set_driver_behavior_per_device(hdev);
+ 
+ 	if (timeout_locked)
+ 		hdev->timeout_jiffies = msecs_to_jiffies(timeout_locked * 1000);
+@@ -228,17 +235,6 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
+ 	hdev->disabled = true;
+ 	hdev->pdev = pdev; /* can be NULL in case of simulator device */
+ 
+-	if (pdev) {
+-		hdev->asic_type = get_asic_type(pdev->device);
+-		if (hdev->asic_type == ASIC_INVALID) {
+-			dev_err(&pdev->dev, "Unsupported ASIC\n");
+-			rc = -ENODEV;
+-			goto free_hdev;
+-		}
+-	} else {
+-		hdev->asic_type = asic_type;
+-	}
+-
+ 	/* Set default DMA mask to 32 bits */
+ 	hdev->dma_mask = 32;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
