@@ -2,101 +2,112 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBA1C004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859E0C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C782120879
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520F620879
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9wxGFxf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6ZI9PRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfEHBrr (ORCPT
+        id S1726526AbfEHBs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:47:47 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39112 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEHBrr (ORCPT
+        Tue, 7 May 2019 21:48:59 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37348 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfEHBs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:47:47 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so7917372pgi.6;
-        Tue, 07 May 2019 18:47:47 -0700 (PDT)
+        Tue, 7 May 2019 21:48:58 -0400
+Received: by mail-it1-f196.google.com with SMTP id l7so1439327ite.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 18:48:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZUKXTU23cy7eYBDs7cqVtk5qVyNyTWpbctBN9H6Jywc=;
-        b=d9wxGFxfNkHkqGhmyH+8VMRaDv61gvP+Y+UQIUCJjqyIdCWYoyLSDBbzdHtmDqdx5r
-         266FwvxIW3UNlwbuG9RiLTmHhsdrbMRC7fw8uo70PgstzvbdqTNwuMwa+MbD7yBEzdTy
-         yvp5YeDm5q4Lkt5sut5GwgqiO73Iz7nClM6ThYBqD7eljKJpjgu4tCpdC1DNdJYavk1J
-         1X1/8C7CJ4MYzO1ikAbTg3GXy5jdE4H4oXSXKX0ScKVpt/VgeWRx9l3ihRfJz7CwULIO
-         qwKa1pGjvFXoKO3Yukp1959jLOUxzsotKi12UHubm8fzRwPOS+MMouK6bbxY01tQYyN8
-         oTAw==
+        h=from:to:cc:subject:date:message-id;
+        bh=o7lcyB5s0oTEYvy3/wHbgG7UILE/7QogHJKGt1FxaBM=;
+        b=L6ZI9PRIK8DoLR58x1qB/Lw9xq543AAQprEDzs/cg+03ifpuGgsmRzrjX63HCBsjv9
+         KfYtHyc7CJwOA9FlfNy0Z45pwr/Ku927wvXIasxUPybmvW16TTPbAIRO0hu7afSl0al3
+         uxZjQhdZHiULov9X9eK+jn8zDeifTLZzlb6Trk9qXXo76nFPjzWYzTQifXsKmxnNlGiD
+         SqAaKhP4WEFndLPX+nLxL9heO/n8mhzhRUEpLyJIC2VHJZLHEpPSdPnghcZ3DWDMCJ3I
+         4meHp0cyCUBJ10WnUWHXT/B58vwCx3wmDP+opfDX+Ufk5M3v9w98d3zubuXn9trTTqBR
+         yG6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZUKXTU23cy7eYBDs7cqVtk5qVyNyTWpbctBN9H6Jywc=;
-        b=NWCIDrJkdx1QIYdjU7WcNEKWy0UN8lyybOZH4xXvjhatrkpI+2iajk0ycWNh6Ds/w0
-         /sct0WTq8YEWb57hYiFMB7SQfO27ECU4S7Z5JSLyuxTYuBwVhta3rYab2g4LPE0iNZP6
-         D+v+oWHr9BCWexd4D/goWe9h990LqIXjXe+I3O6yfo+mGC3fusXDAV3q7Up2UpE2VG/i
-         8+feSzEJnE09/ZLkEMnAfelo0wIDbX3DoX26JNfjTl3Pj2exwU7o+v6ymoti0WSfmJ4q
-         Xr/Yg/oKG6uX0m+oHy9S7tgHEMwIGw/nliWnh/AuD7fUSID3ZLtYoq0nErUNFz+wy8NC
-         WFuA==
-X-Gm-Message-State: APjAAAU8b1piBX7iAlJRKMMlnzNx18wSGl2ESnYiLVJLu+YLTp8hgzd+
-        hhWT1MkX6Egz/E8+6ZWuNRu69th1
-X-Google-Smtp-Source: APXvYqwp5MCmikCBBBf4RJoK06gQX3cliAKSJDSVEwSqVn9CYbpMM01BQdwEP/weyMZBY7rMe5zYuQ==
-X-Received: by 2002:a63:188:: with SMTP id 130mr43879222pgb.391.1557280066346;
-        Tue, 07 May 2019 18:47:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c189sm22649570pfg.46.2019.05.07.18.47.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 18:47:45 -0700 (PDT)
-Subject: Re: [PATCH 0/1] usb: typec: tcpci: read the VBUS_VOLTAGE register
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190508004027.16558-1-angus@akkea.ca>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <74d20a42-b6cf-48d3-7777-a44e500b0eed@roeck-us.net>
-Date:   Tue, 7 May 2019 18:47:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190508004027.16558-1-angus@akkea.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=o7lcyB5s0oTEYvy3/wHbgG7UILE/7QogHJKGt1FxaBM=;
+        b=P2uMYxC/7CHk90g68BING2somkZuipVGQ8klWYVrBl6O4l6IgxCSD68+bFBHnzWKj1
+         EcYXC1fqAHJuHW6z8MiyvLlnMTzldCHV4leuF5zCxS3GHkpdYmgdDKbY9V4lCtvyiENI
+         vNUDq+99G8DwxWt5RTCtc0mJsh6+XJ91OJPDgUEUELLX/eCid6hstqKdA3vPRW3F10jv
+         CztBTVi+mHrAOX2jj4zz/jXFBMVQ0jQVWW3KHxAi9BqcdO02bOSA1q5bhdvR0ZBlqf5U
+         MfF5xcQeUvMG7CG8e63v6ogeF6CzF5B55UC/7Qm+ksXRS9TCaJd55eh0XKVpgnWWaTx3
+         ISJA==
+X-Gm-Message-State: APjAAAWenibkKcTj4gU1kOn9rmMgjauYqwzUOYFT1mnF7A43CYhg7Z0q
+        n5OGv6GBLRdHE8CehKtjZ9mcEbNoQ28=
+X-Google-Smtp-Source: APXvYqxvQgjj28jgLRfY2BL7CgVmEj527sBLG1fKApNyOjUsz3dhX3wUGBgSVcCrfwP0qig61eJpIA==
+X-Received: by 2002:a02:8815:: with SMTP id r21mr2015578jai.88.1557280137987;
+        Tue, 07 May 2019 18:48:57 -0700 (PDT)
+Received: from ubu (2600-6c48-437f-c81d-f514-433e-0658-d461.dhcp6.chtrptr.net. [2600:6c48:437f:c81d:f514:433e:658:d461])
+        by smtp.gmail.com with ESMTPSA id c72sm446207itc.22.2019.05.07.18.48.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 18:48:57 -0700 (PDT)
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] dlm: Replace default_attrs in dlm_ktype with default_groups
+Date:   Tue,  7 May 2019 21:48:05 -0400
+Message-Id: <20190508014805.28715-1-kimbrownkd@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 5:40 PM, Angus Ainslie (Purism) wrote:
-> I don't have a setup that I can test this code right now.
-> 
-> I did test the tcpci_get_vbus_voltage and on my setup it is always 0.
-> 
+The kobj_type default_attrs field is being replaced by the
+default_groups field, so replace the default_attrs field in dlm_ktype
+with default_groups. Use the ATTRIBUTE_GROUPS macro to create
+dlm_groups.
 
-Odd. PTN5110 is supposed to support it, though the datasheet is a bit vague about it.
-It may be disabled. Did you check the status of POWER_CONTROL.VBUS_VOLTAGEMonitor ?
+Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
+---
 
-> I don't currently have setup that I can adjust the vbus voltage to
-> trigger the fault.
-> 
-> Angus Ainslie (Purism) (1):
->    usb: typec: tcpci: add functions to read the VBUS voltage
-> 
->   drivers/usb/typec/tcpm/tcpci.c | 35 ++++++++++++++++++++++++++++++++++
->   1 file changed, 35 insertions(+)
-> 
-In general, an introductory patch is only useful if there is more than one patch.
+This patch depends on a patch in the driver-core tree: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=aa30f47cf666111f6bbfd15f290a27e8a7b9d854
 
-Thanks,
-Guenter
+Greg KH can take this patch through the driver-core tree, or this patch
+can wait a release cycle and go through the subsystem's tree, whichever
+the subsystem maintainer is more comfortable with.
+
+
+ fs/dlm/lockspace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+index db43b98c4d64..762f08bb2bf2 100644
+--- a/fs/dlm/lockspace.c
++++ b/fs/dlm/lockspace.c
+@@ -160,6 +160,7 @@ static struct attribute *dlm_attrs[] = {
+ 	&dlm_attr_recover_nodeid.attr,
+ 	NULL,
+ };
++ATTRIBUTE_GROUPS(dlm);
+ 
+ static ssize_t dlm_attr_show(struct kobject *kobj, struct attribute *attr,
+ 			     char *buf)
+@@ -189,7 +190,7 @@ static const struct sysfs_ops dlm_attr_ops = {
+ };
+ 
+ static struct kobj_type dlm_ktype = {
+-	.default_attrs = dlm_attrs,
++	.default_groups = dlm_groups,
+ 	.sysfs_ops     = &dlm_attr_ops,
+ 	.release       = lockspace_kobj_release,
+ };
+-- 
+2.17.1
 
