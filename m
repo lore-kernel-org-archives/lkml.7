@@ -2,167 +2,162 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512F1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E35C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5B521019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3681521019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 03:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="trPxV2m4"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1ZESEjZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfEHDoS (ORCPT
+        id S1727080AbfEHDod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 23:44:18 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42895 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbfEHDoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 23:44:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zMly1fVwz9s55;
-        Wed,  8 May 2019 13:44:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557287054;
-        bh=Ylec96D19WPOU0Bx4Ri080v/kfToIm71hmLcwiyAkg4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=trPxV2m4GF86uZri4+/pnCUtYOVhP6t2vcYBeAZJJQmYyWB1//jZsGTAa6spV/2Lc
-         iX2H00XXnfx7uJwMFFj2EZEI8Lukl6Xlr3iZfwxqeIXx+675S1E/F9ohuDUAiQpzC5
-         yDJeUbz1jaiboMPlqBrxeTgQ4tCVdxB7W+/CXSxEO2psaG89m+lu2BaUKFk7j82poU
-         fnGITodiKsOnPsaCPvQPdpt/+xme3kJ3cmlCtbrqN85INGmWwQ1RX5s0XHi+aZ3poM
-         js6Qq8fBrmhYDNtLLnENUwLZnx54cgzTHFeU8FYIT2TaGXC5MkddlhH7Kb5QU53qft
-         TBQJXNsjfnvqg==
-Date:   Wed, 8 May 2019 13:44:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: linux-next: manual merge of the staging tree with the block
- tree
-Message-ID: <20190508134413.26a13d00@canb.auug.org.au>
-In-Reply-To: <20190501170528.2d86d133@canb.auug.org.au>
-References: <20190501170528.2d86d133@canb.auug.org.au>
+        Tue, 7 May 2019 23:44:33 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:55088 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfEHDoc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 23:44:32 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x483iAfQ000467;
+        Wed, 8 May 2019 12:44:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x483iAfQ000467
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557287051;
+        bh=GtYEji5+EE71+LZjKDY0sxmohdZ0g+Z5/jFvjX0CHzk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1ZESEjZOrbdTa5+bMjMIxX7JKfYmQ/Y+dVySrIFat/BgQw0mbSCMDzXGSvjMWFz/n
+         avfYjmfH7jmGaI5QdsMqFVxzcZu8izw/LpK1K5OCkgm8I5KWmyRvu9UHOa8gxKoDZt
+         m+aRszBtUwNrViHlN1ejn9NLZd5sBn8LipsbVhKP/EmJklWC8d0SClpntEUdswPbO0
+         uxHDUcYmEs99d3dEYaGWHtzJe4sW3DhiZbWvfKF+a3i+oGn774ldgNtYyHqsLu0LUi
+         wdmGRah9iOVXGv/gkE0XnKA1+0cx7FHv6uxS86y+Yf+qd+CK0/DwFFePzuMXVm07lT
+         NS2Z5t8WpH/UA==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id g127so11777172vsd.6;
+        Tue, 07 May 2019 20:44:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAUR3AuX3SmgwdBFiodM0SXGkP8nbnBJI942Jhx3gtbPtTPGtQfc
+        gQJhKeLMYD4sno69/A9o8/2bWOLvuRdWYJQxHWE=
+X-Google-Smtp-Source: APXvYqz4ub6AwdOUIv3IBI3Jv6hdIY2r3aV/UeyA9Lf21f53omFZix/UHdWvee9kuR48UmUZmxkT6DyZqggTTN2/rBA=
+X-Received: by 2002:a67:fd89:: with SMTP id k9mr7071343vsq.54.1557287050111;
+ Tue, 07 May 2019 20:44:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PTiqtRjs/NzDhQUMKyeXWF="; protocol="application/pgp-signature"
+References: <20190506013456.86061-1-joel@joelfernandes.org>
+In-Reply-To: <20190506013456.86061-1-joel@joelfernandes.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 8 May 2019 12:43:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQesyT-vspoGKdgRqycZfhtJm5Upx2T6ij-yB5i4Nx5nw@mail.gmail.com>
+Message-ID: <CAK7LNAQesyT-vspoGKdgRqycZfhtJm5Upx2T6ij-yB5i4Nx5nw@mail.gmail.com>
+Subject: Re: [PATCH v3] kheaders: Move from proc to sysfs
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
+        Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PTiqtRjs/NzDhQUMKyeXWF=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 1 May 2019 17:05:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+On Mon, May 6, 2019 at 10:37 AM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
 >
-> Today's linux-next merge of the staging tree got conflicts in:
->=20
->   drivers/staging/erofs/data.c
->   drivers/staging/erofs/unzip_vle.c
->=20
-> between commit:
->=20
->   2b070cfe582b ("block: remove the i argument to bio_for_each_segment_all=
-")
->=20
-> from the block tree and commit:
->=20
->   14a56ec65bab ("staging: erofs: support IO read error injection")
->=20
-> from the staging tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc drivers/staging/erofs/data.c
-> index 9f04d7466c55,c64ec76643d4..000000000000
-> --- a/drivers/staging/erofs/data.c
-> +++ b/drivers/staging/erofs/data.c
-> @@@ -17,11 -17,18 +17,17 @@@
->  =20
->   static inline void read_endio(struct bio *bio)
->   {
-> + 	struct super_block *const sb =3D bio->bi_private;
->  -	int i;
->   	struct bio_vec *bvec;
-> - 	const blk_status_t err =3D bio->bi_status;
-> + 	blk_status_t err =3D bio->bi_status;
->   	struct bvec_iter_all iter_all;
->  =20
-> + 	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
-> + 		erofs_show_injection_info(FAULT_READ_IO);
-> + 		err =3D BLK_STS_IOERR;
-> + 	}
-> +=20
->  -	bio_for_each_segment_all(bvec, bio, i, iter_all) {
->  +	bio_for_each_segment_all(bvec, bio, iter_all) {
->   		struct page *page =3D bvec->bv_page;
->  =20
->   		/* page is already locked */
-> diff --cc drivers/staging/erofs/unzip_vle.c
-> index 59b9f37d5c00,a2e03c932102..000000000000
-> --- a/drivers/staging/erofs/unzip_vle.c
-> +++ b/drivers/staging/erofs/unzip_vle.c
-> @@@ -843,14 -844,13 +844,12 @@@ static void z_erofs_vle_unzip_kickoff(v
->  =20
->   static inline void z_erofs_vle_read_endio(struct bio *bio)
->   {
-> - 	const blk_status_t err =3D bio->bi_status;
-> + 	struct erofs_sb_info *sbi =3D NULL;
-> + 	blk_status_t err =3D bio->bi_status;
->  -	unsigned int i;
->   	struct bio_vec *bvec;
-> - #ifdef EROFS_FS_HAS_MANAGED_CACHE
-> - 	struct address_space *mc =3D NULL;
-> - #endif
->   	struct bvec_iter_all iter_all;
->  =20
->  -	bio_for_each_segment_all(bvec, bio, i, iter_all) {
->  +	bio_for_each_segment_all(bvec, bio, iter_all) {
->   		struct page *page =3D bvec->bv_page;
->   		bool cachemngd =3D false;
->  =20
+> The kheaders archive consisting of the kernel headers used for compiling
+> bpf programs is in /proc. However there is concern that moving it here
+> will make it permanent. Let us move it to /sys/kernel as discussed [1].
+>
+> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+> This patch applies on top of the previous patch that was applied to the
+> driver tree:
+> https://lore.kernel.org/patchwork/patch/1067310/
+>
+> v2->v3: Fixed sysfs file mode nit (Greg).
+> v1->v2: Fixed some kconfig nits.
+>
+>  init/Kconfig                                | 16 ++++-----
+>  kernel/Makefile                             |  4 +--
+>  kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
+>  kernel/kheaders.c                           | 40 +++++++++------------
+>  4 files changed, 26 insertions(+), 36 deletions(-)
+>  rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 26a364a95b57..c3661991b089 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -579,15 +579,13 @@ config IKCONFIG_PROC
+>           This option enables access to the kernel configuration file
+>           through /proc/config.gz.
+>
+> -config IKHEADERS_PROC
+> -       tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+> -       depends on PROC_FS
+> -       help
+> -         This option enables access to the kernel header and other artifacts that
+> -         are generated during the build process. These can be used to build eBPF
+> -         tracing programs, or similar programs.  If you build the headers as a
+> -         module, a module called kheaders.ko is built which can be loaded on-demand
+> -         to get access to the headers.
+> +config IKHEADERS
+> +       tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
 
-This conflict is now between the block tree and Linus' tree.
 
---=20
-Cheers,
-Stephen Rothwell
+I suggested "depends on SYSFS" twice, both in v1 and v2.
 
---Sig_/PTiqtRjs/NzDhQUMKyeXWF=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+https://lore.kernel.org/patchwork/patch/1069806/#1266147
+https://lore.kernel.org/patchwork/patch/1070005/#1266279
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzSUI0ACgkQAVBC80lX
-0GznYgf+PLM8FVE3+eBJHgcShX3cPz6dCuWcOYWHXHcCWT5gnmOqutY1Xrbn1NFG
-l0XjkULZPCPJOgsWoVqKA/bJzav17VCR/ArGToeGP3YzCe6COuYSP7tq5WtFiZT7
-JktCqCSOWcmQBkXDWcNkv8Ie84cUOR738hX2CG45tUvhYYw+6sVrlJ7NWtoF7n2d
-3WuZufHUryMyJ9NKWlnUpIHu2G0R83nCsyUYEl5qsHgfTDi7ZJkPXDdMksq6tIfl
-kBM1JZs+WqecuP6kUtRNlUai9sBl/iOkSnQk84KnrrVJSn8GzHL8+I0Zbx2YJuqn
-ySO/viGKh+18hUQrv85y758ZVwWmeA==
-=aat7
------END PGP SIGNATURE-----
 
---Sig_/PTiqtRjs/NzDhQUMKyeXWF=--
+> +       help
+> +         This option enables access to the in-kernel headers that are generated during
+> +         the build process. These can be used to build eBPF tracing programs,
+> +         or similar programs.  If you build the headers as a module, a module called
+> +         kheaders.ko is built which can be loaded on-demand to get access to headers.
+>
+>  config LOG_BUF_SHIFT
+>         int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+
+
+-- 
+Best Regards
+Masahiro Yamada
