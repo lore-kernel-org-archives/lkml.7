@@ -2,167 +2,195 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27023C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB13C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5620216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557338127;
-	bh=py4ZN8xGhiVrBaIbGbhAIZp22m+TDl0beFlh/vYRUG4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zDchER0inHyfzPyCuQohyulC28T5N4P3c7DRxSj8dV1UDTSlnuW/o9pa+dab9jChJ
-	 W4+EIKEGo3Ma6aMjWT0TAdNFppA/mtQE1TVFZ1p1i5+PQ41KnyhJ8aivIvbnfR+G7E
-	 XlniUFXQj3dlIUkGfaY0oO6F9h55AslM5cp0I0fg=
+	by mail.kernel.org (Postfix) with ESMTP id D4A93216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfEHRzZ (ORCPT
+        id S1727393AbfEHR4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 13:55:25 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46808 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfEHRzZ (ORCPT
+        Wed, 8 May 2019 13:56:11 -0400
+Received: from smtprelay0046.hostedemail.com ([216.40.44.46]:56949 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727020AbfEHR4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 13:55:25 -0400
-Received: by mail-lf1-f68.google.com with SMTP id k18so15164185lfj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 10:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tB0dEg1LRdoWuwbFpIiC/qOnD5MiJ0Og2mGu9A6NlQo=;
-        b=JCVzPV7zayA3wH6+Io+L76NQ2XQ8WUGer5LQj7CW69X+OplpDh3FykX8GJcnSmmntK
-         OTIZ8qaVdAmxkZOd5IR6LTfpT5e2bXYmZv/WbMNYfhuZMvs+AgjkFhVxMk5XVgorcaF0
-         GMeaq61fFXW9McmxexkVjLBG42BxtDDsoVj1g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tB0dEg1LRdoWuwbFpIiC/qOnD5MiJ0Og2mGu9A6NlQo=;
-        b=ac2EU/A7PfXzMGnWgE2G9+tJh0YicdiyUjXcdyWGIouqk5I/NHaYv7u8/MFWT7EAjW
-         ECjm/ows2Hpb/WWhYpCtBlEBP2Dx475GI7ZGyyedNUnnSZyV2VMJ4ucCEv+nngtnGp+v
-         LBRrjGo4yI7uK6GmChxONnTyoQZhG5KmQbh5K5YemdHh0AGnsJKb6BW5YeoqU4mavArJ
-         r7CjLnbbj/13MDqyoBa3p03MC0cvonlWgcV6YYzYjA0b9na6d7X/h1KFDlVBJ29+Wyuw
-         F59OTkavdOvm0AFcpTCd85M+T5QxQs6ggX+JfPmkQ/wp1/EfC40qdMhIGe1lWxnhRDgO
-         uIpw==
-X-Gm-Message-State: APjAAAWWHU+kQRQlCJr5qPx7CJh94zYFItB5p/pkl41eISICZCO0x2iC
-        dnSR0tN2LD85XHWqzUdUtMPzxwJBPZE=
-X-Google-Smtp-Source: APXvYqwM2RXYF10pswrzbznMo313VMPLkdStD5qBl7o72GMjWcmRn0fnuH6rn77uS3hxwg5+f8OPYw==
-X-Received: by 2002:ac2:483c:: with SMTP id 28mr11220208lft.93.1557338122044;
-        Wed, 08 May 2019 10:55:22 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id u65sm2544703lja.39.2019.05.08.10.55.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 10:55:21 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id k18so15164121lfj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 10:55:20 -0700 (PDT)
-X-Received: by 2002:a19:ca02:: with SMTP id a2mr20978222lfg.88.1557338120579;
- Wed, 08 May 2019 10:55:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
-In-Reply-To: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 8 May 2019 10:55:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
-Message-ID: <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
-Subject: Re: GFS2: Pull Request
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     cluster-devel <cluster-devel@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 May 2019 13:56:11 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id E9A7D180A8452;
+        Wed,  8 May 2019 17:56:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: knot98_189857d02d93b
+X-Filterd-Recvd-Size: 6426
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  8 May 2019 17:56:08 +0000 (UTC)
+Message-ID: <e9cccc6630eb2fd273e7aa47a635717041b92d05.camel@perches.com>
+Subject: Re: [PATCH v2] checkpatch: add command-line option for TAB size
+From:   Joe Perches <joe@perches.com>
+To:     Antonio Borneo <borneo.antonio@gmail.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 08 May 2019 10:56:07 -0700
+In-Reply-To: <20190508174356.13952-1-borneo.antonio@gmail.com>
+References: <20190508174356.13952-1-borneo.antonio@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 4:49 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
->
-> There was a conflict with commit 2b070cfe582b ("block: remove the i
-> argument to bio_for_each_segment_all") on Jens's block layer changes
-> which you've already merged. I've resolved that by merging those block
-> layer changes; please let me know if you want this done differently.
+On Wed, 2019-05-08 at 19:43 +0200, Antonio Borneo wrote:
+> The size of 8 characters used for both TAB and indentation is
+> embedded as magic value allover the checkpatch script, and this
+> makes the script less readable.
 
-PLEASE.
+I doubt this bit of the commit message is proper.
 
-I say this to somebody pretty much every single merge window: don't do
-merges for me.
+Tabs _are_ 8 in the linux-kernel sources and checkpatch
+was written for the linux-kernel.
 
-You are actually just hurting, not helping. I want to know what the
-conflicts are, not by being told after-the-fact, but by just seeing
-them and resolving them.
+Using a variable _could_ reasonably be described as an
+improvement, but readability wasn't and isn't really an
+issue here.
 
-Yes, I like being _warned_ ahead of time - partly just as a heads up
-to me, but partly also to show that the maintainers are aware of the
-notifications from linux-next, and that linux-next is working as
-intended, and people aren't just ignoring what it reports.
+Other than that, the patch seems fine.
 
-But I do *NOT* want to see maintainers cross-merging each others trees.
+thanks,  Joe
 
-It can cause nasty problems, ranging from simply mis-merges to causing
-me to not pull a tree at all because one side of the development
-effort had done something wrong.
+> Replace the magic value 8 with a variable.
+> From the context of the code it's clear if it is used for
+> indentation or tabulation, so no need to use two separate
+> variables.
+> 
+> Add a command-line option "--tab-size" to let the user select a
+> TAB size value other than 8.
+> This makes easy to reuse this script by other projects with
+> different requirements in their coding style (e.g. OpenOCD [1]
+> requires TAB size of 4 characters [2]).
+> 
+> [1] http://openocd.org/
+> [2] http://openocd.org/doc/doxygen/html/stylec.html#styleformat
+> 
+> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+> Signed-off-by: Erik Ahlén <erik.ahlen@avalonenterprise.com>
+> Signed-off-by: Spencer Oliver <spen@spen-soft.co.uk>
+> ---
+> V1 -> V2
+> 	add the command line option
+> 
+>  scripts/checkpatch.pl | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 916a3fbd4d47..90f641bf1895 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -62,6 +62,7 @@ my $conststructsfile = "$D/const_structs.checkpatch";
+>  my $typedefsfile = "";
+>  my $color = "auto";
+>  my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
+> +my $tabsize = 8;
+>  
+>  sub help {
+>  	my ($exitcode) = @_;
+> @@ -96,6 +97,7 @@ Options:
+>    --show-types               show the specific message type in the output
+>    --max-line-length=n        set the maximum line length, if exceeded, warn
+>    --min-conf-desc-length=n   set the min description length, if shorter, warn
+> +  --tab-size=n               set the number of spaces for tab (default 8)
+>    --root=PATH                PATH to the kernel tree root
+>    --no-summary               suppress the per-file summary
+>    --mailback                 only produce a report in case of warnings/errors
+> @@ -213,6 +215,7 @@ GetOptions(
+>  	'list-types!'	=> \$list_types,
+>  	'max-line-length=i' => \$max_line_length,
+>  	'min-conf-desc-length=i' => \$min_conf_desc_length,
+> +	'tab-size=i'	=> \$tabsize,
+>  	'root=s'	=> \$root,
+>  	'summary!'	=> \$summary,
+>  	'mailback!'	=> \$mailback,
+> @@ -1211,7 +1214,7 @@ sub expand_tabs {
+>  		if ($c eq "\t") {
+>  			$res .= ' ';
+>  			$n++;
+> -			for (; ($n % 8) != 0; $n++) {
+> +			for (; ($n % $tabsize) != 0; $n++) {
+>  				$res .= ' ';
+>  			}
+>  			next;
+> @@ -2224,7 +2227,7 @@ sub string_find_replace {
+>  sub tabify {
+>  	my ($leading) = @_;
+>  
+> -	my $source_indent = 8;
+> +	my $source_indent = $tabsize;
+>  	my $max_spaces_before_tab = $source_indent - 1;
+>  	my $spaces_to_tab = " " x $source_indent;
+>  
+> @@ -3153,7 +3156,7 @@ sub process {
+>  		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+>  
+>  # at the beginning of a line any tabs must come first and anything
+> -# more than 8 must use tabs.
+> +# more than $tabsize must use tabs.
+>  		if ($rawline =~ /^\+\s* \t\s*\S/ ||
+>  		    $rawline =~ /^\+\s*        \s*/) {
+>  			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
+> @@ -3172,7 +3175,7 @@ sub process {
+>  				"please, no space before tabs\n" . $herevet) &&
+>  			    $fix) {
+>  				while ($fixed[$fixlinenr] =~
+> -					   s/(^\+.*) {8,8}\t/$1\t\t/) {}
+> +					   s/(^\+.*) {$tabsize,$tabsize}\t/$1\t\t/) {}
+>  				while ($fixed[$fixlinenr] =~
+>  					   s/(^\+.*) +\t/$1\t/) {}
+>  			}
+> @@ -3194,11 +3197,11 @@ sub process {
+>  		if ($perl_version_ok &&
+>  		    $sline =~ /^\+\t+( +)(?:$c90_Keywords\b|\{\s*$|\}\s*(?:else\b|while\b|\s*$)|$Declare\s*$Ident\s*[;=])/) {
+>  			my $indent = length($1);
+> -			if ($indent % 8) {
+> +			if ($indent % $tabsize) {
+>  				if (WARN("TABSTOP",
+>  					 "Statements should start on a tabstop\n" . $herecurr) &&
+>  				    $fix) {
+> -					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/8)@e;
+> +					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/$tabsize)@e;
+>  				}
+>  			}
+>  		}
+> @@ -3216,8 +3219,8 @@ sub process {
+>  				my $newindent = $2;
+>  
+>  				my $goodtabindent = $oldindent .
+> -					"\t" x ($pos / 8) .
+> -					" "  x ($pos % 8);
+> +					"\t" x ($pos / $tabsize) .
+> +					" "  x ($pos % $tabsize);
+>  				my $goodspaceindent = $oldindent . " "  x $pos;
+>  
+>  				if ($newindent ne $goodtabindent &&
+> @@ -3688,11 +3691,11 @@ sub process {
+>  			#print "line<$line> prevline<$prevline> indent<$indent> sindent<$sindent> check<$check> continuation<$continuation> s<$s> cond_lines<$cond_lines> stat_real<$stat_real> stat<$stat>\n";
+>  
+>  			if ($check && $s ne '' &&
+> -			    (($sindent % 8) != 0 ||
+> +			    (($sindent % $tabsize) != 0 ||
+>  			     ($sindent < $indent) ||
+>  			     ($sindent == $indent &&
+>  			      ($s !~ /^\s*(?:\}|\{|else\b)/)) ||
+> -			     ($sindent > $indent + 8))) {
+> +			     ($sindent > $indent + $tabsize))) {
+>  				WARN("SUSPECT_CODE_INDENT",
+>  				     "suspect code indent for conditional statements ($indent, $sindent)\n" . $herecurr . "$stat_real\n");
+>  			}
 
-And yes, mis-merges happen - and they happen to me too. It's fairly
-rare, but it can be subtle and painful when it does happen.
-
-But (a) I do a _lot_ of merges, so I'm pretty good at them, and (b) if
-_I_ do the merge, at least I know about the conflict and am not as
-taken by surprise by possible problems due to a mis-merge.
-
-And that kind of thing is really really important to me as an upstream
-maintainer. I *need* to know when different subtrees step on each
-others toes.
-
-As a result, even when there's a conflict and a merge is perfectly
-fine, I want to know about it and see it, and I want to have the
-option to pull the maintainer trees in different orders (or not pull
-one tree at all), which means that maintainers *MUST NOT* do
-cross-tree merges. See?
-
-And I don't want to see back-merges (ie merges from my upstream tree,
-as opposed to merges between different maintainer trees) either, even
-as a "let me help Linus, he's already merged the other tree, I'll do
-the merge for him". That's not helping, that's just hiding the issue.
-
-Now, very very occasionally I will hit a merge that is so hard that I
-will go "Hmm, I really need the involved parties to sort this out".
-Honestly, I can't remember the last time that happened, but it _has_
-happened.
-
-Much more commonly, I'll do the merge, but ask for verification,
-saying "ok, this looked more subtle than I like, and I can't test any
-of it, so can you check out my merge". Even that isn't all that
-common, but it definitely happens.
-
-There is _one_ very special kind of merge that I like maintainers
-doing: the "test merge".
-
-That test merge wouldn't be sent to me in the pull request as the
-primary signed pull, but it's useful for the maintainer to do to do a
-final *check* before doing the pull request, so that you as a
-maintainer know what's going on, and perhaps to warn me about
-conflicts.
-
-If you do a test merge, and you think the test merge was complex, you
-might then point to your resolution in the pull request as a "this is
-how I would do it". But you should not make that merge be *the* pull
-request.
-
-One additional advantage of a test merge is that it actually gives a
-"more correct" diffstat for the pull request. Particularly if the pull
-request is for something with complex history (ie you as a maintainer
-have sub-maintainers, and have pulled other peoples work), a
-test-merge can get a much better diffstat. I don't _require_ that
-better diffstat, though - I can see how you got the "odd" diffstat if
-you don't do a test merge - but it's can be a "quality of pull
-request" thing.
-
-See what I'm saying? You would ask me to pull the un-merged state, but
-then say "I noticed a few merge conflicts when I did my test merge,
-and this is what I did" kind of aside.
-
-                     Linus
