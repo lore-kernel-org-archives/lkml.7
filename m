@@ -7,102 +7,123 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2618CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B5DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9455205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2942A20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqtxi/yi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dh4yIitz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfEHN1s (ORCPT
+        id S1727176AbfEHNaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:27:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43283 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbfEHN1s (ORCPT
+        Wed, 8 May 2019 09:30:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40784 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfEHNaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:27:48 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z5so12371482lji.10;
-        Wed, 08 May 2019 06:27:46 -0700 (PDT)
+        Wed, 8 May 2019 09:30:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b3so9936137plr.7;
+        Wed, 08 May 2019 06:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2D3RG8pXMm+z0HEk76Tz92evizs+d/UqhmcHqQu6yA0=;
-        b=mqtxi/yiwaglx8Z9kcnVjlPEnzlHFKooyG01vtm3OqueUr2ldpmOi4OBCKZs+Rj8u3
-         +sAqgF6ISrNjlM9QBob5MH1hwcKQ06mehu7RYf0pQKZJOylx3aaT/lPL1emAUeoffZME
-         Rk0IujZXNYkIDdbB3TBKQ7x2ZKV/66bwKgJw9WD1q0IfPpUf/8wjzMSXe5uECl1axvtD
-         wcGZN6zdfvs3I7PFVoL8456rTrOLaVvFey+2Ka/MoTp2dyiTVwfyzt6bSegArSCpmpbF
-         CemykKpi41MiWm1ig+/ppg2Suf6OuURWnx7AVnIK5OGw/yjTOMtNAxnjVEtFuGhZVOSe
-         3B7Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MMRDG203T8q7M0bbQTE+pNkcaQpfwdTEmlYiIWZnOxY=;
+        b=Dh4yIitzet2cNdBx6KmCJGUWgtxkMjhd8Hkwn1DRmID4+m2U9Q54I+GA2fwl5sSmCQ
+         si4mSg74qhsrZ7v3CbBxbyU5w79kuOpphCWdrRVTaRTJ11DslyDvJAs1KL2r41h0UhOl
+         KCcWkTcb5aW0JXqQ16iQQUa0LAtDYzMS1YQwWxtcwYEMeKY2Cw9diKlQ+9CVqGKpMqLG
+         jrp0nkRJjk7QXuv3wWbHs9aJEIzNSMJ9xRE+8Ieo0YtH04QWp1HxOu6TlSZCHvS9vNPU
+         EmPCdmVQh0Z7+Gc0He91jrhkJO8/CWp3uTPg0NjMUAzK/UMjxFkQHmgf9DqIUisRhpcx
+         obHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2D3RG8pXMm+z0HEk76Tz92evizs+d/UqhmcHqQu6yA0=;
-        b=rK/O0SBtcaD5tKpcY7oMRUaMEE5SMmLXQFLVz+Yr5XZF5ZF4hdTuEBEzlKEuj/KYGJ
-         +TtTB4iky5tacUHRuaOBp/wekZPd7ZT7R1BewRnkerX6bQLguYcCe+J+bpY8zRRHZC6f
-         zAg4Maua1sgkElb/yuDT9brMjRfToqqJ8w8SxSbaVyoUYzM6CzXkYoaNO9RI/9vvjEfT
-         u8gHK9V+H6v+dyEgEuZwyN3hyB2XylogVdLg+bPfgE0cftZOQqvB5dlmfWNtF02zKsc5
-         MB8fTpb+rhHxIrxePq3jPQsiJwbrnMSp4obTQ90IU1y7vS6vZ1w7kheZSgj2a4NCp3cX
-         KLTA==
-X-Gm-Message-State: APjAAAXMrG9AzCAgoTzA8VLqE2asn4eJJ1MtbaOmkwI+t94yo3p7vrEd
-        lIQ3kgsmWXSSxJDhExAAz7URBUGt
-X-Google-Smtp-Source: APXvYqwJNhl/SS47KTmlnE23qhbggTKV/WCPJsEnQkPRfSj07XNZ+x7u4WiOR3Qys8r6RGxkKXg8XA==
-X-Received: by 2002:a2e:9a58:: with SMTP id k24mr14366245ljj.90.1557322065507;
-        Wed, 08 May 2019 06:27:45 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id p14sm1019184lfk.24.2019.05.08.06.27.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 06:27:43 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 6/6] soc/tegra: regulators: Add regulators coupler
- for Tegra30
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190414175939.12368-1-digetx@gmail.com>
- <20190414175939.12368-7-digetx@gmail.com>
- <20190508075848.GX14916@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <af6de446-ab45-1745-30e5-426c6b34421f@gmail.com>
-Date:   Wed, 8 May 2019 16:27:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MMRDG203T8q7M0bbQTE+pNkcaQpfwdTEmlYiIWZnOxY=;
+        b=Hy8kdCeDuMDvBeBWq17wtMd25s7+nJ736+NXt1esDRqI0cKEEN+2AV/W35B1ucrDHM
+         CJ3+ORFpEQO0EuCkN9edsUMDpexi0Ksw6jhI1kbRkhQ5z5Ux5v1Ao2mVl4/qhqp3CSnk
+         lo0jzvLUlIrFZBkVOXor1f0a5SiuM2RsImuDzIMAJ02gdlTZmiWZbNro8REDK+FvPCX4
+         yhqX/bcbXXELrRpHcP7sQxV3uJPvdBkW+krMA1EtDzYnqpHe/MNsaKEBdTc6emyZpd4g
+         SAZxg9FbCowFW+7QqSq8kbwmihSXVRhu7bF/auQ/RENmClWWpUNeaclrYKea7KrhMEe1
+         Hb+A==
+X-Gm-Message-State: APjAAAXuxnUecb25JVucrAp+6iseH7qwbcvcyk5yj97joIfXhWpgAdjq
+        ip53M4lNAYZugnW6jSLQ18zrIybm5Gm2uxZ7O8nQTEqzvII=
+X-Google-Smtp-Source: APXvYqxvxeM/20XZxLDEFFhFqPaHS+19EckDaqq36S8JJZWuhUDEWzLNBIXMo7fsvcv1Qqi+gHRutTWKWQOYHTFUWWA=
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr48101865pll.87.1557322214365;
+ Wed, 08 May 2019 06:30:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190508075848.GX14916@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com> <5e1a56c3-0448-a648-e331-a2e1d0421b56@gmail.com>
+In-Reply-To: <5e1a56c3-0448-a648-e331-a2e1d0421b56@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 May 2019 16:30:03 +0300
+Message-ID: <CAHp75Ve0MrS2_ROzo4_o9oTjTvs+GSfUn=2CRQx1L_W+5JR6Vw@mail.gmail.com>
+Subject: Re: [PATCH v3 03/11] platform/x86: asus-wmi: Increase the input
+ buffer size of WMI methods
+To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.05.2019 10:58, Mark Brown пишет:
-> On Sun, Apr 14, 2019 at 08:59:39PM +0300, Dmitry Osipenko wrote:
->> Add regulators coupler for Tegra30 SoC's that performs voltage balancing
->> of a coupled regulators and thus provides voltage scaling functionality.
-> 
-> Same here, what are the requirements this is implementing?
-> 
+On Fri, Apr 19, 2019 at 1:07 PM Yurii Pavlovskyi
+<yurii.pavlovskyi@gmail.com> wrote:
+>
+> The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
+> Gaming series laptops producing multiple ACPI errors in the kernel log.
+>
+> The input buffer for WMI method invocation size is 2 dwords, whereas
+> 3 are expected by this model.
+>
+> FX505GM:
+> ..
+> Method (WMNB, 3, Serialized)
+> {
+>     P8XH (Zero, 0x11)
+>     CreateDWordField (Arg2, Zero, IIA0)
+>     CreateDWordField (Arg2, 0x04, IIA1)
+>     CreateDWordField (Arg2, 0x08, IIA2)
+>     Local0 = (Arg1 & 0xFFFFFFFF)
+>     ...
+>
+> Compare with older K54C:
+> ...
+> Method (WMNB, 3, NotSerialized)
+> {
+>     CreateDWordField (Arg2, 0x00, IIA0)
+>     CreateDWordField (Arg2, 0x04, IIA1)
+>     Local0 = (Arg1 & 0xFFFFFFFF)
+>     ...
+>
+> Increase buffer size to 3 dwords. No negative consequences of this change
+> are expected, as the input buffer size is not verified. The original
+> function is replaced by a wrapper for a new method passing value 0 for the
+> last parameter. The new function will be used to control RGB keyboard
+> backlight.
 
-There are two coupled regulators: CPU and CORE.
 
-Constraints:
+> -int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+> +static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
+> +               u32 arg2, u32 *retval)
 
-1) The max-spread voltage is 300mV.
+I would name as "..._method3" and move arg2 to previous line
 
-2) CORE voltage must be higher than the CPU by at least N mV, where N
-varies depending on the CPU voltage.
+>  {
+>         struct bios_args args = {
+>                 .arg0 = arg0,
+>                 .arg1 = arg1,
+> +               .arg2 = arg2
 
-3) There is a constraint on the maximum CORE voltage depending on
-hardware model/revision (cpu_speedo_id) where a higher voltages
-apparently may cause physical damage, so it's better to hardcode the
-limitation in the code rather than to rely on a board's device-tree
-description. This constraint is quite vaguely defined in the downstream
-kernel, I'm not really sure if it's solely about the hardware safety.
+Keep comma, it will help in the future, like above helped you here.
+
+--
+With Best Regards,
+Andy Shevchenko
