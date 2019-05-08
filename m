@@ -2,133 +2,119 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F55AC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02FFC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C4420879
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD7A20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="de44/kO6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjfr/fPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfEHAFf (ORCPT
+        id S1726522AbfEHAHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:05:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:36349 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfEHAFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:05:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zGvb4CM2z9s00;
-        Wed,  8 May 2019 10:05:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557273933;
-        bh=oiPHLrJ1PNdtIn7Z2unJZ152OwUKHCpZpXYVThGD6G0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=de44/kO67Isp6nkiulJukoLG7aPg9xt0BTNhM48Bk03ff0xj5f2Eh0hompS/fGJib
-         Qmu82+zV5j2276qeRiKIX5ugSejhI1L4cqpZC1Ew2re3JqXxXCR9KUZPh3iyuujLL/
-         I3nymZKW2K8FMhPTGa8SppkOk8svjcCAOgCsUXLlreEmB55rb3r/ODZOimf0epMMSF
-         vaeFPBUTCas1GMgHJ00jYKuL/QlOn6iAjCDIM/u3nk9GWaJpopxTdjv6sO5dsfhj9I
-         q1CcQIyTLNAVTBgBo8s8jPdkfQyrSv923rTl/j8Y2+kLtF/K5wf5AtbWIDOl17aG6x
-         F7UUW2xHHvdsw==
-Date:   Wed, 8 May 2019 10:05:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Artem Bityutskiy <dedekind1@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Weinberger <richard@nod.at>
-Subject: linux-next: manual merge of the ubifs tree with Linus' tree
-Message-ID: <20190508100525.7c24c8be@canb.auug.org.au>
+        Tue, 7 May 2019 20:07:47 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45310 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfEHAHr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 20:07:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a5so4026562pls.12;
+        Tue, 07 May 2019 17:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HN68pgSokYWWKvinzUgVn1U1SddKsTL2kSGU6FODjf0=;
+        b=bjfr/fPM+0H2SZXbx6TNp/DGV4zpmnTRSn1alUqvoJbctyEYK6nmlvvdUUTHsmHSz9
+         +OhxAnrdDt0lh0w95+rJlQEFnQom0c4jDAAyl6H8reZeWtIpMV7unEF85hkm5THnttQI
+         7mhELEV19lyG1oN/qF0Xthd2xh/7XBVJ1weoiskLIfrIrC5lBIYI6ppzS3nhsGaPVQox
+         NaCZ1z/n+LANnboGjkUN1wnXjfxF/Q3Y4udAakxJDj3koat7LrHTBwG2ZuRQJfacDbAT
+         BSPkOG6okSgfpuaZ6f4GxEbwC/kY3xFbxQ6zK4lMSNNMWQDjQDH5AIRvXVVpSCKN4hsB
+         Y9FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HN68pgSokYWWKvinzUgVn1U1SddKsTL2kSGU6FODjf0=;
+        b=BGmXHnI7XVSAk0XZK1Btie3FXjC8VPpMJSpIYtcUi9tHKPRzsSF6fkx6kEf8hHFTfw
+         oseo1xSMXMqmAHIDocsgf6eGFmO83Nh/OmNY1bDvUMMY67mOhXkw3VWz8Dl8LXJlgNip
+         rQBQYPUmvpun53hcskcM3S8qGp0R8ftgGqlBVd0Ly/rV7jlPOqq81wywm5QHO7lqF53y
+         3NPehbpQdXdE7oa3+1oaPuUUYNc8mP77Jm+ZMLdNXXTTZER9lGwwnQ6PrBDf3u2RUGFq
+         4FHtcIRJrB5dvMPMCN81FtWicsy/PWBIIDkdta1ggRraeJxIjYyWHKcS+oK++VmhQ3I0
+         nmWQ==
+X-Gm-Message-State: APjAAAXairzAIr/b6v/e2Ik2MobrKJYHfOIzENPrzu9gnldq/GjfIz4G
+        DALGMGdnWmQUhzhg9/YGxbE=
+X-Google-Smtp-Source: APXvYqwfTg2fF7e7jMIli0z/0adeHhQWjX/dtytTySV8YZfOK/KeUo9PmzbmXzrbi1jkW3Ra3vv5JQ==
+X-Received: by 2002:a17:902:2927:: with SMTP id g36mr41998203plb.6.1557274066589;
+        Tue, 07 May 2019 17:07:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r18sm19170613pfd.89.2019.05.07.17.07.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 17:07:45 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: fix watchdog_pretimeout.c build error when no
+ default gov. is set
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Cc:     Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+References: <ec5a2b04-2649-e527-bcfd-4e708808e681@infradead.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <aace995d-a076-2fc5-8456-1e2638e4faa6@roeck-us.net>
+Date:   Tue, 7 May 2019 17:07:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PktYFn.tjcmLyihpLR/OTUn"; protocol="application/pgp-signature"
+In-Reply-To: <ec5a2b04-2649-e527-bcfd-4e708808e681@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PktYFn.tjcmLyihpLR/OTUn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/7/19 4:33 PM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix build error when
+> CONFIG_WATCHDOG_PRETIMEOUT_GOV=y
+> # CONFIG_WATCHDOG_PRETIMEOUT_GOV_NOOP is not set
+> # CONFIG_WATCHDOG_PRETIMEOUT_GOV_PANIC is not set
+> 
+> Fixes this build error:
+> 
+> ../drivers/watchdog/watchdog_pretimeout.c: In function ‘watchdog_register_governor’:
+> ../drivers/watchdog/watchdog_pretimeout.c:139:26: error: ‘WATCHDOG_PRETIMEOUT_DEFAULT_GOV’ undeclared (first use in this function)
+>    if (!strncmp(gov->name, WATCHDOG_PRETIMEOUT_DEFAULT_GOV,
+> 
 
-Hi all,
+Ah, I knew I missed something. The following would be a better fix,
+though, since it enforces that at least one pretimeout governor is enabled
+(matching the old code):
 
-Today's linux-next merge of the ubifs tree got a conflict in:
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index e19960ace0c0..4a3461afa96f 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -71,6 +71,12 @@ config WATCHDOG_PRETIMEOUT_GOV
+         help
+           The option allows to select watchdog pretimeout governors.
 
-  fs/ubifs/auth.c
++config WATCHDOG_PRETIMEOUT_GOV_SEL
++       tristate
++       depends on WATCHDOG_PRETIMEOUT_GOV
++       default m
++       select WATCHDOG_PRETIMEOUT_GOV_PANIC if WATCHDOG_PRETIMEOUT_GOV_NOOP=n
++
+  if WATCHDOG_PRETIMEOUT_GOV
 
-between commit:
+Can you send v2 with the above, or do you want me to send it and give you credit ?
 
-  877b5691f27a ("crypto: shash - remove shash_desc::flags")
-
-from Linus' tree and commit:
-
-  f4844b35d68a ("ubifs: work around high stack usage with clang")
-
-from the ubifs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/ubifs/auth.c
-index b758004085c4,3d049194afa4..000000000000
---- a/fs/ubifs/auth.c
-+++ b/fs/ubifs/auth.c
-@@@ -85,12 -86,17 +84,16 @@@ int ubifs_prepare_auth_node(struct ubif
-  	if (!hash)
-  		return -ENOMEM;
- =20
-- 	hash_desc->tfm =3D c->hash_tfm;
-- 	ubifs_shash_copy_state(c, inhash, hash_desc);
-+ 	{
-+ 		SHASH_DESC_ON_STACK(hash_desc, c->hash_tfm);
- =20
-- 	err =3D crypto_shash_final(hash_desc, hash);
-- 	if (err)
-- 		goto out;
-+ 		hash_desc->tfm =3D c->hash_tfm;
- -		hash_desc->flags =3D CRYPTO_TFM_REQ_MAY_SLEEP;
-+ 		ubifs_shash_copy_state(c, inhash, hash_desc);
-+=20
-+ 		err =3D crypto_shash_final(hash_desc, hash);
-+ 		if (err)
-+ 			goto out;
-+ 	}
- =20
-  	err =3D ubifs_hash_calc_hmac(c, hash, auth->hmac);
-  	if (err)
-
---Sig_/PktYFn.tjcmLyihpLR/OTUn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzSHUUACgkQAVBC80lX
-0GxluAf+NFIDpqdiuZljF+G24ADeJLFbGjsnyLnKHvfZwi0xS/hCVrzhpL0NnyUo
-ZtExq/OwLbnb0/BNgG5C1WlnhGrpfDE62f81N8cajNl5fuYmBsQW+9zBiokJM63J
-tiWJ9Y2cwN4WAp15sQUogprh4dXOwp/dwer+Q47GvX6KOZHdXByGEjQLYBlqafg1
-6a8xoIbjxmCi06vqcu3EiuF9g0PICRMPrbpTpDAPcaKFvJyXFVTFHY35dctILcQq
-2QzqLIWLfQuE+DJedxdOPf/f29ofZls4Z46JihojydTUUMwymC4ANWBofzct9nWB
-j+UuwyN5M5Q5+Q9pkJN496Xx/gI02g==
-=gYRA
------END PGP SIGNATURE-----
-
---Sig_/PktYFn.tjcmLyihpLR/OTUn--
+Thanks,
+Guenter
