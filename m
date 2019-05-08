@@ -2,99 +2,122 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A46C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC2DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F277A20850
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5E62173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UlA96dIW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXEIRHCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfEHUn4 (ORCPT
+        id S1727726AbfEHUoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:43:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58882 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbfEHUn4 (ORCPT
+        Wed, 8 May 2019 16:44:00 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38619 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbfEHUn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:43:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BhwXAbjkoDrvmRFXu3os3blWb466l8EQ11sVasbRwbU=; b=UlA96dIW25DYB4esae4s1EdfQ
-        NEtuhMIw7nsyqaMR7A60rhAB+ErA7viMQ83cEbqqtrQUGsl2SdofRIkdWjPbxsjlKcafqZQX8oOp9
-        JyOTUlhdlN4InWx7AQ1LHRmE2A7VTxnQBemIBNFozLO3BdjwJFoAP2lR7UPq9pqBnE3eSFXyzLPI5
-        sQR3d5mP2y1GeT1guc0WKGdk8pQIrp5kEcTeM55UOxN9s1Nm57Rffxhv7tYtMzv2ZsFX9FGhOuFVf
-        YCJHLeXvwBjFPn2vVAk5fvF+N+1UekWoWnxYF1/neLsPQXrYJaAt4kLQprc1LoAkGvLWBpADckL6u
-        51bbcYViQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOTPu-0006ly-IJ; Wed, 08 May 2019 20:43:54 +0000
-Subject: Re: linux-next: Tree for May 8
- (drivers/platform/x86/intel_pmc_core_plat_drv.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        platform-driver-x86@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-References: <20190508173403.6088d0db@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
-Date:   Wed, 8 May 2019 13:43:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 16:43:58 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a64so144398qkg.5;
+        Wed, 08 May 2019 13:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=D+5a7yIWfQM2RvqyQS12Uu7fVHTzOqx14y8Bsmfizjw=;
+        b=PXEIRHCYBAhc/MI+OVHSqQ/OUK0FRyA6cewJp/JxCuqKhxrD8xflX/xYjakuSRlV+j
+         bzHoRlNx4GFNyr08V2kvI/4lM6I7pR2Prx/hnUbwntSECCYxbZtLDy5nqKGHoxA2jJnR
+         OBqMmCSgzw1FD8ho4L/G/2RpClWH07txtknw+rLfb91XD5WBEYAv34JlkjZ4Ump9shRK
+         xtukBuq3opyrXSjbhg3OQIhlFWAVxGl0wfEYTXiqJ6ZxAQT7zxm8xXNhpRuOVUTuwb6S
+         7849sMDcPeGt911RbZvMqWtBmgDUHKEYvR9I2ajWYjeDjvjt8pT6uV77orYWlkIvPQM5
+         WxmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=D+5a7yIWfQM2RvqyQS12Uu7fVHTzOqx14y8Bsmfizjw=;
+        b=fyX6gBHpauc7lPQJxrx3Wb5LLtxUWh59dh9KtGuXNn9xlDON5sbJMabts/N4zUWloL
+         N+x4bLO3XHABsxgp/5a4U6s8Sqi31V8D/nNCGDgEbR4qTGw3/O6auy6We/rKn88o8an/
+         tDeuRyBB1HO6jnnwRUmzLh0z0pvK6xr7/feiGggNbf9Ia3OmCmedFS2d+VyiHWPGrIxf
+         iUbMkWg0KCrr825CrNI46xC1OOwL9EHmKDUHGznEFegFuWNyWV2uHgQq3C1P3HXzouWP
+         Vrwp7qjJ7aILk3Xgf9U74za9zHIXlZI64RwON9u1LW5e0NG8Xcr1TLhPk6azjLJMrkGA
+         tG7g==
+X-Gm-Message-State: APjAAAUHiHQobMP2miY9SHnzEiAL3m99Rr90KKx+6fIq8QU+estUVWLN
+        yYNkepz2rHecJRfkYzjV8AI=
+X-Google-Smtp-Source: APXvYqxuSaA7O0Kfvow7bS6+66Q1kCm9xtHIqoJya9G35v6+67pZVluGYmgVIgRVikVrU1R2Ow08rw==
+X-Received: by 2002:a37:b4c6:: with SMTP id d189mr7925772qkf.173.1557348237279;
+        Wed, 08 May 2019 13:43:57 -0700 (PDT)
+Received: from localhost ([2601:184:4780:7861:6268:7a0b:50be:cebc])
+        by smtp.gmail.com with ESMTPSA id u2sm14131qkb.37.2019.05.08.13.43.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 13:43:56 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/5] drm/msm/mdp5: Use the interconnect API
+Date:   Wed,  8 May 2019 13:42:15 -0700
+Message-Id: <20190508204219.31687-6-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190508204219.31687-1-robdclark@gmail.com>
+References: <20190508204219.31687-1-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190508173403.6088d0db@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/19 12:34 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190507:
-> 
-> The ubifs tree gained a conflict against Linus' tree.
-> 
+From: Georgi Djakov <georgi.djakov@linaro.org>
 
-on i386 or x86_64:
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-
-  CC      drivers/platform/x86/intel_pmc_core_plat_drv.o
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: data definition has no type or storage class [enabled by default]
- MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
- ^
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: error: type defaults to ‘int’ in declaration of ‘MODULE_DEVICE_TABLE’ [-Werror=implicit-int]
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: parameter names (without types) in function declaration [enabled by default]
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: data definition has no type or storage class [enabled by default]
- module_init(pmc_core_platform_init);
- ^
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: error: type defaults to ‘int’ in declaration of ‘module_init’ [-Werror=implicit-int]
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: parameter names (without types) in function declaration [enabled by default]
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: data definition has no type or storage class [enabled by default]
- module_exit(pmc_core_platform_exit);
- ^
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: error: type defaults to ‘int’ in declaration of ‘module_exit’ [-Werror=implicit-int]
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: parameter names (without types) in function declaration [enabled by default]
-../drivers/platform/x86/intel_pmc_core_plat_drv.c:42:19: warning: ‘pmc_core_platform_init’ defined but not used [-Wunused-function]
- static int __init pmc_core_platform_init(void)
-                   ^
-
-and
-WARNING: modpost: missing MODULE_LICENSE() in drivers/platform/x86/intel_pmc_core_plat_drv.o
-
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 97179bec8902..54d2b4c2b09f 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -16,6 +16,7 @@
+  * this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
++#include <linux/interconnect.h>
+ #include <linux/of_irq.h>
+ 
+ #include "msm_drv.h"
+@@ -1050,6 +1051,19 @@ static const struct component_ops mdp5_ops = {
+ 
+ static int mdp5_dev_probe(struct platform_device *pdev)
+ {
++	struct icc_path *path0 = of_icc_get(&pdev->dev, "port0");
++	struct icc_path *path1 = of_icc_get(&pdev->dev, "port1");
++	struct icc_path *path_rot = of_icc_get(&pdev->dev, "rotator");
++
++	if (IS_ERR(path0))
++		return PTR_ERR(path0);
++	icc_set_bw(path0, 0, MBps_to_icc(6400));
++
++	if (!IS_ERR(path1))
++		icc_set_bw(path1, 0, MBps_to_icc(6400));
++	if (!IS_ERR(path_rot))
++		icc_set_bw(path_rot, 0, MBps_to_icc(6400));
++
+ 	DBG("");
+ 	return component_add(&pdev->dev, &mdp5_ops);
+ }
 -- 
-~Randy
+2.20.1
+
