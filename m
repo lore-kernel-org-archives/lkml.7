@@ -2,125 +2,76 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8ACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CFFC04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A9C20644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCB521019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557319662;
+	bh=dnvIXgHZ2nj3mMk0IxGgiKgWOqscukd4p+bqGXdACeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q5R81hKwHk3HJim3bkvb/IulbVdE4Ee3Qz8/a45JfoiM6AZDo40e6+P+lJRjde71Z
+	 4ReeBnAn01Y5nzJZbChEKwmoN8c38HdcI/RX1gWZRffeWtQinXQdn1Mu7+G/tCaCdQ
+	 SqvIn0fciZcar82izr4Eiucd9LmzhWQ8lHhvtk1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfEHMre (ORCPT
+        id S1728665AbfEHMrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:47:34 -0400
-Received: from ms01.santannapisa.it ([193.205.80.98]:53417 "EHLO
-        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfEHMre (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:47:34 -0400
-Received: from [83.43.182.198] (account l.abeni@santannapisa.it HELO nowhere)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 138929448; Wed, 08 May 2019 14:47:23 +0200
-Date:   Wed, 8 May 2019 14:47:16 +0200
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 4/6] sched/dl: Improve capacity-aware wakeup
-Message-ID: <20190508144716.5cc8445d@nowhere>
-In-Reply-To: <20190508120526.GI6551@localhost.localdomain>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
-        <20190506044836.2914-5-luca.abeni@santannapisa.it>
-        <20190508090855.GG6551@localhost.localdomain>
-        <20190508112437.74661fa8@nowhere>
-        <20190508120526.GI6551@localhost.localdomain>
-Organization: Scuola Superiore S.Anna
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 8 May 2019 08:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbfEHMrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:47:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A4620644;
+        Wed,  8 May 2019 12:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557319660;
+        bh=dnvIXgHZ2nj3mMk0IxGgiKgWOqscukd4p+bqGXdACeM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SsduZ/NZYINzSM0PwseSZGuZCr1lxjgTY4zcngITEXQbYQ5LAAVHjuXTGOXkZO7oM
+         Cd82T/Hasjc6Uoa9XByq+oIBghtUe9TiEq04EHSaPTNNV3FJcfggSFrzYAY9YJcCHw
+         HUnLabX0Hh3N/z6D3VEwbRhF1CZi/++b9CsJwR6E=
+Date:   Wed, 8 May 2019 14:47:38 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     PanBian <bianpan2016@163.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] EDAC/sysfs: Drop device references properly
+Message-ID: <20190508124738.GC8646@kroah.com>
+References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
+ <20190418172548.GL27160@zn.tnic>
+ <20190419003536.GA57795@bianpan2016@163.com>
+ <20190419004516.GC559@zn.tnic>
+ <20190427214925.GE16338@kroah.com>
+ <20190508110605.GE19015@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508110605.GE19015@zn.tnic>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Juri,
-
-On Wed, 8 May 2019 14:05:26 +0200
-Juri Lelli <juri.lelli@redhat.com> wrote:
-[...]
-> > > > +	if ((rel_deadline < 0) || (rel_deadline *
-> > > > dl_se->dl_runtime < dl_se->dl_deadline * rem_runtime)) {
-> > > > +		rel_deadline = dl_se->dl_deadline;
-> > > > +		rem_runtime  = dl_se->dl_runtime;
-> > > > +	}    
-> > > 
-> > > So, are you basically checking if current remaining bw can be
-> > > consumed safely?  
-> > 
-> > I check if the current runtime (rescaled based on the capacity) is
-> > smaller than the time to the current scheduling deadline
-> > (basically, if it can be consumed in time).
-> > 
-> > However, if
-> > 	q / (d - t) > Q / P 
-> > (where "q" is the current runtime, "d" is the scheduling deadline,
-> > "Q" is the maximum runtime, and "P" is the CBS period), then a new
-> > scheduling deadline will be generated (later), and the runtime will
-> > be reset to Q... So, I need to use the maximum budget and CBS
-> > period for checking if the task fits in the core.  
+On Wed, May 08, 2019 at 01:06:05PM +0200, Borislav Petkov wrote:
+> --
+> From: Greg KH <gregkh@linuxfoundation.org>
 > 
-> OK. I'd add a comment about it.
-
-Ok; I'll add a comment in the next version of the patchset.
-
-
-[...]
-> > > I'm not actually sure if looking at dynamic values is what we
-> > > need to do at this stage. By considering static values we fix
-> > > admission control (and scheduling). Aren't dynamic values more to
-> > > do with energy tradeoffs (and so to be introduced when starting
-> > > to look at the energy model)?  
-> > 
-> > Using the current runtime and scheduling deadline might allow to
-> > migrate a task to SMALL cores (if its remaining runtime is small
-> > enough), even if the rescaled Q is larger than P.
-> > So, in theory it might allow to reduce the load on big cores.
-> > 
-> > If we decide that this is overkilling, I can just drop the patch.  
+> Do put_device() if device_add() fails.
 > 
-> So, my first impression was that we shouldn't be too clever until we
-> start using info from the energy model (using which one should be able
-> to understand if, for example, reducing load on big cores is a winning
-> power/perf decision).
+>  [ bp: do device_del() for the successfully created devices in
+>    edac_create_csrow_objects(), on the unwind path. ]
 
-Ok.
+Yes, good catch, looks good, thanks!
 
-
-> However, I was also wondering if we should actually compare dynamic
-> parameters with {running,this}_bw (per-rq) the moment we search for
-> potential migration candidates (so that we are not overloading rqs).
-
-Notice that all this logic is used only to select one of the idle cores
-(instead of picking the first idle core, we select the less powerful
-core on which the task "fits").
-
-So, running_bw does not provide any useful information, in this case;
-maybe this_bw can be more useful.
-
-
-
-				Luca
+greg k-h
