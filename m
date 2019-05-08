@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C4FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83100C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D09B20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D3D216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfEHOve (ORCPT
+        id S1728880AbfEHOve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 8 May 2019 10:51:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48400 "EHLO mga14.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728160AbfEHOok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:40 -0400
+        id S1728115AbfEHOom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 07B934FD; Wed,  8 May 2019 17:44:28 +0300 (EEST)
+        id 243E9709; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 08/62] x86/mm: Introduce variables to store number, shift and mask of KeyIDs
-Date:   Wed,  8 May 2019 17:43:28 +0300
-Message-Id: <20190508144422.13171-9-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 10/62] x86/mm: Detect MKTME early
+Date:   Wed,  8 May 2019 17:43:30 +0300
+Message-Id: <20190508144422.13171-11-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,113 +57,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mktme_nr_keyids holds the number of KeyIDs available for MKTME,
-excluding KeyID zero which used by TME. MKTME KeyIDs start from 1.
+We need to know the number of KeyIDs before page_ext is initialized.
+We are going to use page_ext to store KeyID and it would be handly to
+avoid page_ext allocation if there's no MKMTE in the system.
 
-mktme_keyid_shift holds the shift of KeyID within physical address.
-
-mktme_keyid_mask holds the mask to extract KeyID from physical address.
+page_ext initialization happens before full CPU initizliation is complete.
+Move detect_tme() call to early_init_intel().
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mktme.h | 16 ++++++++++++++++
- arch/x86/kernel/cpu/intel.c  | 16 ++++++++++++----
- arch/x86/mm/Makefile         |  2 ++
- arch/x86/mm/mktme.c          | 11 +++++++++++
- 4 files changed, 41 insertions(+), 4 deletions(-)
- create mode 100644 arch/x86/include/asm/mktme.h
- create mode 100644 arch/x86/mm/mktme.c
+ arch/x86/kernel/cpu/intel.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-new file mode 100644
-index 000000000000..df31876ec48c
---- /dev/null
-+++ b/arch/x86/include/asm/mktme.h
-@@ -0,0 +1,16 @@
-+#ifndef	_ASM_X86_MKTME_H
-+#define	_ASM_X86_MKTME_H
-+
-+#include <linux/types.h>
-+
-+#ifdef CONFIG_X86_INTEL_MKTME
-+extern phys_addr_t mktme_keyid_mask;
-+extern int mktme_nr_keyids;
-+extern int mktme_keyid_shift;
-+#else
-+#define mktme_keyid_mask	((phys_addr_t)0)
-+#define mktme_nr_keyids		0
-+#define mktme_keyid_shift	0
-+#endif
-+
-+#endif
 diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 5dfecc9c2253..e271264e238a 100644
+index e271264e238a..4c9fadb57a13 100644
 --- a/arch/x86/kernel/cpu/intel.c
 +++ b/arch/x86/kernel/cpu/intel.c
-@@ -591,6 +591,9 @@ static void detect_tme(struct cpuinfo_x86 *c)
+@@ -161,6 +161,8 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
+ 	return false;
+ }
  
- #ifdef CONFIG_X86_INTEL_MKTME
- 	if (mktme_status == MKTME_ENABLED && nr_keyids) {
-+		mktme_nr_keyids = nr_keyids;
-+		mktme_keyid_shift = c->x86_phys_bits - keyid_bits;
++static void detect_tme(struct cpuinfo_x86 *c);
 +
- 		/*
- 		 * Mask out bits claimed from KeyID from physical address mask.
- 		 *
-@@ -598,17 +601,22 @@ static void detect_tme(struct cpuinfo_x86 *c)
- 		 * and number of bits claimed for KeyID is 6, bits 51:46 of
- 		 * physical address is unusable.
- 		 */
--		phys_addr_t keyid_mask;
+ static void early_init_intel(struct cpuinfo_x86 *c)
+ {
+ 	u64 misc_enable;
+@@ -311,6 +313,9 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+ 	 */
+ 	if (detect_extended_topology_early(c) < 0)
+ 		detect_ht_early(c);
++
++	if (cpu_has(c, X86_FEATURE_TME))
++		detect_tme(c);
+ }
+ 
+ #ifdef CONFIG_X86_32
+@@ -791,9 +796,6 @@ static void init_intel(struct cpuinfo_x86 *c)
+ 	if (cpu_has(c, X86_FEATURE_VMX))
+ 		detect_vmx_virtcap(c);
+ 
+-	if (cpu_has(c, X86_FEATURE_TME))
+-		detect_tme(c);
 -
--		keyid_mask = GENMASK_ULL(c->x86_phys_bits - 1, c->x86_phys_bits - keyid_bits);
--		physical_mask &= ~keyid_mask;
-+		mktme_keyid_mask = GENMASK_ULL(c->x86_phys_bits - 1, mktme_keyid_shift);
-+		physical_mask &= ~mktme_keyid_mask;
- 	} else {
- 		/*
- 		 * Reset __PHYSICAL_MASK.
- 		 * Maybe needed if there's inconsistent configuation
- 		 * between CPUs.
-+		 *
-+		 * FIXME: broken for hotplug.
-+		 * We must not allow onlining secondary CPUs with non-matching
-+		 * configuration.
- 		 */
- 		physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
-+		mktme_keyid_mask = 0;
-+		mktme_keyid_shift = 0;
-+		mktme_nr_keyids = 0;
- 	}
- #endif
+ 	init_intel_energy_perf(c);
  
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 4b101dd6e52f..4ebee899c363 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -53,3 +53,5 @@ obj-$(CONFIG_PAGE_TABLE_ISOLATION)		+= pti.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_identity.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_boot.o
-+
-+obj-$(CONFIG_X86_INTEL_MKTME)	+= mktme.o
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-new file mode 100644
-index 000000000000..91a415612519
---- /dev/null
-+++ b/arch/x86/mm/mktme.c
-@@ -0,0 +1,11 @@
-+#include <asm/mktme.h>
-+
-+/* Mask to extract KeyID from physical address. */
-+phys_addr_t mktme_keyid_mask;
-+/*
-+ * Number of KeyIDs available for MKTME.
-+ * Excludes KeyID-0 which used by TME. MKTME KeyIDs start from 1.
-+ */
-+int mktme_nr_keyids;
-+/* Shift of KeyID within physical address. */
-+int mktme_keyid_shift;
+ 	init_intel_misc_features(c);
 -- 
 2.20.1
 
