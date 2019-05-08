@@ -2,204 +2,83 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032E8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A747C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8895216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tx5sqWDX"
+	by mail.kernel.org (Postfix) with ESMTP id 6A388216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfEHTSN (ORCPT
+        id S1727324AbfEHTT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:18:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35893 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbfEHTSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:18:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c3so6050otr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=x37pcn3M6vPyg8cwbr5kr7DA8TIGTpCINTXyPVgD+Ik=;
-        b=Tx5sqWDXdN8o4nGLji4/tassr/7PVDxGlOko7CN/z8i4N9ZMaHczzcrn/j+3bWaIHg
-         iOhpr/qiQfk83FIrSpg8oOQ/3ZDOOWZK1iGRN1Ddaj0rjVUqqAdg+akK6Az9iUT/HWCE
-         +RbgLGBoM1KXmGzzFIdkSL/IP4jH5qxrIacDRusA9GI4pmte2X+oIf0E5qiPUr2cjsje
-         HB/zl/SGOwDMcNb4wUEnNJNezPu8EGRGEAmGb2cN0dQFAqmAPXLAujkKEFLsuw97W54q
-         q1Z4px77M6zMr0w7jrHy+UAPGRirtQr8A0ngAaBrMdPG2Wp4nQeveIDR0gQr0RiXfH01
-         tN9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=x37pcn3M6vPyg8cwbr5kr7DA8TIGTpCINTXyPVgD+Ik=;
-        b=HDhzVTm50w2NxD6SFQvfFaFZlPl9cI9Defb88BHb2Nyj1nmXm4bR4/jLxnbTGOIWGV
-         x8yf2V4yDu+f49XhBNjhDZPHLVQcqxPJCmP3L3C9gwLyIWg6y/G3K/fJyGFNUIKDJKFk
-         xAFVoActgomMc8Af2ks8+/Iid6JPWKuBdq1pLJv3H/9ApKBQ/nEG2EAeZpI+A6cpH21y
-         ppudT9fTSdOthmrKPOaPRJkzN6ol/shdR9iami9QKqbtK5eE478pPbOnFR5mtgCGwI23
-         3lELe2OSSA6DYpwosbrvF5/jtM0KvdFJlZH7kJWket5HBBIAIK4kJftKBhRVDUIfmtSy
-         45Sg==
-X-Gm-Message-State: APjAAAXiChDTH4YyYEN1ZtI1IEZdy07HW/aSf71Il23XG3aPukCU3OxF
-        /x7A8UozrnIdS89PiH510rSnKoyl4OoWeGkeuIwH4Q==
-X-Google-Smtp-Source: APXvYqyfzxRBSCRa6LOxqn0s3VTe/9YM4zBiRl29i9QcDTSnE2MBNKYlv+HY3jgBfbTk6mq4eJX0kIjTTskxL5HlLJ0=
-X-Received: by 2002:a05:6830:14cd:: with SMTP id t13mr11912335otq.25.1557343091371;
- Wed, 08 May 2019 12:18:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com> <20190507080119.GB28121@kroah.com>
- <20190507172256.GB5900@mit.edu>
-In-Reply-To: <20190507172256.GB5900@mit.edu>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 8 May 2019 12:17:59 -0700
-Message-ID: <CAFd5g47vQQeSHLX_cvWSVzva9YgsXz9DNqPv8Z=nw=-kAcmr3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 May 2019 15:19:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:27842 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfEHTT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 15:19:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 12:19:58 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 08 May 2019 12:19:57 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Raj Ashok <ashok.raj@intel.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH] iommu/vt-d: Fix bind svm with multiple devices
+Date:   Wed,  8 May 2019 12:22:46 -0700
+Message-Id: <1557343366-18686-1-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Tue, May 07, 2019 at 10:01:19AM +0200, Greg KH wrote:
-> > > My understanding is that the intent of KUnit is to avoid booting a kernel on
-> > > real hardware or in a virtual machine.  That seems to be a matter of semantics
-> > > to me because isn't invoking a UML Linux just running the Linux kernel in
-> > > a different form of virtualization?
-> > >
-> > > So I do not understand why KUnit is an improvement over kselftest.
-> > >
-> > > It seems to me that KUnit is just another piece of infrastructure that I
-> > > am going to have to be familiar with as a kernel developer.  More overhead,
-> > > more information to stuff into my tiny little brain.
-> > >
-> > > I would guess that some developers will focus on just one of the two test
-> > > environments (and some will focus on both), splitting the development
-> > > resources instead of pooling them on a common infrastructure.
-> > >
-> > > What am I missing?
-> >
-> > kselftest provides no in-kernel framework for testing kernel code
-> > specifically.  That should be what kunit provides, an "easy" way to
-> > write in-kernel tests for things.
-> >
-> > Brendan, did I get it right?
->
-> Yes, that's basically right.  You don't *have* to use KUnit.  It's
-> supposed to be a simple way to run a large number of small tests that
-> for specific small components in a system.
->
-> For example, I currently use xfstests using KVM and GCE to test all of
-> ext4.  These tests require using multiple 5 GB and 20GB virtual disks,
-> and it works by mounting ext4 file systems and exercising ext4 through
-> the system call interfaces, using userspace tools such as fsstress,
-> fsx, fio, etc.  It requires time overhead to start the VM, create and
-> allocate virtual disks, etc.  For example, to run a single 3 seconds
-> xfstest (generic/001), it requires full 10 seconds to run it via
-> kvm-xfstests.
->
-> KUnit is something else; it's specifically intended to allow you to
-> create lightweight tests quickly and easily, and by reducing the
-> effort needed to write and run unit tests, hopefully we'll have a lot
-> more of them and thus improve kernel quality.
->
-> As an example, I have a volunteer working on developing KUinit tests
-> for ext4.  We're going to start by testing the ext4 extent status
-> tree.  The source code is at fs/ext4/extent_status.c; it's
-> approximately 1800 LOC.  The Kunit tests for the extent status tree
-> will exercise all of the corner cases for the various extent status
-> tree functions --- e.g., ext4_es_insert_delayed_block(),
-> ext4_es_remove_extent(), ext4_es_cache_extent(), etc.  And it will do
-> this in isolation without our needing to create a test file system or
-> using a test block device.
->
-> Next we'll test the ext4 block allocator, again in isolation.  To test
-> the block allocator we will have to write "mock functions" which
-> simulate reading allocation bitmaps from disk.  Again, this will allow
-> the test writer to explicitly construct corner cases and validate that
-> the block allocator works as expected without having to reverese
-> engineer file system data structures which will force a particular
-> code path to be executed.
->
-> So this is why it's largely irrelevant to me that KUinit uses UML.  In
-> fact, it's a feature.  We're not testing device drivers, or the
-> scheduler, or anything else architecture-specific.  UML is not about
-> virtualization.  What it's about in this context is allowing us to
-> start running test code as quickly as possible.  Booting KVM takes
-> about 3-4 seconds, and this includes initializing virtio_scsi and
-> other device drivers.  If by using UML we can hold the amount of
-> unnecessary kernel subsystem initialization down to the absolute
-> minimum, and if it means that we can communicating to the test
-> framework via a userspace "printf" from UML/KUnit code, as opposed to
-> via a virtual serial port to KVM's virtual console, it all makes for
-> lighter weight testing.
->
-> Why did I go looking for a volunteer to write KUnit tests for ext4?
-> Well, I have a plan to make some changes in restructing how ext4's
-> write path works, in order to support things like copy-on-write, a
-> more efficient delayed allocation system, etc.  This will require
-> making changes to the extent status tree, and by having unit tests for
-> the extent status tree, we'll be able to detect any bugs that we might
-> accidentally introduce in the es tree far more quickly than if we
-> didn't have those tests available.  Google has long found that having
-> these sorts of unit tests is a real win for developer velocity for any
-> non-trivial code module (or C++ class), even when you take into
-> account the time it takes to create the unit tests.
->
->                                         - Ted
->
-> P.S.  Many thanks to Brendan for finding such a volunteer for me; the
-> person in question is a SRE from Switzerland who is interested in
-> getting involved with kernel testing, and this is going to be their
-> 20% project.  :-)
+If multiple devices try to bind to the same mm/PASID, we need to
+set up first level PASID entries for all the devices. The current
+code does not consider this case which results in failed DMA for
+devices after the first bind.
 
-Thanks Ted, I really appreciate it!
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reported-by: Mike Campin <mike.campin@intel.com>
+---
+ drivers/iommu/intel-svm.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Since Ted provided such an awesome detailed response, I don't think I
-really need to go into any detail; nevertheless, I think that Greg and
-Shuah have the right idea; in particular, Shuah provides a good
-summary.
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 3a4b09a..f3d59d1 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -357,6 +357,21 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+ 		}
+ 
+ 		list_add_tail(&svm->list, &global_svm_list);
++	} else {
++		/*
++		 * Binding a new device with existing PASID, need to setup
++		 * the PASID entry.
++		 */
++		spin_lock(&iommu->lock);
++		ret = intel_pasid_setup_first_level(iommu, dev,
++						mm ? mm->pgd : init_mm.pgd,
++						svm->pasid, FLPT_DEFAULT_DID,
++						mm ? 0 : PASID_FLAG_SUPERVISOR_MODE);
++		spin_unlock(&iommu->lock);
++		if (ret) {
++			kfree(sdev);
++			goto out;
++		}
+ 	}
+ 	list_add_rcu(&sdev->list, &svm->devs);
+ 
+-- 
+2.7.4
 
-Thanks everyone!
