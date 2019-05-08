@@ -2,178 +2,118 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D56C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57CCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E7921019
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD5221019
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="nTPUhnxI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWvJMfVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfEHHKC (ORCPT
+        id S1726857AbfEHHKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:10:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35078 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfEHHKB (ORCPT
+        Wed, 8 May 2019 03:10:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50839 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfEHHKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:10:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t87so9440409pfa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 00:10:01 -0700 (PDT)
+        Wed, 8 May 2019 03:10:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p21so1802297wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 00:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=T+Y5n/1kItNj/Wraq5boFXyk+YaoMnIUa2Kq93ASx4s=;
-        b=nTPUhnxIkq/ys1Q49IT3TTaqpxV6Cy7X1FsCVQlkwaeTTKRhvWAC9V0+F5CtlUWZrV
-         wkt08Nw8tYk8tyqU+Ool3Phi3VT9gZHbwFrLMwp9bjJ1xGq7h9oVOCn3u+uZvEFYjKSO
-         KE8IsIetL2rxKjq+7BoprqKAgh+L7jWzUUIqL/zPLXUbr/f+Oi6ytBX/okSMtc7fQDSQ
-         e9I9DT/mvIIZTcXpIjJ0zoSNxo5K+xL6/vFa2DbQoWGcxAb9ABY2iM9FmHCjPlQkF3/E
-         4TIa6NZgbm9Hrs7TlVchQ2MvP4UXrgYJf85a3F+tDuljGBSQKLugnki36H77jQjwVEdC
-         17Pw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=b7lc8MdkCqyR2PsiTxcZvlpTg1WA4A/43JRqN8UJdR8=;
+        b=ZWvJMfVQgx0dnDMtn7xAHVlSAYjSe+t9RBXxC+OECxkFhg2aiQ0ZtQcT3xyNrOw142
+         btC4TPoMtNFVyeoPwvOrla2kHmSVHzXSV7e3C0+0ExNTwjsa+qHSKxe2ZT3aZIGkB/ev
+         6Dte5xpI+cJnxXajqlXrwfCJpCsk07nHGC1HzR7easCoKgHFBe65gBo0p+rD27Bzl1R+
+         NWSh0zyTFF358mbyyKmSogIu1uO82kbKkI1/NUmQNlH3ZqWQ3NOe1tLWgzWHpS5h29Wc
+         KNTfBVoCxZfhEKiIIU7IwZcgGdXgYx7z9q/b/T3D7ES9Lh+H1IT871agPnxNaNSshh7f
+         XFxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=T+Y5n/1kItNj/Wraq5boFXyk+YaoMnIUa2Kq93ASx4s=;
-        b=m53pgv/ihSTJEHWaZ/PZrNOeEX9Ulw9NX1kskEDtSoZHMoBQNU+y9lXE8eV2CEkQt+
-         /tLmPAuNxE4wOqKza3jztTM2t2uRcdYNepzWUDGxGFbsn4DrybezWuQmCfLagtJ580Hj
-         plwj9i5C40mQVEKwtEI0LOpjWjXyynUQcJziCJShhi+TaSpDokLit4VIgpKwi7nmvVbz
-         9wn+xQ/0VuVCcGFPJTEBARQzpdent+Ny/UJpRpmkWXlaKdGKd2aGHcMbFZs47630+giK
-         2YKUag24CMidCh68iAnMQNWWAlbQhEEA9hakILnqISzEuEkfh/JrD5dYfmTCtibyk6vU
-         Zi7g==
-X-Gm-Message-State: APjAAAUsxW0zN52sHawggczRd2XyfNHnq8ZgwKs6qxOR7jnWfGMi4iLM
-        HHBRIAeEHgbguta7HlKJWsyOHOhGlmw=
-X-Google-Smtp-Source: APXvYqxk2m3K74J6O/mVHUf27bwYFe69Rho+Z44IcRmVS8rlYpfrnTYd8NvSok89A0IYfAwdG2vUAg==
-X-Received: by 2002:a65:628b:: with SMTP id f11mr43263248pgv.95.1557299400795;
-        Wed, 08 May 2019 00:10:00 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id w12sm9228247pfj.41.2019.05.08.00.09.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 00:09:59 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <9EA5FF19-6602-46AC-AD1A-A2E5B7209040@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_1BA7894E-B92C-4A98-910C-D0E24D6557DD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] ext4: fix use-after-free in dx_release()
-Date:   Wed, 8 May 2019 01:09:47 -0600
-In-Reply-To: <1557295997-13377-1-git-send-email-stummala@codeaurora.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Sahitya Tummala <stummala@codeaurora.org>
-References: <1557295997-13377-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=b7lc8MdkCqyR2PsiTxcZvlpTg1WA4A/43JRqN8UJdR8=;
+        b=KPEN+/YVVhTTPJI8N80Mv2TaKH6hkFvf4QSsaYicOnGoBezz3mT7kprvLL0eVSxauU
+         dWLTKq4iKQm0AubZEIohdKiJHK5K0rzHYc8AB8n8RLkjaLePegV4R/kgb6D8UWgkspKM
+         2ih6ZqTIYAoKJBUC2OEkclplXwrhzQX/jqitxTgewwyk5h/sYESVUNxRIXySu3F/TP/w
+         CPk3Oog8QsbzuZt77P7BAWokVZzuFQLnn0pFEXh1Sv5VPUUOVpS5PpSM478lljY546ZO
+         W2SL9ZblLYSmB7areP3k1nBtr7BppEnamZGecua0aesjNNsQQfwx6WZgkXuMwpaBw4zX
+         AcFA==
+X-Gm-Message-State: APjAAAUO0CBmxjhOCGlANO2xZTASYUlDd++SsBQlcRDWb3FV3VRVt1a6
+        61GRaezj046OF/E2AcNttbQ/UQ==
+X-Google-Smtp-Source: APXvYqyduTqdi1PRP26+SPgAie/nOrz5wXCP7i1wRKKHY0x+Nwk6PkkXda46rX0NIxUGcDBBBAPKUA==
+X-Received: by 2002:a1c:2104:: with SMTP id h4mr1725641wmh.146.1557299413205;
+        Wed, 08 May 2019 00:10:13 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id o4sm1330264wmo.20.2019.05.08.00.10.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 00:10:12 -0700 (PDT)
+Date:   Wed, 8 May 2019 08:10:10 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v3 2/2] platform/chrome: Add support for v1 of host sleep
+ event
+Message-ID: <20190508071010.GH7627@dell>
+References: <20190403213428.89920-1-evgreen@chromium.org>
+ <20190403213428.89920-3-evgreen@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190403213428.89920-3-evgreen@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 03 Apr 2019, Evan Green wrote:
 
---Apple-Mail=_1BA7894E-B92C-4A98-910C-D0E24D6557DD
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-On May 8, 2019, at 12:13 AM, Sahitya Tummala <stummala@codeaurora.org> =
-wrote:
->=20
-> The buffer_head (frames[0].bh) and it's corresping page can be
-> potentially free'd once brelse() is done inside the for loop
-> but before the for loop exits in dx_release(). It can be free'd
-> in another context, when the page cache is flushed via
-> drop_caches_sysctl_handler(). This results into below data abort
-> when accessing info->indirect_levels in dx_release().
->=20
-> Unable to handle kernel paging request at virtual address =
-ffffffc17ac3e01e
-> Call trace:
-> dx_release+0x70/0x90
-> ext4_htree_fill_tree+0x2d4/0x300
-> ext4_readdir+0x244/0x6f8
-> iterate_dir+0xbc/0x160
-> SyS_getdents64+0x94/0x174
->=20
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-
-The patch looks reasonable, but there is a danger that it may be
-"optimized" back to the pre-patch form again.  It probably makes
-sense to include a comment like:
-
-	/* save local copy, "info" may be freed after brelse() */
-
-Looks fine otherwise.
-
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-
+> Add support in code for the new forms of the host sleep event.
+> Detects the presence of this version of the command at runtime,
+> and use whichever form the EC supports. At this time, always
+> request the default timeout, and only report the failing response
+> via a WARN_ONCE(). Future versions could accept the sleep parameter
+> from outside the driver, and return the response information to
+> usermode or elsewhere.
+> 
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> 
 > ---
-> fs/ext4/namei.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-> index 4181c9c..7e6c298 100644
-> --- a/fs/ext4/namei.c
-> +++ b/fs/ext4/namei.c
-> @@ -871,12 +871,14 @@ static void dx_release(struct dx_frame *frames)
-> {
-> 	struct dx_root_info *info;
-> 	int i;
-> +	unsigned int indirect_levels;
->=20
-> 	if (frames[0].bh =3D=3D NULL)
-> 		return;
->=20
-> 	info =3D &((struct dx_root *)frames[0].bh->b_data)->info;
-> -	for (i =3D 0; i <=3D info->indirect_levels; i++) {
-> +	indirect_levels =3D info->indirect_levels;
-> +	for (i =3D 0; i <=3D indirect_levels; i++) {
-> 		if (frames[i].bh =3D=3D NULL)
-> 			break;
-> 		brelse(frames[i].bh);
-> --
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation =
-Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a =
-Linux Foundation Collaborative Project.
->=20
+> 
+> Changes in v3:
+> - Consolidated boolean logic for host_sleep_v1 (Guenter)
+> 
+> Changes in v2:
+> - Removed unnecessary version assignment (Guenter)
+> - Changed WARN to WARN_ONCE (Guenter)
+> - Fixed C code to use anonymous unions
+> - insize is only bigger for resume events.
+> 
+>  drivers/mfd/cros_ec.c                   | 39 +++++++++++++++++++++----
+>  drivers/platform/chrome/cros_ec_proto.c |  6 ++++
+>  include/linux/mfd/cros_ec.h             |  2 ++
+>  3 files changed, 42 insertions(+), 5 deletions(-)
 
+Applied, thanks.
 
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_1BA7894E-B92C-4A98-910C-D0E24D6557DD
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlzSgLwACgkQcqXauRfM
-H+BqDw/+OW1zyHI2woUUl4G4qodJ05Tws6F67FakYSQrsTt0Nq23FxQh/jH1N6Ge
-3SP71KoSaVQrc+9sG9NJXhKY+ev1suTmGKdB214pyuVwyX8KlwDwzdR8LVbQH5PP
-CKDiK9RfbwoF1lcjltH+h+BpW6Qb/dwafAzBHkPJI+S8n+1PjYNjMeRonGh/OO8s
-5hXgumoc0+HIE4Rl9+A430HqYdZodZTPpzZBWBh+tXuiyxlOc8wRyxrs/2egp3vq
-18NFZ/Zj9SDwbUfYfZVP/81/p5KDIbrBg6BqDXmuS6Yx40nOfQtX0BnHWBEFiGQN
-eH+naiEt/cu1z0ASNJmQlX3D1TTOFCR1M8p+IYwh2uS3EBmDAjKG7ayAokmh/wjH
-HmjG5vr5QmeUXwB/GFmdqlBNoht6vb/i7DnsgCEYKXKOvkYy7a+gS5VubhWqBHsy
-omxlmH74xGZHGOe1WR/+ut16jCLWbY+NJSgTBidBWasOLbosWgMYe7PgGPHAxP03
-rEgBvusfEvuD3R7FbUAKAQZn76QHroNFb0kN6yD/OAQ0rXFqcOX586UmVbh1/8oZ
-svzQpqfJqBEsngbPxjnqD6TaDEYRbY5RgiPAWhkCzvpj+F9rUgdmsMtN+6keFptt
-lCcRmrTi8WaKZfz+8ih2vQB2ZBr0LoQhHiVgglIAac4sRmv+qo0=
-=EYlx
------END PGP SIGNATURE-----
-
---Apple-Mail=_1BA7894E-B92C-4A98-910C-D0E24D6557DD--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
