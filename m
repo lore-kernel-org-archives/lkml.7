@@ -2,106 +2,78 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83100C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F920C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D3D216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A517216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfEHOve (ORCPT
+        id S1726906AbfEHOvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:51:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbfEHOom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
-X-ExtLoop1: 1
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 243E9709; Wed,  8 May 2019 17:44:29 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 10/62] x86/mm: Detect MKTME early
-Date:   Wed,  8 May 2019 17:43:30 +0300
-Message-Id: <20190508144422.13171-11-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 8 May 2019 10:51:48 -0400
+Received: from smtprelay0140.hostedemail.com ([216.40.44.140]:53653 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727049AbfEHOvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:51:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 7138C180A813C;
+        Wed,  8 May 2019 14:51:43 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ray83_ee8e93ad3e2b
+X-Filterd-Recvd-Size: 2043
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  8 May 2019 14:51:42 +0000 (UTC)
+Message-ID: <4517dfca6c4692b28c4914410f475d3f521cd230.camel@perches.com>
+Subject: Re: [PATCH 1/4] checkpatch: fix multiple const * types
+From:   Joe Perches <joe@perches.com>
+To:     Antonio Borneo <borneo.antonio@gmail.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 08 May 2019 07:51:40 -0700
+In-Reply-To: <20190508122721.7513-1-borneo.antonio@gmail.com>
+References: <20190508122721.7513-1-borneo.antonio@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to know the number of KeyIDs before page_ext is initialized.
-We are going to use page_ext to store KeyID and it would be handly to
-avoid page_ext allocation if there's no MKMTE in the system.
+On Wed, 2019-05-08 at 14:27 +0200, Antonio Borneo wrote:
+> Commit 1574a29f8e76 ("checkpatch: allow multiple const * types")
+> claims to support repetition of pattern "const *", but it actually
+> allows only one extra instance.
+> Check the following lines
+> 	int a(char const * const x[]);
+> 	int b(char const * const *x);
+> 	int c(char const * const * const x[]);
+> 	int d(char const * const * const *x);
+> with command
+> 	./scripts/checkpatch.pl --show-types -f filename
+> to find that only the first line passes the test, while a warning
+> is triggered by the other 3 lines:
+> 	WARNING:FUNCTION_ARGUMENTS: function definition argument
+> 	'char const * const' should also have an identifier name
+> The reason is that the pattern match halts at the second asterisk
+> in the line, thus the remaining text starting with asterisk fails
+> to match a valid name for a variable.
+> 
+> Fixed by replacing "?" (Match 1 or 0 times) with "*" (Match 0 or
+> more times) in the regular expression.
+> Fix also the similar test for types in unusual order.
 
-page_ext initialization happens before full CPU initizliation is complete.
-Move detect_tme() call to early_init_intel().
+It might be better to use a max match like {0,4} instead of *
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/cpu/intel.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+perl is pretty memory intensive at multiple unrestricted matches
+of somewhat complex patterns.
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index e271264e238a..4c9fadb57a13 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -161,6 +161,8 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
- 	return false;
- }
- 
-+static void detect_tme(struct cpuinfo_x86 *c);
-+
- static void early_init_intel(struct cpuinfo_x86 *c)
- {
- 	u64 misc_enable;
-@@ -311,6 +313,9 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 	 */
- 	if (detect_extended_topology_early(c) < 0)
- 		detect_ht_early(c);
-+
-+	if (cpu_has(c, X86_FEATURE_TME))
-+		detect_tme(c);
- }
- 
- #ifdef CONFIG_X86_32
-@@ -791,9 +796,6 @@ static void init_intel(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_VMX))
- 		detect_vmx_virtcap(c);
- 
--	if (cpu_has(c, X86_FEATURE_TME))
--		detect_tme(c);
--
- 	init_intel_energy_perf(c);
- 
- 	init_intel_misc_features(c);
--- 
-2.20.1
 
