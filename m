@@ -2,110 +2,111 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=BAD_CREDIT,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E4DC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32478C004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED1D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A2E205ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 00:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SpAMFlCH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z6LvqpeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfEHAWi (ORCPT
+        id S1726444AbfEHAZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 20:22:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45126 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEHAWh (ORCPT
+        Tue, 7 May 2019 20:25:42 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:25883 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEHAZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 20:22:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UWO/9ptkBLOrl8A8NUi53jiFeyN64qGSfvbgrndrtbo=; b=SpAMFlCH6K4M7bsqb08ihwS/N
-        Yl0CXJty8JhbqTLyJFC9QapOrD/iWLCbbDba9U4FC/w6YOd6CzCe9RTbkizzqHIGHPhjd4R8fLFxR
-        X6jD9PlM1BD79uYPMpSJ+rtZdeOnbAysA0QbnAeRyc5eXb3zZ+OB4zftlOy8iXDkTaRG1n5YvATrH
-        PEb9AYNBgVmNKWPUQKQMb+bZaiOj7rdytquLA4GAAGkjJLWXp9CHbgf8SVtAGCWj6bkuCd9BBspfP
-        IVaiad05KG4CALD5zwknX1xG1ypOY9NAflJTvDyebYOVFVjG5A7Xsu0nFVv08H4mXo3pDULVy2e1c
-        cw0XaVbPA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOAM0-0003wn-MB; Wed, 08 May 2019 00:22:36 +0000
-Subject: Re: [PATCH] watchdog: fix watchdog_pretimeout.c build error when no
- default gov. is set
-To:     Guenter Roeck <linux@roeck-us.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-References: <ec5a2b04-2649-e527-bcfd-4e708808e681@infradead.org>
- <aace995d-a076-2fc5-8456-1e2638e4faa6@roeck-us.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9fa3055a-a666-021c-6e3e-2d3b6ba4e542@infradead.org>
-Date:   Tue, 7 May 2019 17:22:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <aace995d-a076-2fc5-8456-1e2638e4faa6@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 7 May 2019 20:25:42 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190508002539epoutp04a0e0444b38295908abb1e71b8104acf5~cjX0tWckH0526805268epoutp044
+        for <linux-kernel@vger.kernel.org>; Wed,  8 May 2019 00:25:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190508002539epoutp04a0e0444b38295908abb1e71b8104acf5~cjX0tWckH0526805268epoutp044
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557275139;
+        bh=KOFXNp3YdVudGio3ms3L3EHkZOK4kF38DEZPb5dGSho=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=Z6LvqpeJZmgKLQxCECNLAWEaH0OJnQ5MueVJ4pMCPKCKH+Z//9UkYYxJi5QSUcWB0
+         FM6kmy6GWviz/6c1wAer/yBzdmVesdFdgntt4M33VCMYXjAvDicMDrRDDT569e8VSv
+         gwbIzbWW30GxefxVlsCTAKJGJplqRV1z/2s6GVg0=
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.189]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20190508002536epcas2p10feb8a852a695e6c6d95c267c9fc95e3~cjXxF55i61873218732epcas2p1F;
+        Wed,  8 May 2019 00:25:36 +0000 (GMT)
+X-AuditID: b6c32a46-d63ff7000000106f-c7-5cd221fea1bf
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5A.D4.04207.EF122DC5; Wed,  8 May 2019 09:25:34 +0900 (KST)
+Mime-Version: 1.0
+Subject: Re: [PATCH v2 6/7] nvme-pci: add device coredump support
+Reply-To: minwoo.im@samsung.com
+From:   Minwoo Im <minwoo.im@samsung.com>
+To:     Keith Busch <kbusch@kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Minwoo Im <minwoo.im@samsung.com>
+CC:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christoph Hellwig <hch@lst.de>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20190507170733.GA6783@localhost.localdomain>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190508002534epcms2p3acacda8460fcfb7f2b978411b74bbbd5@epcms2p3>
+Date:   Wed, 08 May 2019 09:25:34 +0900
+X-CMS-MailID: 20190508002534epcms2p3acacda8460fcfb7f2b978411b74bbbd5
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFJsWRmVeSWpSXmKPExsWy7bCmue4/xUsxBq87TS1eHehgtPi/5xib
+        xcrVR5ksPm74xGIx6dA1Rot7R78wWVzeNYfNYv6yp+wWvzq5LZ6dPsBsse71exYHbo+Jze/Y
+        PXbOusvucf7eRhaPxXteMnlsWtXJ5rF5Sb3H7psNbB59W1YxevT3bmPx+LxJLoArKscmIzUx
+        JbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+hiJYWyxJxSoFBA
+        YnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BoWGBXnFibnFpXrpecn6ulaGBgZEpUGVCTsbzXduY
+        C16wVLzf6dHA+I65i5GTQ0LARGLd5W5GEFtIYAejxNY/2l2MHBy8AoISf3cIg4SFBRwlDq45
+        zAgSFhKQl/jxygAirCnxbvcZVhCbTUBdomHqKxYQW0QgX6J7yVamLkYuDmaBe0wSzx91M0Gs
+        4pWY0f6UBcKWlti+fCvYTE4BK4mF/0IhwqISN1e/ZYex3x+bzwhhi0i03jsLdbGgxIOfu8Fa
+        JQQkJO69s4Mw6yW2rLAA2Soh0MIocePNWqhWfYnG5x/BtvIK+EpsXDwNzGYRUJWY8mMOVI2L
+        xPkb09hAbGagD7e/ncMMMpMZ6MX1u/QhxitLHLnFAlHBJ9Fx+C87zE875j2B+k9Z4uOhQ1BH
+        Skosv/SaDaLVQ2Lbf1+Qy4QEfjJK3Fv5hXECo8IsRCjPQrJ3FsLeBYzMqxjFUguKc9NTi40K
+        jJCjdRMjON1que1gXHLO5xCjAAejEg/vhLyLMUKsiWXFlbmHGCU4mJVEeI32AYV4UxIrq1KL
+        8uOLSnNSiw8xmgK9P5FZSjQ5H5gL8kriDU2NzMwMLE0tTM2MLJTEeR9Kz40WEkhPLEnNTk0t
+        SC2C6WPi4JRqYDxxQa2m3C3pzNmQ+C4jvrbv8U0CKWt3lFyouOc58+XSUrGEf+zF3ydZV2ys
+        ETO6evATR4Mih5+OAHOwc/fHNvWQh+XXH+ZbO8csvsl59byuYtYG/ZhkN8Z9S8rMowqmvZzH
+        4PnuQ9ic59IBRzoDPCey6fJYr8r+zNBo3Fdwk/dLlXBa8RcFJZbijERDLeai4kQAdmyF8c0D
+        AAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190507171318epcas5p129bb73b39447d62a7d266ed461687488
+References: <20190507170733.GA6783@localhost.localdomain>
+        <1557248314-4238-1-git-send-email-akinobu.mita@gmail.com>
+        <1557248314-4238-7-git-send-email-akinobu.mita@gmail.com>
+        <CGME20190507171318epcas5p129bb73b39447d62a7d266ed461687488@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 5:07 PM, Guenter Roeck wrote:
-> On 5/7/19 4:33 PM, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix build error when
->> CONFIG_WATCHDOG_PRETIMEOUT_GOV=y
->> # CONFIG_WATCHDOG_PRETIMEOUT_GOV_NOOP is not set
->> # CONFIG_WATCHDOG_PRETIMEOUT_GOV_PANIC is not set
->>
->> Fixes this build error:
->>
->> ../drivers/watchdog/watchdog_pretimeout.c: In function ‘watchdog_register_governor’:
->> ../drivers/watchdog/watchdog_pretimeout.c:139:26: error: ‘WATCHDOG_PRETIMEOUT_DEFAULT_GOV’ undeclared (first use in this function)
->>    if (!strncmp(gov->name, WATCHDOG_PRETIMEOUT_DEFAULT_GOV,
->>
-> 
-> Ah, I knew I missed something. The following would be a better fix,
-> though, since it enforces that at least one pretimeout governor is enabled
-> (matching the old code):
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index e19960ace0c0..4a3461afa96f 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -71,6 +71,12 @@ config WATCHDOG_PRETIMEOUT_GOV
->         help
->           The option allows to select watchdog pretimeout governors.
-> 
-> +config WATCHDOG_PRETIMEOUT_GOV_SEL
-> +       tristate
-> +       depends on WATCHDOG_PRETIMEOUT_GOV
-> +       default m
-> +       select WATCHDOG_PRETIMEOUT_GOV_PANIC if WATCHDOG_PRETIMEOUT_GOV_NOOP=n
-> +
->  if WATCHDOG_PRETIMEOUT_GOV
-> 
-> Can you send v2 with the above, or do you want me to send it and give you credit ?
-> 
-> Thanks,
-> Guenter
+> This is a bit of a mine field. The shutdown_lock is held when reclaiming
+> requests that didn't see a response. If you're holding it here and your
+> telemetry log page times out, we're going to deadlock. And since the
+> controller is probably in a buggered state when you try to retrieve one,
+> I would guess an unrecoverable timeout is the most likely outcome.
 
-Hi Guenter,
-That's your patch.  You can send it.  :)
-No credit needed.
+Akinobu,
 
-cheers.
--- 
-~Randy
+I actually agree with Keith's one.  In my experience, there was always internal
+error inside device when timeout occurs in nvme driver which means the
+following command might not be completed due to lack of response from
+device.
