@@ -2,93 +2,141 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF77C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100D7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636FC21530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC31921530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H5CNzTK7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6E0Q9JV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfEHWz0 (ORCPT
+        id S1728434AbfEHW7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 18:55:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48144 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfEHWz0 (ORCPT
+        Wed, 8 May 2019 18:59:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40898 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfEHW7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 18:55:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dWb8vbMa4ek1cAyusdcm5JJRXWIzq6Cyw6f/vUk2LoM=; b=H5CNzTK7RpLb8QoDHoo4wUNrB
-        7bIBj7AyXt4Y1HGtrUI0/iPIWW1+7x++Rd9MEfpgkLGiFTBqIrzsPsnR18forCFIyFBPyCCe15KzE
-        3yy5KY4L3JbDcIcXGjLyJyApmz0+iEXA/je5++/U+KOnA+yDIFiD8IehBzOl1AJQL9ybYkwTgGHPc
-        QKiQE8R1ucBUA8/k1x0SH/6lPVbCh8OiL4T0GG/9t9g9sXDmsL1oG/fy+3rYQzfdRMM8Rutp80Ew6
-        lb2E9cHp00jiE2v54J2106i7Vwl7nS1qJae/YaQCnGgJBE0hvxNKWY6lxXK0IvMQjl54/ZQz/H5+k
-        pR0DNpvVA==;
-Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOVT9-0006Xo-O0; Wed, 08 May 2019 22:55:23 +0000
-Date:   Wed, 8 May 2019 15:55:22 -0700
-From:   Darren Hart <dvhart@infradead.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Semyon Verchenko <semverchenko@factor-ts.ru>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
- critclk_systems DMI table
-Message-ID: <20190508225522.GA32286@wrath>
-References: <20190429150135.15070-1-hdegoede@redhat.com>
- <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
- <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
- <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
- <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
- <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
- <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com>
- <CAHp75VdnxRQi3X6J9hLGUjGsOYTkjoPN5MakJc=mUSumoC+wag@mail.gmail.com>
- <e9c92d24-9044-c37d-3f18-4884d97047d5@redhat.com>
+        Wed, 8 May 2019 18:59:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so210289pfn.7;
+        Wed, 08 May 2019 15:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3skeGRJ5pRr7+D0+GcBeYq1z7ba6TiYFkEy56aNuN4w=;
+        b=f6E0Q9JV/oK81qEUGBzLotW8ivaqqSHQj7zCw/2vC4n6WMxqICOe4J18CGHEnErqml
+         8wbXgFKBwRG1uwSDnr5Nkn/yCLqp0wlAiItz+AYTS7CWrdy3bMeTFC0yXK4CkYMks5yS
+         qQqA5u3k0/MIGmqy5d0sr/1l+9LuLYarLCbc3pZhwmpX2Emen/uTBbGAbtd0Sj5FXEaX
+         A3Tf/jGtFYql7ptoRop4ZSC4OQxhjEzN5jZ1VD4upkNn8MJoDEc31FtjJ3ZJmAWtNTas
+         B0DgM3KudTDi1acsEkSoFtPV66r3dP+Ak6uPJLO8/hT9sfmFREvZkxJ6qmkjWjC7axjn
+         2s/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3skeGRJ5pRr7+D0+GcBeYq1z7ba6TiYFkEy56aNuN4w=;
+        b=n1usrSXd36sRvrrDOMuXyl5P/DkJq7uK/sYBru4E3db4m+lJwqPdqMHannh3dTR7PT
+         Qy6SKIEMzEMveQNr6j4C3//6EFzamgaO+wmd3/+5x/+GO+RYL0GyRbSb6/ncpL8r97db
+         Wfntpr/K8CJp3M5ohwR20NKUxJCx88jA5KouK//7NgCE0KjHUa+gj1KV4BiNZhS3C+G6
+         3V/T+qhMcnN4SCAYexa/g4ND422BneztFzX0WgMy+2ufs83bfoZYYC1nLXRYxb2yssE7
+         8PiyFNJdQKGSevF67bSHXNPyPJwX5UnE8Z37Uhu8DFiN+1V1pfCU8P8CBWTOtSuOw02P
+         PvRw==
+X-Gm-Message-State: APjAAAXD97/6rs2Gqe3SFipR0jqEKO9cMpFsePL808kEN/xtq6hsBjZc
+        ASL6MoIup4HqEayfrBo7eXI=
+X-Google-Smtp-Source: APXvYqyrohy1M3ppdW6lU7eKE2owmntyLl4B+K6DHGaWoh7InMPIPpSi5AI1dedYXt/CdhdeAcHu/g==
+X-Received: by 2002:a63:6f8e:: with SMTP id k136mr969393pgc.104.1557356342554;
+        Wed, 08 May 2019 15:59:02 -0700 (PDT)
+Received: from localhost ([2601:640:0:ebed:19d3:11c4:475e:3daa])
+        by smtp.gmail.com with ESMTPSA id i65sm327948pgc.3.2019.05.08.15.59.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 15:59:01 -0700 (PDT)
+Date:   Wed, 8 May 2019 15:59:00 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Yury Norov <ynorov@caviumnetworks.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        Alexander Graf <agraf@suse.de>,
+        Alexey Klimov <klimov.linux@gmail.com>,
+        Andreas Schwab <schwab@suse.de>,
+        Andrew Pinski <pinskia@gmail.com>,
+        Bamvor Zhangjian <bamv2005@gmail.com>,
+        Chris Metcalf <cmetcalf@mellanox.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Weimer <fweimer@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        James Hogan <james.hogan@imgtec.com>,
+        James Morse <james.morse@arm.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Lin Yongting <linyongting@huawei.com>,
+        Manuel Montezelo <manuel.montezelo@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Nathan_Lynch <Nathan_Lynch@mentor.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
+        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
+        Steve Ellcey <sellcey@caviumnetworks.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Subject: Re: [PATCH v9 00/24] ILP32 for ARM64
+Message-ID: <20190508225900.GA14091@yury-thinkpad>
+References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e9c92d24-9044-c37d-3f18-4884d97047d5@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20180516081910.10067-1-ynorov@caviumnetworks.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 11:20:52AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 08-05-19 10:42, Andy Shevchenko wrote:
-> > On Wed, May 8, 2019 at 10:48 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> > > On 07-05-19 22:17, Stephen Boyd wrote:
-> > > > Quoting Hans de Goede (2019-05-06 08:05:42)
-> > 
-> > > > I guess this is urgent?
-> > > 
-> > > Somewhat, getting this into e.g. rc2 would be fine too, waiting till 5.3
-> > > would be bad.
-> > 
-> > So, I can do it as a fixes for rc2, just ping me after merge window.
-> 
-> Ok, will do.
+Hi all,
 
-Andy, what is the issue here? If the dependency is in v5.1 we can do a "merge
---ff-only v5.1" in our for-next branch in order to pull it in, that would be the
-same as an immutable branch basically.
+On Wed, May 16, 2018 at 11:18:45AM +0300, Yury Norov wrote:
+> This series enables AARCH64 with ILP32 mode.
+> 
+> As supporting work, it introduces ARCH_32BIT_OFF_T configuration
+> option that is enabled for existing 32-bit architectures but disabled
+> for new arches (so 64-bit off_t userspace type is used by new userspace).
+> Also it deprecates getrlimit and setrlimit syscalls prior to prlimit64.
+> 
+> Based on kernel v4.16. Tested with LTP, glibc testsuite, trinity, lmbench,
+> CPUSpec.
+> 
+> This series on github: 
+> https://github.com/norov/linux/tree/ilp32-4.16
+> Linaro toolchain:
+> http://snapshots.linaro.org/components/toolchain/binaries/7.3-2018.04-rc1/aarch64-linux-gnu_ilp32/
+> Debian repo:
+> http://people.linaro.org/~wookey/ilp32/
+> OpenSUSE repo:
+> https://build.opensuse.org/project/show/devel:ARM:Factory:Contrib:ILP32
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+This is the 5.1-based version.
+Changes comparing to 5.0:
+ - drop arch patches that has been taken upstream:
+   80d7da1cac62 asm-generic: Drop getrlimit and setrlimit syscalls from default list
+   942fa985e9f1 32-bit userspace ABI: introduce ARCH_32BIT_OFF_T config option
+   0d0216c03a7a compat ABI: use non-compat openat and open_by_handle_at variants
+ - in include/linux/thread_bits.h define current_thread_info() prior to
+   inclusion of asm/thread_info.h, to avoid circullar dependencies (thread: move
+   thread bits accessors to separated file);
+ - enable old IPC interfaces for ilp32, according to mainline changes
+   (arm64: ilp32: introduce syscall table for ILP32).
+
+Thanks,
+Yury
