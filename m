@@ -6,74 +6,83 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
 	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D68C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F613C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE3121530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1622F20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557319678;
-	bh=j/GBFlF9tEolvugpluZDjtfFdcU/0slDfFMrraf2dGI=;
+	s=default; t=1557319878;
+	bh=WFgd7FOMXRMBabJAYM7lx2Yy3vvxcjaRtwoc4EcrLeY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cZUIFsoltsAcCBkxsciVX7qDrIOLy9zZlVIyOdCxCnoF23kAhBnr9AMKMGoWo2ymI
-	 0n9vvc7rBCvZC6GxjAZeobsu72AzkhWUZMCPxKpMzzuO/rHEWC6RbYZc2+YWX9q3kB
-	 /7PgLe7tL75IV3Krv6hX2N+h/QEQoxbLIQfI7uWo=
+	b=JktCP2r9GC4Gf3eIehIIXxP1D0pki2Syv7emz3HpZ7NzWHooJZqiIKDMYHNjQOoTV
+	 JMImdW4xyBrJ8T843yqcgDsP2wJFAuA4LqJr72ckyfZlNk6bIkgRID0DkxbIJ6Bd4h
+	 xSdkAA3gqcH030T2yYflnURYM7TJ0um3lbDvMn4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbfEHMr5 (ORCPT
+        id S1728616AbfEHMvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 08:51:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfEHMr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:47:57 -0400
+        id S1726444AbfEHMvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 08:51:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25DF121019;
-        Wed,  8 May 2019 12:47:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D675720644;
+        Wed,  8 May 2019 12:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557319676;
-        bh=j/GBFlF9tEolvugpluZDjtfFdcU/0slDfFMrraf2dGI=;
+        s=default; t=1557319876;
+        bh=WFgd7FOMXRMBabJAYM7lx2Yy3vvxcjaRtwoc4EcrLeY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ik4f/pacqg3sX0XCNJ4o+HUl2WlDqUB8ArTBYqTPPDF+mdb1upNuhodur2FxuX5Fp
-         Fc9eDMD+Juw4JF6C3bmbmFOMD5pV0CoLq4xsMKf0M1uqtXze6Y67SdWsLWpWNdNxvg
-         +U7fEAE068WPY4DlXAuoq5qeZCdhr5pGKw1510Kc=
-Date:   Wed, 8 May 2019 14:47:54 +0200
+        b=FGyGJeWAOfSo+dp1zbIkhSj9++qRrl1+poO7MXog6uDMNiWG7kES6uBgUy2u6s9kK
+         9OOacN8dQyLfQWDdydBH8ahumLfbzP4V9rbB4QyVT4vnOAulT4z9ohZjdKmfNIGt4Z
+         wqeipADOVjLhaF0CBse92uqjpWLUvToiskXVYs40=
+Date:   Wed, 8 May 2019 14:51:14 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     PanBian <bianpan2016@163.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: EDAC: Fix memory leak in creating CSROW object
-Message-ID: <20190508124754.GD8646@kroah.com>
-References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
- <20190418172548.GL27160@zn.tnic>
- <20190419003536.GA57795@bianpan2016@163.com>
- <20190419004516.GC559@zn.tnic>
- <20190427214925.GE16338@kroah.com>
- <20190508105743.GC19015@zn.tnic>
+To:     Sebastian Gottschall <s.gottschall@newmedia-net.de>
+Cc:     David Laight <David.Laight@aculab.com>,
+        'Jiri Kosina' <jikos@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
+ export
+Message-ID: <20190508125114.GG8646@kroah.com>
+References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
+ <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
+ <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1905040849370.17054@cbobk.fhfr.pm>
+ <957b01f742ed47d1ac9e0ea1277d155b@AcuMS.aculab.com>
+ <e95eb45e-8bc6-ec81-fbd2-913f22c4224a@newmedia-net.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508105743.GC19015@zn.tnic>
+In-Reply-To: <e95eb45e-8bc6-ec81-fbd2-913f22c4224a@newmedia-net.de>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 12:57:43PM +0200, Borislav Petkov wrote:
-> On Sat, Apr 27, 2019 at 11:49:25PM +0200, Greg KH wrote:
-> > How about this patch, I think it fixes up everything you need to do
-> > here, right?
-> 
-> Almost, see the two patches as a reply to this message. I've taken
-> Pan's original patch because it is correct and I doubt you're dying for
-> attribution :-)
+On Wed, May 08, 2019 at 02:28:21PM +0200, Sebastian Gottschall wrote:
+> so the question is if it isnt possible to create a EXPORT_SYMBOL variant
+> which includes acceptable license models, but still restricts unacceptable
+> licenses
 
-Nope, no need for that :)
+It's not very difficult, "acceptable" license models are all described
+in the kernel LICENSES/ directory, and must be GPLv2 compatible.
 
-> Then, I productized yours, with some additions. :)
-
-Looks good to me, ship it!
+greg k-h
