@@ -2,103 +2,127 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C88C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70142C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB0A20644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0701B20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 16:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=darbyshire-bryant.me.uk header.i=@darbyshire-bryant.me.uk header.b="M/igsZV2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCkEi6A5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfEHQNU (ORCPT
+        id S1727721AbfEHQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 12:13:20 -0400
-Received: from mail-eopbgr00054.outbound.protection.outlook.com ([40.107.0.54]:58959
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727150AbfEHQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 12:13:19 -0400
+        Wed, 8 May 2019 12:17:36 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38175 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfEHQRf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 12:17:35 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u199so7625003oie.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 09:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=darbyshire-bryant.me.uk; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fRlCgllaeQFRhbw/4RWMMABHQbssZ5McwuHYWfho2V8=;
- b=M/igsZV2MCYkLooVAiZQU5gvT0Owhxw5OSqF8RTs1szzNMgPJ029JkmgcgHVl33hU16d7bl5nd11+NHqppujeXbMQVdx1vhns8AqHd4SHKUBuByUlaDF7NMAMMcHv+gW4qb7J8S8ewMmYPKVbwTTWkGituhK0TEC4ntUXOdNp3Y=
-Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com (10.171.105.143) by
- VI1PR0302MB2734.eurprd03.prod.outlook.com (10.171.108.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.20; Wed, 8 May 2019 16:12:54 +0000
-Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com
- ([fe80::a096:fef7:568:7358]) by VI1PR0302MB2750.eurprd03.prod.outlook.com
- ([fe80::a096:fef7:568:7358%7]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 16:12:54 +0000
-From:   Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-To:     David Miller <davem@davemloft.net>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH net-next v4] net: sched: Introduce act_ctinfo action
-Thread-Topic: [PATCH net-next v4] net: sched: Introduce act_ctinfo action
-Thread-Index: AQHVBREof9SUD1rIBEGMErsp08m2pKZgXWkAgAEKPIA=
-Date:   Wed, 8 May 2019 16:12:54 +0000
-Message-ID: <58168C49-177F-4F74-8E67-8B9CF9B23FD3@darbyshire-bryant.me.uk>
-References: <20190507.123952.2046042425594195721.davem@davemloft.net>
- <20190507201154.97646-1-ldir@darbyshire-bryant.me.uk>
- <20190507.172000.384528161562920463.davem@davemloft.net>
-In-Reply-To: <20190507.172000.384528161562920463.davem@davemloft.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ldir@darbyshire-bryant.me.uk; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2a02:c7f:1268:6500::dc83]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5808bfce-3a59-4591-72ce-08d6d3d006fb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0302MB2734;
-x-ms-traffictypediagnostic: VI1PR0302MB2734:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <VI1PR0302MB2734B98BC407D48F3B3A4ECEC9320@VI1PR0302MB2734.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(376002)(39830400003)(346002)(189003)(199004)(305945005)(6246003)(229853002)(2906002)(5660300002)(6486002)(7736002)(476003)(2616005)(486006)(102836004)(36756003)(54906003)(6916009)(53936002)(6512007)(6306002)(68736007)(25786009)(6436002)(4326008)(256004)(86362001)(83716004)(186003)(71190400001)(71200400001)(4744005)(8676002)(82746002)(81166006)(81156014)(6116002)(8936002)(99286004)(64756008)(66556008)(66476007)(66446008)(316002)(508600001)(966005)(91956017)(33656002)(76176011)(53546011)(66946007)(73956011)(76116006)(6506007)(446003)(11346002)(46003)(14454004)(74482002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0302MB2734;H:VI1PR0302MB2750.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: darbyshire-bryant.me.uk does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xVk7iubFVfyUziI1HXR7vetzWBtRx9UHtxPxTqZYzxsQdBMLg9dM5Ks9EMIvSM1AHXCkaM75Fciie6GO3hqc3iKMYkdypany75Irull3wAxnl9QQQtNlIbcZi4qCWhMRxzykAEWAeWaW6bqfX2fexHuIoTLomptx8Nxd2ipjp9Nt2OGnFQ4qiUbmdkHab6L23M4MayPT2lEZ0PFyj8untI+TRc8xWImjninow2qUdZ0UVW/9OIYTjL8tijXQPACGN2zybXIRe+9Z0bg8J9+tp03ZK9GkR4rDat4QjB5/aHi6mCxfkUOQyt8ESkbDU5Odrn4BxGAjj3aKeK0wzFPVlt8oOg4bFy2KBhcCCqGty/QzvhnVyjPgWky14RMUd/Cm1iyq0eu8Cm96A8Yv1G+yOXegmEoRDrvWhBxQCKMucwM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0557ECDD62803F49B6325B1C33F92D61@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:mime-version
+         :content-disposition:user-agent;
+        bh=mEyEsLGtPKEz1Gmqe5gE55GzDPtET2Lqxlpu7didhoM=;
+        b=PCkEi6A59MmQ6Yk/B4a0gbXmTZ7VfUnX/9TNvK6hT1hAAhQWNxd/BDbAPNHNIp+HGC
+         8QUamDkihg9vWD3W8UGzPUaqa24+qrIAQ0F6JYPv5/xuTOJI3lp/1VnpnU3inIZrdW/G
+         J/zCabBJiRCh9rY4B3j6XV/K8ZMHpVkvZsDtDX7NvjpkOnQLVMm2ni0bRGPViMsq5UHb
+         Dg9miYz7SYTYqGcK3rYY21+iiBYIztIk94sPRDc5Ulh+neyLm00K+UzDK7DmdIEDDyUQ
+         Nq10u6h29kCAoEnHRnbtVe7eFJLTZWqNpYuMDxieIjy416B8TmqKF/oyY8ybVhssRFdT
+         rSGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:mime-version:content-disposition:user-agent;
+        bh=mEyEsLGtPKEz1Gmqe5gE55GzDPtET2Lqxlpu7didhoM=;
+        b=mK1X0KXMAzPy8RxMLTC/1I+yyUZ65Nw47hJqaijQ9e4Q81nZqqfPKAahlpRprQmPKO
+         NaEFr0JZVfogl64qOGD3xz21COmu0NMijPgnMQpZx75HqWaeqf3553mgDIGpmkuKBz/y
+         lKjZqsdMXUePKyDi3GsUxIGijslEMD5y6eppZYs9XygSJ/KtrXRcVtYori2TpedUCFL8
+         zGqFJ9gHO4iFQ3v3yM0O9dtRqBFNjZDgyo4571LKMbriGJ4QrgYKwhQ5191KDH8cUJHA
+         sGFnL2+h1kRupDN6EZSdp6LCSNaPWl82mcDqmp6dLGyqe6hQw+HopcqwXXYmGt4fLHKT
+         62Og==
+X-Gm-Message-State: APjAAAXb1ANxMZXkA8TzklZ5gOwahEM3yQ3mn6TyHbcmvkvWG4PniWPw
+        TILTGz1kdIPn8NRHgPoweQ==
+X-Google-Smtp-Source: APXvYqyTv39lIPGEh5IZ/Rq9WdRnwPNUebFVW34ZD+qvUNVoeejlvTdgZ/iAgMODS0GgNEPbWdXjlg==
+X-Received: by 2002:aca:d509:: with SMTP id m9mr2642793oig.153.1557332254606;
+        Wed, 08 May 2019 09:17:34 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id t14sm2294386otk.55.2019.05.08.09.17.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 09:17:33 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
+        by serve.minyard.net (Postfix) with ESMTPSA id 5B83C18190F;
+        Wed,  8 May 2019 16:17:33 +0000 (UTC)
+Date:   Wed, 8 May 2019 11:17:32 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: [GIT PULL] IPMI bug fixes for 5.2
+Message-ID: <20190508161732.GG16145@minyard.net>
+Reply-To: minyard@acm.org
 MIME-Version: 1.0
-X-OriginatorOrg: darbyshire-bryant.me.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5808bfce-3a59-4591-72ce-08d6d3d006fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 16:12:54.1853
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9151708b-c553-406f-8e56-694f435154a4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0302MB2734
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGF2aWQsDQoNCj4gT24gOCBNYXkgMjAxOSwgYXQgMDE6MjAsIERhdmlkIE1pbGxlciA8ZGF2
-ZW1AZGF2ZW1sb2Z0Lm5ldD4gd3JvdGU6DQo+IA0KPiANCj4gVGhlIG5ldC1uZXh0IHRyZWUgaXMg
-Y2xvc2VkLg0KDQpBcG9sb2dpZXMsIEkgZGlkbuKAmXQgdW5kZXJzdGFuZCB3aGF0IHRoaXMgbWVh
-bnQgaW4geW91ciBwcmlvciBtZXNzYWdlLCBoYXZpbmcgcmVhZCBodHRwczovL3d3dy5rZXJuZWwu
-b3JnL2RvYy9Eb2N1bWVudGF0aW9uL25ldHdvcmtpbmcvbmV0ZGV2LUZBUS50eHQgYW5kIHNlZW4g
-aHR0cDovL3ZnZXIua2VybmVsLm9yZy9+ZGF2ZW0vbmV0LW5leHQuaHRtbCBJIG5vdyBkby4NCg0K
-PiANCj4gWW91IHdpbGwgaGF2ZSB0byBzdWJtaXQgdGhpcyBhZ2FpbiB3aGVuIHRoZSBuZXQtbmV4
-dCB0cmVlIGlzIG9wZW4NCj4gYWdhaW4uDQoNCkNhdGNoIHlvdSBvbiB0aGUgZmxpcCBzaWRlLCBp
-biAyLWlzaCB3ZWVrcyB0aW1lIDotKQ0KDQo+IA0KPiBUaGFuayB5b3UuDQoNClRoYW5rcyBmb3Ig
-eW91ciBwYXRpZW5jZS4NCg0KS2V2aW4gRC1CDQoNCmdwZzogMDEyQyBBQ0IyIDI4QzYgQzUzRSA5
-Nzc1ICA5MTIzIEIzQTIgMzg5QiA5REUyIDMzNEENCg0K
+The following changes since commit fe5cdef29e41c8bda8cd1a11545e7c6bfe25570e:
+
+  Merge tag 'for-linus-5.1-2' of git://github.com/cminyard/linux-ipmi (2019-04-17 10:25:25 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.2
+
+for you to fetch changes up to ed6c3a6d8996659e3bbf4214ba26b5e5a7440b26:
+
+  ipmi: Remove warning if no slave address is present (2019-04-24 12:29:24 -0500)
+
+----------------------------------------------------------------
+Some minor cleanups for the IPMI driver.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      ipmi: avoid atomic_inc in exit function
+
+Colin Ian King (1):
+      char/ipmi: fix spelling mistake "receieved_messages" -> "received_messages"
+
+Corey Minyard (4):
+      ipmi: Remove file from ipmi_file_private
+      ipmi: Add the i2c-addr property for SSIF interfaces
+      ipmi:ssif: Only unregister the platform driver if it was registered
+      ipmi: Remove warning if no slave address is present
+
+Dan Carpenter (1):
+      ipmi_si: remove an unused variable in try_smi_init()
+
+Kamlakant Patel (1):
+      ipmi:ssif: compare block number correctly for multi-part return messages
+
+YueHaibing (1):
+      ipmi: Make ipmi_interfaces_srcu variable static
+
+ .../ABI/testing/sysfs-devices-platform-ipmi        |  2 +-
+ drivers/char/ipmi/ipmi_devintf.c                   |  3 ---
+ drivers/char/ipmi/ipmi_dmi.c                       |  2 ++
+ drivers/char/ipmi/ipmi_msghandler.c                |  4 ++--
+ drivers/char/ipmi/ipmi_plat_data.c                 | 27 ++++++++++++----------
+ drivers/char/ipmi/ipmi_plat_data.h                 |  3 +++
+ drivers/char/ipmi/ipmi_si_hardcode.c               |  1 +
+ drivers/char/ipmi/ipmi_si_hotmod.c                 |  1 +
+ drivers/char/ipmi/ipmi_si_intf.c                   |  2 --
+ drivers/char/ipmi/ipmi_si_platform.c               |  6 ++---
+ drivers/char/ipmi/ipmi_ssif.c                      | 11 ++++++---
+ 11 files changed, 35 insertions(+), 27 deletions(-)
+
