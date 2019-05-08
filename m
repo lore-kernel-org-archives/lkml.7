@@ -2,127 +2,101 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B423C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82290C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292F720989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="y/TCL95R"
+	by mail.kernel.org (Postfix) with ESMTP id 574BE204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfEHUQe (ORCPT
+        id S1728331AbfEHURY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:16:34 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:37404 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfEHUQd (ORCPT
+        Wed, 8 May 2019 16:17:24 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:35793 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbfEHURY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:16:33 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x48KE7Sw139454;
-        Wed, 8 May 2019 20:16:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=RNyiBPHYmMKPy9Ae5WLvwYN+r0cY1awKN5dSIQUf1PM=;
- b=y/TCL95Rml3dD4NpWNmcSltG1tNIp46T5O+MdFYvMJD9CGl0ObYJAHZ+EBHDVsfaoLxR
- HNuv4F9EbW+pwZ3JnWtmXK1IaBTnVvo0f5bZt3PKv8mi6LnvDz073Pe4CTHHYWXXw8bG
- 8GDjv8SM8UXXY8bYJmV0Rbi6m8TAXJuHgCrnieYQbYrIbfoXJLRAgEHG0Zj8XqV1UhLx
- w+Rxq6LZ6j8pQiOP8jcrMHhECLb+xBSx7hlx+ptO9ACBfbgKblb5dQAcT+TAL41qfKSl
- D5SBBKtV7/kN2aG5rRydMzzAsCsy6liumZZhjKRGvxEQmj7wASMO7K05iqKQrNLE1Tlk Aw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2s94b66prj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 May 2019 20:16:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x48KF9SY093762;
-        Wed, 8 May 2019 20:16:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2s94bac3s1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 May 2019 20:16:20 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x48KGIXK020586;
-        Wed, 8 May 2019 20:16:18 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 May 2019 13:16:17 -0700
-Subject: Re: [PATCH] hugetlbfs: always use address space in inode for resv_map
- pointer
-To:     yuyufen <yuyufen@huawei.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-References: <20190416065058.GB11561@dhcp22.suse.cz>
- <20190419204435.16984-1-mike.kravetz@oracle.com>
- <fafe9985-7db1-b65c-523d-875ab4b3b3b8@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <5d7dc0d5-7cd3-eb95-a1e7-9c68fe393647@oracle.com>
-Date:   Wed, 8 May 2019 13:16:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 16:17:24 -0400
+Received: by mail-ot1-f51.google.com with SMTP id g24so174190otq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:17:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M13siEu+g10Eyf72ko5YRm3P5jSDytOXC9psBac97xQ=;
+        b=s8Qqq20nbuHGjUsLEOvwf7XPk2Q110iwNqw0wXxdsYXtS0kxl+UdQoGGOR/qqa1ni+
+         WEnLH510dZ1fgLcYl1B70kxHSBkOk6EuU6GkcX9wP52a+oFzoyhN+s0i4FAJTLg1me5V
+         mSPtUcZCSKHMt/7DmynPE+LmqSxqPmCCbmWSbtSuwikpGP71L6LngMo1hvC8tEUygld9
+         MzfdTzOqMIbGgfTuvXgb5bGu9RBPpVUAZrZJOApcHEYTU/cV/aiv/vMr7RROJQvwQxaI
+         ybslnUwzv7roOG1454rJsfPg3pRezeX8FFOrN/qf05ZeeZYwcNrCFnm9jkg81xE59xBw
+         jIZA==
+X-Gm-Message-State: APjAAAWWMSF2r3rSOb2Dr6hSWEMaxu4x7cF/8eQ7Cv8tvNPvXY0cY8oF
+        IODcKa6sj902qwRJEVxqas2xO++dfYxWEj0dC2hpWA==
+X-Google-Smtp-Source: APXvYqwSWGUNTGH2G86hxTfu40xvKgy0wCqrVfneJnSvUzw3Yu8TSikFVN7lIOFZ7TE029cKTDMP3egLTajjHZ5G1Vw=
+X-Received: by 2002:a9d:4d02:: with SMTP id n2mr476227otf.332.1557346643306;
+ Wed, 08 May 2019 13:17:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fafe9985-7db1-b65c-523d-875ab4b3b3b8@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=976
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905080124
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905080124
+References: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
+ <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com> <CAHk-=whbrADQrEezs=-t0QsKw-qaVU_2s2DqxLAkcczxc62SLQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whbrADQrEezs=-t0QsKw-qaVU_2s2DqxLAkcczxc62SLQ@mail.gmail.com>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Wed, 8 May 2019 22:17:12 +0200
+Message-ID: <CAHc6FU40HucCUzx5k2obs8m6dXS08NmXBM-tFOq7fSbLduHiGw@mail.gmail.com>
+Subject: Re: GFS2: Pull Request
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     cluster-devel <cluster-devel@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Tobin C. Harding" <me@tobin.cc>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/19 12:10 AM, yuyufen wrote:
-> On 2019/4/20 4:44, Mike Kravetz wrote:
->> Continuing discussion about commit 58b6e5e8f1ad ("hugetlbfs: fix memory
->> leak for resv_map") brought up the issue that inode->i_mapping may not
->> point to the address space embedded within the inode at inode eviction
->> time.  The hugetlbfs truncate routine handles this by explicitly using
->> inode->i_data.  However, code cleaning up the resv_map will still use
->> the address space pointed to by inode->i_mapping.  Luckily, private_data
->> is NULL for address spaces in all such cases today but, there is no
->> guarantee this will continue.
->>
->> Change all hugetlbfs code getting a resv_map pointer to explicitly get
->> it from the address space embedded within the inode.  In addition, add
->> more comments in the code to indicate why this is being done.
->>
->> Reported-by: Yufen Yu <yuyufen@huawei.com>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-...
-> 
-> Dose this patch have been applied?
+Linus,
 
-Andrew has pulled it into his tree.  However, I do not believe there has
-been an ACK or Review, so am not sure of the exact status.
+On Wed, 8 May 2019 at 20:06, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Wed, May 8, 2019 at 10:55 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > See what I'm saying? You would ask me to pull the un-merged state, but
+> > then say "I noticed a few merge conflicts when I did my test merge,
+> > and this is what I did" kind of aside.
+>
+> Side note: this is more important if you know of a merge issue that
+> doesn't cause a conflict, and that I won't see in my simple build
+> tests.
+>
+> For example, in this case, the merge issue doesn't cause a conflict
+> (because it's a totally new user of bio_for_each_segment_all() and the
+> syntax changed in another branch), but I see it trivially when I do a
+> test build, since the compiler spews out lots of warnings, and so I
+> can trivially fix it up (and you _mentioning_ the issue gives me the
+> heads up that you knew about it and what it's all about).
+>
+> But if it's other architectures, or only happens under special config
+> options etc, I might not have seen the merge issue at all. And then
+> it's really good if the maintainer talks about it and shows that yes,
+> the maintainer knows what he's doing.
+>
+> Now I'm in the situation where I have actually done the merge the way
+> I *like* doing them, and without your superfluous merge commit. But if
+> I use my merge, I'll lose the signature from your tag, because you
+> signed *your* merge that I didn't actually want to use at all.
+>
+> See? Your "helpful" merge actually caused me extra work, and made me
+> have to pick one of two *worse* situations than if you had just tagged
+> your own development tree. Either my tree has a extra pointless merge
+> commit, or my tree lacks your signature on your work.
 
-> I think it is better to add fixes label, like:
-> Fixes: 58b6e5e8f1ad ("hugetlbfs: fix memory leak for resv_map")
-> 
-> Since the commit 58b6e5e8f1a has been merged to stable, this patch also be needed.
-> https://www.spinics.net/lists/stable/msg298740.html
+Ok, got it.
 
-It must have been the AI that decided 58b6e5e8f1a needed to go to stable.
-Even though this technically does not fix 58b6e5e8f1a, I'm OK with adding
-the Fixes: to force this to go to the same stable trees.
+Would it make sense to describe how to deal with merge conflicts in
+Documentation/maintainer/pull-requests.rst to stop people from getting
+this wrong over and over again?
 
--- 
-Mike Kravetz
+Thanks,
+Andreas
