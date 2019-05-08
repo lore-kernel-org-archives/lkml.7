@@ -2,119 +2,186 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852C1C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54388C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587B921479
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9C32054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 12:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="TLavmPmW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qtuU64U1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfEHM2b (ORCPT
+        id S1728589AbfEHM26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 08:28:31 -0400
-Received: from webmail.newmedia-net.de ([185.84.6.166]:52836 "EHLO
-        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbfEHM2b (ORCPT
+        Wed, 8 May 2019 08:28:58 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19078 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727750AbfEHM25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 08:28:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=IrtOUQ0KzNSaFmEWTYr//AVD9YJKIqSsEkTVPy9gmdo=;
-        b=TLavmPmWFIUv/BvB0sJ30rbFZE9SdzoGBQV3wiktmQgm6sw96ECC5TidOyjA4TT7LtrIZ8eyfwvucoMBQZ4H8j+yk1ERSQpdBjPGgFI7w3UjJGc7kliAQ4zmvELGYZURQPZtzWPPUNlVXdACmyYDL9v7Zuvvf1yD3Z47fw4R6Jg=;
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Jiri Kosina' <jikos@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905040849370.17054@cbobk.fhfr.pm>
- <957b01f742ed47d1ac9e0ea1277d155b@AcuMS.aculab.com>
-From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
-Message-ID: <e95eb45e-8bc6-ec81-fbd2-913f22c4224a@newmedia-net.de>
-Date:   Wed, 8 May 2019 14:28:21 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 08:28:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd2cb830000>; Wed, 08 May 2019 05:28:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 May 2019 05:28:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 May 2019 05:28:55 -0700
+Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 May
+ 2019 12:28:54 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 8 May 2019 12:28:54 +0000
+Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.147]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cd2cb840002>; Wed, 08 May 2019 05:28:54 -0700
+From:   Jim Lin <jilin@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
+        <stern@rowland.harvard.edu>, <kai.heng.feng@canonical.com>,
+        <drinkcat@chromium.org>, <keescook@chromium.org>,
+        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jim Lin <jilin@nvidia.com>
+Subject: [PATCH v5 1/1] usb: xhci: Add Clear_TT_Buffer
+Date:   Wed, 8 May 2019 20:28:49 +0800
+Message-ID: <1557318529-7081-1-git-send-email-jilin@nvidia.com>
+X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-In-Reply-To: <957b01f742ed47d1ac9e0ea1277d155b@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Received:  from [212.111.244.1] (helo=[172.29.0.186])
-        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
-        (Exim 4.72)
-        (envelope-from <s.gottschall@newmedia-net.de>)
-        id 1hOLgY-00006q-2S; Wed, 08 May 2019 14:28:34 +0200
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557318531; bh=cRmvK/tiTBL9p7PfWTIm69LLVYs81XAUbkfC2etvNNA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=qtuU64U18ALZDb6EPsTx9aVBZte2t1f3xoZFNf1yTtg/oqMzbYf9IdVQyOrV3XSlO
+         9IrS3MQRiSBAQBLu5S3XbaPgCIZcNq9P3V1hGEWUM5N9gkv9Gc7tufhHfN/+67d/IT
+         w0GCjsAzfMdxgGKVAs+woUMULeZNeDnc3FTHnwzapubmPAcGwlUyhD+Idbz+b/zj3Q
+         Sp2yoi2sq+YfP6AHjjcC1Gl9VYky6l6d5EfT90/iuTwkVCshg1u02vNlV2co4kw0JU
+         2hvnOqJ4t/tvqmoTXzwDuwIrARqqAgOygfAdDFYd2mJPZgnzjzYsGsp54mvoboshWs
+         7duCw24Bpgd/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
+processing for full-/low-speed endpoints connected via a TT, the host
+software must use the Clear_TT_Buffer request to the TT to ensure
+that the buffer is not in the busy state".
 
-Am 07.05.2019 um 12:31 schrieb David Laight:
-> ...
->> So I don't really see a problem with Andy's patch. If we want to annoy
->> external non-GPL modules as much as possible, sure, that's for a separate
->> discussion though (and I am sure many people would agree to that).
->> Proposal to get rid of EXPORT_SYMBOL in favor of EXPORT_SYMBOL_GPL would
->> be a good start I guess :)
-> As a writer on an external non-GPL module I'd point out:
-> 1 - Even if we wanted to 'upstream' our code it is very specific
->      and wouldn't really be wanted/accepted.
->      Even if accepted it would always be excluded from builds.
-> 2 - It would take man-years to make it meet the kernel code guidelines
->      and to make it portable (from x86).
->      It also contains conditionals because it gets build for windows.
->      I don't like a lot of it.
-> 3 - Almost all the calls to kernel functions are through a 'wrapper'
->      file that is compiled on the target system.
->      About the only functions that are directly called are ones like memcpy().
-> 4 - It wouldn't be that hard, and would still be GPLv2 if we built
->      two loadable modules, one GPL and one non-GPL and put all our
->      wrapper functions in the GPL one.
->      We'd still need a small wrapper for the non-GPL module, but while
->      Non-GPL modules are supported at all it wouldn't be much work.
-> 5 - The continual tweaks for new kernel versions keep us in a job!
->
-> Some of the _GPL exports are a PITA:
-> - we can't reference count network namespaces (without creating a socket).
-> - we can't reference count 'pid' structures making sending signals tricky.
-> - I thing the PCIe error handling functions that we ought to be using
->    are GPL.
->
-> At the moment we've not needed the fpu :-)
->
-> 	David
-unfortunatly some does like ZFS which is opensource, but just licensed 
-under the wrong copyleft license which cannot be changed that easy.
-but its a big loss for the community if such projects get blocked or 
-limited by a singe linux developer. but thats just my own oppinion (even 
-if not intentionally targeted here of course).
-not every project on his planet is a nvidia driver blob. whats most 
-important for me is not if its GPL or not. most important is that its 
-opensource and copyleft.
-so the question is if it isnt possible to create a EXPORT_SYMBOL variant 
-which includes acceptable license models, but still restricts 
-unacceptable licenses
+In our case, a full-speed speaker (ConferenceCam) is behind a high-
+speed hub (ConferenceCam Connect), sometimes once we get STALL on a
+request we may continue to get STALL with the folllowing requests,
+like Set_Interface.
 
-Sebastian
+Solution is for XHCI driver to invoke usb_hub_clear_tt_buffer() to
+send Clear_TT_Buffer request to the hub of the device for the
+following Set_Interface requests to the device to get ACK
+successfully.
+
+The Clear_TT_Buffer request sent to the hub includes the address of
+the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
+uses udev->devnum to set the address wValue. This won't work for
+devices connected to xHC.
+
+For other host controllers udev->devnum is the same as the address of
+the usb device, chosen and set by usb core. With xHC the controller
+hardware assigns the address, and won't be the same as devnum.
+
+In the fix we get that address from slot context if it's XHC.
+
+Signed-off-by: Jim Lin <jilin@nvidia.com>
+---
+v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
+    , remove its claiming in xhci.h
+v3: Add description for clearing_tt (xhci.h)
+v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
+    to protect for Clear_TT_Buffer to be run serially.
+    Remove xhci_clear_tt_buffer_complete as it's not necessary.
+    Same reason as the above.
+    Extend usb_hub_clear_tt_buffer parameter
+v5: Not extending usb_hub_clear_tt_buffer parameter
+    Add description.
+
+ drivers/usb/core/hub.c       | 17 ++++++++++++++++-
+ drivers/usb/host/xhci-ring.c | 13 +++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 15a2934dc29d..00d994908217 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -35,6 +35,7 @@
+ 
+ #include "hub.h"
+ #include "otg_whitelist.h"
++#include "../host/xhci.h"
+ 
+ #define USB_VENDOR_GENESYS_LOGIC		0x05e3
+ #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
+@@ -858,6 +859,10 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
+ 	struct usb_tt		*tt = udev->tt;
+ 	unsigned long		flags;
+ 	struct usb_tt_clear	*clear;
++	struct xhci_hcd *xhci;
++	struct xhci_virt_device *dev;
++	struct xhci_slot_ctx *slot_ctx;
++	int devnum;
+ 
+ 	/* we've got to cope with an arbitrary number of pending TT clears,
+ 	 * since each TT has "at least two" buffers that can need it (and
+@@ -873,7 +878,17 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
+ 	/* info that CLEAR_TT_BUFFER needs */
+ 	clear->tt = tt->multi ? udev->ttport : 1;
+ 	clear->devinfo = usb_pipeendpoint (pipe);
+-	clear->devinfo |= udev->devnum << 4;
++	/* If slot_id is nonzero, then it's XHCI */
++	if (udev->slot_id) {
++		xhci = hcd_to_xhci(bus_to_hcd(udev->bus));
++		dev = xhci->devs[udev->slot_id];
++		slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
++		/* Device address is assigned by XHC */
++		devnum = (int) le32_to_cpu(slot_ctx->dev_state) &
++			DEV_ADDR_MASK;
++		clear->devinfo |= devnum << 4;
++	} else
++		clear->devinfo |= udev->devnum << 4;
+ 	clear->devinfo |= usb_pipecontrol(pipe)
+ 			? (USB_ENDPOINT_XFER_CONTROL << 11)
+ 			: (USB_ENDPOINT_XFER_BULK << 11);
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 9215a28dad40..985f85d23b8d 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1786,6 +1786,18 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
+ 	return NULL;
+ }
+ 
++static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci,
++	unsigned int slot_id, struct xhci_td *td)
++{
++	/*
++	 * As part of low/full-speed endpoint-halt processing
++	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
++	 */
++	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
++	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub))
++		usb_hub_clear_tt_buffer(td->urb);
++}
++
+ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
+ 		unsigned int slot_id, unsigned int ep_index,
+ 		unsigned int stream_id, struct xhci_td *td,
+@@ -1804,6 +1816,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
+ 	if (reset_type == EP_HARD_RESET) {
+ 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
+ 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
++		xhci_clear_hub_tt_buffer(xhci, slot_id, td);
+ 	}
+ 	xhci_ring_cmd_db(xhci);
+ }
+-- 
+2.1.4
 
