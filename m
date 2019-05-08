@@ -4,30 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198CDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C76DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D1B217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CDA2175B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfEHOpP (ORCPT
+        id S1728808AbfEHOpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:45:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59536 "EHLO mga03.intel.com"
+        Wed, 8 May 2019 10:45:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19928 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbfEHOov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:51 -0400
+        id S1726583AbfEHOoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:48 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:53 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656575"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:49 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 9F78EC1D; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id 88BA31186; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,13 +46,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 39/62] keys/mktme: Find new PCONFIG targets during memory hotplug
-Date:   Wed,  8 May 2019 17:43:59 +0300
-Message-Id: <20190508144422.13171-40-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 57/62] x86/mktme: Overview of Multi-Key Total Memory Encryption
+Date:   Wed,  8 May 2019 17:44:17 +0300
+Message-Id: <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,67 +62,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Introduce a helper function that detects a newly added PCONFIG
-target. This will be used in the MKTME memory hotplug notifier
-to determine if a new PCONFIG target has been added that needs
-to have its Key Table programmed.
+Provide an overview of MKTME on Intel Platforms.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 39 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ Documentation/x86/mktme/index.rst          |  8 +++
+ Documentation/x86/mktme/mktme_overview.rst | 57 ++++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/x86/mktme/index.rst
+ create mode 100644 Documentation/x86/mktme/mktme_overview.rst
 
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index 3dfc0647f1e5..2c975c48fe44 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -543,6 +543,45 @@ static int mktme_cpu_teardown(unsigned int cpu)
- 	return ret;
- }
- 
-+static int mktme_get_new_pconfig_target(void)
-+{
-+	unsigned long *prev_map, *tmp_map;
-+	int new_target;		/* New PCONFIG target to program */
+diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
+new file mode 100644
+index 000000000000..1614b52dd3e9
+--- /dev/null
++++ b/Documentation/x86/mktme/index.rst
+@@ -0,0 +1,8 @@
 +
-+	/* Save the current mktme_target_map bitmap */
-+	prev_map = bitmap_alloc(topology_max_packages(), GFP_KERNEL);
-+	bitmap_copy(prev_map, mktme_target_map, sizeof(mktme_target_map));
++=========================================
++Multi-Key Total Memory Encryption (MKTME)
++=========================================
 +
-+	/* Update the global targets - includes mktme_target_map */
-+	mktme_update_pconfig_targets();
++.. toctree::
 +
-+	/* Nothing to do if the target bitmap is unchanged */
-+	if (bitmap_equal(prev_map, mktme_target_map, sizeof(prev_map))) {
-+		new_target = -1;
-+		goto free_prev;
-+	}
++   mktme_overview
+diff --git a/Documentation/x86/mktme/mktme_overview.rst b/Documentation/x86/mktme/mktme_overview.rst
+new file mode 100644
+index 000000000000..59c023965554
+--- /dev/null
++++ b/Documentation/x86/mktme/mktme_overview.rst
+@@ -0,0 +1,57 @@
++Overview
++=========
++Multi-Key Total Memory Encryption (MKTME)[1] is a technology that
++allows transparent memory encryption in upcoming Intel platforms.
++It uses a new instruction (PCONFIG) for key setup and selects a
++key for individual pages by repurposing physical address bits in
++the page tables.
 +
-+	/* Find the change in the target bitmap */
-+	tmp_map = bitmap_alloc(topology_max_packages(), GFP_KERNEL);
-+	bitmap_andnot(tmp_map, prev_map, mktme_target_map,
-+		      sizeof(prev_map));
++Support for MKTME is added to the existing kernel keyring subsystem
++and via a new mprotect_encrypt() system call that can be used by
++applications to encrypt anonymous memory with keys obtained from
++the keyring.
 +
-+	/* There should only be one new target */
-+	if (bitmap_weight(tmp_map, sizeof(tmp_map)) != 1) {
-+		pr_err("%s: expected %d new target, got %d\n", __func__, 1,
-+		       bitmap_weight(tmp_map, sizeof(tmp_map)));
-+		new_target = -1;
-+		goto free_tmp;
-+	}
-+	new_target = find_first_bit(tmp_map, sizeof(tmp_map));
++This architecture supports encrypting both normal, volatile DRAM
++and persistent memory.  However, persistent memory support is
++not included in the Linux kernel implementation at this time.
++(We anticipate adding that support next.)
 +
-+free_tmp:
-+	bitmap_free(tmp_map);
-+free_prev:
-+	bitmap_free(prev_map);
-+	return new_target;
-+}
++Hardware Background
++===================
 +
- static int __init init_mktme(void)
- {
- 	int ret, cpuhp;
++MKTME is built on top of an existing single-key technology called
++TME.  TME encrypts all system memory using a single key generated
++by the CPU on every boot of the system. TME provides mitigation
++against physical attacks, such as physically removing a DIMM or
++watching memory bus traffic.
++
++MKTME enables the use of multiple encryption keys[2], allowing
++selection of the encryption key per-page using the page tables.
++Encryption keys are programmed into each memory controller and
++the same set of keys is available to all entities on the system
++with access to that memory (all cores, DMA engines, etc...).
++
++MKTME inherits many of the mitigations against hardware attacks
++from TME.  Like TME, MKTME does not mitigate vulnerable or
++malicious operating systems or virtual machine managers.  MKTME
++offers additional mitigations when compared to TME.
++
++TME and MKTME use the AES encryption algorithm in the AES-XTS
++mode.  This mode, typically used for block-based storage devices,
++takes the physical address of the data into account when
++encrypting each block.  This ensures that the effective key is
++different for each block of memory. Moving encrypted content
++across physical address results in garbage on read, mitigating
++block-relocation attacks.  This property is the reason many of
++the discussed attacks require control of a shared physical page
++to be handed from the victim to the attacker.
++
++--
++1. https://software.intel.com/sites/default/files/managed/a5/16/Multi-Key-Total-Memory-Encryption-Spec.pdf
++2. The MKTME architecture supports up to 16 bits of KeyIDs, so a
++   maximum of 65535 keys on top of the “TME key” at KeyID-0.  The
++   first implementation is expected to support 5 bits, making 63
++   keys available to applications.  However, this is not guaranteed.
++   The number of available keys could be reduced if, for instance,
++   additional physical address space is desired over additional
++   KeyIDs.
 -- 
 2.20.1
 
