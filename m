@@ -2,199 +2,92 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43B3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF550C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC1521530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:14:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="PwUDAuJ3"
+	by mail.kernel.org (Postfix) with ESMTP id 8457121530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 22:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfEHWOM (ORCPT
+        id S1728920AbfEHWOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 18:14:12 -0400
-Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:55044
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726837AbfEHWOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 18:14:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=37HndU7t7sxqn2CHltLNblO8w+v8oHZ0Rtenb5hhSuA=;
- b=PwUDAuJ3ubiN1h9fVk7zHAWgQ8bq0J3jBDqgm4L3EHdXW4ie3HOVTzlLbAfGmROCPVFZXGrZszPziDhxMuiu5FrluSi2f71UZb0JayVSc3KHTF3mefplxeII0eWaJj3iQAUz/+dNo/P60SpUu8eBMDj0EEi8qB3ci3yqXf6QRSU=
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
- VI1PR0501MB2637.eurprd05.prod.outlook.com (10.172.13.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.20; Wed, 8 May 2019 22:13:28 +0000
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::8810:9799:ab77:9494]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::8810:9799:ab77:9494%2]) with mapi id 15.20.1878.019; Wed, 8 May 2019
- 22:13:28 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: RE: [PATCHv2 09/10] vfio/mdev: Avoid creating sysfs remove file on
- stale device removal
-Thread-Topic: [PATCHv2 09/10] vfio/mdev: Avoid creating sysfs remove file on
- stale device removal
-Thread-Index: AQHU/6cN2gCBUIHpe0O+UYvmhXR8xKZhhEWAgABRkCA=
-Date:   Wed, 8 May 2019 22:13:28 +0000
-Message-ID: <VI1PR0501MB2271E76A8B5E8D00AFEA8D97D1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190430224937.57156-1-parav@mellanox.com>
-        <20190430224937.57156-10-parav@mellanox.com>
- <20190508191635.05a0f277.cohuck@redhat.com>
-In-Reply-To: <20190508191635.05a0f277.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 13eed646-7f66-47d7-063c-08d6d40265ce
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2637;
-x-ms-traffictypediagnostic: VI1PR0501MB2637:
-x-microsoft-antispam-prvs: <VI1PR0501MB2637AA86E737CC8A62C981CCD1320@VI1PR0501MB2637.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(376002)(346002)(396003)(189003)(199004)(13464003)(51444003)(5660300002)(52536014)(7696005)(99286004)(229853002)(478600001)(76176011)(68736007)(8936002)(53546011)(6916009)(11346002)(102836004)(476003)(446003)(9686003)(54906003)(316002)(55016002)(81166006)(81156014)(33656002)(53936002)(8676002)(73956011)(486006)(26005)(6436002)(76116006)(66946007)(64756008)(66446008)(66476007)(66556008)(14454004)(86362001)(4326008)(66066001)(6246003)(25786009)(186003)(6506007)(2906002)(7736002)(305945005)(256004)(14444005)(71190400001)(71200400001)(6116002)(3846002)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2637;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bV9YOyP1JeiEIGz4wAHIHbSd/zOCYPjoyeARGNGHVQqdUxZBrXb9SCLKSG6AGs8g1FiwYVzKvD0pDOnTBW2knAF3QdWiK5w1IVTGGLsjFGrln1U5q75rlCgMlBV8JlNEtyGScYsQTCU04z1b2mSF5bCxei3ixmIPDRM/1Ul8saciqoWMd1GJ68Iq89CliI7lADvwXAzFWnvfQuHuqxzT1aIKB7DHQS2IIKbUqQco6np9WNVA2WZpvtpxWXYe2H8btS9CO8nOvp7/WaX3WazPmGrRq6JBbowUvzadw/CNRFRpiCkZjP2i7y3AB6EjUJZGX4W+q+VwWH8ZSo10N7U/qA/RDOmIr2nmFUiHZpNN+ZOWOykykeGklNJt7zoGpEaNEE7sQy+TnBF6DQ+VxF0hMIJMyzaf6q5w3g32T/z9rIQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 May 2019 18:14:46 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:50810 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726837AbfEHWOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 18:14:46 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 99EE1634C7B;
+        Thu,  9 May 2019 01:14:02 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hOUp8-0001dU-9h; Thu, 09 May 2019 01:14:02 +0300
+Date:   Thu, 9 May 2019 01:14:02 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] v4l: Add source event change for bit-depth
+Message-ID: <20190508221402.6fh5k2pvep33lggj@valkosipuli.retiisi.org.uk>
+References: <20190508113759.19168-1-stanimir.varbanov@linaro.org>
+ <d6dcee9a-0308-855c-9819-3e7413cb617d@linaro.org>
+ <a63d1c5f-806e-92c3-a6f7-e70f0686a27d@xs4all.nl>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13eed646-7f66-47d7-063c-08d6d40265ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 22:13:28.1086
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2637
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a63d1c5f-806e-92c3-a6f7-e70f0686a27d@xs4all.nl>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 08, 2019 at 06:38:49PM +0200, Hans Verkuil wrote:
+> On 5/8/19 5:34 PM, Stanimir Varbanov wrote:
+> > Hi Hans,
+> > 
+> > On 5/8/19 2:37 PM, Stanimir Varbanov wrote:
+> >> This event indicate that the source bit-depth is changed during
+> >> run-time. The client must get the new format and re-allocate buffers
+> >> for it. This can usually happens with video decoder (encoders) when
+> >> the bit-stream depth is changed from 8 to 10bits or vice versa.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> >> ---
+> >> Change since v1: s/BITDEPTH/BIT_DEPTH
+> >>
+> >>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 7 +++++++
+> >>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+> >>  include/uapi/linux/videodev2.h                  | 1 +
+> >>  3 files changed, 9 insertions(+)
+> >>
+> >> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >> index dea9c0cc00ab..f7782cbddc5f 100644
+> >> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >> @@ -397,6 +397,13 @@ call.
+> >>  	that many devices are not able to recover from a temporary loss of
+> >>  	signal and so restarting streaming I/O is required in order for the
+> >>  	hardware to synchronize to the video signal.
+> >> +    * - ``V4L2_EVENT_SRC_CH_BIT_DEPTH``
+> > 
+> > I started to wonder isn't COLOR_DEPTH more appropriate? Bit-depth
+> > doesn't describe what is actually deep.
+> > 
+> 
+> I agree. COLOR_DEPTH is a better name.
 
+Please add:
 
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Wednesday, May 8, 2019 12:17 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
-> Subject: Re: [PATCHv2 09/10] vfio/mdev: Avoid creating sysfs remove file =
-on
-> stale device removal
->=20
-> On Tue, 30 Apr 2019 17:49:36 -0500
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > If device is removal is initiated by two threads as below, mdev core
-> > attempts to create a syfs remove file on stale device.
-> > During this flow, below [1] call trace is observed.
-> >
-> >      cpu-0                                    cpu-1
-> >      -----                                    -----
-> >   mdev_unregister_device()
-> >     device_for_each_child
-> >        mdev_device_remove_cb
-> >           mdev_device_remove
-> >                                        user_syscall
-> >                                          remove_store()
-> >                                            mdev_device_remove()
-> >                                         [..]
-> >    unregister device();
-> >                                        /* not found in list or
-> >                                         * active=3Dfalse.
-> >                                         */
-> >                                           sysfs_create_file()
-> >                                           ..Call trace
-> >
-> > Now that mdev core follows correct device removal system of the linux
-> > bus model, remove shouldn't fail in normal cases. If it fails, there
-> > is no point of creating a stale file or checking for specific error sta=
-tus.
->=20
-> Which error cases are left? Is there anything that does not indicate that
-> something got terribly messed up internally?
->=20
-Few reasons I can think of that can fail remove are:
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-1. Some device removal requires allocating memory too as it needs to issue =
-commands to device.
-If on the path, such allocation fails, remove can fail. However such fail t=
-o allocate memory will probably result into more serious warnings before th=
-is.
-2. if the device firmware has crashed, device removal commands will likely =
-timeout and return such error upto user.
-3. If user tries to remove a device, while parent is already in removal pat=
-h, this call will eventually fail as it won't find the device in the intern=
-al list.
-
-> >
-> > kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
-> > sysfs_create_file_ns+0x7f/0x90
-> > kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted
-> > 5.1.0-rc6-vdevbus+ #6
-> > kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b
-> > 08/09/2016
-> > kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
-> > kernel: Call Trace:
-> > kernel: remove_store+0xdc/0x100 [mdev]
-> > kernel: kernfs_fop_write+0x113/0x1a0
-> > kernel: vfs_write+0xad/0x1b0
-> > kernel: ksys_write+0x5a/0xe0
-> > kernel: do_syscall_64+0x5a/0x210
-> > kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > ---
-> >  drivers/vfio/mdev/mdev_sysfs.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/vfio/mdev/mdev_sysfs.c
-> > b/drivers/vfio/mdev/mdev_sysfs.c index 9f774b91d275..ffa3dcebf201
-> > 100644
-> > --- a/drivers/vfio/mdev/mdev_sysfs.c
-> > +++ b/drivers/vfio/mdev/mdev_sysfs.c
-> > @@ -237,10 +237,8 @@ static ssize_t remove_store(struct device *dev,
-> struct device_attribute *attr,
-> >  		int ret;
-> >
-> >  		ret =3D mdev_device_remove(dev);
-> > -		if (ret) {
-> > -			device_create_file(dev, attr);
-> > +		if (ret)
->=20
-> Should you merge this into the previous patch?
->=20
-I am not sure. Previous patch changes the sequence. I think that deserved a=
-n own patch by itself.
-This change is making use of that sequence.
-So its easier to review? Alex had comment in v0 to split into more logical =
-patches, so...
-Specially to capture a different call trace, I cut into different patch.
-Otherwise previous patch's commit message is too long.
-
-> >  			return ret;
-> > -		}
-> >  	}
-> >
-> >  	return count;
-
+-- 
+Sakari Ailus
