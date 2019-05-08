@@ -2,98 +2,183 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8252EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F25C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C5D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F8E21530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557322319;
+	bh=6SqqVrYzWTK+YoKmBvviC94vExCJXee2HMET0tL2OQU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KyPHyrn1WR1n23msszI6Csy58eDTCTz9uSaSglNw5DyWX08nImtD1zq/0u0VrRQuy
+	 EpFi7vnJK+DbCmGuafEp34QjY9J2WJEu7xepEHpsgNGtfU5PLTgkaUkdZYYewgFHo7
+	 rvbPQjLyhL53tHgn+397+JtR5uYebrybQdyRwRqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfEHNap (ORCPT
+        id S1727612AbfEHNb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:30:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42613 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfEHNap (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:30:45 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hOMef-00032b-UV; Wed, 08 May 2019 13:30:42 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH][V3] net: dsa: sja1105: fix check on while loop exit
-Date:   Wed,  8 May 2019 14:30:41 +0100
-Message-Id: <20190508133041.14435-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 8 May 2019 09:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbfEHNb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 09:31:58 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5283205ED;
+        Wed,  8 May 2019 13:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557322317;
+        bh=6SqqVrYzWTK+YoKmBvviC94vExCJXee2HMET0tL2OQU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F1TkQBBcELv5TIIk4+YNR3CJ6Wd9khr6tnIieEBcJnsf8FtS8p2I8bZOLeKlYS66L
+         aMFgPdcNCsZaqF9CCwX5JRlpqzQ9ofylkfzh3wFZm5zTTQAv0PVO9MVQhrE9aEDcFP
+         /0SyOodD3ybg3ddr7AS0VpMdXJrFnS0jJV7HV7nc=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: [PATCH v7 0/6] tracing/probes: uaccess: Add support user-space access
+Date:   Wed,  8 May 2019 22:31:41 +0900
+Message-Id: <155732230159.12756.15040196512285621636.stgit@devnote2>
+X-Mailer: git-send-email 2.17.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi,
 
-The while-loop exit condition check is not correct; the
-loop should continue if the returns from the function calls are
-negative or the CRC status returns are invalid.  Currently it
-is ignoring the returns from the function calls.  Fix this by
-removing the status return checks and only break from the loop
-at the very end when we know that all the success condtions have
-been met.
+Here is the v7 series of probe-event to support user-space access.
+Previous version is here.
 
-Kudos to Dan Carpenter for describing the correct fix and
-Vladimir Oltean for noting the change to the check on the number
-of retries.
+https://lkml.kernel.org/r/155289137555.7218.9282784065958321058.stgit@devnote2
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Tested-by: Vladimir Oltean <olteanv@gmail.com>
+In this version, I fixed some documentation according to Steve's
+comment. This can be applied against the latest tracing/for-next
++ probeevent bugfix.
+
+https://lkml.kernel.org/r/155723732200.9149.10482668315693777743.stgit@devnote2
+
+Changes in v7:
+ - [4/6] Fix typos and update document according to Steve's comment. 
+
+In summary, strncpy_from_user() should work as below
+
+ - strncpy_from_user() can access user memory with set_fs(USER_DS)
+   in task context
+
+ - strncpy_from_user() can access kernel memory with set_fs(KERNEL_DS)
+   in task context (e.g. devtmpfsd and init)
+
+ - strncpy_from_user() can access user/kernel memory (depends on DS)
+   in IRQ context if pagefault is disabled. (both verified)
+
+Note that this changes the warning behavior when
+CONFIG_DEBUG_ATOMIC_SLEEP=y, it still warns when
+__copy_from_user_inatomic() is called in IRQ context, but don't
+warn if pagefault is disabled because it will not sleep in
+atomic.
+
+====
+Kprobe event user-space memory access features:
+
+For user-space access extension, this series adds 2 features,
+"ustring" type and user-space dereference syntax. "ustring" is
+used for recording a null-terminated string in user-space from
+kprobe events.
+
+"ustring" type is easy, it is able to use instead of "string"
+type, so if you want to record a user-space string via
+"__user char *", you can use ustring type instead of string.
+For example,
+
+echo 'p do_sys_open path=+0($arg2):ustring' >> kprobe_events
+
+will record the path string from user-space.
+
+The user-space dereference syntax is also simple. Thi just
+adds 'u' prefix before an offset value.
+
+   +|-u<OFFSET>(<FETCHARG>)
+
+e.g. +u8(%ax), +u0(+0(%si))
+
+This is more generic. If you want to refer the variable in user-
+space from its address or access a field in data structure in
+user-space, you need to use this.
+
+For example, if you probe do_sched_setscheduler(pid, policy,
+param) and record param->sched_priority, you can add new
+probe as below;
+    
+   p do_sched_setscheduler priority=+u0($arg3)
+
+Actually, with this feature, "ustring" type is not absolutely
+necessary, because these are same meanings.
+
+  +0($arg2):ustring == +u0($arg2):string
+
+Note that kprobe event provides these methods, but it doesn't
+change it from kernel to user automatically because we do not
+know whether the given address is in userspace or kernel on
+some arch.
+
+
+Thank you,
+
 ---
 
-V2: Discard my broken origina fix. Use correct fix as described by
-    Dan Carpenter.
-V3: Remove empty line and check for retries != RETRIES fix.
----
- drivers/net/dsa/sja1105/sja1105_spi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Masami Hiramatsu (6):
+      x86/uaccess: Allow access_ok() in irq context if pagefault_disabled
+      uaccess: Add non-pagefault user-space read functions
+      tracing/probe: Add ustring type for user-space string
+      tracing/probe: Support user-space dereference
+      selftests/ftrace: Add user-memory access syntax testcase
+      perf-probe: Add user memory access attribute support
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
-index 244a94ccfc18..49c5252a8dc6 100644
---- a/drivers/net/dsa/sja1105/sja1105_spi.c
-+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
-@@ -466,14 +466,15 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
- 				"invalid, retrying...\n");
- 			continue;
- 		}
--	} while (--retries && (status.crcchkl == 1 || status.crcchkg == 1 ||
--		 status.configs == 0 || status.ids == 1));
-+		/* Success! */
-+		break;
-+	} while (--retries);
- 
- 	if (!retries) {
- 		rc = -EIO;
- 		dev_err(dev, "Failed to upload config to device, giving up\n");
- 		goto out;
--	} else if (retries != RETRIES - 1) {
-+	} else if (retries != RETRIES) {
- 		dev_info(dev, "Succeeded after %d tried\n", RETRIES - retries);
- 	}
- 
--- 
-2.20.1
 
+ Documentation/trace/kprobetrace.rst                |   28 ++++-
+ Documentation/trace/uprobetracer.rst               |   10 +-
+ arch/x86/include/asm/uaccess.h                     |    4 +
+ include/linux/uaccess.h                            |   19 +++
+ kernel/trace/trace.c                               |    7 +
+ kernel/trace/trace_kprobe.c                        |   35 ++++++
+ kernel/trace/trace_probe.c                         |   37 +++++-
+ kernel/trace/trace_probe.h                         |    3 +
+ kernel/trace/trace_probe_tmpl.h                    |   37 +++++-
+ kernel/trace/trace_uprobe.c                        |   19 +++
+ mm/maccess.c                                       |  117 +++++++++++++++++++-
+ tools/perf/Documentation/perf-probe.txt            |    3 -
+ tools/perf/util/probe-event.c                      |   11 ++
+ tools/perf/util/probe-event.h                      |    2 
+ tools/perf/util/probe-file.c                       |    7 +
+ tools/perf/util/probe-file.h                       |    1 
+ tools/perf/util/probe-finder.c                     |   19 ++-
+ .../ftrace/test.d/kprobe/kprobe_args_user.tc       |   32 +++++
+ 18 files changed, 350 insertions(+), 41 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
