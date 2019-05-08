@@ -6,30 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0E9C04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF73EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D46221734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9705216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfEHOo4 (ORCPT
+        id S1728016AbfEHOq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:44:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57649 "EHLO mga06.intel.com"
+        Wed, 8 May 2019 10:46:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59551 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbfEHOom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:42 -0400
+        id S1728176AbfEHOo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:56 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
-   d="scan'208";a="169656527"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:35 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2019 07:44:49 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 4C59F79C; Wed,  8 May 2019 17:44:29 +0300 (EEST)
+        id AF33E11CE; Wed,  8 May 2019 17:44:31 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -45,10 +43,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free encrypted pages
-Date:   Wed,  8 May 2019 17:43:33 +0300
-Message-Id: <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 60/62] x86/mktme: Document the MKTME Key Service API
+Date:   Wed,  8 May 2019 17:44:20 +0300
+Message-Id: <20190508144422.13171-61-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,115 +57,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hook up into page allocator to allocate and free encrypted page
-properly.
+From: Alison Schofield <alison.schofield@intel.com>
 
-The hardware/CPU does not enforce coherency between mappings of the same
-physical page with different KeyIDs or encryption keys.
-We are responsible for cache management.
-
-Flush cache on allocating encrypted page and on returning the page to
-the free pool.
-
-prep_encrypted_page() also takes care about zeroing the page. We have to
-do this after KeyID is set for the page.
-
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mktme.h | 17 +++++++++++++
- arch/x86/mm/mktme.c          | 49 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+ Documentation/x86/mktme/index.rst      |  1 +
+ Documentation/x86/mktme/mktme_keys.rst | 96 ++++++++++++++++++++++++++
+ 2 files changed, 97 insertions(+)
+ create mode 100644 Documentation/x86/mktme/mktme_keys.rst
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-index b5afa31b4526..6e604126f0bc 100644
---- a/arch/x86/include/asm/mktme.h
-+++ b/arch/x86/include/asm/mktme.h
-@@ -40,6 +40,23 @@ static inline int vma_keyid(struct vm_area_struct *vma)
- 	return __vma_keyid(vma);
- }
- 
-+#define prep_encrypted_page prep_encrypted_page
-+void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero);
-+static inline void prep_encrypted_page(struct page *page, int order,
-+		int keyid, bool zero)
-+{
-+	if (keyid)
-+		__prep_encrypted_page(page, order, keyid, zero);
-+}
+diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
+index 0f021cc4a2db..8cf2b7d62091 100644
+--- a/Documentation/x86/mktme/index.rst
++++ b/Documentation/x86/mktme/index.rst
+@@ -8,3 +8,4 @@ Multi-Key Total Memory Encryption (MKTME)
+    mktme_overview
+    mktme_mitigations
+    mktme_configuration
++   mktme_keys
+diff --git a/Documentation/x86/mktme/mktme_keys.rst b/Documentation/x86/mktme/mktme_keys.rst
+new file mode 100644
+index 000000000000..161871dee0dc
+--- /dev/null
++++ b/Documentation/x86/mktme/mktme_keys.rst
+@@ -0,0 +1,96 @@
++MKTME Key Service API
++=====================
++MKTME is a new key service type added to the Linux Kernel Key Service.
 +
-+#define HAVE_ARCH_FREE_PAGE
-+void free_encrypted_page(struct page *page, int order);
-+static inline void arch_free_page(struct page *page, int order)
-+{
-+	if (page_keyid(page))
-+		free_encrypted_page(page, order);
-+}
++The MKTME Key Service type is available when CONFIG_X86_INTEL_MKTME is
++turned on in Intel platforms that support the MKTME feature.
 +
- #else
- #define mktme_keyid_mask	((phys_addr_t)0)
- #define mktme_nr_keyids		0
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index d4a1a9e9b1c0..43489c098e60 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -1,4 +1,5 @@
- #include <linux/mm.h>
-+#include <linux/highmem.h>
- #include <asm/mktme.h>
- 
- /* Mask to extract KeyID from physical address. */
-@@ -37,3 +38,51 @@ int __vma_keyid(struct vm_area_struct *vma)
- 	pgprotval_t prot = pgprot_val(vma->vm_page_prot);
- 	return (prot & mktme_keyid_mask) >> mktme_keyid_shift;
- }
++The MKTME Key Service type manages the allocation of hardware encryption
++keys. Users can request an MKTME type key and then use that key to
++encrypt memory with the encrypt_mprotect() system call.
 +
-+/* Prepare page to be used for encryption. Called from page allocator. */
-+void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
-+{
-+	int i;
++Usage
++-----
++    When using the Kernel Key Service to request an *mktme* key,
++    specify the *payload* as follows:
 +
-+	/*
-+	 * The hardware/CPU does not enforce coherency between mappings
-+	 * of the same physical page with different KeyIDs or
-+	 * encryption keys. We are responsible for cache management.
-+	 */
-+	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
++    type=
++        *user*	User will supply the encryption key data. Use this
++                type to directly program a hardware encryption key.
 +
-+	for (i = 0; i < (1 << order); i++) {
-+		/* All pages coming out of the allocator should have KeyID 0 */
-+		WARN_ON_ONCE(lookup_page_ext(page)->keyid);
-+		lookup_page_ext(page)->keyid = keyid;
++        *cpu*	User requests a CPU generated encryption key.
++                The CPU generates and assigns an ephemeral key.
 +
-+		/* Clear the page after the KeyID is set. */
-+		if (zero)
-+			clear_highpage(page);
++        *no-encrypt*
++                 User requests that hardware does not encrypt
++                 memory when this key is in use.
 +
-+		page++;
-+	}
-+}
++    algorithm=
++        When type=user or type=cpu the algorithm field must be
++        *aes-xts-128*
 +
-+/*
-+ * Handles freeing of encrypted page.
-+ * Called from page allocator on freeing encrypted page.
-+ */
-+void free_encrypted_page(struct page *page, int order)
-+{
-+	int i;
++        When type=clear or type=no-encrypt the algorithm field
++        must not be present in the payload.
 +
-+	/*
-+	 * The hardware/CPU does not enforce coherency between mappings
-+	 * of the same physical page with different KeyIDs or
-+	 * encryption keys. We are responsible for cache management.
-+	 */
-+	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
++    key=
++        When type=user the user must supply a 128 bit encryption
++        key as exactly 32 ASCII hexadecimal characters.
 +
-+	for (i = 0; i < (1 << order); i++) {
-+		/* Check if the page has reasonable KeyID */
-+		WARN_ON_ONCE(lookup_page_ext(page)->keyid > mktme_nr_keyids);
-+		lookup_page_ext(page)->keyid = 0;
-+		page++;
-+	}
-+}
++	When type=cpu the user may optionally supply 128 bits of
++        entropy for the CPU generated encryption key in this field.
++        It must be exactly 32 ASCII hexadecimal characters.
++
++	When type=no-encrypt this key field must not be present
++        in the payload.
++
++    tweak=
++	When type=user the user must supply a 128 bit tweak key
++        as exactly 32 ASCII hexadecimal characters.
++
++	When type=cpu the user may optionally supply 128 bits of
++        entropy for the CPU generated tweak key in this field.
++        It must be exactly 32 ASCII hexadecimal characters.
++
++        When type=no-encrypt the tweak field must not be present
++        in the payload.
++
++ERRORS
++------
++    In addition to the Errors returned from the Kernel Key Service,
++    add_key(2) or keyctl(1) commands, the MKTME Key Service type may
++    return the following errors:
++
++    EINVAL for any payload specification that does not match the
++           MKTME type payload as defined above.
++
++    EACCES for access denied. The MKTME key type uses capabilities
++           to restrict the allocation of keys to privileged users.
++           CAP_SYS_RESOURCE is required, but it will accept the
++           broader capability of CAP_SYS_ADMIN. See capabilities(7).
++
++    ENOKEY if a hardware key cannot be allocated. Additional error
++           messages will describe the hardware programming errors.
++
++EXAMPLES
++--------
++    Add a 'user' type key::
++
++        char \*options_USER = "type=user
++                               algorithm=aes-xts-128
++                               key=12345678912345671234567891234567
++                               tweak=12345678912345671234567891234567";
++
++        key = add_key("mktme", "name", options_USER, strlen(options_USER),
++                      KEY_SPEC_THREAD_KEYRING);
++
++    Add a 'cpu' type key::
++
++        char \*options_USER = "type=cpu algorithm=aes-xts-128";
++
++        key = add_key("mktme", "name", options_CPU, strlen(options_CPU),
++                      KEY_SPEC_THREAD_KEYRING);
++
++    Add a "no-encrypt' type key::
++
++	key = add_key("mktme", "name", "no-encrypt", strlen(options_CPU),
++		      KEY_SPEC_THREAD_KEYRING);
 -- 
 2.20.1
 
