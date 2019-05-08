@@ -2,89 +2,96 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCDDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8DBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E5321530
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:09:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pcmjCkM2"
+	by mail.kernel.org (Postfix) with ESMTP id AB5BB21479
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 08:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557302969;
+	bh=ULOCWDUQGwmAxHk+ckxsmDle5ZaAI58gkU46nk3dets=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DquPSLvLaIr8pPxNYxSfB8nfA3SxtrustrvKb6nMFk6gVJj8jWJoz6FKz2N8ChIbr
+	 5VM/5rzri5jWxNSuiEJlLZG/wvrGG9dUnN70nzgVOcvDEInv7cMMeonEDOTq4yZyMd
+	 jgQ8LtQw1D27i2xgJEVI+5VtiE49k70ApAkQrloI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfEHIJB (ORCPT
+        id S1726882AbfEHIJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 04:09:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46733 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfEHIJB (ORCPT
+        Wed, 8 May 2019 04:09:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41670 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfEHIJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 04:09:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r7so25870811wrr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 01:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=fxFNIEA7V7ZTCYue3C9CGZ6JTXB6kcJzDAiUiQhZtzA=;
-        b=pcmjCkM2jD1XewDN3VhIEI63Qp4BoAQ6NJySwkHFRHbzYPzhRhWaSxwD39xBosPhvV
-         IexZw+1R9w+ZmujpBaSFfhsnD096FyhuS7+5uOdr7Ao3MPEwR+dT+aJvhEqxAHGXpmeL
-         4GC5KiLO6Anv4Rc05gjNqwCyWwhXRrwInZovJUU8yOj1se8oExjvckYrGt2NV94JDI4j
-         PcXdSoYEF4qVoIoIjuFq4Hqt52mIVdGGNeC/QmXlVSjimOoyxJwOnpBVdPyXzanIxpYt
-         mtggrUDUa61XgmSSUhTQ2a1XYHDtUMsmVk3a0DJPfAt/u3wE6iYLaU7N2fq3aHbqgh9t
-         MsuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fxFNIEA7V7ZTCYue3C9CGZ6JTXB6kcJzDAiUiQhZtzA=;
-        b=Ei/jOeSiTJHT0CmQb7L7Qww8wMIbyxBpXYBNWflyhD2ITVZfhTc/yzY4J1RqBacJ6w
-         U5naUQrV//Z9d3DnlPv0HkxGZzYkD8+lo12VCrR5Fdovya/Fd1j+JdKgcyt/kDRZXjuv
-         YM0QPVStYUVjwzWb1NRPqyl7g28ng81hUetHivvKvc+0nA5Z4pcn6FM7ycdND7nAZbk3
-         yuNtXZ4r7QhTncur4N8kkhpVR8dzexbsXczkoXFynZTfCse5X1wlLOunPdqx1jnasGGG
-         k45kAoCjzYnHaGVDUUiZtBW4Vm2aF+4uyJWKV8s16kiDSlhvBTsTRYRDOS43LG8jz5fP
-         LnkA==
-X-Gm-Message-State: APjAAAW6Z0YLTl0SnQg+22TU7V60GISWG/xkKgLZtjEoAvstoB99MedZ
-        tHWBzmv8jtXdRE+tRwTd3RAjRQ==
-X-Google-Smtp-Source: APXvYqw7wQtH4AXjNUiDLs2Zh6bWTvzpqq77mI0gNIJaWkzh+2WDHnNjEzVb4o/1mEThOBfHwGBogg==
-X-Received: by 2002:adf:b641:: with SMTP id i1mr25882376wre.288.1557302940061;
-        Wed, 08 May 2019 01:09:00 -0700 (PDT)
-Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id h123sm1635385wme.6.2019.05.08.01.08.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 08 May 2019 01:08:59 -0700 (PDT)
-Message-ID: <08ee1bbfb5ae15b5cb2bd421abe6979b83097553.camel@baylibre.com>
-Subject: Re: [PATCH v2 1/4] ASoC: hdmi-codec: remove function name debug
- traces
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
-Date:   Wed, 08 May 2019 10:08:58 +0200
-In-Reply-To: <20190508065016.GP14916@sirena.org.uk>
-References: <20190506095815.24578-1-jbrunet@baylibre.com>
-         <20190506095815.24578-2-jbrunet@baylibre.com>
-         <20190508065016.GP14916@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 8 May 2019 04:09:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ULOCWDUQGwmAxHk+ckxsmDle5ZaAI58gkU46nk3dets=; b=kJNl4MWhG+iTqTlQO+ZJIp6V3
+        ob89WFRfcXV47eRAArKsK1QStuSP2FSXEFdDWAkWpGGKpd19TtpNBZ0KU6VDXX4PKKJxT7ximoCa1
+        mATDKcyuFpk7MqFbjYIUtVRQ26CJ2+RC6UTHPYRAbZnko5nYt59HninUptyz70dmqkLgw=;
+Received: from [61.199.190.11] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hOHdf-0007QV-ES; Wed, 08 May 2019 08:09:20 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id A16ED440034; Wed,  8 May 2019 08:58:48 +0100 (BST)
+Date:   Wed, 8 May 2019 16:58:48 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 6/6] soc/tegra: regulators: Add regulators coupler
+ for Tegra30
+Message-ID: <20190508075848.GX14916@sirena.org.uk>
+References: <20190414175939.12368-1-digetx@gmail.com>
+ <20190414175939.12368-7-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wrNCEKhXQ1Rm601q"
+Content-Disposition: inline
+In-Reply-To: <20190414175939.12368-7-digetx@gmail.com>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-08 at 15:50 +0900, Mark Brown wrote:
-> On Mon, May 06, 2019 at 11:58:12AM +0200, Jerome Brunet wrote:
-> > Remove the debug traces only showing the function name on entry.
-> > The same can be obtained using ftrace.
-> 
-> This is not a bug fix and so shouldn't be the first patch in the series
-> in order to avoid dependencies from it on anything later in the series
-> that is actually a fix.
 
-Sure, I'll re-order
+--wrNCEKhXQ1Rm601q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Sun, Apr 14, 2019 at 08:59:39PM +0300, Dmitry Osipenko wrote:
+> Add regulators coupler for Tegra30 SoC's that performs voltage balancing
+> of a coupled regulators and thus provides voltage scaling functionality.
 
+Same here, what are the requirements this is implementing?
+
+--wrNCEKhXQ1Rm601q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzSjDcACgkQJNaLcl1U
+h9AkPwf/Z7aGD6BhjDwDnRf1W+OFfusRfArS876TN0gpG4jze/ueQvIgTtuwni6t
+lKRHI5u/7G1tXtN0czWxH6XOVWC6rGk2eGGW4DEFiEkqKhi7mYweSL6ed0YuUOna
+LKBsZYuozCWxCsro4IHsSNpxO3NMOf/lHPWwvsLF9BaqxNA2cIsMNeUu0+a1+n5J
+vCYGm6Mpb1wp9hr1LJ6A3FgAOOrkIUwWoshN+fKSdC3rEQZitCBMiv5eTpmCxNDK
+hF4J510FgAujo03oGglUaR4Qzv8NrL6ng67QTyY7Ix5tWrDu2zXgYNWI9pIXwrZI
+rfECvpY97JH/5JKy6HTbtN0xupaUfQ==
+=vCuY
+-----END PGP SIGNATURE-----
+
+--wrNCEKhXQ1Rm601q--
