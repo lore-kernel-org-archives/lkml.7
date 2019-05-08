@@ -6,28 +6,30 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89267C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF3FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C2A218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C052177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfEHOow (ORCPT
+        id S1728595AbfEHOo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:44:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
+        Wed, 8 May 2019 10:44:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61868 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbfEHOok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:40 -0400
+        id S1728258AbfEHOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:44 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:39 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656544"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 May 2019 07:44:34 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:40 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id E99E54F8; Wed,  8 May 2019 17:44:28 +0300 (EEST)
+        id C4835A64; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +45,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 07/62] x86/mm: Mask out KeyID bits from page table entry pfn
-Date:   Wed,  8 May 2019 17:43:27 +0300
-Message-Id: <20190508144422.13171-8-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 22/62] x86/pconfig: Set a valid encryption algorithm for all MKTME commands
+Date:   Wed,  8 May 2019 17:43:42 +0300
+Message-Id: <20190508144422.13171-23-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,55 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MKTME claims several upper bits of the physical address in a page table
-entry to encode KeyID. It effectively shrinks number of bits for
-physical address. We should exclude KeyID bits from physical addresses.
+From: Alison Schofield <alison.schofield@intel.com>
 
-For instance, if CPU enumerates 52 physical address bits and number of
-bits claimed for KeyID is 6, bits 51:46 must not be threated as part
-physical address.
+The Intel MKTME architecture specification requires a valid encryption
+algorithm for all command types.
 
-This patch adjusts __PHYSICAL_MASK during MKTME enumeration.
+For commands that actually perform encryption, SET_KEY_DIRECT and
+SET_KEY_RANDOM, the user specifies the algorithm when requesting the
+key through the MKTME Key Service.
 
+For CLEAR_KEY and NO_ENCRYPT commands, a valid encryption algorithm is
+also required by the MKTME hardware. However, it does not make sense to
+ask userspace to specify one. Define the CLEAR_KEY and NO_ENCRYPT type
+commands to always include a valid encryption algorithm.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/kernel/cpu/intel.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/x86/include/asm/intel_pconfig.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 3142fd7a9b32..5dfecc9c2253 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -589,6 +589,29 @@ static void detect_tme(struct cpuinfo_x86 *c)
- 		mktme_status = MKTME_ENABLED;
- 	}
+diff --git a/arch/x86/include/asm/intel_pconfig.h b/arch/x86/include/asm/intel_pconfig.h
+index 3cb002b1d0f9..15705699a14e 100644
+--- a/arch/x86/include/asm/intel_pconfig.h
++++ b/arch/x86/include/asm/intel_pconfig.h
+@@ -21,14 +21,20 @@ enum pconfig_leaf {
  
-+#ifdef CONFIG_X86_INTEL_MKTME
-+	if (mktme_status == MKTME_ENABLED && nr_keyids) {
-+		/*
-+		 * Mask out bits claimed from KeyID from physical address mask.
-+		 *
-+		 * For instance, if a CPU enumerates 52 physical address bits
-+		 * and number of bits claimed for KeyID is 6, bits 51:46 of
-+		 * physical address is unusable.
-+		 */
-+		phys_addr_t keyid_mask;
+ /* Defines and structure for MKTME_KEY_PROGRAM of PCONFIG instruction */
+ 
++/* mktme_key_program::keyid_ctrl ENC_ALG, bits [23:8] */
++#define MKTME_AES_XTS_128	(1 << 8)
++#define MKTME_ANY_VALID_ALG	(1 << 8)
 +
-+		keyid_mask = GENMASK_ULL(c->x86_phys_bits - 1, c->x86_phys_bits - keyid_bits);
-+		physical_mask &= ~keyid_mask;
-+	} else {
-+		/*
-+		 * Reset __PHYSICAL_MASK.
-+		 * Maybe needed if there's inconsistent configuation
-+		 * between CPUs.
-+		 */
-+		physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
-+	}
-+#endif
-+
- 	/*
- 	 * KeyID bits effectively lower the number of physical address
- 	 * bits.  Update cpuinfo_x86::x86_phys_bits accordingly.
+ /* mktme_key_program::keyid_ctrl COMMAND, bits [7:0] */
+ #define MKTME_KEYID_SET_KEY_DIRECT	0
+ #define MKTME_KEYID_SET_KEY_RANDOM	1
+-#define MKTME_KEYID_CLEAR_KEY		2
+-#define MKTME_KEYID_NO_ENCRYPT		3
+ 
+-/* mktme_key_program::keyid_ctrl ENC_ALG, bits [23:8] */
+-#define MKTME_AES_XTS_128	(1 << 8)
++/*
++ * CLEAR_KEY and NO_ENCRYPT require the COMMAND in bits [7:0]
++ * and any valid encryption algorithm, ENC_ALG, in bits [23:8]
++ */
++#define MKTME_KEYID_CLEAR_KEY  (2 | MKTME_ANY_VALID_ALG)
++#define MKTME_KEYID_NO_ENCRYPT (3 | MKTME_ANY_VALID_ALG)
+ 
+ /* Return codes from the PCONFIG MKTME_KEY_PROGRAM */
+ #define MKTME_PROG_SUCCESS	0
 -- 
 2.20.1
 
