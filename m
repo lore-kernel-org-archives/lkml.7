@@ -2,254 +2,101 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDC2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2487AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746A020644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74BB20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="NQIlrTy4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOs3Uazw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfEHNWd (ORCPT
+        id S1727272AbfEHN0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:22:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43979 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfEHNWc (ORCPT
+        Wed, 8 May 2019 09:26:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45164 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfEHN0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:22:32 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so11895079wro.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 06:22:30 -0700 (PDT)
+        Wed, 8 May 2019 09:26:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i21so10096378pgi.12;
+        Wed, 08 May 2019 06:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ohE2xbTpUYzLEqPlShDMeZUkRblKnapcCYi2034pYU=;
-        b=NQIlrTy4z9jZyQQXlcz/rN7Lqf9MmMk1JIr30W0TLNui5ub3oP7KGK7nJSFBZtGmfF
-         IVLv8rfHGiq31nZDgot2yHyJQgJko4j+dUo9txR4DV7SNJZwzcuWuBHnB04WOrFYYvZH
-         7s8iy607QyK28ukYrHNmH+uAnoZFxG2qfN9ZTryqOoSsj453vgDHaIYuF90cVxPadMAK
-         yKtwq1K7oFvuvWZS9cr0B0bPpp4ABSG3tXffQtg4b5xflnoDo/oiRdTrshrYupRNUtDH
-         MjD1yZn77vIK7rObsU1zzNPfZ7Rx3Ghxl7ueOoLFhJKVWD5SkOQSOJRRRkl0Hh6kaPL/
-         ekag==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RMhJ9x36R3gdVTT73uZINt5ih7RyEduBXnV9LO7/Mfo=;
+        b=GOs3UazwyohF899j7o+bxl2A+D9tyQu2g0HE0TfEsi6cqi6qos6fyWneCG53ElOFCL
+         PTrPf6L/7V6G90PSt1LuU4KptzIVB5Boj8yBZj76IofDS8shQHZ2rILeB+MgFjSzz5CI
+         HlZUour78mIn54ZbbQ5fORqfC6nu4n6ETrXXBgkRHj9iJ4yfqBEB7h5UUy5Zoz0o1ZAN
+         yqOXpEmlUfvOZQW+b/mEydYE7943mIhVZpGNxhazScu9ZFJ90BNkym4k6G/lvQBv+T4z
+         ykZ4btBmWGouEkRfWziOxVRMozJXE/9iWYptNhs5t5BE4vaDelLMu9ri7mhzeKpAJErG
+         OLsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ohE2xbTpUYzLEqPlShDMeZUkRblKnapcCYi2034pYU=;
-        b=n9T4pULMTPvjcywhznz7f+LNuvG4Kjcv7s0vd5GUTNq8YAHMjeIyG2NjHEA6SsQCfW
-         Zp63SWyftvfgFW4GyEbFUSw2QnB01+aHom3NF88O+JXT3AM9IWwZgzyvW07xifHk6jYb
-         GfGAh2u9yF1dbEbgVRe7gxcS9iA5ujVRVzQT0kL0zKUAs6K07hMDIp5IaSE3A1LAXe8+
-         9bCdesAL6w3jZp6VgrGrLuejkbmAU1D2SYtNo0GTf2UddpZ7jZDrwJi11GmKUYTsVFzr
-         zmMxHpQtZU+AoS2sOwu2ay5ICsKlCKK1wB9PEjVo0XJl3GuoaBLqu+8NMmSunb/GHlUQ
-         iD6Q==
-X-Gm-Message-State: APjAAAUKOLEt510HKJirCShB9CnO0nyj7ajXAfVgZt2xN8Z+MZ/BKcCp
-        k1RGkEYCo7aISC59CP8Ck0NF+A==
-X-Google-Smtp-Source: APXvYqxHkHuqm9N7LvcRDGJ3bK0VMl7t9TXHcMXpUw9vdDb3HAQ6mBgXXpIkglR1aEboyylnKqnCOQ==
-X-Received: by 2002:adf:df88:: with SMTP id z8mr26199414wrl.209.1557321749191;
-        Wed, 08 May 2019 06:22:29 -0700 (PDT)
-Received: from localhost.localdomain (v22018046084765073.goodsrv.de. [185.183.158.195])
-        by smtp.gmail.com with ESMTPSA id o4sm3144193wmo.20.2019.05.08.06.22.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 06:22:28 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>
-Subject: [PATCH] fs: make all new mount api fds cloexec by default
-Date:   Wed,  8 May 2019 15:22:18 +0200
-Message-Id: <20190508132218.3617-1-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RMhJ9x36R3gdVTT73uZINt5ih7RyEduBXnV9LO7/Mfo=;
+        b=kL4HM4n4fNp3Cx2J7CSbuLNwgKALfIFlg+eLhOr1ak8SnTS4oyoRou6CZ4RVEPE5cY
+         7z0c1GBfzY062Nt+mRGJV2kMd+OdnOdNZqDiWkgwvsFD9c3ir4ZoOHkdSucnVb5d4+UZ
+         QsqXVdAQavqJ33FgRwlkVAEInXkjAUYMW6xmWqYuOqZU9IMV9AuXvJJPMdlkTPc+jMxK
+         8b2IuS9/qXEOX1AtArsHUivzQ355UMeAcQUoS0ENhlY6xQnzPdbd/IG+g6Hk/IPCUqdF
+         zqt1Q0gZmncULPrt4cfno24VKVbMTuaOChtTtWQzUy33qtKtLqjuNuo9wpl0zLUp7EIo
+         gWTQ==
+X-Gm-Message-State: APjAAAVyAO9MTwYD0reIYGOdVdicQfymumcq/nK/TCLAdtLDxEwEiGGR
+        i+KFzm4NyL/O1KHIT3nHx3A+xBqX5roeueMDVNc=
+X-Google-Smtp-Source: APXvYqx3nJR0axM9U3dMtsXTiI+kVbLrSnBN9zG+3G7GpDhgvYXizTk7QydOGv9vvFa1aK2qnb05vyk7ovjOJhRL3nc=
+X-Received: by 2002:a63:8e4b:: with SMTP id k72mr15123716pge.428.1557321960027;
+ Wed, 08 May 2019 06:26:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com> <a548ce35-5bbc-1c61-2a52-808462000091@gmail.com>
+In-Reply-To: <a548ce35-5bbc-1c61-2a52-808462000091@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 May 2019 16:25:49 +0300
+Message-ID: <CAHp75VeNSUniQtEmf9z1EGPun_3p1DZ_viXYXiAyDouU0s3uHg@mail.gmail.com>
+Subject: Re: [PATCH v3 01/11] platform/x86: asus-wmi: Fix hwmon device cleanup
+To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes file descriptors returned from the new syscalls of the new mount
-api cloexec by default.
+On Fri, Apr 19, 2019 at 1:00 PM Yurii Pavlovskyi
+<yurii.pavlovskyi@gmail.com> wrote:
+>
+> The driver does not clean up the hwmon device on exit or error. To
+> reproduce the bug, repeat rmmod, insmod to verify that device number
+> /sys/devices/platform/asus-nb-wmi/hwmon/hwmon?? grows every time. Replace
+> call for registering device with devm_* version that unregisters it
+> automatically.
 
-From a userspace perspective it is rarely the case that fds are supposed to
-be inherited across exec. In fact, most of the time userspace either needs
-to remember to pass the <SPECIFIC>_CLOEXEC flag along or needs to invoke
-fcntl() on fd to prevent accidentally leaking the fd. This is a much bigger
-issue than accidentally forgetting to remove the cloexec flag to inherit
-the fd.
-For old file descriptor types we can't break userspace but new ones should
-- whenever reasonable - be cloexec by default. Examples of this policy are
-the new seccomp notify fds and also pidfds. If userspace wants to inherit
-fds across exec they can remove the O_CLOEXEC flag and need to opt in to
-inheritance explicitly.
+>         struct device *hwmon;
+>
+> -       hwmon = hwmon_device_register_with_groups(&asus->platform_device->dev,
+> -                                                 "asus", asus,
+> -                                                 hwmon_attribute_groups);
+> +       hwmon = devm_hwmon_device_register_with_groups(
+> +                       &asus->platform_device->dev, "asus", asus,
+> +                       hwmon_attribute_groups);
+> +
 
-Note, this also has the advantage that we can get rid of all the special
-flags per file descriptor type for the new mount api. In total this lets us
-remove 4 flags:
-- FSMOUNT_CLOEXEC
-- FSOPEN_CLOEXEC
-- FSPICK_CLOEXEC
-- OPEN_TREE_CLOEXEC
+Temporary variable would help with readability, i.e.
 
-Ideally, this would be changed before rc1 is out since this would
-otherwise a UAPI break.
+struct device *dev = &asus->platform_device->dev;
+...
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
----
- fs/fsopen.c                | 13 ++++++-------
- fs/namespace.c             | 11 ++++-------
- include/uapi/linux/mount.h | 18 +++---------------
- 3 files changed, 13 insertions(+), 29 deletions(-)
-
-diff --git a/fs/fsopen.c b/fs/fsopen.c
-index 3bb9c0c8cbcc..a38fa8c616cf 100644
---- a/fs/fsopen.c
-+++ b/fs/fsopen.c
-@@ -88,12 +88,12 @@ const struct file_operations fscontext_fops = {
- /*
-  * Attach a filesystem context to a file and an fd.
-  */
--static int fscontext_create_fd(struct fs_context *fc, unsigned int o_flags)
-+static int fscontext_create_fd(struct fs_context *fc)
- {
- 	int fd;
- 
- 	fd = anon_inode_getfd("fscontext", &fscontext_fops, fc,
--			      O_RDWR | o_flags);
-+			      O_RDWR | O_CLOEXEC);
- 	if (fd < 0)
- 		put_fs_context(fc);
- 	return fd;
-@@ -126,7 +126,7 @@ SYSCALL_DEFINE2(fsopen, const char __user *, _fs_name, unsigned int, flags)
- 	if (!ns_capable(current->nsproxy->mnt_ns->user_ns, CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	if (flags & ~FSOPEN_CLOEXEC)
-+	if (flags)
- 		return -EINVAL;
- 
- 	fs_name = strndup_user(_fs_name, PAGE_SIZE);
-@@ -149,7 +149,7 @@ SYSCALL_DEFINE2(fsopen, const char __user *, _fs_name, unsigned int, flags)
- 	if (ret < 0)
- 		goto err_fc;
- 
--	return fscontext_create_fd(fc, flags & FSOPEN_CLOEXEC ? O_CLOEXEC : 0);
-+	return fscontext_create_fd(fc);
- 
- err_fc:
- 	put_fs_context(fc);
-@@ -169,8 +169,7 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
- 	if (!ns_capable(current->nsproxy->mnt_ns->user_ns, CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	if ((flags & ~(FSPICK_CLOEXEC |
--		       FSPICK_SYMLINK_NOFOLLOW |
-+	if ((flags & ~(FSPICK_SYMLINK_NOFOLLOW |
- 		       FSPICK_NO_AUTOMOUNT |
- 		       FSPICK_EMPTY_PATH)) != 0)
- 		return -EINVAL;
-@@ -203,7 +202,7 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
- 		goto err_fc;
- 
- 	path_put(&target);
--	return fscontext_create_fd(fc, flags & FSPICK_CLOEXEC ? O_CLOEXEC : 0);
-+	return fscontext_create_fd(fc);
- 
- err_fc:
- 	put_fs_context(fc);
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 3357c3d65475..ab8cea5d745f 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2369,11 +2369,8 @@ SYSCALL_DEFINE3(open_tree, int, dfd, const char *, filename, unsigned, flags)
- 	int error;
- 	int fd;
- 
--	BUILD_BUG_ON(OPEN_TREE_CLOEXEC != O_CLOEXEC);
--
- 	if (flags & ~(AT_EMPTY_PATH | AT_NO_AUTOMOUNT | AT_RECURSIVE |
--		      AT_SYMLINK_NOFOLLOW | OPEN_TREE_CLONE |
--		      OPEN_TREE_CLOEXEC))
-+		      AT_SYMLINK_NOFOLLOW | OPEN_TREE_CLONE))
- 		return -EINVAL;
- 
- 	if ((flags & (AT_RECURSIVE | OPEN_TREE_CLONE)) == AT_RECURSIVE)
-@@ -2389,7 +2386,7 @@ SYSCALL_DEFINE3(open_tree, int, dfd, const char *, filename, unsigned, flags)
- 	if (detached && !may_mount())
- 		return -EPERM;
- 
--	fd = get_unused_fd_flags(flags & O_CLOEXEC);
-+	fd = get_unused_fd_flags(flags | O_CLOEXEC);
- 	if (fd < 0)
- 		return fd;
- 
-@@ -3352,7 +3349,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
- 	if (!may_mount())
- 		return -EPERM;
- 
--	if ((flags & ~(FSMOUNT_CLOEXEC)) != 0)
-+	if (flags)
- 		return -EINVAL;
- 
- 	if (attr_flags & ~(MOUNT_ATTR_RDONLY |
-@@ -3457,7 +3454,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
- 	}
- 	file->f_mode |= FMODE_NEED_UNMOUNT;
- 
--	ret = get_unused_fd_flags((flags & FSMOUNT_CLOEXEC) ? O_CLOEXEC : 0);
-+	ret = get_unused_fd_flags(flags | O_CLOEXEC);
- 	if (ret >= 0)
- 		fd_install(ret, file);
- 	else
-diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
-index 96a0240f23fe..c688e4ac843b 100644
---- a/include/uapi/linux/mount.h
-+++ b/include/uapi/linux/mount.h
-@@ -59,7 +59,6 @@
-  * open_tree() flags.
-  */
- #define OPEN_TREE_CLONE		1		/* Clone the target tree and attach the clone */
--#define OPEN_TREE_CLOEXEC	O_CLOEXEC	/* Close the file on execve() */
- 
- /*
-  * move_mount() flags.
-@@ -72,18 +71,12 @@
- #define MOVE_MOUNT_T_EMPTY_PATH		0x00000040 /* Empty to path permitted */
- #define MOVE_MOUNT__MASK		0x00000077
- 
--/*
-- * fsopen() flags.
-- */
--#define FSOPEN_CLOEXEC		0x00000001
--
- /*
-  * fspick() flags.
-  */
--#define FSPICK_CLOEXEC		0x00000001
--#define FSPICK_SYMLINK_NOFOLLOW	0x00000002
--#define FSPICK_NO_AUTOMOUNT	0x00000004
--#define FSPICK_EMPTY_PATH	0x00000008
-+#define FSPICK_SYMLINK_NOFOLLOW	0x00000001
-+#define FSPICK_NO_AUTOMOUNT	0x00000002
-+#define FSPICK_EMPTY_PATH	0x00000004
- 
- /*
-  * The type of fsconfig() call made.
-@@ -99,11 +92,6 @@ enum fsconfig_command {
- 	FSCONFIG_CMD_RECONFIGURE = 7,	/* Invoke superblock reconfiguration */
- };
- 
--/*
-- * fsmount() flags.
-- */
--#define FSMOUNT_CLOEXEC		0x00000001
--
- /*
-  * Mount attributes.
-  */
 -- 
-2.21.0
-
+With Best Regards,
+Andy Shevchenko
