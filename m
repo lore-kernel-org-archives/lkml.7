@@ -2,142 +2,115 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC92C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD7EC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4581320675
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF7621655
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:05:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QYBfw7s0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfEHLET (ORCPT
+        id S1727270AbfEHLFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:04:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60902 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726608AbfEHLES (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:04:18 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48B2NiH164193
-        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 07:04:17 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sbw8ka45n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 07:04:17 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Wed, 8 May 2019 12:04:14 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 May 2019 12:04:09 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48B48wv58327292
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 May 2019 11:04:08 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2CB9AAE056;
-        Wed,  8 May 2019 11:04:08 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 84F9DAE058;
-        Wed,  8 May 2019 11:04:07 +0000 (GMT)
-Received: from thinkpad (unknown [9.152.212.151])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 May 2019 11:04:07 +0000 (GMT)
-Date:   Wed, 8 May 2019 13:04:06 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH AUTOSEL 4.14 62/95] mm, memory_hotplug: initialize
- struct pages for the full memory section
-In-Reply-To: <20190507171806.GG1747@sasha-vm>
-References: <20190507053826.31622-1-sashal@kernel.org>
-        <20190507053826.31622-62-sashal@kernel.org>
-        <CAKgT0Uc8ywg8zrqyM9G+Ws==+yOfxbk6FOMHstO8qsizt8mqXA@mail.gmail.com>
-        <CAHk-=win03Q09XEpYmk51VTdoQJTitrr8ON9vgajrLxV8QHk2A@mail.gmail.com>
-        <20190507170208.GF1747@sasha-vm>
-        <CAHk-=wi5M-CC3CUhmQZOvQE2xJgfBgrgyAxp+tE=1n3DaNocSg@mail.gmail.com>
-        <20190507171806.GG1747@sasha-vm>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 8 May 2019 07:05:04 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58040 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfEHLFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 07:05:03 -0400
+Received: from zn.tnic (p2E584D41.dip0.t-ipconnect.de [46.88.77.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CD4FA1EC0C09;
+        Wed,  8 May 2019 13:05:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557313501;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=o7NDZ8O3Gbdptbt9b7o+h4iD6eziklREAki3blIrTDs=;
+        b=QYBfw7s0l1XyJ+2GTNrw/PdH4LkRT5Fm6B9TAjnLNntc4z2D2OS9LTxN6PAgvT/9VDGGno
+        JGEwE5nFPkXYKjEDStBkIgI3F0+sZbAlNl6rfN1PP9lr3isGO43Y/iC8hgyw7xo/LBBdSc
+        qkB5HZlwyomqzqTZizclT3XIKNLF07s=
+Date:   Wed, 8 May 2019 13:02:50 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     PanBian <bianpan2016@163.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] EDAC/sysfs: Fix memory leak when creating a csrow object
+Message-ID: <20190508110250.GD19015@zn.tnic>
+References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
+ <20190418172548.GL27160@zn.tnic>
+ <20190419003536.GA57795@bianpan2016@163.com>
+ <20190419004516.GC559@zn.tnic>
+ <20190427214925.GE16338@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050811-0016-0000-0000-000002798757
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050811-0017-0000-0000-000032D63610
-Message-Id: <20190508130406.3c9237c1@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080071
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190427214925.GE16338@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 13:18:06 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+From 28e7f23939208bea639d6cd3d492cde3f65a7e4f Mon Sep 17 00:00:00 2001
+From: Pan Bian <bianpan2016@163.com>
+Date: Thu, 18 Apr 2019 10:27:18 +0800
 
-> On Tue, May 07, 2019 at 10:15:19AM -0700, Linus Torvalds wrote:
-> >On Tue, May 7, 2019 at 10:02 AM Sasha Levin <sashal@kernel.org> wrote:
-> >>
-> >> I got it wrong then. I'll fix it up and get efad4e475c31 in instead.
-> >
-> >Careful. That one had a bug too, and we have 891cb2a72d82 ("mm,
-> >memory_hotplug: fix off-by-one in is_pageblock_removable").
-> >
-> >All of these were *horribly* and subtly buggy, and might be
-> >intertwined with other issues. And only trigger on a few specific
-> >machines where the memory map layout is just right to trigger some
-> >special case or other, and you have just the right config.
-> >
-> >It might be best to verify with Michal Hocko. Michal?
-> 
-> Michal, is there a testcase I can plug into kselftests to make sure we
-> got this right (and don't regress)? We care a lot about memory hotplug
-> working right.
+In edac_create_csrow_object(), the reference to the object is not
+released when adding the device to the device hierarchy fails
+(device_add()). This may result in a memory leak.
 
-We hit the panics on s390 with special z/VM memory layout, but they both
-can be triggered simply by using mem= kernel parameter (and
-CONFIG_DEBUG_VM_PGFLAGS=y).
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
+---
+ drivers/edac/edac_mc_sysfs.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-With "mem=3075M" (and w/o the commits efad4e475c31 + 24feb47c5fa5), it
-can be triggered by reading from
-/sys/devices/system/memory/memory<x>/valid_zones, or from
-/sys/devices/system/memory/memory<x>/removable, with <x> being the last
-memory block.
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 464174685589..9b7d396f26e9 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -404,6 +404,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
+ static int edac_create_csrow_object(struct mem_ctl_info *mci,
+ 				    struct csrow_info *csrow, int index)
+ {
++	int err;
++
+ 	csrow->dev.type = &csrow_attr_type;
+ 	csrow->dev.groups = csrow_dev_groups;
+ 	device_initialize(&csrow->dev);
+@@ -415,7 +417,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
+ 	edac_dbg(0, "creating (virtual) csrow node %s\n",
+ 		 dev_name(&csrow->dev));
+ 
+-	return device_add(&csrow->dev);
++	err = device_add(&csrow->dev);
++	if (err)
++		put_device(&csrow->dev);
++
++	return err;
+ }
+ 
+ /* Create a CSROW object under specifed edac_mc_device */
+-- 
+2.21.0
 
-This is with 256MB section size and memory block size. On LPAR, with
-256MB section size and 1GB memory block size, for some reason the
-"removable" issue doesn't trigger, only the "valid_zones" issue.
 
-Using lsmem will also trigger it, as it reads both the valid_zones and
-the removable attribute for all memory blocks. So, a test with
-not-section-aligned mem= parameter and using lsmem could be an option.
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards,
-Gerald
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
