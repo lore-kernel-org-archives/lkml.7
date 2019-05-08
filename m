@@ -6,38 +6,37 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA37C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4C4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AA821744
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC3D20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfEHUY4 (ORCPT
+        id S1728917AbfEHUY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:24:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 16:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbfEHUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:24:53 -0400
+        id S1728832AbfEHUYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 16:24:54 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D834721734;
-        Wed,  8 May 2019 20:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5829821726;
+        Wed,  8 May 2019 20:24:54 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hOT7U-0007eq-1S; Wed, 08 May 2019 16:24:52 -0400
-Message-Id: <20190508202451.935409793@goodmis.org>
+        id 1hOT7V-0007jE-D2; Wed, 08 May 2019 16:24:53 -0400
+Message-Id: <20190508202453.294437486@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 08 May 2019 16:24:28 -0400
+Date:   Wed, 08 May 2019 16:24:37 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [for-next][PATCH 01/13] x86_64: Add gap to int3 to allow for call emulation
+        Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [for-next][PATCH 10/13] tracing: Allow RCU to run between postponed startup tests
 References: <20190508202427.252736423@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,75 +45,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-To allow an int3 handler to emulate a call instruction, it must be able to
-push a return address onto the stack. Add a gap to the stack to allow the
-int3 handler to push the return address and change the return from int3 to
-jump straight to the emulated called function target.
+When building a allmodconfig kernel for arm64 and boot that in qemu,
+CONFIG_FTRACE_STARTUP_TEST gets enabled and that takes time so the
+watchdog expires and prints out a message like this:
+'watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]'
+Depending on what the what test gets called from init_trace_selftests()
+it stays minutes in the loop.
+Rework so that function cond_resched() gets called in the
+init_trace_selftests loop.
 
-Link: http://lkml.kernel.org/r/20181130183917.hxmti5josgq4clti@treble
-Link: http://lkml.kernel.org/r/20190502162133.GX2623@hirez.programming.kicks-ass.net
+Link: http://lkml.kernel.org/r/20181130145622.26334-1-anders.roxell@linaro.org
 
-[
-  Note, this is needed to allow Live Kernel Patching to not miss calling a
-  patched function when tracing is enabled. -- Steven Rostedt
-]
-
-Cc: stable@vger.kernel.org
-Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-Tested-by: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Co-developed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- arch/x86/entry/entry_64.S | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 1f0efdb7b629..27fcc6fbdd52 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -879,7 +879,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
-  * @paranoid == 2 is special: the stub will never switch stacks.  This is for
-  * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
-  */
--.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1
-+.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 create_gap=0
- ENTRY(\sym)
- 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 3259019cc66d..4269af5905e4 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1722,6 +1722,10 @@ static __init int init_trace_selftests(void)
+ 	pr_info("Running postponed tracer tests:\n");
  
-@@ -899,6 +899,20 @@ ENTRY(\sym)
- 	jnz	.Lfrom_usermode_switch_stack_\@
- 	.endif
- 
-+	.if \create_gap == 1
-+	/*
-+	 * If coming from kernel space, create a 6-word gap to allow the
-+	 * int3 handler to emulate a call instruction.
-+	 */
-+	testb	$3, CS-ORIG_RAX(%rsp)
-+	jnz	.Lfrom_usermode_no_gap_\@
-+	.rept	6
-+	pushq	5*8(%rsp)
-+	.endr
-+	UNWIND_HINT_IRET_REGS offset=8
-+.Lfrom_usermode_no_gap_\@:
-+	.endif
-+
- 	.if \paranoid
- 	call	paranoid_entry
- 	.else
-@@ -1130,7 +1144,7 @@ apicinterrupt3 HYPERV_STIMER0_VECTOR \
- #endif /* CONFIG_HYPERV */
- 
- idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=DEBUG_STACK
--idtentry int3			do_int3			has_error_code=0
-+idtentry int3			do_int3			has_error_code=0	create_gap=1
- idtentry stack_segment		do_stack_segment	has_error_code=1
- 
- #ifdef CONFIG_XEN_PV
+ 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
++		/* This loop can take minutes when sanitizers are enabled, so
++		 * lets make sure we allow RCU processing.
++		 */
++		cond_resched();
+ 		ret = run_tracer_selftest(p->type);
+ 		/* If the test fails, then warn and remove from available_tracers */
+ 		if (ret < 0) {
 -- 
 2.20.1
 
