@@ -2,108 +2,115 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5BBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C05C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8D0216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kZ0sGhAL"
+	by mail.kernel.org (Postfix) with ESMTP id 6703A216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfEHVjr (ORCPT
+        id S1728539AbfEHVjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 17:39:47 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39540 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfEHVjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 17:39:46 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q10so198324ljc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 14:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x35GHOC+4EYtsgrhdYQQcY08TD8wwwstK0EnEQLGChI=;
-        b=kZ0sGhALn3IdcGAoIdKhFQmH3MoaO+qPD1BFqOhJCn9ot837nEvhn/WG31aFznIVPD
-         EfJ9Jok5N+3il0QxXYCum4koYryraM6ilb3IcCtM2Cehbfb7PFKOdeG0//7rdbs9zGqM
-         usoZSbpUAeD8beJrUyClmY5+lyaW2urpR1XZGgqSwpCkeb8/oQIXUkdQeffC110GNQZE
-         Li/xkfjhcBnCt7ZQ+lX+zmiHyNxO15S1MeoMcU0mXj4NTLzK5LbWP7I1ZSnv/YBhin0F
-         R3p5JzWyuw1Hv215gYur366/0cKQo0+HrXuYj+WhsT/k8OlHqp/sujpz8fBxx3f3jw8/
-         9aSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x35GHOC+4EYtsgrhdYQQcY08TD8wwwstK0EnEQLGChI=;
-        b=Qi8EBO5eFqjYHzQnvrfQWcm0okOZokUiaaIc5HYAzoO+Lk0g+ZqDacXGhQtE25/xv0
-         P/AGx/rRXMLnKk6iw/ZGZK8TBqaNhVSSQz3hmQ0ZdGUnrBMNSedKw34sHbVWccvx/KAt
-         /oa6WI8QbvaZrjYoDq1nm0hQH+7NIDg9NTGfRol93LoQyYkMuPDpa5i59i1XoJU2VdNZ
-         F8RYhKi3xyNxOmZx3wPIe1gZdGIbE2W33BZ8zNGjmfTRyAvpqBgjGFEECzE3POfn/HGG
-         oQnN+/yj6/ApR9oEUM77nwkJyP81Xr4ggFwY7YZUThGjdgu2IWQ5qGCLkP7ZS6aLHapU
-         YnCQ==
-X-Gm-Message-State: APjAAAWQhriczOHB0BUx+0VWhvzFdvdBlsL/zYVGGqXP6PPwyeiC6UOn
-        IscnPLLtdZtdw6JmIw9gjcXliHzDGnBYfgBBnpHoTw==
-X-Google-Smtp-Source: APXvYqxNsEw4hTTxmL8Y4zpll2bZRkk9M8uJxZtl0pjA6EfZbClLaExliTbVd2dOkZbWasN2xHyUAQ33ww1TqOHkJmU=
-X-Received: by 2002:a2e:9d12:: with SMTP id t18mr34389lji.163.1557351583857;
- Wed, 08 May 2019 14:39:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507220115.90395-1-fletcherw@chromium.org>
- <20190507220115.90395-2-fletcherw@chromium.org> <20190508073623.GT14916@sirena.org.uk>
-In-Reply-To: <20190508073623.GT14916@sirena.org.uk>
-From:   Curtis Malainey <cujomalainey@google.com>
-Date:   Wed, 8 May 2019 14:39:32 -0700
-Message-ID: <CAOReqxgYV3SdXot84Xa4X7=MCZdzWmb2N+jaWzjxgmdoMRx5Mw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] ASoC: rt5677: allow multiple interrupt sources
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Zhang <benzh@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        alsa-devel@alsa-project.org
+        Wed, 8 May 2019 17:39:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49782 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbfEHVjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 17:39:52 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 978B43082E3F;
+        Wed,  8 May 2019 21:39:52 +0000 (UTC)
+Received: from ovpn-117-112.phx2.redhat.com (ovpn-117-112.phx2.redhat.com [10.3.117.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FE8E608A6;
+        Wed,  8 May 2019 21:39:51 +0000 (UTC)
+Message-ID: <7d3a76c0c9115726402cfc52da92fd8e2cac426c.camel@redhat.com>
+Subject: Re: [PATCH] fpga: dfl: afu: Pass the correct device to
+ dma_mapping_error()
+From:   Scott Wood <swood@redhat.com>
+To:     Alan Tull <atull@kernel.org>,
+        Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc:     Wu Hao <hao.wu@intel.com>, linux-fpga@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 08 May 2019 16:39:51 -0500
+In-Reply-To: <CANk1AXTv2DFpRDAJ9UH9+LRo=wrmcbP02zbWbtTXku6iwPAhOw@mail.gmail.com>
+References: <20190410215327.8024-1-swood@redhat.com>
+         <20190411123314.GA19198@hao-dev>
+         <CAJYdmeNX9F_EmTPBjQ1SXOOU=JBA1kBO6WEjBXTmJux4O-CR5A@mail.gmail.com>
+         <CANk1AXTv2DFpRDAJ9UH9+LRo=wrmcbP02zbWbtTXku6iwPAhOw@mail.gmail.com>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 08 May 2019 21:39:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, May 8, 2019 at 12:36 AM
-To: Fletcher Woodruff
-Cc: <linux-kernel@vger.kernel.org>, Ben Zhang, Jaroslav Kysela, Liam
-Girdwood, Oder Chiou, Takashi Iwai, Curtis Malainey,
-<alsa-devel@alsa-project.org>
+On Mon, 2019-04-15 at 14:22 -0500, Alan Tull wrote:
+> On Thu, Apr 11, 2019 at 11:36 AM Moritz Fischer
+> <moritz.fischer.private@gmail.com> wrote:
+> 
+> Hi Scott,
+> 
+> Thanks!
+> 
+> > Hi Scott,
+> > 
+> > good catch!
+> > 
+> > On Thu, Apr 11, 2019 at 5:49 AM Wu Hao <hao.wu@intel.com> wrote:
+> > > On Wed, Apr 10, 2019 at 04:53:27PM -0500, Scott Wood wrote:
+> > > > dma_mapping_error() was being called on a different device struct
+> > > > than
+> > > > what was passed to map/unmap.  Besides rendering the error checking
+> > > > ineffective, it caused a debug splat with CONFIG_DMA_API_DEBUG.
+> > > > 
+> > > > Signed-off-by: Scott Wood <swood@redhat.com>
+> > > 
+> > > Hi Scott,
+> > > 
+> > > Looks good to me. Thanks for catching this issue.
+> > > 
+> > > Acked-by: Wu Hao <hao.wu@intel.com>
+> > > 
+> > > Hao
+> > > 
+> > > > ---
+> > > >  drivers/fpga/dfl-afu-dma-region.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-
+> > > > afu-dma-region.c
+> > > > index e18a786fc943..cd68002ac097 100644
+> > > > --- a/drivers/fpga/dfl-afu-dma-region.c
+> > > > +++ b/drivers/fpga/dfl-afu-dma-region.c
+> > > > @@ -399,7 +399,7 @@ int afu_dma_map_region(struct
+> > > > dfl_feature_platform_data *pdata,
+> > > >                                   region->pages[0], 0,
+> > > >                                   region->length,
+> > > >                                   DMA_BIDIRECTIONAL);
+> > > > -     if (dma_mapping_error(&pdata->dev->dev, region->iova)) {
+> > > > +     if (dma_mapping_error(dfl_fpga_pdata_to_parent(pdata), region-
+> > > > >iova)) {
+> > > >               dev_err(&pdata->dev->dev, "failed to map for dma\n");
+> > > >               ret = -EFAULT;
+> > > >               goto unpin_pages;
+> > > > --
+> > > > 1.8.3.1
+> > 
+> > Acked-by: Moritz Fischer <mdf@kernel.org>
+> 
+> Acked-by: Alan Tull <atull@kernel.org>
 
-> On Tue, May 07, 2019 at 04:01:13PM -0600, Fletcher Woodruff wrote:
->
-> > This patch does not add polarity flipping support within regmap-irq
-> > because there is extra work that must be done within the irq handler
-> > to support hotword detection. On the Chromebook Pixel, the firmware will
-> > disconnect GPIO1 from the jack detection irq when a hotword is detected
-> > and trigger the interrupt handler. Inside the handler, we will need to
-> > detect this, report the hotword event, and re-connect GPIO1 to the jack
-> > detection irq.
->
-> Please have a conversation with your firmware team about the concept of
-> abstraction - this is clearly a problematic thing to do as it's causing
-> the state of the system to change for devices that are mostly managed
-> from the operating system.  It's not clear to me that this shouldn't be
-> split off somehow so that it doesn't impact other systems using this
-> hardware.
->
-Pixelbooks (Samus Chromebook) are the only devices that use this part.
-Realtek has confirmed this. Therefore we only have to worry about
-breaking ourselves. That being said I agree there is likely a better
-way to handle general abstraction here. We will need the explicit irq
-handling since I will be following these patches up with patches that
-enable hotwording on the codec (we will be sending the firmware to
-linux-firmware as well that is needed for the process.)
+Whose tree would these patches be going through?
+
+-Scott
+
+
