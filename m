@@ -2,82 +2,122 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27214C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B06C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E717C20644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXO9tnt2"
+	by mail.kernel.org (Postfix) with ESMTP id 9025620644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfEHPcv (ORCPT
+        id S1727409AbfEHPdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:32:51 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40091 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfEHPcv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:32:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d15so17872701ljc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 08:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=efFqE71myC6MPTZmHm78nEVSWRAaBgXdAc12s1W2kpY=;
-        b=LXO9tnt2EM8URsuamNbGdiqdKaqqaX/EpEG+nAamEYMCftm2Ko15oGNlcXP2FvQfIz
-         xc+/kenQh49yDjNpKW59niPBWwoFBTMji4QvNiAsG4V+f9HOLvVaDHn2SjK8QO4EhZng
-         ePQJjVBXqsSwbIBAyH97xSqAqSnN+qXGTsGgi+F8d3ZMz405ZgorNJNn2t+/ROsOcbcd
-         rtthFj9moXY4naveRVbIms2SlyaHdA/MW0kKU+TRbdARhJyyHDSk5RcuoNWGnin5OdIG
-         +mJkt3kr++vcUDaMvmWmddg2JQZk+xfeXRIjf2hPISJ5YcIc0w4k6KmjxtYrt/9YRGNU
-         gIqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=efFqE71myC6MPTZmHm78nEVSWRAaBgXdAc12s1W2kpY=;
-        b=kaZWEV7k4hh6rUHO7R+z/Fjwo7933NDLzFSIN9dngahF8jAc9dy9XMasreUsNU8H+x
-         Qlvy1dnfEiidcX7JGvduGzLhELxB9dGVz1hNcIVS0lkJ8Tu4rw8P4Bxw4rd46t4kS0je
-         rbvdS9nWGTbVItXI+c7z4nKMxpLoPeg/qlB8lT6pNgFSvTTGKo7IXFFCKNggIFTQMgVC
-         X+MQ0rSV34VrqIdyY0pzbU9sGsApsnrYBnLxxFuzjbqB/9qltOCdfywF2WU6qpvdhpMr
-         Z4YlnQa393Ctg+zrAJQ6uCqA3751StxHIXAzrp/KvKyP5cTwd5R4Xcxzhe9TyY5qlhEX
-         xwag==
-X-Gm-Message-State: APjAAAWtoPiBpW6UTLEZ7qy/wz7NbYFWMs00MgqLwIWPvNDjGcOFk7pm
-        yeLJarMnYNk/FzxbeltyzBoVevrZY/agq/mEplY=
-X-Google-Smtp-Source: APXvYqxjMfOCsup4df3nANSM7MP6sd4VeE+ydPPvmQ9S/sCtRdgwZDSaWO0vlP5DDJMv6B8E6BuF2KMaxRU38Fo7veI=
-X-Received: by 2002:a2e:1445:: with SMTP id 5mr1824359lju.37.1557329568904;
- Wed, 08 May 2019 08:32:48 -0700 (PDT)
+        Wed, 8 May 2019 11:33:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44820 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfEHPdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 11:33:15 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id ED8C04C8B852AB280886;
+        Wed,  8 May 2019 23:33:10 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
+ 23:32:58 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <willemb@google.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <edumazet@google.com>, <maximmi@mellanox.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] packet: Fix error path in packet_init
+Date:   Wed, 8 May 2019 23:32:41 +0800
+Message-ID: <20190508153241.30776-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190508122721.7513-1-borneo.antonio@gmail.com>
- <20190508122721.7513-4-borneo.antonio@gmail.com> <73a79b49d0183468a63876b170d1318d38c78d73.camel@perches.com>
-In-Reply-To: <73a79b49d0183468a63876b170d1318d38c78d73.camel@perches.com>
-From:   Antonio Borneo <borneo.antonio@gmail.com>
-Date:   Wed, 8 May 2019 17:32:28 +0200
-Message-ID: <CAAj6DX3LahQK_t0paVzcTfTsavANXnatgc_vX_1VLPJ9RhsdHQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] checkpatch: replace magic value for TAB size
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 4:52 PM Joe Perches <joe@perches.com> wrote:
-...
-> > In these cases the script will be probably modified and adapted,
-> > so there is no need (at least for the moment) to expose this
-> > setting on the script's command line.
->
-> Disagree.  Probably getter to add a --tabsize=<foo> option now.
+ kernel BUG at lib/list_debug.c:47!
+ invalid opcode: 0000 [#1
+ CPU: 0 PID: 11195 Comm: rmmod Tainted: G        W         5.1.0+ #33
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+ RIP: 0010:__list_del_entry_valid+0x55/0x90
+ Code: 12 48 39 d7 75 39 48 8b 50 08 48 39 d7 75 1d b8 01 00 00 00 5d c3 48 89 c2 48 89 fe 
+ 31 c0 48 c7 c7 40 3a fe 82 e8 74 c1 78 ff <0f> 0b 48 89 fe 31 c0 48 c7 c7 f0 3a fe 82 e8 61 c1 78 ff 0f 0b 48
+ RSP: 0018:ffffc90001b8be48 EFLAGS: 00010246
+ RAX: 000000000000004e RBX: ffffffffa0210000 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: ffff888237a16808 RDI: 00000000ffffffff
+ RBP: ffffc90001b8be48 R08: 0000000000000000 R09: 0000000000000001
+ R10: 0000000000000000 R11: ffffffff842c1640 R12: 0000000000000800
+ R13: 0000000000000000 R14: ffffc90001b8be58 R15: ffffffffa0210000
+ FS:  00007f58963c7540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000056064c7af818 CR3: 00000001e9895000 CR4: 00000000000006f0
+ Call Trace:
+  unregister_pernet_operations+0x34/0x110
+  unregister_pernet_subsys+0x1c/0x30
+  packet_exit+0x1c/0x1dd [af_packet
+  __x64_sys_delete_module+0x16b/0x290
+  ? trace_hardirqs_off_thunk+0x1a/0x1c
+  do_syscall_64+0x6b/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Ok, will send a V2 including the command line option.
-Exposing TAB size, makes the option name relevant; should I keep
-"--tabsize" or is "--tab-stop" more appropriate?
+Fix error handing path in packet_init to
+avoid possilbe issue if some error occur.
 
-Antonio
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/packet/af_packet.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 90d4e3c..3917c75 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4598,14 +4598,30 @@ static void __exit packet_exit(void)
+ 
+ static int __init packet_init(void)
+ {
+-	int rc = proto_register(&packet_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&packet_proto, 0);
++	if (rc)
+ 		goto out;
+ 
+-	sock_register(&packet_family_ops);
+-	register_pernet_subsys(&packet_net_ops);
+-	register_netdevice_notifier(&packet_netdev_notifier);
++	rc = sock_register(&packet_family_ops);
++	if (rc)
++		goto out_proto;
++	rc = register_pernet_subsys(&packet_net_ops);
++	if (rc)
++		goto out_sock;
++	rc = register_netdevice_notifier(&packet_netdev_notifier);
++	if (rc)
++		goto out_pernet;
++
++	return 0;
++
++out_pernet:
++	unregister_pernet_subsys(&packet_net_ops);
++out_sock:
++	sock_unregister(PF_PACKET);
++out_proto:
++	proto_unregister(&packet_proto);
+ out:
+ 	return rc;
+ }
+-- 
+1.8.3.1
+
+
