@@ -2,318 +2,110 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DFAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E81AC04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6BF20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557300354;
-	bh=jzO050Wewk+rFMC4Z1fjI4UJ716Ph+60nlXVau0FKWE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=omn6H4GceuiU8spczct4qrMb26DVscETMWOfsIzhLbcZKbvDfbEBOSaDCYkJPQJwc
-	 p7vwuBFTSEzomBQvuXJEdOp0fPI69QSHIS0WLhj9UlgCq7EP3p1o2VoJWqjcFYOzdN
-	 qL/58iOe4gMTxBCyrvGS4wmTTxwP6DgG4GUolPfs=
+	by mail.kernel.org (Postfix) with ESMTP id 6598220989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="cx+jDf1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfEHHZy (ORCPT
+        id S1726990AbfEHH2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfEHHZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:25:53 -0400
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DDC021530;
-        Wed,  8 May 2019 07:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557300351;
-        bh=jzO050Wewk+rFMC4Z1fjI4UJ716Ph+60nlXVau0FKWE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Q3f6bwJoiG6FgNSiytY4Lo7ntjcOkVfNnNBF95tmz6VxLdqKh7txerGoc1/qEs6uN
-         d+kHfup2/xoW9JvwzmycWR5++fdNTg37RNM2fMnaTU2McRSvDY7TUQyhfLuQPhDGk/
-         R36mMBxjkIOMxZaMadwP3bE6OBWrWwpd80wuGjRY=
-Received: by mail-lf1-f50.google.com with SMTP id f1so986599lfl.6;
-        Wed, 08 May 2019 00:25:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAXjcTJyUDYyPxxYYrmmuJMkLC8E38kpfUg5JTH30buctBHR3LPX
-        p0uD1pBp4HR0f4SchzILRO6/9N1KKESLJV95iIs=
-X-Google-Smtp-Source: APXvYqwBgP9hZLm7s8pUqqsx7t0N+Zi4L4NhkNPMloo5vaBwKyVsajAn3EVlgnXJipYIPRykyxn/twffi5oMedS2vWM=
-X-Received: by 2002:a19:97c8:: with SMTP id z191mr18746085lfd.167.1557300349411;
- Wed, 08 May 2019 00:25:49 -0700 (PDT)
+        Wed, 8 May 2019 03:28:13 -0400
+Received: from mail-eopbgr00128.outbound.protection.outlook.com ([40.107.0.128]:25193
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726628AbfEHH2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 03:28:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qWKbaahYiA9lYMyegZeWHf8b2vQmLuiL+B95D4p8mLk=;
+ b=cx+jDf1d2Tc/swdAuzjj69EfNTsgEVzvC64FIoFK9O8ellLAtuppmrmY4GrQC9ue0SZkLR0mvfME6+r3z++EXrv87BR+NLb8bklYwXVqHcJ894wNrZXAkORv6Y9sMiopCclSzr5MdYL/67tdrbFhVlmPjGNvatixrfIz0flGjH8=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB3933.eurprd05.prod.outlook.com (52.134.4.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.20; Wed, 8 May 2019 07:28:05 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::48ff:f344:98da:6571]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::48ff:f344:98da:6571%5]) with mapi id 15.20.1856.012; Wed, 8 May 2019
+ 07:28:05 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH 1/5] iio: stmpe-adc: Add compatible name
+Thread-Topic: [PATCH 1/5] iio: stmpe-adc: Add compatible name
+Thread-Index: AQHVBOJChjWKjOCYJEK9rCCD5+wLmaZgzdmAgAAHiAA=
+Date:   Wed, 8 May 2019 07:28:05 +0000
+Message-ID: <0cf03cb66eebb1aa87a4460f96db5cadab47392c.camel@toradex.com>
+References: <20190507143615.28477-1-dev@pschenker.ch>
+         <20190508070107.GG7627@dell>
+In-Reply-To: <20190508070107.GG7627@dell>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ddaba678-98d0-4676-a0d7-08d6d386b649
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0502MB3933;
+x-ms-traffictypediagnostic: VI1PR0502MB3933:
+x-microsoft-antispam-prvs: <VI1PR0502MB3933A22E607CF338585F3446F4320@VI1PR0502MB3933.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:390;
+x-forefront-prvs: 0031A0FFAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(366004)(136003)(346002)(376002)(396003)(199004)(189003)(305945005)(6246003)(2351001)(7416002)(36756003)(14454004)(86362001)(6116002)(6506007)(6486002)(68736007)(4326008)(3846002)(6916009)(53936002)(229853002)(44832011)(2501003)(478600001)(25786009)(11346002)(446003)(6436002)(2906002)(14444005)(102836004)(5640700003)(186003)(118296001)(2616005)(7736002)(5660300002)(76176011)(99286004)(316002)(91956017)(486006)(73956011)(64756008)(66476007)(81156014)(76116006)(8676002)(66556008)(66446008)(66946007)(4744005)(54906003)(81166006)(6512007)(476003)(71200400001)(71190400001)(256004)(26005)(8936002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3933;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vP6X/d4d8ipD7XPGF7pXKL7U/j493agGxP5tq5U58tT/kegeV2D96FB8i+yqZP0j5ytWjuDDu4e+DSgJw3Rd5GuNzWNRIPgMoICAPMeThjEdV2vYIjWgoH+0PaZHqgm3hUgKOqHigHBwXDyDNb/oZLDi5pkRJjKAZKEl2Zg/XYPux/xHGdx5jes4Lg5eN5cAbevBDONQRVF7j8S6ylwWY6miJ91dydVOFVmN69+zR2b7xx8JRei5D7NjFIQlAAJvaTD53SFuNGj+Jn4XV98WUDVvJlTZ3BDv20HDy+w7FUrkoo6HAGSFtOqdbCDIlAPTyRzr8qWdzZxdXlrKINCvyMMD6F8z5xfSilFh7hdKUuQAMq/CVwcvbCi1ALIP7C+yfiAHqtLBh4P391yTt0msSuNKbSFyVVCfrXVQv+wlHi4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <14D6D287240A1F4587BD207F33A3EE13@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CGME20190506151219eucas1p2b5c3368873696f51e7d0d3a3e6d6bf1e@eucas1p2.samsung.com>
- <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com> <1557155521-30949-13-git-send-email-l.luba@partner.samsung.com>
-In-Reply-To: <1557155521-30949-13-git-send-email-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 8 May 2019 09:25:38 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcOWkUa_+sLNXdhqpQNN9oaCuHzpjvagsE+ViA0mDf4Vw@mail.gmail.com>
-Message-ID: <CAJKOXPcOWkUa_+sLNXdhqpQNN9oaCuHzpjvagsE+ViA0mDf4Vw@mail.gmail.com>
-Subject: Re: [PATCH v7 12/13] ARM: dts: exynos: add DMC device for exynos5422
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddaba678-98d0-4676-a0d7-08d6d386b649
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 07:28:05.4849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3933
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 at 17:12, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Add description of Dynamic Memory Controller and PPMU counters.
-> They are used by exynos5422-dmc driver.
-> There is a definition of the memory chip, which is then used during
-> calculation of timings for each OPP.
-> The algorithm in the driver needs these two sets to bound the timings.
->
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 121 +++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 122 ++++++++++++++++++++++++++
->  2 files changed, 243 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index aaff158..1b66601 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -14,6 +14,7 @@
->  #include <dt-bindings/clock/exynos5420.h>
->  #include <dt-bindings/clock/exynos-audss-clk.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/pmu/exynos_ppmu.h>
->
->  / {
->         compatible = "samsung,exynos5420", "samsung,exynos5";
-> @@ -235,6 +236,38 @@
->                         status = "disabled";
->                 };
->
-> +               dmc: memory-controller@10c20000 {
-> +                       compatible = "samsung,exynos5422-dmc";
-> +                       reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
-> +                       clocks = <&clock CLK_FOUT_SPLL>,
-> +                                <&clock CLK_MOUT_SCLK_SPLL>,
-> +                                <&clock CLK_FF_DOUT_SPLL2>,
-> +                                <&clock CLK_FOUT_BPLL>,
-> +                                <&clock CLK_MOUT_BPLL>,
-> +                                <&clock CLK_SCLK_BPLL>,
-> +                                <&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> +                                <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
-> +                                <&clock CLK_MOUT_MCLK_CDREX>,
-> +                                <&clock CLK_DOUT_CLK2X_PHY0>,
-> +                                <&clock CLK_CLKM_PHY0>,
-> +                                <&clock CLK_CLKM_PHY1>;
-> +                       clock-names = "fout_spll",
-> +                                     "mout_sclk_spll",
-> +                                     "ff_dout_spll2",
-> +                                     "fout_bpll",
-> +                                     "mout_bpll",
-> +                                     "sclk_bpll",
-> +                                     "mout_mx_mspll_ccore",
-> +                                     "mout_mx_mspll_ccore_phy",
-> +                                     "mout_mclk_cdrex",
-> +                                     "dout_clk2x_phy0",
-> +                                     "clkm_phy0",
-> +                                     "clkm_phy1";
-> +                       samsung,syscon-clk = <&clock>;
-> +                       samsung,syscon-chipid = <&chipid>;
-> +                       status = "disabled";
-> +               };
-> +
->                 nocp_mem0_0: nocp@10ca1000 {
->                         compatible = "samsung,exynos5420-nocp";
->                         reg = <0x10CA1000 0x200>;
-> @@ -271,6 +304,94 @@
->                         status = "disabled";
->                 };
->
-> +               ppmu_dmc0_0: ppmu@10d00000 {
-> +                       compatible = "samsung,exynos-ppmu";
-> +                       reg = <0x10d00000 0x2000>;
-> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
-> +                       clock-names = "ppmu";
-> +                       events {
-> +                               ppmu_event0_dmc0_0: ppmu-event0-dmc0_0 {
-> +                                       event-name = "ppmu-event0-dmc0_0";
-> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event1_dmc0_0: ppmu-event1-dmc0_0 {
-> +                                       event-name = "ppmu-event1-dmc0_0";
-> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event3_dmc0_0: ppmu-event3-dmc0_0 {
-> +                                       event-name = "ppmu-event3-dmc0_0";
-> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
-> +                                               PPMU_WO_DATA_CNT)>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               ppmu_dmc0_1: ppmu@10d10000 {
-> +                       compatible = "samsung,exynos-ppmu";
-> +                       reg = <0x10d10000 0x2000>;
-> +                       clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
-> +                       clock-names = "ppmu";
-> +                       events {
-> +                               ppmu_event0_dmc0_1: ppmu-event0-dmc0_1 {
-> +                                       event-name = "ppmu-event0-dmc0_1";
-> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event1_dmc0_1: ppmu-event1-dmc0_1 {
-> +                                       event-name = "ppmu-event1-dmc0_1";
-> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event3_dmc0_1: ppmu-event3-dmc0_1 {
-> +                                       event-name = "ppmu-event3-dmc0_1";
-> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
-> +                                               PPMU_WO_DATA_CNT)>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               ppmu_dmc1_0: ppmu@10d60000 {
-> +                       compatible = "samsung,exynos-ppmu";
-> +                       reg = <0x10d60000 0x2000>;
-> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
-> +                       clock-names = "ppmu";
-> +                       events {
-> +                               ppmu_event0_dmc1_0: ppmu-event0-dmc1_0 {
-> +                                       event-name = "ppmu-event0-dmc1_0";
-> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event1_dmc1_0: ppmu-event1-dmc1_0 {
-> +                                       event-name = "ppmu-event1-dmc1_0";
-> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event3_dmc1_0: ppmu-event3-dmc1_0 {
-> +                                       event-name = "ppmu-event3-dmc1_0";
-> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
-> +                                               PPMU_WO_DATA_CNT)>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               ppmu_dmc1_1: ppmu@10d70000 {
-> +                       compatible = "samsung,exynos-ppmu";
-> +                       reg = <0x10d70000 0x2000>;
-> +                       clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
-> +                       clock-names = "ppmu";
-> +                       events {
-> +                               ppmu_event0_dmc1_1: ppmu-event0-dmc1_1 {
-> +                                       event-name = "ppmu-event0-dmc1_1";
-> +                                       event-data-type = <PPMU_RO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event1_dmc1_1: ppmu-event1-dmc1_1 {
-> +                                       event-name = "ppmu-event1-dmc1_1";
-> +                                       event-data-type = <PPMU_WO_DATA_CNT>;
-> +                               };
-> +                               ppmu_event3_dmc1_1: ppmu-event3-dmc1_1 {
-> +                                       event-name = "ppmu-event3-dmc1_1";
-> +                                       event-data-type = <(PPMU_RO_DATA_CNT |
-> +                                               PPMU_WO_DATA_CNT)>;
-> +                               };
-> +                       };
-> +               };
-> +
->                 gsc_pd: power-domain@10044000 {
->                         compatible = "samsung,exynos4210-pd";
->                         reg = <0x10044000 0x20>;
-> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> index 25d95de1..76abf03 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> @@ -34,6 +34,97 @@
->                         clock-frequency = <24000000>;
->                 };
->         };
-> +
-> +       dmc_opp_table: opp_table2 {
-> +               compatible = "operating-points-v2";
-> +
-> +               opp00 {
-> +                       opp-hz = /bits/ 64 <165000000>;
-> +                       opp-microvolt = <875000>;
-> +               };
-> +               opp01 {
-> +                       opp-hz = /bits/ 64 <206000000>;
-> +                       opp-microvolt = <875000>;
-> +               };
-> +               opp02 {
-> +                       opp-hz = /bits/ 64 <275000000>;
-> +                       opp-microvolt = <875000>;
-> +               };
-> +               opp03 {
-> +                       opp-hz = /bits/ 64 <413000000>;
-> +                       opp-microvolt = <887500>;
-> +               };
-> +               opp04 {
-> +                       opp-hz = /bits/ 64 <543000000>;
-> +                       opp-microvolt = <937500>;
-> +               };
-> +               opp05 {
-> +                       opp-hz = /bits/ 64 <633000000>;
-> +                       opp-microvolt = <1012500>;
-> +               };
-> +               opp06 {
-> +                       opp-hz = /bits/ 64 <728000000>;
-> +                       opp-microvolt = <1037500>;
-> +               };
-> +               opp07 {
-> +                       opp-hz = /bits/ 64 <825000000>;
-> +                       opp-microvolt = <1050000>;
-> +               };
-> +       };
-> +
-> +       samsung_K3QF2F20DB: lpddr3 {
-> +               compatible      = "Samsung,K3QF2F20DB", "jedec,lpddr3";
-> +               density         = <16384>;
-> +               io-width        = <32>;
-> +               #address-cells  = <1>;
-> +               #size-cells     = <0>;
-> +
-> +               tRFC-min-tck            = <17>;
-> +               tRRD-min-tck            = <2>;
-> +               tRPab-min-tck           = <2>;
-> +               tRPpb-min-tck           = <2>;
-> +               tRCD-min-tck            = <3>;
-> +               tRC-min-tck             = <6>;
-> +               tRAS-min-tck            = <5>;
-> +               tWTR-min-tck            = <2>;
-> +               tWR-min-tck             = <7>;
-> +               tRTP-min-tck            = <2>;
-> +               tW2W-C2C-min-tck        = <0>;
-> +               tR2R-C2C-min-tck        = <0>;
-> +               tWL-min-tck             = <8>;
-> +               tDQSCK-min-tck          = <5>;
-> +               tRL-min-tck             = <14>;
-> +               tFAW-min-tck            = <5>;
-> +               tXSR-min-tck            = <12>;
-> +               tXP-min-tck             = <2>;
-> +               tCKE-min-tck            = <2>;
-> +               tCKESR-min-tck          = <2>;
-> +               tMRD-min-tck            = <5>;
-> +
-> +               timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@0 {
-> +                       compatible      = "jedec,lpddr3-timings";
-> +                       reg             = <800000000>; /* workaround: it shows max-freq */
-
-Please be sure that there are no new warnings (make dtbs W=1). This
-does not look correct (reg does not match unit address).
-
-Best regards,
-Krzysztof
+T24gV2VkLCAyMDE5LTA1LTA4IGF0IDA4OjAxICswMTAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
+IFR1ZSwgMDcgTWF5IDIwMTksIFBoaWxpcHBlIFNjaGVua2VyIHdyb3RlOg0KPiANCj4gPiBGcm9t
+OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQo+ID4g
+DQo+ID4gQWRkIHRoZSBjb21wYXRpYmxlIG5hbWUgdG8gdGhlIGRyaXZlciBzbyBpdCBnZXRzIGxv
+YWRlZCB3aGVuIHRoZSBwcm9wZXINCj4gPiBub2RlIGluIERUIGlzIGRldGVjdGVkLg0KPiA+IA0K
+PiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0
+b3JhZGV4LmNvbT4NCj4gPiAtLS0NCj4gPiANCj4gPiAgZHJpdmVycy9paW8vYWRjL3N0bXBlLWFk
+Yy5jIHwgNyArKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDEg
+ZGVsZXRpb24oLSkNCj4gDQo+IFdoeSBoYXZlIHlvdSBzZW50IHRoaXMgc2V0IHRvIG1lPw0KPiAN
+Cg0KZ2V0X21haW50YWluZXIucGwgcmV0dXJuZWQgeW91IGFzIGEgY29tbWl0IHNpZ25lci4gWW91
+IHNpZ25lZCB0aGUgaW5pdGlhbCBjb21taXQNCm9mIHRoaXMgZHJpdmVyIGFuZCBwdWxsZWQgaXQg
+YmFjayB0aGVuIGJlY2F1c2UgaXQgaXMgcGFydCBvZiBhIG1mZC4NCg0KUGhpbGlwcGUNCg==
