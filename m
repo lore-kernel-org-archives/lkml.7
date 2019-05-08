@@ -2,95 +2,99 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C319FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C08C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E14320850
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4F020850
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 13:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oc1+a6P+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfEHNK1 (ORCPT
+        id S1727425AbfEHNLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 09:10:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37159 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfEHNKY (ORCPT
+        Wed, 8 May 2019 09:11:03 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44766 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727210AbfEHNLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 09:10:24 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y5so3200610wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 06:10:23 -0700 (PDT)
+        Wed, 8 May 2019 09:11:03 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e13so2842249ljl.11;
+        Wed, 08 May 2019 06:11:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uPUEltEM8YnnSOYwSvRNb2803gogpOnMDSmCbmKkT28=;
+        b=Oc1+a6P+tQ0R9ivDMoNUscebnkTlJegOOoekMYI9H7VfW4bVhpTv+yexL4UKe3K9JR
+         zJ+5AxEkP3rB2/qgcXjvVZ0Jia/rtT6tPDM5YYy9GsxsnRBDq6Mngc1+jQW8hcgK0n9j
+         W9nMjbaalkGNOTNjeLrfcz753AeTr/O7bVLshgj2If4YyTf8sLRRg2RtmwnNAQY1u8H9
+         30rkG2wBiYPY7m3oPcsgEPavLEToOu/B014kju+Q0b1DdJJRLGFvxRFfHvMbBym/HWxQ
+         9A+bhnH3ABZvIQsQT+Dc7/Ify8Ve1a2tDpJTRn4KoicIMCH2rcjwBJKYGLUPofEws5IX
+         F59g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qGCGUpJEQoNfvEbD1fSHxBYCNGGKXcKxyrb1HER/Hww=;
-        b=tG2Ng5KUJujY4/qKC/STi5emvQXJq0LQp4el/xrdiRDK2kiwxPy279ajhch8Ts6052
-         ObX4RP5Zh2laPXQWzBi2oAM2UkJAa9MpvudVs5ajCd1EjzB1z3BLDO2IGsAyLmeOAVZ3
-         s4hu9sQDxeqQ6jW2CEpVw+dxL6GYT7hLx8SnrEhfZ5uGKbvHe0NxtcFbQ451v4kHj+uM
-         z6PEPgSXf6bk3Lo7EUvqPxZNJhLwUEHloYchaJ9do9pEuE4zeowaTvwlrOsmpzbUh7en
-         K1XOWDKLjEp7N3ctKC1GoTzLKd57pxOQRsd/ervlO4c4PalsAJ4j9C21A/9HurU/MUht
-         l73w==
-X-Gm-Message-State: APjAAAU/JGPZd+hG2kJ4AmCxhbicpwv6FRLtUpfMLOTjREbWGuUitIGu
-        IxqJFYXB3ZDdGwax2wiBlujxVg==
-X-Google-Smtp-Source: APXvYqxKLgJWfZ6CUXsJxJ1CoDxkm/R+XyNfDo+jCSYBBCTLxTF9t0ki/gmgrEY3OBnmwMm7k1Tf5w==
-X-Received: by 2002:a1c:9942:: with SMTP id b63mr3167876wme.116.1557321022640;
-        Wed, 08 May 2019 06:10:22 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.174.33])
-        by smtp.gmail.com with ESMTPSA id e16sm10789869wrw.24.2019.05.08.06.10.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 06:10:21 -0700 (PDT)
-Date:   Wed, 8 May 2019 15:10:18 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     luca abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 4/6] sched/dl: Improve capacity-aware wakeup
-Message-ID: <20190508131018.GJ6551@localhost.localdomain>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-5-luca.abeni@santannapisa.it>
- <20190508090855.GG6551@localhost.localdomain>
- <20190508112437.74661fa8@nowhere>
- <20190508120526.GI6551@localhost.localdomain>
- <20190508144716.5cc8445d@nowhere>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uPUEltEM8YnnSOYwSvRNb2803gogpOnMDSmCbmKkT28=;
+        b=c1u2qdiTTsdTyHRsgNEY/5y7ALHA49ZktYfJh/Ep5LqkGgGchAndcFLH1y6dHnkmsF
+         LDP3bW+F1JwMTAB/i6lIfgSVmh6qWvXfxpMkFq6878Dw2yYHvoOGYXK384CA0xDf85kD
+         s834zT+mfn9YhiwQz2IhYoOKdv+11IYeVGb6FdCqYWZaVqh+/AZfmto7QIU5q/hSUw+w
+         xhKIqPCE/UPVWQV+UKfDtwxdDIO89DAIOWo8uzDv0HWQf0hu92e4AMd/aFA0a+Z8fwVn
+         6Il6GNwFpSH4H8Gm7o2Bpi3ib67YxzO0YgJdMospT1teMTynORLOO/bUh2ql2cNdCEOB
+         NY3A==
+X-Gm-Message-State: APjAAAW50bZKOJRz7GiX5oaZaivtIIpZtrrF+ep0Q88F19jcZAmruiFQ
+        NHQ3UTKF/ott9QlhJMHCCq1avGfr
+X-Google-Smtp-Source: APXvYqzRwlyfw6KVbMu9yCCQaQLVeAxxCmeB1ATfkMgtPjRN1Vtza3wSmdh4I9mnhn99ztU+7hZi0A==
+X-Received: by 2002:a2e:8846:: with SMTP id z6mr18664891ljj.98.1557321060933;
+        Wed, 08 May 2019 06:11:00 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id j6sm4536133ljc.0.2019.05.08.06.10.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 06:10:59 -0700 (PDT)
+Subject: Re: [RFC PATCH v1 5/6] soc/tegra: regulators: Add regulators coupler
+ for Tegra20
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190414175939.12368-1-digetx@gmail.com>
+ <20190414175939.12368-6-digetx@gmail.com>
+ <20190508075706.GW14916@sirena.org.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
+Date:   Wed, 8 May 2019 16:10:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144716.5cc8445d@nowhere>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190508075706.GW14916@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/19 14:47, luca abeni wrote:
-
-[...]
-
-> Notice that all this logic is used only to select one of the idle cores
-> (instead of picking the first idle core, we select the less powerful
-> core on which the task "fits").
+08.05.2019 10:57, Mark Brown пишет:
+> On Sun, Apr 14, 2019 at 08:59:38PM +0300, Dmitry Osipenko wrote:
+>> Add regulators coupler for Tegra20 SoC's that performs voltage balancing
+>> of a coupled regulators and thus provides voltage scaling functionality.
 > 
-> So, running_bw does not provide any useful information, in this case;
-> maybe this_bw can be more useful.
+> Can you say what the rules that this is trying to follow are?
+> 
 
-Ah, indeed.
+There are three regulators: CPU, CORE and RTC.
 
-However, what happens when cores are all busy? Can load balancing
-decisions based on deadline values only break capacity awareness?  (I
-understand this is an RFC, so a "yes, something we need to look at" is
-OK :-)
+Constraints:
+
+1) CORE and RTC have max-spread voltage of 170mV.
+2) CORE and RTC voltages must be higher than the CPU voltage by at least
+120mV.
