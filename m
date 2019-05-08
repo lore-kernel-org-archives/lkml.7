@@ -2,87 +2,168 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193FAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59C1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD59A20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C3820989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfEHO7e (ORCPT
+        id S1727296AbfEHPBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:59:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:32920 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726543AbfEHO7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:59:34 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E4DE4F78B63A55120F8E;
-        Wed,  8 May 2019 22:59:29 +0800 (CST)
-Received: from [127.0.0.1] (10.184.227.228) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 May 2019
- 22:59:21 +0800
-Subject: Re: [PATCH 3/3] net-sysfs: Fix error path for kobject_init_and_add()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Tobin C. Harding" <tobin@kernel.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        "Ido Schimmel" <idosch@mellanox.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190430002817.10785-1-tobin@kernel.org>
- <20190430002817.10785-4-tobin@kernel.org>
- <20190430161124.GM9224@smile.fi.intel.com>
-From:   "wanghai (M)" <wanghai26@huawei.com>
-Message-ID: <2062f0d4-e51f-106e-cd0b-f0464d06f517@huawei.com>
-Date:   Wed, 8 May 2019 22:52:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 8 May 2019 11:01:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37402 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfEHPBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 11:01:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BBEFA78;
+        Wed,  8 May 2019 08:01:20 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 744F03F238;
+        Wed,  8 May 2019 08:01:16 -0700 (PDT)
+Subject: Re: [PATCH v7 14/23] iommu/smmuv3: Implement cache_invalidate
+To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
+ <20190408121911.24103-15-eric.auger@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a53d72f5-c8a2-a9e9-eb0b-2fac65964caf@arm.com>
+Date:   Wed, 8 May 2019 16:01:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190430161124.GM9224@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.227.228]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190408121911.24103-15-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08/04/2019 13:19, Eric Auger wrote:
+> Implement domain-selective and page-selective IOTLB invalidations.
+> 
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> 
+> ---
+> v6 -> v7
+> - check the uapi version
+> 
+> v3 -> v4:
+> - adapt to changes in the uapi
+> - add support for leaf parameter
+> - do not use arm_smmu_tlb_inv_range_nosync or arm_smmu_tlb_inv_context
+>    anymore
+> 
+> v2 -> v3:
+> - replace __arm_smmu_tlb_sync by arm_smmu_cmdq_issue_sync
+> 
+> v1 -> v2:
+> - properly pass the asid
+> ---
+>   drivers/iommu/arm-smmu-v3.c | 60 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 60 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 1486baf53425..4366921d8318 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2326,6 +2326,65 @@ static void arm_smmu_detach_pasid_table(struct iommu_domain *domain)
+>   	mutex_unlock(&smmu_domain->init_mutex);
+>   }
+>   
+> +static int
+> +arm_smmu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
+> +			  struct iommu_cache_invalidate_info *inv_info)
+> +{
+> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +
+> +	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
+> +		return -EINVAL;
+> +
+> +	if (!smmu)
+> +		return -EINVAL;
+> +
+> +	if (inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> +		return -EINVAL;
+> +
+> +	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_IOTLB) {
+> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID) {
+> +			struct arm_smmu_cmdq_ent cmd = {
+> +				.opcode = CMDQ_OP_TLBI_NH_ASID,
+> +				.tlbi = {
+> +					.vmid = smmu_domain->s2_cfg.vmid,
+> +					.asid = inv_info->pasid,
+> +				},
+> +			};
+> +
+> +			arm_smmu_cmdq_issue_cmd(smmu, &cmd);
+> +			arm_smmu_cmdq_issue_sync(smmu);
 
-在 2019/5/1 0:11, Andy Shevchenko 写道:
-> On Tue, Apr 30, 2019 at 10:28:17AM +1000, Tobin C. Harding wrote:
->> Currently error return from kobject_init_and_add() is not followed by a
->> call to kobject_put().  This means there is a memory leak.
->>
->> Add call to kobject_put() in error path of kobject_init_and_add().
-> It's not obvious to me if this will help to fix what is stated in the
-> (reverted) commit 6b70fc94afd1 ("net-sysfs: Fix memory leak in
-> netdev_register_kobject")?
->
-> If so, perhaps we need to tell syzkaller guys about this.
-Thanks for reminding. It seems that the bug has not been completely fixed.
+I'd much rather make arm_smmu_tlb_inv_context() understand nested 
+domains than open-code commands all over the place.
 
-in netdev_register_kobject():
+> +
+> +		} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR) {
+> +			struct iommu_inv_addr_info *info = &inv_info->addr_info;
+> +			size_t size = info->nb_granules * info->granule_size;
+> +			bool leaf = info->flags & IOMMU_INV_ADDR_FLAGS_LEAF;
+> +			struct arm_smmu_cmdq_ent cmd = {
+> +				.opcode = CMDQ_OP_TLBI_NH_VA,
+> +				.tlbi = {
+> +					.addr = info->addr,
+> +					.vmid = smmu_domain->s2_cfg.vmid,
+> +					.asid = info->pasid,
+> +					.leaf = leaf,
+> +				},
+> +			};
+> +
+> +			do {
+> +				arm_smmu_cmdq_issue_cmd(smmu, &cmd);
+> +				cmd.tlbi.addr += info->granule_size;
+> +			} while (size -= info->granule_size);
+> +			arm_smmu_cmdq_issue_sync(smmu);
 
-1746         error = device_add(dev);
-1747         if (error)
-1748                 return error;
-1749
-1750         error = register_queue_kobjects(ndev);
-1751         if (error) {
-1752                 device_del(dev);
-1753                 return error;
-1754         }
+An this in particular I would really like to go all the way through 
+io_pgtable_tlb_add_flush()/io_pgtable_sync() if at all possible. Hooking 
+up range-based invalidations is going to be a massive headache if the 
+abstraction isn't solid.
 
-This only fixes a memory leak after a failure in 
-register_queue_kobjects(). If device_add() fails, kobject_put() still 
-cann't be called, and the memory leak still exists.
+Robin.
 
+> +		} else {
+> +			return -EINVAL;
+> +		}
+> +	}
+> +	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_PASID ||
+> +	    inv_info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB) {
+> +		return -ENOENT;
+> +	}
+> +	return 0;
+> +}
+> +
+>   static struct iommu_ops arm_smmu_ops = {
+>   	.capable		= arm_smmu_capable,
+>   	.domain_alloc		= arm_smmu_domain_alloc,
+> @@ -2346,6 +2405,7 @@ static struct iommu_ops arm_smmu_ops = {
+>   	.put_resv_regions	= arm_smmu_put_resv_regions,
+>   	.attach_pasid_table	= arm_smmu_attach_pasid_table,
+>   	.detach_pasid_table	= arm_smmu_detach_pasid_table,
+> +	.cache_invalidate	= arm_smmu_cache_invalidate,
+>   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+>   };
+>   
+> 
