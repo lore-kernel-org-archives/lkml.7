@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB8AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337ACC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CE520989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD0A20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfEHOuZ (ORCPT
+        id S1728711AbfEHOul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:50:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33094 "EHLO mga07.intel.com"
+        Wed, 8 May 2019 10:50:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48407 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbfEHOou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:44:50 -0400
+        id S1728279AbfEHOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:44:44 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:50 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 08 May 2019 07:44:45 -0700
+  by orsmga006.jf.intel.com with ESMTP; 08 May 2019 07:44:39 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 19F92F6E; Wed,  8 May 2019 17:44:31 +0300 (EEST)
+        id A195D9EA; Wed,  8 May 2019 17:44:29 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +43,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 47/62] mm: Restrict MKTME memory encryption to anonymous VMAs
-Date:   Wed,  8 May 2019 17:44:07 +0300
-Message-Id: <20190508144422.13171-48-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 19/62] x86/mm: Handle encrypted memory in page_to_virt() and __pa()
+Date:   Wed,  8 May 2019 17:43:39 +0300
+Message-Id: <20190508144422.13171-20-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,63 +57,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Per-KeyID direct mappings require changes into how we find the right
+virtual address for a page and virt-to-phys address translations.
 
-Memory encryption is only supported for mappings that are ANONYMOUS.
-Test the VMA's in an encrypt_mprotect() request to make sure they all
-meet that requirement before encrypting any.
+page_to_virt() definition overwrites default macros provided by
+<linux/mm.h>.
 
-The encrypt_mprotect syscall will return -EINVAL and will not encrypt
-any VMA's if this check fails.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- mm/mprotect.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/include/asm/page.h    | 3 +++
+ arch/x86/include/asm/page_64.h | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 38d766b5cc20..53bd41f99a67 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -346,6 +346,24 @@ static int prot_none_walk(struct vm_area_struct *vma, unsigned long start,
- 	return walk_page_range(start, end, &prot_none_walk);
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index 39af59487d5f..aff30554f38e 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -72,6 +72,9 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+ extern bool __virt_addr_valid(unsigned long kaddr);
+ #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
+ 
++#define page_to_virt(x) \
++	(__va(PFN_PHYS(page_to_pfn(x))) + page_keyid(x) * direct_mapping_size)
++
+ #endif	/* __ASSEMBLY__ */
+ 
+ #include <asm-generic/memory_model.h>
+diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
+index f57fc3cc2246..a4f394e3471d 100644
+--- a/arch/x86/include/asm/page_64.h
++++ b/arch/x86/include/asm/page_64.h
+@@ -24,7 +24,7 @@ static inline unsigned long __phys_addr_nodebug(unsigned long x)
+ 	/* use the carry flag to determine if x was < __START_KERNEL_map */
+ 	x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
+ 
+-	return x;
++	return x & direct_mapping_mask;
  }
  
-+/*
-+ * Encrypted mprotect is only supported on anonymous mappings.
-+ * If this test fails on any single VMA, the entire mprotect
-+ * request fails.
-+ */
-+static bool mem_supports_encryption(struct vm_area_struct *vma, unsigned long end)
-+{
-+	struct vm_area_struct *test_vma = vma;
-+
-+	do {
-+		if (!vma_is_anonymous(test_vma))
-+			return false;
-+
-+		test_vma = test_vma->vm_next;
-+	} while (test_vma && test_vma->vm_start < end);
-+	return true;
-+}
-+
- int
- mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
- 	       unsigned long start, unsigned long end, unsigned long newflags,
-@@ -532,6 +550,12 @@ static int do_mprotect_ext(unsigned long start, size_t len,
- 				goto out;
- 		}
- 	}
-+
-+	if (keyid > 0 && !mem_supports_encryption(vma, end)) {
-+		error = -EINVAL;
-+		goto out;
-+	}
-+
- 	if (start > vma->vm_start)
- 		prev = vma;
- 
+ #ifdef CONFIG_DEBUG_VIRTUAL
 -- 
 2.20.1
 
