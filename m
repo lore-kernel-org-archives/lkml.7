@@ -2,135 +2,115 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F17C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF93C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8712E2173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A872173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YWFEOs2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfEHVkh (ORCPT
+        id S1727499AbfEHVnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 17:40:37 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46875 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726875AbfEHVkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 17:40:37 -0400
-Received: from dread.disaster.area (pa49-181-171-240.pa.nsw.optusnet.com.au [49.181.171.240])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DA5DA439ACF;
-        Thu,  9 May 2019 07:40:33 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hOUIj-0005D5-1v; Thu, 09 May 2019 07:40:33 +1000
-Date:   Thu, 9 May 2019 07:40:33 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chris Mason <clm@fb.com>
-Cc:     Rik van Riel <riel@surriel.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH] fs,xfs: fix missed wakeup on l_flush_wait
-Message-ID: <20190508214033.GQ29573@dread.disaster.area>
-References: <20190507130528.1d3d471b@imladris.surriel.com>
- <20190507212213.GO29573@dread.disaster.area>
- <605BF0CA-EB32-46A5-8045-2BAB7EB0BD66@fb.com>
+        Wed, 8 May 2019 17:43:21 -0400
+Received: from ozlabs.org ([203.11.71.1]:51507 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfEHVnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 17:43:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zqj12YVsz9s7h;
+        Thu,  9 May 2019 07:43:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557351797;
+        bh=S79DeqKFsnMK7Z+G0v4i11VpRAQuuvyknUIOHBC/TYM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YWFEOs2zfM3FpwwcVv96Sgi4t+ZudQflk1EZBkay+G3t9vDvjAv6XvZ6gNIf6PWRs
+         G9PUQtBqiR/vlEiF7c0tQ1H0U1aNmoNpesAmZiElWcaUprnWBodQSQWQkTa9BDjBY+
+         Qu56cD7rHzFAvUYG1kEA2b906rc+Zqi+EtKgdVI22+jvaV4qFk6aSXs0PEUa3UmNme
+         YJWCbtMygZPjua+Aq3/noUBdpUBU2IiaRe4aE+FcGkcC28JHKMF3GhUj/nbOZ4dhDE
+         fz+dCiiNiqLftFxU1sfWSOKIgKs3AVI5yDcw6w2B+rNs8toCi19BmEsKJSGFohvluZ
+         Chtiv/p/sp2dg==
+Date:   Thu, 9 May 2019 07:43:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>
+Subject: linux-next: Fixes tags need some work in the net tree
+Message-ID: <20190509074308.7c0ade7d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <605BF0CA-EB32-46A5-8045-2BAB7EB0BD66@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=LhzQONXuMOhFZtk4TmSJIw==:117 a=LhzQONXuMOhFZtk4TmSJIw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=E5NmQfObTbMA:10
-        a=20KFwNOVAAAA:8 a=FOH2dFAWAAAA:8 a=7-415B0cAAAA:8 a=MvpEtWUUUWvuhsli_6IA:9
-        a=CjuIK1q_8ugA:10 a=i3VuKzQdj-NEYjvDI-p3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/zd_DhxPtPy7N5zeooSkhzkt"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 04:39:41PM +0000, Chris Mason wrote:
-> On 7 May 2019, at 17:22, Dave Chinner wrote:
-> 
-> > On Tue, May 07, 2019 at 01:05:28PM -0400, Rik van Riel wrote:
-> >> The code in xlog_wait uses the spinlock to make adding the task to
-> >> the wait queue, and setting the task state to UNINTERRUPTIBLE atomic
-> >> with respect to the waker.
-> >>
-> >> Doing the wakeup after releasing the spinlock opens up the following
-> >> race condition:
-> >>
-> >> - add task to wait queue
-> >>
-> >> -                                      wake up task
-> >>
-> >> - set task state to UNINTERRUPTIBLE
-> >>
-> >> Simply moving the spin_unlock to after the wake_up_all results
-> >> in the waker not being able to see a task on the waitqueue before
-> >> it has set its state to UNINTERRUPTIBLE.
-> >
-> > Yup, seems like an issue. Good find, Rik.
-> >
-> > So, what problem is this actually fixing? Was it noticed by
-> > inspection, or is it actually manifesting on production machines?
-> > If it is manifesting IRL, what are the symptoms (e.g. hang running
-> > out of log space?) and do you have a test case or any way to
-> > exercise it easily?
-> 
-> The steps to reproduce are semi-complicated, they create a bunch of 
-> files, do stuff, and then delete all the files in a loop.  I think they 
-> shotgunned it across 500 or so machines to trigger 5 times, and then 
-> left the wreckage for us to poke at.
-> 
-> The symptoms were identical to the bug fixed here:
-> 
-> commit 696a562072e3c14bcd13ae5acc19cdf27679e865
-> Author: Brian Foster <bfoster@redhat.com>
-> Date:   Tue Mar 28 14:51:44 2017 -0700
-> 
-> xfs: use dedicated log worker wq to avoid deadlock with cil wq
-> 
-> But since our 4.16 kernel is new than that, I briefly hoped that 
-> m_sync_workqueue needed to be flagged with WQ_MEM_RECLAIM.  I don't have 
-> a great picture of how all of these workqueues interact, but I do think 
-> it needs WQ_MEM_RECLAIM.  It can't be the cause of this deadlock, the 
-> workqueue watchdog would have fired.
+--Sig_/zd_DhxPtPy7N5zeooSkhzkt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It shouldn't matter, because the m_sync_workqueue is largely
-advisory - the only real function it has is to ensure that idle
-filesystems have dirty metadata flushed and the journal emptied and
-marked clean (that's what "covering the log" means) so if we crash
-on an idle filesystem recovery is unnecessary....
+Hi all,
 
-i.e. if the filesystem is heavily busy it doesn't matter is the
-m_sync_workqueue is run or not.
+In commit
 
-....
+  3b2c4f4d63a5 ("net: dsa: sja1105: Don't return a negative in u8 sja1105_s=
+tp_state_get")
 
-> That's a huge tangent around acking Rik's patch, but it's hard to be 
-> sure if we've hit the lost wakeup in prod.  I could search through all 
-> the related hung task timeouts, but they are probably all stuck in 
-> blkmq.
-> 
-> Acked-but-I'm-still-blaming-Jens-by: Chris Mason <clm@fb.com>
+Fixes tag
 
-No worries, quite the wild goose chase. :)
+  Fixes: 640f763f98c2: ("net: dsa: sja1105: Add support for Spanning Tree P=
+rotocol")
 
-I just wanted some background on how it manifested so that we have
-some idea of whether we have other unresolved bug reports that might
-be a result of this problem.
+has these problem(s):
 
+  - the ':' after the SHA1 is unexpected
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+In commit
+
+  e9919a24d302 ("fib_rules: return 0 directly if an exactly same rule exist=
+s when NLM_F_EXCL not supplied")
+
+Fixes tag
+
+  Fixes: 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to fib_nl_newrul=
+e")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/zd_DhxPtPy7N5zeooSkhzkt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzTTWwACgkQAVBC80lX
+0GxlCgf/b5yD/Wnlo5qm4dcDRcTmKTnt9HgRU7xWAPTZto5fDLbiUsRkyx4+bZHb
+Z+6+drXkIQxh68OIKmpyA/6NItK7GukC5AwaXwz3cwOu6FbWwjSqw2Jbmc3zr1P1
+BWbiKZd9nZtCer+lobMox4aWMOqXjt8XQLaoXABNhsMSMe/NP4/B0YoyHyuVdBDy
+d2IEdL19ReyQeAMGUjQTBE0QgSsfTP2R933BsoFaODw8ApGMBLIij42M74SuIWs+
+eIt2a+Y0nAVjy2uBZ7sjQfVuhz5s36h5xeweaq70vbdteD0eC2u9tNQENjfblxwB
+HsShBhEhqRPsiCGD0LyavIguYLrAeg==
+=G0pe
+-----END PGP SIGNATURE-----
+
+--Sig_/zd_DhxPtPy7N5zeooSkhzkt--
