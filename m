@@ -2,135 +2,130 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D8BC004C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF67DC004C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF31C20C01
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F5020656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 01:54:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Wx6Lz/ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfEHBwH (ORCPT
+        id S1726503AbfEHBym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 21:52:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 21:54:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41283 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfEHBvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 21:51:55 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726381AbfEHBym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 21:54:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C7F321479;
-        Wed,  8 May 2019 01:51:54 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1hOBkP-0005l8-Ip; Tue, 07 May 2019 21:51:53 -0400
-Message-Id: <20190508015153.469614024@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Tue, 07 May 2019 21:51:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [for-next][PATCH 1/3] tracing: kdb: The skip_lines parameter should have been skip_entries
-References: <20190508015112.818966506@goodmis.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zKKT5hzNz9s3l;
+        Wed,  8 May 2019 11:54:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557280478;
+        bh=uoaM4/kFzgSgOBal6RL10pdCs262sqiKKMIevH31Us0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Wx6Lz/ssAHJOmbV3p2X/ZFdVoZe+zNiKRt1vYZW/EDr6iKD+ZNmDcR7jwH1OEnreo
+         1kZxGstI1UCFA3kmknosfHl8tzVusmngHQoMTNx2jRZ1uwWE0QujYoJQPJWq68Sqav
+         dN7CzaOqrhRR9dyktrih29c+AcfOL8V6kZ3W3j4q9Vw4Fe13JSXapBmYiboWM+YmfC
+         OpAFGeiFhFnlddcynv8C3yiPPVbMzT6y+qt1tOnLgrWQu7JW9vI1w6jMSvA9UQgqDL
+         glJrQgaR9nAo0Wn2enlzmiM28bdJ9XcItD1XlBALgN2OVZtImcv5wYDbQ6FviTYH/1
+         hqSSsL+JvlsEA==
+Date:   Wed, 8 May 2019 11:54:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Cristiano Borges Cardoso <cristianoborgescardoso@gmail.com>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Sanjana Sanikommu <sanjana99reddy99@gmail.com>,
+        Vatsala Narang <vatsalanarang@gmail.com>,
+        Bhanusree Pola <bhanusreemahesh@gmail.com>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: Re: linux-next: manual merge of the staging tree with the v4l-dvb
+ tree
+Message-ID: <20190508115436.43cd6bc0@canb.auug.org.au>
+In-Reply-To: <20190426160658.4929d1ad@canb.auug.org.au>
+References: <20190426160658.4929d1ad@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/y2.zRoqKy//H05ubAmjuWI6"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+--Sig_/y2.zRoqKy//H05ubAmjuWI6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The things skipped by kdb's "ftdump" command when you pass it a
-parameter has always been entries, not lines.  The difference usually
-doesn't matter but when the trace buffer has multi-line entries (like
-a stack dump) it can matter.
+Hi all,
 
-Let's fix this both in the help text for ftdump and also in the local
-variable names.
+On Fri, 26 Apr 2019 16:06:58 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the staging tree got conflicts in:
+>=20
+>   drivers/staging/media/zoran/Kconfig
+>   drivers/staging/media/zoran/videocodec.c
+>   drivers/staging/media/zoran/videocodec.h
+>   drivers/staging/media/zoran/zoran.h
+>   drivers/staging/media/zoran/zoran_card.c
+>   drivers/staging/media/zoran/zoran_card.h
+>   drivers/staging/media/zoran/zoran_device.c
+>   drivers/staging/media/zoran/zoran_device.h
+>   drivers/staging/media/zoran/zoran_driver.c
+>   drivers/staging/media/zoran/zoran_procfs.c
+>   drivers/staging/media/zoran/zoran_procfs.h
+>   drivers/staging/media/zoran/zr36016.c
+>   drivers/staging/media/zoran/zr36016.h
+>   drivers/staging/media/zoran/zr36050.c
+>   drivers/staging/media/zoran/zr36050.h
+>   drivers/staging/media/zoran/zr36057.h
+>   drivers/staging/media/zoran/zr36060.c
+>   drivers/staging/media/zoran/zr36060.h
+>=20
+> between commit:
+>=20
+>   8dce4b265a53 ("media: zoran: remove deprecated driver")
+>=20
+> from the v4l-dvb tree and various commits from the staging tree.
+>=20
+> I fixed it up (I just removed the files) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-Link: http://lkml.kernel.org/r/20190319171206.97107-1-dianders@chromium.org
+This is now a conflict between the v4l-dvb tree and Linus' tree.
+--=20
+Cheers,
+Stephen Rothwell
 
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace_kdb.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+--Sig_/y2.zRoqKy//H05ubAmjuWI6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 810d78a8d14c..4b666643d69f 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -17,7 +17,7 @@
- #include "trace.h"
- #include "trace_output.h"
- 
--static void ftrace_dump_buf(int skip_lines, long cpu_file)
-+static void ftrace_dump_buf(int skip_entries, long cpu_file)
- {
- 	/* use static because iter can be a bit big for the stack */
- 	static struct trace_iterator iter;
-@@ -70,11 +70,11 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 			kdb_printf("---------------------------------\n");
- 		cnt++;
- 
--		if (!skip_lines) {
-+		if (!skip_entries) {
- 			print_trace_line(&iter);
- 			trace_printk_seq(&iter.seq);
- 		} else {
--			skip_lines--;
-+			skip_entries--;
- 		}
- 
- 		if (KDB_FLAG(CMD_INTERRUPT))
-@@ -106,7 +106,7 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
-  */
- static int kdb_ftdump(int argc, const char **argv)
- {
--	int skip_lines = 0;
-+	int skip_entries = 0;
- 	long cpu_file;
- 	char *cp;
- 
-@@ -114,9 +114,9 @@ static int kdb_ftdump(int argc, const char **argv)
- 		return KDB_ARGCOUNT;
- 
- 	if (argc) {
--		skip_lines = simple_strtol(argv[1], &cp, 0);
-+		skip_entries = simple_strtol(argv[1], &cp, 0);
- 		if (*cp)
--			skip_lines = 0;
-+			skip_entries = 0;
- 	}
- 
- 	if (argc == 2) {
-@@ -129,7 +129,7 @@ static int kdb_ftdump(int argc, const char **argv)
- 	}
- 
- 	kdb_trap_printk++;
--	ftrace_dump_buf(skip_lines, cpu_file);
-+	ftrace_dump_buf(skip_entries, cpu_file);
- 	kdb_trap_printk--;
- 
- 	return 0;
-@@ -137,7 +137,7 @@ static int kdb_ftdump(int argc, const char **argv)
- 
- static __init int kdb_ftrace_register(void)
- {
--	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#lines] [cpu]",
-+	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#entries] [cpu]",
- 			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
- 	return 0;
- }
--- 
-2.20.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzSNtwACgkQAVBC80lX
+0Gw93AgAgXI+L7EKmqLwU/ffg+z9s8iyRFRYmx/S71Paap7Z9yoMxFDmQwgviuLU
+hDT3h92tucDNb5eeFRg67dc+2pJ04VrcJMt9+X2euBqHKW6XXdxIIqx+CErWzqdi
+zhcetUB1Y9S8ULEOaKX+WYhntTJBERFEBKWYA9dCVOGlZOZXLrzrt8Rc5yY8IflB
+CCr2t3XL1BqF1S2ncuu457EydOKu1t/oJ+Qz9svxTTCowQKEjFqMIrJ6VQVZe16Y
+1hQEbpmHbuIB6FlH+wzDfbex7qB5xGCTevesmk2YiFQ4tx8+aJ2GSFQpwfJRFVAI
+teswJyi+AY3dB8oQhifiZmafApIqwQ==
+=xf3A
+-----END PGP SIGNATURE-----
 
+--Sig_/y2.zRoqKy//H05ubAmjuWI6--
