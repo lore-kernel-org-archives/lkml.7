@@ -2,211 +2,181 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2607EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F992C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E739D20644
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9D521530
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mGDwoD4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfEHHjR (ORCPT
+        id S1727244AbfEHHkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:39:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58572 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfEHHjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 03:39:16 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7235C5F73A;
-        Wed,  8 May 2019 07:39:15 +0000 (UTC)
-Received: from [10.36.117.63] (ovpn-117-63.ams2.redhat.com [10.36.117.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 930506149F;
-        Wed,  8 May 2019 07:39:11 +0000 (UTC)
-Subject: Re: [PATCH v2 5/8] mm/memory_hotplug: Drop MHP_MEMBLOCK_API
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190507183804.5512-1-david@redhat.com>
- <20190507183804.5512-6-david@redhat.com>
- <CAPcyv4ge1pSOopfHof4USn=7Skc-UV4Xhd_s=h+M9VXSp_p1XQ@mail.gmail.com>
- <d83fec16-ceff-2f6f-72e1-48996187d5ba@redhat.com>
- <CAPcyv4iRQteuT9yESvbUyhp3KVVgTXDiGAo+TwPCM_4f0CzBgg@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <edd762a1-c012-fe05-a72e-2505cd98188a@redhat.com>
-Date:   Wed, 8 May 2019 09:39:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 03:40:04 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35051 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfEHHkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 03:40:03 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c15so2621915qkl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 00:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kdzNGG6w8busuuDVf/UQqEgzyyAeZLA0QEhPPerzhfg=;
+        b=mGDwoD4U62ey6G7SruSx83RUQNe+cXi/7VIMvqL9+ahBUlgPNQwS98dYlXxeQxQ8Bk
+         IFuhOGwxWtAVuqezODZivYfjrX+e6ntlFVnvGVkxIp8xa9mms3GEcgUcVyeOzSv2/dj5
+         /BZw0T/c0G6FkPHM4B0kzgTFXOIZmj9mSHFqo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kdzNGG6w8busuuDVf/UQqEgzyyAeZLA0QEhPPerzhfg=;
+        b=Cconv0H3Q+/fktuA+gOf3V0G5AmAmxGK6YHxMStsgqs75YxhHSskpeZs/0pwQxNaM8
+         08usCjaNMCMrpcelcIreh/8EBq1p6jODPbmOEWhr96aiRRHGR8pQui+OoKli89uVjtFG
+         NyWDAAqla1T0d8vv7jZeQlV0HETcQqwgIrfO6G6qBEU7sY5cWHgFTW0Mf7uAZuVdlvkH
+         rvwuKi6xYtWAyoYgb2o1rNkM0BifAKdPOkB9m4B/JtBJErMls0V64riHU9OxGsOzpVNf
+         vHNcPqEM+IldWNRLGtwNmImDxzGI9MBWHuQJf7Rllz86QNReAHlm03uhvFpSydxipxNZ
+         rKmQ==
+X-Gm-Message-State: APjAAAX0yZSxSIqMHhSnBRKjYimWhNMwjx2ZM2VA7kPZHKekvoTdjV/U
+        5WDpWqxmqzj0Os1WT4Iwkd6ms9CakeUoQSvrc4aphg==
+X-Google-Smtp-Source: APXvYqysbcDT6bwWGV2HclOY8NZruV58WYxSqPpErYEwFdjc/fTQZKoLsn3w/8kJFVIKm/xaLb0gQ5MJd+XlaYmy6fc=
+X-Received: by 2002:a05:620a:1670:: with SMTP id d16mr15764186qko.288.1557301201879;
+ Wed, 08 May 2019 00:40:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iRQteuT9yESvbUyhp3KVVgTXDiGAo+TwPCM_4f0CzBgg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 08 May 2019 07:39:16 +0000 (UTC)
+References: <20190429032551.65975-1-drinkcat@chromium.org> <20190429032551.65975-2-drinkcat@chromium.org>
+ <1556804888.28808.6.camel@mtksdaap41> <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
+ <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
+In-Reply-To: <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 8 May 2019 16:39:50 +0900
+Message-ID: <CANMq1KCzy45RYR-8Y6zeCj+xzOk6QUJvTA8aB8LYZ7zmORmiGQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: mediatek: Add mtk_eint_pm_ops to common-v2
+To:     Sean Wang <sean.wang@kernel.org>
+Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.05.19 23:25, Dan Williams wrote:
-> On Tue, May 7, 2019 at 2:24 PM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 07.05.19 23:19, Dan Williams wrote:
->>> On Tue, May 7, 2019 at 11:38 AM David Hildenbrand <david@redhat.com> wrote:
->>>>
->>>> No longer needed, the callers of arch_add_memory() can handle this
->>>> manually.
->>>>
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: David Hildenbrand <david@redhat.com>
->>>> Cc: Michal Hocko <mhocko@suse.com>
->>>> Cc: Oscar Salvador <osalvador@suse.com>
->>>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->>>> Cc: Wei Yang <richard.weiyang@gmail.com>
->>>> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->>>> Cc: Qian Cai <cai@lca.pw>
->>>> Cc: Arun KS <arunks@codeaurora.org>
->>>> Cc: Mathieu Malaterre <malat@debian.org>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>  include/linux/memory_hotplug.h | 8 --------
->>>>  mm/memory_hotplug.c            | 9 +++------
->>>>  2 files changed, 3 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
->>>> index 2d4de313926d..2f1f87e13baa 100644
->>>> --- a/include/linux/memory_hotplug.h
->>>> +++ b/include/linux/memory_hotplug.h
->>>> @@ -128,14 +128,6 @@ extern void arch_remove_memory(int nid, u64 start, u64 size,
->>>>  extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
->>>>                            unsigned long nr_pages, struct vmem_altmap *altmap);
->>>>
->>>> -/*
->>>> - * Do we want sysfs memblock files created. This will allow userspace to online
->>>> - * and offline memory explicitly. Lack of this bit means that the caller has to
->>>> - * call move_pfn_range_to_zone to finish the initialization.
->>>> - */
->>>> -
->>>> -#define MHP_MEMBLOCK_API               (1<<0)
->>>> -
->>>>  /* reasonably generic interface to expand the physical pages */
->>>>  extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
->>>>                        struct mhp_restrictions *restrictions);
->>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->>>> index e1637c8a0723..107f72952347 100644
->>>> --- a/mm/memory_hotplug.c
->>>> +++ b/mm/memory_hotplug.c
->>>> @@ -250,7 +250,7 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
->>>>  #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
->>>>
->>>>  static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
->>>> -               struct vmem_altmap *altmap, bool want_memblock)
->>>> +                                  struct vmem_altmap *altmap)
->>>>  {
->>>>         int ret;
->>>>
->>>> @@ -293,8 +293,7 @@ int __ref __add_pages(int nid, unsigned long phys_start_pfn,
->>>>         }
->>>>
->>>>         for (i = start_sec; i <= end_sec; i++) {
->>>> -               err = __add_section(nid, section_nr_to_pfn(i), altmap,
->>>> -                               restrictions->flags & MHP_MEMBLOCK_API);
->>>> +               err = __add_section(nid, section_nr_to_pfn(i), altmap);
->>>>
->>>>                 /*
->>>>                  * EEXIST is finally dealt with by ioresource collision
->>>> @@ -1066,9 +1065,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
->>>>   */
->>>>  int __ref add_memory_resource(int nid, struct resource *res)
->>>>  {
->>>> -       struct mhp_restrictions restrictions = {
->>>> -               .flags = MHP_MEMBLOCK_API,
->>>> -       };
->>>> +       struct mhp_restrictions restrictions = {};
->>>
->>> With mhp_restrictions.flags no longer needed, can we drop
->>> mhp_restrictions and just go back to a plain @altmap argument?
->>>
->>
->> Oscar wants to use it to configure from where to allocate vmemmaps. That
->> was the original driver behind it.
->>
-> 
-> Ah, ok, makes sense.
-> 
+On Sat, May 4, 2019 at 2:09 AM Sean Wang <sean.wang@kernel.org> wrote:
+>
+> Hi, Nicolas
+>
+> On Thu, May 2, 2019 at 5:53 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >
+> > On Thu, May 2, 2019 at 9:48 PM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> > >
+> > > On Mon, 2019-04-29 at 11:25 +0800, Nicolas Boichat wrote:
+> > > > pinctrl variants that include pinctrl-mtk-common-v2.h (and not
+> > > > pinctrl-mtk-common.h) also need to use mtk_eint_pm_ops to setup
+> > > > wake mask properly, so copy over the pm_ops to v2.
+> > > >
+> > > > It is not easy to merge the 2 copies (or move
+> > > > mtk_eint_suspend/resume to mtk-eint.c), as we need to
+> > > > dereference pctrl->eint, and struct mtk_pinctrl *pctl has a
+> > > > different structure definition for v1 and v2.
+> > > >
+> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > > Reviewed-by: Chuanjia Liu <Chuanjia.Liu@mediatek.com>
+> > > > ---
+> > > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 19 +++++++++++++++++++
+> > > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
+> > > >  2 files changed, 20 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > > > index 20e1c890e73b30c..7e19b5a4748eafe 100644
+> > > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > > > @@ -723,3 +723,22 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+> > > >
+> > > >       return 0;
+> > > >  }
+> > > > +
+> > > > +static int mtk_eint_suspend(struct device *device)
+> > > > +{
+> > > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> > > > +
+> > > > +     return mtk_eint_do_suspend(pctl->eint);
+> > > > +}
+> > > > +
+> > > > +static int mtk_eint_resume(struct device *device)
+> > > > +{
+> > > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> > > > +
+> > > > +     return mtk_eint_do_resume(pctl->eint);
+> > > > +}
+> > > > +
+> > > > +const struct dev_pm_ops mtk_eint_pm_ops = {
+> > > > +     .suspend_noirq = mtk_eint_suspend,
+> > > > +     .resume_noirq = mtk_eint_resume,
+> > > > +};
+> > >
+> > > This is identical to the one in pinctrl-mtk-common.c and will have name
+> > > clash if both pinctrl-mtk-common.c and pinctrl-mtk-common-v2.c are
+> > > built.
+> > >
+> > > It would be better if we try to merge both version into mtk-eint.c, this
+> > > way we could also remove some global functions.
+> >
+> > Argh, I didn't think about the name clash, you're right. I guess the
+> > easy way is to rename this one mtk_eint_pm_ops_v2 ...
+> >
+> > As highlighted in the commit message, it's tricky to merge the 2 sets
+> > of functions, they look identical, but they actually work on struct
+> > mtk_pinctrl that are defined differently (in
+> > pinctrl-mtk-common[-v2].h), so the ->eint member is at different
+> > addresses...
+> >
+> > I don't really see a way around this... Unless we want to change
+> > platform_set_drvdata(pdev, pctl); to pass another type of structure
+> > that could be shared (but I think that'll make the code fairly
+> > verbose, with another layer of indirection). Or just assign struct
+> > mtk_eint to that, since that contains pctl so we could get back the
+> > struct mtk_pinctrl from that, but that feels ugly as well...
+> >
+>
+> I agree on renaming would make the thing simple. but I wouldn't like
+> to rename to mtk_eint_pm_ops_v2 since this would make people
+> misunderstand that is mtk_eint_v2.
+>
+> How about renaming to mtk_paris_pinctrl_pm_ops and then place related
+> logic you added into pinctrl-paris.c? Because I prefer to keep pure
+> pinctrl hardware operations in pinctrl-mtk-common-v2.c, and for
+> relevant to other modules (mtk eint) or others subsystem (device tree
+> binding, GPIO subsytem, PM something like that) they should be moved
+> to pinctrl-paris.c or pinctrl-moore.c
 
-However I haven't really thought it through yet, smalles like that could
-as well just be handled by the caller of
-arch_add_memory()/arch_remove_memory() eventually, passing it via
-something like the altmap parameter.
+Sounds reasonable. I uploaded a v2 that does just that.
 
-Let's leave it in place for now, we can talk about that once we have new
-patches from Oscar.
+Note that we'd still have to duplicate this code between paris and
+moore, if we wanted to implement pm_ops in moore as well, but maybe
+that's ok for now.
 
--- 
-
-Thanks,
-
-David / dhildenb
+>      Sean
+>
+> > >
+> > > Joe.C
+> > >
+> > >
+> > >
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
