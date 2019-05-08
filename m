@@ -6,91 +6,94 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5079C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796D1C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B519620989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5FE20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 11:46:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLFaoXIJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ezjf3jfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfEHLpj (ORCPT
+        id S1728179AbfEHLqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 07:45:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39747 "EHLO
+        Wed, 8 May 2019 07:46:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46134 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbfEHLpg (ORCPT
+        with ESMTP id S1727704AbfEHLqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 07:45:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v10so1545878wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:45:36 -0700 (PDT)
+        Wed, 8 May 2019 07:46:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so26752339wrr.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 04:46:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=tlwX1TwlUBY6Z37kB2EJ5w9WiIHcYvXReYxAo3ZK/QU=;
-        b=aLFaoXIJBRIIYYQi6a34dUkmQ3Qxn+QdslldTwFr/3TeRmdWtnkEXUKnt5cwI64iyS
-         E3Z/VyxNSChE4jryrWHmG9WxOPHJyFgX8PCVGm9FkCw0FK/48uk+vFoodfeyXH6xh3dC
-         ECnGN20wkM9Aw+TLnn07DGMMyPxOQ07qHmHHS741REuApklwsX5NSnVskZXnzaDWBajC
-         yA2DQxXY3Fcn7VQXf3vYtY7BQDtZ+oH3JuF0tz9n3GThksESTNyRgsnqyWVcHm8/VeAf
-         H4mEWWWZKDUkGf+FVTX5HnAI2ggA2oYgwa3+zT+xydKTnsftnA6Sc7gQDrtTuhxV/L+C
-         YeDA==
+        bh=JMXRWT/F4hp5WfrQGRhzI2YLNPd4nX+eBcUO3CBizws=;
+        b=Ezjf3jfdQWt8+1oRjIl4JHtShWCjon4HaXtoPv6Q4hNQ3C9AYRYsISbe45hvnNGK4D
+         IpQ8TzgeTJW8y2uF820mzyoewxCakvkiC0aiQa6YXUlZWI4l/YNPujRMIH1fS2ezveq5
+         gipjHBqcB7fbPOf61V+fdWG72epbFItzz8D6aQazvQieVRNrOGxtDE08vMRgXP+30dcj
+         2qLGIJkrHiJSQ5mcj9N12O8BESc0QMIvYA9EHApOALMkRwIvjmXi/p6ZVarTlrDVmjvF
+         AZ9sEqNvBClVOIRuLRdfCM0Uu3ml0OFgMMjRu/4x06T7h/+f0KOZJzbD4WGqqRhpd5/g
+         p7/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=tlwX1TwlUBY6Z37kB2EJ5w9WiIHcYvXReYxAo3ZK/QU=;
-        b=Fqwoejxv/bLgcQeB110ABItmE1pJJGF2OzPcSCo+uFT0pqsF7gPrRcO3W+k9xCHm4A
-         nXpWtLxL/ju3ozcWglIOm2mueBhJy7/qCCMAmpxbhitTL/R5GG6YuBr2QxI2AK8bA4bG
-         zEkQqnFCUXqHQLevIFz6mWu2/WbIwfGVIviWYPFPgAfepxgTZw+AinvEoRDv5KCeXaLk
-         Jk1Bdsp7rdy1Fnd0EkyKVOwIfOf7S1p2lzixLC0M0C5AP0N40/KAM9CdItcHyXPfDUYO
-         kbodVzJDXsjauZEKfbeg0TEcU7WGRnNcW5UcBH6wLuv9AizHZCTsrENWxMpQIn6lQOlT
-         N6zQ==
-X-Gm-Message-State: APjAAAXhCBaPxq648MG3G0OLL10NG5cY5dKu+geg+PGL7yWcUC3HBc7J
-        Q9kKmA1v8ubO3qug8RGHWKXaIw==
-X-Google-Smtp-Source: APXvYqykdlP88xzgMGKDUs4qkEmodZQT12LFcXefUZay/XBaDwzQZGh3E3/CFHN5zN+W7WJ3Pyni6A==
-X-Received: by 2002:a5d:6249:: with SMTP id m9mr9799370wrv.255.1557315935670;
-        Wed, 08 May 2019 04:45:35 -0700 (PDT)
+        bh=JMXRWT/F4hp5WfrQGRhzI2YLNPd4nX+eBcUO3CBizws=;
+        b=ioDs5/MuqEY4EHNPXbwwcaOwelPd5Ct5Z6GDZtsjJwZO+2bHVxnjQX62p0ju2veMRk
+         w+PHKtXtVeDjcNhksADsz9kd31i9hk+4N/JCGY8LxBGDsECRUbWNQ+tGYRlXIhLgcZaP
+         eet2KffQ2XR/y6teqmCAUrmoYVAU5yjJdzqrw/1nDTiX1ObkqSudFdHD0iuRuw3yxDI1
+         5HFZyGMa8YKA5I1kVWxbTUt1MEEdUKOEuHs0WB+OGPcvktU687uRR7Uq5YJXoTpptwkQ
+         ElyG9yghYtsr+tGy6cQVndNCnPUkxNTkZQzM7DGjy+2MxHKWcFp17MY8Sx8b25lST1v0
+         hTcg==
+X-Gm-Message-State: APjAAAXF6Vzh6HoePYzAb8jTVjBdSltlW9ozDrLQZJsLKW5kttz/zL69
+        aCtNWqEuseLijg4soiyG23p5nQ==
+X-Google-Smtp-Source: APXvYqyXTmLI4JXav9TDocJWmcd5fIHJYqnB6gupx9rImn0d0mLlJ8TiDiXRuOldMiuSCLR8SkGzIA==
+X-Received: by 2002:adf:a202:: with SMTP id p2mr27045648wra.166.1557315973156;
+        Wed, 08 May 2019 04:46:13 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id k67sm2055362wmb.34.2019.05.08.04.45.34
+        by smtp.gmail.com with ESMTPSA id b10sm28889467wrh.59.2019.05.08.04.46.12
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 04:45:35 -0700 (PDT)
-Date:   Wed, 8 May 2019 12:45:33 +0100
+        Wed, 08 May 2019 04:46:12 -0700 (PDT)
+Date:   Wed, 8 May 2019 12:46:11 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 6/7] iio: adc: sun4i-gpadc-iio: add support for H6
- thermal sensor
-Message-ID: <20190508114533.GG31645@dell>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-7-tiny.windzz@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mallikarjun Kasoju <mkasoju@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] dt-bindings: mfd: max77620: Add compatible for
+ Maxim 77663
+Message-ID: <20190508114611.GH31645@dell>
+References: <20190505154325.30026-1-digetx@gmail.com>
+ <20190505154325.30026-2-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190503072813.2719-7-tiny.windzz@gmail.com>
+In-Reply-To: <20190505154325.30026-2-digetx@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 May 2019, Yangtao Li wrote:
+On Sun, 05 May 2019, Dmitry Osipenko wrote:
 
-> This patch adds support for the H6 ths sensor.
+> Maxim 77663 has a few minor differences in regards to hardware interface
+> and available capabilities by comparing it with 77620 and 20024 models,
+> hence re-use 77620 device-tree binding for the 77663.
 > 
-> TODO: calibrate thermal sensor by using information from sid.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 65 +++++++++++++++++++++++++++++++
->  include/linux/mfd/sun4i-gpadc.h   |  9 +++++
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
