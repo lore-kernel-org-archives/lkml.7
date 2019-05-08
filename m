@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BADC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68973C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5C021726
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FE32173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 19:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557345094;
-	bh=RHXXd7lXMgFiZCdQS3stOTIConYe0AS69uhgFRQCJew=;
+	s=default; t=1557345121;
+	bh=xfiKSHmaFE8J5srUUDYQEYrEndhZmjayDb2RolBu9D8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JFknlQOHJ7yV27pMTkVwWU4j1nIZs4gaxwr6yPCmsFzWftTo8zom/DPusZXL8io5n
-	 Oo++9DMkWZ8W5KMmw+Wgexc46vkO1q94Y8akQhpBCHh/vGuvwkUWRispzFTKrpK+nj
-	 Fqplu4qHdbzNd1mh4dyWSRN6cC7x+4TworYoWiB0=
+	b=HkLd+dL85QCdD6M92HAd+w7GbBqvMAi37EeqlD4ltvHrL8q6GV39vujS07EzO2DnV
+	 d1C5DiJuDzqM1v/MZtaUOCN9n5taKxtNqSTyT0NNsbTYGbniLuqPU5fJcfxi8TmBM0
+	 33xzhIy7yHzYODgpCOTxP/jLI4q5ULGKxVYxgr1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfEHTvd (ORCPT
+        id S1728111AbfEHTwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 15:51:33 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42676 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfEHTvc (ORCPT
+        Wed, 8 May 2019 15:52:00 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33942 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfEHTv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 15:51:32 -0400
-Received: by mail-ed1-f68.google.com with SMTP id l25so23180326eda.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:51:31 -0700 (PDT)
+        Wed, 8 May 2019 15:51:59 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p27so8253894eda.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 12:51:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xt6kSgujPUBekFrqEm4E/0l9ZP4sNoTUR2oIeyK8NJk=;
-        b=sTQERpcMuUfEt6h9kooqh8PAlVuoDjLlCGqT7Uklvk+2EQBlVg89j5qvhho9BoM4JJ
-         LniLqQheZ3gUuRUTTBtGrArqSpoVXHG+CE6WSZIhaQqfxWdJNpkKTXUvvA/v5Uclopoz
-         8wY2ePk2oUrNv3OC8IxGPzxlF2hDzcxapEm7XuquyYGlvhwd0V7HTBW5oYNqR389nLsN
-         HeElSiGJma2+pBpE+A5lUS9meTTM5K0axraxQ0gNvOyMY9CqBPycaKu6qjHcZuSevE8+
-         03bkNRAFH5HMtKp2VbBmA5Ist3S5QQJXpZ1Bq59hM9le7nnj4gTowiQYXKeaQjCZjTzg
-         ex0g==
-X-Gm-Message-State: APjAAAVO3DBd/2CLYOrbSj64fOD5AY65SE4ui8TqLwg/x1UsKEulhOKZ
-        DISRKsjDNTfK3KQEAM1tz+e6tz7aGg5fnPtDrwI=
-X-Google-Smtp-Source: APXvYqznnKZ06hcmzGFukgkOAj3mFQpPbadte1ALKcH7Sr1t7EQrlgeB/oxaiF/3uZeNh3ZQ+lqYUASHV4vqYcXPFH8=
-X-Received: by 2002:a50:b862:: with SMTP id k31mr39528025ede.27.1557345091391;
- Wed, 08 May 2019 12:51:31 -0700 (PDT)
+        bh=uqOZEzLE6WwTiA3Dz7Gqq2Tv3AW7Mi8HGq1qcRsSpRU=;
+        b=ic9kgFYTuNAejn8z3ijaImES3euvwLMxKuHnbDhW+cLWy978kwY8Rdw6C0rdjfVyKZ
+         Mtl9aIxqnvIreQ/L4CR6WbVKmYnWC/mFzh+978+snbbqRo6R5OKjYr1URPdpnMouaTbj
+         YdKH3lwTRHrrJ3UIw9L3oYm8ODhlpEJuthd4noD1lOXm8dIljlTzzMW49Q9W+qeHhRWR
+         Yu0tvujMwhPZCWtarlVUx/kTIyXmySwkuWuswyvCPuOAgIaXFF108Hr0UMYQMehe/cxA
+         XMxqhO7Ch6Qx6uqYw1VfYT0lOwcr2RyR0WH9zgCNx38rQXsYbE+gzdxuwp1AJjkndNR+
+         ADsQ==
+X-Gm-Message-State: APjAAAXnOjazddML8l/30dQ6PGXHJy5ohUL2KJRf+rBe6wQS97AqFs/a
+        gXZQc4DW/pq3q+fbAPhMs4TKtHCYqGUuvRO2sS989hLT
+X-Google-Smtp-Source: APXvYqy5e8vTqJHsWt6cyK83x4oPyJXZcetqXs7QvD0GksqAD0Zo3RLFLjlKFEZy5RfYHx/mEWEjtMjGdyipkjXxLMM=
+X-Received: by 2002:a50:9203:: with SMTP id i3mr23971200eda.172.1557345118108;
+ Wed, 08 May 2019 12:51:58 -0700 (PDT)
 MIME-Version: 1.0
 References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
- <1d7c4d47cfca91c11b0e078d86a8f7f7da6d862a.1557177585.git.len.brown@intel.com> <20190507122141.GM2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190507122141.GM2623@hirez.programming.kicks-ass.net>
+ <1d7c4d47cfca91c11b0e078d86a8f7f7da6d862a.1557177585.git.len.brown@intel.com> <20190507122219.GN2623@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190507122219.GN2623@hirez.programming.kicks-ass.net>
 From:   Len Brown <lenb@kernel.org>
-Date:   Wed, 8 May 2019 15:51:20 -0400
-Message-ID: <CAJvTdKk78OzgcsUjRpvOOgA1w9VyjADJ4m+=hSFk3WciNAdBkQ@mail.gmail.com>
+Date:   Wed, 8 May 2019 15:51:46 -0400
+Message-ID: <CAJvTdKm_hsHT7nSi3YwNbZ6gYbHGksQKo_WBaFWSFiN0xJ7peA@mail.gmail.com>
 Subject: Re: [PATCH 16/22] perf/x86/intel/uncore: Support multi-die/package
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
@@ -63,17 +63,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 8:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, May 7, 2019 at 8:22 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
 > On Mon, May 06, 2019 at 05:26:11PM -0400, Len Brown wrote:
-> > @@ -1411,7 +1413,7 @@ static int __init intel_uncore_init(void)
-> >       if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-> >               return -ENODEV;
+> > @@ -1223,7 +1225,7 @@ static int uncore_event_cpu_online(unsigned int cpu)
+> >       struct intel_uncore_box *box;
+> >       int i, ret, pkg, target;
 > >
-> > -     max_packages = topology_max_packages();
-> > +     max_packages = topology_max_packages() * topology_max_die_per_package();
+> > -     pkg = topology_logical_package_id(cpu);
+> > +     pkg = topology_logical_die_id(cpu);
+> >       ret = allocate_boxes(types, pkg, cpu);
+> >       if (ret)
+> >               return ret;
 >
-> That's max_dies..
+> 'pkg' != 'die'
 
 To keep the patch with this functional change minimal and obvious,
 the rename of this variable was segregated into patch 22, which is
