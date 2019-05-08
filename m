@@ -2,115 +2,91 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7F0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CD9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32F020578
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557310760;
-	bh=KgiLwHa8c628XCTksNuq14BZQuGqDsnA4pu3qRgYcxQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PSe2FhPSKniEykav0O9hAJrIfPWlO1JbEGGnZrovzQMwER3LI0Ual+amU910Eddzw
-	 S0W+8oqVKhrohS694p0twuwQT8OCbYthxk5qAxrK8aIWqfplQNFfSsWkop2d0emI4U
-	 iu868o/iLyMjnpBQ8/X+mqcshqy0r4y7YwQgHy6I=
+	by mail.kernel.org (Postfix) with ESMTP id 868A1214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 10:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="RCduyU6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfEHKTU (ORCPT
+        id S1727146AbfEHKUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 06:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 06:20:48 -0400
+Received: from onstation.org ([52.200.56.107]:54298 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfEHKTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 06:19:19 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726640AbfEHKUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 06:20:47 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8F2D216C4;
-        Wed,  8 May 2019 10:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557310758;
-        bh=KgiLwHa8c628XCTksNuq14BZQuGqDsnA4pu3qRgYcxQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2wft5YmM3CM2rKVQmpR6hOXN83mEVRAGkfTMAnH44HifrmzxdXs+02+K45kkV3yXn
-         SvHDi2skTrO4pZqoo9fwE+uG5WIJDdk33/r0LrAJsE606iivCAE2HAmf2kBc4cwQEU
-         7Zu6tEOESBQf/upZesMJd6wJb1Pb3iqzL6f13vfE=
-Received: by mail-lj1-f176.google.com with SMTP id y10so10458062lji.9;
-        Wed, 08 May 2019 03:19:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAXgi3EkamGkdwSyIYhaXl/j71xt21dN/Bnzc6qsQ/4L/R2NwiJv
-        GtiYwcES88ib3iU1KwpsJYoqxB/mJ+aFwv1b45I=
-X-Google-Smtp-Source: APXvYqwYkt5J0rET0wyrGnqJH8poPsUWaDooXeIeenTxmEqd6U1lzC8GOwJ2ZxmNmgblZZPq0m1QyUUqoG45zpuRE0s=
-X-Received: by 2002:a2e:82cb:: with SMTP id n11mr20509505ljh.183.1557310756058;
- Wed, 08 May 2019 03:19:16 -0700 (PDT)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 610443E941;
+        Wed,  8 May 2019 10:20:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1557310846;
+        bh=GQMfiDCH+yPuPYxmkr3rVNJiGPHx3JJy8lKsx/Svqk4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RCduyU6kHTTTdGkLVgNg48NGethGwiEZa+Os/9cU/btdu1k09pKeqPLBcFrTFnqZi
+         gSQsKHFt7TmyOvd7Ui6zrplzj/60nk8rhrxOgS7Kgu0/2ARXPTQACAcd38izUrgcUV
+         xvrOYjFChA4XemKLTx92uZ4Bmw5nQt4HOJkh6bpA=
+Date:   Wed, 8 May 2019 06:20:46 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] spi updates for v5.2
+Message-ID: <20190508102046.GA18635@basecamp>
+References: <20190506143301.GU14916@sirena.org.uk>
+ <CAADWXX_MqtZ6RxS2zEVmHtKrjqigiNzdSe5qVwBVvfVU6dxJRQ@mail.gmail.com>
+ <20190507021853.GY14916@sirena.org.uk>
+ <20190507030241.GC14916@sirena.org.uk>
+ <CAHk-=wi4EJQLoMNd4ptiiZvLy8ZW49pcCy0VQwZt4xhDDqSOjw@mail.gmail.com>
+ <20190507110345.GF14916@sirena.org.uk>
+ <20190507120730.5ylk6v4yvzxuzqld@earth.universe>
+ <20190508060936.GH14916@sirena.org.uk>
 MIME-Version: 1.0
-References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
- <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
- <20190507170422.GA25179@bogus> <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
- <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-In-Reply-To: <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 8 May 2019 12:19:04 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPc2Swoi+xc_=QTMdY8p2DTtf5SprpfMFC6B9QCNUtxm-w@mail.gmail.com>
-Message-ID: <CAJKOXPc2Swoi+xc_=QTMdY8p2DTtf5SprpfMFC6B9QCNUtxm-w@mail.gmail.com>
-Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add Exynos5422
- DMC device description
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508060936.GH14916@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 at 11:45, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
->
-> On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
-> > On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
-> >>> +- devfreq-events : phandles of the PPMU events used by the controller.
-> >>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
-> >>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
-> >>
-> >> Looks like a hack. Can't you get this from the clocks property? What is
-> >> this for?
-> >
-> > Hi Rob,
-> >
-> > Lukasz uses these two syscon regmaps to read certain registers. For
-> > chipid he reads it to check the size of attached memory (only 2 GB
-> > version is supported). This indeed looks like a hack. However the
-> > second regmap (clk) is needed to get the timing data from registers
-> > from DMC clock driver address space. These are registers with memory
-> > timing so their data is not exposed anyway in common clk framework.
-> >
-> > Best regards,
-> > Krzysztof
->
-> Thank you Krzysztof for a fast response. I have also responded to Rob.
-> I wouldn't call accessing chipid registers as a hack, though. The DMC
-> registers do not contain information about the memory chip since it is
-> in phase of production the board not the chip. Thus, chipid regs (which
-> loads from e-fuses) are best place to put information about memory
-> type/size.
+On Wed, May 08, 2019 at 03:09:36PM +0900, Mark Brown wrote:
+> On Tue, May 07, 2019 at 02:07:30PM +0200, Sebastian Reichel wrote:
+> 
+> > FWIW, I send out kernel.org mails via mail.kernel.org. Konstantin
+> > added that service in 2014. You can get a password with
+> 
+> > ssh git@gitolite.kernel.org getsmtppass
+> > 
+> > and then use the following settings for (example for git):
+> 
+> I'd have to send all mail out via kernel.org to do that, or persuade a
+> MTA to route mail differently based on contents which seems interesting
+> - I inject most of my mail via /usr/sbin/sendmail rather than SMTP
+> (including a bunch of scripts).
 
-By hack I meant that you have to read chipid instead of DTS... but as
-you pointed, the DTS could not match the real fused values so actually
-it makes sense to read them.
+I use a program called msmtp (https://marlam.de/msmtp/) to route email
+to different SMTP servers based on my sender address. Once you have your
+accounts configured, replace the call to the sendmail binary in your MUA
+with msmtp and it'll route the email differently for you. It's included
+in the package repositories for most major Linux distributions. Here's
+two resources I found that show how to configure mutt and git send-email
+to use msmtp:
 
-Best regards,
-Krzysztof
+https://hostpresto.com/community/tutorials/how-to-send-email-from-the-command-line-with-msmtp-and-mutt/
+https://jordonwu.github.io/blog/2015/12/01/git-send-email-and-msmtp-config/
+
+Once you have msmtp setup, send test emails from each of your accounts
+to check-auth@verifier.port25.com to have a bot verify that your email
+is setup properly (DKIM, SPF, reverse DNS, etc).
+
+Brian
