@@ -2,141 +2,153 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D096C04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCF4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC4F214AE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557289833;
-	bh=sgs6ytJVn9qBYplg2hYQ+XOt9DqBHh15P7mn2I3W6ac=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=L09Of1LYmJs6TaaT6c/Vmgu79NRPbxdW87yGwDY7DOMzxW5gBKINFGDbYl5ZUh/Ld
-	 DBnyP3CGNv8paR3mWcn/DAWx3WM6R/TOcE0BFLgZ+Ee0XAdoIrdwNfDi6C0OuK1W30
-	 NRuBXg4A4T08bVrA+9ao6LEL9nqJ01/bLfeHb1mc=
+	by mail.kernel.org (Postfix) with ESMTP id 9B4DA20644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 04:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RwFsDZ8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfEHEac (ORCPT
+        id S1727090AbfEHEcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 00:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfEHEac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 00:30:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A07821019;
-        Wed,  8 May 2019 04:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557289830;
-        bh=sgs6ytJVn9qBYplg2hYQ+XOt9DqBHh15P7mn2I3W6ac=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NgH+vDrx//pebh1V6TMfYZeViVKqiJape+anma/JjnKItD3ZSXojjOoOUuYTSWKXR
-         +8zmAaoHcuu3391UqImrgZa8fESLt7q9yqhxXynu0zzuHRkOB41yUFB51EHNx7elpS
-         gI4w6Ui5tWAQey2rt3dz7TYq23OAaY8TXwAvkXxI=
-Date:   Wed, 8 May 2019 13:30:22 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 0/3] x86_64/ftrace: Emulate calls from int3 when
- patching functions
-Message-Id: <20190508133022.78cd9c9b8fcb7838fc0280d0@kernel.org>
-In-Reply-To: <20190508015559.767152678@goodmis.org>
-References: <20190508015559.767152678@goodmis.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 8 May 2019 00:32:46 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:57959 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfEHEcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 00:32:45 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x484WGjd022829;
+        Wed, 8 May 2019 13:32:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x484WGjd022829
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557289937;
+        bh=Ps4nshk7Zk0dLbA3505OadTet8yPE5ONbU7K+n8ob/o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RwFsDZ8mZFGRpAvZrGOZlhrPoqAg4d566R4Pzb5WBlt/NeJjdonpqjmQucOaHCpZH
+         Qoq+aYUTu7OSyES/qKLARdzxVQ2BbkDHiicqsX42JEQm4ZDhjgHWK9TkYemqeZhbWQ
+         hsp7Q41668IV9NMHORlYjf3fzAHY1Ymfvr/OMY9ueNOKMDzbZoBZLZ3nSCYC3VY4yt
+         kfccFLOv3acToYheAfdCLkDE/VIFZ6V7HtgHzcuFS5Znu+O+ybETdF0yJPl63gBNlP
+         JagIlkL8hdUgTwOCt4o2UOkOMhnFPRTYTcAmP3bq6BqMHjh6Pln0yPgkUj4NlEezFl
+         mut5LeoeCxygA==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id f9so6898643ual.1;
+        Tue, 07 May 2019 21:32:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAUtr1WDSy+TljhtQ5c9Rz3+FMLjYZC4V8GzhoNJs2Dih35fS644
+        9mtMfZTqe6XKwkargkSKqhRjGHn+sYWcLA8JbnM=
+X-Google-Smtp-Source: APXvYqyN7//sr1iQvDH6P2JrFGC8ks2rJ/Zq3PumOClZ6goClsxQSulHsCamCd7f1fV8zcCLccwkpNusygOCOU268Sc=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr18605406ual.95.1557289935781;
+ Tue, 07 May 2019 21:32:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190506094609.08e930f2@canb.auug.org.au> <CAK7LNASH4CuVBjfEJsT+aBx4aLrj9j2=aOD3B4f9+Tdcm=x2pg@mail.gmail.com>
+ <20190506033151.GB2649@windriver.com> <CAK7LNAS=D96B_OgnRu-NK0-G+y8itvhe3qvwfYxZUCSqdC0gEA@mail.gmail.com>
+ <20190506142010.GC2649@windriver.com>
+In-Reply-To: <20190506142010.GC2649@windriver.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 8 May 2019 13:31:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQXg_3-ka8QHDJi=svnDz1rEA6Yx7Oy_=TXTFYXRBJaeQ@mail.gmail.com>
+Message-ID: <CAK7LNAQXg_3-ka8QHDJi=svnDz1rEA6Yx7Oy_=TXTFYXRBJaeQ@mail.gmail.com>
+Subject: Re: Fwd: linux-next: build failure after merge of the kbuild tree
+To:     Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 May 2019 21:55:59 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Paul,
 
-> 
-> [
->   This is the non-RFC version.
-> 
->   It went through and passed all my tests. If there's no objections
->   I'm going to include this in my pull request. I still have patches
->   in my INBOX that may still be included, so I need to run those through
->   my tests as well, so a pull request wont be immediate.
-> ]
-> 
-> Nicolai Stange discovered that Live Kernel Patching can have unforseen
-> consequences if tracing is enabled when there are functions that are
-> patched. The reason being, is that Live Kernel patching is built on top
-> of ftrace, which will have the patched functions call the live kernel
-> trampoline directly, and that trampoline will modify the regs->ip address
-> to return to the patched function.
-> 
-> But in the transition between changing the call to the customized
-> trampoline, the tracing code is needed to have its handler called
-> an well, so the function fentry location must be changed from calling
-> the live kernel patching trampoline, to the ftrace_reg_caller trampoline
-> which will iterate through all the registered ftrace handlers for
-> that function.
-> 
-> During this transition, a break point is added to do the live code
-> modifications. But if that break point is hit, it just skips calling
-> any handler, and makes the call site act as a nop. For tracing, the
-> worse that can happen is that you miss a function being traced, but
-> for live kernel patching the affects are more severe, as the old buggy
-> function is now called.
-> 
-> To solve this, an int3_emulate_call() is created for x86_64 to allow
-> ftrace on x86_64 to emulate the call to ftrace_regs_caller() which will
-> make sure all the registered handlers to that function are still called.
-> And this keeps live kernel patching happy!
 
-Out of curiosity, would you have any idea to re-use these function for
-other use-case? Maybe kprobes can reuse it, but very limited use-case.
+On Mon, May 6, 2019 at 11:23 PM Paul Gortmaker
+<paul.gortmaker@windriver.com> wrote:
+>
+> [Re: Fwd: linux-next: build failure after merge of the kbuild tree] On 06/05/2019 (Mon 21:07) Masahiro Yamada wrote:
+>
+> > Hi Paul,
+> >
+> >
+> > On Mon, May 6, 2019 at 12:34 PM Paul Gortmaker
+> > <paul.gortmaker@windriver.com> wrote:
+> > >
+> > > [Fwd: linux-next: build failure after merge of the kbuild tree] On 06/05/2019 (Mon 11:19) Masahiro Yamada wrote:
+> > >
+> > > > Hi Paul,
+> > > >
+> > > > In today's linux-next build testing,
+> > > > more "make ... explicitly non-modular"
+> > > > candidates showed up.
+> > > >
+> > >
+> > > Hi Masahiro,
+> > >
+> > > I am not 100% clear on what you are asking me.  There are lots and lots
+> > > of these in the kernel.... many fixed, and many remain unfortunately.
+> > >
+> > > > arch/arm/plat-omap/dma.c
+> > > > drivers/clocksource/timer-ti-dm.c
+> > > > drivers/mfd/omap-usb-host.c
+> > > > drivers/mfd/omap-usb-tll.c
+> > >
+> > > None of these are "new".  I just checked, and I have had patches for all
+> > > these for a long time, in my personal queue, found by my audits.
+> >
+> >
+> > OK, I saw many patches from you
+> > addressing this issue,
+> > so I just thought you might be motivated to
+> > fix them.
+> >
+> > Anyway, I have a reason to fix them
+> > because a patch in my tree is causing build errors.
+>
+> I understand now.  I missed the connection between these drivers and the
+> Kbuild change when I read this last night.  Sorry about that.
+>
+> I can send the changes to those four files, but since I can't guarantee
+> they will be merged quickly (or at all!) - that will leave the commit in
+> the Kbuild tree causing build regressions for days or likely even weeks.
+>
+> > So, I will do something for them
+> > if you do not have a plan to send patches soon.
+>
+> I will be happy to send them, but we just opened the two week merge
+> window, and a lot of maintainers don't like getting sent new patches
+> until the two week merge window has closed - so we should avoid that.
+>
+> I'm not sure how you would like to proceed - one way would be that we
+> get the drivers above changed in 5.2 and you delay your kbuild change
+> until we start v5.3 - to that end I'd be happy to add the Kbuild change
+> to my internal build testing in the meantime, if you would like.
+>
+> Now that I understand the problem, let me know what you would like to
+> do, and I'll do what I can to help out.
 
-> To mimimize the changes, and to avoid controversial patches, this
-> only changes x86_64. Due to the way x86_32 implements the regs->sp
-> the complexity of emulating calls on that platform is too much for
-> stable patches, and live kernel patching does not support x86_32 anyway.
 
-This series looks good to me.
+I decided to merge minimal changes to my kbuild tree
+since I did not want to delay the kbuild patch.
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+I got some Ack tags, so I applied this patch:
+https://patchwork.kernel.org/patch/10931673/
 
-Thanks!
+I appreciate if you could fix those files in a complete way,
+but there is no more reason to rush.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+
+
+> Thanks,
+> Paul.
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
