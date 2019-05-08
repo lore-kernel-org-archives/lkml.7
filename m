@@ -2,120 +2,155 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9943AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB6DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691C921734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37E221734
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 20:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="JYS8nhvW"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="i5gP1jg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbfEHU1Z (ORCPT
+        id S1728175AbfEHUee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 16:27:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33904 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729139AbfEHU1Y (ORCPT
+        Wed, 8 May 2019 16:34:34 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55542 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726526AbfEHUed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 16:27:24 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j6so15615qtq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y1oAL2e+nDxNSlN8Pn+qOcIb2+7Ea2X17YXpRqljKsI=;
-        b=JYS8nhvWxAfBtVu9xdrLwq3zymLBJolq7Z9h0ZdiIgsCPff2mlXK3P72whWTnh4qGo
-         Ovg1aPAs0W8mSKgvaqdCikqOluGa84/dKcPAijH55blUXF4x6wpB06Gv7KbwF80938Wm
-         XLa66QvaPs8fLJ/hTq3p38J3z9RxOCvASvTkW3wDhvZVGQRRP+YAd6Lo3RZywh5rIWIS
-         +kpbU+4YKEaRU+N8OXKOx6Fx+ldPmplcErXwrt05qb3uuzpzvUSppLHPCPWX+4XRXvMP
-         Iw5H+K1Em7mb34jBBW3APKQTwZr5vmROWfBMkWt6Ga/vrZ57PaRmMhjTJ88APBbAOYDj
-         99+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y1oAL2e+nDxNSlN8Pn+qOcIb2+7Ea2X17YXpRqljKsI=;
-        b=Ba+62hzDckEc1VdknHIjfu0Gc1AIY6L5jFKykeHZMGhMj0EPalay/UgRUUVoFhttvU
-         2c6MetmWKBDd3KOGUK7hD/NNVMmoYbl8fGeRjzR34KDOBkBcKe+tYOHTCAn4db+IAdxE
-         O9hQqxQcSBztBzx6vb0DOxXBqHxg5K6VcKORRr9K6U9BJbPZwCIvYVet65Xw/bqXNPgF
-         w+RbkRabPjf6Xjtk7UCoBG6rRRlkRO+qtJhZ2kouKuexkabxfzRAJlbCowaVziML3D+J
-         nCyYgvg9u5cHazTtkq3K/ybQFjB8LI6WJq9lWX7lhJffrdTmJlCbiC+U4fnWiRYk/XtV
-         Y48Q==
-X-Gm-Message-State: APjAAAV5j6k2Y7et8bIaJgx7nS5COl5Xrudq0EGbD0OG5YURfGWfRJaX
-        8Mk+fHxNpEaUqazc+pEzRbf6XQ==
-X-Google-Smtp-Source: APXvYqxI348a5G44Us1OX3HYd/MQ95CBhXbRtWT/DUszb4SCQek/YD2KQUahgddFgYiOum1m0aUGCA==
-X-Received: by 2002:ad4:4587:: with SMTP id x7mr164380qvu.192.1557347243293;
-        Wed, 08 May 2019 13:27:23 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id n66sm9721679qkc.36.2019.05.08.13.27.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 13:27:22 -0700 (PDT)
-Date:   Wed, 8 May 2019 16:27:21 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/a6xx: No zap shader is not an error
-Message-ID: <20190508202721.GL17077@art_vandelay>
-References: <20190508130726.27557-1-robdclark@gmail.com>
+        Wed, 8 May 2019 16:34:33 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48KCiGj013909
+        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 13:34:32 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=Qt+4ylLnsNwTDXffLjsnqCa0p2J66ZSO/dTW7jmxMrs=;
+ b=i5gP1jg6fN0KMm6q0bZqZ+iYGFQKj0c1t9mvLuNSGFkqNUhXD1/9xqDcid3Su183xR0L
+ aT5aKwIUhe+VVOfxuoJDmj0XAwJABxHxSUhVPok4tmhvHssnapi4ZzB/z7iCZiJiOp/d
+ I2FVUglTsKu4EHrLYKwDzgrZVZWpwgYebGg= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sc05qshuu-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 13:34:32 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Wed, 8 May 2019 13:34:31 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id E81D811CDD2A0; Wed,  8 May 2019 13:34:30 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Tejun Heo <tj@kernel.org>
+CC:     Oleg Nesterov <oleg@redhat.com>, <kernel-team@fb.com>,
+        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] cgroup: never call do_group_exit() with task->frozen bit set
+Date:   Wed, 8 May 2019 13:34:20 -0700
+Message-ID: <20190508203420.580163-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508130726.27557-1-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_11:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 06:06:52AM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> Depending on platform firmware, a zap shader may not be required to take
-> the GPU out of secure mode on boot, in which case we can just write
-> RBBM_SECVID_TRUST_CNTL directly.  Which we *mostly* handled, but missed
-> clearing 'ret' resulting that hw_init() returned an error on these
-> devices.
-> 
-> Fixes: abccb9fe3267 drm/msm/a6xx: Add zap shader load
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+I've got two independent reports that cgroup_task_frozen() check
+in cgroup_exit() has been triggered by lkp libhugetlbfs-test and
+LTP ptrace01 tests.
 
-As discussed on IRC, I've stuffed this in -misc-next-fixes for the next PR I'm
-sending out.
+For example:
+[   44.576072] WARNING: CPU: 1 PID: 3028 at kernel/cgroup/cgroup.c:5932 cgroup_exit+0x148/0x160
+[   44.577724] Modules linked in: crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel sr_mod cdrom
+bochs_drm sg ttm ata_generic pata_acpi ppdev drm_kms_helper snd_pcm syscopyarea aesni_intel snd_timer
+sysfillrect sysimgblt snd crypto_simd cryptd glue_helper soundcore fb_sys_fops joydev drm serio_raw pcspkr
+ata_piix libata i2c_piix4 floppy parport_pc parport ip_tables
+[   44.583106] CPU: 1 PID: 3028 Comm: ptrace-write-hu Not tainted 5.1.0-rc3-00053-g9262503 #5
+[   44.584600] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+[   44.586116] RIP: 0010:cgroup_exit+0x148/0x160
+[   44.587135] Code: 0f 84 50 ff ff ff 48 8b 85 c8 0c 00 00 48 8b 78 70 e8 ec 2e 00 00 e9 3b ff ff ff f0 ff 43 60
+0f 88 72 21 89 00 e9 48 ff ff ff <0f> 0b e9 1b ff ff ff e8 3c 73 f4 ff 66 90 66 2e 0f 1f 84 00 00 00
+[   44.590113] RSP: 0018:ffffb25702dcfd30 EFLAGS: 00010002
+[   44.591167] RAX: ffff96a7fee32410 RBX: ffff96a7ff1d6000 RCX: dead000000000200
+[   44.592446] RDX: ffff96a7ff1d6080 RSI: ffff96a7fec75290 RDI: ffff96a7fec75290
+[   44.593715] RBP: ffff96a7fec745c0 R08: ffff96a7fec74658 R09: 0000000000000000
+[   44.594985] R10: 0000000000000000 R11: 0000000000000001 R12: ffff96a7fec75101
+[   44.596266] R13: ffff96a7fec745c0 R14: ffff96a7ff3bde30 R15: ffff96a7fec75130
+[   44.597550] FS:  0000000000000000(0000) GS:ffff96a7dd700000(0000) knlGS:0000000000000000
+[   44.598950] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+[   44.600098] CR2: 00000000f7a00000 CR3: 000000000d20e000 CR4: 00000000000406e0
+[   44.601417] Call Trace:
+[   44.602777]  do_exit+0x337/0xc40
+[   44.603677]  do_group_exit+0x3a/0xa0
+[   44.604610]  get_signal+0x12e/0x8d0
+[   44.605533]  ? __switch_to_asm+0x40/0x70
+[   44.606503]  do_signal+0x36/0x650
+[   44.607409]  ? __switch_to_asm+0x40/0x70
+[   44.608383]  ? __schedule+0x267/0x860
+[   44.609329]  exit_to_usermode_loop+0x89/0xf0
+[   44.610349]  do_fast_syscall_32+0x251/0x2e3
+[   44.611357]  entry_SYSENTER_compat+0x7f/0x91
+[   44.612376] ---[ end trace e4ca5cfc4b7f7964 ]---
 
-Sean
+The problem is caused by the ptrace_signal() call in the for loop
+in get_signal(). There is a cgroup_enter_frozen() call inside
+ptrace_signal(), so after exit from ptrace_signal() the task->frozen
+bit might be set. In this case do_group_exit() can be called with the
+task->frozen bit set and trigger the warning. This is only place where
+we can leave the loop with the task->frozen bit set and without
+setting JOBCTL_TRAP_FREEZE and TIF_SIGPENDING.
 
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index ec24508b9d68..e74dce474250 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -527,6 +527,7 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->  		dev_warn_once(gpu->dev->dev,
->  			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
->  		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-> +		ret = 0;
->  	}
->  
->  out:
-> -- 
-> 2.20.1
-> 
+To resolve this problem, let's move cgroup_leave_frozen(true) call to
+just after the fatal label. If the task is going to die, the frozen
+bit must be cleared no matter how we get into this point.
 
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ kernel/signal.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 16b72f4f14df..8607b11ff936 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2483,10 +2483,6 @@ bool get_signal(struct ksignal *ksig)
+ 		ksig->info.si_signo = signr = SIGKILL;
+ 		sigdelset(&current->pending.signal, SIGKILL);
+ 		recalc_sigpending();
+-		current->jobctl &= ~JOBCTL_TRAP_FREEZE;
+-		spin_unlock_irq(&sighand->siglock);
+-		if (unlikely(cgroup_task_frozen(current)))
+-			cgroup_leave_frozen(true);
+ 		goto fatal;
+ 	}
+ 
+@@ -2608,8 +2604,10 @@ bool get_signal(struct ksignal *ksig)
+ 			continue;
+ 		}
+ 
+-		spin_unlock_irq(&sighand->siglock);
+ 	fatal:
++		spin_unlock_irq(&sighand->siglock);
++		if (unlikely(cgroup_task_frozen(current)))
++			cgroup_leave_frozen(true);
+ 
+ 		/*
+ 		 * Anything else is fatal, maybe with a core dump.
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.20.1
+
