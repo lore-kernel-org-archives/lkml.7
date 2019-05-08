@@ -2,80 +2,107 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA29EC04AAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A895C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0FF21655
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B10620656
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfEHOTe (ORCPT
+        id S1727331AbfEHOUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:19:34 -0400
-Received: from smtprelay0232.hostedemail.com ([216.40.44.232]:47807 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbfEHOTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 10:19:34 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id CAE7F180A885B;
-        Wed,  8 May 2019 14:19:32 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: slip08_190566b4c9f11
-X-Filterd-Recvd-Size: 1834
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  8 May 2019 14:19:31 +0000 (UTC)
-Message-ID: <b76eb950365b27848dfb0cfc851255d9af97ac90.camel@perches.com>
-Subject: Re: [PATCH 2/4] checkpatch: add --fix for warning LINE_CONTINUATIONS
-From:   Joe Perches <joe@perches.com>
-To:     Antonio Borneo <borneo.antonio@gmail.com>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 08 May 2019 07:19:29 -0700
-In-Reply-To: <20190508122721.7513-2-borneo.antonio@gmail.com>
-References: <20190508122721.7513-1-borneo.antonio@gmail.com>
-         <20190508122721.7513-2-borneo.antonio@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 8 May 2019 10:20:24 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60209 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726700AbfEHOUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 10:20:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:20:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169650244"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:20:23 -0700
+Date:   Wed, 8 May 2019 07:20:23 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Peter Shier <pshier@google.com>,
+        Aaron Lewis <aaronlewis@google.com>
+Subject: Re: [PATCH v2] kvm: nVMX: Set nested_run_pending in
+ vmx_set_nested_state after checks complete
+Message-ID: <20190508142023.GA13834@linux.intel.com>
+References: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-08 at 14:27 +0200, Antonio Borneo wrote:
-> The warning LINE_CONTINUATIONS does not offer a --fix.
+On Wed, May 08, 2019 at 02:16:39PM +0200, Paolo Bonzini wrote:
+> From: Aaron Lewis <aaronlewis@google.com>
+
+If this is actually attributed to Aaron it needs his SOB.
+
+> nested_run_pending=1 implies we have successfully entered guest mode.
+> Move setting from external state in vmx_set_nested_state() until after
+> all other checks are complete.
+
+It'd be helpful to at least mention the flag is consumed by
+nested_vmx_enter_non_root_mode().
+
+> Based on a patch by Aaron Lewis.
 > 
-> Add the trivial --fix.
-> In case of consecutive lines with the same issue, this will
-> fix only the first line.
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -5207,8 +5207,11 @@ sub process {
->  			    $line !~ /^\+\s*\#.*\\$/ &&		# preprocessor
->  			    $line !~ /^\+.*\b(__asm__|asm)\b.*\\$/ &&	# asm
->  			    $line =~ /^\+.*\\$/) {
-> -				WARN("LINE_CONTINUATIONS",
-> -				     "Avoid unnecessary line continuations\n" . $herecurr);
-> +				if (WARN("LINE_CONTINUATIONS",
-> +					 "Avoid unnecessary line continuations\n" . $herecurr) &&
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
 
-I prefer to not apply this.
+For the code itself:
 
-Problem here is that these should generally be fixed by hand
-as the automated fix isn't very good style either.
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com> 
 
-> +				    $fix) {
-> +					$fixed[$fixlinenr] =~ s/\s*\\$//;
-> +				}
->  			}
->  		}
+>  arch/x86/kvm/vmx/nested.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index cec77f30f61c..e58caff92694 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5420,9 +5420,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>  	if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
+>  		return 0;
 >  
-
+> -	vmx->nested.nested_run_pending =
+> -		!!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+> -
+>  	if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+>  	    vmcs12->vmcs_link_pointer != -1ull) {
+>  		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+> @@ -5446,9 +5443,14 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>  		return -EINVAL;
+>  
+>  	vmx->nested.dirty_vmcs12 = true;
+> +	vmx->nested.nested_run_pending =
+> +		!!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+> +
+>  	ret = nested_vmx_enter_non_root_mode(vcpu, false);
+> -	if (ret)
+> +	if (ret) {
+> +		vmx->nested.nested_run_pending = 0;
+>  		return -EINVAL;
+> +	}
+>  
+>  	return 0;
+>  }
+> -- 
+> 1.8.3.1
+> 
