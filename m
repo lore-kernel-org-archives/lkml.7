@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337ACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E06EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD0A20989
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFDB62184D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfEHOul (ORCPT
+        id S1728879AbfEHOup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:50:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48407 "EHLO mga14.intel.com"
+        Wed, 8 May 2019 10:50:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19899 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728279AbfEHOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728274AbfEHOoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:44 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:44 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 08 May 2019 07:44:39 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 08 May 2019 07:44:40 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id A195D9EA; Wed,  8 May 2019 17:44:29 +0300 (EEST)
+        id 06098AD9; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,10 +43,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 19/62] x86/mm: Handle encrypted memory in page_to_virt() and __pa()
-Date:   Wed,  8 May 2019 17:43:39 +0300
-Message-Id: <20190508144422.13171-20-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 27/62] keys/mktme: Strengthen the entropy of CPU generated MKTME keys
+Date:   Wed,  8 May 2019 17:43:47 +0300
+Message-Id: <20190508144422.13171-28-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -57,45 +57,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per-KeyID direct mappings require changes into how we find the right
-virtual address for a page and virt-to-phys address translations.
+From: Alison Schofield <alison.schofield@intel.com>
 
-page_to_virt() definition overwrites default macros provided by
-<linux/mm.h>.
+If users request CPU generated keys, mix additional entropy bits
+from the kernel into the key programming fields used by the
+hardware. This additional entropy may compensate for weak user
+supplied, or CPU generated, entropy.
 
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/page.h    | 3 +++
- arch/x86/include/asm/page_64.h | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ security/keys/mktme_keys.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
-index 39af59487d5f..aff30554f38e 100644
---- a/arch/x86/include/asm/page.h
-+++ b/arch/x86/include/asm/page.h
-@@ -72,6 +72,9 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
- extern bool __virt_addr_valid(unsigned long kaddr);
- #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index a7ca32865a1c..9fdf482ea3e6 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -7,6 +7,7 @@
+ #include <linux/key-type.h>
+ #include <linux/mm.h>
+ #include <linux/parser.h>
++#include <linux/random.h>
+ #include <linux/string.h>
+ #include <asm/intel_pconfig.h>
+ #include <keys/mktme-type.h>
+@@ -102,7 +103,8 @@ struct mktme_payload {
+ static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
+ {
+ 	struct mktme_key_program *kprog = NULL;
+-	int ret;
++	u8 kern_entropy[MKTME_AES_XTS_SIZE];
++	int ret, i;
  
-+#define page_to_virt(x) \
-+	(__va(PFN_PHYS(page_to_pfn(x))) + page_keyid(x) * direct_mapping_size)
-+
- #endif	/* __ASSEMBLY__ */
+ 	kprog = kmem_cache_zalloc(mktme_prog_cache, GFP_ATOMIC);
+ 	if (!kprog)
+@@ -114,6 +116,14 @@ static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
+ 	memcpy(kprog->key_field_1, payload->data_key, MKTME_AES_XTS_SIZE);
+ 	memcpy(kprog->key_field_2, payload->tweak_key, MKTME_AES_XTS_SIZE);
  
- #include <asm-generic/memory_model.h>
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index f57fc3cc2246..a4f394e3471d 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -24,7 +24,7 @@ static inline unsigned long __phys_addr_nodebug(unsigned long x)
- 	/* use the carry flag to determine if x was < __START_KERNEL_map */
- 	x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
- 
--	return x;
-+	return x & direct_mapping_mask;
- }
- 
- #ifdef CONFIG_DEBUG_VIRTUAL
++	/* Strengthen the entropy fields for CPU generated keys */
++	if ((payload->keyid_ctrl & 0xff) == MKTME_KEYID_SET_KEY_RANDOM) {
++		get_random_bytes(&kern_entropy, sizeof(kern_entropy));
++		for (i = 0; i < (MKTME_AES_XTS_SIZE); i++) {
++			kprog->key_field_1[i] ^= kern_entropy[i];
++			kprog->key_field_2[i] ^= kern_entropy[i];
++		}
++	}
+ 	ret = MKTME_PROG_SUCCESS;	/* Future programming call */
+ 	kmem_cache_free(mktme_prog_cache, kprog);
+ 	return ret;
 -- 
 2.20.1
 
