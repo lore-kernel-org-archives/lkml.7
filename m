@@ -3,31 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901AEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF797C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E8621734
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C038216B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 14:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfEHOpO (ORCPT
+        id S1727523AbfEHOpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 10:45:14 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48407 "EHLO mga14.intel.com"
+        Wed, 8 May 2019 10:45:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19918 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbfEHOou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728395AbfEHOou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 10:44:50 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP; 08 May 2019 07:44:49 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 07:44:49 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,446,1549958400"; 
+   d="scan'208";a="169656563"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2019 07:44:44 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id F254AF65; Wed,  8 May 2019 17:44:30 +0300 (EEST)
+        id B16F3D2B; Wed,  8 May 2019 17:44:30 +0300 (EEST)
 From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -44,9 +46,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
-Date:   Wed,  8 May 2019 17:44:05 +0300
-Message-Id: <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+Subject: [PATCH, RFC 40/62] keys/mktme: Program new PCONFIG targets with MKTME keys
+Date:   Wed,  8 May 2019 17:44:00 +0300
+Message-Id: <20190508144422.13171-41-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
@@ -59,195 +61,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Implement memory encryption for MKTME (Multi-Key Total Memory
-Encryption) with a new system call that is an extension of the
-legacy mprotect() system call.
+When a new PCONFIG target is added to an MKTME platform, its
+key table needs to be programmed to match the key tables across
+the entire platform. This type of newly added PCONFIG target
+may appear during a memory hotplug event.
 
-In encrypt_mprotect the caller must pass a handle to a previously
-allocated and programmed MKTME encryption key. The key can be
-obtained through the kernel key service type "mktme". The caller
-must have KEY_NEED_VIEW permission on the key.
+This key programming path will differ from the normal key
+programming path in that it will only program a single PCONFIG
+target, AND, it will only do that programming if allowed.
 
-MKTME places an additional restriction on the protected data:
-The length of the data must be page aligned. This is in addition
-to the existing mprotect restriction that the addr must be page
-aligned.
+Allowed means that either user type keys are stored, or, no
+user type keys are currently programmed.
 
-encrypt_mprotect() will lookup the hardware keyid for the given
-userspace key. It will use previously defined helpers to insert
-that keyid in the VMAs during legacy mprotect() execution.
+So, after checking if programming is allowable, this helper
+function will program the one new PCONFIG target, with all
+the currently programmed keys.
+
+This will be used in MKTME's memory notifier callback supporting
+MEM_GOING_ONLINE events.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- fs/exec.c          |  4 +--
- include/linux/mm.h |  3 +-
- mm/mprotect.c      | 68 +++++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 65 insertions(+), 10 deletions(-)
+ security/keys/mktme_keys.c | 44 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 2e0033348d8e..695c121b34b3 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -755,8 +755,8 @@ int setup_arg_pages(struct linux_binprm *bprm,
- 	vm_flags |= mm->def_flags;
- 	vm_flags |= VM_STACK_INCOMPLETE_SETUP;
- 
--	ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end,
--			vm_flags);
-+	ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end, vm_flags,
-+			     -1);
- 	if (ret)
- 		goto out_unlock;
- 	BUG_ON(prev != vma);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c027044de9bf..a7f52d053826 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1634,7 +1634,8 @@ extern unsigned long change_protection(struct vm_area_struct *vma, unsigned long
- 			      int dirty_accountable, int prot_numa);
- extern int mprotect_fixup(struct vm_area_struct *vma,
- 			  struct vm_area_struct **pprev, unsigned long start,
--			  unsigned long end, unsigned long newflags);
-+			  unsigned long end, unsigned long newflags,
-+			  int newkeyid);
- 
- /*
-  * doesn't attempt to fault and will return short.
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 23e680f4b1d5..38d766b5cc20 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -28,6 +28,7 @@
- #include <linux/ksm.h>
- #include <linux/uaccess.h>
- #include <linux/mm_inline.h>
-+#include <linux/key.h>
- #include <asm/pgtable.h>
- #include <asm/cacheflush.h>
- #include <asm/mmu_context.h>
-@@ -347,7 +348,8 @@ static int prot_none_walk(struct vm_area_struct *vma, unsigned long start,
- 
- int
- mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
--	unsigned long start, unsigned long end, unsigned long newflags)
-+	       unsigned long start, unsigned long end, unsigned long newflags,
-+	       int newkeyid)
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	unsigned long oldflags = vma->vm_flags;
-@@ -357,7 +359,14 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
- 	int error;
- 	int dirty_accountable = 0;
- 
--	if (newflags == oldflags) {
-+	/*
-+	 * Flags match and Keyids match or we have NO_KEY.
-+	 * This _fixup is usually called from do_mprotect_ext() except
-+	 * for one special case: caller fs/exec.c/setup_arg_pages()
-+	 * In that case, newkeyid is passed as -1 (NO_KEY).
-+	 */
-+	if (newflags == oldflags &&
-+	    (newkeyid == vma_keyid(vma) || newkeyid == NO_KEY)) {
- 		*pprev = vma;
- 		return 0;
- 	}
-@@ -423,6 +432,8 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
- 	}
- 
- success:
-+	if (newkeyid != NO_KEY)
-+		mprotect_set_encrypt(vma, newkeyid, start, end);
- 	/*
- 	 * vm_flags and vm_page_prot are protected by the mmap_sem
- 	 * held in write mode.
-@@ -454,10 +465,15 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index 2c975c48fe44..489dddb8c623 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -582,6 +582,50 @@ static int mktme_get_new_pconfig_target(void)
+ 	return new_target;
  }
  
- /*
-- * When pkey==NO_KEY we get legacy mprotect behavior here.
-+ * do_mprotect_ext() supports the legacy mprotect behavior plus extensions
-+ * for Protection Keys and Memory Encryption Keys. These extensions are
-+ * mutually exclusive and the behavior is:
-+ *	(pkey==NO_KEY && keyid==NO_KEY) ==> legacy mprotect
-+ *	(pkey is valid)  ==> legacy mprotect plus Protection Key extensions
-+ *	(keyid is valid) ==> legacy mprotect plus Encryption Key extensions
-  */
- static int do_mprotect_ext(unsigned long start, size_t len,
--		unsigned long prot, int pkey)
-+			   unsigned long prot, int pkey, int keyid)
- {
- 	unsigned long nstart, end, tmp, reqprot;
- 	struct vm_area_struct *vma, *prev;
-@@ -555,7 +571,8 @@ static int do_mprotect_ext(unsigned long start, size_t len,
- 		tmp = vma->vm_end;
- 		if (tmp > end)
- 			tmp = end;
--		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
-+		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags,
-+				       keyid);
- 		if (error)
- 			goto out;
- 		nstart = tmp;
-@@ -580,7 +597,7 @@ static int do_mprotect_ext(unsigned long start, size_t len,
- SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
- 		unsigned long, prot)
- {
--	return do_mprotect_ext(start, len, prot, NO_KEY);
-+	return do_mprotect_ext(start, len, prot, NO_KEY, NO_KEY);
- }
- 
- #ifdef CONFIG_ARCH_HAS_PKEYS
-@@ -588,7 +605,7 @@ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
- SYSCALL_DEFINE4(pkey_mprotect, unsigned long, start, size_t, len,
- 		unsigned long, prot, int, pkey)
- {
--	return do_mprotect_ext(start, len, prot, pkey);
-+	return do_mprotect_ext(start, len, prot, pkey, NO_KEY);
- }
- 
- SYSCALL_DEFINE2(pkey_alloc, unsigned long, flags, unsigned long, init_val)
-@@ -637,3 +654,40 @@ SYSCALL_DEFINE1(pkey_free, int, pkey)
- }
- 
- #endif /* CONFIG_ARCH_HAS_PKEYS */
-+
-+#ifdef CONFIG_X86_INTEL_MKTME
-+
-+extern int mktme_keyid_from_key(struct key *key);
-+
-+SYSCALL_DEFINE4(encrypt_mprotect, unsigned long, start, size_t, len,
-+		unsigned long, prot, key_serial_t, serial)
++static int mktme_program_new_pconfig_target(int new_pkg)
 +{
-+	key_ref_t key_ref;
-+	struct key *key;
-+	int ret, keyid;
-+
-+	/* MKTME restriction */
-+	if (!PAGE_ALIGNED(len))
-+		return -EINVAL;
++	struct mktme_payload *payload;
++	int cpu, keyid, ret;
 +
 +	/*
-+	 * key_ref prevents the destruction of the key
-+	 * while the memory encryption is being set up.
++	 * Only program new target when user type keys are stored or,
++	 * no user type keys are currently programmed.
 +	 */
++	if (!mktme_storekeys &&
++	    (bitmap_weight(mktme_bitmap_user_type, mktme_nr_keyids)))
++		return -EPERM;
 +
-+	key_ref = lookup_user_key(serial, 0, KEY_NEED_VIEW);
-+	if (IS_ERR(key_ref))
-+		return PTR_ERR(key_ref);
-+
-+	key = key_ref_to_ptr(key_ref);
-+	keyid = mktme_keyid_from_key(key);
-+	if (!keyid) {
-+		key_ref_put(key_ref);
-+		return -EINVAL;
++	/* Set mktme_leadcpus to only include new target */
++	cpumask_clear(mktme_leadcpus);
++	for_each_online_cpu(cpu) {
++		if (topology_physical_package_id(cpu) == new_pkg) {
++			__cpumask_set_cpu(cpu, mktme_leadcpus);
++			break;
++		}
 +	}
-+	ret = do_mprotect_ext(start, len, prot, NO_KEY, keyid);
-+	key_ref_put(key_ref);
++	/* Program the stored keys into the new key table */
++	for (keyid = 1; keyid <= mktme_nr_keyids; keyid++) {
++		/*
++		 * When a KeyID slot is not in use, the corresponding key
++		 * pointer is 0. '-1' is an intermediate state where the
++		 * key is on it's way out, but not gone yet. Program '-1's.
++		 */
++		if (mktme_map->key[keyid] == 0)
++			continue;
++
++		payload = &mktme_key_store[keyid];
++		ret = mktme_program_keyid(keyid, payload);
++		if (ret != MKTME_PROG_SUCCESS) {
++			/* Quit on first failure to program key table */
++			pr_debug("mktme: %s\n", mktme_error[ret].msg);
++			ret = -ENOKEY;
++			break;
++		}
++	}
++	mktme_update_pconfig_targets();		/* Restore mktme_leadcpus */
 +	return ret;
 +}
 +
-+#endif /* CONFIG_X86_INTEL_MKTME */
+ static int __init init_mktme(void)
+ {
+ 	int ret, cpuhp;
 -- 
 2.20.1
 
