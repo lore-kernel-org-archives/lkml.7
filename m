@@ -2,142 +2,148 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED20AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CC6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CA42173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:22:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDn2+nW7"
+	by mail.kernel.org (Postfix) with ESMTP id 697FE20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 15:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfEHPWj (ORCPT
+        id S1727964AbfEHPWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 11:22:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34288 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbfEHPWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 11:22:38 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c13so10281116pgt.1;
-        Wed, 08 May 2019 08:22:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=894APrpOjqkRmf1J0VMgwVy+KCpHCnfK4NXUp7KFcxc=;
-        b=YDn2+nW73kggpJVEGViqDkyNgT4jTwx9VBpGipglBFplCmGlrfEHhDMkApiDfzToee
-         zwC8KWQT55zfuwBf/KxlvHBbYif1caUgobMy6znympRQLrpQOd1ySBcjnGEqOq73i7S1
-         eFe+ZjYbqWWhbNb7Xmt9RX/dL5d/3pJs6AsZdsTW1pi2J/OeW569D+DMZli1FGoSIYjQ
-         i92D6Z0vgEzS9/b66ZlWs7epvuV873yinI+VoSi/WrAF+texlPWUVFqZpwCaRjdoqd2k
-         fF5rw9wxK41je8DoQ7nbwMEIsvcpWaSPigzYWk4ICjbsV+3urSsT5n9Jj+p+PKlAlV6y
-         V8aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=894APrpOjqkRmf1J0VMgwVy+KCpHCnfK4NXUp7KFcxc=;
-        b=a3EnYBfLywXqdMqBTc2x5HRL/XcLnUSdx2zCin52fXNIhb8xnCz5PfRCkW+JhNSFzR
-         Pk5HxnSPJ2SJn7W/e5KdVTXXL++LnsG+qazIT684YbH2pXChlYlVYD/2BNQBck/hEvZW
-         aftrReuy6Xyl7bjAyiLYPi7Eyn4wxzulviYdEYHQscKQTJ5UCtL9/xMDboMAmVCSEEkr
-         Smb7pNv21qqkda+ldKtCIklfOLK1yR2HLQwPZluZYyh04fE9cAxJuLXeijGxZYPd8vXb
-         ifu/iJuTkM0QiOwsWO/g4GE7h6XRe67ANn79OLuC41z6dsnEfMoVCBtUsFrzxFLR5MkS
-         wrxQ==
-X-Gm-Message-State: APjAAAU4PrhWtUAm9z9+SomT7KG3q7QQyKSli5McNAy0B7xxp1zcB7lH
-        tfsfpYU+9vKSZa6uaK8nLQY=
-X-Google-Smtp-Source: APXvYqymlmITXcufyfjdEvPxjgY+SZH4VtzDxQL8iYskmF2U9JCaxdaggXcH38QiBAalknoNa+wxWg==
-X-Received: by 2002:a63:1654:: with SMTP id 20mr48256654pgw.166.1557328957725;
-        Wed, 08 May 2019 08:22:37 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id o73sm7459360pfi.137.2019.05.08.08.22.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 08 May 2019 08:22:37 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v4 06/27] Documentation: x86: convert entry_64.txt to reST
-Date:   Wed,  8 May 2019 23:21:20 +0800
-Message-Id: <20190508152141.8740-7-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190508152141.8740-1-changbin.du@gmail.com>
-References: <20190508152141.8740-1-changbin.du@gmail.com>
+        Wed, 8 May 2019 11:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727800AbfEHPWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 11:22:42 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05910216C8;
+        Wed,  8 May 2019 15:22:38 +0000 (UTC)
+Date:   Wed, 8 May 2019 11:22:37 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [RFC PATCH v6 4/6] tracing/probe: Support user-space
+ dereference
+Message-ID: <20190508112237.76bd0e6b@gandalf.local.home>
+In-Reply-To: <20190508131143.6f69abddd4c11b47bea138fb@kernel.org>
+References: <155289137555.7218.9282784065958321058.stgit@devnote2>
+        <155289143224.7218.6083289081805224583.stgit@devnote2>
+        <20190506115226.70c62f7a@gandalf.local.home>
+        <20190508131143.6f69abddd4c11b47bea138fb@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On Wed, 8 May 2019 13:11:43 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/x86/{entry_64.txt => entry_64.rst} | 12 +++++++++---
- Documentation/x86/index.rst                      |  1 +
- 2 files changed, 10 insertions(+), 3 deletions(-)
- rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
+> On Mon, 6 May 2019 11:52:26 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Mon, 18 Mar 2019 15:43:52 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >   
+> > > +.. _user_mem_access:
+> > > +User Memory Access
+> > > +------------------
+> > > +Kprobe events supports user-space memory access. For that purpose, you can use
+> > > +either user-space dereference syntax or 'ustring' type.
+> > > +
+> > > +The user-space dereference syntax allows you to access a field of a data
+> > > +structure in user-space. This is done by adding the "u" prefix to the
+> > > +dereference syntax. For example, +u4(%si) means it will read memory from the
+> > > +address in the register %si offset by 4, and the mory is expected to be in  
+> > 
+> >                                                     ^^^^
+> >  "memory"  
+> 
+> OK, thanks!
+> 
+> >   
+> > > +user-space. You can use this for strings too, e.g. +u0(%si):string will read
+> > > +a string from the address in the register %si that is expected to be in user-
+> > > +space. 'ustring' is a shortcut way of performing the same task. That is,
+> > > ++0(%si):ustring is equivalent to +u0(%si):string.
+> > > +
+> > > +Note that kprobe-event provides the user-memory access syntax but it doesn't
+> > > +use it transparently. This means if you use normal dereference or string type
+> > > +for user memory, it might fail, and always fails on some arch. So user has to  
+> > 
+> >   "and may always fail on some archs. The user has to carefully check
+> >   if the target data is in kernel or user space."  
+> 
+> OK. I'll update.
+> 
+> > > +check if the targe data is in kernel or in user space carefully.
+> > >  
+> > >  Per-Probe Event Filtering
+> > >  -------------------------
+> > > diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
+> > > index 4346e23e3ae7..de8812c932bc 100644
+> > > --- a/Documentation/trace/uprobetracer.rst
+> > > +++ b/Documentation/trace/uprobetracer.rst
+> > > @@ -42,16 +42,17 @@ Synopsis of uprobe_tracer
+> > >     @+OFFSET	: Fetch memory at OFFSET (OFFSET from same file as PATH)
+> > >     $stackN	: Fetch Nth entry of stack (N >= 0)
+> > >     $stack	: Fetch stack address.
+> > > -   $retval	: Fetch return value.(*)
+> > > +   $retval	: Fetch return value.(\*1)
+> > >     $comm	: Fetch current task comm.
+> > > -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
+> > > +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
+> > >     NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
+> > >     FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
+> > >  		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> > >  		       (x8/x16/x32/x64), "string" and bitfield are supported.  
+> > 
+> > Hmm, shouldn't uprobes default to userspace. Isn't the purpose mostly
+> > to find out what's going on in userspace. Perhaps we should add a 'k'
+> > annotation to uprobes to denote that it's for kernel space, as that
+> > should be the exception and not the norm.  
+> 
+> No, uprobe can not access kernel space, because it doesn't have the
+> current kernel context. Note that all registers, stacks which
+> can be accessed from uprobe handler are user-space. We can not access
+> kernel context from that. See below
+> 
+> > > -  (*) only for return probe.
+> > > -  (**) this is useful for fetching a field of data structures.
+> > > +  (\*1) only for return probe.
+> > > +  (\*2) this is useful for fetching a field of data structures.
+> > > +  (\*3) Unlike kprobe event, "u" prefix will just be ignored.  
+> 
+> Thus the 'u' is just ignored on uprobe event.
 
-diff --git a/Documentation/x86/entry_64.txt b/Documentation/x86/entry_64.rst
-similarity index 95%
-rename from Documentation/x86/entry_64.txt
-rename to Documentation/x86/entry_64.rst
-index c1df8eba9dfd..a48b3f6ebbe8 100644
---- a/Documentation/x86/entry_64.txt
-+++ b/Documentation/x86/entry_64.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============
-+Kernel Entries
-+==============
-+
- This file documents some of the kernel entries in
- arch/x86/entry/entry_64.S.  A lot of this explanation is adapted from
- an email from Ingo Molnar:
-@@ -59,7 +65,7 @@ Now, there's a secondary complication: there's a cheap way to test
- which mode the CPU is in and an expensive way.
- 
- The cheap way is to pick this info off the entry frame on the kernel
--stack, from the CS of the ptregs area of the kernel stack:
-+stack, from the CS of the ptregs area of the kernel stack::
- 
- 	xorl %ebx,%ebx
- 	testl $3,CS+8(%rsp)
-@@ -67,7 +73,7 @@ stack, from the CS of the ptregs area of the kernel stack:
- 	SWAPGS
- 
- The expensive (paranoid) way is to read back the MSR_GS_BASE value
--(which is what SWAPGS modifies):
-+(which is what SWAPGS modifies)::
- 
- 	movl $1,%ebx
- 	movl $MSR_GS_BASE,%ecx
-@@ -76,7 +82,7 @@ The expensive (paranoid) way is to read back the MSR_GS_BASE value
- 	js 1f   /* negative -> in kernel */
- 	SWAPGS
- 	xorl %ebx,%ebx
--1:	ret
-+  1:	ret
- 
- If we are at an interrupt or user-trap/gate-alike boundary then we can
- use the faster check: the stack will be a reliable indicator of
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index f6f4e0fc79f2..0e3e73458738 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -12,3 +12,4 @@ x86-specific Documentation
-    topology
-    exception-tables
-    kernel-stacks
-+   entry_64
--- 
-2.20.1
+I totally missed the footnote here. Can we stress this point more up in
+the "User Memory Access" section. Specifically state something like:
+"Uprobes only access userspace memory, thus the 'u' is not required,
+and if it is added to a uprobe, it will simply be ignored".
 
+Thanks!
+
+-- Steve
