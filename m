@@ -2,243 +2,106 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CFBC04AAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8615C04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59738216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="UKKA8+3I"
+	by mail.kernel.org (Postfix) with ESMTP id B5F35216C8
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 21:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557349558;
+	bh=iqIPlh1mmcFuBc/JzzhVLdenVANuihdttWuVAjvDzZE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QFvUJ1oH1De//HJBV38pUHHZJrv18GhC+Ur8wBpNMjqIRyBQB9YButp4Ju8JAL5KM
+	 E8cT2vIkCJHk8RTpPmMIFcFeKcv/+WOySRsz8s4HDr7b4Xexjm0dQgQDfNGbpdY+PI
+	 Ec+RIQOQbGAGDaD95twTK58uNhkDpyMjPLlln89Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfEHVEw (ORCPT
+        id S1727386AbfEHVFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 17:04:52 -0400
-Received: from mail-eopbgr790115.outbound.protection.outlook.com ([40.107.79.115]:22260
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726583AbfEHVEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 17:04:51 -0400
+        Wed, 8 May 2019 17:05:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41467 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfEHVFz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 17:05:55 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d8so15551719lfb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 14:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pVOFebMqLbEcTZf1m/KfUjdY4dV1Hiof/fZb+AMTMsE=;
- b=UKKA8+3IPKtFjtjxuT59hSlpIMBuKPyBZzsrMCYc0JWkYDga4M1WnmB46h4j6a1UOEXiGlzAoC+692OXBuKVDTyk8Y+l/ad36SRDJw68OQwFpRWLDmZ9Cjhljoc+eYnnUkOGQZsZmaCgwJ9LjjHKONDW7gTDJtIpbW832S0uF5Q=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1134.namprd22.prod.outlook.com (10.174.170.39) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Wed, 8 May 2019 21:04:46 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b%7]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 21:04:46 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] MIPS changes for 5.2
-Thread-Topic: [GIT PULL] MIPS changes for 5.2
-Thread-Index: AQHVBeGqoPyJ4GYfbUyU2z9dy+Mklw==
-Date:   Wed, 8 May 2019 21:04:46 +0000
-Message-ID: <20190508210444.vxnmbd2sdluubjdy@pburton-laptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR03CA0025.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::35) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 326b4c44-8f7b-4c7a-c8dd-08d6d3f8ccbe
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(49563074)(7193020);SRVR:MWHPR2201MB1134;
-x-ms-traffictypediagnostic: MWHPR2201MB1134:
-x-microsoft-antispam-prvs: <MWHPR2201MB1134CD772C32BBB41876FBFCC1320@MWHPR2201MB1134.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(366004)(396003)(39850400004)(136003)(376002)(199004)(189003)(5660300002)(7736002)(66446008)(66556008)(66476007)(66616009)(256004)(305945005)(478600001)(4326008)(73956011)(66946007)(476003)(81156014)(316002)(186003)(486006)(99936001)(81166006)(8676002)(44832011)(64756008)(52116002)(6916009)(6436002)(99286004)(68736007)(14444005)(1076003)(42882007)(6486002)(66574012)(3846002)(6116002)(2906002)(9686003)(53936002)(26005)(6512007)(386003)(6506007)(8936002)(66066001)(102836004)(33716001)(25786009)(54906003)(58126008)(14454004)(71190400001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1134;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: V1uj8uZOqOMcVbL3mx8Omg912TctclzyU5YPCjaYICLQWzGA2CFWn0wkcXJ6h1THpnY61C9rjoQ3rM3QpUUOfu7Ksp7MXt2JQeJz5Hyg6QGUQLJyzqKz8Sz61/DllkrsS4+VRPHDUzzl6fx+bvi8jg7w+w0PsmxZSi/H/KrKV185/+hCw48xjpWXOS9NlNcaatNe/16ohMuX/64+PZmZBPMg4T3GrIqm6TuZLeI8X0BJ8bEZVsuxUDup4LexEcquC6sFqK49j8PeLY8t1fDmssl7+e/1mjvvBvFWVXQeJLYe+ouxEBDlYZ0egFeAu29waH1BnN4AGtXHqGY2u7gU+Nd1rkVawTtRLG4Mdu+Zr2eUHhkTz42SbkmpisjFSetRBgM0ePMZHXZRpXiqQZbNaJiMNxYIl/Xv28xiYhLUyWw=
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yiolb2m25wd3qrtj"
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fckl0xjweeVSgmV6ZhbixKk1mxFtiIYGjnNtVdcmVxo=;
+        b=Pp2t2GlyiZSXovwnh9PFrn4iYBJ/vbeGKAbfaCTmcGmXDPVHx18nUq63X85sD1beaH
+         vac1zYT1UIe1PABtweZBtUEFhs5plA3qmlj8jeg9kFjNFnXE7BYze6WdSAokj1y/1eVq
+         vphRbjzCRE7ZQdfdrFUZPXy5vbAMZbWAt9HWY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fckl0xjweeVSgmV6ZhbixKk1mxFtiIYGjnNtVdcmVxo=;
+        b=ULnG4gbLLHRKe2leVlY4Mb4BtRHUQ36/6M2VzdeGC7gTCH23D09taeggcMB8QLka2V
+         COInnRKg/3Z0zLQPM6gx6fJpF0rYdHrctzokbjHD6WAAzXVN09V5adESDhpdX9JZj044
+         q5YVtWOuJAVPQBvUCbN0/hxkdVo+KprkUw9Gns6scUZWjZRO1NQKaINNd+5ZZu5T1y4z
+         Hq+enwhLS/BlTvRR7S8itGbVT9RsFj9s9Hg8xxGL39C/ppJiNrwC/b2j+B17FAZiU9oU
+         dApvAhx2lecfDOahnmm/Rc/CkyZ9hr8vKUmUuds4m70ghe72yghXiDqZQLfUt/gWI+Bz
+         /U2A==
+X-Gm-Message-State: APjAAAV16w86gRQvS4W8HfI9MWiF/uNHLfmgwPlErII3g8OuKXd291sW
+        ar9/RRDcD187VOLsmddHVuaMJkYh8Hk=
+X-Google-Smtp-Source: APXvYqyL+1v+7rijvsxKCYl/IL6K08KAE+gKUgCwV9MqDbXN1gYGQ6KGkH4f+FhoGVtrsWfJ3sBGHQ==
+X-Received: by 2002:a19:7411:: with SMTP id v17mr141615lfe.116.1557349553168;
+        Wed, 08 May 2019 14:05:53 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id f25sm11454lfc.46.2019.05.08.14.05.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 14:05:52 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id r76so105445lja.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 14:05:51 -0700 (PDT)
+X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr22158854lja.125.1557349551465;
+ Wed, 08 May 2019 14:05:51 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 326b4c44-8f7b-4c7a-c8dd-08d6d3f8ccbe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 21:04:46.5363
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1134
+References: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
+ <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
+ <CAHk-=whbrADQrEezs=-t0QsKw-qaVU_2s2DqxLAkcczxc62SLQ@mail.gmail.com>
+ <CAHc6FU40HucCUzx5k2obs8m6dXS08NmXBM-tFOq7fSbLduHiGw@mail.gmail.com> <20190508145818.6a53dff5@lwn.net>
+In-Reply-To: <20190508145818.6a53dff5@lwn.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 8 May 2019 14:05:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiUMj0nwj_ee59J4yLnbnR_UfMeRx4agijSc7DKJADoPw@mail.gmail.com>
+Message-ID: <CAHk-=wiUMj0nwj_ee59J4yLnbnR_UfMeRx4agijSc7DKJADoPw@mail.gmail.com>
+Subject: Re: GFS2: Pull Request
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        cluster-devel <cluster-devel@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---yiolb2m25wd3qrtj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 8, 2019 at 1:58 PM Jonathan Corbet <corbet@lwn.net> wrote:
+>
+> I think this certainly belongs in the maintainer manual, but probably not
+> in pull-requests.rst.  There are a lot of things about repository
+> management that seem to trip up even experienced maintainers; pre-pull
+> merges is just one of those.  I would love to see a proper guide on when
+> and how to do merges in general.
 
-Hi Linus,
+We had another pull request issue today, about a situation that I
+definitely know you've written about in the past, because I linked to
+lwn in my email:
 
-Here are the main MIPS changes for the 5.2 cycle.
+   https://lore.kernel.org/lkml/CAHk-=wiKoePP_9CM0fn_Vv1bYom7iB5N=ULaLLz7yOST3K+k5g@mail.gmail.com/
 
-I wound up merging in the mips_fixes_5.1_1 tag that you already merged
-earlier in order to gain a fix for a jump label bug that would otherwise
-have prevented me testing some work included here. I hope that's OK - it
-does mean the shortlog below shows some changes that you already merged.
+and while I suspect people don't actually read documentation
+(_particularly_ maintainers that have already been around for a long
+time but still do this), maybe that part could be in the same
+documentation?
 
-There are a few last minute changes which I hope to submit to you next
-week if things seem calm enough, but that potential second pull request
-will be even smaller than this one.
-
-Please pull.
-
-Thanks,
-    Paul
-
-
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_5.2
-
-for you to fetch changes up to 3751cbda8f223549d7ea28803cbec8ac87e43ed2:
-
-  mips: Manually call fdt_init_reserved_mem() method (2019-05-05 20:12:20 -=
-0700)
-
-----------------------------------------------------------------
-Main MIPS changes for v5.2:
-
-- A set of memblock initialization improvements thanks to Serge Semin,
-  tidying up after our conversion from bootmem to memblock back in
-  v4.20.
-
-- Our eBPF JIT the previously supported only MIPS64r2 through MIPS64r5
-  is improved to also support MIPS64r6. Support for MIPS32 systems is
-  introduced, with the caveat that it only works for programs that don't
-  use 64 bit registers or operations - those will bail out & need to be
-  interpreted.
-
-- Improvements to the allocation & configuration of our exception vector
-  that should fix issues seen on some platforms using recent versions of
-  U-Boot.
-
-- Some minor improvements to code generated for jump labels, along with
-  enabling them by default for generic kernels.
-
-----------------------------------------------------------------
-Archer Yan (1):
-      MIPS: Fix kernel crash for R6 in jump label branch function
-
-Chuanhong Guo (1):
-      MIPS: ralink: fix cpu clock of mt7621 and add dt clk devices
-
-Enrico Weigelt, metux IT consult (1):
-      arch: mips: Kconfig: pedantic formatting
-
-Hassan Naveed (3):
-      MIPS: uasm: Add div, mul and sel instructions for mipsr6
-      MIPS: eBPF: Provide eBPF support for MIPS64R6
-      MIPS: eBPF: Initial eBPF support for MIPS32 architecture.
-
-Nick Desaulniers (1):
-      mips: vdso: drop unnecessary cc-ldoption
-
-Paul Burton (11):
-      MIPS: Remove custom MIPS32 __kernel_fsid_t type
-      MIPS: KVM: Use prandom_u32_max() to generate tlbwr index
-      Merge tag 'mips_fixes_5.1_1' into mips-next
-      MIPS: jump_label: Remove redundant nops
-      MIPS: jump_label: Use compact branches for >=3D r6
-      MIPS: generic: Enable CONFIG_JUMP_LABEL
-      Revert "MIPS: ralink: fix cpu clock of mt7621 and add dt clk devices"
-      MIPS: Use memblock_phys_alloc() for exception vector
-      MIPS: Always allocate exception vector for MIPSr2+
-      MIPS: Sync icache for whole exception vector
-      MIPS: Remove duplicate EBase configuration
-
-Petr =C5=A0tetiar (1):
-      mips: bcm47xx: Enable USB power on Netgear WNDR3400v2
-
-Serge Semin (11):
-      mips: Make sure kernel .bss exists in boot mem pool
-      mips: Discard rudiments from bootmem_init
-      mips: Combine memblock init and memory reservation loops
-      mips: Reserve memory for the kernel image resources
-      mips: Discard post-CMA-init foreach loop
-      mips: Use memblock to reserve the __nosave memory range
-      mips: Add reserve-nomap memory type support
-      mips: Dump memblock regions for debugging
-      mips: Perform early low memory test
-      mips: Make sure dt memory regions are valid
-      mips: Manually call fdt_init_reserved_mem() method
-
-Valentin Schneider (1):
-      MIPS: entry: Remove unneeded need_resched() loop
-
-Yasha Cherikovsky (1):
-      MIPS: Ensure ELF appended dtb is relocated
-
-Yifeng Li (1):
-      mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqacti=
-on.
-
- arch/mips/Kconfig                        |   64 +-
- arch/mips/bcm47xx/Kconfig                |    8 +-
- arch/mips/bcm47xx/workarounds.c          |    1 +
- arch/mips/bcm63xx/boards/Kconfig         |    2 +-
- arch/mips/configs/generic_defconfig      |    1 +
- arch/mips/include/asm/bootinfo.h         |    1 +
- arch/mips/include/asm/jump_label.h       |   17 +-
- arch/mips/include/asm/uasm.h             |    8 +
- arch/mips/include/uapi/asm/inst.h        |    6 +-
- arch/mips/include/uapi/asm/posix_types.h |    7 -
- arch/mips/kernel/entry.S                 |    5 +-
- arch/mips/kernel/jump_label.c            |   30 +-
- arch/mips/kernel/prom.c                  |   18 +-
- arch/mips/kernel/setup.c                 |  129 +--
- arch/mips/kernel/traps.c                 |   63 +-
- arch/mips/kernel/vmlinux.lds.S           |   12 +-
- arch/mips/kvm/emulate.c                  |    4 +-
- arch/mips/loongson64/lemote-2f/irq.c     |    2 +-
- arch/mips/mm/uasm-mips.c                 |   14 +
- arch/mips/mm/uasm.c                      |   39 +-
- arch/mips/net/Makefile                   |    1 -
- arch/mips/net/bpf_jit.c                  | 1270 --------------------------=
-----
- arch/mips/net/bpf_jit_asm.S              |  285 -------
- arch/mips/net/ebpf_jit.c                 |  191 +++--
- arch/mips/pic32/Kconfig                  |    8 +-
- arch/mips/vdso/Makefile                  |    4 +-
- 26 files changed, 351 insertions(+), 1839 deletions(-)
- delete mode 100644 arch/mips/net/bpf_jit.c
- delete mode 100644 arch/mips/net/bpf_jit_asm.S
-
---yiolb2m25wd3qrtj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXNNEbAAKCRA+p5+stXUA
-3YLCAQDeKRTwxwsEcSI32YMmx7z9LGwP+uQs43n5niOLiAsy7AD+McVaVZq3k8dG
-2M8WfBPv2LQOYaHHClYdhrXwC5jQfwU=
-=Y4Nf
------END PGP SIGNATURE-----
-
---yiolb2m25wd3qrtj--
+                 Linus
