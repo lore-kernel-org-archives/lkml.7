@@ -2,45 +2,47 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3070EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4208BC04AAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00DB9214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1455620644
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 07:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hlB54Abe"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dqSMxH3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfEHHvb (ORCPT
+        id S1726589AbfEHHva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 03:51:31 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:53806 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725884AbfEHHv3 (ORCPT
+        Wed, 8 May 2019 03:51:30 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53824 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725778AbfEHHv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 May 2019 03:51:29 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A51F3C0108;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A06D8C0104;
         Wed,  8 May 2019 07:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557301882; bh=N1nNw0lR2Hfa0vE0MbFOgbVnpAJnZjXAL+geIRasaBg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hlB54AbeYegPKqTidrJxDgirL8G3+ESTbiCcjLF2pvO03Uvm7B57nfhaLuBTj5LKT
-         53irTN1Q+AWWJmPl6PHjOwIU5n/4D3ISTYE4HbBuIpZpI+JB3MNijUopT3Mc97SQ6n
-         3AU1rWfflx9V45QFpMH3CR5wAMahn6qSQdthYm4LizBJL+z2kBY1NUFOHpWR4Mck01
-         iCR8/tUSmR4WCVvTMlnjrRLJrbZssHo7jcvAJA/sG67JqteRK9SutLu7IDfLoW0b1C
-         wkTDbEwJB/oNH2E4FUyGX60Ah8Uug8XxsqU5Isb6DzKefjzDSa2xvjXGxyLQuKXYVA
-         N/H7XX+dCHPJw==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 4C1A2A02CF;
+        t=1557301882; bh=5GcpIZToM0XZw8U1w+svdUz7F40dnGaIgWn064KmYDU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=dqSMxH3Wn4rJ0EvAVK4Kxq/cgwPcKj7xhfEg45E1g2EZCyMW5VY24XCpCZgz2/7Q+
+         H83NWJdod5cSwh61OCRFUX0R0DmSmY4tRf6ZIox1jFprh+djFTjjQ+Q5r/pPlFt/9v
+         jT7CdZDeCT08HzwSyLZwAFphNMZCSwKl2m5McdtoSMbX75Aa0dbNLwgM4IW8HTAnz/
+         gGyg1uROZauD/rrWf8nySyL5gLuwx9BBYhEqXdYE95OOqV5D4eCUkam/ZU8Ao9BrwY
+         70xE+UlX7J7KZDkL8SJ0cA6ZqyLVnhZ+96PfiqqMGUwT7+XnYOSN345yDkIa3ANJCh
+         xjuM+QQhmqFcQ==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 59E73A02DC;
         Wed,  8 May 2019 07:51:28 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 40EAA3D513;
+        by de02.synopsys.com (Postfix) with ESMTP id 8C8093D520;
         Wed,  8 May 2019 09:51:27 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -49,87 +51,91 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 00/11] net: stmmac: Selftests
-Date:   Wed,  8 May 2019 09:51:00 +0200
-Message-Id: <cover.1557300602.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 04/11] net: stmmac: dwmac4/5: Add MAC loopback support
+Date:   Wed,  8 May 2019 09:51:04 +0200
+Message-Id: <01812f5cb5b8bdab3d7df3656b49f069dc7f5af1.1557300602.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
+References: <cover.1557300602.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
+References: <cover.1557300602.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Submitting with net-next closed for proper review and testing. ]
+In preparation for the addition of stmmac selftests we implement the MAC
+loopback callback in dwmac4/5 cores.
 
-This introduces selftests support in stmmac driver. We add 4 basic sanity
-checks and MAC loopback support for all cores within the driver. This way
-more tests can easily be added in the future and can be run in virtually
-any MAC/GMAC/QoS/XGMAC platform.
-
-Having this we can find regressions and missing features in the driver
-while at the same time we can check if the IP is correctly working.
-
-We have been using this for some time now and I do have more tests to
-submit in the feature. My experience is that although writing the tests
-adds more development time, the gain results are obvious.
-
-I let this feature optional within the driver under a Kconfig option.
-
-For this series the output result will be something like this
-(e.g. for dwmac1000):
-----
-# ethtool -t eth0
-The test result is PASS
-The test extra info:
-1. MAC Loopback                 0
-2. PHY Loopback                 -95
-3. MMC Counters                 0
-4. EEE                          -95
-5. Hash Filter MC               0
-6. Perfect Filter UC            0
-7. Flow Control                 0
-----
-
-(Error code -95 means EOPNOTSUPP in current HW).
-
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
 Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-Jose Abreu (11):
-  net: stmmac: Add MAC loopback callback to HWIF
-  net: stmmac: dwmac100: Add MAC loopback support
-  net: stmmac: dwmac1000: Add MAC loopback support
-  net: stmmac: dwmac4/5: Add MAC loopback support
-  net: stmmac: dwxgmac2: Add MAC loopback support
-  net: stmmac: Switch MMC functions to HWIF callbacks
-  net: stmmac: dwmac1000: Also pass control frames while in promisc mode
-  net: stmmac: dwmac4/5: Also pass control frames while in promisc mode
-  net: stmmac: dwxgmac2: Also pass control frames while in promisc mode
-  net: stmmac: Introduce selftests support
-  net: stmmac: dwmac1000: Fix Hash Filter
-
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |   9 +
- drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +
- drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |   1 +
- .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |  16 +-
- .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |  13 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |   2 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  17 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   2 +
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  15 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.c         |   9 +
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +
- drivers/net/ethernet/stmicro/stmmac/mmc.h          |   4 -
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |  13 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  22 +
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   8 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   4 +-
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 743 +++++++++++++++++++++
- 18 files changed, 889 insertions(+), 13 deletions(-)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index eb013d54025a..3dddd7902b0f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -160,6 +160,7 @@ enum power_event {
+ #define GMAC_CONFIG_PS			BIT(15)
+ #define GMAC_CONFIG_FES			BIT(14)
+ #define GMAC_CONFIG_DM			BIT(13)
++#define GMAC_CONFIG_LM			BIT(12)
+ #define GMAC_CONFIG_DCRS		BIT(9)
+ #define GMAC_CONFIG_TE			BIT(1)
+ #define GMAC_CONFIG_RE			BIT(0)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 7e5d5db0d516..2f1a2a6f9b33 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -701,6 +701,18 @@ static void dwmac4_debug(void __iomem *ioaddr, struct stmmac_extra_stats *x,
+ 		x->mac_gmii_rx_proto_engine++;
+ }
+ 
++static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++	u32 value = readl(ioaddr + GMAC_CONFIG);
++
++	if (enable)
++		value |= GMAC_CONFIG_LM;
++	else
++		value &= ~GMAC_CONFIG_LM;
++
++	writel(value, ioaddr + GMAC_CONFIG);
++}
++
+ const struct stmmac_ops dwmac4_ops = {
+ 	.core_init = dwmac4_core_init,
+ 	.set_mac = stmmac_set_mac,
+@@ -730,6 +742,7 @@ const struct stmmac_ops dwmac4_ops = {
+ 	.pcs_get_adv_lp = dwmac4_get_adv_lp,
+ 	.debug = dwmac4_debug,
+ 	.set_filter = dwmac4_set_filter,
++	.set_mac_loopback = dwmac4_set_mac_loopback,
+ };
+ 
+ const struct stmmac_ops dwmac410_ops = {
+@@ -761,6 +774,7 @@ const struct stmmac_ops dwmac410_ops = {
+ 	.pcs_get_adv_lp = dwmac4_get_adv_lp,
+ 	.debug = dwmac4_debug,
+ 	.set_filter = dwmac4_set_filter,
++	.set_mac_loopback = dwmac4_set_mac_loopback,
+ };
+ 
+ const struct stmmac_ops dwmac510_ops = {
+@@ -797,6 +811,7 @@ const struct stmmac_ops dwmac510_ops = {
+ 	.safety_feat_dump = dwmac5_safety_feat_dump,
+ 	.rxp_config = dwmac5_rxp_config,
+ 	.flex_pps_config = dwmac5_flex_pps_config,
++	.set_mac_loopback = dwmac4_set_mac_loopback,
+ };
+ 
+ int dwmac4_setup(struct stmmac_priv *priv)
 -- 
 2.7.4
 
