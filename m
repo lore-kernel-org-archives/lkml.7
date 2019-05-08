@@ -2,78 +2,125 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2788C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A485CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E15821726
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724DD216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 17:06:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQl6hDH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfEHRFy (ORCPT
+        id S1728990AbfEHRGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 13:05:54 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:59494 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbfEHRFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 13:05:53 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.141])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hOQ0s-0001ya-OA; Wed, 08 May 2019 11:05:51 -0600
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-mm@kvack.org
-References: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <059859ca-3cc8-e3ff-f797-1b386931c41e@deltatee.com>
-Date:   Wed, 8 May 2019 11:05:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 13:06:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45608 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728533AbfEHRGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 13:06:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a5so5278292pls.12;
+        Wed, 08 May 2019 10:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=75HU3h4OsAx80C+4HKmkW9WgCjMZ+3MuLOv2/tSvsf8=;
+        b=jQl6hDH30YowXP4QHSAKi9IE+6WlJEE9nvbFJQjRbUi7SHucchoX5QX0FEPCcs+kkL
+         /jpbzu3fEJoqC4nfdct9P3686RvwnXltHnptuE6rWvUJqv6WrstRah+XYV+aRESaYFn3
+         jFlNYGFTnsq7c6nSR/FxyByvG87taz9YhTSvI6cGnvoO5Qfl5OoZqQTuX8wBXJn+ss9d
+         0U31LGy5ye/WnB3tucJRtX1bxu/FPDmIq6nqHk2nl515S9PzPdxO9m0clWWhIAvzSPyt
+         mkqzEJ8W17t6yXjMve4NC7Px40RyKcqnY7HOmzaicZhAa/EtdMIsysIHDQJ6aZsARyIL
+         N5EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=75HU3h4OsAx80C+4HKmkW9WgCjMZ+3MuLOv2/tSvsf8=;
+        b=Q7LkCV6+EyyNixvR476rE3e8vYCxNayAcWB367Kxpj0EvM/nZzwxaGXRqNFdt3naVz
+         KSgPOQo9Url7jJuHzpcy7ij48TC5tigbGcMn8qw3L8+NHz+S+BlHdqXOOu3mw7Pk2h50
+         Yu3qGUVpbO9a+YZVLMCAQHYXNVB29EcQEo7Ln+rHqCF2BUP/4K8Tu5kf1IukEJbL/86u
+         0pU6yteF3vqtO3pwd8vp4395dAw5EC96v2vn4PY6FQEJ7FDyZn8tjQurfNsKd8sCBQCe
+         UHepYy8uahlQfkr5610KWOzFD3jel0doImWjEQxdmXCbG/oY7ZmpwGB2QMG/ruC2O92M
+         8nVw==
+X-Gm-Message-State: APjAAAXhzS4cFBb+4e4k9FVEbaGw0MVyzrlBJcIsFS+Nk0HyIypwLi2z
+        6Dhj+8xmEJmmdjnqtUN0skDP32xG
+X-Google-Smtp-Source: APXvYqz2ig4LTc8BeA++POHhfq31FLeFbtUnhNuxJeCOWUwYOUw7UcTLduomkOhdm3P5hDWJB/4mKA==
+X-Received: by 2002:a17:902:b489:: with SMTP id y9mr17545441plr.70.1557335193074;
+        Wed, 08 May 2019 10:06:33 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id o10sm26434215pfh.168.2019.05.08.10.06.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 10:06:32 -0700 (PDT)
+Date:   Wed, 8 May 2019 10:06:29 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Po Liu <po.liu@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Leo Li <leoyang.li@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>
+Subject: Re: [EXT] Re: [PATCH v1] timer:clock:ptp: add support the dynamic
+ posix clock alarm set for ptp
+Message-ID: <20190508170629.me5smui6n7n62x2l@localhost>
+References: <1557032106-28041-1-git-send-email-Po.Liu@nxp.com>
+ <20190507134952.uqqxmhinv75actbh@localhost>
+ <VI1PR04MB51359553C796D25765720FCC92320@VI1PR04MB5135.eurprd04.prod.outlook.com>
+ <20190508143654.uj7266kcbhf744c3@localhost>
 MIME-Version: 1.0
-In-Reply-To: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: linux-mm@kvack.org, linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org, rafael@kernel.org, gregkh@linuxfoundation.org, jglisse@redhat.com, hch@lst.de, bhelgaas@google.com, ira.weiny@intel.com, akpm@linux-foundation.org, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 0/6] mm/devm_memremap_pages: Fix page release race
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508143654.uj7266kcbhf744c3@localhost>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 08, 2019 at 07:36:54AM -0700, Richard Cochran wrote:
+> No the alarm functionality has been removed.  It will not be coming
+> back, unless there are really strong arguments to support it.
 
+Here is some more background:
 
-On 2019-05-07 5:55 p.m., Dan Williams wrote:
-> Changes since v1 [1]:
-> - Fix a NULL-pointer deref crash in pci_p2pdma_release() (Logan)
+    commit 3a06c7ac24f9f24ec059cd77c2dbdf7fbfd0aaaf
+    Author: Thomas Gleixner <tglx@linutronix.de>
+    Date:   Tue May 30 23:15:38 2017 +0200
+
+    posix-clocks: Remove interval timer facility and mmap/fasync callbacks
+    
+    The only user of this facility is ptp_clock, which does not implement any of
+    those functions.
+    
+    Remove them to prevent accidental users. Especially the interval timer
+    interfaces are now more or less impossible to implement because the
+    necessary infrastructure has been confined to the core code. Aside of that
+    it's really complex to make these callbacks implemented according to spec
+    as the alarm timer implementation demonstrates. If at all then a nanosleep
+    callback might be a reasonable extension. For now keep just what ptp_clock
+    needs.
+ 
+> Here is the result of a study of a prototype alarm method.  It shows
+> why the hrtimer method is better.
 > 
-> - Refresh the p2pdma patch headers to match the format of other p2pdma
->    patches (Bjorn)
-> 
-> - Collect Ira's reviewed-by
-> 
-> [1]: https://lore.kernel.org/lkml/155387324370.2443841.574715745262628837.stgit@dwillia2-desk3.amr.corp.intel.com/
+>    https://sourceforge.net/p/linuxptp/mailman/message/35535965/
 
-This series looks good to me:
+That test was with a PCIe card.  With a SoC that has a PHC as a built
+in peripheral, the hardware solution might outperform hrtimers.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-However, I haven't tested it yet but I intend to later this week.
+So you might consider adding clock_nanosleep() for dynamic posix
+clocks.  But your code will have to support multiple users at the same
+time.
 
 Thanks,
-
-Logan
+Richard
