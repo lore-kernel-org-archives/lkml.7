@@ -2,182 +2,109 @@ Return-Path: <SRS0=J8hU=TI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD0C04AAB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B58C04AAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDAE214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE03214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 May 2019 06:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l13Kn1KU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GvRmc3UD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jhZxQGup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfEHGL1 (ORCPT
+        id S1727060AbfEHGNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 02:11:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43052 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEHGL0 (ORCPT
+        Wed, 8 May 2019 02:13:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46736 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEHGNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 02:11:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r4so10191376wro.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 23:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=GqEqCNgSxd2APLcFtwFmHcxS1CnmhrSkbjU7782mmEA=;
-        b=l13Kn1KUq5zSRAzSwAktRUo1C6jyppWNyv3HllcCtdXrTu4EpW8geG9Iry0cHA2uMf
-         pOK265Mrbp8iag3zrgfE0qXUaTXZuGC+FNDTwEJgqKa+FoeBCIN84XDRBA9hXZanzAqM
-         dqoOhRA/jPnW2p89bXTLRyO/tq324AKCNEPpsHJ/aiVZUZMXsMogE8I4BrrptyAzy7n+
-         LRcFr6ISOPot7ORaO23ZT5UHzXRkqgFVYlIC5iqzOFH9ch8nh4cAESOM7wimzrnadnUI
-         zDX67dO/9slLZ91EOtq8okbepSPmze+rKL5wpTtJZTNkH1MPd/T1j9Qk/NXL8lKD4pCX
-         TN5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GqEqCNgSxd2APLcFtwFmHcxS1CnmhrSkbjU7782mmEA=;
-        b=otJvAgms/M50dpaCwnQIQFtkM0YdnYCY7DM+FepQ+c8+dFhWpkSkowTs+lY4+ERHXw
-         bz6JTmHICE82N9P3DX2yepHU9RgDNoG9DE5WMXKQRIfm26MN7lTlc1+9BvIgcWBW4xDe
-         z0w1VgnPU4hD9GBPb594fM8t+fBoT40I9n1IoevJm78Iez1KeOy4ztE+XuwRMR/NVCiU
-         S4qcSbqbB8mWHqNY/jQBwhrzp7+l3LxaAktnDR67qU50MNNxdlrtE/OKVu8wbaCPBooY
-         +mQ77ziSJVPcvJBqhH5f9nvpq356JliAWz9Y6J71BkXya7LkM7mxk6OQ16iEqpJX3kqX
-         oP9g==
-X-Gm-Message-State: APjAAAU2nnS1UcC1qYfdsxP1YMsIEQGA13svmH/6wztJAKglhCMOpn6n
-        INJX5z2EtfpbMOtXYJT3otHk9g==
-X-Google-Smtp-Source: APXvYqyhLI8rjbMFiYKWUY/0814APcR9oqetQaa4ygCTxANrE1IE/VWJ8JAne09spnjza72PYUlIxw==
-X-Received: by 2002:adf:dc8a:: with SMTP id r10mr9548175wrj.15.1557295883528;
-        Tue, 07 May 2019 23:11:23 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id k67sm1170939wmb.34.2019.05.07.23.11.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 May 2019 23:11:22 -0700 (PDT)
-Date:   Wed, 8 May 2019 07:11:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     masonccyang@mxic.com.tw, bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-spi@vger.kernel.org, mark.rutland@arm.com,
-        Rob Herring <robh@kernel.org>,
-        sergei.shtylyov@cogentembedded.com, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-Message-ID: <20190508061119.GB7627@dell>
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus>
- <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <20190507125730.GD29524@dell>
- <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
- <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 8 May 2019 02:13:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3452760779; Wed,  8 May 2019 06:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557296024;
+        bh=6JF1Wj9rmKFTxA+ck/bXWL6AFxtAP0AJGAAq9KaA1bU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GvRmc3UDU6h23XQcy1351x+WxIxy3U5tBLP6nWf13GDw25uvmuPi1n3XZRJl04KHa
+         Ct0UxvJw4cPu/Xlx0btssTOcSyySeUZfzL2cvXRAeC1xWnJForTyJYNaPR5nbs2Q1q
+         otAZWBrqptTg5YJYwAqtjiLg0c8t/nbd15eX59Iw=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBFBA60779;
+        Wed,  8 May 2019 06:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557296023;
+        bh=6JF1Wj9rmKFTxA+ck/bXWL6AFxtAP0AJGAAq9KaA1bU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jhZxQGupSaxx8wMvNJ4B9wqgIL/OosUUPGfEqgfS0x1LGwnb5m9HZj9QQix3Ec8jb
+         Dbr/2oRXREm9BMbVfN77VPRq3NsNaAHSryU0jxcLolPaNIbHDt3L3JR0J88d0rOhB6
+         pp2lIyKZon/h7AP4b3L6HphthxRWzCbKG3u9P28o=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBFBA60779
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sahitya Tummala <stummala@codeaurora.org>
+Subject: [PATCH] ext4: fix use-after-free in dx_release()
+Date:   Wed,  8 May 2019 11:43:17 +0530
+Message-Id: <1557295997-13377-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 May 2019, Marek Vasut wrote:
+The buffer_head (frames[0].bh) and it's corresping page can be
+potentially free'd once brelse() is done inside the for loop
+but before the for loop exits in dx_release(). It can be free'd
+in another context, when the page cache is flushed via
+drop_caches_sysctl_handler(). This results into below data abort
+when accessing info->indirect_levels in dx_release().
 
-> On 5/8/19 4:48 AM, masonccyang@mxic.com.tw wrote:
-> > Hi Jones,
-> > 
-> >> "Lee Jones" <lee.jones@linaro.org>
-> >> 2019/05/07 下午 08:58
-> >>
-> >> To
-> >>
-> >> "Marek Vasut" <marek.vasut@gmail.com>,
-> >>
-> >> cc
-> >>
-> >> "Rob Herring" <robh@kernel.org>, "Mason Yang"
-> >> <masonccyang@mxic.com.tw>, broonie@kernel.org, linux-
-> >> kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-> >> bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, "Geert
-> >> Uytterhoeven" <geert+renesas@glider.be>,
-> >> sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com,
-> >> devicetree@vger.kernel.org, juliensu@mxic.com.tw, "Simon Horman"
-> >> <horms@verge.net.au>, zhengxunli@mxic.com.tw
-> >>
-> >> Subject
-> >>
-> >> Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
-> >> RPC-IF MFD bindings
-> >>
-> >> On Wed, 24 Apr 2019, Marek Vasut wrote:
-> >>
-> >> > On 4/24/19 11:23 PM, Rob Herring wrote:
-> >> > > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
-> >> > >> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
-> >> > >>
-> >> > >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> >> > >> ---
-> >> > >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++
-> >> ++++++++++++++++
-> >> > >>  1 file changed, 40 insertions(+)
-> >> > >>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
-> >> renesas-rpc.txt
-> >> > >>
-> >> > >> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
-> >> rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> >> > >> new file mode 100644
-> >> > >> index 0000000..668b822
-> >> > >> --- /dev/null
-> >> > >> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> >> > >> @@ -0,0 +1,40 @@
-> >> > >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
-> >> > >> +--------------------------------------------------
-> >> > >
-> >> > > Looks like a SPI flash controller from the example. What makes it an
-> >> > > MFD?
-> >> >
-> >> > It supports both SPI NOR and HyperFlash (CFI-compliant flash with
-> >> > different bus interface).
-> >>
-> >> Looks like you're registering one OR the other.
-> >>
-> >> Why don't you just do this from DT?
-> >>
-> >> No reason for this to be an MFD IMHO.
-> > 
-> > 
-> > okay, I will patch it back to SPI mode only.
-> 
-> I don't think that's what Lee meant . The controller supports _both_
-> modes , hence it would have the same compatible string. You just need to
-> extract the mode of operation from the DT.
+Unable to handle kernel paging request at virtual address ffffffc17ac3e01e
+Call trace:
+ dx_release+0x70/0x90
+ ext4_htree_fill_tree+0x2d4/0x300
+ ext4_readdir+0x244/0x6f8
+ iterate_dir+0xbc/0x160
+ SyS_getdents64+0x94/0x174
 
-HiSilicon attempted to upstream something similar, only their
-controller provided NAND and NOR functionality.  They used different
-compatible strings to differentiate between the varying
-technologies.
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+ fs/ext4/namei.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-They too tried to use MFD as a means to select between them (which was
-also NACKed).  Not sure what they ended up doing, but the original
-submission and (half of) the conversation can be found at [0].  Some
-more of the thread continues at [1].
-
-Hope that helps.
-
-[0] https://groups.google.com/forum/#!topic/fa.linux.kernel/F6i9o8sfOIw
-[1] https://marc.info/?l=devicetree&m=147669165104431&w=2
-
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 4181c9c..7e6c298 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -871,12 +871,14 @@ static void dx_release(struct dx_frame *frames)
+ {
+ 	struct dx_root_info *info;
+ 	int i;
++	unsigned int indirect_levels;
+ 
+ 	if (frames[0].bh == NULL)
+ 		return;
+ 
+ 	info = &((struct dx_root *)frames[0].bh->b_data)->info;
+-	for (i = 0; i <= info->indirect_levels; i++) {
++	indirect_levels = info->indirect_levels;
++	for (i = 0; i <= indirect_levels; i++) {
+ 		if (frames[i].bh == NULL)
+ 			break;
+ 		brelse(frames[i].bh);
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
