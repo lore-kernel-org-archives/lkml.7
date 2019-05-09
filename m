@@ -2,239 +2,130 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C9BC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D0C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714F620850
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8824205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:37:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QSMKGU9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfEINhX (ORCPT
+        id S1726716AbfEINh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:37:23 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54960 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726195AbfEINhX (ORCPT
+        Thu, 9 May 2019 09:37:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58550 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfEINh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:37:23 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x49DZpAW030412
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 9 May 2019 09:35:52 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 6AC26420024; Thu,  9 May 2019 09:35:51 -0400 (EDT)
-Date:   Thu, 9 May 2019 09:35:51 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Knut Omang <knut.omang@oracle.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190509133551.GD29703@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Knut Omang <knut.omang@oracle.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
-        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
- <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
- <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+        Thu, 9 May 2019 09:37:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c3CNghomBvawXt39KUULl2no8YKZp9OCsMHGGo+d4vY=; b=QSMKGU9y7AlcT7/k7D/Szm2yH
+        LIbJva8UKnIQv5o1v0AjlvexOXaEtc2xlrFGSSIwQN4PNuC+KvgJAW3Taak/bKS8wioU6Lj+PDqAV
+        5FqCYx0qjJ212tmfb6gBV8dv/gtKDYLw/efRQazndKIOqb5an6AFuim5SoWC8FxjAQ0cmhytPyrtI
+        OhSH5p3Byn8fEhNvdfLQM8fz95glNggAcecni9jCVX9IA2ZOClVImLpRNyovV+kfzyRbkc0lAlF46
+        rz63s72/1EkCmASPhSkO5PO9/l0svnRdDNXxbEHArDe3Bcqbd3fP8OEcMeCyb10YpjQ0hVs0SH5nP
+        J9TuRwfNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOjE8-0003T4-SR; Thu, 09 May 2019 13:36:49 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 613DD20268735; Thu,  9 May 2019 15:36:47 +0200 (CEST)
+Date:   Thu, 9 May 2019 15:36:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
+Message-ID: <20190509133647.GX2623@hirez.programming.kicks-ass.net>
+References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
+ <20190509123104.GQ2589@hirez.programming.kicks-ass.net>
+ <CAKMK7uGuOFGEuw1m_fiBfGbAEY0eeoDEFtP7Htt8-RCzD66MGw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+In-Reply-To: <CAKMK7uGuOFGEuw1m_fiBfGbAEY0eeoDEFtP7Htt8-RCzD66MGw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 01:52:15PM +0200, Knut Omang wrote:
-> 1) Tests that exercises typically algorithmic or intricate, complex
->    code with relatively few outside dependencies, or where the dependencies 
->    are considered worth mocking, such as the basics of container data 
->    structures or page table code. If I get you right, Ted, the tests 
->    you refer to in this thread are such tests. I believe covering this space 
->    is the goal Brendan has in mind for KUnit.
+On Thu, May 09, 2019 at 03:06:09PM +0200, Daniel Vetter wrote:
+> On Thu, May 9, 2019 at 2:31 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Thu, May 09, 2019 at 02:09:03PM +0200, Daniel Vetter wrote:
+> > > Fix this by creating a prinkt_safe_up() which calls wake_up_process
+> > > outside of the spinlock. This isn't correct in full generality, but
+> > > good enough for console_lock:
+> > >
+> > > - console_lock doesn't use interruptible or killable or timeout down()
+> > >   calls, hence an up() is the only thing that can wake up a process.
+> >
+> > Wrong :/ Any task can be woken at any random time. We must, at all
+> > times, assume spurious wakeups will happen.
+> 
+> Out of curiosity, where do these come from? I know about the races
+> where you need to recheck on the waiter side to avoid getting stuck,
+> but didn't know about this. Are these earlier (possibly spurious)
+> wakeups that got held up and delayed for a while, then hit the task
+> much later when it's already continued doing something else?
 
-Yes, that's correct.  I'd also add that one of the key differences is
-that it sounds like Frank and you are coming from the perspective of
-testing *device drivers* where in general there aren't a lot of
-complex code which is hardware independent.  After all, the vast
-majority of device drivers are primarily interface code to hardware,
-with as much as possible abstracted away to common code.  (Take, for
-example, the model of the SCSI layer; or all of the kobject code.)
+Yes, this. So they all more or less have the form:
 
-> 2) Tests that exercises interaction between a module under test and other 
->    parts of the kernel, such as testing intricacies of the interaction of 
->    a driver or file system with the rest of the kernel, and with hardware, 
->    whether that is real hardware or a model/emulation. 
->    Using your testing needs as example again, Ted, from my shallow understanding,
->    you have such needs within the context of xfstests (https://github.com/tytso/xfstests)
+CPU0		CPU1
 
-Well, upstream is for xfstests is git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+		enqueue_waiter()
+done = true;
+if (waiters)
+		for (;;) {
+		  if (done)
+		    break;
 
-The test framework where I can run 20 hours worth of xfstests
-(multiple file system features enabled, multiple mount options, etc.)
-in 3 hours of wall clock time using multiple cloud VM is something
-called gce-xfstests.
+		  ...
+		}
 
-I also have kvm-xfstests, which optimizes low test latency, where I
-want to run a one or a small number of tests with a minimum of
-overhead --- gce startup and shutdown is around 2 minutes, where as
-kvm startup and shutdown is about 7 seconds.  As far as I'm concerned,
-7 seconds is still too slow, but that's the best I've been able to do
-given all of the other things I want a test framework to do, including
-archiving test results, parsing the test results so it's easy to
-interpret, etc.  Both kvm-xfstests and gce-xfstests are located at:
+		dequeue_waiter()
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+		do something else again
 
-So if Frank's primary argument is "too many frameworks", it's already
-too late.  The block layer has blktests has a seprate framework,
-called blktests --- and yeah, it's a bit painful to launch or learn
-how to set things up.
+  wake_up_task
+		<gets wakeup>
 
-That's why I added support to run blktests using gce-xfstests and
-kvm-xfstests, so that "gce-xfstests --blktests" or "kvm-xfstests
---xfstests" will pluck a kernel from your build tree, and launch at
-test appliance VM using that kernel and run the block layer tests.
 
-The point is we *already* have multiple test frameworks, which are
-optimized for testing different parts of the kernel.  And if you plan
-to do a lot of work in these parts of the kernel, you're going to have
-to learn how to use some other test framework other than kselftest.
-Sorry, that's just the way it goes.
+The wake_q thing made the above much more common, but we've had it
+forever.
 
-Of course, I'll accept trivial patches that haven't been tested using
-xfstests --- but that's because I can trivially run the smoke test for
-you.  Of course, if I get a lot of patches from a contributor which
-cause test regressions, I'll treat them much like someone who
-contribute patches which fail to build.  I'll apply pressure to the
-contributor to actually build test, or run a ten minute kvm-xfstests
-smoke test.  Part of the reason why I feel comfortable to do this is
-it's really easy to run the smoke test.  There are pre-compiled test
-appliances, and a lot of documentation:
+> Or even
+> more random, and even if I never put a task on a wait list or anything
+> else, ever, it can get woken spuriously?
 
-https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-quickstart.md
+I had patches that did that on purpose, but no.
 
-This is why I have close to zero sympathy to Frank's complaint that
-extra test frameworks are a bad thing.  To me, that's whining.  I've
-done a huge amount of work to meet contributors more than half-way.
-The insistence that "There Must Be One", ala the Highlander movie, is
-IMHO so wrong that it's not even close.  Is it really that hard to do
-a "git pull", download a test appliance, set up a config file to tell
-kvm-xfstests where to find your build tree, and then run "kvm-xfstests
---smoke" or "gce-xfstests --smoke"?  Cry me a river.
+> > Something like the below might work.
+> 
+> Yeah that looks like the proper fix. I guess semaphores are uncritical
+> enough that we can roll this out for everyone. Thanks for the hint.
 
-There are already multiple test frameworks, and if you expect to do a
-lot of work in a particular subsystem, you'll be expected to use the
-Maintainer's choice of tests.  Deal with it.  We do this so we can
-scale to the number of contributors we have in our subsystem.
+It's actually an optimization that we never did because semaphores are
+so uncritical :-)
 
-> To 1) I agree with Frank in that the problem with using UML is that you still have to
-> relate to the complexity of a kernel run time system, while what you really want for these
-> types of tests is just to compile a couple of kernel source files in a normal user land
-> context, to allow the use of Valgrind and other user space tools on the code.
-
-"Just compiling a couple of kernel source files in a normal user land"
-is much harder than you think.  It requires writing vast numbers of
-mocking functions --- for a file system I would have to simulate the
-block device layer, large portions of the VFS layer, the scheduler and
-the locking layer if I want to test locking bugs, etc., etc.  In
-practice, UML itself is serving as mocking layer, by its mere
-existence.  So when Frank says that KUnit doesn't provide any mocking
-functions, I don't at all agree.  Using KUnit and UML makes testing
-internal interfaces *far* simpler, especially if the comparison is
-"just compile some kernel source files as part of a userspace test
-program".
-
-Perhaps your and Frank's experience is different --- perhaps that can
-be explained by your past experience and interest in testing device
-drivers as opposed to file systems.
-
-The other thing I'd add is that at least for me, a really important
-consideration is how quickly we can run tests.  I consider
-minimization of developer friction (e.g., all you need to do is
-running "make ; kvm-xfstests --smoke" to run tests), and maximizing
-developer velocity to be high priority goals.  Developer velocity is
-how quickly can you run the tests; ideally, less than 5-10 seconds.
-
-And that's the other reason why I consider unit tests to be a
-complement to integration tests.  "gce-xfstests --smoke" takes 10-15
-minutes.  If I can have unit tests which takes 5-15 seconds for a
-smoke test of the specific part of ext4 that I am modifying (and often
-with much better coverage than integration tests from userspace),
-that's at really big deal.  I can do this for e2fsprogs; but if I have
-to launch a VM, the VM overhead pretty much eats all or most of that
-time budget right there.
-
-From looking at your documentation of KTF, you are targetting the use
-case of continuous testing.  That's a different testing scenario than
-what I'm describing; with continuous testing, overhead measured in
-minutes or even tens of minutes is not a big deal.  But if you are
-trying to do real-time testing as part of your development process ---
-*real* Test Driven Development, then test latency is a really big
-deal.
-
-I'll grant that for people who are working on device drivers where
-architecture dependencies are a big deal, building for an architecture
-where you can run in a virtual environment or using test hardware is
-going to be a better way to go.  And Brendan has said he's willing to
-look at adapting KUnit so it can be built for use in a virtual
-environment to accomodate your requirements.
-
-As far as I'm concerned, however, I would *not* be interested in KTF
-unless you could demonstrate to me that launching at test VM, somehow
-getting the kernel modules copied into the VM, and running the tests
-as kernel modules, has zero overhead compared to using UML.
-
-Ultimately, I'm a pragmatist.  If KTF serves your needs best, good for
-you.  If other approaches are better for other parts of the kernel,
-let's not try to impose a strict "There Must Be Only One" religion.
-That's already not true today, and for good reason.  There are many
-different kinds of kernel code, and many different types of test
-philosophies.  Trying to force all kernel testing into a single
-Procrustean Bed is simply not productive.
-
-Regards,
-
-						- Ted
+The thing is, by delaying the wakup until after we've released the
+spinlock, the waiter will not contend on the spinlock the moment it
+wakes.
