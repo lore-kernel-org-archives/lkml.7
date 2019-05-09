@@ -2,95 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB609C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59418C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D7620675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2649820675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WKveJiy4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWc7+YOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfEIRjp (ORCPT
+        id S1726948AbfEIRjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:39:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59102 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbfEIRjl (ORCPT
+        Thu, 9 May 2019 13:39:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37601 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfEIRjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:39:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ze3bI7R/AWInMMM2JlDlT8P7z6aa7ltggLIal7qS1fs=; b=WKveJiy42tZa3XL3xEuRZRY2+Y
-        /wFrD9wGXNbRmW3FI4knn62zQ0lsa6/yA554tTuDxACiFGD8H04SFguP6SpPJJUTsC9tPHHKZLDUZ
-        dcrqukr1oW1BbrODPMEMDZ0F99786dV4u+ip4Mdgdg84PgQVUN5dJ4JJFag0QCQkBNkHjjgRFZnNI
-        YzHQgyhXf0ADhDO3gkNf3dFevriC+kuga/MwMBKDLxfOO4Iewqh3AVidMqdnS4JTJUoM4rtwpzh8M
-        rqzmN7vQta8y7T0YPLC/1YsWg8+sUCJgTNSr5V6Rn8UQBbQt/z2KZpcPGJehPUrW5SZtJ4cAKqFm7
-        TwsCOg/A==;
-Received: from 089144210233.atnat0019.highway.a1.net ([89.144.210.233] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOn19-0005Lf-Nm; Thu, 09 May 2019 17:39:40 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Manuel Lauss <manuel.lauss@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] jz4740_fb: fix DMA API abuse
-Date:   Thu,  9 May 2019 19:38:49 +0200
-Message-Id: <20190509173849.11825-4-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190509173849.11825-1-hch@lst.de>
-References: <20190509173849.11825-1-hch@lst.de>
+        Thu, 9 May 2019 13:39:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g3so1687947pfi.4;
+        Thu, 09 May 2019 10:39:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G488tD19TVWHIOWsjCdbHdhwCsIhFZLwFL+fr08o8yY=;
+        b=DWc7+YOLeKjZcWm01IV8h1YnJP1hiMBzcwboBwpZtqdZ8Kum8i1u9sl2nzvG8XWtMw
+         pQRcvpvWkVfRnHmysa7W0d3lo1e7K6LVn3HhmblUHAe2rJrWCx3aoeJrlwMiPC7EfDS1
+         1ehLLzz5lhswSLpPn/+XVz4o52FoAGPCBCIH/52E+Av+0I6BB+vqnexXsbqw5gT1fGO/
+         yf/+a020oHz6vNDJvNXjJ++BSruR/u8sCaVx0IaqjSypiVimilzFLX5uthqx6norQGjI
+         p50FqRt+aMJpAK1wFzEHWnhljXaXq6xZmqKgME7w7MYbWar8FodFXzx+R6/Hp+e8nP8L
+         hwLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G488tD19TVWHIOWsjCdbHdhwCsIhFZLwFL+fr08o8yY=;
+        b=VzzcXL+KyJ1X4H2/U7pohtaRjSWUMZlWwO/CY1P1Dv94qOecTv+UFvkjqENHiSE8Et
+         S40J1JezgWphgMs2ENdZ5ZljgG9uEasDJhkdAty+MqOOw6f/kGhDmC/z5PXT2eOy74xZ
+         eRtO+d/eNxmAOTjX0fet6uFth0jb4tDUDZDHxxsRrAYne0dqYTc2CDzfNVETDQvXxbxg
+         8TkgVAjBajQgFq6xj0nPUIoLzwkxtlVAnggLO2o9hq47RI9AsbcmSRpkltcdizavBE6m
+         DLhtgeBLyMUyi09rjc8Tkw75RdqJ4gBchFUhTk9aRgffOC6xwaM3Vba/dTZTskDRI6e9
+         nlVA==
+X-Gm-Message-State: APjAAAVMDmI0RR581AdX8LwHjBUPUvzF69kpQ9wFVhG3o9r0YLbC/mB0
+        L1aB5513aSpR/LLoFun7s7eaTVXBmcqnlXnzdydWReHv
+X-Google-Smtp-Source: APXvYqybBsI5M5pIlHneeTgkKElb1tKBLhckJ3TJ+ZTU0oRNNydY760+OhWLcqcERf/d8hA3KxMjmxek5UUh3jRRY74=
+X-Received: by 2002:a62:ee04:: with SMTP id e4mr7018095pfi.232.1557423579900;
+ Thu, 09 May 2019 10:39:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190509141456.223614-1-helgaas@kernel.org> <20190509141456.223614-4-helgaas@kernel.org>
+In-Reply-To: <20190509141456.223614-4-helgaas@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 May 2019 20:39:28 +0300
+Message-ID: <CAHp75Vd=fm4Sdc_ymiPgXnrCsU_9gBF16TsP0VX=ghDrbvk1Yw@mail.gmail.com>
+Subject: Re: [PATCH 03/10] PCI/DPC: Log messages with pci_dev, not pcie_device
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dongdong Liu <liudongdong3@huawei.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Virtual addresses return from dma(m)_alloc_coherent are opaque in what
-backs then, and drivers must not poke into them.  Switch the driver
-to use the generic DMA API mmap helper to avoid these problems.
+On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> Log messages with pci_dev, not pcie_device.  Factor out common message
+> prefixes with dev_fmt().
+>
+> Example output change:
+>
+>   - dpc 0000:00:01.1:pcie008: DPC error containment capabilities...
+>   + pcieport 0000:00:01.1: DPC: error containment capabilities...
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/video/fbdev/jz4740_fb.c | 7 -------
- 1 file changed, 7 deletions(-)
+Overall same question about Capitalizing sentences.
 
-diff --git a/drivers/video/fbdev/jz4740_fb.c b/drivers/video/fbdev/jz4740_fb.c
-index b57df83fdbd3..b95cdfa9e0a1 100644
---- a/drivers/video/fbdev/jz4740_fb.c
-+++ b/drivers/video/fbdev/jz4740_fb.c
-@@ -466,7 +466,6 @@ static int jzfb_alloc_devmem(struct jzfb *jzfb)
- {
- 	int max_videosize = 0;
- 	struct fb_videomode *mode = jzfb->pdata->modes;
--	void *page;
- 	int i;
- 
- 	for (i = 0; i < jzfb->pdata->num_modes; ++mode, ++i) {
-@@ -491,12 +490,6 @@ static int jzfb_alloc_devmem(struct jzfb *jzfb)
- 	if (!jzfb->vidmem)
- 		goto err_free_framedesc;
- 
--	for (page = jzfb->vidmem;
--		 page < jzfb->vidmem + PAGE_ALIGN(jzfb->vidmem_size);
--		 page += PAGE_SIZE) {
--		SetPageReserved(virt_to_page(page));
--	}
--
- 	jzfb->framedesc->next = jzfb->framedesc_phys;
- 	jzfb->framedesc->addr = jzfb->vidmem_phys;
- 	jzfb->framedesc->id = 0xdeafbead;
+> +       pci_err(pdev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
+
+And here perhaps RP PIO status: ... mask: ... ?
+See below I left examples from this patch.
+
+>                 status, mask);
+
+> +       pci_err(pdev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
+>                 sev, syserr, exc);
+
+> +       pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
+
+> +                       pci_err(pdev, "RP PIO log size %u is invalid\n",
+>                                 dpc->rp_log_size);
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
