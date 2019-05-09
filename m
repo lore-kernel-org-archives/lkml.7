@@ -2,54 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E02EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5568C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5262177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8792520656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428483;
-	bh=ZXHsWRQ1nISxNPdDvFHgbRBPGB32dxP9CQAt2ndDmVw=;
+	s=default; t=1557428493;
+	bh=YX3+YfrWcRrg3w26p8h5VeKNgG+y16CzzzJAS8dUiDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vw85k07jiX91TEAlEe1M1I9uk9/UNhVgfjFfdrVL9zag6KRpOYyL0iXCYpEb1OnjE
-	 0SA72SD3f/AsuC15JpY4AqKrRWrsEjSxSLs4pbDX74e9o0Fx7AcxCIgERZzoTvbe2J
-	 mHu3FkI6hOYIhHBPJw4+6Rk9YpWZ11OvYe+suGzs=
+	b=Fd/bA80tFigIBA0xMC9W88WVPkgQS6MYxl+iD5regA9tPn2ub7JIfRIMj25RLdKso
+	 QSex2kJdrgeFOqCgHY0HOTLeGDf/bQaaPdzgfQYMyq+JLnZSupqGMrHWjoMOoQXByE
+	 L7VVjAOtNtv1B66JQ5v54L9LAzv3nWa5kUUa+fYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfEITBW (ORCPT
+        id S1728706AbfEITBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44506 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728504AbfEISuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:50:54 -0400
+        id S1727262AbfEISuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:50:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 466F920578;
-        Thu,  9 May 2019 18:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2917F2177E;
+        Thu,  9 May 2019 18:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427853;
-        bh=ZXHsWRQ1nISxNPdDvFHgbRBPGB32dxP9CQAt2ndDmVw=;
+        s=default; t=1557427845;
+        bh=YX3+YfrWcRrg3w26p8h5VeKNgG+y16CzzzJAS8dUiDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9e5MuCUzYHQ+z3FQnnAUHdIL9FJ5CJf2EG8t+aXL5GOwRxaK9FYURFWYIAiC0j8c
-         ZOOKDCzgAURH+3MG4HVbDCMjC2bbQ269KEMYm2xmly2dOe60CapeGiQo5vxDkIyLyR
-         +90Sfe8AvYgR+JN+C7svSFhWCe2QdQhFDIdeK0w8=
+        b=Gb0Z302z7OW7gsgbGJy4QUIsJ3H4RTJWM8ZfPPOUS+zLyMmYRNcWZyDFDizTIAQLL
+         pRysTX0eEKVvLZTdHWPIx0BmD4YbKXHKivbIsB4HnNwmbgK6iMriYGktWeUDqWkb6Z
+         sk5D3e5icZm7DpS+I3Bee3cMlvqr6UbOO3sfYSrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 28/95] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
-Date:   Thu,  9 May 2019 20:41:45 +0200
-Message-Id: <20190509181311.275503510@linuxfoundation.org>
+Subject: [PATCH 5.0 25/95] ASoC: stm32: dfsdm: manage multiple prepare
+Date:   Thu,  9 May 2019 20:41:42 +0200
+Message-Id: <20190509181311.082186104@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -62,34 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
+[ Upstream commit 19441e35a43b616ea6afad91ed0d9e77268d8f6a ]
 
-w_text_param can be NULL and it is being dereferenced without checking.
-Add the missing sanity check to prevent  NULL pointer dereference.
+The DFSDM must be stopped when a new setting is applied.
+restart systematically DFSDM on multiple prepare calls,
+to apply changes.
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/stm/stm32_adfsdm.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 20bad755888b1..08ab5fef75dca 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3840,6 +3840,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
- 	int count;
+diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
+index 706ff005234f3..71d341b732a4d 100644
+--- a/sound/soc/stm/stm32_adfsdm.c
++++ b/sound/soc/stm/stm32_adfsdm.c
+@@ -9,6 +9,7 @@
  
- 	devm_kfree(card->dev, (void *)*private_value);
+ #include <linux/clk.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -37,6 +38,8 @@ struct stm32_adfsdm_priv {
+ 	/* PCM buffer */
+ 	unsigned char *pcm_buff;
+ 	unsigned int pos;
 +
-+	if (!w_param_text)
-+		return;
++	struct mutex lock; /* protect against race condition on iio state */
+ };
+ 
+ static const struct snd_pcm_hardware stm32_adfsdm_pcm_hw = {
+@@ -62,10 +65,12 @@ static void stm32_adfsdm_shutdown(struct snd_pcm_substream *substream,
+ {
+ 	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
+ 
++	mutex_lock(&priv->lock);
+ 	if (priv->iio_active) {
+ 		iio_channel_stop_all_cb(priv->iio_cb);
+ 		priv->iio_active = false;
+ 	}
++	mutex_unlock(&priv->lock);
+ }
+ 
+ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
+@@ -74,13 +79,19 @@ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
+ 	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
+ 	int ret;
+ 
++	mutex_lock(&priv->lock);
++	if (priv->iio_active) {
++		iio_channel_stop_all_cb(priv->iio_cb);
++		priv->iio_active = false;
++	}
 +
- 	for (count = 0 ; count < num_params; count++)
- 		devm_kfree(card->dev, (void *)w_param_text[count]);
- 	devm_kfree(card->dev, w_param_text);
+ 	ret = iio_write_channel_attribute(priv->iio_ch,
+ 					  substream->runtime->rate, 0,
+ 					  IIO_CHAN_INFO_SAMP_FREQ);
+ 	if (ret < 0) {
+ 		dev_err(dai->dev, "%s: Failed to set %d sampling rate\n",
+ 			__func__, substream->runtime->rate);
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	if (!priv->iio_active) {
+@@ -92,6 +103,9 @@ static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
+ 				__func__, ret);
+ 	}
+ 
++out:
++	mutex_unlock(&priv->lock);
++
+ 	return ret;
+ }
+ 
+@@ -298,6 +312,7 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 
+ 	priv->dev = &pdev->dev;
+ 	priv->dai_drv = stm32_adfsdm_dai;
++	mutex_init(&priv->lock);
+ 
+ 	dev_set_drvdata(&pdev->dev, priv);
+ 
 -- 
 2.20.1
 
