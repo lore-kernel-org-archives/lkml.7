@@ -2,208 +2,170 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C15AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756BEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDD6214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3KgZzLZ"
+	by mail.kernel.org (Postfix) with ESMTP id 52D38216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEIBPV (ORCPT
+        id S1726573AbfEIBP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:15:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41408 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfEIBPU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:15:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z3so281395pgp.8;
-        Wed, 08 May 2019 18:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1+Jfl9iXviaxHbmbhnDjk1eQnpFz6l/2Nut9ww82zvo=;
-        b=a3KgZzLZ0y84UNUIY8RS+nYDRzFkAivRDtTwVjhJ1vYp+v2Z6HVSzmnnRowbVUedfI
-         93zPM5T0iF4iJCU1PddnaPwpC/nrCINNvHKs9PmQ0ayrLgURqYfh7EH67znRVZxTURN5
-         VsMO/ROT48Ly/mYey3OTt/dpawpdAk7DUuJetc8MAAQuinmU4P2PjwyMam4VRQGyIo8C
-         F5An8gjuExmDUN5kMRWiGJsQOqa4gz/Zgv9YpcjdE85z0otG8d1GXhf4e05Hdx2o8s1c
-         hn9kGYBDYT3L0e4JtQg2AhBurTKMtE9VNzBNe+yPm2LTyV/rg3Wp/BZ+nH8mhD2rC6M3
-         7+6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1+Jfl9iXviaxHbmbhnDjk1eQnpFz6l/2Nut9ww82zvo=;
-        b=a086WzWOF9zlpKfGBY4LodiG2Cqf1r78lIcu1kGog3yz0L8IXZX3AiX0Bm3K05j7UU
-         zFmvbNfY35LhML5kZ7dS0fRrhsbyrASjkP6idMqmIxkj8p+AZcj7fnrv2JqgM6i6r+A+
-         N6nKV0nuElLWf/e1MjnFkJYLwuAxJi++XY/wDHK654ADK4oQWqiN3aowMniqL7Q0KR2i
-         PCIhm5A8fEHp0Vcj/0r0ZumSDnO0d9OqH7nTiUjIvTuPEm+mkULak+uD3GkxtLL9/DQ2
-         RWZI+r6CyMa6Nq6Ra1ZcVFrKbGSEDg5OAsbcUTr2sMOotGJRRqmz615xO+V+DHzumOtc
-         ew+g==
-X-Gm-Message-State: APjAAAVnUsL4IZX+D6Com+KFV+QDYMijxJK67QglVIaqRDH8l8n3vztP
-        KBgRmvUYpzcEje71+1MWSUfPf+n1
-X-Google-Smtp-Source: APXvYqzW2wEIzqNsRgYl9IE5EX5P/24Mi1edBj4NYy1YPo+96Z3/rjpt+DtwN4pC4yu/pBUKvsKvyA==
-X-Received: by 2002:a65:628b:: with SMTP id f11mr1432751pgv.95.1557362619650;
-        Wed, 08 May 2019 17:43:39 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id 63sm543120pfu.95.2019.05.08.17.43.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 17:43:38 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
-Date:   Wed, 8 May 2019 17:43:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 May 2019 21:15:56 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3005 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725832AbfEIBPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:15:55 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id B279296CE9A30478F184;
+        Thu,  9 May 2019 09:15:53 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 9 May 2019 09:15:53 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 9 May 2019 09:15:52 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
+ in image
+From:   Chao Yu <yuchao0@huawei.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190424094850.118323-1-yuchao0@huawei.com>
+ <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
+ <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
+ <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
+ <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
+Message-ID: <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
+Date:   Thu, 9 May 2019 09:15:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190507080119.GB28121@kroah.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 1:01 AM, Greg KH wrote:
-> On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
->> On 5/1/19 4:01 PM, Brendan Higgins wrote:
->>> ## TLDR
+On 2019/5/5 10:51, Chao Yu wrote:
+> On 2019/5/1 11:22, Jaegeuk Kim wrote:
+>> On 04/29, Chao Yu wrote:
+>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
+>>>> On 04/24, Chao Yu wrote:
+>>>>> This patch fixes to do sanity with enabled features in image, if
+>>>>> there are features kernel can not recognize, just fail the mount.
+>>>>
+>>>> We need to figure out per-feature-based rejection, since some of them can
+>>>> be set without layout change.
 >>>
->>> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
->>> 5.2.
->>>
->>> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
->>> we would merge through your tree when the time came? Am I remembering
->>> correctly?
->>>
->>> ## Background
->>>
->>> This patch set proposes KUnit, a lightweight unit testing and mocking
->>> framework for the Linux kernel.
->>>
->>> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
->>> it does not require installing the kernel on a test machine or in a VM
->>> and does not require tests to be written in userspace running on a host
->>> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
->>> can run several dozen tests in under a second. Currently, the entire
->>> KUnit test suite for KUnit runs in under a second from the initial
->>> invocation (build time excluded).
->>>
->>> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
->>> Googletest/Googlemock for C++. KUnit provides facilities for defining
->>> unit test cases, grouping related test cases into test suites, providing
->>> common infrastructure for running tests, mocking, spying, and much more.
+>>> So any suggestion on how to implement this?
 >>
->> As a result of the emails replying to this patch thread, I am now
->> starting to look at kselftest.  My level of understanding is based
->> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
->> and a _tiny_ bit of looking at kselftest code.
->>
->> tl;dr; I don't really understand kselftest yet.
->>
->>
->> (1) why KUnit exists
->>
->>> ## What's so special about unit testing?
->>>
->>> A unit test is supposed to test a single unit of code in isolation,
->>> hence the name. There should be no dependencies outside the control of
->>> the test; this means no external dependencies, which makes tests orders
->>> of magnitudes faster. Likewise, since there are no external dependencies,
->>> there are no hoops to jump through to run the tests. Additionally, this
->>> makes unit tests deterministic: a failing unit test always indicates a
->>> problem. Finally, because unit tests necessarily have finer granularity,
->>> they are able to test all code paths easily solving the classic problem
->>> of difficulty in exercising error handling code.
->>
->> (2) KUnit is not meant to replace kselftest
->>
->>> ## Is KUnit trying to replace other testing frameworks for the kernel?
->>>
->>> No. Most existing tests for the Linux kernel are end-to-end tests, which
->>> have their place. A well tested system has lots of unit tests, a
->>> reasonable number of integration tests, and some end-to-end tests. KUnit
->>> is just trying to address the unit test space which is currently not
->>> being addressed.
->>
->> My understanding is that the intent of KUnit is to avoid booting a kernel on
->> real hardware or in a virtual machine.  That seems to be a matter of semantics
->> to me because isn't invoking a UML Linux just running the Linux kernel in
->> a different form of virtualization?
->>
->> So I do not understand why KUnit is an improvement over kselftest.
->>
->> It seems to me that KUnit is just another piece of infrastructure that I
->> am going to have to be familiar with as a kernel developer.  More overhead,
->> more information to stuff into my tiny little brain.
->>
->> I would guess that some developers will focus on just one of the two test
->> environments (and some will focus on both), splitting the development
->> resources instead of pooling them on a common infrastructure.
->>
->> What am I missing?
+>> Which features do we need to disallow? When we introduce new features, they
 > 
-> kselftest provides no in-kernel framework for testing kernel code
-> specifically.  That should be what kunit provides, an "easy" way to
-> write in-kernel tests for things.
+> I guess it should be the new features.
+> 
+>> didn't hurt the previous flow by checking f2fs_sb_has_###().
+> 
+> Yes, but new features may use new disk layout, if old kernel handled it with old
+> disk layout, there must be problematic.
+> 
+> e.g. format image with -O extra_attr, and mount it with kernel who don't
+> recognize new inode layout.
 
-kselftest provides a mechanism for in-kernel tests via modules.  For
-example, see:
+Jaegeuk,
 
-  tools/testing/selftests/vm/run_vmtests invokes:
-    tools/testing/selftests/vm/test_vmalloc.sh
-      loads module:
-        test_vmalloc
-        (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
+Any thoughts?
 
-A very quick and dirty search (likely to miss some tests) finds modules:
-
-  test_bitmap
-  test_bpf
-  test_firmware
-  test_printf
-  test_static_key_base
-  test_static_keys
-  test_user_copy
-  test_vmalloc
-
--Frank
+Thanks,
 
 > 
-> Brendan, did I get it right?
+> Thanks,
 > 
-> thanks,
+>>
+>>>
+>>> Maybe:
+>>>
+>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
+>>> 	check 4.14+ features
+>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
+>>> 	check 4.9+ features
+>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
+>>> 	check 4.4+ features
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>>>
+>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>> ---
+>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
+>>>>>  fs/f2fs/super.c |  9 +++++++++
+>>>>>  2 files changed, 22 insertions(+)
+>>>>>
+>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>> index f5ffc09705eb..15b640967e12 100644
+>>>>> --- a/fs/f2fs/f2fs.h
+>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
+>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+>>>>>  
+>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
+>>>>> +				F2FS_FEATURE_BLKZONED |			\
+>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
+>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
+>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
+>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
+>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
+>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
+>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
+>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
+>>>>> +				F2FS_FEATURE_VERITY |			\
+>>>>> +				F2FS_FEATURE_SB_CHKSUM)
+>>>>> +
+>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
+>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
+>>>>> --- a/fs/f2fs/super.c
+>>>>> +++ b/fs/f2fs/super.c
+>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+>>>>>  		return 1;
+>>>>>  	}
+>>>>>  
+>>>>> +	/* check whether kernel supports all features */
+>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
+>>>>> +		f2fs_msg(sb, KERN_INFO,
+>>>>> +			"Unsupported feature:%u: supported:%u",
+>>>>> +			le32_to_cpu(raw_super->feature),
+>>>>> +			F2FS_ALL_FEATURES);
+>>>>> +		return 1;
+>>>>> +	}
+>>>>> +
+>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
+>>>>>  	if (sanity_check_area_boundary(sbi, bh))
+>>>>>  		return 1;
+>>>>> -- 
+>>>>> 2.18.0.rc1
+>> .
+>>
 > 
-> greg k-h
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 > .
 > 
-
