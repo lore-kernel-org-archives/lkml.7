@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4796C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C245C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4B52177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD6020656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428425;
-	bh=AFVKm1rtHlf4BYp39A7OOmkyXbVuznMWBpMiJDUsB8g=;
+	s=default; t=1557428430;
+	bh=bHoOnIlsyTPfLVH1YTxoNF1t9ZcKKZiYw2OEkn5sGCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kx43ym28v0UDOT3b3cGWwgjvfxIHup2/2qx3g29pO0Obj1nTjbi8+a+VfR1orysz8
-	 YDrhmyg6sehKuxkQXnG6ZmqexCXY62gNSqvu/V7ZjZBE3fUhpORsw1MAcQDMzYvMtV
-	 hgP75ZmFM5XLF+NgEPmUFtR/DGebBq8afWPUJlkQ=
+	b=2CZpj/zB1OsuF3MtyNqYqpbuLMq5iMWFyO2pDXCOQLDvABUdojRlT0wIS8wloKbmf
+	 7xekm+fxn+3mgKgCDs9en+ggjGNhlIyYovS8/pga71B8G+aNOXvU88dXzj3CrmjwAW
+	 VIaHw6l55Rwdoxl1jB8445jFW64L4P9A7EcqY7iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfEITAY (ORCPT
+        id S1728330AbfEISvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbfEISvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:40 -0400
+        id S1728569AbfEISve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 035032177E;
-        Thu,  9 May 2019 18:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BC3217D7;
+        Thu,  9 May 2019 18:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427899;
-        bh=AFVKm1rtHlf4BYp39A7OOmkyXbVuznMWBpMiJDUsB8g=;
+        s=default; t=1557427894;
+        bh=bHoOnIlsyTPfLVH1YTxoNF1t9ZcKKZiYw2OEkn5sGCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTiCu2urJk7DK8Nb9zpYgeKoq1X4UNSkNBx74aPqeCC7B9xQOgYuexubmkJV9JdDL
-         RgX0xk0kgWj3eEBNtxJdGsfIyep5hRBewWoYxrzNO8ufvMCT/YG4gaUdGOWedtKX6/
-         7EqEy7LnA3LEF8AznDMQBnCtYsfNBjsck+Ce/lBo=
+        b=qTkNNysOThHnZ2p2OD13+CsLMZeouHGzB2bW6S3Mat+PXzXFcGqxKfbIXD8G5T7nh
+         2L2fYHBrka/yFl5Og+D1zIzBS+R0MAGbPeY6qJwbj3wsucZv5WPIYDE+ZDf28cUQ/v
+         9GLrjOa1pHWdEd3hMyr6LEEy1wm/DTVfwl36QeDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Wentao Lou <Wentao.Lou@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 46/95] ASoC: cs35l35: Disable regulators on driver removal
-Date:   Thu,  9 May 2019 20:42:03 +0200
-Message-Id: <20190509181312.688513493@linuxfoundation.org>
+Subject: [PATCH 5.0 44/95] drm/amdgpu: amdgpu_device_recover_vram always failed if only one node in shadow_list
+Date:   Thu,  9 May 2019 20:42:01 +0200
+Message-Id: <20190509181312.518662004@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -61,50 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 47c4cc08cb5b34e93ab337b924c5ede77ca3c936 ]
+[ Upstream commit 1712fb1a2f6829150032ac76eb0e39b82a549cfb ]
 
-The chips main power supplies VA and VP are enabled during probe but
-then never disabled, this will cause warnings from the regulator
-framework on driver removal. Fix this by adding a remove callback and
-disabling the supplies, whilst doing so follow best practice and put the
-chip back into reset as well.
+amdgpu_bo_restore_shadow would assign zero to r if succeeded.
+r would remain zero if there is only one node in shadow_list.
+current code would always return failure when r <= 0.
+restart the timeout for each wait was a rather problematic bug as well.
+The value of tmo SHOULD be changed, otherwise we wait tmo jiffies on each loop.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Wentao Lou <Wentao.Lou@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs35l35.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
-index 9f4a59871cee7..c71696146c5ec 100644
---- a/sound/soc/codecs/cs35l35.c
-+++ b/sound/soc/codecs/cs35l35.c
-@@ -1635,6 +1635,16 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
- 	return ret;
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 7ff3a28fc9038..d55dd570a7023 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3158,11 +3158,16 @@ static int amdgpu_device_recover_vram(struct amdgpu_device *adev)
+ 			break;
  
-+static int cs35l35_i2c_remove(struct i2c_client *i2c_client)
-+{
-+	struct cs35l35_private *cs35l35 = i2c_get_clientdata(i2c_client);
-+
-+	regulator_bulk_disable(cs35l35->num_supplies, cs35l35->supplies);
-+	gpiod_set_value_cansleep(cs35l35->reset_gpio, 0);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id cs35l35_of_match[] = {
- 	{.compatible = "cirrus,cs35l35"},
- 	{},
-@@ -1655,6 +1665,7 @@ static struct i2c_driver cs35l35_i2c_driver = {
- 	},
- 	.id_table = cs35l35_id,
- 	.probe = cs35l35_i2c_probe,
-+	.remove = cs35l35_i2c_remove,
- };
+ 		if (fence) {
+-			r = dma_fence_wait_timeout(fence, false, tmo);
++			tmo = dma_fence_wait_timeout(fence, false, tmo);
+ 			dma_fence_put(fence);
+ 			fence = next;
+-			if (r <= 0)
++			if (tmo == 0) {
++				r = -ETIMEDOUT;
+ 				break;
++			} else if (tmo < 0) {
++				r = tmo;
++				break;
++			}
+ 		} else {
+ 			fence = next;
+ 		}
+@@ -3173,8 +3178,8 @@ static int amdgpu_device_recover_vram(struct amdgpu_device *adev)
+ 		tmo = dma_fence_wait_timeout(fence, false, tmo);
+ 	dma_fence_put(fence);
  
- module_i2c_driver(cs35l35_i2c_driver);
+-	if (r <= 0 || tmo <= 0) {
+-		DRM_ERROR("recover vram bo from shadow failed\n");
++	if (r < 0 || tmo <= 0) {
++		DRM_ERROR("recover vram bo from shadow failed, r is %ld, tmo is %ld\n", r, tmo);
+ 		return -EIO;
+ 	}
+ 
 -- 
 2.20.1
 
