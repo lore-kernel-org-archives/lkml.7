@@ -2,113 +2,141 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7477C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46923C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BBB216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557369192;
-	bh=hGPnm5tbZN7czfBP3tH3xRO8abftaq/KoRmkBsPvr4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MTRX1bl3g3KJll9GQBiy2H7TbUAyrDxKOvb2nz0bIJC+dz4gZIfgBTWQVM2bkNv9/
-	 soz2ycRAIadJ8EkquRzm0TAOxcJHgS54Zopcsol0Hu3JcVWEfpBJ5IctewhRuOg+4r
-	 eZV8/R8pXjL5D34qQrHX2iP5igpy0i6OKU+IpEWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 103F4216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lHKiZJsB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfEICdL (ORCPT
+        id S1726720AbfEICdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:33:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59490 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbfEICdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:33:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A5G/1lWkrleN9QL1gRcbrpqWq59CDY9vHWndd24sW9I=; b=T88tg49MHvWq6cI1ntmfSSKGU
-        PiatX9xQ/RVBZZd7JsltR5BYTdxzV6Bfczl4KEPeOrSrTLVJYFDT1StKYHkbbvQp+PRF1hFgD/69l
-        3zhHUVy2ck01ZEEbCHuk7H2VwpEA3HRdM10GTpoxKpoG3z9B21TkSFySPEC9JPRkpkz0E=;
-Received: from kd111239184245.au-net.ne.jp ([111.239.184.245] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hOYrc-0001RR-RR; Thu, 09 May 2019 02:32:53 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 9304E44000C; Thu,  9 May 2019 03:32:47 +0100 (BST)
-Date:   Thu, 9 May 2019 11:32:47 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Curtis Malainey <cujomalainey@google.com>
-Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Zhang <benzh@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v5 1/3] ASoC: rt5677: allow multiple interrupt sources
-Message-ID: <20190509023247.GT14916@sirena.org.uk>
-References: <20190507220115.90395-1-fletcherw@chromium.org>
- <20190507220115.90395-2-fletcherw@chromium.org>
- <20190508073623.GT14916@sirena.org.uk>
- <CAOReqxgYV3SdXot84Xa4X7=MCZdzWmb2N+jaWzjxgmdoMRx5Mw@mail.gmail.com>
+        Wed, 8 May 2019 22:33:39 -0400
+Received: from mail-eopbgr150040.outbound.protection.outlook.com ([40.107.15.40]:64836
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725891AbfEICdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 22:33:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WT+gJvPsQ5SD0YY4s2IcEc6eR/1X/c0ITM+bFwrHgbA=;
+ b=lHKiZJsBbLSbevLx1RdTOIfO2qaohMBAnfkglukWry/C2ZgYFBywY3X6BMn2VxzCCVd8PMzVfKENMOoLzAC6y1rJX6K4UdLVVkmvb5MjVmuzIBkQQu5ZLqCRhIBnd4ac06Qhzr1GH3UIicOUU5kt/5t8VyO1Su9pNK8AcrPCH38=
+Received: from VI1PR04MB3247.eurprd04.prod.outlook.com (10.170.232.160) by
+ VI1PR04MB5933.eurprd04.prod.outlook.com (20.178.205.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Thu, 9 May 2019 02:33:34 +0000
+Received: from VI1PR04MB3247.eurprd04.prod.outlook.com
+ ([fe80::cd99:d9b2:d90a:6c2]) by VI1PR04MB3247.eurprd04.prod.outlook.com
+ ([fe80::cd99:d9b2:d90a:6c2%2]) with mapi id 15.20.1856.012; Thu, 9 May 2019
+ 02:33:34 +0000
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: RE:  [PATCH v2 5/6] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Thread-Topic: [PATCH v2 5/6] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Thread-Index: AdUGD32ltqP1VC1gSGyaIizREbNmaQ==
+Date:   Thu, 9 May 2019 02:33:34 +0000
+Message-ID: <VI1PR04MB3247F31E0B6604847058395491330@VI1PR04MB3247.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiang.zhao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 236602db-1e54-416a-be00-08d6d426bbbe
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5933;
+x-ms-traffictypediagnostic: VI1PR04MB5933:
+x-microsoft-antispam-prvs: <VI1PR04MB5933F4865696ABABC09F9C0891330@VI1PR04MB5933.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(366004)(136003)(396003)(199004)(189003)(13464003)(86362001)(256004)(6436002)(55016002)(316002)(66946007)(73956011)(2501003)(6246003)(7696005)(6506007)(53546011)(3846002)(6116002)(102836004)(5660300002)(52536014)(7736002)(71200400001)(71190400001)(26005)(68736007)(2906002)(66476007)(8936002)(4326008)(14454004)(25786009)(229853002)(81156014)(81166006)(8676002)(64756008)(66446008)(478600001)(66556008)(6636002)(110136005)(99286004)(54906003)(486006)(74316002)(476003)(44832011)(66066001)(9686003)(186003)(33656002)(7416002)(53936002)(76116006)(305945005)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5933;H:VI1PR04MB3247.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: M1qGmsO20WONwOEOaedKUL6ic35ici+A4ebYOEdxYesGn+afa++hIDUp5VhQBl9pilhJHURdrIOaJzCkl+FkcinDOLYkWRdiCUpG/8VJjtq005vXwOIKrfARtlntWu9Cxe/xFJMEAm44Zyfmqups5MGF+nVwfABxDM835cO6R82557D/F60hZ0MKufxJxeVLeqPHnhuuP6Po1nvaAAZ1TxQ8+8gzAoHpB6MqiuAwgXmIUorIzJHg4GnT/CwlLm0QR3zy5sMqyWE9Tx+tuvTzPGuO6Al7kpgm+Sc2/y49+z5Ut5cB6s3GUcAFp5QI3kXF4f4mMw0PMXtLXb3XqL3Y1lwXISQTnt4SEaHtb6baWYaFhGCF/2LCGFNPk29P8pqL3/HkXkqu2AmhFI1UXBXvwvuOtLQtu6o5dGMC31z3rJQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sOuRR0jXHR3ukxKL"
-Content-Disposition: inline
-In-Reply-To: <CAOReqxgYV3SdXot84Xa4X7=MCZdzWmb2N+jaWzjxgmdoMRx5Mw@mail.gmail.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 236602db-1e54-416a-be00-08d6d426bbbe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 02:33:34.2398
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5933
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---sOuRR0jXHR3ukxKL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, May 08, 2019 at 02:39:32PM -0700, Curtis Malainey wrote:
-
-> Pixelbooks (Samus Chromebook) are the only devices that use this part.
-> Realtek has confirmed this. Therefore we only have to worry about
-> breaking ourselves. That being said I agree there is likely a better
-
-And there are no other parts that are software compatible enough to
-share the same driver?
-
-> way to handle general abstraction here. We will need the explicit irq
-> handling since I will be following these patches up with patches that
-> enable hotwording on the codec (we will be sending the firmware to
-> linux-firmware as well that is needed for the process.)
-
-OK.  Like I said it might also be clearer split into multiple patches,
-it was just really difficult to tell what was going on with the diff
-there.
-
---sOuRR0jXHR3ukxKL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzTkU4ACgkQJNaLcl1U
-h9DsMgf8DlzUF2AXtzerym+DDHSpdLJct9B0sDS+4a3l7aJ0l4BGoN8UBK9D9bks
-KJq5h9X/JaOojry4WTfrdZtm2rFTa0ztIvtIsNBahAHzYGplUafHmr3lOdsWviUa
-IyQk8XARXYWfm0mB0Pdfe58BDY+Y74naM1H6WypF5S1nfCmg2vo4++C1DmV7L56J
-7ZdDnceJqVUpW6hyCsp1dRP6Ot8ICzKbUWZABTYVWj/a/CcowwUl+P5/eX5zhM1A
-Iy2LN3nZcQE/C7OcG1HB8rZhz+enKCURNLGHHWKmfOuDa8yZR7MS0Q8fFTTwbwow
-kPYJXq28b3JoVxlrpjiAFcNg5JUiZQ==
-=izHs
------END PGP SIGNATURE-----
-
---sOuRR0jXHR3ukxKL--
+T24gMjAxOS81LzEgMTc6MjksIFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJl
+dmFzLmRrPiB3cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBS
+YXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4gU2VudDogMjAx
+OeW5tDXmnIgx5pelIDE3OjI5DQo+IFRvOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgUWlh
+bmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5j
+b20+DQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBS
+b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgU2NvdHQgV29vZA0KPiA8b3NzQGJ1c2Vy
+cm9yLm5ldD47IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPjsgTWFy
+aw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJhc211cyBWaWxsZW1vZXMNCj4g
+PFJhc211cy5WaWxsZW1vZXNAcHJldmFzLnNlPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjIgNS82XSBz
+b2MvZnNsL3FlOiBxZS5jOiBzdXBwb3J0IGZzbCxxZS1zbnVtcyBwcm9wZXJ0eQ0KPiANCj4gQWRk
+IGRyaXZlciBzdXBwb3J0IGZvciB0aGUgbmV3bHkgaW50cm9kdWNlZCBmc2wscWUtc251bXMgcHJv
+cGVydHkuDQo+IA0KPiBDb252ZW5pZW50bHksIG9mX3Byb3BlcnR5X3JlYWRfdmFyaWFibGVfdThf
+YXJyYXkgZG9lcyBleGFjdGx5IHdoYXQgd2UNCj4gbmVlZDogSWYgdGhlIHByb3BlcnR5IGZzbCxx
+ZS1zbnVtcyBpcyBmb3VuZCAoYW5kIGhhcyBhbiBhbGxvd2VkIHNpemUpLCB0aGUgYXJyYXkNCj4g
+b2YgdmFsdWVzIGdldCBjb3BpZWQgdG8gc251bXMsIGFuZCB0aGUgcmV0dXJuIHZhbHVlIGlzIHRo
+ZSBudW1iZXIgb2Ygc251bXMgLQ0KPiB3ZSBjYW5ub3QgYXNzaWduIGRpcmVjdGx5IHRvIG51bV9v
+Zl9zbnVtcywgc2luY2Ugd2UgbmVlZCB0byBjaGVjayB3aGV0aGVyDQo+IHRoZSByZXR1cm4gdmFs
+dWUgaXMgbmVnYXRpdmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYXNtdXMgVmlsbGVtb2VzIDxy
+YXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4gLS0tDQogDQpSZXZpZXdlZC1ieTogUWlhbmcg
+WmhhbyA8cWlhbmcuemhhb0BueHAuY29tPg0KDQo+ICBkcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyB8
+IDE2ICsrKysrKysrKysrKysrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL2ZzbC9xZS9x
+ZS5jIGIvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMgaW5kZXgNCj4gMGZiOGI1OWY2MWFkLi4zMjVk
+Njg5Y2JmNWMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL2ZzbC9xZS9xZS5jDQo+ICsrKyBi
+L2RyaXZlcnMvc29jL2ZzbC9xZS9xZS5jDQo+IEBAIC0yODMsNyArMjgzLDYgQEAgRVhQT1JUX1NZ
+TUJPTChxZV9jbG9ja19zb3VyY2UpOw0KPiAgICovDQo+ICBzdGF0aWMgdm9pZCBxZV9zbnVtc19p
+bml0KHZvaWQpDQo+ICB7DQo+IC0gICAgICAgaW50IGk7DQo+ICAgICAgICAgc3RhdGljIGNvbnN0
+IHU4IHNudW1faW5pdF83NltdID0gew0KPiAgICAgICAgICAgICAgICAgMHgwNCwgMHgwNSwgMHgw
+QywgMHgwRCwgMHgxNCwgMHgxNSwgMHgxQywgMHgxRCwNCj4gICAgICAgICAgICAgICAgIDB4MjQs
+IDB4MjUsIDB4MkMsIDB4MkQsIDB4MzQsIDB4MzUsIDB4ODgsIDB4ODksIEBADQo+IC0zMDQsNyAr
+MzAzLDIxIEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9pZCkNCj4gICAgICAgICAgICAg
+ICAgIDB4MjgsIDB4MjksIDB4MzgsIDB4MzksIDB4NDgsIDB4NDksIDB4NTgsIDB4NTksDQo+ICAg
+ICAgICAgICAgICAgICAweDY4LCAweDY5LCAweDc4LCAweDc5LCAweDgwLCAweDgxLA0KPiAgICAg
+ICAgIH07DQo+ICsgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpxZTsNCj4gICAgICAgICBjb25z
+dCB1OCAqc251bV9pbml0Ow0KPiArICAgICAgIGludCBpOw0KPiArDQo+ICsgICAgICAgYml0bWFw
+X3plcm8oc251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0KPiArICAgICAgIHFlID0gcWVfZ2V0
+X2RldmljZV9ub2RlKCk7DQo+ICsgICAgICAgaWYgKHFlKSB7DQo+ICsgICAgICAgICAgICAgICBp
+ID0gb2ZfcHJvcGVydHlfcmVhZF92YXJpYWJsZV91OF9hcnJheShxZSwgImZzbCxxZS1zbnVtcyIs
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBzbnVtcywgMSwNCj4gUUVfTlVNX09GX1NOVU0pOw0KPiArICAgICAgICAgICAgICAgb2Zfbm9k
+ZV9wdXQocWUpOw0KPiArICAgICAgICAgICAgICAgaWYgKGkgPiAwKSB7DQo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIHFlX251bV9vZl9zbnVtID0gaTsNCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgcmV0dXJuOw0KPiArICAgICAgICAgICAgICAgfQ0KPiArICAgICAgIH0NCj4gDQo+ICAgICAg
+ICAgcWVfbnVtX29mX3NudW0gPSBxZV9nZXRfbnVtX29mX3NudW1zKCk7DQo+IA0KPiBAQCAtMzEz
+LDcgKzMyNiw2IEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9pZCkNCj4gICAgICAgICBl
+bHNlDQo+ICAgICAgICAgICAgICAgICBzbnVtX2luaXQgPSBzbnVtX2luaXRfNDY7DQo+IA0KPiAt
+ICAgICAgIGJpdG1hcF96ZXJvKHNudW1fc3RhdGUsIFFFX05VTV9PRl9TTlVNKTsNCj4gICAgICAg
+ICBtZW1jcHkoc251bXMsIHNudW1faW5pdCwgcWVfbnVtX29mX3NudW0pOyAgfQ0KPiANCj4gLS0N
+Cj4gMi4yMC4xDQpCZXN0IFJlZ2FyZHMNClFpYW5nIFpoYW8NCg==
