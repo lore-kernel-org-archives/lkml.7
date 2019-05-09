@@ -2,166 +2,273 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C055C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A1DC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3413221744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:41:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AcyhZIdU"
+	by mail.kernel.org (Postfix) with ESMTP id 140FF2084E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfEIJls (ORCPT
+        id S1726711AbfEIJmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:41:48 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19931 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfEIJlr (ORCPT
+        Thu, 9 May 2019 05:42:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38413 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfEIJmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:41:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd3f5b50000>; Thu, 09 May 2019 02:41:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 May 2019 02:41:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 May 2019 02:41:45 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
- 2019 09:41:42 +0000
-Subject: Re: [Patch-V2 1/4] dt-binding: Tegra194 pinctrl support
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
-        <smangipudi@nvidia.com>, <ldewangan@nvidia.com>,
-        <vidyas@nvidia.com>
-References: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <41dbf606-0a15-a0bc-07fd-2c7101d7f6a1@nvidia.com>
-Date:   Thu, 9 May 2019 10:41:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557394869; bh=dk8yatUotHOvFsORd6Mm8U2hBhCLTRqYjHQ4BQhaQZ8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=AcyhZIdUoDefRLOp4M8WtcdhyVHJSncU0DwkN2LqaA31Izrqq1LRHRGZ1rEhyjwvU
-         A7zxK5DMRZhicjm4UaN6li0XG8u7Xbk6/78s9K3fNUX5iwGSTZoxMvWRtuKbQzfxTj
-         l4MOzEH3cDKxRo1F7936ZvPYGiE8a4CFqjDNXElPS8uSUY/TPfbAxOm98M9JhVPqX2
-         Oh7NQWZzyHd3+8JS6i114Psxiw+BlN6BzVTkQwZmq8VUzVu87vv6/l2ow7h8Dv3J9v
-         C+pnrbtwPNCymLvy++u8QTqQ6QtQbwReH45ebpL09h+ucM5x79UjuHyCPZd/yUV9S3
-         ED1x7O1iDW68A==
+        Thu, 9 May 2019 05:42:39 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hOfZU-0005ub-0q
+        for linux-kernel@vger.kernel.org; Thu, 09 May 2019 09:42:36 +0000
+Received: by mail-pf1-f199.google.com with SMTP id n3so1243120pff.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:42:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vCyQ60BE6nSCa7adNn8wGWtGspW5wwW93oaMgXkndqY=;
+        b=CaIIUrcFU6dj8gCqHgiPBtB55grJNqxZ3hT6goAHINwA42Hz0xCNK8wvZhyxg51RmO
+         bDOsunc4MhijtKcRTaqYWFHZjR22aH2DkaHQEIewmFqhQ07YeRh0QgSbZ3ZorDx5FYlg
+         4+7zR8iZn+4e8w7vNSZ6ehPXYI2xvtYsMMHYaXdUqcI0FiRVsoi2iL3AdwRi037VOC2u
+         IFku3SAEg2obRv4NbidXmY3vOvFhQi9c4kKe9AfgWDKdSRC2owVNlZkG+18Vr581SJ1B
+         /ERmUaiciUkNtAtzNhthLzqN2p/kUPaLvg+espDiOaA+bl7cCilX6dOZWyIJ+OmKSQIp
+         hy9w==
+X-Gm-Message-State: APjAAAWoCNqAHb1NM7LBZGK/CoH4yLfmvlDSU8YXDtw39o8JoSNVnDTA
+        V2yvd1p4CvFTIbRbVWe86HPWjoMVE+bKlqFecOKO1LgkUszcFfNsdLfBGi1JvCDfd3Md/FPTS7v
+        cqF9OG7ZaGFy7MAc5wkuGsNdyv5LyP6j8shbytMZ9iA==
+X-Received: by 2002:a63:10c:: with SMTP id 12mr4207300pgb.276.1557394954727;
+        Thu, 09 May 2019 02:42:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx4tmcD33XpLhEuyhpoUaGX5iEQ6p4zYrtvOSZ/IdC6tLif2k7cQ2EI0mQEiPkOT1lAI1J9Ew==
+X-Received: by 2002:a63:10c:: with SMTP id 12mr4207277pgb.276.1557394954398;
+        Thu, 09 May 2019 02:42:34 -0700 (PDT)
+Received: from 2001-b011-380f-14b9-f0ba-4a15-3e79-97f9.dynamic-ip6.hinet.net (2001-b011-380f-14b9-f0ba-4a15-3e79-97f9.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:f0ba:4a15:3e79:97f9])
+        by smtp.gmail.com with ESMTPSA id f87sm3062680pff.56.2019.05.09.02.42.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 02:42:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
+Date:   Thu, 9 May 2019 17:42:30 +0800
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
+References: <20190508185955.11406-1-kai.heng.feng@canonical.com>
+ <20190508191624.GA8365@localhost.localdomain>
+ <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com>
+ <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM>
+ <20190508195159.GA1530@lst.de>
+ <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+ <20190509061237.GA15229@lst.de>
+ <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
+ <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+at 17:07, Rafael J. Wysocki <rafael@kernel.org> wrote:
 
-On 09/05/2019 09:08, Krishna Yarlagadda wrote:
-> Add binding doc for Tegra 194 pinctrl driver
-> 
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
-> Changes in V2:
-> created new binding doc to handle Tegra194 pinctrl driver
-> 
->  .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    | 116 +++++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
-> new file mode 100644
-> index 0000000..80e36c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
-> @@ -0,0 +1,116 @@
-> +NVIDIA Tegra194 pinmux controller
-> +
-> +Required properties:
-> +- compatible: "nvidia,tegra194-pinmux"
-> +- reg: Should contain a list of base address and size pairs for:
-> +  - first entry: The APB_MISC_GP_*_PADCTRL registers (pad control)
-> +  - second entry: The PINMUX_AUX_* registers (pinmux)
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning of the
-> +phrase "pin configuration node".
-> +
-> +Tegra's pin configuration nodes act as a container for an arbitrary number of
-> +subnodes. Each of these subnodes represents some desired configuration for a
-> +pin, a group, or a list of pins or groups. This configuration can include the
-> +mux function to select on those pin(s)/group(s), and various pin configuration
-> +parameters, such as pull-up, tristate, drive strength, etc.
-> +
-> +See the TRM to determine which properties and values apply to each pin/group.
-> +Macro values for property values are defined in
-> +include/dt-binding/pinctrl/pinctrl-tegra.h.
-> +
-> +Required subnode-properties:
-> +- nvidia,pins : An array of strings. Each string contains the name of a pin or
-> +    group. Valid values for these names are listed below.
-> +
-> +Optional subnode-properties:
-> +- nvidia,function: A string containing the name of the function to mux to the
-> +    pin or group.
-> +- nvidia,pull: Integer, representing the pull-down/up to apply to the pin.
-> +    0: none, 1: down, 2: up.
-> +- nvidia,tristate: Integer.
-> +    0: drive, 1: tristate.
-> +- nvidia,enable-input: Integer. Enable the pin's input path.
-> +    enable :TEGRA_PIN_ENABLE and
-> +    disable or output only: TEGRA_PIN_DISABLE.
-> +- nvidia,open-drain: Integer.
-> +    enable: TEGRA_PIN_ENABLE.
-> +    disable: TEGRA_PIN_DISABLE.
-> +- nvidia,lock: Integer. Lock the pin configuration against further changes
-> +    until reset.
-> +    enable: TEGRA_PIN_ENABLE.
-> +    disable: TEGRA_PIN_DISABLE.
-> +- nvidia,io-hv: Integer. Select high-voltage receivers.
-> +    normal: TEGRA_PIN_DISABLE
-> +    high: TEGRA_PIN_ENABLE
-> +- nvidia,high-speed-mode: Integer. Enable high speed mode the pins.
-> +    normal: TEGRA_PIN_DISABLE
-> +    high: TEGRA_PIN_ENABLE
-> +- nvidia,schmitt: Integer. Enables Schmitt Trigger on the input.
-> +    normal: TEGRA_PIN_DISABLE
-> +    high: TEGRA_PIN_ENABLE
-> +- nvidia,drive-type: Integer. Valid range 0...3.
-> +- nvidia,pull-down-strength: Integer. Controls drive strength. 0 is weakest.
-> +    The range of valid values depends on the pingroup. See "CAL_DRVDN" in the
-> +    Tegra TRM.
-> +- nvidia,pull-up-strength: Integer. Controls drive strength. 0 is weakest.
-> +    The range of valid values depends on the pingroup. See "CAL_DRVUP" in the
-> +    Tegra TRM.
-> +- nvidia,slew-rate-rising: Integer. Controls rising signal slew rate. 0 is
-> +    fastest. The range of valid values depends on the pingroup. See
-> +    "DRVDN_SLWR" in the Tegra TRM.
-> +- nvidia,slew-rate-falling: Integer. Controls falling signal slew rate. 0 is
-> +    fastest. The range of valid values depends on the pingroup. See
-> +    "DRVUP_SLWF" in the Tegra TRM.
+> On Thu, May 9, 2019 at 8:49 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com> wrote:
+>> Cc Rafael and linux-pm
+>
+> I would have been much more useful to CC the patch to linux-pm at
+> least from the outset.
+>
+>> at 14:12, Christoph Hellwig <hch@lst.de> wrote:
+>>
+>>> On Wed, May 08, 2019 at 08:28:30PM +0000, Mario.Limonciello@dell.com  
+>>> wrote:
+>>>> You might think this would be adding runtime_suspend/runtime_resume
+>>>> callbacks, but those also get called actually at runtime which is not
+>>>> the goal here.  At runtime, these types of disks should rely on APST  
+>>>> which
+>>>> should calculate the appropriate latencies around the different power
+>>>> states.
+>>>>
+>>>> This code path is only applicable in the suspend to idle state, which
+>>>> /does/
+>>>> call suspend/resume functions associated with dev_pm_ops.  There isn't
+>>>> a dedicated function in there for use only in suspend to idle, which is
+>>>> why pm_suspend_via_s2idle() needs to get called.
+>>>
+>>> The problem is that it also gets called for others paths:
+>>>
+>>> #ifdef CONFIG_PM_SLEEP
+>>> #define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+>>>         .suspend = suspend_fn, \
+>>>       .resume = resume_fn, \
+>>>       .freeze = suspend_fn, \
+>>>       .thaw = resume_fn, \
+>>>       .poweroff = suspend_fn, \
+>>>       .restore = resume_fn,
+>>> #else
+>>> else
+>>> #define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
+>>> #endif
+>>>
+>>> #define SIMPLE_DEV_PM_OPS(name, suspend_fn, resume_fn) \
+>>> const struct dev_pm_ops name = { \
+>>>       SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+>>> }
+>>>
+>>> And at least for poweroff this new code seems completely wrong, even
+>>> for freeze it looks rather borderline.
+>>
+>> Not really, for hibernation pm_suspend_via_s2idle() evaluates to false so
+>> the old code path will be taken.
+>>
+>>> And more to the points - if these "modern MS standby" systems are
+>>> becoming common, which it looks they are, we need support in the PM core
+>>> for those instead of working around the decisions in low-level drivers.
+>>
+>> Rafael, what do you think about this?
+>
+> The difference between suspend-to-idle and suspend-to-RAM (S3) boils
+> down to the fact that at the end of S3 suspend all control of the
+> system is passed to the platform firmware.  Then, the firmware can
+> take care of some things that may not be taken care of by drivers (it
+> sometimes assumes that drivers will not take care of those things even
+> which is generally problematic).
+>
+> For suspend-to-idle the final physical state of the system should (in
+> theory) be the same as the deepest possible physical idle state of it
+> achievable through working-state PM (combination of PM-runtime and
+> cpuidle, roughly speaking).  However, in practice the working-state PM
+> may not even be able to get there, as it generally requires many
+> things to happen exactly at the right time in a specific order and the
+> probability of that in the working-state PM situation is practically
+> 0.  Suspend-to-idle helps here by quiescing everything in an ordered
+> fashion which makes all of the requisite conditions more likely to be
+> met together.
+>
+> So yes, from an individual driver perspective, the device handling for
+> s2idle should be more like for PM-runtime than for S3 (s2R), but this
+> really shouldn't matter (and it doesn't matter for the vast majority
+> of drivers).
+>
+> Unfortunately, the "modern MS standby" concept makes it matter,
+> because "modern MS standby" causes system-wide transitions to be
+> "special" and it appears to expect drivers to take care of the "extra
+> bit" that would have been taken care of by the platform firmware in
+> the S3 case.  [Note that in the Windows world the "modern MS standby"
+> systems don't support S3 ("modern MS standby" and S3 support are
+> mutually exclusive in Windows AFAICS) while Linux needs to support S3
+> and is expected to achieve the minimum power state through s2idle
+> (generally, even on the same platform) at the same time.]
+>
+>> Including this patch, there are five drivers that use
+>> pm_suspend_via_{firmware,s2idle}() to differentiate between S2I and S3.
+>
+> Well, that is not a large number relative to the total number of
+> drivers in Linux.
 
-Are all these properties applicable to the pex_l5_clkreq and pex_l5_rst
-pins? Particularly the slew-rate properties?
+That’s right, but I think we are going to see more of similar cases.
 
-Cheers
-Jon
+>
+>> So I think maybe it’s time to introduce a new suspend callback for S2I?
+>
+> That would be a set of 6 new suspend and resume callbacks, mind you,
+> and there's quite a few of them already.  And the majority of drivers
+> would not need to use them anyway.
 
--- 
-nvpublic
+I think suspend_to_idle() and resume_from_idle() should be enough?
+What are other 4 callbacks?
+
+>
+> Also, please note that, possibly apart from the device power state
+> setting, the S2I and S2R handling really aren't that different at all.
+> You basically need to carry out the same preparations during suspend
+> and reverse them during resume in both cases.
+
+But for this case, it’s quite different to the original suspend and resume  
+callbacks.
+
+>
+> That said I admit that there are cases in which device drivers need to
+> know that the system-wide transition under way is into s2idle and so
+> they should do extra stuff.  If pm_suspend_via_firmware() is not
+> sufficient for that, then I'm open to other suggestions, but
+> introducing a new set of callbacks for that alone would be rather
+> excessive IMO.
+
+ From drivers’ perspective nothing changed, as PM core can prioritize  
+suspend_to_idle() over suspend() when it’s actually S2I.
+
+>
+>>>> SIMPLE_DEV_PM_OPS normally sets the same function for suspend and
+>>>> freeze (hibernate), so to avoid any changes to the hibernate case it  
+>>>> seems
+>>>> to me that there needs to be a new nvme_freeze() that calls into the
+>>>> existing
+>>>> nvme_dev_disable for the freeze pm op and nvme_thaw() that calls into  
+>>>> the
+>>>> existing nvme_reset_ctrl for the thaw pm op.
+>>>
+>>> At least, yes.
+>>
+>> Hibernation should remain the same as stated above.
+>
+> Depending on what check is used in that code path.
+> pm_suspend_via_s2idle() will return "true" in the hibernation path
+> too, for one.
+
+You are right, I should use !pm_suspend_via_firmware() instead.
+
+>
+>>>>> enterprise class NVMe devices
+>>>>> that don't do APST and don't really do different power states at
+>>>>> all in many cases.
+>>>>
+>>>> Enterprise class NVMe devices that don't do APST - do they typically
+>>>> have a non-zero value for ndev->ctrl.npss?
+>>>>
+>>>> If not, they wouldn't enter this new codepath even if the server entered
+>>>> into S2I.
+>>>
+>>> No, devices that do set NPSS will have at least some power states
+>>> per definition, although they might not be too useful.  I suspect  
+>>> checking
+>>> APSTA might be safer, but if we don't want to rely on APST we should
+>>> check for a power state supporting the condition that the MS document
+>>> quoted in the original document supports.
+>>
+>> If Modern Standby or Connected Standby is not supported by servers, I  
+>> don’t
+>> think the design documents mean much here.
+>> We probably should check if the platform firmware really supports S2I
+>> instead.
+>
+> S2I is expected to work regardless of the platform firmware and there
+> is nothing like "platform firmware support for S2I".  IOW, that check
+> would always return "false".
+>
+> What you really need to know is if the given particular transition is S2I.
+
+Maybe a helper based on FADT flag and _DSM can do this thing?
+
+Kai-Heng
+
+
