@@ -2,246 +2,218 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1789CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52496C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E7C2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KHEHVvcl"
+	by mail.kernel.org (Postfix) with ESMTP id 24B2A21019
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfEIQn0 (ORCPT
+        id S1726761AbfEIQpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:43:26 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:54204 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfEIQn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:43:26 -0400
-Received: by mail-it1-f193.google.com with SMTP id m141so3297596ita.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ri3CpftuIpT9d0s+IVfuoxut7FIO9KJuWpxsKIznmbU=;
-        b=KHEHVvclKxX3b4VEd9rqQSKIfc/VB1DG46AiuqoQO6MmdzqKPChzqIjaWeLi8WZuSN
-         qg3vWPQpJh8P12dR1aDpy55Qfcft4l5n6tx87xVhtWFaRWgJ0e6J78POHm0EgkWmRDZy
-         cpd6tWNs2OYEAKfYsXj+ATze0Cs/+Vxv485d4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ri3CpftuIpT9d0s+IVfuoxut7FIO9KJuWpxsKIznmbU=;
-        b=MPqBIs9EDMfKycFQ+cQyLS//MIuyNUDepHE8WfrFKuMHfQpTekCSAWvl/xOIPya9X0
-         m0NCZS9uBSU7leGoRmOkkGw9WckM+uTEjCOD/wR0jmQ7KCI6D52/azZ3vDNWVdgegG2h
-         JzuQfmZblSBjXOf6ArscIFMZXf+gvewjgAGdT4CLntcXroxMdOcyJsnff9+3M6swKTC7
-         kOi0AUm4mEcnBXvhxUrGlxg3svr0yyb9CyDdwP0qimEo/2SGysjvg7QeOrJCHF8Zm6Cf
-         3+IuKPCY6VVMP8FmWtnxzjh2f1wzu74nzPAA5ceLXgQhLqLtO8hRjeTlk1fecZ6IUxxp
-         A5SA==
-X-Gm-Message-State: APjAAAVVRhXfc4MJSiFUNfx2JHgAqvWQnjFyzlvmbqfhqSuZDEugYOro
-        G6QBel20WQvuG0G4GGNdMHDAmwi2RYRL0IV++kYbzQ==
-X-Google-Smtp-Source: APXvYqzWDnGMynWy3va8bT/rHKkJudfLzib87wLjGrfcxNr6pxPcPCAai2WR2EI/XFW0Fo6VtG3+2XlryAQjvA9Beww=
-X-Received: by 2002:a05:660c:4d0:: with SMTP id v16mr3974611itk.62.1557420205267;
- Thu, 09 May 2019 09:43:25 -0700 (PDT)
+        Thu, 9 May 2019 12:45:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64483 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfEIQpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 12:45:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 09:45:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,450,1549958400"; 
+   d="scan'208";a="170026874"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga002.fm.intel.com with ESMTP; 09 May 2019 09:45:33 -0700
+Subject: [PATCH] mm/huge_memory: Fix vmf_insert_pfn_{pmd, pud}() crash,
+ handle unaligned addresses
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     stable@vger.kernel.org, Piotr Balcer <piotr.balcer@intel.com>,
+        Yan Ma <yan.ma@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Thu, 09 May 2019 09:31:41 -0700
+Message-ID: <155741946350.372037.11148198430068238140.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-References: <20190509120903.28939-1-daniel.vetter@ffwll.ch> <20190509145620.2pjqko7copbxuzth@pathway.suse.cz>
-In-Reply-To: <20190509145620.2pjqko7copbxuzth@pathway.suse.cz>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 9 May 2019 18:43:12 +0200
-Message-ID: <CAKMK7uFTsr1F8nFExTvC7nWFQMcZ7ejh+k_X6E8EcMUaP3e29A@mail.gmail.com>
-Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 4:56 PM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Thu 2019-05-09 14:09:03, Daniel Vetter wrote:
-> > console_trylock, called from within printk, can be called from pretty
-> > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > usually the box is in pretty bad shape at that point already. But it
-> > really doesn't help when then lockdep jumps in and spams the logs,
-> > potentially obscuring the real backtrace we're really interested in.
-> > One case I've seen (slightly simplified backtrace):
-> >
-> >  Call Trace:
-> >   <IRQ>
-> >   console_trylock+0xe/0x60
-> >   vprintk_emit+0xf1/0x320
-> >   printk+0x4d/0x69
-> >   __warn_printk+0x46/0x90
-> >   native_smp_send_reschedule+0x2f/0x40
-> >   check_preempt_curr+0x81/0xa0
-> >   ttwu_do_wakeup+0x14/0x220
-> >   try_to_wake_up+0x218/0x5f0
-> >   pollwake+0x6f/0x90
-> >   credit_entropy_bits+0x204/0x310
-> >   add_interrupt_randomness+0x18f/0x210
-> >   handle_irq+0x67/0x160
-> >   do_IRQ+0x5e/0x130
-> >   common_interrupt+0xf/0xf
-> >   </IRQ>
-> >
-> > This alone isn't a problem, but the spinlock in the semaphore is also
-> > still held while waking up waiters (up() -> __up() -> try_to_wake_up()
-> > callchain), which then closes the runqueue vs. semaphore.lock loop,
-> > and upsets lockdep, which issues a circular locking splat to dmesg.
-> > Worse it upsets developers, since we don't want to spam dmesg with
-> > clutter when the machine is dying already.
-> >
-> > Fix this by creating a prinkt_safe_up() which calls wake_up_process
-> > outside of the spinlock. This isn't correct in full generality, but
-> > good enough for console_lock:
-> >
-> > - console_lock doesn't use interruptible or killable or timeout down()
-> >   calls, hence an up() is the only thing that can wake up a process.
-> >   Hence the process can't get woken and killed and reaped while we try
-> >   to wake it up too.
-> >
-> > - semaphore.c always updates the waiter list while under the spinlock,
-> >   so there's no other races. Specifically another process that races
-> >   with a quick console_lock/unlock while we've dropped the spinlock
-> >   already won't see our own waiter.
-> >
-> > Note that we only have to break the recursion for the semaphore.lock
-> > spinlock of the console_lock. Recursion within various scheduler
-> > related locks is already prevented by the printk_safe_enter/exit pair
-> > in __up_console_sem().
->
-> This is not fully true. printk_safe() helps only when
-> the first try_to_wake_up() is called from printk_safe() context.
->
-> > --- a/kernel/locking/semaphore.c
-> > +++ b/kernel/locking/semaphore.c
-> > @@ -197,6 +197,37 @@ struct semaphore_waiter {
-> >       bool up;
-> >  };
-> >
-> > +/**
-> > + * printk_safe_up - release the semaphore in console_unlock
-> > + * @sem: the semaphore to release
-> > + *
-> > + * Release the semaphore.  Unlike mutexes, up() may be called from any
-> > + * context and even by tasks which have never called down().
-> > + *
-> > + * NOTE: This is a special version of up() for console_unlock only. It is only
-> > + * safe if there are no killable, interruptible or timing out down() calls.
-> > + */
-> > +void printk_safe_up(struct semaphore *sem)
-> > +{
-> > +     unsigned long flags;
-> > +     struct semaphore_waiter *waiter = NULL;
-> > +
-> > +     raw_spin_lock_irqsave(&sem->lock, flags);
-> > +     if (likely(list_empty(&sem->wait_list))) {
-> > +             sem->count++;
-> > +     } else {
-> > +             waiter = list_first_entry(&sem->wait_list,
-> > +                                       struct semaphore_waiter, list);
-> > +             list_del(&waiter->list);
-> > +             waiter->up = true;
-> > +     }
-> > +     raw_spin_unlock_irqrestore(&sem->lock, flags);
-> > +
-> > +     if (waiter) /* protected by being sole wake source */
-> > +             wake_up_process(waiter->task);
->
-> I still do not see how this could help. Let's take the above
-> backtrace as example:
->
->    <IRQ>
->    console_trylock+0xe/0x60
->    vprintk_emit+0xf1/0x320
->    printk+0x4d/0x69
->    __warn_printk+0x46/0x90
->    native_smp_send_reschedule +0x2f/0x40
->    check_preempt_curr+0x81/0xa0
->    ttwu_do_wakeup+0x14/0x220
->    try_to_wake_up+0x218/0x5f0
->    pollwake+0x6f/0x90
->    credit_entropy_bits+0x204/0x310
->    add_interrupt_randomness+0x18f/0x210
->    handle_irq+0x67/0x160
->    do_IRQ+0x5e/0x130
->    common_interrupt+0xf/0xf
->    </IRQ>
->
-> We have the following chain of calls:
->
->   + do_IRQ()
->     ...
->       + try_to_wake_up()    # takes p->pi_lock
->         + ttwu_remote()     # takes rq lock
->           + ttwu_do_wakeup()
->             + check_preempt_curr()
->               + native_smp_send_reschedule()
->                 + __warn_printk()
->                   + printk()
->                     + vprintk_emit()
->                       + console_trylock() # success
->                       + console_unlock()
->                         + up_console_sem()
->                           + up() # wait list in not empty
->                             + __up()
->                               + wake_up_process()
->                                 + try_to_wake_up()
->
-> !BANG! Deadlock on p->pi_lock.
+Starting with commit c6f3c5ee40c1 "mm/huge_memory.c: fix modifying of
+page protection by insert_pfn_pmd()" vmf_insert_pfn_pmd() internally
+calls pmdp_set_access_flags(). That helper enforces a pmd aligned
+@address argument via VM_BUG_ON() assertion.
 
-Hm right ... I only looked at this starting with console_unlock.
+Update the implementation to take a 'struct vm_fault' argument directly
+and apply the address alignment fixup internally to fix crash signatures
+like:
 
-> It does not matter if the nested try_to_wake_up() was called
-> under sem->lock or outside.
->
-> By other words. The patch removed one lockdep warning. But it just
-> just delayed the deadlock. It will not happen on sem->lock but
-> later on p->pi_lock.
->
-> I am repeating myself. But IMHO, the only solution is to introduce
-> printk deferred context and use it in WARN_DEFERRED().
+    kernel BUG at arch/x86/mm/pgtable.c:515!
+    invalid opcode: 0000 [#1] SMP NOPTI
+    CPU: 51 PID: 43713 Comm: java Tainted: G           OE     4.19.35 #1
+    [..]
+    RIP: 0010:pmdp_set_access_flags+0x48/0x50
+    [..]
+    Call Trace:
+     vmf_insert_pfn_pmd+0x198/0x350
+     dax_iomap_fault+0xe82/0x1190
+     ext4_dax_huge_fault+0x103/0x1f0
+     ? __switch_to_asm+0x40/0x70
+     __handle_mm_fault+0x3f6/0x1370
+     ? __switch_to_asm+0x34/0x70
+     ? __switch_to_asm+0x40/0x70
+     handle_mm_fault+0xda/0x200
+     __do_page_fault+0x249/0x4f0
+     do_page_fault+0x32/0x110
+     ? page_fault+0x8/0x30
+     page_fault+0x1e/0x30
 
-One thing to keep in mind is that the kernel is already dying, and
-things will come crashing down later on (I've seen this only in dmesg
-tails capture in pstore in our CI, i.e. the box died for good). I just
-want to make sure that the useful information isn't overwritten by
-more dmesg splats that happen as a consequence of us somehow trying to
-run things on an offline cpu. Once console_unlock has completed in
-your above backtrace and the important stuff has gone out I'm totally
-fine with the kernel just dying. Pulling the wake_up_process out from
-under the semaphore.lock is enough to prevent lockdep from dumping
-more stuff while we're trying to print the important things, and I
-think the untangling of the locking hiararchy is useful irrespective
-of this lockdep splat. Plus Peter doesn't sound like he likes to roll
-out more printk_deferred kind of things.
+Cc: <stable@vger.kernel.org>
+Fixes: c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()")
+Reported-by: Piotr Balcer <piotr.balcer@intel.com>
+Tested-by: Yan Ma <yan.ma@intel.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Chandan Rajendra <chandan@linux.ibm.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
 
-But if you think I should do the printk_deferred thing too I can look
-into that. Just not quite sure what that's supposed to look like now.
--Daniel
+ drivers/dax/device.c    |    6 ++----
+ fs/dax.c                |    6 ++----
+ include/linux/huge_mm.h |    6 ++----
+ mm/huge_memory.c        |   16 ++++++++++------
+ 4 files changed, 16 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index e428468ab661..996d68ff992a 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -184,8 +184,7 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
+ 
+ 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+ 
+-	return vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd, *pfn,
+-			vmf->flags & FAULT_FLAG_WRITE);
++	return vmf_insert_pfn_pmd(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
+ }
+ 
+ #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+@@ -235,8 +234,7 @@ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+ 
+ 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+ 
+-	return vmf_insert_pfn_pud(vmf->vma, vmf->address, vmf->pud, *pfn,
+-			vmf->flags & FAULT_FLAG_WRITE);
++	return vmf_insert_pfn_pud(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
+ }
+ #else
+ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+diff --git a/fs/dax.c b/fs/dax.c
+index e5e54da1715f..83009875308c 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1575,8 +1575,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
+ 		}
+ 
+ 		trace_dax_pmd_insert_mapping(inode, vmf, PMD_SIZE, pfn, entry);
+-		result = vmf_insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn,
+-					    write);
++		result = vmf_insert_pfn_pmd(vmf, pfn, write);
+ 		break;
+ 	case IOMAP_UNWRITTEN:
+ 	case IOMAP_HOLE:
+@@ -1686,8 +1685,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+ 		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
+ #ifdef CONFIG_FS_DAX_PMD
+ 	else if (order == PMD_ORDER)
+-		ret = vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd,
+-			pfn, true);
++		ret = vmf_insert_pfn_pmd(vmf, pfn, FAULT_FLAG_WRITE);
+ #endif
+ 	else
+ 		ret = VM_FAULT_FALLBACK;
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 381e872bfde0..7cd5c150c21d 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -47,10 +47,8 @@ extern bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+ extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			unsigned long addr, pgprot_t newprot,
+ 			int prot_numa);
+-vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+-			pmd_t *pmd, pfn_t pfn, bool write);
+-vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+-			pud_t *pud, pfn_t pfn, bool write);
++vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
++vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+ enum transparent_hugepage_flag {
+ 	TRANSPARENT_HUGEPAGE_FLAG,
+ 	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 165ea46bf149..4310c6e9e5a3 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -793,11 +793,13 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 		pte_free(mm, pgtable);
+ }
+ 
+-vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+-			pmd_t *pmd, pfn_t pfn, bool write)
++vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+ {
++	unsigned long addr = vmf->address & PMD_MASK;
++	struct vm_area_struct *vma = vmf->vma;
+ 	pgprot_t pgprot = vma->vm_page_prot;
+ 	pgtable_t pgtable = NULL;
++
+ 	/*
+ 	 * If we had pmd_special, we could avoid all these restrictions,
+ 	 * but we need to be consistent with PTEs and architectures that
+@@ -820,7 +822,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 
+ 	track_pfn_insert(vma, &pgprot, pfn);
+ 
+-	insert_pfn_pmd(vma, addr, pmd, pfn, pgprot, write, pgtable);
++	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
+ 	return VM_FAULT_NOPAGE;
+ }
+ EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
+@@ -869,10 +871,12 @@ static void insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+ 	spin_unlock(ptl);
+ }
+ 
+-vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+-			pud_t *pud, pfn_t pfn, bool write)
++vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+ {
++	unsigned long addr = vmf->address & PUD_MASK;
++	struct vm_area_struct *vma = vmf->vma;
+ 	pgprot_t pgprot = vma->vm_page_prot;
++
+ 	/*
+ 	 * If we had pud_special, we could avoid all these restrictions,
+ 	 * but we need to be consistent with PTEs and architectures that
+@@ -889,7 +893,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+ 
+ 	track_pfn_insert(vma, &pgprot, pfn);
+ 
+-	insert_pfn_pud(vma, addr, pud, pfn, pgprot, write);
++	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
+ 	return VM_FAULT_NOPAGE;
+ }
+ EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
 
-
-
-
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
