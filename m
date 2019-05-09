@@ -2,131 +2,202 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59F9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20075C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF20206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:13:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDkwyiO6"
+	by mail.kernel.org (Postfix) with ESMTP id E1DEC206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557393255;
+	bh=O0H9VMAqC7wNghzyMsp+TfEzir01DKrhvxZzqGjWN0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tc/KGbZmxPmWcA8aLVgUvjm5SMG8tbnXEWlRI5AOvmBGLjjEHbha4qOefkgEEXtDC
+	 QSIpqSujy/wMn0snxMG5J0XiSRdwNip1lBuGnCkN7O79kyorYSkdIMaamSqikJAL16
+	 XgQlF7oeWIfbazMFhrVQLE8yeBNe5tLL8p0Je2Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEIJNA (ORCPT
+        id S1726567AbfEIJON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:13:00 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52184 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfEIJNA (ORCPT
+        Thu, 9 May 2019 05:14:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46872 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfEIJON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:13:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o189so2268800wmb.1;
-        Thu, 09 May 2019 02:12:58 -0700 (PDT)
+        Thu, 9 May 2019 05:14:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so1300680wrr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=UcO77C1d2oPlXYkp6CkiRlKtVOMkq5wxTIYeAm1syxo=;
-        b=CDkwyiO65SSVbxmKPkBw+7CcNdsw7cmG/lXhK57rnCu5hWuqjioqvSYy2l9aUikO5M
-         /nW8VgaATNCzJhdIcK9nIZxH0TZfYz86n0vwCqqh1C//E0g2pG660CNOtzmxqm6EqpgK
-         ZWIpx5vT9WYGFEmAXUpEgd/buHjfmaAOtX6UH2Bw+XR37DkBzqcVhOmXL2ZHV4oI4jxf
-         Q6v6TKLWoy9BL+/a+HF5QnTS14Sj1q9oOGmb1RYruBTgAgXTxEzipUKxBtN49pQAYrNG
-         4uZj/gIv9bT4vK48zVMSQsSJ5yDQ1b2WgQORXIz4ZaauynohR8iJft+JXpAWii7StqKO
-         1cXQ==
+        bh=n2PPgaUDt8nIFjgJXkfdOKyrT6Vwlbh1gjpRTaotzks=;
+        b=hwMlt/AKgtqLaf9ArLn40hZZ5E8ymQ7HSQNLkVbJyelwJMe4sETPbGG2R43uLUyqc/
+         aBbUco3MEqXYCQijTsMFakWP/2XAzeMWO/iOG5gUUvqdCjAIfD+b6DMtfqIuoN+XQfin
+         nJ6dIl6Cf4qrK5Pypb0iYdkj61+kgJy941imXuadeeXr0t39TDhH+k7Mp9ZJwqeK/pV6
+         cN9/iIdakQ8y117VeCQAkf16ufro40Efy7Dnt/RmcJ4kE4KGiPEZbeqJRVS0GeeIJPiT
+         X7u0esrch7R96AmmGH4o86HfqDFkI7Hfc9S7drvW2c1v1D3e4o7dvvzQBKxKaAWHjmI6
+         Ws0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UcO77C1d2oPlXYkp6CkiRlKtVOMkq5wxTIYeAm1syxo=;
-        b=GHbMDfYvEaa6C85q8xjApQegAkKhNKpwdC6JFwukJP2D41N3ADfvFSiMwiftpU/ygr
-         dLYpYxEnSca9u0vi66vbWGvoDKqsVyeThGPIR03kQD/CGLY5w4MGmTulB5MjGCxF2Gla
-         ljcySJ0VOnSWMm4vEDeCukIvofeQTZd3ilhOOxk8s8JGWkNcC859OcfM54ZHSskaH5WA
-         jwJnUC3zsiy0HYpbnjicb+GnVje5Lr4GZFK/K7p+AkbCLCy8qFhd4kM0oRWYVtmPbkf+
-         P6TvvNujlFahf63BlUDRRGOr3NnnSdPlmdV0s1BMDCaqUAlUMOY3qIpgK0Yogdff0VQd
-         ytPw==
-X-Gm-Message-State: APjAAAX1QshsvAAJyC1SghQ8O+4OlEpkBzNraqZVk6jqHAYEmvp3PICF
-        fDGYMpB/NdnioOKjYXfDtYo=
-X-Google-Smtp-Source: APXvYqw0VKhI0WziMTaFb1wtWXZnzZOn5XxmOI7BEJXN6voxMBVpcjaeQu+MCIZq24v6HE7IT31/cQ==
-X-Received: by 2002:a1c:b756:: with SMTP id h83mr1888506wmf.64.1557393177619;
-        Thu, 09 May 2019 02:12:57 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id e8sm4815404wrc.34.2019.05.09.02.12.56
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n2PPgaUDt8nIFjgJXkfdOKyrT6Vwlbh1gjpRTaotzks=;
+        b=MFMmH3emzwJp27tZPUTO5AmvkrrMvqAoJcOUc9yEI7+PUYQxxNsMHfSbOs4MqozO6d
+         /zTR7Sr55j5l5eHm0+CWv7OSkGnp1mLb/4PM0nSHr+krh2az63pYb9v44SO2yrHbRIQ3
+         Xrx5dnchMknVR/eynHeSUQNWk/NznFcRx7vAHAv0YTw0QzHUHaUHf4rAUs6iz8iFnv7p
+         x/p86ctnuy/v1gMyWB0DSgsoqREkmfgkb+VEiQdwY074Cxvn/cv2dIYZiIABJbxDYaxf
+         Qy49yWEZanL8SEWZ2ehR6k1F7ugF+Gdb9MmixiqHQiZjbL1E2cIX1oD2LVnyyoxJjDU0
+         nQmg==
+X-Gm-Message-State: APjAAAWu0c/xLirK2Dg4iZAB5yK2i6WfrtghK4wjm8wPbDIyZnWZiku2
+        SOwQsnHVNs8PpMGF+8RsU2I=
+X-Google-Smtp-Source: APXvYqyRc3+WzUDnhwD75Kzy72WIIdZx8YAYSn0peY8hJ30tcz3PJzECiVySH3e5IWTwDgMar2jsgQ==
+X-Received: by 2002:adf:fb11:: with SMTP id c17mr2083625wrr.237.1557393251561;
+        Thu, 09 May 2019 02:14:11 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id n1sm1397371wmc.19.2019.05.09.02.14.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 02:12:56 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:12:55 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Fam Zheng <fam@euphon.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
-Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
-Message-ID: <20190509091255.GB15331@stefanha-x1.localdomain>
-References: <20190502114801.23116-1-mlevitsk@redhat.com>
- <20190503121838.GA21041@lst.de>
- <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
+        Thu, 09 May 2019 02:14:10 -0700 (PDT)
+Date:   Thu, 9 May 2019 11:14:08 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [PATCH v7 2/6] uaccess: Add non-pagefault user-space read
+ functions
+Message-ID: <20190509091408.GA90202@gmail.com>
+References: <155732230159.12756.15040196512285621636.stgit@devnote2>
+ <155732233411.12756.16633189392389986702.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <155732233411.12756.16633189392389986702.stgit@devnote2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +static __always_inline long
+> +probe_read_common(void *dst, const void __user *src, size_t size)
+> +{
+> +	long ret;
+> +
+> +	pagefault_disable();
+> +	ret = __copy_from_user_inatomic(dst, src, size);
+> +	pagefault_enable();
+> +
+> +	return ret ? -EFAULT : 0;
+> +}
 
-On Mon, May 06, 2019 at 12:04:06PM +0300, Maxim Levitsky wrote:
-> On top of that, it is expected that newer hardware will support the PASID based
-> device subdivision, which will allow us to _directly_ pass through the
-> submission queues of the device and _force_ us to use the NVME protocol for the
-> frontend.
+Empty line before return statement: good.
 
-I don't understand the PASID argument.  The data path will be 100%
-passthrough and this driver won't be necessary.
+> +long __weak probe_user_read(void *dst, const void __user *src, size_t size)
+> +    __attribute__((alias("__probe_user_read")));
+> +
+> +long __probe_user_read(void *dst, const void __user *src, size_t size)
+> +{
+> +	long ret = -EFAULT;
+> +	mm_segment_t old_fs = get_fs();
+> +
+> +	set_fs(USER_DS);
+> +	if (access_ok(src, size))
+> +		ret = probe_read_common(dst, src, size);
+> +	set_fs(old_fs);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(probe_user_read);
 
-In the meantime there is already SPDK for users who want polling.  This
-driver's main feature is that the host can still access the device at
-the same time as VMs, but I'm not sure that's useful in
-performance-critical use cases and for non-performance use cases this
-driver isn't necessary.
+No empty line before return statement: not good.
 
-Stefan
+> +long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+> +			      long count)
+> +{
+> +	mm_segment_t old_fs = get_fs();
+> +	long ret;
+> +
+> +	if (unlikely(count <= 0))
+> +		return 0;
+> +
+> +	set_fs(USER_DS);
+> +	pagefault_disable();
+> +	ret = strncpy_from_user(dst, unsafe_addr, count);
+> +	pagefault_enable();
+> +	set_fs(old_fs);
+> +	if (ret >= count) {
+> +		ret = count;
+> +		dst[ret - 1] = '\0';
+> +	} else if (ret > 0)
+> +		ret++;
+> +	return ret;
+> +}
 
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
+Ditto. Also unbalanced curly braces.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +/**
+> + * strnlen_unsafe_user: - Get the size of a user string INCLUDING final NUL.
+> + * @unsafe_addr: The string to measure.
+> + * @count: Maximum count (including NUL character)
+> + *
+> + * Get the size of a NUL-terminated string in user space without pagefault.
+> + *
+> + * Returns the size of the string INCLUDING the terminating NUL.
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzT7xcACgkQnKSrs4Gr
-c8h67Qf/cCzGWh6iM657Q87QZaDIfXuEdFC5VBJt+JUTAJrD1K+vJeppmlITSNe9
-7i6nrm+Y7G2icJW5PZmv7Ym7Pl9na4VDNU+G13f/ErGEniwuY8YdvW5VyO7v8Ilo
-ShnXoNT6DY0yhSi7TZalmpq/o9GAw/i0A/QEoMs89A1jQgcnbYZjXemlRTuy+RaT
-NcXQxGSVvjW3QXT/qSiwD2GgeNVWbGTp5pCFME/GBY5tlad9blpJJIKkQQLHyhdW
-U/UqokQr4hAbb1C1W+Y4nzQsGaHxB8AN+mQoD3luyDs0qqYNeHLiQCAm3mXdRna5
-A/tkfOjwvZxT/OhJqWDcjIHB9NsWmA==
-=YaAX
------END PGP SIGNATURE-----
+These phrases exist:
 
---qlTNgmc+xy1dBmNv--
+ 'Terminating NULL'
+ 'NULL character'
+
+And we also sometimes talk about 'nil' - but I don't think there's such 
+thing as a 'NUL character'?
+
+I realize that this was probably cloned from existing lib/strnlen_user.c 
+code, but still. ;-)
+
+> + *
+> + * If the string is too long, returns a number larger than @count. User
+> + * has to check the return value against "> count".
+> + * On exception (or invalid count), returns 0.
+> + *
+> + * Unlike strnlen_user, this can be used from IRQ handler etc. because
+> + * it disables pagefaults.
+
+'can be used from IRQ handlers'
+
+> + */
+> +long strnlen_unsafe_user(const void __user *unsafe_addr, long count)
+> +{
+> +	mm_segment_t old_fs = get_fs();
+> +	int ret;
+> +
+> +	set_fs(USER_DS);
+> +	pagefault_disable();
+> +	ret = strnlen_user(unsafe_addr, count);
+> +	pagefault_enable();
+> +	set_fs(old_fs);
+> +	return ret;
+> +}
+
+Same problem as before.
+
+Thanks,
+
+	Ingo
