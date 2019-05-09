@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF73C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42AEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0995D2183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5F02184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427525;
-	bh=n6R/SMkEDuB4xZ6Ddy+01pQ8t9J5hnVCEn33UDP+TM8=;
+	s=default; t=1557427530;
+	bh=aunbj7sVZYdk5uShv0beEqqx7aXlJ8EvIbMw5RVle4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7s8a4Q70HxwwraNxve3rsquFgD8BhrmKKJPW6HKr9xyk7KJf6kP1Ru3nG1lptz+u
-	 rrC1rxlUGfp/JpoAasQfNOj10C90vP3y7OePc9Mh5O3H7KN763F1O7QVg3HEBSLjEk
-	 y42Bm2MzgmbaUPM5PhTTU5TgeaROOYPQ/DoUpM4U=
+	b=bLsL8+WfIR6V/6PJaNTwUpw7yH5VrHF4vITE9BpgOfR3s+PThQt07uhpekCx4T1nE
+	 5BvK+vgDcuHevSF/nB4hg3fNlrYKg3LglLFhairyYsaEimiejRWPnTvF6dIgISxkCg
+	 /NB0hVfcWZTQsX7vmU/zzG//WoEOQkPx+6Erzfqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfEISpY (ORCPT
+        id S1727334AbfEISp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727281AbfEISpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:21 -0400
+        id S1726711AbfEISpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BFE217D6;
-        Thu,  9 May 2019 18:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0BB62183E;
+        Thu,  9 May 2019 18:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427520;
-        bh=n6R/SMkEDuB4xZ6Ddy+01pQ8t9J5hnVCEn33UDP+TM8=;
+        s=default; t=1557427523;
+        bh=aunbj7sVZYdk5uShv0beEqqx7aXlJ8EvIbMw5RVle4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cghv0FKPxEt2BtnmshQGM1ASRgHvjE/37zZKJUExYcTcN7D4bG9o+udyJ+DjnLApm
-         pPotNxgDV35eTMqzTSpdBv0KUKT/Fj+2WJjjHPdMFUrpssF2c5tg0TVGwKQprYNnpO
-         lgdSajVZbGIcQymyzmF90hCpjfB1+vu9664svRlo=
+        b=XxwrJSurtG2YA62hASCbGIFTMjV8bM4LSSukQ2vR6je3HLKAtZMPU/SN+HqrUI4eC
+         2mkHJb7rRZwAV7fStH9KPeu1k6SAIV229LL7POtOC0CbloMgfpa5OWo7fECGXbRfYj
+         xk3HwZXaDp0mk7FZxiEcp0JUOX+dWCvWLIZsL/zM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chong Qiao <qiaochong@loongson.cn>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/42] MIPS: KGDB: fix kgdb support for SMP platforms.
-Date:   Thu,  9 May 2019 20:42:02 +0200
-Message-Id: <20190509181255.318076267@linuxfoundation.org>
+        stable@vger.kernel.org, Annaliese McDermond <nh6z@nh6z.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 14/42] ASoC: tlv320aic32x4: Fix Common Pins
+Date:   Thu,  9 May 2019 20:42:03 +0200
+Message-Id: <20190509181255.515469856@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -66,51 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ab8a6d821179ab9bea1a9179f535ccba6330c1ed ]
+[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
 
-KGDB_call_nmi_hook is called by other cpu through smp call.
-MIPS smp call is processed in ipi irq handler and regs is saved in
- handle_int.
-So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
- to kgdb_cpu_enter.
+The common pins were mistakenly not added to the DAPM graph.
+Adding these pins will allow valid graphs to be created.
 
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: QiaoChong <qiaochong@loongson.cn>
+Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/kgdb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/tlv320aic32x4.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
-index eb6c0d582626b..2c1e30ca7ee4e 100644
---- a/arch/mips/kernel/kgdb.c
-+++ b/arch/mips/kernel/kgdb.c
-@@ -33,6 +33,7 @@
- #include <asm/processor.h>
- #include <asm/sigcontext.h>
- #include <linux/uaccess.h>
-+#include <asm/irq_regs.h>
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index e694f5f04eb90..628621fc3386c 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -462,6 +462,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
+ 	SND_SOC_DAPM_INPUT("IN2_R"),
+ 	SND_SOC_DAPM_INPUT("IN3_L"),
+ 	SND_SOC_DAPM_INPUT("IN3_R"),
++	SND_SOC_DAPM_INPUT("CM_L"),
++	SND_SOC_DAPM_INPUT("CM_R"),
+ };
  
- static struct hard_trap_info {
- 	unsigned char tt;	/* Trap type code for MIPS R3xxx and R4xxx */
-@@ -214,7 +215,7 @@ static void kgdb_call_nmi_hook(void *ignored)
- 	old_fs = get_fs();
- 	set_fs(get_ds());
- 
--	kgdb_nmicallback(raw_smp_processor_id(), NULL);
-+	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
- 
- 	set_fs(old_fs);
- }
+ static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
 -- 
 2.20.1
 
