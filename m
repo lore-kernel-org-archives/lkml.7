@@ -2,122 +2,90 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B45CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FEBC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750F721019
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB495217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:43:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JkDquylz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfEIRn1 (ORCPT
+        id S1726866AbfEIRnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:43:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEIRn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:43:27 -0400
-Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A989A20675;
-        Thu,  9 May 2019 17:43:23 +0000 (UTC)
-Date:   Thu, 9 May 2019 13:43:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
+        Thu, 9 May 2019 13:43:45 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:36653 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726657AbfEIRno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:43:44 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 744E31691A;
+        Thu,  9 May 2019 13:43:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 09 May 2019 13:43:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mFDG90
+        yq4F2EnWFF1ZS80ux8BXFvjcThICBapXjtjfk=; b=JkDquylzTNP+K6EFu6O2B2
+        j5Ln2AzammWx0qPNjWIGBiL+UEh8Wa28ad4ebNoQJBL0uajcHLDFIGo2zsAmXsqY
+        mIUJW2d0h8SMoeqbJsPz/fU9ARL55uX/6rw1Y9oFQLlKnUPNdxcnlcLrnzSv6a5F
+        TSTybgQ4ugXUMrWnnpdBrmNGe0boE1ukxaUczYEFeivnMtxIEGRWj+8PsiN1Dl21
+        KvjFU5UwhLYXBAYpkthmyOR+6ly/YGYa5588CRNtiR/TeIjOiMOs4ShsPzePuh0u
+        lCiQqTv0sZET1AcaCwewG6EmZ4N0SS0lIQDdLU6ZiV/oicLw3BBb51YvRo7nI2OQ
+        ==
+X-ME-Sender: <xms:zWbUXFREvd9H9QOQNGYk54OvDXquwI5sgfryfmXjjbiGlkK7pYy1JQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeeigdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepuddtle
+    drieehrdeffedrudeftdenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehi
+    ughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:zWbUXJPeqVfufUxXoIV-7kTnS3BRObVeoUZjhyGKnxNsr7S5Rl1N1g>
+    <xmx:zWbUXLQE-bsINC6iyqM-QUk9HJe9PdjtdVEXY8X-JjWhoCKhDd2KCA>
+    <xmx:zWbUXPNyeWU0h0Drq_C9ULOb_3fAk064Qa1SAh7dchXOaV6IvoKrrg>
+    <xmx:z2bUXMScrTY9h0mguX7t-bMFPpUC9MByfntmH7XBmswuru2Q-badDQ>
+Received: from localhost (bzq-109-65-33-130.red.bezeqint.net [109.65.33.130])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3282C80065;
+        Thu,  9 May 2019 13:43:40 -0400 (EDT)
+Date:   Thu, 9 May 2019 20:43:38 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190509174316.pzuakeu657g3fnlm@home.goodmis.org>
-References: <20190508074901.982470324@infradead.org>
- <20190508080612.721269814@infradead.org>
- <20190508115416.nblx7c2kocidpytm@treble>
- <20190508120416.GL2589@hirez.programming.kicks-ass.net>
- <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
- <20190508184848.qerg3flv3ej3xsev@treble>
- <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
- <20190509081431.GO2589@hirez.programming.kicks-ass.net>
- <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Simon Schricker <sschricker@suse.de>,
+        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 2/2] PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs
+ interface
+Message-ID: <20190509174338.GA24432@splinter>
+References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
+ <1762575.ER2xjzr9E1@aspire.rjw.lan>
+ <20190509102315.GA31824@splinter>
+ <1627338.1fd8ofggM8@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1627338.1fd8ofggM8@kreacher>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 09:20:06AM -0700, Andy Lutomirski wrote:
-> > +END(call_to_exception_trampoline)
-> > --- a/arch/x86/kernel/kprobes/core.c
-> > +++ b/arch/x86/kernel/kprobes/core.c
-> > @@ -731,29 +731,8 @@ asm(
-> >    ".global kretprobe_trampoline\n"
-> >    ".type kretprobe_trampoline, @function\n"
-> >    "kretprobe_trampoline:\n"
-> > -    /* We don't bother saving the ss register */
-> > -#ifdef CONFIG_X86_64
-> > -    "    pushq %rsp\n"
-> > -    "    pushfq\n"
-> > -    SAVE_REGS_STRING
-> > -    "    movq %rsp, %rdi\n"
-> > -    "    call trampoline_handler\n"
-> > -    /* Replace saved sp with true return address. */
-> > -    "    movq %rax, 19*8(%rsp)\n"
-> > -    RESTORE_REGS_STRING
-> > -    "    popfq\n"
-> > -#else
-> > -    "    pushl %esp\n"
-> > -    "    pushfl\n"
-> > -    SAVE_REGS_STRING
-> > -    "    movl %esp, %eax\n"
-> > -    "    call trampoline_handler\n"
-> > -    /* Replace saved sp with true return address. */
-> > -    "    movl %eax, 15*4(%esp)\n"
-> > -    RESTORE_REGS_STRING
-> > -    "    popfl\n"
-> > -#endif
-> > -    "    ret\n"
-> > +    "push trampoline_handler\n"
-> > +    "jmp call_to_exception_trampoline\n"
-> >    ".size kretprobe_trampoline, .-kretprobe_trampoline\n"
-> > );
-> 
-> 
-> Potentially minor nit: you’re doing popfl, but you’re not doing TRACE_IRQ_whatever.  This makes me think that you should either add the tracing (ugh!) or you should maybe just skip the popfl.
+On Thu, May 09, 2019 at 07:18:28PM +0200, Rafael J. Wysocki wrote:
+> So does the patch below fix it for you?
 
+Yes. Thanks for the fix. Feel free to add my tag:
 
-Note, kprobes (and ftrace for that matter) are not saving flags for
-interrupts, but because it must not modify the sign, zero and carry flags.
-
--- Steve
-
+Tested-by: Ido Schimmel <idosch@mellanox.com>
