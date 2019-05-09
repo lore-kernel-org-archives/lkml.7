@@ -2,99 +2,88 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F95C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E97C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF7521479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:09:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mOhCkhFl"
+	by mail.kernel.org (Postfix) with ESMTP id A906A21479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557411163;
+	bh=gvXtCwB0sLdrpt5goC5N5snphtui02QgZflWutuvxYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zu28NW8W1gt8+Nz0qBpBRRF5y0NW3aRZoJR+3bIWPS92cRFp/IXMPvAymkWUuAp8S
+	 RtsBvr1cXCf6MW0V98muyowKeLOQ3bqaeOjsJ75RDUkBaPVjzRhXCTQr/CgqF1AQhV
+	 EV9gZM5xxRHLtEmkst6VnDL/jfQruREYYDSql8Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfEIOJC (ORCPT
+        id S1726659AbfEIOMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:09:02 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:26127 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfEIOJC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:09:02 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x49E8mVK014119;
-        Thu, 9 May 2019 23:08:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x49E8mVK014119
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557410929;
-        bh=EZMLary+S+9G6cLchLp//JUrbW4OA+W27VKESK3gpQQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mOhCkhFl5O8yiIT+wwl0Y92WkVEr496DrkVp96FpOjHU+bVqIEhGzEBJAKz477626
-         REEq0wRshE0LNDOq+e40XhyHP5Uxu9TUZT2fDHSawEHhyh9F6yKNe1QsEMZg8se4Fg
-         8hq+gaxSNRblDwzAzbLI6rCfFaWB+0kxbOrahHkKkz3TF8WAVO6YlyYCigEfD/rtXU
-         dRLfwPj80JvcmojwnWptihjUPX3e6p8LuQ08PHBV4IZSktNPShrJ6PSqvSsjjHcWrh
-         QNmGn6WJh/SNI3JByG7726vOALdFvnWosyvoaZVl/cmZoWyeeEXA0SqltXLocLdD5y
-         Ey2mL/VmTjJQA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id o10so1467280vsp.12;
-        Thu, 09 May 2019 07:08:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAVHDx3AEvOARZwSKvJ9KmQN5iX0YgnWn93ah/3RCY0b9BCK0xmE
-        MCYJNR+mURXSaGJDC5O6HPUFCxJ3SkhEX75MmHw=
-X-Google-Smtp-Source: APXvYqyXqKJ3SsM3Ps8XtfCp7GyYivlSpdHI1xek9RndBNDO1WT3kBOSIoE8oM8e7mGqFya2uRNXk1RdUg629T6kvyw=
-X-Received: by 2002:a67:f109:: with SMTP id n9mr2198293vsk.181.1557410927513;
- Thu, 09 May 2019 07:08:47 -0700 (PDT)
+        Thu, 9 May 2019 10:12:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfEIOMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:12:42 -0400
+Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FC7C2085A;
+        Thu,  9 May 2019 14:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557411161;
+        bh=gvXtCwB0sLdrpt5goC5N5snphtui02QgZflWutuvxYw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W8Cm60yZvIcQo+buFJ5EdbA/DOIxuuSxZIrEx1Q1iwB3KNptgpqKfLr2ot/qAwKN2
+         2RHmLiDfnuJywOuNzxA96yC/TC1gsyNpvWbVCp+Hq4Q6FTYDA0+Frw0RI8LazilqaW
+         nu7sj+DjlZls42Kad5oqlFclWRYZTxat/+YKL+ZA=
+Date:   Thu, 9 May 2019 09:12:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Frederick Lawler <fred@fredlawl.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, lukas@wunner.de,
+        andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
+        mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com
+Subject: Re: [PATCH v2 4/9] PCI/LINK: Prefix dmesg logs with PCIe service name
+Message-ID: <20190509141240.GB88424@google.com>
+References: <20190503035946.23608-1-fred@fredlawl.com>
+ <20190503035946.23608-5-fred@fredlawl.com>
 MIME-Version: 1.0
-References: <1557146820-13059-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1557146820-13059-1-git-send-email-krzk@kernel.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 9 May 2019 23:08:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATFKHmgi+7LktGJg9FRJr3BoZb=r+OdPE4rf=q1WE0j3g@mail.gmail.com>
-Message-ID: <CAK7LNATFKHmgi+7LktGJg9FRJr3BoZb=r+OdPE4rf=q1WE0j3g@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: kbuild: Add pattern for scripts/*vmlinux*
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503035946.23608-5-fred@fredlawl.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 9:47 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> scripts/link-vmlinux.sh is part of kbuild so extend the pattern to match
-> any vmlinux related scripts.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Applied to linux-kbuild.
-
-Thanks.
-
-
+On Thu, May 02, 2019 at 10:59:41PM -0500, Frederick Lawler wrote:
+> bw_notification.c currently does not have any dmesg logs. As the
+> service continues to expand in functionality, prefix logs anyways.
+> 
+> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c61c49dd3643..aa0a61c7736b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8523,6 +8523,7 @@ F:        scripts/Kbuild*
->  F:     scripts/Makefile*
->  F:     scripts/basic/
->  F:     scripts/mk*
-> +F:     scripts/*vmlinux*
->  F:     scripts/mod/
->  F:     scripts/package/
->
-> --
-> 2.7.4
->
+>  drivers/pci/pcie/bw_notification.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
+> index d2eae3b7cc0f..a4bb90562cd5 100644
+> --- a/drivers/pci/pcie/bw_notification.c
+> +++ b/drivers/pci/pcie/bw_notification.c
+> @@ -14,6 +14,8 @@
+>   * and warns when links become degraded in operation.
+>   */
+>  
+> +#define dev_fmt(fmt) "BWN: " fmt
 
+I think I'd drop this patch until it's needed.
 
--- 
-Best Regards
-Masahiro Yamada
+>  #include "../pci.h"
+>  #include "portdrv.h"
+>  
+> -- 
+> 2.17.1
+> 
