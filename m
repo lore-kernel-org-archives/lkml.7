@@ -2,114 +2,109 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64499C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4790CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE6F2182B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427537;
-	bh=S0Tt4ZKK6EQYjobmGT2IHopSDVpjcEeO0xmCEx3RX4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOT1AqAGurw8nQHwxQpPnLlts26m28OA9MTC4w00KDFzkHRFatJ4WaQjdqvz/sPSt
-	 UgMyxegkLnOQFBZUUc1t4RP/QNCcGSceVpZPEpiJVRGEnRq+5IoMXdZqqHzCGWP0os
-	 5jxLpalsIz4GA/3ti2C3VnOe8S8y73r2Cc7v4JWc=
+	by mail.kernel.org (Postfix) with ESMTP id 24E8221848
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfEISpf (ORCPT
+        id S1727392AbfEISpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38368 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbfEISpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726892AbfEISpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:36 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C7C2183E;
-        Thu,  9 May 2019 18:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427530;
-        bh=S0Tt4ZKK6EQYjobmGT2IHopSDVpjcEeO0xmCEx3RX4o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wze+88v6u5xpRPGUt1GHulNjYNC7xrljYPC4OMVbJQuMONrVMm3A02mxm9My/pxsz
-         XV/rAYxQ0CNWLLE3w1iNBmzjauApdEfXHAQ9TRKnEBREhkq2pxi552c47GgW+eqrT+
-         YgiUIlIh052f19Bqecvqkz/fvWOogfHIavLlwNdM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Nelson DSouza <nelson.dsouza@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, tonyj@suse.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/42] perf/x86/intel: Initialize TFA MSR
-Date:   Thu,  9 May 2019 20:42:06 +0200
-Message-Id: <20190509181256.166848807@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
-References: <20190509181252.616018683@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 14F547DCC1;
+        Thu,  9 May 2019 18:45:36 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B130F4A3;
+        Thu,  9 May 2019 18:45:33 +0000 (UTC)
+Date:   Thu, 9 May 2019 13:45:31 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
+        "brgerst@gmail.com" <brgerst@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>
+Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
+Message-ID: <20190509184531.jhinxi2x2pdfaefb@treble>
+References: <20190318153840.906404905@infradead.org>
+ <20190318155140.058627431@infradead.org>
+ <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
+ <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
+ <20190509090058.6554dc81@gandalf.local.home>
+ <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
+ <20190509142902.08a32f20@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190509142902.08a32f20@gandalf.local.home>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 09 May 2019 18:45:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7262457e35dbe239659e62654e56f8ddb814bed ]
+On Thu, May 09, 2019 at 02:29:02PM -0400, Steven Rostedt wrote:
+> On Thu, 9 May 2019 09:51:59 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+> > On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > >
+> > > This patch works. Can I get your Signed-off-by for it?  
+> > 
+> > Yes. Please write some kind of comprehensible commit log for it, but
+> 
+> How's this:
+> 
+> "Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
+> macro converts the conditional to an array index.  This can cause GCC
+> to create horrible code.  When there are nested ifs, the generated code
+> uses register values to encode branching decisions.
+> 
+> Josh Poimboeuf found that replacing the define "if" macro from using
+> the condition as an array index and incrementing the branch statics
+> with an if statement itself, reduced the asm complexity and shrinks the
+> generated code quite a bit.
+> 
+> But this can be simplified even further by replacing the internal if
+> statement with a ternary operator.
+> 
+> Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Stephane reported that the TFA MSR is not initialized by the kernel,
-but the TFA bit could set by firmware or as a leftover from a kexec,
-which makes the state inconsistent.
+Actually, my original fix already went in:
 
-Reported-by: Stephane Eranian <eranian@google.com>
-Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: tonyj@suse.com
-Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/events/intel/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+  37686b1353cf ("tracing: Improve "if" macro code generation")
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 74e26803be5dd..82ddee4ab25fd 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3427,6 +3427,12 @@ static void intel_pmu_cpu_starting(int cpu)
- 
- 	cpuc->lbr_sel = NULL;
- 
-+	if (x86_pmu.flags & PMU_FL_TFA) {
-+		WARN_ON_ONCE(cpuc->tfa_shadow);
-+		cpuc->tfa_shadow = ~0ULL;
-+		intel_set_tfa(cpuc, false);
-+	}
-+
- 	if (x86_pmu.version > 1)
- 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
- 
+But it introduced a regression:
+
+  https://lkml.kernel.org/r/201905040509.iqQ2CrOU%lkp@intel.com
+
+which Linus' patch fixes for some reason.
+
 -- 
-2.20.1
-
-
-
+Josh
