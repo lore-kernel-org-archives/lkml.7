@@ -2,258 +2,289 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32775C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38EBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49E92177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2462177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="aRUvNRxe";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="G1CTAamN"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ot7zEqiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfEIQPH (ORCPT
+        id S1726680AbfEIQQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:15:07 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:30398 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfEIQPG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:15:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1557418507; x=1588954507;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=Avai2N2HSV70DD22u4XXfC2qb00F0NkaQr+r7L19E7c=;
-  b=aRUvNRxer4o8bADAq7NK5wuK6IPuJ5v45TmFGt9GSymrNM/6yaXCf0vK
-   ceag1BaQOHN2grlcetMs84qtCkJp1D9zfxCfGe+7J7veLVbFi+r7gfUEi
-   pexrv0R3QoDAb9jMnSEknISRGwh2vFKR2Z2H152jeJOD7iQmcuteeFNvA
-   HRxgM3DrZ59T9Y0fmYpt/nUU1kgi0d70fMK9YqJb65e37e5516cY7vfGO
-   WwZW9f/SSmOfOkY8mire3CjuLm1gG/QsPCL+ZXiaFCnjiWNyclvRG5pvp
-   YE+RvtGLwN3SFT323jtuWF+5GLLyNZ7B5U2pIkd0zBxfR9hj9FpX22twJ
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,450,1549900800"; 
-   d="scan'208";a="112849883"
-Received: from mail-sn1nam01lp2051.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.51])
-  by ob1.hgst.iphmx.com with ESMTP; 10 May 2019 00:15:06 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+        Thu, 9 May 2019 12:16:25 -0400
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:13892
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726561AbfEIQQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 12:16:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pwjejvgrhcehh0KN1cee17ynSWC0GYKGO3Z4QeHTUms=;
- b=G1CTAamNredwUC70uqA2uL2He9r5/2VbtFhLPjI5AlZqrvWj4XXqqqwDV4dVvfjaFumW/X8NmwTsxI5Cz3MSk2jvDkQVNIrbPj0RcxppXMD+6yqSQMl+u5VG3dDkVzF8cCRWahmqPm3B0cEqvrtrwdY0cHp7I5wo2VFvaml4NNk=
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
- SN6PR04MB3806.namprd04.prod.outlook.com (52.135.81.27) with Microsoft SMTP
+ bh=F6sV3l9uhUqWDawQ7SG1EG9ZIkxAehoJV1ranh5CDMQ=;
+ b=ot7zEqiLQh1WkjG2J2+ZscZHwJpqHHKDE/vRfFubalhVaBVOYOJHyGQlYY7W3fDr3K78qHH/szn3X2wPaDxv2p0/5t4yN+K+agT83T/He/5DVnHoAQ8gMIIGYI+vzJ12Fbg3R/BEdcSBNb8d6jp1V/LFE9+cj7bseXbWtd8vESM=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
+ VI1PR0501MB2864.eurprd05.prod.outlook.com (10.172.12.9) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Thu, 9 May 2019 16:15:02 +0000
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c4f:1604:178c:d974]) by SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c4f:1604:178c:d974%5]) with mapi id 15.20.1856.012; Thu, 9 May 2019
- 16:15:02 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Evan Green <evgreen@chromium.org>, Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>
-CC:     Bart Van Assche <bvanassche@acm.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Alexis Savery <asavery@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] loop: Better discard support for block devices
-Thread-Topic: [PATCH v5 2/2] loop: Better discard support for block devices
-Thread-Index: AQHVBDnQte6MG5PpIUSpV+iVZADCQg==
-Date:   Thu, 9 May 2019 16:15:02 +0000
-Message-ID: <SN6PR04MB45272BA1AE5D477892A08AE486330@SN6PR04MB4527.namprd04.prod.outlook.com>
-References: <20190506182736.21064-1-evgreen@chromium.org>
- <20190506182736.21064-3-evgreen@chromium.org>
+ 15.20.1856.12; Thu, 9 May 2019 16:14:40 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::8810:9799:ab77:9494]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::8810:9799:ab77:9494%2]) with mapi id 15.20.1878.022; Thu, 9 May 2019
+ 16:14:40 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCHv2 10/10] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Topic: [PATCHv2 10/10] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Index: AQHU/6cO6K7GzrI04UmIa4WtImP3kqZiI2OAgAB2PYCAAGjOgA==
+Date:   Thu, 9 May 2019 16:14:40 +0000
+Message-ID: <VI1PR0501MB2271A16961F015FF122EF6E0D1330@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190430224937.57156-1-parav@mellanox.com>
+        <20190430224937.57156-11-parav@mellanox.com>
+        <20190508204605.17294a7d@x1.home> <20190509114917.5e80e88d.cohuck@redhat.com>
+In-Reply-To: <20190509114917.5e80e88d.cohuck@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a5af0fbd-2d72-4d5e-dfdc-08d6d4997df9
+x-ms-office365-filtering-correlation-id: 61781923-287c-4c62-f8ed-08d6d4997093
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB3806;
-x-ms-traffictypediagnostic: SN6PR04MB3806:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB3806BD7B7E2B1EC3881A495D86330@SN6PR04MB3806.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:138;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2864;
+x-ms-traffictypediagnostic: VI1PR0501MB2864:
+x-microsoft-antispam-prvs: <VI1PR0501MB2864A0C0E0ECA62435B6D672D1330@VI1PR0501MB2864.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 003245E729
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39860400002)(396003)(189003)(199004)(81156014)(99286004)(8676002)(86362001)(81166006)(476003)(8936002)(486006)(6506007)(73956011)(66946007)(76116006)(6246003)(54906003)(91956017)(110136005)(66446008)(4326008)(66556008)(66476007)(71200400001)(71190400001)(64756008)(102836004)(53546011)(186003)(305945005)(74316002)(76176011)(446003)(66066001)(26005)(7696005)(229853002)(316002)(9686003)(55016002)(52536014)(3846002)(6116002)(14454004)(6436002)(25786009)(68736007)(33656002)(7736002)(53936002)(5660300002)(72206003)(478600001)(14444005)(256004)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB3806;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(39860400002)(376002)(346002)(51444003)(199004)(189003)(13464003)(7736002)(74316002)(2906002)(305945005)(186003)(33656002)(256004)(102836004)(26005)(11346002)(25786009)(14444005)(68736007)(14454004)(316002)(99286004)(53546011)(54906003)(110136005)(446003)(3846002)(6116002)(6506007)(52536014)(6436002)(81166006)(86362001)(81156014)(4326008)(476003)(486006)(71200400001)(71190400001)(5660300002)(7696005)(66066001)(478600001)(229853002)(64756008)(66446008)(8676002)(66556008)(8936002)(66476007)(9686003)(73956011)(66946007)(76116006)(55016002)(53936002)(6246003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2864;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MuIT2s0eyB27sr+2OCbhXzS8wjgW962Tw0KhCmNTW9idW+XsD9k66+1h6akVDIkikPS6u0j2WfUIvOjKPYdf3IdH3GQkb4cqp1Y9KCu2jTkcvrmrHMwROh2GFEjtgvsdlWvhVuZMDzKWERmhuZjDsOuo8+cXv/Q7iL4yyt66CVIhJIdjc2adgWUy0mhuicaSwel1fFB3KszCNmDcuxjW7mJvedB37UwbjKnL5TATxcy2vN7n0zVDgYx4E/kOr5PIqb/EgeNf77zuJMYHCcdO46a1XnDUd/+MLGFecqduI3R4659nTjfVocjz5wZDoD7sL3+ift/m9C0eJ6gelS5NltgQSZ8DmDqXe9tpcHcKVJyNKb6W3mwS6TZvGoDER+JmGRamzV69nbZc2/PQq1E0t4i3+acIk8KrmkClH3AERRs=
+x-microsoft-antispam-message-info: UsW0M2BY1sifrD2ZXvpDwifhH0/u053LbYAWzV+K8UI5w7wEzGjH8zjrE3Va03tkveggzoDgqxPgC+9/36EnhjhVa8wbnUS+C/9adQaCeCTST/7X4UdYS9cztl92Gu6Cv+kml+oMq/b+V9iX0su9rm02OfniiBQovc32szgzxaI0Oatv1wk0Olh1X64iGYcso4W+rH7wUrG3t4fihctI8/NIzkH26vsNmqTuCYd7iK7+TFp/46TjAtrqcXsMduyPYPLq7C4nUYU49xvyezT6WVh9r5z/XOu6dAH48Zq0GdlsWuvmY8ctmf1KpAeFTVnwvbhacNxrl6fdPk+wBr6uCrfASdaurbn2d9W8/KZyVe1piMiTRfyegfd8op3ZN7yZiXHeis1uSxt7WGSRacBCgriixHY+8B//RYYBRZ4SLFM=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5af0fbd-2d72-4d5e-dfdc-08d6d4997df9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 16:15:02.7095
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61781923-287c-4c62-f8ed-08d6d4997093
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 16:14:40.1883
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3806
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
-On 05/06/2019 11:30 AM, Evan Green wrote:=0A=
-> If the backing device for a loop device is a block device,=0A=
-> then mirror the "write zeroes" capabilities of the underlying=0A=
-> block device into the loop device. Copy this capability into both=0A=
-> max_write_zeroes_sectors and max_discard_sectors of the loop device.=0A=
->=0A=
-> The reason for this is that REQ_OP_DISCARD on a loop device translates=0A=
-> into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This=0A=
-> presents a consistent interface for loop devices (that discarded data=0A=
-> is zeroed), regardless of the backing device type of the loop device.=0A=
-> There should be no behavior change for loop devices backed by regular=0A=
-> files.=0A=
->=0A=
-> While in there, differentiate between REQ_OP_DISCARD and=0A=
-> REQ_OP_WRITE_ZEROES, which are different for block devices,=0A=
-> but which the loop device had just been lumping together, since=0A=
-> they're largely the same for files.=0A=
->=0A=
-> This change fixes blktest block/003, and removes an extraneous=0A=
-> error print in block/013 when testing on a loop device backed=0A=
-> by a block device that does not support discard.=0A=
->=0A=
-> Signed-off-by: Evan Green <evgreen@chromium.org>=0A=
-> ---=0A=
->=0A=
-> Changes in v5:=0A=
-> - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)=0A=
->=0A=
-> Changes in v4:=0A=
-> - Mirror blkdev's write_zeroes into loopdev's discard_sectors.=0A=
->=0A=
-> Changes in v3:=0A=
-> - Updated commit description=0A=
->=0A=
-> Changes in v2: None=0A=
->=0A=
->   drivers/block/loop.c | 57 ++++++++++++++++++++++++++++----------------=
-=0A=
->   1 file changed, 37 insertions(+), 20 deletions(-)=0A=
->=0A=
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c=0A=
-> index bbf21ebeccd3..a147210ed009 100644=0A=
-> --- a/drivers/block/loop.c=0A=
-> +++ b/drivers/block/loop.c=0A=
-> @@ -417,19 +417,14 @@ static int lo_read_transfer(struct loop_device *lo,=
- struct request *rq,=0A=
->   	return ret;=0A=
->   }=0A=
->=0A=
-> -static int lo_discard(struct loop_device *lo, struct request *rq, loff_t=
- pos)=0A=
-> +static int lo_discard(struct loop_device *lo, struct request *rq,=0A=
-> +		int mode, loff_t pos)=0A=
->   {=0A=
-> -	/*=0A=
-> -	 * We use punch hole to reclaim the free space used by the=0A=
-> -	 * image a.k.a. discard. However we do not support discard if=0A=
-> -	 * encryption is enabled, because it may give an attacker=0A=
-> -	 * useful information.=0A=
-> -	 */=0A=
->   	struct file *file =3D lo->lo_backing_file;=0A=
-> -	int mode =3D FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;=0A=
-> +	struct request_queue *q =3D lo->lo_queue;=0A=
->   	int ret;=0A=
->=0A=
-> -	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {=0A=
-> +	if (!blk_queue_discard(q)) {=0A=
->   		ret =3D -EOPNOTSUPP;=0A=
->   		goto out;=0A=
->   	}=0A=
-> @@ -599,8 +594,13 @@ static int do_req_filebacked(struct loop_device *lo,=
- struct request *rq)=0A=
->   	case REQ_OP_FLUSH:=0A=
->   		return lo_req_flush(lo, rq);=0A=
->   	case REQ_OP_DISCARD:=0A=
-> +		return lo_discard(lo, rq,=0A=
-> +			FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, pos);=0A=
-> +=0A=
->   	case REQ_OP_WRITE_ZEROES:=0A=
-> -		return lo_discard(lo, rq, pos);=0A=
-> +		return lo_discard(lo, rq,=0A=
-> +			FALLOC_FL_ZERO_RANGE | FALLOC_FL_KEEP_SIZE, pos);=0A=
-> +=0A=
->   	case REQ_OP_WRITE:=0A=
->   		if (lo->transfer)=0A=
->   			return lo_write_transfer(lo, rq, pos);=0A=
-> @@ -854,6 +854,21 @@ static void loop_config_discard(struct loop_device *=
-lo)=0A=
->   	struct file *file =3D lo->lo_backing_file;=0A=
->   	struct inode *inode =3D file->f_mapping->host;=0A=
->   	struct request_queue *q =3D lo->lo_queue;=0A=
-> +	struct request_queue *backingq;=0A=
-> +=0A=
-> +	/*=0A=
-> +	 * If the backing device is a block device, mirror its zeroing=0A=
-> +	 * capability. REQ_OP_DISCARD translates to a zero-out even when backed=
-=0A=
-> +	 * by block devices to keep consistent behavior with file-backed loop=
-=0A=
-> +	 * devices.=0A=
-> +	 */=0A=
-> +	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {=0A=
-> +		backingq =3D bdev_get_queue(inode->i_bdev);=0A=
-> +		blk_queue_max_discard_sectors(q,=0A=
-> +			backingq->limits.max_write_zeroes_sectors);=0A=
-> +=0A=
-> +		blk_queue_max_write_zeroes_sectors(q,=0A=
-> +			backingq->limits.max_write_zeroes_sectors);=0A=
->=0A=
->   	/*=0A=
->   	 * We use punch hole to reclaim the free space used by the=0A=
-> @@ -861,22 +876,24 @@ static void loop_config_discard(struct loop_device =
-*lo)=0A=
->   	 * encryption is enabled, because it may give an attacker=0A=
->   	 * useful information.=0A=
->   	 */=0A=
-> -	if ((!file->f_op->fallocate) ||=0A=
-> -	    lo->lo_encrypt_key_size) {=0A=
-> +	} else if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {=0A=
->   		q->limits.discard_granularity =3D 0;=0A=
->   		q->limits.discard_alignment =3D 0;=0A=
->   		blk_queue_max_discard_sectors(q, 0);=0A=
->   		blk_queue_max_write_zeroes_sectors(q, 0);=0A=
-> -		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);=0A=
-> -		return;=0A=
-> -	}=0A=
->=0A=
-> -	q->limits.discard_granularity =3D inode->i_sb->s_blocksize;=0A=
-> -	q->limits.discard_alignment =3D 0;=0A=
-> +	} else {=0A=
-> +		q->limits.discard_granularity =3D inode->i_sb->s_blocksize;=0A=
-> +		q->limits.discard_alignment =3D 0;=0A=
-> +=0A=
-> +		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);=0A=
-> +		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);=0A=
-> +	}=0A=
->=0A=
-> -	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);=0A=
-> -	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);=0A=
-> -	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);=0A=
-> +	if (q->limits.max_write_zeroes_sectors)=0A=
-> +		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);=0A=
-> +	else=0A=
-> +		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);=0A=
->   }=0A=
->=0A=
->   static void loop_unprepare_queue(struct loop_device *lo)=0A=
->=0A=
-=0A=
+
+
+> -----Original Message-----
+> From: Cornelia Huck <cohuck@redhat.com>
+> Sent: Thursday, May 9, 2019 4:49 AM
+> To: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Parav Pandit <parav@mellanox.com>; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; kwankhede@nvidia.com; cjia@nvidia.com
+> Subject: Re: [PATCHv2 10/10] vfio/mdev: Synchronize device create/remove
+> with parent removal
+>=20
+> On Wed, 8 May 2019 20:46:05 -0600
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+>=20
+> > On Tue, 30 Apr 2019 17:49:37 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >
+> > > In following sequences, child devices created while removing mdev
+> > > parent device can be left out, or it may lead to race of removing
+> > > half initialized child mdev devices.
+> > >
+> > > issue-1:
+> > > --------
+> > >        cpu-0                         cpu-1
+> > >        -----                         -----
+> > >                                   mdev_unregister_device()
+> > >                                     device_for_each_child()
+> > >                                       mdev_device_remove_cb()
+> > >                                         mdev_device_remove()
+> > > create_store()
+> > >   mdev_device_create()                   [...]
+> > >     device_add()
+> > >                                   parent_remove_sysfs_files()
+> > >
+> > > /* BUG: device added by cpu-0
+> > >  * whose parent is getting removed
+> > >  * and it won't process this mdev.
+> > >  */
+> > >
+> > > issue-2:
+> > > --------
+> > > Below crash is observed when user initiated remove is in progress
+> > > and mdev_unregister_driver() completes parent unregistration.
+> > >
+> > >        cpu-0                         cpu-1
+> > >        -----                         -----
+> > > remove_store()
+> > >    mdev_device_remove()
+> > >    active =3D false;
+> > >                                   mdev_unregister_device()
+> > >                                   parent device removed.
+> > >    [...]
+> > >    parents->ops->remove()
+> > >  /*
+> > >   * BUG: Accessing invalid parent.
+> > >   */
+> > >
+> > > This is similar race like create() racing with mdev_unregister_device=
+().
+> > >
+> > > BUG: unable to handle kernel paging request at ffffffffc0585668 PGD
+> > > e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
+> > > Oops: 0000 [#1] SMP PTI
+> > > CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted
+> > > 5.1.0-rc6-vdevbus+ #6 Hardware name: Supermicro
+> > > SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> > > RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev] Call Trace:
+> > >  remove_store+0x71/0x90 [mdev]
+> > >  kernfs_fop_write+0x113/0x1a0
+> > >  vfs_write+0xad/0x1b0
+> > >  ksys_write+0x5a/0xe0
+> > >  do_syscall_64+0x5a/0x210
+> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > >
+> > > Therefore, mdev core is improved as below to overcome above issues.
+> > >
+> > > Wait for any ongoing mdev create() and remove() to finish before
+> > > unregistering parent device using refcount and completion.
+> > > This continues to allow multiple create and remove to progress in
+> > > parallel for different mdev devices as most common case.
+> > > At the same time guard parent removal while parent is being access
+> > > by
+> > > create() and remove callbacks.
+> > >
+> > > Code is simplified from kref to use refcount as unregister_device()
+> > > has to wait anyway for all create/remove to finish.
+> > >
+> > > While removing mdev devices during parent unregistration, there
+> > > isn't need to acquire refcount of parent device, hence code is
+> > > restructured using mdev_device_remove_common() to avoid it.
+> >
+> > Did you consider calling parent_remove_sysfs_files() earlier in
+> > mdev_unregister_device() and adding srcu support to know there are no
+> > in-flight callers of the create path?  I think that would address
+> > issue-1.
+> >
+> > Issue-2 suggests a bug in our handling of the parent device krefs, the
+> > parent object should exist until all child devices which have a kref
+> > reference to the parent are removed, but clearly
+> > mdev_unregister_device() is not blocking for that to occur allowing
+> > the parent driver .remove callback to finish.  This seems similar to
+> > vfio_del_group_dev() where we need to block a vfio bus driver from
+> > removing a device until it becomes unused, could a similar solution
+> > with a wait_queue and wait_woken be used here?
+> >
+> > I'm not immediately sold on the idea that removing a kref to solve
+> > this problem is a good thing, it seems odd to me that mdevs don't hold
+> > a reference to the parent throughout their life with this change, and
+> > the remove_store path branch to exit if we find we're racing the
+> > parent remove path is rather ugly.  BTW, why is the sanitization loop
+> > in
+> > mdev_device_remove() still here, wasn't that fixed by the previous two
+> > patches?  Thanks,
+>=20
+> Agreed, I think not holding a reference to the parent is rather odd.
+>=20
+> >
+> > Alex
+> >
+> > > Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > ---
+> > >  drivers/vfio/mdev/mdev_core.c    | 86 ++++++++++++++++++++----------=
+--
+> > >  drivers/vfio/mdev/mdev_private.h |  6 ++-
+> > >  2 files changed, 60 insertions(+), 32 deletions(-)
+>=20
+> (...)
+>=20
+> > > @@ -206,14 +214,27 @@ void mdev_unregister_device(struct device
+> *dev)
+> > >  	dev_info(dev, "MDEV: Unregistering\n");
+> > >
+> > >  	list_del(&parent->next);
+> > > +	mutex_unlock(&parent_list_lock);
+> > > +
+> > > +	/* Release the initial reference so that new create cannot start */
+> > > +	mdev_put_parent(parent);
+> > > +
+> > > +	/*
+> > > +	 * Wait for all the create and remove references to drop.
+> > > +	 */
+> > > +	wait_for_completion(&parent->unreg_completion);
+> > > +
+> > > +	/*
+> > > +	 * New references cannot be taken and all users are done
+> > > +	 * using the parent. So it is safe to unregister parent.
+> > > +	 */
+> > >  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+> > >
+> > >  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+> > >
+> > >  	parent_remove_sysfs_files(parent);
+> > > -
+> > > -	mutex_unlock(&parent_list_lock);
+> > > -	mdev_put_parent(parent);
+> > > +	kfree(parent);
+>=20
+> Such a kfree() is usually a big, flashing warning sign to me, even though=
+ it
+> probably isn't strictly broken in this case.
+>=20
+Devices are removed, create files are removed. Parent is taken off the list=
+.
+So who else can access this parent?
+
+> > > +	put_device(dev);
+> > >  }
+> > >  EXPORT_SYMBOL(mdev_unregister_device);
+> > >
+>=20
+> I think one problem I'm having here is that two things are conflated with
+> that approach:
+>=20
+> - Structures holding a reference to another structure, where they need
+>   to be sure that it isn't pulled out from under them.
+> - Structures being hooked up and discoverable from somewhere else.
+>=20
+> I think what we actually need is that the code possibly creating a new md=
+ev
+> device is not able to look up the parent device if removal has been alrea=
+dy
+> triggered for it. Same for triggering mdev device removal.
+>=20
+This is already present in the patch.
+mdev_try_get_parent() API looks up the parent during creation and removal p=
+ath.
+
+> Do we need to somehow tie getting an extra reference to looking up the
+> device? Any extra reference does not hurt, as long as we remember to drop
+> it again :)
+
+A single refcount publishes its parent's device existence.
+If we want to hold reference to parent until the life of child device, than=
+ we need additional plumbing.
+Additional plumbing advertises when parent is reachable/getting removed and=
+ also waits until create/remove is completed.
+I think if we can justify the need for this additional plumbing, it makes i=
+t easy to think what to be done.
