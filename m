@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38460C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F98C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E43A217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CF6208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427659;
-	bh=DRhEhGyYWBssR7wYLehVy2xwuilR7RyWyiKA0TLdZbk=;
+	s=default; t=1557427662;
+	bh=aD/N5gPsVhM0JlMNYj0g6pyBk36ukHSTrEyvxuYlAt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K96ftE1O5X6GFv8PIFFP5S8UT8M8iXdSUCac3kegnh6Zpy5vU33SEkvfarfPEmslC
-	 Sqdh53mYVFwa9mOtVWg6FiuZDp9RZ4YqYBnJs25TqI71N9rORuJ/JBO4++WygRhX3W
-	 09eMZHaoZxK7OVwaEz1DT6LQwYMggS8rUydc0tyo=
+	b=btY/4G7LHO+qjRR3EUnl2inArDcbVwDHdGYSyw+79sEkKnkqPmTlOAR7W9itsBTSB
+	 cJYNjzwBfUp+07q+KkH+VVXBZnYQi1Q55eigcqAgE19QOSrrM7gMKoZ5z4DrQEOHCp
+	 6g/hWIIiORwfQAnfRoXdJYif2SmGPHi26QPWc0kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfEISrh (ORCPT
+        id S1727878AbfEISrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbfEISrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:32 -0400
+        id S1727857AbfEISrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65184217D7;
-        Thu,  9 May 2019 18:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B82C217F9;
+        Thu,  9 May 2019 18:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427651;
-        bh=DRhEhGyYWBssR7wYLehVy2xwuilR7RyWyiKA0TLdZbk=;
+        s=default; t=1557427656;
+        bh=aD/N5gPsVhM0JlMNYj0g6pyBk36ukHSTrEyvxuYlAt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BzC/R/PUG1UawOMEVYjYuxNdL8JoArROj/d2a56JUZ23dBzBKLfhG9gS8GFp3Ht3A
-         yMaHlAx229cQG6f++fDY0ekJEirQQR+H8iFRlhhNQb+JTc7s8/sDY6UERXRO3luysW
-         VIO10NN9BjSFV1O/dfGUCW9Y6z6SDmtO2MDwZUHA=
+        b=ixcHbQeYMHXTtonhLqTEGvnouFwCROz/R5OWsdC1EoZoaOcPfR/pqBVJSZRWVEopd
+         Eh3atlheNSLK8us3uZMVOkKCf1JjSKBc2+OD08G1ptrd80ykBFhyk/9zcClKYo6wjE
+         3wrFRHkFPU0+BFbmhLcl1IyXUyOyb77ylK5wgDEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        stable@vger.kernel.org,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/66] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
-Date:   Thu,  9 May 2019 20:41:55 +0200
-Message-Id: <20190509181304.025650625@linuxfoundation.org>
+Subject: [PATCH 4.19 22/66] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
+Date:   Thu,  9 May 2019 20:41:57 +0200
+Message-Id: <20190509181304.226182023@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,71 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c47255b61129857b74b0d86eaf59335348be05e0 ]
+[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
 
-Register platform component with a prefix, to avoid warnings
-on debugfs entries creation, due to component name
-redundancy.
+w_text_param can be NULL and it is being dereferenced without checking.
+Add the missing sanity check to prevent  NULL pointer dereference.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ sound/soc/soc-dapm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
-index 71d341b732a4d..24948b95eb19f 100644
---- a/sound/soc/stm/stm32_adfsdm.c
-+++ b/sound/soc/stm/stm32_adfsdm.c
-@@ -304,6 +304,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
- static int stm32_adfsdm_probe(struct platform_device *pdev)
- {
- 	struct stm32_adfsdm_priv *priv;
-+	struct snd_soc_component *component;
- 	int ret;
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 9b78fb3daa7bb..2257b1b0151c4 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3847,6 +3847,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
+ 	int count;
  
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -331,9 +332,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->iio_cb))
- 		return PTR_ERR(priv->iio_cb);
- 
--	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &stm32_adfsdm_soc_platform,
--					      NULL, 0);
-+	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
-+	if (!component)
-+		return -ENOMEM;
-+#ifdef CONFIG_DEBUG_FS
-+	component->debugfs_prefix = "pcm";
-+#endif
+ 	devm_kfree(card->dev, (void *)*private_value);
 +
-+	ret = snd_soc_add_component(&pdev->dev, component,
-+				    &stm32_adfsdm_soc_platform, NULL, 0);
- 	if (ret < 0)
- 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
- 			__func__);
-@@ -341,12 +348,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int stm32_adfsdm_remove(struct platform_device *pdev)
-+{
-+	snd_soc_unregister_component(&pdev->dev);
++	if (!w_param_text)
++		return;
 +
-+	return 0;
-+}
-+
- static struct platform_driver stm32_adfsdm_driver = {
- 	.driver = {
- 		   .name = STM32_ADFSDM_DRV_NAME,
- 		   .of_match_table = stm32_adfsdm_of_match,
- 		   },
- 	.probe = stm32_adfsdm_probe,
-+	.remove = stm32_adfsdm_remove,
- };
- 
- module_platform_driver(stm32_adfsdm_driver);
+ 	for (count = 0 ; count < num_params; count++)
+ 		devm_kfree(card->dev, (void *)w_param_text[count]);
+ 	devm_kfree(card->dev, w_param_text);
 -- 
 2.20.1
 
