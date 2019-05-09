@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D19DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1F9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CDD217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0667217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428118;
-	bh=UXy7aui7yC9NiQsI/1El6Ml1ENsUM4xMnXKn11cKhM0=;
+	s=default; t=1557428123;
+	bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hhMedqWOhuL6r8Y7VMWiE+fmjjHy6WOdYOE2MIQl5j/Jt5syOXkZk+eoNzCwsjD+w
-	 CXg3muLzxnaUatInIAcopXlTJEEdKR07BqVRCEGcYoS2kkbSxvJKOKWavV8BrCatzz
-	 so0bEh7n8H3KMMpWye3MeSzP9cnW12GSqo6UT3Fg=
+	b=AHPTGONAvyGn9RkJ7a0y8pMaTqU4zcc/RTdfvlNMYCr+EHmGPvPQCHmEYv8NHlF2v
+	 OanIk2N/r8xXII5zgC2xOavWN3o7f2zyx4v/A1jUtLg2r/3NJZBulUuEIZTI3nkywI
+	 HImySMKmXh2RkFR6HsTzxhN8fR0Pbo7lj7kP7+Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfEISzR (ORCPT
+        id S1729003AbfEISzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbfEISzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:12 -0400
+        id S1729207AbfEISzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D8FF204FD;
-        Thu,  9 May 2019 18:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94619204FD;
+        Thu,  9 May 2019 18:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428111;
-        bh=UXy7aui7yC9NiQsI/1El6Ml1ENsUM4xMnXKn11cKhM0=;
+        s=default; t=1557428118;
+        bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ovq2cib8WtsXRdFrz60eIkKaInAjvBqrhwQMNpOplq76/3CfJfMBTnl8FKWW+MwxT
-         gei39FlYaWQm05Z0U1jtqvgVnEmdn2B2a50BbbpltH3D3QTgXMIMZLhgjz1pfBTfU7
-         VymqNMjzWzItt49aU4PqPy2J10P0zaB8R24V8R6Q=
+        b=IV3SICB2jPRBTVZkxd7osE81qH5b/NGBgFzeh7gIqvjmWKsOJQB6gojFDOYbg//6x
+         d0E3GG2qg96k5y26War3sdfPZ484TSPN3kn2TeTtowweI9SbJe/lJmLpKW3nJLA8fL
+         F5ZxDdkM0AMgVult3mvxZcrZ/S7UfDnobswCdmUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH 5.1 07/30] usb: dwc3: Allow building USB_DWC3_QCOM without EXTCON
-Date:   Thu,  9 May 2019 20:42:39 +0200
-Message-Id: <20190509181252.205048287@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.1 09/30] USB: serial: f81232: fix interrupt worker not stop
+Date:   Thu,  9 May 2019 20:42:41 +0200
+Message-Id: <20190509181252.590284425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -58,44 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
 
-commit 77a4946516fe488b6a33390de6d749f934a243ba upstream.
+commit 804dbee1e49774918339c1e5a87400988c0819e8 upstream.
 
-Keep EXTCON support optional, as some platforms do not need it.
+The F81232 will use interrupt worker to handle MSR change.
+This patch will fix the issue that interrupt work should stop
+in close() and suspend().
 
-Do the same for USB_DWC3_OMAP while we're at it.
+This also fixes line-status events being disabled after a suspend cycle
+until the port is re-opened.
 
-Fixes: 3def4031b3e3f ("usb: dwc3: add EXTCON dependency for qcom")
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+[ johan: amend commit message ]
+Fixes: 87fe5adcd8de ("USB: f81232: implement read IIR/MSR with endpoint")
+Cc: stable <stable@vger.kernel.org>	# 4.1
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/Kconfig |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/serial/f81232.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -54,7 +54,8 @@ comment "Platform Glue Driver Support"
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -556,9 +556,12 @@ static int f81232_open(struct tty_struct
  
- config USB_DWC3_OMAP
- 	tristate "Texas Instruments OMAP5 and similar Platforms"
--	depends on EXTCON && (ARCH_OMAP2PLUS || COMPILE_TEST)
-+	depends on ARCH_OMAP2PLUS || COMPILE_TEST
-+	depends on EXTCON || !EXTCON
- 	depends on OF
- 	default USB_DWC3
- 	help
-@@ -115,7 +116,8 @@ config USB_DWC3_ST
+ static void f81232_close(struct usb_serial_port *port)
+ {
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->interrupt_work);
+ }
  
- config USB_DWC3_QCOM
- 	tristate "Qualcomm Platform"
--	depends on EXTCON && (ARCH_QCOM || COMPILE_TEST)
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on EXTCON || !EXTCON
- 	depends on OF
- 	default USB_DWC3
- 	help
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -632,6 +635,40 @@ static int f81232_port_remove(struct usb
+ 	return 0;
+ }
+ 
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct usb_serial_port *port = serial->port[0];
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
++		usb_kill_urb(port->read_urbs[i]);
++
++	usb_kill_urb(port->interrupt_in_urb);
++
++	if (port_priv)
++		flush_work(&port_priv->interrupt_work);
++
++	return 0;
++}
++
++static int f81232_resume(struct usb_serial *serial)
++{
++	struct usb_serial_port *port = serial->port[0];
++	int result;
++
++	if (tty_port_initialized(&port->port)) {
++		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
++		if (result) {
++			dev_err(&port->dev, "submit interrupt urb failed: %d\n",
++					result);
++			return result;
++		}
++	}
++
++	return usb_serial_generic_resume(serial);
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -655,6 +692,8 @@ static struct usb_serial_driver f81232_d
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
 
 
