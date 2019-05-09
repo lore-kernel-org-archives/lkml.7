@@ -2,105 +2,211 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65749C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41BAC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C2720675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15E02089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQCvYs9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfEINy4 (ORCPT
+        id S1726730AbfEINzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:54:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34424 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfEINyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:54:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2D3E8C057F3B;
-        Thu,  9 May 2019 13:54:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id BE9E31001E7C;
-        Thu,  9 May 2019 13:54:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  9 May 2019 15:54:53 +0200 (CEST)
-Date:   Thu, 9 May 2019 15:54:51 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH] cgroup: never call do_group_exit() with task->frozen bit
- set
-Message-ID: <20190509135450.GA24526@redhat.com>
-References: <20190508203420.580163-1-guro@fb.com>
+        Thu, 9 May 2019 09:55:37 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41816 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfEINzh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:55:37 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m4so2107131edd.8;
+        Thu, 09 May 2019 06:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rj8sR0p1Edqa94H02tBjaXnEUtoaRjwEJVzZPumNj1g=;
+        b=oQCvYs9jZqA0mKZRzCMWu05oFj2Zz17/PVNd4bwpPPpxmMr0K+ZQCs7yxqlPtfjuMy
+         8OjUA2czA5H6SB9uPKPi/jS92gskpNjvYeYP/Q4yo9+o9Xrd9/e5lEK5NKwBomh3Cy8d
+         txu9rR8KNjutQFiKex2oKNITF45PZElb82I9QA/6KUxfMCLsrY1lDcu5LtawuUioBTcj
+         C363GL59Zdaxz2o8wF08BTrzO41fdEKqPgs6o4QzXc1PYVqQv9UpbOEWVkNzzqcmKdVj
+         852r0xVwgC3ApDh6OJFtIWvfw2X6OVJBAUv3KUKUNUdncpeZkAmD/cq2XxXLjQEZfw5F
+         hPxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rj8sR0p1Edqa94H02tBjaXnEUtoaRjwEJVzZPumNj1g=;
+        b=FuxIhKCyoP/mbxqCoMMNNVHiTYFRLY6GeGczcDgWkaMrhAo4/IM96TTtJtJiR/jR5O
+         x3AGXBl42VneTXnGLSEB0o4/Ade9YqNqDYyJyH//xncwf+2pyxsv47IaP/22/sbZs403
+         lSTdGYvZrl8j8AILwnGfetf2fLjgKqiHo20AFYGtXl56pGwWsWCg2l8CUXIvPI3yuBM3
+         F4SX/1CdlAJeHn5TBQ0RxN/8D8JtK3OnctkU5l6p+t957XgnxXWqfMOyvRM5LsXhpYV6
+         MwE1fR8YJWSHUOZEVSlIR24yJIl9ARLU6L+1oPBsH60gl+BwyLldEnIMGouQJpX7LjmK
+         7BNQ==
+X-Gm-Message-State: APjAAAVmgkQWbBZcBGVqIZNh5g3+KkWJfHuJpQbAc0FunZsOxmDIOtlb
+        ciQzYEVcUke/lt+WBOEdaSc=
+X-Google-Smtp-Source: APXvYqyqamcbXYaLythnIDnP0cKrQ7Jqxn1LlTAxYUXRdkLE65y8UJdLAseURDgvrzBfIKf7YsPB9w==
+X-Received: by 2002:a50:a5b4:: with SMTP id a49mr4299981edc.30.1557410134597;
+        Thu, 09 May 2019 06:55:34 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id j55sm611135ede.27.2019.05.09.06.55.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 06:55:33 -0700 (PDT)
+Date:   Thu, 9 May 2019 13:55:33 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
+ after arch_add_memory()
+Message-ID: <20190509135533.6xok3v7rxxaohc77@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190507183804.5512-1-david@redhat.com>
+ <20190507183804.5512-5-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508203420.580163-1-guro@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 09 May 2019 13:54:54 +0000 (UTC)
+In-Reply-To: <20190507183804.5512-5-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08, Roman Gushchin wrote:
+On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
+>Only memory to be added to the buddy and to be onlined/offlined by
+>user space using memory block devices needs (and should have!) memory
+>block devices.
 >
-> To resolve this problem, let's move cgroup_leave_frozen(true) call to
-> just after the fatal label. If the task is going to die, the frozen
-> bit must be cleared no matter how we get into this point.
-
-OK, agreed, better than nothing.
-
-but please see my previous email. enter_frozen() in ptrace_stop() is not safe
-anyway. In fact somehow I thought it does leave_frozen(), iirc this was true
-in the earlier versions...
-
+>Factor out creation of memory block devices Create all devices after
+>arch_add_memory() succeeded. We can later drop the want_memblock parameter,
+>because it is now effectively stale.
+>
+>Only after memory block devices have been added, memory can be onlined
+>by user space. This implies, that memory is not visible to user space at
+>all before arch_add_memory() succeeded.
+>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>Cc: David Hildenbrand <david@redhat.com>
+>Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Ingo Molnar <mingo@kernel.org>
+>Cc: Andrew Banman <andrew.banman@hpe.com>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Cc: Qian Cai <cai@lca.pw>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Arun KS <arunks@codeaurora.org>
+>Cc: Mathieu Malaterre <malat@debian.org>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
+>---
+> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
+> include/linux/memory.h |  2 +-
+> mm/memory_hotplug.c    | 15 ++++-----
+> 3 files changed, 53 insertions(+), 34 deletions(-)
+>
+>diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>index 6e0cb4fda179..862c202a18ca 100644
+>--- a/drivers/base/memory.c
+>+++ b/drivers/base/memory.c
+>@@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
+> 	return 0;
+> }
 > 
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  kernel/signal.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+>+static void unregister_memory(struct memory_block *memory)
+>+{
+>+	BUG_ON(memory->dev.bus != &memory_subsys);
+>+
+>+	/* drop the ref. we got via find_memory_block() */
+>+	put_device(&memory->dev);
+>+	device_unregister(&memory->dev);
+>+}
+>+
+> /*
+>- * need an interface for the VM to add new memory regions,
+>- * but without onlining it.
+>+ * Create memory block devices for the given memory area. Start and size
+>+ * have to be aligned to memory block granularity. Memory block devices
+>+ * will be initialized as offline.
+>  */
+>-int hotplug_memory_register(int nid, struct mem_section *section)
+>+int hotplug_memory_register(unsigned long start, unsigned long size)
+> {
+>-	int ret = 0;
+>+	unsigned long block_nr_pages = memory_block_size_bytes() >> PAGE_SHIFT;
+>+	unsigned long start_pfn = PFN_DOWN(start);
+>+	unsigned long end_pfn = start_pfn + (size >> PAGE_SHIFT);
+>+	unsigned long pfn;
+> 	struct memory_block *mem;
+>+	int ret = 0;
 > 
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 16b72f4f14df..8607b11ff936 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2483,10 +2483,6 @@ bool get_signal(struct ksignal *ksig)
->  		ksig->info.si_signo = signr = SIGKILL;
->  		sigdelset(&current->pending.signal, SIGKILL);
->  		recalc_sigpending();
-> -		current->jobctl &= ~JOBCTL_TRAP_FREEZE;
-> -		spin_unlock_irq(&sighand->siglock);
-> -		if (unlikely(cgroup_task_frozen(current)))
-> -			cgroup_leave_frozen(true);
->  		goto fatal;
->  	}
->  
-> @@ -2608,8 +2604,10 @@ bool get_signal(struct ksignal *ksig)
->  			continue;
->  		}
->  
-> -		spin_unlock_irq(&sighand->siglock);
->  	fatal:
-> +		spin_unlock_irq(&sighand->siglock);
-> +		if (unlikely(cgroup_task_frozen(current)))
-> +			cgroup_leave_frozen(true);
->  
->  		/*
->  		 * Anything else is fatal, maybe with a core dump.
-> -- 
-> 2.20.1
+>-	mutex_lock(&mem_sysfs_mutex);
+>+	BUG_ON(!IS_ALIGNED(start, memory_block_size_bytes()));
+>+	BUG_ON(!IS_ALIGNED(size, memory_block_size_bytes()));
 > 
+>-	mem = find_memory_block(section);
+>-	if (mem) {
+>-		mem->section_count++;
+>-		put_device(&mem->dev);
+>-	} else {
+>-		ret = init_memory_block(&mem, section, MEM_OFFLINE);
+>+	mutex_lock(&mem_sysfs_mutex);
+>+	for (pfn = start_pfn; pfn != end_pfn; pfn += block_nr_pages) {
+>+		mem = find_memory_block(__pfn_to_section(pfn));
+>+		if (mem) {
+>+			WARN_ON_ONCE(false);
 
+One question here, the purpose of WARN_ON_ONCE(false) is? Would we trigger
+this?
+
+>+			put_device(&mem->dev);
+>+			continue;
+>+		}
+>+		ret = init_memory_block(&mem, __pfn_to_section(pfn),
+>+					MEM_OFFLINE);
+> 		if (ret)
+>-			goto out;
+>-		mem->section_count++;
+>+			break;
+>+		mem->section_count = memory_block_size_bytes() /
+>+				     MIN_MEMORY_BLOCK_SIZE;
+
+Maybe we can leverage sections_per_block variable.
+
+                mem->section_count = sections_per_block;
+
+>+	}
+>+	if (ret) {
+>+		end_pfn = pfn;
+>+		for (pfn = start_pfn; pfn != end_pfn; pfn += block_nr_pages) {
+>+			mem = find_memory_block(__pfn_to_section(pfn));
+>+			if (!mem)
+>+				continue;
+>+			mem->section_count = 0;
+>+			unregister_memory(mem);
+>+		}
+> 	}
+
+-- 
+Wei Yang
+Help you, Help me
