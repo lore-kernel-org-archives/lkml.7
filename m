@@ -2,89 +2,148 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ECBC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400EBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D28216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3E9216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:59:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IXSVdGuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfEII5L (ORCPT
+        id S1726683AbfEII7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:57:11 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34532 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbfEII5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:57:11 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 15E61F77F8BDA0A382E3;
-        Thu,  9 May 2019 16:57:09 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.55) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 May 2019
- 16:57:02 +0800
-Subject: Re: Why do we mark vpending table as non-shareable in
- GICR_VPENDBASER?
-To:     Marc Zyngier <marc.zyngier@arm.com>
-References: <fbee07c9-ec3b-d443-2132-7208dae38539@huawei.com>
- <867eb09i00.wl-marc.zyngier@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
-From:   Heyi Guo <guoheyi@huawei.com>
-Message-ID: <63414d91-2ddf-e1bb-22cf-3eb00e355fba@huawei.com>
-Date:   Thu, 9 May 2019 16:56:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 9 May 2019 04:59:17 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11718 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726097AbfEII7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 04:59:16 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x498wcEH026185;
+        Thu, 9 May 2019 10:59:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=jUe2d3C91CwaYKqFGnAmdOypdhWz5JbvmAKgwZA/OlQ=;
+ b=IXSVdGuovITH732k0nWd9IpIc83HnodlMz1kxeIO2z3CmXJ+HGzdPWvha29wt4d9mPtL
+ eUj2iMcQRdWbnBN8WebuytEzZeRNuqnz9SndIwd6vCZ1uPkAQ6GcUIJujGCj9RVRQmB0
+ PyNhigQGzoFbXntPtbN2yMXZ2/paULZRvdRPt3oJ0/qxssxBgPpyBuh8ZWojO5KOofku
+ lFNA/HjLlClQCR5HhWwlfZ0A2/6WEsVd/1UgtlOUqAAnYaFvIg63DPw4crNtkpOqVyEP
+ no3QdgoMNTGKdkyNQGejipGQrGCQKqA4phN/QMFZ8Xxu2yHkcwXrlTUsIrwAWw/j3e3Z Ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4a9k6-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 09 May 2019 10:59:05 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9D72831;
+        Thu,  9 May 2019 08:59:04 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5D0B5153D;
+        Thu,  9 May 2019 08:59:04 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 9 May 2019
+ 10:59:04 +0200
+Received: from localhost (10.201.20.5) by webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 9 May 2019 10:59:03 +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v6 0/9] Introduce STMFX I2C Multi-Function eXpander
+Date:   Thu, 9 May 2019 10:58:47 +0200
+Message-ID: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <867eb09i00.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.55]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.5]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks.
+This series adds support for STMicroelectronics Multi-Function eXpander
+(STMFX), used on some STM32 discovery and evaluation boards.
 
-One more question about the cacheability of VPROPBASER, which is RaWb, while it is RaWaWb for PROPBASER. Any special reason for this?
+STMFX is an STM32L152 slave controller whose firmware embeds the following
+features:
+- I/O expander (16 GPIOs + 8 extra if the other features are not enabled),
+- resistive touchscreen controller,
+- IDD measurement.
 
-Heyi
+I2C stuff and chip initialization is based on an MFD parent driver, which
+registers STMFX features MFD children.
 
+---
+Changes in v6:
+- mfd: go with Lee's suggestion about vdd regulator management (but
+initialize ret with PTR_ERR_OR_ZERO to use it in if/else if and error log),
+also remove backup/restore helpers and move the code in suspend/
+resume
+Changes in v5:
+- mfd: fix Lee's comments (reorder struct declaration, drop mfd cells
+  platform data initialization, typos)
+- pinctrl: get stmfx struct through dev_get_drvdata(pdev->dev.parent)
+  instead of dev_get_platdata(&pdev->dev);
+Changes in v4:
+- mfd: move registers #define into the header
+- mfd: merge stmfx and stmfx_ddata structures into one stmfx structure
+- mfd: change stmfx_chip_init/exit and stmfx_irq_init/exit args: use
+  i2c_client struct and i2c_get_clientdata
+- mfd: fix typos
+- mfd: add MFD cells for IDD and TS features
+- pinctrl: rework registers #define
+- dts: add STMFX support on stm32mp157c-ev1
+Changes in v3:
+- fix MFD interrupt bindings
+- fix drivers/mfd/stmfx.c:103:8: warning: 'mask' may be used uninitialized
+  in this function
+Changes in v2:
+- move to MFD parent driver for i2c stuff and chip initialization
+- improve regmap configuration
+- take advantage of the use of gpio-ranges
 
-On 2019/5/9 15:58, Marc Zyngier wrote:
-> On Thu, 09 May 2019 08:10:09 +0100,
-> Heyi Guo <guoheyi@huawei.com> wrote:
->> Hi Marc,
->>
->> We can see in its_vpe_schedule() the shareability bits of
->> GICR_VPENDBASER are set as non-shareable, But we set physical
->> PENDBASER as inner-shareable. Is there any special reason for doing
->> this? If it is because the vpending table is GICR specific, why
->> don't we do the same for physical pending table?
-> That's a good question. They should have similar attributes.
->
->> We have not seen function issue with this setting, but a special
->> detector in our hardware warns us that there are non-shareable
->> requests sent out while some inner shareable cache entries still
->> present in the cache, and it may cause data inconsistent.
-> The main issue with the inner-shareable attributes and the GIC is that
-> nothing in the spec says that CPUs and GIC have to be in the same
-> inner-shareable domain, as the system can have as many as you want.
->
-> You obviously have built it with GICR in the same inner-shareability
-> domain as the CPU. I'm happy to change the VPENDBASER attributes,
-> given that the CPU has a mapping to that memory already, and that
-> shouldn't affect systems where GICR isn't in the same inner shareable
-> domain anyway.
->
-> Thanks,
->
-> 	M.
->
+Amelie Delaunay (9):
+  dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
+  mfd: Add ST Multi-Function eXpander (STMFX) core driver
+  dt-bindings: pinctrl: document the STMFX pinctrl bindings
+  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
+  ARM: dts: stm32: add STMFX support on stm32746g-eval
+  ARM: dts: stm32: add joystick support on stm32746g-eval
+  ARM: dts: stm32: add orange and blue leds on stm32746g-eval
+  ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
+  ARM: dts: stm32: add joystick support on stm32mp157c-ev1
 
+ Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
+ .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
+ arch/arm/boot/dts/stm32746g-eval.dts               |  66 ++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts              |  60 ++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   2 +-
+ drivers/mfd/stmfx.c                                | 545 ++++++++++++++
+ drivers/pinctrl/Kconfig                            |  12 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
+ include/linux/mfd/stmfx.h                          | 123 ++++
+ 11 files changed, 1785 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+ create mode 100644 drivers/mfd/stmfx.c
+ create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
+ create mode 100644 include/linux/mfd/stmfx.h
+
+-- 
+2.7.4
 
