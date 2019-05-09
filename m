@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334D4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17DFC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034EC2183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57892184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427719;
-	bh=gXA1V0Hcm30fXk20UNjgt87jxM6iQ5P4exP5dhQABEI=;
+	s=default; t=1557427721;
+	bh=scQnLSil0ImaITJO60dTpxacwCQbUf+OJuPDTSNB3n4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldHPRlRdYj9vEnSQkk6x8rF5vVZ9J6OTfTlYRKGPvVIA7pqJhzESB90F/mza7WG29
-	 ioxwmjIyKnJKNRQ0z/1w3aR8vzfC8gX3WBkpLzWG625J5INPUW17g3k4RKu9Ue2v6k
-	 lzqwqKP3deffi4Jg3dgDt9OLg9Npi3ogPsFh6vdM=
+	b=Bz6CKJRg7+zHMLI7L60wsZNokBqE+vuEMTAr0f6LhLH0+xDq2gGv4LYwS60tKcl98
+	 ZtIOePP03Q8Pr65Um0yfjG7bhJ6miODAL42u09lEecxY818EYl3P0HDD2B47VD74gx
+	 fC9qwiXY05PWUrMHrKdD/q+yzmELAOyYFsnMV39I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfEISsi (ORCPT
+        id S1728075AbfEISsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727353AbfEISsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:35 -0400
+        id S1728054AbfEISsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE7B20578;
-        Thu,  9 May 2019 18:48:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E9B217D7;
+        Thu,  9 May 2019 18:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427714;
-        bh=gXA1V0Hcm30fXk20UNjgt87jxM6iQ5P4exP5dhQABEI=;
+        s=default; t=1557427716;
+        bh=scQnLSil0ImaITJO60dTpxacwCQbUf+OJuPDTSNB3n4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glWbGXT/NJhvqxFARMvOj9QPoWwRGeRZe8rp9qIttu7E7t9Al+Ff5YUVuAR0UHy+P
-         kcJCN5lDJX0BF10PgzqC/8Mrk6PvZN8Tq8utT2S+YUcGzKgJB9WaDsWsbWktXHLc23
-         unnIdWyKE0RQS/XPpgcoOaHTf1qU70g0+qnY4Z9o=
+        b=F/Zub/svBLIJuzNH8bW276utS1VGp8N8hbc9bFEOjCWdm6E407pGbDu3mqrmSNGAH
+         byjRIn8FgmMrgv7ut2Dxscdz8OWVBWtep8VJmaWhmNQ/6Gx8D77wZme0PmPU1WmaQO
+         uLaa1NrzSynaEOIZ0OIfc723goEIob2Sew0+bIis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chenglang <chenglang@huawei.com>,
-        Lijun Ou <oulijun@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/66] RDMA/hns: Fix bug that caused srq creation to fail
-Date:   Thu,  9 May 2019 20:42:16 +0200
-Message-Id: <20190509181306.277936413@linuxfoundation.org>
+Subject: [PATCH 4.19 42/66] scsi: csiostor: fix missing data copy in csio_scsi_err_handler()
+Date:   Thu,  9 May 2019 20:42:17 +0200
+Message-Id: <20190509181306.349125189@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -61,77 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4772e03d239484f3461e33c79d721c8ea03f7416 ]
+[ Upstream commit 5c2442fd78998af60e13aba506d103f7f43f8701 ]
 
-Due to the incorrect use of the seg and obj information, the position of
-the mtt is calculated incorrectly, and the free space of the page is not
-enough to store the entire mtt, resulting in access to the next page. This
-patch fixes this problem.
+If scsi cmd sglist is not suitable for DDP then csiostor driver uses
+preallocated buffers for DDP, because of this data copy is required from
+DDP buffer to scsi cmd sglist before calling ->scsi_done().
 
- Unable to handle kernel paging request at virtual address ffff00006e3cd000
- ...
- Call trace:
-  hns_roce_write_mtt+0x154/0x2f0 [hns_roce]
-  hns_roce_buf_write_mtt+0xa8/0xd8 [hns_roce]
-  hns_roce_create_srq+0x74c/0x808 [hns_roce]
-  ib_create_srq+0x28/0xc8
-
-Fixes: 0203b14c4f32 ("RDMA/hns: Unify the calculation for hem index in hip08")
-Signed-off-by: chenglang <chenglang@huawei.com>
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hem.c | 6 ++++--
- drivers/infiniband/hw/hns/hns_roce_mr.c  | 4 ++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/scsi/csiostor/csio_scsi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
-index f6faefed96e8b..a73d388b70930 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hem.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
-@@ -745,6 +745,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 		idx_offset = (obj & (table->num_obj - 1)) % obj_per_chunk;
- 		dma_offset = offset = idx_offset * table->obj_size;
- 	} else {
-+		u32 seg_size = 64; /* 8 bytes per BA and 8 BA per segment */
-+
- 		hns_roce_calc_hem_mhop(hr_dev, table, &mhop_obj, &mhop);
- 		/* mtt mhop */
- 		i = mhop.l0_idx;
-@@ -756,8 +758,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 			hem_idx = i;
- 
- 		hem = table->hem[hem_idx];
--		dma_offset = offset = (obj & (table->num_obj - 1)) *
--				       table->obj_size % mhop.bt_chunk_size;
-+		dma_offset = offset = (obj & (table->num_obj - 1)) * seg_size %
-+				       mhop.bt_chunk_size;
- 		if (mhop.hop_num == 2)
- 			dma_offset = offset = 0;
+diff --git a/drivers/scsi/csiostor/csio_scsi.c b/drivers/scsi/csiostor/csio_scsi.c
+index dab0d3f9bee13..e09c7f360dbde 100644
+--- a/drivers/scsi/csiostor/csio_scsi.c
++++ b/drivers/scsi/csiostor/csio_scsi.c
+@@ -1713,8 +1713,11 @@ csio_scsi_err_handler(struct csio_hw *hw, struct csio_ioreq *req)
  	}
-diff --git a/drivers/infiniband/hw/hns/hns_roce_mr.c b/drivers/infiniband/hw/hns/hns_roce_mr.c
-index eb26a5f6fc58c..41a538d23b802 100644
---- a/drivers/infiniband/hw/hns/hns_roce_mr.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_mr.c
-@@ -707,7 +707,6 @@ static int hns_roce_write_mtt_chunk(struct hns_roce_dev *hr_dev,
- 	struct hns_roce_hem_table *table;
- 	dma_addr_t dma_handle;
- 	__le64 *mtts;
--	u32 s = start_index * sizeof(u64);
- 	u32 bt_page_size;
- 	u32 i;
  
-@@ -730,7 +729,8 @@ static int hns_roce_write_mtt_chunk(struct hns_roce_dev *hr_dev,
- 		table = &hr_dev->mr_table.mtt_cqe_table;
+ out:
+-	if (req->nsge > 0)
++	if (req->nsge > 0) {
+ 		scsi_dma_unmap(cmnd);
++		if (req->dcopy && (host_status == DID_OK))
++			host_status = csio_scsi_copy_to_sgl(hw, req);
++	}
  
- 	mtts = hns_roce_table_find(hr_dev, table,
--				mtt->first_seg + s / hr_dev->caps.mtt_entry_sz,
-+				mtt->first_seg +
-+				start_index / HNS_ROCE_MTT_ENTRY_PER_SEG,
- 				&dma_handle);
- 	if (!mtts)
- 		return -ENOMEM;
+ 	cmnd->result = (((host_status) << 16) | scsi_status);
+ 	cmnd->scsi_done(cmnd);
 -- 
 2.20.1
 
