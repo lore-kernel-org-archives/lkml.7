@@ -2,146 +2,98 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4E1C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685A5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E620920989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B4920989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:09:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBSWmYZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfEIPIv (ORCPT
+        id S1726749AbfEIPJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:08:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33900 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726234AbfEIPIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:08:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AF88EAC58;
-        Thu,  9 May 2019 15:08:48 +0000 (UTC)
-Date:   Thu, 9 May 2019 17:08:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Intel-gfx] [PATCH] RFC: console: hack up console_lock more v2
-Message-ID: <20190509150848.dj5kb47iuz5tcmso@pathway.suse.cz>
-References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
- <20190506074553.21464-1-daniel.vetter@ffwll.ch>
- <20190506081614.b7b22k4prodskbiy@pathway.suse.cz>
- <20190506082628.wehkislebljxmk5d@pathway.suse.cz>
- <20190506093812.GG17751@phenom.ffwll.local>
- <20190506112448.rng2oefmp2c262dq@pathway.suse.cz>
- <20190508081712.GQ17751@phenom.ffwll.local>
+        Thu, 9 May 2019 11:09:35 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:47018 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIPJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:09:34 -0400
+Received: by mail-lf1-f67.google.com with SMTP id k18so1798840lfj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 08:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kWAKK8WP4FdUrwf2u9IYb4uPnmyQHm6cwqnEBOHfHJY=;
+        b=sBSWmYZWoM+6BpSnJ4geqHG3oHG1h6SunhGuXmjafljNOOSMrfsfJBAcXMhY1jimSO
+         oOftSpC7Ul4LNSuJp/nsrU88fQ82yCaBe6uJynIjcchhOjfwo7CoHpCkdsO7LYWsWalJ
+         v3tVWR8uuryZLmqVklUMK1dthEMNi55+oeUd8FjT53ybLy3uHYgLWA3oz0FOWxeMPWMM
+         Ii52AvZWyTZXgWUS20+RXGR5HSTtQbe9Ko0pwasdYa2kcN1s7miZy4ayuHgTZnAkJL2M
+         G5xg9Ytmx276Aa3MGW1qQGsAtwNsoaidDuqtewiuFnwHBqy9ZQ/wm6miLEionQWY5jOO
+         SNKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kWAKK8WP4FdUrwf2u9IYb4uPnmyQHm6cwqnEBOHfHJY=;
+        b=JK/vlk5jEKaSd/lLzlW3hu+LAiddnFWd41DbYa1siJZOhpAeoSPIctcbxMJCNK6eXE
+         ftEWwkOoEwm1FirAg8vFp69lDiQhWl9FdZcxuK364PjL8+2Ivp+T0rhjm3I7qNu0w9Qm
+         q9pj7Ny3P96VkQYgUnNZtfHm0lgrU+bjEnyge67fzZ39EXpPpZJMvC1GHOFyaA23YQ51
+         QFp+unU/s+ktRC2iwAETsdhMqmCcP4Vjy1/fgpG5Ldn7PstrabHOCSKZz2fdz1Swjv9n
+         5pX5t9He/Lg/F5umb0jqgoGkbUEDc13Kb0YccjYx0zVxHTuEKqeYQu38iMEA1s7VymCP
+         PO7w==
+X-Gm-Message-State: APjAAAW226lIQaKVvtW6zv0gXFcVv7X5tn14V5uzUKoa8njHHVcpmZOK
+        p7jenkkhE65PEqIMrPAk2P8HChJu
+X-Google-Smtp-Source: APXvYqzUG1kOTtAno/F8AbgnmfjezoT9TuQUrKWwA/13jdCCEPkg7oLNdfLEn3aDW7pxIryJkxCIeQ==
+X-Received: by 2002:a19:196:: with SMTP id 144mr2978471lfb.35.1557414572716;
+        Thu, 09 May 2019 08:09:32 -0700 (PDT)
+Received: from mail-personal.localdomain (v902-597.aalto.fi. [130.233.10.104])
+        by smtp.gmail.com with ESMTPSA id z4sm393048ljz.16.2019.05.09.08.09.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 08:09:31 -0700 (PDT)
+Received: by mail-personal.localdomain (Postfix, from userid 1000)
+        id 20C17602FC; Thu,  9 May 2019 18:09:29 +0300 (EEST)
+Date:   Thu, 9 May 2019 18:09:29 +0300
+From:   Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/7] rslib: RS decoder is severely broken
+Message-ID: <20190509150929.GA309@mail-personal>
+References: <20190330182947.8823-1-ferdinand.blomqvist@gmail.com>
+ <alpine.DEB.2.21.1904041322160.1685@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190508081712.GQ17751@phenom.ffwll.local>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <alpine.DEB.2.21.1904041322160.1685@nanos.tec.linutronix.de>
+X-PGP-Key: https://keys.gnupg.net/pks/lookup?op=vindex&search=ferdinand.blomqvist%40gmail.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-05-08 10:17:12, Daniel Vetter wrote:
-> On Mon, May 06, 2019 at 01:24:48PM +0200, Petr Mladek wrote:
-> > On Mon 2019-05-06 11:38:13, Daniel Vetter wrote:
-> > > On Mon, May 06, 2019 at 10:26:28AM +0200, Petr Mladek wrote:
-> > > > On Mon 2019-05-06 10:16:14, Petr Mladek wrote:
-> > > > > On Mon 2019-05-06 09:45:53, Daniel Vetter wrote:
-> > > > > > console_trylock, called from within printk, can be called from pretty
-> > > > > > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > > > > > usually the box is in pretty bad shape at that point already. But it
-> > > > > > really doesn't help when then lockdep jumps in and spams the logs,
-> > > > > > potentially obscuring the real backtrace we're really interested in.
-> > > > > > One case I've seen (slightly simplified backtrace):
-> > > > > > 
-> > > > > >  Call Trace:
-> > > > > >   <IRQ>
-> > > > > >   console_trylock+0xe/0x60
-> > > > > >   vprintk_emit+0xf1/0x320
-> > > > > >   printk+0x4d/0x69
-> > > > > >   __warn_printk+0x46/0x90
-> > > > > >   native_smp_send_reschedule+0x2f/0x40
-> > > > > >   check_preempt_curr+0x81/0xa0
-> > > > > >   ttwu_do_wakeup+0x14/0x220
-> > > > > >   try_to_wake_up+0x218/0x5f0
-> > > > > 
-> > > > > try_to_wake_up() takes p->pi_lock. It could deadlock because it
-> > > > > can get called recursively from printk_safe_up().
-> > > > > 
-> > > > > And there are more locks taken from try_to_wake_up(), for example,
-> > > > > __task_rq_lock() taken from ttwu_remote().
-> > > > > 
-> > > > > IMHO, the most reliable solution would be do call the entire
-> > > > > up_console_sem() from printk deferred context. We could assign
-> > > > > few bytes for this context in the per-CPU printk_deferred
-> > > > > variable.
-> > > > 
-> > > > Ah, I was too fast and did the same mistake. This won't help because
-> > > > it would still call try_to_wake_up() recursively.
-> > > 
-> > > Uh :-/
-> > > 
-> > > > We need to call all printk's that can be called under locks
-> > > > taken in try_to_wake_up() path in printk deferred context.
-> > > > Unfortunately it is whack a mole approach.
-> > > 
-> > > Hm since it's whack-a-mole anyway, what about converting the WARN_ON into
-> > > a prinkt_deferred, like all the other scheduler related code? Feels a
-> > > notch more consistent to me than leaking the printk_context into areas it
-> > > wasn't really meant built for. Scheduler code already fully subscribed to
-> > > the whack-a-mole approach after all.
-> > 
-> > I am not sure how exactly you mean the conversion.
-> > 
-> > Anyway, we do not want to use printk_deferred() treewide. It reduces
-> > the chance that the messages reach consoles. Scheduler is an
-> > exception because of the possible deadlocks.
-> > 
-> > A solution would be to define WARN_ON_DEFERRED() that would
-> > call normal WARN_ON() in printk deferred context and
-> > use in scheduler.
-> 
-> Sent it out, and then Sergey pointed out printk_safe_enter/exit (which I
-> guess is what you meant, and which I missed)
-
-No, I meant introducing a deferred printk context that would behave
-like printk_deferred().
-
-printk safe context is more limiting. It prevents deadlock on
-logbuf_lock by temporary saving the messages into per-CPU
-buffers.
-
-In scheduler, we could store the messages directly into
-the main log buffer. We just need to deffer the console
-handling to avoid deadlock on the scheduler locks.
-
-> , but we're doing this already around the up() call
-> in __up_console_sem.
+On 2019-04-04 13:24:05, Thomas Gleixner wrote:
+>Ferdinand,
 >
-> So I think these further recursions you're pointed out are already handled
-> correctly, and all we need to do is to break the loop involving
-> semaphore.lock of the console_lock semaphore only. Which I think this
-> patch here achieves.
+>On Sat, 30 Mar 2019, Ferdinand Blomqvist wrote:
+>
+>Thanks for providing that! I'm short of cycles to go through that right
+>now, but will do in the foreseeable future. Feel free to remind me if I
+>don't do so within two weeks.
+>
+>Thanks,
+>
+>	tglx
+>
 
-printk safe context would help only when try_to_wake_up()
-and all other functions using the same locks _all over
-the system_ are called printk safe (or deferred) context.
+A gentle reminder.
 
-By other words, printk safe context solves only printk()
-recursion. It does not solve recursion of the scheduler
-operations.
-
-Best Regards,
-Petr
+-- 
+Ferdinand Blomqvist
+ferdinand.blomqvist[at]gmail.com
+GPG key: 9EFB 7A2C 0432 4EC5 32BA FA61 CFE9 4164 93E8 B9E4
