@@ -2,225 +2,120 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74345C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E207C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4CE2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF69E21841
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428128;
-	bh=rKlNMGiGE87j05Hs5EDmbJNz8PnL4zYhc55QwOj/DU8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=urKulcc4rsMY0qSOP7r29R20VRrQesvOHAmMD6KlScyMZPAiKPhRTI98P51W9wTRG
-	 KE1s4US0dvo8O7ojSdabeahCUJcwONK9g0dXnuen89j6PRrOsRnxSp1mY30lfh8qmO
-	 I7bv+LFFcZ67miQjKy+UnwUeR6JbdYomauTOnSE4=
+	s=default; t=1557428131;
+	bh=K7/Z7ULPaiMrGML8CskPhXEpmnsruK7vDzfr3sp2vPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w0yB1Ycm49wIHwEaB0/4wPG9J2M+a/Fivz2YDOKbx8FJUfxfgNxErTFcVySDF0Ao5
+	 /l7AD9BlsW8XmiVoz1C3HizDaPWN+9als0de8Rtr7CH1G27fzcx0mxTJsp6USxtv8u
+	 N691SvALeGm6SadnPABxHQKjTfsdaE3ye9aqECxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfEISzZ (ORCPT
+        id S1729245AbfEISza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50414 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbfEISzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:21 -0400
+        id S1729011AbfEISz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C599204FD;
-        Thu,  9 May 2019 18:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B1432177E;
+        Thu,  9 May 2019 18:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428120;
-        bh=rKlNMGiGE87j05Hs5EDmbJNz8PnL4zYhc55QwOj/DU8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=T6LtnTtY6P1d4t8/nKutCzwAiAMncEUviX7rSKNownwAmbj0+H/lLrsrVSFQFafjM
-         Wp4fJY9yf+az+neEo0tuNkgbwdyGXqI9O7onpwz0LaH02cfZmZTFI8AQWlE6/qTz7A
-         yi71A40b+Ia3CbrXQtxPsO3si0VyGeWs4xBadU4k=
+        s=default; t=1557428125;
+        bh=K7/Z7ULPaiMrGML8CskPhXEpmnsruK7vDzfr3sp2vPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ickvzl07rWdrHRgouaVTh0rgN4EOFCgXx91yMtcFLOpJrlIbEefDK4ezs3WQWQphY
+         MglOhLcLZslJLQwNsg8OLigOkKRrs3zncflpnqlYS61fFYmDwhAidgMYM93/V0gFO5
+         hD2Qb4XSMd/M8n/mtlWKp4Ryw1ox2hUTQCVlQgc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.1 00/30] 5.1.1-stable review
-Date:   Thu,  9 May 2019 20:42:32 +0200
-Message-Id: <20190509181250.417203112@linuxfoundation.org>
+        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.1 27/30] ASoC: Intel: avoid Oops if DMA setup fails
+Date:   Thu,  9 May 2019 20:42:59 +0200
+Message-Id: <20190509181256.790938036@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
+In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
+References: <20190509181250.417203112@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.1.1-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.1.1-rc1
-X-KernelTest-Deadline: 2019-05-11T18:12+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.1.1 release.
-There are 30 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Ross Zwisler <zwisler@chromium.org>
 
-Responses should be made by Sat 11 May 2019 06:11:35 PM UTC.
-Anything received after that time might be too late.
+commit 0efa3334d65b7f421ba12382dfa58f6ff5bf83c4 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.1-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-and the diffstat can be found below.
+Currently in sst_dsp_new() if we get an error return from sst_dma_new()
+we just print an error message and then still complete the function
+successfully.  This means that we are trying to run without sst->dma
+properly set up, which will result in NULL pointer dereference when
+sst->dma is later used.  This was happening for me in
+sst_dsp_dma_get_channel():
 
-thanks,
+        struct sst_dma *dma = dsp->dma;
+	...
+        dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
 
-greg k-h
+This resulted in:
 
--------------
-Pseudo-Shortlog of commits:
+   BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
+   IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.1.1-rc1
+Fix this by adding proper error handling for the case where we fail to
+set up DMA.
 
-Will Deacon <will.deacon@arm.com>
-    arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
+This change only affects Haswell and Broadwell systems.  Baytrail
+systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
+being set to -1.
 
-Will Deacon <will.deacon@arm.com>
-    locking/futex: Allow low-level atomic operations to return -EAGAIN
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Cc: stable@vger.kernel.org
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Dan Carpenter <dan.carpenter@oracle.com>
-    i3c: Fix a shift wrap bug in i3c_bus_set_addr_slot_status()
+---
+ sound/soc/intel/common/sst-firmware.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Ross Zwisler <zwisler@chromium.org>
-    ASoC: Intel: avoid Oops if DMA setup fails
-
-Oliver Neukum <oneukum@suse.com>
-    UAS: fix alignment of scatter/gather segments
-
-Chen-Yu Tsai <wens@csie.org>
-    Bluetooth: hci_bcm: Fix empty regulator supplies for Intel Macs
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: Fix not initializing L2CAP tx_credits
-
-Marcel Holtmann <marcel@holtmann.org>
-    Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
-
-Young Xiao <YangX92@hotmail.com>
-    Bluetooth: hidp: fix buffer overflow
-
-Quinn Tran <qtran@marvell.com>
-    scsi: qla2xxx: Fix device staying in blocked state
-
-Giridhar Malavali <gmalavali@marvell.com>
-    scsi: qla2xxx: Set remote port devloss timeout to 0
-
-Andrew Vasquez <andrewv@marvell.com>
-    scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
-
-Silvio Cesare <silvio.cesare@gmail.com>
-    scsi: lpfc: change snprintf to scnprintf for possible overflow
-
-Samuel Holland <samuel@sholland.org>
-    soc: sunxi: Fix missing dependency on REGMAP_MMIO
-
-Hans de Goede <hdegoede@redhat.com>
-    ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
-
-Gregory CLEMENT <gregory.clement@bootlin.com>
-    cpufreq: armada-37xx: fix frequency calculation for opp
-
-Bjorn Andersson <bjorn.andersson@linaro.org>
-    iio: adc: qcom-spmi-adc5: Fix of-based module autoloading
-
-Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    intel_th: pci: Add Comet Lake support
-
-Prasad Sodagudi <psodagud@codeaurora.org>
-    genirq: Prevent use-after-free and work list corruption
-
-Alan Stern <stern@rowland.harvard.edu>
-    usb-storage: Set virt_boundary_mask to avoid SG overflows
-
-Johan Hovold <johan@kernel.org>
-    USB: cdc-acm: fix unthrottle races
-
-Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
-    USB: serial: f81232: fix interrupt worker not stop
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    usb: dwc3: Fix default lpm_nyet_threshold value
-
-Marc Gonzalez <marc.w.gonzalez@free.fr>
-    usb: dwc3: Allow building USB_DWC3_QCOM without EXTCON
-
-Christian Gromm <christian.gromm@microchip.com>
-    staging: most: sound: pass correct device when creating a sound card
-
-Suresh Udipi <sudipi@jp.adit-jv.com>
-    staging: most: cdev: fix chrdev_region leak in mod_exit
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    staging: wilc1000: Avoid GFP_KERNEL allocation from atomic context.
-
-Johan Hovold <johan@kernel.org>
-    staging: greybus: power_supply: fix prop-descriptor request size
-
-Andrey Ryabinin <aryabinin@virtuozzo.com>
-    ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings
-
-Dexuan Cui <decui@microsoft.com>
-    Drivers: hv: vmbus: Remove the undesired put_cpu_ptr() in hv_synic_cleanup()
-
-
--------------
-
-Diffstat:
-
- Makefile                               |   4 +-
- arch/arm64/include/asm/futex.h         |  55 ++--
- drivers/acpi/acpi_lpss.c               |   4 +-
- drivers/bluetooth/hci_bcm.c            |  20 +-
- drivers/cpufreq/armada-37xx-cpufreq.c  |  22 +-
- drivers/hv/hv.c                        |   1 -
- drivers/hwtracing/intel_th/pci.c       |   5 +
- drivers/i3c/master.c                   |   5 +-
- drivers/iio/adc/qcom-spmi-adc5.c       |   1 +
- drivers/scsi/lpfc/lpfc_attr.c          | 196 +++++++-------
- drivers/scsi/lpfc/lpfc_ct.c            |  12 +-
- drivers/scsi/lpfc/lpfc_debugfs.c       | 474 +++++++++++++++++----------------
- drivers/scsi/lpfc/lpfc_debugfs.h       |   6 +-
- drivers/scsi/qla2xxx/qla_attr.c        |   4 +-
- drivers/scsi/qla2xxx/qla_nvme.c        |  19 +-
- drivers/scsi/qla2xxx/qla_target.c      |   4 +-
- drivers/soc/sunxi/Kconfig              |   1 +
- drivers/staging/greybus/power_supply.c |   2 +-
- drivers/staging/most/cdev/cdev.c       |   2 +-
- drivers/staging/most/sound/sound.c     |   2 +-
- drivers/staging/wilc1000/wilc_netdev.c |   2 +-
- drivers/usb/class/cdc-acm.c            |  32 ++-
- drivers/usb/dwc3/Kconfig               |   6 +-
- drivers/usb/dwc3/core.c                |   2 +-
- drivers/usb/musb/Kconfig               |   2 +-
- drivers/usb/serial/f81232.c            |  39 +++
- drivers/usb/storage/scsiglue.c         |  26 +-
- drivers/usb/storage/uas.c              |  35 ++-
- include/net/bluetooth/hci_core.h       |   3 +
- kernel/futex.c                         | 188 ++++++++-----
- kernel/irq/manage.c                    |   4 +-
- lib/ubsan.c                            |  49 ++--
- net/bluetooth/hci_conn.c               |   8 +
- net/bluetooth/hidp/sock.c              |   1 +
- net/bluetooth/l2cap_core.c             |   9 +-
- sound/soc/intel/common/sst-firmware.c  |   8 +-
- 36 files changed, 716 insertions(+), 537 deletions(-)
+--- a/sound/soc/intel/common/sst-firmware.c
++++ b/sound/soc/intel/common/sst-firmware.c
+@@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct devic
+ 		goto irq_err;
+ 
+ 	err = sst_dma_new(sst);
+-	if (err)
+-		dev_warn(dev, "sst_dma_new failed %d\n", err);
++	if (err)  {
++		dev_err(dev, "sst_dma_new failed %d\n", err);
++		goto dma_err;
++	}
+ 
+ 	return sst;
+ 
++dma_err:
++	free_irq(sst->irq, sst);
+ irq_err:
+ 	if (sst->ops->free)
+ 		sst->ops->free(sst);
 
 
