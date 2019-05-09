@@ -2,52 +2,53 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCCC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B9AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91AC217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD7B217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427479;
-	bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
+	s=default; t=1557427483;
+	bh=z/KGFFDvSAg9YaKNINdovmagIzFMweISCju5tT/qXmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yUzWmlJiqOIXi8Zk04e92Zn4qLyvgGUYcriiBZI5CJH1Cz8T5USwNt923KUoOtpWy
-	 FwnclLp7dNSAQ+mIruKXdA05e3Mj+qXBZ7XerAvqxMtXwYSBpuJeD1sEgT8ut+6f9e
-	 DpR4tKj5lmU/gTd1lOSqGg0ozuBjzFDGz+cALtgg=
+	b=xuW4KgwnoM7IIkB78GS1S1x6VZCRQ1TbFG92wyrkwzSXwSVkWeFO5K9UtH2H3btOH
+	 cE2YstFeC64PxxkxhioBS3bz0pau7HVPqc0EGLKDZ0AEsM7goGZplaLiz3UgJuVMoI
+	 LhCm4FD837jMyBNZBH5h0fdfqVtlIf0EaoFeDO8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfEISoj (ORCPT
+        id S1727121AbfEISom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbfEISoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:34 -0400
+        id S1727089AbfEISoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13F10217D6;
-        Thu,  9 May 2019 18:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F262183F;
+        Thu,  9 May 2019 18:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427473;
-        bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
+        s=default; t=1557427478;
+        bh=z/KGFFDvSAg9YaKNINdovmagIzFMweISCju5tT/qXmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzG4xRsdUvGkJcSCHdYm+SB7DsBsnY3B+B3Z/Cidqh8n/NQ5CnFVYP0IPW0UTLtR6
-         KQLKd3rEtOSDJui2cXAACxXOw2CvlzfQAM1T8Fc6gqI2GNGRgIHCvaRa1r3dHl0mB5
-         XVpPlHw7g2MkaFvGeUJ6U/3zEIFvsusxRBuUHFgA=
+        b=JyBygKff/HqgDCvt9/LK1/j4bB5R4iWVBCyLIhSwdLOPdjqrEDII+FZPq3WOPH5V2
+         sCyoiYGpednBxjsg0A66ZRPwK/H3abfrDqNudRcrplIGBg8Ztq+x8AHb63XNmp6r+A
+         arJHquky1qXamg5ONCxDm4pSK9lW5JDrTCxtx+n0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 23/28] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
-Date:   Thu,  9 May 2019 20:42:15 +0200
-Message-Id: <20190509181255.186877923@linuxfoundation.org>
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 04/28] ASoC:soc-pcm:fix a codec fixup issue in TDM case
+Date:   Thu,  9 May 2019 20:41:56 +0200
+Message-Id: <20190509181250.990152284@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -60,45 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Vasquez <andrewv@marvell.com>
+[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
 
-commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
+On HDaudio platforms, if playback is started when capture is working,
+there is no audible output.
 
-Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
-code") incorrectly set 'optrom_region_size' to 'start+size', which can
-overflow option-rom boundaries when 'start' is non-zero.  Continue setting
-optrom_region_size to the proper adjusted value of 'size'.
+This can be root-caused to the use of the rx|tx_mask to store an HDaudio
+stream tag.
 
-Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If capture is stared before playback, rx_mask would be non-zero on HDaudio
+platform, then the channel number of playback, which is in the same codec
+dai with the capture, would be changed by soc_pcm_codec_params_fixup based
+on the tx_mask at first, then overwritten by this function based on rx_mask
+at last.
 
+According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
+is for capture. And stream direction is checked at all other references of
+tx|rx_mask in ASoC, so here should be an error. This patch checks stream
+direction for tx|rx_mask for fixup function.
+
+This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
+channel number based on rx_mask is not equal to the one for tx_mask. It could
+be rarely reproduecd because most drivers in kernel set the same channel number
+to tx|rx_mask or rx_mask is zero.
+
+Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
+
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-pcm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -345,7 +345,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index b111ecda6439d..1dbcdc99dbe36 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -894,10 +894,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
+ 		codec_params = *params;
  
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
+ 		/* fixup params based on TDM slot masks */
+-		if (codec_dai->tx_mask)
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
++		    codec_dai->tx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->tx_mask);
+-		if (codec_dai->rx_mask)
++
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
++		    codec_dai->rx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->rx_mask);
  
- 		ha->optrom_state = QLA_SREADING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-@@ -418,7 +418,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
- 
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SWRITING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+-- 
+2.20.1
+
 
 
