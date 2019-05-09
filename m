@@ -2,103 +2,185 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760F7C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6B8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C502173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hFsjYOCx"
+	by mail.kernel.org (Postfix) with ESMTP id 47EC62173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfEINDI (ORCPT
+        id S1726730AbfEINEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:03:08 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:55522 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfEINDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:03:07 -0400
-Received: by mail-it1-f193.google.com with SMTP id q132so3356615itc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 06:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lrOhAw0sRCAQ3y5JzhUO9qwjE87PxvqK2URtKLv0dZI=;
-        b=hFsjYOCxC0gr593JRxNG9FrZD5WWeyw4qCbzAmirygOb1W0pVnpIRSc0BHFIeF84Rr
-         Zup0wjcUbalqNiVJcfhmnrrfqNfx9shU03Bcj/oiv0JkM22q/OARveD68F1VNK9cTjU+
-         K6g4IjsA0IxEvoxG5ULyyfj3W7nNNvK2NN75sHZdMvtmuryOMn/qUbdGPzD+GhxIt24m
-         yPeSAITo/1mMTA4DgBDiHoKLJFnYrO959ROHkscm2ABiiPqTq03KQbyx6fMkDV9mipgO
-         bD6xbnkemW9y46LsFKOxo/sHesR40r/GPmATacq2fe3Y7r5eC0ODGhMOfla3cEwquwjW
-         bmuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lrOhAw0sRCAQ3y5JzhUO9qwjE87PxvqK2URtKLv0dZI=;
-        b=h27K0sI9ii42bjfhTNO6Skoz7mchnDAuzLolabAqBaYFgsaWa5SBc7Z6Cg1ifX/Ybo
-         gamAPLcwuiHKsTZaz7Y9Ah4IeKZm60NIj8Tpjw2W1oruYiDcaoFB1Ir2fa0lxj61YiPh
-         /YdbSrVN8uoei8qGSZV8YvDl3PDe6Q4nmwOmGux0HUyS7G2dQtZd6zUqQTGMvLjqKswO
-         /gwCfxIY+P0lBs3NPhgDm06mmGk74rlsTIraj0mgGSYTDwOrzADUm3JkYejC88pzhK4e
-         dN2pnCqrHFvXXFjTPLHJfjEbIVh/nc+xOaFoUuduOaInBBAYgizYYmUT6ZCV1StPSML9
-         epOw==
-X-Gm-Message-State: APjAAAVyyrpLfqmzU6Y82I962EvFB67OOW/GD0ZSlGR1isdTdU4Azq+R
-        2C7kXMeBueiTNnB20y5b7lAl/QAcCURZRmXYiTVmdQ==
-X-Google-Smtp-Source: APXvYqypM/J9GkSNpoEgS1CV7kAoZkYHIvwJjkkGE0RD174ldbjZZlzCy7sGykk2JaOw0C9fRBa5vKmZE5QYCEOfHOQ=
-X-Received: by 2002:a05:660c:38a:: with SMTP id x10mr2828361itj.12.1557406986628;
- Thu, 09 May 2019 06:03:06 -0700 (PDT)
+        Thu, 9 May 2019 09:04:51 -0400
+Received: from foss.arm.com ([217.140.101.70]:40882 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbfEINEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:04:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6261B374;
+        Thu,  9 May 2019 06:04:50 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D1673F7BD;
+        Thu,  9 May 2019 06:04:47 -0700 (PDT)
+Date:   Thu, 9 May 2019 14:04:44 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v8 04/16] sched/core: uclamp: Add system default clamps
+Message-ID: <20190509130444.4yawtbpjx2y7pp7g@e110439-lin>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-5-patrick.bellasi@arm.com>
+ <20190508190733.GC32547@worktop.programming.kicks-ass.net>
+ <20190508191529.GA26813@worktop.programming.kicks-ass.net>
+ <20190509091057.ckef2ley4eswyzds@e110439-lin>
+ <20190509115307.GS2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <000000000000afcf18058364e99e@google.com> <0000000000008497eb0583d26f55@google.com>
-In-Reply-To: <0000000000008497eb0583d26f55@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 May 2019 15:02:55 +0200
-Message-ID: <CACT4Y+ax0TjkaFLoYZL0jZCdRELA7ajnBaAeSANw-hUP--CqJQ@mail.gmail.com>
-Subject: Re: WARNING: locking bug in __icmp_send
-To:     syzbot <syzbot+173d67242daa7ce45f85@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509115307.GS2623@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: syzbot <syzbot+173d67242daa7ce45f85@syzkaller.appspotmail.com>
-Date: Mon, Mar 11, 2019 at 3:32 PM
-To: <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-<syzkaller-bugs@googlegroups.com>, <yoshfuji@linux-ipv6.org>
+On 09-May 13:53, Peter Zijlstra wrote:
+> On Thu, May 09, 2019 at 10:10:57AM +0100, Patrick Bellasi wrote:
+> > On 08-May 21:15, Peter Zijlstra wrote:
+> > > On Wed, May 08, 2019 at 09:07:33PM +0200, Peter Zijlstra wrote:
+> > > > On Tue, Apr 02, 2019 at 11:41:40AM +0100, Patrick Bellasi wrote:
+> > > > > +static inline struct uclamp_se
+> > > > > +uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+> > > > > +{
+> > > > > +	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
+> > > > > +	struct uclamp_se uc_max = uclamp_default[clamp_id];
+> > > > > +
+> > > > > +	/* System default restrictions always apply */
+> > > > > +	if (unlikely(uc_req.value > uc_max.value))
+> > > > > +		return uc_max;
+> > > > > +
+> > > > > +	return uc_req;
+> > > > > +}
+> > > > > +
+> > > > > +static inline unsigned int
+> > > > > +uclamp_eff_bucket_id(struct task_struct *p, unsigned int clamp_id)
+> > > > > +{
+> > > > > +	struct uclamp_se uc_eff;
+> > > > > +
+> > > > > +	/* Task currently refcounted: use back-annotated (effective) bucket */
+> > > > > +	if (p->uclamp[clamp_id].active)
+> > > > > +		return p->uclamp[clamp_id].bucket_id;
+> > > > > +
+> > > > > +	uc_eff = uclamp_eff_get(p, clamp_id);
+> > > > > +
+> > > > > +	return uc_eff.bucket_id;
+> > > > > +}
+> > > > > +
+> > > > > +unsigned int uclamp_eff_value(struct task_struct *p, unsigned int clamp_id)
+> > > > > +{
+> > > > > +	struct uclamp_se uc_eff;
+> > > > > +
+> > > > > +	/* Task currently refcounted: use back-annotated (effective) value */
+> > > > > +	if (p->uclamp[clamp_id].active)
+> > > > > +		return p->uclamp[clamp_id].value;
+> > > > > +
+> > > > > +	uc_eff = uclamp_eff_get(p, clamp_id);
+> > > > > +
+> > > > > +	return uc_eff.value;
+> > > > > +}
+> > > > 
+> > > > This is 'wrong' because:
+> > > > 
+> > > >   uclamp_eff_value(p,id) := uclamp_eff(p,id).value
+> > > 
+> > > Clearly I means to say the above does not hold with the given
+> > > implementation, while the naming would suggest it does.
+> > 
+> > Not sure to completely get your point...
+> 
+> the point is that uclamp_eff_get() doesn't do the back annotate thing
+> and therefore returns something entirely different from
+> uclamp_eff_{bucket_id,value}(), where the naming would suggest it in
+> fact returns the same thing.
+> 
+> > > > Which seems to suggest the uclamp_eff_*() functions want another name.
+> > 
+> > That function returns the effective value of a task, which is either:
+> >  1. the back annotated value for a RUNNABLE task
+> > or
+> >  2. the aggregation of task-specific, system-default and cgroup values
+> >     for a non RUNNABLE task.
+> 
+> Right, but uclamp_eff_get() doesn't do 1, while the other two do do it.
+> And that is confusing.
 
-> syzbot has bisected this bug to:
->
-> commit 8bafb83eeee2efb8b9b4e9dfd9fb90debe4a2417
-> Author: David S. Miller <davem@davemloft.net>
-> Date:   Fri Mar 30 16:32:00 2018 +0000
->
->      Merge branch 'stmmac-DWMAC5'
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13354d9d200000
-> start commit:   8bafb83e Merge branch 'stmmac-DWMAC5'
-> git tree:       net
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10b54d9d200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17354d9d200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=73d88a42238825ad
-> dashboard link: https://syzkaller.appspot.com/bug?extid=173d67242daa7ce45f85
-> userspace arch: amd64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153d6923200000
->
-> Reported-by: syzbot+173d67242daa7ce45f85@syzkaller.appspotmail.com
-> Fixes: 8bafb83e ("Merge branch 'stmmac-DWMAC5'")
+I see, right.
 
-#syz dup: WARNING: locking bug in icmp_send
+> > > > Also, suppose the above would be true; does GCC really generate better
+> > > > code for the LHS compared to the RHS?
+> > 
+> > It generate "sane" code which implements the above logic and allows
+> > to know that whenever we call uclamp_eff_value(p,id) we get the most
+> > updated effective value for a task, independently from its {!}RUNNABLE
+> > state.
+> > 
+> > I would keep the function but, since Suren also complained also about
+> > the name... perhaps I should come up with a better name? Proposals?
+> 
+> Right, so they should move to the patch where they're needed, but I was
 
-https://syzkaller.appspot.com/bug?id=4b9e5e6290e3fdee367ea37949f3bda8d4ec87bd
+Yes, I'll move _value() to 10/16:
+
+   sched/core: uclamp: Add uclamp_util_with()
+
+where we actually need to access the clamp value and...
+
+> wondering why you'd not written something like:
+> 
+> static inline
+> struct uclamp_se uclamp_active(struct task_struct *p, unsigned int clamp_id)
+> {
+> 	if (p->uclamp[clamp_id].active)
+> 		return p->uclamp[clamp_id];
+> 
+> 	return uclamp_eff(p, clamp_id);
+> }
+> 
+> And then used:
+> 
+> 	uclamp_active(p, id).{value,bucket_id}
+> 
+> - OR -
+> 
+> have uclamp_eff() include the active thing, afaict the callsite in
+> uclamp_rq_inc_id() guarantees !active.
+> 
+> In any case, I'm thinking the foo().member notation saves us from having
+> to have two almost identical functions and the 'inline' part should get
+> GCC to generate sane code.
+
+... look into this approach, seems reasonable and actually better to read.
+
+Thanks
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
