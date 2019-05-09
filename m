@@ -2,52 +2,63 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7686BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF627C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C519217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2B4217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428032;
-	bh=HhhJhHf55z+gcxz4+Y2O/KLEOBrc3+ZnT8gPTSUcojE=;
+	s=default; t=1557428035;
+	bh=6yWeDZiM5iQAxyM2lXLole3tDtvdt8+Ni7Vn2pjNp2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hwhDHFBI7QmfkgVBJoNiT/g2boPbnWln7dBVbMZnkS2ljDJwg057reDlAczro9lx6
-	 3xDQ/RHMpFyCiHCSTs07ZRjtFIpTGEpJgYJK1+h4IyWhQxotIItwMBfhPKkosT7do2
-	 jdhqbonnlh4yowa8dfkG2gUyk8TXKlVdy6AwquHc=
+	b=SvJg7CwwLOjiY4YNEV8ePhvI2RoUaEi6oV8y6FfY1F5mljfjoqPQqEBUg+WHJceUg
+	 2ptgCxcnsj7HFVpApHCAi3hAi/9SYmAw3tvftpPIplw3z/MwAyOyyXslarcarDSfgN
+	 K53lJ6vgg6LJNHDDScWRlppgWJa2nRA/Mw+Pl1E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbfEISxv (ORCPT
+        id S1728958AbfEISxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48320 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728941AbfEISxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:53:47 -0400
+        id S1728941AbfEISxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:53:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C52912177E;
-        Thu,  9 May 2019 18:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16712177E;
+        Thu,  9 May 2019 18:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428026;
-        bh=HhhJhHf55z+gcxz4+Y2O/KLEOBrc3+ZnT8gPTSUcojE=;
+        s=default; t=1557428031;
+        bh=6yWeDZiM5iQAxyM2lXLole3tDtvdt8+Ni7Vn2pjNp2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W90tL3OG9MY+uJIJBqAGWrg7sMo+3yzLp4Vj6eL61eTC1OSct8qV3GS3XRO1O5RjT
-         VImIU7t8/kmhBFrP6qB64v84NwOV8quE7j4uwDynxa+k6gZnBMFCGRAiYzvvvHsoko
-         WBZXWEYMeGs8s70IAmY0Xamo+tcSYzeL4CT4O3nY=
+        b=N2yayeu1VEBHs94xliYMS8tloBceZ1DJ1huInfIaGk7nT5/psUHvlr4F2vnxXPPFn
+         tCPZsqTRfz2k8kD7Qhz482Gxluh/3rhy5wHMQZx7S5bDlVOsBZfgbe7rralvMM95oz
+         v8SO/v3z9nLnnUN6SeFM5b4gtmBCCM5d6SIQYsvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
+        stable@vger.kernel.org,
+        Thomas-Mich Richter <tmricht@linux.ibm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.0 94/95] locking/futex: Allow low-level atomic operations to return -EAGAIN
-Date:   Thu,  9 May 2019 20:42:51 +0200
-Message-Id: <20190509181315.759921533@linuxfoundation.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 71/95] perf/core: Fix perf_event_disable_inatomic() race
+Date:   Thu,  9 May 2019 20:42:28 +0200
+Message-Id: <20190509181314.402251425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,341 +71,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+[ Upstream commit 1d54ad944074010609562da5c89e4f5df2f4e5db ]
 
-commit 6b4f4bc9cb22875f97023984a625386f0c7cc1c0 upstream.
+Thomas-Mich Richter reported he triggered a WARN()ing from event_function_local()
+on his s390. The problem boils down to:
 
-Some futex() operations, including FUTEX_WAKE_OP, require the kernel to
-perform an atomic read-modify-write of the futex word via the userspace
-mapping. These operations are implemented by each architecture in
-arch_futex_atomic_op_inuser() and futex_atomic_cmpxchg_inatomic(), which
-are called in atomic context with the relevant hash bucket locks held.
+	CPU-A				CPU-B
 
-Although these routines may return -EFAULT in response to a page fault
-generated when accessing userspace, they are expected to succeed (i.e.
-return 0) in all other cases. This poses a problem for architectures
-that do not provide bounded forward progress guarantees or fairness of
-contended atomic operations and can lead to starvation in some cases.
+	perf_event_overflow()
+	  perf_event_disable_inatomic()
+	    @pending_disable = 1
+	    irq_work_queue();
 
-In these problematic scenarios, we must return back to the core futex
-code so that we can drop the hash bucket locks and reschedule if
-necessary, much like we do in the case of a page fault.
+	sched-out
+	  event_sched_out()
+	    @pending_disable = 0
 
-Allow architectures to return -EAGAIN from their implementations of
-arch_futex_atomic_op_inuser() and futex_atomic_cmpxchg_inatomic(), which
-will cause the core futex code to reschedule if necessary and return
-back to the architecture code later on.
+					sched-in
+					perf_event_overflow()
+					  perf_event_disable_inatomic()
+					    @pending_disable = 1;
+					    irq_work_queue(); // FAILS
 
-Cc: <stable@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	irq_work_run()
+	  perf_pending_event()
+	    if (@pending_disable)
+	      perf_event_disable_local(); // WHOOPS
 
+The problem exists in generic, but s390 is particularly sensitive
+because it doesn't implement arch_irq_work_raise(), nor does it call
+irq_work_run() from it's PMU interrupt handler (nor would that be
+sufficient in this case, because s390 also generates
+perf_event_overflow() from pmu::stop). Add to that the fact that s390
+is a virtual architecture and (virtual) CPU-A can stall long enough
+for the above race to happen, even if it would self-IPI.
+
+Adding a irq_work_sync() to event_sched_in() would work for all hardare
+PMUs that properly use irq_work_run() but fails for software PMUs.
+
+Instead encode the CPU number in @pending_disable, such that we can
+tell which CPU requested the disable. This then allows us to detect
+the above scenario and even redirect the IPI to make up for the failed
+queue.
+
+Reported-by: Thomas-Mich Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/futex.c |  188 +++++++++++++++++++++++++++++++++++----------------------
- 1 file changed, 117 insertions(+), 71 deletions(-)
+ kernel/events/core.c        | 52 ++++++++++++++++++++++++++++++-------
+ kernel/events/ring_buffer.c |  4 +--
+ 2 files changed, 45 insertions(+), 11 deletions(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -1314,13 +1314,15 @@ static int lookup_pi_state(u32 __user *u
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2e2305a810470..124e1e3d06b92 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2007,8 +2007,8 @@ event_sched_out(struct perf_event *event,
+ 	event->pmu->del(event, 0);
+ 	event->oncpu = -1;
  
- static int lock_pi_update_atomic(u32 __user *uaddr, u32 uval, u32 newval)
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
++	if (READ_ONCE(event->pending_disable) >= 0) {
++		WRITE_ONCE(event->pending_disable, -1);
+ 		state = PERF_EVENT_STATE_OFF;
+ 	}
+ 	perf_event_set_state(event, state);
+@@ -2196,7 +2196,8 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
+ 
+ void perf_event_disable_inatomic(struct perf_event *event)
  {
-+	int err;
- 	u32 uninitialized_var(curval);
- 
- 	if (unlikely(should_fail_futex(true)))
- 		return -EFAULT;
- 
--	if (unlikely(cmpxchg_futex_value_locked(&curval, uaddr, uval, newval)))
--		return -EFAULT;
-+	err = cmpxchg_futex_value_locked(&curval, uaddr, uval, newval);
-+	if (unlikely(err))
-+		return err;
- 
- 	/* If user space value changed, let the caller retry */
- 	return curval != uval ? -EAGAIN : 0;
-@@ -1506,10 +1508,8 @@ static int wake_futex_pi(u32 __user *uad
- 	if (unlikely(should_fail_futex(true)))
- 		ret = -EFAULT;
- 
--	if (cmpxchg_futex_value_locked(&curval, uaddr, uval, newval)) {
--		ret = -EFAULT;
--
--	} else if (curval != uval) {
-+	ret = cmpxchg_futex_value_locked(&curval, uaddr, uval, newval);
-+	if (!ret && (curval != uval)) {
- 		/*
- 		 * If a unconditional UNLOCK_PI operation (user space did not
- 		 * try the TID->0 transition) raced with a waiter setting the
-@@ -1704,32 +1704,32 @@ retry_private:
- 	double_lock_hb(hb1, hb2);
- 	op_ret = futex_atomic_op_inuser(op, uaddr2);
- 	if (unlikely(op_ret < 0)) {
--
- 		double_unlock_hb(hb1, hb2);
- 
--#ifndef CONFIG_MMU
--		/*
--		 * we don't get EFAULT from MMU faults if we don't have an MMU,
--		 * but we might get them from range checking
--		 */
--		ret = op_ret;
--		goto out_put_keys;
--#endif
--
--		if (unlikely(op_ret != -EFAULT)) {
-+		if (!IS_ENABLED(CONFIG_MMU) ||
-+		    unlikely(op_ret != -EFAULT && op_ret != -EAGAIN)) {
-+			/*
-+			 * we don't get EFAULT from MMU faults if we don't have
-+			 * an MMU, but we might get them from range checking
-+			 */
- 			ret = op_ret;
- 			goto out_put_keys;
- 		}
- 
--		ret = fault_in_user_writeable(uaddr2);
--		if (ret)
--			goto out_put_keys;
-+		if (op_ret == -EFAULT) {
-+			ret = fault_in_user_writeable(uaddr2);
-+			if (ret)
-+				goto out_put_keys;
-+		}
- 
--		if (!(flags & FLAGS_SHARED))
-+		if (!(flags & FLAGS_SHARED)) {
-+			cond_resched();
- 			goto retry_private;
-+		}
- 
- 		put_futex_key(&key2);
- 		put_futex_key(&key1);
-+		cond_resched();
- 		goto retry;
- 	}
- 
-@@ -2354,7 +2354,7 @@ static int fixup_pi_state_owner(u32 __us
- 	u32 uval, uninitialized_var(curval), newval;
- 	struct task_struct *oldowner, *newowner;
- 	u32 newtid;
--	int ret;
-+	int ret, err = 0;
- 
- 	lockdep_assert_held(q->lock_ptr);
- 
-@@ -2425,14 +2425,17 @@ retry:
- 	if (!pi_state->owner)
- 		newtid |= FUTEX_OWNER_DIED;
- 
--	if (get_futex_value_locked(&uval, uaddr))
--		goto handle_fault;
-+	err = get_futex_value_locked(&uval, uaddr);
-+	if (err)
-+		goto handle_err;
- 
- 	for (;;) {
- 		newval = (uval & FUTEX_OWNER_DIED) | newtid;
- 
--		if (cmpxchg_futex_value_locked(&curval, uaddr, uval, newval))
--			goto handle_fault;
-+		err = cmpxchg_futex_value_locked(&curval, uaddr, uval, newval);
-+		if (err)
-+			goto handle_err;
-+
- 		if (curval == uval)
- 			break;
- 		uval = curval;
-@@ -2460,23 +2463,37 @@ retry:
- 	return 0;
- 
- 	/*
--	 * To handle the page fault we need to drop the locks here. That gives
--	 * the other task (either the highest priority waiter itself or the
--	 * task which stole the rtmutex) the chance to try the fixup of the
--	 * pi_state. So once we are back from handling the fault we need to
--	 * check the pi_state after reacquiring the locks and before trying to
--	 * do another fixup. When the fixup has been done already we simply
--	 * return.
-+	 * In order to reschedule or handle a page fault, we need to drop the
-+	 * locks here. In the case of a fault, this gives the other task
-+	 * (either the highest priority waiter itself or the task which stole
-+	 * the rtmutex) the chance to try the fixup of the pi_state. So once we
-+	 * are back from handling the fault we need to check the pi_state after
-+	 * reacquiring the locks and before trying to do another fixup. When
-+	 * the fixup has been done already we simply return.
- 	 *
- 	 * Note: we hold both hb->lock and pi_mutex->wait_lock. We can safely
- 	 * drop hb->lock since the caller owns the hb -> futex_q relation.
- 	 * Dropping the pi_mutex->wait_lock requires the state revalidate.
- 	 */
--handle_fault:
-+handle_err:
- 	raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
- 	spin_unlock(q->lock_ptr);
- 
--	ret = fault_in_user_writeable(uaddr);
-+	switch (err) {
-+	case -EFAULT:
-+		ret = fault_in_user_writeable(uaddr);
-+		break;
-+
-+	case -EAGAIN:
-+		cond_resched();
-+		ret = 0;
-+		break;
-+
-+	default:
-+		WARN_ON_ONCE(1);
-+		ret = err;
-+		break;
-+	}
- 
- 	spin_lock(q->lock_ptr);
- 	raw_spin_lock_irq(&pi_state->pi_mutex.wait_lock);
-@@ -3045,10 +3062,8 @@ retry:
- 		 * A unconditional UNLOCK_PI op raced against a waiter
- 		 * setting the FUTEX_WAITERS bit. Try again.
- 		 */
--		if (ret == -EAGAIN) {
--			put_futex_key(&key);
--			goto retry;
--		}
-+		if (ret == -EAGAIN)
-+			goto pi_retry;
- 		/*
- 		 * wake_futex_pi has detected invalid state. Tell user
- 		 * space.
-@@ -3063,9 +3078,19 @@ retry:
- 	 * preserve the WAITERS bit not the OWNER_DIED one. We are the
- 	 * owner.
- 	 */
--	if (cmpxchg_futex_value_locked(&curval, uaddr, uval, 0)) {
-+	if ((ret = cmpxchg_futex_value_locked(&curval, uaddr, uval, 0))) {
- 		spin_unlock(&hb->lock);
--		goto pi_faulted;
-+		switch (ret) {
-+		case -EFAULT:
-+			goto pi_faulted;
-+
-+		case -EAGAIN:
-+			goto pi_retry;
-+
-+		default:
-+			WARN_ON_ONCE(1);
-+			goto out_putkey;
-+		}
- 	}
- 
- 	/*
-@@ -3079,6 +3104,11 @@ out_putkey:
- 	put_futex_key(&key);
- 	return ret;
- 
-+pi_retry:
-+	put_futex_key(&key);
-+	cond_resched();
-+	goto retry;
-+
- pi_faulted:
- 	put_futex_key(&key);
- 
-@@ -3439,6 +3469,7 @@ err_unlock:
- static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
- {
- 	u32 uval, uninitialized_var(nval), mval;
-+	int err;
- 
- 	/* Futex address must be 32bit aligned */
- 	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
-@@ -3448,42 +3479,57 @@ retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
- 
--	if ((uval & FUTEX_TID_MASK) == task_pid_vnr(curr)) {
--		/*
--		 * Ok, this dying thread is truly holding a futex
--		 * of interest. Set the OWNER_DIED bit atomically
--		 * via cmpxchg, and if the value had FUTEX_WAITERS
--		 * set, wake up a waiter (if any). (We have to do a
--		 * futex_wake() even if OWNER_DIED is already set -
--		 * to handle the rare but possible case of recursive
--		 * thread-death.) The rest of the cleanup is done in
--		 * userspace.
--		 */
--		mval = (uval & FUTEX_WAITERS) | FUTEX_OWNER_DIED;
--		/*
--		 * We are not holding a lock here, but we want to have
--		 * the pagefault_disable/enable() protection because
--		 * we want to handle the fault gracefully. If the
--		 * access fails we try to fault in the futex with R/W
--		 * verification via get_user_pages. get_user() above
--		 * does not guarantee R/W access. If that fails we
--		 * give up and leave the futex locked.
--		 */
--		if (cmpxchg_futex_value_locked(&nval, uaddr, uval, mval)) {
-+	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
-+		return 0;
-+
-+	/*
-+	 * Ok, this dying thread is truly holding a futex
-+	 * of interest. Set the OWNER_DIED bit atomically
-+	 * via cmpxchg, and if the value had FUTEX_WAITERS
-+	 * set, wake up a waiter (if any). (We have to do a
-+	 * futex_wake() even if OWNER_DIED is already set -
-+	 * to handle the rare but possible case of recursive
-+	 * thread-death.) The rest of the cleanup is done in
-+	 * userspace.
-+	 */
-+	mval = (uval & FUTEX_WAITERS) | FUTEX_OWNER_DIED;
-+
-+	/*
-+	 * We are not holding a lock here, but we want to have
-+	 * the pagefault_disable/enable() protection because
-+	 * we want to handle the fault gracefully. If the
-+	 * access fails we try to fault in the futex with R/W
-+	 * verification via get_user_pages. get_user() above
-+	 * does not guarantee R/W access. If that fails we
-+	 * give up and leave the futex locked.
-+	 */
-+	if ((err = cmpxchg_futex_value_locked(&nval, uaddr, uval, mval))) {
-+		switch (err) {
-+		case -EFAULT:
- 			if (fault_in_user_writeable(uaddr))
- 				return -1;
- 			goto retry;
--		}
--		if (nval != uval)
-+
-+		case -EAGAIN:
-+			cond_resched();
- 			goto retry;
- 
--		/*
--		 * Wake robust non-PI futexes here. The wakeup of
--		 * PI futexes happens in exit_pi_state():
--		 */
--		if (!pi && (uval & FUTEX_WAITERS))
--			futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
-+		default:
-+			WARN_ON_ONCE(1);
-+			return err;
-+		}
- 	}
-+
-+	if (nval != uval)
-+		goto retry;
-+
-+	/*
-+	 * Wake robust non-PI futexes here. The wakeup of
-+	 * PI futexes happens in exit_pi_state():
-+	 */
-+	if (!pi && (uval & FUTEX_WAITERS))
-+		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
-+
- 	return 0;
+-	event->pending_disable = 1;
++	WRITE_ONCE(event->pending_disable, smp_processor_id());
++	/* can fail, see perf_pending_event_disable() */
+ 	irq_work_queue(&event->pending);
  }
  
+@@ -5803,10 +5804,45 @@ void perf_event_wakeup(struct perf_event *event)
+ 	}
+ }
+ 
++static void perf_pending_event_disable(struct perf_event *event)
++{
++	int cpu = READ_ONCE(event->pending_disable);
++
++	if (cpu < 0)
++		return;
++
++	if (cpu == smp_processor_id()) {
++		WRITE_ONCE(event->pending_disable, -1);
++		perf_event_disable_local(event);
++		return;
++	}
++
++	/*
++	 *  CPU-A			CPU-B
++	 *
++	 *  perf_event_disable_inatomic()
++	 *    @pending_disable = CPU-A;
++	 *    irq_work_queue();
++	 *
++	 *  sched-out
++	 *    @pending_disable = -1;
++	 *
++	 *				sched-in
++	 *				perf_event_disable_inatomic()
++	 *				  @pending_disable = CPU-B;
++	 *				  irq_work_queue(); // FAILS
++	 *
++	 *  irq_work_run()
++	 *    perf_pending_event()
++	 *
++	 * But the event runs on CPU-B and wants disabling there.
++	 */
++	irq_work_queue_on(&event->pending, cpu);
++}
++
+ static void perf_pending_event(struct irq_work *entry)
+ {
+-	struct perf_event *event = container_of(entry,
+-			struct perf_event, pending);
++	struct perf_event *event = container_of(entry, struct perf_event, pending);
+ 	int rctx;
+ 
+ 	rctx = perf_swevent_get_recursion_context();
+@@ -5815,10 +5851,7 @@ static void perf_pending_event(struct irq_work *entry)
+ 	 * and we won't recurse 'further'.
+ 	 */
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
+-		perf_event_disable_local(event);
+-	}
++	perf_pending_event_disable(event);
+ 
+ 	if (event->pending_wakeup) {
+ 		event->pending_wakeup = 0;
+@@ -9998,6 +10031,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 
+ 
+ 	init_waitqueue_head(&event->waitq);
++	event->pending_disable = -1;
+ 	init_irq_work(&event->pending, perf_pending_event);
+ 
+ 	mutex_init(&event->mmap_mutex);
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index dbd7656b4f737..a5fc56a654fd3 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -393,7 +393,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
+ 		 * store that will be enabled on successful return
+ 		 */
+ 		if (!handle->size) { /* A, matches D */
+-			event->pending_disable = 1;
++			event->pending_disable = smp_processor_id();
+ 			perf_output_wakeup(handle);
+ 			local_set(&rb->aux_nest, 0);
+ 			goto err_put;
+@@ -478,7 +478,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+ 
+ 	if (wakeup) {
+ 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
+-			handle->event->pending_disable = 1;
++			handle->event->pending_disable = smp_processor_id();
+ 		perf_output_wakeup(handle);
+ 	}
+ 
+-- 
+2.20.1
+
 
 
