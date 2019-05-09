@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F970C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAEEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF0E20578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F82C2183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427710;
-	bh=7FayuxrMwXleHriLSFaZ300dCYW/NHCA5YFjUDuEqY4=;
+	s=default; t=1557427714;
+	bh=Rp7/QikNtiLDpD20dGNUM3+MIlwpnQqPwqvMNHk1K90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vgF8eOI2fvJphmzfeXKrHMW67IUsgvW8EXSx+gxG+ke2LQGurLbKNDqUIJyc2du6n
-	 9P+Dr1Q7SsYcVWfP6XJUGqEvGK55PYR58KSDBklzkt98jqUDyjvL+veHDLrhhJ+RJf
-	 gGOl6mAQT4u161wawVLr7RJMdSmTyKP6ZLuPJwNs=
+	b=UqoY1xeI4Ym6E1p8dky3CJd1SfxenXRqDUVStvQWDVexJ2cqMm1aQPXgKZ3ULemul
+	 1Tx2GNpE0wYdjWXoaBtQ+YA4It2MG16RGs6Qrx2bB0I6QJOOD8qRnlDeNQgEoXicze
+	 /DPWmvF2E5SaRgxj2YIK4FkVCnM7XYRjHUyJOWZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfEISs3 (ORCPT
+        id S1728050AbfEISsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41350 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfEISs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:26 -0400
+        id S1728036AbfEISs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A849F20578;
-        Thu,  9 May 2019 18:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53425217F9;
+        Thu,  9 May 2019 18:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427706;
-        bh=7FayuxrMwXleHriLSFaZ300dCYW/NHCA5YFjUDuEqY4=;
+        s=default; t=1557427708;
+        bh=Rp7/QikNtiLDpD20dGNUM3+MIlwpnQqPwqvMNHk1K90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KuM0ZyXPNYNBPR67JetVs1iOs7FVByugKmmexk6/fkAM2St0R6wr3Sn4uNhXB1LW9
-         XfMx6wt9ZhVSg1IDdGLBuyviyP/nlk6k5UWVxPGwyUJafW+tVxKSqP2j6mHWXg/AKe
-         sTXrpSYzazRZKZXYkZrr9sKkNnArZCDKLlhWsHw8=
+        b=2oUuT0H/qjJ+LOXMxOd/gTceQE2vDLKhBU/uAFwda+VAEv6dd3/efgVJQpWHbnTJI
+         KZkmjV8b4OvpkhNkU/Hq6SLQKWSNGMPjRP82oJyQbhSqRpLfBeIkEc7vmCXcBdy4Vd
+         4hzd2OQIeBp34G7hDf5WsL20QghyslN+ZY9AO77w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
+        Longpeng <longpeng2@huawei.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/66] drm/sun4i: tcon top: Fix NULL/invalid pointer dereference in sun8i_tcon_top_un/bind
-Date:   Thu,  9 May 2019 20:42:13 +0200
-Message-Id: <20190509181305.995242614@linuxfoundation.org>
+Subject: [PATCH 4.19 39/66] virtio_pci: fix a NULL pointer reference in vp_del_vqs
+Date:   Thu,  9 May 2019 20:42:14 +0200
+Message-Id: <20190509181306.101821011@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,69 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a07a94b47b1f528f39c3e6187b5eaf02efe44ea ]
+[ Upstream commit 6a8aae68c87349dbbcd46eac380bc43cdb98a13b ]
 
-There are two problems here:
+If the msix_affinity_masks is alloced failed, then we'll
+try to free some resources in vp_free_vectors() that may
+access it directly.
 
-1. Not all clk_data->hws[] need to be initialized, depending on various
-   configured quirks. This leads to NULL ptr deref in
-   clk_hw_unregister_gate() in sun8i_tcon_top_unbind()
-2. If there is error when registering the clk_data->hws[],
-   err_unregister_gates error path will try to unregister
-   IS_ERR()=true (invalid) pointer.
+We met the following stack in our production:
+[   29.296767] BUG: unable to handle kernel NULL pointer dereference at  (null)
+[   29.311151] IP: [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
+[   29.324787] PGD 0
+[   29.333224] Oops: 0000 [#1] SMP
+[...]
+[   29.425175] RIP: 0010:[<ffffffffc04fe35a>]  [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
+[   29.441405] RSP: 0018:ffff9a55c2dcfa10  EFLAGS: 00010206
+[   29.453491] RAX: 0000000000000000 RBX: ffff9a55c322c400 RCX: 0000000000000000
+[   29.467488] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a55c322c400
+[   29.481461] RBP: ffff9a55c2dcfa20 R08: 0000000000000000 R09: ffffc1b6806ff020
+[   29.495427] R10: 0000000000000e95 R11: 0000000000aaaaaa R12: 0000000000000000
+[   29.509414] R13: 0000000000010000 R14: ffff9a55bd2d9e98 R15: ffff9a55c322c400
+[   29.523407] FS:  00007fdcba69f8c0(0000) GS:ffff9a55c2840000(0000) knlGS:0000000000000000
+[   29.538472] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   29.551621] CR2: 0000000000000000 CR3: 000000003ce52000 CR4: 00000000003607a0
+[   29.565886] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   29.580055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   29.594122] Call Trace:
+[   29.603446]  [<ffffffffc04fe8a2>] vp_request_msix_vectors+0xe2/0x260 [virtio_pci]
+[   29.618017]  [<ffffffffc04fedc5>] vp_try_to_find_vqs+0x95/0x3b0 [virtio_pci]
+[   29.632152]  [<ffffffffc04ff117>] vp_find_vqs+0x37/0xb0 [virtio_pci]
+[   29.645582]  [<ffffffffc057bf63>] init_vq+0x153/0x260 [virtio_blk]
+[   29.658831]  [<ffffffffc057c1e8>] virtblk_probe+0xe8/0x87f [virtio_blk]
+[...]
 
-For problem (1) I have this stack trace:
-
-Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000008
-Call trace:
- clk_hw_unregister+0x8/0x18
- clk_hw_unregister_gate+0x14/0x28
- sun8i_tcon_top_unbind+0x2c/0x60
- component_unbind.isra.4+0x2c/0x50
- component_bind_all+0x1d4/0x230
- sun4i_drv_bind+0xc4/0x1a0
- try_to_bring_up_master+0x164/0x1c0
- __component_add+0xa0/0x168
- component_add+0x10/0x18
- sun8i_dw_hdmi_probe+0x18/0x20
- platform_drv_probe+0x3c/0x70
- really_probe+0xcc/0x278
- driver_probe_device+0x34/0xa8
-
-Problem (2) was identified by head scratching.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405233048.3823-1-megous@megous.com
+Cc: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng <longpeng2@huawei.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Gonglei <arei.gonglei@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/virtio/virtio_pci_common.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index adcdf946c365d..dfbcd1ad81a54 100644
---- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -217,7 +217,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
+index 465a6f5142cc5..45b04bc91f248 100644
+--- a/drivers/virtio/virtio_pci_common.c
++++ b/drivers/virtio/virtio_pci_common.c
+@@ -255,9 +255,11 @@ void vp_del_vqs(struct virtio_device *vdev)
+ 	for (i = 0; i < vp_dev->msix_used_vectors; ++i)
+ 		free_irq(pci_irq_vector(vp_dev->pci_dev, i), vp_dev);
  
- err_unregister_gates:
- 	for (i = 0; i < CLK_NUM; i++)
--		if (clk_data->hws[i])
-+		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
- 			clk_hw_unregister_gate(clk_data->hws[i]);
- 	clk_disable_unprepare(tcon_top->bus);
- err_assert_reset:
-@@ -235,7 +235,8 @@ static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
+-	for (i = 0; i < vp_dev->msix_vectors; i++)
+-		if (vp_dev->msix_affinity_masks[i])
+-			free_cpumask_var(vp_dev->msix_affinity_masks[i]);
++	if (vp_dev->msix_affinity_masks) {
++		for (i = 0; i < vp_dev->msix_vectors; i++)
++			if (vp_dev->msix_affinity_masks[i])
++				free_cpumask_var(vp_dev->msix_affinity_masks[i]);
++	}
  
- 	of_clk_del_provider(dev->of_node);
- 	for (i = 0; i < CLK_NUM; i++)
--		clk_hw_unregister_gate(clk_data->hws[i]);
-+		if (clk_data->hws[i])
-+			clk_hw_unregister_gate(clk_data->hws[i]);
- 
- 	clk_disable_unprepare(tcon_top->bus);
- 	reset_control_assert(tcon_top->rst);
+ 	if (vp_dev->msix_enabled) {
+ 		/* Disable the vector used for configuration */
 -- 
 2.20.1
 
