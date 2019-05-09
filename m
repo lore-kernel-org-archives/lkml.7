@@ -2,112 +2,224 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510C8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14922C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220972175B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69F2216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGyl/NoS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBhm+5dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfEIJdq (ORCPT
+        id S1726234AbfEIJjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:33:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41075 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEIJdp (ORCPT
+        Thu, 9 May 2019 05:39:45 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40181 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfEIJjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:33:45 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d12so2012368wrm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:33:44 -0700 (PDT)
+        Thu, 9 May 2019 05:39:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h11so2257387wmb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:39:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=o7y1Eq5XE68bwd6aXqoeahdc2GOPTkNRx2HYwO3zXRM=;
-        b=MGyl/NoSKew0c+r/VW5jKj8+RY1Be0lr7+iIyBpWo2JyYY2+4Zj0KIOT5UyS2IH7p6
-         Xl8Db2PnGHM3+pD5QLCTzzpzGSmEtTFTZ6XOaQOj2ECmn0uQBKyeIxF4HZBVzRqUiJI2
-         NEDAmdlp9PxYJcXxwi7whT1QkFYbEdWMx6tV43o4yLEvaQyl/FMlzPKNIZr4j26kLmou
-         amPYy2ATk+pcA9Lju+4267nyRZtaBxE1pCly3geHfLV8Bl8qMtI3tyJAkYKyWCIXlAY2
-         nu6Mdw5YSWjgkIa1xZ/wflstOgUkvca0cuPgMnpdZ+lPpSfs8EDVYQWEFaBKZ397A7hp
-         Bz7A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EPqzVi3zKKwHtJglhj145ldMMaQbDGmaOkRBDE4CHMc=;
+        b=bBhm+5dyIQED+c+WmgRwiLtO2YQNLYUbzSpC07gH67UgSdg7ziX7+9DSn5sUbgzTDU
+         jc2LyjBKn00Tm57119XtksTBuaShBC43vEeCGb1Sxn9wjrnHOsQNfi/YI0STxlmklDOA
+         DzHA//UWzI3+Nl64Hf+mCDlQZ3uHz99bnBuUOrsEa/ML2F3QuPb6ugkigTIg0l+88ruu
+         Z7OGIEc1fw0t1k+6jQRT/JzkWCbUYkOFdy02q4DbV3kFCSTbYqOYxtt9U9nhxWpLhcpe
+         6GMaC6WVzyDFl3glcKUW3kgz8T2fWEzdLty5BdDn/0P7gDRKyHK7TCICMoypl5NZr65b
+         LvSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=o7y1Eq5XE68bwd6aXqoeahdc2GOPTkNRx2HYwO3zXRM=;
-        b=WKUZNgitay7ZuUHf56hpXYueJNmCggen0D/EAGHEw8U7YzzCz+prz44rEo6qcSZtFq
-         ZdqzusAFbCRLICAN4RPphf68SzTj/L2D6kORRb2V/vvJiufoGQx33v9XVX2RiokhKEeF
-         xgE+6f9ZsdilFaAjpvttn8LUrMz0VJl9SPgxjetBigznhgq/HHSD8HtQ4Hawlxfy17lk
-         ygWamNRykS44HJqNHX4hfDZlSTw91qEErnSxUM5E68lSxgs3Hn2P9VsIMW2npiZ8K/dc
-         Cedh3oDU2UHfUzoBb/fyJeKQA6vhaiqG9JmA9RbIvhxNw7eYYgs+X6BnKF4+uGCF+eRz
-         es9A==
-X-Gm-Message-State: APjAAAVm+72lfNtQ/kTAP4sxD4gPXOXVej3uQwSoO2TSeoJH/pkD0zUI
-        p1Xrp7U2knLFkVC+kKdwfJvL9w==
-X-Google-Smtp-Source: APXvYqyaoHx3f0sqPQbDtBs8Z9JyejUps85iOp6Wh0y/gQuPQM64c/u7mmfNhXTMA9EEM9TWbH/fpA==
-X-Received: by 2002:adf:ec51:: with SMTP id w17mr2358350wrn.326.1557394423897;
-        Thu, 09 May 2019 02:33:43 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id u8sm1141266wmc.14.2019.05.09.02.33.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 02:33:43 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:33:38 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v6 2/9] mfd: Add ST Multi-Function eXpander (STMFX) core
- driver
-Message-ID: <20190509093338.GW31645@dell>
-References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
- <1557392336-28239-3-git-send-email-amelie.delaunay@st.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EPqzVi3zKKwHtJglhj145ldMMaQbDGmaOkRBDE4CHMc=;
+        b=kWI5RnHulgHdIf4FTgr7T4ng1Q1mFjND5NvtK72KDN2HS70xzZejv61Y2E9lCr32Uc
+         wxBJ/paYcwfsc7QBgtPQ4Hr//4mLqzn0pnUCxNHdXnxeYCLASr8lhx1r4RwPnjJbEiRF
+         PxAZs0OTxYe6bDgBqmfbZNf52+JxR6HD7j2LSv8Sw2tyjz6/TZo3EqRMxMQBx1saHt/A
+         UHt5ulHJqzCbtpcKIPXeJA9wNAxUrHcbZMpLNNgdn54p76IkpD9nXm52mdnN0Zof2i1H
+         5ftzja5KF/X2GiGDmmTrdch5MnTYaMNZn44evf0/CzgHQP+GGbFHp+q92Qn6w8B9QlHp
+         /FHw==
+X-Gm-Message-State: APjAAAUHn2cCmkwMcVJz4f+B2jOfv3jRUbvOPmKUQUYotK0eynWwedHT
+        oFd50fCxyGQlSZItbvWXLy8=
+X-Google-Smtp-Source: APXvYqwxoM/5kN0UOrTQ3RTn8Tq/Kb7HtHEeH9us7QhRpMe6gKeeO4emuS956ZhuEev5S1J7fDvV0A==
+X-Received: by 2002:a1c:b189:: with SMTP id a131mr2099575wmf.107.1557394782028;
+        Thu, 09 May 2019 02:39:42 -0700 (PDT)
+Received: from localhost.localdomain (lputeaux-657-1-239-64.w80-14.abo.wanadoo.fr. [80.14.206.64])
+        by smtp.gmail.com with ESMTPSA id 4sm1598836wmi.4.2019.05.09.02.39.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 02:39:41 -0700 (PDT)
+From:   Antonio Borneo <borneo.antonio@gmail.com>
+To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        "Elliott, Robert (Servers)" <elliott@hpe.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v5] checkpatch: add command-line option for TAB size
+Date:   Thu,  9 May 2019 11:39:29 +0200
+Message-Id: <20190509093929.23507-1-borneo.antonio@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557392336-28239-3-git-send-email-amelie.delaunay@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 May 2019, Amelie Delaunay wrote:
+Linux kernel coding style requires a size of 8 characters for
+both TAB and indentation, and such value is embedded as magic
+value allover the checkpatch script.
+This makes hard to reuse the script by other projects with
+different requirements in their coding style (e.g. OpenOCD [1]
+requires TAB size of 4 characters [2]).
 
-> STMicroelectronics Multi-Function eXpander (STMFX) is a slave controller
-> using I2C for communication with the main MCU. Main features are:
-> - 16 fast GPIOs individually configurable in input/output
-> - 8 alternate GPIOs individually configurable in input/output when other
-> STMFX functions are not used
-> - Main MCU IDD measurement
-> - Resistive touchscreen controller
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  drivers/mfd/Kconfig       |  13 ++
->  drivers/mfd/Makefile      |   2 +-
->  drivers/mfd/stmfx.c       | 545 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/stmfx.h | 123 +++++++++++
->  4 files changed, 682 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mfd/stmfx.c
->  create mode 100644 include/linux/mfd/stmfx.h
+Replace the magic value 8 with a variable.
 
-Applied, thanks.
+Add a command-line option "--tab-size" to let the user select a
+TAB size value other than 8.
 
+[1] http://openocd.org/
+[2] http://openocd.org/doc/doxygen/html/stylec.html#styleformat
+
+Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+Signed-off-by: Erik Ahlén <erik.ahlen@avalonenterprise.com>
+Signed-off-by: Spencer Oliver <spen@spen-soft.co.uk>
+---
+v1 -> v2
+	add the command line option
+
+v2 -> v3
+	rewrite commit msg to remove script readability issue
+
+v3 -> v4
+	check for command line value positive
+
+v4 -> v5
+	exclude --tab-size=1
+---
+ scripts/checkpatch.pl | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 916a3fbd4d47..c36876f78bd5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -62,6 +62,7 @@ my $conststructsfile = "$D/const_structs.checkpatch";
+ my $typedefsfile = "";
+ my $color = "auto";
+ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
++my $tabsize = 8;
+ 
+ sub help {
+ 	my ($exitcode) = @_;
+@@ -96,6 +97,7 @@ Options:
+   --show-types               show the specific message type in the output
+   --max-line-length=n        set the maximum line length, if exceeded, warn
+   --min-conf-desc-length=n   set the min description length, if shorter, warn
++  --tab-size=n               set the number of spaces for tab (default 8)
+   --root=PATH                PATH to the kernel tree root
+   --no-summary               suppress the per-file summary
+   --mailback                 only produce a report in case of warnings/errors
+@@ -213,6 +215,7 @@ GetOptions(
+ 	'list-types!'	=> \$list_types,
+ 	'max-line-length=i' => \$max_line_length,
+ 	'min-conf-desc-length=i' => \$min_conf_desc_length,
++	'tab-size=i'	=> \$tabsize,
+ 	'root=s'	=> \$root,
+ 	'summary!'	=> \$summary,
+ 	'mailback!'	=> \$mailback,
+@@ -265,6 +268,9 @@ if ($color =~ /^[01]$/) {
+ 	die "Invalid color mode: $color\n";
+ }
+ 
++# skip TAB size 1 to avoid additional checks on $tabsize - 1
++die "Invalid TAB size: $tabsize\n" if ($tabsize < 2);
++
+ sub hash_save_array_words {
+ 	my ($hashRef, $arrayRef) = @_;
+ 
+@@ -1211,7 +1217,7 @@ sub expand_tabs {
+ 		if ($c eq "\t") {
+ 			$res .= ' ';
+ 			$n++;
+-			for (; ($n % 8) != 0; $n++) {
++			for (; ($n % $tabsize) != 0; $n++) {
+ 				$res .= ' ';
+ 			}
+ 			next;
+@@ -2224,7 +2230,7 @@ sub string_find_replace {
+ sub tabify {
+ 	my ($leading) = @_;
+ 
+-	my $source_indent = 8;
++	my $source_indent = $tabsize;
+ 	my $max_spaces_before_tab = $source_indent - 1;
+ 	my $spaces_to_tab = " " x $source_indent;
+ 
+@@ -3153,7 +3159,7 @@ sub process {
+ 		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+ 
+ # at the beginning of a line any tabs must come first and anything
+-# more than 8 must use tabs.
++# more than $tabsize must use tabs.
+ 		if ($rawline =~ /^\+\s* \t\s*\S/ ||
+ 		    $rawline =~ /^\+\s*        \s*/) {
+ 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
+@@ -3172,7 +3178,7 @@ sub process {
+ 				"please, no space before tabs\n" . $herevet) &&
+ 			    $fix) {
+ 				while ($fixed[$fixlinenr] =~
+-					   s/(^\+.*) {8,8}\t/$1\t\t/) {}
++					   s/(^\+.*) {$tabsize,$tabsize}\t/$1\t\t/) {}
+ 				while ($fixed[$fixlinenr] =~
+ 					   s/(^\+.*) +\t/$1\t/) {}
+ 			}
+@@ -3194,11 +3200,11 @@ sub process {
+ 		if ($perl_version_ok &&
+ 		    $sline =~ /^\+\t+( +)(?:$c90_Keywords\b|\{\s*$|\}\s*(?:else\b|while\b|\s*$)|$Declare\s*$Ident\s*[;=])/) {
+ 			my $indent = length($1);
+-			if ($indent % 8) {
++			if ($indent % $tabsize) {
+ 				if (WARN("TABSTOP",
+ 					 "Statements should start on a tabstop\n" . $herecurr) &&
+ 				    $fix) {
+-					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/8)@e;
++					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/$tabsize)@e;
+ 				}
+ 			}
+ 		}
+@@ -3216,8 +3222,8 @@ sub process {
+ 				my $newindent = $2;
+ 
+ 				my $goodtabindent = $oldindent .
+-					"\t" x ($pos / 8) .
+-					" "  x ($pos % 8);
++					"\t" x ($pos / $tabsize) .
++					" "  x ($pos % $tabsize);
+ 				my $goodspaceindent = $oldindent . " "  x $pos;
+ 
+ 				if ($newindent ne $goodtabindent &&
+@@ -3688,11 +3694,11 @@ sub process {
+ 			#print "line<$line> prevline<$prevline> indent<$indent> sindent<$sindent> check<$check> continuation<$continuation> s<$s> cond_lines<$cond_lines> stat_real<$stat_real> stat<$stat>\n";
+ 
+ 			if ($check && $s ne '' &&
+-			    (($sindent % 8) != 0 ||
++			    (($sindent % $tabsize) != 0 ||
+ 			     ($sindent < $indent) ||
+ 			     ($sindent == $indent &&
+ 			      ($s !~ /^\s*(?:\}|\{|else\b)/)) ||
+-			     ($sindent > $indent + 8))) {
++			     ($sindent > $indent + $tabsize))) {
+ 				WARN("SUSPECT_CODE_INDENT",
+ 				     "suspect code indent for conditional statements ($indent, $sindent)\n" . $herecurr . "$stat_real\n");
+ 			}
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.21.0
+
