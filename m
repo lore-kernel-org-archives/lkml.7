@@ -6,71 +6,76 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCEEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E97C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E869E2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4516B20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfEIPXX (ORCPT
+        id S1726765AbfEIPXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:23:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38168 "EHLO huawei.com"
+        Thu, 9 May 2019 11:23:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46436 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfEIPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:23:22 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 07D063A0F5A08C8A697D;
-        Thu,  9 May 2019 23:23:20 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 May 2019
- 23:23:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <hare@kernel.org>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] scsi: myrs: Fix uninitialized variable
-Date:   Thu, 9 May 2019 23:22:47 +0800
-Message-ID: <20190509152247.26164-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726187AbfEIPXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:23:24 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B6E4FAADCA029062E2BF;
+        Thu,  9 May 2019 23:23:22 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 9 May 2019 23:23:14 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Yana Esina <yana.esina@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] net: aquantia: fix undefined devm_hwmon_device_register_with_info reference
+Date:   Thu, 9 May 2019 23:32:35 +0800
+Message-ID: <20190509153235.103441-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/scsi/myrs.c: In function 'myrs_log_event':
-drivers/scsi/myrs.c:821:24: warning: 'sshdr.sense_key' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  struct scsi_sense_hdr sshdr;
+drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.o: In function `aq_drvinfo_init':
+aq_drvinfo.c:(.text+0xe8): undefined reference to `devm_hwmon_device_register_with_info'
 
-If ev->ev_code is not 0x1C, sshdr.sense_key may
-be used uninitialized. Fix this by initializing
-variable 'sshdr' to 0.
+Fix it by using #if IS_REACHABLE(CONFIG_HWMON).
 
-Fixes: 77266186397c ("scsi: myrs: Add Mylex RAID controller (SCSI interface)")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- drivers/scsi/myrs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/myrs.c b/drivers/scsi/myrs.c
-index b8d54ef..eb0dd56 100644
---- a/drivers/scsi/myrs.c
-+++ b/drivers/scsi/myrs.c
-@@ -818,7 +818,7 @@ static void myrs_log_event(struct myrs_hba *cs, struct myrs_event *ev)
- 	unsigned char ev_type, *ev_msg;
- 	struct Scsi_Host *shost = cs->host;
- 	struct scsi_device *sdev;
--	struct scsi_sense_hdr sshdr;
-+	struct scsi_sense_hdr sshdr = {0};
- 	unsigned char sense_info[4];
- 	unsigned char cmd_specific[4];
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c b/drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c
+index f5a92b2a5cd6..adad6a7acabe 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c
+@@ -13,6 +13,7 @@
  
+ #include "aq_drvinfo.h"
+ 
++#if IS_REACHABLE(CONFIG_HWMON)
+ static int aq_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 			 u32 attr, int channel, long *value)
+ {
+@@ -123,3 +124,7 @@ int aq_drvinfo_init(struct net_device *ndev)
+ 
+ 	return err;
+ }
++
++#else
++int aq_drvinfo_init(struct net_device *ndev) { return 0; }
++#endif
 -- 
-2.7.4
-
+2.20.1
 
