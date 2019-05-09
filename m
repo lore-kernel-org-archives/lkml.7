@@ -2,181 +2,164 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE24C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08074C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1265C205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1517205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D6AcNdPb";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NX8//c4n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/7+vmEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfEIBim (ORCPT
+        id S1726702AbfEIBjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:38:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54528 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfEIBil (ORCPT
+        Wed, 8 May 2019 21:39:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46848 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbfEIBjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:38:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 868ED60A05; Thu,  9 May 2019 01:38:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557365920;
-        bh=4Ht87dHBqAzcwQ0kRXGlxzlr4w5kuIJqcWk5Du00ZJA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D6AcNdPbUOkqgiT9cjhJb2kQCS3mko0gIkXla4MQ7lubKIW0trHoM3efJ8gl2O7Xn
-         jhMsRXvITvfdjiAZLGoeCR/Ld6z7nUVsM+VYsRneCoJd/WhcviwtBdBWnoE0J6ZqD8
-         CRvxJPYumVEq1bgxcoHf6bXrOGpNLNsQIMZxqJEM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id C09AB6016D;
-        Thu,  9 May 2019 01:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557365919;
-        bh=4Ht87dHBqAzcwQ0kRXGlxzlr4w5kuIJqcWk5Du00ZJA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NX8//c4nlLdgspVnETddzTr74XRcwdiyl+1hK275wEEhZaxhsEvvfXOAaBsOdn2HW
-         7K/dQC755WzACbOmYOk1etkJIfhVzuFUp16BTLVMv1qAyaFX/POOhhzvUP9gVGeH2R
-         Q0AdWDEgtaF2uaKl8YfQ+6h52ZKw6shRznisoIVo=
+        Wed, 8 May 2019 21:39:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h21so517933ljk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 18:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hLMQoawtf7zEIInnvJYm+TQ2l/zeMDbM81eV5mgMe5I=;
+        b=X/7+vmElyjBWNBsb1JgMyNZqvJuMIQvL+Y8Zp0Nz7YQ29HxJTUaJsvfs8RjIIIwH+W
+         xPFnXatt+h0EQ1xtlFzvEm9wndgh1eawjR8RyC0HAmnTd5QwstvGZm+p6QIlgCi+oFFr
+         xNX0tjStcYBDAUM8e71Yl4RhalJaxL06e8B4PfkWzvDgaL8jmLFwzDk9MyVfEkhNNkjG
+         zXh6gb5Kar9u4NX2vQdZgyEXwM9AgyEcl734F+qfpgOCpI6AL3DzS6rJIZEtwt6kQj1k
+         jdIUDVQgzgbtLoVuuYAmKblgfpLowSGzn+CTz3BUq7XbLANw5xybjD7evO23lfFa5Vxc
+         AoqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hLMQoawtf7zEIInnvJYm+TQ2l/zeMDbM81eV5mgMe5I=;
+        b=CepB5MQLE43JCcfQmzgm0kxb5TFBsRT/ttZwd5L9Pb62gO38krJ7cZEwJPjLqr6znu
+         ozHcqAR+E41HEsNI1Fr8U6SCL6UfdWwudZn1fmb9k/Nthmq3q9w1BZomlNbrA6Z548gC
+         FUpT5FSUPBv64EmZxHCQs/5vzLCye1TxqFgBhsL7RhQIwhSV9FW2ySeSLGoj1vSqqGEH
+         ZKCMNH7CVNkuuhe+GKrYiMiBT6prz4AhtX6kSrXO+Wzyh3WzaWpmkvIMGceTozARXW22
+         sjNTTjqpDNdMJLKlr2ohTjnq37SG8Q7cDZjGP7iJrc7gI44Ls0QjtrhDjFPEu3AlvnvW
+         XSow==
+X-Gm-Message-State: APjAAAWudMpWb9or/Hvp/Vb6XAzynQIOjTKvWZHsaAoI6MB5piuizCoU
+        j1cYcqP2q/PdBq0cnqoLkwLzZG9d2uDY53C9W+U=
+X-Google-Smtp-Source: APXvYqw1fnLy/3pDnP6VQZtirMi9hVF0iXwdyyXdP/mW5qDqVSdf9w1auJeE0QHjpdXBf5SCB+GHghhRqFjf/5r4G2g=
+X-Received: by 2002:a2e:984d:: with SMTP id e13mr544040ljj.61.1557365946270;
+ Wed, 08 May 2019 18:39:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 May 2019 18:38:39 -0700
-From:   Sodagudi Prasad <psodagud@codeaurora.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     julien.thierry@arm.com, will.deacon@arm.com,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: PSCI version 1.1 and SYSTEM_RESET2
-In-Reply-To: <20190502090507.GC12498@e107155-lin>
-References: <24970f7101952f347bd4046c9a980473@codeaurora.org>
- <efee74624f986a358b8986ae3085fba2@codeaurora.org>
- <20190501094953.GA21851@e107155-lin>
- <3ceb06c36ecb745e2befaeaefe49be19@codeaurora.org>
- <20190502090507.GC12498@e107155-lin>
-Message-ID: <ce0b66f5d00e760f87ddeeacbc40b956@codeaurora.org>
-X-Sender: psodagud@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+ <20190429061516.GA9796@aaronlu> <6dfc392f-e24b-e641-2f7d-f336a90415fa@linux.intel.com>
+ <777b7674-4811-dac4-17df-29bd028d6b26@linux.intel.com> <CAERHkrvU0nay-cG9equdOBejOZ5Ffdxo+67ZRp9q0L9BQkcAtQ@mail.gmail.com>
+ <eb9abb34-d946-c63c-750b-8f52ed842670@oracle.com> <28fb6854-2772-5d29-087a-6a0cf6afe626@oracle.com>
+ <CAERHkrsavsBoEOR5Eq-nm6ADarS0zTi5Mu-T7TO6JoSUi7TRfQ@mail.gmail.com> <8098b70b-2095-91ea-d4ad-9181829066c7@oracle.com>
+In-Reply-To: <8098b70b-2095-91ea-d4ad-9181829066c7@oracle.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Thu, 9 May 2019 09:38:54 +0800
+Message-ID: <CAERHkrvKfvrSOKoJ5StYWENm9domgx1OkPyeKHacP9AGrgf8cg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-02 02:05, Sudeep Holla wrote:
-> On Wed, May 01, 2019 at 11:43:00AM -0700, Sodagudi Prasad wrote:
->> On 2019-05-01 02:49, Sudeep Holla wrote:
->> > On Tue, Apr 30, 2019 at 05:07:31PM -0700, Sodagudi Prasad wrote:
->> > > On 2019-04-30 14:44, Sodagudi Prasad wrote:
-> 
-> [...]
-> 
->> > >
->> > > It would nice if there is a config option to reboot the device
->> > > either in
->> > > warm or cold in the case of kernel panic.
->> >
->> > I presume you prefer to do warm boot in case of panic to get a dump of
->> > the memory to inspect ? If so, is kexec/kdump not the mechanism to
->> > achieve that ?
->> 
->> Hi Sudeep,
->> 
->> Thanks for your response and sharing details about your patch.
->> 
->> > If so, is kexec/kdump not the mechanism to achieve that?
->> >
->> Qualcomm is having vendor specific solution to capture ram contents 
->> and for
->> offline analysis.
->> 
-> 
-> Ah OK.
-> 
->> >
->> > I am just trying to understand the use case. Xilinx asked for the same
->> > but never got to understand their use case.
->> 
->> Here is the background -
->> Usually, power off drivers are overriding arm_pm_restart and 
->> pm_power_off
->> callbacks and registering with reboot notifier with  some priority for 
->> the
->> reboot operations.  Here is the Qualcomm poweroff driver for 
->> reference.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/power/reset/msm-poweroff.c
->> 
->> Before vendor chip set specific power off driver is probed, 
->> arm_pm_restart
->> functions pointer holds the psci_sys_reset function. Once vendor power 
->> off
->> driver is probed,  vendor drivers can override the arm_pm_restart 
->> function
->> pointer.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/psci.c#n562
->> 
->> Once vendor driver is probed, drivers can take care of devices warm or 
->> hard
->> reset configuration part properly.  But there is a window from
->> start_kernel() to vendor specific driver probed, devices are getting 
->> cold
->> resets even if kernel crashed.  This is due to arm_pm_restart points 
->> to
->> psci_sys_reset function by default.  Is this problem clear now?
->> 
-> 
-> Too specific use case IMO and I am not sure if we need a generic 
-> solution
-> to deal with this. Anyways, I don't see any check in arch/psci specific
-> code for what you want, just ensure reboot_mode is set appropriately.
-> Post a patch and see what people have to say.
+On Thu, May 9, 2019 at 8:29 AM Subhra Mazumdar
+<subhra.mazumdar@oracle.com> wrote:
+>
+>
+> On 5/8/19 5:01 PM, Aubrey Li wrote:
+> > On Thu, May 9, 2019 at 2:41 AM Subhra Mazumdar
+> > <subhra.mazumdar@oracle.com> wrote:
+> >>
+> >> On 5/8/19 11:19 AM, Subhra Mazumdar wrote:
+> >>> On 5/8/19 8:49 AM, Aubrey Li wrote:
+> >>>>> Pawan ran an experiment setting up 2 VMs, with one VM doing a
+> >>>>> parallel kernel build and one VM doing sysbench,
+> >>>>> limiting both VMs to run on 16 cpu threads (8 physical cores), with
+> >>>>> 8 vcpu for each VM.
+> >>>>> Making the fix did improve kernel build time by 7%.
+> >>>> I'm gonna agree with the patch below, but just wonder if the testing
+> >>>> result is consistent,
+> >>>> as I didn't see any improvement in my testing environment.
+> >>>>
+> >>>> IIUC, from the code behavior, especially for 2 VMs case(only 2
+> >>>> different cookies), the
+> >>>> per-rq rb tree unlikely has nodes with different cookies, that is, all
+> >>>> the nodes on this
+> >>>> tree should have the same cookie, so:
+> >>>> - if the parameter cookie is equal to the rb tree cookie, we meet a
+> >>>> match and go the
+> >>>> third branch
+> >>>> - else, no matter we go left or right, we can't find a match, and
+> >>>> we'll return idle thread
+> >>>> finally.
+> >>>>
+> >>>> Please correct me if I was wrong.
+> >>>>
+> >>>> Thanks,
+> >>>> -Aubrey
+> >>> This is searching in the per core rb tree (rq->core_tree) which can have
+> >>> 2 different cookies. But having said that, even I didn't see any
+> >>> improvement with the patch for my DB test case. But logically it is
+> >>> correct.
+> >>>
+> >> Ah, my bad. It is per rq. But still can have 2 different cookies. Not sure
+> >> why you think it is unlikely?
+> > Yeah, I meant 2 different cookies on the system, but unlikely 2
+> > different cookies
+> > on one same rq.
+> >
+> > If I read the source correctly, for the sched_core_balance path, when try to
+> > steal cookie from another CPU, sched_core_find() uses dst's cookie to search
+> > if there is a cookie match in src's rq, and sched_core_find() returns idle or
+> > matched task, and later put this matched task onto dst's rq (activate_task() in
+> > sched_core_find()). At this moment, the nodes on the rq's rb tree should have
+> > same cookies.
+> >
+> > Thanks,
+> > -Aubrey
+> Yes, but sched_core_find is also called from pick_task to find a local
+> matching task.
 
-Hi Sudeep,
+Can a local searching introduce a different cookies? Where is it from?
 
-Yes. With your system_reset2 command support addition, just configuring 
-the reboot_mode is good enough.
+> The enqueue side logic of the scheduler is unchanged with
+> core scheduling,
 
--Thanks, Prasad
+But only the task with cookies is placed onto this rb tree?
 
-> 
->> Qualcomm downstream kernel has a lot of use cases with respect device 
->> reset
->> sequence and the downstream driver is much different from upstream 
->> drivers.
->> I think, the above-mentioned problem is common for all the chipset 
->> vendors
->> and it is not specific Qualcomm use cases.  I have one downstream 
->> solution
->> to this problem but thought to bring up this problem to the upstream
->> community for a common solution, so that all the vendors can use it.
->> 
-> 
-> May be or may be not, post the patch and let's see.
-> 
->> I have modified below flow to avoid cold restart in the case of early 
->> kernel
->> panic.
->> panic() --> emergency_restart() --> machine_emergency_restart() -->
->> machine_restart(NULL);
->> 
->> -Thanks, Prasad
->> 
->> >
->> > --
->> > Regards,
->> > Sudeep
->> 
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> Linux Foundation Collaborative Project
+> so it is possible tasks with different cookies are
+> enqueued on the same rq. So while searching for a matching task locally
+> doing it correctly should matter.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-Linux Foundation Collaborative Project
+May I know how exactly?
+
+Thanks,
+-Aubrey
