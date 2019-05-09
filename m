@@ -2,249 +2,381 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6269C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C8C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8712177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:01:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eicyC2LY"
+	by mail.kernel.org (Postfix) with ESMTP id E84632177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfEIVBa (ORCPT
+        id S1726982AbfEIVDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:01:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36087 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfEIVBZ (ORCPT
+        Thu, 9 May 2019 17:03:43 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:38751 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfEIVDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:01:25 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d21so1722589plr.3;
-        Thu, 09 May 2019 14:01:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XIfv0w8R9hbMpIkYecRyvbKImnAIaPLF4+t0eBmtucc=;
-        b=eicyC2LYjnQM70p4GVW8AY2eMq2ucpBRLYd8qbc6RiNh7HpQ+14/Imu7oCe49giLcz
-         OsQs4iFWp1m2yWVTc9GJxU0BX1mZt9QFFP/uKk2rNpjj2WK/PHPgUsz95JyOdh8DkPO9
-         68TuxjHgop54Tp3vJ3Pr2DD/xvW6b+a5UYYQ9wuznYgD00LtCRJgQ1+c2R1H+4l7hw20
-         MexlNgZRhdzMQszkqV95NLYZnslJCDDG5TbQ2DvwqWxIZXJjBJEzLC3KsIzDlzE87mI5
-         gRG+kqvBlZLFW1WcEKgtqB/7HD85ZuUERRV9G5KNHIgQTkzv/3dSnB+oCs5b/H1e3AqV
-         k8Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XIfv0w8R9hbMpIkYecRyvbKImnAIaPLF4+t0eBmtucc=;
-        b=lttqEPtNRccugZZEjYg6bztwPZPSPbSRjkT2dWY31MELVT/0aK8ZaQB3wGkEekCo7a
-         pUKKQcdoDAfDceHdqOemE4goXSYCcA/6e9hybrsHQwQp6X5u/jEx/4jLD+P5JgbFxJ1D
-         yoAOuGWVDkXrcZWIM2Y8sjP+hZma5CvbWiNa9R1igrVn1oi6Kif103SW1Q5vAXzh5M3d
-         Ofv2GLhPp4ZS1M4NCSDyMjfHhS8IENIy3tAAIlt5R2X2ddauImo7sL/OYVOo0ex1aiC3
-         d8xaTeunkOf+bB1/JjFl5K826UNjSX3n72nYR3Xep6Q8u8ZayC7J+phkAbAtKkNvh/e+
-         2GIA==
-X-Gm-Message-State: APjAAAVJO3fMFS93qxE/0VU456dtBD/ZnjkWMO93+G8yne3yf3nLGiin
-        kVDAjasnCicufW2VnDCbkwI=
-X-Google-Smtp-Source: APXvYqwcw7GiVnjrYj1XiTQi0Bq0hzC69oqOsJ7LlYVQptq7h8VhaR08IPnOqeMHrT9EEpuiPK89Cg==
-X-Received: by 2002:a17:902:9a83:: with SMTP id w3mr8129940plp.241.1557435684380;
-        Thu, 09 May 2019 14:01:24 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id d15sm10989209pfm.186.2019.05.09.14.01.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:01:23 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Doug Berger <opendmb@gmail.com>,
-        Matheus Castello <matheus@castello.eng.br>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Lukas Wunner <lukas@wunner.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2835
-        ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] pinctrl: bcm2835: bcm7211: Add support for 7211 pull-up functionality
-Date:   Thu,  9 May 2019 13:59:55 -0700
-Message-Id: <20190509205955.27842-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190509205955.27842-1-f.fainelli@gmail.com>
-References: <20190509205955.27842-1-f.fainelli@gmail.com>
+        Thu, 9 May 2019 17:03:43 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8F98B40003;
+        Thu,  9 May 2019 21:03:40 +0000 (UTC)
+Date:   Thu, 9 May 2019 23:03:40 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 5.2
+Message-ID: <20190509210340.GA23061@piout.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Cooper <alcooperx@gmail.com>
+Hello Linus,
 
-The 7211 has a new way of selecting the pull-up/pull-down setting
-for a GPIO pin. The registers used for the bcm2837, GP_PUD and
-GP_PUDCLKn0, are no longer connected. A new set of registers,
-GP_GPIO_PUP_PDN_CNTRL_REGx must be used. This commit will add
-a new compatible string "brcm,bcm7211-gpio" and the kernel
-driver will use it to select which method is used to select
-pull-up/pull-down.
+A huge series from me this cycle. I went through many drivers to set the
+date and time range supported by the RTC which helps solving HW
+limitation when the time comes (as early as next year for some). This
+time, I focused on drivers using .set_mms and .set_mmss64, allowing me
+to remove those callbacks. About a third of the patches got reviews, I
+actually own the RTCs and I tested another third and the remaining one
+are unlikely to cause any issues.
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 85 +++++++++++++++++++++++++--
- 1 file changed, 80 insertions(+), 5 deletions(-)
+Other than that, a single new driver and the usual fixes here and there.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 183d1ffe6a75..35d9f9593000 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -57,15 +57,26 @@
- #define GPAFEN0		0x88	/* Pin Async Falling Edge Detect */
- #define GPPUD		0x94	/* Pin Pull-up/down Enable */
- #define GPPUDCLK0	0x98	/* Pin Pull-up/down Enable Clock */
-+#define GP_GPIO_PUP_PDN_CNTRL_REG0 0xe4 /* 7211 Pin Pull-up/down select */
- 
- #define FSEL_REG(p)		(GPFSEL0 + (((p) / 10) * 4))
- #define FSEL_SHIFT(p)		(((p) % 10) * 3)
- #define GPIO_REG_OFFSET(p)	((p) / 32)
- #define GPIO_REG_SHIFT(p)	((p) % 32)
- 
-+#define PUD_7211_MASK		0x3
-+#define PUD_7211_REG_OFFSET(p)	((p) / 16)
-+#define PUD_7211_REG_SHIFT(p)	(((p) % 16) * 2)
-+
- /* argument: bcm2835_pinconf_pull */
- #define BCM2835_PINCONF_PARAM_PULL	(PIN_CONFIG_END + 1)
- 
-+enum bcm7211_pinconf_pull {
-+	BCM7211_PINCONFIG_PULL_NONE,
-+	BCM7211_PINCONFIG_PULL_UP,
-+	BCM7211_PINCONFIG_PULL_DOWN,
-+};
-+
- struct bcm2835_pinctrl {
- 	struct device *dev;
- 	void __iomem *base;
-@@ -975,6 +986,55 @@ static const struct pinconf_ops bcm2835_pinconf_ops = {
- 	.pin_config_set = bcm2835_pinconf_set,
- };
- 
-+static int bcm7211_pinconf_set(struct pinctrl_dev *pctldev,
-+			       unsigned int pin, unsigned long *configs,
-+			       unsigned int num_configs)
-+{
-+	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	u32 param, arg;
-+	u32 shifter;
-+	u32 value;
-+	u32 off;
-+	int i;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		param = pinconf_to_config_param(configs[i]);
-+		if (param != BCM2835_PINCONF_PARAM_PULL)
-+			return -EINVAL;
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		/* convert to 7211 value */
-+		switch (arg) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			arg = BCM7211_PINCONFIG_PULL_NONE;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			arg = BCM7211_PINCONFIG_PULL_DOWN;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			arg = BCM7211_PINCONFIG_PULL_UP;
-+			break;
-+		}
-+
-+		off = PUD_7211_REG_OFFSET(pin);
-+		shifter = PUD_7211_REG_SHIFT(pin);
-+
-+		value = bcm2835_gpio_rd(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 +
-+					(off * 4));
-+		value &= ~(PUD_7211_MASK << shifter);
-+		value |= (arg << shifter);
-+		bcm2835_gpio_wr(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 + (off * 4),
-+				value);
-+	} /* for each config */
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops bcm7211_pinconf_ops = {
-+	.pin_config_get = bcm2835_pinconf_get,
-+	.pin_config_set = bcm7211_pinconf_set,
-+};
-+
- static struct pinctrl_desc bcm2835_pinctrl_desc = {
- 	.name = MODULE_NAME,
- 	.pins = bcm2835_gpio_pins,
-@@ -990,6 +1050,18 @@ static struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
- 	.npins = BCM2835_NUM_GPIOS,
- };
- 
-+static const struct of_device_id bcm2835_pinctrl_match[] = {
-+	{
-+		.compatible = "brcm,bcm2835-gpio",
-+		.data = &bcm2835_pinconf_ops,
-+	},
-+	{
-+		.compatible = "brcm,bcm7211-gpio",
-+		.data = &bcm7211_pinconf_ops,
-+	},
-+	{}
-+};
-+
- static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -997,6 +1069,8 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	struct bcm2835_pinctrl *pc;
- 	struct resource iomem;
- 	int err, i;
-+	const struct of_device_id *match;
-+
- 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2835_NUM_GPIOS);
- 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2835_NUM_GPIOS);
- 
-@@ -1073,6 +1147,12 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 					     bcm2835_gpio_irq_handler);
- 	}
- 
-+	match = of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-+	if (match) {
-+		bcm2835_pinctrl_desc.confops =
-+			(const struct pinconf_ops *)match->data;
-+	}
-+
- 	pc->pctl_dev = devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
- 	if (IS_ERR(pc->pctl_dev)) {
- 		gpiochip_remove(&pc->gpio_chip);
-@@ -1087,11 +1167,6 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id bcm2835_pinctrl_match[] = {
--	{ .compatible = "brcm,bcm2835-gpio" },
--	{}
--};
--
- static struct platform_driver bcm2835_pinctrl_driver = {
- 	.probe = bcm2835_pinctrl_probe,
- 	.driver = {
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.2
+
+for you to fetch changes up to dacb6a4035a010e41abaf81c1cfe2beadfb05ec8:
+
+  rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP (2019-05-08 22:14:36 +0200)
+
+----------------------------------------------------------------
+RTC for 5.2
+
+Subsystem:
+ - set_mmss and set_mmss64 rtc_ops removal
+ - Fix timestamp value for RTC_TIMESTAMP_BEGIN_1900
+ - Use SPDX identifier for the core
+ - validate upper bound of tm->tm_year
+
+New driver:
+ - Aspeed BMC SoC RTC
+
+Drivers:
+ - abx80x: use rtc_add_group
+ - ds3232: nvram support
+ - pcf85063: add alarm, nvram, offset correction and microcrystal rv8263 support
+ - x1205: add of_match_table
+ - Use set_time instead of set_mms/set_mmss64 for: ab3100, coh901331, digicolor,
+   ds1672, ds2404, ep93xx, imxdi, jz4740, lpc32xx, mc13xxx, mxc, pcap, stmp3xxx,
+   test, wm831x, xgene.
+ - Set RTC range for: ab3100, at91sam9, coh901331, da9063, digicolor, dm355evm,
+   ds1672, ds2404, ep39xx, goldfish, imxdi, jz4740, lpc32xx, mc13xxx, mv, mxc,
+   omap, pcap, pcf85063, pcf85363, ps3, sh, stmp3xxx, sun4v, tegra, wm831x,
+   xgene.
+ - Switch to rtc_time64_to_tm/rtc_tm_to_time64 for the driver that properly set
+   the RTC range.
+ - Use dev_get_drvdata instead of multiple indirections.
+
+----------------------------------------------------------------
+Alexandre Belloni (150):
+      rtc: abx80x: convert to SPDX identifier
+      rtc: abx80x: use rtc_add_group
+      rtc: abx80x: remove useless .remove
+      rtc: zynqmp: convert to SPDX identifier
+      rtc: ab-b5ze-s3: remove mutex
+      rtc: ab-b5ze-s3: remove unnecessary gotos
+      rtc: ab-b5ze-s3: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: ab-b5ze-s3: convert to SPDX identifier
+      rtc: ab-b5ze-s3: remove unnecessary check
+      rtc: convert core to SPDX identifier
+      rtc: mv: convert to SPDX identifier
+      rtc: mv: convert to devm_rtc_allocate_device
+      rtc: mv: add range
+      rtc: omap: let the core handle range
+      rtc: core: correct trivial checkpatch warnings
+      rtc: ab-b5ze-s3: correct checkpatch issues
+      rtc: 88pm80x: convert to SPDX identifier
+      rtc: test: do not use assignment in if condition
+      rtc: xgene: fix possible race condition
+      rtc: xgene: set range
+      rtc: xgene: convert to SPDX identifier
+      rtc: xgene: correct checkpatch issues
+      rtc: xgene: stop caching alarm_time
+      rtc: xgene: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: xgene: use .set_time
+      rtc: goldfish: convert to devm_rtc_allocate_device
+      rtc: goldfish: add range
+      rtc: goldfish: sort headers
+      rtc: goldfish: allow building on more than MIPS
+      rtc: goldfish: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: goldfish: convert to SPDX identifier
+      rtc: dm355evm: convert to devm_rtc_allocate_device
+      rtc: dm355evm: set range
+      rtc: dm355evm: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: dm355evm: convert to SPDX identifier
+      rtc: sh: stop resetting time to epoch
+      rtc: sh: fix possible race condition
+      rtc: sh: set range
+      rtc: at91sam9: drop platform_data support
+      rtc: at91sam9: convert to devm_rtc_allocate_device
+      rtc: at91sam9: set range
+      rtc: at91sam9: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: at91sam9: convert to SPDX identifier
+      rtc: at91sam9: correct trivial checkpatch warnings
+      rtc: ps3: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: ps3: convert to SPDX identifier
+      rtc: ps3: convert to devm_rtc_allocate_device
+      rtc: ps3: set range
+      rtc: omap: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: omap: convert to SPDX identifier
+      rtc: sun4v: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: sun4v: set range
+      rtc: sun4v: switch to SPDX identifier
+      rtc: da9063: set range
+      rtc: da9063: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: wm831x: set range
+      rtc: wm831x: remove unnecessary goto
+      rtc: wm831x: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: wm831x: convert to SPDX identifier
+      rtc: brcmstb-waketimer: switch to rtc_time64_to_tm
+      rtc: pcf85063: switch to probe_new
+      rtc: pcf85063: convert to SPDX identifier
+      rtc: pcf85063: remove bogus i2c functionality check
+      rtc: pcf85063: convert to devm_rtc_allocate_device
+      rtc: pcf85063: set range
+      rtc: pcf85063: switch to regmap
+      rtc: pcf85063: differentiate pcf85063a and pcf85063tp
+      rtc: pcf85063: add alarm support
+      rtc: pcf85063: add Micro Crystal RV8263 support
+      rtc: pcf85063: add nvram support
+      rtc: pcf85063: add offset correction support
+      rtc: pcf85063: add RTC_VL_READ/RTC_VL_CLR support
+      rtc: remove unnecessary Kconfig dependencies
+      rtc: test: use .set_time
+      rtc: ds1672: set range
+      rtc: ds1672: move oscillator handling to .read_time
+      rtc: ds1672: remove sysfs debug interface
+      rtc: ds1672: remove useless indirection
+      rtc: ds1672: use rtc_time64_to_tm
+      rtc: ds1672: use .set_time
+      rtc: ds1672: convert to SPDX identifier
+      rtc: ds1672: switch debug message to %ptR
+      rtc: coh901331: set range
+      rtc: coh901331: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: coh901331: use .set_time
+      rtc: coh901331: convert to SPDX identifier
+      rtc: tegra: set range
+      rtc: tegra: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: tegra: convert to SPDX identifier
+      rtc: stmp3xxx: set range
+      rtc: stmp3xxx: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: stmp3xxx: use .set_time
+      rtc: stmp3xxx: convert to SPDX identifier
+      rtc: pcf85363: remove unused struct pcf85363 member
+      rtc: pcf85363: set range
+      rtc: pcf85363: remove bogus i2c functionality check
+      rtc: pcf85363: remove useless forward declaration
+      rtc: pcf85363: convert to SPDX identifier
+      rtc: ab3100: set range
+      rtc: ab3100: use .set_time
+      rtc: ab3100: convert to SPDX identifier
+      rtc: lpc32xx: convert to devm_rtc_allocate_device
+      rtc: lpc32xx: set range
+      rtc: lpc32xx: simplify IRQ setup
+      rtc: lpc32xx: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: lpc32xx: use .set_time
+      rtc: lpc32xx: convert to SPDX identifier
+      rtc: mc13xxx: set range
+      rtc: mc13xxx: use .set_time
+      rtc: mc13xxx: convert to SPDX identifier
+      rtc: mc13xxx: fix style issue
+      rtc: ep93xx: stop setting platform_data
+      rtc: ep93xx: convert to devm_rtc_allocate_device
+      rtc: ep93xx: use rtc_add_group
+      rtc: ep93xx: set range
+      rtc: ep93xx: switch to rtc_time64_to_tm
+      rtc: ep93xx: use .set_time
+      rtc: ep93xx: convert to SPDX identifier
+      rtc: ep93xx: fix checkpatch issues
+      rtc: ds2404: set range
+      rtc: ds2404: switch to rtc_time64_to_tm
+      rtc: ds2404: use .set_time
+      rtc: ds2404: convert to SPDX identifier
+      rtc: ds2404: remove ds2404_chip_ops
+      rtc: ds2404: simplify .probe and remove .remove
+      rtc: wm831x: use .set_time
+      rtc: mxc: fix possible race condition
+      rtc: mxc: set range
+      rtc: mxc: use .set_time
+      rtc: imxdi: set range
+      rtc: imxdi: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: imxdi: use .set_time
+      rtc: imxdi: remove unnecessary check
+      rtc: imxdi: convert to SPDX identifier
+      rtc: jz4740: set range
+      rtc: jz4740: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: jz4740: remove useless check
+      rtc: jz4740: use .set_time
+      rtc: jz4740: use dev_pm_set_wake_irq() to simplify code
+      rtc: jz4740: rework invalid time detection
+      rtc: jz4740: convert to SPDX identifier
+      rtc: digicolor: fix possible race condition
+      rtc: digicolor: set range
+      rtc: digicolor: use .set_time
+      rtc: digicolor: convert to SPDX identifier
+      rtc: pcap: set range
+      rtc: pcap: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: pcap: use .set_time
+      rtc: pcap: convert to SPDX identifier
+      rtc: drop set_mms and set_mmss64
+
+Anders Roxell (1):
+      rtc: imxdi: remove unused variable
+
+Andy Shevchenko (1):
+      rtc: rx8025: Fix a parameter to %ptR in rx8025_read_alarm()
+
+Anson Huang (6):
+      rtc: snvs: use dev_pm_set_wake_irq() to simplify code
+      rtc: mxc: use devm_platform_ioremap_resource() to simplify code
+      rtc: snvs: use devm_platform_ioremap_resource() to simplify code
+      rtc: mxc: use dev_pm_set_wake_irq() to simplify code
+      rtc: mxc_v2: use dev_pm_set_wake_irq() to simplify code
+      rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+
+Daniel Gomez (1):
+      rtc: rx6110: declare missing of table
+
+Fabien Dessenne (1):
+      rtc: stm32: manage the get_irq probe defer case
+
+Geert Uytterhoeven (1):
+      rtc: Fix timestamp value for RTC_TIMESTAMP_BEGIN_1900
+
+Han Nandor (1):
+      rtc: ds3232: get SRAM access using NVMEM Framework
+
+Joel Stanley (2):
+      dt-bindings: rtc: Add on-chip ASPEED RTC documentation
+      rtc: Add ASPEED RTC driver
+
+Kefeng Wang (1):
+      rtc: Use dev_get_drvdata()
+
+Linus Walleij (2):
+      rtc: x1205: Add DT bindings
+      rtc: x1205: Add DT probing support
+
+Pi-Hsun Shih (1):
+      rtc: mt6397: Don't call irq_dispose_mapping.
+
+Sven Van Asbroeck (1):
+      rtc: 88pm860x: prevent use-after-free on device remove
+
+Thomas Bogendoerfer (3):
+      rtc: ds1685: fix crash caused by referencing wrong device struct
+      rtc: ds1685: remove dead code
+      rtc: ds1685: use threaded interrupt
+
+Wolfram Sang (2):
+      rtc: da9063: convert header to SPDX
+      rtc: don't reference bogus function pointer in kdoc
+
+Xuefeng Wang (1):
+      rtc: lib: check whether tm->tm_year in int32 range
+
+YueHaibing (2):
+      rtc: opal: Make opal_tpo_alarm_irq_enable static
+      rtc: sirfsoc: Make sysrtc_regmap_config static
+
+ .../devicetree/bindings/rtc/nxp,pcf85063.txt       |   6 +-
+ .../devicetree/bindings/rtc/rtc-aspeed.txt         |  22 +
+ Documentation/devicetree/bindings/rtc/rtc.txt      |   1 +
+ drivers/rtc/Kconfig                                |  19 +-
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/class.c                                |  21 +-
+ drivers/rtc/dev.c                                  |  20 +-
+ drivers/rtc/hctosys.c                              |  10 +-
+ drivers/rtc/interface.c                            | 107 +++--
+ drivers/rtc/lib.c                                  |  30 +-
+ drivers/rtc/nvmem.c                                |   7 +-
+ drivers/rtc/proc.c                                 |  21 +-
+ drivers/rtc/rtc-88pm80x.c                          |  14 +-
+ drivers/rtc/rtc-88pm860x.c                         |   2 +-
+ drivers/rtc/rtc-ab-b5ze-s3.c                       | 189 +++------
+ drivers/rtc/rtc-ab3100.c                           |  24 +-
+ drivers/rtc/rtc-abx80x.c                           |  43 +-
+ drivers/rtc/rtc-aspeed.c                           | 136 +++++++
+ drivers/rtc/rtc-at91sam9.c                         | 108 ++---
+ drivers/rtc/rtc-brcmstb-waketimer.c                |   2 +-
+ drivers/rtc/rtc-coh901331.c                        |  37 +-
+ drivers/rtc/rtc-da9063.c                           |  27 +-
+ drivers/rtc/rtc-digicolor.c                        |  25 +-
+ drivers/rtc/rtc-dm355evm.c                         |  24 +-
+ drivers/rtc/rtc-ds1672.c                           | 127 ++----
+ drivers/rtc/rtc-ds1685.c                           | 262 +++++-------
+ drivers/rtc/rtc-ds2404.c                           |  73 +---
+ drivers/rtc/rtc-ds3232.c                           |  40 +-
+ drivers/rtc/rtc-ep93xx.c                           |  70 ++--
+ drivers/rtc/rtc-goldfish.c                         |  50 +--
+ drivers/rtc/rtc-hid-sensor-time.c                  |   3 +-
+ drivers/rtc/rtc-imxdi.c                            |  50 +--
+ drivers/rtc/rtc-jz4740.c                           |  95 ++---
+ drivers/rtc/rtc-lpc32xx.c                          |  59 +--
+ drivers/rtc/rtc-mc13xxx.c                          |  25 +-
+ drivers/rtc/rtc-mt6397.c                           |   9 +-
+ drivers/rtc/rtc-mv.c                               |  33 +-
+ drivers/rtc/rtc-mxc.c                              |  86 ++--
+ drivers/rtc/rtc-mxc_v2.c                           |  29 +-
+ drivers/rtc/rtc-omap.c                             |  32 +-
+ drivers/rtc/rtc-opal.c                             |   2 +-
+ drivers/rtc/rtc-pcap.c                             |  28 +-
+ drivers/rtc/rtc-pcf85063.c                         | 446 ++++++++++++++++-----
+ drivers/rtc/rtc-pcf85363.c                         |  20 +-
+ drivers/rtc/rtc-ps3.c                              |  30 +-
+ drivers/rtc/rtc-pxa.c                              |   3 +-
+ drivers/rtc/rtc-rk808.c                            |   6 +-
+ drivers/rtc/rtc-rx6110.c                           |   9 +
+ drivers/rtc/rtc-rx8025.c                           |   2 +-
+ drivers/rtc/rtc-sh.c                               |  30 +-
+ drivers/rtc/rtc-sirfsoc.c                          |   2 +-
+ drivers/rtc/rtc-snvs.c                             |  48 +--
+ drivers/rtc/rtc-stm32.c                            |   9 +-
+ drivers/rtc/rtc-stmp3xxx.c                         |  34 +-
+ drivers/rtc/rtc-sun4v.c                            |  21 +-
+ drivers/rtc/rtc-tegra.c                            |  47 +--
+ drivers/rtc/rtc-test.c                             |  11 +-
+ drivers/rtc/rtc-tx4939.c                           |  17 +-
+ drivers/rtc/rtc-wm831x.c                           |  69 ++--
+ drivers/rtc/rtc-wm8350.c                           |  12 +-
+ drivers/rtc/rtc-x1205.c                            |   7 +
+ drivers/rtc/rtc-xgene.c                            |  61 ++-
+ drivers/rtc/rtc-zynqmp.c                           |  13 +-
+ drivers/rtc/sysfs.c                                |  23 +-
+ drivers/rtc/systohc.c                              |  13 +-
+ include/linux/rtc.h                                |   6 +-
+ include/linux/rtc/ds1685.h                         |   2 -
+ 67 files changed, 1400 insertions(+), 1510 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-aspeed.txt
+ create mode 100644 drivers/rtc/rtc-aspeed.c
+
 -- 
-2.17.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
