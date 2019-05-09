@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD27C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC9DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466D72089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB0520656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428676;
-	bh=VHEcK7OOP1jtW+G99RTlVZzKoB+P1+WnmyH6ylK7zTw=;
+	s=default; t=1557428681;
+	bh=inT9FER4sSnpeDgeUcIZ2sHTDbPIDTss4puXlMKfU9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=titWEd9NzzxX9SBlWldisEdA2PETQVBYld32MRiJ9INlh2oGYq2+Qn570wRMmK/xS
-	 XGjpeX8WAM5k1xC3OtuxUnPtRc4tO6gnRM8lPVHDg+GIrGAaqyWwcZk4MmSvN+JyWz
-	 kIN2zDo90i3YlRcwUdkN3dEfOLh6lx4i9zs9YFJg=
+	b=rYR/YBy6yGc2KepxOlzbci5rjum2TdRqmOIq6CwpVQBBuhO3VSsPQ3qYsDN/5b2qF
+	 /+cYo/D3tgU//l2Qf+COGNQPT1BhTVH3hRgCIJDxliFiRcRvUoyHLPVc5GoJBANvvQ
+	 t+HuPJIDH6BCyctxhMNSHb12sPnuMMiY8TpUwG7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfEISsZ (ORCPT
+        id S1727881AbfEITEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41246 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbfEISsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:21 -0400
+        id S1728014AbfEISsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86D96217F9;
-        Thu,  9 May 2019 18:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3408D217F9;
+        Thu,  9 May 2019 18:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427701;
-        bh=VHEcK7OOP1jtW+G99RTlVZzKoB+P1+WnmyH6ylK7zTw=;
+        s=default; t=1557427703;
+        bh=inT9FER4sSnpeDgeUcIZ2sHTDbPIDTss4puXlMKfU9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0NQtxmiBmNoT/JFt0A1lAvl7aK8xIg+k7E1jDZktiwZ4TNST537Pbn/WNO6prucz
-         RSb0tLi2NYrzJBN1YZrqV5vwg8lBdvFDE2ZWb27jKX8ZbQVchkXkCgUIwjrgppxCiq
-         FmQRbHATQMLVjjMIwvlrkddXVHXFk4htmZXhZ4e4=
+        b=BawazgV1jQw9KBE+JTxXCk0w+RmRcw8nFHs5G/de78vFQtqJxIUNaPggYVohsXfU+
+         a/JG6M65J+e0ngTRPaz13KLXMWNM34lF0abDeDQL/zFzGtw11aLrER4/VZMBz4pjLR
+         5rWEny0xMLiIBTfG47kuJDL8vgok7DkJ8PEyw7CA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        "Tobin C. Harding" <tobin@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/66] slab: fix a crash by reading /proc/slab_allocators
-Date:   Thu,  9 May 2019 20:42:12 +0200
-Message-Id: <20190509181305.905790050@linuxfoundation.org>
+Subject: [PATCH 4.19 11/66] ASoC:soc-pcm:fix a codec fixup issue in TDM case
+Date:   Thu,  9 May 2019 20:41:46 +0200
+Message-Id: <20190509181303.095144130@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -62,42 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fcf88917dd435c6a4cb2830cb086ee58605a1d85 ]
+[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
 
-The commit 510ded33e075 ("slab: implement slab_root_caches list")
-changes the name of the list node within "struct kmem_cache" from "list"
-to "root_caches_node", but leaks_show() still use the "list" which
-causes a crash when reading /proc/slab_allocators.
+On HDaudio platforms, if playback is started when capture is working,
+there is no audible output.
 
-You need to have CONFIG_SLAB=y and CONFIG_MEMCG=y to see the problem,
-because without MEMCG all slab caches are root caches, and the "list"
-node happens to be the right one.
+This can be root-caused to the use of the rx|tx_mask to store an HDaudio
+stream tag.
 
-Fixes: 510ded33e075 ("slab: implement slab_root_caches list")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+If capture is stared before playback, rx_mask would be non-zero on HDaudio
+platform, then the channel number of playback, which is in the same codec
+dai with the capture, would be changed by soc_pcm_codec_params_fixup based
+on the tx_mask at first, then overwritten by this function based on rx_mask
+at last.
+
+According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
+is for capture. And stream direction is checked at all other references of
+tx|rx_mask in ASoC, so here should be an error. This patch checks stream
+direction for tx|rx_mask for fixup function.
+
+This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
+channel number based on rx_mask is not equal to the one for tx_mask. It could
+be rarely reproduecd because most drivers in kernel set the same channel number
+to tx|rx_mask or rx_mask is zero.
+
+Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
+
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/soc-pcm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index b8e0ec74330f3..018d32496e8d1 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4305,7 +4305,8 @@ static void show_symbol(struct seq_file *m, unsigned long address)
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index e8b98bfd4cf13..33060af18b5a4 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -957,10 +957,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
+ 		codec_params = *params;
  
- static int leaks_show(struct seq_file *m, void *p)
- {
--	struct kmem_cache *cachep = list_entry(p, struct kmem_cache, list);
-+	struct kmem_cache *cachep = list_entry(p, struct kmem_cache,
-+					       root_caches_node);
- 	struct page *page;
- 	struct kmem_cache_node *n;
- 	const char *name;
+ 		/* fixup params based on TDM slot masks */
+-		if (codec_dai->tx_mask)
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
++		    codec_dai->tx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->tx_mask);
+-		if (codec_dai->rx_mask)
++
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
++		    codec_dai->rx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->rx_mask);
+ 
 -- 
 2.20.1
 
