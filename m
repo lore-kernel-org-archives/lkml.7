@@ -6,64 +6,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F5AC04AB1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34491C04AB3
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EBA216C4
+	by mail.kernel.org (Postfix) with ESMTP id F0E882173C
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="FwNys07q"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="WY8l8dc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfEIFy3 (ORCPT
+        id S1726859AbfEIFyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 01:54:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46938 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEIFy2 (ORCPT
+        Thu, 9 May 2019 01:54:32 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35025 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEIFyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 01:54:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y11so691012pfm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:54:28 -0700 (PDT)
+        Thu, 9 May 2019 01:54:31 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h1so626940pgs.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=imoKp9JuiJEQQrERMHSHA/nmMTQQOgAMM5q2Pymqq9c=;
-        b=FwNys07qzls52gZevH6vBD9KYUaRUy8Z5uj1DW56bcDHPnzRfWd4QQMjBNvTOmfQsp
-         gFsKK8kwfpckL/qiuTmkyy64uAXKVvjfQ/mFm2++8nCo0NHXSYfHlhIQDgpLMRgrV0Ng
-         UVI3MSunEOVydxc1GXAsgspc/t0+itLz6XdDrBNchh8qKVWzRSiWOYAP7GNBx8A+11dO
-         XsfQrA8ig8NI5Nu2OerxGtkBp/uU/uXexxWh9REU/DcRrE0Yqlcr5JKDVAF37AMdHG3V
-         27/dBd/Ey8i8BxtETFN9HgdGPVXsC8NH2k7gYs3Z3swV0Yt8s/579IMIbgh1DSMztqER
-         dA7g==
+        bh=MOdd8WODSKAcoIO4YQx/Lh3fMGICrMESlcX7S3xlaIE=;
+        b=WY8l8dc+g75Z1nXPaySHYzrv10cvaRv3g6XT1/Gx8dYFZKef/lQ1660+F+N0yDkIkV
+         puVThSfQ2h7u3N3gXrgxcybLClNd73qlaCSNweokDlVX66bFIendMuM3qsh/2+g9IkPH
+         MMeec0AYchWDJftg8XRwKfTCxU0PVULzf5bUnZWhaeTyDewBJiAHf1F1Ak2aGn5cTpVv
+         bEq0Gk7IkGVaAo2qaNQxh8yG4PxBmW/lspWVIZHNiqDFrkOmzlXG1ybDksvqgSY9xJwq
+         pfyBkrnOeduhnQ7buQ5QvAPNjHGIqfXAboBP5R8Jtcipr3qA1w50GXP+Dwcptc0WBVV/
+         BpKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=imoKp9JuiJEQQrERMHSHA/nmMTQQOgAMM5q2Pymqq9c=;
-        b=W/rytzR8DuFszKCv96iuTvQZaqTLUQhpkhs4pUf2Kf3niK4oGDHgPxKcLagzOEZskn
-         sPrbNI3Kz7SCudhY5EzN3WBSQqATkRJOM6jInv9cwQeg5vaAyl3lOu+jC53BpM/0pOEk
-         Vovvv40vjzEmC3oOzJPcj7ALl0XZUbNV3aT0iMs1DuUsRZdWtk66QqM5t2Juy3hkvbfC
-         xl3JWtGG0aJEdYTDXeDS9bKAIHvR5+P8VBj1/mClfV15keImPvHrq4sG/AHrH7QYLXN4
-         J0+7K/iNvXqWvadzs8vCxFYhABmLx/RywFDfNrJQF+sUSqK5cKnEHMMD4pjMHpNp7E0a
-         pGmw==
-X-Gm-Message-State: APjAAAXzH3szBdqXrQ5/1poSmm0QvBMtnqsog7RiCsW/DVANl18IxO80
-        JMKR7qjCofsItWnL4QJfTyn5Ow==
-X-Google-Smtp-Source: APXvYqyF8kmEKyn18cOblna/CpyIEcoPR+HptdM9H6IcZlve2X9Mno53I8kePzk7HDnUpmholMYTIQ==
-X-Received: by 2002:a63:8dc8:: with SMTP id z191mr3195571pgd.9.1557381267872;
-        Wed, 08 May 2019 22:54:27 -0700 (PDT)
+        bh=MOdd8WODSKAcoIO4YQx/Lh3fMGICrMESlcX7S3xlaIE=;
+        b=oQZOQodyPVQDCRcFV2RnNvXCwQT4FkbE8UX7w1jDMn+uaGU8PhH+/2bBJj1/FdVqDJ
+         jyvWpcuKHiwwPgrVjvmhHqiHXQtkzphWFuBO+u3grnPYSrzaUICqkL36Uj30kamwk7ic
+         LW00EigcHxEawqxKyfQPbiUReI5hRtneb4Sl1EQy6Y6YUX2se8c41+2C3CZEDFSKRYma
+         3QIo92TcwcoPwfQRqfnwAPNsL92lQypVaJkl4pl2SLn8AecxyOiMr8BIyEI0CsKOBkdP
+         CIBzs5kIgLHV09WkYaFK19zW88Epvv/3zU4CNPDFRmws5OpdCPuVcrulJC7usknlmOfI
+         EuOw==
+X-Gm-Message-State: APjAAAWgbsURtwZxfUL3nygWAwrSJOanGLa9pp4ae4+TSIrsGlpz0TEE
+        Anwp4gqyWPHLTNMm+alH1KStUA==
+X-Google-Smtp-Source: APXvYqwl6cBbjrCiiyFAlij5R8mG1qr4uX+A/6IpQ1mLq9cK6GeJ5adK0ex8ZUHucBoei8MQw97Iew==
+X-Received: by 2002:a63:cf54:: with SMTP id b20mr3082109pgj.307.1557381270963;
+        Wed, 08 May 2019 22:54:30 -0700 (PDT)
 Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id f20sm1363137pff.176.2019.05.08.22.54.24
+        by smtp.gmail.com with ESMTPSA id f20sm1363137pff.176.2019.05.08.22.54.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 22:54:27 -0700 (PDT)
+        Wed, 08 May 2019 22:54:30 -0700 (PDT)
 From:   Daniel Drake <drake@endlessm.com>
 To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
 Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
         len.brown@intel.com, rafael.j.wysocki@intel.com,
-        linux@endlessm.com, peterz@infradead.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 2/3] x86/apic: rename lapic_timer_frequency to lapic_timer_period
-Date:   Thu,  9 May 2019 13:54:16 +0800
-Message-Id: <20190509055417.13152-2-drake@endlessm.com>
+        linux@endlessm.com, peterz@infradead.org
+Subject: [PATCH v2 3/3] x86/tsc: set LAPIC timer period to crystal clock frequency
+Date:   Thu,  9 May 2019 13:54:17 +0800
+Message-Id: <20190509055417.13152-3-drake@endlessm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190509055417.13152-1-drake@endlessm.com>
 References: <20190509055417.13152-1-drake@endlessm.com>
@@ -74,177 +73,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This variable is a period unit (number of clock cycles per jiffy),
-not a frequency (which is number of cycles per second).
+The APIC timer calibration (calibrate_APIC_timer()) can be skipped
+in cases where we know the APIC timer frequency. On Intel SoCs,
+we believe that the APIC is fed by the crystal clock; this would make
+sense, and the crystal clock frequency has been verified against the
+APIC timer calibration result on ApolloLake, GeminiLake, Kabylake,
+CoffeeLake, WhiskeyLake and AmberLake.
 
-Give it a more appropriate name.
+Set lapic_timer_period based on the crystal clock frequency
+accordingly.
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
+APIC timer calibration would normally be skipped on modern CPUs
+by nature of the TSC deadline timer being used instead,
+however this change is still potentially useful, e.g. if the
+TSC deadline timer has been disabled with a kernel parameter.
+calibrate_APIC_timer() uses the legacy timer, but we are seeing
+new platforms that omit such legacy functionality, so avoiding
+such codepaths is becoming more important.
+
+Link: https://lkml.kernel.org/r/20190419083533.32388-1-drake@endlessm.com
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Daniel Drake <drake@endlessm.com>
 ---
- arch/x86/include/asm/apic.h    |  2 +-
- arch/x86/kernel/apic/apic.c    | 20 ++++++++++----------
- arch/x86/kernel/cpu/mshyperv.c |  4 ++--
- arch/x86/kernel/cpu/vmware.c   |  2 +-
- arch/x86/kernel/jailhouse.c    |  2 +-
- arch/x86/kernel/tsc_msr.c      |  4 ++--
- 6 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 130e81e10fc7..fc505a84aa93 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -52,7 +52,7 @@ extern unsigned int apic_verbosity;
- extern int local_apic_timer_c2_ok;
+Notes:
+    v2:
+     - remove unnecessary braces
+     - use newly renamed variable lapic_timer_period
+
+ arch/x86/kernel/tsc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 6e6d933fb99c..8f47c4862c56 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -671,6 +671,16 @@ unsigned long native_calibrate_tsc(void)
+ 	if (boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT)
+ 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
  
- extern int disable_apic;
--extern unsigned int lapic_timer_frequency;
-+extern unsigned int lapic_timer_period;
- 
- extern enum apic_intr_mode_id apic_intr_mode;
- enum apic_intr_mode_id {
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index ab6af775f06c..93de7862eef8 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -194,7 +194,7 @@ static struct resource lapic_resource = {
- 	.flags = IORESOURCE_MEM | IORESOURCE_BUSY,
- };
- 
--unsigned int lapic_timer_frequency = 0;
-+unsigned int lapic_timer_period = 0;
- 
- static void apic_pm_activate(void);
- 
-@@ -500,7 +500,7 @@ lapic_timer_set_periodic_oneshot(struct clock_event_device *evt, bool oneshot)
- 	if (evt->features & CLOCK_EVT_FEAT_DUMMY)
- 		return 0;
- 
--	__setup_APIC_LVTT(lapic_timer_frequency, oneshot, 1);
-+	__setup_APIC_LVTT(lapic_timer_period, oneshot, 1);
- 	return 0;
++#ifdef CONFIG_X86_LOCAL_APIC
++	/*
++	 * The local APIC appears to be fed by the core crystal clock
++	 * (which sounds entirely sensible). We can set the global
++	 * lapic_timer_period here to avoid having to calibrate the APIC
++	 * timer later.
++	 */
++	lapic_timer_period = crystal_khz * 1000 / HZ;
++#endif
++
+ 	return crystal_khz * ebx_numerator / eax_denominator;
  }
  
-@@ -804,11 +804,11 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 
- static int __init lapic_init_clockevent(void)
- {
--	if (!lapic_timer_frequency)
-+	if (!lapic_timer_period)
- 		return -1;
- 
- 	/* Calculate the scaled math multiplication factor */
--	lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
-+	lapic_clockevent.mult = div_sc(lapic_timer_period/APIC_DIVISOR,
- 					TICK_NSEC, lapic_clockevent.shift);
- 	lapic_clockevent.max_delta_ns =
- 		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
-@@ -838,7 +838,7 @@ static int __init calibrate_APIC_clock(void)
- 	 */
- 	if (!lapic_init_clockevent()) {
- 		apic_printk(APIC_VERBOSE, "lapic timer already calibrated %d\n",
--			    lapic_timer_frequency);
-+			    lapic_timer_period);
- 		/*
- 		 * Direct calibration methods must have an always running
- 		 * local APIC timer, no need for broadcast timer.
-@@ -883,13 +883,13 @@ static int __init calibrate_APIC_clock(void)
- 	pm_referenced = !calibrate_by_pmtimer(lapic_cal_pm2 - lapic_cal_pm1,
- 					&delta, &deltatsc);
- 
--	lapic_timer_frequency = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
-+	lapic_timer_period = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
- 	lapic_init_clockevent();
- 
- 	apic_printk(APIC_VERBOSE, "..... delta %ld\n", delta);
- 	apic_printk(APIC_VERBOSE, "..... mult: %u\n", lapic_clockevent.mult);
- 	apic_printk(APIC_VERBOSE, "..... calibration result: %u\n",
--		    lapic_timer_frequency);
-+		    lapic_timer_period);
- 
- 	if (boot_cpu_has(X86_FEATURE_TSC)) {
- 		apic_printk(APIC_VERBOSE, "..... CPU clock speed is "
-@@ -900,13 +900,13 @@ static int __init calibrate_APIC_clock(void)
- 
- 	apic_printk(APIC_VERBOSE, "..... host bus clock speed is "
- 		    "%u.%04u MHz.\n",
--		    lapic_timer_frequency / (1000000 / HZ),
--		    lapic_timer_frequency % (1000000 / HZ));
-+		    lapic_timer_period / (1000000 / HZ),
-+		    lapic_timer_period % (1000000 / HZ));
- 
- 	/*
- 	 * Do a sanity check on the APIC calibration result
- 	 */
--	if (lapic_timer_frequency < (1000000 / HZ)) {
-+	if (lapic_timer_period < (1000000 / HZ)) {
- 		local_irq_enable();
- 		pr_warning("APIC frequency too slow, disabling apic timer\n");
- 		return -1;
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 3fa238a137d2..faae6115ddef 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -270,9 +270,9 @@ static void __init ms_hyperv_init_platform(void)
- 
- 		rdmsrl(HV_X64_MSR_APIC_FREQUENCY, hv_lapic_frequency);
- 		hv_lapic_frequency = div_u64(hv_lapic_frequency, HZ);
--		lapic_timer_frequency = hv_lapic_frequency;
-+		lapic_timer_period = hv_lapic_frequency;
- 		pr_info("Hyper-V: LAPIC Timer Frequency: %#x\n",
--			lapic_timer_frequency);
-+			lapic_timer_period);
- 	}
- 
- 	register_nmi_handler(NMI_UNKNOWN, hv_nmi_unknown, NMI_FLAG_FIRST,
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 0eda91f8eeac..3c648476d4fb 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -157,7 +157,7 @@ static void __init vmware_platform_setup(void)
- 
- #ifdef CONFIG_X86_LOCAL_APIC
- 		/* Skip lapic calibration since we know the bus frequency. */
--		lapic_timer_frequency = ecx / HZ;
-+		lapic_timer_period = ecx / HZ;
- 		pr_info("Host bus clock speed read from hypervisor : %u Hz\n",
- 			ecx);
- #endif
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index 1b2ee55a2dfb..ba95bc70460d 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -45,7 +45,7 @@ static void jailhouse_get_wallclock(struct timespec64 *now)
- 
- static void __init jailhouse_timer_init(void)
- {
--	lapic_timer_frequency = setup_data.apic_khz * (1000 / HZ);
-+	lapic_timer_period = setup_data.apic_khz * (1000 / HZ);
- }
- 
- static unsigned long jailhouse_get_tsc(void)
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 3d0e9aeea7c8..067858fe4db8 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -71,7 +71,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
- /*
-  * MSR-based CPU/TSC frequency discovery for certain CPUs.
-  *
-- * Set global "lapic_timer_frequency" to bus_clock_cycles/jiffy
-+ * Set global "lapic_timer_period" to bus_clock_cycles/jiffy
-  * Return processor base frequency in KHz, or 0 on failure.
-  */
- unsigned long cpu_khz_from_msr(void)
-@@ -104,7 +104,7 @@ unsigned long cpu_khz_from_msr(void)
- 	res = freq * ratio;
- 
- #ifdef CONFIG_X86_LOCAL_APIC
--	lapic_timer_frequency = (freq * 1000) / HZ;
-+	lapic_timer_period = (freq * 1000) / HZ;
- #endif
- 
- 	/*
 -- 
 2.20.1
 
