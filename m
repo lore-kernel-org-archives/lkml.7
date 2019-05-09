@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BACC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CA2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE95217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6386217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hfz6R5jU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ikiqJjbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfEIVP4 (ORCPT
+        id S1727278AbfEIVO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:15:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38985 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbfEIVO1 (ORCPT
+        Thu, 9 May 2019 17:14:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46095 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbfEIVOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:14:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w22so1832688pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:27 -0700 (PDT)
+        Thu, 9 May 2019 17:14:22 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y11so1937855pfm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6+yP1qosK/y2iv8L43JDMJpbS2RloEA5RNXI8d21xdE=;
-        b=hfz6R5jUfGZg4MXeD1OGSYc0unYnKr1VPP9nN+Zy82DrMJEHd3B0sRkDd0Hp6XKOu7
-         SZs3+dF2VjA/in0kMc62Av7u3YSu+WfackzMpXP3V9I9u+Gk4usXhRoBDGh5vcsz4uYX
-         bGtOa5doog1coRW7GuO7BMjPcUh7ZRaE0+KQo=
+        bh=qjD70egNJa0bWRCM3mWm+Y3jFJFiZloqPeAQ9dZL65s=;
+        b=ikiqJjblS+fQtPXMsXiF4xrITMT4K7JPsjpUMPZ2qF3G7U9uJgPRuVTCWl6k2sbHQJ
+         BJ+XDDAbh/TBK52T7SHd9FYULFPSwNxOGfH4NrASleMhPo+VdhVPZZsPxajc7bsNdpzu
+         WKjiJ/dfum5eKOAMuRxnfHWGrNVDQpWSs3Bso=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6+yP1qosK/y2iv8L43JDMJpbS2RloEA5RNXI8d21xdE=;
-        b=s9teuyU9TzVfjRtOAC6ECGs3mAerXV9XYrFOV37xyRQ5lyDaARKzLnybocJ7l1Ta0c
-         urIhIn6xAXTuwArQdwurAzwVM2Ee7YZ2HUlD3oEHMalyrTvcB/EVv/+6JKH/L6RYRFUx
-         F+OhfxL1iGYwVC3EE9NggJHRehJ7U0gQYlyp+Zftvh60KnaDxbem6Xt53uT3lDZX3ZXR
-         Kk0g4vdz/cyueNdO9K8aPHVSNmWXKoTY6I6Bmx9GSiM8/KBWpM16JIyUX4cB2w9jal+m
-         KHcCupgfZGbWk+yf7QqRV50FxkcgatkaQdlCX6kxU79x+wUvmPlHpsde/j3bqTBr2yAG
-         dS0Q==
-X-Gm-Message-State: APjAAAWXcysx3hXxIWAx1TCuJu9xHd/9JbJJK14K0CnHQRieXcrOQ0s2
-        6IJSuwRI7opESs3aDti4RLqCFg==
-X-Google-Smtp-Source: APXvYqzCwycRw8SwOX1blYHIjhBSlH5xmc2R3sUD1IvuJ6Lete75nOStbxsYalNC2qmBPpUcNIoqUg==
-X-Received: by 2002:a63:1a42:: with SMTP id a2mr8514818pgm.358.1557436467181;
-        Thu, 09 May 2019 14:14:27 -0700 (PDT)
+        bh=qjD70egNJa0bWRCM3mWm+Y3jFJFiZloqPeAQ9dZL65s=;
+        b=h6VcoxZ7r+jMfrpv+DyVIa9vLkpwXvVacE5+Y/TeOIFv0rxS09ChDd4P8+ZhJA3+2e
+         Q0D8gsKndP8/cV7D1CwvtTyA8TFw0RaXlbFVJueim27FE0mm+7yH2tuuFU0xVsXPUO73
+         JOQ16zjON1UR2Az95rHAiVn0O7zpw8yDv6lNOI74GW0pm5/t4PdP0oBc6pD4eWgjLBcx
+         3p/0JVh9BwcwIyLjDwHb95O8rlvGZD3JS6sH8OYadHddYnuy5QlFrNZ9F4lgPzIWF1J4
+         S8oDeCQdYuOU96GFok3RnxP5XMyeFcbd5/epxpGGyYYiP/LcbSnj/7iRs75jCKcqmtM9
+         K1Rw==
+X-Gm-Message-State: APjAAAWhjlLUh2hvfl96iDyGDsAYKpXnj8vktPyhbKCjVdr+aT7vHNC6
+        9bgWZYBrC0CbWeaGkkSSjPk2EA==
+X-Google-Smtp-Source: APXvYqw3LC+kAnV5JsjEZvQK+vrOXKMWUrM42DnEQLFc9wnBPmNZc0J12yJPGp2ytD5mN+2UzABKcQ==
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr8622490pgl.103.1557436461199;
+        Thu, 09 May 2019 14:14:21 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id e184sm4600720pfc.102.2019.05.09.14.14.26
+        by smtp.gmail.com with ESMTPSA id k6sm227261pfi.86.2019.05.09.14.14.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:14:26 -0700 (PDT)
+        Thu, 09 May 2019 14:14:20 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -60,9 +60,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v3 16/30] mfd: cros_ec: Fix event processing API
-Date:   Thu,  9 May 2019 14:13:39 -0700
-Message-Id: <20190509211353.213194-17-gwendal@chromium.org>
+Subject: [PATCH v3 12/30] mfd: cros_ec: Add lightbar v2 API
+Date:   Thu,  9 May 2019 14:13:35 -0700
+Message-Id: <20190509211353.213194-13-gwendal@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509211353.213194-1-gwendal@chromium.org>
 References: <20190509211353.213194-1-gwendal@chromium.org>
@@ -73,197 +73,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improve API between EC and Host to report events.
+New API split commands, improve EC command latency.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 87 ++++++++++++++++++++++++----
- 1 file changed, 76 insertions(+), 11 deletions(-)
+ include/linux/mfd/cros_ec_commands.h | 124 ++++++++++++++++++++++++++-
+ 1 file changed, 120 insertions(+), 4 deletions(-)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 701b03cfa445..51fe65170ce6 100644
+index 2b3a94a4f0f4..0ff1941288cf 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -500,7 +500,8 @@ enum host_event_code {
- 	EC_HOST_EVENT_BATTERY_CRITICAL = 7,
- 	EC_HOST_EVENT_BATTERY = 8,
- 	EC_HOST_EVENT_THERMAL_THRESHOLD = 9,
--	EC_HOST_EVENT_THERMAL_OVERLOAD = 10,
-+	/* Event generated by a device attached to the EC */
-+	EC_HOST_EVENT_DEVICE = 10,
- 	EC_HOST_EVENT_THERMAL = 11,
- 	EC_HOST_EVENT_USB_CHARGER = 12,
- 	EC_HOST_EVENT_KEY_PRESSED = 13,
-@@ -527,15 +528,34 @@ enum host_event_code {
- 	EC_HOST_EVENT_HANG_DETECT = 20,
- 	/* Hang detect logic detected a hang and warm rebooted the AP */
- 	EC_HOST_EVENT_HANG_REBOOT = 21,
-+
- 	/* PD MCU triggering host event */
- 	EC_HOST_EVENT_PD_MCU = 22,
+@@ -1658,7 +1658,10 @@ struct lightbar_params_v1 {
+ 	int32_t s3_sleep_for;
+ 	int32_t s3_ramp_up;
+ 	int32_t s3_ramp_down;
++	int32_t s5_ramp_up;
++	int32_t s5_ramp_down;
+ 	int32_t tap_tick_delay;
++	int32_t tap_gate_delay;
+ 	int32_t tap_display_time;
  
--	/* EC desires to change state of host-controlled USB mux */
--	EC_HOST_EVENT_USB_MUX = 28,
-+	/* Battery Status flags have changed */
-+	EC_HOST_EVENT_BATTERY_STATUS = 23,
-+
-+	/* EC encountered a panic, triggering a reset */
-+	EC_HOST_EVENT_PANIC = 24,
-+
-+	/* Keyboard fastboot combo has been pressed */
-+	EC_HOST_EVENT_KEYBOARD_FASTBOOT = 25,
+ 	/* Tap-for-battery params */
+@@ -1686,11 +1689,82 @@ struct lightbar_params_v1 {
+ 	uint8_t s0_idx[2][LB_BATTERY_LEVELS];	/* AP is running */
+ 	uint8_t s3_idx[2][LB_BATTERY_LEVELS];	/* AP is sleeping */
  
- 	/* EC RTC event occurred */
- 	EC_HOST_EVENT_RTC = 26,
- 
-+	/* Emulate MKBP event */
-+	EC_HOST_EVENT_MKBP = 27,
++	/* s5: single color pulse on inhibited power-up */
++	uint8_t s5_idx;
 +
-+	/* EC desires to change state of host-controlled USB mux */
-+	EC_HOST_EVENT_USB_MUX = 28,
-+
-+	/* TABLET/LAPTOP mode or detachable base attach/detach event */
-+	EC_HOST_EVENT_MODE_CHANGE = 29,
-+
-+	/* Keyboard recovery combo with hardware reinitialization */
-+	EC_HOST_EVENT_KEYBOARD_RECOVERY_HW_REINIT = 30,
-+
- 	/*
- 	 * The high bit of the event mask is not used as a host event code.  If
- 	 * it reads back as set, then the entire event mask should be
-@@ -1259,7 +1279,7 @@ enum ec_feature_code {
- 	EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS = 37,
- 	/* EC supports audio codec. */
- 	EC_FEATURE_AUDIO_CODEC = 38,
--	/* EC Supports SCP. */
-+	/* The MCU is a System Companion Processor (SCP). */
- 	EC_FEATURE_SCP = 39,
- 	/* The MCU is an Integrated Sensor Hub */
- 	EC_FEATURE_ISH = 40,
-@@ -3183,12 +3203,23 @@ struct ec_result_keyscan_seq_ctrl {
+ 	/* Color palette */
+ 	struct rgb_s color[8];			/* 0-3 are Google colors */
  } __ec_todo_packed;
  
- /*
-- * Command for retrieving the next pending MKBP event from the EC device
-+ * Get the next pending MKBP event.
-  *
-- * The device replies with UNAVAILABLE if there aren't any pending events.
-+ * Returns EC_RES_UNAVAILABLE if there is no event pending.
-  */
- #define EC_CMD_GET_NEXT_EVENT 0x0067
- 
-+#define EC_MKBP_HAS_MORE_EVENTS_SHIFT 7
-+
-+/*
-+ * We use the most significant bit of the event type to indicate to the host
-+ * that the EC has more MKBP events available to provide.
+-/* Lightbar program */
++/* Lightbar command params v2
++ * crbug.com/467716
++ *
++ * lightbar_parms_v1 was too big for i2c, therefore in v2, we split them up by
++ * logical groups to make it more manageable ( < 120 bytes).
++ *
++ * NOTE: Each of these groups must be less than 120 bytes.
 + */
-+#define EC_MKBP_HAS_MORE_EVENTS BIT(EC_MKBP_HAS_MORE_EVENTS_SHIFT)
 +
-+/* The mask to apply to get the raw event type */
-+#define EC_MKBP_EVENT_TYPE_MASK (BIT(EC_MKBP_HAS_MORE_EVENTS_SHIFT) - 1)
++struct lightbar_params_v2_timing {
++	/* Timing */
++	int32_t google_ramp_up;
++	int32_t google_ramp_down;
++	int32_t s3s0_ramp_up;
++	int32_t s0_tick_delay[2];		/* AC=0/1 */
++	int32_t s0a_tick_delay[2];		/* AC=0/1 */
++	int32_t s0s3_ramp_down;
++	int32_t s3_sleep_for;
++	int32_t s3_ramp_up;
++	int32_t s3_ramp_down;
++	int32_t s5_ramp_up;
++	int32_t s5_ramp_down;
++	int32_t tap_tick_delay;
++	int32_t tap_gate_delay;
++	int32_t tap_display_time;
++} __ec_todo_packed;
 +
- enum ec_mkbp_event {
- 	/* Keyboard matrix changed. The event data is the new matrix state. */
- 	EC_MKBP_EVENT_KEY_MATRIX = 0,
-@@ -3205,9 +3236,21 @@ enum ec_mkbp_event {
- 	/* The state of the switches have changed. */
- 	EC_MKBP_EVENT_SWITCH = 4,
++struct lightbar_params_v2_tap {
++	/* Tap-for-battery params */
++	uint8_t tap_pct_red;
++	uint8_t tap_pct_green;
++	uint8_t tap_seg_min_on;
++	uint8_t tap_seg_max_on;
++	uint8_t tap_seg_osc;
++	uint8_t tap_idx[3];
++} __ec_todo_packed;
++
++struct lightbar_params_v2_oscillation {
++	/* Oscillation */
++	uint8_t osc_min[2];			/* AC=0/1 */
++	uint8_t osc_max[2];			/* AC=0/1 */
++	uint8_t w_ofs[2];			/* AC=0/1 */
++} __ec_todo_packed;
++
++struct lightbar_params_v2_brightness {
++	/* Brightness limits based on the backlight and AC. */
++	uint8_t bright_bl_off_fixed[2];		/* AC=0/1 */
++	uint8_t bright_bl_on_min[2];		/* AC=0/1 */
++	uint8_t bright_bl_on_max[2];		/* AC=0/1 */
++} __ec_todo_packed;
++
++struct lightbar_params_v2_thresholds {
++	/* Battery level thresholds */
++	uint8_t battery_threshold[LB_BATTERY_LEVELS - 1];
++} __ec_todo_packed;
++
++struct lightbar_params_v2_colors {
++	/* Map [AC][battery_level] to color index */
++	uint8_t s0_idx[2][LB_BATTERY_LEVELS];	/* AP is running */
++	uint8_t s3_idx[2][LB_BATTERY_LEVELS];	/* AP is sleeping */
++
++	/* s5: single color pulse on inhibited power-up */
++	uint8_t s5_idx;
++
++	/* Color palette */
++	struct rgb_s color[8];			/* 0-3 are Google colors */
++} __ec_todo_packed;
++
++/* Lightbar program. */
+ #define EC_LB_PROG_LEN 192
+ struct lightbar_program {
+ 	uint8_t size;
+@@ -1704,7 +1778,10 @@ struct ec_params_lightbar {
+ 		 * The following commands have no args:
+ 		 *
+ 		 * dump, off, on, init, get_seq, get_params_v0, get_params_v1,
+-		 * version, get_brightness, get_demo, suspend, resume
++		 * version, get_brightness, get_demo, suspend, resume,
++		 * get_params_v2_timing, get_params_v2_tap, get_params_v2_osc,
++		 * get_params_v2_bright, get_params_v2_thlds,
++		 * get_params_v2_colors
+ 		 *
+ 		 * Don't use an empty struct, because C++ hates that.
+ 		 */
+@@ -1731,6 +1808,14 @@ struct ec_params_lightbar {
  
--	/* EC sent a sysrq command */
-+	/* New Fingerprint sensor event, the event data is fp_events bitmap. */
-+	EC_MKBP_EVENT_FINGERPRINT = 5,
+ 		struct lightbar_params_v0 set_params_v0;
+ 		struct lightbar_params_v1 set_params_v1;
 +
-+	/*
-+	 * Sysrq event: send emulated sysrq. The event data is sysrq,
-+	 * corresponding to the key to be pressed.
-+	 */
- 	EC_MKBP_EVENT_SYSRQ = 6,
- 
-+	/*
-+	 * New 64-bit host event.
-+	 * The event data is 8 bytes of host event flags.
-+	 */
-+	EC_MKBP_EVENT_HOST_EVENT64 = 7,
++		struct lightbar_params_v2_timing set_v2par_timing;
++		struct lightbar_params_v2_tap set_v2par_tap;
++		struct lightbar_params_v2_oscillation set_v2par_osc;
++		struct lightbar_params_v2_brightness set_v2par_bright;
++		struct lightbar_params_v2_thresholds set_v2par_thlds;
++		struct lightbar_params_v2_colors set_v2par_colors;
 +
- 	/* Notify the AP that something happened on CEC */
- 	EC_MKBP_EVENT_CEC_EVENT = 8,
+ 		struct lightbar_program set_program;
+ 	};
+ } __ec_todo_packed;
+@@ -1752,6 +1837,14 @@ struct ec_response_lightbar {
+ 		struct lightbar_params_v0 get_params_v0;
+ 		struct lightbar_params_v1 get_params_v1;
  
-@@ -3217,12 +3260,14 @@ enum ec_mkbp_event {
- 	/* Number of MKBP events */
- 	EC_MKBP_EVENT_COUNT,
++
++		struct lightbar_params_v2_timing get_params_v2_timing;
++		struct lightbar_params_v2_tap get_params_v2_tap;
++		struct lightbar_params_v2_oscillation get_params_v2_osc;
++		struct lightbar_params_v2_brightness get_params_v2_bright;
++		struct lightbar_params_v2_thresholds get_params_v2_thlds;
++		struct lightbar_params_v2_colors get_params_v2_colors;
++
+ 		struct __ec_todo_unpacked {
+ 			uint32_t num;
+ 			uint32_t flags;
+@@ -1764,9 +1857,11 @@ struct ec_response_lightbar {
+ 		/*
+ 		 * The following commands have no response:
+ 		 *
+-		 * off, on, init, set_brightness, seq, reg, set_rgb,
++		 * off, on, init, set_brightness, seq, reg, set_rgb, demo,
+ 		 * set_params_v0, set_params_v1, set_program,
+-		 * manual_suspend_ctrl, suspend, resume
++		 * manual_suspend_ctrl, suspend, resume, set_v2par_timing,
++		 * set_v2par_tap, set_v2par_osc, set_v2par_bright,
++		 * set_v2par_thlds, set_v2par_colors
+ 		 */
+ 	};
+ } __ec_todo_packed;
+@@ -1795,6 +1890,18 @@ enum lightbar_command {
+ 	LIGHTBAR_CMD_MANUAL_SUSPEND_CTRL = 19,
+ 	LIGHTBAR_CMD_SUSPEND = 20,
+ 	LIGHTBAR_CMD_RESUME = 21,
++	LIGHTBAR_CMD_GET_PARAMS_V2_TIMING = 22,
++	LIGHTBAR_CMD_SET_PARAMS_V2_TIMING = 23,
++	LIGHTBAR_CMD_GET_PARAMS_V2_TAP = 24,
++	LIGHTBAR_CMD_SET_PARAMS_V2_TAP = 25,
++	LIGHTBAR_CMD_GET_PARAMS_V2_OSCILLATION = 26,
++	LIGHTBAR_CMD_SET_PARAMS_V2_OSCILLATION = 27,
++	LIGHTBAR_CMD_GET_PARAMS_V2_BRIGHTNESS = 28,
++	LIGHTBAR_CMD_SET_PARAMS_V2_BRIGHTNESS = 29,
++	LIGHTBAR_CMD_GET_PARAMS_V2_THRESHOLDS = 30,
++	LIGHTBAR_CMD_SET_PARAMS_V2_THRESHOLDS = 31,
++	LIGHTBAR_CMD_GET_PARAMS_V2_COLORS = 32,
++	LIGHTBAR_CMD_SET_PARAMS_V2_COLORS = 33,
+ 	LIGHTBAR_NUM_CMDS
  };
-+BUILD_ASSERT(EC_MKBP_EVENT_COUNT <= EC_MKBP_EVENT_TYPE_MASK);
  
- union __ec_align_offset1 ec_response_get_next_data {
- 	uint8_t key_matrix[13];
+@@ -1813,6 +1920,14 @@ enum ec_led_id {
+ 	EC_LED_ID_POWER_LED,
+ 	/* LED on power adapter or its plug */
+ 	EC_LED_ID_ADAPTER_LED,
++	/* LED to indicate left side */
++	EC_LED_ID_LEFT_LED,
++	/* LED to indicate right side */
++	EC_LED_ID_RIGHT_LED,
++	/* LED to indicate recovery mode with HW_REINIT */
++	EC_LED_ID_RECOVERY_HW_REINIT_LED,
++	/* LED to indicate sysrq debug mode. */
++	EC_LED_ID_SYSRQ_DEBUG_LED,
  
- 	/* Unaligned */
--	uint32_t  host_event;
-+	uint32_t host_event;
-+	uint64_t host_event64;
- 
- 	struct __ec_todo_unpacked {
- 		/* For aligning the fifo_info */
-@@ -3230,14 +3275,25 @@ union __ec_align_offset1 ec_response_get_next_data {
- 		struct ec_response_motion_sense_fifo_info info;
- 	} sensor_fifo;
- 
--	uint32_t   buttons;
--	uint32_t   switches;
--	uint32_t   sysrq;
-+	uint32_t buttons;
-+
-+	uint32_t switches;
-+
-+	uint32_t fp_events;
-+
-+	uint32_t sysrq;
-+
-+	/* CEC events from enum mkbp_cec_event */
-+	uint32_t cec_events;
+ 	EC_LED_ID_COUNT
  };
+@@ -1827,6 +1942,7 @@ enum ec_led_colors {
+ 	EC_LED_COLOR_BLUE,
+ 	EC_LED_COLOR_YELLOW,
+ 	EC_LED_COLOR_WHITE,
++	EC_LED_COLOR_AMBER,
  
- union __ec_align_offset1 ec_response_get_next_data_v1 {
- 	uint8_t key_matrix[16];
-+
-+	/* Unaligned */
- 	uint32_t host_event;
-+	uint64_t host_event64;
-+
- 	struct __ec_todo_unpacked {
- 		/* For aligning the fifo_info */
- 		uint8_t reserved[3];
-@@ -3245,11 +3301,19 @@ union __ec_align_offset1 ec_response_get_next_data_v1 {
- 	} sensor_fifo;
- 
- 	uint32_t buttons;
-+
- 	uint32_t switches;
-+
-+	uint32_t fp_events;
-+
- 	uint32_t sysrq;
-+
-+	/* CEC events from enum mkbp_cec_event */
- 	uint32_t cec_events;
-+
- 	uint8_t cec_message[16];
+ 	EC_LED_COLOR_COUNT
  };
-+BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
- 
- struct ec_response_get_next_event {
- 	uint8_t event_type;
-@@ -3268,6 +3332,7 @@ struct ec_response_get_next_event_v1 {
- #define EC_MKBP_POWER_BUTTON	0
- #define EC_MKBP_VOL_UP		1
- #define EC_MKBP_VOL_DOWN	2
-+#define EC_MKBP_RECOVERY	3
- 
- /* Switches */
- #define EC_MKBP_LID_OPEN	0
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
