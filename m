@@ -2,88 +2,116 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B539CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17934C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853DE216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1189D216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Wj8IycJk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="mI3ai4sU";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="mI3ai4sU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfEIPkF (ORCPT
+        id S1726657AbfEIPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:40:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46259 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfEIPkF (ORCPT
+        Thu, 9 May 2019 11:42:28 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:46948 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbfEIPm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:40:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id v17so2654978otp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 08:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xSzZV65JqCtXVXp3jlprv98tNwKpdM2hfn5arWFOHlQ=;
-        b=Wj8IycJkrri//lG167IMCLkpOF3P0RDxUTLSG3qf9PCTxjX6DB+bZDqLo2GKXYpIUf
-         94bR8IgO7nRPbkGSFYZHQVN0lU1j6cz8KrLDPTP3KwkFZqctJwA+D8F2qyn16FimrDmH
-         H5jjZi+ZDGieYHHhmUB29OScA2PIGo+DMzXF9jd/7XwemUkPWQKR1VryhTn6yT2eolZ6
-         QONFr619BXzyo+BPB4fPNS3KtX6h31ZRXuc1elagjPwt9M1Flreeam4G5G5vfbKRfSfy
-         Y+8ExhrjY6/TcnA9Fg9D4UQN9M0PcpY0mWTlGB3qfPw1Cq57BSZNqHdPIkJm3mV1j2T+
-         Tg1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xSzZV65JqCtXVXp3jlprv98tNwKpdM2hfn5arWFOHlQ=;
-        b=sB5IV5C6ObpJ45mv/6biPymqJoigohpldg+VD8fHyoJBqmZN0nMtCfFr8XGf79LNMl
-         XhM3PQCsdayni94s70ZnZQNQ+bOOwrS69T45E4HGsvOJdD/B1CRAl4+KsdHl8cwz6lqn
-         ezszK7jzl9YW/mKqJKy+DDzeeUbz+Ax3PDdhYrG21jbLpNZga601JnPTNyR1WCKncSGs
-         55RmU/HDwaQJe1MRF2iOhAVYmF9LZR5egyyu5iBygCNyj7clvaXlShLkYDenUvCd0XZf
-         k5S65pv0edc1PC9zhE3aSkOQ7Ap0eC+eMQEMpu6rTD61ODgrRXhKTiyH8IGVLr5lv6oe
-         CyHw==
-X-Gm-Message-State: APjAAAWAJbC5miTyIpH0TKPARaH4XhfKZr4KqZnI6tovdIjdtyhEcaDJ
-        lJajrWbYm35kkLO090k/AC06TQ==
-X-Google-Smtp-Source: APXvYqzhrR/B1Ofdn+/XkOJi4J9l1K72xcXghvK7Q4wTyN1HvQcy2LB9NlYNQ6igJr8sgEA2B0kobw==
-X-Received: by 2002:a9d:826:: with SMTP id 35mr3067127oty.114.1557416404417;
-        Thu, 09 May 2019 08:40:04 -0700 (PDT)
-Received: from brauner.io ([172.56.6.91])
-        by smtp.gmail.com with ESMTPSA id c131sm949673oif.33.2019.05.09.08.40.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 09 May 2019 08:40:03 -0700 (PDT)
-Date:   Thu, 9 May 2019 17:39:59 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] fsopen: use square brackets around "fscontext"
-Message-ID: <20190509153957.ahqqxwzipdvjxudo@brauner.io>
-References: <20190508152509.13336-1-christian@brauner.io>
- <20190508152509.13336-2-christian@brauner.io>
- <20190509153902.tqkoooxtviafrla5@brauner.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190509153902.tqkoooxtviafrla5@brauner.io>
-User-Agent: NeoMutt/20180716
+        Thu, 9 May 2019 11:42:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C2F998EE2F4;
+        Thu,  9 May 2019 08:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557416547;
+        bh=MFzfvCr0ghlSwCqfMPN+3U/z7LPdQOpfgYAbwLhIp/s=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=mI3ai4sUaDOITFli4oAi51bk6X9VCi1bBBwRf7j0NOq7QYPskHyAD1FgKe0XNQDMn
+         GYnRzV0Mln13+7JvwrGFBnYU4+UPrSGRjLYaN9QkzOgecwdMvEoBFhgge9m6cpI71s
+         X1LaIhSLodhbat/qaxnwA8MWdS7s+bpANUWat2V0=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rwh2OIwpaMgk; Thu,  9 May 2019 08:42:27 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1AE748EE101;
+        Thu,  9 May 2019 08:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557416547;
+        bh=MFzfvCr0ghlSwCqfMPN+3U/z7LPdQOpfgYAbwLhIp/s=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=mI3ai4sUaDOITFli4oAi51bk6X9VCi1bBBwRf7j0NOq7QYPskHyAD1FgKe0XNQDMn
+         GYnRzV0Mln13+7JvwrGFBnYU4+UPrSGRjLYaN9QkzOgecwdMvEoBFhgge9m6cpI71s
+         X1LaIhSLodhbat/qaxnwA8MWdS7s+bpANUWat2V0=
+Message-ID: <1557416545.4268.22.camel@HansenPartnership.com>
+Subject: Re: [PATCH] mptsas: fix undefined behaviour of a shift of an int by
+ more than 31 places
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Hannes Reinecke <hare@suse.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 09 May 2019 08:42:25 -0700
+In-Reply-To: <9b4c84b5-31eb-6068-57c2-80ededc21b43@suse.de>
+References: <20190504164010.24937-1-colin.king@canonical.com>
+         <1557027274.2821.2.camel@HansenPartnership.com>
+         <de7e3aaf-0155-5007-c228-510f0d0de428@canonical.com>
+         <1557325468.3196.2.camel@HansenPartnership.com>
+         <9b4c84b5-31eb-6068-57c2-80ededc21b43@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 05:39:02PM +0200, Christian Brauner wrote:
-> On Wed, May 08, 2019 at 05:25:09PM +0200, Christian Brauner wrote:
-> > Make the name of the anon inode fd "[fscontext]" instead of "fscontext".
-> > This is minor but most core-kernel anon inode fds carry square brackets
-> > around their name (cf. [1]). For the sake of consistency lets do the same
+On Thu, 2019-05-09 at 17:30 +0200, Hannes Reinecke wrote:
+> On 5/8/19 4:24 PM, James Bottomley wrote:
+> > On Wed, 2019-05-08 at 14:07 +0100, Colin Ian King wrote:
+> > > On 05/05/2019 04:34, James Bottomley wrote:
+> > > > On Sat, 2019-05-04 at 17:40 +0100, Colin King wrote:
+> > > > > From: Colin Ian King <colin.king@canonical.com>
+> > > > > 
+> > > > > Currently the shift of int value 1 by more than 31 places can
+> > > > > result in undefined behaviour. Fix this by making the 1 a ULL
+> > > > > value before the shift operation.
+> > > > 
+> > > > Fusion SAS is pretty ancient.  I thought the largest one ever
+> > > > produced had four phys, so how did you produce the overflow?
+> > > 
+> > > This was an issue found by static analysis with Coverity; so I
+> > > guess won't happen in the wild, in which case the patch could be
+> > > ignored.
+> > 
+> > The point I was more making is that if we thought this could ever
+> > happen in practice, we'd need more error handling than simply this:
+> > we'd be setting the phy_bitmap to zero which would be every bit as
+> > bad as some random illegal value.
+> > 
 > 
-> This "(cf. [1])" reference was supposed to point to the list below. But
-> since I rewrote the paragraph it can simply be dropped.  Sorry for the
-> oversight.
+> Thing is, mptsas is used as the default emulation in VMWare, and
+> that does allow you to do some pretty weird configurations (I've
+> found myself  fixing a bug with SATA hotplug on mptsas once ...).
+> So I wouldn't discard this issue out of hand.
 
-I'll resend with the commit message fixed up.
+I'm not, I'm just saying the proposed fix is no fix at all since it
+would just produce undefined behaviour in the driver.  I thought the
+issue might have been coming from VMWare, which is why I asked how the
+bug was seen.  The proper fix is probably to fail attachment if the phy
+number goes over a fixed value (16 sounds reasonable) but if it's never
+a problem in the field, I'm happy doing nothing because we have no real
+idea what the reasonable value is.
 
-Christian
+James
+
