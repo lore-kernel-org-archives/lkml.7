@@ -2,189 +2,117 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363B2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D662C04AAD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0403620675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED2B20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vu0NFRT9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEf4IWGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfEICXh (ORCPT
+        id S1726652AbfEICZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:23:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58977 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfEICXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:23:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=BLdUxRrkwpbfMypNuHs1fW3qzt5NUxqZanuMvnX1EIM=; b=vu0NFRT9a7FhbMaiTIdR8jrxM+
-        UljmNAEVWm4ywYA69TC01Y2ntK1Ozzi49VjWGqq8Axff70XUsDWUtgZGBAhX/eNj9rU9dUsxz0tUo
-        wkUnRlsy/iv+FRmoEPkwZ5nlnd/nqV3tP+b0BKUMa+s8KsgoPN0SCPFj2tEkY+HZ6qyM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hOYiY-0006iY-9w; Thu, 09 May 2019 04:23:30 +0200
-Date:   Thu, 9 May 2019 04:23:30 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH net-next 10/11] net: stmmac: Introduce selftests support
-Message-ID: <20190509022330.GA23758@lunn.ch>
-References: <cover.1557300602.git.joabreu@synopsys.com>
- <be9099bbf8783b210dc9034a8b82219984f03250.1557300602.git.joabreu@synopsys.com>
+        Wed, 8 May 2019 22:25:56 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40637 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfEICZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 22:25:55 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e56so593553ede.7;
+        Wed, 08 May 2019 19:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dV00bhvitZyhUixU9bkcFkopWQ37LaEH0x2qCgsghaQ=;
+        b=fEf4IWGadCTWVwexFcQu9G5ffqcmzFCHyG2Y7VEWUC++JswOh9aeE5P+25F8g5ai6S
+         uW1EZ8MgoDpiTEEwHQENtrcCTBaO5lzyTFf1ROoIVD31KFKY0FyN7KZzwZb2a1YAGx8z
+         gfuW6K+13N39gmPdrPYvc/1oQrSSX24ZoHQvqWQ3H+c78bZEiMnQIunySmy411OO85Wr
+         sqzUJnGN9kr0kvQdsiD5e9ir8lFZc8qIM2aX5uBaoQqr1PQJjMcZNPvLxQi9W9OtZCo3
+         iGeq9K6qBoYuva44haY7ZuA49TOmNUdDtbBGb7+K8cKWgO3sa704DVvPekcbrRgCuwXT
+         HX2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dV00bhvitZyhUixU9bkcFkopWQ37LaEH0x2qCgsghaQ=;
+        b=X+ceMHp0Ix17rvJ95jIlHFgGPxNhCIuAy3NktYJ2jIk7PW1IMkKpUfvBcrExI95jjl
+         AnYqj628mQtcMVxX37N0QmiIXbkQskrajbp9Ir39lraTD6HE5gQaQBVUPbVlPhYxBZa2
+         zWsk99QNf4qy6HvZJbhyKF2Lf7lSF2UsDgg7b3Pu4zrsj7qb3PyRLtmTGlQj0/Y/fMAy
+         Dk9rVN87tSDYe3tDdbhn0zSSZbifqwzZlyyIVM3vsSEdChNqAKSkVc0GrOIy/w1JhOE5
+         Bpe/A4ZSoiUhjKdvS0BJrJynLevbOHDcSirOtIBKeRr7cmS92J0OdDCPyryuYshiNn1F
+         YUDw==
+X-Gm-Message-State: APjAAAWVEHDnh+iNOcJnbjPM60HA4Pq8wossKHgEAP3Xymfno1TAlY0T
+        hhwGPIcr2j3HcpuACMxr6AOjcncWsYa3JvJkIKo=
+X-Google-Smtp-Source: APXvYqymS3jNPYoPoYTVXnqAuO2BYYvz7TS/SDyCdCXiOkfqcA7noytpW9Gx0yFP/avBPOcvjhRerfKKN4Q4vJQvmFc=
+X-Received: by 2002:a50:9441:: with SMTP id q1mr1091789eda.101.1557368753776;
+ Wed, 08 May 2019 19:25:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be9099bbf8783b210dc9034a8b82219984f03250.1557300602.git.joabreu@synopsys.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190505130413.32253-1-masneyb@onstation.org> <20190505130413.32253-5-masneyb@onstation.org>
+ <20190507063902.GA2085@tuxbook-pro> <20190509021616.GA26228@basecamp>
+In-Reply-To: <20190509021616.GA26228@basecamp>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 8 May 2019 19:25:44 -0700
+Message-ID: <CAF6AEGsM382jB=h7oM3frhZ5fAp+qYUdgiiKSKo1RtR8+ffjrg@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/6] ARM: dts: msm8974: add display support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int stmmac_test_eee(struct stmmac_priv *priv)
-> +{
-> +	struct stmmac_extra_stats *initial, *final;
-> +	int timeout = 100;
-> +	int ret;
-> +
-> +	ret = stmmac_test_loopback(priv);
-> +	if (ret)
-> +		goto out_free_final;
-> +
-> +	/* We have no traffic in the line so, sooner or later it will go LPI */
-> +	while (--timeout) {
-> +		memcpy(final, &priv->xstats, sizeof(*final));
-> +
-> +		if (final->irq_tx_path_in_lpi_mode_n >
-> +		    initial->irq_tx_path_in_lpi_mode_n)
-> +			break;
-> +		msleep(100);
-> +	}
-> +
-> +	if (!timeout) {
-> +		ret = -ETIMEDOUT;
-> +		goto out_free_final;
-> +	}
+On Wed, May 8, 2019 at 7:16 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> On Mon, May 06, 2019 at 11:39:02PM -0700, Bjorn Andersson wrote:
+> > On Sun 05 May 06:04 PDT 2019, Brian Masney wrote:
+> > > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > [..]
+> > > +                           clocks = <&mmcc MDSS_MDP_CLK>,
+> > > +                                    <&mmcc MDSS_AHB_CLK>,
+> > > +                                    <&mmcc MDSS_AXI_CLK>,
+> > > +                                    <&mmcc MDSS_BYTE0_CLK>,
+> > > +                                    <&mmcc MDSS_PCLK0_CLK>,
+> > > +                                    <&mmcc MDSS_ESC0_CLK>,
+> > > +                                    <&mmcc MMSS_MISC_AHB_CLK>;
+> > > +                           clock-names = "mdp_core",
+> > > +                                         "iface",
+> > > +                                         "bus",
+> > > +                                         "byte",
+> > > +                                         "pixel",
+> > > +                                         "core",
+> > > +                                         "core_mmss";
+> >
+> > Unless I enable MMSS_MMSSNOC_AXI_CLK and MMSS_S0_AXI_CLK I get some
+> > underrun error from DSI. You don't see anything like this?
+> >
+> > (These clocks are controlled by msm_bus downstream and should be driven
+> > by interconnect upstream)
+> >
+> >
+> > Apart from this, I think this looks nice. Happy to see the progress.
+>
+> No, I'm not seeing an underrun errors from the DSI. I think the clocks
+> are fine since I'm able to get this working with 4.17 using these same
+> clocks. I just sent out v2 and the cover letter has some details, along
+> with the full dmesg.
 
-Retries would be a better name than timeout.
+since we don't have interconnect driver for 8974, I guess there is
+some chance that things work or not based on how lk leaves things?
 
-Also, 100 * 100 ms seems like a long time.
-
-> +static int stmmac_filter_check(struct stmmac_priv *priv)
-> +{
-> +	if (!(priv->dev->flags & IFF_PROMISC))
-> +		return 0;
-> +
-> +	netdev_warn(priv->dev, "Test can't be run in promiscuous mode!\n");
-> +	return 1;
-
-Maybe return EOPNOTSUPP here,
-
-> +}
-> +
-> +static int stmmac_test_hfilt(struct stmmac_priv *priv)
-> +{
-> +	unsigned char gd_addr[ETH_ALEN] = {0x01, 0x0c, 0xcd, 0x04, 0x00, 0x00};
-> +	unsigned char bd_addr[ETH_ALEN] = {0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b};
-
-What does gd and bd mean?
-
-> +	struct stmmac_packet_attrs attr = { };
-> +	int ret;
-> +
-> +	if (stmmac_filter_check(priv))
-> +		return -EOPNOTSUPP;
-
-and just return the error code from the call.
-
-> +
-> +	ret = dev_mc_add(priv->dev, gd_addr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	attr.dst = gd_addr;
-> +
-> +	/* Shall receive packet */
-> +	ret = __stmmac_test_loopback(priv, &attr);
-> +	if (ret)
-> +		goto cleanup;
-> +
-> +	attr.dst = bd_addr;
-> +
-> +	/* Shall NOT receive packet */
-> +	ret = __stmmac_test_loopback(priv, &attr);
-> +	ret = !ret;
-
-What is this test testing? gd is a multicast, where as bd is not.  I
-expect the hardware treats multicast different to unicast. So it would
-make more sense to test two different multicast addresses, one which
-has been added via dev_mc_addr, and one that has not?
-
-> +
-> +cleanup:
-> +	dev_mc_del(priv->dev, gd_addr);
-> +	return ret;
-> +}
-> +
-> +static int stmmac_test_pfilt(struct stmmac_priv *priv)
-> +{
-> +	unsigned char gd_addr[ETH_ALEN] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
-> +	unsigned char bd_addr[ETH_ALEN] = {0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b};
-> +	struct stmmac_packet_attrs attr = { };
-> +	int ret;
-> +
-> +	if (stmmac_filter_check(priv))
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = dev_uc_add(priv->dev, gd_addr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	attr.dst = gd_addr;
-> +
-> +	/* Shall receive packet */
-> +	ret = __stmmac_test_loopback(priv, &attr);
-> +	if (ret)
-> +		goto cleanup;
-
-gb is a multicast address. Does dev_uc_add() return an error? If it
-does not we should not expect it to actually work, since a multicast
-address should not match a unicast address?
-
-You also seem to be missing a test for adding a unicast address via
-dev_uc_add() and receiving packets for that address, but not receiving
-multicast packets.
-
-> +static const struct stmmac_test {
-> +	char name[ETH_GSTRING_LEN];
-> +	int lb;
-> +	int (*fn)(struct stmmac_priv *priv);
-> +} stmmac_selftests[] = {
-> +	{
-> +		.name = "MAC Loopback         ",
-> +		.lb = STMMAC_LOOPBACK_MAC,
-> +		.fn = stmmac_test_loopback,
-
-stmmac_test_mac_loopback might be a better name.
-
-> +	}, {
-> +		.name = "PHY Loopback         ",
-> +		.lb = STMMAC_LOOPBACK_PHY,
-> +		.fn = stmmac_test_phy_loopback,
-> +	}, {
-
-  Andrew
+BR,
+-R
