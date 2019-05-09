@@ -4,67 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B18DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F5AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFE9216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EBA216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="bbFlrxFY"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="FwNys07q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEIFyZ (ORCPT
+        id S1726832AbfEIFy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 01:54:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33412 "EHLO
+        Thu, 9 May 2019 01:54:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46938 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEIFyZ (ORCPT
+        with ESMTP id S1726179AbfEIFy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 01:54:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z28so722315pfk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:54:24 -0700 (PDT)
+        Thu, 9 May 2019 01:54:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y11so691012pfm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MyoriVMIilTeJ9qFpR6AU4DWacDTYEkqJme7/MxnVqg=;
-        b=bbFlrxFYylFXUH5ZVeD6MYXyaFIdK+gVBVe+gfkSRidRYbDhicWM49Y/QrJRf8haYP
-         Ataz1DsFGwFCLfELOnmvl00Ms6iR26Yp+aUUarVlWYz/ha1u6HPFM6xrKL5MDRz2unna
-         KNPjMy0Zi1ZqKnjEkPI3OcbScAE3Nm6IEQUrOtoTsptqMX1namJuj0xKY5qpXB8HxWEU
-         2M8HFtfjtNQLuuM8J2VAxSmMcJ21cvFLmS7jaucXvACmNswDtq1zXVdcQHekiZxo7Trp
-         OlizbT7t8VFKyARiFE+vqVLPSwPDZvda7A1joUFIF/YzqpLWYpXzdgFwi/mQ8uzLjOLA
-         7TSg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=imoKp9JuiJEQQrERMHSHA/nmMTQQOgAMM5q2Pymqq9c=;
+        b=FwNys07qzls52gZevH6vBD9KYUaRUy8Z5uj1DW56bcDHPnzRfWd4QQMjBNvTOmfQsp
+         gFsKK8kwfpckL/qiuTmkyy64uAXKVvjfQ/mFm2++8nCo0NHXSYfHlhIQDgpLMRgrV0Ng
+         UVI3MSunEOVydxc1GXAsgspc/t0+itLz6XdDrBNchh8qKVWzRSiWOYAP7GNBx8A+11dO
+         XsfQrA8ig8NI5Nu2OerxGtkBp/uU/uXexxWh9REU/DcRrE0Yqlcr5JKDVAF37AMdHG3V
+         27/dBd/Ey8i8BxtETFN9HgdGPVXsC8NH2k7gYs3Z3swV0Yt8s/579IMIbgh1DSMztqER
+         dA7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MyoriVMIilTeJ9qFpR6AU4DWacDTYEkqJme7/MxnVqg=;
-        b=i/zD9s9SeWUZQorz3DVs2vik+1p/I7118neUNHx1mAQgfjg5sca7FVtkuJW9BqzNj+
-         bb94CG5TUR95GZr8wBqVGIxB5Yk28Zg/0YsWsJ6Yzuk2WO9JRAkdjV90ztAb5ZqTwSFe
-         lek47FxOeE9DIQM9suAHcMzJdTvAtMReiW+K0rWxfNHCRby5mgVvgSQHjqF+1gkJlLHC
-         741w475r56KKcO07RkcPjjhPm4xX9JRl9llIXx4Glo7dCZcRlL/qDZC3veXMTxFY0hJl
-         MEK1SafPC8M/rwGRrPvPVnr7p0txRTB1v7C7+jidXmHZtDp50tblIN2P84RMbybO1itt
-         jcuw==
-X-Gm-Message-State: APjAAAXsqgbWo17AILlrF16qdwXbxPYNt+kVWikdB+d3TlLR/y0tZge0
-        gNp82EA4Avpv2xvmDrRi9uDXGA==
-X-Google-Smtp-Source: APXvYqxdmBN/lHsDvX6PGNtCQWDni9gx70ciWVTNJGJX9FO/ZuzKDfvfQ5f8fc0IdJFPM02/VoJjIA==
-X-Received: by 2002:a62:6c88:: with SMTP id h130mr2573755pfc.106.1557381263835;
-        Wed, 08 May 2019 22:54:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=imoKp9JuiJEQQrERMHSHA/nmMTQQOgAMM5q2Pymqq9c=;
+        b=W/rytzR8DuFszKCv96iuTvQZaqTLUQhpkhs4pUf2Kf3niK4oGDHgPxKcLagzOEZskn
+         sPrbNI3Kz7SCudhY5EzN3WBSQqATkRJOM6jInv9cwQeg5vaAyl3lOu+jC53BpM/0pOEk
+         Vovvv40vjzEmC3oOzJPcj7ALl0XZUbNV3aT0iMs1DuUsRZdWtk66QqM5t2Juy3hkvbfC
+         xl3JWtGG0aJEdYTDXeDS9bKAIHvR5+P8VBj1/mClfV15keImPvHrq4sG/AHrH7QYLXN4
+         J0+7K/iNvXqWvadzs8vCxFYhABmLx/RywFDfNrJQF+sUSqK5cKnEHMMD4pjMHpNp7E0a
+         pGmw==
+X-Gm-Message-State: APjAAAXzH3szBdqXrQ5/1poSmm0QvBMtnqsog7RiCsW/DVANl18IxO80
+        JMKR7qjCofsItWnL4QJfTyn5Ow==
+X-Google-Smtp-Source: APXvYqyF8kmEKyn18cOblna/CpyIEcoPR+HptdM9H6IcZlve2X9Mno53I8kePzk7HDnUpmholMYTIQ==
+X-Received: by 2002:a63:8dc8:: with SMTP id z191mr3195571pgd.9.1557381267872;
+        Wed, 08 May 2019 22:54:27 -0700 (PDT)
 Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id f20sm1363137pff.176.2019.05.08.22.54.19
+        by smtp.gmail.com with ESMTPSA id f20sm1363137pff.176.2019.05.08.22.54.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 22:54:22 -0700 (PDT)
+        Wed, 08 May 2019 22:54:27 -0700 (PDT)
 From:   Daniel Drake <drake@endlessm.com>
 To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
 Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
         len.brown@intel.com, rafael.j.wysocki@intel.com,
-        linux@endlessm.com, peterz@infradead.org
-Subject: [PATCH v2 1/3] x86/tsc: use CPUID.0x16 to calculate missing crystal frequency
-Date:   Thu,  9 May 2019 13:54:15 +0800
-Message-Id: <20190509055417.13152-1-drake@endlessm.com>
+        linux@endlessm.com, peterz@infradead.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v2 2/3] x86/apic: rename lapic_timer_frequency to lapic_timer_period
+Date:   Thu,  9 May 2019 13:54:16 +0800
+Message-Id: <20190509055417.13152-2-drake@endlessm.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190509055417.13152-1-drake@endlessm.com>
+References: <20190509055417.13152-1-drake@endlessm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,115 +74,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-native_calibrate_tsc() had a data mapping Intel CPU families
-and crystal clock speed, but hardcoded tables are not ideal, and this
-approach was already problematic at least in the Skylake X case, as
-seen in commit b51120309348 ("x86/tsc: Fix erroneous TSC rate on Skylake
-Xeon").
+This variable is a period unit (number of clock cycles per jiffy),
+not a frequency (which is number of cycles per second).
 
-By examining CPUID data from http://instlatx64.atw.hu/ and units
-in the lab, we have found that 3 different scenarios need to be dealt
-with, and we can eliminate most of the hardcoded data using an approach a
-little more advanced than before:
+Give it a more appropriate name.
 
- 1. ApolloLake, GeminiLake, CannonLake (and presumably all new chipsets
-    from this point) report the crystal frequency directly via CPUID.0x15.
-    That's definitive data that we can rely upon.
-
- 2. Skylake, Kabylake and all variants of those two chipsets report a
-    crystal frequency of zero, however we can calculate the crystal clock
-    speed by condidering data from CPUID.0x16.
-
-    This method correctly distinguishes between the two crystal clock
-    frequencies present on different Skylake X variants that caused
-    headaches before.
-
-    As the calculations do not quite match the previously-hardcoded values
-    in some cases (e.g. 23913043Hz instead of 24MHz), TSC refinement is
-    enabled on all platforms where we had to calculate the crystal
-    frequency in this way.
-
- 3. Denverton (GOLDMONT_X) reports a crystal frequency of zero and does
-    not support CPUID.0x16, so we leave this entry hardcoded.
-
-Link: https://lkml.kernel.org/r/20190419083533.32388-1-drake@endlessm.com
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Daniel Drake <drake@endlessm.com>
 ---
+ arch/x86/include/asm/apic.h    |  2 +-
+ arch/x86/kernel/apic/apic.c    | 20 ++++++++++----------
+ arch/x86/kernel/cpu/mshyperv.c |  4 ++--
+ arch/x86/kernel/cpu/vmware.c   |  2 +-
+ arch/x86/kernel/jailhouse.c    |  2 +-
+ arch/x86/kernel/tsc_msr.c      |  4 ++--
+ 6 files changed, 17 insertions(+), 17 deletions(-)
 
-Notes:
-    v2:
-     - Clarify the situation around Skylake X better.
-     - Enable TSC refinement when we had to calculate the crystal clock,
-       in case slight differences in the calculation result cause problems
-       similar to those reported earlier on Skylake X.
-
- arch/x86/kernel/tsc.c | 47 +++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
-
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 15b5e98a86f9..6e6d933fb99c 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -631,31 +631,38 @@ unsigned long native_calibrate_tsc(void)
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 130e81e10fc7..fc505a84aa93 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -52,7 +52,7 @@ extern unsigned int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
  
- 	crystal_khz = ecx_hz / 1000;
+ extern int disable_apic;
+-extern unsigned int lapic_timer_frequency;
++extern unsigned int lapic_timer_period;
  
--	if (crystal_khz == 0) {
--		switch (boot_cpu_data.x86_model) {
--		case INTEL_FAM6_SKYLAKE_MOBILE:
--		case INTEL_FAM6_SKYLAKE_DESKTOP:
--		case INTEL_FAM6_KABYLAKE_MOBILE:
--		case INTEL_FAM6_KABYLAKE_DESKTOP:
--			crystal_khz = 24000;	/* 24.0 MHz */
--			break;
--		case INTEL_FAM6_ATOM_GOLDMONT_X:
--			crystal_khz = 25000;	/* 25.0 MHz */
--			break;
--		case INTEL_FAM6_ATOM_GOLDMONT:
--			crystal_khz = 19200;	/* 19.2 MHz */
--			break;
--		}
--	}
-+	/*
-+	 * Denverton SoCs don't report crystal clock, and also don't support
-+	 * CPUID.0x16 for the calculation below, so hardcode the 25MHz crystal
-+	 * clock.
-+	 */
-+	if (crystal_khz == 0 &&
-+			boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT_X)
-+		crystal_khz = 25000;
+ extern enum apic_intr_mode_id apic_intr_mode;
+ enum apic_intr_mode_id {
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index ab6af775f06c..93de7862eef8 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -194,7 +194,7 @@ static struct resource lapic_resource = {
+ 	.flags = IORESOURCE_MEM | IORESOURCE_BUSY,
+ };
  
--	if (crystal_khz == 0)
--		return 0;
- 	/*
--	 * TSC frequency determined by CPUID is a "hardware reported"
-+	 * TSC frequency reported directly by CPUID is a "hardware reported"
- 	 * frequency and is the most accurate one so far we have. This
- 	 * is considered a known frequency.
+-unsigned int lapic_timer_frequency = 0;
++unsigned int lapic_timer_period = 0;
+ 
+ static void apic_pm_activate(void);
+ 
+@@ -500,7 +500,7 @@ lapic_timer_set_periodic_oneshot(struct clock_event_device *evt, bool oneshot)
+ 	if (evt->features & CLOCK_EVT_FEAT_DUMMY)
+ 		return 0;
+ 
+-	__setup_APIC_LVTT(lapic_timer_frequency, oneshot, 1);
++	__setup_APIC_LVTT(lapic_timer_period, oneshot, 1);
+ 	return 0;
+ }
+ 
+@@ -804,11 +804,11 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
+ 
+ static int __init lapic_init_clockevent(void)
+ {
+-	if (!lapic_timer_frequency)
++	if (!lapic_timer_period)
+ 		return -1;
+ 
+ 	/* Calculate the scaled math multiplication factor */
+-	lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
++	lapic_clockevent.mult = div_sc(lapic_timer_period/APIC_DIVISOR,
+ 					TICK_NSEC, lapic_clockevent.shift);
+ 	lapic_clockevent.max_delta_ns =
+ 		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
+@@ -838,7 +838,7 @@ static int __init calibrate_APIC_clock(void)
  	 */
--	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+	if (crystal_khz != 0)
-+		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+
-+	/*
-+	 * Some Intel SoCs like Skylake and Kabylake don't report the crystal
-+	 * clock, but we can easily calculate it to a high degree of accuracy
-+	 * by considering the crystal ratio and the CPU speed.
-+	 */
-+	if (crystal_khz == 0 && boot_cpu_data.cpuid_level >= 0x16) {
-+		unsigned int eax_base_mhz, ebx, ecx, edx;
-+
-+		cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
-+		crystal_khz = eax_base_mhz * 1000 *
-+			eax_denominator / ebx_numerator;
-+	}
-+
-+	if (crystal_khz == 0)
-+		return 0;
+ 	if (!lapic_init_clockevent()) {
+ 		apic_printk(APIC_VERBOSE, "lapic timer already calibrated %d\n",
+-			    lapic_timer_frequency);
++			    lapic_timer_period);
+ 		/*
+ 		 * Direct calibration methods must have an always running
+ 		 * local APIC timer, no need for broadcast timer.
+@@ -883,13 +883,13 @@ static int __init calibrate_APIC_clock(void)
+ 	pm_referenced = !calibrate_by_pmtimer(lapic_cal_pm2 - lapic_cal_pm1,
+ 					&delta, &deltatsc);
+ 
+-	lapic_timer_frequency = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
++	lapic_timer_period = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
+ 	lapic_init_clockevent();
+ 
+ 	apic_printk(APIC_VERBOSE, "..... delta %ld\n", delta);
+ 	apic_printk(APIC_VERBOSE, "..... mult: %u\n", lapic_clockevent.mult);
+ 	apic_printk(APIC_VERBOSE, "..... calibration result: %u\n",
+-		    lapic_timer_frequency);
++		    lapic_timer_period);
+ 
+ 	if (boot_cpu_has(X86_FEATURE_TSC)) {
+ 		apic_printk(APIC_VERBOSE, "..... CPU clock speed is "
+@@ -900,13 +900,13 @@ static int __init calibrate_APIC_clock(void)
+ 
+ 	apic_printk(APIC_VERBOSE, "..... host bus clock speed is "
+ 		    "%u.%04u MHz.\n",
+-		    lapic_timer_frequency / (1000000 / HZ),
+-		    lapic_timer_frequency % (1000000 / HZ));
++		    lapic_timer_period / (1000000 / HZ),
++		    lapic_timer_period % (1000000 / HZ));
  
  	/*
- 	 * For Atom SoCs TSC is the only reliable clocksource.
+ 	 * Do a sanity check on the APIC calibration result
+ 	 */
+-	if (lapic_timer_frequency < (1000000 / HZ)) {
++	if (lapic_timer_period < (1000000 / HZ)) {
+ 		local_irq_enable();
+ 		pr_warning("APIC frequency too slow, disabling apic timer\n");
+ 		return -1;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 3fa238a137d2..faae6115ddef 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -270,9 +270,9 @@ static void __init ms_hyperv_init_platform(void)
+ 
+ 		rdmsrl(HV_X64_MSR_APIC_FREQUENCY, hv_lapic_frequency);
+ 		hv_lapic_frequency = div_u64(hv_lapic_frequency, HZ);
+-		lapic_timer_frequency = hv_lapic_frequency;
++		lapic_timer_period = hv_lapic_frequency;
+ 		pr_info("Hyper-V: LAPIC Timer Frequency: %#x\n",
+-			lapic_timer_frequency);
++			lapic_timer_period);
+ 	}
+ 
+ 	register_nmi_handler(NMI_UNKNOWN, hv_nmi_unknown, NMI_FLAG_FIRST,
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 0eda91f8eeac..3c648476d4fb 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -157,7 +157,7 @@ static void __init vmware_platform_setup(void)
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 		/* Skip lapic calibration since we know the bus frequency. */
+-		lapic_timer_frequency = ecx / HZ;
++		lapic_timer_period = ecx / HZ;
+ 		pr_info("Host bus clock speed read from hypervisor : %u Hz\n",
+ 			ecx);
+ #endif
+diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
+index 1b2ee55a2dfb..ba95bc70460d 100644
+--- a/arch/x86/kernel/jailhouse.c
++++ b/arch/x86/kernel/jailhouse.c
+@@ -45,7 +45,7 @@ static void jailhouse_get_wallclock(struct timespec64 *now)
+ 
+ static void __init jailhouse_timer_init(void)
+ {
+-	lapic_timer_frequency = setup_data.apic_khz * (1000 / HZ);
++	lapic_timer_period = setup_data.apic_khz * (1000 / HZ);
+ }
+ 
+ static unsigned long jailhouse_get_tsc(void)
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index 3d0e9aeea7c8..067858fe4db8 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -71,7 +71,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
+ /*
+  * MSR-based CPU/TSC frequency discovery for certain CPUs.
+  *
+- * Set global "lapic_timer_frequency" to bus_clock_cycles/jiffy
++ * Set global "lapic_timer_period" to bus_clock_cycles/jiffy
+  * Return processor base frequency in KHz, or 0 on failure.
+  */
+ unsigned long cpu_khz_from_msr(void)
+@@ -104,7 +104,7 @@ unsigned long cpu_khz_from_msr(void)
+ 	res = freq * ratio;
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+-	lapic_timer_frequency = (freq * 1000) / HZ;
++	lapic_timer_period = (freq * 1000) / HZ;
+ #endif
+ 
+ 	/*
 -- 
 2.20.1
 
