@@ -2,119 +2,131 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0421C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B895C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAFC217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16472183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="KZXV+Zme"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="y2nCTlnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfEIX1P (ORCPT
+        id S1726819AbfEIXcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 19:27:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53501 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbfEIX1P (ORCPT
+        Thu, 9 May 2019 19:32:19 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:45076 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfEIXcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 19:27:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 198so5239006wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 16:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=RnvY7geH+A4N8B10Z1RbPFf3s1ZPigUFVWpv/Xpazjs=;
-        b=KZXV+ZmebZiHyksi89Co3Ncpgpll079vA+GPTDcX0c3sNhE7P/fo4EdX4iO1u0r0mZ
-         COOreq3YGTcJLoYVnHX/+3Xvs7DTecqEiFLlFMaY7yEKZIyzuSAyvs5K7i6EE4gH01uV
-         91H5X2EdBsyu5VtMNtV/YFwARMQ2cqT6CCKNQ9uJF3pXIwS9U9Wwp7JUEcC7vUJKXjx8
-         DJGfxDLwnLy3krjt0OtCkXQjTudjHgYu0+rFwPcdGGjxmknBOkYH5WlQC+K/eg0wdlkK
-         Scx4Nsm9ATFL0UUBB4FxUQW+qPRPW5ZrN+J/aj2IFQK8R3u5FLkqXNxWqPNEvFu2zskn
-         aljA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=RnvY7geH+A4N8B10Z1RbPFf3s1ZPigUFVWpv/Xpazjs=;
-        b=sTM+XsrA8QxjcmVU27Te7OpQ+dX0RmUxK/ba4UTN7a+AJnqFBlbQ6d6TaqCMe1dYPW
-         Ze37JmZLTghNQ/P5sOVyqOqmlGeWUCR4p78CPOsc6ZbvEQ1RMYYXqH37wIUvBPAAjgXO
-         AjXNpPhm5G51OnEAYFoWTC/8it8TpDKkkT+ElEGwks4JL7cssLmYhrOlalnN8UgMzsE7
-         igxgtUqumLwLiRvBrHvyv9muiukOQyRy9hyTtPnd+hlpqwsxfexfVG2BYBMCvpQTvFZY
-         bO5vPB8PRJ/svoNEV8ERD8S9Hhf+GNQvXEqBG218RSZozKFkntbRLEDrRValcSRzWu25
-         pB4A==
-X-Gm-Message-State: APjAAAV9+9MJprlVI+w5EWYux5aZklDv2hPWc9APseadX/AyjJyCT/Qp
-        HyjuSHR39xXnhfSMyLaN+zu/FA==
-X-Google-Smtp-Source: APXvYqxLLfrFCfz3i3u9lf6pJBwCTjAtwmx1g16ijs4SqlmlwcGtWHQfTSP6cXuPpLXD8ZRGHn/UEw==
-X-Received: by 2002:a1c:a406:: with SMTP id n6mr4581605wme.126.1557444433385;
-        Thu, 09 May 2019 16:27:13 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id f7sm2215872wmb.28.2019.05.09.16.27.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 16:27:12 -0700 (PDT)
-Message-ID: <5cd4b750.1c69fb81.c7a5d.a8bc@mx.google.com>
-Date:   Thu, 09 May 2019 16:27:12 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Kernel: v4.14.117-43-gfd7dbc6d8090
-In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
-References: <20190509181252.616018683@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/42] 4.14.118-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        Thu, 9 May 2019 19:32:19 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49NOFCS051217;
+        Thu, 9 May 2019 23:32:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=C9aIasraSha+Unahg2EAZJgXu4Vii1PBVVz7t26PHMo=;
+ b=y2nCTlnf47trHDM7FlSPumjUEArfp40Mam9pSSNWxp9tuaJdDpHfRlBbsNprh6FslJfZ
+ CvffXORALuUweL8ITV6SGhxWVWMt2j6NrHdSPkZHRCipnwSD3grZ15DUe+bjBfe5am5x
+ SXCqanmEWrfk9VJwiMvC25XHGG7jzJ5zPOQdrVRqQR2/I/MnYgCPVdAPNy8tW/rq8+qW
+ zmNbRVRI0WtRAy0cYaYpH9+07mv5C38mtNYXtZpE0xWroBvWiWhm4bTc0qSaeSW6kFI7
+ 7M2N6W29+txJqiVcRhJ0MTLSmTxAHH1heZY68DbVfcRUPRsENUrC7pbw8x18yZp0yV76 +g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2s94b6e0e9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 23:32:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49NVUVU125728;
+        Thu, 9 May 2019 23:32:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2s94ah2qat-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 23:32:05 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x49NW3rL010577;
+        Thu, 9 May 2019 23:32:04 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 May 2019 16:32:03 -0700
+Subject: Re: [PATCH] hugetlbfs: always use address space in inode for resv_map
+ pointer
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     yuyufen <yuyufen@huawei.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         stable@vger.kernel.org
+References: <20190416065058.GB11561@dhcp22.suse.cz>
+ <20190419204435.16984-1-mike.kravetz@oracle.com>
+ <fafe9985-7db1-b65c-523d-875ab4b3b3b8@huawei.com>
+ <5d7dc0d5-7cd3-eb95-a1e7-9c68fe393647@oracle.com>
+ <20190509161135.00b542e5b4d0996b5089ea02@linux-foundation.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <31754605-5425-a2aa-b16f-ad89772c27b9@oracle.com>
+Date:   Thu, 9 May 2019 16:32:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190509161135.00b542e5b4d0996b5089ea02@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=735
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905090134
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=805 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905090134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/9/19 4:11 PM, Andrew Morton wrote:
+> On Wed, 8 May 2019 13:16:09 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> 
+>>> I think it is better to add fixes label, like:
+>>> Fixes: 58b6e5e8f1ad ("hugetlbfs: fix memory leak for resv_map")
+>>>
+>>> Since the commit 58b6e5e8f1a has been merged to stable, this patch also be needed.
+>>> https://www.spinics.net/lists/stable/msg298740.html
+>>
+>> It must have been the AI that decided 58b6e5e8f1a needed to go to stable.
+> 
+> grr.
+> 
+>> Even though this technically does not fix 58b6e5e8f1a, I'm OK with adding
+>> the Fixes: to force this to go to the same stable trees.
+> 
+> Why are we bothering with any of this, given that
+> 
+> : Luckily, private_data is NULL for address spaces in all such cases
+> : today but, there is no guarantee this will continue.
+> 
+> ?
 
+You are right.  For stable releases, I do not see any way for this to
+be an issue.  We are lucky today (and in the past).  The patch is there
+to guard against code changes which may cause this condition to change
+in the future.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.117-43-gfd7dbc6d8090/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.117-43-gfd7dbc6d8090/
+Yufen Yu, do you see this actually fixing a problem in stable releases?
+I believe you originally said this is not a problem today, which would
+also imply older releases.  Just want to make sure I am not missing something.
+-- 
+Mike Kravetz
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.117-43-gfd7dbc6d8090
-Git Commit: fd7dbc6d8090b210573e19d5a50f7772ec4b1977
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 64 unique boards, 25 SoC families, 15 builds out of 201
-
-Boot Failures Detected:
-
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            stih410-b2120: 1 failed lab
-
-arm64:
-    defconfig:
-        gcc-8:
-            rk3399-firefly: 1 failed lab
-
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
-
-arm:
-    davinci_all_defconfig:
-        da850-lcdk:
-            lab-baylibre: PASS (gcc-8)
-            lab-baylibre-seattle: FAIL (gcc-8)
-
----
-For more info write to <info@kernelci.org>
+> Even though 58b6e5e8f1ad was inappropriately backported, the above
+> still holds, so what problem does a backport of "hugetlbfs: always use
+> address space in inode for resv_map pointer" actually solve?
+> 
+> And yes, some review of this would be nice
