@@ -2,104 +2,153 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84783C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EFEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5298A2053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E908521530
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6Fl21d6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEICMk (ORCPT
+        id S1726631AbfEICOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:12:40 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:42732 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbfEICMk (ORCPT
+        Wed, 8 May 2019 22:14:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36998 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfEICOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:12:40 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TRDJ4vp_1557367904;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TRDJ4vp_1557367904)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 09 May 2019 10:11:50 +0800
-Date:   Thu, 9 May 2019 10:11:44 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Phil Auld <pauld@redhat.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190509021144.GA24577@aaronlu>
-References: <20190423180238.GG22260@pauld.bos.csb>
- <20190423184527.6230-1-vpillai@digitalocean.com>
- <20190429035320.GB128241@aaronlu>
- <20190506193937.GA10264@sinkpad>
- <20190508023009.GA89792@aaronlu>
- <20190508174909.GA18516@sinkpad>
+        Wed, 8 May 2019 22:14:03 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g3so437300pfi.4;
+        Wed, 08 May 2019 19:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=m2h4qfOyf/vTBN3ksTZ+p+B5Uh42DjnmBaKteMIQJDg=;
+        b=d6Fl21d6H9hguqCIk66KfQTbpzIqdRCUj3hyqEHsDnZWMFK8wQPsR7wgx3oa+G2kjG
+         1seT91f0+lIwQZd84COg8BT3K9ELnhDM30SHEOrlnvKeE7/5VX5u1W/8fgPsbHGyE+tg
+         N1mbck/bnevbonwY9JDeI4wL+fVc6yDfWWKPjYGMVo+t1urDbbw17h12P2lsuAick9RL
+         +tTl21ycCYmhS8aq1IQN4QtpicNviaYVVDhPWJWCkKNQi57gYY8h3oQc9YLQvbqDRawh
+         S+/psk+LuYFrjp041aE4v+E+1oI4xE/yaxSeWSVYuo1fFT8XcryTFla0UCjHS8CZoXbN
+         /oeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m2h4qfOyf/vTBN3ksTZ+p+B5Uh42DjnmBaKteMIQJDg=;
+        b=a7fncWhP6kjwsAbhSo1YWP0/rHwq/XMQuuQXXr46s42tQEcjL5MpAPnwfamFge9o24
+         j+kx6dYi0h/zZqWI7fu1pyDT/A/TNw+XIc2Sd4rLtZFLcYmef8A+E2pmueF9IZ7UvE4B
+         tRmA9rOJsjqwiS9yw1LS/KIaBbROhV5tam5IVWWFJHRNdZQBx9FdBrBMotf7lGp6OQDw
+         78s8GC2X+if4VyTgTp+erjrOVF1Fe5g4LED91vaixGF9EDDei34zNZbWhycsK2ymo3JV
+         c3Ac9U8r0xbU0DhKe+QN0KqXX0FlD5B9ja1oDwCTenEQ+vMDqssu3C8FtV6/7Dj8msTm
+         VA8A==
+X-Gm-Message-State: APjAAAXE8x9H0Sma10zb7yq2/rd+v+hTRzAcy2H9kI7d74mmm1Z04r35
+        9OEsiKPoevvCVzxHWt6tavI=
+X-Google-Smtp-Source: APXvYqzL/TN1nN9Ct8HQ4wtcFHZZcQhp0SvsSuj3cK4ro/YW06pExZSQlXbu2Pcfe+Xz4ExfmkwqHw==
+X-Received: by 2002:a63:b64:: with SMTP id a36mr2188141pgl.58.1557368042377;
+        Wed, 08 May 2019 19:14:02 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id a17sm668823pff.82.2019.05.08.19.13.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 19:14:01 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+Date:   Wed, 8 May 2019 19:13:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190509015856.GB7031@mit.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190508174909.GA18516@sinkpad>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 01:49:09PM -0400, Julien Desfossez wrote:
-> On 08-May-2019 10:30:09 AM, Aaron Lu wrote:
-> > On Mon, May 06, 2019 at 03:39:37PM -0400, Julien Desfossez wrote:
-> > > On 29-Apr-2019 11:53:21 AM, Aaron Lu wrote:
-> > > > This is what I have used to make sure no two unmatched tasks being
-> > > > scheduled on the same core: (on top of v1, I thinks it's easier to just
-> > > > show the diff instead of commenting on various places of the patches :-)
-> > > 
-> > > We imported this fix in v2 and made some small changes and optimizations
-> > > (with and without Peter’s fix from https://lkml.org/lkml/2019/4/26/658)
-> > > and in both cases, the performance problem where the core can end up
-> > 
-> > By 'core', do you mean a logical CPU(hyperthread) or the entire core?
-> No I really meant the entire core.
+On 5/8/19 6:58 PM, Theodore Ts'o wrote:
+> On Wed, May 08, 2019 at 05:43:35PM -0700, Frank Rowand wrote:
+>> kselftest provides a mechanism for in-kernel tests via modules.  For
+>> example, see:
+>>
+>>   tools/testing/selftests/vm/run_vmtests invokes:
+>>     tools/testing/selftests/vm/test_vmalloc.sh
+>>       loads module:
+>>         test_vmalloc
+>>         (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
 > 
-> I’m sorry, I should have added a little bit more context. This relates
-> to a performance issue we saw in v1 and discussed here:
-> https://lore.kernel.org/lkml/20190410150116.GI2490@worktop.programming.kicks-ass.net/T/#mb9f1f54a99bac468fc5c55b06a9da306ff48e90b
+> The majority of the kselftests are implemented as userspace programs.
+
+Non-argument.
+
+
+> You *can* run in-kernel test using modules; but there is no framework
+> for the in-kernel code found in the test modules, which means each of
+> the in-kernel code has to create their own in-kernel test
+> infrastructure.
+
+Why create an entire new subsystem (KUnit) when you can add a header
+file (and .c code as appropriate) that outputs the proper TAP formatted
+results from kselftest kernel test modules?
+
+There are already a multitude of in kernel test modules used by
+kselftest.  It would be good if they all used a common TAP compliant
+mechanism to report results.
+
+ 
+> That's much like saying you can use vice grips to turn a nut or
+> bolt-head.  You *can*, but it might be that using a monkey wrench
+> would be a much better tool that is much easier.
 > 
-> We proposed a fix that solved this, Peter came up with a better one
-> (https://lkml.org/lkml/2019/4/26/658), but if we add your isolation fix
-> as posted above, the same problem reappears. Hope this clarifies your
-> ask.
+> What would you say to a wood worker objecting that a toolbox should
+> contain a monkey wrench because he already knows how to use vise
+> grips, and his tiny brain shouldn't be forced to learn how to use a
+> wrench when he knows how to use a vise grip, which is a perfectly good
+> tool?
+> 
+> If you want to use vice grips as a hammer, screwdriver, monkey wrench,
+> etc.  there's nothing stopping you from doing that.  But it's not fair
+> to object to other people who might want to use better tools.
+> 
+> The reality is that we have a lot of testing tools.  It's not just
+> kselftests.  There is xfstests for file system code, blktests for
+> block layer tests, etc.   We use the right tool for the right job.
 
-It's clear now, thanks.
-I don't immediately see how my isolation fix would make your fix stop
-working, will need to check. But I'm busy with other stuffs so it will
-take a while.
+More specious arguments.
+
+-Frank
 
 > 
-> I hope that we did not miss anything crucial while integrating your fix
-> on top of v2 + Peter’s fix. The changes are conceptually similar, but we
-> refactored it slightly to make the logic clear. Please have a look and
-> let us know
+> 						- Ted
+> 
 
-I suppose you already have a branch that have all the bits there? I
-wonder if you can share that branch somewhere so I can start working on
-top of it to make sure we are on the same page?
-
-Also, it would be good if you can share the workload, cmdline options,
-how many workers need to start etc. to reproduce this issue.
-
-Thanks.
