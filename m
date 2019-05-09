@@ -2,232 +2,224 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E29EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4CAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372442173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557387709;
-	bh=/k/jKycODfpSva7zsqgSvH/Ogl6rkFExwcf2OxcRsNo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=drgonwsp/SDT3WEgGjs2yOTZMf5i4wP27aat6MhuEPfeJSoS9QTnDltjjsu7q/2yQ
-	 nk/JQU72NxiBEVKxhyjZ4PWjvIZpLwcEUjEaMiuppNBUJC3ednLyfLawnLrvfjophx
-	 r4tEmyUt39NWSGDAWs6KlEsVTJhnl8nhuVq/uRY8=
+	by mail.kernel.org (Postfix) with ESMTP id 0499A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xroSGT35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfEIHls (ORCPT
+        id S1726764AbfEIHmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:41:48 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35015 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfEIHls (ORCPT
+        Thu, 9 May 2019 03:42:01 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29224 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726726AbfEIHmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:41:48 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a132so1206805oib.2;
-        Thu, 09 May 2019 00:41:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3KulEKizWIWmp7w/J6WXP00Agbtffv61w2wzB/s1EJA=;
-        b=c/bczytAdbCbHroPCVVFMW/CzLbxYECwIwdx4Rt1QFBjitJvRGIwdUHPPnfqE1+qi4
-         CVXL+vgY+AuEah8PVTANrFgquQQzSqyeZgeOzUa2vHKvy8EVXyvA8RHeOCYfFsHNAqOh
-         ZCS9NcYJZVlN+6fhvp6X1QtJrIFkaJyGBj/086WTXifB8CkYYQcZJKtegO8095a7ucrY
-         +dDp5Bs+YE+2XqfwV/vRCUmg17jY0u+suwu6eybhta70IVLFXKdT9jDDmfgDarXuxxy4
-         ytHg2gxPAcb0Mtuf22dOxxRfsdHeq2e6sf7mUnv30Aa8omaTReDGykFkeoMGBBrf+KVh
-         lSkA==
-X-Gm-Message-State: APjAAAVKdKyukCjbVP2qfjRkgWKP0566yKJebJnh55d5lQ2jPqWSExWj
-        qK6XzzwSacdA9LXF/NrtWIAwHN/hfkjNuO0203A=
-X-Google-Smtp-Source: APXvYqy8UbHR0TetuMPKUzgFolqlADKSIUxY1HI1z6VG4KO9XzUx91AMrAi8WJbhSGc8oVYNI2cA6noHBvMte/Q431s=
-X-Received: by 2002:aca:ba82:: with SMTP id k124mr642037oif.110.1557387706984;
- Thu, 09 May 2019 00:41:46 -0700 (PDT)
+        Thu, 9 May 2019 03:42:01 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x497W7il022468;
+        Thu, 9 May 2019 09:41:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=wG0Xfxv+jPDjeJvGNsddWLb0baeLwqwmAheX1cvn5mo=;
+ b=xroSGT35wM+MwOSVuCcNBYuVxd6Nx9HlzVvuAMPDwtR1JgRWNSaMTeJ8wC21yy52qZdq
+ OZwIlLpfX9uPZLo+cSR5YHYiVQf/TYM9PPsyThkvcQCfH70etUzG0u+mE5hQJn9cY69B
+ DdLwGnf7tqaOZJrZ25KauCaVJnH1mYMUmD0OCCa1JnWCZwsUcaS76ZXswjtqEe/N+SFk
+ GjRHlNg4DoS21qlQUIyIAuUnadLQMnnUmPRpxKgIMLPI1A3JlXdbub3WWIgb5Qm8Eb9I
+ 4RWgfsh0T/G8WYVSz6i14Or2W7JD5NtXNq9wMyLlZsE24Kw3Y0brFIDST/tHpvgq2o0c gA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sc9s49sr4-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 09 May 2019 09:41:31 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0422642;
+        Thu,  9 May 2019 07:41:28 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6AE413C2;
+        Thu,  9 May 2019 07:41:28 +0000 (GMT)
+Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 May
+ 2019 09:41:28 +0200
+Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
+ SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
+ 15.00.1347.000; Thu, 9 May 2019 09:41:28 +0200
+From:   Erwan LE RAY <erwan.leray@st.com>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        "Kevin Hilman" <khilman@baylibre.com>
+CC:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Clement Peron <clement.peron@devialet.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Stefan Agner <stefan@agner.ch>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "Gerald BAEZA" <gerald.baeza@st.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bich HEMON <bich.hemon@st.com>,
+        "Fabrice GASNIER" <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] ARM: debug: stm32: add UART early console configuration
+Thread-Topic: [PATCH] ARM: debug: stm32: add UART early console configuration
+Thread-Index: AQHU73OP100nvdfkikCtYg1KY+YHZqY1DV8AgC1naoA=
+Date:   Thu, 9 May 2019 07:41:28 +0000
+Message-ID: <deebc332-277b-76b9-421f-7f67c6bdacc8@st.com>
+References: <1554883239-12051-1-git-send-email-erwan.leray@st.com>
+ <CAJiuCcd9884Kn2MAtLMzZpdSa-=xpCDKRLQSVC6NmRNC+YFtaA@mail.gmail.com>
+In-Reply-To: <CAJiuCcd9884Kn2MAtLMzZpdSa-=xpCDKRLQSVC6NmRNC+YFtaA@mail.gmail.com>
+Accept-Language: en-US, fr-FR
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7E58E97697490E4C89F88A875D7CF662@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190423233904.195842-1-furquan@google.com> <CAEGmHFEf4RTn5mrQ4pn+WPz=WnD5id9joEdGQnu==ibx+r1L8g@mail.gmail.com>
-In-Reply-To: <CAEGmHFEf4RTn5mrQ4pn+WPz=WnD5id9joEdGQnu==ibx+r1L8g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 May 2019 09:41:33 +0200
-Message-ID: <CAJZ5v0ieonHdgFh_GQUSAEoUh3JyOj2rMp174Xvhsq_HHRNEHg@mail.gmail.com>
-Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Todd Broch <tbroch@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 8:12 AM Furquan Shaikh <furquan@google.com> wrote:
->
-> On Tue, Apr 23, 2019 at 4:39 PM Furquan Shaikh <furquan@google.com> wrote:
-> >
-> > During boot-up, ACPI bus scan enables all power resources so that
-> > respective device drivers can talk to their device. This causes acpi
-> > ref_count for the power resource to be incremented to 1. When system
-> > suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
-> > power off on all power resources whose ref_count is 1 i.e. no other
-> > user of this power resource and thus resulting in _OFF routine being
-> > called for it.
-> >
-> > However, in case of poweroff, DPM is not involved and so the power
-> > resources are left on when the system is entering S5. This results in
-> > the violation of power down sequencing for certain devices
-> > e.g. touchscreen or digitizer I2C devices. In order to ensure that the
-> > power down sequencing does the right thing, it is necessary for ACPI
-> > to disable all power resources while preparing for S5.
-> >
-> > This change updates the function acpi_turn_off_unused_power_resources
-> > to accept a parameter acpi_system_state, This function turns off power
-> > resources according to the targeted system ACPI state:
-> > 1. For S0: Unused power resources are turned off i.e. power resources
-> > whose ref_count is already 0.
-> > 2. For S5: ref_count is decremented first to undo the increment
-> > performed during ACPI bus scan and then power resources with ref_count
-> > 0 are turned off.
-> > 3. All other suspend/hibernate states: No action is required since DPM
-> > takes care of turning off power resources.
-> >
-> > This change should not affect the wake capable devices since:
-> > 1. If wake capable devices are enabled before this call, their
-> > refcount should be greater than 1. Thus, they won't be turned off.
-> > 2. If wake capable devices are not enabled yet when this call is made,
-> > they would eventually get turned on by call to
-> > acpi_enable_wakeup_devices.
-> >
-> > Signed-off-by: Furquan Shaikh <furquan@google.com>
-> > ---
-> >  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
-> >  drivers/acpi/sleep.c |  5 ++++-
-> >  drivers/acpi/sleep.h |  2 +-
-> >  3 files changed, 46 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-> > index 665e93ca0b40f..945db762861a3 100644
-> > --- a/drivers/acpi/power.c
-> > +++ b/drivers/acpi/power.c
-> > @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
-> >
-> >         mutex_unlock(&power_resource_list_lock);
-> >  }
-> > +#endif
-> >
-> > -void acpi_turn_off_unused_power_resources(void)
-> > +/**
-> > + * acpi_turn_off_power_resources: This function is used to turn off power
-> > + * resources in provided ACPI system state.
-> > + *
-> > + * Behavior differs based on the target system state:
-> > + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
-> > + *                with ref_count zero.
-> > + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
-> > + *                ref_count zero. This is done to ensure that the ref_count
-> > + *                incremented during ACPI bus scan is undone and any power
-> > + *                resources that are not required during S5 are turned off.
-> > + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
-> > + *                resources while suspending/hibernating.
-> > + */
-> > +void acpi_turn_off_power_resources(int acpi_system_state)
-> >  {
-> >         struct acpi_power_resource *resource;
-> > +       int decrement;
-> > +
-> > +       if (acpi_system_state == ACPI_STATE_S0) {
-> > +               /*
-> > +                * In case of ACPI_STATE_S0, turn off only unused power
-> > +                * resources. So, no need to decrement ref_count.
-> > +                */
-> > +               decrement = 0;
-> > +       } else if (acpi_system_state == ACPI_STATE_S5) {
-> > +               /*
-> > +                * In case of ACPI_STATE_S5, ref_count needs to be decremented
-> > +                * first before checking if it is okay to power off the
-> > +                * resource.
-> > +                */
-> > +               decrement = 1;
-> > +       } else
-> > +               return;
-> >
-> >         mutex_lock(&power_resource_list_lock);
-> >
-> > @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
-> >                         continue;
-> >                 }
-> >
-> > -               if (state == ACPI_POWER_RESOURCE_STATE_ON
-> > -                   && !resource->ref_count) {
-> > -                       dev_info(&resource->device.dev, "Turning OFF\n");
-> > -                       __acpi_power_off(resource);
-> > +               if (state == ACPI_POWER_RESOURCE_STATE_ON) {
-> > +                       if (resource->ref_count)
-> > +                               resource->ref_count -= decrement;
-> > +
-> > +                       if (!resource->ref_count) {
-> > +                               dev_info(&resource->device.dev, "Turning OFF\n");
-> > +                               __acpi_power_off(resource);
-> > +                       }
-> >                 }
-> >
-> >                 mutex_unlock(&resource->resource_lock);
-> > @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
-> >
-> >         mutex_unlock(&power_resource_list_lock);
-> >  }
-> > -#endif
-> > diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> > index 403c4ff153498..fb6b3ca0eeb91 100644
-> > --- a/drivers/acpi/sleep.c
-> > +++ b/drivers/acpi/sleep.c
-> > @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
-> >         printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
-> >                 acpi_state);
-> >         acpi_enable_wakeup_devices(acpi_state);
-> > +
-> > +       acpi_turn_off_power_resources(acpi_state);
-> > +
-> >         acpi_enter_sleep_state_prep(acpi_state);
-> >         return 0;
-> >  }
-> > @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
-> >   */
-> >  static void acpi_pm_end(void)
-> >  {
-> > -       acpi_turn_off_unused_power_resources();
-> > +       acpi_turn_off_power_resources(ACPI_STATE_S0);
-> >         acpi_scan_lock_release();
-> >         /*
-> >          * This is necessary in case acpi_pm_finish() is not called during a
-> > diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
-> > index 41675d24a9bc0..a495c91e2bf3b 100644
-> > --- a/drivers/acpi/sleep.h
-> > +++ b/drivers/acpi/sleep.h
-> > @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
-> >  extern struct mutex acpi_device_lock;
-> >
-> >  extern void acpi_resume_power_resources(void);
-> > -extern void acpi_turn_off_unused_power_resources(void);
-> > +extern void acpi_turn_off_power_resources(int acpi_system_state);
-> >
-> >  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
-> >  {
-> > --
-> > 2.21.0.593.g511ec345e18-goog
-> >
->
-> Hi Rafael,
->
-> Gentle ping. Just checking if you got a chance to look at this one. It
-> is actually causing problems in one of our devices since power off
-> sequencing is not honored when entering S5.
-
-I have looked at it and I didn't like it.
-
-I'll post my comments on this patch later.
+SGkgT2xvZiwgQXJuZCBhbmQgS2V2aW4sDQoNCkNhbiB5b3UgcGxlYXNlIHByb3ZpZGUgbWUgeW91
+ciBmZWVkYmFjayBhYm91dCB0aGUgcGF0Y2gsIGFuZCBhYm91dCANCkNsZW1lbnQgY2hhbmdlcyBw
+cm9wb3NhbC4NCg0KSSB3b3VsZCBsaWtlIHRvIGtub3cgaWYgeW91IGV4cGVjdCBhIFYyIChiYXNl
+ZCBvbiBDbGVtZW50IGNvbW1lbnRzKSwgb3IgDQppZiB0aGUgVjEgaWYgT0sgZm9yIHlvdXIuDQoN
+CkJlc3QgcmVnYXJkcywgRXJ3YW4uDQoNCg0KT24gNC8xMC8xOSAxMjoxOSBQTSwgQ2zDqW1lbnQg
+UMOpcm9uIHdyb3RlOg0KPiBIaSwNCj4NCj4gT24gV2VkLCAxMCBBcHIgMjAxOSBhdCAxMDowMywg
+RXJ3YW4gTGUgUmF5IDxlcndhbi5sZXJheUBzdC5jb20+IHdyb3RlOg0KPj4gLSBUaGlzIHBhdGNo
+IGFsbG93cyB0byBjb25maWd1cmUgVUFSVCBpbnN0YW5jZSBmb3IgZWFybHkgY29uc29sZSBieSBz
+ZXR0aW5nDQo+PiBwaHlzaWNhbCBhbmQgdmlydHVhbCBiYXNlIGFkZHJlc3Nlcy4NCj4+IC0gVGhp
+cyBwYXRjaCBhZGRzIFVBUlQgZWFybHkgY29uc29sZSBzdXBwb3J0IGZvciBzdG0zMmg3IGFuZCBz
+dG0zMm1wMTU3Yy4NCj4gKk5ld2JpZSBrZXJuZWwgc3BlYWtpbmcqDQo+DQo+IEkgdGhpbmsgdGhp
+cyBwYXRjaCBpbnRyb2R1Y2UgYXQgbGVhc3QgMiwgSSB3aWxsIGdvIGZvciAzIG1vZGlmaWNhdGlv
+bnM6DQo+IC1BZGRpbmcgSDcgRGVidWcNCj4gLUFkZGluZyBNUDEgZGVidWcNCj4gLShGaXhpbmcg
+ZGVwZW5kZW5jaWVzIEY0L0Y3KQ0KPg0KPiBXaXRoIG15IGxpdHRsZSBrbm93bGVkZ2UsIEkgd2ls
+bCBzZXBhcmF0ZSB0aGlzIHBhdGNoIGluIDMuDQo+IEFsc28gdHJ5IHRvIGhhdmUgYSBjb21taXQg
+bG9nIGxpa2UgdGhpcyA6DQo+IDEpIEV4cGxhaW4gV2hhdCdzIHdyb25nIG9yIGlzIG5vdCBwcmVz
+ZW50DQo+IDIpIEV4cGxhaW4gd2hhdCB5b3UgZG8gaW4gdGhlIHBhdGNoDQo+DQo+IGhlcmUgeW91
+IGRvbid0IGV4cGxhaW4gYSBsb3Qgd2hhdCB0aGUgaXNzdWVzIGFyZS4NCj4NCj4gTXkgMmN0cyBv
+biB5b3VyIHBhdGNoLCBhZ2FpbiBuZXdiaWUgdXNlciBoZXJlIGFuZCBJIGhhdmUgcG9zdCBvbmx5
+IGZldw0KPiBwYXRjaGVzIGJ1dCB0aGlzIGlzIG15IHNoYXJpbmcuDQo+DQo+IFRoYW5rcywNCj4g
+Q2xlbWVudA0KPg0KPj4gU2lnbmVkLW9mZi1ieTogRXJ3YW4gTGUgUmF5IDxlcndhbi5sZXJheUBz
+dC5jb20+DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL0tjb25maWcuZGVidWcgYi9hcmNo
+L2FybS9LY29uZmlnLmRlYnVnDQo+PiBpbmRleCA2ZDZlMDMzLi40ZWEzZTE3IDEwMDY0NA0KPj4g
+LS0tIGEvYXJjaC9hcm0vS2NvbmZpZy5kZWJ1Zw0KPj4gKysrIGIvYXJjaC9hcm0vS2NvbmZpZy5k
+ZWJ1Zw0KPj4gQEAgLTEyMDEsMjMgKzEyMDEsNDkgQEAgY2hvaWNlDQo+Pg0KPj4gICAgICAgICAg
+Y29uZmlnIFNUTTMyRjRfREVCVUdfVUFSVA0KPj4gICAgICAgICAgICAgICAgICBib29sICJVc2Ug
+U1RNMzJGNCBVQVJUIGZvciBsb3ctbGV2ZWwgZGVidWciDQo+PiAtICAgICAgICAgICAgICAgZGVw
+ZW5kcyBvbiBBUkNIX1NUTTMyDQo+PiArICAgICAgICAgICAgICAgZGVwZW5kcyBvbiBNQUNIX1NU
+TTMyRjQyOSB8fCBNQUNIX1NUTTMyRjQ2OQ0KPj4gICAgICAgICAgICAgICAgICBzZWxlY3QgREVC
+VUdfU1RNMzJfVUFSVA0KPj4gICAgICAgICAgICAgICAgICBoZWxwDQo+PiAgICAgICAgICAgICAg
+ICAgICAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCBrZXJuZWwgbG93LWxldmVsIGRlYnVnZ2luZyBz
+dXBwb3J0DQo+PiAgICAgICAgICAgICAgICAgICAgb24gU1RNMzJGNCBiYXNlZCBwbGF0Zm9ybXMs
+IHdoaWNoIGRlZmF1bHQgVUFSVCBpcyB3aXJlZCBvbg0KPj4gLSAgICAgICAgICAgICAgICAgVVNB
+UlQxLg0KPj4gKyAgICAgICAgICAgICAgICAgVVNBUlQxLCBidXQgYW5vdGhlciBVQVJUIGluc3Rh
+bmNlIGNhbiBiZSBzZWxlY3RlZCBieSBtb2RpZnlpbmcNCj4+ICsgICAgICAgICAgICAgICAgIENP
+TkZJR19ERUJVR19VQVJUX1BIWVMuDQo+Pg0KPj4gICAgICAgICAgICAgICAgICAgIElmIHVuc3Vy
+ZSwgc2F5IE4uDQo+Pg0KPj4gICAgICAgICAgY29uZmlnIFNUTTMyRjdfREVCVUdfVUFSVA0KPj4g
+ICAgICAgICAgICAgICAgICBib29sICJVc2UgU1RNMzJGNyBVQVJUIGZvciBsb3ctbGV2ZWwgZGVi
+dWciDQo+PiAtICAgICAgICAgICAgICAgZGVwZW5kcyBvbiBBUkNIX1NUTTMyDQo+PiArICAgICAg
+ICAgICAgICAgZGVwZW5kcyBvbiBNQUNIX1NUTTMyRjc0NiB8fCBNQUNIX1NUTTMyRjc2OQ0KPj4g
+ICAgICAgICAgICAgICAgICBzZWxlY3QgREVCVUdfU1RNMzJfVUFSVA0KPj4gICAgICAgICAgICAg
+ICAgICBoZWxwDQo+PiAgICAgICAgICAgICAgICAgICAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCBr
+ZXJuZWwgbG93LWxldmVsIGRlYnVnZ2luZyBzdXBwb3J0DQo+PiAgICAgICAgICAgICAgICAgICAg
+b24gU1RNMzJGNyBiYXNlZCBwbGF0Zm9ybXMsIHdoaWNoIGRlZmF1bHQgVUFSVCBpcyB3aXJlZCBv
+bg0KPj4gLSAgICAgICAgICAgICAgICAgVVNBUlQxLg0KPj4gKyAgICAgICAgICAgICAgICAgVVNB
+UlQxLCBidXQgYW5vdGhlciBVQVJUIGluc3RhbmNlIGNhbiBiZSBzZWxlY3RlZCBieSBtb2RpZnlp
+bmcNCj4+ICsgICAgICAgICAgICAgICAgIENPTkZJR19ERUJVR19VQVJUX1BIWVMuDQo+PiArDQo+
+PiArICAgICAgICAgICAgICAgICBJZiB1bnN1cmUsIHNheSBOLg0KPj4gKw0KPj4gKyAgICAgICBj
+b25maWcgU1RNMzJIN19ERUJVR19VQVJUDQo+PiArICAgICAgICAgICAgICAgYm9vbCAiVXNlIFNU
+TTMySDcgVUFSVCBmb3IgbG93LWxldmVsIGRlYnVnIg0KPj4gKyAgICAgICAgICAgICAgIGRlcGVu
+ZHMgb24gTUFDSF9TVE0zMkg3NDMNCj4+ICsgICAgICAgICAgICAgICBzZWxlY3QgREVCVUdfU1RN
+MzJfVUFSVA0KPj4gKyAgICAgICAgICAgICAgIGhlbHANCj4+ICsgICAgICAgICAgICAgICAgIFNh
+eSBZIGhlcmUgaWYgeW91IHdhbnQga2VybmVsIGxvdy1sZXZlbCBkZWJ1Z2dpbmcgc3VwcG9ydA0K
+Pj4gKyAgICAgICAgICAgICAgICAgb24gU1RNMzJINyBiYXNlZCBwbGF0Zm9ybXMsIHdoaWNoIGRl
+ZmF1bHQgVUFSVCBpcyB3aXJlZCBvbg0KPj4gKyAgICAgICAgICAgICAgICAgVVNBUlQxLCBidXQg
+YW5vdGhlciBVQVJUIGluc3RhbmNlIGNhbiBiZSBzZWxlY3RlZCBieSBtb2RpZnlpbmcNCj4+ICsg
+ICAgICAgICAgICAgICAgIENPTkZJR19ERUJVR19VQVJUX1BIWVMuDQo+PiArDQo+PiArICAgICAg
+ICAgICAgICAgICBJZiB1bnN1cmUsIHNheSBOLg0KPj4gKw0KPj4gKyAgICAgICBjb25maWcgU1RN
+MzJNUDFfREVCVUdfVUFSVA0KPj4gKyAgICAgICAgICAgICAgIGJvb2wgIlVzZSBTVE0zMk1QMSBV
+QVJUIGZvciBsb3ctbGV2ZWwgZGVidWciDQo+PiArICAgICAgICAgICAgICAgZGVwZW5kcyBvbiBN
+QUNIX1NUTTMyTVAxNTcNCj4+ICsgICAgICAgICAgICAgICBzZWxlY3QgREVCVUdfU1RNMzJfVUFS
+VA0KPj4gKyAgICAgICAgICAgICAgIGhlbHANCj4+ICsgICAgICAgICAgICAgICAgIFNheSBZIGhl
+cmUgaWYgeW91IHdhbnQga2VybmVsIGxvdy1sZXZlbCBkZWJ1Z2dpbmcgc3VwcG9ydA0KPj4gKyAg
+ICAgICAgICAgICAgICAgb24gU1RNMzJNUDEgYmFzZWQgcGxhdGZvcm1zLCB3aWNoIGRlZmF1bHQg
+VUFSVCBpcyB3aXJlZCBvbg0KPj4gKyAgICAgICAgICAgICAgICAgVUFSVDQsIGJ1dCBhbm90aGVy
+IFVBUlQgaW5zdGFuY2UgY2FuIGJlIHNlbGVjdGVkIGJ5IG1vZGlmeWluZw0KPj4gKyAgICAgICAg
+ICAgICAgICAgQ09ORklHX0RFQlVHX1VBUlRfUEhZUyBhbmQgQ09ORklHX0RFQlVHX1VBUlRfVklS
+VC4NCj4+DQo+PiAgICAgICAgICAgICAgICAgICAgSWYgdW5zdXJlLCBzYXkgTi4NCj4+DQo+PiBA
+QCAtMTYyMiw2ICsxNjQ4LDkgQEAgY29uZmlnIERFQlVHX1VBUlRfUEhZUw0KPj4gICAgICAgICAg
+ZGVmYXVsdCAweDNlMDAwMDAwIGlmIERFQlVHX0JDTV9LT05BX1VBUlQNCj4+ICAgICAgICAgIGRl
+ZmF1bHQgMHgzZjIwMTAwMCBpZiBERUJVR19CQ00yODM2DQo+PiAgICAgICAgICBkZWZhdWx0IDB4
+NDAwMGU0MDAgaWYgREVCVUdfTExfVUFSVF9FRk0zMg0KPj4gKyAgICAgICBkZWZhdWx0IDB4NDAw
+MTAwMDAgaWYgU1RNMzJNUDFfREVCVUdfVUFSVA0KPj4gKyAgICAgICBkZWZhdWx0IDB4NDAwMTEw
+MDAgaWYgU1RNMzJGNF9ERUJVR19VQVJUIHx8IFNUTTMyRjdfREVCVUdfVUFSVCB8fCBcDQo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNUTTMySDdfREVCVUdfVUFSVA0KPj4gICAg
+ICAgICAgZGVmYXVsdCAweDQwMDI4MDAwIGlmIERFQlVHX0FUOTFfU0FNVjdfVVNBUlQxDQo+PiAg
+ICAgICAgICBkZWZhdWx0IDB4NDAwODEwMDAgaWYgREVCVUdfTFBDMThYWF9VQVJUMA0KPj4gICAg
+ICAgICAgZGVmYXVsdCAweDQwMDkwMDAwIGlmIERFQlVHX0xQQzMyWFgNCj4+IEBAIC0xNzE2LDcg
+KzE3NDUsNyBAQCBjb25maWcgREVCVUdfVUFSVF9QSFlTDQo+PiAgICAgICAgICAgICAgICAgIERF
+QlVHX1MzQzY0WFhfVUFSVCB8fCBcDQo+PiAgICAgICAgICAgICAgICAgIERFQlVHX0JDTTYzWFhf
+VUFSVCB8fCBERUJVR19BU005MjYwX1VBUlQgfHwgXA0KPj4gICAgICAgICAgICAgICAgICBERUJV
+R19TSVJGU09DX1VBUlQgfHwgREVCVUdfRElHSUNPTE9SX1VBMCB8fCBcDQo+PiAtICAgICAgICAg
+ICAgICAgREVCVUdfQVQ5MV9VQVJUDQo+PiArICAgICAgICAgICAgICAgREVCVUdfQVQ5MV9VQVJU
+IHx8IERFQlVHX1NUTTMyX1VBUlQNCj4+DQo+PiAgIGNvbmZpZyBERUJVR19VQVJUX1ZJUlQNCj4+
+ICAgICAgICAgIGhleCAiVmlydHVhbCBiYXNlIGFkZHJlc3Mgb2YgZGVidWcgVUFSVCINCj4+IEBA
+IC0xNzg0LDYgKzE4MTMsNyBAQCBjb25maWcgREVCVUdfVUFSVF9WSVJUDQo+PiAgICAgICAgICBk
+ZWZhdWx0IDB4ZmQwMTIwMDAgaWYgREVCVUdfTVZFQlVfVUFSVDBfQUxURVJOQVRFICYmIEFSQ0hf
+TVY3OFhYMA0KPj4gICAgICAgICAgZGVmYXVsdCAweGZkODgzMDAwIGlmIERFQlVHX0FMUElORV9V
+QVJUMA0KPj4gICAgICAgICAgZGVmYXVsdCAweGZkZTEyMDAwIGlmIERFQlVHX01WRUJVX1VBUlQw
+X0FMVEVSTkFURSAmJiBBUkNIX0RPVkUNCj4+ICsgICAgICAgZGVmYXVsdCAweGZlMDEwMDAwIGlm
+IFNUTTMyTVAxX0RFQlVHX1VBUlQNCj4+ICAgICAgICAgIGRlZmF1bHQgMHhmZTAxMjAwMCBpZiBE
+RUJVR19NVkVCVV9VQVJUMF9BTFRFUk5BVEUgJiYgQVJDSF9PUklPTjVYDQo+PiAgICAgICAgICBk
+ZWZhdWx0IDB4ZmUwMTcwMDAgaWYgREVCVUdfTU1QX1VBUlQyDQo+PiAgICAgICAgICBkZWZhdWx0
+IDB4ZmUwMTgwMDAgaWYgREVCVUdfTU1QX1VBUlQzDQo+PiBAQCAtMTgzMiw3ICsxODYyLDcgQEAg
+Y29uZmlnIERFQlVHX1VBUlRfVklSVA0KPj4gICAgICAgICAgICAgICAgICBERUJVR19TM0M2NFhY
+X1VBUlQgfHwgXA0KPj4gICAgICAgICAgICAgICAgICBERUJVR19CQ002M1hYX1VBUlQgfHwgREVC
+VUdfQVNNOTI2MF9VQVJUIHx8IFwNCj4+ICAgICAgICAgICAgICAgICAgREVCVUdfU0lSRlNPQ19V
+QVJUIHx8IERFQlVHX0RJR0lDT0xPUl9VQTAgfHwgXA0KPj4gLSAgICAgICAgICAgICAgIERFQlVH
+X0FUOTFfVUFSVA0KPj4gKyAgICAgICAgICAgICAgIERFQlVHX0FUOTFfVUFSVCB8fCBERUJVR19T
+VE0zMl9VQVJUDQo+Pg0KPj4gICBjb25maWcgREVCVUdfVUFSVF84MjUwX1NISUZUDQo+PiAgICAg
+ICAgICBpbnQgIlJlZ2lzdGVyIG9mZnNldCBzaGlmdCBmb3IgdGhlIDgyNTAgZGVidWcgVUFSVCIN
+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9pbmNsdWRlL2RlYnVnL3N0bTMyLlMgYi9hcmNoL2Fy
+bS9pbmNsdWRlL2RlYnVnL3N0bTMyLlMNCj4+IGluZGV4IDFhYmIzMmYuLjY0NDZlNDYgMTAwNjQ0
+DQo+PiAtLS0gYS9hcmNoL2FybS9pbmNsdWRlL2RlYnVnL3N0bTMyLlMNCj4+ICsrKyBiL2FyY2gv
+YXJtL2luY2x1ZGUvZGVidWcvc3RtMzIuUw0KPj4gQEAgLTQsMTQgKzQsMTMgQEANCj4+ICAgICog
+QXV0aG9yOiAgIEdlcmFsZCBCYWV6YSA8Z2VyYWxkLmJhZXphQHN0LmNvbT4gZm9yIFNUTWljcm9l
+bGVjdHJvbmljcy4NCj4+ICAgICovDQo+Pg0KPj4gLSNkZWZpbmUgU1RNMzJfVUFSVF9CQVNFICAg
+ICAgICAgICAgICAgICAgICAgICAgMHg0MDAxMTAwMCAgICAgIC8qIFVTQVJUMSAqLw0KPj4gLQ0K
+Pj4gICAjaWZkZWYgQ09ORklHX1NUTTMyRjRfREVCVUdfVUFSVA0KPj4gICAjZGVmaW5lIFNUTTMy
+X1VTQVJUX1NSX09GRiAgICAgICAgICAgICAweDAwDQo+PiAgICNkZWZpbmUgU1RNMzJfVVNBUlRf
+VERSX09GRiAgICAgICAgICAgIDB4MDQNCj4+ICAgI2VuZGlmDQo+Pg0KPj4gLSNpZmRlZiBDT05G
+SUdfU1RNMzJGN19ERUJVR19VQVJUDQo+PiArI2lmIGRlZmluZWQoQ09ORklHX1NUTTMyRjdfREVC
+VUdfVUFSVCkgfHwgKENPTkZJR19TVE0zMkg3X0RFQlVHX1VBUlQpIHx8IFwNCj4+ICsgICAgICAg
+ZGVmaW5lZChDT05GSUdfU1RNMzJNUDFfREVCVUdfVUFSVCkNCj4+ICAgI2RlZmluZSBTVE0zMl9V
+U0FSVF9TUl9PRkYgICAgICAgICAgICAgMHgxQw0KPj4gICAjZGVmaW5lIFNUTTMyX1VTQVJUX1RE
+Ul9PRkYgICAgICAgICAgICAweDI4DQo+PiAgICNlbmRpZg0KPj4gQEAgLTIwLDggKzE5LDggQEAN
+Cj4+ICAgI2RlZmluZSBTVE0zMl9VU0FSVF9UWEUgICAgICAgICAgICAgICAgICAgICAgICAoMSA8
+PCA3KSAgICAgICAgLyogVHggZGF0YSByZWcgZW1wdHkgKi8NCj4+DQo+PiAgIC5tYWNybyBhZGRy
+dWFydCwgcnAsIHJ2LCB0bXANCj4+IC0gICAgICAgbGRyICAgICBccnAsICAgICAgPVNUTTMyX1VB
+UlRfQkFTRSAgICAgIEAgcGh5c2ljYWwgYmFzZQ0KPj4gLSAgICAgICBsZHIgICAgIFxydiwgICAg
+ICA9U1RNMzJfVUFSVF9CQVNFICAgICAgQCB2aXJ0IGJhc2UgLyogTm9NTVUgKi8NCj4+ICsgICAg
+ICAgbGRyICAgICBccnAsID1DT05GSUdfREVCVUdfVUFSVF9QSFlTIEAgcGh5c2ljYWwgYmFzZQ0K
+Pj4gKyAgICAgICBsZHIgICAgIFxydiwgPUNPTkZJR19ERUJVR19VQVJUX1ZJUlQgQCB2aXJ0IGJh
+c2UNCj4+ICAgLmVuZG0NCj4+DQo+PiAgIC5tYWNybyAgc2VuZHVhcnQscmQscngNCj4+IC0tDQo+
+PiAxLjkuMQ0KPj4=
