@@ -2,232 +2,197 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8018C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA274C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C13821744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IeJbQg0d"
+	by mail.kernel.org (Postfix) with ESMTP id 9C8ED21479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEIIsc (ORCPT
+        id S1726452AbfEIIuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:48:32 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34277 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfEIIsb (ORCPT
+        Thu, 9 May 2019 04:50:10 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45922 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfEIIuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:48:31 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190509084828euoutp017c533f2430b2e0149a919da8ad3ec556~c94Hn7bq03062930629euoutp019;
-        Thu,  9 May 2019 08:48:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190509084828euoutp017c533f2430b2e0149a919da8ad3ec556~c94Hn7bq03062930629euoutp019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557391708;
-        bh=8Iob6mvtL1S8ewGxreFizsraS0/+JCLQ9ltwPWqTkio=;
-        h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=IeJbQg0dIMCBRixV1f5rIcJeBP0Jx+ollJvo1wf/qI9gcMm8hTU6Kz81BjGV3p628
-         DOgkGviWdKe/d42s0kTkgb+qxaq0rRaQwPhIimw++JwtXn0WLUWMSs14I0z3AW08Ts
-         tPhxeVzAsBLw6YT7ratKMB38ga3jHCZdwQ/Mnf14=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190509084828eucas1p1dcdce5a1e42908a116f6c830f9292f62~c94HQpen11689816898eucas1p1x;
-        Thu,  9 May 2019 08:48:28 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 0F.2C.04298.B59E3DC5; Thu,  9
-        May 2019 09:48:27 +0100 (BST)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190509084827eucas1p294962744fe70745c50b69a5349b5de68~c94GcpBMs0394203942eucas1p2X;
-        Thu,  9 May 2019 08:48:27 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-d7-5cd3e95b2e7d
-Received: from eusync3.samsung.com ( [203.254.199.213]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6E.12.04140.B59E3DC5; Thu,  9
-        May 2019 09:48:27 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local ([106.120.51.73]) by
-        eusync3.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
-        (built May  5 2014)) with ESMTPA id <0PR800GPLB4IMG00@eusync3.samsung.com>;
-        Thu, 09 May 2019 09:48:27 +0100 (BST)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mans Rullgard <mans@mansr.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v3] usb: core: verify devicetree nodes for USB devices
-Date:   Thu, 09 May 2019 10:47:26 +0200
-Message-id: <20190509084726.5405-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-reply-to: <yw1xpnotufti.fsf@mansr.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsWy7djPc7rRLy/HGPQv07fYOGM9q0Xz4vVs
-        FufPb2C3uLxrDpvFjPP7mCwWLWtltnh55Aejxdojd9ktfjyczmTx594dVgcuj1t36j02repk
-        89g/dw27x5vTp9g9Nr7bweTRt2UVo8fnTXIB7FFcNimpOZllqUX6dglcGXPXzWQuOKNaseHo
-        F5YGxn3yXYycHBICJhLzelazdTFycQgJrGCUOPZqJROE85lRYtOuLiaYqtX3PrNCJJYxSpx9
-        0gPV8p9R4v+MC+wgVWwChhJdb7vYQGwRgQSJI5vfM4MUMQusY5J4d6AJqIiDQ1jATWLfHSWQ
-        GhYBVYmezRPBNvAK2EgsWfmYHWKbvMTqDQeYQWxOAU2J70e3g22WENjAJnGwt4kVoshF4vCj
-        mSwQtozE5cndLBBFzYwSD8+tZYdwehglLjfNYISospY4fPwiWDezAJ/EpG3TmUEukhDgleho
-        E4Io8ZB48qMHbLOQQI3EhqU7GScwSixgZFjFKJ5aWpybnlpsmJdarlecmFtcmpeul5yfu4kR
-        GJun/x3/tIPx66WkQ4wCHIxKPLwZhy7FCLEmlhVX5h5ilOBgVhLhvT4RKMSbklhZlVqUH19U
-        mpNafIhRmoNFSZy3muFBtJBAemJJanZqakFqEUyWiYNTqoFxqoGNgqj3ro/yfmdfzp7Aa/Zb
-        K+gE33RGk9YV/n9Up88+c/nZtcK1/pu+161eULfYS2i30+IVzx/MW3jBQN3oe4z41PpXK9R2
-        SB04v3dOUZlN4BV3tp/rvh9rD1Dljn76puH0krnqC8SWefrZe837IJDD1RxZvfDLirXXP/jH
-        bX9p2xj54YXmBiWW4oxEQy3mouJEACA0lNXJAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPLMWRmVeSWpSXmKPExsVy+t/xq7rRLy/HGGx6ym6xccZ6VovmxevZ
-        LM6f38BucXnXHDaLGef3MVksWtbKbPHyyA9Gi7VH7rJb/Hg4ncniz707rA5cHrfu1HtsWtXJ
-        5rF/7hp2jzenT7F7bHy3g8mjb8sqRo/Pm+QC2KO4bFJSczLLUov07RK4Muaum8lccEa1YsPR
-        LywNjPvkuxg5OSQETCRW3/vM2sXIxSEksIRRouHZFBYIp5FJYsb2WewgVWwChhJdb7vYQGwR
-        gQSJJW83s4MUMQusY5KYdXk/YxcjB4ewgJvEvjtKIDUsAqoSPZsnMoHYvAI2EktWPmaH2CYv
-        sXrDAWYQm1NAU+L70e2sILaQgIbEz5a9TBMYeRYwMqxiFEktLc5Nzy020itOzC0uzUvXS87P
-        3cQIDLZtx35u2cHY9S74EKMAB6MSD2/GoUsxQqyJZcWVuYcYJTiYlUR4r08ECvGmJFZWpRbl
-        xxeV5qQWH2KU5mBREuftEDgYIySQnliSmp2aWpBaBJNl4uCUamDkj1s9Y9vdimiPy5P+an9v
-        lDpx3vZEa6nbe64w2UUn7ztExwXvZfPXe/Rx89tv1/8qv7I9xyh4OfZOjfDZsA19krMWrOjZ
-        uVTgRL7Ol59Lbt3NY1xd2qp5fPXKKfv9om/Z3Sn7c0M0vHX+3WlXLf+Ws9p/CA4svS92apJY
-        oEjceiPFFndJhdDtSizFGYmGWsxFxYkArqiYUzICAAA=
-X-CMS-MailID: 20190509084827eucas1p294962744fe70745c50b69a5349b5de68
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190509084827eucas1p294962744fe70745c50b69a5349b5de68
-References: <yw1xpnotufti.fsf@mansr.com>
-        <CGME20190509084827eucas1p294962744fe70745c50b69a5349b5de68@eucas1p2.samsung.com>
+        Thu, 9 May 2019 04:50:10 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g57so1274150edc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 01:50:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EynZfXFAHENXdId9UWac9+EIUrOg4ejj/igrSdFswKc=;
+        b=T992i3R3LYzxN42p4IoEaZXIU/EuufLqizUca6LHgKA2ygo2rfiYQVeNejTuJOzGy6
+         g4Y8ebrbD3XlUQtmW9P3UEZ0vT+Exh3sZaHTtgTcARYERlU6KvFM1yojRXZtAU0atb79
+         c4hm2Rm717aVkNFLVsslG/7YAm0ZBYHJH0LtWzdeq+iRh43dNs9spST3v9xDvC+ccF1t
+         oqrgRowwfAqnSdi5FnPMztsNXfH3A4gRnDraXT/DUCe89T/aZGha0057r6m168gRusCB
+         M17V43ppYEdRD+F4Ah3MWx1oXjFDnPgX67aWK1dgorlJ3ixdnMkZPxln7Shmel/NdBhi
+         9clQ==
+X-Gm-Message-State: APjAAAVpwPd45q+gNeDfX7htsE3SbdzG3mVjtEW7uGbwOytpzTzL8l7Y
+        PPKaX12TAmFx5XIDycsqdpOI3LO49D0=
+X-Google-Smtp-Source: APXvYqxJCweJPm3K7QH4oNFZhIGlW7cFmH94xQ3KxQMen+5K38osOWjUA6HIbC4Ac4zrLxKxXbHbzw==
+X-Received: by 2002:a17:906:2403:: with SMTP id z3mr2154692eja.278.1557391807921;
+        Thu, 09 May 2019 01:50:07 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id e35sm423143eda.2.2019.05.09.01.50.06
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 01:50:07 -0700 (PDT)
+Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
+ on BYT/CHT
+To:     "Robert R. Howell" <RHowell@uwyo.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
+ <eb1462c9-ebef-7bd6-c263-3f4f2e8ba63d@redhat.com>
+ <b6cd67d7-a4de-0fab-4512-25d732190d17@uwyo.edu>
+ <feb1808d-542c-83c2-5c70-9228473bb8d0@redhat.com>
+ <0a770539-dfe9-2eb6-a90a-82f065a23a3f@uwyo.edu>
+ <f6db39bc-b8d1-fda8-ad37-a8b050ef0027@redhat.com>
+ <37aee883-1253-adad-82b4-4a578cc72825@uwyo.edu>
+ <CAJZ5v0j9U20cFbRx6QKeQv6wyDg6nL71L0U_Rec5+W1JoD8-=w@mail.gmail.com>
+ <144b56d4-54e6-bccd-4652-22303bcd9168@uwyo.edu>
+ <CAJZ5v0jJEovXXiqs-tzPC7FsGjGL+qxfXCxbTrQZqAxSCv1oyQ@mail.gmail.com>
+ <beab21cb-9f89-b934-e0a4-2fd85c69f4e6@uwyo.edu>
+ <4fb5fc2e-e5af-6732-0228-8c73beed1afb@redhat.com>
+ <c3dadc9d-bf3b-c992-f256-94a25fea570a@uwyo.edu>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1bb008bd-ae0d-d351-ef0c-303e23b0eca5@redhat.com>
+Date:   Thu, 9 May 2019 10:50:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <c3dadc9d-bf3b-c992-f256-94a25fea570a@uwyo.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 69bec7259853 ("USB: core: let USB device know device node")
-added support for attaching devicetree node for USB devices. The mentioned
-commit however identifies the given USB device node only by the 'reg'
-property in the host controller children nodes. The USB device node
-however also has to have a 'compatible' property as described in
-Documentation/devicetree/bindings/usb/usb-device.txt. Lack for the
-'compatible' property check might result in assigning a devicetree node,
-which is not intended to be the proper node for the given USB device.
+Hi,
 
-This is important especially when USB host controller has child-nodes for
-other purposes. For example, Exynos EHCI and OHCI drivers already define
-child-nodes for each physical root hub port and assigns respective PHY
-controller and parameters for them. Those binding predates support for
-USB devicetree nodes.
+On 09-05-19 06:24, Robert R. Howell wrote:
+> On 4/30/19 8:39 AM, Hans de Goede wrote:
+>>
+>> Hi,
+>>
+>> On 4/25/19 6:38 PM, Robert R. Howell wrote:
+>>> On 4/24/19 1:20 AM, Rafael J. Wysocki wrote:
+>>>
+>>>> On Tue, Apr 23, 2019 at 10:03 PM Robert R. Howell <RHowell@uwyo.edu> wrote:
+>>>>>
+>>>>> On 4/23/19 2:07 AM, Rafael J. Wysocki wrote:
+>>>>>>
+>>>>>> On Sat, Apr 20, 2019 at 12:44 AM Robert R. Howell <RHowell@uwyo.edu> wrote:
+>>>>>>>
+>>>>>>> On 4/18/19 5:42 AM, Hans de Goede wrote:
+>>>>>>>
+>>>>>>>>> On 4/8/19 2:16 AM, Hans de Goede wrote:>
+>>>>>>>>>>
+>>>>>>>>>> Hmm, interesting so you have hibernation working on a T100TA
+>>>>>>>>>> (with 5.0 + 02e45646d53b reverted), right ?
+>>>>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> I've managed to find a way around the i2c_designware timeout issues
+>>>>>>> on the T100TA's.  The key is to NOT set DPM_FLAG_SMART_SUSPEND,
+>>>>>>> which was added in the 02e45646d53b commit.
+>>>>>>>
+>>>>>>> To test that I've started with a 5.1-rc5 kernel, applied your recent patch
+>>>>>>> to acpi_lpss.c, then apply the following patch of mine, removing
+>>>>>>> DPM_FLAG_SMART_SUSPEND.  (For the T100 hardware I need to apply some
+>>>>>>> other patches as well but those are not related to the i2c-designware or
+>>>>>>> acpi issues addressed here.)
+>>>>>>>
+>>>>>>> On a resume from hibernation I still see one error:
+>>>>>>>     "i2c_designware 80860F41:00: Error i2c_dw_xfer called while suspended"
+>>>>>>> but I no longer get the i2c_designware timeouts, and audio does now work
+>>>>>>> after the resume.
+>>>>>>>
+>>>>>>> Removing DPM_FLAG_SMART_SUSPEND may not be what you want for other
+>>>>>>> hardware, but perhaps this will give you a clue as to what is going
+>>>>>>> wrong with hibernate/resume on the T100TA's.
+>>>>>>
+>>>>>> What if you drop DPM_FLAG_LEAVE_SUSPENDED alone instead?
+>>>>>>
+>>>>>
+>>>>> I did try dropping just DPM_FLAG_LEAVE_SUSPENDED, dropping just
+>>>>> DPM_FLAG_SMART_SUSPEND, and dropping both flags.  When I just drop
+>>>>> DPM_FLAG_LEAVE_SUSPENDED I still get the i2c_designware timeouts
+>>>>> after the resume.  If I drop just DPM_FLAG_SMART_SUSPEND or drop both,
+>>>>> then the timeouts go away.
+>>>>
+>>>> OK, thanks!
+>>>>
+>>>> Is non-hibernation system suspend affected too?
+>>>
+>>> I just ran some tests on a T100TA, using the 5.1-rc5 code with Hans' patch applied
+>>> but without any changes to i2c-designware-platdrv.c, so the
+>>> DPM_FLAG_SMART_PREPARE, DPM_FLAG_SMART_SUSPEND, and DPM_FLAG_LEAVE_SUSPENDED flags
+>>> are all set.
+>>>
+>>> Suspend does work OK, and after resume I do NOT get any of the crippling
+>>> i2c_designware timeout errors which cause sound to fail after hibernate.  I DO see one
+>>>     "i2c_designware 80860F41:00: Error i2c_dw_xfer call while suspended"
+>>> error on resume, just as I do on hibernate.  I've attached a portion of dmesg below.
+>>> The "asus_wmi:  Unknown key 79 pressed" error is a glitch which occurs
+>>> intermittently on these machines, but doesn't seem related to the other issues.
+>>> I had one test run when it was absent but the rest of the messages were the
+>>> same -- but then kept getting that unknown key error on all my later tries.
+>>
+>> I've just tried to reproduce the "Error i2c_dw_xfer call while suspended" error
+>> on suspend/resume on my own T100TA and I could not reproduce this.
+>>
+>> Can you try without the BT keyboard paired and waking up from suspend using the
+>> tablet part's power-button ?
+>>
+>> Also do you still have the scripts to rmmod some modules before suspend ?
+>>
+> 
+> The T100TA keyboard is actually a hardwired connection rather than Bluetooth but I
+> did physically disconnect the keyboard, and also unpaired all the actual Bluetooth
+> devices (such as the mouse) and then powered down the T100TA bluetooth adapter.
+> When I suspend, then resume using the tablet power button, I still get the
+> i2c_dw_xfererror error during the resume.  But whatever causes this error isn't fatal,
+> in the sense that after resume the sound and other i2c functions do still work OK.
+> 
+> While I always get this i2c_dw_xfer error on resume from suspend or hibernation on the T100TA,
+> I also have a T100TAM and curiously, it NEVER shows that error -- although all the
+> other suspend and hibernate behavior seems similar.  I'm not sure if the following could
+> be the difference, but the T100TA uses an i2c connected ATML1000 touchscreen controller
+> while the T100TAM uses an i2c connected SIS0817 touchscreen controller.  Other than that
+> the hardware seems almost identical.
 
-Checking for the proper compatibility string allows to mitigate the
-conflict between USB device devicetree nodes and the bindings for USB
-controllers with child nodes. It also fixes the side-effect of the other
-commits, like 01fdf179f4b0 ("usb: core: skip interfaces disabled in
-devicetree"), which incorrectly disables some devices on Exynos based
-boards.
+I've been testing on an actual T100TA, with the ATML1000 touchscreen controller.
 
-Reported-by: Markus Reichl <m.reichl@fivetechno.de>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v3:
-- replaced ad hoc checks by proper test for proper value of the
-  compatible string in drivers/usb/core/of.c
-v2: https://lkml.org/lkml/2019/5/8/321
-v1: https://lkml.org/lkml/2019/5/7/715
----
- drivers/usb/core/hub.c |  3 +++
- drivers/usb/core/of.c  | 31 +++++++++++++++++++++++++++++++
- include/linux/usb/of.h |  2 ++
- 3 files changed, 36 insertions(+)
+Maybe it is a difference in BIOS version, my T100TA is running the latest BIOS, what
+is the output of:
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 2f94568ba385..6f2438522d09 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -22,6 +22,7 @@
- #include <linux/usb.h>
- #include <linux/usbdevice_fs.h>
- #include <linux/usb/hcd.h>
-+#include <linux/usb/of.h>
- #include <linux/usb/otg.h>
- #include <linux/usb/quirks.h>
- #include <linux/workqueue.h>
-@@ -5023,6 +5024,8 @@ static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
- 		if (status < 0)
- 			goto loop;
- 
-+		usb_of_validate_device_node(udev);
-+
- 		if (udev->quirks & USB_QUIRK_DELAY_INIT)
- 			msleep(2000);
- 
-diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-index 651708d8c908..2b6f16753edc 100644
---- a/drivers/usb/core/of.c
-+++ b/drivers/usb/core/of.c
-@@ -30,6 +30,12 @@ struct device_node *usb_of_get_device_node(struct usb_device *hub, int port1)
- 	for_each_child_of_node(hub->dev.of_node, node) {
- 		if (of_property_read_u32(node, "reg", &reg))
- 			continue;
-+		/*
-+		 * idVendor and idProduct are not yet known, so check only
-+		 * a presence of the compatible property.
-+		 */
-+		if (!of_find_property(node, "compatible", NULL))
-+			continue;
- 
- 		if (reg == port1)
- 			return node;
-@@ -39,6 +45,31 @@ struct device_node *usb_of_get_device_node(struct usb_device *hub, int port1)
- }
- EXPORT_SYMBOL_GPL(usb_of_get_device_node);
- 
-+/**
-+ * usb_of_validate_device_node() - validate dt node of the probed USB device
-+ * @udev: USB device
-+ *
-+ * Validate devicetree node for the USB device. Compatible string must match
-+ * device's idVendor and idProduct, otherwise the of_node will be put and set
-+ * to NULL.
-+ */
-+void usb_of_validate_device_node(struct usb_device *udev)
-+{
-+	char compatible[13];
-+
-+	if (!udev->dev.of_node)
-+		return;
-+
-+	snprintf(compatible, sizeof(compatible), "usb%x,%x",
-+		 le16_to_cpu(udev->descriptor.idVendor),
-+		 le16_to_cpu(udev->descriptor.idProduct));
-+
-+	if (of_device_is_compatible(udev->dev.of_node, compatible) == 0) {
-+		of_node_put(udev->dev.of_node);
-+		udev->dev.of_node = NULL;
-+	}
-+}
-+
- /**
-  * usb_of_has_combined_node() - determine whether a device has a combined node
-  * @udev: USB device
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index dba55ccb9b53..9969efda03ad 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -24,6 +24,7 @@ bool usb_of_has_combined_node(struct usb_device *udev);
- struct device_node *usb_of_get_interface_node(struct usb_device *udev,
- 		u8 config, u8 ifnum);
- struct device *usb_of_get_companion_dev(struct device *dev);
-+void usb_of_validate_device_node(struct usb_device *udev);
- #else
- static inline enum usb_dr_mode
- of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0)
-@@ -57,6 +58,7 @@ static inline struct device *usb_of_get_companion_dev(struct device *dev)
- {
- 	return NULL;
- }
-+static inline void usb_of_validate_device_node(struct usb_device *udev) { }
- #endif
- 
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
--- 
-2.17.1
+cat /sys/class/dmi/id/bios_version /sys/class/dmi/id/bios_date
 
+?
+
+Also do you perhaps have a microsd card inserted?  (I'm trying to figure out the
+different between our setups so that I can hopefully reproduce the issue myself).
+
+
+> Regarding scripts, while I do still need a systemd hibernate script which removes the
+> brcmfmac and the hci_uart (bluetooth related) drivers, I've found that I no longer need
+> any script for suspend.
+
+Ok, so you are not doing any rmmod-s on suspend, right?
+
+Regards,
+
+Hans
