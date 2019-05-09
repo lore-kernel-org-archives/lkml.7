@@ -2,95 +2,130 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C26C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4D6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C986A20989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0ACE20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYUZ6ptG"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Zl3JG7Wt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfEILfl (ORCPT
+        id S1726726AbfEILgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:35:41 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35917 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfEILfl (ORCPT
+        Thu, 9 May 2019 07:36:03 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:37903 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfEILgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:35:41 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so1088347pgb.3;
-        Thu, 09 May 2019 04:35:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pCzQA9iFafWm9xsaMI26hanRVNC/kRqx7QC4DMgsQhw=;
-        b=tYUZ6ptGZ0VCmH5SP3u3RZe53nNjuDZy6tuB8oq1LpEe6sL19KnFH2BjIHZgo0DmnH
-         P56z51i/LOEB/YxplPb/jxR+C6mmiPpaEfSWJ7yeBUd48qqkIHZPhTZm2eQ4dYljsZMd
-         aprbB8wnK/FR0qI6JMO50dIA90z2pHdWpTmYUP9X2YmGICVR5+1tQGLoe/zKrgHzQGc1
-         Gf+/psfSfVEOyC4JcVJ69yfwEQJ4u3rBadLyjIm8e7q+NeFb0KOufiz+pqPpXYSxex21
-         6sWqZzUxEZFJ6ExWzpqpt1tPMLdjJItID4sCXixfXhZ6L9Aofy4u6khLZHKkyvCL1SOR
-         4eag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pCzQA9iFafWm9xsaMI26hanRVNC/kRqx7QC4DMgsQhw=;
-        b=qVYomWBdu9qkQFR83O3sFrHfo3YbS3xnLc0ZMZ86EoK8PFofuwZXcJmiuWM0hMUT6g
-         eZdf9hxQufP4u1PjfKiA4f0K62ztiYkCRKAj5zWWuH9ZEj45rBKfGdBczXeMUoEl09pv
-         ReblfE5neggSM+nbR+mXmRwhzgPr+c9/hXcWc889lqfiDWWoEdcXcFFAZ/6axdVWrEAD
-         XWaYT4gUJJ4bDvzu390NUvsnOi18kbWmqxUAosUb/GgKyv9x8ZlmvXkRCh477oVyCAI5
-         0jco0N/oeCCe4RgJA9a+kDj5GwLSuWANOW/uysitkeIfxfRh104dABENgK6kwL80Nc8s
-         20ng==
-X-Gm-Message-State: APjAAAWtEYpuK4O5zdwBerVxWiAl59xAffMx2eXn3Mar2gKmVenol5Ya
-        zK7DPzS12emcT/g02N3qWKQ=
-X-Google-Smtp-Source: APXvYqxmRsJST+6oDiJ8/5DEEcoDK/i0mbVlIZapJZhIrRHkp7lkL1zHzEGnt+fRmKLy5EinBajctQ==
-X-Received: by 2002:aa7:9242:: with SMTP id 2mr4381343pfp.230.1557401740471;
-        Thu, 09 May 2019 04:35:40 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id v40sm6937601pgn.17.2019.05.09.04.35.39
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 04:35:39 -0700 (PDT)
-Subject: Re: [PATCH net V3 1/2] tuntap: fix dividing by zero in ebpf queue
- selection
-To:     Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yuehaibing@huawei.com, xiyou.wangcong@gmail.com,
-        weiyongjun1@huawei.com, eric.dumazet@gmail.com
-References: <1557372018-18544-1-git-send-email-jasowang@redhat.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <1a244711-657c-88f9-6463-c503d178dd02@gmail.com>
-Date:   Thu, 9 May 2019 04:35:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 07:36:03 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x49BZfwU026748;
+        Thu, 9 May 2019 20:35:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x49BZfwU026748
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557401742;
+        bh=PL01WUsmxYOgu3vvcvfxyKA3luTzFek4V3LVb2hS7LE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Zl3JG7WtdomkCaZilW11XTnQ8h60XrG3uZ1n/QNohO1lekita6uGX7GZJ5jsCdbgu
+         snBJ21Ip5+rIyCps+V4HRHMgc+12Ww9rAOBtlUnsb0sqe4BX2luFe+MAFqGVPBg7Ct
+         JrMtq7kryfgO1uxwAwfGxrQH+dA6g84kOoX9dmOFVrDplCFi1v59cTVnpS8M1uUNiz
+         MGLPx7Q1lsVN1Oyn8DTgJTWDwAUDSXlIEhlx5fpS8J1Y3haRHLyLeonwPZXzoiFNYj
+         2kX3FqWbzuJ2tBxVPVKQq2sAR9Dr48c1UIeuDw3G1KrecSA7Un9I1/y9J0604w5eLz
+         6w9YFmuxylsLw==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id g187so1179276vsc.8;
+        Thu, 09 May 2019 04:35:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAVzC+DVcCgaauI/TShSEQSCmE98neO3plPooYnldks4UurQIvb/
+        qCf1rMLtU/VU/YGVw3Ji7SyD6ocWzTrJ9UL5Q8U=
+X-Google-Smtp-Source: APXvYqz43z6deMTelju4IlQu5Tc9PL6TkjY78McJ94t4eOCDAyZwLfGsNngbI9QUWmS6JshI9Y4ds/CNXiA7mo1hHcM=
+X-Received: by 2002:a67:fd89:: with SMTP id k9mr1943399vsq.54.1557401741466;
+ Thu, 09 May 2019 04:35:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1557372018-18544-1-git-send-email-jasowang@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190509064455.1173-1-yamada.masahiro@socionext.com> <20190509111534.GA32696@archlinux-i9>
+In-Reply-To: <20190509111534.GA32696@archlinux-i9>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 9 May 2019 20:35:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
+Message-ID: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: add most of Clang-specific flags unconditionally
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi.
+
+On Thu, May 9, 2019 at 8:15 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Thu, May 09, 2019 at 03:44:55PM +0900, Masahiro Yamada wrote:
+> > We do not support old Clang versions. Upgrade your clang version
+> > if any of these flags is unsupported.
+> >
+> > Let's add flags within ifdef CONFIG_CC_IS_CLANG unconditionally,
+> > except -fcatch-undefined-behavior.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  Makefile                   | 10 +++++-----
+> >  scripts/Makefile.extrawarn | 12 ++++++------
+> >  2 files changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index bd7ae11947cb..c71ffb6f55b5 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -731,15 +731,15 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
+> >  KBUILD_CFLAGS += $(stackp-flags-y)
+> >
+> >  ifdef CONFIG_CC_IS_CLANG
+> > -KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+> > +KBUILD_CPPFLAGS += -Qunused-arguments
+> > +KBUILD_CFLAGS += -Wno-format-invalid-specifier
+> > +KBUILD_CFLAGS += -Wno-gnu
+> >  # Quiet clang warning: comparison of unsigned expression < 0 is always false
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+> > +KBUILD_CFLAGS += -Wno-tautological-compare
+> >  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+> >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+> >  # See modpost pattern 2
+> > -KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
+> > +KBUILD_CFLAGS += -mno-global-merge
+> >  KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
+>
+> I think we should just remove this, I'm fairly confident the kernel
+> can't be reliably compiled with anything earlier than Clang 4 (Pixel 2
+> was shipped with it but had some hacks, this commit is from Clang 3.5):
+>
+> https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
 
 
-On 5/8/19 11:20 PM, Jason Wang wrote:
-> We need check if tun->numqueues is zero (e.g for the persist device)
-> before trying to use it for modular arithmetic.
-> 
-> Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-> Fixes: 96f84061620c6("tun: add eBPF based queue selection method")
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
+Oh, I did not know this was deprecated.
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Could you send a patch to remove it
+with filling the commit log ?
+
 
 Thanks.
 
+
+
+-- 
+Best Regards
+Masahiro Yamada
