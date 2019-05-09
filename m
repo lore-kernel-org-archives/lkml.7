@@ -2,76 +2,81 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5B8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6821821479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1802173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="mrm0yeww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfEIONW (ORCPT
+        id S1726895AbfEIONZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:13:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46920 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726661AbfEIONK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:13:10 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hOjnI-000122-EU; Thu, 09 May 2019 15:13:08 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hOjnI-0006Lr-9G; Thu, 09 May 2019 15:13:08 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Thu, 9 May 2019 10:13:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:59610 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbfEIONX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:13:23 -0400
+Received: from zn.tnic (p200300EC2F0F5F00A4EF991375FD2B9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:a4ef:9913:75fd:2b9a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 844EF1EC0AD6;
+        Thu,  9 May 2019 16:13:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557411201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=+PHLiSfYmDjlELYK+9z1QfW58niSz8+w36T8ZEcU68k=;
+        b=mrm0yewwvirES4xxq5BoKs3UMEVvkMcA4rAauxjG9tRKhxdr5ouftUo6GE72JG6VL+FlJC
+        9oC3Q73j5v28nuII7af0DPlN7wxZ2VZeZzOYXoBz4BbTqC8nj1Q5pMVeBCSBXI9C1FLXEy
+        FKrSvk/ByJrF7GRIL4l6bXNpdScYXIw=
+Date:   Thu, 9 May 2019 16:13:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
+Message-ID: <20190509141313.GA17053@zn.tnic>
+References: <20190508224201.27120-1-colin.king@canonical.com>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Thu, 09 May 2019 15:08:17 +0100
-Message-ID: <lsq.1557410897.311064425@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 01/10] Revert "brcmfmac: assure SSID length from
- firmware is limited"
-In-Reply-To: <lsq.1557410896.171359878@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190508224201.27120-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.67-rc1 review patch.  If anyone has any objections, please let me know.
+On Wed, May 08, 2019 at 11:42:01PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable tad_base is being set to a value that is never read
+> and is being over-written on the next iteration of a for-loop.
+> This assignment is therefore redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
 
-------------------
+What's that tag's function supposed to be?
 
-From: Ben Hutchings <ben@decadent.org.uk>
+I see a lot of those in commit messages but it is nowhere documented in
+the tree.
 
-This reverts commit 9657f3abd17772d3290a3545dfb4811d945e84e1, which
-was similar to commit 1b5e2423164b3670e8bc9174e4762d297990deff
-upstream.  The function fixed upstream doesn't exist in 3.16 and the
-similar bug that does exist here needs a different fix.
+$ git grep -i coverity
 
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
---- a/drivers/net/wireless/brcm80211/brcmfmac/wl_cfg80211.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/wl_cfg80211.c
-@@ -3082,8 +3082,6 @@ brcmf_notify_sched_scan_results(struct b
- 
- 			brcmf_dbg(SCAN, "SSID:%s Channel:%d\n",
- 				  netinfo->SSID, netinfo->channel);
--			if (netinfo->SSID_len > IEEE80211_MAX_SSID_LEN)
--				netinfo->SSID_len = IEEE80211_MAX_SSID_LEN;
- 			memcpy(ssid[i].ssid, netinfo->SSID, netinfo->SSID_len);
- 			ssid[i].ssid_len = netinfo->SSID_len;
- 			request->n_ssids++;
+doesn't give anything relevant.
 
+Hmm?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
