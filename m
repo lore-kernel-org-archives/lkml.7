@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEA3C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE4BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE3A217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287A7217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427754;
-	bh=OP280kuGSMjRSEKfqeYczZixuEf3EDUGnZF1DlEt8Fw=;
+	s=default; t=1557427758;
+	bh=erub84zW5SlMt2EeVa3Z6abSx4S29rau3YDLlNndXu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0q2zgYhBhUkSDX2+ilNjAJSdrm9FCIcCHk+HEy+a6RfIVLEB6I9V8QafLZy2+1A6f
-	 j32ODYcl+1wZNUGvkV0gppfHygAwrNksl19ls4rvWdgGYFHmX3BifsaqtcsPn0o462
-	 JRw/8pfkD5knFSrbG/gJ8EFPyE+WftXtWElLARZs=
+	b=ozIJC+3at3u6R8m0lVwa6L3EYyvp7WbuoIjax/y7G4E9MxDcLATDp9MCsKwXpXyWO
+	 djg8l1WfM1qUOXchWgfSPIuEcm4NtdzpAk/qStQK087G45UH2PE7+7o5lT0bE0FRL3
+	 1OMibagd022QVbOt+/titsDUaUaQZGMf+OIhWR/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfEIStN (ORCPT
+        id S1728180AbfEIStM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42362 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbfEIStF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:49:05 -0400
+        id S1727681AbfEIStI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA9E9217D7;
-        Thu,  9 May 2019 18:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F888217F5;
+        Thu,  9 May 2019 18:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427745;
-        bh=OP280kuGSMjRSEKfqeYczZixuEf3EDUGnZF1DlEt8Fw=;
+        s=default; t=1557427747;
+        bh=erub84zW5SlMt2EeVa3Z6abSx4S29rau3YDLlNndXu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BvQOF6ZE/xZh5D3Sdtig1+piVmydW+rhXECHwwqTSCFz3cu9beI+Gqp4024e60T0A
-         MQLnZaX5M2V7j2b+XfrE881lhfQgoi951G64YsICCovNjpdfGAJhhNy2oDg1va83bz
-         TzZYJWEabjIgH8qDaQjP2IGxUGzxN7k4G0VWUJ4A=
+        b=OtzNXyfFGCMIna3SB9BCLXZXyo8+sd8KjyB+aJyBpQ8dg43+0/2exYzHGRrs90prV
+         o+sMzEH4VE5FT+yGswvHnRySAJeuZlhIEcNAXvVoAgbe3mHIBA9vfKszhCUIFtFcxG
+         iRU3UHzBouDlg5XA+BHBFjw+THNA4srpuLaYtoPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.19 55/66] intel_th: pci: Add Comet Lake support
-Date:   Thu,  9 May 2019 20:42:30 +0200
-Message-Id: <20190509181307.330586608@linuxfoundation.org>
+        Christian Neubert <christian.neubert.86@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 4.19 56/66] cpufreq: armada-37xx: fix frequency calculation for opp
+Date:   Thu,  9 May 2019 20:42:31 +0200
+Message-Id: <20190509181307.425842082@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -59,33 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit e60e9a4b231a20a199d7a61caadc48693c30d695 upstream.
+commit 8db82563451f976597ab7b282ec655e4390a4088 upstream.
 
-This adds support for Intel TH on Comet Lake.
+The frequency calculation was based on the current(max) frequency of the
+CPU. However for low frequency, the value used was already the parent
+frequency divided by a factor of 2.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
+Instead of using this frequency, this fix directly get the frequency from
+the parent clock.
+
+Fixes: 92ce45fb875d ("cpufreq: Add DVFS support for Armada 37xx")
+Cc: <stable@vger.kernel.org>
+Reported-by: Christian Neubert <christian.neubert.86@gmail.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/cpufreq/armada-37xx-cpufreq.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -165,6 +165,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x34a6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Comet Lake */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x02a6),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+--- a/drivers/cpufreq/armada-37xx-cpufreq.c
++++ b/drivers/cpufreq/armada-37xx-cpufreq.c
+@@ -359,11 +359,11 @@ static int __init armada37xx_cpufreq_dri
+ 	struct armada_37xx_dvfs *dvfs;
+ 	struct platform_device *pdev;
+ 	unsigned long freq;
+-	unsigned int cur_frequency;
++	unsigned int cur_frequency, base_frequency;
+ 	struct regmap *nb_pm_base, *avs_base;
+ 	struct device *cpu_dev;
+ 	int load_lvl, ret;
+-	struct clk *clk;
++	struct clk *clk, *parent;
  
+ 	nb_pm_base =
+ 		syscon_regmap_lookup_by_compatible("marvell,armada-3700-nb-pm");
+@@ -399,6 +399,22 @@ static int __init armada37xx_cpufreq_dri
+ 		return PTR_ERR(clk);
+ 	}
+ 
++	parent = clk_get_parent(clk);
++	if (IS_ERR(parent)) {
++		dev_err(cpu_dev, "Cannot get parent clock for CPU0\n");
++		clk_put(clk);
++		return PTR_ERR(parent);
++	}
++
++	/* Get parent CPU frequency */
++	base_frequency =  clk_get_rate(parent);
++
++	if (!base_frequency) {
++		dev_err(cpu_dev, "Failed to get parent clock rate for CPU\n");
++		clk_put(clk);
++		return -EINVAL;
++	}
++
+ 	/* Get nominal (current) CPU frequency */
+ 	cur_frequency = clk_get_rate(clk);
+ 	if (!cur_frequency) {
+@@ -431,7 +447,7 @@ static int __init armada37xx_cpufreq_dri
+ 	for (load_lvl = ARMADA_37XX_DVFS_LOAD_0; load_lvl < LOAD_LEVEL_NR;
+ 	     load_lvl++) {
+ 		unsigned long u_volt = avs_map[dvfs->avs[load_lvl]] * 1000;
+-		freq = cur_frequency / dvfs->divider[load_lvl];
++		freq = base_frequency / dvfs->divider[load_lvl];
+ 		ret = dev_pm_opp_add(cpu_dev, freq, u_volt);
+ 		if (ret)
+ 			goto remove_opp;
 
 
