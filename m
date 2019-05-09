@@ -2,97 +2,165 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD161C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4E7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92ED521479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ge8R844S"
+	by mail.kernel.org (Postfix) with ESMTP id 89C6A2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfEIT2B (ORCPT
+        id S1726981AbfEIT2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:28:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39839 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfEIT2B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:28:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so1707001pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mSogdT1b1TrauWJdc0+lW0R8qL7KGKdwvRVPra/F2u4=;
-        b=ge8R844S9rhQhPZywYJzkfKzn0+UrddioB1eT3CI+Rxgh7FM5k/Nj631+ajLB5i98z
-         qBuIhlAi7+7nh6F7Z1rJckUuSkcwqxtG9sGhGQoT+x1lUg6X3OXiC6ccNVUb1g4+KJ3l
-         N1+vO7n2+b3u1X/Did/QTcwhdXYLekpehe87DVnoLH6kY+122yYPr/Ex9cn7pf7BP/W1
-         FlrT5uOI64/8jOOZYvR1fypE9LJklRZHypbB9rqVJZx8+MtL+1Nrohw+knyr2bfi5W17
-         OI+nfZAAHolUUB31C+q4yU4AmDT6PfWpOuppbMD9XX7P7zp9QAx71kIPMtx5e3xSH1Q5
-         tKkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mSogdT1b1TrauWJdc0+lW0R8qL7KGKdwvRVPra/F2u4=;
-        b=Y5hJFozeBlEeIBkHmyXO2Ot/YWygWvOf+c43/Vupl4Gcu/OAJTx0V73uNYCBdWYHv0
-         HS/GMzdx1QDKc//YueXOimLQA59pXBjzhUFEbjGsAdNEO7J6x4Rm6o9c7Mx/Nfp7o3+W
-         8T6orvx+cIGgUlS91LZTeF6w276Xlpc+Mzq55OKvjN1OLolzuoqmmgd+VwtFCWkDyQn1
-         42HaHj26ZNbwyIjs+foMtSt/oCHbgucH6eqOEShMDIye1TzfrhMNOXPvRCkAF2nHAjLl
-         uDGvUWBErkmC+J75FEAMi13RcnR+iZpAYkKgl8VJSZyXvZcHaalOXjxeWobPnmQ1USMH
-         Y7Ig==
-X-Gm-Message-State: APjAAAXYIi2tfaSvKJ8O1iCk2GZY8avUWU7SuJjBdCRPxgCInC6p7eYV
-        y+ZEBpcTYlk37z4v6c4hCddepw==
-X-Google-Smtp-Source: APXvYqz/zYt5LNbOUqYwUYqUaZNqn28INg1eTCOj3kgCLcwZ9Gnpmql4xKPflas+TJJo6HIP9ZvJow==
-X-Received: by 2002:a62:1897:: with SMTP id 145mr7992573pfy.122.1557430079463;
-        Thu, 09 May 2019 12:27:59 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id j12sm3809086pff.148.2019.05.09.12.27.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 09 May 2019 12:27:58 -0700 (PDT)
-Date:   Thu, 9 May 2019 12:27:53 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Joao Moreira <jmoreira@suse.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH v3 0/7] crypto: x86: Fix indirect function call casts
-Message-ID: <20190509192753.GA233211@google.com>
-References: <20190507161321.34611-1-keescook@chromium.org>
- <20190507170039.GB1399@sol.localdomain>
- <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
- <20190507215045.GA7528@sol.localdomain>
- <20190508133606.nsrzthbad5kynavp@gondor.apana.org.au>
- <CAGXu5jKdsuzX6KF74zAYw3PpEf8DExS9P0Y_iJrJVS+goHFbcA@mail.gmail.com>
- <20190509020439.GB693@sol.localdomain>
- <20190509153828.GA261205@google.com>
- <20190509175822.GB12602@gmail.com>
+        Thu, 9 May 2019 15:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfEIT2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:28:44 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9521E21479;
+        Thu,  9 May 2019 19:28:41 +0000 (UTC)
+Date:   Thu, 9 May 2019 15:28:40 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
+        "brgerst@gmail.com" <brgerst@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>
+Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
+Message-ID: <20190509152840.7fd261a4@gandalf.local.home>
+In-Reply-To: <20190509150644.13d4a046@gandalf.local.home>
+References: <20190318153840.906404905@infradead.org>
+        <20190318155140.058627431@infradead.org>
+        <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
+        <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
+        <20190509090058.6554dc81@gandalf.local.home>
+        <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
+        <20190509142902.08a32f20@gandalf.local.home>
+        <20190509184531.jhinxi2x2pdfaefb@treble>
+        <20190509150644.13d4a046@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509175822.GB12602@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 10:58:23AM -0700, Eric Biggers wrote:
-> Is there any way to annotate assembly functions such that they work
-> directly with CFI?
+On Thu, 9 May 2019 15:06:44 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Not to my knowledge.
+> Hmm, I'm still working on my pull request for the merge window, and if
+> this already went in, I could just add this, and let it conflict. I'm
+> sure Linus will have no problems in fixing up the conflicts.
+> 
+> I should change the subject, as it is the same ;-) Perhaps to:
+> 
+>  tracing: Clean up "if" macro
+> 
+> But it would be good to find out why this fixes the issue you see.
+> Perhaps its because we remove the internal if statement?
 
-Sami
+I'm adding this to my tree, if that's alright with everyone. It will
+conflict with your patch, but like I said, Linus should have no problem
+fixing up the conflicts.
+
+But it probably would probably still be good to know why this fixes the
+issues you see.
+
+-- Steve
+
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] tracing: Simplify "if" macro code
+
+Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
+macro converts the conditional to an array index.  This can cause GCC
+to create horrible code.  When there are nested ifs, the generated code
+uses register values to encode branching decisions.
+
+Josh Poimboeuf found that replacing the define "if" macro from using
+the condition as an array index and incrementing the branch statics
+with an if statement itself, reduced the asm complexity and shrinks the
+generated code quite a bit.
+
+But this can be simplified even further by replacing the internal if
+statement with a ternary operator.
+
+Link: https://lkml.kernel.org/r/20190307174802.46fmpysxyo35hh43@treble
+Link: http://lkml.kernel.org/r/CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com
+
+Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ include/linux/compiler.h | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 445348facea9..8aaf7cd026b0 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -53,23 +53,24 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+  * "Define 'is'", Bill Clinton
+  * "Define 'if'", Steven Rostedt
+  */
+-#define if(cond, ...) __trace_if( (cond , ## __VA_ARGS__) )
+-#define __trace_if(cond) \
+-	if (__builtin_constant_p(!!(cond)) ? !!(cond) :			\
+-	({								\
+-		int ______r;						\
+-		static struct ftrace_branch_data			\
+-			__aligned(4)					\
+-			__section("_ftrace_branch")			\
+-			______f = {					\
+-				.func = __func__,			\
+-				.file = __FILE__,			\
+-				.line = __LINE__,			\
+-			};						\
+-		______r = !!(cond);					\
+-		______f.miss_hit[______r]++;					\
+-		______r;						\
+-	}))
++#define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
++
++#define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
++
++#define __trace_if_value(cond) ({			\
++	static struct ftrace_branch_data		\
++		__aligned(4)				\
++		__section("_ftrace_branch")		\
++		__if_trace = {				\
++			.func = __func__,		\
++			.file = __FILE__,		\
++			.line = __LINE__,		\
++		};					\
++	(cond) ?					\
++		(__if_trace.miss_hit[1]++,1) :		\
++		(__if_trace.miss_hit[0]++,0);		\
++})
++
+ #endif /* CONFIG_PROFILE_ALL_BRANCHES */
+ 
+ #else
+-- 
+2.20.1
+
