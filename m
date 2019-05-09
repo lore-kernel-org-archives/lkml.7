@@ -2,57 +2,57 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7E9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEF5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0C921744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F89A217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuAzQQMz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mKj2Cgfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfEIVOE (ORCPT
+        id S1727149AbfEIVOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:14:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38953 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfEIVOD (ORCPT
+        Thu, 9 May 2019 17:14:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34297 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfEIVOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:14:03 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w22so1832247pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:03 -0700 (PDT)
+        Thu, 9 May 2019 17:14:06 -0400
+Received: by mail-pf1-f193.google.com with SMTP id n19so1964700pfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P9AsCRlkOOmYTXd62VCE+TLaRBh2EP8zJGBIvpPdv+s=;
-        b=PuAzQQMz7nwC9LEZewasSekHzr0gzavO/OiUWtrEjI2oRvWoSOlhf23dIs2YNuL8+I
-         hjQzfRQubWGAS97DozJVYiZkX1o6rwy8U0L2nQVVJXC4iTo4kh7mrNxL0WxOE6XUBMaL
-         AFAb1N/SveVKB8LKCd3n40EJH9pcpBSkZtzcU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/7P5q4QlYjlB1PoaalbGvh8L1Fqv8yMUpPNP9xHcgwI=;
+        b=mKj2Cgfps3G1zkXLP/TIIcygJDNMHzTg6Im1Me8vkc9Tt/pT5I3JuoMevxlhdjlXaP
+         vlcQwc3KzzYMSbUXV9An0OBLQ9UIyV07iY9hhxhJV2UqDrw0rS16/AoF0aF59mU0dUKA
+         y56TmbTurVjtUNNP1jvaKkxMZAUfZRLEwQHHg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P9AsCRlkOOmYTXd62VCE+TLaRBh2EP8zJGBIvpPdv+s=;
-        b=XqlKjw0J8LFfFW1rXxPmyTfp57zU62x4ApDpPHyWAQU8COjVNz1tucBJN83zWAhgY6
-         5yhNJVjn1Q1/DE1gAgkGKjwp5uqE9nKDqirj38oSCfcujhFmBCy4zape/lGt3Y6LGdsT
-         IGMPtAXRB63lC04otyBrTXzeilWHEcDYeMdvF6CaeTl8dw9mZ5/3KNs4PRcaWZkLT5Y7
-         KgHawzFfgGSgpOHvEUetunZZBfJPwoxBGHCXK9Kr9ga3rC3DUod2CSqlstR/ma2LMExH
-         3pJyQn8dxT5iNAD5Y+trkEin4XPziyN1U5RYR7YzAhEfumZEs4A6rWasXirp0MytAK41
-         hzzA==
-X-Gm-Message-State: APjAAAVbhq7Npuf60+5ZumiXaRY5EBQC7g2lWjwYgWy8K1nMI6XnxMuE
-        JqtQ4lQFL2jLAt743VKV3j5+Tw==
-X-Google-Smtp-Source: APXvYqzOA+ux6Z4uGST2w2ScerR1nnAkn72owRHC1ECieOpbdEaZoJNeaELR4m34RLFLexWgNiS4ow==
-X-Received: by 2002:a63:3190:: with SMTP id x138mr8583878pgx.402.1557436442056;
-        Thu, 09 May 2019 14:14:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/7P5q4QlYjlB1PoaalbGvh8L1Fqv8yMUpPNP9xHcgwI=;
+        b=s+x4zLBeXfCAP+5kgE6ggBExbtMkLPW0rmbJF4of8W8P5NF0JfRjnZxn0QEZUZJk6w
+         FSBM3+wPSPaTFjcfirEEpmqfr53EUGHH9lLAemQ98ght/oU3dVqtfRs59kGiD65pfJbG
+         UuitweQ26w2mZDpm1YGlAs/BU32qjkU29v1J7mlFxfviRTq2+7BI++zDZovdb2D9Dk8R
+         JmhNm1LK/ew8U8MCx0k0690qP3z3V9+pfLRz7k8syYtJ8OuQAmyYJHmDxmK4byjZbXdF
+         6sS/lFk2mlT9dM9XcFjRG76LeKSSBOs62LYUzZXmHF8nt7NQjay2qmWta5aWcgCtbatl
+         /SDw==
+X-Gm-Message-State: APjAAAUICp9FCL5lqYAlqs4pWmWm822mrGErL6KrDq9RACdO58GTMbzt
+        lUWGFcl/E8UcFkMa6FZwrYd7jg==
+X-Google-Smtp-Source: APXvYqxsq242WuHcF8/Wt0+0fgOWnGWASQJ3tDGCiBrsZLC4ZM6LkVI2F+ZEyqL/TfDx1mm8LexPxQ==
+X-Received: by 2002:a63:b706:: with SMTP id t6mr2570714pgf.305.1557436445625;
+        Thu, 09 May 2019 14:14:05 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id r8sm4162245pfn.11.2019.05.09.14.14.00
+        by smtp.gmail.com with ESMTPSA id p2sm5140870pfi.73.2019.05.09.14.14.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:14:00 -0700 (PDT)
+        Thu, 09 May 2019 14:14:04 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -60,10 +60,12 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v3 00/30] Update cros_ec_commands.h
-Date:   Thu,  9 May 2019 14:13:23 -0700
-Message-Id: <20190509211353.213194-1-gwendal@chromium.org>
+Subject: [PATCH v3 02/30] mfd: cros_ec: Zero BUILD_ macro
+Date:   Thu,  9 May 2019 14:13:25 -0700
+Message-Id: <20190509211353.213194-3-gwendal@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+In-Reply-To: <20190509211353.213194-1-gwendal@chromium.org>
+References: <20190509211353.213194-1-gwendal@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,65 +73,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interface between CrosEC embedded controller and the host,
-described by cros_ec_commands.h, as diverged from what the embedded
-controller really support.
+Defined out build macro used when compiling embedded controller
+firmware.
 
-The source of thruth is at
-https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+---
+ include/linux/mfd/cros_ec_commands.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-That include file is converted to remove ACPI and Embedded only code.
-
-From now on, cros_ec_commands.h will be automatically generated from
-the file above, do not modify directly.
-
-Fell free to squash the commits below.
-
-Changes in v3:
-- Rebase after commit 81888d8ab1532 ("mfd: cros_ec: Update the EC feature codes")
-- Add Acked-by: Benson Leung <bleung@chromium.org>
-
-Changes in v2:
-- Move I2S changes at the end of the patchset, squashed with change in
-  sound/soc/codecs/cros_ec_codec.c to match new interface.
-- Add Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Gwendal Grignou (30):
-  mfd: cros_ec: Update license term
-  mfd: cros_ec: Zero BUILD_ macro
-  mfd: cros_ec: set comments properly
-  mfd: cros_ec: add ec_align macros
-  mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
-  mfd: cros_ec: use BIT macro
-  mfd: cros_ec: Update ACPI interface definition
-  mfd: cros_ec: move HDMI CEC API definition
-  mfd: cros_ec: Remove zero-size structs
-  mfd: cros_ec: Add Flash V2 commands API
-  mfd: cros_ec: Add PWM_SET_DUTY API
-  mfd: cros_ec: Add lightbar v2 API
-  mfd: cros_ec: Expand hash API
-  mfd: cros_ec: Add EC transport protocol v4
-  mfd: cros_ec: Complete MEMS sensor API
-  mfd: cros_ec: Fix event processing API
-  mfd: cros_ec: Add fingerprint API
-  mfd: cros_ec: Fix temperature API
-  mfd: cros_ec: Complete Power and USB PD API
-  mfd: cros_ec: Add API for keyboard testing
-  mfd: cros_ec: Add Hibernate API
-  mfd: cros_ec: Add Smart Battery Firmware update API
-  mfd: cros_ec: Add I2C passthru protection API
-  mfd: cros_ec: Add API for EC-EC communication
-  mfd: cros_ec: Add API for Touchpad support
-  mfd: cros_ec: Add API for Fingerprint support
-  mfd: cros_ec: Add API for rwsig
-  mfd: cros_ec: Add SKU ID and Secure storage API
-  mfd: cros_ec: Add Management API entry points
-  mfd: cros_ec: Update I2S API
-
- include/linux/mfd/cros_ec_commands.h | 3658 ++++++++++++++++++++------
- sound/soc/codecs/cros_ec_codec.c     |    8 +-
- 2 files changed, 2915 insertions(+), 751 deletions(-)
-
+diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+index 48292d449921..7b8fac4d0c89 100644
+--- a/include/linux/mfd/cros_ec_commands.h
++++ b/include/linux/mfd/cros_ec_commands.h
+@@ -13,6 +13,11 @@
+ #ifndef __CROS_EC_COMMANDS_H
+ #define __CROS_EC_COMMANDS_H
+ 
++
++
++
++#define BUILD_ASSERT(_cond)
++
+ /*
+  * Current version of this protocol
+  *
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
