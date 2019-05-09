@@ -2,90 +2,189 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E16C04AAE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363B2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B722173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0403620675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:23:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vu0NFRT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfEICUE (ORCPT
+        id S1726563AbfEICXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:20:04 -0400
-Received: from www.osadl.org ([62.245.132.105]:60498 "EHLO www.osadl.org"
+        Wed, 8 May 2019 22:23:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58977 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfEICUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:20:03 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x492JcKg005420;
-        Thu, 9 May 2019 04:19:38 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Alessandro Zummo <a.zummo@towertech.it>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH] rtc: ds2404: use hw endiannes variable
-Date:   Thu,  9 May 2019 04:13:55 +0200
-Message-Id: <1557368035-6787-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        id S1725842AbfEICXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 22:23:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=BLdUxRrkwpbfMypNuHs1fW3qzt5NUxqZanuMvnX1EIM=; b=vu0NFRT9a7FhbMaiTIdR8jrxM+
+        UljmNAEVWm4ywYA69TC01Y2ntK1Ozzi49VjWGqq8Axff70XUsDWUtgZGBAhX/eNj9rU9dUsxz0tUo
+        wkUnRlsy/iv+FRmoEPkwZ5nlnd/nqV3tP+b0BKUMa+s8KsgoPN0SCPFj2tEkY+HZ6qyM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hOYiY-0006iY-9w; Thu, 09 May 2019 04:23:30 +0200
+Date:   Thu, 9 May 2019 04:23:30 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next 10/11] net: stmmac: Introduce selftests support
+Message-ID: <20190509022330.GA23758@lunn.ch>
+References: <cover.1557300602.git.joabreu@synopsys.com>
+ <be9099bbf8783b210dc9034a8b82219984f03250.1557300602.git.joabreu@synopsys.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be9099bbf8783b210dc9034a8b82219984f03250.1557300602.git.joabreu@synopsys.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converting from hardware to host endiannes was done using reassignment
-to the same variable which makes sparse unhappy as it can not verify
-the endiannes handling properly. To allow sparse to verify endiannes
-handling an explicit __le32 is introduced. Note that this patch does
-not change the generated binary (x86_64 and ppc64 binary diff).
+> +static int stmmac_test_eee(struct stmmac_priv *priv)
+> +{
+> +	struct stmmac_extra_stats *initial, *final;
+> +	int timeout = 100;
+> +	int ret;
+> +
+> +	ret = stmmac_test_loopback(priv);
+> +	if (ret)
+> +		goto out_free_final;
+> +
+> +	/* We have no traffic in the line so, sooner or later it will go LPI */
+> +	while (--timeout) {
+> +		memcpy(final, &priv->xstats, sizeof(*final));
+> +
+> +		if (final->irq_tx_path_in_lpi_mode_n >
+> +		    initial->irq_tx_path_in_lpi_mode_n)
+> +			break;
+> +		msleep(100);
+> +	}
+> +
+> +	if (!timeout) {
+> +		ret = -ETIMEDOUT;
+> +		goto out_free_final;
+> +	}
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
----
+Retries would be a better name than timeout.
 
-Problem located by an experimental coccinelle script to locate
-patters that make sparse unhappy (false positives):
+Also, 100 * 100 ms seems like a long time.
 
-on little-endian x86_64 sparse complains about:
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
-on big-endian ppc64 sparse complains about
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
-drivers/rtc/rtc-ds2404.c:187:16: warning: cast to restricted __le32
+> +static int stmmac_filter_check(struct stmmac_priv *priv)
+> +{
+> +	if (!(priv->dev->flags & IFF_PROMISC))
+> +		return 0;
+> +
+> +	netdev_warn(priv->dev, "Test can't be run in promiscuous mode!\n");
+> +	return 1;
 
-Patch was compiletested with:
- x86_64_defconfig + RTC_DRV_DS2404=m
- ppc64_defconfig + RTC_DRV_DS2404=m
+Maybe return EOPNOTSUPP here,
 
-in both cases applying the patch has no impact on the generated binary.
+> +}
+> +
+> +static int stmmac_test_hfilt(struct stmmac_priv *priv)
+> +{
+> +	unsigned char gd_addr[ETH_ALEN] = {0x01, 0x0c, 0xcd, 0x04, 0x00, 0x00};
+> +	unsigned char bd_addr[ETH_ALEN] = {0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b};
 
-Patch is against 5.1 (localversion-next is next-20190508)
+What does gd and bd mean?
 
- drivers/rtc/rtc-ds2404.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> +	struct stmmac_packet_attrs attr = { };
+> +	int ret;
+> +
+> +	if (stmmac_filter_check(priv))
+> +		return -EOPNOTSUPP;
 
-diff --git a/drivers/rtc/rtc-ds2404.c b/drivers/rtc/rtc-ds2404.c
-index 1e9f429..9df0c44 100644
---- a/drivers/rtc/rtc-ds2404.c
-+++ b/drivers/rtc/rtc-ds2404.c
-@@ -182,9 +182,10 @@ static void ds2404_enable_osc(struct device *dev)
- static int ds2404_read_time(struct device *dev, struct rtc_time *dt)
- {
- 	unsigned long time = 0;
-+	__le32 hw_time = 0;
- 
--	ds2404_read_memory(dev, 0x203, 4, (u8 *)&time);
--	time = le32_to_cpu(time);
-+	ds2404_read_memory(dev, 0x203, 4, (u8 *)&hw_time);
-+	time = le32_to_cpu(hw_time);
- 
- 	rtc_time64_to_tm(time, dt);
- 	return 0;
--- 
-2.1.4
+and just return the error code from the call.
 
+> +
+> +	ret = dev_mc_add(priv->dev, gd_addr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr.dst = gd_addr;
+> +
+> +	/* Shall receive packet */
+> +	ret = __stmmac_test_loopback(priv, &attr);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	attr.dst = bd_addr;
+> +
+> +	/* Shall NOT receive packet */
+> +	ret = __stmmac_test_loopback(priv, &attr);
+> +	ret = !ret;
+
+What is this test testing? gd is a multicast, where as bd is not.  I
+expect the hardware treats multicast different to unicast. So it would
+make more sense to test two different multicast addresses, one which
+has been added via dev_mc_addr, and one that has not?
+
+> +
+> +cleanup:
+> +	dev_mc_del(priv->dev, gd_addr);
+> +	return ret;
+> +}
+> +
+> +static int stmmac_test_pfilt(struct stmmac_priv *priv)
+> +{
+> +	unsigned char gd_addr[ETH_ALEN] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+> +	unsigned char bd_addr[ETH_ALEN] = {0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b};
+> +	struct stmmac_packet_attrs attr = { };
+> +	int ret;
+> +
+> +	if (stmmac_filter_check(priv))
+> +		return -EOPNOTSUPP;
+> +
+> +	ret = dev_uc_add(priv->dev, gd_addr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr.dst = gd_addr;
+> +
+> +	/* Shall receive packet */
+> +	ret = __stmmac_test_loopback(priv, &attr);
+> +	if (ret)
+> +		goto cleanup;
+
+gb is a multicast address. Does dev_uc_add() return an error? If it
+does not we should not expect it to actually work, since a multicast
+address should not match a unicast address?
+
+You also seem to be missing a test for adding a unicast address via
+dev_uc_add() and receiving packets for that address, but not receiving
+multicast packets.
+
+> +static const struct stmmac_test {
+> +	char name[ETH_GSTRING_LEN];
+> +	int lb;
+> +	int (*fn)(struct stmmac_priv *priv);
+> +} stmmac_selftests[] = {
+> +	{
+> +		.name = "MAC Loopback         ",
+> +		.lb = STMMAC_LOOPBACK_MAC,
+> +		.fn = stmmac_test_loopback,
+
+stmmac_test_mac_loopback might be a better name.
+
+> +	}, {
+> +		.name = "PHY Loopback         ",
+> +		.lb = STMMAC_LOOPBACK_PHY,
+> +		.fn = stmmac_test_phy_loopback,
+> +	}, {
+
+  Andrew
