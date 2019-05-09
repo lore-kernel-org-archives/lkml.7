@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368D9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53107C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2AD20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F9E20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428944;
-	bh=6n0GKdS7BlfEBRnyPq2cxQ+2dRUOf7IlbbWhpkO/mt4=;
+	s=default; t=1557428952;
+	bh=MOv2AaTh1w0/0TobC/dEXlg7Pdgap2FW3MINoZAneYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLyg+6qZUMFkY5sEk05rysjYUfLa50qZ5pMURk8mCKjOUtkfSJIUcYHqVI662FHbg
-	 bWR7aVkiSj6tV+huaeSaN/kzgS4QwR6z/hcGkl4XTsop23a3MvIzcb2Hhsxq5Nc6I0
-	 k/9tp+t9cD91zHpw36jBoCq50Nq6iEw/PNy6dbYo=
+	b=bcMfK4kk1YGSKD28paa9/8OcqR5rqmvj2GZXpwAn0VLkk5WmvvsstPZBfWEHG4kmr
+	 PPwpjD2PSMQRepHuVrEkbs7MbP4n8CEnxcSVkBalWRZsOslKtMCgbsyyX5feNn0B9t
+	 Z3BKq1bOxSt1sd0bqoBmSBwvsVhTDJFRce1nsbv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfEITJD (ORCPT
+        id S1727421AbfEITJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:09:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfEISoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:32 -0400
+        id S1727025AbfEISo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B715217F5;
-        Thu,  9 May 2019 18:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2BF9217D6;
+        Thu,  9 May 2019 18:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427470;
-        bh=6n0GKdS7BlfEBRnyPq2cxQ+2dRUOf7IlbbWhpkO/mt4=;
+        s=default; t=1557427468;
+        bh=MOv2AaTh1w0/0TobC/dEXlg7Pdgap2FW3MINoZAneYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CSvX8Nclut2pUEUyMZ0FYLasweJpxCkiI+VeaVJHTG4rQkjo0WyDQJe7UCN4UzM4
-         2IHCMr7jePgIflg010ImyyMr9aEEPWCMqu0WDYZejPxIYKrPNkBGEKW9uIefLndtZO
-         z7TUwTWeCngXAHdPruvoMAgp86pTtAvdKoj6Oink=
+        b=D7Blw1IkQuPe/vYMxcMBr9/sVKZ3AixNVyxOAKKnZO0HNGcyJMjoD1+AdX1E5I/gY
+         YGX7ad9Wdv0Jx3MlInRucmgf9iTDiQG8jOIuHOGNdlq7sYYqh87xwmbawe/VATC1Tu
+         g/gX3NoYJt0rF/W6auk9y7UiIRNJuGDNX/lD14jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Seth Bollinger <Seth.Bollinger@digi.com>,
-        Ming Lei <tom.leiming@gmail.com>
-Subject: [PATCH 4.9 22/28] usb-storage: Set virt_boundary_mask to avoid SG overflows
-Date:   Thu,  9 May 2019 20:42:14 +0200
-Message-Id: <20190509181254.988450875@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 21/28] USB: serial: f81232: fix interrupt worker not stop
+Date:   Thu,  9 May 2019 20:42:13 +0200
+Message-Id: <20190509181254.812697083@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -60,87 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
 
-commit 747668dbc061b3e62bc1982767a3a1f9815fcf0e upstream.
+commit 804dbee1e49774918339c1e5a87400988c0819e8 upstream.
 
-The USB subsystem has always had an unusual requirement for its
-scatter-gather transfers: Each element in the scatterlist (except the
-last one) must have a length divisible by the bulk maxpacket size.
-This is a particular issue for USB mass storage, which uses SG lists
-created by the block layer rather than setting up its own.
+The F81232 will use interrupt worker to handle MSR change.
+This patch will fix the issue that interrupt work should stop
+in close() and suspend().
 
-So far we have scraped by okay because most devices have a logical
-block size of 512 bytes or larger, and the bulk maxpacket sizes for
-USB 2 and below are all <= 512.  However, USB 3 has a bulk maxpacket
-size of 1024.  Since the xhci-hcd driver includes native SG support,
-this hasn't mattered much.  But now people are trying to use USB-3
-mass storage devices with USBIP, and the vhci-hcd driver currently
-does not have full SG support.
+This also fixes line-status events being disabled after a suspend cycle
+until the port is re-opened.
 
-The result is an overflow error, when the driver attempts to implement
-an SG transfer of 63 512-byte blocks as a single
-3584-byte (7 blocks) transfer followed by seven 4096-byte (8 blocks)
-transfers.  The device instead sends 31 1024-byte packets followed by
-a 512-byte packet, and this overruns the first SG buffer.
-
-Ideally this would be fixed by adding better SG support to vhci-hcd.
-But for now it appears we can work around the problem by
-asking the block layer to respect the maxpacket limitation, through
-the use of the virt_boundary_mask.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Seth Bollinger <Seth.Bollinger@digi.com>
-Tested-by: Seth Bollinger <Seth.Bollinger@digi.com>
-CC: Ming Lei <tom.leiming@gmail.com>
-Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+[ johan: amend commit message ]
+Fixes: 87fe5adcd8de ("USB: f81232: implement read IIR/MSR with endpoint")
+Cc: stable <stable@vger.kernel.org>	# 4.1
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/scsiglue.c |   26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ drivers/usb/serial/f81232.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/drivers/usb/storage/scsiglue.c
-+++ b/drivers/usb/storage/scsiglue.c
-@@ -81,6 +81,7 @@ static const char* host_info(struct Scsi
- static int slave_alloc (struct scsi_device *sdev)
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -560,9 +560,12 @@ static int f81232_open(struct tty_struct
+ 
+ static void f81232_close(struct usb_serial_port *port)
  {
- 	struct us_data *us = host_to_us(sdev->host);
-+	int maxp;
- 
- 	/*
- 	 * Set the INQUIRY transfer length to 36.  We don't use any of
-@@ -90,20 +91,17 @@ static int slave_alloc (struct scsi_devi
- 	sdev->inquiry_len = 36;
- 
- 	/*
--	 * USB has unusual DMA-alignment requirements: Although the
--	 * starting address of each scatter-gather element doesn't matter,
--	 * the length of each element except the last must be divisible
--	 * by the Bulk maxpacket value.  There's currently no way to
--	 * express this by block-layer constraints, so we'll cop out
--	 * and simply require addresses to be aligned at 512-byte
--	 * boundaries.  This is okay since most block I/O involves
--	 * hardware sectors that are multiples of 512 bytes in length,
--	 * and since host controllers up through USB 2.0 have maxpacket
--	 * values no larger than 512.
--	 *
--	 * But it doesn't suffice for Wireless USB, where Bulk maxpacket
--	 * values can be as large as 2048.  To make that work properly
--	 * will require changes to the block layer.
-+	 * USB has unusual scatter-gather requirements: the length of each
-+	 * scatterlist element except the last must be divisible by the
-+	 * Bulk maxpacket value.  Fortunately this value is always a
-+	 * power of 2.  Inform the block layer about this requirement.
-+	 */
-+	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
-+	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
 +
-+	/*
-+	 * Some host controllers may have alignment requirements.
-+	 * We'll play it safe by requiring 512-byte alignment always.
- 	 */
- 	blk_queue_update_dma_alignment(sdev->request_queue, (512 - 1));
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->interrupt_work);
+ }
  
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -656,6 +659,40 @@ static int f81232_port_remove(struct usb
+ 	return 0;
+ }
+ 
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct usb_serial_port *port = serial->port[0];
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
++		usb_kill_urb(port->read_urbs[i]);
++
++	usb_kill_urb(port->interrupt_in_urb);
++
++	if (port_priv)
++		flush_work(&port_priv->interrupt_work);
++
++	return 0;
++}
++
++static int f81232_resume(struct usb_serial *serial)
++{
++	struct usb_serial_port *port = serial->port[0];
++	int result;
++
++	if (tty_port_initialized(&port->port)) {
++		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
++		if (result) {
++			dev_err(&port->dev, "submit interrupt urb failed: %d\n",
++					result);
++			return result;
++		}
++	}
++
++	return usb_serial_generic_resume(serial);
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -679,6 +716,8 @@ static struct usb_serial_driver f81232_d
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
 
 
