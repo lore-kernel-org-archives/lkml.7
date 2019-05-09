@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCDFC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE8FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CA62089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D065320656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428632;
-	bh=tn/Owjpp3Jru80bpgmicmEK6vh4fN5P+SJ+VHX4bfv8=;
+	s=default; t=1557428645;
+	bh=0zZtPe/QZmm1wOMxxCB1OieNmsIUQ3UbVlb0wPX58Fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqhtW1s5q7cNScCABQj82IdNco8YjHQkkPu4KHeonA0BnLrpwO/So9lKiyF+0Z5Mx
-	 n7vgz9FhTvAP/PD3O9aBXTySTgs/TPc5Op9WKq8dhJU0lvfLiCS2uuVJN7oQEFrpDL
-	 O6Pjh/t3oZdYJQEcxCrkK/mN612ruVzbW81wZhPs=
+	b=KcuhHfvLpdzF35D2ByXXkevlqHOECf8P7HtPhXN0ozy3rAUxnvVq9y1qM+sYregJ2
+	 nUiDtopsEHYQ5r63DjcYErym48a5toOsWSPf/zwhKQ/9OF1AeIe90zM/zKJdDDQQB7
+	 oQXFlBT5CSO6k/YnoALAUgh/tzkqsN1YMHy5UQ8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfEITDw (ORCPT
+        id S1728182AbfEITED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfEISs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:58 -0400
+        id S1728101AbfEISsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1622217D7;
-        Thu,  9 May 2019 18:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FA47217D7;
+        Thu,  9 May 2019 18:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427737;
-        bh=tn/Owjpp3Jru80bpgmicmEK6vh4fN5P+SJ+VHX4bfv8=;
+        s=default; t=1557427729;
+        bh=0zZtPe/QZmm1wOMxxCB1OieNmsIUQ3UbVlb0wPX58Fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUaWfVhutvxrMAc0KOYPDIcgmx/4tFsT5UqubDLeF108EG7ZAxUcZVJhu492Cc/5x
-         E0+w4yqXNqkg0umIHiAj4onJKg4+15emqBuwBH/Sx8CjkLVOQdDPg/jAI/on/cnSg8
-         ncn4hloQofF+2OB0cxuPpt4xSIIJmoox1mDOP7xc=
+        b=bvsoTr7lZ1O98lEm5QYOCz82/wNwwkUI/aDdtQh2a7VzwlGQd+VHi0lpXRnXdWYAE
+         GVUxmFPyRzPiXbSvW7TwbTtworkneRGCpX1ThqdyLWIBsqMSMo01iWpRGatmDZR75L
+         mPG3Z8kKICaoK6XNP69QnuUoWPoSttQyxmGjiJ/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, JaeChul Lee <jcsing.lee@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 08/66] ASoC: hdmi-codec: fix S/PDIF DAI
-Date:   Thu,  9 May 2019 20:41:43 +0200
-Message-Id: <20190509181302.758132382@linuxfoundation.org>
+Subject: [PATCH 4.19 15/66] ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate
+Date:   Thu,  9 May 2019 20:41:50 +0200
+Message-Id: <20190509181303.530167536@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,174 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e95f984aae4cf0608d0ba2189c756f2bd50b44a ]
+[ Upstream commit 2b13bee3884926cba22061efa75bd315e871de24 ]
 
-When using the S/PDIF DAI, there is no requirement to call
-snd_soc_dai_set_fmt() as there is no DAI format definition that defines
-S/PDIF.  In any case, S/PDIF does not have separate clocks, this is
-embedded into the data stream.
+After commit fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate
+handling") the audio root clock frequency is configured improperly for
+44100 sample rate. Due to clock rate rounding it's 20070401 Hz instead
+of 22579000 Hz. This results in a too low value of the PSR clock divider
+in the CPU DAI driver and too fast actual sample rate for fs=44100. E.g.
+1 kHz tone has actual 1780 Hz frequency (1 kHz * 20070401/22579000 * 2).
 
-Consequently, when attempting to use TDA998x in S/PDIF mode, the attempt
-to configure TDA998x via the hw_params callback fails as the
-hdmi_codec_daifmt is left initialised to zero.
+Fix this by increasing the correction passed to clk_set_rate() to take
+into account inaccuracy of the EPLL frequency properly.
 
-Since the S/PDIF DAI will only be used by S/PDIF, prepare the
-hdmi_codec_daifmt structure for this format.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Fixes: fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate handling")
+Reported-by: JaeChul Lee <jcsing.lee@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 118 +++++++++++++++++-----------------
- 1 file changed, 59 insertions(+), 59 deletions(-)
+ sound/soc/samsung/odroid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index e5b6769b97977..d5f73c8372817 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -529,73 +529,71 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
- {
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 	struct hdmi_codec_daifmt cf = { 0 };
--	int ret = 0;
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index e7b371b072304..45c6d73967852 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -64,11 +64,11 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
+ 		return ret;
  
- 	dev_dbg(dai->dev, "%s()\n", __func__);
+ 	/*
+-	 *  We add 1 to the rclk_freq value in order to avoid too low clock
++	 *  We add 2 to the rclk_freq value in order to avoid too low clock
+ 	 *  frequency values due to the EPLL output frequency not being exact
+ 	 *  multiple of the audio sampling rate.
+ 	 */
+-	rclk_freq = params_rate(params) * rfs + 1;
++	rclk_freq = params_rate(params) * rfs + 2;
  
--	if (dai->id == DAI_ID_SPDIF) {
--		cf.fmt = HDMI_SPDIF;
--	} else {
--		switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
--		case SND_SOC_DAIFMT_CBM_CFM:
--			cf.bit_clk_master = 1;
--			cf.frame_clk_master = 1;
--			break;
--		case SND_SOC_DAIFMT_CBS_CFM:
--			cf.frame_clk_master = 1;
--			break;
--		case SND_SOC_DAIFMT_CBM_CFS:
--			cf.bit_clk_master = 1;
--			break;
--		case SND_SOC_DAIFMT_CBS_CFS:
--			break;
--		default:
--			return -EINVAL;
--		}
-+	if (dai->id == DAI_ID_SPDIF)
-+		return 0;
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		cf.bit_clk_master = 1;
-+		cf.frame_clk_master = 1;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFM:
-+		cf.frame_clk_master = 1;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+		cf.bit_clk_master = 1;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 
--		switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
--		case SND_SOC_DAIFMT_NB_NF:
--			break;
--		case SND_SOC_DAIFMT_NB_IF:
--			cf.frame_clk_inv = 1;
--			break;
--		case SND_SOC_DAIFMT_IB_NF:
--			cf.bit_clk_inv = 1;
--			break;
--		case SND_SOC_DAIFMT_IB_IF:
--			cf.frame_clk_inv = 1;
--			cf.bit_clk_inv = 1;
--			break;
--		}
-+	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-+	case SND_SOC_DAIFMT_NB_NF:
-+		break;
-+	case SND_SOC_DAIFMT_NB_IF:
-+		cf.frame_clk_inv = 1;
-+		break;
-+	case SND_SOC_DAIFMT_IB_NF:
-+		cf.bit_clk_inv = 1;
-+		break;
-+	case SND_SOC_DAIFMT_IB_IF:
-+		cf.frame_clk_inv = 1;
-+		cf.bit_clk_inv = 1;
-+		break;
-+	}
- 
--		switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
--		case SND_SOC_DAIFMT_I2S:
--			cf.fmt = HDMI_I2S;
--			break;
--		case SND_SOC_DAIFMT_DSP_A:
--			cf.fmt = HDMI_DSP_A;
--			break;
--		case SND_SOC_DAIFMT_DSP_B:
--			cf.fmt = HDMI_DSP_B;
--			break;
--		case SND_SOC_DAIFMT_RIGHT_J:
--			cf.fmt = HDMI_RIGHT_J;
--			break;
--		case SND_SOC_DAIFMT_LEFT_J:
--			cf.fmt = HDMI_LEFT_J;
--			break;
--		case SND_SOC_DAIFMT_AC97:
--			cf.fmt = HDMI_AC97;
--			break;
--		default:
--			dev_err(dai->dev, "Invalid DAI interface format\n");
--			return -EINVAL;
--		}
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		cf.fmt = HDMI_I2S;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_A:
-+		cf.fmt = HDMI_DSP_A;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_B:
-+		cf.fmt = HDMI_DSP_B;
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		cf.fmt = HDMI_RIGHT_J;
-+		break;
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		cf.fmt = HDMI_LEFT_J;
-+		break;
-+	case SND_SOC_DAIFMT_AC97:
-+		cf.fmt = HDMI_AC97;
-+		break;
-+	default:
-+		dev_err(dai->dev, "Invalid DAI interface format\n");
-+		return -EINVAL;
- 	}
- 
- 	hcp->daifmt[dai->id] = cf;
- 
--	return ret;
-+	return 0;
- }
- 
- static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
-@@ -792,8 +790,10 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 		i++;
- 	}
- 
--	if (hcd->spdif)
-+	if (hcd->spdif) {
- 		hcp->daidrv[i] = hdmi_spdif_dai;
-+		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
-+	}
- 
- 	dev_set_drvdata(dev, hcp);
- 
+ 	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
+ 	if (ret < 0)
 -- 
 2.20.1
 
