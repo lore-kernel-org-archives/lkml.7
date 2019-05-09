@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC99C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E62AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301A420656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B48520656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428889;
-	bh=wjbGWFqpVYEx/KMtz9p5c0//79ohF9cJwwfkSlbOwzE=;
+	s=default; t=1557428895;
+	bh=MOZrTxGSqKnDh5cfgtBT8RTiA31Qm7MZwDzqMBAmq68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzHWQ9HAbLwEKwbMt1qsYjrIKRdRM/YC6DoD4eOieRrxf1gc0mHVB1DT4cghjM9Sq
-	 pCkMU7w04zUe5e1icBDcWG3CQ0m5z2wkSrP0gJgoXd7lkvp4tR8FaW2cTk/dtIggZ7
-	 isJ14heviKA1kCl8dhABcAopnmnnzSui9hLwsrVQ=
+	b=w75yUXn38sKEau55jJfOYPWeI1ko4fQOc3XqDRUwFokqscUo5nQ8ZuTOaDv9VoGKw
+	 /A3okgxvxkTWhjofFMj9ykIhrlWXcpUdQNsecpChDcDblomjuOwz4wO2+ouhKtrygf
+	 bcA64n3GedKBeXc033xTuIoQrh15iacwnrp3KdtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfEITII (ORCPT
+        id S1727666AbfEITIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:08:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727300AbfEISpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:18 -0400
+        id S1726824AbfEISpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86933217F9;
-        Thu,  9 May 2019 18:45:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4980217D6;
+        Thu,  9 May 2019 18:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427518;
-        bh=wjbGWFqpVYEx/KMtz9p5c0//79ohF9cJwwfkSlbOwzE=;
+        s=default; t=1557427515;
+        bh=MOZrTxGSqKnDh5cfgtBT8RTiA31Qm7MZwDzqMBAmq68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2PxZTHvAMJ0VQUI09efvh+BDGZpskARNafy3j04FKvxg00AMaPzIs2M8zGX7WQQd
-         EgTtepgRRNtXaUdSzgWW8kIVm8gnBKCIZotr67u3cpht3u+r/byXDe4J8aY3DpWoZd
-         oDaP4j0dViukqoxXnoMqJIe967BInGxoOOd3H/H0=
+        b=lXx7K3jvvOVmvLODxiyKz/ZFaH9Q/zluEiQLkK0a7qf/Bn+81c5mjhgYIop9QZ0pp
+         vlNIgBhWmRq2yONVMlrVuXNiIoS9DdVmtYPALreNG7kKhu4I11yShj5h5vO5jfVG0L
+         /k0UX+mNcyJbZRWBLh0l4GUjlsztYHCs2Om8cT4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/42] IB/hfi1: Eliminate opcode tests on mr deref
-Date:   Thu,  9 May 2019 20:42:01 +0200
-Message-Id: <20190509181255.161329314@linuxfoundation.org>
+Subject: [PATCH 4.14 11/42] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Thu,  9 May 2019 20:42:00 +0200
+Message-Id: <20190509181254.957202771@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -63,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8639a79e85c18c16c10089edd589c7948f19bbd ]
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-When an old ack_queue entry is used to store an incoming request, it may
-need to clean up the old entry if it is still referencing the
-MR. Originally only RDMA READ request needed to reference MR on the
-responder side and therefore the opcode was tested when cleaning up the
-old entry. The introduction of tid rdma specific operations in the
-ack_queue makes the specific opcode tests wrong.  Multiple opcodes (RDMA
-READ, TID RDMA READ, and TID RDMA WRITE) may need MR ref cleanup.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-Remove the opcode specific tests associated with the ack_queue.
+To fix this, set the INCR bit in all cases.
 
-Fixes: f48ad614c100 ("IB/hfi1: Move driver out of staging")
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/rc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/cs4270.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
-index d3b8cb92fd6d6..28eb7003c297e 100644
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -2309,7 +2309,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
- 			update_ack_queue(qp, next);
- 		}
- 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
--		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
-+		if (e->rdma_sge.mr) {
- 			rvt_put_mr(e->rdma_sge.mr);
- 			e->rdma_sge.mr = NULL;
- 		}
-@@ -2383,7 +2383,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
- 			update_ack_queue(qp, next);
- 		}
- 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
--		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
-+		if (e->rdma_sge.mr) {
- 			rvt_put_mr(e->rdma_sge.mr);
- 			e->rdma_sge.mr = NULL;
- 		}
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 84f86745c30e9..828bc615a1908 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -643,6 +643,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
+ 
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
 -- 
 2.20.1
 
