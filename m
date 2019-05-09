@@ -2,214 +2,142 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E31C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61025C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DAE216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C0120644
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxZh6+94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfEIOu5 (ORCPT
+        id S1726804AbfEIOvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:50:57 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48518 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfEIOu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:50:56 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3B676271413EEE816D2A;
-        Thu,  9 May 2019 22:50:52 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 May 2019
- 22:50:49 +0800
-Subject: Re: [PATCH] scsi: qedi: remove memset/memcpy to nfunc and use func
- instead
-To:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <mojha@codeaurora.org>,
-        <skashyap@marvell.com>, <gregkh@linuxfoundation.org>
-References: <20190412094829.15868-1-colin.king@canonical.com>
- <20190420040554.41888-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <2907a552-a557-afeb-de56-88c958480f0c@huawei.com>
-Date:   Thu, 9 May 2019 22:50:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 9 May 2019 10:51:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34230 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfEIOvu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:51:50 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so3497148wrq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 07:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NnIVSTbXkxS0yhKtK5Xl2+rccguXdwwJsXkxd/ssJco=;
+        b=gxZh6+94YVMwo9tSjmQcnBR5/SHN/gMgGTviBNlpNv8ZSYHK6QRWULthr4xYwlzSkO
+         i414W6PFW9Lhca7FNfRjJ4Lq8LaXbeOuHiFNdpkZwRzRDvorreq1lhUdvwZkD9Fk3Mze
+         cWQhYZ7OGmivg9v+eOEHtTXxmzxuKJXmCSQDGc91mOX6i7DM2wtbpEThOXPc+OCSapt+
+         mtQOhu87HRGuH9CLBh6LFi+cecMnGgRArya4MmFXuUNIeZckQNDqQWaS1JSKBA/NnyzR
+         rTImp4xFd0zWOe7j4lCwL/60O7jgMp52Cgi5dTvfMAq6SY1P50CqFX18H51pjeB89XVT
+         RtEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NnIVSTbXkxS0yhKtK5Xl2+rccguXdwwJsXkxd/ssJco=;
+        b=NTuTt823TdeVWsTbIshh4rx5k5yTt/edKSGtSU64VsSIGwJFqdWNx7B88Plso7dCnD
+         p+QHt8Pz5I60umooAjiLdd8GjR7Wf5xd+2YNkuBI3nORpVB5vNVBpkfVMdT7eGG/38lN
+         uWFSnyPD3EGQfPQMjiavSYjbGndDIqMP6CgQBCKhwxC1BPevHZCAwA/SHtWkmdrQYkx9
+         ts8lX1NT+odXlgEUCHFeKTMdYfsASDKLEm84wvRwzgW1mS5cUiIgY/sA1J2rRgMjJfJ5
+         20nKQ7ePSJebaPC1iANeTQC2p0chNxgel3yJV/MEKERIDeDcI9jJsXSQqld5q+fL26hF
+         1bVQ==
+X-Gm-Message-State: APjAAAWJJt0GM0WIZcYGHOCXD18FeCIPAIClcoGPAP7P9ix9VEMdvh/j
+        TXroaiMlT3altTr7X4n+u9zMaAaIjcP8hv7/lQTOlg==
+X-Google-Smtp-Source: APXvYqyw6AVan6W+w1LMEkfKYRd7eqcaBqO4NEiGhzTMOQ4FZpcP8d/2DdivQSG357GbKZTLP20eNWPdroaESd+DEno=
+X-Received: by 2002:a5d:4b0b:: with SMTP id v11mr3401996wrq.317.1557413508636;
+ Thu, 09 May 2019 07:51:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190420040554.41888-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <20190508125516.16732-1-wanghai26@huawei.com>
+In-Reply-To: <20190508125516.16732-1-wanghai26@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 9 May 2019 10:51:36 -0400
+Message-ID: <CADnq5_NmbWQWjYe5DnGJAPh-uA6Fwi+xZ4FJq-tJWYDuXp6teg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Make some functions static
+To:     Wang Hai <wanghai26@huawei.com>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "Cheng, Tony" <Tony.Cheng@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        David Francis <David.Francis@amd.com>, Jun.Lei@amd.com,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Friendly ping, could someone review this patch ?
-
-On 2019/4/20 12:05, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> KASAN report this:
-> 
-> BUG: KASAN: global-out-of-bounds in qedi_dbg_err+0xda/0x330 [qedi]
-> Read of size 31 at addr ffffffffc12b0ae0 by task syz-executor.0/2429
-> 
-> CPU: 0 PID: 2429 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xfa/0x1ce lib/dump_stack.c:113
->  print_address_description+0x1c4/0x270 mm/kasan/report.c:187
->  kasan_report+0x149/0x18d mm/kasan/report.c:317
->  memcpy+0x1f/0x50 mm/kasan/common.c:130
->  qedi_dbg_err+0xda/0x330 [qedi]
->  ? 0xffffffffc12d0000
->  qedi_init+0x118/0x1000 [qedi]
->  ? 0xffffffffc12d0000
->  ? 0xffffffffc12d0000
->  ? 0xffffffffc12d0000
->  do_one_initcall+0xfa/0x5ca init/main.c:887
->  do_init_module+0x204/0x5f6 kernel/module.c:3460
->  load_module+0x66b2/0x8570 kernel/module.c:3808
->  __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
->  do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462e99
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f2d57e55c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462e99
-> RDX: 0000000000000000 RSI: 00000000200003c0 RDI: 0000000000000003
-> RBP: 00007f2d57e55c70 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2d57e566bc
-> R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
-> 
-> The buggy address belongs to the variable:
->  __func__.67584+0x0/0xffffffffffffd520 [qedi]
-> 
-> Memory state around the buggy address:
->  ffffffffc12b0980: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 05 fa
->  ffffffffc12b0a00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 05 fa fa
->> ffffffffc12b0a80: fa fa fa fa 00 06 fa fa fa fa fa fa 00 02 fa fa
->                                                           ^
->  ffffffffc12b0b00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 03 fa
->  ffffffffc12b0b80: fa fa fa fa 00 00 02 fa fa fa fa fa 00 00 04 fa
-> 
-> Currently the qedi_dbg_* family of functions can overrun the end
-> of the source string if it is less than the destination buffer
-> length because of the use of a fixed sized memcpy. Remove the
-> memset/memcpy calls to nfunc and just use func instead as it
-> is always a null terminated string.
-> 
+On Wed, May 8, 2019 at 10:47 AM Wang Hai <wanghai26@huawei.com> wrote:
+>
+> Fix the following sparse warnings:
+>
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dce120/dce120_resource.c:483:21: warning: symbol 'dce120_clock_source_create' was not declared. Should it be static?
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dce120/dce120_resource.c:506:6: warning: symbol 'dce120_clock_source_destroy' was not declared. Should it be static?
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dce120/dce120_resource.c:513:6: warning: symbol 'dce120_hw_sequencer_create' was not declared. Should it be static?
+>
+> Fixes: b8fdfcc6a92c ("drm/amd/display: Add DCE12 core support")
 > Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/scsi/qedi/qedi_dbg.c | 32 ++++++++------------------------
->  1 file changed, 8 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/scsi/qedi/qedi_dbg.c b/drivers/scsi/qedi/qedi_dbg.c
-> index 8fd28b0..3383314 100644
-> --- a/drivers/scsi/qedi/qedi_dbg.c
-> +++ b/drivers/scsi/qedi/qedi_dbg.c
-> @@ -16,10 +16,6 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  {
->  	va_list va;
->  	struct va_format vaf;
-> -	char nfunc[32];
-> -
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
->  
->  	va_start(va, fmt);
->  
-> @@ -28,9 +24,9 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  
->  	if (likely(qedi) && likely(qedi->pdev))
->  		pr_err("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
-> -		       nfunc, line, qedi->host_no, &vaf);
-> +		       func, line, qedi->host_no, &vaf);
->  	else
-> -		pr_err("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-> +		pr_err("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
->  
->  	va_end(va);
->  }
-> @@ -41,10 +37,6 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  {
->  	va_list va;
->  	struct va_format vaf;
-> -	char nfunc[32];
-> -
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
->  
->  	va_start(va, fmt);
->  
-> @@ -56,9 +48,9 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  
->  	if (likely(qedi) && likely(qedi->pdev))
->  		pr_warn("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
-> -			nfunc, line, qedi->host_no, &vaf);
-> +			func, line, qedi->host_no, &vaf);
->  	else
-> -		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-> +		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
->  
->  ret:
->  	va_end(va);
-> @@ -70,10 +62,6 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  {
->  	va_list va;
->  	struct va_format vaf;
-> -	char nfunc[32];
-> -
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
->  
->  	va_start(va, fmt);
->  
-> @@ -85,10 +73,10 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  
->  	if (likely(qedi) && likely(qedi->pdev))
->  		pr_notice("[%s]:[%s:%d]:%d: %pV",
-> -			  dev_name(&qedi->pdev->dev), nfunc, line,
-> +			  dev_name(&qedi->pdev->dev), func, line,
->  			  qedi->host_no, &vaf);
->  	else
-> -		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-> +		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
->  
->  ret:
->  	va_end(va);
-> @@ -100,10 +88,6 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  {
->  	va_list va;
->  	struct va_format vaf;
-> -	char nfunc[32];
-> -
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
->  
->  	va_start(va, fmt);
->  
-> @@ -115,9 +99,9 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  
->  	if (likely(qedi) && likely(qedi->pdev))
->  		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
-> -			nfunc, line, qedi->host_no, &vaf);
-> +			func, line, qedi->host_no, &vaf);
->  	else
-> -		pr_info("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-> +		pr_info("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
->  
->  ret:
->  	va_end(va);
-> 
+> Signed-off-by: Wang Hai <wanghai26@huawei.com>
 
+Applied.  Thanks!
+
+Alex
+
+> ---
+>  drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> index 312a0aebf91f..0948421219ef 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> @@ -458,7 +458,7 @@ static const struct dc_debug_options debug_defaults = {
+>                 .disable_clock_gate = true,
+>  };
+>
+> -struct clock_source *dce120_clock_source_create(
+> +static struct clock_source *dce120_clock_source_create(
+>         struct dc_context *ctx,
+>         struct dc_bios *bios,
+>         enum clock_source_id id,
+> @@ -481,14 +481,14 @@ struct clock_source *dce120_clock_source_create(
+>         return NULL;
+>  }
+>
+> -void dce120_clock_source_destroy(struct clock_source **clk_src)
+> +static void dce120_clock_source_destroy(struct clock_source **clk_src)
+>  {
+>         kfree(TO_DCE110_CLK_SRC(*clk_src));
+>         *clk_src = NULL;
+>  }
+>
+>
+> -bool dce120_hw_sequencer_create(struct dc *dc)
+> +static bool dce120_hw_sequencer_create(struct dc *dc)
+>  {
+>         /* All registers used by dce11.2 match those in dce11 in offset and
+>          * structure
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
