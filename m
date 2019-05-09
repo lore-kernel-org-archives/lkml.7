@@ -2,90 +2,212 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F7BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEED9C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C33217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4295217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427495;
-	bh=nSpBTyDk2DUiuG8wLuyLlpbmf0GF6juv+6YT6PlGsxw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKaMRRbGBIRuYp0/lJKU2yel5EkURd+jMec91r56PcKunKFxNDJGcWT77JnJD1ozU
-	 D9X3tU58XnZ4wGbvJdXpn9ASPfVp8hde5Nv9bl5vJgd5PDSrWEu2n3b/wm4inJ+KH9
-	 wHv16EYMGXy0hfb7/sLJa0DpdqqWUkgMnxtbuycQ=
+	s=default; t=1557427498;
+	bh=Z0f0+ZL3QQynnqexc86HmoG4yQE4cBDUZPRGIe1voHM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UEY+anK6l/YkbFMysn3R9FdCOhZKQCUZimhihrcYwyaXDeH9iD+HSbvbJbeG5VRgK
+	 xnHSq6qzjbcnFACNxV7Qn6DoV5/+ofgxRutIl9T5sPPF6NdF65HOjWzG7CFRii1M45
+	 vxpsoUoO+LP+NsRHmjc9Io7f6GFyDcMDyhN9dwb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfEISoy (ORCPT
+        id S1727203AbfEISo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36424 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbfEISow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:52 -0400
+        id S1727188AbfEISoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631EB217D6;
-        Thu,  9 May 2019 18:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A20217D6;
+        Thu,  9 May 2019 18:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427491;
-        bh=nSpBTyDk2DUiuG8wLuyLlpbmf0GF6juv+6YT6PlGsxw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPwYe0ohKHJO383OEcmzk+Mb0XgnV8mmkvQWso1a6sNjfM75konZSs2U1MnTKeoku
-         yuOSUKUqH62LFa7BmzvPfrQ+6VCMPju+QBDsXZQpi9C2npDo/CMkMZqzFoD3LpWmMQ
-         Jw0aBhB04uHzIypsSCbw3AhdeSouNemNwwwO5FDk=
+        s=default; t=1557427494;
+        bh=Z0f0+ZL3QQynnqexc86HmoG4yQE4cBDUZPRGIe1voHM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lVsu8Zlt/mPQ8Euo2oDX7AKcrvNA7ctqCkpCFjyBTPe5wTY+SgBOYsenWDNkOAu2u
+         3ttz2+0Go2jiDs8/3IdOvoKymtoz5Nlg1IREuWrjnngQDlWGxQF/tWl6vqy12hvsfG
+         lndCwnRS0OqRHBr+H2RgVdC71A1jMrE3hT54qV5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 09/28] drm/mediatek: Fix an error code in mtk_hdmi_dt_parse_pdata()
-Date:   Thu,  9 May 2019 20:42:01 +0200
-Message-Id: <20190509181252.212056811@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/28] 4.9.175-stable review
+Date:   Thu,  9 May 2019 20:41:52 +0200
+Message-Id: <20190509181247.647767531@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
-References: <20190509181247.647767531@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.175-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.175-rc1
+X-KernelTest-Deadline: 2019-05-11T18:12+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d85978341e6a32e7443d9f28639da254d53f400 ]
+This is the start of the stable review cycle for the 4.9.175 release.
+There are 28 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-We don't want to overwrite "ret", it already holds the correct error
-code.  The "regmap" variable might be a valid pointer as this point.
+Responses should be made by Sat 11 May 2019 06:11:12 PM UTC.
+Anything received after that time might be too late.
 
-Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 -
- 1 file changed, 1 deletion(-)
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.175-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 863d030786e52..200f75e1d6198 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1473,7 +1473,6 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	if (IS_ERR(regmap))
- 		ret = PTR_ERR(regmap);
- 	if (ret) {
--		ret = PTR_ERR(regmap);
- 		dev_err(dev,
- 			"Failed to get system configuration registers: %d\n",
- 			ret);
--- 
-2.20.1
+thanks,
 
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.175-rc1
+
+Ben Hutchings <ben@decadent.org.uk>
+    timer/debug: Change /proc/timer_stats from 0644 to 0600
+
+Ross Zwisler <zwisler@chromium.org>
+    ASoC: Intel: avoid Oops if DMA setup fails
+
+Oliver Neukum <oneukum@suse.com>
+    UAS: fix alignment of scatter/gather segments
+
+Marcel Holtmann <marcel@holtmann.org>
+    Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+
+Young Xiao <YangX92@hotmail.com>
+    Bluetooth: hidp: fix buffer overflow
+
+Andrew Vasquez <andrewv@marvell.com>
+    scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+
+Alan Stern <stern@rowland.harvard.edu>
+    usb-storage: Set virt_boundary_mask to avoid SG overflows
+
+Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
+    USB: serial: f81232: fix interrupt worker not stop
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: Fix default lpm_nyet_threshold value
+
+Prasad Sodagudi <psodagud@codeaurora.org>
+    genirq: Prevent use-after-free and work list corruption
+
+Ard Biesheuvel <ard.biesheuvel@linaro.org>
+    ARM: 8680/1: boot/compressed: fix inappropriate Thumb2 mnemonic for __nop
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    mm: add 'try_get_page()' helper function
+
+Joerg Roedel <jroedel@suse.de>
+    iommu/amd: Set exclusion range correctly
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    virtio-blk: limit number of hw queues by nr_cpu_ids
+
+Wen Yang <wen.yang99@zte.com.cn>
+    drm/mediatek: fix possible object reference leak
+
+Varun Prakash <varun@chelsio.com>
+    scsi: csiostor: fix missing data copy in csio_scsi_err_handler()
+
+Max Filippov <jcmvbkbc@gmail.com>
+    xtensa: fix initialization of pt_regs::syscall in start_thread
+
+Jann Horn <jannh@google.com>
+    linux/kernel.h: Use parentheses around argument in u64_to_user_ptr()
+
+Stephane Eranian <eranian@google.com>
+    perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    drm/mediatek: Fix an error code in mtk_hdmi_dt_parse_pdata()
+
+Annaliese McDermond <nh6z@nh6z.net>
+    ASoC: tlv320aic32x4: Fix Common Pins
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Eliminate opcode tests on mr deref
+
+Daniel Mack <daniel@zonque.org>
+    ASoC: cs4270: Set auto-increment bit for register writes
+
+John Hsu <KCHSU0@nuvoton.com>
+    ASoC: nau8810: fix the issue of widget with prefixed name
+
+Rander Wang <rander.wang@linux.intel.com>
+    ASoC:soc-pcm:fix a codec fixup issue in TDM case
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: power_supply: fix prop-descriptor request size
+
+Andrey Ryabinin <aryabinin@virtuozzo.com>
+    ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings
+
+Jason Yan <yanaijie@huawei.com>
+    scsi: libsas: fix a race condition when smp task timeout
+
+
+-------------
+
+Diffstat:
+
+ Makefile                               |  4 +--
+ arch/arm/boot/compressed/efi-header.S  |  3 ++-
+ arch/x86/events/intel/core.c           |  2 +-
+ arch/xtensa/include/asm/processor.h    | 21 ++++++++-------
+ drivers/block/virtio_blk.c             |  2 ++
+ drivers/gpu/drm/mediatek/mtk_hdmi.c    |  2 +-
+ drivers/infiniband/hw/hfi1/rc.c        |  4 +--
+ drivers/iommu/amd_iommu_init.c         |  2 +-
+ drivers/scsi/csiostor/csio_scsi.c      |  5 +++-
+ drivers/scsi/libsas/sas_expander.c     |  9 +++----
+ drivers/scsi/qla2xxx/qla_attr.c        |  4 +--
+ drivers/staging/greybus/power_supply.c |  2 +-
+ drivers/usb/dwc3/core.c                |  2 +-
+ drivers/usb/serial/f81232.c            | 39 +++++++++++++++++++++++++++
+ drivers/usb/storage/scsiglue.c         | 26 +++++++++---------
+ drivers/usb/storage/uas.c              | 35 +++++++++++++++---------
+ include/linux/kernel.h                 |  4 +--
+ include/linux/mm.h                     |  9 +++++++
+ include/net/bluetooth/hci_core.h       |  3 +++
+ kernel/irq/manage.c                    |  4 ++-
+ kernel/time/timer_stats.c              |  2 +-
+ lib/ubsan.c                            | 49 ++++++++++++++++------------------
+ net/bluetooth/hci_conn.c               |  8 ++++++
+ net/bluetooth/hidp/sock.c              |  1 +
+ sound/soc/codecs/cs4270.c              |  1 +
+ sound/soc/codecs/nau8810.c             |  4 +--
+ sound/soc/codecs/tlv320aic32x4.c       |  2 ++
+ sound/soc/intel/common/sst-firmware.c  |  8 ++++--
+ sound/soc/soc-pcm.c                    |  7 +++--
+ 29 files changed, 174 insertions(+), 90 deletions(-)
 
 
