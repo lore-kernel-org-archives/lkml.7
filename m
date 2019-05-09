@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCFEC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A4CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289A420656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552F320656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428283;
-	bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
+	s=default; t=1557428287;
+	bh=g85WHPlSeeNCZmBZ0LD/EXxEDcEyzF+M+UOePGG4gEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jCWnWFxXWHXo8nqJsf6tiqW+PzVSRrWZiGDa4N7UV8Tw5kJSDeL3AsjYCsk6CUsCl
-	 oox57it+Iv6xQoDj7Vq73w1NGs7sy3k9lDG0XG9A23JCuiLNusFvIHPsZqSXs8PCbk
-	 0ZPra/PqrSR60jrvvGYEr+eiYoIJ/t9W6frv4xbg=
+	b=K6f9h+/wIYsV9L4mv4+f7wV1uCzF87SuteZRCV/MfpxB7MTRtRQtWTBGFQkRz5sS5
+	 9qIo+GsHEXshiNsuCdjUt5Xyn4cUn7x9L53eLB19CVHJa0yjWC8ubeHx69ZyziV4nE
+	 KpfczVzI1u5i9N8lbRhvkDNO8FIsTTsoTz7bEljk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfEISxl (ORCPT
+        id S1729157AbfEIS6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:58:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727153AbfEISxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:53:31 -0400
+        id S1728907AbfEISxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:53:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EE6720578;
-        Thu,  9 May 2019 18:53:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D94920578;
+        Thu,  9 May 2019 18:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428010;
-        bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
+        s=default; t=1557428015;
+        bh=g85WHPlSeeNCZmBZ0LD/EXxEDcEyzF+M+UOePGG4gEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmOhlPNf+QgG4zAvxiijzGhojmKNlPquT4ZH/Q/9gUIUYAVSVm5nIDtkuTSZqANl7
-         yHyO22761u8l9hbX+CH1VVTmPbmQJvmdidAwxVSks2o2PcpYEfEmxSPUy9LKVL+KQ6
-         OwHZYf2Ey9T78av+iPyjs10ggzc0KU6XSfSm82ic=
+        b=GPkaMe/EcwJlPPxo2ED6PrO5Z9KpZW8w+9cqTmdt788gfMdQ9cmyISUxP0uSiWjOC
+         mIw8U2rEokFQ1AZ+8TPSKUc79AIylEqUR6Lu9Z6mYlkinwgFTA9MVMr8+sM6iUJDYr
+         x6/ch/cb1ljsQ9dImooFBVLsrT4RrYmoPXakAWwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 5.0 88/95] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
-Date:   Thu,  9 May 2019 20:42:45 +0200
-Message-Id: <20190509181315.406260301@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.0 90/95] Bluetooth: hci_bcm: Fix empty regulator supplies for Intel Macs
+Date:   Thu,  9 May 2019 20:42:47 +0200
+Message-Id: <20190509181315.527130150@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -59,52 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
+commit 62611abc8f37d00e3b0cff0eb2d72fa92b05fd27 upstream.
 
-The minimum encryption key size for LE connections is 56 bits and to
-align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
-BR/EDR connections as well.
+The code path for Macs goes through bcm_apple_get_resources(), which
+skips over the code that sets up the regulator supplies. As a result,
+the call to regulator_bulk_enable() / regulator_bulk_disable() results
+in a NULL pointer dereference.
 
+This was reported on the kernel.org Bugzilla, bug 202963.
+
+Unbreak Broadcom Bluetooth support on Intel Macs by checking if the
+supplies were set up before enabling or disabling them.
+
+The same does not need to be done for the clocks, as the common clock
+framework API checks for NULL pointers.
+
+Fixes: 75d11676dccb ("Bluetooth: hci_bcm: Add support for regulator supplies")
+Cc: <stable@vger.kernel.org> # 5.0.x
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Tested-by: Imre Kaloz <kaloz@openwrt.org>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/bluetooth/hci_core.h |    3 +++
- net/bluetooth/hci_conn.c         |    8 ++++++++
- 2 files changed, 11 insertions(+)
+ drivers/bluetooth/hci_bcm.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -190,6 +190,9 @@ struct adv_info {
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -228,9 +228,15 @@ static int bcm_gpio_set_power(struct bcm
+ 	int err;
  
- #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 	if (powered && !dev->res_enabled) {
+-		err = regulator_bulk_enable(BCM_NUM_SUPPLIES, dev->supplies);
+-		if (err)
+-			return err;
++		/* Intel Macs use bcm_apple_get_resources() and don't
++		 * have regulator supplies configured.
++		 */
++		if (dev->supplies[0].supply) {
++			err = regulator_bulk_enable(BCM_NUM_SUPPLIES,
++						    dev->supplies);
++			if (err)
++				return err;
++		}
  
-+/* Min encryption key size to match with SMP */
-+#define HCI_MIN_ENC_KEY_SIZE		7
+ 		/* LPO clock needs to be 32.768 kHz */
+ 		err = clk_set_rate(dev->lpo_clk, 32768);
+@@ -259,7 +265,13 @@ static int bcm_gpio_set_power(struct bcm
+ 	if (!powered && dev->res_enabled) {
+ 		clk_disable_unprepare(dev->txco_clk);
+ 		clk_disable_unprepare(dev->lpo_clk);
+-		regulator_bulk_disable(BCM_NUM_SUPPLIES, dev->supplies);
 +
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
++		/* Intel Macs use bcm_apple_get_resources() and don't
++		 * have regulator supplies configured.
++		 */
++		if (dev->supplies[0].supply)
++			regulator_bulk_disable(BCM_NUM_SUPPLIES,
++					       dev->supplies);
+ 	}
  
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1276,6 +1276,14 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
- 
-+	/* The minimum encryption key size needs to be enforced by the
-+	 * host stack before establishing any L2CAP connections. The
-+	 * specification in theory allows a minimum of 1, but to align
-+	 * BR/EDR and LE transports, a minimum of 7 is chosen.
-+	 */
-+	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
-+		return 0;
-+
- 	return 1;
- }
- 
+ 	/* wait for device to power on and come out of reset */
 
 
