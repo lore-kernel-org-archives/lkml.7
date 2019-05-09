@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE35C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1763C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21B9217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7447217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427896;
-	bh=TNMM64LqHJWwfNpECzm2lrav3fqNephfWJN/XMD7woA=;
+	s=default; t=1557427901;
+	bh=lJ0C36r+5zsZbM2h3rirBgRczl9F2Y6/33fY0ItqosE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GCSkfZsw+yYVIplBBI5mVTxXogZl+OiJxE02QuXy2ZTdqvyB14lVF5KS6NhbeLFS1
-	 J+KyryfcCqVoRkx9KXW8jm0zegMPT7yjJ6dJR4z0ouBLqSxf9K2U06UVN1Mlstuu0z
-	 5Us0ihrcDPgZoMkxSMWcDVbWJWliUXjdZ2jjKKpI=
+	b=R2bY3g+NZ83+MsRBjXx2O7vscmffb7RNutM/TarByIum0ACV6Pc0H9bXsAOHirVbq
+	 l8ePX6L3UBZLTTsfp4MK0PK38VM/Q6UrQwQjzbYmv5WA3bFm6eip6IFyt3pYfvhjfr
+	 JoLIlI+KapEYlTu7kgP7Y8YCyBbSE0oiB7szDxkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfEISvf (ORCPT
+        id S1728593AbfEISvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:51:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbfEISvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:32 -0400
+        id S1727323AbfEISvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35941217D7;
-        Thu,  9 May 2019 18:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6461F2177E;
+        Thu,  9 May 2019 18:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427891;
-        bh=TNMM64LqHJWwfNpECzm2lrav3fqNephfWJN/XMD7woA=;
+        s=default; t=1557427896;
+        bh=lJ0C36r+5zsZbM2h3rirBgRczl9F2Y6/33fY0ItqosE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bddhUUUYvjOIwrACpgvsuFsqrTDFso+NmnIFGkhRkGRuluFCCUm2SMTMMIM3iMdU8
-         ef6BdDQvNfDzusGw3JXjuaUucvS8/k9F1I9FRliTu6A5UuBADpGsxoHjQaZLkixzZy
-         O7OsFvwF0pvivLR6BtMUYbrs1+UnvNvGwUMnAvDE=
+        b=iMHA7zBrcVPklm1KiOtiou44LqRw5QhQHNv634KInFvIiD9v6FC7mVW+TKrde6blx
+         WoJH7Cdl8HQhWONaqcvfI3U03aZxtB2K2ixxKIN1FUZYufDGH7r+VE80/nyyVkWpBP
+         XoBvpeRX5NGdJmhDqIIOg6Bun4E/nmFam5eA/3ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, shaoyunl <shaoyun.liu@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Tianci Yin <tianci.yin@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 43/95] drm/amdgpu: Adjust IB test timeout for XGMI configuration
-Date:   Thu,  9 May 2019 20:42:00 +0200
-Message-Id: <20190509181312.428756851@linuxfoundation.org>
+Subject: [PATCH 5.0 45/95] drm/amd/display: fix cursor black issue
+Date:   Thu,  9 May 2019 20:42:02 +0200
+Message-Id: <20190509181312.613813762@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -61,39 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4162c61e253177936fcfe6c29f7b224d9a1efb8 ]
+[ Upstream commit c1cefe115d1cdc460014483319d440b2f0d07c68 ]
 
-On XGMI configuration the ib test may take longer to finish
+[Why]
+the member sdr_white_level of struct dc_cursor_attributes was not
+initialized, then the random value result that
+dcn10_set_cursor_sdr_white_level() set error hw_scale value 0x20D9(normal
+value is 0x3c00), this cause the black cursor issue.
 
-Signed-off-by: shaoyunl <shaoyun.liu@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+[how]
+just initilize the obj of struct dc_cursor_attributes to zero to avoid
+the random value.
+
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Tianci Yin <tianci.yin@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-index c48207b377bc5..b82c5fca217b3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-@@ -35,6 +35,7 @@
- #include "amdgpu_trace.h"
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 83c8a0407537b..84ee777869441 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4455,6 +4455,7 @@ static void handle_cursor_update(struct drm_plane *plane,
+ 	amdgpu_crtc->cursor_width = plane->state->crtc_w;
+ 	amdgpu_crtc->cursor_height = plane->state->crtc_h;
  
- #define AMDGPU_IB_TEST_TIMEOUT	msecs_to_jiffies(1000)
-+#define AMDGPU_IB_TEST_GFX_XGMI_TIMEOUT	msecs_to_jiffies(2000)
- 
- /*
-  * IB
-@@ -344,6 +345,8 @@ int amdgpu_ib_ring_tests(struct amdgpu_device *adev)
- 		 * cost waiting for it coming back under RUNTIME only
- 		*/
- 		tmo_gfx = 8 * AMDGPU_IB_TEST_TIMEOUT;
-+	} else if (adev->gmc.xgmi.hive_id) {
-+		tmo_gfx = AMDGPU_IB_TEST_GFX_XGMI_TIMEOUT;
- 	}
- 
- 	for (i = 0; i < adev->num_rings; ++i) {
++	memset(&attributes, 0, sizeof(attributes));
+ 	attributes.address.high_part = upper_32_bits(address);
+ 	attributes.address.low_part  = lower_32_bits(address);
+ 	attributes.width             = plane->state->crtc_w;
 -- 
 2.20.1
 
