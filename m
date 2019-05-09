@@ -2,51 +2,55 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A7DC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43258C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD492183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E3E217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427783;
-	bh=M/WflKJ18bUUTjs4bfqR6PSZ0fvoLlGIFcH8OVmjCno=;
+	s=default; t=1557427787;
+	bh=IDw46fZYrf8Ouu1BoNhchZFD0deoikTUfU2RsJt3vcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2DblbNScoaezvH5A9zlIETT+0fe66ZRxGvt5aGVUTHwcCsZwmpPnPt9Rx6/POXqr
-	 AzHDsng5s9/BthAuB+TB4NaZgsO8l0jHxlh2+XsCFHL28T6K5tCDXQyA5DC2dZZjKm
-	 F/JVNnAE+XEa3seqMLMWPsHwt815fjzQi7OUZFko=
+	b=JyO0FvCjjLHwDESUT7GcRthdCLpy7xQJyUe3Vsj363XCPhw0dQNEy+humz+p0H8S0
+	 C03Twn6e7wSGquXh52NEcqg14M5JeKtBcn28yJMjBbajXAcbCYqCu5KcsoEvZgTrnw
+	 Bj1ix1qg3SlrWOZTXADG/xdZ/SZ28Vs86+MSoYhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfEIStm (ORCPT
+        id S1728313AbfEIStq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42990 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbfEIStj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:49:39 -0400
+        id S1728280AbfEIStk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:49:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123E9217D7;
-        Thu,  9 May 2019 18:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB666217F9;
+        Thu,  9 May 2019 18:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427777;
-        bh=M/WflKJ18bUUTjs4bfqR6PSZ0fvoLlGIFcH8OVmjCno=;
+        s=default; t=1557427780;
+        bh=IDw46fZYrf8Ouu1BoNhchZFD0deoikTUfU2RsJt3vcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZfZWN/fG6Joh2HnUY8ghVf25qpVS8BCVJ1neYj2GRh6QLDbqWsgqSgYz4heY23nHR
-         po9080YJE6jgUrohYdsJFJnDtkqVnTeejZ9dadaJHlBDAc1CXpqOIcoVJWZwyvTvc6
-         VoA07xshY0FKH2QwNyiG8Wf7gQjm4rj3A4RxpNn4=
+        b=KiV8hKEK0450qAMg6vQtSI3v/022Udo4shXBKe0TkamyAVTVfiCZr2CaNHfqp64YX
+         3RimkXynqVTGFI4k/KfMySFzKKoNMIr/lD8q88EhDLwcdBIbmbZ8sGqEskkjt7mKTp
+         4WXaLbh4Is0MM4jeZgrx7tcXCuHnati8ldL1+wy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 66/66] arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
-Date:   Thu,  9 May 2019 20:42:41 +0200
-Message-Id: <20190509181308.288924477@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 47/66] platform/x86: pmc_atom: Drop __initconst on dmi table
+Date:   Thu,  9 May 2019 20:42:22 +0200
+Message-Id: <20190509181306.731505723@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -59,142 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+[ Upstream commit b995dcca7cf12f208cfd95fd9d5768dca7cccec7 ]
 
-commit 03110a5cb2161690ae5ac04994d47ed0cd6cef75 upstream.
+It's used by probe and that isn't an init function. Drop this so that we
+don't get a section mismatch.
 
-Our futex implementation makes use of LDXR/STXR loops to perform atomic
-updates to user memory from atomic context. This can lead to latency
-problems if we end up spinning around the LL/SC sequence at the expense
-of doing something useful.
-
-Rework our futex atomic operations so that we return -EAGAIN if we fail
-to update the futex word after 128 attempts. The core futex code will
-reschedule if necessary and we'll try again later.
-
-Cc: <stable@kernel.org>
-Fixes: 6170a97460db ("arm64: Atomic operations")
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: David Müller <dave.mueller@gmx.ch>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/futex.h |   55 +++++++++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 21 deletions(-)
+ drivers/platform/x86/pmc_atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/futex.h
-+++ b/arch/arm64/include/asm/futex.h
-@@ -23,26 +23,34 @@
- 
- #include <asm/errno.h>
- 
-+#define FUTEX_MAX_LOOPS	128 /* What's the largest number you can think of? */
-+
- #define __futex_atomic_op(insn, ret, oldval, uaddr, tmp, oparg)		\
- do {									\
-+	unsigned int loops = FUTEX_MAX_LOOPS;				\
-+									\
- 	uaccess_enable();						\
- 	asm volatile(							\
- "	prfm	pstl1strm, %2\n"					\
- "1:	ldxr	%w1, %2\n"						\
- 	insn "\n"							\
- "2:	stlxr	%w0, %w3, %2\n"						\
--"	cbnz	%w0, 1b\n"						\
--"	dmb	ish\n"							\
-+"	cbz	%w0, 3f\n"						\
-+"	sub	%w4, %w4, %w0\n"					\
-+"	cbnz	%w4, 1b\n"						\
-+"	mov	%w0, %w7\n"						\
- "3:\n"									\
-+"	dmb	ish\n"							\
- "	.pushsection .fixup,\"ax\"\n"					\
- "	.align	2\n"							\
--"4:	mov	%w0, %w5\n"						\
-+"4:	mov	%w0, %w6\n"						\
- "	b	3b\n"							\
- "	.popsection\n"							\
- 	_ASM_EXTABLE(1b, 4b)						\
- 	_ASM_EXTABLE(2b, 4b)						\
--	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp)	\
--	: "r" (oparg), "Ir" (-EFAULT)					\
-+	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp),	\
-+	  "+r" (loops)							\
-+	: "r" (oparg), "Ir" (-EFAULT), "Ir" (-EAGAIN)			\
- 	: "memory");							\
- 	uaccess_disable();						\
- } while (0)
-@@ -57,23 +65,23 @@ arch_futex_atomic_op_inuser(int op, int
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
--		__futex_atomic_op("mov	%w3, %w4",
-+		__futex_atomic_op("mov	%w3, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	case FUTEX_OP_ADD:
--		__futex_atomic_op("add	%w3, %w1, %w4",
-+		__futex_atomic_op("add	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	case FUTEX_OP_OR:
--		__futex_atomic_op("orr	%w3, %w1, %w4",
-+		__futex_atomic_op("orr	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	case FUTEX_OP_ANDN:
--		__futex_atomic_op("and	%w3, %w1, %w4",
-+		__futex_atomic_op("and	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, ~oparg);
- 		break;
- 	case FUTEX_OP_XOR:
--		__futex_atomic_op("eor	%w3, %w1, %w4",
-+		__futex_atomic_op("eor	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	default:
-@@ -93,6 +101,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
- 			      u32 oldval, u32 newval)
- {
- 	int ret = 0;
-+	unsigned int loops = FUTEX_MAX_LOOPS;
- 	u32 val, tmp;
- 	u32 __user *uaddr;
- 
-@@ -104,20 +113,24 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
- 	asm volatile("// futex_atomic_cmpxchg_inatomic\n"
- "	prfm	pstl1strm, %2\n"
- "1:	ldxr	%w1, %2\n"
--"	sub	%w3, %w1, %w4\n"
--"	cbnz	%w3, 3f\n"
--"2:	stlxr	%w3, %w5, %2\n"
--"	cbnz	%w3, 1b\n"
--"	dmb	ish\n"
-+"	sub	%w3, %w1, %w5\n"
-+"	cbnz	%w3, 4f\n"
-+"2:	stlxr	%w3, %w6, %2\n"
-+"	cbz	%w3, 3f\n"
-+"	sub	%w4, %w4, %w3\n"
-+"	cbnz	%w4, 1b\n"
-+"	mov	%w0, %w8\n"
- "3:\n"
-+"	dmb	ish\n"
-+"4:\n"
- "	.pushsection .fixup,\"ax\"\n"
--"4:	mov	%w0, %w6\n"
--"	b	3b\n"
-+"5:	mov	%w0, %w7\n"
-+"	b	4b\n"
- "	.popsection\n"
--	_ASM_EXTABLE(1b, 4b)
--	_ASM_EXTABLE(2b, 4b)
--	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp)
--	: "r" (oldval), "r" (newval), "Ir" (-EFAULT)
-+	_ASM_EXTABLE(1b, 5b)
-+	_ASM_EXTABLE(2b, 5b)
-+	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp), "+r" (loops)
-+	: "r" (oldval), "r" (newval), "Ir" (-EFAULT), "Ir" (-EAGAIN)
- 	: "memory");
- 	uaccess_disable();
- 
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index eaec2d306481c..c7039f52ad518 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -396,7 +396,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+  * Some systems need one or more of their pmc_plt_clks to be
+  * marked as critical.
+  */
+-static const struct dmi_system_id critclk_systems[] __initconst = {
++static const struct dmi_system_id critclk_systems[] = {
+ 	{
+ 		.ident = "MPL CEC1x",
+ 		.matches = {
+-- 
+2.20.1
+
 
 
