@@ -2,132 +2,86 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FBEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F25C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A63420863
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5A0208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vXF/soVC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCaYi6iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfEIApX (ORCPT
+        id S1726406AbfEIAup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 20:45:23 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:40882 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfEIApW (ORCPT
+        Wed, 8 May 2019 20:50:45 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43041 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfEIAuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 20:45:22 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x490jGOK004911;
-        Thu, 9 May 2019 09:45:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x490jGOK004911
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557362717;
-        bh=Ru+R2ORrPqw7LLrV9WuQHOQEGZCvCvmHZGJp+XgMk80=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vXF/soVCbtpS5f0Tu08V5muuPEeHvpraunn9QJockLtWJ1HvL/wzjYp+CSj6/9pch
-         WeBYDWIwPNnTeCRoGTkTDPZLWWmQyhGn3bhCfe8e+uHudGnI+pxKvtqm5uhZ/x8ses
-         17/rcjIXnxhu2e1TAuLSKKX5sQUU4nrc6g1LNBqVjueIXWBKpDBT5HnS+f0kyxQsQU
-         BVNU+OZgSjia4lB6um9X6+O6xemOH1+ZNSSY2y6ioZLtXNb/13tapxDVN8OLJ+Aytz
-         Wp3zGP+IuiPB4+oUA+sLGI4ZhQZCyd0BqbveQriKtOPBTXV4jeco+kqjLVaMs8WZ21
-         JNmrNDecbXClw==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id d77so152114vke.13;
-        Wed, 08 May 2019 17:45:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAWsxWJkAdF0jEZJFF2HhbGKRTkeeF0Jm3CHQxDwnX4NXevnqko7
-        Dp6oIly23IVYupKzhRxkFX5HR+KfevWG20UQAcg=
-X-Google-Smtp-Source: APXvYqxqigK4Zd4WROweEDNtiX9uCKXTUwALTs0K4eXUT/nrc10Jemy00RvqfCjLTOviHTVQMXpCqR0yXYzUp25OKYE=
-X-Received: by 2002:a1f:d585:: with SMTP id m127mr163317vkg.34.1557362716285;
- Wed, 08 May 2019 17:45:16 -0700 (PDT)
+        Wed, 8 May 2019 20:50:44 -0400
+Received: by mail-qt1-f193.google.com with SMTP id r3so615050qtp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 17:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lKvoil9HNmhPTazHRMwHsi/uN0UT2qVv1DkSDyE5wNI=;
+        b=nCaYi6iHEA7hQ1jIirrfxGV70xswo9YyTlLCCgAFsuHfLf508F5YXDdbB9sIgejKev
+         7veAZxRHNO9B90/XpblNZSADBG/QxxHHZpq4RC5bQ5QM6/dsHKUtjIVHDf4GqAXqxfKn
+         t/JhZqVwkgX+pqxg6IVCeym11pNYAYyn/l2fOs4Mj7KYoQWsrKirufk1pNRNQLl1jE0A
+         LEHdGg0oiRIiV7M6Z2a8i5xFLz6Y7geqSUmlqXd4lercuVt4eTnbVZP69w0wwGBVYvr8
+         OWowW79Y60AHoJxj4flsDRDrgvHa1Tgo+7jlAriOkhzpPPtRlb1xeeRYqFteelzufNU2
+         L6yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lKvoil9HNmhPTazHRMwHsi/uN0UT2qVv1DkSDyE5wNI=;
+        b=h/+yMTN5PhGw9DITiMCW3eudUVkMG9TVW0oEnyJUd7gnWqJwr0TFApbp+GRuB+UWlO
+         8gyvFGpoBeCN0JYVE7/4asvT4J8huLINq5G8ehMmprOLEh7lsX9n3cbXv/vjF0QAfuDH
+         J8G0X4qekHl95z0COWbo4U7UAzRhxpYr68dfIruhHqyx5ZzCDkjLle5U+Xhs+iwhilF9
+         RyZ0rnqHMAc4ecTgUzC8YJpDz5U5zJbDmqEXp+iLr+rILAN1RwzAmcWim8INhN4kbVt3
+         pMLdjUH6IFQmZL7TLbpyvLWJ30KtD2iTlt6zwKwRw1Un5heF6nMzRXDvUr0q4AJUnBak
+         pXnw==
+X-Gm-Message-State: APjAAAWLrdXRKl2hInIpmiI0BQpTikEmAD+FHu14qs6OirmqS/h/oM0j
+        bGwpis/S40UKI39EP7LwttdZTE2yjVXLI8gkHDw=
+X-Google-Smtp-Source: APXvYqxTwsZy+bJni+WylRu8HA3AbMT28j61hBkmVSyWhZAw6QgZwsR168c/rxJwU/kb6sFEQtKl+D4GY2n7S3xKi1k=
+X-Received: by 2002:a0c:8832:: with SMTP id 47mr1062767qvl.88.1557363044051;
+ Wed, 08 May 2019 17:50:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190423204821.241925-1-ndesaulniers@google.com>
- <CAKwvOd=ws1D95ydQjGtK0U0KQ-5poyj8Oek5Yka6-cvtCdpJ-g@mail.gmail.com> <CAKwvOd=tA3-i65B_92QHaJrpEREzBB91QkkqgRANncwfb2d-Kg@mail.gmail.com>
-In-Reply-To: <CAKwvOd=tA3-i65B_92QHaJrpEREzBB91QkkqgRANncwfb2d-Kg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 9 May 2019 09:44:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR80+TxOHUN9cqPB3iHCJcK13HkyMmaVru1wHbe-KfeGQ@mail.gmail.com>
-Message-ID: <CAK7LNAR80+TxOHUN9cqPB3iHCJcK13HkyMmaVru1wHbe-KfeGQ@mail.gmail.com>
-Subject: Re: [PATCH] ia64: require -Wl,--hash-style=sysv
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190506081939.74287-1-duyuyang@gmail.com> <20190508085548.GA2606@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190508085548.GA2606@hirez.programming.kicks-ass.net>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Thu, 9 May 2019 08:50:30 +0800
+Message-ID: <CAHttsrbJ_jHdQnWESXBf6V-fzrUA6WKAKRcdoLOgLsw+qarvig@mail.gmail.com>
+Subject: Re: [PATCH v2 00/23] locking/lockdep: Small improvements
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
+        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 4:27 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+Thank you so much.
+
+On Wed, 8 May 2019 at 16:56, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> bumping for review, as the merge window is now open.
-
-
-ia64 is not very active these days.
-
-I applied this to my kbuild tree.
-I will send PR for this in the current MW.
-
-Thanks.
-
-
-
-
-> On Tue, Apr 30, 2019 at 1:24 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
+> On Mon, May 06, 2019 at 04:19:16PM +0800, Yuyang Du wrote:
+> > Hi Peter,
 > >
-> > On Tue, Apr 23, 2019 at 1:48 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > Towards the goal of removing cc-ldoption, it seems that --hash-style=
-> > > was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-> > > of binutils for the kernel according to
-> > > Documentation/process/changes.rst is 2.20.
-> > >
-> > > Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-> > > Cc: clang-built-linux@googlegroups.com
-> > > Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > ---
-> > >  arch/ia64/kernel/Makefile.gate | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/ia64/kernel/Makefile.gate b/arch/ia64/kernel/Makefile.gate
-> > > index f53faf48b7ce..846867bff6d6 100644
-> > > --- a/arch/ia64/kernel/Makefile.gate
-> > > +++ b/arch/ia64/kernel/Makefile.gate
-> > > @@ -11,7 +11,7 @@ quiet_cmd_gate = GATE    $@
-> > >        cmd_gate = $(CC) -nostdlib $(GATECFLAGS_$(@F)) -Wl,-T,$(filter-out FORCE,$^) -o $@
-> > >
-> > >  GATECFLAGS_gate.so = -shared -s -Wl,-soname=linux-gate.so.1 \
-> > > -                    $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-> > > +                    -Wl,--hash-style=sysv
-> > >  $(obj)/gate.so: $(obj)/gate.lds $(obj)/gate.o FORCE
-> > >         $(call if_changed,gate)
-> > >
-> > > --
-> > > 2.21.0.593.g511ec345e18-goog
-> > >
+> > Let me post these small bits first while waiting for Frederic's patches
+> > to be merged.
 > >
-> > bumping for review
-> >
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
 >
+> They apply nicely and should show up in tip after the merge window
+> closes or thereabout.
 >
->
-> --
-> Thanks,
-> ~Nick Desaulniers
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Thanks!
