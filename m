@@ -4,60 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BDC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A347C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E75320656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E2A20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428767;
-	bh=2kJoZ+cjfSzkpzoetEwzeleoVs2fuDkITfPVv3PmI4M=;
+	s=default; t=1557428773;
+	bh=Ss5X+RIKrkfObLBIwJoE0jZwf0fTuAOXHaRiDfCHvfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPmgoiBPprZDRxeBp4M7/Ve3PSTN/dyS7m0EUCi3FHUaJjsh/ng+jH+D4SO2SyQ7R
-	 F20n8yBboPVyiSbcMGBTyoYuirnGvNzLAh8Lm3NcV7i+DirDPoXCKpQbtXNBpe1ySV
-	 vuZP3ESnR3gkzeRu5ABZJ4ueQLxgS0gvGiWz87gM=
+	b=eud4LdcffrJtzSwEdC1oYI8igXShfLJeT6UQgkqu/Nozhf5lGeOFFIz/yW37GsCUL
+	 /lVKwt2ygqMqSQUCU175puXPBYDf3PpDRpgL/Q+E2eEjROAbiKkEoNodnHBNi3KDZa
+	 80BnmpjQSQKbQ7lbLEdolCDiMXYmhGmCu2H+NmIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfEISrK (ORCPT
+        id S1727384AbfEITGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39556 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727306AbfEISrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:06 -0400
+        id S1727686AbfEISrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88133217F5;
-        Thu,  9 May 2019 18:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FF4B2183E;
+        Thu,  9 May 2019 18:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427626;
-        bh=2kJoZ+cjfSzkpzoetEwzeleoVs2fuDkITfPVv3PmI4M=;
+        s=default; t=1557427623;
+        bh=Ss5X+RIKrkfObLBIwJoE0jZwf0fTuAOXHaRiDfCHvfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUo64gfq81yb3S/PhakiBB8yWGRnRASCr7Iqt0wrJuXQ5eNvUMWbCN4ADUa1wHvMJ
-         05UlK83eHgFb0W5RINaK+pCmUu+1SuZIf5x100R9PoSHRN5xBZy+XGkceGCjbp2PyA
-         xM2RROEty7Dvkxv2RNqoLM9dWQxK519KELLqbxQg=
+        b=t3d6YlFgd4ZYlNlWeFwrcUgeMvtitS83IAheta+l3WE3MKDKn7Sjr/gaVYIl+q1hr
+         hvwNTnG5fJ8+2yR6wAZncjM1cvtinOsAww3QSlfuqZZ5djm3dUVVVwPuSGZmWTj7Gz
+         dt6I+Zj91Vqysdj5Gq7f8dUucPHUsEFm/IzxvoF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chenxiang <chenxiang66@hisilicon.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 02/66] scsi: libsas: fix a race condition when smp task timeout
-Date:   Thu,  9 May 2019 20:41:37 +0200
-Message-Id: <20190509181301.995626693@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.19 01/66] net: stmmac: Use bfsize1 in ndesc_init_rx_desc
+Date:   Thu,  9 May 2019 20:41:36 +0200
+Message-Id: <20190509181301.896150656@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,65 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit b90cd6f2b905905fb42671009dc0e27c310a16ae upstream.
+commit f87db4dbd52f2f8a170a2b51cb0926221ca7c9e2 upstream.
 
-When the lldd is processing the complete sas task in interrupt and set the
-task stat as SAS_TASK_STATE_DONE, the smp timeout timer is able to be
-triggered at the same time. And smp_task_timedout() will complete the task
-wheter the SAS_TASK_STATE_DONE is set or not. Then the sas task may freed
-before lldd end the interrupt process. Thus a use-after-free will happen.
+gcc warn this:
 
-Fix this by calling the complete() only when SAS_TASK_STATE_DONE is not
-set. And remove the check of the return value of the del_timer(). Once the
-LLDD sets DONE, it must call task->done(), which will call
-smp_task_done()->complete() and the task will be completed and freed
-correctly.
+drivers/net/ethernet/stmicro/stmmac/norm_desc.c: In function ndesc_init_rx_desc:
+drivers/net/ethernet/stmicro/stmmac/norm_desc.c:138:6: warning: variable 'bfsize1' set but not used [-Wunused-but-set-variable]
 
-Reported-by: chenxiang <chenxiang66@hisilicon.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Guenter Roeck <linux@roeck-us.net
+Like enh_desc_init_rx_desc, we should use bfsize1
+in ndesc_init_rx_desc to calculate 'p->des1'
+
+Fixes: 583e63614149 ("net: stmmac: use correct DMA buffer size in the RX descriptor")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/libsas/sas_expander.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/norm_desc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -48,17 +48,16 @@ static void smp_task_timedout(struct tim
- 	unsigned long flags;
+--- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+@@ -140,7 +140,7 @@ static void ndesc_init_rx_desc(struct dm
+ 	p->des0 |= cpu_to_le32(RDES0_OWN);
  
- 	spin_lock_irqsave(&task->task_state_lock, flags);
--	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
-+	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
-+		complete(&task->slow_task->completion);
-+	}
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
--
--	complete(&task->slow_task->completion);
- }
+ 	bfsize1 = min(bfsize, BUF_SIZE_2KiB - 1);
+-	p->des1 |= cpu_to_le32(bfsize & RDES1_BUFFER1_SIZE_MASK);
++	p->des1 |= cpu_to_le32(bfsize1 & RDES1_BUFFER1_SIZE_MASK);
  
- static void smp_task_done(struct sas_task *task)
- {
--	if (!del_timer(&task->slow_task->timer))
--		return;
-+	del_timer(&task->slow_task->timer);
- 	complete(&task->slow_task->completion);
- }
- 
+ 	if (mode == STMMAC_CHAIN_MODE)
+ 		ndesc_rx_set_on_chain(p, end);
 
 
