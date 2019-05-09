@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80953C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6016AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589BE2183F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0A121848
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427458;
-	bh=tNjYUTZ1DOGAjleLkG3kpghjYkmPPY5p4WMIEZcqOlI=;
+	s=default; t=1557427463;
+	bh=U9CTq3I/rLV1LufqLJb85uD7bOGN5SH9NgAN5kkw4eE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPDAg6FASVx5SsK+QkuwjWHYcehbyFgQLqvrfF7cdi2pqZSzR1i5Q3NJNACS/7Sdb
-	 AKohlEu26MksPGM4uLdgZXu7ELusD04eO5Sb/A3eLeIVMXeLClgJHyUqD5r4gECZ/p
-	 Ya9SHKVesxL7ELDmBYBHop2T5yovwLjW+gdWBFQU=
+	b=iIPyAfEMezhOyKEpWkqfJjjoKK7HlPQI8Qq+y0JNyV/qJzQdKql4fv14fTpm/6dYO
+	 P575fUERLgWKcYRttr73bPSE7vS+ogeitTNkuQuRsxqTKFxTxT27Q2n9NxQeXdpHL3
+	 /BUpb5gnmGpQKozjEwwL36EJH8lxS8L1dHpiZTg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfEISoR (ORCPT
+        id S1726982AbfEISoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfEISoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:15 -0400
+        id S1726620AbfEISoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81212183E;
-        Thu,  9 May 2019 18:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CA10217D6;
+        Thu,  9 May 2019 18:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427455;
-        bh=tNjYUTZ1DOGAjleLkG3kpghjYkmPPY5p4WMIEZcqOlI=;
+        s=default; t=1557427457;
+        bh=U9CTq3I/rLV1LufqLJb85uD7bOGN5SH9NgAN5kkw4eE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyEf5MGQJCdnJflZts/co78p519k7bNn/ldJJ0WuzhY+IQr5mQ57/TbxgH7FpGLrR
-         HIDt4c3xhg0Lr5CcdF6TQyYBeFPnyNxO0h31KSxqcB8TKgEMqk2OX8JNCLldsfcR1B
-         tjyhAhQt1Y+kjb3FDr5/bKsGIVmoWRagCXAgjRkg=
+        b=tcj1+9/cP3SfpfqoDv55x8ohHY6439IWH/PvMx+Kp8MfQOtWWfSsLkQPEBH3HPoGf
+         55kef1uhXpEbdTH2geBkraLAlTfnX5Sl8j6iOdawiHmjG9tkObN4kMXH6Ak2fnWMwJ
+         nrt/AOoA29wr7TIqGX5/130n7/gk8qelNYJPTVHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>, stable@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/28] mm: add try_get_page() helper function
-Date:   Thu,  9 May 2019 20:42:09 +0200
-Message-Id: <20190509181253.918151808@linuxfoundation.org>
+Subject: [PATCH 4.9 18/28] ARM: 8680/1: boot/compressed: fix inappropriate Thumb2 mnemonic for __nop
+Date:   Thu,  9 May 2019 20:42:10 +0200
+Message-Id: <20190509181254.093026560@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -61,56 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 ]
+[ Upstream commit 60ce2858514ed9ccaf00dc7e9f4dc219537e9855 ]
 
-This is the same as the traditional 'get_page()' function, but instead
-of unconditionally incrementing the reference count of the page, it only
-does so if the count was "safe".  It returns whether the reference count
-was incremented (and is marked __must_check, since the caller obviously
-has to be aware of it).
+Commit 06a4b6d009a1 ("ARM: 8677/1: boot/compressed: fix decompressor
+header layout for v7-M") fixed an issue in the layout of the header
+of the compressed kernel image that was caused by the assembler
+emitting narrow opcodes for 'mov r0, r0', and for this reason, the
+mnemonic was updated to use the W() macro, which will append the .w
+suffix (which forces a wide encoding) if required, i.e., when building
+the kernel in Thumb2 mode.
 
-Also like 'get_page()', you can't use this function unless you already
-had a reference to the page.  The intent is that you can use this
-exactly like get_page(), but in situations where you want to limit the
-maximum reference count.
+However, this failed to take into account that on Thumb2 kernels built
+for CPUs that are also ARM capable, the entry point is entered in ARM
+mode, and so the instructions emitted here will be ARM instructions
+that only exist in a wide encoding to begin with, which is why the
+assembler rejects the .w suffix here and aborts the build with the
+following message:
 
-The code currently does an unconditional WARN_ON_ONCE() if we ever hit
-the reference count issues (either zero or negative), as a notification
-that the conditional non-increment actually happened.
+  head.S: Assembler messages:
+  head.S:132: Error: width suffixes are invalid in ARM mode -- `mov.w r0,r0'
 
-NOTE! The count access for the "safety" check is inherently racy, but
-that doesn't matter since the buffer we use is basically half the range
-of the reference count (ie we look at the sign of the count).
+So replace the W(mov) with separate ARM and Thumb2 instructions, where
+the latter will only be used for THUMB2_ONLY builds.
 
-Acked-by: Matthew Wilcox <willy@infradead.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 06a4b6d009a1 ("ARM: 8677/1: boot/compressed: fix decompressor ...")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/compressed/efi-header.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 11a5a46ce72be..e3c8d40a18b5b 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -777,6 +777,15 @@ static inline void get_page(struct page *page)
- 		get_zone_device_page(page);
- }
+diff --git a/arch/arm/boot/compressed/efi-header.S b/arch/arm/boot/compressed/efi-header.S
+index 3f7d1b74c5e02..a17ca8d78656d 100644
+--- a/arch/arm/boot/compressed/efi-header.S
++++ b/arch/arm/boot/compressed/efi-header.S
+@@ -17,7 +17,8 @@
+ 		@ there.
+ 		.inst	'M' | ('Z' << 8) | (0x1310 << 16)   @ tstne r0, #0x4d000
+ #else
+-		W(mov)	r0, r0
++ AR_CLASS(	mov	r0, r0		)
++  M_CLASS(	nop.w			)
+ #endif
+ 		.endm
  
-+static inline __must_check bool try_get_page(struct page *page)
-+{
-+	page = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
-+		return false;
-+	page_ref_inc(page);
-+	return true;
-+}
-+
- static inline void put_page(struct page *page)
- {
- 	page = compound_head(page);
 -- 
 2.20.1
 
