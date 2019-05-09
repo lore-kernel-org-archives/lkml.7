@@ -2,147 +2,103 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB31DC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCCC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AAD21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdEZRAX/"
+	by mail.kernel.org (Postfix) with ESMTP id B91AC217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557427479;
+	bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yUzWmlJiqOIXi8Zk04e92Zn4qLyvgGUYcriiBZI5CJH1Cz8T5USwNt923KUoOtpWy
+	 FwnclLp7dNSAQ+mIruKXdA05e3Mj+qXBZ7XerAvqxMtXwYSBpuJeD1sEgT8ut+6f9e
+	 DpR4tKj5lmU/gTd1lOSqGg0ozuBjzFDGz+cALtgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfEISoe (ORCPT
+        id S1727090AbfEISoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 9 May 2019 14:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727053AbfEISoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 May 2019 14:44:34 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46947 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfEISoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:30 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a132so2029070qkb.13;
-        Thu, 09 May 2019 11:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jsPKkmhsqJ0aAq9vroFhWsbnGVTGtQicTcthWAQlR0o=;
-        b=LdEZRAX/TJ/k7NmNps9puKYLdyNm3cessNkR2RXfqapZ3k1zJMftD6E+ZLLHkonDD8
-         er8rft+IqnV8aNN6bbU7fysGGnts+wmpRLdQjThOHJZGujYRQ5FAdC0+AreAr3A8sl5s
-         ppNZ5Nt1CckPMLI3iY4/+XKuGB3wwQatMnzXmAkZd8TkjpmXGjIogFqx+zf8s66+qv/a
-         FF9O+iIU7vVFLhNPXo7WpUKwMmGzT5EsahgewAFBN0OZ4sKIE2s9KruO6h8mAQiqlT1Q
-         DOei/Ub5V0TrRauunH3PoTdGvqwPuq1ZYPT02R50Rt5PQf6tNRhMxNsN/gGEZsaN5mpI
-         +vLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jsPKkmhsqJ0aAq9vroFhWsbnGVTGtQicTcthWAQlR0o=;
-        b=TlRuTUTctv+TEUr8Zuc7huQQZkupqGjborl8KEqVVBsApnt5FKCT9F5cOomxW1nr4G
-         Zos29xC963X7Fqr9FaZtUmq38LKfFeX0wUjMADcZTUpEp4/4NDKO9xIlBn8llvLSHMdR
-         uwyIBZ0a2+bPbM0jlVHN7kH/BxoSsl3Cdyvv+ETiEcpyW0pJyPrOcz+AxvhFXdQzNVG/
-         cqBVBok6AdVo7pAaNQz+mDkFB8CP9fq3lRe1zf7lTdC5mp7kV4D2yYPLRGSWRx+eRUyK
-         Gcr79Y48W0s4Xd1dXYb1B0KueLnWnp0eAriIUXFwmW3/viiwghE3mOb278qCO9CihWPX
-         3aMA==
-X-Gm-Message-State: APjAAAV31UAcOJNa/ymT41o/uUPvWOxAA2w81Y2H/0dCBokxjTeAzXr2
-        Vu0Q5prS67CnraH6QO5KdesdUHzxMug=
-X-Google-Smtp-Source: APXvYqxoucIeygzi7jC6N4v37QMotaGcn4FbS9qhFQGd+VyvmmmQQkGW1HfLOasSyFNaz3jyCokjCg==
-X-Received: by 2002:a37:a40e:: with SMTP id n14mr4671379qke.85.1557427468797;
-        Thu, 09 May 2019 11:44:28 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:6268:7a0b:50be:cebc])
-        by smtp.gmail.com with ESMTPSA id 50sm1691080qtq.7.2019.05.09.11.44.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 11:44:28 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
-Date:   Thu,  9 May 2019 11:44:12 -0700
-Message-Id: <20190509184415.11592-3-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190509184415.11592-1-robdclark@gmail.com>
-References: <20190509184415.11592-1-robdclark@gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13F10217D6;
+        Thu,  9 May 2019 18:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557427473;
+        bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zzG4xRsdUvGkJcSCHdYm+SB7DsBsnY3B+B3Z/Cidqh8n/NQ5CnFVYP0IPW0UTLtR6
+         KQLKd3rEtOSDJui2cXAACxXOw2CvlzfQAM1T8Fc6gqI2GNGRgIHCvaRa1r3dHl0mB5
+         XVpPlHw7g2MkaFvGeUJ6U/3zEIFvsusxRBuUHFgA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 23/28] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+Date:   Thu,  9 May 2019 20:42:15 +0200
+Message-Id: <20190509181255.186877923@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
+References: <20190509181247.647767531@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Andrew Vasquez <andrewv@marvell.com>
 
-Let's fixup the reserved memory to re-add the things we deleted in
-("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
-reserved-mem changes") in a way that plays nicely with the new
-upstream definitions.
+commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
+code") incorrectly set 'optrom_region_size' to 'start+size', which can
+overflow option-rom boundaries when 'start' is non-zero.  Continue setting
+optrom_region_size to the proper adjusted value of 'size'.
+
+Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 338c92ddd1c3..8ccbe246dff4 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -156,10 +156,44 @@
- 	};
- };
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -345,7 +345,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
  
-+/*
-+ * Reserved memory changes
-+ *
-+ * Putting this all together (out of order with the rest of the file) to keep
-+ * all modifications to the memory map (from sdm845.dtsi) in one place.
-+ */
-+
-+/*
-+ * Our mpss_region is 8MB bigger than the default one and that conflicts
-+ * with venus_mem and cdsp_mem.
-+ *
-+ * For venus_mem we'll delete and re-create at a different address.
-+ *
-+ * cdsp_mem isn't used on cheza right now so we won't bother re-creating it; but
-+ * that also means we need to delete cdsp_pas.
-+ */
-+/delete-node/ &venus_mem;
-+/delete-node/ &cdsp_mem;
-+/delete-node/ &cdsp_pas;
-+
-+/* Increase the size from 120 MB to 128 MB */
- &mpss_region {
- 	reg = <0 0x8e000000 0 0x8000000>;
- };
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
  
-+/* Increase the size from 2MB to 8MB */
-+&rmtfs_mem {
-+	reg = <0 0x88f00000 0 0x800000>;
-+};
-+
-+/ {
-+	reserved-memory {
-+		venus_mem: memory@96000000 {
-+			reg = <0 0x96000000 0 0x500000>;
-+			no-map;
-+		};
-+	};
-+};
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
--- 
-2.20.1
+ 		ha->optrom_state = QLA_SREADING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+@@ -418,7 +418,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
+ 
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
+ 
+ 		ha->optrom_state = QLA_SWRITING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+
 
