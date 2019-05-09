@@ -2,119 +2,109 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB071C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA6BC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82041216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2097221773
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gb5pAJWK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCiSzQoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfEIPjK (ORCPT
+        id S1726804AbfEIPjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:39:10 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42625 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbfEIPjK (ORCPT
+        Thu, 9 May 2019 11:39:23 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33600 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfEIPjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:39:10 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k9so2219393oig.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 08:39:09 -0700 (PDT)
+        Thu, 9 May 2019 11:39:23 -0400
+Received: by mail-vs1-f66.google.com with SMTP id y6so1720828vsb.0;
+        Thu, 09 May 2019 08:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pRrwlxjj+nqUwQKzCVPQDW+zUXQGGWC5tBHdWs2mPtI=;
-        b=gb5pAJWKRsBwdzipU8w3qhL3oH6jyQ6/SVOIpLg2g1C8IEY9O6GY8vCXM1WJHJDIW4
-         WP6K8wNXsr+CBjsIfqtnAcjSH6rKs03wUQTObwjaVERsPRRKhg9wfTe0fhXkaz5EDoou
-         lRwIwP9dd+KN5OoOzT9u7n4TPwuAU3JDFU4CbyFJ1uvyA3i/drmFY+Hwed25XMXUWDY4
-         ofrdVFM5mTXTJPFIdMXwJqTnoXvbqH/bvIlp9oBQCk+Ll065GA27EQpcr/JKyTayZxCF
-         QVbvdZ13RLA5wJGTaW9nwREVJYRNGKjl5hl3agSy7QY7St/ZlmtPSAOI2OgJ5e+Bszzn
-         BqKA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yd8RkYcSwt5CH746lToN3J7dxLcl9P87HyYsL7ViWQY=;
+        b=FCiSzQoJkd2cwXjtOL7ovFDazzwL9mHcuR2iZx/UnXJT9pvM3vefzQ7noANymRwlC1
+         Bt3c7yLSzPVoq3t7tOroTOidR0w9JyCZqqU0HtMRFRu+ziouU9DQvJZ8QzEQIXgIpNPi
+         L3DwfbQdAxh+boYjL57aB2PtN0foQz5Rl1NYT/ztQLhAM8rbpWoHgxeYfiCpNnMAD9U5
+         u3XxCLfTy+FRxK+mk5bk0w90ELsQ+NVf4YfIPrr1O0KuBpt5PgZmE+PYoiDS9enSpS0y
+         l+dmJAjNeXWXIkODKKjFCZpmwEaUym5zHcCVzPKRLad448LW35UqYbWHjYj3I5b2/A1f
+         S1DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pRrwlxjj+nqUwQKzCVPQDW+zUXQGGWC5tBHdWs2mPtI=;
-        b=Gru4yS2TOPvrHi+V+3auyi/oApEAP/KB8vx0Cm4Azg6JW6IiCsFoHJI7DI/ZIHvAEy
-         eIf79YTLviNe7q/hEMH2fDZWtd5+aSdcEmgg0qrjjm4lz53xVk+NE1olAc6+t7M5oy81
-         IkSt8oS8TmNC7sjTPu+SBUb7vKakqOUXZd+Oul9jSq/RHe/0oGVay4i/sn8qCGv+jk/P
-         Hcu57F2A/NRfQKjDW+c2zatsQg7TCX2wbuh3rOsEx6yEU/t8os8VVd0hBMra1U6cNUJd
-         kfAIcPIDrWHKioAXANJEAyuvzKdbV8qXBUNQ4/d0eCcbc7TvipmRT+Xjszyc5za/DQ+U
-         jQvw==
-X-Gm-Message-State: APjAAAVZ0Ac8yDtGmNv+E2zovBF+iM98BON84IBM3D05+i3HJDQW+Jci
-        UOfDcpsV1EHBoarRHkNJBNpucw==
-X-Google-Smtp-Source: APXvYqzAB/c0Nn91nrkOtM4l2ZUflo45O57TS9/QSjBdu3Wqo1fajxgoMsNWpaoeLq5rUn7ZexZanA==
-X-Received: by 2002:aca:fd47:: with SMTP id b68mr1800995oii.12.1557416349306;
-        Thu, 09 May 2019 08:39:09 -0700 (PDT)
-Received: from brauner.io ([172.56.6.91])
-        by smtp.gmail.com with ESMTPSA id e31sm996126ote.61.2019.05.09.08.39.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 09 May 2019 08:39:08 -0700 (PDT)
-Date:   Thu, 9 May 2019 17:39:04 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] fsopen: use square brackets around "fscontext"
-Message-ID: <20190509153902.tqkoooxtviafrla5@brauner.io>
-References: <20190508152509.13336-1-christian@brauner.io>
- <20190508152509.13336-2-christian@brauner.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yd8RkYcSwt5CH746lToN3J7dxLcl9P87HyYsL7ViWQY=;
+        b=D1qxoX7IEZIUxqKg6sV3XhSuNZ7XJGDi0g1/yBHeqBzeSoAQAppt0PBg1P8Pz/bOAs
+         V1utJ1lIaQsbQvLpLhkRdMgAKmmwd9/Uo2DjudqkKHEsf8y6bl1d065+TLnw+N0kNkX1
+         Lor3/Wg44F9CpbwYN2vOnAWZTI3xfs8N7vruNLU2Js3tQ/wxt6zaZaI/2/dApIdik/8E
+         HsWAOpN/0VxquNWpJfZmZMQl1rpkcrcW1zCTQP94hnD6n2n/eJNdiG7XZUf7h7q7jqTL
+         vTw7FS/56l3leU5DbUjR7WjRV3fZ606Lx5oM964vFxx36s0j7ZCVC2zxnIKFCyrNaJsw
+         s6rQ==
+X-Gm-Message-State: APjAAAVKDZCv7dD7pNEuLuf+T0soGosfj7HSVETFkbCvOMHH8DpcfCak
+        UAg4zVuK2XEl8PNWCjJZ7H7TkucX61dRH/90qUU=
+X-Google-Smtp-Source: APXvYqwTohibUJuLYdL5JMayoegLe/NsHqe3cEirwttrcoCdPnewPhpehYhcNpc+Ijr0lSu8NCtkxTFBC/JKsFj+/lM=
+X-Received: by 2002:a67:f153:: with SMTP id t19mr2504897vsm.148.1557416361757;
+ Thu, 09 May 2019 08:39:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190508152509.13336-2-christian@brauner.io>
-User-Agent: NeoMutt/20180716
+References: <1557252127-11145-1-git-send-email-jcrouse@codeaurora.org> <1557252127-11145-3-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1557252127-11145-3-git-send-email-jcrouse@codeaurora.org>
+From:   =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@gmail.com>
+Date:   Thu, 9 May 2019 08:39:10 -0700
+Message-ID: <CAOeoa-d4tC9VYR_O_Nfrx=hm1Xi4JpsLEDWCibv39CGxsSFt=Q@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v1 2/3] drm/msm: Print all 64 bits of the
+ faulting IOMMU address
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:25:09PM +0200, Christian Brauner wrote:
-> Make the name of the anon inode fd "[fscontext]" instead of "fscontext".
-> This is minor but most core-kernel anon inode fds carry square brackets
-> around their name (cf. [1]). For the sake of consistency lets do the same
+On Tue, May 7, 2019 at 11:02 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> When we move to 64 bit addressing for a5xx and a6xx targets we will start
+> seeing pagefaults at larger addresses so format them appropriately in the
+> log message for easier debugging.
 
-This "(cf. [1])" reference was supposed to point to the list below. But
-since I rewrote the paragraph it can simply be dropped.  Sorry for the
-oversight.
+Yes please, this has confused me more than once.
 
-Christian
+Reviewed-by: Kristian H. Kristensen <hoegsberg@google.com>
 
-> for the mount api:
-> 
-> [eventfd]
-> [eventpoll]
-> [fanotify]
-> [fscontext]
-> [io_uring]
-> [pidfd]
-> [signalfd]
-> [timerfd]
-> [userfaultfd]
-> 
-> Signed-off-by: Christian Brauner <christian@brauner.io>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  fs/fsopen.c | 2 +-
+>
+>  drivers/gpu/drm/msm/msm_iommu.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/fsopen.c b/fs/fsopen.c
-> index a38fa8c616cf..83d0d2001bb2 100644
-> --- a/fs/fsopen.c
-> +++ b/fs/fsopen.c
-> @@ -92,7 +92,7 @@ static int fscontext_create_fd(struct fs_context *fc)
->  {
->  	int fd;
->  
-> -	fd = anon_inode_getfd("fscontext", &fscontext_fops, fc,
-> +	fd = anon_inode_getfd("[fscontext]", &fscontext_fops, fc,
->  			      O_RDWR | O_CLOEXEC);
->  	if (fd < 0)
->  		put_fs_context(fc);
-> -- 
-> 2.21.0
-> 
+>
+> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> index 12bb54c..1926329 100644
+> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> @@ -30,7 +30,7 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+>         struct msm_iommu *iommu = arg;
+>         if (iommu->base.handler)
+>                 return iommu->base.handler(iommu->base.arg, iova, flags);
+> -       pr_warn_ratelimited("*** fault: iova=%08lx, flags=%d\n", iova, flags);
+> +       pr_warn_ratelimited("*** fault: iova=%16lx, flags=%d\n", iova, flags);
+>         return 0;
+>  }
+>
+> --
+> 2.7.4
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
