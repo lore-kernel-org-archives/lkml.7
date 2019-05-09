@@ -2,96 +2,399 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC4FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3797C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454D920578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkBo2kat"
+	by mail.kernel.org (Postfix) with ESMTP id 8947F20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557428155;
+	bh=Wfv9nrCGeWkOdA/O6boT3BGMsJWo/SZ6eeZLUFJFHZM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gmgJj6SXIRg9vOq3dD0e3panBC7heGvxOwUznlpQDafLpyHT+GSxScf1eDIDJ7yKp
+	 SOUuR4oQzFZZmlZc7SMYskPNz7gG4JL0C5PTTw6R7MQkMeGQGASbiRL/b/LW+/+cCX
+	 rm8PwxhRozrXGTbtwy6kW+s+BZQABAKR4blqyJMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbfEISzp (ORCPT
+        id S1729089AbfEISzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:45 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40329 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbfEISzn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:43 -0400
-Received: by mail-yw1-f67.google.com with SMTP id 18so2699857ywe.7;
-        Thu, 09 May 2019 11:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4JFPFXVDH7pJ9CJTfoL2qJ+K7zcKHZ5roJuaHINr0fU=;
-        b=VkBo2kat9T4exVnlUA1bHK14ozicDJbZ7bEF/zNTVnMg+kDzu1jvmAWAkbD0Hyr+kr
-         dxeWekWbRiXvQtRC+ezW0VrSfDxmTqS5rVLLXtgQWs6YYHfDjrGOw0ORNZCkfyho8D/0
-         203ElUp4T/6HItf2fiinS4NkeaOj59/tYEbBnIxv3DOablRikKYSKZ9AMNFo1AwK0TYd
-         5PpgWFvp2hu9+eTd9mO7KKHMNKi1iyp5lnTTyv0b/Ig5nrVmCdnKM2NF0hJgQWFdMrGo
-         cd20NCP8uCgeAlj3PCgBGmHSovzlODFAkM/zwIcAHqiCyKNpBrq6hcLQJDf0fFSmu2Xj
-         pIqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4JFPFXVDH7pJ9CJTfoL2qJ+K7zcKHZ5roJuaHINr0fU=;
-        b=KBYgJ+GCkAyVtQ29NDt4VSVZfiJbwf0RKrs9RQfaMLFot/S3riS1blQt1A+dDCnep9
-         X9N9N5VHEqgBTnIeV3eW9sM0wF7pYkPI41i5lJh8fy8C2SoJPm4GDwtuzgr8lQpuNxuL
-         o39i5HZRLIuJH0IjgRKtpw0FAApNJkZ1KKa9j8Zj/0czkrG+NCtiv9XvKIoBQLqbNDkI
-         pC9dw8uE5eldey/LzFZD0Ld6cpqDHKcyPF4kgnMf8JutyZjrsHuIHKNcbOinqdkeeuvL
-         7lpGnhUpLt95y2hT5X3hCw6wYSJkiSdoLjqMuqOIQ8rgxKxY6lgXVo+jjcWL1Igv7xTK
-         0ozg==
-X-Gm-Message-State: APjAAAW2lHJShkn0Nk0X75pt2lFWjwjrLUQbbzNa4BDwcCqgOk0JEeoI
-        dgk9qu0QwYuGh0akw2lOalkRbA9wmU2mGFP3PR4=
-X-Google-Smtp-Source: APXvYqwNlGdkGWUPsJYGt/hFZGUABwbuzytLt/hWzpG1HIsldhR/35nTAj17XxIPutZ/+XfqJ0/Q/fsLJeS8d5kh4Jk=
-X-Received: by 2002:a0d:d7d0:: with SMTP id z199mr3300615ywd.468.1557428143045;
- Thu, 09 May 2019 11:55:43 -0700 (PDT)
+        Thu, 9 May 2019 14:55:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729011AbfEISzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A11217F9;
+        Thu,  9 May 2019 18:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557428131;
+        bh=Wfv9nrCGeWkOdA/O6boT3BGMsJWo/SZ6eeZLUFJFHZM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DKvlXgkm+K+sh3z7Oxa7j6MyfnXWSU5RTqFskPGtjq/oXAYE8mrGNN0klD2SqVatP
+         Tq3EiQrOU+vBjNJqJIIrzfWli8+py7Os8iaYF7hTuxTNS4rDZD6UUsddkxITtAa/5x
+         HGMCk+nvg4uK9LC4GU4Z5KzO82gZijhtf8cUJBM0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, stable@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 29/30] locking/futex: Allow low-level atomic operations to return -EAGAIN
+Date:   Thu,  9 May 2019 20:43:01 +0200
+Message-Id: <20190509181257.188782248@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
+References: <20190509181250.417203112@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190509181301.719249738@linuxfoundation.org> <20190509181305.327667203@linuxfoundation.org>
-In-Reply-To: <20190509181305.327667203@linuxfoundation.org>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Thu, 9 May 2019 11:55:31 -0700
-Message-ID: <CAMo8Bf+TZ_ptRjDVuKLZ2M6Bjo83ckuvj=6hCpiZ2ufJrnu80A@mail.gmail.com>
-Subject: Re: [PATCH 4.19 32/66] xtensa: fix initialization of pt_regs::syscall
- in start_thread
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Will Deacon <will.deacon@arm.com>
 
-On Thu, May 9, 2019 at 11:48 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> [ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
->
-> New pt_regs should indicate that there's no syscall, not that there's
-> syscall #0. While at it wrap macro body in do/while and parenthesize
-> macro arguments.
->
-> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+commit 6b4f4bc9cb22875f97023984a625386f0c7cc1c0 upstream.
 
-This patch should not be taken to any of the stable trees, except maybe
-5.0.y, because NO_SYSCALL was introduced to arch/xtensa in 5.0.
+Some futex() operations, including FUTEX_WAKE_OP, require the kernel to
+perform an atomic read-modify-write of the futex word via the userspace
+mapping. These operations are implemented by each architecture in
+arch_futex_atomic_op_inuser() and futex_atomic_cmpxchg_inatomic(), which
+are called in atomic context with the relevant hash bucket locks held.
 
-This patch doesn't have any cc:stable tags, I'm curious why was it chosen
-for stable and what can I do to prevent that in the future?
+Although these routines may return -EFAULT in response to a page fault
+generated when accessing userspace, they are expected to succeed (i.e.
+return 0) in all other cases. This poses a problem for architectures
+that do not provide bounded forward progress guarantees or fairness of
+contended atomic operations and can lead to starvation in some cases.
 
--- 
-Thanks.
--- Max
+In these problematic scenarios, we must return back to the core futex
+code so that we can drop the hash bucket locks and reschedule if
+necessary, much like we do in the case of a page fault.
+
+Allow architectures to return -EAGAIN from their implementations of
+arch_futex_atomic_op_inuser() and futex_atomic_cmpxchg_inatomic(), which
+will cause the core futex code to reschedule if necessary and return
+back to the architecture code later on.
+
+Cc: <stable@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/futex.c |  188 +++++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 117 insertions(+), 71 deletions(-)
+
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -1311,13 +1311,15 @@ static int lookup_pi_state(u32 __user *u
+ 
+ static int lock_pi_update_atomic(u32 __user *uaddr, u32 uval, u32 newval)
+ {
++	int err;
+ 	u32 uninitialized_var(curval);
+ 
+ 	if (unlikely(should_fail_futex(true)))
+ 		return -EFAULT;
+ 
+-	if (unlikely(cmpxchg_futex_value_locked(&curval, uaddr, uval, newval)))
+-		return -EFAULT;
++	err = cmpxchg_futex_value_locked(&curval, uaddr, uval, newval);
++	if (unlikely(err))
++		return err;
+ 
+ 	/* If user space value changed, let the caller retry */
+ 	return curval != uval ? -EAGAIN : 0;
+@@ -1502,10 +1504,8 @@ static int wake_futex_pi(u32 __user *uad
+ 	if (unlikely(should_fail_futex(true)))
+ 		ret = -EFAULT;
+ 
+-	if (cmpxchg_futex_value_locked(&curval, uaddr, uval, newval)) {
+-		ret = -EFAULT;
+-
+-	} else if (curval != uval) {
++	ret = cmpxchg_futex_value_locked(&curval, uaddr, uval, newval);
++	if (!ret && (curval != uval)) {
+ 		/*
+ 		 * If a unconditional UNLOCK_PI operation (user space did not
+ 		 * try the TID->0 transition) raced with a waiter setting the
+@@ -1700,32 +1700,32 @@ retry_private:
+ 	double_lock_hb(hb1, hb2);
+ 	op_ret = futex_atomic_op_inuser(op, uaddr2);
+ 	if (unlikely(op_ret < 0)) {
+-
+ 		double_unlock_hb(hb1, hb2);
+ 
+-#ifndef CONFIG_MMU
+-		/*
+-		 * we don't get EFAULT from MMU faults if we don't have an MMU,
+-		 * but we might get them from range checking
+-		 */
+-		ret = op_ret;
+-		goto out_put_keys;
+-#endif
+-
+-		if (unlikely(op_ret != -EFAULT)) {
++		if (!IS_ENABLED(CONFIG_MMU) ||
++		    unlikely(op_ret != -EFAULT && op_ret != -EAGAIN)) {
++			/*
++			 * we don't get EFAULT from MMU faults if we don't have
++			 * an MMU, but we might get them from range checking
++			 */
+ 			ret = op_ret;
+ 			goto out_put_keys;
+ 		}
+ 
+-		ret = fault_in_user_writeable(uaddr2);
+-		if (ret)
+-			goto out_put_keys;
++		if (op_ret == -EFAULT) {
++			ret = fault_in_user_writeable(uaddr2);
++			if (ret)
++				goto out_put_keys;
++		}
+ 
+-		if (!(flags & FLAGS_SHARED))
++		if (!(flags & FLAGS_SHARED)) {
++			cond_resched();
+ 			goto retry_private;
++		}
+ 
+ 		put_futex_key(&key2);
+ 		put_futex_key(&key1);
++		cond_resched();
+ 		goto retry;
+ 	}
+ 
+@@ -2350,7 +2350,7 @@ static int fixup_pi_state_owner(u32 __us
+ 	u32 uval, uninitialized_var(curval), newval;
+ 	struct task_struct *oldowner, *newowner;
+ 	u32 newtid;
+-	int ret;
++	int ret, err = 0;
+ 
+ 	lockdep_assert_held(q->lock_ptr);
+ 
+@@ -2421,14 +2421,17 @@ retry:
+ 	if (!pi_state->owner)
+ 		newtid |= FUTEX_OWNER_DIED;
+ 
+-	if (get_futex_value_locked(&uval, uaddr))
+-		goto handle_fault;
++	err = get_futex_value_locked(&uval, uaddr);
++	if (err)
++		goto handle_err;
+ 
+ 	for (;;) {
+ 		newval = (uval & FUTEX_OWNER_DIED) | newtid;
+ 
+-		if (cmpxchg_futex_value_locked(&curval, uaddr, uval, newval))
+-			goto handle_fault;
++		err = cmpxchg_futex_value_locked(&curval, uaddr, uval, newval);
++		if (err)
++			goto handle_err;
++
+ 		if (curval == uval)
+ 			break;
+ 		uval = curval;
+@@ -2456,23 +2459,37 @@ retry:
+ 	return 0;
+ 
+ 	/*
+-	 * To handle the page fault we need to drop the locks here. That gives
+-	 * the other task (either the highest priority waiter itself or the
+-	 * task which stole the rtmutex) the chance to try the fixup of the
+-	 * pi_state. So once we are back from handling the fault we need to
+-	 * check the pi_state after reacquiring the locks and before trying to
+-	 * do another fixup. When the fixup has been done already we simply
+-	 * return.
++	 * In order to reschedule or handle a page fault, we need to drop the
++	 * locks here. In the case of a fault, this gives the other task
++	 * (either the highest priority waiter itself or the task which stole
++	 * the rtmutex) the chance to try the fixup of the pi_state. So once we
++	 * are back from handling the fault we need to check the pi_state after
++	 * reacquiring the locks and before trying to do another fixup. When
++	 * the fixup has been done already we simply return.
+ 	 *
+ 	 * Note: we hold both hb->lock and pi_mutex->wait_lock. We can safely
+ 	 * drop hb->lock since the caller owns the hb -> futex_q relation.
+ 	 * Dropping the pi_mutex->wait_lock requires the state revalidate.
+ 	 */
+-handle_fault:
++handle_err:
+ 	raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
+ 	spin_unlock(q->lock_ptr);
+ 
+-	ret = fault_in_user_writeable(uaddr);
++	switch (err) {
++	case -EFAULT:
++		ret = fault_in_user_writeable(uaddr);
++		break;
++
++	case -EAGAIN:
++		cond_resched();
++		ret = 0;
++		break;
++
++	default:
++		WARN_ON_ONCE(1);
++		ret = err;
++		break;
++	}
+ 
+ 	spin_lock(q->lock_ptr);
+ 	raw_spin_lock_irq(&pi_state->pi_mutex.wait_lock);
+@@ -3041,10 +3058,8 @@ retry:
+ 		 * A unconditional UNLOCK_PI op raced against a waiter
+ 		 * setting the FUTEX_WAITERS bit. Try again.
+ 		 */
+-		if (ret == -EAGAIN) {
+-			put_futex_key(&key);
+-			goto retry;
+-		}
++		if (ret == -EAGAIN)
++			goto pi_retry;
+ 		/*
+ 		 * wake_futex_pi has detected invalid state. Tell user
+ 		 * space.
+@@ -3059,9 +3074,19 @@ retry:
+ 	 * preserve the WAITERS bit not the OWNER_DIED one. We are the
+ 	 * owner.
+ 	 */
+-	if (cmpxchg_futex_value_locked(&curval, uaddr, uval, 0)) {
++	if ((ret = cmpxchg_futex_value_locked(&curval, uaddr, uval, 0))) {
+ 		spin_unlock(&hb->lock);
+-		goto pi_faulted;
++		switch (ret) {
++		case -EFAULT:
++			goto pi_faulted;
++
++		case -EAGAIN:
++			goto pi_retry;
++
++		default:
++			WARN_ON_ONCE(1);
++			goto out_putkey;
++		}
+ 	}
+ 
+ 	/*
+@@ -3075,6 +3100,11 @@ out_putkey:
+ 	put_futex_key(&key);
+ 	return ret;
+ 
++pi_retry:
++	put_futex_key(&key);
++	cond_resched();
++	goto retry;
++
+ pi_faulted:
+ 	put_futex_key(&key);
+ 
+@@ -3435,6 +3465,7 @@ err_unlock:
+ static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
+ {
+ 	u32 uval, uninitialized_var(nval), mval;
++	int err;
+ 
+ 	/* Futex address must be 32bit aligned */
+ 	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
+@@ -3444,42 +3475,57 @@ retry:
+ 	if (get_user(uval, uaddr))
+ 		return -1;
+ 
+-	if ((uval & FUTEX_TID_MASK) == task_pid_vnr(curr)) {
+-		/*
+-		 * Ok, this dying thread is truly holding a futex
+-		 * of interest. Set the OWNER_DIED bit atomically
+-		 * via cmpxchg, and if the value had FUTEX_WAITERS
+-		 * set, wake up a waiter (if any). (We have to do a
+-		 * futex_wake() even if OWNER_DIED is already set -
+-		 * to handle the rare but possible case of recursive
+-		 * thread-death.) The rest of the cleanup is done in
+-		 * userspace.
+-		 */
+-		mval = (uval & FUTEX_WAITERS) | FUTEX_OWNER_DIED;
+-		/*
+-		 * We are not holding a lock here, but we want to have
+-		 * the pagefault_disable/enable() protection because
+-		 * we want to handle the fault gracefully. If the
+-		 * access fails we try to fault in the futex with R/W
+-		 * verification via get_user_pages. get_user() above
+-		 * does not guarantee R/W access. If that fails we
+-		 * give up and leave the futex locked.
+-		 */
+-		if (cmpxchg_futex_value_locked(&nval, uaddr, uval, mval)) {
++	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
++		return 0;
++
++	/*
++	 * Ok, this dying thread is truly holding a futex
++	 * of interest. Set the OWNER_DIED bit atomically
++	 * via cmpxchg, and if the value had FUTEX_WAITERS
++	 * set, wake up a waiter (if any). (We have to do a
++	 * futex_wake() even if OWNER_DIED is already set -
++	 * to handle the rare but possible case of recursive
++	 * thread-death.) The rest of the cleanup is done in
++	 * userspace.
++	 */
++	mval = (uval & FUTEX_WAITERS) | FUTEX_OWNER_DIED;
++
++	/*
++	 * We are not holding a lock here, but we want to have
++	 * the pagefault_disable/enable() protection because
++	 * we want to handle the fault gracefully. If the
++	 * access fails we try to fault in the futex with R/W
++	 * verification via get_user_pages. get_user() above
++	 * does not guarantee R/W access. If that fails we
++	 * give up and leave the futex locked.
++	 */
++	if ((err = cmpxchg_futex_value_locked(&nval, uaddr, uval, mval))) {
++		switch (err) {
++		case -EFAULT:
+ 			if (fault_in_user_writeable(uaddr))
+ 				return -1;
+ 			goto retry;
+-		}
+-		if (nval != uval)
++
++		case -EAGAIN:
++			cond_resched();
+ 			goto retry;
+ 
+-		/*
+-		 * Wake robust non-PI futexes here. The wakeup of
+-		 * PI futexes happens in exit_pi_state():
+-		 */
+-		if (!pi && (uval & FUTEX_WAITERS))
+-			futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
++		default:
++			WARN_ON_ONCE(1);
++			return err;
++		}
+ 	}
++
++	if (nval != uval)
++		goto retry;
++
++	/*
++	 * Wake robust non-PI futexes here. The wakeup of
++	 * PI futexes happens in exit_pi_state():
++	 */
++	if (!pi && (uval & FUTEX_WAITERS))
++		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
++
+ 	return 0;
+ }
+ 
+
+
