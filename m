@@ -2,110 +2,69 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7C9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35D7C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D44221479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L/7bDbph"
+	by mail.kernel.org (Postfix) with ESMTP id 97F722173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557406302;
+	bh=5Vi+tEKkp9VxJRyFwYeZI7OuxsJj4UPpv65iBZIJ/kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=baHY/IrLynvSyMQ4RshJoNIyK74rwBydUFiHYJsiI/PooNzP6diT3WWwzIqsyRb6j
+	 kVefTlhwlD19y9tRcgOqW6iHm9Y0TQEUq4Sv09Dc7+eqJCgIqM4g24xw/yHuuJKV60
+	 13sx646oSuKSAYvXES6gG4ngbC0E+uca2FpB//84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfEIMvP (ORCPT
+        id S1726694AbfEIMvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:51:15 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58046 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfEIMvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:51:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t0R1VUJJpsY1eusaHX/1WZb8mvW8M0k/0c+bY4+19pk=; b=L/7bDbphkzq4BzbOgQs8HTsnG
-        0GBm3lkiGp7zTZbYCswxeJDVmOkma4KoRHropEotGvYjQmCM0HeoVx2CLF9Bb7pwFjqA/STo9r6ae
-        /Itil4rq6feK6pSNYAe0ubtxQrThrLnz98WNVgF2lUIOWdCAjpkLvvfStCl7pKS4bPfYi5EvfPJgk
-        UaSxkDOVGOK3JEP4VGPEBhjIc7HiFg6PAHRDbJ8e2YZnDrT65kdaER1wIYeYvv4FwjUVm+WGiNyge
-        oHkL+lG6z7Az5XHSODakI72uVu/fzkynhCFKY/eAWGpcqSoxijxkf2ZvIk50xB/LOQiP6wYSfCZQi
-        jgH3gWQkg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOiVu-0003BH-Qz; Thu, 09 May 2019 12:51:07 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 940FB22158200; Thu,  9 May 2019 14:51:05 +0200 (CEST)
-Date:   Thu, 9 May 2019 14:51:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v8 11/16] sched/fair: uclamp: Add uclamp support to
- energy_compute()
-Message-ID: <20190509125105.GU2623@hirez.programming.kicks-ass.net>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-12-patrick.bellasi@arm.com>
+        Thu, 9 May 2019 08:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfEIMvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 08:51:41 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EEA421479;
+        Thu,  9 May 2019 12:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557406300;
+        bh=5Vi+tEKkp9VxJRyFwYeZI7OuxsJj4UPpv65iBZIJ/kU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kbYedNbtek73Ryw7WZTAkNJt5ocKMKYDQTGYb95tyIAircFqXNRLinWK0eKaSnYoI
+         XIHtHXjg26aFPx7LlHijIWlNJIfkxuanMYz8iaJ49YiOWZHRKijrHeOp26SLU+1ITH
+         2c+/lKZDeLPbccYFdVajGF7Wot0rkwUuUDVdcEds=
+Date:   Thu, 9 May 2019 18:21:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4] clk: gcc-qcs404: Add PCIe resets
+Message-ID: <20190509125135.GE16052@vkoul-mobl>
+References: <20190508223922.5609-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402104153.25404-12-patrick.bellasi@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190508223922.5609-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 11:41:47AM +0100, Patrick Bellasi wrote:
-> @@ -6484,11 +6494,29 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
->  		 * it will not appear in its pd list and will not be accounted
->  		 * by compute_energy().
->  		 */
-> -		for_each_cpu_and(cpu, perf_domain_span(pd), cpu_online_mask) {
-> -			util = cpu_util_next(cpu, p, dst_cpu);
-> -			util = schedutil_energy_util(cpu, util);
-> -			max_util = max(util, max_util);
-> -			sum_util += util;
-> +		for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
-> +			util_cfs = cpu_util_next(cpu, p, dst_cpu);
-> +
-> +			/*
-> +			 * Busy time computation: utilization clamping is not
-> +			 * required since the ratio (sum_util / cpu_capacity)
-> +			 * is already enough to scale the EM reported power
-> +			 * consumption at the (eventually clamped) cpu_capacity.
-> +			 */
-> +			sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
-> +						       ENERGY_UTIL, NULL);
-> +
-> +			/*
-> +			 * Performance domain frequency: utilization clamping
-> +			 * must be considered since it affects the selection
-> +			 * of the performance domain frequency.
-> +			 * NOTE: in case RT tasks are running, by default the
-> +			 * FREQUENCY_UTIL's utilization can be max OPP.
-> +			 */
-> +			tsk = cpu == dst_cpu ? p : NULL;
-> +			cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
-> +						      FREQUENCY_UTIL, tsk);
-> +			max_util = max(max_util, cpu_util);
->  		}
+On 08-05-19, 15:39, Bjorn Andersson wrote:
+> Enabling PCIe requires several of the PCIe related resets from GCC, so
+> add them all.
 
-That's a bit unfortunate; having to do both variants here, but I see
-why. Nothing to be done about it I suppose.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
