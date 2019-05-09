@@ -2,98 +2,115 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0F2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F657C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1703217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427639;
-	bh=WE7DH8v4uGIWCVhMwzNdRbqkimb09nk1+twnWPRqxgg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eigsU1a8iDI6Niv6oN9YJIGfOhqbqOXri7JgL2Jdbsx1Od3diwQw/qNREc0GSw/bs
-	 DfnDwga93X+/CgNvaJILRh82OoqsJwiIZY09nVYU0/WqnTCr/b/WO0RKGn7+nVUbvU
-	 ibw1u1Vgo/g4iNtMGA1fom2xbI5wgzXqis4ZOvrw=
+	by mail.kernel.org (Postfix) with ESMTP id E2E98217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfEISrS (ORCPT
+        id S1727811AbfEISrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:47:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46328 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbfEISrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727797AbfEISrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:19 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFC1217F9;
-        Thu,  9 May 2019 18:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427636;
-        bh=WE7DH8v4uGIWCVhMwzNdRbqkimb09nk1+twnWPRqxgg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hq+Wu8uWbSbS9mNkoKHrqEUpRjxDrsfyu7na0jH42aaqlDJXjoQh7CX/EktJ4CjaF
-         1ihQMpf9SgLhUY+V7ywbNj6iY9GAcDkfMfZ46pXyl0PxHY8dZ3i8xV23drr122j4Fz
-         aS2gg72nEDzNbt1QfHpztUBVo0cl6b2bcrZ7ht7M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Christian Gromm <christian.gromm@microchip.com>
-Subject: [PATCH 4.19 06/66] staging: most: cdev: fix chrdev_region leak in mod_exit
-Date:   Thu,  9 May 2019 20:41:41 +0200
-Message-Id: <20190509181302.485638271@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
-References: <20190509181301.719249738@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 60A00308FC5E;
+        Thu,  9 May 2019 18:47:19 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 272014A3;
+        Thu,  9 May 2019 18:47:17 +0000 (UTC)
+Date:   Thu, 9 May 2019 13:47:15 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
+        "brgerst@gmail.com" <brgerst@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>
+Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
+Message-ID: <20190509184715.6y2uzlld4irlm3tw@treble>
+References: <20190318153840.906404905@infradead.org>
+ <20190318155140.058627431@infradead.org>
+ <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
+ <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
+ <20190509090058.6554dc81@gandalf.local.home>
+ <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
+ <20190509142902.08a32f20@gandalf.local.home>
+ <20190509184531.jhinxi2x2pdfaefb@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190509184531.jhinxi2x2pdfaefb@treble>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 09 May 2019 18:47:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suresh Udipi <sudipi@jp.adit-jv.com>
+On Thu, May 09, 2019 at 01:45:31PM -0500, Josh Poimboeuf wrote:
+> On Thu, May 09, 2019 at 02:29:02PM -0400, Steven Rostedt wrote:
+> > On Thu, 9 May 2019 09:51:59 -0700
+> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > 
+> > > On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > >
+> > > > This patch works. Can I get your Signed-off-by for it?  
+> > > 
+> > > Yes. Please write some kind of comprehensible commit log for it, but
+> > 
+> > How's this:
+> > 
+> > "Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
+> > macro converts the conditional to an array index.  This can cause GCC
+> > to create horrible code.  When there are nested ifs, the generated code
+> > uses register values to encode branching decisions.
+> > 
+> > Josh Poimboeuf found that replacing the define "if" macro from using
+> > the condition as an array index and incrementing the branch statics
+> > with an if statement itself, reduced the asm complexity and shrinks the
+> > generated code quite a bit.
+> > 
+> > But this can be simplified even further by replacing the internal if
+> > statement with a ternary operator.
+> > 
+> > Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> 
+> Actually, my original fix already went in:
+> 
+>   37686b1353cf ("tracing: Improve "if" macro code generation")
+> 
+> But it introduced a regression:
+> 
+>   https://lkml.kernel.org/r/201905040509.iqQ2CrOU%lkp@intel.com
+> 
+> which Linus' patch fixes for some reason.
 
-commit af708900e9a48c0aa46070c8a8cdf0608a1d2025 upstream.
+/me curses URL encoding
 
-It looks like v4.18-rc1 commit [0] which upstreams mld-1.8.0
-commit [1] missed to fix the memory leak in mod_exit function.
+https://lkml.kernel.org/r/201905040509.iqQ2CrOU%25lkp@intel.com
 
-Do it now.
-
-[0] aba258b7310167 ("staging: most: cdev: fix chrdev_region leak")
-[1] https://github.com/microchip-ais/linux/commit/a2d8f7ae7ea381
-    ("staging: most: cdev: fix leak for chrdev_region")
-
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Christian Gromm <christian.gromm@microchip.com>
-Fixes: aba258b73101 ("staging: most: cdev: fix chrdev_region leak")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/staging/most/cdev/cdev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/staging/most/cdev/cdev.c
-+++ b/drivers/staging/most/cdev/cdev.c
-@@ -546,7 +546,7 @@ static void __exit mod_exit(void)
- 		destroy_cdev(c);
- 		destroy_channel(c);
- 	}
--	unregister_chrdev_region(comp.devno, 1);
-+	unregister_chrdev_region(comp.devno, CHRDEV_REGION_SIZE);
- 	ida_destroy(&comp.minor_id);
- 	class_destroy(comp.class);
- }
-
-
+-- 
+Josh
