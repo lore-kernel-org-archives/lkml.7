@@ -2,106 +2,240 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C926FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C45AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9758321744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6E02173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPxMF5TI"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y3Eph6wW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfEIIXe (ORCPT
+        id S1726652AbfEIIZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:23:34 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38502 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfEIIXe (ORCPT
+        Thu, 9 May 2019 04:25:19 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49662 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725822AbfEIIZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:23:34 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a64so937637qkg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 01:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EFT1vB8Ia4opzNsYEQvDePR21FiapilD338d0lHR4o8=;
-        b=tPxMF5TIZibttUB0Mg1eZeguPLY+u7Mz5SEb03beeEiPZ9+fkuVNtb5Pn4kjqRKK5f
-         VWotKrLzvjMfdZrChopRkeTBMjTvUud7waprpWWL8KcE07AaM5ZV2vZC1Je/yYSybBZp
-         UvWxt8coxeXlIR2ZDwSZFCqXLaFhMNR1anjHx4j6HjJWDZEpFmfjvbXiYsPVDi23INa+
-         P6v2Htfv3CiLdok1uzZVynGnnejvaiUNE+xUZSr1UYalirC0Biq72ZpGdx51KmluOtvT
-         3ToBxW8gJPGjUxCbxhfrY2cQGrQ4c4bhXsKBqt+qK3VycHKRMGOM7Ic4h6zZnjS1kqGN
-         6IQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EFT1vB8Ia4opzNsYEQvDePR21FiapilD338d0lHR4o8=;
-        b=XAW6+6+CfXQCzCLieR0kvH1Egr5N7vHnK1HYPEsYr4XFClWEOfgfgHFEU0+BF9wSy9
-         ycHpBakwo0v2cMOyMZ977Q7Rq/lZTYppHPVL79fAkdRrKssTRUAFp3Ckc19aWqOYwkmN
-         ICevH2coX9wVZdn+PlnLUeJx8esQ86vr4g6dZyaSEBmcwO5Gcu/G4KfwICVYIIekcCX2
-         U2UqV4JhgkTayePasj9STkXsNNZZ39YxhPFWIJX3PI9dqaLo7looSF+wxmHMyeDCdhc/
-         liuN9kBwMEBzQ6dDAYGN7CNezdVHZk+f4ImAD5ytuRu6+3reSGNyYVmyrE1yys+u1wwo
-         Xayg==
-X-Gm-Message-State: APjAAAVTZBqIGKOwhW+PQRKS/u28HgfT+Acjuv8QovCLArNRlGgirKlY
-        RORynM6TgeguevYW2LXdajisH3kwoma6I3xLMBEW5Xdo
-X-Google-Smtp-Source: APXvYqzNATcpB6ItFy0KqLc9ZTufcZjj7iqnPu0NOYCIEA6Aip7FwxseECZ8wFA4+19//wNpWZE/IFr5+O0/Euiz8zU=
-X-Received: by 2002:a37:620d:: with SMTP id w13mr2119251qkb.131.1557390213283;
- Thu, 09 May 2019 01:23:33 -0700 (PDT)
+        Thu, 9 May 2019 04:25:18 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A2061C00FF;
+        Thu,  9 May 2019 08:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557390321; bh=QpFuzC5ceXosrmcLY4vec6CxMTx1UXydL2qAHJ6XHx4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Y3Eph6wWsOakV82OSBZQ+TZb86vDoabAKUfRFRcpxMwByuuktGkqUcPMueNSOVnX7
+         c14J4mqG+aatKLi1rhITjC1C2i+vuR/g53SMS3GXg1Z/Yf+JM34Krf3Do8dmrkvUH+
+         X8UZwnRuZBpKi+Cmi17gnuF6lDApp4N4pvKdYKZMkCXTSjfUbjAtXW8DFPFS+aFKkr
+         +b93xqc7DeiIJsHXQLy/Lbv0O4w5zwBPh7L12UdAOFTeErVRkMlFYGu33d1QloB6jc
+         7a8HwEveXm1+FPX62XEtcGdtXEk1CJ3bnkTFbiZnqDXTmlWlUgRreYD3uylL6SSM/p
+         srWzlSxM+dgFw==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 8AEFDA02F0;
+        Thu,  9 May 2019 08:25:16 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 9 May 2019 01:25:16 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Thu,
+ 9 May 2019 10:25:14 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next 10/11] net: stmmac: Introduce selftests support
+Thread-Topic: [PATCH net-next 10/11] net: stmmac: Introduce selftests support
+Thread-Index: AQHVBXLbzVq8jQ4wOEqKi4j/REzHDqZh7/UAgACEXjA=
+Date:   Thu, 9 May 2019 08:25:14 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B47AB21@DE02WEMBXB.internal.synopsys.com>
+References: <cover.1557300602.git.joabreu@synopsys.com>
+ <be9099bbf8783b210dc9034a8b82219984f03250.1557300602.git.joabreu@synopsys.com>
+ <20190509022330.GA23758@lunn.ch>
+In-Reply-To: <20190509022330.GA23758@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAPM=9tyFp5LZ6QO1TaDK5jSb5+2SCe3Rjmk0_juVfr-zfspBLg@mail.gmail.com>
- <CAHk-=wg6imuGGw_4d6ywhu=0Kxr+H2S=hHavoDXYjN6o7SqMUg@mail.gmail.com>
-In-Reply-To: <CAHk-=wg6imuGGw_4d6ywhu=0Kxr+H2S=hHavoDXYjN6o7SqMUg@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Thu, 9 May 2019 18:23:21 +1000
-Message-ID: <CAPM=9twww4shPTifuQKOaUMtkKOZWFN1LY=FTLGmXkH-SxFJnw@mail.gmail.com>
-Subject: Re: [git pull] drm for 5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 at 14:45, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Dave,
->
-> On Wed, May 8, 2019 at 8:28 PM Dave Airlie <airlied@gmail.com> wrote:
-> >
-> > This is the main drm pull request for 5.2.
->
-> Thanks. I've merged it, but I got a couple of conflicts with fixes
-> (reverts) to mainline in the meantime.
->
-> The one to the i915 driver you seem to have applied again (after the
-> function was moved and renamed).
->
-> The one to the virtgpu driver, I really don't know if is needed any
-> more. I suspect I completely unnecessarily merged that
-> virtgpu_gem_prime_import_sg_table() function that came in because I
-> decided to do the merge of the revert.
->
-> It's a trivial function that just returns an error, and your tree just
-> leaves it as NULL, and I suspect my merge doesn't hurt, but it also
-> probably doesn't matter.
->
-> So you should check my merge.
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Thu, May 09, 2019 at 03:23:30
+
+> > +static int stmmac_test_eee(struct stmmac_priv *priv)
+> > +{
+> > +	struct stmmac_extra_stats *initial, *final;
+> > +	int timeout =3D 100;
+> > +	int ret;
+> > +
+> > +	ret =3D stmmac_test_loopback(priv);
+> > +	if (ret)
+> > +		goto out_free_final;
+> > +
+> > +	/* We have no traffic in the line so, sooner or later it will go LPI =
+*/
+> > +	while (--timeout) {
+> > +		memcpy(final, &priv->xstats, sizeof(*final));
+> > +
+> > +		if (final->irq_tx_path_in_lpi_mode_n >
+> > +		    initial->irq_tx_path_in_lpi_mode_n)
+> > +			break;
+> > +		msleep(100);
+> > +	}
+> > +
+> > +	if (!timeout) {
+> > +		ret =3D -ETIMEDOUT;
+> > +		goto out_free_final;
+> > +	}
+>=20
+> Retries would be a better name than timeout.
+
+Ok.
+
+>=20
+> Also, 100 * 100 ms seems like a long time.
+
+Ah, yeah. I will adjust to 0.5 or maybe 1 sec max.
+
+>=20
+> > +static int stmmac_filter_check(struct stmmac_priv *priv)
+> > +{
+> > +	if (!(priv->dev->flags & IFF_PROMISC))
+> > +		return 0;
+> > +
+> > +	netdev_warn(priv->dev, "Test can't be run in promiscuous mode!\n");
+> > +	return 1;
+>=20
+> Maybe return EOPNOTSUPP here,
+
+Ok.
+
+>=20
+> > +}
+> > +
+> > +static int stmmac_test_hfilt(struct stmmac_priv *priv)
+> > +{
+> > +	unsigned char gd_addr[ETH_ALEN] =3D {0x01, 0x0c, 0xcd, 0x04, 0x00, 0x=
+00};
+> > +	unsigned char bd_addr[ETH_ALEN] =3D {0x06, 0x07, 0x08, 0x09, 0x0a, 0x=
+0b};
+>=20
+> What does gd and bd mean?
+
+Good and Bad :D
+
+>=20
+> > +	struct stmmac_packet_attrs attr =3D { };
+> > +	int ret;
+> > +
+> > +	if (stmmac_filter_check(priv))
+> > +		return -EOPNOTSUPP;
+>=20
+> and just return the error code from the call.
+>=20
+> > +
+> > +	ret =3D dev_mc_add(priv->dev, gd_addr);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	attr.dst =3D gd_addr;
+> > +
+> > +	/* Shall receive packet */
+> > +	ret =3D __stmmac_test_loopback(priv, &attr);
+> > +	if (ret)
+> > +		goto cleanup;
+> > +
+> > +	attr.dst =3D bd_addr;
+> > +
+> > +	/* Shall NOT receive packet */
+> > +	ret =3D __stmmac_test_loopback(priv, &attr);
+> > +	ret =3D !ret;
+>=20
+> What is this test testing? gd is a multicast, where as bd is not.  I
+> expect the hardware treats multicast different to unicast. So it would
+> make more sense to test two different multicast addresses, one which
+> has been added via dev_mc_addr, and one that has not?
+
+Hmm, yeah makes sense. I will adjust.
+
+>=20
+> > +
+> > +cleanup:
+> > +	dev_mc_del(priv->dev, gd_addr);
+> > +	return ret;
+> > +}
+> > +
+> > +static int stmmac_test_pfilt(struct stmmac_priv *priv)
+> > +{
+> > +	unsigned char gd_addr[ETH_ALEN] =3D {0x01, 0x02, 0x03, 0x04, 0x05, 0x=
+06};
+> > +	unsigned char bd_addr[ETH_ALEN] =3D {0x06, 0x07, 0x08, 0x09, 0x0a, 0x=
+0b};
+> > +	struct stmmac_packet_attrs attr =3D { };
+> > +	int ret;
+> > +
+> > +	if (stmmac_filter_check(priv))
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	ret =3D dev_uc_add(priv->dev, gd_addr);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	attr.dst =3D gd_addr;
+> > +
+> > +	/* Shall receive packet */
+> > +	ret =3D __stmmac_test_loopback(priv, &attr);
+> > +	if (ret)
+> > +		goto cleanup;
+>=20
+> gb is a multicast address. Does dev_uc_add() return an error? If it
+> does not we should not expect it to actually work, since a multicast
+> address should not match a unicast address?
+
+It doesn't return an error and it does calls the set_filter callback in=20
+netdev. I will adjust to use unicast address.
+
+> You also seem to be missing a test for adding a unicast address via
+> dev_uc_add() and receiving packets for that address, but not receiving
+> multicast packets.
+
+Hmm, what if interface was already configured to receive Multicast before=20
+running the tests ?
+
+>=20
+> > +static const struct stmmac_test {
+> > +	char name[ETH_GSTRING_LEN];
+> > +	int lb;
+> > +	int (*fn)(struct stmmac_priv *priv);
+> > +} stmmac_selftests[] =3D {
+> > +	{
+> > +		.name =3D "MAC Loopback         ",
+> > +		.lb =3D STMMAC_LOOPBACK_MAC,
+> > +		.fn =3D stmmac_test_loopback,
+>=20
+> stmmac_test_mac_loopback might be a better name.
+
+Ok.
+
+Thanks for the review!
 
 Thanks,
-
-That explains the "I know I had something else to say" feeling. I did
-a test merge yesterday and then forgot to write the details down.
-
-I had a look and it seems fine, and it's Gerd's code so if he's happy
-with the result.
-
-Dave.
+Jose Miguel Abreu
