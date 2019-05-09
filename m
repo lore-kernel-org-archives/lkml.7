@@ -2,120 +2,95 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22897C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B798AC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA50F20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTNDv5mN"
+	by mail.kernel.org (Postfix) with ESMTP id 78AC5217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557428930;
+	bh=3LGXhU34TF7uaRCjViOO0QMHLQIuPsKntqshfejySY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b6EUXeyh0OM/GQVMDmbmCndigaYw0vnAAaN1FLpYkeCuwwWy4j9w5xiMv6xDF6nT5
+	 f0mplnVIrgHo3FHX5daB3HqitqRGI9mEyi/Ri+bTrUpcbxfwx6DzOymTzAeEd9+1iU
+	 JskFMWyjB2Hsty/Wwg5CJQevpi6DCTKtOXcvJe9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfEISol (ORCPT
+        id S1727348AbfEITIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:44:41 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42575 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbfEISoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:34 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j53so3697054qta.9;
-        Thu, 09 May 2019 11:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gNzbchyS3MYXKFC8vXfjMbKEn2g9EXo8PLmv/XF6OgQ=;
-        b=TTNDv5mNgHh7RhlaXKTRIDiMCPa6fNBk7ERMYokDoBWwODUQ+TgQ0DgBBc6jQ9hBiW
-         kt6oupJUYmACQvepi7F4NWlVZFQQ1CU5J5E4Ool4Rkzbqv4pyHTKg4um54Bd3+Jy7JzD
-         RPOYM68lZ95tHvHm5AmrnElVotyK79ItbT5OzZDrmZQIJpSIDyDGuN/cm+PGnNxe5lle
-         x2lZHA9qTgZ7sXyyW4Lj+sHZKbARxs2wmeGZM6JG+xbbbQN3sVC/9bmNl3vXB5BKWpBG
-         wt1m65ELO48/VHTNQejQVxNoZftYI07HehvNAE0AbR+k2ANdRn7C5CGUAEsQWcYTl0Fa
-         i1sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gNzbchyS3MYXKFC8vXfjMbKEn2g9EXo8PLmv/XF6OgQ=;
-        b=M05cDPHPHFXsYH83jBdvQDTMqcMjPsuWegyyKVnIcblEEnZSYhXhzMmmqh3p43sok9
-         bJCpb1mY13/cdinUwV573hp8/stNd5Pz7gc7BYbkX4UZA8HriMPoV4PW10n2nY4uXr71
-         pWkR2E3G2/E9we2LBck171AmF+m5jqPZVWm/DFgCqHXccsD1hnYCr6GTsJ6A6B1+F4EC
-         tw0HrwaTbr0nrnyKUtbHpnPGwU2NyTVBFOTWRlltgsHbUd+Cd5eQrQlmmsi/8AntSD8k
-         DVDyawg+8QGwHfIeNgGe8Kylw2nbTc3tm/1+Y1SGXNPlJ4Nj7E6acSsE/KrqTa5+AbVe
-         MB2g==
-X-Gm-Message-State: APjAAAUP8ZkMrpWlJUSQfIPu2QbwEHnUlY2A9uGSB+VHOu+iDTDl9q3O
-        7Tj4r96qqoKXmonQMgoZ4My0Ntv52Ck=
-X-Google-Smtp-Source: APXvYqzvkaSup/U+6jlc0XHDqTIZZGZnUdW7Fzk8uuVh2NxC01TyNPoFq3JKeoBV1falQBosMIuPVw==
-X-Received: by 2002:a0c:9ac1:: with SMTP id k1mr4997641qvf.36.1557427473250;
-        Thu, 09 May 2019 11:44:33 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:6268:7a0b:50be:cebc])
-        by smtp.gmail.com with ESMTPSA id e3sm1116133qkn.93.2019.05.09.11.44.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 11:44:32 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC 3/3] arm64: dts: qcom: sdm845-cheza: delete zap-shader
-Date:   Thu,  9 May 2019 11:44:13 -0700
-Message-Id: <20190509184415.11592-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190509184415.11592-1-robdclark@gmail.com>
-References: <20190509184415.11592-1-robdclark@gmail.com>
+        Thu, 9 May 2019 15:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727055AbfEISom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3288217F5;
+        Thu,  9 May 2019 18:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557427481;
+        bh=3LGXhU34TF7uaRCjViOO0QMHLQIuPsKntqshfejySY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fqOLvyePjdo87893nY5X4e25nir/m7C1+jSVsy+k7KV0R6EFrhjOsTjzRQ4li5nvh
+         dvL4cyaHCaHcpSLWsanJxgONIQ0zVqmh4HQARNTEt4FLvDJMvmUjNmDZe1hcMb878K
+         883oarUYGFmKSs6BHo3220EsG33f31z5rQCqW6LU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, John Hsu <KCHSU0@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 05/28] ASoC: nau8810: fix the issue of widget with prefixed name
+Date:   Thu,  9 May 2019 20:41:57 +0200
+Message-Id: <20190509181251.377068930@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
+References: <20190509181247.647767531@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+[ Upstream commit 54d1cf78b0f4ba348a7c7fb8b7d0708d71b6cc8a ]
 
-This is unused on cheza.  Delete the node to get rid of the reserved-
-memory section, and to avoid the driver from attempting to load a zap
-shader that doesn't exist every time it powers up the GPU.
+The driver changes the stream name of DAC and ADC to avoid the issue of
+widget with prefixed name. When the machine adds prefixed name for codec,
+the stream name of DAI may not find the widgets.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/nau8810.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 8ccbe246dff4..28c28517b21a 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -175,6 +175,8 @@
- /delete-node/ &venus_mem;
- /delete-node/ &cdsp_mem;
- /delete-node/ &cdsp_pas;
-+/delete-node/ &zap_shader;
-+/delete-node/ &gpu_mem;
- 
- /* Increase the size from 120 MB to 128 MB */
- &mpss_region {
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b2d9e46c3916..2ea74b58a613 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1989,7 +1989,7 @@
- 
- 			qcom,gmu = <&gmu>;
- 
--			zap-shader {
-+			zap_shader: zap-shader {
- 				memory-region = <&gpu_mem>;
- 			};
- 
+diff --git a/sound/soc/codecs/nau8810.c b/sound/soc/codecs/nau8810.c
+index e45518629968b..2234d0c041657 100644
+--- a/sound/soc/codecs/nau8810.c
++++ b/sound/soc/codecs/nau8810.c
+@@ -414,9 +414,9 @@ static const struct snd_soc_dapm_widget nau8810_dapm_widgets[] = {
+ 	SND_SOC_DAPM_MIXER("Mono Mixer", NAU8810_REG_POWER3,
+ 		NAU8810_MOUTMX_EN_SFT, 0, &nau8810_mono_mixer_controls[0],
+ 		ARRAY_SIZE(nau8810_mono_mixer_controls)),
+-	SND_SOC_DAPM_DAC("DAC", "HiFi Playback", NAU8810_REG_POWER3,
++	SND_SOC_DAPM_DAC("DAC", "Playback", NAU8810_REG_POWER3,
+ 		NAU8810_DAC_EN_SFT, 0),
+-	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", NAU8810_REG_POWER2,
++	SND_SOC_DAPM_ADC("ADC", "Capture", NAU8810_REG_POWER2,
+ 		NAU8810_ADC_EN_SFT, 0),
+ 	SND_SOC_DAPM_PGA("SpkN Out", NAU8810_REG_POWER3,
+ 		NAU8810_NSPK_EN_SFT, 0, NULL, 0),
 -- 
 2.20.1
+
+
 
