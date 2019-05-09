@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA4BC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459D4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601FB217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187C4217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427682;
-	bh=4mFI387IeNJ4MiJZrdLcUmO36LiP/VWMQVImiHpAHgc=;
+	s=default; t=1557427684;
+	bh=e6xqg4Ow/x1yX/utboduXIpg42hiUbk/k2nfCwWgXpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2E0BXhtsfkLAC9Uh64AzdejqZhAyzQfFivEvGRFNS7VGLB8NAV96BSblrHnevTez
-	 VLvXBmjnu/DsAtSClhbv4WxCLXdVL/Ujq3jiBtOXg9IUon5UiKe6qjLDB5MiaELFyV
-	 hCGE7z6dDEKDtWaQjy0oNXNdeYaeCPQmQQLNOYgs=
+	b=ozax/CYluSCXHn6KrPkSuHHnhejfNktSHCJr9XiqjRDq6iSXaKrSdwXNit1xQltvm
+	 XNYJYLu5tLIK/xo2LC62YZL13Qfk+ZjWghAAYn+5RYUjKqvyahCQdH444eiIOdHXJf
+	 q8zt5ScGsUFLIb88Xa0DVd+KUykXEVq+BGRcWdG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfEISsB (ORCPT
+        id S1727938AbfEISsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbfEISrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:55 -0400
+        id S1727925AbfEISsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E1A20578;
-        Thu,  9 May 2019 18:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D3320578;
+        Thu,  9 May 2019 18:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427674;
-        bh=4mFI387IeNJ4MiJZrdLcUmO36LiP/VWMQVImiHpAHgc=;
+        s=default; t=1557427680;
+        bh=e6xqg4Ow/x1yX/utboduXIpg42hiUbk/k2nfCwWgXpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SGnGIKyuk+y4GD8TGDKHD35e+8rjO3x/V5wCCdxpLR69mzTF54+hXD5kQs8N5V9KD
-         96yk6jlnEmU2Hxmh+SBzrKaXcJH1ArkpjuuTsY+VhxNavpYlk3LJ/izdS/Zz7bzo78
-         SkqQrh121uxXBIXcFwzgvn6PmuOK4JBg5n8YZUBg=
+        b=V7CDMBTtM8LXtOG0sM4RopjpRr07oTtKP7HZNSw9ldCoRAXi+1tiKeikgrFHzKZvJ
+         5R7+HinMs4vrxFzdcFWpvncIzqtntKK++NrFsZkPQ5Rn4GdzFmSQ4K+557uinaZhCy
+         vgkkKCH35aOI852daKRJzdcm9TDlDA+UOn5gk97Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/66] ASoC: stm32: sai: fix exposed capabilities in spdif mode
-Date:   Thu,  9 May 2019 20:41:45 +0200
-Message-Id: <20190509181302.985812404@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 29/66] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+Date:   Thu,  9 May 2019 20:42:04 +0200
+Message-Id: <20190509181304.958580335@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,38 +67,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8468192971807c43a80d6e2c41f83141cb7b211 ]
+[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
 
-Change capabilities exposed in SAI S/PDIF mode, to match
-actually supported formats.
-In S/PDIF mode only 32 bits stereo is supported.
+When an event is programmed with attr.wakeup_events=N (N>0), it means
+the caller is interested in getting a user level notification after
+N samples have been recorded in the kernel sampling buffer.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+With precise events on Intel processors, the kernel uses PEBS.
+The kernel tries minimize sampling overhead by verifying
+if the event configuration is compatible with multi-entry PEBS mode.
+If so, the kernel is notified only when the buffer has reached its threshold.
+Other PEBS operates in single-entry mode, the kenrel is notified for each
+PEBS sample.
+
+The problem is that the current implementation look at frequency
+mode and event sample_type but ignores the wakeup_events field. Thus,
+it may not be possible to receive a notification after each precise event.
+
+This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
+is non-zero.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_sai_sub.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index e8df3cc341b5e..2fb2b914e78b4 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -498,6 +498,14 @@ static int stm32_sai_startup(struct snd_pcm_substream *substream,
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3dd204d1dd194..26432ee4590e3 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3068,7 +3068,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
- 	sai->substream = substream;
- 
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		snd_pcm_hw_constraint_mask64(substream->runtime,
-+					     SNDRV_PCM_HW_PARAM_FORMAT,
-+					     SNDRV_PCM_FMTBIT_S32_LE);
-+		snd_pcm_hw_constraint_single(substream->runtime,
-+					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
-+	}
-+
- 	ret = clk_prepare_enable(sai->sai_ck);
- 	if (ret < 0) {
- 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
+ 	if (event->attr.precise_ip) {
+-		if (!event->attr.freq) {
++		if (!(event->attr.freq || event->attr.wakeup_events)) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_large_pebs_flags(event)))
 -- 
 2.20.1
 
