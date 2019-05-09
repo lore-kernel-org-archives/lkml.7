@@ -2,420 +2,132 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC375C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15467C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A964F217D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61B0217D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jXRR9TYq"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="RbR/FmZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfEIRjA (ORCPT
+        id S1726891AbfEIRjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:39:00 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44670 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfEIRi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:38:59 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g18so2844435otj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:38:59 -0700 (PDT)
+        Thu, 9 May 2019 13:39:09 -0400
+Received: from mail-eopbgr700041.outbound.protection.outlook.com ([40.107.70.41]:60162
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726736AbfEIRjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:39:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M0VuxFpeT9DA70XmwW0AmbRmT5GsxrO9BRQcv/Ek49w=;
-        b=jXRR9TYq3+d3jyuw/RgfG2HcJ0Vz9SmXqn06mlMrXGuWUnwlgtUIMnbQvbO5805a1e
-         drEhMAYtD9gCXcLWFvUREi1DRhqNl88mkMXA/eh7neOdxQHJ+MCYdNho1AFukPPGeN6L
-         6GblOrKkQAzN8qToDGpyGFjugBRhE08fsz6loOMsKRvj+PmAJxDtHCd9lLwfZhSS2HGW
-         tn3gVQG265klHR9HUZVPMPYnTxEpEB7f5k+Vpss5r6WiL0MeTvzF7Hhdx3ArIyve+ASX
-         ewT0IA8S4cWtIU21BBr6VN0nPATbl3/3EOwb/wQ3de/f5y6B0wFKspwOGCgk1Gk4RP+L
-         FLWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M0VuxFpeT9DA70XmwW0AmbRmT5GsxrO9BRQcv/Ek49w=;
-        b=EHAK+87ijZsGjvPSIJW+F11d//me+kRkQkRpPX+aikCSMpEHcKnsFdA7Sj4+FYc2iy
-         sLqMzDgiWzrAutQaVSSOPU9Rl77HoO/Hn95SqCr2JFeThElUsG+SMKeVHg1EItAPi2Kb
-         JnPNejvq+o7Gn80MBebHRzB4TVTHSPw+t7U2lSTzsN+24X4wEo0GQV0zKllCo46vJn4k
-         xBD1Q/l9OoKDZSw3vKKYkjPugng2/WO0PcNY8SPod4HnwLcWGphdEuT6QiWCFe9gkYz7
-         oGqSpD56touDbqSOtT8k8xWuC5jWvkb4V4ostxn4r1EeWOJpWkWLpNAKPFEWfI7ecTQu
-         CaKw==
-X-Gm-Message-State: APjAAAVZeL45aLfiu5Y3TgQaLDikbEaGHqX7cqe7vtrbNXh7GdWbEmVE
-        hflmooAStaLgTEcCJ3cEAj9fk9i/c8wlOsiyLT0ibg==
-X-Google-Smtp-Source: APXvYqyubWyHqbFDXiscXJdmsOtAENFPiVrPHmNzeTfVlvr8kdYn9Z/FJJa+YsFyguiWKexehWV8Cog75A4JetNj5ns=
-X-Received: by 2002:a05:6830:14cd:: with SMTP id t13mr3352372otq.25.1557423538487;
- Thu, 09 May 2019 10:38:58 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xgt3Eo6om+aRkbGrjNNACgVS3HMUFsIYY1qHRdQZ4jY=;
+ b=RbR/FmZYwRDq7m+WXbZcABMWFlFof/D6qGxVCaWtfZoWU4XtGGsrxmhEspREAhCZI2M1LGTUI/Yz7AbL/ua6c2N4AxfVGFU1SlE3sHBYgy7ewgGKevpTx07OaWR8S/ye6wUh16TG5jvH5yFbLqw6r+1x4TKubL3TabwSqyZ43sI=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB2649.namprd12.prod.outlook.com (20.176.116.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.15; Thu, 9 May 2019 17:39:06 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::d119:23e5:be33:4ac6]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::d119:23e5:be33:4ac6%2]) with mapi id 15.20.1856.012; Thu, 9 May 2019
+ 17:39:06 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "Graf, Alexander" <graf@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+Subject: Re: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host APIC
+ ID 255
+Thread-Topic: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host
+ APIC ID 255
+Thread-Index: AQHVAbVYshI13bVJeUaA1Du2DOEuS6Zfu3aAgANdToA=
+Date:   Thu, 9 May 2019 17:39:06 +0000
+Message-ID: <da74be11-1278-3b0f-db19-459f2f50e2ad@amd.com>
+References: <1556890631-9561-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <49a27e83-a83e-5d2d-9b11-bb09c15776d2@amazon.com>
+In-Reply-To: <49a27e83-a83e-5d2d-9b11-bb09c15776d2@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
+x-originating-ip: [165.204.77.11]
+x-clientproxiedby: SN6PR04CA0014.namprd04.prod.outlook.com
+ (2603:10b6:805:3e::27) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0e696d50-d3d3-401c-46f9-08d6d4a53bf8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2649;
+x-ms-traffictypediagnostic: DM6PR12MB2649:
+x-microsoft-antispam-prvs: <DM6PR12MB2649C13F25331A86F474A47DF3330@DM6PR12MB2649.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(346002)(136003)(376002)(189003)(199004)(2616005)(64126003)(53546011)(229853002)(6506007)(53936002)(6486002)(7736002)(305945005)(316002)(6436002)(5660300002)(65806001)(65956001)(11346002)(76176011)(476003)(386003)(99286004)(2906002)(66066001)(26005)(65826007)(14444005)(256004)(486006)(186003)(66946007)(102836004)(66446008)(73956011)(66476007)(6512007)(66556008)(64756008)(2201001)(25786009)(52116002)(4326008)(86362001)(81156014)(81166006)(8676002)(54906003)(58126008)(110136005)(8936002)(446003)(31696002)(6116002)(14454004)(478600001)(2501003)(71200400001)(71190400001)(72206003)(36756003)(68736007)(31686004)(3846002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2649;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: t5Py5kj0hAtg21WA3UKDAiRgX9A8HmQrwF2QVHi9baVRAEaw+HDulr50wWPGS+9l1aUwliCJF3/rz9PbNP0BjSeJXiNP37H9/vnhLX6QscEAKmhmdSeTJ5VGHXGbdm0UMV6QNREG61HAlqYAde/BlZGTw4RJEBFaDHeP936OroPti+8CXM3JhRuSPL1iN8ZAEyb2RCWSMj5IMiFbiXhbM8hsz58fXcT5PTtiOWZBrhAfHnVxoC/R0BDrKXPoH4I/eJpOOaKg7VlSZZ87ZMyNOzTi7UDyNComs3Adlwr+/LHkvqWrjcpzYVL2vWwVKaPEcTmBY4YeJCKgyfzonZqpWSscWRw340Y4DWqTJEmXw3NhKO/9++PoPL2A7ILYnjfwaiVppy9MuW7kpguMmlbIfrRPPQc8jSEueCUkegHlLCQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ACBC78EBDC856D41923BEE77CE679440@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-15-brendanhiggins@google.com> <498d42d8-0b8b-6ee4-c0ad-42760a7e89d4@infradead.org>
-In-Reply-To: <498d42d8-0b8b-6ee4-c0ad-42760a7e89d4@infradead.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 9 May 2019 10:38:45 -0700
-Message-ID: <CAFd5g45cd8AmHfmOu=N4y_XcvpjfwT=Z=dUzFqjQKJDr+OByUA@mail.gmail.com>
-Subject: Re: [PATCH v2 14/17] Documentation: kunit: add documentation for KUnit
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e696d50-d3d3-401c-46f9-08d6d4a53bf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 17:39:06.3525
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2649
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi,
->
-> On 5/1/19 4:01 PM, Brendan Higgins wrote:
-> > Add documentation for KUnit, the Linux kernel unit testing framework.
-> > - Add intro and usage guide for KUnit
-> > - Add API reference
-> >
-> > Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
-> >  Documentation/index.rst           |   1 +
-> >  Documentation/kunit/api/index.rst |  16 ++
-> >  Documentation/kunit/api/test.rst  |  15 +
-> >  Documentation/kunit/faq.rst       |  46 +++
-> >  Documentation/kunit/index.rst     |  80 ++++++
-> >  Documentation/kunit/start.rst     | 180 ++++++++++++
-> >  Documentation/kunit/usage.rst     | 447 ++++++++++++++++++++++++++++++
-> >  7 files changed, 785 insertions(+)
-> >  create mode 100644 Documentation/kunit/api/index.rst
-> >  create mode 100644 Documentation/kunit/api/test.rst
-> >  create mode 100644 Documentation/kunit/faq.rst
-> >  create mode 100644 Documentation/kunit/index.rst
-> >  create mode 100644 Documentation/kunit/start.rst
-> >  create mode 100644 Documentation/kunit/usage.rst
-> >
->
-> > diff --git a/Documentation/kunit/api/index.rst b/Documentation/kunit/api/index.rst
-> > new file mode 100644
-> > index 0000000000000..c31c530088153
-> > --- /dev/null
-> > +++ b/Documentation/kunit/api/index.rst
-> > @@ -0,0 +1,16 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=============
-> > +API Reference
-> > +=============
-> > +.. toctree::
-> > +
-> > +     test
-> > +
-> > +This section documents the KUnit kernel testing API. It is divided into 3
-> > +sections:
-> > +
-> > +================================= ==============================================
-> > +:doc:`test`                       documents all of the standard testing API
-> > +                                  excluding mocking or mocking related features.
-> > +================================= ==============================================
->
-> What 3 sections does the above refer to?  seems to be missing.
-
-Whoops, that references documentation added in a later patch (not
-included in this patchset). Thanks for pointing this out, will fix in
-next revision.
-
-> > diff --git a/Documentation/kunit/start.rst b/Documentation/kunit/start.rst
-> > new file mode 100644
-> > index 0000000000000..5cdba5091905e
-> > --- /dev/null
-> > +++ b/Documentation/kunit/start.rst
-> > @@ -0,0 +1,180 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +===============
-> > +Getting Started
-> > +===============
-> > +
-> > +Installing dependencies
-> > +=======================
-> > +KUnit has the same dependencies as the Linux kernel. As long as you can build
-> > +the kernel, you can run KUnit.
-> > +
-> > +KUnit Wrapper
-> > +=============
-> > +Included with KUnit is a simple Python wrapper that helps format the output to
-> > +easily use and read KUnit output. It handles building and running the kernel, as
-> > +well as formatting the output.
-> > +
-> > +The wrapper can be run with:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +   ./tools/testing/kunit/kunit.py
-> > +
-> > +Creating a kunitconfig
-> > +======================
-> > +The Python script is a thin wrapper around Kbuild as such, it needs to be
->
->                                        around Kbuild. As such,
->
-> > +configured with a ``kunitconfig`` file. This file essentially contains the
-> > +regular Kernel config, with the specific test targets as well.
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
-> > +     cd $PATH_TO_LINUX_REPO
-> > +     ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
-> > +
-> > +You may want to add kunitconfig to your local gitignore.
-> > +
-> > +Verifying KUnit Works
-> > +-------------------------
->
-> I would expect Sphinx to complain about the underline length not being the
-> same as the header/title above it.
-
-Hmmm...I am pretty sure it wasn't complaining to me, but that might
-just be because I didn't build with the right verbosity options or
-something.
-
-My experience mostly comes from Markdown which doesn't care about this.
-
-In any case, after some random spot checks it looks like everyone else
-uniformly keeps the line under sections to be the same length. So it
-looks like I need to fix this regardless.
-
-Will fix in the next revision. Thanks for pointing this out!
-
-> > +
-> > +To make sure that everything is set up correctly, simply invoke the Python
-> > +wrapper from your kernel repo:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     ./tools/testing/kunit/kunit.py
-> > +
-> > +.. note::
-> > +   You may want to run ``make mrproper`` first.
-> > +
-> > +If everything worked correctly, you should see the following:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     Generating .config ...
-> > +     Building KUnit Kernel ...
-> > +     Starting KUnit Kernel ...
-> > +
-> > +followed by a list of tests that are run. All of them should be passing.
-> > +
-> > +.. note::
-> > +   Because it is building a lot of sources for the first time, the ``Building
-> > +   kunit kernel`` step may take a while.
-> > +
-> > +Writing your first test
-> > +==========================
->
-> underline length warning?
->
-> > +
-> > +In your kernel repo let's add some code that we can test. Create a file
-> > +``drivers/misc/example.h`` with the contents:
-> > +
-> > +.. code-block:: c
-> > +
-> > +     int misc_example_add(int left, int right);
-> > +
-> > +create a file ``drivers/misc/example.c``:
-> > +
-> > +.. code-block:: c
-> > +
-> > +     #include <linux/errno.h>
-> > +
-> > +     #include "example.h"
-> > +
-> > +     int misc_example_add(int left, int right)
-> > +     {
-> > +             return left + right;
-> > +     }
-> > +
-> > +Now add the following lines to ``drivers/misc/Kconfig``:
-> > +
-> > +.. code-block:: kconfig
-> > +
-> > +     config MISC_EXAMPLE
-> > +             bool "My example"
-> > +
-> > +and the following lines to ``drivers/misc/Makefile``:
-> > +
-> > +.. code-block:: make
-> > +
-> > +     obj-$(CONFIG_MISC_EXAMPLE) += example.o
-> > +
-> > +Now we are ready to write the test. The test will be in
-> > +``drivers/misc/example-test.c``:
-> > +
-> > +.. code-block:: c
-> > +
-> > +     #include <kunit/test.h>
-> > +     #include "example.h"
-> > +
-> > +     /* Define the test cases. */
-> > +
-> > +     static void misc_example_add_test_basic(struct kunit *test)
-> > +     {
-> > +             KUNIT_EXPECT_EQ(test, 1, misc_example_add(1, 0));
-> > +             KUNIT_EXPECT_EQ(test, 2, misc_example_add(1, 1));
-> > +             KUNIT_EXPECT_EQ(test, 0, misc_example_add(-1, 1));
-> > +             KUNIT_EXPECT_EQ(test, INT_MAX, misc_example_add(0, INT_MAX));
-> > +             KUNIT_EXPECT_EQ(test, -1, misc_example_add(INT_MAX, INT_MIN));
-> > +     }
-> > +
-> > +     static void misc_example_test_failure(struct kunit *test)
-> > +     {
-> > +             KUNIT_FAIL(test, "This test never passes.");
-> > +     }
-> > +
-> > +     static struct kunit_case misc_example_test_cases[] = {
-> > +             KUNIT_CASE(misc_example_add_test_basic),
-> > +             KUNIT_CASE(misc_example_test_failure),
-> > +             {},
-> > +     };
-> > +
-> > +     static struct kunit_module misc_example_test_module = {
-> > +             .name = "misc-example",
-> > +             .test_cases = misc_example_test_cases,
-> > +     };
-> > +     module_test(misc_example_test_module);
-> > +
-> > +Now add the following to ``drivers/misc/Kconfig``:
-> > +
-> > +.. code-block:: kconfig
-> > +
-> > +     config MISC_EXAMPLE_TEST
-> > +             bool "Test for my example"
-> > +             depends on MISC_EXAMPLE && KUNIT
-> > +
-> > +and the following to ``drivers/misc/Makefile``:
-> > +
-> > +.. code-block:: make
-> > +
-> > +     obj-$(CONFIG_MISC_EXAMPLE_TEST) += example-test.o
-> > +
-> > +Now add it to your ``kunitconfig``:
-> > +
-> > +.. code-block:: none
-> > +
-> > +     CONFIG_MISC_EXAMPLE=y
-> > +     CONFIG_MISC_EXAMPLE_TEST=y
-> > +
-> > +Now you can run the test:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     ./tools/testing/kunit/kunit.py
-> > +
-> > +You should see the following failure:
-> > +
-> > +.. code-block:: none
-> > +
-> > +     ...
-> > +     [16:08:57] [PASSED] misc-example:misc_example_add_test_basic
-> > +     [16:08:57] [FAILED] misc-example:misc_example_test_failure
-> > +     [16:08:57] EXPECTATION FAILED at drivers/misc/example-test.c:17
-> > +     [16:08:57]      This test never passes.
-> > +     ...
-> > +
-> > +Congrats! You just wrote your first KUnit test!
-> > +
-> > +Next Steps
-> > +=============
->
-> underline length warning. (?)
->
-> > +*   Check out the :doc:`usage` page for a more
-> > +    in-depth explanation of KUnit.
-> > diff --git a/Documentation/kunit/usage.rst b/Documentation/kunit/usage.rst
-> > new file mode 100644
-> > index 0000000000000..5c83ea9e21bc5
-> > --- /dev/null
-> > +++ b/Documentation/kunit/usage.rst
-> > @@ -0,0 +1,447 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=============
-> > +Using KUnit
-> > +=============
->
-> over/underline length warnings?
->
-> > +
-> > +The purpose of this document is to describe what KUnit is, how it works, how it
-> > +is intended to be used, and all the concepts and terminology that are needed to
-> > +understand it. This guide assumes a working knowledge of the Linux kernel and
-> > +some basic knowledge of testing.
-> > +
-> > +For a high level introduction to KUnit, including setting up KUnit for your
-> > +project, see :doc:`start`.
-> > +
-> > +Organization of this document
-> > +=================================
->
-> underline length?  (and more below, but not being marked)
->
-> > +
-> > +This document is organized into two main sections: Testing and Isolating
-> > +Behavior. The first covers what a unit test is and how to use KUnit to write
-> > +them. The second covers how to use KUnit to isolate code and make it possible
-> > +to unit test code that was otherwise un-unit-testable.
-> > +
-> > +Testing
-> > +==========
-> > +
-> > +What is KUnit?
-> > +------------------
-> > +
-> > +"K" is short for "kernel" so "KUnit" is the "(Linux) Kernel Unit Testing
-> > +Framework." KUnit is intended first and foremost for writing unit tests; it is
-> > +general enough that it can be used to write integration tests; however, this is
-> > +a secondary goal. KUnit has no ambition of being the only testing framework for
-> > +the kernel; for example, it does not intend to be an end-to-end testing
-> > +framework.
-> > +
-> > +What is Unit Testing?
-> > +-------------------------
-
-Thanks!
+QWxleCwNCg0KT24gNS83LzE5IDk6MTYgQU0sIEdyYWYsIEFsZXhhbmRlciB3cm90ZToNCj4gW0NB
+VVRJT046IEV4dGVybmFsIEVtYWlsXQ0KPiANCj4gT24gMDMuMDUuMTkgMTU6MzcsIFN1dGhpa3Vs
+cGFuaXQsIFN1cmF2ZWUgd3JvdGU6DQo+PiBDdXJyZW50IGxvZ2ljIGRvZXMgbm90IGFsbG93IFZD
+UFUgdG8gYmUgbG9hZGVkIG9udG8gQ1BVIHdpdGgNCj4+IEFQSUMgSUQgMjU1LiBUaGlzIHNob3Vs
+ZCBiZSBhbGxvd2VkIHNpbmNlIHRoZSBob3N0IHBoeXNpY2FsIEFQSUMgSUQNCj4+IGZpZWxkIGlu
+IHRoZSBBVklDIFBoeXNpY2FsIEFQSUMgdGFibGUgZW50cnkgaXMgYW4gOC1iaXQgdmFsdWUsDQo+
+PiBhbmQgQVBJQyBJRCAyNTUgaXMgdmFsaWQgaW4gc3lzdGVtIHdpdGggeDJBUElDIGVuYWJsZWQu
+DQo+Pg0KPj4gSW5zdGVhZCwgZG8gbm90IGFsbG93IFZDUFUgbG9hZCBpZiB0aGUgaG9zdCBBUElD
+IElEIGNhbm5vdCBiZQ0KPj4gcmVwcmVzZW50ZWQgYnkgYW4gOC1iaXQgdmFsdWUuDQo+Pg0KPj4g
+U2lnbmVkLW9mZi1ieTogU3VyYXZlZSBTdXRoaWt1bHBhbml0IDxzdXJhdmVlLnN1dGhpa3VscGFu
+aXRAYW1kLmNvbT4NCj4gDQo+IFlvdXIgY29tbWVudCBmb3IgQVZJQ19NQVhfUEhZU0lDQUxfSURf
+Q09VTlQgc2F5cyB0aGF0IDB4ZmYgKDI1NSkgaXMNCj4gYnJvYWRjYXN0IGhlbmNlIHlvdSBkaXNh
+bGxvdyB0aGF0IHZhbHVlLiBJbiBmYWN0LCBldmVuIHRoZSBjb21tZW50IGEgZmV3DQo+IGxpbmVz
+IGFib3ZlIHRoZSBwYXRjaCBodW5rIGRvZXMgc2F5IHRoYXQuIFdoeSB0aGUgY2hhbmdlIG9mIG1p
+bmQ/DQoNCkFjdHVhbGx5LCBJIHdvdWxkIG5lZWQgdG8gbWFrZSBjaGFuZ2UgdG8gdGhhdCBjb21t
+ZW50IHRvIHJlbW92ZSB0aGUgbWVudGlvbmluZw0Kb2YgMjU1IGFzIGJyb2FkY2FzdC4gSSB3aWxs
+IHNlbmQgb3V0IFYyIHdpdGggcHJvcGVyIGNvbW1lbnQgZml4Lg0KDQpUaGUgcmVhc29uIGlzIGJl
+Y2F1c2Ugb24gc3lzdGVtIHcvIHgyQVBJQywgdGhlIEFQSUMgSUQgMjU1IGlzIGFjdHVhbGx5DQpu
+b24tYnJvYWRjYXN0LCBhbmQgdGhpcyBzaG91bGQgYmUgYWxsb3dlZC4gVGhlIGNvZGUgaGVyZSBz
+aG91bGQgbm90IG5lZWQNCnRvIGNoZWNrIGZvciBicm9hZGNhc3QuDQoNClRoYW5rcywNClN1cmF2
+ZWUNCg0KPiBBbGV4DQo+IA0KPj4gLS0tDQo+PiDCoCBhcmNoL3g4Ni9rdm0vc3ZtLmMgfCA2ICsr
+KysrLQ0KPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vc3ZtLmMgYi9hcmNoL3g4Ni9rdm0v
+c3ZtLmMNCj4+IGluZGV4IDI5NDQ0OGUuLjEyMjc4OGYgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4
+Ni9rdm0vc3ZtLmMNCj4+ICsrKyBiL2FyY2gveDg2L2t2bS9zdm0uYw0KPj4gQEAgLTIwNzEsNyAr
+MjA3MSwxMSBAQCBzdGF0aWMgdm9pZCBhdmljX3ZjcHVfbG9hZChzdHJ1Y3Qga3ZtX3ZjcHUgKnZj
+cHUsIGludCBjcHUpDQo+PiDCoMKgwqDCoMKgIGlmICgha3ZtX3ZjcHVfYXBpY3ZfYWN0aXZlKHZj
+cHUpKQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuOw0KPj4NCj4+IC3CoMKg
+wqDCoCBpZiAoV0FSTl9PTihoX3BoeXNpY2FsX2lkID49IEFWSUNfTUFYX1BIWVNJQ0FMX0lEX0NP
+VU5UKSkNCj4+ICvCoMKgwqDCoCAvKg0KPj4gK8KgwqDCoMKgwqAgKiBTaW5jZSB0aGUgaG9zdCBw
+aHlzaWNhbCBBUElDIGlkIGlzIDggYml0cywNCj4+ICvCoMKgwqDCoMKgICogd2UgY2FuIHN1cHBv
+cnQgaG9zdCBBUElDIElEIHVwdG8gMjU1Lg0KPj4gK8KgwqDCoMKgwqAgKi8NCj4+ICvCoMKgwqDC
+oCBpZiAoV0FSTl9PTihoX3BoeXNpY2FsX2lkID4gQVZJQ19NQVhfUEhZU0lDQUxfSURfQ09VTlQp
+KQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuOw0KPj4NCj4+IMKgwqDCoMKg
+wqAgZW50cnkgPSBSRUFEX09OQ0UoKihzdm0tPmF2aWNfcGh5c2ljYWxfaWRfY2FjaGUpKTsNCj4+
+DQo+IA0K
