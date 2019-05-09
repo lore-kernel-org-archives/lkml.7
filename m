@@ -2,147 +2,148 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C3AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846EEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87BC21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557391439;
-	bh=j1YnXyjICPhbLslCFd7x0HibtkN89AY+RtNaWmJfcMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RwDJUtRsyzqt9KK9rnoQeTRGOPH1mqDF2yCQpO7Vqmh++vRanTzGu9ITW4DaupCmU
-	 D9eQrXALe5bM7U8eZg7WVg478G784MV8+eD23xrXTtJVqnoZHMMXFSFpTFkqgM+x+w
-	 zv4pYbcaJmtR2bqd6nNpYUEHFW6WogRyc8NYCHrI=
+	by mail.kernel.org (Postfix) with ESMTP id 5347921479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfEIIn6 (ORCPT
+        id S1726650AbfEIIou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:43:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50508 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfEIIn6 (ORCPT
+        Thu, 9 May 2019 04:44:50 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:49599 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725821AbfEIIot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:43:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y17so1187681wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 01:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b8KF4mdAGxKEusWlC4USzdTdaf7B1lwWHoLhbn/+MSc=;
-        b=QWp3vbz6LQ0TQFBfNDWHqVxk84FoMnhzjM5MNhxDlvmpF58WJ+2QeFC7YWtOrfeuz5
-         sZ03dzEeBvvqqN72H6cQT5LktZpXKHv6OAQ2nSa7cg00Ztfnf6BqkY7wU2XrLTPz827q
-         7eyTq7M1IDBubn/LRtghh1+QPqHliEF+IfAY7P8okI1Z/6DJLV6GYcACaCi7doAZGMw9
-         /dyIHtvKj75ocqdUfqA6evD3kzI7d60lz96N6l80oCjsCkwInFo3s+FTiRBF0b6R4k/Z
-         q0/GKwtraN//gURCFQVsmP6WprOmuLoxNgpKV/e1h9zG6bazrklMRdd5G1GOhEmqCKbY
-         qMcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b8KF4mdAGxKEusWlC4USzdTdaf7B1lwWHoLhbn/+MSc=;
-        b=N7qx51lOrJcmPPcoAYF2C4QuaQyuf+qn6jcUI4mDCjQ7OtTzfBpFXDo33NfdBSy6KL
-         w9fpZ2pHB31wg3VrJGmv+3XMzxpQTreE+56xAh4yC6aZsWyPfgCNh7K2Zv6v9Qjbq/jx
-         SwvLmlwUvtsQOf1xSA+qDsXCJDxoA8fkJhXbzTProPIwPCRCxA71g4SHftPXkODEX8PK
-         G/iDRNM6b7IDUF6oXcpgwfMK8QmBjlXv6zJ23YSkPBmBSMXV7QvcWJx6zPi1RuH44gJN
-         5U1s56nBwROzMzhhu9O/RXfpoqgFKgcnq3zSDr6FpNN7Byd1OgJc6cJD/u6j14Pu9++M
-         saaw==
-X-Gm-Message-State: APjAAAUWSjT8fo8cGXJlqSDs1G5XiIAmNbFqVhtfg2lVaPWQ+6moVZpk
-        77Y/amf+o8zMngwslrd3vwk=
-X-Google-Smtp-Source: APXvYqwPCLmwERJGm0GgOzGN4iYF3cgpTmSB9jlMHIwT3WhfPaclWLymsXpEdZKNIssjPaOjlsz3nQ==
-X-Received: by 2002:a1c:ca0b:: with SMTP id a11mr1963575wmg.52.1557391435976;
-        Thu, 09 May 2019 01:43:55 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y3sm1042661wrh.90.2019.05.09.01.43.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 01:43:55 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:43:52 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Thu, 9 May 2019 04:44:49 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.85)
+          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1hOefW-001CNb-SJ>; Thu, 09 May 2019 10:44:46 +0200
+Received: from suse-laptop.physik.fu-berlin.de ([160.45.32.140])
+          by inpost2.zedat.fu-berlin.de (Exim 4.85)
+          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1hOefW-003o7Z-7L>; Thu, 09 May 2019 10:44:46 +0200
+Subject: Re: [PATCH v2] sh: vsyscall: drop unnecessary cc-ldoption
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Andy Lutomirski <luto@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190509084352.GA96236@gmail.com>
-References: <20190502150853.GA16779@gmail.com>
- <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
- <20190502164524.GB115950@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
- <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C760A7@IRSMSX102.ger.corp.intel.com>
- <20190508113239.GA33324@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
- <20190509055915.GA58462@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAK7LNASLBQ=w9YFBD80s7dit1bd_Tr+ggVyRNms0jf1pR9k=ZA@mail.gmail.com>
+ <20190424180223.253025-1-ndesaulniers@google.com>
+ <CAKwvOd=5SVBFsfEgYc9Dpgr--h+pQgCwOnpAjg9B4HG2VY6kFg@mail.gmail.com>
+ <CAKwvOdkpjwgt3pP9rjZtm=rEK9MhEfQdc6PEr91Bnb9tMVDBEA@mail.gmail.com>
+ <CAK7LNASL+oNNbZ4YaPtGnwka06sRr3Pz8HjjM7oxUC-JkvqF2Q@mail.gmail.com>
+ <fc61a1c2-5503-b18d-e178-491952e059f6@physik.fu-berlin.de>
+ <CAK7LNATEizpakgj_UT4-OyUy8cs7C_kz8wEWDJAdoftfVK=uKw@mail.gmail.com>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <fd075ea4-5fc9-a015-e4ae-180451f9bea0@physik.fu-berlin.de>
+Date:   Thu, 9 May 2019 10:44:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK7LNATEizpakgj_UT4-OyUy8cs7C_kz8wEWDJAdoftfVK=uKw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: 160.45.32.140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Masahiro!
 
-* Reshetova, Elena <elena.reshetova@intel.com> wrote:
-
-> > I find it ridiculous that even with 4K blocked get_random_bytes(), 
-> > which gives us 32k bits, which with 5 bits should amortize the RNG 
-> > call to something like "once per 6553 calls", we still see 17% 
-> > overhead? It's either a measurement artifact, or something doesn't 
-> > compute.
+On 5/9/19 9:07 AM, Masahiro Yamada wrote:
+>> So, if in doubt, there are folks in Debian which can test your kernel patch
+>> if you fear that it breaks something.
 > 
-> If you check what happens underneath of get_random_bytes(), there is a 
-> fair amount of stuff that is going on, including reseeding CRNG if 
-> reseeding interval has passed (see _extract_crng()). It also even 
-> attempts to stir in more entropy from rdrand if avalaible:
+> Thanks for taking care of them in Debian.
 > 
-> I will look into this whole construction slowly now to investigate. I 
-> did't optimize anything yet also (I take 8 bits at the time for 
-> offset), but these small optimization won't make performance impact 
-> from 17% --> 2%, so pointless for now, need a more radical shift.
+> I am talking about the sh sub-system in the kernel here.
 
-So assuming that the 17% overhead primarily comes from get_random_bytes() 
-(does it? I don't know), that's incredibly slow for something like the 
-system call entry path, even if it's batched.
+Yes, I'm aware of that :).
 
-If so then maybe we have to find something else? RDRAND was just my 
-desperate suggestion to find something faster, I assumed a modern chip 
-would find no trouble finding plenty of source of quantum randomness, 
-given how much it has to fight it just to keep working - but that 
-assumption was apparently wrong. ;-)
+> SH patches occasionally fly around in LKML, but
+> the SH maintainers are not picking up them these days.
 
-Is there no cryptographically robust yet fast (pseudo-)random sequence 
-generator that is unlikely to be cracked real-time?
+Rich was normally the one maintaining the SH tree and collecting the patches,
+not sure whether he is still active. It's been a while since he sent Linus
+a pull request.
 
-The performance bar that such a feature has to cross should be very high, 
-given how the whole threat model and justification is dubious to begin 
-with.
+Sato-san was recently a patch himself, but I think he doesn't have a tree
+himself.
 
-Or just give up on the whole notion if it cannot be done? ;-)
+@Sato: Could you have a look at the patch and ack it if it's okay?
 
-Thanks,
+> This one is trivial from the build system point of view.
+> So, I offer to apply it to my tree.
 
-	Ingo
+I'm fine with that. If you need to test build the kernel for SH, Debian
+has an easily installable cross-compiler for SH and every other architecture
+except ia64 (working on fixing that) available.
+
+In any case, thanks for taking care of SH in this case.
+
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
