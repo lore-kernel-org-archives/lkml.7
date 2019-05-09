@@ -2,196 +2,143 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E2FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FABC04AAD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D1A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AB42173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfEIAOo (ORCPT
+        id S1727800AbfEIARH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 20:14:44 -0400
-Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:44181 "EHLO
-        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfEIAOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 20:14:44 -0400
-Received: by mail.osadl.at (Postfix, from userid 1001)
-        id 5659C5C0F61; Thu,  9 May 2019 02:13:45 +0200 (CEST)
-Date:   Thu, 9 May 2019 02:13:45 +0200
-From:   Nicholas Mc Guire <der.herr@hofr.at>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        peter enderborg <peter.enderborg@sony.com>,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] selinux: provide __le variables explicitly
-Message-ID: <20190509001345.GA23407@osadl.at>
-References: <1557296477-4694-1-git-send-email-hofrat@osadl.org>
- <CAHC9VhSU7pzWby78gHkYKm3t1LopSCoHBfmp=uBc+mF234K8mg@mail.gmail.com>
+        Wed, 8 May 2019 20:17:07 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:33742 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfEIARH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 20:17:07 -0400
+Received: by mail-it1-f197.google.com with SMTP id x3so2159713itj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 17:17:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=e87X274QzI+nGsJX1NYlS+xDvqLPNZh6bmnfqFL/Rcs=;
+        b=tQoG49/JhhZtq9KsBFcvqCHkm7W9s4B9jJN08CDBBLKzUhM/8CQCfsblW2EOQfiUjE
+         jiKXGcFzeAVN0CfQ5qlOilMznfdtzWqqW9OTZl3IUECA9WvJwEZYT/9s21AhHn+DkUPX
+         hR+BQnYvKQGc7hGYKNM35WK8MDmBH31mb4spoFLkyLVV3JB/gf9ROGjaVRQLQ5sWvRsh
+         AEgtjgOK/rY1M8LHmMNf5lvGYbJC/overMOYuZsc9lV5VCeckp9EniV75y//wgc1b9pl
+         3NBYCYiS3wbwMQHISbshhXOPEUn0H1CJpSoWgAtBl7kodmIZT3W55PJ3Re3SH+VQZ6pV
+         33vg==
+X-Gm-Message-State: APjAAAXQtS5+qkeL/3LFzDzIN+Lnow1aEFzDyfcoG5LLuvOkmQ/usxXa
+        /KvixoN5EvZ+cTJdrhW/QLxcwr2OnIMI+gBf1XYddr6kAtLp
+X-Google-Smtp-Source: APXvYqwwvCXOA9r67ZLdGaDwNv8X5U/qdtVWHggK/l3JkUrEAEQ2MJhIVOyxH2fDWM2+OY384WZHJC1kCyxtgXO6gmJR7hYhl/51
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSU7pzWby78gHkYKm3t1LopSCoHBfmp=uBc+mF234K8mg@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a05:6602:2286:: with SMTP id d6mr586903iod.257.1557361026392;
+ Wed, 08 May 2019 17:17:06 -0700 (PDT)
+Date:   Wed, 08 May 2019 17:17:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c3e9dc0588695e22@google.com>
+Subject: WARNING: locking bug in nfs_get_client
+From:   syzbot <syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com>
+To:     anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        trond.myklebust@hammerspace.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:47:32PM -0400, Paul Moore wrote:
-> On Wed, May 8, 2019 at 2:27 AM Nicholas Mc Guire <hofrat@osadl.org> wrote:
-> > While the endiannes is being handled properly sparse was unable to verify
-> > this due to type inconsistency. So introduce an additional __le32
-> > respectively _le64 variable to be passed to le32/64_to_cpu() to allow
-> > sparse to verify proper typing. Note that this patch does not change
-> > the generated binary on little-endian systems - on 32bit powerpc it
-> > does change the binary.
-> >
-> > Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-> > ---
-> >
-> > Problem located by an experimental coccinelle script to locate
-> > patters that make sparse unhappy (false positives):
-> >
-> > sparse complaints on different architectures fixed by this patch are:
-> >
-> > ppc6xx_defconfig
-> >   CHECK   security/selinux/ss/ebitmap.c
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> >
-> > Little-endian systems:
-> >
-> > loongson3_defconfig
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> >
-> > x86_64_defconfig
-> > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> >
-> > Patch was compile-tested with: x86_64_defconfig,loongson3_defconfig (both
-> > little-endian) and ppc603_defconfig (big-endian).
-> >
-> > On little-endian systems the patch has no impact on the generated binary
-> > (which is expected) but on the 32bit powerpc it does change the binary
-> > which is not expected but since I'm not able to generate the .lst files
-> > in security/selinux/ss/ due to the lack of a Makefile it is not clear
-> > if this is an unexpected side-effect or due only to the introduction of
-> > the additional variables. From my understanding the patch does not change
-> > the program logic so if the code was correct on big-endian systems before
-> > it should still be correct now.
-> 
-> This is a bit worrisome, but I tend to agree that this patch *should*
-> be correct.  I'm thinking you're probably right in that the resulting
-> binary difference could be due to the extra variable.  Have you tried
-> any other big-endian arches?
->
+Hello,
 
-just tried ppc64_defconfig + AUDIT=y, SECURITY=y, SECURITY_NETWORK=y, SECURITY_SELINUX=y
+syzbot found the following crash on:
 
-sparse will complain in the original version about:
-  CHECK   security/selinux/ss/ebitmap.c
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
+HEAD commit:    31ccad9b Add linux-next specific files for 20190508
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1082d2aca00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=63cd766601c6c9fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=228a82b263b5da91883d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140fdce8a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134dce02a00000
 
-which is the same as 32bit ppc - after the patch is applied that is resolved
-and and the generated ebitmap.o files are binary identical.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
 
-I just had chosen ppc6xx_defconfig as my big-endian test-target as SELINUX
-was on there by default so I assumed it would be the most reasonable
-compile-test target.
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(depth <= 0)
+WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052 __lock_release  
+kernel/locking/lockdep.c:4052 [inline]
+WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052  
+lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7948 Comm: syz-executor561 Not tainted 5.1.0-next-20190508 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x75a kernel/panic.c:218
+  __warn.cold+0x20/0x47 kernel/panic.c:575
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
+RIP: 0010:__lock_release kernel/locking/lockdep.c:4052 [inline]
+RIP: 0010:lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
+Code: 0f 85 a0 03 00 00 8b 35 a7 02 09 08 85 f6 75 23 48 c7 c6 e0 57 6b 87  
+48 c7 c7 80 27 6b 87 4c 89 85 70 ff ff ff e8 37 7c eb ff <0f> 0b 4c 8b 85  
+70 ff ff ff 4c 89 ea 4c 89 e6 4c 89 c7 e8 52 63 ff
+RSP: 0018:ffff888095867730 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 1ffff11012b0ceec RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b20c6 RDI: ffffed1012b0ced8
+RBP: ffff8880958677e8 R08: ffff88809a5b83c0 R09: fffffbfff1133071
+R10: fffffbfff1133070 R11: ffffffff88998383 R12: ffff888219eeb700
+R13: ffffffff821668ab R14: ffffffff8a45bd40 R15: ffff8880958677c0
+  __raw_spin_unlock include/linux/spinlock_api_smp.h:150 [inline]
+  _raw_spin_unlock+0x1b/0x50 kernel/locking/spinlock.c:183
+  spin_unlock include/linux/spinlock.h:378 [inline]
+  nfs_get_client+0xc1b/0x1300 fs/nfs/client.c:412
+  nfs_init_server+0x26f/0xea0 fs/nfs/client.c:675
+  nfs_create_server+0x12b/0x6d0 fs/nfs/client.c:962
+  nfs_try_mount+0x15a/0x910 fs/nfs/super.c:1882
+  nfs_fs_mount+0x184a/0x2690 fs/nfs/super.c:2718
+  legacy_get_tree+0x10a/0x220 fs/fs_context.c:665
+  vfs_get_tree+0x93/0x3a0 fs/super.c:1476
+  do_new_mount fs/namespace.c:2790 [inline]
+  do_mount+0x138c/0x1c00 fs/namespace.c:3110
+  ksys_mount+0xdb/0x150 fs/namespace.c:3319
+  __do_sys_mount fs/namespace.c:3333 [inline]
+  __se_sys_mount fs/namespace.c:3330 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3330
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4467d9
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f54c53e0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004467d9
+RDX: 0000000020fb5ffc RSI: 0000000020343ff8 RDI: 0000000000000000
+RBP: 00000000006dbc30 R08: 000000002000a000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
+R13: 00007ffe22037e2f R14: 00007f54c53e19c0 R15: 20c49ba5e353f7cf
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-thx!
-hofrat
- 
-> > Patch is against 5.1 (localversion-next is next-20190506)
-> >
-> >  security/selinux/ss/ebitmap.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/security/selinux/ss/ebitmap.c b/security/selinux/ss/ebitmap.c
-> > index 8f624f8..09929fc 100644
-> > --- a/security/selinux/ss/ebitmap.c
-> > +++ b/security/selinux/ss/ebitmap.c
-> > @@ -347,7 +347,9 @@ int ebitmap_read(struct ebitmap *e, void *fp)
-> >  {
-> >         struct ebitmap_node *n = NULL;
-> >         u32 mapunit, count, startbit, index;
-> > +       __le32 ebitmap_start;
-> >         u64 map;
-> > +       __le64 mapbits;
-> >         __le32 buf[3];
-> >         int rc, i;
-> >
-> > @@ -381,12 +383,12 @@ int ebitmap_read(struct ebitmap *e, void *fp)
-> >                 goto bad;
-> >
-> >         for (i = 0; i < count; i++) {
-> > -               rc = next_entry(&startbit, fp, sizeof(u32));
-> > +               rc = next_entry(&ebitmap_start, fp, sizeof(u32));
-> >                 if (rc < 0) {
-> >                         pr_err("SELinux: ebitmap: truncated map\n");
-> >                         goto bad;
-> >                 }
-> > -               startbit = le32_to_cpu(startbit);
-> > +               startbit = le32_to_cpu(ebitmap_start);
-> >
-> >                 if (startbit & (mapunit - 1)) {
-> >                         pr_err("SELinux: ebitmap start bit (%d) is "
-> > @@ -423,12 +425,12 @@ int ebitmap_read(struct ebitmap *e, void *fp)
-> >                         goto bad;
-> >                 }
-> >
-> > -               rc = next_entry(&map, fp, sizeof(u64));
-> > +               rc = next_entry(&mapbits, fp, sizeof(u64));
-> >                 if (rc < 0) {
-> >                         pr_err("SELinux: ebitmap: truncated map\n");
-> >                         goto bad;
-> >                 }
-> > -               map = le64_to_cpu(map);
-> > +               map = le64_to_cpu(mapbits);
-> >
-> >                 index = (startbit - n->startbit) / EBITMAP_UNIT_SIZE;
-> >                 while (map) {
-> > --
-> > 2.1.4
-> >
-> 
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
