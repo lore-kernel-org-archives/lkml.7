@@ -2,180 +2,108 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AFEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFCCC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A895B217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZmDFKam/"
+	by mail.kernel.org (Postfix) with ESMTP id 9C364217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfEIRTC (ORCPT
+        id S1726861AbfEIRTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:19:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfEIRTC (ORCPT
+        Thu, 9 May 2019 13:19:15 -0400
+Received: from smtprelay0228.hostedemail.com ([216.40.44.228]:45651 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726620AbfEIRTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:19:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=h9oK3RsLQP7A0Z8d5uEJwqxM0kwLaT657qEgfdThiz0=; b=ZmDFKam/fMA79ssTdityQOLPmr
-        IksuipOforKZi0mU4GnsCvS63QktfJcCEqwLiBqsvQObZ8YTIzQ/diRiczfU6MMxVoRdkKLvIaLzZ
-        26CrOAvas1A6QpLFWO+4ipn/jQk4ShpkE2YvdG0JU//CoZbWiUClosxmP3AkKbAKz25OTkXcjOBNS
-        GKDFSYEVgy6DWEizZvJ9OFlq5Mg4qpRDcVStqjVqsU4xC43zdMAMwmBbIOb/L1vVjl6feijiY5tr/
-        lcIA42F9qSapoW0//LhPr+tc+qk0Q+aAhuAgzw7rDgnzhm8yZO634in7uWey3LbQ+h6W+qjrRK6Lk
-        y/cyfYVA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOmgs-0006Dd-Jr; Thu, 09 May 2019 17:18:42 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 981EF2019FECA; Thu,  9 May 2019 19:18:40 +0200 (CEST)
-Date:   Thu, 9 May 2019 19:18:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190509171840.GZ2623@hirez.programming.kicks-ass.net>
-References: <20190508074901.982470324@infradead.org>
- <20190508080612.721269814@infradead.org>
- <20190508115416.nblx7c2kocidpytm@treble>
- <20190508120416.GL2589@hirez.programming.kicks-ass.net>
- <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
- <20190508184848.qerg3flv3ej3xsev@treble>
- <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
- <20190509081431.GO2589@hirez.programming.kicks-ass.net>
- <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 9 May 2019 13:19:15 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 943FC100E86C7;
+        Thu,  9 May 2019 17:19:13 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fly20_3353c4314b71f
+X-Filterd-Recvd-Size: 2401
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  9 May 2019 17:19:12 +0000 (UTC)
+Message-ID: <b5e2a4d9eb49290d6dc3449c90cdf07797b1aba6.camel@perches.com>
+Subject: Re: [Proposal] end of file checks by checkpatch.pl
+From:   Joe Perches <joe@perches.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@canonical.com>
+Date:   Thu, 09 May 2019 10:19:11 -0700
+In-Reply-To: <CAK7LNAR5j1ygbq9TLqUhbJ+tkMdrtD3BgQoUWZErUrnEoWKYMw@mail.gmail.com>
+References: <CAK7LNAR5j1ygbq9TLqUhbJ+tkMdrtD3BgQoUWZErUrnEoWKYMw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 09:20:06AM -0700, Andy Lutomirski wrote:
-> > +ENTRY(call_to_exception_trampoline)
-> > +    /*
-> > +     * On entry the stack looks like:
-> > +     *
-> > +     *   2*4(%esp) <previous context>
-> > +     *   1*4(%esp) RET-IP
-> > +     *   0*4(%esp) func
-> > +     *
-> > +     * transform this into:
-> > +     *
-> > +     *  19*4(%esp) <previous context>
-> > +     *  18*4(%esp) gap / RET-IP
-> > +     *  17*4(%esp) gap / func
-> > +     *  16*4(%esp) ss
-> > +     *  15*4(%esp) sp / <previous context>
-> > +     *  14*4(%esp) flags
-> > +     *  13*4(%esp) cs
-> > +     *  12*4(%esp) ip / RET-IP
-> > +     *  11*4(%esp) orig_eax
-> > +     *  10*4(%esp) gs
-> > +     *   9*4(%esp) fs
-> > +     *   8*4(%esp) es
-> > +     *   7*4(%esp) ds
-> > +     *   6*4(%esp) eax
-> > +     *   5*4(%esp) ebp
-> > +     *   4*4(%esp) edi
-> > +     *   3*4(%esp) esi
-> > +     *   2*4(%esp) edx
-> > +     *   1*4(%esp) ecx
-> > +     *   0*4(%esp) ebx
-> > +     */
-> > +    pushl    %ss
-> > +    pushl    %esp        # points at ss
-> > +    addl    $3*4, (%esp)    #   point it at <previous context>
-> > +    pushfl
-> > +    pushl    %cs
-> > +    pushl    5*4(%esp)    # RET-IP
-> > +    subl    5, (%esp)    #   point at CALL instruction
-> > +    pushl    $-1
-> > +    pushl    %gs
-> > +    pushl    %fs
-> > +    pushl    %es
-> > +    pushl    %ds
-> > +    pushl    %eax
-> > +    pushl    %ebp
-> > +    pushl    %edi
-> > +    pushl    %esi
-> > +    pushl    %edx
-> > +    pushl    %ecx
-> > +    pushl    %ebx
-> > +
-> > +    ENCODE_FRAME_POINTER
-> > +
-> > +    movl    %esp, %eax    # 1st argument: pt_regs
-> > +
-> > +    movl    17*4(%esp), %ebx    # func
-> > +    CALL_NOSPEC %ebx
-> > +
-> > +    movl    PT_OLDESP(%esp), %eax
-> > +
-> > +    movl    PT_EIP(%esp), %ecx
-> > +    movl    %ecx, -1*4(%eax)
-> > +
-> > +    movl    PT_EFLAGS(%esp), %ecx
-> > +    movl    %ecx, -2*4(%eax)
-> > +
-> > +    movl    PT_EAX(%esp), %ecx
-> > +    movl    %ecx, -3*4(%eax)
-> > +
-> > +    popl    %ebx
-> > +    popl    %ecx
-> > +    popl    %edx
-> > +    popl    %esi
-> > +    popl    %edi
-> > +    popl    %ebp
-> > +
-> > +    lea    -3*4(%eax), %esp
-> > +    popl    %eax
-> > +    popfl
-> > +    ret
-> > +END(call_to_exception_trampoline)
+On Fri, 2019-05-10 at 00:27 +0900, Masahiro Yamada wrote:
+> Hi Joe,
+> 
+> 
+> Does it make sense to check the following
+> by checkpatch.pl ?
+> 
+> 
+> [1] blank line at end of file
 
-> Potentially minor nit: you’re doing popfl, but you’re not doing
-> TRACE_IRQ_whatever.  This makes me think that you should either add
-> the tracing (ugh!) or you should maybe just skip the popfl.
 
-Yeah, so we really should not change flags I suppose. If this lives I'll
-remove the popfl.
+> [2] no new line at end of file
+
+I'm pretty sure checkpatch does one this already.
+(around line 3175)
+
+# check for adding lines without a newline.
+		if ($line =~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =~ /^\\ No newline at end of file/) {
+ 			WARN("MISSING_EOF_NEWLINE",
+ 			     "adding a line without newline at end of file\n" . $herecurr);
+ 		}
+
+
+> When I apply a patch,
+> I sometimes see the following warning from 'git am'.
+> 
+> 
+> Applying: kunit: test: add string_stream a std::stream like string builder
+> .git/rebase-apply/patch:223: new blank line at EOF.
+> +
+> 
+> 
+> I just thought it could be checked
+> before the patch submission.
+
+perhaps:
+---
+ scripts/checkpatch.pl | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 1c421ac42b07..ceb32c584ee5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3356,6 +3356,12 @@ sub process {
+ 			$last_blank_line = $linenr;
+ 		}
+ 
++# check the last line isn't blank
++		if ($linenr >= $#rawlines && $line =~ /^\+\s*$/) {
++			WARN("LINE_SPACING",
++			     "Avoid blank lines at EOF\n" . $herecurr);
++		}
++
+ # check for missing blank lines after declarations
+ 		if ($sline =~ /^\+\s+\S/ &&			#Not at char 1
+ 			# actual declarations
+
+
