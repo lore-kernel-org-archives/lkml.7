@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957C8C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B09C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0A7217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1DC22184D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427730;
-	bh=AYeoGN273AXyjiMv89OcvbcdISNL0ikD9NfcKVEP0pw=;
+	s=default; t=1557427733;
+	bh=uZaDk2MwG1pjJ1LTJ9lj/yeRBUt9aHHPE2OQWP7w6zY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+aoFMn3X1hQMYZ1Rf4dBbuzy62vSOMFMNjjh6AiQar0Ky8JgpFez+qzI+Rcnkaqk
-	 m9un8ROzzYTh/eY4W8xoKzbEETvk7auPZ/sjeYkdgEDKdWdeOQS0SlKJAJ9NTer5oO
-	 OJSfUnqAUkXoe4nDhu8quaZFpGhRsqHBGkeTv63M=
+	b=EHNWLeefHFeYVW3CGJfRUQCD9JyNlTXBiFDpVOj0aFv86K6WJFG4E0MImt98uFRqE
+	 PCQoIDU8HxCalGLERODdf4ZThYF4b15/etPTTx+SIwT2pB2Cy4LKy3xsBlTOGeRody
+	 5d7ETub7IMRNBPYn90MtiVZyMeWKJLz2wfUvQ3HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfEISst (ORCPT
+        id S1728109AbfEISsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbfEISsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:42 -0400
+        id S1728070AbfEISsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3AF2183E;
-        Thu,  9 May 2019 18:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 786112183E;
+        Thu,  9 May 2019 18:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427721;
-        bh=AYeoGN273AXyjiMv89OcvbcdISNL0ikD9NfcKVEP0pw=;
+        s=default; t=1557427727;
+        bh=uZaDk2MwG1pjJ1LTJ9lj/yeRBUt9aHHPE2OQWP7w6zY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0T19ikhrg3IBow/8936KD1zvqinR9emRhULnJxjrbpoFO72oWL9jv81ufFj9lCi/
-         7zv4SP+nHJv6pHiOHtvnPSi56+6CZ/JD8qXyx2COrGnAIciYX0iGqSSOalVpctscn5
-         /M1SmXnQdN2hJ5YlF6DAbWA1MOsZG701Ek9mUEbk=
+        b=Ffh8Ie/7yySYxUd2b/3TPmkYtPZD/Rm4gYRKu8hZWTVJ4smgLDwWY+q8J79AVpbLr
+         3/D1wi4pnNGf1pu86krnHtbbTPvaqtC0pZx5GHlqmmbALT2JmmVr5C6K6syLLqxBrI
+         RzSLNpgYI8pU2DswTR0JuO5HWT2iTCPQkJyqPXRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, John Hsu <KCHSU0@nuvoton.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 12/66] ASoC:intel:skl:fix a simultaneous playback & capture issue on hda platform
-Date:   Thu,  9 May 2019 20:41:47 +0200
-Message-Id: <20190509181303.215614019@linuxfoundation.org>
+Subject: [PATCH 4.19 14/66] ASoC: nau8810: fix the issue of widget with prefixed name
+Date:   Thu,  9 May 2019 20:41:49 +0200
+Message-Id: <20190509181303.418977513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -61,76 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c899df3e9b0bf7b76e642aed1a214582ea7012d5 ]
+[ Upstream commit 54d1cf78b0f4ba348a7c7fb8b7d0708d71b6cc8a ]
 
-If playback and capture are enabled concurrently, when the capture stops
-the output becomes inaudile. The playback application will become stuck
-and underrun after a timeout.
+The driver changes the stream name of DAC and ADC to avoid the issue of
+widget with prefixed name. When the machine adds prefixed name for codec,
+the stream name of DAI may not find the widgets.
 
-This is caused by mistaken use of the stream_id, which should only be
-set for playback and not for capture
-
-Tested on Apollolake and Kabylake with SST driver.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/skylake/skl-pcm.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ sound/soc/codecs/nau8810.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/skylake/skl-pcm.c b/sound/soc/intel/skylake/skl-pcm.c
-index 823e39103edd3..6b2c8c6e7a00f 100644
---- a/sound/soc/intel/skylake/skl-pcm.c
-+++ b/sound/soc/intel/skylake/skl-pcm.c
-@@ -180,6 +180,7 @@ int skl_pcm_link_dma_prepare(struct device *dev, struct skl_pipe_params *params)
- 	struct hdac_stream *hstream;
- 	struct hdac_ext_stream *stream;
- 	struct hdac_ext_link *link;
-+	unsigned char stream_tag;
- 
- 	hstream = snd_hdac_get_stream(bus, params->stream,
- 					params->link_dma_id + 1);
-@@ -198,10 +199,13 @@ int skl_pcm_link_dma_prepare(struct device *dev, struct skl_pipe_params *params)
- 
- 	snd_hdac_ext_link_stream_setup(stream, format_val);
- 
--	list_for_each_entry(link, &bus->hlink_list, list) {
--		if (link->index == params->link_index)
--			snd_hdac_ext_link_set_stream_id(link,
--					hstream->stream_tag);
-+	stream_tag = hstream->stream_tag;
-+	if (stream->hstream.direction == SNDRV_PCM_STREAM_PLAYBACK) {
-+		list_for_each_entry(link, &bus->hlink_list, list) {
-+			if (link->index == params->link_index)
-+				snd_hdac_ext_link_set_stream_id(link,
-+								stream_tag);
-+		}
- 	}
- 
- 	stream->link_prepared = 1;
-@@ -640,6 +644,7 @@ static int skl_link_hw_free(struct snd_pcm_substream *substream,
- 	struct hdac_ext_stream *link_dev =
- 				snd_soc_dai_get_dma_data(dai, substream);
- 	struct hdac_ext_link *link;
-+	unsigned char stream_tag;
- 
- 	dev_dbg(dai->dev, "%s: %s\n", __func__, dai->name);
- 
-@@ -649,7 +654,11 @@ static int skl_link_hw_free(struct snd_pcm_substream *substream,
- 	if (!link)
- 		return -EINVAL;
- 
--	snd_hdac_ext_link_clear_stream_id(link, hdac_stream(link_dev)->stream_tag);
-+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+		stream_tag = hdac_stream(link_dev)->stream_tag;
-+		snd_hdac_ext_link_clear_stream_id(link, stream_tag);
-+	}
-+
- 	snd_hdac_ext_stream_release(link_dev, HDAC_EXT_STREAM_TYPE_LINK);
- 	return 0;
- }
+diff --git a/sound/soc/codecs/nau8810.c b/sound/soc/codecs/nau8810.c
+index bfd74b86c9d2f..645aa07941237 100644
+--- a/sound/soc/codecs/nau8810.c
++++ b/sound/soc/codecs/nau8810.c
+@@ -411,9 +411,9 @@ static const struct snd_soc_dapm_widget nau8810_dapm_widgets[] = {
+ 	SND_SOC_DAPM_MIXER("Mono Mixer", NAU8810_REG_POWER3,
+ 		NAU8810_MOUTMX_EN_SFT, 0, &nau8810_mono_mixer_controls[0],
+ 		ARRAY_SIZE(nau8810_mono_mixer_controls)),
+-	SND_SOC_DAPM_DAC("DAC", "HiFi Playback", NAU8810_REG_POWER3,
++	SND_SOC_DAPM_DAC("DAC", "Playback", NAU8810_REG_POWER3,
+ 		NAU8810_DAC_EN_SFT, 0),
+-	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", NAU8810_REG_POWER2,
++	SND_SOC_DAPM_ADC("ADC", "Capture", NAU8810_REG_POWER2,
+ 		NAU8810_ADC_EN_SFT, 0),
+ 	SND_SOC_DAPM_PGA("SpkN Out", NAU8810_REG_POWER3,
+ 		NAU8810_NSPK_EN_SFT, 0, NULL, 0),
 -- 
 2.20.1
 
