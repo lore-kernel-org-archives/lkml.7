@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF207C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E712C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5338217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C7921848
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427500;
-	bh=jLuUJzS93NiFBMI63O+Gx7/+lKHwhvNKMTtWX26LwmE=;
+	s=default; t=1557427503;
+	bh=DSgNyAu3218PTqN3ZNvpI+NYW6lqI+fUcvQx/HBEHVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDuU2yPNkNHTTZ87d1K+Fgzs+iNtpkDWoMdcfneDy3IAm3/bTwm3xhlYAwR47L/Yw
-	 ew+C3z6WXlrC6ZLI6nKE43thfuC5slJ0XQlA0I1EUSKHUJ7SEYMUCy0dKI9Pwysmvz
-	 0ZB2DVUj78wMaWw158O2UIKXmxnfSgqS0ucm+YGk=
+	b=I6lcwqkIxuJA6DJBD5NTVJ2W4Kl1e21Hwwonh1uTmfpSo8Rzm5JgcK6rlV9k1Jcon
+	 lxBxtQowC6Oc6rpnaQASyGzyvfMwf3lT8pi2Q+ByBPYWfM2VhkUGwoTXxCWKOk0Mte
+	 DcJILglm86UyshzbjhgDIrJCk2XTXiv32VIcfKVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfEISpA (ORCPT
+        id S1727245AbfEISpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36542 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfEISo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:57 -0400
+        id S1727221AbfEISpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94753217F5;
-        Thu,  9 May 2019 18:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38649217F9;
+        Thu,  9 May 2019 18:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427497;
-        bh=jLuUJzS93NiFBMI63O+Gx7/+lKHwhvNKMTtWX26LwmE=;
+        s=default; t=1557427499;
+        bh=DSgNyAu3218PTqN3ZNvpI+NYW6lqI+fUcvQx/HBEHVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vb+3WYOLtV3ouAJsD+et/S/9sWx50nFIIMjXU3RDiaGq6N3g/lrmIqTWYZq9m6ia6
-         FBfTdp1KSUnUPMVuM7UXhcp4XwYpppV6gsHdo651rhSfdM09bFAhS1EttbV/wUEhzz
-         QwBwGaBY3bFL4TNjC0KEpEtDQ7OnTzK1qLkDhbK4=
+        b=ntIH2ByQV/N7xnK3RNl56gDk6kkn0cGxJ0FoZI0eLzzSH67v1FlJ/8CQ8Vv9AtZbv
+         eW/EZLYRSybLcyVb2TCS5gcFgkgfD78N1+iLZWIg3SPTKYRXgT3aFLGStGjFgbnbVS
+         IC0Foh1R3niUucBFsqafCqOMuBXH2J89mfYv/ug8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.9 25/28] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
-Date:   Thu,  9 May 2019 20:42:17 +0200
-Message-Id: <20190509181255.579097161@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.9 26/28] UAS: fix alignment of scatter/gather segments
+Date:   Thu,  9 May 2019 20:42:18 +0200
+Message-Id: <20190509181255.760577817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -59,52 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
+commit 3ae62a42090f1ed48e2313ed256a1182a85fb575 upstream.
 
-The minimum encryption key size for LE connections is 56 bits and to
-align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
-BR/EDR connections as well.
+This is the UAS version of
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Cc: stable@vger.kernel.org
+747668dbc061b3e62bc1982767a3a1f9815fcf0e
+usb-storage: Set virt_boundary_mask to avoid SG overflows
+
+We are not as likely to be vulnerable as storage, as it is unlikelier
+that UAS is run over a controller without native support for SG,
+but the issue exists.
+The issue has been existing since the inception of the driver.
+
+Fixes: 115bb1ffa54c ("USB: Add UAS driver")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/bluetooth/hci_core.h |    3 +++
- net/bluetooth/hci_conn.c         |    8 ++++++++
- 2 files changed, 11 insertions(+)
+ drivers/usb/storage/uas.c |   35 ++++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -176,6 +176,9 @@ struct adv_info {
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -796,24 +796,33 @@ static int uas_slave_alloc(struct scsi_d
+ {
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
++	int maxp;
  
- #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 	sdev->hostdata = devinfo;
  
-+/* Min encryption key size to match with SMP */
-+#define HCI_MIN_ENC_KEY_SIZE		7
-+
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
- 
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1165,6 +1165,14 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
- 
-+	/* The minimum encryption key size needs to be enforced by the
-+	 * host stack before establishing any L2CAP connections. The
-+	 * specification in theory allows a minimum of 1, but to align
-+	 * BR/EDR and LE transports, a minimum of 7 is chosen.
+ 	/*
+-	 * USB has unusual DMA-alignment requirements: Although the
+-	 * starting address of each scatter-gather element doesn't matter,
+-	 * the length of each element except the last must be divisible
+-	 * by the Bulk maxpacket value.  There's currently no way to
+-	 * express this by block-layer constraints, so we'll cop out
+-	 * and simply require addresses to be aligned at 512-byte
+-	 * boundaries.  This is okay since most block I/O involves
+-	 * hardware sectors that are multiples of 512 bytes in length,
+-	 * and since host controllers up through USB 2.0 have maxpacket
+-	 * values no larger than 512.
++	 * We have two requirements here. We must satisfy the requirements
++	 * of the physical HC and the demands of the protocol, as we
++	 * definitely want no additional memory allocation in this path
++	 * ruling out using bounce buffers.
+ 	 *
+-	 * But it doesn't suffice for Wireless USB, where Bulk maxpacket
+-	 * values can be as large as 2048.  To make that work properly
+-	 * will require changes to the block layer.
++	 * For a transmission on USB to continue we must never send
++	 * a package that is smaller than maxpacket. Hence the length of each
++         * scatterlist element except the last must be divisible by the
++         * Bulk maxpacket value.
++	 * If the HC does not ensure that through SG,
++	 * the upper layer must do that. We must assume nothing
++	 * about the capabilities off the HC, so we use the most
++	 * pessimistic requirement.
 +	 */
-+	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
-+		return 0;
 +
- 	return 1;
- }
++	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
++	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
++
++	/*
++	 * The protocol has no requirements on alignment in the strict sense.
++	 * Controllers may or may not have alignment restrictions.
++	 * As this is not exported, we use an extremely conservative guess.
+ 	 */
+ 	blk_queue_update_dma_alignment(sdev->request_queue, (512 - 1));
  
 
 
