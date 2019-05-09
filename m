@@ -2,69 +2,113 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE08C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5E9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3FA217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557437721;
-	bh=fbvGp1O/NrVth7VQNBezCWE6xsmE3bsEJsgNrQSf8gM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=zOMBv2SbewbAAFzs/eoICSRdvOlSafFaeH4FTw/Ic0Xnc4bA0Ev+7VGhRl4sLurhO
-	 tgz+B7Tfd0IP49Hug145lakaa8IjFqWMFZQJkJxSCISl5dXdUMG43UJ741oNWjo4Uf
-	 Rn20PYurG8/PYrxUAQeYq0tE6rbDl2gSBGk80nCM=
+	by mail.kernel.org (Postfix) with ESMTP id 845FA217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfEIVfT (ORCPT
+        id S1727078AbfEIVff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbfEIVfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:35:15 -0400
-Subject: Re: [GIT PULL] cgroup changes for v5.2-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557437714;
-        bh=fbvGp1O/NrVth7VQNBezCWE6xsmE3bsEJsgNrQSf8gM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ldOq1tJujkL5T2sO2Pek6IDJm4dkU3Moto48MsN2NWYYd3/XcUloqPJfsz9hqp44A
-         uW4TZEPHMigHCu3dSAGhOCLuWmxzQ9jHGxxA2zpIO/zPRuQDfItaawFFypBFEScNXk
-         t6vuu++q9h45bypW6gb27jpndxui1HyhiD0OUn+Y=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190509173642.GA374014@devbig004.ftw2.facebook.com>
-References: <20190509173642.GA374014@devbig004.ftw2.facebook.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190509173642.GA374014@devbig004.ftw2.facebook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.2
-X-PR-Tracked-Commit-Id: f2b31bb598248c04721cb8485e6091a9feb045ac
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: abde77eb5c66b2f98539c4644b54f34b7e179e6b
-Message-Id: <155743771473.19196.4472489485491678704.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 May 2019 21:35:14 +0000
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        Roman Gushchin <guro@fb.com>, Oleg Nesterov <oleg@redhat.com>
+        Thu, 9 May 2019 17:35:35 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:41294 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfEIVfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 17:35:34 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1DDBD14DAFB7A;
+        Thu,  9 May 2019 14:35:34 -0700 (PDT)
+Date:   Thu, 09 May 2019 14:35:31 -0700 (PDT)
+Message-Id: <20190509.143531.499657137828123463.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, sparclinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Sparc
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 May 2019 14:35:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 9 May 2019 10:36:42 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.2
+Here we go:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/abde77eb5c66b2f98539c4644b54f34b7e179e6b
+1) Fix various long standing issues in the sparc 32-bit IOMMU support
+   code, from Christoph Hellwig.
 
-Thank you!
+2) Various other code cleanups and simplifications all over.  From
+   Gustavo A. R. Silva, Jagadeesh Pagadala, Masahiro Yamada, Mauro
+   Carvalho Chehab, Mike Rapoport.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Please pull, thanks a lot!
+
+The following changes since commit 92fab77b6b309dc219b02da4a69ad5dc76f7ec74:
+
+  Merge tag 'mips_5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux (2019-05-08 16:41:47 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git 
+
+for you to fetch changes up to f4d9a23d3dad0252f375901bf4ff6523a2c97241:
+
+  sparc64: simplify reduce_memory() function (2019-05-09 14:26:17 -0700)
+
+----------------------------------------------------------------
+Christoph Hellwig (9):
+      sparc/iommu: use !PageHighMem to check if a page has a kernel mapping
+      sparc/iommu: use sbus_iommu_unmap_page in sbus_iommu_unmap_sg
+      sparc/iommu: merge iommu_release_one and sbus_iommu_unmap_page
+      sparc/iommu: create a common helper for map_sg
+      sparc/iommu: pass a physical address to iommu_get_one
+      sparc/iommu: move per-page flushing into __sbus_iommu_map_page
+      sparc/iommu: fix __sbus_iommu_map_page for highmem pages
+      sparc/iommu: use __sbus_iommu_map_page to implement the map_sg path
+      sparc/iommu: merge iommu_get_one and __sbus_iommu_map_page
+
+David S. Miller (1):
+      Merge branch 'sparc32-iommu-SG-list'
+
+Gustavo A. R. Silva (1):
+      sparc: use struct_size() in kzalloc()
+
+Jagadeesh Pagadala (1):
+      arch:sparc:kernel/uprobes.c : Remove duplicate header
+
+Masahiro Yamada (1):
+      sparc: vdso: add FORCE to the build rule of %.so
+
+Mauro Carvalho Chehab (1):
+      docs: sparc: convert to ReST
+
+Mike Rapoport (1):
+      sparc64: simplify reduce_memory() function
+
+ Documentation/sparc/{adi.txt => adi.rst}                      | 188 ++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------
+ Documentation/sparc/{console.txt => console.rst}              |   4 +-
+ Documentation/sparc/index.rst                                 |  13 +++++++
+ Documentation/sparc/oradax/{oracle-dax.txt => oracle-dax.rst} |  58 +++++++++++++++++----------
+ arch/sparc/kernel/cpumap.c                                    |   3 +-
+ arch/sparc/kernel/uprobes.c                                   |   1 -
+ arch/sparc/mm/init_64.c                                       |  42 +-------------------
+ arch/sparc/mm/iommu.c                                         | 142 +++++++++++++++++++++++++++---------------------------------------
+ arch/sparc/vdso/Makefile                                      |   2 +-
+ drivers/sbus/char/oradax.c                                    |   2 +-
+ 10 files changed, 213 insertions(+), 242 deletions(-)
+ rename Documentation/sparc/{adi.txt => adi.rst} (70%)
+ rename Documentation/sparc/{console.txt => console.rst} (53%)
+ create mode 100644 Documentation/sparc/index.rst
+ rename Documentation/sparc/oradax/{oracle-dax.txt => oracle-dax.rst} (95%)
