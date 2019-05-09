@@ -2,209 +2,159 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BABC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E69C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E0D20989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcbJ3zLp"
+	by mail.kernel.org (Postfix) with ESMTP id B765420989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfEIWUu (ORCPT
+        id S1727071AbfEIWU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:20:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39999 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfEIWUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:20:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so1802708plr.7;
-        Thu, 09 May 2019 15:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z1YADLv+X+eTaFOCPRPMkyVNxJwrl9u02E65BW40D5k=;
-        b=lcbJ3zLpdbWPY6o2RCZ4AodP4ic2pzULnGi7IghozPpmKe1z1o67yEB9TIsnQngizS
-         KQgXLqZNB7Ae2D6QTJeoIIqZefMYGYF5wjyAxNmtBeh5ZS633Cqonxv8mDbqMMjSRZDR
-         KNS33bTuluL5H/WFj/xZ8RngtzSlE+Lf1/8paQYrrVKmxaXOoWm8NnMgpEKH6ztlYaad
-         PI4+UUj4as/Xt/f8FdwsSAi1UFvM6iDeS4eALzNNvTEt665rIfZ0LHkKzXP0zOrqi6Dg
-         e2TU2/pqcloLVkFbFoZh4bIvUClKXvQke538xFqKLidb8EG8zEgLTojfB0qEVQCKzKrw
-         6t5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z1YADLv+X+eTaFOCPRPMkyVNxJwrl9u02E65BW40D5k=;
-        b=gaD0DqIqvzADPn5ow3Y2Y7MOgJCBDoj2xHvIJUPKu15jkqzcBIYwRaCzjikkhtLLW6
-         DhDE4CsOqs7VVSaKTrH+4DrA1YPNECR4Ofqn6c4GOJkb5DMkg1EBbv9+lW4H8TQyye0z
-         ZNe6n3OmBuI0nT7gj2h+VDStHZi7YRSTH5lZtVOPxj7lTlbePnzR0rsJjpvRCNDuRuAa
-         SyivS4b2wKowzGNc9fZ8Ykeh1Wqbrf/LYilDUdoHPAmENeSyGagc3nlNvHYMZfb1BNg9
-         C4nXo/tJnAko/7pH08LdYjuVGF6xF2qJzW+v0MlTt17vgFwmMN+eHe9q7TbUWcBU+0GO
-         MQiA==
-X-Gm-Message-State: APjAAAWnMa10DlnkpuJGs2gIqRTCzVdV9nM5p/HYVgeClmcufFi4z7iD
-        juabw0K+Wm3AKrjb4Coub9k=
-X-Google-Smtp-Source: APXvYqzSmVmq4+FqBEl/cq1bHlnhsA+wSlbzzJZ/8v9nTieYPU4Ln2SpEjRuNj0P80hXDrqRQNAbHg==
-X-Received: by 2002:a17:902:8bca:: with SMTP id r10mr8481101plo.67.1557440449042;
-        Thu, 09 May 2019 15:20:49 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:200::bc44])
-        by smtp.gmail.com with ESMTPSA id o71sm8197898pfi.174.2019.05.09.15.20.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 15:20:47 -0700 (PDT)
-Date:   Thu, 9 May 2019 15:20:46 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.2-rc1
-Message-ID: <20190509222043.b4zn32kuohduzzzr@ast-mbp>
-References: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
+        Thu, 9 May 2019 18:20:58 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:36450 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfEIWU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:20:58 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.141])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hOrOj-00055b-MR; Thu, 09 May 2019 16:20:18 -0600
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, amir73il@gmail.com,
+        dan.carpenter@oracle.com, dan.j.williams@intel.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+Date:   Thu, 9 May 2019 16:20:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20190509214233.GA20877@mit.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: wfg@linux.intel.com, rostedt@goodmis.org, rientjes@google.com, richard@nod.at, pmladek@suse.com, mpe@ellerman.id.au, khilman@baylibre.com, julia.lawall@lip6.fr, joel@jms.id.au, jdike@addtoit.com, daniel@ffwll.ch, dan.j.williams@intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Alexander.Levin@microsoft.com, linux-um@lists.infradead.org, linux-nvdimm@lists.01.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org, robh@kernel.org, mcgrof@kernel.org, kieran.bingham@ideasonboard.com, keescook@google.com, brendanhiggins@google.com, gregkh@linuxfoundation.org, knut.omang@oracle.com, Tim.Bird@sony.com, frowand.list@gmail.com, tytso@mit.edu
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:56:56AM -0600, Shuah Khan wrote:
-> Hi Linus,
-> 
-> Please pull the following Kselftest update for Linux 5.2-rc1
-> 
-> This Kselftest update for Linux 5.2-rc1 consists of
-> 
-> - fixes to seccomp test, and kselftest framework
-> - cleanups to remove duplicate header defines
-> - fixes to efivarfs "make clean" target
-> - cgroup cleanup path
-> - Moving the IMA kexec_load selftest to selftests/kexec work from
->   Mimi Johar and Petr Vorel
-> - A framework to kselftest for writing kernel test modules addition
->   from Tobin C. Harding
-> 
-> diff is attached.
-> 
-> thanks,
-> -- Shuah
-> 
-> 
-> ----------------------------------------------------------------
-> The following changes since commit 15ade5d2e7775667cf191cf2f94327a4889f8b9d:
-> 
->   Linux 5.1-rc4 (2019-04-07 14:09:59 -1000)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
-> tags/linux-kselftest-5.2-rc1
-> 
-> for you to fetch changes up to d917fb876f6eaeeea8a2b620d2a266ce26372f4d:
-> 
->   selftests: build and run gpio when output directory is the src dir
-> (2019-04-22 17:02:26 -0600)
-> 
-> ----------------------------------------------------------------
-> linux-kselftest-5.2-rc1
-> 
-> This Kselftest update for Linux 5.2-rc1 consists of
-> 
-> - fixes to seccomp test, and kselftest framework
-> - cleanups to remove duplicate header defines
-> - fixes to efivarfs "make clean" target
-> - cgroup cleanup path
-> - Moving the IMA kexec_load selftest to selftests/kexec work from
->   Mimi Johar and Petr Vorel
-> - A framework to kselftest for writing kernel test modules addition
->   from Tobin C. Harding
-> 
-> ----------------------------------------------------------------
-> Kees Cook (3):
->       selftests/seccomp: Handle namespace failures gracefully
->       selftests/harness: Add 30 second timeout per test
->       selftests/ipc: Fix msgque compiler warnings
-> 
-> Mathieu Desnoyers (1):
->       rseq/selftests: Adapt number of threads to the number of detected cpus
-> 
-> Mimi Zohar (9):
->       selftests/kexec: move the IMA kexec_load selftest to selftests/kexec
->       selftests/kexec: cleanup the kexec selftest
->       selftests/kexec: define a set of common functions
->       selftests/kexec: define common logging functions
->       selftests/kexec: define "require_root_privileges"
->       selftests/kexec: kexec_file_load syscall test
->       selftests/kexec: check kexec_load and kexec_file_load are enabled
->       selftests/kexec: make kexec_load test independent of IMA being enabled
->       selftests/kexec: update get_secureboot_mode
-> 
-> Petr Vorel (1):
->       selftests/kexec: Add missing '=y' to config options
-> 
-> Po-Hsu Lin (1):
->       selftests/efivarfs: clean up test files from test_create*()
-> 
-> Roman Gushchin (1):
->       selftests: cgroup: fix cleanup path in test_memcg_subtree_control()
-> 
-> Sabyasachi Gupta (4):
->       selftest/x86/mpx-dig.c: Remove duplicate header
->       selftest/timers: Remove duplicate header
->       selftest/rseq: Remove duplicate header
->       selftest/gpio: Remove duplicate header
-> 
-> Shuah Khan (2):
->       selftests: fix headers_install circular dependency
 
-Shuah,
 
-the commit 8ce72dc32578 ("selftests: fix headers_install circular dependency")
-broke our build/test workflow, since it added:
-  ifneq ($(KBUILD_OUTPUT),)
-          OUTPUT := $(KBUILD_OUTPUT)
-  else
+On 2019-05-09 3:42 p.m., Theodore Ts'o wrote:
+> On Thu, May 09, 2019 at 11:12:12AM -0700, Frank Rowand wrote:
+>>
+>>     "My understanding is that the intent of KUnit is to avoid booting a kernel on
+>>     real hardware or in a virtual machine.  That seems to be a matter of semantics
+>>     to me because isn't invoking a UML Linux just running the Linux kernel in
+>>     a different form of virtualization?
+>>
+>>     So I do not understand why KUnit is an improvement over kselftest.
+>>
+>>     ...
+>>
+>>     What am I missing?"
+> 
+> One major difference: kselftest requires a userspace environment; it
+> starts systemd, requires a root file system from which you can load
+> modules, etc.  Kunit doesn't require a root file system; doesn't
+> require that you start systemd; doesn't allow you to run arbitrary
+> perl, python, bash, etc. scripts.  As such, it's much lighter weight
+> than kselftest, and will have much less overhead before you can start
+> running tests.  So it's not really the same kind of virtualization.
 
-which means that all of selftests/bpf artifacts are now going into
-main build directory cluttering it with all sorts of .o, generated files
-and executables.
-The end result is humans and scripts can no longer find tests.
+I largely agree with everything Ted has said in this thread, but I 
+wonder if we are conflating two different ideas that is causing an 
+impasse. From what I see, Kunit actually provides two different things:
 
-For now I hacked it as:
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 5979fdc4f36c..caecec7aebde 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -6,12 +6,8 @@ ifeq (0,$(MAKELEVEL))
-     ifneq ($(O),)
-        OUTPUT := $(O)
-     else
--       ifneq ($(KBUILD_OUTPUT),)
--               OUTPUT := $(KBUILD_OUTPUT)
--       else
--               OUTPUT := $(shell pwd)
--               DEFAULT_INSTALL_HDR_PATH := 1
--       endif
-+       OUTPUT := $(shell pwd)
-+       DEFAULT_INSTALL_HDR_PATH := 1
-     endif
- endif
+1) An execution environment that can be run very quickly in userspace on 
+tests in the kernel source. This speeds up the tests and gives a lot of 
+benefit to developers using those tests because they can get feedback on 
+their code changes a *lot* quicker.
 
-bpf developers are doing "cd tools/testing/selftests/bpf; make; ./test_verifier; ..."
-while KBUILD_OUTPUT is also set.
-I don't quite get this 'circular dependency' issue that your commit suppose to address
-but please fix it differently, so bpf developer's workflow is restored and buildbots work again.
-People and scripts depend on it.
-It's even described in Documentation/bpf/bpf_devel_QA.rst
+2) A framework to write unit tests that provides a lot of the same 
+facilities as other common unit testing frameworks from userspace (ie. a 
+runner that runs a list of tests and a bunch of helpers such as 
+KUNIT_EXPECT_* to simplify test passes and failures).
 
-Thanks
+The first item from Kunit is novel and I see absolutely no overlap with 
+anything kselftest does. It's also the valuable thing I'd like to see 
+merged and grow.
+
+The second item, arguably, does have significant overlap with kselftest. 
+Whether you are running short tests in a light weight UML environment or 
+higher level tests in an heavier VM the two could be using the same 
+framework for writing or defining in-kernel tests. It *may* also be 
+valuable for some people to be able to run all the UML tests in the 
+heavy VM environment along side other higher level tests.
+
+Looking at the selftests tree in the repo, we already have similar items 
+to what Kunit is adding as I described in point (2) above. 
+kselftest_harness.h contains macros like EXPECT_* and ASSERT_* with very 
+similar intentions to the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
+
+However, the number of users of this harness appears to be quite small. 
+Most of the code in the selftests tree seems to be a random mismash of 
+scripts and userspace code so it's not hard to see it as something 
+completely different from the new Kunit:
+
+$ git grep --files-with-matches kselftest_harness.h *
+Documentation/dev-tools/kselftest.rst
+MAINTAINERS
+tools/testing/selftests/kselftest_harness.h
+tools/testing/selftests/net/tls.c
+tools/testing/selftests/rtc/rtctest.c
+tools/testing/selftests/seccomp/Makefile
+tools/testing/selftests/seccomp/seccomp_bpf.c
+tools/testing/selftests/uevent/Makefile
+tools/testing/selftests/uevent/uevent_filtering.c
+
+Thus, I can personally see a lot of value in integrating the kunit test 
+framework with this kselftest harness. There's only a small number of 
+users of the kselftest harness today, so one way or another it seems 
+like getting this integrated early would be a good idea. Letting Kunit 
+and Kselftests progress independently for a few years will only make 
+this worse and may become something we end up regretting.
+
+Logan
+
+
+
+
+
+
 
