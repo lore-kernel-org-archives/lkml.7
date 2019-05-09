@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAFFC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64499C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AA72182B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE6F2182B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427534;
-	bh=Xry9IfgzGkS4bZ5D/hLEPBwmFk/dQBWrJQXjqNhVEks=;
+	s=default; t=1557427537;
+	bh=S0Tt4ZKK6EQYjobmGT2IHopSDVpjcEeO0xmCEx3RX4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBZQ6eJvKtM5UVhUnJmRMOOSdAQcaoH22ynu8EP6Gg4wR5+DcrjHTA1NhOXrGrHWQ
-	 +1MbzftAYvUvVxFDAl68RC44T7saUML3FvRYj1bTRDQqv7u3v2suyeF+GPOvm3urLg
-	 Gyst28uHLApZac1CbGbs/IGtoB6bzW4vhwslngSU=
+	b=rOT1AqAGurw8nQHwxQpPnLlts26m28OA9MTC4w00KDFzkHRFatJ4WaQjdqvz/sPSt
+	 UgMyxegkLnOQFBZUUc1t4RP/QNCcGSceVpZPEpiJVRGEnRq+5IoMXdZqqHzCGWP0os
+	 5jxLpalsIz4GA/3ti2C3VnOe8S8y73r2Cc7v4JWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfEISpd (ORCPT
+        id S1727355AbfEISpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfEISp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:29 -0400
+        id S1726802AbfEISpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBA3321848;
-        Thu,  9 May 2019 18:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47C7C2183E;
+        Thu,  9 May 2019 18:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427528;
-        bh=Xry9IfgzGkS4bZ5D/hLEPBwmFk/dQBWrJQXjqNhVEks=;
+        s=default; t=1557427530;
+        bh=S0Tt4ZKK6EQYjobmGT2IHopSDVpjcEeO0xmCEx3RX4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qXgSPziISeSfmysPO+1kyKKF37iU1qa+m5qvabgFntAqibc9p0MMvbAEXk2dY5wgD
-         XPkkNSzF1k6W3cP/A1hIa77ekbp1RiZMdf3TdLFN8/c8kAedlAl6cSObclN/dt94S6
-         12zEUHDoq09dAmJAOCt6IhvvqrLcr4NfaBdV6o4A=
+        b=wze+88v6u5xpRPGUt1GHulNjYNC7xrljYPC4OMVbJQuMONrVMm3A02mxm9My/pxsz
+         XV/rAYxQ0CNWLLE3w1iNBmzjauApdEfXHAQ9TRKnEBREhkq2pxi552c47GgW+eqrT+
+         YgiUIlIh052f19Bqecvqkz/fvWOogfHIavLlwNdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        Nelson DSouza <nelson.dsouza@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Vince Weaver <vincent.weaver@maine.edu>, tonyj@suse.com,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/42] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
-Date:   Thu,  9 May 2019 20:42:05 +0200
-Message-Id: <20190509181255.900971671@linuxfoundation.org>
+Subject: [PATCH 4.14 17/42] perf/x86/intel: Initialize TFA MSR
+Date:   Thu,  9 May 2019 20:42:06 +0200
+Message-Id: <20190509181256.166848807@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -67,29 +67,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
+[ Upstream commit d7262457e35dbe239659e62654e56f8ddb814bed ]
 
-When an event is programmed with attr.wakeup_events=N (N>0), it means
-the caller is interested in getting a user level notification after
-N samples have been recorded in the kernel sampling buffer.
+Stephane reported that the TFA MSR is not initialized by the kernel,
+but the TFA bit could set by firmware or as a leftover from a kexec,
+which makes the state inconsistent.
 
-With precise events on Intel processors, the kernel uses PEBS.
-The kernel tries minimize sampling overhead by verifying
-if the event configuration is compatible with multi-entry PEBS mode.
-If so, the kernel is notified only when the buffer has reached its threshold.
-Other PEBS operates in single-entry mode, the kenrel is notified for each
-PEBS sample.
-
-The problem is that the current implementation look at frequency
-mode and event sample_type but ignores the wakeup_events field. Thus,
-it may not be possible to receive a notification after each precise event.
-
-This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
-is non-zero.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
+Reported-by: Stephane Eranian <eranian@google.com>
+Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
@@ -97,27 +83,31 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: kan.liang@intel.com
-Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
+Cc: tonyj@suse.com
+Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 99d45660242e3..74e26803be5dd 100644
+index 74e26803be5dd..82ddee4ab25fd 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3051,7 +3051,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
+@@ -3427,6 +3427,12 @@ static void intel_pmu_cpu_starting(int cpu)
  
- 	if (event->attr.precise_ip) {
--		if (!event->attr.freq) {
-+		if (!(event->attr.freq || event->attr.wakeup_events)) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_free_running_flags(event)))
+ 	cpuc->lbr_sel = NULL;
+ 
++	if (x86_pmu.flags & PMU_FL_TFA) {
++		WARN_ON_ONCE(cpuc->tfa_shadow);
++		cpuc->tfa_shadow = ~0ULL;
++		intel_set_tfa(cpuc, false);
++	}
++
+ 	if (x86_pmu.version > 1)
+ 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
+ 
 -- 
 2.20.1
 
