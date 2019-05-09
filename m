@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E15C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFA0C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E68C217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660122182B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427699;
-	bh=r/gG9fHbgSH+e8w0+yw+2NRJygv2eH5liffGZQMgvFs=;
+	s=default; t=1557427701;
+	bh=O4EPrr34U2tRAfhad++Hrv38U/CglpjqXgiIyrFJ74o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HOAdaixhnKOMPw0WEFmlI8IEhxh2YHHbYMWHxrVAY1pZ1Zi0HjS+kkS724qpPLgeY
-	 ytjTupLAoG76/kHJs7KtIvFxNGqunSzWCJFKDQk7frdZQ9xfAS08O3w8ySymihzJFV
-	 5PNyVJPZe2u6tmv9FBTfUk+TE/2g1bZRtwgLOPik=
+	b=RuzzbPz0I/1RnDCoirS+su96UD+NpJJbmHKba9PgahmX65oOYn7fVxSAOQEZuHzCC
+	 EMMpiDXwAwyMco4PGYPp9sbH5+QGI7LXMiuYdnQm/TyOZJ2k7emhr2mjzUX+aWAwEW
+	 VAZfhT/bh9biGmsUYzo8tKHz3ZuGiGQnAMRnbG/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfEISsR (ORCPT
+        id S1728005AbfEISsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfEISsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:14 -0400
+        id S1727989AbfEISsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3231217F5;
-        Thu,  9 May 2019 18:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 736F320578;
+        Thu,  9 May 2019 18:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427693;
-        bh=r/gG9fHbgSH+e8w0+yw+2NRJygv2eH5liffGZQMgvFs=;
+        s=default; t=1557427696;
+        bh=O4EPrr34U2tRAfhad++Hrv38U/CglpjqXgiIyrFJ74o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEDdUYVsX5e4P3xVO7ru4qzQ64fQVIhnYfEfsL8qIsQKx541+zci5GCDgNbQGQQIo
-         qdnladPp3RPdEYcmvDdPMVwf2oufrOqvXfBBcUumpxNSYxzkqqDIoJosfGNCms0hxe
-         XdjqeA+akDrOw++WZUh2hkUWBL+ppZIhgGgihHkU=
+        b=YpPjTKpxlT9xKpxG5quaPNNl0V/7LYuwLu79lcXHAVOqbTJuVREOSZlfCydUO7sKy
+         ZwXxYyQ2I7ugSk41lxKyqEiwdLwXhlCNbSKheGDMGD0lRpl0/cUnFiJVJea73NiHCV
+         iAIbLgGcBIjglGEnBWjZaT9eF8muzB4I0HuHg1XQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Tianci Yin <tianci.yin@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/66] drm/amd/display: fix cursor black issue
-Date:   Thu,  9 May 2019 20:42:09 +0200
-Message-Id: <20190509181305.612568910@linuxfoundation.org>
+Subject: [PATCH 4.19 35/66] ASoC: cs35l35: Disable regulators on driver removal
+Date:   Thu,  9 May 2019 20:42:10 +0200
+Message-Id: <20190509181305.727470185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -62,38 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c1cefe115d1cdc460014483319d440b2f0d07c68 ]
+[ Upstream commit 47c4cc08cb5b34e93ab337b924c5ede77ca3c936 ]
 
-[Why]
-the member sdr_white_level of struct dc_cursor_attributes was not
-initialized, then the random value result that
-dcn10_set_cursor_sdr_white_level() set error hw_scale value 0x20D9(normal
-value is 0x3c00), this cause the black cursor issue.
+The chips main power supplies VA and VP are enabled during probe but
+then never disabled, this will cause warnings from the regulator
+framework on driver removal. Fix this by adding a remove callback and
+disabling the supplies, whilst doing so follow best practice and put the
+chip back into reset as well.
 
-[how]
-just initilize the obj of struct dc_cursor_attributes to zero to avoid
-the random value.
-
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Tianci Yin <tianci.yin@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/cs35l35.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 2b8b892eb846f..76ee2de43ea66 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4028,6 +4028,7 @@ static void handle_cursor_update(struct drm_plane *plane,
- 	amdgpu_crtc->cursor_width = plane->state->crtc_w;
- 	amdgpu_crtc->cursor_height = plane->state->crtc_h;
+diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
+index bd6226bde45f6..17e0101081ef6 100644
+--- a/sound/soc/codecs/cs35l35.c
++++ b/sound/soc/codecs/cs35l35.c
+@@ -1634,6 +1634,16 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 	return ret;
+ }
  
-+	memset(&attributes, 0, sizeof(attributes));
- 	attributes.address.high_part = upper_32_bits(address);
- 	attributes.address.low_part  = lower_32_bits(address);
- 	attributes.width             = plane->state->crtc_w;
++static int cs35l35_i2c_remove(struct i2c_client *i2c_client)
++{
++	struct cs35l35_private *cs35l35 = i2c_get_clientdata(i2c_client);
++
++	regulator_bulk_disable(cs35l35->num_supplies, cs35l35->supplies);
++	gpiod_set_value_cansleep(cs35l35->reset_gpio, 0);
++
++	return 0;
++}
++
+ static const struct of_device_id cs35l35_of_match[] = {
+ 	{.compatible = "cirrus,cs35l35"},
+ 	{},
+@@ -1654,6 +1664,7 @@ static struct i2c_driver cs35l35_i2c_driver = {
+ 	},
+ 	.id_table = cs35l35_id,
+ 	.probe = cs35l35_i2c_probe,
++	.remove = cs35l35_i2c_remove,
+ };
+ 
+ module_i2c_driver(cs35l35_i2c_driver);
 -- 
 2.20.1
 
