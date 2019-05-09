@@ -2,131 +2,120 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E476C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22897C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23FE820656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428903;
-	bh=EMkLnOSZMMv4MZEje/xzNx+RTKH8T3X3TlZQylSguD4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDuGIFE1ckM5eVyJP/9JReJ6KeX2ps6oUuiVRT7yPmVKuoBhKmuC3V3w1GfyQMVfg
-	 IDlqUuWnu+tIPMJS2j91DRSPlapCIR8fi/iERaCjq6ZU7T19+fZFEOwFWBvqaT8H7j
-	 RsihmqxEyPOLydhwf+rHv0pARjW+euxHJIO88kNQ=
+	by mail.kernel.org (Postfix) with ESMTP id EA50F20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTNDv5mN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfEITIV (ORCPT
+        id S1727105AbfEISol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfEISpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A136A217F5;
-        Thu,  9 May 2019 18:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427510;
-        bh=EMkLnOSZMMv4MZEje/xzNx+RTKH8T3X3TlZQylSguD4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXbGAiadrq3uFQzVNu9Lvf2v19dTbObBufavqjl/4LMFSGk3WZH+c8JI4iUbFFLeA
-         xxJ7nNgl80sfMWNVX5yBT9KnoVL96oyCCBrFs/pJOS67mXExw5lL+RSSu6ryWwbN0c
-         XDkTp1aNtSA0HWwoCD8xgstGKbBms2JSNfL1Tm8I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chenxiang <chenxiang66@hisilicon.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 01/42] scsi: libsas: fix a race condition when smp task timeout
-Date:   Thu,  9 May 2019 20:41:50 +0200
-Message-Id: <20190509181252.772469485@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
-References: <20190509181252.616018683@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 9 May 2019 14:44:41 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42575 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbfEISoe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:34 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j53so3697054qta.9;
+        Thu, 09 May 2019 11:44:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gNzbchyS3MYXKFC8vXfjMbKEn2g9EXo8PLmv/XF6OgQ=;
+        b=TTNDv5mNgHh7RhlaXKTRIDiMCPa6fNBk7ERMYokDoBWwODUQ+TgQ0DgBBc6jQ9hBiW
+         kt6oupJUYmACQvepi7F4NWlVZFQQ1CU5J5E4Ool4Rkzbqv4pyHTKg4um54Bd3+Jy7JzD
+         RPOYM68lZ95tHvHm5AmrnElVotyK79ItbT5OzZDrmZQIJpSIDyDGuN/cm+PGnNxe5lle
+         x2lZHA9qTgZ7sXyyW4Lj+sHZKbARxs2wmeGZM6JG+xbbbQN3sVC/9bmNl3vXB5BKWpBG
+         wt1m65ELO48/VHTNQejQVxNoZftYI07HehvNAE0AbR+k2ANdRn7C5CGUAEsQWcYTl0Fa
+         i1sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gNzbchyS3MYXKFC8vXfjMbKEn2g9EXo8PLmv/XF6OgQ=;
+        b=M05cDPHPHFXsYH83jBdvQDTMqcMjPsuWegyyKVnIcblEEnZSYhXhzMmmqh3p43sok9
+         bJCpb1mY13/cdinUwV573hp8/stNd5Pz7gc7BYbkX4UZA8HriMPoV4PW10n2nY4uXr71
+         pWkR2E3G2/E9we2LBck171AmF+m5jqPZVWm/DFgCqHXccsD1hnYCr6GTsJ6A6B1+F4EC
+         tw0HrwaTbr0nrnyKUtbHpnPGwU2NyTVBFOTWRlltgsHbUd+Cd5eQrQlmmsi/8AntSD8k
+         DVDyawg+8QGwHfIeNgGe8Kylw2nbTc3tm/1+Y1SGXNPlJ4Nj7E6acSsE/KrqTa5+AbVe
+         MB2g==
+X-Gm-Message-State: APjAAAUP8ZkMrpWlJUSQfIPu2QbwEHnUlY2A9uGSB+VHOu+iDTDl9q3O
+        7Tj4r96qqoKXmonQMgoZ4My0Ntv52Ck=
+X-Google-Smtp-Source: APXvYqzvkaSup/U+6jlc0XHDqTIZZGZnUdW7Fzk8uuVh2NxC01TyNPoFq3JKeoBV1falQBosMIuPVw==
+X-Received: by 2002:a0c:9ac1:: with SMTP id k1mr4997641qvf.36.1557427473250;
+        Thu, 09 May 2019 11:44:33 -0700 (PDT)
+Received: from localhost ([2601:184:4780:7861:6268:7a0b:50be:cebc])
+        by smtp.gmail.com with ESMTPSA id e3sm1116133qkn.93.2019.05.09.11.44.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 11:44:32 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC 3/3] arm64: dts: qcom: sdm845-cheza: delete zap-shader
+Date:   Thu,  9 May 2019 11:44:13 -0700
+Message-Id: <20190509184415.11592-4-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190509184415.11592-1-robdclark@gmail.com>
+References: <20190509184415.11592-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Rob Clark <robdclark@chromium.org>
 
-commit b90cd6f2b905905fb42671009dc0e27c310a16ae upstream.
+This is unused on cheza.  Delete the node to get rid of the reserved-
+memory section, and to avoid the driver from attempting to load a zap
+shader that doesn't exist every time it powers up the GPU.
 
-When the lldd is processing the complete sas task in interrupt and set the
-task stat as SAS_TASK_STATE_DONE, the smp timeout timer is able to be
-triggered at the same time. And smp_task_timedout() will complete the task
-wheter the SAS_TASK_STATE_DONE is set or not. Then the sas task may freed
-before lldd end the interrupt process. Thus a use-after-free will happen.
-
-Fix this by calling the complete() only when SAS_TASK_STATE_DONE is not
-set. And remove the check of the return value of the del_timer(). Once the
-LLDD sets DONE, it must call task->done(), which will call
-smp_task_done()->complete() and the task will be completed and freed
-correctly.
-
-Reported-by: chenxiang <chenxiang66@hisilicon.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Guenter Roeck <linux@roeck-us.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/scsi/libsas/sas_expander.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -47,17 +47,16 @@ static void smp_task_timedout(unsigned l
- 	unsigned long flags;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 8ccbe246dff4..28c28517b21a 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -175,6 +175,8 @@
+ /delete-node/ &venus_mem;
+ /delete-node/ &cdsp_mem;
+ /delete-node/ &cdsp_pas;
++/delete-node/ &zap_shader;
++/delete-node/ &gpu_mem;
  
- 	spin_lock_irqsave(&task->task_state_lock, flags);
--	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
-+	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
-+		complete(&task->slow_task->completion);
-+	}
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
--
--	complete(&task->slow_task->completion);
- }
+ /* Increase the size from 120 MB to 128 MB */
+ &mpss_region {
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b2d9e46c3916..2ea74b58a613 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1989,7 +1989,7 @@
  
- static void smp_task_done(struct sas_task *task)
- {
--	if (!del_timer(&task->slow_task->timer))
--		return;
-+	del_timer(&task->slow_task->timer);
- 	complete(&task->slow_task->completion);
- }
+ 			qcom,gmu = <&gmu>;
  
-
+-			zap-shader {
++			zap_shader: zap-shader {
+ 				memory-region = <&gpu_mem>;
+ 			};
+ 
+-- 
+2.20.1
 
