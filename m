@@ -4,118 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6C8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56057C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BDF20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F9020675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lr2gDwCH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoD45aM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfEIRtN (ORCPT
+        id S1726819AbfEIRtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:49:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32828 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEIRtM (ORCPT
+        Thu, 9 May 2019 13:49:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38362 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIRtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:49:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e11so4265285wrs.0;
-        Thu, 09 May 2019 10:49:11 -0700 (PDT)
+        Thu, 9 May 2019 13:49:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a59so1496394pla.5;
+        Thu, 09 May 2019 10:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0/UR7KuBk7jn3GdiXeodrKFMGjiBmRvYd8mwzpA5/pQ=;
-        b=Lr2gDwCHh+okjR5BMJoyAUcTWx2e7xJCBSFaC2JjpvhMZiM7r0e3wgnMGmmTUWVCeG
-         Zv8nRv/DH1GU3rCUBk71aYdRxzDHb0L67ODR1lbZSr30yncbPJzsTXMTKASFdt/le1f0
-         5DTT4izNgzSVdFjb/EyfnmphquHq6Z+D71PAJsxsGDj8xVc5tE40SrYHHkF7VA2a6ozG
-         068Q3H2JF/0Cak9ac+8L5fVCxB+WmdWXVU0+a8XbVtrSKMIzWTt69AZCXLR1glOXWwEo
-         7hn9l2SkHAtVG1iDv6sPJHk0HTSCkRCCTlCp0ONX5Y6XSD+1JcxuOjEGk8fw1yHvsD3R
-         a5IA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xGNclB3X4zp+TTPFI7JduJSlyKXyeMQXRwODcYbvWDE=;
+        b=IoD45aM0LJOyM3f/3ASR5vZeOg/rb/POXAq5u+jOo8ovy4hzE7SPXnSRhTMoL21dpJ
+         Ygex/67fx3Y9W1X2Hu6FLi8Z5GQY0Pd3i2YoON7RhKaw/vZcirt+oeX92L4eLrPwqA83
+         wMURjlG6AvHtzS7PT7+YDBZIr0NeWIuxTicCEvLxF2I3R0hyIDE3/xjOp4T0ffDuUu+Z
+         uI7DZ9KYIr82UZuWR1fBisYQURkY39ZEN4bWEnwiBPnoCnjLL97d0Pxz3F3n5xMRFoT0
+         uEzdo1Foyi0Mv/PVV5k2+JgekMlGydJhb7QLXs93pLPjwPhc2VWLQypdDUBj4Yca5bBs
+         29oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0/UR7KuBk7jn3GdiXeodrKFMGjiBmRvYd8mwzpA5/pQ=;
-        b=jKBYkcvP9HTc/+ythuAEjaTSV36C+OoIedS7hvuFHgOSTAHsHx/LmbmFZeHvuA53zZ
-         9FxaEiG8zEMJQ4Xb2judJ7qzsQWM8Y5ARiBgrHhSD/CTKotSNAIZynSLgToQXkD6ST6O
-         prK5ntQVqx4bJ7Vh8X+xq5Ps2HWXDiSnwwgIgG+eGpNhsHRLb/kbKZ+h3Tt0FIH0pw1i
-         aw96YOShMNaXn5yB5ESrSndF/CbRzhNcluj7ECntXrWtXaMFzdLMSr8R6C40Qgb11iqk
-         iYoCI+rRuBI7hYZmzAJYNUzlfVjlfdtRQgtphig9yt6lzraHhrjH+WUULJSPpuXFlqHI
-         Dm9A==
-X-Gm-Message-State: APjAAAU2dl77m88PUUPMg6iTXjeerCRQPxMcO2GfpS1ZIpzkcLqQniIr
-        mylUM4stR9E+tFWnQxBItxvKxi7O
-X-Google-Smtp-Source: APXvYqxpxT5uCg6dRjinbTiAzLimF39CcpccN2MoM68JfAIz692dZPSLjbsqHgk/WZQBZKtsxMVxsQ==
-X-Received: by 2002:a5d:67cb:: with SMTP id n11mr4144109wrw.3.1557424150632;
-        Thu, 09 May 2019 10:49:10 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id k67sm4474383wmb.34.2019.05.09.10.49.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 10:49:10 -0700 (PDT)
-Subject: Re: [PATCH v3 08/11] platform/x86: asus-wmi: Enhance detection of
- thermal data
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
- <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
- <CAHp75VdE7MBjyLj=9bS6oc5jc8+BC_hftWUJgZGG02iDd=saiQ@mail.gmail.com>
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Message-ID: <0d7f6a9e-d508-65ba-9646-39f1d1a42a13@gmail.com>
-Date:   Thu, 9 May 2019 19:49:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xGNclB3X4zp+TTPFI7JduJSlyKXyeMQXRwODcYbvWDE=;
+        b=so1vf06NuJlX943U4ncH3GyPvGbwM5wdaZju4NEebL+L+0v0LeITTkdF0Nk79GLAXF
+         GwV6kJmztI5s6CTAsTEUMgtjID8wx6YxNvL9iEKijO5zgGUEXRIYDSG51AkKm5kt8ZRo
+         HCj394DMc8ME2b1BmJJV7ZPlmW7se3XvMUvnVdXJ+RNjQIoQjjCT/EhnoYUnDaHbS0Zo
+         xYNFab8v1eMpRyPLPb3MbvOdb8wXFvDLyDnf97iArvO9eoQtSu4my+jyZPUdg7JvaygX
+         3mblQppzOcggy3euTj3awoAQRyhH4qz0ze0NEWL1S4cztdQWNHYK6KaPnMYo82M3yuAC
+         J8Zg==
+X-Gm-Message-State: APjAAAWxEM37ZT6MT6e7PN4Nhba3h1UF59nez0/GFeWFancy5P3kTD3Y
+        Az7N/+SeL8yY7Hm0w8NQNHl8OQtLWVvJNoQawKo=
+X-Google-Smtp-Source: APXvYqyy2yBnIkSugLtMCw3gCEWa4fuULEZiSXDEDQlFwBQjm3MPLyj9xEy327TMz96GSIxiypKwPP4cN7CYBrmpFcY=
+X-Received: by 2002:a17:902:aa45:: with SMTP id c5mr6857755plr.144.1557424159804;
+ Thu, 09 May 2019 10:49:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdE7MBjyLj=9bS6oc5jc8+BC_hftWUJgZGG02iDd=saiQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190509141456.223614-1-helgaas@kernel.org>
+In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 May 2019 20:49:08 +0300
+Message-ID: <CAHp75VdrQgu3Tis1V1j1AgjS=Uvw-7tz5ke4kSxRWM=0DrSjhw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] PCI: Log with pci_dev, not pcie_device
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dongdong Liu <liudongdong3@huawei.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.05.19 15:58, Andy Shevchenko wrote:
-> On Fri, Apr 19, 2019 at 1:12 PM Yurii Pavlovskyi
-> <yurii.pavlovskyi@gmail.com> wrote:
-> 
->> -               if (value == ASUS_WMI_UNSUPPORTED_METHOD || value & 0xFFF80000
->> +               if (value == ASUS_WMI_UNSUPPORTED_METHOD || (value & 0xFFF80000)
-> 
-> Seems like a bug fix and thus should be a separate commit predecessing
-> the series.
-The previous one should theoretically work as well, just thought that would
-help readability, will revert this.
-
->> -       else if (attr == &dev_attr_temp1_input.attr)
->> -               dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
+On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> I don't see how this change affects the user output or driver
-> behaviour. Why is it done?
-> 
->> -       } else if (dev_id == ASUS_WMI_DEVID_THERMAL_CTRL) {
-> 
->> +       } else if (attr == &dev_attr_temp1_input.attr) {
-> 
-> So, I don't see why you change this line.
-> 
-Yes, looking at this patch now I'd guess the refactoring there is really
-misguided as it adds a lot more code than it removes, will drop it
-completely and just add a new condition to the current check instead in
-next version:
--		/* If value is zero, something is clearly wrong */
--		if (!value)
-+		if (!value || value == 1)
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> This is a collection of updates to Fred's v2 patches from:
+>
+>   https://lore.kernel.org/lkml/20190503035946.23608-1-fred@fredlawl.com
+>
+> and some follow-on discussion.
+>
 
-Thanks,
-Yurii
+For non-commented patches,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+For the commented ones, I hope you will address them, and then my tag
+applies for them as well.
+
+> Bjorn Helgaas (3):
+>   PCI: pciehp: Remove pciehp_debug uses
+>   PCI: pciehp: Remove pointless PCIE_MODULE_NAME definition
+>   PCI: pciehp: Remove pointless MY_NAME definition
+>
+> Frederick Lawler (7):
+>   PCI/AER: Replace dev_printk(KERN_DEBUG) with dev_info()
+>   PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()
+>   PCI/DPC: Log messages with pci_dev, not pcie_device
+>   PCI/AER: Log messages with pci_dev, not pcie_device
+>   PCI: pciehp: Replace pciehp_debug module param with dyndbg
+>   PCI: pciehp: Log messages with pci_dev, not pcie_device
+>   PCI: pciehp: Remove unused dbg/err/info/warn() wrappers
+>
+>  drivers/pci/hotplug/pciehp.h      | 31 +++++++-------------------
+>  drivers/pci/hotplug/pciehp_core.c | 18 +++++++--------
+>  drivers/pci/hotplug/pciehp_ctrl.c |  2 ++
+>  drivers/pci/hotplug/pciehp_hpc.c  | 17 +++++++-------
+>  drivers/pci/hotplug/pciehp_pci.c  |  2 ++
+>  drivers/pci/pcie/aer.c            | 32 ++++++++++++++------------
+>  drivers/pci/pcie/aer_inject.c     | 22 +++++++++---------
+>  drivers/pci/pcie/dpc.c            | 37 +++++++++++++++----------------
+>  drivers/pci/pcie/pme.c            | 10 +++++----
+>  9 files changed, 82 insertions(+), 89 deletions(-)
+>
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
