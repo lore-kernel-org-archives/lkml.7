@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A4CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EA6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552F320656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C6A20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428287;
-	bh=g85WHPlSeeNCZmBZ0LD/EXxEDcEyzF+M+UOePGG4gEc=;
+	s=default; t=1557428297;
+	bh=K6Crj5qIPiEOEheoj0CX+J/8kS3zZBd/dhua6TODmiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6f9h+/wIYsV9L4mv4+f7wV1uCzF87SuteZRCV/MfpxB7MTRtRQtWTBGFQkRz5sS5
-	 9qIo+GsHEXshiNsuCdjUt5Xyn4cUn7x9L53eLB19CVHJa0yjWC8ubeHx69ZyziV4nE
-	 KpfczVzI1u5i9N8lbRhvkDNO8FIsTTsoTz7bEljk=
+	b=V3NvuoY37j6xMPThIx6w8C780HvCFHdXngJ/JExPnQsP9QPVG+yvtU2jJWiouE1Lz
+	 CVMwc74mK6sJUY136+pOop8ebGRCwFv8N+qell0KsonEIP25dCVIs8W83q1Ehn3TQO
+	 bDDZXA82XnyZY0mg7uoQapPSue7kPt09qWRVIMZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfEIS6G (ORCPT
+        id S1728919AbfEIS6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48132 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728907AbfEISxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:53:36 -0400
+        id S1728450AbfEISxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:53:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D94920578;
-        Thu,  9 May 2019 18:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C7E620578;
+        Thu,  9 May 2019 18:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428015;
-        bh=g85WHPlSeeNCZmBZ0LD/EXxEDcEyzF+M+UOePGG4gEc=;
+        s=default; t=1557428002;
+        bh=K6Crj5qIPiEOEheoj0CX+J/8kS3zZBd/dhua6TODmiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPkaMe/EcwJlPPxo2ED6PrO5Z9KpZW8w+9cqTmdt788gfMdQ9cmyISUxP0uSiWjOC
-         mIw8U2rEokFQ1AZ+8TPSKUc79AIylEqUR6Lu9Z6mYlkinwgFTA9MVMr8+sM6iUJDYr
-         x6/ch/cb1ljsQ9dImooFBVLsrT4RrYmoPXakAWwo=
+        b=KZaFLQRAvtBYAh0VdEFQPHnXbrSF/fzR2bEtCLqNXo/XY0kh5Dkn/6TQ8E14YSkt/
+         dG8tcuhTzbm+pFa586aWFeWV7/NVe6cvGOpoFWMIyrjp/V69wJGbeIlySa1EZVg4ba
+         OTVR84CPd1YJcZ5aZaTCx/w3ZmHDm8R6ScQ3agxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.0 90/95] Bluetooth: hci_bcm: Fix empty regulator supplies for Intel Macs
-Date:   Thu,  9 May 2019 20:42:47 +0200
-Message-Id: <20190509181315.527130150@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qtran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 86/95] scsi: qla2xxx: Fix device staying in blocked state
+Date:   Thu,  9 May 2019 20:42:43 +0200
+Message-Id: <20190509181315.280012213@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -59,69 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Quinn Tran <qtran@marvell.com>
 
-commit 62611abc8f37d00e3b0cff0eb2d72fa92b05fd27 upstream.
+commit 2137490f2147a8d0799b72b9a1023efb012d40c7 upstream.
 
-The code path for Macs goes through bcm_apple_get_resources(), which
-skips over the code that sets up the regulator supplies. As a result,
-the call to regulator_bulk_enable() / regulator_bulk_disable() results
-in a NULL pointer dereference.
+This patch fixes issue reported by some of the customers, who discovered
+that after cable pull scenario the devices disappear and path seems to
+remain in blocked state. Once the device reappears, driver does not seem to
+update path to online. This issue appears because of the defer flag
+creating race condition where the same session reappears.  This patch fixes
+this issue by indicating SCSI-ML of device lost when
+qlt_free_session_done() is called from qlt_unreg_sess().
 
-This was reported on the kernel.org Bugzilla, bug 202963.
-
-Unbreak Broadcom Bluetooth support on Intel Macs by checking if the
-supplies were set up before enabling or disabling them.
-
-The same does not need to be done for the clocks, as the common clock
-framework API checks for NULL pointers.
-
-Fixes: 75d11676dccb ("Bluetooth: hci_bcm: Add support for regulator supplies")
-Cc: <stable@vger.kernel.org> # 5.0.x
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Tested-by: Imre Kaloz <kaloz@openwrt.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 41dc529a4602a ("qla2xxx: Improve RSCN handling in driver")
+Signed-off-by: Quinn Tran <qtran@marvell.com>
+Cc: stable@vger.kernel.org #4.19
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_bcm.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_target.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -228,9 +228,15 @@ static int bcm_gpio_set_power(struct bcm
- 	int err;
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -977,6 +977,8 @@ void qlt_free_session_done(struct work_s
+ 		sess->send_els_logo);
  
- 	if (powered && !dev->res_enabled) {
--		err = regulator_bulk_enable(BCM_NUM_SUPPLIES, dev->supplies);
--		if (err)
--			return err;
-+		/* Intel Macs use bcm_apple_get_resources() and don't
-+		 * have regulator supplies configured.
-+		 */
-+		if (dev->supplies[0].supply) {
-+			err = regulator_bulk_enable(BCM_NUM_SUPPLIES,
-+						    dev->supplies);
-+			if (err)
-+				return err;
-+		}
- 
- 		/* LPO clock needs to be 32.768 kHz */
- 		err = clk_set_rate(dev->lpo_clk, 32768);
-@@ -259,7 +265,13 @@ static int bcm_gpio_set_power(struct bcm
- 	if (!powered && dev->res_enabled) {
- 		clk_disable_unprepare(dev->txco_clk);
- 		clk_disable_unprepare(dev->lpo_clk);
--		regulator_bulk_disable(BCM_NUM_SUPPLIES, dev->supplies);
+ 	if (!IS_SW_RESV_ADDR(sess->d_id)) {
++		qla2x00_mark_device_lost(vha, sess, 0, 0);
 +
-+		/* Intel Macs use bcm_apple_get_resources() and don't
-+		 * have regulator supplies configured.
-+		 */
-+		if (dev->supplies[0].supply)
-+			regulator_bulk_disable(BCM_NUM_SUPPLIES,
-+					       dev->supplies);
- 	}
+ 		if (sess->send_els_logo) {
+ 			qlt_port_logo_t logo;
  
- 	/* wait for device to power on and come out of reset */
+@@ -1157,8 +1159,6 @@ void qlt_unreg_sess(struct fc_port *sess
+ 	if (sess->se_sess)
+ 		vha->hw->tgt.tgt_ops->clear_nacl_from_fcport_map(sess);
+ 
+-	qla2x00_mark_device_lost(vha, sess, 0, 0);
+-
+ 	sess->deleted = QLA_SESS_DELETION_IN_PROGRESS;
+ 	sess->disc_state = DSC_DELETE_PEND;
+ 	sess->last_rscn_gen = sess->rscn_gen;
 
 
