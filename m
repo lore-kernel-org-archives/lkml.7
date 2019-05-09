@@ -2,212 +2,229 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5A1C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B529C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D797221479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C72E2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfEITbQ (ORCPT
+        id S1727060AbfEITcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:31:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:60788 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfEITbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:31:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 12:31:14 -0700
-X-ExtLoop1: 1
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga008.jf.intel.com with ESMTP; 09 May 2019 12:31:14 -0700
-Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 9 May 2019 12:31:13 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
- ORSMSX115.amr.corp.intel.com ([169.254.4.162]) with mapi id 14.03.0415.000;
- Thu, 9 May 2019 12:31:13 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
-        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>
-CC:     "hch@infradead.org" <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "jonas.rabenstein@studium.uni-erlangen.de" 
-        <jonas.rabenstein@studium.uni-erlangen.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-Subject: Re: [PATCH 0/3] block: sed-opal: add support for shadow MBR done
- flag and write
-Thread-Topic: [PATCH 0/3] block: sed-opal: add support for shadow MBR done
- flag and write
-Thread-Index: AQHU/6tnJPjYcz7aREior5rwNXuvoqZWv1iAgAOVRYCAAsM0AIAGmZiA
-Date:   Thu, 9 May 2019 19:31:12 +0000
-Message-ID: <8342e25cc9d6e84c620d54c6cbe0f7244ebb7de1.camel@intel.com>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
-         <20190501134917.GC24132@infradead.org>
-         <alpine.LRH.2.21.1905032058110.30331@linux.fjfi.cvut.cz>
-         <20190505144330.GB1030@hacktheplanet>
-In-Reply-To: <20190505144330.GB1030@hacktheplanet>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.4.116]
-Content-Type: multipart/signed; micalg=sha-1;
-        protocol="application/x-pkcs7-signature"; boundary="=-YCN78LGfkXmWnf27gyZc"
+        Thu, 9 May 2019 15:32:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57250 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726710AbfEITcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:32:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A7E6BAE16;
+        Thu,  9 May 2019 19:32:22 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id ED4D81E3C7F; Thu,  9 May 2019 21:32:19 +0200 (CEST)
+Date:   Thu, 9 May 2019 21:32:19 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, stable@vger.kernel.org,
+        Piotr Balcer <piotr.balcer@intel.com>,
+        Yan Ma <yan.ma@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] mm/huge_memory: Fix vmf_insert_pfn_{pmd, pud}() crash,
+ handle unaligned addresses
+Message-ID: <20190509193219.GH23589@quack2.suse.cz>
+References: <155741946350.372037.11148198430068238140.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155741946350.372037.11148198430068238140.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-YCN78LGfkXmWnf27gyZc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu 09-05-19 09:31:41, Dan Williams wrote:
+> Starting with commit c6f3c5ee40c1 "mm/huge_memory.c: fix modifying of
+> page protection by insert_pfn_pmd()" vmf_insert_pfn_pmd() internally
+> calls pmdp_set_access_flags(). That helper enforces a pmd aligned
+> @address argument via VM_BUG_ON() assertion.
+> 
+> Update the implementation to take a 'struct vm_fault' argument directly
+> and apply the address alignment fixup internally to fix crash signatures
+> like:
+> 
+>     kernel BUG at arch/x86/mm/pgtable.c:515!
+>     invalid opcode: 0000 [#1] SMP NOPTI
+>     CPU: 51 PID: 43713 Comm: java Tainted: G           OE     4.19.35 #1
+>     [..]
+>     RIP: 0010:pmdp_set_access_flags+0x48/0x50
+>     [..]
+>     Call Trace:
+>      vmf_insert_pfn_pmd+0x198/0x350
+>      dax_iomap_fault+0xe82/0x1190
+>      ext4_dax_huge_fault+0x103/0x1f0
+>      ? __switch_to_asm+0x40/0x70
+>      __handle_mm_fault+0x3f6/0x1370
+>      ? __switch_to_asm+0x34/0x70
+>      ? __switch_to_asm+0x40/0x70
+>      handle_mm_fault+0xda/0x200
+>      __do_page_fault+0x249/0x4f0
+>      do_page_fault+0x32/0x110
+>      ? page_fault+0x8/0x30
+>      page_fault+0x1e/0x30
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()")
+> Reported-by: Piotr Balcer <piotr.balcer@intel.com>
+> Tested-by: Yan Ma <yan.ma@intel.com>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Cc: Chandan Rajendra <chandan@linux.ibm.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-On Sun, 2019-05-05 at 10:43 -0400, Scott Bauer wrote:
-> On Fri, May 03, 2019 at 10:32:19PM +0200, David Kozub wrote:
-> > On Wed, 1 May 2019, Christoph Hellwig wrote:
-> >=20
-> > > > I successfully tested toggling the MBR done flag and writing
-> > > > the shadow MBR
-> > > > using some tools I hacked together[4] with a Samsung SSD 850
-> > > > EVO drive.
-> > >=20
-> > > Can you submit the tool to util-linux so that we get it into
-> > > distros?
-> >=20
-> > There is already Scott's sed-opal-temp[1] and a fork by Jonas that
-> > adds
-> > support for older version of these new IOCTLs[2]. There was already
-> > some
-> > discussion of getting that to util-linux.[3]
-> >=20
-> > While I like my hack, sed-opal-temp can do much more (my tool
-> > supports just
-> > the few things I actually use). But there are two things which sed-
-> > opal-temp
-> > currently lacks which my hack has:
-> >=20
-> > * It can use a PBKDF2 hash (salted by disk serial number) of the
-> > password
-> >   rather than the password directly. This makes it compatible with
-> > sedutil
-> >   and I think it's also better practice (as firmware can contain
-> > many
-> >   surprises).
-> >=20
-> > * It contains a 'PBA' (pre-boot authorization) tool. A tool
-> > intended to be
-> >   run from shadow mbr that asks for a password and uses it to
-> > unlock all
-> >   disks and set shadow mbr done flag, so after restart the computer
-> > boots
-> >   into the real OS.
-> >=20
-> > @Scott: What are your plans with sed-opal-temp? If you want I can
-> > update
-> > Jonas' patches to the adapted IOCTLs. What are your thoughts on PW
-> > hashing
-> > and a PBA tool?
->=20
-> I will accept any and all patches to sed opal tooling, I am not
-> picky. I will
-> also give up maintainership of it is someone else feels they can
-> (rightfully
-> so) do a better job.
->=20
-> Jon sent me a patch for the tool that will deal with writing to the
-> shadow MBR,
-> so once we know these patches are going in i'll pull that patch into
-> the tool.
->=20
-> Then I guess that leaves PBKDF2 which I don't think will be too hard
-> to pull in.
->=20
-> With regard to your PBA tool, is that actually being run post-
-> uefi/pre-linux?
-> IE are we writing your tool into the SMBR and that's what is being
-> run on bootup?
->=20
-> Jon, if you think it's a good idea can you ask David if Revanth or
-> you wants
-> to take over the tooling? Or if anyone else here wants to own it then
-> let me know.
->=20
+Looks good to me. You can add:
 
-I'll get back to you on this. Let me know if it begins to pick up a lot
-of steam and I can prioritize this.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
---=-YCN78LGfkXmWnf27gyZc
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+								Honza
 
-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
-PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
-AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
-HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
-b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
-JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
-bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
-SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
-MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
-gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
-AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
-gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
-ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
-p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
-7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
-NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
-CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
-FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
-bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
-IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDUwOTE5MzA0N1owIwYJ
-KoZIhvcNAQkEMRYEFHk98NfJtBUAjEXUevIjndasiw+KMA0GCSqGSIb3DQEBAQUABIIBACu252H6
-bgx5XVoe9fEE74XocWaW+nCjI5pO8ExMcRfchJW5IN77Z1oKHpT6k09Pb/tzmeOc5xDDMCHMabGY
-o2diY+d61+7XfZg/obHbMK4T0JSpKX69JO1c9460y7/2Zcl8DWaerq0Tl37JQNetqnUy7MmG0fFa
-XjntwcxkxmD7PjKX/JL7n9TcpwmCEQvp5fV/5Bj6In7ceUpJ6QPEIwG9EkidIfK8nAHjKw5zwpJJ
-ccztCt3n8CVvZa3OMy0YsJz7rqWonmIEieeD0YJ2CLOYcGkdYVBm8LOwGCKcZ4g7Yrc14zcqZGs8
-3SlbjGy3TBKMIJJYTlRRaC4pyjMrelEAAAAAAAA=
-
-
---=-YCN78LGfkXmWnf27gyZc--
+> ---
+> 
+>  drivers/dax/device.c    |    6 ++----
+>  fs/dax.c                |    6 ++----
+>  include/linux/huge_mm.h |    6 ++----
+>  mm/huge_memory.c        |   16 ++++++++++------
+>  4 files changed, 16 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index e428468ab661..996d68ff992a 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -184,8 +184,7 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
+>  
+>  	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+>  
+> -	return vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd, *pfn,
+> -			vmf->flags & FAULT_FLAG_WRITE);
+> +	return vmf_insert_pfn_pmd(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
+>  }
+>  
+>  #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+> @@ -235,8 +234,7 @@ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+>  
+>  	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+>  
+> -	return vmf_insert_pfn_pud(vmf->vma, vmf->address, vmf->pud, *pfn,
+> -			vmf->flags & FAULT_FLAG_WRITE);
+> +	return vmf_insert_pfn_pud(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
+>  }
+>  #else
+>  static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+> diff --git a/fs/dax.c b/fs/dax.c
+> index e5e54da1715f..83009875308c 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -1575,8 +1575,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
+>  		}
+>  
+>  		trace_dax_pmd_insert_mapping(inode, vmf, PMD_SIZE, pfn, entry);
+> -		result = vmf_insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn,
+> -					    write);
+> +		result = vmf_insert_pfn_pmd(vmf, pfn, write);
+>  		break;
+>  	case IOMAP_UNWRITTEN:
+>  	case IOMAP_HOLE:
+> @@ -1686,8 +1685,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+>  		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
+>  #ifdef CONFIG_FS_DAX_PMD
+>  	else if (order == PMD_ORDER)
+> -		ret = vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd,
+> -			pfn, true);
+> +		ret = vmf_insert_pfn_pmd(vmf, pfn, FAULT_FLAG_WRITE);
+>  #endif
+>  	else
+>  		ret = VM_FAULT_FALLBACK;
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 381e872bfde0..7cd5c150c21d 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -47,10 +47,8 @@ extern bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+>  extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+>  			unsigned long addr, pgprot_t newprot,
+>  			int prot_numa);
+> -vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+> -			pmd_t *pmd, pfn_t pfn, bool write);
+> -vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+> -			pud_t *pud, pfn_t pfn, bool write);
+> +vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
+> +vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+>  enum transparent_hugepage_flag {
+>  	TRANSPARENT_HUGEPAGE_FLAG,
+>  	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 165ea46bf149..4310c6e9e5a3 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -793,11 +793,13 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  		pte_free(mm, pgtable);
+>  }
+>  
+> -vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+> -			pmd_t *pmd, pfn_t pfn, bool write)
+> +vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+>  {
+> +	unsigned long addr = vmf->address & PMD_MASK;
+> +	struct vm_area_struct *vma = vmf->vma;
+>  	pgprot_t pgprot = vma->vm_page_prot;
+>  	pgtable_t pgtable = NULL;
+> +
+>  	/*
+>  	 * If we had pmd_special, we could avoid all these restrictions,
+>  	 * but we need to be consistent with PTEs and architectures that
+> @@ -820,7 +822,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  
+>  	track_pfn_insert(vma, &pgprot, pfn);
+>  
+> -	insert_pfn_pmd(vma, addr, pmd, pfn, pgprot, write, pgtable);
+> +	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
+>  	return VM_FAULT_NOPAGE;
+>  }
+>  EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
+> @@ -869,10 +871,12 @@ static void insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+>  	spin_unlock(ptl);
+>  }
+>  
+> -vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+> -			pud_t *pud, pfn_t pfn, bool write)
+> +vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+>  {
+> +	unsigned long addr = vmf->address & PUD_MASK;
+> +	struct vm_area_struct *vma = vmf->vma;
+>  	pgprot_t pgprot = vma->vm_page_prot;
+> +
+>  	/*
+>  	 * If we had pud_special, we could avoid all these restrictions,
+>  	 * but we need to be consistent with PTEs and architectures that
+> @@ -889,7 +893,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+>  
+>  	track_pfn_insert(vma, &pgprot, pfn);
+>  
+> -	insert_pfn_pud(vma, addr, pud, pfn, pgprot, write);
+> +	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
+>  	return VM_FAULT_NOPAGE;
+>  }
+>  EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
