@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA97C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7E020656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D852C20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428788;
-	bh=U2ddoaxNddJnFuld8DffmPpRIoM8TBSm6suNkKdVHy0=;
+	s=default; t=1557428800;
+	bh=9tbsKffdPUc+3OwTLv/iHQ2quWGjUaoqMPorFu9sQZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKYzIeVSB7fCWkdw3/Nkvyocgvx7kkjkBhMc/4eDJC7Ewvl9Wr2d5q12tJmbwtbyf
-	 8c/4Ft1gmh46A6113Baw+7ghzigMvV2C06Z0FaV2AajlyoewAJiHfQRbaZNSWwFt4Z
-	 IyioXKjnWK3rqfN2Ga82tH2DqTPk1J2+vr150Mbg=
+	b=aXRbtW+oWpEj/WrTPonaM9bl3e3a/yVMkeaKBx0t8zVwBwy0LirQx+tDA6eegZT9z
+	 4I4/A819VIzoUThVKWq5qR7DfSKMNaNDFevnnoUeMqfvBoZTq1H/47HEytYi9U973V
+	 /RC8uXyJfHVz63AOygtOrjXKVsxAFXyfIhOL/8ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfEITG1 (ORCPT
+        id S1727744AbfEITGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:06:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39264 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbfEISqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:46:51 -0400
+        id S1727646AbfEISqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:46:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2401C2182B;
-        Thu,  9 May 2019 18:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D786921848;
+        Thu,  9 May 2019 18:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427610;
-        bh=U2ddoaxNddJnFuld8DffmPpRIoM8TBSm6suNkKdVHy0=;
+        s=default; t=1557427600;
+        bh=9tbsKffdPUc+3OwTLv/iHQ2quWGjUaoqMPorFu9sQZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7yB6EDIUSQ348LDI67bCLnu46RX+lGHqajvgFSUIc4w5UrglTe7/XNb2E54zozhJ
-         OJzagiUpkPljHB6k9rGwWe8aHPENlJnYBCVeZdUnRbgxv7h7mXhsx8QbVGa2SWf/4y
-         WmWZ3uFv+ayb4aSZ4tQAojEn6vzWCqpBrecyeoq0=
+        b=fAOsUInQEbpoDuPKh591XiZNPHD6Wj4yYWc7a7pogIU2ElYTUm77GEzuCdhftpnBL
+         Yx2i9qIbFhndgJQ8cqinRArMt5WsokLulNOVVs9V3QhViwdYOLwZmC0mTNVpauYHS3
+         HORECqMWUyyaeM+OccCOy2gcz+VJfqRC2DP1WvGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.14 35/42] intel_th: pci: Add Comet Lake support
-Date:   Thu,  9 May 2019 20:42:24 +0200
-Message-Id: <20190509181259.622269659@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.14 31/42] usb: dwc3: Fix default lpm_nyet_threshold value
+Date:   Thu,  9 May 2019 20:42:20 +0200
+Message-Id: <20190509181258.968789081@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -58,33 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit e60e9a4b231a20a199d7a61caadc48693c30d695 upstream.
+commit 8d791929b2fbdf7734c1596d808e55cb457f4562 upstream.
 
-This adds support for Intel TH on Comet Lake.
+The max possible value for DCTL.LPM_NYET_THRES is 15 and not 255. Change
+the default value to 15.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 80caf7d21adc ("usb: dwc3: add lpm erratum support")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/dwc3/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -173,6 +173,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x34a6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Comet Lake */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x02a6),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1042,7 +1042,7 @@ static void dwc3_get_properties(struct d
+ 	u8			hird_threshold;
  
+ 	/* default to highest possible threshold */
+-	lpm_nyet_threshold = 0xff;
++	lpm_nyet_threshold = 0xf;
+ 
+ 	/* default to -3.5dB de-emphasis */
+ 	tx_de_emphasis = 1;
 
 
