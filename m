@@ -2,163 +2,97 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EA6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E189CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6D820989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A752173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:59:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="KN3iirzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfEIM6J (ORCPT
+        id S1726640AbfEIM7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:58:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58594 "EHLO mx1.redhat.com"
+        Thu, 9 May 2019 08:59:40 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36737 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbfEIM6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:58:09 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 404063087BD2;
-        Thu,  9 May 2019 12:58:08 +0000 (UTC)
-Received: from hp-dl380pg8-02.lab.eng.pek2.redhat.com (hp-dl380pg8-02.lab.eng.pek2.redhat.com [10.73.8.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 97CD462DE;
-        Thu,  9 May 2019 12:58:01 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Subject: [RFC PATCH V2] vhost: don't use kmap() to log dirty pages
-Date:   Thu,  9 May 2019 08:58:00 -0400
-Message-Id: <1557406680-4087-1-git-send-email-jasowang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 09 May 2019 12:58:08 +0000 (UTC)
+        id S1726054AbfEIM7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 08:59:40 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 450D2K2Wfvz9v0vx;
+        Thu,  9 May 2019 14:59:37 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=KN3iirzk; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id KloxUBLf2aLe; Thu,  9 May 2019 14:59:37 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 450D2K1Jfvz9v0vm;
+        Thu,  9 May 2019 14:59:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557406777; bh=bjxVmGayki9KchW8MayZ1YtVg0d3U0cW8pv3uWCqln4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=KN3iirzkskwbti6N5NugYST8J3heL1osAoBNNDrVwm+82ddbJiAc3pWcBIjlr9Qeg
+         tCClutOGk83Pv23h5PCMoXMxj7RUKf812V4HobFsF8+sV8C+parcdJvqhKjCSQ2IcS
+         0pKY+T9kcsaYu/tqEmu67GX9wOIXA20yxwsJ2JNM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 935418B91C;
+        Thu,  9 May 2019 14:59:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6-BNBGXyCheG; Thu,  9 May 2019 14:59:38 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6BBFC8B918;
+        Thu,  9 May 2019 14:59:38 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 2F10166235; Thu,  9 May 2019 12:59:38 +0000 (UTC)
+Message-Id: <a4e5d99c5173797b7242652be99801a9bb5d68fc.1557406475.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32s: fix flush_hash_pages() on SMP
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@vger.kernel.org
+Date:   Thu,  9 May 2019 12:59:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vhost log dirty pages directly to a userspace bitmap through GUP and
-kmap_atomic() since kernel doesn't have a set_bit_to_user()
-helper. This will cause issues for the arch that has virtually tagged
-caches. The way to fix is to keep using userspace virtual
-address. Fortunately, futex has arch_futex_atomic_op_inuser() which
-could be used for setting a bit to user.
+flush_hash_pages() runs with data translation off, so current
+task_struct has to be accesssed using physical address.
 
-Note:
-- There're archs (few non popular ones) that don't implement futex
-  helper, we can't log dirty pages. We can fix them e.g for non
-  virtually tagged archs implement a kmap fallback on top or simply
-  disable LOG_ALL features of vhost.
-- The helper also requires userspace pointer is located at 4-byte
-  boundary, need to check during dirty log setting
-
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Fixes: f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and rename TI_CPU")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-Changes from V1:
-- switch to use arch_futex_atomic_op_inuser()
----
- drivers/vhost/vhost.c | 35 +++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
+ arch/powerpc/mm/book3s32/hash_low.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 351af88..4e5a004 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -31,6 +31,7 @@
- #include <linux/sched/signal.h>
- #include <linux/interval_tree_generic.h>
- #include <linux/nospec.h>
-+#include <asm/futex.h>
- 
- #include "vhost.h"
- 
-@@ -1652,6 +1653,10 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- 			r = -EFAULT;
- 			break;
- 		}
-+		if (p & 0x3) {
-+			r = -EINVAL;
-+			break;
-+		}
- 		for (i = 0; i < d->nvqs; ++i) {
- 			struct vhost_virtqueue *vq;
- 			void __user *base = (void __user *)(unsigned long)p;
-@@ -1692,31 +1697,27 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- }
- EXPORT_SYMBOL_GPL(vhost_dev_ioctl);
- 
--/* TODO: This is really inefficient.  We need something like get_user()
-- * (instruction directly accesses the data, with an exception table entry
-- * returning -EFAULT). See Documentation/x86/exception-tables.txt.
-- */
--static int set_bit_to_user(int nr, void __user *addr)
-+static int set_bit_to_user(int nr, u32 __user *addr)
- {
- 	unsigned long log = (unsigned long)addr;
- 	struct page *page;
--	void *base;
--	int bit = nr + (log % PAGE_SIZE) * 8;
-+	u32 old;
- 	int r;
- 
- 	r = get_user_pages_fast(log, 1, 1, &page);
- 	if (r < 0)
- 		return r;
- 	BUG_ON(r != 1);
--	base = kmap_atomic(page);
--	set_bit(bit, base);
--	kunmap_atomic(base);
-+
-+	r = arch_futex_atomic_op_inuser(FUTEX_OP_ADD, 1 << nr, &old, addr);
-+	/* TODO: fallback to kmap() when -ENOSYS? */
-+
- 	set_page_dirty_lock(page);
- 	put_page(page);
--	return 0;
-+	return r;
- }
- 
--static int log_write(void __user *log_base,
-+static int log_write(u32 __user *log_base,
- 		     u64 write_address, u64 write_length)
- {
- 	u64 write_page = write_address / VHOST_PAGE_SIZE;
-@@ -1726,12 +1727,10 @@ static int log_write(void __user *log_base,
- 		return 0;
- 	write_length += write_address % VHOST_PAGE_SIZE;
- 	for (;;) {
--		u64 base = (u64)(unsigned long)log_base;
--		u64 log = base + write_page / 8;
--		int bit = write_page % 8;
--		if ((u64)(unsigned long)log != log)
--			return -EFAULT;
--		r = set_bit_to_user(bit, (void __user *)(unsigned long)log);
-+		u32 __user *log = log_base + write_page / 32;
-+		int bit = write_page % 32;
-+
-+		r = set_bit_to_user(bit, log);
- 		if (r < 0)
- 			return r;
- 		if (write_length <= VHOST_PAGE_SIZE)
+diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
+index e27792d0b744..8366c2abeafc 100644
+--- a/arch/powerpc/mm/book3s32/hash_low.S
++++ b/arch/powerpc/mm/book3s32/hash_low.S
+@@ -539,7 +539,8 @@ _GLOBAL(flush_hash_pages)
+ #ifdef CONFIG_SMP
+ 	lis	r9, (mmu_hash_lock - PAGE_OFFSET)@ha
+ 	addi	r9, r9, (mmu_hash_lock - PAGE_OFFSET)@l
+-	lwz	r8,TASK_CPU(r2)
++	tophys	(r8, r2)
++	lwz	r8, TASK_CPU(r8)
+ 	oris	r8,r8,9
+ 10:	lwarx	r0,0,r9
+ 	cmpi	0,r0,0
 -- 
-1.8.3.1
+2.13.3
 
