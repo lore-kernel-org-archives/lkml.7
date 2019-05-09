@@ -2,75 +2,63 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B828FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D147C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9147B216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA8B20850
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfEIFOP (ORCPT
+        id S1726796AbfEIFZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 01:14:15 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:43967 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfEIFOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 01:14:15 -0400
-Received: from bootlin.com (lfbn-tou-1-417-253.w86-206.abo.wanadoo.fr [86.206.242.253])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2CD8F200003;
-        Thu,  9 May 2019 05:14:09 +0000 (UTC)
-Date:   Thu, 9 May 2019 07:14:08 +0200
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net] net: mvpp2: cls: Add missing NETIF_F_NTUPLE flag
-Message-ID: <20190509071408.23eae42a@bootlin.com>
-In-Reply-To: <20190507102803.09fcb56c@cakuba.hsd1.ca.comcast.net>
-References: <20190507123635.17782-1-maxime.chevallier@bootlin.com>
-        <20190507102803.09fcb56c@cakuba.hsd1.ca.comcast.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 May 2019 01:25:38 -0400
+Received: from [5.180.42.13] ([5.180.42.13]:53938 "EHLO deadmen.hmeau.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfEIFZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 01:25:38 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hObYk-0001DJ-Iq; Thu, 09 May 2019 13:25:34 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hObYj-0001ao-Cl; Thu, 09 May 2019 13:25:33 +0800
+Date:   Thu, 9 May 2019 13:25:33 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: caam: fix caam_dump_sg that iterates through
+ scatterlist
+Message-ID: <20190509052533.rqodnozdaescixqz@gondor.apana.org.au>
+References: <1557236223-31492-1-git-send-email-iuliana.prodan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557236223-31492-1-git-send-email-iuliana.prodan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jakub, David,
+On Tue, May 07, 2019 at 04:37:03PM +0300, Iuliana Prodan wrote:
+> Fix caam_dump_sg by correctly determining the next scatterlist
+> entry in the list.
+> 
+> Fixes: 5ecf8ef9103c ("crypto: caam - fix sg dump")
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> ---
+>  drivers/crypto/caam/error.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, 7 May 2019 10:28:03 -0700
-Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
-
->> -	if (mvpp22_rss_is_supported())
->> +	if (mvpp22_rss_is_supported()) {
->>  		dev->hw_features |= NETIF_F_RXHASH;
->> +		dev->features |= NETIF_F_NTUPLE;  
->
->Hm, why not in hw_features?
-
-Because as of today, there's nothing implemented to disable
-classification offload in the driver, so the feature can't be toggled.
-
-Is this an issue ? Sorry if I'm doing this wrong, but I didn't see any
-indication that this feature has to be host-writeable.
-
-I can make so that it's toggle-able, but it's not as straightforward as
-we would think, since the classifier is also used for RSS (so, we can't
-just disable the classifier as a whole, we would have to invalidate
-each registered flow).
-
-Thanks,
-
-Maxime
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
