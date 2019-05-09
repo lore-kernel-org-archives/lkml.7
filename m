@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1379C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D28C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9579520578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B533217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427996;
-	bh=qxNcQDxSh66X3XT1A9HlEwqB20CxHkhLaAHXQ69M1j4=;
+	s=default; t=1557427999;
+	bh=if2nZ56rO+pMZc+Myfq3f0Ur5avwSADbbKcVIDE0cJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P758ayZiMDyH3Qkq6zkvx5y/2Bw9E9fML3JsY+D6ks1k/AKJQu/3YRdwj3MDvw5gW
-	 Sose1zRiAoUjEx6XCxQn3lL3Hkiucv1vYgKyrEJHHpFVNVRHDMp5IQ+vSCCT7jAHV6
-	 iBzSGOfJGqG2tsPow0TsTA0N3Y1PxVDsFh6kZU0Q=
+	b=vvaep+eHufJ6f4jnsv6cloxxpXh/HNUF8/oFfkiEOC9WqdWU8hoT7uICIj8GAFHnk
+	 X02qQL7NkDxdx66tAFl7Uv2hX3KkongysKSm9XQrWRN84tQav+gIVi2ToJBMDatYEo
+	 Gc+eCfQcCbQcHeb4nuj9gbQqc6yJxjMdTLs0C1w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfEISxP (ORCPT
+        id S1728869AbfEISxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:53:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbfEISxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:53:12 -0400
+        id S1728853AbfEISxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:53:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 892C6204FD;
-        Thu,  9 May 2019 18:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30405217F5;
+        Thu,  9 May 2019 18:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427992;
-        bh=qxNcQDxSh66X3XT1A9HlEwqB20CxHkhLaAHXQ69M1j4=;
+        s=default; t=1557427994;
+        bh=if2nZ56rO+pMZc+Myfq3f0Ur5avwSADbbKcVIDE0cJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ND2XEk6cRYf2A3huXYJ/OdoE6AEzZdD1t5v4cf1kXgqeeAMoD9k3rjIjva/J50PFY
-         EzysA24h04l85xu9lbb/7yRHDfm6XqahXZq4LXsd7Q33/Av/Jd8kzIBYeY8CDLmCUI
-         5uqhH/0D5Kl4TAlAZVSzPwj+ncS6JSTeVBayqM/E=
+        b=YXWZZ94o9G3PtR2gtXpXdeyxqOnGhP+rUAbfIJ1LwVmxrHlrH2yXPbmnrAJGWsggW
+         qSjtQbnTHwUqimqMXX/OoxEd7MqEZ7tdEWowzHvoFvOfP690x30bzoJgWjXk3/05Ph
+         8z4NBmBRNtywuUWDw7k5lrKpa7n+kcXv57Iop27M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 82/95] ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
-Date:   Thu,  9 May 2019 20:42:39 +0200
-Message-Id: <20190509181315.038135125@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.0 83/95] soc: sunxi: Fix missing dependency on REGMAP_MMIO
+Date:   Thu,  9 May 2019 20:42:40 +0200
+Message-Id: <20190509181315.094360476@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -61,50 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit c8afd03486c26accdda4846e5561aa3f8e862a9d upstream.
+commit a84014e1db35d8e7af09878d0b4bf30804fb17d5 upstream.
 
-Commit 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from
-resume_noirq") makes acpi_lpss_{suspend_late,resume_early}() bail early
-on BYT/CHT as resume_from_noirq is set.
+When enabling ARCH_SUNXI from allnoconfig, SUNXI_SRAM is enabled, but
+not REGMAP_MMIO, so the kernel fails to link with an undefined reference
+to __devm_regmap_init_mmio_clk. Select REGMAP_MMIO, as suggested in
+drivers/base/regmap/Kconfig.
 
-This means that on resume from hibernate dw_i2c_plat_resume() doesn't get
-called by the restore_early callback, acpi_lpss_resume_early(). Instead it
-should be called by the restore_noirq callback matching how things are done
-when resume_from_noirq is set and we are doing a regular resume.
+This creates the following dependency loop:
 
-Change the restore_noirq callback to acpi_lpss_resume_noirq so that
-dw_i2c_plat_resume() gets properly called when resume_from_noirq is set
-and we are resuming from hibernate.
+  drivers/of/Kconfig:68:                symbol OF_IRQ depends on IRQ_DOMAIN
+  kernel/irq/Kconfig:63:                symbol IRQ_DOMAIN is selected by REGMAP
+  drivers/base/regmap/Kconfig:7:        symbol REGMAP default is visible depending on REGMAP_MMIO
+  drivers/base/regmap/Kconfig:39:       symbol REGMAP_MMIO is selected by SUNXI_SRAM
+  drivers/soc/sunxi/Kconfig:4:          symbol SUNXI_SRAM is selected by USB_MUSB_SUNXI
+  drivers/usb/musb/Kconfig:63:          symbol USB_MUSB_SUNXI depends on GENERIC_PHY
+  drivers/phy/Kconfig:7:                symbol GENERIC_PHY is selected by PHY_BCM_NS_USB3
+  drivers/phy/broadcom/Kconfig:29:      symbol PHY_BCM_NS_USB3 depends on MDIO_BUS
+  drivers/net/phy/Kconfig:12:           symbol MDIO_BUS default is visible depending on PHYLIB
+  drivers/net/phy/Kconfig:181:          symbol PHYLIB is selected by ARC_EMAC_CORE
+  drivers/net/ethernet/arc/Kconfig:18:  symbol ARC_EMAC_CORE is selected by ARC_EMAC
+  drivers/net/ethernet/arc/Kconfig:24:  symbol ARC_EMAC depends on OF_IRQ
 
-Likewise also change the poweroff_noirq callback so that
-dw_i2c_plat_suspend gets called properly.
+To fix the circular dependency, make USB_MUSB_SUNXI select GENERIC_PHY
+instead of depending on it. This matches the use of GENERIC_PHY by all
+but two other drivers.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202139
-Fixes: 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq")
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: <stable@vger.kernel.org> # 4.19
+Fixes: 5828729bebbb ("soc: sunxi: export a regmap for EMAC clock reg on A64")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_lpss.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/sunxi/Kconfig |    1 +
+ drivers/usb/musb/Kconfig  |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -1142,8 +1142,8 @@ static struct dev_pm_domain acpi_lpss_pm
- 		.thaw_noirq = acpi_subsys_thaw_noirq,
- 		.poweroff = acpi_subsys_suspend,
- 		.poweroff_late = acpi_lpss_suspend_late,
--		.poweroff_noirq = acpi_subsys_suspend_noirq,
--		.restore_noirq = acpi_subsys_resume_noirq,
-+		.poweroff_noirq = acpi_lpss_suspend_noirq,
-+		.restore_noirq = acpi_lpss_resume_noirq,
- 		.restore_early = acpi_lpss_resume_early,
- #endif
- 		.runtime_suspend = acpi_lpss_runtime_suspend,
+--- a/drivers/soc/sunxi/Kconfig
++++ b/drivers/soc/sunxi/Kconfig
+@@ -4,6 +4,7 @@
+ config SUNXI_SRAM
+ 	bool
+ 	default ARCH_SUNXI
++	select REGMAP_MMIO
+ 	help
+ 	  Say y here to enable the SRAM controller support. This
+ 	  device is responsible on mapping the SRAM in the sunXi SoCs
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -66,7 +66,7 @@ config USB_MUSB_SUNXI
+ 	depends on NOP_USB_XCEIV
+ 	depends on PHY_SUN4I_USB
+ 	depends on EXTCON
+-	depends on GENERIC_PHY
++	select GENERIC_PHY
+ 	select SUNXI_SRAM
+ 
+ config USB_MUSB_DAVINCI
 
 
