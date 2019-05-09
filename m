@@ -2,142 +2,118 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA88C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEB5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4CE214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557366957;
-	bh=ozqYgXRJMRFe+AItTZSjOhcmBX9vg9ndN9W47uyCAJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T5y/7pWbFL0HcloFehQ8vsClgB7XV17ym0koh+gImM8dUztxr4+SmLPYLRk0qjadG
-	 DWfZcsQ2t9vIm4VjoJLfwXdBKuOD/WFZrTbqQ/4YQiESdBVId29I7I62VnazFSAzEc
-	 zO0o7OdBpYysICm4H3uFQYT5I4XDLtu/GM32krGI=
+	by mail.kernel.org (Postfix) with ESMTP id 507AA21530
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfEIBz4 (ORCPT
+        id S1726571AbfEICAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:55:56 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38962 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfEIBzz (ORCPT
+        Wed, 8 May 2019 22:00:13 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46167 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726109AbfEICAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:55:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g9so303015plm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 18:55:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xe7404RtUM/sn+MoO5V1fONQ0OCW3SoYDedpXw7A92M=;
-        b=DwZ1z5o93yTFkdaE2oDUSuJ502GwpumCfsB/L/YfSiVxGMzP3AJiW4DtORmA0EvjdD
-         UqGs884WWjnGB5hcbIcFEUFxSNKYcV7YozG/Ma4n16thz6nwj1qaofHnhYQwzv69fpUR
-         ugUpCJPHPrBdQcmDrgKC63PUoas5dMxISHwmnyNW+CmsHUjDWc2IVraIfpdSdMa6OoMA
-         JA9/LxCsGAE6H+dyf97BZlA2wfQ1B36lvCl3BsWvJJ7WehBtWZRtQg30Zwbv9zJQJ7An
-         tyAJ8mDhJ5F4u8XI9xA7gOFcDBwZpfW8Mfvv4YxZKn6PDYXLTf4IaHyrsSDgewr54SnA
-         bkNw==
-X-Gm-Message-State: APjAAAXmYs+GHtFSYnpz+ZxEiUFNWdlyadmMHsu9qKZfj4LGhFm5RnbC
-        g9IsvbbsJN3D6ikq4nnE7+LqqA==
-X-Google-Smtp-Source: APXvYqwl/oum57VOvei6JScraq/7JXaswNqtNC5Gr/Mc/MLpICDomEFbVEI3LV546l7mtW8BzUbLew==
-X-Received: by 2002:a17:902:b70c:: with SMTP id d12mr1634368pls.178.1557366954793;
-        Wed, 08 May 2019 18:55:54 -0700 (PDT)
-Received: from localhost ([2601:647:4700:2953:ec49:968:583:9f8])
-        by smtp.gmail.com with ESMTPSA id o37sm495163pgm.78.2019.05.08.18.55.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 May 2019 18:55:53 -0700 (PDT)
-Date:   Wed, 8 May 2019 18:55:52 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Alan Tull <atull@kernel.org>,
-        Moritz Fischer <moritz.fischer.private@gmail.com>,
-        Wu Hao <hao.wu@intel.com>, linux-fpga@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fpga: dfl: afu: Pass the correct device to
- dma_mapping_error()
-Message-ID: <20190509015552.GA13721@archbox>
-References: <20190410215327.8024-1-swood@redhat.com>
- <20190411123314.GA19198@hao-dev>
- <CAJYdmeNX9F_EmTPBjQ1SXOOU=JBA1kBO6WEjBXTmJux4O-CR5A@mail.gmail.com>
- <CANk1AXTv2DFpRDAJ9UH9+LRo=wrmcbP02zbWbtTXku6iwPAhOw@mail.gmail.com>
- <7d3a76c0c9115726402cfc52da92fd8e2cac426c.camel@redhat.com>
+        Wed, 8 May 2019 22:00:12 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x491wvb2023686
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 8 May 2019 21:58:57 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D504A420024; Wed,  8 May 2019 21:58:56 -0400 (EDT)
+Date:   Wed, 8 May 2019 21:58:56 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190509015856.GB7031@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
+        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d3a76c0c9115726402cfc52da92fd8e2cac426c.camel@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
-
-On Wed, May 08, 2019 at 04:39:51PM -0500, Scott Wood wrote:
-> On Mon, 2019-04-15 at 14:22 -0500, Alan Tull wrote:
-> > On Thu, Apr 11, 2019 at 11:36 AM Moritz Fischer
-> > <moritz.fischer.private@gmail.com> wrote:
-> > 
-> > Hi Scott,
-> > 
-> > Thanks!
-> > 
-> > > Hi Scott,
-> > > 
-> > > good catch!
-> > > 
-> > > On Thu, Apr 11, 2019 at 5:49 AM Wu Hao <hao.wu@intel.com> wrote:
-> > > > On Wed, Apr 10, 2019 at 04:53:27PM -0500, Scott Wood wrote:
-> > > > > dma_mapping_error() was being called on a different device struct
-> > > > > than
-> > > > > what was passed to map/unmap.  Besides rendering the error checking
-> > > > > ineffective, it caused a debug splat with CONFIG_DMA_API_DEBUG.
-> > > > > 
-> > > > > Signed-off-by: Scott Wood <swood@redhat.com>
-> > > > 
-> > > > Hi Scott,
-> > > > 
-> > > > Looks good to me. Thanks for catching this issue.
-> > > > 
-> > > > Acked-by: Wu Hao <hao.wu@intel.com>
-> > > > 
-> > > > Hao
-> > > > 
-> > > > > ---
-> > > > >  drivers/fpga/dfl-afu-dma-region.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-
-> > > > > afu-dma-region.c
-> > > > > index e18a786fc943..cd68002ac097 100644
-> > > > > --- a/drivers/fpga/dfl-afu-dma-region.c
-> > > > > +++ b/drivers/fpga/dfl-afu-dma-region.c
-> > > > > @@ -399,7 +399,7 @@ int afu_dma_map_region(struct
-> > > > > dfl_feature_platform_data *pdata,
-> > > > >                                   region->pages[0], 0,
-> > > > >                                   region->length,
-> > > > >                                   DMA_BIDIRECTIONAL);
-> > > > > -     if (dma_mapping_error(&pdata->dev->dev, region->iova)) {
-> > > > > +     if (dma_mapping_error(dfl_fpga_pdata_to_parent(pdata), region-
-> > > > > >iova)) {
-> > > > >               dev_err(&pdata->dev->dev, "failed to map for dma\n");
-> > > > >               ret = -EFAULT;
-> > > > >               goto unpin_pages;
-> > > > > --
-> > > > > 1.8.3.1
-> > > 
-> > > Acked-by: Moritz Fischer <mdf@kernel.org>
-> > 
-> > Acked-by: Alan Tull <atull@kernel.org>
+On Wed, May 08, 2019 at 05:43:35PM -0700, Frank Rowand wrote:
+> kselftest provides a mechanism for in-kernel tests via modules.  For
+> example, see:
 > 
-> Whose tree would these patches be going through?
+>   tools/testing/selftests/vm/run_vmtests invokes:
+>     tools/testing/selftests/vm/test_vmalloc.sh
+>       loads module:
+>         test_vmalloc
+>         (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
 
-Greg, usually. We're a bit late this time... again ... But haven't forgotten about it.
+The majority of the kselftests are implemented as userspace programs.
 
-Sorry,
+You *can* run in-kernel test using modules; but there is no framework
+for the in-kernel code found in the test modules, which means each of
+the in-kernel code has to create their own in-kernel test
+infrastructure.  
 
-Moritz
+That's much like saying you can use vice grips to turn a nut or
+bolt-head.  You *can*, but it might be that using a monkey wrench
+would be a much better tool that is much easier.
+
+What would you say to a wood worker objecting that a toolbox should
+contain a monkey wrench because he already knows how to use vise
+grips, and his tiny brain shouldn't be forced to learn how to use a
+wrench when he knows how to use a vise grip, which is a perfectly good
+tool?
+
+If you want to use vice grips as a hammer, screwdriver, monkey wrench,
+etc.  there's nothing stopping you from doing that.  But it's not fair
+to object to other people who might want to use better tools.
+
+The reality is that we have a lot of testing tools.  It's not just
+kselftests.  There is xfstests for file system code, blktests for
+block layer tests, etc.   We use the right tool for the right job.
+
+						- Ted
