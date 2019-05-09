@@ -2,107 +2,166 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F6AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C055C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1684216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3413221744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:41:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AcyhZIdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfEIJkw (ORCPT
+        id S1726701AbfEIJls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:40:52 -0400
-Received: from foss.arm.com ([217.140.101.70]:36184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfEIJkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:40:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2805374;
-        Thu,  9 May 2019 02:40:51 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2150C3F575;
-        Thu,  9 May 2019 02:40:49 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:40:44 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Prasad Sodagudi <psodagud@codeaurora.org>
-Cc:     julien.thierry@arm.com, will.deacon@arm.com,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, akpm@linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] kernel/panic: Use SYSTEM_RESET2 command for warm reset
-Message-ID: <20190509094021.GA8239@e107155-lin>
-References: <ce0b66f5d00e760f87ddeeacbc40b956@codeaurora.org>
- <1557366432-352469-1-git-send-email-psodagud@codeaurora.org>
+        Thu, 9 May 2019 05:41:48 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19931 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfEIJlr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:41:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd3f5b50000>; Thu, 09 May 2019 02:41:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 May 2019 02:41:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 May 2019 02:41:45 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
+ 2019 09:41:42 +0000
+Subject: Re: [Patch-V2 1/4] dt-binding: Tegra194 pinctrl support
+To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
+        <smangipudi@nvidia.com>, <ldewangan@nvidia.com>,
+        <vidyas@nvidia.com>
+References: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <41dbf606-0a15-a0bc-07fd-2c7101d7f6a1@nvidia.com>
+Date:   Thu, 9 May 2019 10:41:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557366432-352469-1-git-send-email-psodagud@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557394869; bh=dk8yatUotHOvFsORd6Mm8U2hBhCLTRqYjHQ4BQhaQZ8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AcyhZIdUoDefRLOp4M8WtcdhyVHJSncU0DwkN2LqaA31Izrqq1LRHRGZ1rEhyjwvU
+         A7zxK5DMRZhicjm4UaN6li0XG8u7Xbk6/78s9K3fNUX5iwGSTZoxMvWRtuKbQzfxTj
+         l4MOzEH3cDKxRo1F7936ZvPYGiE8a4CFqjDNXElPS8uSUY/TPfbAxOm98M9JhVPqX2
+         Oh7NQWZzyHd3+8JS6i114Psxiw+BlN6BzVTkQwZmq8VUzVu87vv6/l2ow7h8Dv3J9v
+         C+pnrbtwPNCymLvy++u8QTqQ6QtQbwReH45ebpL09h+ucM5x79UjuHyCPZd/yUV9S3
+         ED1x7O1iDW68A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 06:47:12PM -0700, Prasad Sodagudi wrote:
-> Some platforms may need warm reboot support when kernel crashed
-> for post mortem analysis instead of cold reboot. So use config
-> CONFIG_WARM_REBOOT_ON_PANIC and SYSTEM_RESET2 psci command
-> support for warm reset.
->
 
-Please drop all the references to PSCI and SYSTEM_RESET2 including
-in subject. This is more generic and PSCIv1.1 with SYSTEM_RESET2 can
-make use of it.
-
-> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> ---
->  kernel/panic.c    |  4 ++++
->  lib/Kconfig.debug | 10 ++++++++++
->  2 files changed, 14 insertions(+)
+On 09/05/2019 09:08, Krishna Yarlagadda wrote:
+> Add binding doc for Tegra 194 pinctrl driver
 > 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index c1fcaad..6ab6675 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -198,6 +198,10 @@ void panic(const char *fmt, ...)
->  
->  	console_verbose();
->  	bust_spinlocks(1);
-> +#ifdef CONFIG_WARM_REBOOT_ON_PANIC
-> +	/* Configure for warm reboot instead of cold reboot. */
-> +	reboot_mode = REBOOT_WARM;
-> +#endif
->  	va_start(args, fmt);
->  	len = vscnprintf(buf, sizeof(buf), fmt, args);
->  	va_end(args);
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index d695ec1..2a727d8 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1000,6 +1000,16 @@ config PANIC_TIMEOUT
->  	  value n > 0 will wait n seconds before rebooting, while a timeout
->  	  value n < 0 will reboot immediately.
->  
-> +config WARM_REBOOT_ON_PANIC
-> +	bool "Warm reboot instead of cold reboot for panic"
-> +	default n
-> +	help
-> +	  Some vendor platform may need warm reboot instead of cold reboot
-> +	  for debugging. Before vendor specific power off driver is
-> +	  probed, platform always gets cold reset. By setting Y here and
-> +	  support for PSCI V1.1 is present from firmware, platform would
-> +	  get warm reset instead of cold reset.
+> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> ---
+> Changes in V2:
+> created new binding doc to handle Tegra194 pinctrl driver
+> 
+>  .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    | 116 +++++++++++++++++++++
+>  1 file changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+> new file mode 100644
+> index 0000000..80e36c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+> @@ -0,0 +1,116 @@
+> +NVIDIA Tegra194 pinmux controller
 > +
+> +Required properties:
+> +- compatible: "nvidia,tegra194-pinmux"
+> +- reg: Should contain a list of base address and size pairs for:
+> +  - first entry: The APB_MISC_GP_*_PADCTRL registers (pad control)
+> +  - second entry: The PINMUX_AUX_* registers (pinmux)
+> +
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices, including the meaning of the
+> +phrase "pin configuration node".
+> +
+> +Tegra's pin configuration nodes act as a container for an arbitrary number of
+> +subnodes. Each of these subnodes represents some desired configuration for a
+> +pin, a group, or a list of pins or groups. This configuration can include the
+> +mux function to select on those pin(s)/group(s), and various pin configuration
+> +parameters, such as pull-up, tristate, drive strength, etc.
+> +
+> +See the TRM to determine which properties and values apply to each pin/group.
+> +Macro values for property values are defined in
+> +include/dt-binding/pinctrl/pinctrl-tegra.h.
+> +
+> +Required subnode-properties:
+> +- nvidia,pins : An array of strings. Each string contains the name of a pin or
+> +    group. Valid values for these names are listed below.
+> +
+> +Optional subnode-properties:
+> +- nvidia,function: A string containing the name of the function to mux to the
+> +    pin or group.
+> +- nvidia,pull: Integer, representing the pull-down/up to apply to the pin.
+> +    0: none, 1: down, 2: up.
+> +- nvidia,tristate: Integer.
+> +    0: drive, 1: tristate.
+> +- nvidia,enable-input: Integer. Enable the pin's input path.
+> +    enable :TEGRA_PIN_ENABLE and
+> +    disable or output only: TEGRA_PIN_DISABLE.
+> +- nvidia,open-drain: Integer.
+> +    enable: TEGRA_PIN_ENABLE.
+> +    disable: TEGRA_PIN_DISABLE.
+> +- nvidia,lock: Integer. Lock the pin configuration against further changes
+> +    until reset.
+> +    enable: TEGRA_PIN_ENABLE.
+> +    disable: TEGRA_PIN_DISABLE.
+> +- nvidia,io-hv: Integer. Select high-voltage receivers.
+> +    normal: TEGRA_PIN_DISABLE
+> +    high: TEGRA_PIN_ENABLE
+> +- nvidia,high-speed-mode: Integer. Enable high speed mode the pins.
+> +    normal: TEGRA_PIN_DISABLE
+> +    high: TEGRA_PIN_ENABLE
+> +- nvidia,schmitt: Integer. Enables Schmitt Trigger on the input.
+> +    normal: TEGRA_PIN_DISABLE
+> +    high: TEGRA_PIN_ENABLE
+> +- nvidia,drive-type: Integer. Valid range 0...3.
+> +- nvidia,pull-down-strength: Integer. Controls drive strength. 0 is weakest.
+> +    The range of valid values depends on the pingroup. See "CAL_DRVDN" in the
+> +    Tegra TRM.
+> +- nvidia,pull-up-strength: Integer. Controls drive strength. 0 is weakest.
+> +    The range of valid values depends on the pingroup. See "CAL_DRVUP" in the
+> +    Tegra TRM.
+> +- nvidia,slew-rate-rising: Integer. Controls rising signal slew rate. 0 is
+> +    fastest. The range of valid values depends on the pingroup. See
+> +    "DRVDN_SLWR" in the Tegra TRM.
+> +- nvidia,slew-rate-falling: Integer. Controls falling signal slew rate. 0 is
+> +    fastest. The range of valid values depends on the pingroup. See
+> +    "DRVUP_SLWF" in the Tegra TRM.
 
-Ditto here, drop PSCI reference. Since it's being pushed as generic
-solution, expecting anyone reading this to understand what is this PSCI
-makes no sense and may be even confusing.
+Are all these properties applicable to the pex_l5_clkreq and pex_l5_rst
+pins? Particularly the slew-rate properties?
 
---
-Regards,
-Sudeep
+Cheers
+Jon
 
+-- 
+nvpublic
