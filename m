@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE877C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282B9C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8BA21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED183217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557436120;
-	bh=XILdQ+D024p0eiOqPV0zQVQ24DjYnyMwDWIZGe43PXA=;
+	s=default; t=1557436122;
+	bh=A2KlR4tg2BhBXTfCzsQuGbwT0RVrYjIIugnnkl+JVAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RRPfxgil0VTeaQDyE94XX2xCaxCF1PJBiW1iTUbmghzg9nCcDse0YSsBE1feOS+p5
-	 RPCnta5Av++qFiBF3hVFE3QvmzbNxB92zuoQmihZzFV+l1Kak9hiuMMS9x1eJRQ87s
-	 h4HFdEbQGR7WMA173kn7WCN4U97sSeNMRCKcj5fs=
+	b=c6yYI6ortGfYZMu+oMrEcNik/hXvX2Y7w/6Iy9fD2tLzycq8anJRzY1GpyAwU4aPB
+	 pz+07HxDOvcguM+AG2/0IbILxj9khHB2pGEBAhLnEGQmA2LUfl32yYDqpEXsX/Cou/
+	 IIxcSpbgwMS2lf0TyjSmM4pr0hlUU/KW4+cGglMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfEIVIj (ORCPT
+        id S1727146AbfEIVIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43586 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 17:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfEIVIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:08:37 -0400
+        id S1725992AbfEIVIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 17:08:36 -0400
 Received: from localhost.localdomain (user-0ccsrjt.cable.mindspring.com [24.206.110.125])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27CEA21744;
-        Thu,  9 May 2019 21:08:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34513217F5;
+        Thu,  9 May 2019 21:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557436116;
-        bh=XILdQ+D024p0eiOqPV0zQVQ24DjYnyMwDWIZGe43PXA=;
+        s=default; t=1557436115;
+        bh=A2KlR4tg2BhBXTfCzsQuGbwT0RVrYjIIugnnkl+JVAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1KUu20M4YAGg1Yhg1dPXd2xyFd0lENBwfjERpsyxFAwcbGgOVG9FFx5hXMTKnNi0
-         rn2RCLujpaYhT5zbCaWaNYq+15fu1v5+R372oSpzI4/66cWkzkBC+T4hfnjImhJD1C
-         btPtPfQqU4fpuSQ1dyhW0h+gyaiW134Pq8obeiAQ=
+        b=y9wfyHob1Brg0UK3vjRJ8iO/B6s1DMf1UfQ9PMSKL7dp69cF0Rkd9QhEIjt1XlKOJ
+         b5qjMdTmzbze1iqYRdK5QOcwBkTq89zZQaSnHYxbsDANuVgLtKtmYaZQlch1b1sSUV
+         M6YFWAR7sSb4veSEZJnZ08+XEe28xkLpbVXRfGH4=
 From:   Alan Tull <atull@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
         linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
-        Scott Wood <swood@redhat.com>, Wu Hao <hao.wu@intel.com>
-Subject: [PATCH 2/4] fpga: dfl: afu: Pass the correct device to dma_mapping_error()
-Date:   Thu,  9 May 2019 16:08:27 -0500
-Message-Id: <20190509210829.31815-3-atull@kernel.org>
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 1/4] fpga: stratix10-soc: fix use-after-free on s10_init()
+Date:   Thu,  9 May 2019 16:08:26 -0500
+Message-Id: <20190509210829.31815-2-atull@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509210829.31815-1-atull@kernel.org>
 References: <20190509210829.31815-1-atull@kernel.org>
@@ -57,33 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Wood <swood@redhat.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-dma_mapping_error() was being called on a different device struct than
-what was passed to map/unmap.  Besides rendering the error checking
-ineffective, it caused a debug splat with CONFIG_DMA_API_DEBUG.
+The refcount of fw_np has already been decreased by of_find_matching_node()
+so it shouldn't be used anymore.
+This patch adds an of_node_get() before of_find_matching_node() to avoid
+the use-after-free problem.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
-Acked-by: Moritz Fischer <mdf@kernel.org>
+Fixes: e7eef1d7633a ("fpga: add intel stratix10 soc fpga manager driver")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Alan Tull <atull@kernel.org>
+Cc: Moritz Fischer <mdf@kernel.org>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: linux-fpga@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Moritz Fischer <mdf@kernel.org>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Acked-by: Alan Tull <atull@kernel.org>
 ---
- drivers/fpga/dfl-afu-dma-region.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/fpga/stratix10-soc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-index 0bbc7142f1dc..f7d268f45df0 100644
---- a/drivers/fpga/dfl-afu-dma-region.c
-+++ b/drivers/fpga/dfl-afu-dma-region.c
-@@ -391,7 +391,7 @@ int afu_dma_map_region(struct dfl_feature_platform_data *pdata,
- 				    region->pages[0], 0,
- 				    region->length,
- 				    DMA_BIDIRECTIONAL);
--	if (dma_mapping_error(&pdata->dev->dev, region->iova)) {
-+	if (dma_mapping_error(dfl_fpga_pdata_to_parent(pdata), region->iova)) {
- 		dev_err(&pdata->dev->dev, "failed to map for dma\n");
- 		ret = -EFAULT;
- 		goto unpin_pages;
+diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+index 13851b3d1c56..215d33789c74 100644
+--- a/drivers/fpga/stratix10-soc.c
++++ b/drivers/fpga/stratix10-soc.c
+@@ -507,12 +507,16 @@ static int __init s10_init(void)
+ 	if (!fw_np)
+ 		return -ENODEV;
+ 
++	of_node_get(fw_np);
+ 	np = of_find_matching_node(fw_np, s10_of_match);
+-	if (!np)
++	if (!np) {
++		of_node_put(fw_np);
+ 		return -ENODEV;
++	}
+ 
+ 	of_node_put(np);
+ 	ret = of_platform_populate(fw_np, s10_of_match, NULL, NULL);
++	of_node_put(fw_np);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.21.0
 
