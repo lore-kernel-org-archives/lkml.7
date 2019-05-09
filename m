@@ -2,224 +2,207 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F818C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F1721773
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3656C20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557411362;
-	bh=4nwEVs4HpuVLEW1H4P+gCJQ+1ahy8T18SlcqTYAoWCs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdGlJVfuxXuGt5lihGj1oz2onrpRIKkwx02c4lgBANRThJcAM9psEGYDHZ8JnX7MJ
-	 KrW8etPhn3wFxye6oNb2dBKlstquz2drUHhKmrietRpsoFq07pBHIrmd4oapD9TXRW
-	 SF7AH9m4KIZlK93YnDU/2ra2kxQ/cazhj5zUkgzI=
+	s=default; t=1557411623;
+	bh=728btKMpGcRm6QCpLxYuNAcXDFUi1xd2ev1v3qU4jzw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=riEpKMGJOwWpAhfLX4cKJuBSdHIFUS38XQCapEKsL+dR14PNQfbXVOZ8+xSJWx0dG
+	 3wMyExpihlvGNhqUr6hARa1KqfWFQvyqQgqaDLnNl+H1mO4LBYoW4IRea/86pI+/yW
+	 exdXsCqlzkOdcaQSLKxzIXP7xYay2nxSEKxgVWwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfEIOQB (ORCPT
+        id S1726687AbfEIOUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:16:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 10:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfEIOPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:13 -0400
-Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
+        id S1726449AbfEIOUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:20:22 -0400
+Received: from devnote2 (unknown [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8626F2173C;
-        Thu,  9 May 2019 14:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53AC621479;
+        Thu,  9 May 2019 14:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411311;
-        bh=4nwEVs4HpuVLEW1H4P+gCJQ+1ahy8T18SlcqTYAoWCs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZdD4UIYnD6o9Sirz5PyUvkIA8NXrvBTCSDcy5QOKPBYh8Q3s2jyBGTir8WnCJhKF
-         eYLZajPH3OSzDDq+XqjQwMHAaI9X91lvqm8aZzd7BpoCSkpXHRUXlEBOk6YchvJGcP
-         X0DMHjLJ9Isvk3fgtZl9kS52eWXHcchCiiKYHGg8=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Frederick Lawler <fred@fredlawl.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dongdong Liu <liudongdong3@huawei.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 04/10] PCI/AER: Log messages with pci_dev, not pcie_device
-Date:   Thu,  9 May 2019 09:14:50 -0500
-Message-Id: <20190509141456.223614-5-helgaas@kernel.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
-References: <20190509141456.223614-1-helgaas@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        s=default; t=1557411621;
+        bh=728btKMpGcRm6QCpLxYuNAcXDFUi1xd2ev1v3qU4jzw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o72nheea6Q6avgAcoLCYAO1/oR8LxO3adI2SpbpGGaPk9DYaXr3296eLLkXkpg7UG
+         GXPfNjMFjJXpOmRet+BM9EOgZo1/gvwigaAWOykXeFfEva4Qi54FC4CcDpB0sEwVXI
+         qhEjVzzvk/uGeOYNbyn/8w9ej4TrOji+TPpvqTnk=
+Date:   Thu, 9 May 2019 23:20:04 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [PATCH v7 2/6] uaccess: Add non-pagefault user-space read
+ functions
+Message-Id: <20190509232004.7e354456abd654b225a3554a@kernel.org>
+In-Reply-To: <20190509091408.GA90202@gmail.com>
+References: <155732230159.12756.15040196512285621636.stgit@devnote2>
+        <155732233411.12756.16633189392389986702.stgit@devnote2>
+        <20190509091408.GA90202@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederick Lawler <fred@fredlawl.com>
+Hi Ingo,
 
-Log messages with pci_dev, not pcie_device.  Factor out common message
-prefixes with dev_fmt().
+On Thu, 9 May 2019 11:14:08 +0200
+Ingo Molnar <mingo@kernel.org> wrote:
 
-Example output change:
+> * Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > +static __always_inline long
+> > +probe_read_common(void *dst, const void __user *src, size_t size)
+> > +{
+> > +	long ret;
+> > +
+> > +	pagefault_disable();
+> > +	ret = __copy_from_user_inatomic(dst, src, size);
+> > +	pagefault_enable();
+> > +
+> > +	return ret ? -EFAULT : 0;
+> > +}
+> 
+> Empty line before return statement: good.
+> 
+> > +long __weak probe_user_read(void *dst, const void __user *src, size_t size)
+> > +    __attribute__((alias("__probe_user_read")));
+> > +
+> > +long __probe_user_read(void *dst, const void __user *src, size_t size)
+> > +{
+> > +	long ret = -EFAULT;
+> > +	mm_segment_t old_fs = get_fs();
+> > +
+> > +	set_fs(USER_DS);
+> > +	if (access_ok(src, size))
+> > +		ret = probe_read_common(dst, src, size);
+> > +	set_fs(old_fs);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(probe_user_read);
+> 
+> No empty line before return statement: not good.
 
-  - aer 0000:00:00.0:pci002: AER enabled with IRQ ...
-  + pcieport 0000:00:00.0: AER: enabled with IRQ ...
+OK, I'll fix that.
 
-Link: https://lore.kernel.org/lkml/20190503035946.23608-6-fred@fredlawl.com
-Signed-off-by: Frederick Lawler <fred@fredlawl.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pcie/aer.c        | 19 ++++++++++++-------
- drivers/pci/pcie/aer_inject.c | 22 ++++++++++++----------
- 2 files changed, 24 insertions(+), 17 deletions(-)
+> 
+> > +long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+> > +			      long count)
+> > +{
+> > +	mm_segment_t old_fs = get_fs();
+> > +	long ret;
+> > +
+> > +	if (unlikely(count <= 0))
+> > +		return 0;
+> > +
+> > +	set_fs(USER_DS);
+> > +	pagefault_disable();
+> > +	ret = strncpy_from_user(dst, unsafe_addr, count);
+> > +	pagefault_enable();
+> > +	set_fs(old_fs);
+> > +	if (ret >= count) {
+> > +		ret = count;
+> > +		dst[ret - 1] = '\0';
+> > +	} else if (ret > 0)
+> > +		ret++;
+> > +	return ret;
+> > +}
+> 
+> Ditto. Also unbalanced curly braces.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 74f872e4e0cc..20a68e8546cc 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -12,6 +12,9 @@
-  *    Andrew Patterson <andrew.patterson@hp.com>
-  */
- 
-+#define pr_fmt(fmt) "AER: " fmt
-+#define dev_fmt pr_fmt
-+
- #include <linux/cper.h>
- #include <linux/pci.h>
- #include <linux/pci-acpi.h>
-@@ -779,10 +782,11 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
- 	u8 bus = info->id >> 8;
- 	u8 devfn = info->id & 0xff;
- 
--	pci_info(dev, "AER: %s%s error received: %04x:%02x:%02x.%d\n",
--		info->multi_error_valid ? "Multiple " : "",
--		aer_error_severity_string[info->severity],
--		pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn), PCI_FUNC(devfn));
-+	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
-+		 info->multi_error_valid ? "Multiple " : "",
-+		 aer_error_severity_string[info->severity],
-+		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-+		 PCI_FUNC(devfn));
- }
- 
- #ifdef CONFIG_ACPI_APEI_PCIEAER
-@@ -1377,24 +1381,25 @@ static int aer_probe(struct pcie_device *dev)
- 	int status;
- 	struct aer_rpc *rpc;
- 	struct device *device = &dev->device;
-+	struct pci_dev *port = dev->port;
- 
- 	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
- 	if (!rpc)
- 		return -ENOMEM;
- 
--	rpc->rpd = dev->port;
-+	rpc->rpd = port;
- 	set_service_data(dev, rpc);
- 
- 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
- 					   IRQF_SHARED, "aerdrv", dev);
- 	if (status) {
--		dev_err(device, "request AER IRQ %d failed\n",
-+		pci_err(port, "request AER IRQ %d failed\n",
- 			dev->irq);
- 		return status;
- 	}
- 
- 	aer_enable_rootport(rpc);
--	dev_info(device, "AER enabled with IRQ %d\n", dev->irq);
-+	pci_info(port, "enabled with IRQ %d\n", dev->irq);
- 	return 0;
- }
- 
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index 95d4759664b3..b05f0d728be8 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -12,6 +12,8 @@
-  *     Huang Ying <ying.huang@intel.com>
-  */
- 
-+#define dev_fmt(fmt) "aer_inject: " fmt
-+
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/irq.h>
-@@ -332,14 +334,14 @@ static int aer_inject(struct aer_error_inj *einj)
- 		return -ENODEV;
- 	rpdev = pcie_find_root_port(dev);
- 	if (!rpdev) {
--		pci_err(dev, "aer_inject: Root port not found\n");
-+		pci_err(dev, "Root port not found\n");
- 		ret = -ENODEV;
- 		goto out_put;
- 	}
- 
- 	pos_cap_err = dev->aer_cap;
- 	if (!pos_cap_err) {
--		pci_err(dev, "aer_inject: Device doesn't support AER\n");
-+		pci_err(dev, "Device doesn't support AER\n");
- 		ret = -EPROTONOSUPPORT;
- 		goto out_put;
- 	}
-@@ -350,7 +352,7 @@ static int aer_inject(struct aer_error_inj *einj)
- 
- 	rp_pos_cap_err = rpdev->aer_cap;
- 	if (!rp_pos_cap_err) {
--		pci_err(rpdev, "aer_inject: Root port doesn't support AER\n");
-+		pci_err(rpdev, "Root port doesn't support AER\n");
- 		ret = -EPROTONOSUPPORT;
- 		goto out_put;
- 	}
-@@ -398,14 +400,14 @@ static int aer_inject(struct aer_error_inj *einj)
- 	if (!aer_mask_override && einj->cor_status &&
- 	    !(einj->cor_status & ~cor_mask)) {
- 		ret = -EINVAL;
--		pci_warn(dev, "aer_inject: The correctable error(s) is masked by device\n");
-+		pci_warn(dev, "The correctable error(s) is masked by device\n");
- 		spin_unlock_irqrestore(&inject_lock, flags);
- 		goto out_put;
- 	}
- 	if (!aer_mask_override && einj->uncor_status &&
- 	    !(einj->uncor_status & ~uncor_mask)) {
- 		ret = -EINVAL;
--		pci_warn(dev, "aer_inject: The uncorrectable error(s) is masked by device\n");
-+		pci_warn(dev, "The uncorrectable error(s) is masked by device\n");
- 		spin_unlock_irqrestore(&inject_lock, flags);
- 		goto out_put;
- 	}
-@@ -460,19 +462,19 @@ static int aer_inject(struct aer_error_inj *einj)
- 	if (device) {
- 		edev = to_pcie_device(device);
- 		if (!get_service_data(edev)) {
--			dev_warn(&edev->device,
--				 "aer_inject: AER service is not initialized\n");
-+			pci_warn(edev->port,
-+				 "AER service is not initialized\n");
- 			ret = -EPROTONOSUPPORT;
- 			goto out_put;
- 		}
--		dev_info(&edev->device,
--			 "aer_inject: Injecting errors %08x/%08x into device %s\n",
-+		pci_info(edev->port,
-+			 "Injecting errors %08x/%08x into device %s\n",
- 			 einj->cor_status, einj->uncor_status, pci_name(dev));
- 		local_irq_disable();
- 		generic_handle_irq(edev->irq);
- 		local_irq_enable();
- 	} else {
--		pci_err(rpdev, "aer_inject: AER device not found\n");
-+		pci_err(rpdev, "AER device not found\n");
- 		ret = -ENODEV;
- 	}
- out_put:
+Yeah, thanks!
+
+> 
+> > +
+> > +/**
+> > + * strnlen_unsafe_user: - Get the size of a user string INCLUDING final NUL.
+> > + * @unsafe_addr: The string to measure.
+> > + * @count: Maximum count (including NUL character)
+> > + *
+> > + * Get the size of a NUL-terminated string in user space without pagefault.
+> > + *
+> > + * Returns the size of the string INCLUDING the terminating NUL.
+> 
+> These phrases exist:
+> 
+>  'Terminating NULL'
+>  'NULL character'
+> 
+> And we also sometimes talk about 'nil' - but I don't think there's such 
+> thing as a 'NUL character'?
+
+OK, it should be "NUL" or "Null character" ( https://en.wikipedia.org/wiki/Null_character )
+
+> 
+> I realize that this was probably cloned from existing lib/strnlen_user.c 
+> code, but still. ;-)
+> 
+> > + *
+> > + * If the string is too long, returns a number larger than @count. User
+> > + * has to check the return value against "> count".
+> > + * On exception (or invalid count), returns 0.
+> > + *
+> > + * Unlike strnlen_user, this can be used from IRQ handler etc. because
+> > + * it disables pagefaults.
+> 
+> 'can be used from IRQ handlers'
+
+OK.
+
+> 
+> > + */
+> > +long strnlen_unsafe_user(const void __user *unsafe_addr, long count)
+> > +{
+> > +	mm_segment_t old_fs = get_fs();
+> > +	int ret;
+> > +
+> > +	set_fs(USER_DS);
+> > +	pagefault_disable();
+> > +	ret = strnlen_user(unsafe_addr, count);
+> > +	pagefault_enable();
+> > +	set_fs(old_fs);
+> > +	return ret;
+> > +}
+> 
+> Same problem as before.
+
+OK, I'll fix that.
+
+Thank you!
+
+> 
+> Thanks,
+> 
+> 	Ingo
+
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+Masami Hiramatsu <mhiramat@kernel.org>
