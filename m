@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A910BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABB6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5DB2184C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EDD217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427687;
-	bh=h2N+hDNITwH/Ke3AALEIDpBX62l9aCHbEXOmbu49DlY=;
+	s=default; t=1557427692;
+	bh=BUDnrf/w8DJeoUExIXvy5ZlhV8zEWHorSEFZJt2WU+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVigUUskmCJrH+Tjjj28NiPcchS2DV3CguFUI2eWUfAL+/KHcCE6MLVJ8wlNHDEDa
-	 Z7AoCSwhpLfa0NKfD4/pAJ8xtTM6/ODZQaLhFvODiFpQ9JyF/6omPHOVfEaCzQVEIx
-	 IIa8PM3w6m4ZvUFoTeLJ4FA3/Sasmna6Xw4JhdLA=
+	b=tpzSEP3LxHnSCfN8ThAOTPHiyg79v4r+n4rwDOkotXuq1nzxpkhw7ZcIpRFJeRFId
+	 T4uJM5KuFa4fPFyjFC40JWS1CyTqKybYbzd6jgB8Vw9DtLINmbkOOkgrS2w5+9V5LN
+	 P73wfjbAF2L5GX7H0UXotM9Yv1I7XYHtwhYUm9BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfEISsG (ORCPT
+        id S1727969AbfEISsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40836 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfEISsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:03 -0400
+        id S1727953AbfEISsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6327321848;
-        Thu,  9 May 2019 18:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A89D12184D;
+        Thu,  9 May 2019 18:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427682;
-        bh=h2N+hDNITwH/Ke3AALEIDpBX62l9aCHbEXOmbu49DlY=;
+        s=default; t=1557427688;
+        bh=BUDnrf/w8DJeoUExIXvy5ZlhV8zEWHorSEFZJt2WU+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWfTta4q5OpMc1H4TYX5pc9CmKjwlLg4OwdS97S3gAgvRDB+KvRT5++1oZQ8ETsHI
-         1Pmng7ipO8FaocGEQBWeCj1bE5II1nijVDlSrpoCzFy/VY3qVlE0fY6x5vKUCIqIh0
-         L4uahYVvVNemSQewou5cklyrpVPc7lbFIq5TYqTo=
+        b=uStNVL/vnQsyBVkO7QgOvmEPuc7AQl+hQPhUiyq/dwrXJ5YhYQoa00W2krm4Gn73v
+         c4KMfC6eLCcqsCmB2nZF/YAauYjoGgsnXFZl4hdZbuxAgpIbKn5mS7fyN8YRqHl7Rc
+         tb7YBuw65gw+9OgGA59AZxhpsZD+Ctg9wgSzl+Nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Nelson DSouza <nelson.dsouza@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, tonyj@suse.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/66] perf/x86/intel: Initialize TFA MSR
-Date:   Thu,  9 May 2019 20:42:05 +0200
-Message-Id: <20190509181305.094955192@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 32/66] xtensa: fix initialization of pt_regs::syscall in start_thread
+Date:   Thu,  9 May 2019 20:42:07 +0200
+Message-Id: <20190509181305.327667203@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -67,47 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7262457e35dbe239659e62654e56f8ddb814bed ]
+[ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
 
-Stephane reported that the TFA MSR is not initialized by the kernel,
-but the TFA bit could set by firmware or as a leftover from a kexec,
-which makes the state inconsistent.
+New pt_regs should indicate that there's no syscall, not that there's
+syscall #0. While at it wrap macro body in do/while and parenthesize
+macro arguments.
 
-Reported-by: Stephane Eranian <eranian@google.com>
-Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: tonyj@suse.com
-Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 26432ee4590e3..f9958ad4d3353 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3447,6 +3447,12 @@ static void intel_pmu_cpu_starting(int cpu)
+diff --git a/arch/xtensa/include/asm/processor.h b/arch/xtensa/include/asm/processor.h
+index 677bc76c1d707..6e709fb562831 100644
+--- a/arch/xtensa/include/asm/processor.h
++++ b/arch/xtensa/include/asm/processor.h
+@@ -194,15 +194,18 @@ struct thread_struct {
  
- 	cpuc->lbr_sel = NULL;
+ /* Clearing a0 terminates the backtrace. */
+ #define start_thread(regs, new_pc, new_sp) \
+-	memset(regs, 0, sizeof(*regs)); \
+-	regs->pc = new_pc; \
+-	regs->ps = USER_PS_VALUE; \
+-	regs->areg[1] = new_sp; \
+-	regs->areg[0] = 0; \
+-	regs->wmask = 1; \
+-	regs->depc = 0; \
+-	regs->windowbase = 0; \
+-	regs->windowstart = 1;
++	do { \
++		memset((regs), 0, sizeof(*(regs))); \
++		(regs)->pc = (new_pc); \
++		(regs)->ps = USER_PS_VALUE; \
++		(regs)->areg[1] = (new_sp); \
++		(regs)->areg[0] = 0; \
++		(regs)->wmask = 1; \
++		(regs)->depc = 0; \
++		(regs)->windowbase = 0; \
++		(regs)->windowstart = 1; \
++		(regs)->syscall = NO_SYSCALL; \
++	} while (0)
  
-+	if (x86_pmu.flags & PMU_FL_TFA) {
-+		WARN_ON_ONCE(cpuc->tfa_shadow);
-+		cpuc->tfa_shadow = ~0ULL;
-+		intel_set_tfa(cpuc, false);
-+	}
-+
- 	if (x86_pmu.version > 1)
- 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
- 
+ /* Forward declaration */
+ struct task_struct;
 -- 
 2.20.1
 
