@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CCEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DA4C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898A42177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D772177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428388;
-	bh=FIXdxNrE9/HrVfQLCvXe/WWdQ3EDi7cCuGjjZ40Gutw=;
+	s=default; t=1557428392;
+	bh=sX3+KUytg+j6NMJ3s91MjrjyiHfmusDpn3DoOinAvg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdS3QWPo87xxy5nEQyky9eFQAILupbkVEZ0Fnl48DJ9AOY4H68BImynsFR6rghorH
-	 Syg+iQQvfocHxWWRTJlaxAD5V5Bk6aC61VWdamTi6YD+jL5LPm0EXezszlilJ4e/1m
-	 PjIx/3UdoTfbQThYobpU2wluIUTNNIb+Ffv/xSPg=
+	b=1tVeFuvSvk4IGCOL9WBK6WXALcsguTp5MwTToDFqEs2BF+23cJKTsU8OzyndlzOrG
+	 TXckHeTxY7nJ9k9mo74KlrKxEJ0DIKwdfZpdtRovXkIKA/7JN5ACjiBTFIc9tRSCs0
+	 Nm2ScFTQ0ibSYQ7mLguODTMB66JKXzPb66F8jRzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfEIS7r (ORCPT
+        id S1728662AbfEISwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbfEISwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:16 -0400
+        id S1728659AbfEISwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30E882183E;
-        Thu,  9 May 2019 18:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEFA3217F9;
+        Thu,  9 May 2019 18:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427935;
-        bh=FIXdxNrE9/HrVfQLCvXe/WWdQ3EDi7cCuGjjZ40Gutw=;
+        s=default; t=1557427925;
+        bh=sX3+KUytg+j6NMJ3s91MjrjyiHfmusDpn3DoOinAvg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9Mk+pra+OJHxJTDKDosAnvSZqzLXoq7ZGCsErOpA6s8xhU3unHZGpAT9fy+frARM
-         9KrREo3OFK4RHX75PPtR1ttXr4BB9b9nEmLnylx1bQnsK3Lw7n/BTrZ80cXdQzoo/P
-         3O2T+LqtoiaB1QIMpAKs4d+jZkNyrR6KnNOs0wxo=
+        b=M22VXn+5XY60hofhKRWu6erDXh76AAVP7Yw2zrdXZFeqt02113SKwMS+BF6w0G19+
+         l2R6ospaTTCU/k/n+SKu+cceMQtxUyXo2uu4616Ez6c2cwSpynFAHeswcSID9vPtKe
+         0ETHt0D0vEJ4cw282MBPERAEFm3snrw+VrZNid4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 32/95] IB/hfi1: Fix the allocation of RSM table
-Date:   Thu,  9 May 2019 20:41:49 +0200
-Message-Id: <20190509181311.548879047@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 55/95] drm/mediatek: fix possible object reference leak
+Date:   Thu,  9 May 2019 20:42:12 +0200
+Message-Id: <20190509181313.357629651@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -64,99 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d0294344470e6b52d097aa7369173f32d11f2f52 ]
+[ Upstream commit 2ae2c3316fb77dcf64275d011596b60104c45426 ]
 
-The receive side mapping (RSM) on hfi1 hardware is a special
-matching mechanism to direct an incoming packet to a given
-hardware receive context. It has 4 instances of matching capabilities
-(RSM0 - RSM3) that share the same RSM table (RMT). The RMT has a total of
-256 entries, each of which points to a receive context.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Currently, three instances of RSM have been used:
-1. RSM0 by QOS;
-2. RSM1 by PSM FECN;
-3. RSM2 by VNIC.
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/mediatek/mtk_hdmi.c:1521:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
+drivers/gpu/drm/mediatek/mtk_hdmi.c:1524:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
 
-Each RSM instance should reserve enough entries in RMT to function
-properly. Since both PSM and VNIC could allocate any receive context
-between dd->first_dyn_alloc_ctxt and dd->num_rcv_contexts, PSM FECN must
-reserve enough RMT entries to cover the entire receive context index
-range (dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt) instead of only
-the user receive contexts allocated for PSM
-(dd->num_user_contexts). Consequently, the sizing of
-dd->num_user_contexts in set_up_context_variables is incorrect.
-
-Fixes: 2280740f01ae ("IB/hfi1: Virtual Network Interface Controller (VNIC) HW support")
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: CK Hu <ck.hu@mediatek.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/chip.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index b443642eac021..0ae05e9249b39 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -13219,7 +13219,7 @@ static int set_up_context_variables(struct hfi1_devdata *dd)
- 	int total_contexts;
- 	int ret;
- 	unsigned ngroups;
--	int qos_rmt_count;
-+	int rmt_count;
- 	int user_rmt_reduced;
- 	u32 n_usr_ctxts;
- 	u32 send_contexts = chip_send_contexts(dd);
-@@ -13281,10 +13281,20 @@ static int set_up_context_variables(struct hfi1_devdata *dd)
- 		n_usr_ctxts = rcv_contexts - total_contexts;
- 	}
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index c910850d20770..a687fe3e1d6c5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -1514,6 +1514,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+ 	of_node_put(remote);
  
--	/* each user context requires an entry in the RMT */
--	qos_rmt_count = qos_rmt_entries(dd, NULL, NULL);
--	if (qos_rmt_count + n_usr_ctxts > NUM_MAP_ENTRIES) {
--		user_rmt_reduced = NUM_MAP_ENTRIES - qos_rmt_count;
-+	/*
-+	 * The RMT entries are currently allocated as shown below:
-+	 * 1. QOS (0 to 128 entries);
-+	 * 2. FECN for PSM (num_user_contexts + num_vnic_contexts);
-+	 * 3. VNIC (num_vnic_contexts).
-+	 * It should be noted that PSM FECN oversubscribe num_vnic_contexts
-+	 * entries of RMT because both VNIC and PSM could allocate any receive
-+	 * context between dd->first_dyn_alloc_text and dd->num_rcv_contexts,
-+	 * and PSM FECN must reserve an RMT entry for each possible PSM receive
-+	 * context.
-+	 */
-+	rmt_count = qos_rmt_entries(dd, NULL, NULL) + (num_vnic_contexts * 2);
-+	if (rmt_count + n_usr_ctxts > NUM_MAP_ENTRIES) {
-+		user_rmt_reduced = NUM_MAP_ENTRIES - rmt_count;
- 		dd_dev_err(dd,
- 			   "RMT size is reducing the number of user receive contexts from %u to %d\n",
- 			   n_usr_ctxts,
-@@ -14272,9 +14282,11 @@ static void init_user_fecn_handling(struct hfi1_devdata *dd,
- 	u64 reg;
- 	int i, idx, regoff, regidx;
- 	u8 offset;
-+	u32 total_cnt;
- 
- 	/* there needs to be enough room in the map table */
--	if (rmt->used + dd->num_user_contexts >= NUM_MAP_ENTRIES) {
-+	total_cnt = dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt;
-+	if (rmt->used + total_cnt >= NUM_MAP_ENTRIES) {
- 		dd_dev_err(dd, "User FECN handling disabled - too many user contexts allocated\n");
- 		return;
- 	}
-@@ -14328,7 +14340,7 @@ static void init_user_fecn_handling(struct hfi1_devdata *dd,
- 	/* add rule 1 */
- 	add_rsm_rule(dd, RSM_INS_FECN, &rrd);
- 
--	rmt->used += dd->num_user_contexts;
-+	rmt->used += total_cnt;
- }
- 
- /* Initialize RSM for VNIC */
+ 	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
++	of_node_put(i2c_np);
+ 	if (!hdmi->ddc_adpt) {
+ 		dev_err(dev, "Failed to get ddc i2c adapter by node\n");
+ 		return -EINVAL;
 -- 
 2.20.1
 
