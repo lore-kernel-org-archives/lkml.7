@@ -2,219 +2,89 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA13C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0900C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA14A2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="SQXCzKdD"
+	by mail.kernel.org (Postfix) with ESMTP id C042220850
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfEITXJ (ORCPT
+        id S1726864AbfEIT1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:23:09 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34288 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfEITXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:23:09 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j24so2216130ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K0ULTKW1pMIYvmrrloRIKSC8znExoCBaNY+Qu0rdHP4=;
-        b=SQXCzKdDXRiTbiLue1n3gd9c1Ccer5Njq9kWMpqmtLuw/GdsYfKsNwe/4DkA4BxtGI
-         RRNLxVD5BwuOJmOL02Q6lMbIDUqLn8FSeTMGGguibuUVrMc5OiAgEJDvmMR9tDLgg04i
-         U/VEpfB+7v6TBVBo9hXpciknBq53s+rfIZeyvsx4+zkUQy2Lt18QCJdU++b+YCtBF7ty
-         aHofqfWfadHo/VAFIuiLXbYn1bUcY01ZerY/hG8FUdUWSyz1HpvMYdhU+oQ/AC6cNCx+
-         5Ns5ZtlCOcrhkVs1gJsDHdbEkyRtRgD/DpYA/tPDzaP+nSG5ZY8KRLv/ETsdC6oV3enF
-         5OVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=K0ULTKW1pMIYvmrrloRIKSC8znExoCBaNY+Qu0rdHP4=;
-        b=O1rwPviHeqzMWWzfYXT9APpr3uPMDZPYvCgKQGeRf8uxYpfuZnBKpUXHY3JiZW8c3A
-         3G637CF9ISsOVK5sG9/Hxt7/TSxqDT8aXaaSLfiHKhMHgJ9bdViFMexSdMNDBlZZqjcr
-         SsH3MceB1DLBjcRhyPaqdFpAJGrnODMoF2Uel5kr9X8UWpXIJI2MGA8A1bwm/jJ57wpb
-         aMgH4Sw9k1oBCBIf9VejGUTH2meESSBQigI/jIrfi8Sn9hbF3wl6rNUICWRZdBJ+72uv
-         I/JgzJ+Z0RbXAwZt9sR10kU28s18N90GX6v/zuFHlbpg7OR4J6XhrCtEVdvZPKdsH3cG
-         A9dw==
-X-Gm-Message-State: APjAAAWo0WIVfOVx7qqFLZNWi5JBDgux+pk24yPJ0Ai2Al9WXLKVhM3F
-        DCoNB/YsWPIRkLlvXJpNJ2vv7Q==
-X-Google-Smtp-Source: APXvYqw2arXF20dec9+VIQWTMMpM13g01EjzQKLatrD9RWACWa5PsAFeP3BflM5CzO/HShJzHIfRig==
-X-Received: by 2002:a2e:2995:: with SMTP id p21mr3078309ljp.39.1557429786652;
-        Thu, 09 May 2019 12:23:06 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.83.188])
-        by smtp.gmail.com with ESMTPSA id m3sm563590lfh.94.2019.05.09.12.23.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 12:23:05 -0700 (PDT)
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-To:     masonccyang@mxic.com.tw, Lee Jones <lee.jones@linaro.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-spi@vger.kernel.org, mark.rutland@arm.com,
-        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus>
- <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <20190507125730.GD29524@dell>
- <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
- <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
- <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com>
-Date:   Thu, 9 May 2019 22:23:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Thu, 9 May 2019 15:27:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38898 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfEIT1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:27:32 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 91B2E81112;
+        Thu,  9 May 2019 19:27:32 +0000 (UTC)
+Received: from gimli.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CEBD5C582;
+        Thu,  9 May 2019 19:27:22 +0000 (UTC)
+Subject: [PATCH] PCI: Always allow probing with driver_override
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
+        laine@redhat.com
+Date:   Thu, 09 May 2019 13:27:22 -0600
+Message-ID: <155742996741.21878.569845487290798703.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-In-Reply-To: <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 09 May 2019 19:27:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+VF driver binding") introduced the sriov_drivers_autoprobe attribute
+which allows users to prevent the kernel from automatically probing a
+driver for new VFs as they are created.  This allows VFs to be spawned
+without automatically binding the new device to a host driver, such as
+in cases where the user intends to use the device only with a meta
+driver like vfio-pci.  However, the current implementation prevents any
+use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
+blocks the now current general practice of setting driver_override
+followed by using drivers_probe to bind a device to a specified driver.
 
-On 05/09/2019 05:06 AM, masonccyang@mxic.com.tw wrote:
+The kernel never automatically sets a driver_override therefore it seems
+we can assume a driver_override reflects the intent of the user.  Also,
+probing a device using a driver_override match seems outside the scope
+of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
+driver_override matches regardless of sriov_drivers_autoprobe, which we
+can do by simply testing if a driver_override is set for a device as a
+'can probe' condition.
 
-[...]
->> > >> > On 4/24/19 11:23 PM, Rob Herring wrote:
->> > >> > > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
->> > >> > >> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
->> > >> > >>
->> > >> > >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> > >> > >> ---
->> > >> > >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++
->> > >> ++++++++++++++++
->> > >> > >>  1 file changed, 40 insertions(+)
->> > >> > >>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
->> > >> renesas-rpc.txt
->> > >> > >>
->> > >> > >> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
->> > >> rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->> > >> > >> new file mode 100644
->> > >> > >> index 0000000..668b822
->> > >> > >> --- /dev/null
->> > >> > >> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
->> > >> > >> @@ -0,0 +1,40 @@
->> > >> > >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
->> > >> > >> +--------------------------------------------------
->> > >> > >
->> > >> > > Looks like a SPI flash controller from the example. What makes it an
->> > >> > > MFD?
->> > >> >
->> > >> > It supports both SPI NOR and HyperFlash (CFI-compliant flash with
->> > >> > different bus interface).
->> > >>
->> > >> Looks like you're registering one OR the other.
->> > >>
->> > >> Why don't you just do this from DT?
->> > >>
->> > >> No reason for this to be an MFD IMHO.
->> > >
->> > >
->> > > okay, I will patch it back to SPI mode only.
->> >
->> > I don't think that's what Lee meant . The controller supports _both_
->> > modes , hence it would have the same compatible string. You just need to
->> > extract the mode of operation from the DT.
->>
->> HiSilicon attempted to upstream something similar, only their
->> controller provided NAND and NOR functionality.  They used different
->> compatible strings to differentiate between the varying
->> technologies.
->>
->> They too tried to use MFD as a means to select between them (which was
->> also NACKed).  Not sure what they ended up doing, but the original
->> submission and (half of) the conversation can be found at [0].  Some
->> more of the thread continues at [1].
->>
->> Hope that helps.
->>
->> [0] https://groups.google.com/forum/#!topic/fa.linux.kernel/F6i9o8sfOIw
->> [1] https://marc.info/?l=devicetree&m=147669165104431&w=2
-> 
-> 
-> Hi Marek,
-> 
-> By Jones's comments:
-> --------------------------------------------------------------------------
->> From: Shunquan Lin <linshunquan1@hisilicon.com>
->>
->> This patch adds driver support for HiSilicon Flash Memory
->> Controller(FMC). HiSilicon FMC is a multi-functions device which
->> supports SPI Nor flash controller, SPI nand Flash controller and
->> parallel nand flash controller.
-> 
-> MFDs are for devices which span multiple subsystems.
+Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
 
-   And we do! One of the subdrivers will live under drivers/spi/, the other
-under drivers/mtd/...
+ drivers/pci/pci-driver.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Please submit this to MTD.
-> 
-> _https://marc.info/?l=devicetree&m=147376842210229&w=2_
-> -------------------------------------------------------------------------------------------------
-> 
-> 
-> I will patch RPC-IF back to SPI mode according to previous patches:
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index da7b82e56c83..9b9e9c63cde8 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -399,7 +399,8 @@ void __weak pcibios_free_irq(struct pci_dev *dev)
+ #ifdef CONFIG_PCI_IOV
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
+ {
+-	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
++	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
++		pdev->driver_override);
+ }
+ #else
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
 
-   I still don't see why you want to do this...
-
-> -----------------------------------------------------------------------
-> On 2/12/19 3:22 PM, Mark Brown wrote:
->> The patch
->>
->>    spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
->>
->> has been applied to the spi tree at
->>
->>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
->>
->> All being well this means that it will be integrated into the linux-next
->> tree (usually sometime in the next 24 hours) and sent to Linus during
->> the next merge window (or sooner if it is a bug fix), however if
->> problems are discovered then the patch may be dropped or reverted.  
->>
->> You may get further e-mails resulting from automated or manual testing
->> and review of the tree, please engage with people reporting problems and
->> send followup patches addressing any issues that are reported if needed.
->>
->> If any updates are required or you are submitting further changes they
->> should be sent as incremental updates against current git, existing
->> patches will not be replaced.
->>
->> Please add any relevant lists and maintainers to the CCs when replying
->> to this mail.
-> ------------------------------------------------------------------------
-> 
-> agreed it ?
-
-   No, I don't agree.
-
-[...]
-> thanks & best regards,
-> Mason
-
-MBR, Sergei
