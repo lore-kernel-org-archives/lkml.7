@@ -2,108 +2,88 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8766C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6FFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E32820989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB95E20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEIKrH (ORCPT
+        id S1726567AbfEIKrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 9 May 2019 06:47:09 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:44464 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726078AbfEIKrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 May 2019 06:47:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725869AbfEIKrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 06:47:06 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49ASThi044126
-        for <linux-kernel@vger.kernel.org>; Thu, 9 May 2019 06:47:05 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2scjer0vq0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 06:47:04 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Thu, 9 May 2019 11:47:03 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 May 2019 11:47:00 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49Al0RH5570676
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 May 2019 10:47:00 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8EB811C04A;
-        Thu,  9 May 2019 10:46:59 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9DD011C04C;
-        Thu,  9 May 2019 10:46:59 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  9 May 2019 10:46:59 +0000 (GMT)
-Date:   Thu, 9 May 2019 12:46:58 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Early printk breakage due to 3e5903eb9cff ("vsprintf: Prevent crash
- when dereferencing invalid pointers")
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19050910-0028-0000-0000-0000036BE55F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050910-0029-0000-0000-0000242B6630
-Message-Id: <20190509104658.GB5758@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=301 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090065
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 12BAC9BBD87513C55F72;
+        Thu,  9 May 2019 18:47:03 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x49AktYE044383;
+        Thu, 9 May 2019 18:46:55 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019050918471900-10203318 ;
+          Thu, 9 May 2019 18:47:19 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        sean.j.christopherson@intel.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn
+Subject: [PATCH v2] [next] KVM: lapic: allow set apic debug dynamically
+Date:   Thu, 9 May 2019 18:47:57 +0800
+Message-Id: <1557398877-32750-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-05-09 18:47:19,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-05-09 18:46:41,
+        Serialize complete at 2019-05-09 18:46:41
+X-MAIL: mse-fl1.zte.com.cn x49AktYE044383
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Petr,
+There are many functions invoke apic_debug(), which is defined
+a null function by default, and that's incovenient for debuging
+lapic.
 
-I just realized that early printks, or more specific vsnprintf invocations,
-are broken on s390 due to
+This patch allows setting apic debug according to add a apic_dbg
+parameter of kvm.
 
-3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers").
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+v2: change apic_dbg to bool and tag __read_mostly. Thanks to Sean.
 
-E.g. the early boot output now looks like this where the first
-(efault) should be the linux_banner:
+ arch/x86/kvm/lapic.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-[    0.099985] (efault)
-[    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
-[    0.100066] setup: The maximum memory size is 8192MB
-[    0.100070] cma: Reserved 4 MiB at (efault)
-[    0.100100] numa: NUMA mode: (efault)
-
-The reason for this, is that your code assumes that
-probe_kernel_address() works very early. This however is not true on
-at least s390. Uaccess on KERNEL_DS works only after page tables have
-been setup on s390, which happens with setup_arch()->paging_init().
-
-Any probe_kernel_address() invocation before that will return -EFAULT.
-
-So how should we fix this? We could e.g. again add an arch specific
-version of probe_kernel_read() for s390, which would be more or less a
-copy of the generic variant, just that it would do something different
-if page tables aren't setup yet.
-
-Or... any other idea?
-
-Cc'ing linux-arch, just in case other architectures are also affected.
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 9bf70cf..0827e7c 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -54,8 +54,13 @@
+ #define PRIu64 "u"
+ #define PRIo64 "o"
+ 
++static bool apic_dbg __read_mostly;
++module_param(apic_dbg, bool, 0644);
++
+ /* #define apic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg) */
+-#define apic_debug(fmt, arg...) do {} while (0)
++#define apic_debug(fmt, arg...) do {  if (apic_dbg)   \
++	printk(KERN_DEBUG fmt, ##arg);    \
++} while (0)
+ 
+ /* 14 is the version for Xeon and Pentium 8.4.8*/
+ #define APIC_VERSION			(0x14UL | ((KVM_APIC_LVT_NUM - 1) << 16))
+-- 
+1.8.3.1
 
