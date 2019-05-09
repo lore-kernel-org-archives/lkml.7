@@ -2,160 +2,77 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C88AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72C1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D8221783
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OvRBXXdx"
+	by mail.kernel.org (Postfix) with ESMTP id B64AC216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557364133;
+	bh=HHCN83sJGDHkgbhIwvLbEuO8IR+0t6CVcaGE9uGJjDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=av5TFvXAPoSdmgUskZ6M8GKtWaIyvnHemZi+O2tQArQAgzt3VZbUHjH3QHiOWzjvS
+	 nZTt9jmq89uMzRt1buhNAzd8f8hDhr2nxx4hjUmEArqU3uD3A5J8KR/km6y35JA/vT
+	 CBLlcQ8mw/QfLVtjITFKimWw70q3UqUHr4B+8gsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfEIBH3 (ORCPT
+        id S1726546AbfEIBIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:07:29 -0400
-Received: from ozlabs.org ([203.11.71.1]:44657 "EHLO ozlabs.org"
+        Wed, 8 May 2019 21:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfEIBH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:07:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725778AbfEIBIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:08:52 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zwDY0Tfkz9sBV;
-        Thu,  9 May 2019 11:07:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557364045;
-        bh=z7RKUdcv39RmUFu7h7XjjB8CeA+0giObheLTz+x3H5Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OvRBXXdx3fE+9ApExagCmYf7N/2JJElmdcQE/IiEqili3QXa3kjiMYVVzgEU3fcC3
-         gWUYCpxRp/ipB+Zn3Qfc0Vio0rHUGExhxyomchwKFAxqNnsRWZ58nHgxOfZtJZjtc3
-         VH0FMOMFhTvZX6uxb1eCcLk6/jWXoSqtt98vhftDNeCbhNoVqK+fEnYmt4v95VJv1a
-         G+gA79/MxN3351syVdT2keMh43gYIOMPmmTRYZ2RNVUS/rX0HYW4Pd4lt3qFLZmc6u
-         d2MBWcJjl0CcDv5zSr0XIEsK+K2cFPX7BGOXUShgqgwTcpAjoNyXknemYe/RFCY+p0
-         dTwzhiQCH/d+g==
-Date:   Thu, 9 May 2019 11:07:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vu Pham <vuhuong@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>
-Subject: Re: linux-next: manual merge of the mlx5-next tree with the rdma
- tree
-Message-ID: <20190509110724.6694d991@canb.auug.org.au>
-In-Reply-To: <20190506140147.23d41ac1@canb.auug.org.au>
-References: <20190430135846.0c17df6e@canb.auug.org.au>
-        <20190506140147.23d41ac1@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id BA490214AF;
+        Thu,  9 May 2019 01:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557364132;
+        bh=HHCN83sJGDHkgbhIwvLbEuO8IR+0t6CVcaGE9uGJjDo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IaP05M3Q6k+0AQL9Jydqk2Th4poz3rAb6ArQfCkdC8jxuZPBw7zXo7tBMfSQimbEz
+         pRT6COESspTWRihN0k5gsRgwC7RCB//5FzGYVj4awAholMTc8c4595ExPq77QGIz60
+         QANGzL5zh4jTDWXjL+j79alegmGvdRnsgT9/tqC8=
+Date:   Wed, 8 May 2019 21:08:50 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Adrian Vladu <avladu@cloudbasesolutions.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Subject: Re: [PATCH] hv: tools: fix KVP and VSS daemons exit code
+Message-ID: <20190509010850.GR1747@sasha-vm>
+References: <20190506165058.6749-1-avladu@cloudbasesolutions.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/n5dCGEwjrWyPV6gM/vr=LWj"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190506165058.6749-1-avladu@cloudbasesolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n5dCGEwjrWyPV6gM/vr=LWj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 6 May 2019 14:01:47 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+On Mon, May 06, 2019 at 04:50:58PM +0000, Adrian Vladu wrote:
+>HyperV KVP and VSS daemons should exit with 0 when the '--help'
+>or '-h' flags are used.
 >
-> Hi all,
->=20
-> On Tue, 30 Apr 2019 13:58:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > Hi Leon,
-> >=20
-> > Today's linux-next merge of the mlx5-next tree got a conflict in:
-> >=20
-> >   drivers/infiniband/hw/mlx5/main.c
-> >=20
-> > between commit:
-> >=20
-> >   35b0aa67b298 ("RDMA/mlx5: Refactor netdev affinity code")
-> >=20
-> > from the rdma tree and commit:
-> >=20
-> >   c42260f19545 ("net/mlx5: Separate and generalize dma device from pci =
-device")
-> >=20
-> > from the mlx5-next tree.
-> >=20
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> >=20
-> > --=20
-> > Cheers,
-> > Stephen Rothwell
-> >=20
-> > diff --cc drivers/infiniband/hw/mlx5/main.c
-> > index 6135a0b285de,fae6a6a1fbea..000000000000
-> > --- a/drivers/infiniband/hw/mlx5/main.c
-> > +++ b/drivers/infiniband/hw/mlx5/main.c
-> > @@@ -200,12 -172,18 +200,12 @@@ static int mlx5_netdev_event(struct not
-> >  =20
-> >   	switch (event) {
-> >   	case NETDEV_REGISTER:
-> >  +		/* Should already be registered during the load */
-> >  +		if (ibdev->is_rep)
-> >  +			break;
-> >   		write_lock(&roce->netdev_lock);
-> > - 		if (ndev->dev.parent =3D=3D &mdev->pdev->dev)
-> >  -		if (ibdev->rep) {
-> >  -			struct mlx5_eswitch *esw =3D ibdev->mdev->priv.eswitch;
-> >  -			struct net_device *rep_ndev;
-> >  -
-> >  -			rep_ndev =3D mlx5_ib_get_rep_netdev(esw,
-> >  -							  ibdev->rep->vport);
-> >  -			if (rep_ndev =3D=3D ndev)
-> >  -				roce->netdev =3D ndev;
-> >  -		} else if (ndev->dev.parent =3D=3D mdev->device) {
-> > ++		if (ndev->dev.parent =3D=3D mdev->device)
-> >   			roce->netdev =3D ndev;
-> >  -		}
-> >   		write_unlock(&roce->netdev_lock);
-> >   		break;
-> >    =20
->=20
-> This is now a conflict between the net-next tree and the rdma tree.
+>Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+>
+>Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>Cc: Sasha Levin <sashal@kernel.org>
+>Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
 
-And now between the rdma tree and Linus' tree.
+Queued for hyperv-fixes, thanks!
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/n5dCGEwjrWyPV6gM/vr=LWj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzTfUwACgkQAVBC80lX
-0GwMrQf/VkAhwibKjn27GJoRox74VtVB3guRMFjw+TsMO5fCNIdGkRtROoHV7Fgi
-AtbKH6CQXw54+q+2sHbPqBvOb9tmsPshuDJ8jvwzp989QNGHrbIshDLvOJLhRUhl
-XLjf+jIHazXYa5w/7JIELz9JOGgJ6ySOvFjwrpvjGDEUtWcxzWMvzDhq9cOYDf/n
-szEpKMRvAo9UgTqCzEVW/HMypUfJp7c/yESFz5iildGt91IR0t62aLZC9u4rBPij
-NAlXWQyHewIcp5bJFgIxwn4cJeIXanpB4ax8MGuHhdHrj864eo6AeRNPuEXoLVvD
-Y7mG1T8oFfei+wr6/NP+P0TSdBVugw==
-=VkZ9
------END PGP SIGNATURE-----
-
---Sig_/n5dCGEwjrWyPV6gM/vr=LWj--
+--
+Thanks,
+Sasha
