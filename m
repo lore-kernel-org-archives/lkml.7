@@ -2,172 +2,169 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C407AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91912C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9471021743
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A166216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:30:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EeWeZL2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEIC2g (ORCPT
+        id S1726656AbfEICaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:28:36 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55337 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfEIC2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:28:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 19:28:34 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 08 May 2019 19:28:32 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Ashok Raj <ashok.raj@intel.com>, jacob.jun.pan@intel.com,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        James Sewart <jamessewart@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] iommu: Add ops entry for supported default domain
- type
-To:     Tom Murphy <tmurphy@arista.com>
-References: <20190429020925.18136-1-baolu.lu@linux.intel.com>
- <20190429020925.18136-2-baolu.lu@linux.intel.com>
- <CAPL0++4Q7p7gWRUF5vG5sazLNCmSR--Px-=OEtj6vm_gEpB_ng@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <4a21bf25-bde5-3248-2f41-17c5c8803c5f@linux.intel.com>
-Date:   Thu, 9 May 2019 10:22:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAPL0++4Q7p7gWRUF5vG5sazLNCmSR--Px-=OEtj6vm_gEpB_ng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 8 May 2019 22:30:30 -0400
+Received: from mail-eopbgr150081.outbound.protection.outlook.com ([40.107.15.81]:48475
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726082AbfEICaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 22:30:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pW5BzZjQLlxkVc1eetGVZECsUOclUujYSIIs/G1EL3U=;
+ b=EeWeZL2Pg0ActY23Yv1FemExZCWElBgObxxd4gGUFgxFktgwYbmOt1/nVSzn+z8hd5YI+mzHkvdE41UU2ZhKzuty0dR1Me1HGmkiJx/0lAq8oMg2TcZOJNRyPKRGQCgbokzSNZWEvw6sPZtRaIoPO98MHeHZHSIx3lBQhIk+7xA=
+Received: from VI1PR04MB3247.eurprd04.prod.outlook.com (10.170.232.160) by
+ VI1PR04MB5933.eurprd04.prod.outlook.com (20.178.205.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Thu, 9 May 2019 02:30:24 +0000
+Received: from VI1PR04MB3247.eurprd04.prod.outlook.com
+ ([fe80::cd99:d9b2:d90a:6c2]) by VI1PR04MB3247.eurprd04.prod.outlook.com
+ ([fe80::cd99:d9b2:d90a:6c2%2]) with mapi id 15.20.1856.012; Thu, 9 May 2019
+ 02:30:24 +0000
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: RE: PATCH v2 2/6] soc/fsl/qe: qe.c: reduce static memory footprint by
+ 1.7K
+Thread-Topic: PATCH v2 2/6] soc/fsl/qe: qe.c: reduce static memory footprint
+ by 1.7K
+Thread-Index: AdUGDvJsxH/GwTlzQJOYnr/7RIp6Ag==
+Date:   Thu, 9 May 2019 02:30:24 +0000
+Message-ID: <VI1PR04MB3247B7164E4BB289A7211B1D91330@VI1PR04MB3247.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiang.zhao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d65fbfa6-0835-4fe0-e329-08d6d4264a64
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5933;
+x-ms-traffictypediagnostic: VI1PR04MB5933:
+x-microsoft-antispam-prvs: <VI1PR04MB5933168466D1C6DAD0C6443B91330@VI1PR04MB5933.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(39860400002)(346002)(376002)(13464003)(189003)(199004)(66446008)(64756008)(8676002)(81166006)(81156014)(6636002)(478600001)(66556008)(229853002)(68736007)(26005)(66476007)(2906002)(7736002)(71190400001)(71200400001)(8936002)(14454004)(25786009)(4326008)(486006)(33656002)(186003)(7416002)(76116006)(305945005)(53936002)(54906003)(110136005)(99286004)(74316002)(476003)(9686003)(66066001)(44832011)(6246003)(2501003)(66946007)(316002)(55016002)(73956011)(7696005)(86362001)(14444005)(256004)(6436002)(5660300002)(52536014)(6116002)(53546011)(6506007)(3846002)(102836004)(2004002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5933;H:VI1PR04MB3247.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 81TPDspRqKaoPh4tUeMmp2D5Yqwk9fFSvJ2UyJljL5PntqaRM8dOLqdQbcJ96318Wv8e8r0GX16RuBuef3VdFVLTyDmu2xvYxrjMEDYl6ts7xV5uMQIuJNcG/Vhy7vtvlXXyygMjhVAfIG1LxHWyZ5tTaVImrgo1jKeK8lK05lLGsO9B4GTm8KNQ/MLD2kZ8DcVb2Nix6+K+35opvzUJVBSwnRRL68q50XJpDsSnA6LOxcDHUwm1IwGW4wLFAx2wIv2atSbdn9OyM/9DJ+O1uotGbEDIrYoSdxmC7Bx8OiRO1jJXWlOIFcfTwLa28haXWQvhlM/eZBXp32YbMtZxBbkokXfuUmelOd6LFL+jj0LHZwUHa/zMUEKabppd/8hYw/EEMd2ZjYe/Ie2ZvaxWfgGHGKUQpIW/eHdbFJtn1lc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d65fbfa6-0835-4fe0-e329-08d6d4264a64
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 02:30:24.0674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5933
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
-
-On 5/6/19 11:32 PM, Tom Murphy wrote:
-> The AMD driver already solves this problem and uses the generic
-> iommu_request_dm_for_dev function. It seems like both drivers have the
-> same problem and could use the same solution. Is there any reason we
-> can't have use the same solution for the intel and amd driver?
-
-The iommu_request_dm_for_dev() works for vt-d driver as well. But it's
-insufficient. Another case is the default domain type is IDENTITY, but
-the iommu driver can only support DMA type. Is it possible to add an
-iommu_request_dma_map_for_dev() for this purpose?
-
-> 
-> Could we just  copy the implementation of the AMD driver? It would be
-> nice to have the same behavior across both drivers especially as we
-> move to make both drivers use more generic code.
-
-Yes, agreed.
-
-Best regards,
-Lu Baolu
-
-> 
-> On Mon, Apr 29, 2019 at 3:16 AM Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>
->> This adds an optional ops entry to query the default domain
->> types supported by the iommu driver for  a specific device.
->> This is necessary in cases where the iommu driver can only
->> support a specific type of default domain for a device. In
->> normal cases, this ops will return IOMMU_DOMAIN_ANY which
->> indicates that the iommu driver supports both IOMMU_DOMAIN_DMA
->> and IOMMU_DOMAIN_IDENTITY, hence the static default domain
->> type will be used.
->>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/iommu.c | 13 ++++++++++---
->>   include/linux/iommu.h | 11 +++++++++++
->>   2 files changed, 21 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index acd6830e6e9b..1ad9a1f2e078 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -1097,15 +1097,22 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
->>           * IOMMU driver.
->>           */
->>          if (!group->default_domain) {
->> +               unsigned int domain_type = IOMMU_DOMAIN_ANY;
->>                  struct iommu_domain *dom;
->>
->> -               dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
->> -               if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
->> +               if (ops->def_domain_type)
->> +                       domain_type = ops->def_domain_type(dev);
->> +
->> +               if (domain_type == IOMMU_DOMAIN_ANY)
->> +                       domain_type = iommu_def_domain_type;
->> +
->> +               dom = __iommu_domain_alloc(dev->bus, domain_type);
->> +               if (!dom && domain_type != IOMMU_DOMAIN_DMA) {
->>                          dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
->>                          if (dom) {
->>                                  dev_warn(dev,
->>                                           "failed to allocate default IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
->> -                                        iommu_def_domain_type);
->> +                                        domain_type);
->>                          }
->>                  }
->>
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index 8239ece9fdfc..ba9a5b996a63 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -79,12 +79,16 @@ struct iommu_domain_geometry {
->>    *     IOMMU_DOMAIN_DMA        - Internally used for DMA-API implementations.
->>    *                               This flag allows IOMMU drivers to implement
->>    *                               certain optimizations for these domains
->> + *     IOMMU_DOMAIN_ANY        - All domain types defined here
->>    */
->>   #define IOMMU_DOMAIN_BLOCKED   (0U)
->>   #define IOMMU_DOMAIN_IDENTITY  (__IOMMU_DOMAIN_PT)
->>   #define IOMMU_DOMAIN_UNMANAGED (__IOMMU_DOMAIN_PAGING)
->>   #define IOMMU_DOMAIN_DMA       (__IOMMU_DOMAIN_PAGING |        \
->>                                   __IOMMU_DOMAIN_DMA_API)
->> +#define IOMMU_DOMAIN_ANY       (IOMMU_DOMAIN_IDENTITY |        \
->> +                                IOMMU_DOMAIN_UNMANAGED |       \
->> +                                IOMMU_DOMAIN_DMA)
->>
->>   struct iommu_domain {
->>          unsigned type;
->> @@ -196,6 +200,11 @@ enum iommu_dev_features {
->>    * @dev_feat_enabled: check enabled feature
->>    * @aux_attach/detach_dev: aux-domain specific attach/detach entries.
->>    * @aux_get_pasid: get the pasid given an aux-domain
->> + * @def_domain_type: get per-device default domain type that the IOMMU
->> + *             driver is able to support. Valid returns values:
->> + *             - IOMMU_DOMAIN_DMA: only suports non-identity domain
->> + *             - IOMMU_DOMAIN_IDENTITY: only supports identity domain
->> + *             - IOMMU_DOMAIN_ANY: supports all
->>    * @pgsize_bitmap: bitmap of all possible supported page sizes
->>    */
->>   struct iommu_ops {
->> @@ -251,6 +260,8 @@ struct iommu_ops {
->>          void (*aux_detach_dev)(struct iommu_domain *domain, struct device *dev);
->>          int (*aux_get_pasid)(struct iommu_domain *domain, struct device *dev);
->>
->> +       int (*def_domain_type)(struct device *dev);
->> +
->>          unsigned long pgsize_bitmap;
->>   };
->>
->> --
->> 2.17.1
->>
-> 
+T24gMjAxOS81LzEgMTc6MjksIFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJl
+dmFzLmRrPiB3cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBS
+YXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4gU2VudDogMjAx
+OeW5tDXmnIgx5pelIDE3OjI5DQo+IFRvOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgUWlh
+bmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5j
+b20+DQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBS
+b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgU2NvdHQgV29vZA0KPiA8b3NzQGJ1c2Vy
+cm9yLm5ldD47IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPjsgTWFy
+aw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJhc211cyBWaWxsZW1vZXMNCj4g
+PFJhc211cy5WaWxsZW1vZXNAcHJldmFzLnNlPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjIgMi82XSBz
+b2MvZnNsL3FlOiBxZS5jOiByZWR1Y2Ugc3RhdGljIG1lbW9yeSBmb290cHJpbnQNCj4gYnkgMS43
+Sw0KPiANCj4gVGhlIGN1cnJlbnQgYXJyYXkgb2Ygc3RydWN0IHFlX3NudW0gdXNlIDI1Nio0IGJ5
+dGVzIGZvciBqdXN0IGtlZXBpbmcgdHJhY2sgb2YNCj4gdGhlIGZyZWUvdXNlZCBzdGF0ZSBvZiBl
+YWNoIGluZGV4LCBhbmQgdGhlIHN0cnVjdCBsYXlvdXQgbWVhbnMgdGhlcmUncyBhbm90aGVyDQo+
+IDc2OCBieXRlcyBvZiBwYWRkaW5nLiBJZiB3ZSBqdXN0IHVuemlwIHRoYXQgc3RydWN0dXJlLCB0
+aGUgYXJyYXkgb2Ygc251bSB2YWx1ZXMNCj4ganVzdCB1c2UgMjU2IGJ5dGVzLCB3aGlsZSB0aGUg
+ZnJlZS9pbnVzZSBzdGF0ZSBjYW4gYmUgdHJhY2tlZCBpbiBhIDMyIGJ5dGUNCj4gYml0bWFwLg0K
+PiANCj4gU28gdGhpcyByZWR1Y2VzIHRoZSAuZGF0YSBmb290cHJpbnQgYnkgMTc2MCBieXRlcy4g
+SXQgYWxzbyBzZXJ2ZXMgYXMgcHJlcGFyYXRpb24NCj4gZm9yIGludHJvZHVjaW5nIGFub3RoZXIg
+RFQgYmluZGluZyBmb3Igc3BlY2lmeWluZyB0aGUgc251bSB2YWx1ZXMuDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBSYXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCiAN
+ClJldmlld2VkLWJ5OiBRaWFuZyBaaGFvIDxxaWFuZy56aGFvQG54cC5jb20+DQoNCj4gLS0tDQo+
+ICBkcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyB8IDQzICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMzEg
+ZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMg
+Yi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyBpbmRleA0KPiA4NTUzNzNkZWI3NDYuLjMwM2FhMjlj
+YjI3ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMNCj4gKysrIGIvZHJp
+dmVycy9zb2MvZnNsL3FlL3FlLmMNCj4gQEAgLTE0LDYgKzE0LDcgQEANCj4gICAqIEZyZWUgU29m
+dHdhcmUgRm91bmRhdGlvbjsgIGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlICBMaWNlbnNlLCBvciAo
+YXQgeW91cg0KPiAgICogb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4NCj4gICAqLw0KPiArI2lu
+Y2x1ZGUgPGxpbnV4L2JpdG1hcC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2Vycm5vLmg+DQo+ICAj
+aW5jbHVkZSA8bGludXgvc2NoZWQuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4g
+QEAgLTQzLDI1ICs0NCwxNCBAQCBzdGF0aWMgREVGSU5FX1NQSU5MT0NLKHFlX2xvY2spOw0KPiBE
+RUZJTkVfU1BJTkxPQ0soY214Z2NyX2xvY2spOyAgRVhQT1JUX1NZTUJPTChjbXhnY3JfbG9jayk7
+DQo+IA0KPiAtLyogUUUgc251bSBzdGF0ZSAqLw0KPiAtZW51bSBxZV9zbnVtX3N0YXRlIHsNCj4g
+LSAgICAgICBRRV9TTlVNX1NUQVRFX1VTRUQsDQo+IC0gICAgICAgUUVfU05VTV9TVEFURV9GUkVF
+DQo+IC19Ow0KPiAtDQo+IC0vKiBRRSBzbnVtICovDQo+IC1zdHJ1Y3QgcWVfc251bSB7DQo+IC0g
+ICAgICAgdTggbnVtOw0KPiAtICAgICAgIGVudW0gcWVfc251bV9zdGF0ZSBzdGF0ZTsNCj4gLX07
+DQo+IC0NCj4gIC8qIFdlIGFsbG9jYXRlIHRoaXMgaGVyZSBiZWNhdXNlIGl0IGlzIHVzZWQgYWxt
+b3N0IGV4Y2x1c2l2ZWx5IGZvcg0KPiAgICogdGhlIGNvbW11bmljYXRpb24gcHJvY2Vzc29yIGRl
+dmljZXMuDQo+ICAgKi8NCj4gIHN0cnVjdCBxZV9pbW1hcCBfX2lvbWVtICpxZV9pbW1yOw0KPiAg
+RVhQT1JUX1NZTUJPTChxZV9pbW1yKTsNCj4gDQo+IC1zdGF0aWMgc3RydWN0IHFlX3NudW0gc251
+bXNbUUVfTlVNX09GX1NOVU1dOyAgIC8qIER5bmFtaWNhbGx5DQo+IGFsbG9jYXRlZCBTTlVNcyAq
+Lw0KPiArc3RhdGljIHU4IHNudW1zW1FFX05VTV9PRl9TTlVNXTsgICAgICAgLyogRHluYW1pY2Fs
+bHkgYWxsb2NhdGVkDQo+IFNOVU1zICovDQo+ICtzdGF0aWMgREVDTEFSRV9CSVRNQVAoc251bV9z
+dGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0KPiAgc3RhdGljIHVuc2lnbmVkIGludCBxZV9udW1fb2Zf
+c251bTsNCj4gDQo+ICBzdGF0aWMgcGh5c19hZGRyX3QgcWViYXNlID0gLTE7DQo+IEBAIC0zMTUs
+MTAgKzMwNSw4IEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9pZCkNCj4gICAgICAgICBl
+bHNlDQo+ICAgICAgICAgICAgICAgICBzbnVtX2luaXQgPSBzbnVtX2luaXRfNDY7DQo+IA0KPiAt
+ICAgICAgIGZvciAoaSA9IDA7IGkgPCBxZV9udW1fb2Zfc251bTsgaSsrKSB7DQo+IC0gICAgICAg
+ICAgICAgICBzbnVtc1tpXS5udW0gPSBzbnVtX2luaXRbaV07DQo+IC0gICAgICAgICAgICAgICBz
+bnVtc1tpXS5zdGF0ZSA9IFFFX1NOVU1fU1RBVEVfRlJFRTsNCj4gLSAgICAgICB9DQo+ICsgICAg
+ICAgYml0bWFwX3plcm8oc251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0KPiArICAgICAgIG1l
+bWNweShzbnVtcywgc251bV9pbml0LCBxZV9udW1fb2Zfc251bSk7DQo+ICB9DQo+IA0KPiAgaW50
+IHFlX2dldF9zbnVtKHZvaWQpDQo+IEBAIC0zMjgsMTIgKzMxNiwxMCBAQCBpbnQgcWVfZ2V0X3Nu
+dW0odm9pZCkNCj4gICAgICAgICBpbnQgaTsNCj4gDQo+ICAgICAgICAgc3Bpbl9sb2NrX2lycXNh
+dmUoJnFlX2xvY2ssIGZsYWdzKTsNCj4gLSAgICAgICBmb3IgKGkgPSAwOyBpIDwgcWVfbnVtX29m
+X3NudW07IGkrKykgew0KPiAtICAgICAgICAgICAgICAgaWYgKHNudW1zW2ldLnN0YXRlID09IFFF
+X1NOVU1fU1RBVEVfRlJFRSkgew0KPiAtICAgICAgICAgICAgICAgICAgICAgICBzbnVtc1tpXS5z
+dGF0ZSA9IFFFX1NOVU1fU1RBVEVfVVNFRDsNCj4gLSAgICAgICAgICAgICAgICAgICAgICAgc251
+bSA9IHNudW1zW2ldLm51bTsNCj4gLSAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+IC0g
+ICAgICAgICAgICAgICB9DQo+ICsgICAgICAgaSA9IGZpbmRfZmlyc3RfemVyb19iaXQoc251bV9z
+dGF0ZSwgcWVfbnVtX29mX3NudW0pOw0KPiArICAgICAgIGlmIChpIDwgcWVfbnVtX29mX3NudW0p
+IHsNCj4gKyAgICAgICAgICAgICAgIHNldF9iaXQoaSwgc251bV9zdGF0ZSk7DQo+ICsgICAgICAg
+ICAgICAgICBzbnVtID0gc251bXNbaV07DQo+ICAgICAgICAgfQ0KPiAgICAgICAgIHNwaW5fdW5s
+b2NrX2lycXJlc3RvcmUoJnFlX2xvY2ssIGZsYWdzKTsNCj4gDQo+IEBAIC0zNDMsMTQgKzMyOSw5
+IEBAIEVYUE9SVF9TWU1CT0wocWVfZ2V0X3NudW0pOw0KPiANCj4gIHZvaWQgcWVfcHV0X3NudW0o
+dTggc251bSkNCj4gIHsNCj4gLSAgICAgICBpbnQgaTsNCj4gLQ0KPiAtICAgICAgIGZvciAoaSA9
+IDA7IGkgPCBxZV9udW1fb2Zfc251bTsgaSsrKSB7DQo+IC0gICAgICAgICAgICAgICBpZiAoc251
+bXNbaV0ubnVtID09IHNudW0pIHsNCj4gLSAgICAgICAgICAgICAgICAgICAgICAgc251bXNbaV0u
+c3RhdGUgPSBRRV9TTlVNX1NUQVRFX0ZSRUU7DQo+IC0gICAgICAgICAgICAgICAgICAgICAgIGJy
+ZWFrOw0KPiAtICAgICAgICAgICAgICAgfQ0KPiAtICAgICAgIH0NCj4gKyAgICAgICBjb25zdCB1
+OCAqcCA9IG1lbWNocihzbnVtcywgc251bSwgcWVfbnVtX29mX3NudW0pOw0KPiArICAgICAgIGlm
+IChwKQ0KPiArICAgICAgICAgICAgICAgY2xlYXJfYml0KHAgLSBzbnVtcywgc251bV9zdGF0ZSk7
+DQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MKHFlX3B1dF9zbnVtKTsNCj4gDQo+IC0tDQo+IDIuMjAu
+MQ0KQmVzdCBSZWdhcmRzDQpRaWFuZyBaaGFvDQo=
