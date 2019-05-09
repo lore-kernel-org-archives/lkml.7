@@ -2,359 +2,162 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D8EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072FDC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D899217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5352217D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQtPyK2Z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j3aJduX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfEIRPr (ORCPT
+        id S1726805AbfEIRRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:15:47 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36526 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfEIRPq (ORCPT
+        Thu, 9 May 2019 13:17:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33357 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfEIRRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:15:46 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a8so2724424edx.3;
-        Thu, 09 May 2019 10:15:44 -0700 (PDT)
+        Thu, 9 May 2019 13:17:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y3so1466335plp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zbF3oqCAGIPdLC4hANbX/incxnaiv6V68BxbekEEZaw=;
-        b=UQtPyK2ZCVSBEctYacy3KjTsDRzLu+dJwxveJhSfx6JgHwr/3SFjvxy78tAPGuHvtJ
-         2Bg9MdUX7Ej8E0ODmY+Wh5WfIJBTXVJCPKIOnLWXbDgtdcNUBT3EO7oH1xzft8YivzxQ
-         wmZWagSB71iZsp5Sow96RNj9kS8Daysm2x7aGJ/n/3Ecs0clTBvOs73V1VJgCrV5XOH1
-         QoJr9pSwxJ+qEdXcpqh/aAlpHCY6sFEg8Pr+728p50YmY47BwnZ6BKcprFgU+IhztbJB
-         S645UQHb6vdoT7M7sYLXcofW+ogodZtASH/mSkvsHRtnffY5GjQHfdGcU7TDX3vw6Xte
-         gOeQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rwCs3q6jbD83yfOwCi9FGEbxwcLuNFM2qszk0t25lO0=;
+        b=j3aJduX0Ix4TebkyyPV3qCbhz379c+5CY5UYNFnybdIxXefzYU0NIFxb8gTh8ZhNTi
+         DZmQ+fZwBQONntrPlfJg/ubxah2qR7K4uIQFQ0X4aBqEogQjSUd4IhOc0dCNH1gU5ksw
+         rGyATepTqf+k0Bbr6fAclgERf/XvJhT4R+mpyDQLGLbClLvmMwkZKpIj+QjhjaIPzXGi
+         XSz3J7nfc5V4TJbQntJpjdaeivTnURLemo7NC2CFVcZZw+miD86iwasFwmxvQBiFUwUl
+         jpAvKpoOBjhBGzrTjG8FvIt82y0FWb+lj5G7lSC93RiHJplmSU32zs5bYsfmuQLKo4kY
+         Xchg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zbF3oqCAGIPdLC4hANbX/incxnaiv6V68BxbekEEZaw=;
-        b=PVC1gyhBnTMAve7NWnFqhDRQeCLtHZAD6KU8bmQ/pFLe/i3nKHZAoV4GXowFEam1SG
-         kBliTfrZ21td+n7B+3ul+qqLxSyrZi2iOcG6oGRgoYOPVHWL3tn4ekjI/2w4Od8iV5tL
-         iQpmMROFNDeZ3z+7I/1hXOi+srMoq15Miglnozm+UT3uf6q7wX/P7wuQG7uHHRMatumg
-         v2Lu8NJGvVcWLqK9mXhSbbNOB35R0VHKNxr+apTrbanUeTB1MPAvNeXIA1KSTF4VKpe1
-         LnjQnX9sVSvFgbdewy0W52g5FvoeQsha7n+YkK1ki7/fLJXXBFApFyawmN1m7Z9EgSjL
-         9ThA==
-X-Gm-Message-State: APjAAAV0/hO1bxzK4Wpdr29tcB1xCkUNIPCj99Z5Jhe/rwK/KuTUXhzV
-        uaW1UE51LUlXlf2+VIBM79A=
-X-Google-Smtp-Source: APXvYqyYzGb7Cy5q4QPoEpmGU4zl+S2nL4QKnv4i0CueknI+kse9Moti7osXcnGWfeiOXMGwppjivw==
-X-Received: by 2002:a17:906:890:: with SMTP id n16mr4357502eje.28.1557422143905;
-        Thu, 09 May 2019 10:15:43 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id p13sm397070ejj.2.2019.05.09.10.15.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 10:15:43 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     robh@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM5301X ARM
-        ARCHITECTURE), Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: dts: bcm: Add missing device_type = "memory" property
-Date:   Thu,  9 May 2019 10:15:25 -0700
-Message-Id: <20190509171527.2331-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rwCs3q6jbD83yfOwCi9FGEbxwcLuNFM2qszk0t25lO0=;
+        b=YEKQA1SvHwPdN8jeLzqASWC8rzTCo1CmWtUSC71DY9XDx9mg6CB1PNfBm26Es0rZKg
+         BjSL4DyuW6L5KH+dhRRNIsrlP+HfCnqUXQIK62K5LnqVPMu5OPpWnQWPsHLeW5yZyVGP
+         RInks/pfN9YiWxV9z7xnmKIXuupaLCaiT95KoA99LSW5GvlqdHnuJslWR/nMcTybuXq/
+         tvLjvP3PYMM4FAymV0/UjfRvkFtDVnNmRxipTxwWJ1LmlRM2wJ1CLOI/8vVKT7L5kb3w
+         bKNMVAWY+P3+DvPoMmML2gwPvvIRcN+V0KdfeZMglQgBWPND3Lt5U5ARkLmNCZJZh63Y
+         yl2Q==
+X-Gm-Message-State: APjAAAVoBiXa6Y6y5t6QUNAbN9fB1E1ZFL6175gBZ38ceQZpI+sViuUE
+        w5kNKkUzjcSLv9YtOKbcdgJgJCpfyVvd0fKqfEXxWg==
+X-Google-Smtp-Source: APXvYqx2aTaiRZ3xsV976GrnpDFl/zXtdv+wVuwvLB2fmHDuFumVjwczU/rfW94kTNvOnKnYSv+40CyQvS2Xp3D3dwY=
+X-Received: by 2002:a17:902:2a26:: with SMTP id i35mr6888461plb.229.1557422254907;
+ Thu, 09 May 2019 10:17:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190509064455.1173-1-yamada.masahiro@socionext.com> <20190509111534.GA32696@archlinux-i9>
+In-Reply-To: <20190509111534.GA32696@archlinux-i9>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 9 May 2019 10:17:23 -0700
+Message-ID: <CAKwvOd=3UqmwDpKyUGj6gH_TwWc=JeEKdwAi=-AhFvRBGc1ncg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: add most of Clang-specific flags unconditionally
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the removal of the skeleton.dtsi file with commit abe60a3a7afb
-("ARM: dts: Kill off skeleton{64}.dtsi") a number of Broadcom SoCs were
-converted, but a few were left unoticed, now causing boot failures with
-v5.1 since the kernel cannot find suitable memory.
+> On Thu, May 09, 2019 at 03:44:55PM +0900, Masahiro Yamada wrote:
+> > We do not support old Clang versions. Upgrade your clang version
+> > if any of these flags is unsupported.
+> >
+> > Let's add flags within ifdef CONFIG_CC_IS_CLANG unconditionally,
+> > except -fcatch-undefined-behavior.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  Makefile                   | 10 +++++-----
+> >  scripts/Makefile.extrawarn | 12 ++++++------
+> >  2 files changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index bd7ae11947cb..c71ffb6f55b5 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -731,15 +731,15 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
+> >  KBUILD_CFLAGS += $(stackp-flags-y)
+> >
+> >  ifdef CONFIG_CC_IS_CLANG
+> > -KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+> > +KBUILD_CPPFLAGS += -Qunused-arguments
+> > +KBUILD_CFLAGS += -Wno-format-invalid-specifier
+> > +KBUILD_CFLAGS += -Wno-gnu
+> >  # Quiet clang warning: comparison of unsigned expression < 0 is always false
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+> > +KBUILD_CFLAGS += -Wno-tautological-compare
+> >  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+> >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+> >  # See modpost pattern 2
+> > -KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
+> > +KBUILD_CFLAGS += -mno-global-merge
+> >  KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
+>
+> I think we should just remove this, I'm fairly confident the kernel
+> can't be reliably compiled with anything earlier than Clang 4 (Pixel 2
+> was shipped with it but had some hacks, this commit is from Clang 3.5):
 
-Updating the .dtsi files with the property will be done next, since
-there are some memory nodes that do not follow the proper naming
-convention and lack an unit name.
+Yeah, clang-4 is usually what I test these with, as that's the
+earliest known version of Clang that I ever had success with.
+Hopefully a lot of things will stabilize for the clang-9 release.
 
-Fixes: abe60a3a7afb ("ARM: dts: Kill off skeleton{64}.dtsi")
-Reported-by: Kevin Hilman <khilman@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Rob,
+Anyways, I checked these all w/ godbolt w/ clang-4.
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Since I have additional ARM SoC fixes to submit, I will send that as
-part of my pull request to Arnd, Olof and Kevin.
+>
+> https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
+>
+> Otherwise:
+>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> >  else
+> >
+> > diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> > index 768306add591..523c4cafe2dc 100644
+> > --- a/scripts/Makefile.extrawarn
+> > +++ b/scripts/Makefile.extrawarn
+> > @@ -66,11 +66,11 @@ KBUILD_CFLAGS += $(warning)
+> >  else
+> >
+> >  ifdef CONFIG_CC_IS_CLANG
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, initializer-overrides)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, unused-value)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, format)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
+> > -KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
+> > +KBUILD_CFLAGS += -Wno-initializer-overrides
+> > +KBUILD_CFLAGS += -Wno-unused-value
+> > +KBUILD_CFLAGS += -Wno-format
+> > +KBUILD_CFLAGS += -Wno-sign-compare
+> > +KBUILD_CFLAGS += -Wno-format-zero-length
+> > +KBUILD_CFLAGS += -Wno-uninitialized
+> >  endif
+> >  endif
+> > --
+> > 2.17.1
+> >
 
-Thanks!
 
- arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts       | 1 +
- arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts       | 1 +
- arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts | 1 +
- arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dts   | 1 +
- arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts   | 1 +
- arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts      | 1 +
- arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts      | 1 +
- arch/arm/boot/dts/bcm4708-netgear-r6250.dts       | 1 +
- arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts    | 1 +
- arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts     | 1 +
- arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts       | 1 +
- arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts | 1 +
- arch/arm/boot/dts/bcm4709-linksys-ea9200.dts      | 1 +
- arch/arm/boot/dts/bcm4709-netgear-r7000.dts       | 1 +
- arch/arm/boot/dts/bcm4709-netgear-r8000.dts       | 1 +
- arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts | 1 +
- arch/arm/boot/dts/bcm47094-phicomm-k3.dts         | 1 +
- arch/arm/boot/dts/bcm94708.dts                    | 1 +
- arch/arm/boot/dts/bcm94709.dts                    | 1 +
- arch/arm/boot/dts/bcm963138dvt.dts                | 1 +
- 20 files changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts b/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts
-index 79d454ff3be4..1c6f561ac52b 100644
---- a/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts
-+++ b/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts b/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
-index 99365bb8c41e..e550799a6ae0 100644
---- a/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
-+++ b/arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
-index bc330b1f6de0..7bfa2238f70b 100644
---- a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
-+++ b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x18000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dts b/arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dts
-index 258d2b251900..fd361c9b1374 100644
---- a/arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dts
-+++ b/arch/arm/boot/dts/bcm4708-linksys-ea6300-v1.dts
-@@ -17,6 +17,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts b/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
-index babcfec50dde..7c34360d3285 100644
---- a/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
-+++ b/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
-@@ -18,6 +18,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-index e7fdaed99bd0..969b8d78e492 100644
---- a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-+++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-@@ -16,6 +16,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
-index 42bafc644013..b62854ee27ab 100644
---- a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
-+++ b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
-index dce35eb79dbe..75f7b4ef35da 100644
---- a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
-+++ b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts b/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
-index b7a024b7951b..148d16a9085e 100644
---- a/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
-+++ b/arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-index f7f834cd3448..eed3aab6679b 100644
---- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-+++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts b/arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts
-index 4cb10f88a95e..8f1e565c3db4 100644
---- a/arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts
-+++ b/arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts b/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts
-index 77d1687b4228..ce888b1835d1 100644
---- a/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts
-+++ b/arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x18000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts b/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts
-index 983149b55269..ed8619b54d69 100644
---- a/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts
-+++ b/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts
-@@ -17,6 +17,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4709-netgear-r7000.dts b/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
-index ca41481b44bd..1f87993eae1d 100644
---- a/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
-+++ b/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
-@@ -20,6 +20,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
-index aa69e656d395..6c6199a53d09 100644
---- a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
-+++ b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
-@@ -31,6 +31,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
-index b527d2ff987e..f806be5da723 100644
---- a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
-+++ b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
-@@ -16,6 +16,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm47094-phicomm-k3.dts b/arch/arm/boot/dts/bcm47094-phicomm-k3.dts
-index ec09c0426d16..456045f17a00 100644
---- a/arch/arm/boot/dts/bcm47094-phicomm-k3.dts
-+++ b/arch/arm/boot/dts/bcm47094-phicomm-k3.dts
-@@ -14,6 +14,7 @@
- 	model = "Phicomm K3";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000
- 		       0x88000000 0x18000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm94708.dts b/arch/arm/boot/dts/bcm94708.dts
-index 934f07adfe3c..3d13e46c6949 100644
---- a/arch/arm/boot/dts/bcm94708.dts
-+++ b/arch/arm/boot/dts/bcm94708.dts
-@@ -39,6 +39,7 @@
- 	compatible = "brcm,bcm94708", "brcm,bcm4708";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm94709.dts b/arch/arm/boot/dts/bcm94709.dts
-index 31e4dd098776..5017b7b259cb 100644
---- a/arch/arm/boot/dts/bcm94709.dts
-+++ b/arch/arm/boot/dts/bcm94709.dts
-@@ -39,6 +39,7 @@
- 	compatible = "brcm,bcm94709", "brcm,bcm4709", "brcm,bcm4708";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm963138dvt.dts b/arch/arm/boot/dts/bcm963138dvt.dts
-index 8dca97eeaf57..29525686e51a 100644
---- a/arch/arm/boot/dts/bcm963138dvt.dts
-+++ b/arch/arm/boot/dts/bcm963138dvt.dts
-@@ -17,6 +17,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x0 0x08000000>;
- 	};
- 
 -- 
-2.17.1
-
+Thanks,
+~Nick Desaulniers
