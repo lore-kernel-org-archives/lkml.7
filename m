@@ -2,210 +2,162 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04ABC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF66C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7693C216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:35:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AH21/DI8"
+	by mail.kernel.org (Postfix) with ESMTP id 783BC20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfEIEfn (ORCPT
+        id S1726503AbfEIEiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 00:35:43 -0400
-Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:63204
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726108AbfEIEfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 00:35:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j1AbEwA7uFCYEkK5k9EIlcgc/vFWjMsPX96cDB4Ob0Q=;
- b=AH21/DI8JRCyAtZYEmytGo2yVomYd3GgIpAffhHsxyL5XkuI3xnzZ8WM/M09337/voB6c+vY9e7GJkfeglR60jmubzG4AkSZrCILOw9DD82Ffj7Jc8/RlQw8lR9vZEH9BTpmNnm/sxXktsM1IvRfg333SVuKBiRHyZNTQpfuPzk=
-Received: from AM6PR04MB4629.eurprd04.prod.outlook.com (20.177.38.28) by
- AM6PR04MB4760.eurprd04.prod.outlook.com (20.177.32.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.21; Thu, 9 May 2019 04:35:33 +0000
-Received: from AM6PR04MB4629.eurprd04.prod.outlook.com
- ([fe80::909a:bfcb:89aa:cdb7]) by AM6PR04MB4629.eurprd04.prod.outlook.com
- ([fe80::909a:bfcb:89aa:cdb7%4]) with mapi id 15.20.1856.012; Thu, 9 May 2019
- 04:35:33 +0000
-From:   Sumit Batra <sumit.batra@nxp.com>
-To:     Chuanhua Han <chuanhua.han@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "eha@deif.com" <eha@deif.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "peda@axentia.se" <peda@axentia.se>
-Subject: RE: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
- I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Thread-Topic: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
- I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Thread-Index: AQHU/w+WxhNHqUrORkaLbPX64iAO0KZUqIWAgAYQ6QCAAwWXgIADZuiAgAEXrjA=
-Date:   Thu, 9 May 2019 04:35:33 +0000
-Message-ID: <AM6PR04MB4629DEDAAA6559EBBD20E974EF330@AM6PR04MB4629.eurprd04.prod.outlook.com>
-References: <20190430044719.30720-1-chuanhua.han@nxp.com>
- <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
- <AM6PR04MB43571B8D52C1FE9ED20DBA1D97360@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <20190506073735.ctzybytamu44pbvv@pengutronix.de>
- <AM0PR04MB43534A9B1A146DEFA929844C97320@AM0PR04MB4353.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB43534A9B1A146DEFA929844C97320@AM0PR04MB4353.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sumit.batra@nxp.com; 
-x-originating-ip: [92.120.0.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7f6bbcc0-7d4c-4d2b-6d93-08d6d437c63e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4760;
-x-ms-traffictypediagnostic: AM6PR04MB4760:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM6PR04MB47606942347F2A32A2519891EF330@AM6PR04MB4760.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 003245E729
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(376002)(396003)(366004)(189003)(199004)(13464003)(86362001)(66066001)(76176011)(6506007)(53936002)(6246003)(74316002)(71200400001)(71190400001)(68736007)(14454004)(478600001)(966005)(45080400002)(54906003)(110136005)(99286004)(7696005)(102836004)(4326008)(7416002)(476003)(26005)(64756008)(73956011)(66946007)(33656002)(66446008)(66476007)(66556008)(53546011)(6436002)(55016002)(446003)(11346002)(8936002)(25786009)(486006)(76116006)(316002)(186003)(44832011)(52536014)(5660300002)(14444005)(229853002)(2906002)(81166006)(81156014)(8676002)(256004)(3846002)(6116002)(305945005)(7736002)(6306002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4760;H:AM6PR04MB4629.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dOe1pKxfy9zFCEsqDmzmwFmnT0m8yL15q4rBRTjYpFxRyIyueWkLDdmg89bzMXQqbs6HpsvDWoytGmt2JK7mK86GFJUCuMGTdxyJfQ5fNB3gKBX0UzLB+yEm+8Tr1R0tTxT95d7GyflZoYkshqQdapX9snHX6LE+Fw9MJxwRaO6kbUgWYc6Bbsp+ti/3jn6QVRgurpmgPiigfuZDs4XHsgDNj0RMr5889zgtEsXbH59Y8ROkqDOIucC7D3IABsJ8O7aS4CEFWFpULgMsaM9WWj/vLeUD6YAxrLntwHKLz4CPqbefz0RXhchS+bLr/bipLNr3Os61hcnwht5EVHf2d/NKMCVNnc+MLDkJh4BDra2u6E2UA5996LocS7miu0zGt5GLfd3lgF/CSzwZteAnNDwsTT0gmlg4K+3Nv6PUWN4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 May 2019 00:38:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:58762 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfEIEiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 00:38:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 21:38:07 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 08 May 2019 21:38:06 -0700
+Cc:     baolu.lu@linux.intel.com, Christoph Hellwig <hch@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com
+Subject: Re: [PATCH v3 5/8] iommu/vt-d: Implement def_domain_type iommu ops
+ entry
+To:     Tom Murphy <tmurphy@arista.com>
+References: <20190429020925.18136-1-baolu.lu@linux.intel.com>
+ <20190429020925.18136-6-baolu.lu@linux.intel.com>
+ <20190429200338.GA8412@infradead.org>
+ <9c1d1e16-fdab-0494-8720-97ff20013da4@linux.intel.com>
+ <CAPL0++6UmAzVQCm0MBD056DsA-13qVTSK1x737tXXkFzooWzNA@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <bb0122b9-9001-415d-807f-aa4f4dcf0b85@linux.intel.com>
+Date:   Thu, 9 May 2019 12:31:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f6bbcc0-7d4c-4d2b-6d93-08d6d437c63e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 04:35:33.2642
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4760
+In-Reply-To: <CAPL0++6UmAzVQCm0MBD056DsA-13qVTSK1x737tXXkFzooWzNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2FzY2hhLA0KUGxlYXNlIGNoZWNrIG15IGNvbW1lbnQNCg0KLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCkZyb206IENodWFuaHVhIEhhbiANClNlbnQ6IFdlZG5lc2RheSwgTWF5IDgsIDIw
-MTkgNTowNSBQTQ0KVG86IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCkNj
-OiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFtQGdt
-YWlsLmNvbTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47IHdzYStyZW5lc2FzQHNh
-bmctZW5naW5lZXJpbmcuY29tOyB1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGVoYUBk
-ZWlmLmNvbTsgbGludXhAcmVtcGVsLXByaXZhdC5kZTsgbC5zdGFjaEBwZW5ndXRyb25peC5kZTsg
-cGVkYUBheGVudGlhLnNlOyBTdW1pdCBCYXRyYSA8c3VtaXQuYmF0cmFAbnhwLmNvbT4NClN1Ympl
-Y3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIIDEvMl0gaTJjOiBpbXg6IEkyQyBEcml2ZXIgZG9lc24n
-dCBjb25zaWRlciBJMkNfSVBHQ0xLX1NFTCBSQ1cgYml0IHdoZW4gdXNpbmcgbHMxMDQ2YSBTb0MN
-Cg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVy
-IDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBTZW50OiAyMDE55bm0NeaciDbml6UgMTU6MzgN
-Cj4gVG86IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+IENjOiBzaGF3bmd1
-b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IA0KPiByb2JoK2R0QGtl
-cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyANCj4gbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtaTJjQHZnZXIua2VybmVsLm9yZzsgDQo+IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3Rl
-dmFtQGdtYWlsLmNvbTsgZGwtbGludXgtaW14IA0KPiA8bGludXgtaW14QG54cC5jb20+OyB3c2Er
-cmVuZXNhc0BzYW5nLWVuZ2luZWVyaW5nLmNvbTsgDQo+IHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
-b25peC5kZTsgZWhhQGRlaWYuY29tOyBsaW51eEByZW1wZWwtcHJpdmF0LmRlOyANCj4gbC5zdGFj
-aEBwZW5ndXRyb25peC5kZTsgcGVkYUBheGVudGlhLnNlOyBTdW1pdCBCYXRyYSANCj4gPHN1bWl0
-LmJhdHJhQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIIDEvMl0gaTJj
-OiBpbXg6IEkyQyBEcml2ZXIgZG9lc24ndCANCj4gY29uc2lkZXIgSTJDX0lQR0NMS19TRUwgUkNX
-IGJpdCB3aGVuIHVzaW5nIGxzMTA0NmEgU29DDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4g
-DQo+IE9uIFNhdCwgTWF5IDA0LCAyMDE5IGF0IDA5OjI4OjQ4QU0gKzAwMDAsIENodWFuaHVhIEhh
-biB3cm90ZToNCj4gPg0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
-ID4gRnJvbTogU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiA+ID4gU2Vu
-dDogMjAxOeW5tDTmnIgzMOaXpSAyMDo1MQ0KPiA+ID4gVG86IENodWFuaHVhIEhhbiA8Y2h1YW5o
-dWEuaGFuQG54cC5jb20+DQo+ID4gPiBDYzogc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxs
-ZW95YW5nLmxpQG54cC5jb20+Ow0KPiA+ID4gcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxh
-bmRAYXJtLmNvbTsNCj4gPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWky
-Y0B2Z2VyLmtlcm5lbC5vcmc7IA0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFtQGdtYWls
-LmNvbTsgZGwtbGludXgtaW14IA0KPiA+ID4gPGxpbnV4LWlteEBueHAuY29tPjsgd3NhK3JlbmVz
-YXNAc2FuZy1lbmdpbmVlcmluZy5jb207IA0KPiA+ID4gdS5rbGVpbmUta29lbmlnQHBlbmd1dHJv
-bml4LmRlOyBlaGFAZGVpZi5jb207IA0KPiA+ID4gbGludXhAcmVtcGVsLXByaXZhdC5kZTsgbC5z
-dGFjaEBwZW5ndXRyb25peC5kZTsgcGVkYUBheGVudGlhLnNlOyANCj4gPiA+IFN1bWl0IEJhdHJh
-IDxzdW1pdC5iYXRyYUBueHAuY29tPg0KPiA+ID4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSCAx
-LzJdIGkyYzogaW14OiBJMkMgRHJpdmVyIGRvZXNuJ3QgDQo+ID4gPiBjb25zaWRlciBJMkNfSVBH
-Q0xLX1NFTCBSQ1cgYml0IHdoZW4gdXNpbmcgbHMxMDQ2YSBTb0MNCj4gPiA+DQo+ID4gPiBDYXV0
-aW9uOiBFWFQgRW1haWwNCj4gPiA+DQo+ID4gPiBPbiBUdWUsIEFwciAzMCwgMjAxOSBhdCAxMjo0
-NzoxOFBNICswODAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6DQo+ID4gPiA+IFRoZSBjdXJyZW50IGtl
-cm5lbCBkcml2ZXIgZG9lcyBub3QgY29uc2lkZXIgSTJDX0lQR0NMS19TRUwgKDQyNCANCj4gPiA+
-ID4gYml0IG9mDQo+ID4gPiA+IFJDVykgaW4gZGVjaWRpbmcgIGkyY19jbGtfcmF0ZSBpbiBmdW5j
-dGlvbiBpMmNfaW14X3NldF9jbGsoKSB7IDAgDQo+ID4gPiA+IFBsYXRmb3JtIGNsb2NrLzQsIDEg
-UGxhdGZvcm0gY2xvY2svMn0uDQo+ID4gPiA+DQo+ID4gPiA+IFdoZW4gdXNpbmcgbHMxMDQ2YSBT
-b0MsIHRoaXMgcG9wdWxhdGVzIGluY29ycmVjdCB2YWx1ZSBpbiBJQkZEIA0KPiA+ID4gPiByZWdp
-c3RlciBpZiBJMkNfSVBHQ0xLX1NFTCA9IDAsIHdoaWNoIGdlbmVyYXRlcyBoYWxmIG9mIHRoZSBk
-ZXNpcmVkIENsb2NrLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGVyZWZvcmUsIGlmIGxzMTA0NmEgU29D
-IGlzIHVzZWQsIHdlIG5lZWQgdG8gc2V0IHRoZSBpMmMgY2xvY2sgDQo+ID4gPiA+IGFjY29yZGlu
-ZyB0byB0aGUgY29ycmVzcG9uZGluZyBSQ1cuDQo+ID4gPg0KPiA+ID4gU28gdGhlIGNsb2NrIGRy
-aXZlciByZXBvcnRzIHRoZSB3cm9uZyBjbG9jay4gUGxlYXNlIGZpeCB0aGUgY2xvY2sgZHJpdmVy
-IHRoZW4uDQo+ID4gTm8sIHRoaXMgaXMgYSBwcm9ibGVtIHdpdGggdGhlIGkyYyBkcml2ZXIuIEl0
-IGlzIG5vdCBhIHByb2JsZW0gd2l0aCANCj4gPiB0aGUgY2xvY2sgZHJpdmVyLCBzbyB0aGUgaTJj
-IGRyaXZlciBuZWVkcyB0byBiZSBtb2RpZmllZC4NCj4gDQo+IFNvIGhvdyBkb2VzIHRoaXMgUkNX
-IGJpdCBnZXQgZXZhbHVhdGVkPyANCkFjY29yZGluZyB0byB0aGUgcmVmZXJlbmNlIG1hbnVhbA0K
-PiBvbmx5IG9uZSBjbG9jayBnb2VzIHRvIHRoZSBpMmMgbW9kdWxlIChkZXNjcmliZWQgYXMgMS8y
-IFBsYXRmb3JtDQo+IENsb2NrKSBhbmQgdGhlIGkyYyBtb2R1bGUgb25seSB0YWtlcyBvbmUgY2xv
-Y2suIFNvIGl0IHNlZW1zIHRoZXJlIG11c3QgDQo+IGJlIGEgLzIgZGl2aWRlciBzb21ld2hlcmUs
-IGVpdGhlciBpbiBlYWNoIGkyYyBtb2R1bGUgb3Igc29tZXdoZXJlIA0KPiBvdXRzaWRlLiBDYW4g
-eW91ciBJQyBndXlzIHRlbGwgeW91IHdoZXJlIGl0IGlzPw0KSSBuZWVkIHRvIGNvbmZpcm0gdGhp
-cyB3aXRoIHRoZSBJQyB0ZWFtDQpbU3VtaXQgQmF0cmFdIFRoZXJlIGFyZSAyIHBsYWNlcyB3aGVy
-ZSBjbG9jayBkaXZpc2lvbiB0YWtlcyBwbGFjZSAtDQogICAgICAgICAgICAgIDEpIFRoZXJlIGlz
-IGEgY2xvY2sgZGl2aWRlciBvdXRzaWRlIG9mIEkyQyBibG9jaywgd2hpY2ggbWFrZXMgdGhlIGNs
-b2NrIHJlYWNoaW5nIEkyQyBtb2R1bGUgYXMgLSBQbGF0Zm9ybSBDbG9jay8yDQoJMikgVGhlcmUg
-aXMgYW5vdGhlciBjbG9jayBkaXZpZGVyIHdoaWNoIHNwZWNpZmljYWxseSBkaXZpZGVzIHRoZSBj
-bG9jayB0byB0aGUgSTJDIGJsb2NrLCBiYXNlZCBvbiBSQ1cgYml0IDQyNCAoaWYgNDI0dGggYml0
-IGlzIDAgdGhlbiB0aGUgYmF1ZCBjbG9jayBzb3VyY2UgaXMgUGxhdGZvcm0gQ2xvY2svNCwgaWYg
-NDI0dGggYml0IGlzIDEgdGhlbiBpdCByZW1haW5zIFBsYXRmb3JtIENsb2NrLzIpDQogICAgICAg
-ICAgICAgIDMpIE5vdyBiYXNlZCBvbiB0aGUgd2hhdCBpcyB0aGUgZGVzaXJlZCBTQ0wgdmFsdWUg
-KDEwMEtIeiBldGMpIGFuZCB0aGUgY2xvY2sgd2hpY2ggaXMgcmVjZWl2ZWQgYnkgSTJDIGJsb2Nr
-LCB0aGVyZSBpcyBhIGNhbGN1bGF0aW9uIHRoYXQgZ29lcyBvbiBpbnNpZGUgdGhlIEkyQyBkcml2
-ZXIgbW9kdWxlIHdoaWNoIGlzIHVzZWQgdG8gbWFwIGEgdmFsdWUgaW4gdGhpcyBpbXhfaTJjX2Ns
-a19kaXYgdGFibGUuDQogICAgICAgICAgICAgICAgICBUaGlzIHZhbHVlIGlzIHVzZWQgdG8gcHJv
-Z3JhbSB0aGUgSU1YX0kyQ19JRkRSIHJlZ2lzdGVyIG9mIHRoZSBJMkMgYmxvY2suIE5vdyBpZiB3
-ZSBkb24ndCBjb25zaWRlciB0aGUgUkNXIGJpdCA0MjQgaW4gb3VyIEkyQyBkcml2ZXIgY2FsY3Vs
-YXRpb24gdGhlbiB0aGUgSU1YX0kyQ19JRkRSIHZhbHVlIHRoYXQgZ2V0cyBzZXQgbWFrZXMgU0NM
-IGhhbGYgb2Ygd2hhdCBpcyBkZXNpcmVkIGJ5IHRoZSB1c2VyLg0KICAgICAgICAgICAgICAgICAg
-VGhpcyBpcyBiZWNhdXNlIGlmIHlvdSBtYWtlIHRoZSBSQ1cgNDI0dGggYml0IGFzIDAgdGhlbiBh
-bnlob3cgSTJDIGJsb2NrIChoYXJkd2FyZSkgd2lsbCByZWNlaXZlIFBsYXRmb3JtIENsb2NrLzQs
-IGJ1dCB0aGUgZHJpdmVyIChzaW5jZSBpdCBoYXMgbm90IGNvbnNpZGVyZWQgdGhpcyBiaXQpIHdp
-bGwgY29uc2lkZXIgaXQgYXMgUGxhdGZvcm0gQ2xvY2svMiBzbyBpdCdsbCBwcm9ncmFtIGEgYmln
-Z2VyIGRpdmlkZXIgZnJvbSAgICAgdGhlIGlteF9pMmNfY2xrX2RpdiB0YWJsZQkJDQo+IA0KPiBP
-bmUgcmVhc29uIEkgc3VnZ2VzdGVkIHRoZSBjbG9jayBkcml2ZXIgaXMgdGhhdCB0aGUgY2xvY2sg
-ZHJpdmVyIA0KPiBjb250YWlucyBTb0Mgc3BlY2lmaWMgY29kZSBhbHJlYWR5LCBzbyBpdCBzaG91
-bGQgYmUgZWFzaWVyIHRvIGludGVncmF0ZSB0aGVyZS4NCkl0IHNlZW1zIGluYXBwcm9wcmlhdGUg
-dG8gcHV0IHRoZSBjbG9jayBmcmVxdWVuY3kgZGl2aXNpb24gbW9kaWZpY2F0aW9uIG9mIGkyYyBp
-biB0aGUgY2xvY2sgZHJpdmVyLCBiZWNhdXNlIHRoZSBjbG9jayBkcml2ZXIgaXMgZm9yIGFsbCBJ
-UCBhbmQgaXMgYSB1bml2ZXJzYWwgY29kZSwgc28gSSB0aGluayBpdCBpcyBiZXR0ZXIgdG8gbW9k
-aWZ5IHRoZSBjbG9jayBpbiB0aGUgSVAgZHJpdmVyLg0KPiANCj4gU2FzY2hhDQo+IA0KPiANCj4g
-LS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCj4gfA0K
-PiBJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAgICAgfA0KPiBodHRwczov
-L2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUy
-Rnd3dy5wDQo+IGUgbmd1dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NjaHVhbmh1YS5o
-YW4lNDBueHAuY29tJTdDYjJkDQo+IDQ2ODA2OTljNDQ4ZTg1MTQzMDhkNmQxZjViZjgyJTdDNjg2
-ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2Mw0KPiA1JTdDMCU3QzAlN0M2MzY5MjcyNTA3NDM1
-MTY1NjMmYW1wO3NkYXRhPXBGZENiaURYRSUyRkRsbDAxWDlOag0KPiBIZzNTQ0RwRUN6Z3JyOE1M
-dFlCZEtINWMlM0QmYW1wO3Jlc2VydmVkPTAgIHwgUGVpbmVyIFN0ci4gNi04LCAzMTEzNyANCj4g
-SGlsZGVzaGVpbSwgR2VybWFueSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMA0KPiB8DQo+IEFt
-dHNnZXJpY2h0IEhpbGRlc2hlaW0sIEhSQSAyNjg2ICAgICAgICAgICB8IEZheDoNCj4gKzQ5LTUx
-MjEtMjA2OTE3LTU1NTUgfA0K
+Hi,
+
+On 5/6/19 11:25 PM, Tom Murphy wrote:
+> It looks like there is a bug in this code.
+> 
+> The behavior before this patch in __intel_map_single was that
+> iommu_no_mapping would call remove the attached si_domain for 32 bit
+> devices  (in the  dmar_remove_one_dev_info(dev) call in
+> iommu_no_mapping) and then allocate a new domain in
+> get_valid_domain_for_dev
+> old:
+> if (iommu_no_mapping(dev))
+>     return paddr;
+> domain = get_valid_domain_for_dev(dev);
+> if (!domain)
+>     return DMA_MAPPING_ERROR;
+> 
+> but in the new code we remove the attached si_domain but we WON'T
+> allocate a new domain and instead just return an error when we call
+> find_domain
+> new:
+>          if (iommu_no_mapping(dev))
+>                  return paddr;
+> 
+>          domain = find_domain(dev);
+>          if (!domain)
+>                  return DMA_MAPPING_ERROR;
+> 
+> This is a bug, right?
+
+When we use the old lazy creation of iommu domain, we can change the
+domain for a 32bit device from identity to dma by pulling it out of the
+si_domain and allocating a new one for it.
+
+When we switch to default domain in iommu generic layer, we can't do
+this anymore. The logic in above code is if we find this case (32bit
+device using an identity domain), we simple return error for dma api
+and warn the user "hey, this is a 32bit device, don't use the default
+pass-through mode".
+
+I believe there should be better solutions, for example, how about
+letting pci core to call iommu_request_dma_map_for_dev() when it
+finds a 32bit device.
+
+Best regards,
+Lu Baolu
+
+> 
+> On Tue, Apr 30, 2019 at 3:18 AM Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>> Hi Christoph,
+>>
+>> On 4/30/19 4:03 AM, Christoph Hellwig wrote:
+>>>> @@ -3631,35 +3607,30 @@ static int iommu_no_mapping(struct device *dev)
+>>>>       if (iommu_dummy(dev))
+>>>>               return 1;
+>>>>
+>>>> -    if (!iommu_identity_mapping)
+>>>> -            return 0;
+>>>> -
+>>>
+>>> FYI, iommu_no_mapping has been refactored in for-next:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/commit/?h=x86/vt-d&id=48b2c937ea37a3bece0094b46450ed5267525289
+>>
+>> Oh, yes! Thanks for letting me know this. Will rebase the code.
+>>
+>>>
+>>>>       found = identity_mapping(dev);
+>>>>       if (found) {
+>>>> +            /*
+>>>> +             * If the device's dma_mask is less than the system's memory
+>>>> +             * size then this is not a candidate for identity mapping.
+>>>> +             */
+>>>> +            u64 dma_mask = *dev->dma_mask;
+>>>> +
+>>>> +            if (dev->coherent_dma_mask &&
+>>>> +                dev->coherent_dma_mask < dma_mask)
+>>>> +                    dma_mask = dev->coherent_dma_mask;
+>>>> +
+>>>> +            if (dma_mask < dma_get_required_mask(dev)) {
+>>>
+>>> I know this is mostly existing code moved around, but it really needs
+>>> some fixing.  For one dma_get_required_mask is supposed to return the
+>>> required to not bounce mask for the given device.  E.g. for a device
+>>> behind an iommu it should always just return 32-bit.  If you really
+>>> want to check vs system memory please call dma_direct_get_required_mask
+>>> without the dma_ops indirection.
+>>>
+>>> Second I don't even think we need to check the coherent_dma_mask,
+>>> dma_direct is pretty good at always finding memory even without
+>>> an iommu.
+>>>
+>>> Third this doesn't take take the bus_dma_mask into account.
+>>>
+>>> This probably should just be:
+>>>
+>>>                if (min(*dev->dma_mask, dev->bus_dma_mask) <
+>>>                    dma_direct_get_required_mask(dev)) {
+>>
+>> Agreed and will add this in the next version.
+>>
+>> Best regards,
+>> Lu Baolu
+> 
