@@ -2,109 +2,93 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4790CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132C4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E8221848
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED5421848
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557427544;
+	bh=oyTjSecDC36hOUXR6U4y+GsvDs0eI8Nz8IgZeszoFVE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B+o2E496JLyt2KkfMyd1mFdlO85pdWImPSZ+KkuJc1+yW1tktVcYQXC077x1C3Dql
+	 y+A0BiwNxLwCByZfo3hRLNEHJ0Jjnzkfg4j7LoHwf91cdjlMOaItBwnV+caK57xBz3
+	 iIeXxeYyJKFifAz8yVYYlicneKhJ2JMzcFq6ApJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfEISpk (ORCPT
+        id S1727406AbfEISpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38368 "EHLO mx1.redhat.com"
+        Thu, 9 May 2019 14:45:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbfEISpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:36 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726892AbfEISpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 14F547DCC1;
-        Thu,  9 May 2019 18:45:36 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B130F4A3;
-        Thu,  9 May 2019 18:45:33 +0000 (UTC)
-Date:   Thu, 9 May 2019 13:45:31 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-Message-ID: <20190509184531.jhinxi2x2pdfaefb@treble>
-References: <20190318153840.906404905@infradead.org>
- <20190318155140.058627431@infradead.org>
- <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
- <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
- <20190509090058.6554dc81@gandalf.local.home>
- <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
- <20190509142902.08a32f20@gandalf.local.home>
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A802182B;
+        Thu,  9 May 2019 18:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557427541;
+        bh=oyTjSecDC36hOUXR6U4y+GsvDs0eI8Nz8IgZeszoFVE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oQmPgu6iDqi9lI4EUPiJrIkEgyGZf3ahsRf4iXsvJHcl5c7l1wHWyf21y3CQOf5yz
+         A9bu0EkUsvtiLKGNFsQMqmq8z/6orkkXerfB6fhBMCHoD3mIlPALnl8mcD0cbmaBCb
+         iqU2rewBdURwMPON3mfHVCMTofIhxrviCLKXSvq8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 20/42] ASoC: rockchip: pdm: fix regmap_ops hang issue
+Date:   Thu,  9 May 2019 20:42:09 +0200
+Message-Id: <20190509181256.789071130@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
+References: <20190509181252.616018683@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190509142902.08a32f20@gandalf.local.home>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 09 May 2019 18:45:36 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 02:29:02PM -0400, Steven Rostedt wrote:
-> On Thu, 9 May 2019 09:51:59 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> > On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > This patch works. Can I get your Signed-off-by for it?  
-> > 
-> > Yes. Please write some kind of comprehensible commit log for it, but
-> 
-> How's this:
-> 
-> "Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
-> macro converts the conditional to an array index.  This can cause GCC
-> to create horrible code.  When there are nested ifs, the generated code
-> uses register values to encode branching decisions.
-> 
-> Josh Poimboeuf found that replacing the define "if" macro from using
-> the condition as an array index and incrementing the branch statics
-> with an if statement itself, reduced the asm complexity and shrinks the
-> generated code quite a bit.
-> 
-> But this can be simplified even further by replacing the internal if
-> statement with a ternary operator.
-> 
-> Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
+[ Upstream commit c85064435fe7a216ec0f0238ef2b8f7cd850a450 ]
 
-Actually, my original fix already went in:
+This is because set_fmt ops maybe called when PD is off,
+and in such case, regmap_ops will lead system hang.
+enale PD before doing regmap_ops.
 
-  37686b1353cf ("tracing: Improve "if" macro code generation")
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/rockchip/rockchip_pdm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-But it introduced a regression:
-
-  https://lkml.kernel.org/r/201905040509.iqQ2CrOU%lkp@intel.com
-
-which Linus' patch fixes for some reason.
-
+diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
+index 400e29edb1c9c..8a2e3bbce3a16 100644
+--- a/sound/soc/rockchip/rockchip_pdm.c
++++ b/sound/soc/rockchip/rockchip_pdm.c
+@@ -208,7 +208,9 @@ static int rockchip_pdm_set_fmt(struct snd_soc_dai *cpu_dai,
+ 		return -EINVAL;
+ 	}
+ 
++	pm_runtime_get_sync(cpu_dai->dev);
+ 	regmap_update_bits(pdm->regmap, PDM_CLK_CTRL, mask, val);
++	pm_runtime_put(cpu_dai->dev);
+ 
+ 	return 0;
+ }
 -- 
-Josh
+2.20.1
+
+
+
