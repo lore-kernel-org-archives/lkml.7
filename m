@@ -2,88 +2,102 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7417C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1639C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C002053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8FF2053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gEPalcgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfEIOkF (ORCPT
+        id S1726743AbfEIOlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:40:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48276 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726743AbfEIOkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:40:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 93DC0ACBC;
-        Thu,  9 May 2019 14:40:03 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-spi@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: bcm2835: only split transfers that exceed DLEN if DMA available
-Date:   Thu,  9 May 2019 16:39:59 +0200
-Message-Id: <20190509144000.681-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
+        Thu, 9 May 2019 10:41:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35398 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbfEIOlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:41:22 -0400
+Received: from zn.tnic (p200300EC2F0F5F00A4EF991375FD2B9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:a4ef:9913:75fd:2b9a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E64801EC0AD6;
+        Thu,  9 May 2019 16:41:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557412880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=qeOScAfRAmQ56riL9fdpfe5rB018UBHT2CZaW0ZlCS8=;
+        b=gEPalcgEW1yNQsU+wbPMOplWdstb11ij19P8HoCM1Ncv9hqhGu8Nnv1f3xgtuDaR8+sMdK
+        V3rP4+JSENRGFBc4AV5wT13FXelL9kRWLY6J+qAEgflpaLiRsb257fZlF6ttVnuq+DwuFi
+        qVfzMUvOeOKPDDR3YiddLjEr8bWcUhs=
+Date:   Thu, 9 May 2019 16:41:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
+Message-ID: <20190509144113.GB17053@zn.tnic>
+References: <20190508224201.27120-1-colin.king@canonical.com>
+ <20190509141313.GA17053@zn.tnic>
+ <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no use for this when performing non DMA operations. So we
-bypass the split.
+On Thu, May 09, 2019 at 03:29:42PM +0100, Colin Ian King wrote:
+> These are the Coverity static analysis warning/error message
+> classifications.  Tagging them should be useful for several reasons:
+> 
+> 1. We can classify the types of issues being fixed
+> 2. We can see how many issues are being found/fixed with the use of
+> static analysis tools like Coverity
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/spi/spi-bcm2835.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+Who's "We"?
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index 37893313e595..649fd6caed35 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -861,15 +861,17 @@ static int bcm2835_spi_prepare_message(struct spi_master *master,
- 	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
- 	int ret;
- 
--	/*
--	 * DMA transfers are limited to 16 bit (0 to 65535 bytes) by the SPI HW
--	 * due to DLEN. Split up transfers (32-bit FIFO aligned) if the limit is
--	 * exceeded.
--	 */
--	ret = spi_split_transfers_maxsize(master, msg, 65532,
--					  GFP_KERNEL | GFP_DMA);
--	if (ret)
--		return ret;
-+	if (master->can_dma) {
-+		/*
-+		 * DMA transfers are limited to 16 bit (0 to 65535 bytes) by
-+		 * the SPI HW due to DLEN. Split up transfers (32-bit FIFO
-+		 * aligned) if the limit is exceeded.
-+		 */
-+		ret = spi_split_transfers_maxsize(master, msg, 65532,
-+						  GFP_KERNEL | GFP_DMA);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	cs &= ~(BCM2835_SPI_CS_CPOL | BCM2835_SPI_CS_CPHA);
- 
+> 3. It provides some context on how these bugs were being found.
+
+I figured as much but I have more questions:
+
+* you say "tools like Coverity" but the name Coverity is in the tag.
+So another tool would want to add its own tag. Which begs the second
+question:
+
+* has it ever been discussed and/or agreed upon all those "tools" tags?
+
+Because we remove internal tags which have no bearing on the upstream
+kernel. When I see that tag, how can I find out what it means? Can I run
+coverity myself?
+
+Lemme dig another one:
+
+Addresses-Coverity-ID: 744899 ("Missing break in switch")
+
+Where do I look up that ID?
+
+And so on...
+
+Bottom line of what I'm trying to say is, those tags better be useful to
+the general kernel audience - that means, they should be documented so
+that people can look them up - or better not be in commit messages at
+all.
+
+Thx.
+
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
