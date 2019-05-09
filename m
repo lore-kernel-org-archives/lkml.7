@@ -2,202 +2,148 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C667EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7270AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968B72145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CF22145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Mwm1+mM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfEIXzi convert rfc822-to-8bit (ORCPT
+        id S1726788AbfEIX7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 19:55:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:42962 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfEIXzi (ORCPT
+        Thu, 9 May 2019 19:59:47 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:53444 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbfEIX7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 19:55:38 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 01C6E14DEA669;
-        Thu,  9 May 2019 16:55:36 -0700 (PDT)
-Date:   Thu, 09 May 2019 16:55:36 -0700 (PDT)
-Message-Id: <20190509.165536.716778200205224094.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 May 2019 16:55:37 -0700 (PDT)
+        Thu, 9 May 2019 19:59:47 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1DA2DC00D0;
+        Thu,  9 May 2019 23:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557446390; bh=EnqrzmpzPbj+nGgnpyTF6VzPxqLccG3bhMGQETJ3X8c=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=Mwm1+mM2RVhLnJUa6D1AJx3dhWWhijAAloSjByMrWk0GErXdoZcGJgIvqxb04DICq
+         4Rd8dHDIf+eUdbZTU/S6yP3HNZlbHbwibdu5L8p83z+LT9GYKw7chIaRKA1vto5trE
+         yM+dNdFMW0qnGR7rLSK+WEjYrAzSD898OoDpaun3KVo9DXfP/eATtMQRk8RNIx9d2G
+         sbaiHMMrlT2/vmSsITdWIQ44RwsifsAp/mmqpusjPXgIy+rz2pf7lVIuvblZKs2mea
+         GMtQbSkfRHvlw3hl6h3TAAzl6VawULLss2hQpwZc+b1hEzH446Wh56q1Vgi1o/F866
+         WA3d2nrj3UX5w==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 936DFA005D;
+        Thu,  9 May 2019 23:59:45 +0000 (UTC)
+Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
+ US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Thu,
+ 9 May 2019 16:59:45 -0700
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Anurag Kumar Vulisha <anuragku@xilinx.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Claus H. Stovgaard" <cst@phaseone.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
+ and U2 entries
+Thread-Topic: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
+ and U2 entries
+Thread-Index: AQHVBXNg9QMnfODDx0qS+2/7kcKJQQ==
+Date:   Thu, 9 May 2019 23:59:43 +0000
+Message-ID: <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
+References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
+ <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.13.184.19]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Several bug fixes, many are quick merge-window regression cures:
-
-1) When NLM_F_EXCL is not set, allow same fib rule insertion.  From
-   Hangbin Liu.
-
-2) Several cures in sja1105 DSA driver (while loop exit condition fix,
-   return of negative u8, etc.) from Vladimir Oltean.
-
-3) Handle tx/rx delays in realtek PHY driver properly, from Serge
-   Semin.
-
-4) Double free in cls_matchall, from Pieter Jansen van Vuuren.
-
-5) Disable SIOCSHWTSTAMP in macvlan/vlan containers, from Hangbin Liu.
-
-6) Endainness fixes in aqc111, from Oliver Neukum.
-
-7) Handle errors in packet_init properly, from Haibing Yue.
-
-8) Various W=1 warning fixes in kTLS, from Jakub Kicinski.
-
-Please pull, thanks a lot!
-
-The following changes since commit 80f232121b69cc69a31ccb2b38c1665d770b0710:
-
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next (2019-05-07 22:03:58 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net 
-
-for you to fetch changes up to 6c9f05441477e29783e8391d06c067e4a3b23d47:
-
-  nfp: add missing kdoc (2019-05-09 16:41:46 -0700)
-
-----------------------------------------------------------------
-Cheng Han (1):
-      dwmac4_prog_mtl_tx_algorithms() missing write operation
-
-Claudiu Manoil (1):
-      ptp_qoriq: fix NULL access if ptp dt node missing
-
-Colin Ian King (3):
-      net: dsa: lantiq: fix spelling mistake "brigde" -> "bridge"
-      net: hns3: remove redundant assignment of l2_hdr to itself
-      net: dsa: sja1105: fix check on while loop exit
-
-David Ahern (1):
-      ipv4: Fix raw socket lookup for local traffic
-
-David S. Miller (4):
-      Merge branch 'phy-realtek-delays'
-      Merge tag 'batadv-net-for-davem-20190509' of git://git.open-mesh.org/linux-merge
-      Merge git://git.kernel.org/.../bpf/bpf
-      Merge branch 'tls-warnings'
-
-Gary Lin (1):
-      docs/btf: fix the missing section marks
-
-Geert Uytterhoeven (1):
-      openvswitch: Replace removed NF_NAT_NEEDED with IS_ENABLED(CONFIG_NF_NAT)
-
-Hangbin Liu (3):
-      fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
-      macvlan: disable SIOCSHWTSTAMP in container
-      vlan: disable SIOCSHWTSTAMP in container
-
-Jakub Kicinski (4):
-      net/tcp: use deferred jump label for TCP acked data hook
-      net/tls: remove set but not used variables
-      net/tls: handle errors from padding_length()
-      nfp: add missing kdoc
-
-Jason Wang (2):
-      tuntap: fix dividing by zero in ebpf queue selection
-      tuntap: synchronize through tfiles array instead of tun->numqueues
-
-Jiong Wang (1):
-      nfp: bpf: fix static check error through tightening shift amount adjustment
-
-Kefeng Wang (1):
-      net: aquantia: fix undefined devm_hwmon_device_register_with_info reference
-
-Linus Lüssing (1):
-      batman-adv: mcast: fix multicast tt/tvlv worker locking
-
-Lorenz Bauer (1):
-      selftests: bpf: initialize bpf_object pointers where needed
-
-Oliver Neukum (3):
-      aqc111: fix endianness issue in aqc111_change_mtu
-      aqc111: fix writing to the phy on BE
-      aqc111: fix double endianness swap on BE
-
-Paolo Abeni (1):
-      selinux: do not report error on connect(AF_UNSPEC)
-
-Parthasarathy Bhuvaragan (1):
-      tipc: fix hanging clients using poll with EPOLLOUT flag
-
-Pieter Jansen van Vuuren (2):
-      nfp: reintroduce ndo_get_port_parent_id for representor ports
-      net/sched: avoid double free on matchall reoffload
-
-Serge Semin (2):
-      net: phy: realtek: Add rtl8211e rx/tx delays config
-      net: phy: realtek: Change TX-delay setting for RGMII modes only
-
-Simon Wunderlich (1):
-      batman-adv: Start new development cycle
-
-Vladimir Oltean (1):
-      net: dsa: sja1105: Don't return a negative in u8 sja1105_stp_state_get
-
-Wang Hai (1):
-      net: dsa: sja1105: Make 'sja1105et_regs' and 'sja1105pqrs_regs' static
-
-YueHaibing (1):
-      packet: Fix error path in packet_init
-
- Documentation/bpf/btf.rst                                 |  2 ++
- drivers/net/dsa/lantiq_gswip.c                            |  8 ++++----
- drivers/net/dsa/sja1105/sja1105_main.c                    |  6 +++++-
- drivers/net/dsa/sja1105/sja1105_spi.c                     | 11 ++++++-----
- drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c       |  5 +++++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c           |  2 +-
- drivers/net/ethernet/netronome/nfp/bpf/jit.c              | 13 ++++++++++++-
- drivers/net/ethernet/netronome/nfp/ccm.h                  |  2 ++
- drivers/net/ethernet/netronome/nfp/nfp_net_repr.c         |  1 +
- drivers/net/ethernet/netronome/nfp/nfp_port.c             | 16 ++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c         |  2 ++
- drivers/net/macvlan.c                                     |  2 ++
- drivers/net/phy/realtek.c                                 | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
- drivers/net/tun.c                                         | 14 ++++++++++++--
- drivers/net/usb/aqc111.c                                  | 31 +++++++++++++++++++++++--------
- drivers/ptp/ptp_qoriq.c                                   |  3 +++
- include/net/tcp.h                                         |  2 +-
- net/8021q/vlan_dev.c                                      |  4 +++-
- net/batman-adv/main.c                                     |  1 +
- net/batman-adv/main.h                                     |  2 +-
- net/batman-adv/multicast.c                                | 11 +++--------
- net/batman-adv/types.h                                    |  5 +++++
- net/core/fib_rules.c                                      |  6 +++---
- net/ipv4/raw.c                                            |  4 ++--
- net/ipv4/tcp_input.c                                      | 16 +++++++++++-----
- net/openvswitch/conntrack.c                               |  4 ++--
- net/packet/af_packet.c                                    | 25 ++++++++++++++++++++-----
- net/sched/cls_matchall.c                                  |  1 +
- net/tipc/socket.c                                         |  4 ++--
- net/tls/tls_device.c                                      |  6 ++----
- net/tls/tls_sw.c                                          | 30 ++++++++++++++++++++++--------
- security/selinux/hooks.c                                  |  8 ++++----
- tools/testing/selftests/bpf/prog_tests/bpf_verif_scale.c  |  2 +-
- tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c |  2 +-
- tools/testing/selftests/bpf/prog_tests/tp_attach_query.c  |  3 +++
- 35 files changed, 250 insertions(+), 74 deletions(-)
+Hi Anurag,=0A=
+=0A=
+Anurag Kumar Vulisha wrote:=0A=
+>>> +		return -EINVAL;=0A=
+>>>=0A=
+>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
+>>>  	if (set)=0A=
+>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, s=
+truct=0A=
+>> usb_ctrlrequest *ctrl)=0A=
+>>>  			 * nothing is pending from application.=0A=
+>>>  			 */=0A=
+>>>  			reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
+>>> -			reg |=3D (DWC3_DCTL_ACCEPTU1ENA |=0A=
+>> DWC3_DCTL_ACCEPTU2ENA);=0A=
+>>> +			if (!dwc->dis_u1_entry_quirk)=0A=
+>>> +				reg |=3D DWC3_DCTL_ACCEPTU1ENA;=0A=
+>>> +			if (!dwc->dis_u2_entry_quirk)=0A=
+>>> +				reg |=3D DWC3_DCTL_ACCEPTU2ENA;=0A=
+>>>  			dwc3_writel(dwc->regs, DWC3_DCTL, reg);=0A=
+>>>  		}=0A=
+>>>  		break;=0A=
+>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=0A=
+>>> index e293400..f2d3112 100644=0A=
+>>> --- a/drivers/usb/dwc3/gadget.c=0A=
+>>> +++ b/drivers/usb/dwc3/gadget.c=0A=
+>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget *g=
+)=0A=
+>>>  	return 0;=0A=
+>>>  }=0A=
+>>>=0A=
+>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,=0A=
+>>> +				      struct usb_dcd_config_params *params)=0A=
+>>> +{=0A=
+>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);=0A=
+>>> +=0A=
+>>> +	/* U1 Device exit Latency */=0A=
+>>> +	if (dwc->dis_u1_entry_quirk)=0A=
+>>> +		params->bU1devExitLat =3D 0;=0A=
+>> It doesn't make sense to have exit latency of 0. Rejecting=0A=
+>> SET_FEATURE(enable U1/U2) should already let the host know that the=0A=
+>> device doesn't support U1/U2.=0A=
+>>=0A=
+> I am okay to remove this, but I feel that it is better to report zero val=
+ue instead=0A=
+> of a non-zero value in exit latency of BOS when U1 or U2 entries are not =
+supported. =0A=
+> Advantage of reporting 0 is that some hosts doesn't even send SET_FEATURE=
+(U1/U2)=0A=
+> requests on seeing zero value in BOS descriptor. Also there can be cases =
+where U1 is=0A=
+> disabled and U2 entry is allowed or vice versa, for these kind of cases t=
+he driver can=0A=
+> set zero exit latency value for U1 and non-zero exit latency value for U2=
+ . Based on this=0A=
+> I think it would be better to report 0 when U1/U2 states are not enabled.=
+ Please provide=0A=
+> your opinion on this.=0A=
+=0A=
+Hm... I assume you're testing against linux usb stack and xhci host. If=0A=
+that's the case, it looks like host will still request the device to=0A=
+enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). This=0A=
+needs to be fixed. I think what you have is fine to workaround this issue.=
+=0A=
+=0A=
+Thanks,=0A=
+Thinh=0A=
