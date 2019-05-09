@@ -2,118 +2,99 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92521C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9E9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FD821744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557431066;
-	bh=keqavFL8lhG4U0wtXuTx0jZyaWppSu4S6UmhqaneCVU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YTU3IGrY84teYyglhrY1msHH7oI3m9629Iw9m6FiIPOCShcwYSoQw1ixJkmenaL/p
-	 wOeRLA0U44r8SCUGDZgudp/8SqsHtudk9FROwvBbc2xyEKGK7Hz7Qs9NQqmG3lR8Gt
-	 lS2nRWSUsXR/xhMNGZY8u5/b8JO1JD01m3Pft/JI=
+	by mail.kernel.org (Postfix) with ESMTP id A1A6721744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfEIToZ (ORCPT
+        id S1727000AbfEITrM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:44:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42660 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfEIToY (ORCPT
+        Thu, 9 May 2019 15:47:12 -0400
+Received: from 212-186-180-163.static.upcbusiness.at ([212.186.180.163]:36596
+        "EHLO cgate.sperl.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfEITrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:44:24 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 188so3059947ljf.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T0/ym1mmNmKB3V1YI5EOYjWhKsAecqndDM3XjAmY7xo=;
-        b=bZOYGPzrvaOvN0slWBOMz90ZRF+SlLVqUiZDaFCChf2fQxq0PUKb221LAKja6LTxBJ
-         vjQTcLvfZgoMAmKrepLsCaUYETSKrfdHlf3EBymOyJAIA9F85DquAviSdeynNSEk8GxA
-         PBFWijkYARHhptPYXGFYMCrqYPdMiEqlDwV3Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T0/ym1mmNmKB3V1YI5EOYjWhKsAecqndDM3XjAmY7xo=;
-        b=XOe0YiB8mKYA2ioJ66oiEiNObNx+NOUMbGkqBnHIlCQ9B037vdeHmn+LYPi6C6czwc
-         ZgXqzL8K8rI3hHEGsBevBTdUHPpbW8Z9zEYkkbjS0mEiqD26w3Ly/JMO2fQ8HJKfc2dt
-         lPjJ7UyrESp0ugxRJnql5OaN72yRQL0IGShDEW9u4N9O1QPHRjWOV1wgbZejAS3y6+j/
-         fivKpdA6+uZM2ne4xkdDd1px+/f+PEqgQNlvgcaoX8d1Vm6QaINp7wn6kIJG4JbU4dkm
-         QrjaR2e2qjhi9Io+Ooex8wIihi1z1dbunF+Ymx305Xg4U+ECoM/Ge8E7WhSo9IULvp9C
-         /V+A==
-X-Gm-Message-State: APjAAAXf4lH3707ZTPoyoAO6KpEvYiQFJf1qr1WYskyvXOVauOvokihj
-        v846aqTpEByZzi9lmQDq5nC4Arfd27g=
-X-Google-Smtp-Source: APXvYqyz+3gYhECyraXZ6i4W6joVvTfOFp9viDTarjNZrL+7Mytx0NLWYpvg7ZZ5LwOONLTZkYjpiQ==
-X-Received: by 2002:a2e:9747:: with SMTP id f7mr590919ljj.34.1557431061740;
-        Thu, 09 May 2019 12:44:21 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id v26sm552125lja.60.2019.05.09.12.44.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 12:44:20 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id n4so3070199ljg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:44:19 -0700 (PDT)
-X-Received: by 2002:a2e:9644:: with SMTP id z4mr1752057ljh.22.1557431059453;
- Thu, 09 May 2019 12:44:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190318153840.906404905@infradead.org> <20190318155140.058627431@infradead.org>
- <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com> <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
- <20190509090058.6554dc81@gandalf.local.home> <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
- <20190509142902.08a32f20@gandalf.local.home> <20190509184531.jhinxi2x2pdfaefb@treble>
- <20190509150644.13d4a046@gandalf.local.home> <20190509152840.7fd261a4@gandalf.local.home>
-In-Reply-To: <20190509152840.7fd261a4@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 May 2019 12:44:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=widET5dA_4xNQ=7cc7VbW9HMpXK6r06VmDEfX3=D6fXRQ@mail.gmail.com>
-Message-ID: <CAHk-=widET5dA_4xNQ=7cc7VbW9HMpXK6r06VmDEfX3=D6fXRQ@mail.gmail.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 May 2019 15:47:12 -0400
+Received: from [10.10.10.192] (account martin@sperl.org [10.10.10.192] verified)
+  by sperl.org (CommuniGate Pro SMTP 6.2.1 _community_)
+  with ESMTPSA id 7764569; Thu, 09 May 2019 19:47:08 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: Regression: spi: core: avoid waking pump thread from spi_sync instead run teardown delayed
+From:   Martin Sperl <kernel@martin.sperl.org>
+X-Mailer: iPad Mail (16E227)
+In-Reply-To: <20190123175609.GG7503@sirena.org.uk>
+Date:   Thu, 9 May 2019 21:47:08 +0200
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CB6BCD42-60F9-493A-B05B-FC27C125E982@martin.sperl.org>
+References: <f86eaebb-0359-13be-f4a2-4f2b8832252e@nvidia.com> <7C4A5EFC-8235-40C8-96E1-E6020529DF72@martin.sperl.org> <aabd916e-005e-6cda-25d7-8ab875afa7a0@nvidia.com> <AAA7943B-B1F1-4389-AAC3-8621EC6E38B8@martin.sperl.org> <20190115192619.GG5522@sirena.org.uk> <5D3256B1-5DAE-4E3F-9099-5425F4BCA304@martin.sperl.org> <20190115212539.GK5522@sirena.org.uk> <EA757B47-A264-4B4D-9E5F-16611ABA0278@martin.sperl.org> <20190118191202.GG6260@sirena.org.uk> <EE52ED32-CBB4-40D4-8615-CA814158C826@martin.sperl.org> <20190123175609.GG7503@sirena.org.uk>
+To:     Mark Brown <broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 12:28 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> But it probably would probably still be good to know why this fixes the
-> issues you see.
+Hi Mark!
 
-Looks like a compiler bug, plain and simple.
+> On 23.01.2019, at 18:56, Mark Brown <broonie@kernel.org> wrote:
+> 
+>> On Sun, Jan 20, 2019 at 12:24:23PM +0100, kernel@martin.sperl.org wrote:
+>> 
+>> These kind of changes it requires are consuming a bit more time than
+>> I was hoping for.
+> 
+> Thanks for trying.
+> 
+>> So maybe at this very moment the best is reverting the patch.
+> 
+> Yes, I'm just going to do that for now.
+> 
+>> As for the root cause of the regression: my guess is that spi-mem is
+>> just not triggering a shutdown any more because of how message_pump works.
+> 
+> I'm fairly sure that's what's going on but not been able to get my head
+> around things enough to figure out what's going wrong yet.
 
-The simplified case really simplifies a lot for the internal IR, and
-has a single conditional that then increments a constant location and
-returns a constant value. That means that any branch following code in
-the compiler has a much simpler setup, and doesn't need to try to
-follow any chain of condirional branches with the same conditional to
-generate sane code.
+While thinking about this again maybe an idea:
+What about implement a second spi_transfer_one implementation (together
+with a message pump implementation) that would handle things correctly.
 
-But the code generation problem is clearly a compiler bug, although
-I'd not be surprised if it's also triggered by whatever horrid things
-ASAN does internally to gcc state.
+Any driver then can select the old (default) or new implementation and thus
+would allow the optimizations to take place only for verified working drivers...
 
-                 Linus
+At least this way we would not be blocked because no hw exposing this
+Behavior is available to us - at the cost of extra code to get maintained.
+
+What I would then also like to do for the new implementation is modify the
+API a bit - ideally I would like to:
+* Make spi_sync the primary interface which the message pump is also 
+  using directly
+* move all the prepare stuff early into spi-sync, so that for example the
+  Preparing (including dma mapping) would get done in the calling thread
+  And only the prepared message would get submitted to the queue
+  - special processing would be needed for the spi-async case.
+
+This should optimize the computations out of the central loop faster.
+
+Adding spi-nand support could get added later by someone who has
+access to a device making use of this.
+
+If that sounds as somewhat acceptable then I will try get something
+Implemented.
+
+Any other ideas where we could improve as well?
+
+Martin
+
+
+
