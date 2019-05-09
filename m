@@ -2,115 +2,103 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203C3C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C03217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B79217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GTmpYoVk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VxfFwifN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfEIQ3Y (ORCPT
+        id S1727446AbfEIQ32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:29:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43857 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfEIQ3Y (ORCPT
+        Thu, 9 May 2019 12:29:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42620 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbfEIQ3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:29:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r4so3895423wro.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:29:23 -0700 (PDT)
+        Thu, 9 May 2019 12:29:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l2so3900595wrb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=xnUcq849ljF3W1PVVaGBumjDSyHUcTVt7HVj2vrbpqs=;
-        b=GTmpYoVkiFD9q5dllN+UTANfhfNppEO9k9r2mtPKdiNTKlSo2/K11Kc1DoLO3pzGzo
-         +8oadDWMMF73u7uqsEZVKantnFEz5I1jvg8q9diJ6h67xa9PwPRxZeqN9qzkghbTPqKl
-         Ejxg9meqYwvs8CCfmixifG+k1qEOibJwAnoXDZK57nBxIMlP4YQG/mYlfIVdmMxX9dWU
-         MppYB4r7h8KEEcJBJndg79YL+AZwelfMkzB3PCvXTx5vdbxegozXDdM4wuWT2uw1nlZd
-         ImyV2grmhzXcCDroeRpOWDhTsWt1pRy5VwtgGikKnh7mlrZDfohpGp1+5w9OPq0yooKl
-         270A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2c6x2f6eeQDgR5pR9v6L40zLzoX5XJYrfYvIkaAjp04=;
+        b=VxfFwifNwbqNi2XzCiT6xL1zwC5Abv0LgBZ2PPzyVD5t6T2sMYVCKVkPVeu8S33/Uc
+         oDw3/LViauL4eGriZ8a6El5onMLvO0Q3WMu3DQnwnqdBKx4APhMrnNaCl/+m3pPyIKwn
+         E05U+8mckVFQ36oriVIhhE2XEqThDMGCzRoPd/otk+V5sVRsGNpBSvlM6JbCc1z1aALV
+         +9QkG6oqIs39hJDbq6E2nMiNImliQjj5frZSLPM8PmRYDI0gFw3Io2450Qyl3Na9ApCI
+         4lWoaTuNTNfoOuG3Ta8JRgQ4d04USPVuDOsTIP/cQmx+IpKgxxjmAiayrns4BtMwMq8C
+         coBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xnUcq849ljF3W1PVVaGBumjDSyHUcTVt7HVj2vrbpqs=;
-        b=o4j3EqIB/VfpBADepTE14ESAXbQKIsMq2kbdxs7EiiISjwysiRGUZq4bye+gJp5OmQ
-         qBBSuhDe13w+ES64cOjUfTW1jgoPkEhs8AprWqnVl6/Q8F4EVKvkxMtrF8qBOwaRZkTR
-         w7XaVj6HQZNlXrNE6Saqa1PXdjmOC9RK6jjsCjvEoh9TOYScXiQtTRrFIvOeMHS2OpnA
-         gCjKudZ6Pw1+6SK5eOS8tJWu1HWInO12ShTDZ3+70U+N6iwmjBSDO8/yJRYRqKfXXBGs
-         EpzimoT1SocetIucIdUQIvjwiaOuuyX2+mDLahfZE7GrqmGgF7OcfkUiceHTk4rOowsG
-         wEqg==
-X-Gm-Message-State: APjAAAWQFAD91RABqeX/s+92El/ftKOkNFDpr6kOgxvDyuCqgTmCnpvO
-        gb6b9I1+iMj7FtGfuC/Hwv0a+Q==
-X-Google-Smtp-Source: APXvYqyiMcEGk177HRPJlCRGpEKkfOvFY/t5LFvZZuyi6ApMgWQ/TqSREiCeGqHv1iD451gqV5gHBQ==
-X-Received: by 2002:a5d:4a92:: with SMTP id o18mr3791996wrq.80.1557419362487;
-        Thu, 09 May 2019 09:29:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2c6x2f6eeQDgR5pR9v6L40zLzoX5XJYrfYvIkaAjp04=;
+        b=fy792eYepC3eefaPnAvRuBpO6FUu64YMGk3a81kmcxDQ8PwQxeiiLFa2pkoMynNcqL
+         plpvDlzXcieEeiWkKPibJZdQgcBB2DdUkPAU1OBFU/DQt/EP9j5v3rxgyVCW6fDK4w2t
+         FrWHyL4twknYIBXCRjxWoNpqvbU2OCDuLpnFfZkHsuibQZI0Ukz+o+onx1g9QmW81NSW
+         rarC6Yqcvy9goLSrAIOIMgh669PBMTqHu39oVBDM0SGXxySWgOgAnciFL/npWnEB3Auf
+         kPJ9sgabQsGyQqrTcW8cpF/OvAJu9aVakgEF7qd0rWW1wUnnwrrXRrbpYUXJIgKMWpoK
+         udrQ==
+X-Gm-Message-State: APjAAAWosOe95bnDtwuLZ+ayz/9wYGsi5uQpSzTlUFeNccKdmn6xsgVR
+        1O+vHlXA4b5Y/piU572wLw8uiA==
+X-Google-Smtp-Source: APXvYqzVL8+3tvK+pyR0Yf8H/ohoHNF9R/2o0IP5EFUiAuUIeVNuMQCC7AQlvEtrp/uEtg6KXNR2Qg==
+X-Received: by 2002:a5d:628d:: with SMTP id k13mr3878033wru.319.1557419363588;
+        Thu, 09 May 2019 09:29:23 -0700 (PDT)
 Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
-        by smtp.gmail.com with ESMTPSA id k2sm4116297wrg.22.2019.05.09.09.29.21
+        by smtp.gmail.com with ESMTPSA id k2sm4116297wrg.22.2019.05.09.09.29.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 09:29:21 -0700 (PDT)
+        Thu, 09 May 2019 09:29:23 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     linus.walleij@linaro.org, khilman@baylibre.com
 Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/6] Add drive-strength in Meson pinctrl driver
-Date:   Thu,  9 May 2019 18:29:14 +0200
-Message-Id: <20190509162920.7054-1-glaroque@baylibre.com>
+Subject: [PATCH v4 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+Date:   Thu,  9 May 2019 18:29:15 +0200
+Message-Id: <20190509162920.7054-2-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190509162920.7054-1-glaroque@baylibre.com>
+References: <20190509162920.7054-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this patchset is to add drive-strength support in meson pinconf
-driver. This is a new feature that was added on the g12a. It is critical for us
-to support this since many functions are failing with default pad drive-strength.
+This property allow drive-strength parameter in uA instead of mA.
 
-The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-'drive-strength' is expressed in mA.
-So this patch add another generic property "drive-strength-uA". The change to do so
-would be minimal and could be benefit to other platforms later on.
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Cheers
-Guillaume
-
-Changes since v3:
-- remove dev_err in meson_get_drive_strength
-- cleanup code
-
-Changes since v2:
-- update driver-strength-uA property to be compliant with DT documentation
-- rework patch series for better understanding
-- rework set_bias function
-
-Changes since v1:
-- fix missing break
-- implement new pinctrl generic property "drive-strength-uA"
-
-[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
-
-Guillaume La Roque (6):
-  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-  pinctrl: generic: add new 'drive-strength-microamp' property support
-  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-  pinctrl: meson: Rework enable/disable bias part
-  pinctrl: meson: add support of drive-strength-microamp
-  pinctrl: meson: g12a: add DS bank value
-
- .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
- .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
- drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
- drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
- drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
- drivers/pinctrl/pinconf-generic.c             |   2 +
- include/linux/pinctrl/pinconf-generic.h       |   3 +
- 7 files changed, 193 insertions(+), 53 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index cef2b5855d60..84adce9f2a75 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
+ drive-open-drain	- drive with open drain
+ drive-open-source	- drive with open source
+ drive-strength		- sink or source at most X mA
++drive-strength-microamp	- sink or source at most X uA
+ input-enable		- enable input on pin (no effect on output, such as
+ 			  enabling an input buffer)
+ input-disable		- disable input on pin (no effect on output, such as
+@@ -326,6 +327,8 @@ arguments are described below.
+ 
+ - drive-strength takes as argument the target strength in mA.
+ 
++- drive-strength-uA takes as argument the target strength in uA.
++
+ - input-debounce takes the debounce time in usec as argument
+   or 0 to disable debouncing
+ 
 -- 
 2.17.1
 
