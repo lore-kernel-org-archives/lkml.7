@@ -2,108 +2,134 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4261C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7E9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2496F217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0C921744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Q4FuJCkP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuAzQQMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfEIVMb (ORCPT
+        id S1726978AbfEIVOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:12:31 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34414 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfEIVMa (ORCPT
+        Thu, 9 May 2019 17:14:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38953 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfEIVOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:12:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f7so4960327wrq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:12:29 -0700 (PDT)
+        Thu, 9 May 2019 17:14:03 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w22so1832247pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZbRqqTjFs5tzEMVAU+7blChm+Y6s6n5IPp9aCMFKe+E=;
-        b=Q4FuJCkPtO06kar0ftxSdZvXt+6xzU1bjhcMqjXqM67bvJmecuLczOYD8s9xc3P9OP
-         uYGmr2xqNFbW7JxQEtTp37dJQBLpFBeAp6boNlAJ7rgnK0vL18Qa8wyCu5xlbRrqZje8
-         NgUOzxtmqZSgHe0IHEwqCGfnPHEoWrIE2+RNQ=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P9AsCRlkOOmYTXd62VCE+TLaRBh2EP8zJGBIvpPdv+s=;
+        b=PuAzQQMz7nwC9LEZewasSekHzr0gzavO/OiUWtrEjI2oRvWoSOlhf23dIs2YNuL8+I
+         hjQzfRQubWGAS97DozJVYiZkX1o6rwy8U0L2nQVVJXC4iTo4kh7mrNxL0WxOE6XUBMaL
+         AFAb1N/SveVKB8LKCd3n40EJH9pcpBSkZtzcU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZbRqqTjFs5tzEMVAU+7blChm+Y6s6n5IPp9aCMFKe+E=;
-        b=R/xpUm3gnhaYDMvVYespZleWVD3RIBuf0mPRg0JzlNdKh8NdL8poibeQx1wmKM0zxf
-         ugSq2vIlPk8S880ejE9Gq1B9Z7Qik0Np31GlZDV2wslowoZqs/+N8asSd0nFKLGxFX7L
-         SBAbn4Sv4hWFoJV6lxkfrT+KbbbRJ5xkr7nf8LTEAoNCYoTj4Eph50RRhQ7+Um+eVQA0
-         EDVQvf8kPCHXPjGTLv62ef2xwnfrcswFn/9vJxDOyk0BAZR0LL7znzvrZOQRk5lsK526
-         9zVrVyNJ5f+NM2Dat2W+R0t8QGnCAPfw1kxGxTkPz/eP09yVayrKq05zyOC8Fy0WMvIm
-         dyzA==
-X-Gm-Message-State: APjAAAVQvPqAP5Hob1y+s4jUr/w0GYumIP8YkI5RNTWbJUnN+tBHp9Xl
-        NJMncgd95wWwLCHhqsXl2cbRpg==
-X-Google-Smtp-Source: APXvYqwiQT08x4DMfKJuEiIlsOxYvyHIoXhLXtYS+lFYjC3nHHwyDIx/UDAU+qmXXg5uTHzs0UptmA==
-X-Received: by 2002:adf:e690:: with SMTP id r16mr4592916wrm.193.1557436349141;
-        Thu, 09 May 2019 14:12:29 -0700 (PDT)
-Received: from andrea ([91.252.228.170])
-        by smtp.gmail.com with ESMTPSA id r2sm6339087wrr.65.2019.05.09.14.12.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P9AsCRlkOOmYTXd62VCE+TLaRBh2EP8zJGBIvpPdv+s=;
+        b=XqlKjw0J8LFfFW1rXxPmyTfp57zU62x4ApDpPHyWAQU8COjVNz1tucBJN83zWAhgY6
+         5yhNJVjn1Q1/DE1gAgkGKjwp5uqE9nKDqirj38oSCfcujhFmBCy4zape/lGt3Y6LGdsT
+         IGMPtAXRB63lC04otyBrTXzeilWHEcDYeMdvF6CaeTl8dw9mZ5/3KNs4PRcaWZkLT5Y7
+         KgHawzFfgGSgpOHvEUetunZZBfJPwoxBGHCXK9Kr9ga3rC3DUod2CSqlstR/ma2LMExH
+         3pJyQn8dxT5iNAD5Y+trkEin4XPziyN1U5RYR7YzAhEfumZEs4A6rWasXirp0MytAK41
+         hzzA==
+X-Gm-Message-State: APjAAAVbhq7Npuf60+5ZumiXaRY5EBQC7g2lWjwYgWy8K1nMI6XnxMuE
+        JqtQ4lQFL2jLAt743VKV3j5+Tw==
+X-Google-Smtp-Source: APXvYqzOA+ux6Z4uGST2w2ScerR1nnAkn72owRHC1ECieOpbdEaZoJNeaELR4m34RLFLexWgNiS4ow==
+X-Received: by 2002:a63:3190:: with SMTP id x138mr8583878pgx.402.1557436442056;
+        Thu, 09 May 2019 14:14:02 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id r8sm4162245pfn.11.2019.05.09.14.14.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:12:28 -0700 (PDT)
-Date:   Thu, 9 May 2019 23:12:21 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Dalessandro, Dennis" <dennis.dalessandro@intel.com>,
-        "Marciniszyn, Mike" <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 5/5] IB/hfi1: Fix improper uses of smp_mb__before_atomic()
-Message-ID: <20190509211221.GA4966@andrea>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
- <14063C7AD467DE4B82DEDB5C278E8663BE6AADCE@FMSMSX108.amr.corp.intel.com>
- <20190429231657.GA2733@andrea>
+        Thu, 09 May 2019 14:14:00 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
+        broonie@kernel.org, cychiang@chromium.org, tiwai@suse.com
+Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v3 00/30] Update cros_ec_commands.h
+Date:   Thu,  9 May 2019 14:13:23 -0700
+Message-Id: <20190509211353.213194-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190429231657.GA2733@andrea>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:16:57AM +0200, Andrea Parri wrote:
-> Hi Mike,
-> 
-> > >This barrier only applies to the read-modify-write operations; in
-> > >particular, it does not apply to the atomic_read() primitive.
-> > >
-> > >Replace the barrier with an smp_mb().
-> > 
-> > This is one of a couple of barrier issues that we are currently looking into.
-> > 
-> > See:
-> > 
-> > [PATCH for-next 6/9] IB/rdmavt: Add new completion inline
-> > 
-> > We will take a look at this one as well.
-> 
-> Thank you for the reference and for looking into this,
+The interface between CrosEC embedded controller and the host,
+described by cros_ec_commands.h, as diverged from what the embedded
+controller really support.
 
-So, I'm planning to just drop this patch; or can I do something to help?
+The source of thruth is at
+https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
 
-Please let me know.
+That include file is converted to remove ACPI and Embedded only code.
 
-Thanx,
-  Andrea
+From now on, cros_ec_commands.h will be automatically generated from
+the file above, do not modify directly.
 
+Fell free to squash the commits below.
 
-> 
->   Andrea
+Changes in v3:
+- Rebase after commit 81888d8ab1532 ("mfd: cros_ec: Update the EC feature codes")
+- Add Acked-by: Benson Leung <bleung@chromium.org>
+
+Changes in v2:
+- Move I2S changes at the end of the patchset, squashed with change in
+  sound/soc/codecs/cros_ec_codec.c to match new interface.
+- Add Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Gwendal Grignou (30):
+  mfd: cros_ec: Update license term
+  mfd: cros_ec: Zero BUILD_ macro
+  mfd: cros_ec: set comments properly
+  mfd: cros_ec: add ec_align macros
+  mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
+  mfd: cros_ec: use BIT macro
+  mfd: cros_ec: Update ACPI interface definition
+  mfd: cros_ec: move HDMI CEC API definition
+  mfd: cros_ec: Remove zero-size structs
+  mfd: cros_ec: Add Flash V2 commands API
+  mfd: cros_ec: Add PWM_SET_DUTY API
+  mfd: cros_ec: Add lightbar v2 API
+  mfd: cros_ec: Expand hash API
+  mfd: cros_ec: Add EC transport protocol v4
+  mfd: cros_ec: Complete MEMS sensor API
+  mfd: cros_ec: Fix event processing API
+  mfd: cros_ec: Add fingerprint API
+  mfd: cros_ec: Fix temperature API
+  mfd: cros_ec: Complete Power and USB PD API
+  mfd: cros_ec: Add API for keyboard testing
+  mfd: cros_ec: Add Hibernate API
+  mfd: cros_ec: Add Smart Battery Firmware update API
+  mfd: cros_ec: Add I2C passthru protection API
+  mfd: cros_ec: Add API for EC-EC communication
+  mfd: cros_ec: Add API for Touchpad support
+  mfd: cros_ec: Add API for Fingerprint support
+  mfd: cros_ec: Add API for rwsig
+  mfd: cros_ec: Add SKU ID and Secure storage API
+  mfd: cros_ec: Add Management API entry points
+  mfd: cros_ec: Update I2S API
+
+ include/linux/mfd/cros_ec_commands.h | 3658 ++++++++++++++++++++------
+ sound/soc/codecs/cros_ec_codec.c     |    8 +-
+ 2 files changed, 2915 insertions(+), 751 deletions(-)
+
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
