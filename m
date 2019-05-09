@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ADBC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9B5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D135E217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D012186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427564;
-	bh=jeZ0AcsDyNIgmsDK4DCsbg9/qtGgmB05LsiGMG5X+H4=;
+	s=default; t=1557427568;
+	bh=yC0K1TXT1Dg+h2IWUIu97lPsdjlyrA3kg/UjzugIvig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaYOPPzSP33zWVeTBeZu66k/yhMEyw8CdhKkpb0e2EMNPOaN9L6U8cZx0JWkip2NN
-	 +9I7BknCbRpfAqeTFPFuQ11FJbOiJVQZUi01QajiijoqaO3mjzxAdK/fQNfEMClouu
-	 4VcWAqZMsy3XpYkndxxwd9LbnifvIwPYaYCgvjh8=
+	b=APmutJGs6AMZ30m4mTQhChRyNg5YEK7gO+w6wsjKeYqLTIz09s4i0jxIrU1zS69VL
+	 oy0ffXpJbM7bbz/Hcb/dowGVHyCFVb/wpgBz2++zuQBgE4elYDY3QGD5zn1alBIffy
+	 XrPf4bLFcqEIoKH5x5PM+dVMEG14H7E6EvboWa7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfEISqD (ORCPT
+        id S1727504AbfEISqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38122 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbfEISqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:46:01 -0400
+        id S1727488AbfEISqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:46:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 136412183F;
-        Thu,  9 May 2019 18:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC192184C;
+        Thu,  9 May 2019 18:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427560;
-        bh=jeZ0AcsDyNIgmsDK4DCsbg9/qtGgmB05LsiGMG5X+H4=;
+        s=default; t=1557427563;
+        bh=yC0K1TXT1Dg+h2IWUIu97lPsdjlyrA3kg/UjzugIvig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NGPvu+qqEmVEUukKxaIOjTnQalJK80+YBjYNz+sp1TiTQR9fz95sBTWL+NOorvbB1
-         HJ9+bpNQRnD5jdGZWEG5fr0xA3Q3lxUP6dDVRSKA+y4zBsFDgAo+joPsS3BoI2nQSH
-         APOe2Ou7Y1wxGSltGC2wpbngtV9UEPvt77vCNjrc=
+        b=EYQzVxxRnUGQMX9Jmpzkc5t1m7W58TuZnV+wGlHBuRiI6whGZ20UxN0w1AwPZeknh
+         8Yb6NqjgekjSE0BLRuu+l2rIm9RZbKw7ycRoN/zqM4i3QsUt9fg7LldLi5HLi72lo1
+         0NkoDu+wrICR0T2QftXmN45UnJp7kbo3wQfn7zNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 27/42] virtio-blk: limit number of hw queues by nr_cpu_ids
-Date:   Thu,  9 May 2019 20:42:16 +0200
-Message-Id: <20190509181258.110952471@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/42] platform/x86: pmc_atom: Drop __initconst on dmi table
+Date:   Thu,  9 May 2019 20:42:17 +0200
+Message-Id: <20190509181258.306404372@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -60,42 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
+[ Upstream commit b995dcca7cf12f208cfd95fd9d5768dca7cccec7 ]
 
-When tag_set->nr_maps is 1, the block layer limits the number of hw queues
-by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
-has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
+It's used by probe and that isn't an init function. Drop this so that we
+don't get a section mismatch.
 
-In addition, specifically for pci scenario, when the 'num-queues' specified
-by qemu is more than maxcpus, virtio-blk would not be able to allocate more
-than maxcpus vectors in order to have a vector for each queue. As a result,
-it falls back into MSI-X with one vector for config and one shared for
-queues.
-
-Considering above reasons, this patch limits the number of hw queues used
-by virtio-blk by nr_cpu_ids.
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: David Müller <dave.mueller@gmx.ch>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/pmc_atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 68846897d2139..8767401f75e04 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -437,6 +437,8 @@ static int init_vq(struct virtio_blk *vblk)
- 	if (err)
- 		num_vqs = 1;
- 
-+	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
-+
- 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
- 	if (!vblk->vqs)
- 		return -ENOMEM;
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 75f69cf0d45fa..50f2a125cd2c8 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -426,7 +426,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+  * Some systems need one or more of their pmc_plt_clks to be
+  * marked as critical.
+  */
+-static const struct dmi_system_id critclk_systems[] __initconst = {
++static const struct dmi_system_id critclk_systems[] = {
+ 	{
+ 		.ident = "MPL CEC1x",
+ 		.matches = {
 -- 
 2.20.1
 
