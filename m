@@ -2,401 +2,174 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E969C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB3F2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84392173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="wvOpATp5"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NnHwrUhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfEIILb (ORCPT
+        id S1726714AbfEIILh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:11:31 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44744 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfEIILa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:11:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f24so1459405qtk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 01:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=29b/Cz6gRH2L4oI6e8shpAVeSBly6WQGApdA4f9yTaY=;
-        b=wvOpATp51jN4QQPqidZNyKp0nIfDyaUh9DmHE5NcmNLnvLioq3K2hai3OdXsmfXcmv
-         NVD1mxm0Ru+JUezlYW0wUKqggdxYDmPTzzKWkvYINo1HN4rWQ9U0IKIYQ2oHZPehk1MF
-         ZV8DsFZF28lR/yqzGQgl50a9dmQ9itr1GLY0ojsWGqyPGuGB5yzbLNz6T6Mze5IEnv47
-         ykb5qFQAJzcNQqajWSSjK2aM+VtNwHgmwgboKr4DPtSBzj/M344/LEec2ajN4gdiZBil
-         y5NoXrDlQ3dOZrZPIcDy1dAlZ9I/lPJG20ddqUqRb53gesKtfbfn8lBVp8C/Vmc2e0Av
-         D1XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=29b/Cz6gRH2L4oI6e8shpAVeSBly6WQGApdA4f9yTaY=;
-        b=thgv2vG1zx3HdpWezC5c1umTaYXA+EuUWNE3rv0j25pornPXFV9CykqOB//xQ1OLs/
-         PfKgPNWttXYuAkgjptIB7YZRqt1+lz7bpbxs2FVOFfgEKytCvQHgvkFh70rtlBdeHvFa
-         MAD9hcLV6q6JpKNYHauFZn9NE+Sh0RJ/TsK3rBP3X6q35B9ed7NoEyPwW46sGgY6t6Vi
-         fDIFL7/RVLVfaXvofXQopLvDhaDb47fiTl5UvoKLy/y8Yif/qaIl/xXvLFt1UrngI2rH
-         yO0cByTDa+Nucvh4iamObewvqABxbADLfobOGKt8iiX+6hQp7Lr76mDao6rQa2blaI+M
-         gqgw==
-X-Gm-Message-State: APjAAAXBq25l308ksmkzxDouTm2+m030b83GfEyAKXXJFEAbRK9lApWL
-        h9qnn7jjw2ye6ROBfsgU9IzG2UagZ3pFABLFXnTa+A==
-X-Google-Smtp-Source: APXvYqznyN3oiTuX5lMuO2HWl7b7hvZgomm+R+03hq3bZFLw+Rr0cBCIiIkzphM+57U83E2cjsfHE8hnbYXYUg+DbH4=
-X-Received: by 2002:ac8:e0f:: with SMTP id a15mr2379460qti.360.1557389489200;
- Thu, 09 May 2019 01:11:29 -0700 (PDT)
+        Thu, 9 May 2019 04:11:37 -0400
+Received: from mout.web.de ([217.72.192.78]:47197 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbfEIILg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 04:11:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1557389459;
+        bh=C6VrNUr3KSKlna0pY1MdZrQdH3t43UtamDaNsAwYX9M=;
+        h=X-UI-Sender-Class:Subject:Cc:References:To:From:Date:In-Reply-To;
+        b=NnHwrUhXt43StzTiAeFSHr0hxkbkg2hvi3WVisIcwUyXRYlIaXW/4mG1sGnk7niEg
+         R6lajH0tlosCX8HiKaArgdj94VNFeJU5Mui4fVsRngbQI6b5KcZpvKqthQEsqI9ynO
+         U8YxeN3RyItZdH0FCLnzIiYUej0a8Z6RWNN+oL10=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.6.113]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Ltnmz-1ghEs349G1-011CBE; Thu, 09
+ May 2019 10:10:59 +0200
+Subject: Re: Coccinelle: semantic patch for missing of_node_put
+Cc:     linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <201905090947015772925@zte.com.cn>
+To:     Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <141163ed-a78b-6d89-e6cd-3442adda7073@web.de>
+Date:   Thu, 9 May 2019 10:10:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190503072146.49999-1-chiu@endlessm.com> <20190503072146.49999-3-chiu@endlessm.com>
-In-Reply-To: <20190503072146.49999-3-chiu@endlessm.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Thu, 9 May 2019 16:11:17 +0800
-Message-ID: <CAD8Lp47_-6d2wCAs5QbuR6Mw2w91TyJ9W3kFiJHH4F_6dXqnHg@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] rtl8xxxu: Add watchdog to update rate mask by
- signal strength
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     jes.sorensen@gmail.com, Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <201905090947015772925@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VOV3WvEGfkxwV7iT1XhUEiLOH6hfXaL9ulbvLGoAkL1fJmZWYbz
+ gY50LqPyYRL7sXDi0f6ZHQ3yJD2c7jxTzmRI3LSuJTyAio4XGfWaZHWG0pGRyH4mxA73Is+
+ wf//OtmzB7Qlkq8Tnb3KAqh1LZTDmt4RnAd34JVKndFBXNmn4BfKNF/xYzLTZL4BumvfmmS
+ bIebnePIhpDVZQSrpRDLQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PT9in4O+5Wc=:4bgd73Uy3tlkeMl/Uo7J+h
+ LJGqs0xkH8nNwt3WX7nLZlDafIzX/DkrVW1GEp74UAxKzqdAVTttwBahgIIIek6uSkRLvpojS
+ zXgKxwD+uPkr/mAb9W7z/wPpBbbuBzmnnhg0v8sQEvkOiQVFi+cz2kgv3hbEtqceoV61gDt0s
+ sknzO1Zx1xAAS2aLx02lgzALnhNpgARuyAc7+TKpd/ntUP8CMv+roxDIb76Oic/YLKTa//UDe
+ d04jVekY24fw3lb/2HLC+LURpMl8LtxqT4SFfrtJQr1OnDFCxWlEohZoQPTF/nJ76OWK+pjNH
+ ulvRBIs2NYp6CZ0p2Rxj6ay0RYzVhJAMwnUwHOPgHJXlw3UhjY6VVISvhn1nQ4xRyXgxnDwIm
+ xW0ht8gIjp7tfXl3ItqX78uktnh2fnptoLq8sJaG9aGk6yVmeB8+k/f/aN1ZWvd3Zo1HLYLrZ
+ OOWjNNR9w4oKIblVfVZnhzlpmkDKL0N15Tl9hXW5R2h5Z28YR39LE9wuO8KSXujuiChJ1F7Lc
+ FTFx65FV0e/DArjpoJAjknMZ7zspUYKuJrweKsfYxZN2hAIbzjMi6Kua14ARFAkxAtURpNKO9
+ vWw4Gnf5FFNZ0KLPdtYCrRSEZ/zNX2+bIAOb3JxRuR/tTbMT+gq4Uj8FHa4GA8cfeD0pF9UEG
+ LmU9Pp4WtzPhQJNzSL/PN9ZJGuJvIvj7gWG66W0RxD8YK+mpDf2yV4p6zeGwpun96OaFyjNh6
+ Qlto9O/f8xlR/G0t+MKD2hgFWxazldTp39f7VGegzHYVfl350HCykaAlFjnt8QHayBBFFXG0D
+ 4PfM2tB04P6J7vq4ANDXpTu7YVuc7eQuNE0sz2mENmFCunAByou51R30C6OKm4TsfVXSjzYUf
+ rrAzVx16eOK2eR/G6FJEYML0NLeZ0OBBSvnGJEs/y9Ge1HCwoMltKigHe56WnhZPOBd5v/l+o
+ v3PTK9DQMYg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+> It's interesting to get the function list automatically.
 
-Great work on finding this!
+I occasionally imported code data into list variables
+or even database tables.
 
-On Fri, May 3, 2019 at 3:22 PM Chris Chiu <chiu@endlessm.com> wrote:
-> Introduce watchdog to monitor signal then update the rate mask
-> accordingly. The rate mask update logic comes from the rtlwifi
-> refresh_rate_adaptive_mask() from different chips.
 
-You should expand your commit message here to summarise the key points
-in the cover letter. Specifically that matching this aspect of the
-vendor driver results in a significant TX performance increase which
-was previously stuck at 1mbps.
+> I'll try to parse the drivers/of/base.c file based on comments like this
+> "* Returns a node pointer with refcount incremented, use
+> * of_node_put() on it when done."
+> to automatically get the name of the function that needs to be checked.
 
-> ---
->  .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  |   8 +
->  .../realtek/rtl8xxxu/rtl8xxxu_8723b.c         | 151 ++++++++++++++++++
->  .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |  38 +++++
->  3 files changed, 197 insertions(+)
->
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-> index 771f58aa7cae..f97271951053 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-> @@ -1239,6 +1239,11 @@ struct rtl8xxxu_rate_adaptive {
->         u8 rssi_level;          /* INIT, HIGH, MIDDLE, LOW */
->  } __packed;
->
-> +struct rtl8xxxu_watchdog {
-> +       struct ieee80211_vif *vif;
-> +       struct delayed_work ra_wq;
-> +};
+Will feature requests like the following become more interesting?
 
-Having to store the vif address under the device-specific private
-structure may be a layering violation, but I'm not fully grasping how
-all this fits together. Can anyone from linux-wireless help?
+* Advanced data processing for source code comments
+  https://github.com/coccinelle/coccinelle/issues/57
 
-The existing rtl8xxxu_add_interface() code appears to allow multiple
-STA interfaces to be added. Does that imply that the hardware should
-support connecting to multiple APs on different channels? I'm pretty
-sure the hardware doesn't support that; if so we could do something
-similar to ar5523.c where it only allows a single vif, and can easily
-store that pointer in the device-specific structure.
+* Add a metavariable for the handling of source code
+  https://github.com/coccinelle/coccinelle/issues/140
 
-Or if there's a valid reason to support multiple vifs, then we need to
-figure out how to implement this watchdog. As shown below, the
-watchdog needs to know the supported rate info of the AP you are
-connected to, and the RSSI, and that comes from a specific vif. If
-multiple vifs are present, how would we know which one to choose for
-this rate adjustment?
 
->  struct rtl8xxxu_priv {
->         struct ieee80211_hw *hw;
->         struct usb_device *udev;
-> @@ -1344,6 +1349,7 @@ struct rtl8xxxu_priv {
->         u8 no_pape:1;
->         u8 int_buf[USB_INTR_CONTENT_LENGTH];
->         struct rtl8xxxu_rate_adaptive ra_info;
-> +       struct rtl8xxxu_watchdog watchdog;
->  };
->
->  struct rtl8xxxu_rx_urb {
-> @@ -1380,6 +1386,8 @@ struct rtl8xxxu_fileops {
->                               bool ht40);
->         void (*update_rate_mask) (struct rtl8xxxu_priv *priv,
->                                   u32 ramask, int sgi);
-> +       void (*refresh_rate_mask) (struct rtl8xxxu_priv *priv, int signal,
-> +                                  struct ieee80211_sta *sta);
->         void (*report_connect) (struct rtl8xxxu_priv *priv,
->                                 u8 macid, bool connect);
->         void (*fill_txdesc) (struct ieee80211_hw *hw, struct ieee80211_hdr *hdr,
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> index 26b674aca125..92c35afecae0 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> @@ -1645,6 +1645,156 @@ static void rtl8723bu_init_statistics(struct rtl8xxxu_priv *priv)
->         rtl8xxxu_write32(priv, REG_OFDM0_FA_RSTC, val32);
->  }
->
-> +static u8 rtl8723b_signal_to_rssi(int signal)
-> +{
-> +       if (signal < -95)
-> +               signal = -95;
-> +       return (u8)(signal + 95);
-> +}
-> +
-> +static void rtl8723b_refresh_rate_mask(struct rtl8xxxu_priv *priv,
-> +                                      int signal, struct ieee80211_sta *sta)
-> +{
-> +       struct rtl8xxxu_rate_adaptive *ra;
-> +       struct ieee80211_hw *hw = priv->hw;
-> +       u16 wireless_mode;
-> +       u8 rssi_level, ratr_index;
-> +       u8 txbw_40mhz;
-> +       u8 rssi, rssi_thresh_high, rssi_thresh_low;
-> +
-> +       ra = &priv->ra_info;
-> +       wireless_mode = ra->wireless_mode;
-> +       rssi_level = ra->rssi_level;
-> +       rssi = rtl8723b_signal_to_rssi(signal);
-> +       ratr_index = ra->ratr_index;
-> +       txbw_40mhz = (hw->conf.chandef.width == NL80211_CHAN_WIDTH_40)? 1 : 0;
-> +
-> +       switch (rssi_level) {
-> +       case RTL8XXXU_RATR_STA_HIGH:
-> +               rssi_thresh_high = 50;
-> +               rssi_thresh_low = 20;
-> +               break;
-> +       case RTL8XXXU_RATR_STA_MID:
-> +               rssi_thresh_high = 55;
-> +               rssi_thresh_low = 20;
-> +               break;
-> +       case RTL8XXXU_RATR_STA_LOW:
-> +               rssi_thresh_high = 60;
-> +               rssi_thresh_low = 25;
-> +               break;
-> +       default:
-> +               rssi_thresh_high = 50;
-> +               rssi_thresh_low = 20;
-> +               break;
-> +       }
-> +
-> +       if (rssi > rssi_thresh_high)
-> +               rssi_level = RTL8XXXU_RATR_STA_HIGH;
-> +       else if (rssi > rssi_thresh_low)
-> +               rssi_level = RTL8XXXU_RATR_STA_MID;
-> +       else
-> +               rssi_level = RTL8XXXU_RATR_STA_LOW;
-> +
-> +       if (rssi_level != ra->rssi_level) {
-> +               int sgi = 0;
-> +               u32 rate_bitmap = 0;
-> +
-> +               rcu_read_lock();
-> +               rate_bitmap = (sta->supp_rates[0] & 0xfff) |
-> +                             sta->ht_cap.mcs.rx_mask[0] << 12 |
-> +                              sta->ht_cap.mcs.rx_mask[1] << 20;
-> +               if (sta->ht_cap.cap &
-> +                   (IEEE80211_HT_CAP_SGI_40 | IEEE80211_HT_CAP_SGI_20))
-> +                       sgi = 1;
-> +               rcu_read_unlock();
-> +
-> +               switch (wireless_mode) {
-> +               case WIRELESS_MODE_B:
-> +                       ratr_index = RATEID_IDX_B;
-> +                       if (rate_bitmap & 0x0000000c)
-> +                               rate_bitmap &= 0x0000000d;
-> +                       else
-> +                               rate_bitmap &= 0x0000000f;
-> +                       break;
-> +               case WIRELESS_MODE_A:
-> +               case WIRELESS_MODE_G:
-> +                       ratr_index = RATEID_IDX_G;
-> +                       if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
-> +                               rate_bitmap &= 0x00000f00;
-> +                       else
-> +                               rate_bitmap &= 0x00000ff0;
-> +                       break;
-> +               case (WIRELESS_MODE_B|WIRELESS_MODE_G):
-> +                       ratr_index = RATEID_IDX_BG;
-> +                       if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
-> +                               rate_bitmap &= 0x00000f00;
-> +                       else if (rssi_level == RTL8XXXU_RATR_STA_MID)
-> +                               rate_bitmap &= 0x00000ff0;
-> +                       else
-> +                               rate_bitmap &= 0x00000ff5;
-> +                       break;
-> +               case WIRELESS_MODE_N_24G:
-> +               case WIRELESS_MODE_N_5G:
-> +               case (WIRELESS_MODE_G|WIRELESS_MODE_N_24G):
-> +               case (WIRELESS_MODE_A|WIRELESS_MODE_N_5G):
-> +                       if (priv->tx_paths == 2 && priv->rx_paths == 2)
-> +                               ratr_index = RATEID_IDX_GN_N2SS;
-> +                       else
-> +                               ratr_index = RATEID_IDX_GN_N1SS;
-> +               case (WIRELESS_MODE_B|WIRELESS_MODE_G|WIRELESS_MODE_N_24G):
-> +               case (WIRELESS_MODE_B|WIRELESS_MODE_N_24G):
-> +                       if (txbw_40mhz) {
-> +                               if (priv->tx_paths == 2 && priv->rx_paths == 2)
-> +                                       ratr_index = RATEID_IDX_BGN_40M_2SS;
-> +                               else
-> +                                       ratr_index = RATEID_IDX_BGN_40M_1SS;
-> +                       }
-> +                       else {
-> +                               if (priv->tx_paths == 2 && priv->rx_paths == 2)
-> +                                       ratr_index = RATEID_IDX_BGN_20M_2SS_BN;
-> +                               else
-> +                                       ratr_index = RATEID_IDX_BGN_20M_1SS_BN;
-> +                       }
-> +
-> +                       if (priv->tx_paths == 2 && priv->rx_paths == 2) {
-> +                               if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
-> +                                       rate_bitmap &= 0x0f8f0000;
-> +                               else if (rssi_level == RTL8XXXU_RATR_STA_MID)
-> +                                       rate_bitmap &= 0x0f8ff000;
-> +                               else {
-> +                                       if (txbw_40mhz)
-> +                                               rate_bitmap &= 0x0f8ff015;
-> +                                       else
-> +                                               rate_bitmap &= 0x0f8ff005;
-> +                               }
-> +                       }
-> +                       else {
-> +                               if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
-> +                                       rate_bitmap &= 0x000f0000;
-> +                               else if (rssi_level == RTL8XXXU_RATR_STA_MID)
-> +                                       rate_bitmap &= 0x000ff000;
-> +                               else {
-> +                                       if (txbw_40mhz)
-> +                                               rate_bitmap &= 0x000ff015;
-> +                                       else
-> +                                               rate_bitmap &= 0x000ff005;
-> +                               }
-> +                       }
-> +                       break;
-> +               default:
-> +                       ratr_index = RATEID_IDX_BGN_40M_2SS;
-> +                       rate_bitmap &= 0x0fffffff;
-> +                       break;
-> +               }
-> +
-> +               ra->ratr_index = ratr_index;
-> +               ra->rssi_level = rssi_level;
-> +               priv->fops->update_rate_mask(priv, rate_bitmap, sgi);
-> +       }
-> +
-> +       return;
-> +}
-> +
->  struct rtl8xxxu_fileops rtl8723bu_fops = {
->         .parse_efuse = rtl8723bu_parse_efuse,
->         .load_firmware = rtl8723bu_load_firmware,
-> @@ -1665,6 +1815,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
->         .usb_quirks = rtl8xxxu_gen2_usb_quirks,
->         .set_tx_power = rtl8723b_set_tx_power,
->         .update_rate_mask = rtl8xxxu_gen2_update_rate_mask,
-> +       .refresh_rate_mask = rtl8723b_refresh_rate_mask,
->         .report_connect = rtl8xxxu_gen2_report_connect,
->         .fill_txdesc = rtl8xxxu_fill_txdesc_v2,
->         .writeN_block_size = 1024,
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> index 360e9bd837e5..8db479986e97 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> @@ -4565,6 +4565,7 @@ rtl8xxxu_bss_info_changed(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
->                                 sgi = 1;
->                         rcu_read_unlock();
->
-> +                       priv->watchdog.vif = vif;
->                         ra = &priv->ra_info;
->                         ra->wireless_mode = rtl8xxxu_wireless_mode(hw, sta);
->                         ra->ratr_index = RATEID_IDX_BGN_40M_2SS;
-> @@ -5822,6 +5823,38 @@ rtl8xxxu_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
->         return 0;
->  }
->
-> +static void rtl8xxxu_watchdog_callback(struct work_struct *work)
-> +{
-> +       struct ieee80211_vif *vif;
-> +       struct rtl8xxxu_watchdog *wdog;
-> +       struct rtl8xxxu_priv *priv;
-> +
-> +       wdog = container_of(work, struct rtl8xxxu_watchdog, ra_wq.work);
-> +       priv = container_of(wdog, struct rtl8xxxu_priv, watchdog);
-> +       vif = wdog->vif;
-> +
-> +       if (vif) {
-> +               int signal;
-> +               struct ieee80211_sta *sta;
-> +
-> +               rcu_read_lock();
+> We will continue to analyze the code of coccinelle
 
-Can you explain the lock/unlock here?
+How will the understanding evolve for the OCaml source code
+of this software?
 
-> +               sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
-> +               if (!sta) {
-> +                       struct device *dev = &priv->udev->dev;
-> +                       dev_info(dev, "%s: no sta found\n", __func__);
 
-Does this result in a kernel log message every 2 seconds when the wifi
-interface is not associated to an AP?
+> to confirm whether this false positive is a bug in coccinelle.
 
-> +                       rcu_read_unlock();
-> +                       return;
-> +               }
-> +               rcu_read_unlock();
-> +
-> +               signal = ieee80211_ave_rssi(vif);
-> +               if (priv->fops->refresh_rate_mask)
-> +                       priv->fops->refresh_rate_mask(priv, signal, sta);
-> +       }
-> +
-> +       schedule_delayed_work(&priv->watchdog.ra_wq, 2 * HZ);
-> +}
-> +
->  static int rtl8xxxu_start(struct ieee80211_hw *hw)
->  {
->         struct rtl8xxxu_priv *priv = hw->priv;
-> @@ -5878,6 +5911,8 @@ static int rtl8xxxu_start(struct ieee80211_hw *hw)
->
->                 ret = rtl8xxxu_submit_rx_urb(priv, rx_urb);
->         }
-> +
-> +       schedule_delayed_work(&priv->watchdog.ra_wq, 2* HZ);
->  exit:
->         /*
->          * Accept all data and mgmt frames
-> @@ -6101,6 +6136,7 @@ static int rtl8xxxu_probe(struct usb_interface *interface,
->         INIT_LIST_HEAD(&priv->rx_urb_pending_list);
->         spin_lock_init(&priv->rx_urb_lock);
->         INIT_WORK(&priv->rx_urb_wq, rtl8xxxu_rx_urb_work);
-> +       INIT_DELAYED_WORK(&priv->watchdog.ra_wq, rtl8xxxu_watchdog_callback);
->
->         usb_set_intfdata(interface, hw);
->
-> @@ -6226,6 +6262,8 @@ static void rtl8xxxu_disconnect(struct usb_interface *interface)
->         mutex_destroy(&priv->usb_buf_mutex);
->         mutex_destroy(&priv->h2c_mutex);
->
-> +       cancel_delayed_work_sync(&priv->watchdog.ra_wq);
-> +
->         if (priv->udev->state != USB_STATE_NOTATTACHED) {
->                 dev_info(&priv->udev->dev,
->                          "Device still attached, trying to reset\n");
-> --
-> 2.21.0
->
+I am also curious on how the corresponding clarification will be continued=
+.
+
+By the way:
+Yesterday I stumbled on another questionable software behaviour
+while trying to apply an update suggestion from our development discussion
+on the topic =E2=80=9C[v6] coccinelle: semantic code search for missing pu=
+t_device()=E2=80=9D.
+https://lore.kernel.org/cocci/201902191014156680299@zte.com.cn/
+https://systeme.lip6.fr/pipermail/cocci/2019-February/005620.html
+
+
+> But this statement is currently needed here.
+
+Will the need be reconsidered?
+
+
+I got another development concern here:
+You propose to use a SmPL conjunction in the rule =E2=80=9Cr1=E2=80=9D.
+How does it fit to the previous exclusion specification =E2=80=9Cwhen !=3D=
+ of_node_put(x)=E2=80=9D?
+
+Regards,
+Markus
