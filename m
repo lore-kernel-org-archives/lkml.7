@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B371C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7055AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB7842177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4754F2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427849;
-	bh=IvzcrKKjUaGhShNfGWas+gHJsnT1+Y7lxcLDpEGJ1kk=;
+	s=default; t=1557427853;
+	bh=DRhEhGyYWBssR7wYLehVy2xwuilR7RyWyiKA0TLdZbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1a4XFagMPrwK0LxIQa065nwCN8lYE346D4BTh+SKfgCaQD5XVxLmqeZ8P2ASqCR4n
-	 pUrWUx+uf7evZsN84yVx9mOwiQ2dR/UwQ4gkoj8oQQOV9pPOfzQHTZY1P1koUiFaz9
-	 OLpoj+VxOXn8jQ19U69vn9zzgzp+ofNQEfbUWDT8=
+	b=oQlfEGHuE8sSvg40+C5Zv71jABLU0CjJoCs9+jApSW6U4hnDkM8E2/eBxXiQThjI+
+	 BZ5HnEG2vcHR8vP/R0poPNUnpraxzkYE3PdDmLCWz8B/oNojcUk3wuLY6ITgiBXdqK
+	 cuPGjReKXIR4JRMMhsBxyHvdd1/qlacqStpkKZqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbfEISur (ORCPT
+        id S1728501AbfEISuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:50:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44292 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:50:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbfEISun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:50:43 -0400
+        id S1727068AbfEISus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:50:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEB120578;
-        Thu,  9 May 2019 18:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C455F20578;
+        Thu,  9 May 2019 18:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427843;
-        bh=IvzcrKKjUaGhShNfGWas+gHJsnT1+Y7lxcLDpEGJ1kk=;
+        s=default; t=1557427848;
+        bh=DRhEhGyYWBssR7wYLehVy2xwuilR7RyWyiKA0TLdZbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MntGGDgDlREj3vxT74NVdB/QJga+Vx4bTUw5PnvGX0h3mjQElclj5C+HJQ6pxBjEo
-         ih/JMa5pZv3do9w1aLNvdJnbRK4L/tmPd/RV5lnlFnEDVBUUIsntDeFk5PFxcy1cZt
-         bAwKWn0wClot2Ba32XAjiU8KYpeZZvdmyLxBVNK8=
+        b=A5lHAxWqKfELNFuoEwIB4BkoGDzVYT3wlgLNnQMVymcqUln0MXBEqe4xyCMBpARIx
+         YhNP+5rkdCh1dMETK8N3gDMROGx11EJEkKqPgY55HzpDJDrorGxxe9gMYuX+3+IzLb
+         aNxxZyuhNhxG82fM2uTJJK+CuHs5bGr6B/W6eQOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Jourdan <mjourdan@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 24/95] clk: meson-gxbb: round the vdec dividers to closest
-Date:   Thu,  9 May 2019 20:41:41 +0200
-Message-Id: <20190509181311.014770082@linuxfoundation.org>
+Subject: [PATCH 5.0 26/95] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+Date:   Thu,  9 May 2019 20:41:43 +0200
+Message-Id: <20190509181311.153520435@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,44 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9b70c697e87286ade406e6a02091757307dd4b7c ]
+[ Upstream commit c47255b61129857b74b0d86eaf59335348be05e0 ]
 
-We want the video decoder clocks to always round to closest. While the
-muxes are already using CLK_MUX_ROUND_CLOSEST, the corresponding
-CLK_DIVIDER_ROUND_CLOSEST was forgotten for the dividers.
+Register platform component with a prefix, to avoid warnings
+on debugfs entries creation, due to component name
+redundancy.
 
-Fix this by adding the flag to the two vdec dividers.
-
-Fixes: a565242eb9fc ("clk: meson: gxbb: add the video decoder clocks")
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lkml.kernel.org/r/20190319102537.2043-1-mjourdan@baylibre.com
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/gxbb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-index 65f2599e52434..08824b2cd1428 100644
---- a/drivers/clk/meson/gxbb.c
-+++ b/drivers/clk/meson/gxbb.c
-@@ -2213,6 +2213,7 @@ static struct clk_regmap gxbb_vdec_1_div = {
- 		.offset = HHI_VDEC_CLK_CNTL,
- 		.shift = 0,
- 		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
- 	},
- 	.hw.init = &(struct clk_init_data){
- 		.name = "vdec_1_div",
-@@ -2258,6 +2259,7 @@ static struct clk_regmap gxbb_vdec_hevc_div = {
- 		.offset = HHI_VDEC2_CLK_CNTL,
- 		.shift = 16,
- 		.width = 7,
-+		.flags = CLK_DIVIDER_ROUND_CLOSEST,
- 	},
- 	.hw.init = &(struct clk_init_data){
- 		.name = "vdec_hevc_div",
+diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
+index 71d341b732a4d..24948b95eb19f 100644
+--- a/sound/soc/stm/stm32_adfsdm.c
++++ b/sound/soc/stm/stm32_adfsdm.c
+@@ -304,6 +304,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
+ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_adfsdm_priv *priv;
++	struct snd_soc_component *component;
+ 	int ret;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -331,9 +332,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->iio_cb))
+ 		return PTR_ERR(priv->iio_cb);
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &stm32_adfsdm_soc_platform,
+-					      NULL, 0);
++	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
++	if (!component)
++		return -ENOMEM;
++#ifdef CONFIG_DEBUG_FS
++	component->debugfs_prefix = "pcm";
++#endif
++
++	ret = snd_soc_add_component(&pdev->dev, component,
++				    &stm32_adfsdm_soc_platform, NULL, 0);
+ 	if (ret < 0)
+ 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
+ 			__func__);
+@@ -341,12 +348,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int stm32_adfsdm_remove(struct platform_device *pdev)
++{
++	snd_soc_unregister_component(&pdev->dev);
++
++	return 0;
++}
++
+ static struct platform_driver stm32_adfsdm_driver = {
+ 	.driver = {
+ 		   .name = STM32_ADFSDM_DRV_NAME,
+ 		   .of_match_table = stm32_adfsdm_of_match,
+ 		   },
+ 	.probe = stm32_adfsdm_probe,
++	.remove = stm32_adfsdm_remove,
+ };
+ 
+ module_platform_driver(stm32_adfsdm_driver);
 -- 
 2.20.1
 
