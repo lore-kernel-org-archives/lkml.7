@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864B7C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB8C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BE2204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DBBB204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427955;
-	bh=dzBOdXs1SpdMzjFnP+RGYqtfEUngwD8kCrHTrI4Zbvw=;
+	s=default; t=1557427957;
+	bh=QzCzpG7nqtzDp/K2VGk2Dc3YCAeq6d3p0u/YucM0gio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICa58pCkWwfdW9ZVc27auFkAjOwkiiuWsMwKfkreF3siegEdstjJER08DbQkB5Q3a
-	 OAqWrrGr21csYW0Hv4KdRhnalRmAb9e5AS3BtvVtZslWsQf9JGF2yUuVo1sRhZJNvM
-	 4h+Y/RHttxi8aoRAnWgWRCWaIXVCnCNoTzt5KGOA=
+	b=0tHiEwRD6b2eEiM5bR1RC7eet748cPh3q9JZYS7Viu2OJurYVFCR0JCndTk8D/Z05
+	 xZsDFuqVhVaqGEvicKbadJUuGnSS9h3VxNxJbwNwg1vDLVu+uiQbVJKrhGlu1WjWwP
+	 HE0qjbK6D/cu3l0DNa/z0qTE9qY/pnMAxwUkdP2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfEISwe (ORCPT
+        id S1728744AbfEISwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:52:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbfEISw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:29 -0400
+        id S1728733AbfEISwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36FF12183E;
-        Thu,  9 May 2019 18:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF0A2177E;
+        Thu,  9 May 2019 18:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427948;
-        bh=dzBOdXs1SpdMzjFnP+RGYqtfEUngwD8kCrHTrI4Zbvw=;
+        s=default; t=1557427953;
+        bh=QzCzpG7nqtzDp/K2VGk2Dc3YCAeq6d3p0u/YucM0gio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YGhXL1qdqfjHx1c9YjzaDVIPiRavmpMQ7F188Exn96JznSZ1kroWggVhibEKLikSl
-         aPQNdN4jzvscCbGUFqQxRhOWzad+bAMuoDThuX0lTK+Rex4MDsXGhZcUdCcI8Txqhd
-         c4YdwUFZ354TFKbDKbfyVfMdMQ1aA5m75EGKog9w=
+        b=iX3G8Lt6BxkS0x7YyRtPwp5i7SVWpfqUSP3ClzNMkMeSk3v8GQYQodOSrVzPdoWfK
+         6q62MEVbAxMiOpzrtzq9eARqSgmNO3IwC7ruP45dJjvn3l02pna7fI3/jrCWDXG3Mu
+         HJ3F05moBAQ9HafEoSV78HyiZ8R69cgtzU8nediE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 63/95] ALSA: hda: Fix racy display power access
-Date:   Thu,  9 May 2019 20:42:20 +0200
-Message-Id: <20190509181313.889818220@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        James Smart <james.smart@broadcom.com>,
+        linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 65/95] blk-mq: introduce blk_mq_complete_request_sync()
+Date:   Thu,  9 May 2019 20:42:22 +0200
+Message-Id: <20190509181314.017487714@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,84 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7a181da2dfa3190487c446042ba01e07d851c74 ]
+[ Upstream commit 1b8f21b74c3c9c82fce5a751d7aefb7cc0b8d33d ]
 
-snd_hdac_display_power() doesn't handle the concurrent calls carefully
-enough, and it may lead to the doubly get_power or put_power calls,
-when a runtime PM and an async work get called in racy way.
+In NVMe's error handler, follows the typical steps of tearing down
+hardware for recovering controller:
 
-This patch addresses it by reusing the bus->lock mutex that has been
-used for protecting the link state change in ext bus code, so that it
-can protect against racy display state changes.  The initialization of
-bus->lock was moved from snd_hdac_ext_bus_init() to
-snd_hdac_bus_init() as well accordingly.
+1) stop blk_mq hw queues
+2) stop the real hw queues
+3) cancel in-flight requests via
+	blk_mq_tagset_busy_iter(tags, cancel_request, ...)
+cancel_request():
+	mark the request as abort
+	blk_mq_complete_request(req);
+4) destroy real hw queues
 
-Testcase: igt/i915_pm_rpm/module-reload #glk-dsi
-Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+However, there may be race between #3 and #4, because blk_mq_complete_request()
+may run q->mq_ops->complete(rq) remotelly and asynchronously, and
+->complete(rq) may be run after #4.
+
+This patch introduces blk_mq_complete_request_sync() for fixing the
+above race.
+
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: linux-nvme@lists.infradead.org
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/ext/hdac_ext_bus.c | 1 -
- sound/hda/hdac_bus.c         | 1 +
- sound/hda/hdac_component.c   | 6 +++++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ block/blk-mq.c         | 7 +++++++
+ include/linux/blk-mq.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
-index 9c37d9af3023f..ec7715c6b0c02 100644
---- a/sound/hda/ext/hdac_ext_bus.c
-+++ b/sound/hda/ext/hdac_ext_bus.c
-@@ -107,7 +107,6 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
- 	INIT_LIST_HEAD(&bus->hlink_list);
- 	bus->idx = idx++;
- 
--	mutex_init(&bus->lock);
- 	bus->cmd_dma_state = true;
- 
- 	return 0;
-diff --git a/sound/hda/hdac_bus.c b/sound/hda/hdac_bus.c
-index 012305177f682..ad8eee08013fb 100644
---- a/sound/hda/hdac_bus.c
-+++ b/sound/hda/hdac_bus.c
-@@ -38,6 +38,7 @@ int snd_hdac_bus_init(struct hdac_bus *bus, struct device *dev,
- 	INIT_WORK(&bus->unsol_work, snd_hdac_bus_process_unsol_events);
- 	spin_lock_init(&bus->reg_lock);
- 	mutex_init(&bus->cmd_mutex);
-+	mutex_init(&bus->lock);
- 	bus->irq = -1;
- 	return 0;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 5a2585d69c817..6930c82ab75fc 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -657,6 +657,13 @@ bool blk_mq_complete_request(struct request *rq)
  }
-diff --git a/sound/hda/hdac_component.c b/sound/hda/hdac_component.c
-index a6d37b9d6413f..6b5caee61c6e0 100644
---- a/sound/hda/hdac_component.c
-+++ b/sound/hda/hdac_component.c
-@@ -69,13 +69,15 @@ void snd_hdac_display_power(struct hdac_bus *bus, unsigned int idx, bool enable)
+ EXPORT_SYMBOL(blk_mq_complete_request);
  
- 	dev_dbg(bus->dev, "display power %s\n",
- 		enable ? "enable" : "disable");
++void blk_mq_complete_request_sync(struct request *rq)
++{
++	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
++	rq->q->mq_ops->complete(rq);
++}
++EXPORT_SYMBOL_GPL(blk_mq_complete_request_sync);
 +
-+	mutex_lock(&bus->lock);
- 	if (enable)
- 		set_bit(idx, &bus->display_power_status);
- 	else
- 		clear_bit(idx, &bus->display_power_status);
- 
- 	if (!acomp || !acomp->ops)
--		return;
-+		goto unlock;
- 
- 	if (bus->display_power_status) {
- 		if (!bus->display_power_active) {
-@@ -92,6 +94,8 @@ void snd_hdac_display_power(struct hdac_bus *bus, unsigned int idx, bool enable)
- 			bus->display_power_active = false;
- 		}
- 	}
-+ unlock:
-+	mutex_unlock(&bus->lock);
- }
- EXPORT_SYMBOL_GPL(snd_hdac_display_power);
- 
+ int blk_mq_request_started(struct request *rq)
+ {
+ 	return blk_mq_rq_state(rq) != MQ_RQ_IDLE;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 0e030f5f76b66..7e092bdac27f6 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -306,6 +306,7 @@ void blk_mq_add_to_requeue_list(struct request *rq, bool at_head,
+ void blk_mq_kick_requeue_list(struct request_queue *q);
+ void blk_mq_delay_kick_requeue_list(struct request_queue *q, unsigned long msecs);
+ bool blk_mq_complete_request(struct request *rq);
++void blk_mq_complete_request_sync(struct request *rq);
+ bool blk_mq_bio_list_merge(struct request_queue *q, struct list_head *list,
+ 			   struct bio *bio);
+ bool blk_mq_queue_stopped(struct request_queue *q);
 -- 
 2.20.1
 
