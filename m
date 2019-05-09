@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42AEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAFFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5F02184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AA72182B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427530;
-	bh=aunbj7sVZYdk5uShv0beEqqx7aXlJ8EvIbMw5RVle4U=;
+	s=default; t=1557427534;
+	bh=Xry9IfgzGkS4bZ5D/hLEPBwmFk/dQBWrJQXjqNhVEks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLsL8+WfIR6V/6PJaNTwUpw7yH5VrHF4vITE9BpgOfR3s+PThQt07uhpekCx4T1nE
-	 5BvK+vgDcuHevSF/nB4hg3fNlrYKg3LglLFhairyYsaEimiejRWPnTvF6dIgISxkCg
-	 /NB0hVfcWZTQsX7vmU/zzG//WoEOQkPx+6Erzfqw=
+	b=nBZQ6eJvKtM5UVhUnJmRMOOSdAQcaoH22ynu8EP6Gg4wR5+DcrjHTA1NhOXrGrHWQ
+	 +1MbzftAYvUvVxFDAl68RC44T7saUML3FvRYj1bTRDQqv7u3v2suyeF+GPOvm3urLg
+	 Gyst28uHLApZac1CbGbs/IGtoB6bzW4vhwslngSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfEISp3 (ORCPT
+        id S1726913AbfEISpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37222 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfEISpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:23 -0400
+        id S1726839AbfEISp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0BB62183E;
-        Thu,  9 May 2019 18:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBA3321848;
+        Thu,  9 May 2019 18:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427523;
-        bh=aunbj7sVZYdk5uShv0beEqqx7aXlJ8EvIbMw5RVle4U=;
+        s=default; t=1557427528;
+        bh=Xry9IfgzGkS4bZ5D/hLEPBwmFk/dQBWrJQXjqNhVEks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxwrJSurtG2YA62hASCbGIFTMjV8bM4LSSukQ2vR6je3HLKAtZMPU/SN+HqrUI4eC
-         2mkHJb7rRZwAV7fStH9KPeu1k6SAIV229LL7POtOC0CbloMgfpa5OWo7fECGXbRfYj
-         xk3HwZXaDp0mk7FZxiEcp0JUOX+dWCvWLIZsL/zM=
+        b=qXgSPziISeSfmysPO+1kyKKF37iU1qa+m5qvabgFntAqibc9p0MMvbAEXk2dY5wgD
+         XPkkNSzF1k6W3cP/A1hIa77ekbp1RiZMdf3TdLFN8/c8kAedlAl6cSObclN/dt94S6
+         12zEUHDoq09dAmJAOCt6IhvvqrLcr4NfaBdV6o4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Annaliese McDermond <nh6z@nh6z.net>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/42] ASoC: tlv320aic32x4: Fix Common Pins
-Date:   Thu,  9 May 2019 20:42:03 +0200
-Message-Id: <20190509181255.515469856@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 16/42] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+Date:   Thu,  9 May 2019 20:42:05 +0200
+Message-Id: <20190509181255.900971671@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -60,31 +67,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
+[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
 
-The common pins were mistakenly not added to the DAPM graph.
-Adding these pins will allow valid graphs to be created.
+When an event is programmed with attr.wakeup_events=N (N>0), it means
+the caller is interested in getting a user level notification after
+N samples have been recorded in the kernel sampling buffer.
 
-Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+With precise events on Intel processors, the kernel uses PEBS.
+The kernel tries minimize sampling overhead by verifying
+if the event configuration is compatible with multi-entry PEBS mode.
+If so, the kernel is notified only when the buffer has reached its threshold.
+Other PEBS operates in single-entry mode, the kenrel is notified for each
+PEBS sample.
+
+The problem is that the current implementation look at frequency
+mode and event sample_type but ignores the wakeup_events field. Thus,
+it may not be possible to receive a notification after each precise event.
+
+This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
+is non-zero.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320aic32x4.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index e694f5f04eb90..628621fc3386c 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -462,6 +462,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
- 	SND_SOC_DAPM_INPUT("IN2_R"),
- 	SND_SOC_DAPM_INPUT("IN3_L"),
- 	SND_SOC_DAPM_INPUT("IN3_R"),
-+	SND_SOC_DAPM_INPUT("CM_L"),
-+	SND_SOC_DAPM_INPUT("CM_R"),
- };
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 99d45660242e3..74e26803be5dd 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3051,7 +3051,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
- static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
+ 	if (event->attr.precise_ip) {
+-		if (!event->attr.freq) {
++		if (!(event->attr.freq || event->attr.wakeup_events)) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_free_running_flags(event)))
 -- 
 2.20.1
 
