@@ -2,292 +2,218 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726C4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2390C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF86216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557414860;
-	bh=RQbZdEywXTKImIQgtR0Ab98Z5+mb/iASPOUkCd/efAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLULC2bASvl7KKc93FY8paBZauExt0zaGhRr4OnCPFrwQ65BLQfbd1oNFVyQ1oAXS
-	 52Dsuk9G1pJNf85Cee1bXRx8cAtQAgle6TgXwf02zTGzWwQ9gCcqUrx50xWeQ35mvl
-	 tCHyHRxFeWQmnResDkZUG5CBR+zsnhwr/QXoKXE4=
+	by mail.kernel.org (Postfix) with ESMTP id BAA5920989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:15:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H5qiIONr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfEIPOS (ORCPT
+        id S1726710AbfEIPPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfEIPOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:14:18 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C61B2173B;
-        Thu,  9 May 2019 15:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557414857;
-        bh=RQbZdEywXTKImIQgtR0Ab98Z5+mb/iASPOUkCd/efAY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xe6/QFVO7iisT6locuYeVtkzVI7Hl+0minbXztV+ixGgBNDHO6LEoprH4ie3R3nzR
-         N8vn00WnoDUjVesJfLK1KlogU0xlclsPSkKcikJc6HwODZJSCeh2s0KeN4IxywSY05
-         mB9abIZc5M/DLshDhYt9UWhklX895MQ43P8MUQmo=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: [PATCH -tip v8 6/6] perf-probe: Add user memory access attribute support
-Date:   Fri, 10 May 2019 00:14:10 +0900
-Message-Id: <155741485072.28419.5453040378002299536.stgit@devnote2>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <155741476971.28419.15837024173365724167.stgit@devnote2>
-References: <155741476971.28419.15837024173365724167.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Thu, 9 May 2019 11:15:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44391 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIPPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:15:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c5so3552999wrs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 08:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WIoalgfl9sB38qAJBElhkuBUCSWiSCsmyfEgfkSYiRQ=;
+        b=H5qiIONrxB7hLFsb9rrnuiuqPc+zrOGv70fqWwcEd7WxVsAdDfJ+bE7awRHt3RmGbJ
+         TXzwG9OHdHnppDFSDyHUCN4WFnA2OBNvgRIm9kTznr0eDnm33auw4h64LL05vR08L1S3
+         dze/b46aeC96NPTDNPMNnBuasyWP6zIFcugwDAGOoullVhtOMGYxQTvt7YrmoWXzw9hs
+         k6Uv4JrPSnbJsIou9gB5q72aignrfjgIrN+lKI3DqwuJRa8P2/pWhb7i8YL0GjrV7Vqw
+         341XOWVcmsXG7pJOjB9GRWh6HmtLFtLW5d5iO6mJyHDwKDLZFQcm1EwGQcnNXRqyLtco
+         rxeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WIoalgfl9sB38qAJBElhkuBUCSWiSCsmyfEgfkSYiRQ=;
+        b=XzuZKyw3axC9LcQf8biWWh3IlNmRCuR7ZAgqLEQmzVoISQRSpGoC9BIjokatn0Dns6
+         s+Vb9NznBopXQOs4DXMvVQEv/gXxxenFx5rSt4vk0XwduvFDtDj75JUe0KljondzgbcY
+         rtAeINGBW/Lm0QnvhOs4lOga16+0EqIKVAQm/fJaEe2CMxuQ5nw2Ek5fZb3OJKLr/Soo
+         s3DSSZGvc81F0s40uFSHbwdl4RqAQT4xIygjwA3O/e7dZFQIIpnOU8YHT90h1rTCNekU
+         UnfZ4kXWzf8em3NmzrdcDN3MJoj7I2pTHNUw+MR1gnrvZs2HXqYn6fc0JB3LHDaqIofW
+         ZDWA==
+X-Gm-Message-State: APjAAAVW6LhnlzT6UUsai3eEd5LZU8ezRBDnza4irOx4oLspPW6DtOMl
+        /1KLi1meUE1+1ju3o/WLeZ5uGA==
+X-Google-Smtp-Source: APXvYqwMm0zjMX5F2Wrypephb4Ds8LTa3vdggOVjM2ghxNW5OeG9W/7z9xoPa/KB5kSQSk1jJPcSpw==
+X-Received: by 2002:adf:c503:: with SMTP id q3mr3742761wrf.263.1557414900058;
+        Thu, 09 May 2019 08:15:00 -0700 (PDT)
+Received: from [192.168.0.100] (146-241-119-67.dyn.eolo.it. [146.241.119.67])
+        by smtp.gmail.com with ESMTPSA id x17sm3356570wru.27.2019.05.09.08.14.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 08:14:59 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: use-after-free in bfq_idle_slice_timer()
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190508195047.GA28280@roeck-us.net>
+Date:   Thu, 9 May 2019 17:14:57 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CFD68161-8AE4-48A1-9884-B8B4A93A50EB@linaro.org>
+References: <20190508195047.GA28280@roeck-us.net>
+To:     Guenter Roeck <linux@roeck-us.net>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add user memory access attribute for kprobe event arguments.
-If a given 'local variable' is in user-space, User can
-specify memory access method by '@user' suffix. This is
-not only for string but also for data structure.
+I couldn't find any explanation.  Would you be willing to apply a
+patch that adds runtime checks in bfq?  It'd take me a few days to
+prepare it.
 
-If we access a field of data structure in user memory from
-kernel on some arch, it will fail. e.g.
+Thanks,
+Paolo
 
- perf probe -a "sched_setscheduler param->sched_priority"
-
-This will fail to access the "param->sched_priority" because
-the param is __user pointer. Instead, we can now specify
-@user suffix for such argument.
-
- perf probe -a "sched_setscheduler param->sched_priority@user"
-
-Note that kernel memory access with "@user" must always fail
-on any arch.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- Changes in v8
-  - Fix a typo and rename user field to user_access field. (Thanks Ingo!)
----
- tools/perf/Documentation/perf-probe.txt |    3 ++-
- tools/perf/util/probe-event.c           |   11 +++++++++++
- tools/perf/util/probe-event.h           |    2 ++
- tools/perf/util/probe-file.c            |    7 +++++++
- tools/perf/util/probe-file.h            |    1 +
- tools/perf/util/probe-finder.c          |   19 ++++++++++++-------
- 6 files changed, 35 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index b6866a05edd2..ed3ecfa422e1 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -194,12 +194,13 @@ PROBE ARGUMENT
- --------------
- Each probe argument follows below syntax.
- 
-- [NAME=]LOCALVAR|$retval|%REG|@SYMBOL[:TYPE]
-+ [NAME=]LOCALVAR|$retval|%REG|@SYMBOL[:TYPE][@user]
- 
- 'NAME' specifies the name of this argument (optional). You can use the name of local variable, local data structure member (e.g. var->field, var.field2), local array with fixed index (e.g. array[1], var->array[0], var->pointer[2]), or kprobe-tracer argument format (e.g. $retval, %ax, etc). Note that the name of this argument will be set as the last member name if you specify a local data structure member (e.g. field2 for 'var->field1.field2'.)
- '$vars' and '$params' special arguments are also available for NAME, '$vars' is expanded to the local variables (including function parameters) which can access at given probe point. '$params' is expanded to only the function parameters.
- 'TYPE' casts the type of this argument (optional). If omitted, perf probe automatically set the type based on debuginfo (*). Currently, basic types (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal integers (x/x8/x16/x32/x64), signedness casting (u/s), "string" and bitfield are supported. (see TYPES for detail)
- On x86 systems %REG is always the short form of the register: for example %AX. %RAX or %EAX is not valid.
-+"@user" is a special attribute which means the LOCALVAR will be treated as a user-space memory. This is only valid for kprobe event.
- 
- TYPES
- -----
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 198e09ff611e..a7ca17be5fc5 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1577,6 +1577,17 @@ static int parse_perf_probe_arg(char *str, struct perf_probe_arg *arg)
- 		str = tmp + 1;
- 	}
- 
-+	tmp = strchr(str, '@');
-+	if (tmp && tmp != str && strcmp(tmp + 1, "user")) { /* user attr */
-+		if (!user_access_is_supported()) {
-+			semantic_error("ftrace does not support user access\n");
-+			return -EINVAL;
-+		}
-+		*tmp = '\0';
-+		arg->user_access = true;
-+		pr_debug("user_access ");
-+	}
-+
- 	tmp = strchr(str, ':');
- 	if (tmp) {	/* Type setting */
- 		*tmp = '\0';
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 05c8d571a901..96a319cd2378 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -37,6 +37,7 @@ struct probe_trace_point {
- struct probe_trace_arg_ref {
- 	struct probe_trace_arg_ref	*next;	/* Next reference */
- 	long				offset;	/* Offset value */
-+	bool				user_access;	/* User-memory access */
- };
- 
- /* kprobe-tracer and uprobe-tracer tracing argument */
-@@ -82,6 +83,7 @@ struct perf_probe_arg {
- 	char				*var;	/* Variable name */
- 	char				*type;	/* Type name */
- 	struct perf_probe_arg_field	*field;	/* Structure fields */
-+	bool				user_access;	/* User-memory access */
- };
- 
- /* Perf probe probing event (point + arg) */
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 4062bc4412a9..89ce1a9c3798 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -1015,6 +1015,7 @@ enum ftrace_readme {
- 	FTRACE_README_PROBE_TYPE_X = 0,
- 	FTRACE_README_KRETPROBE_OFFSET,
- 	FTRACE_README_UPROBE_REF_CTR,
-+	FTRACE_README_USER_ACCESS,
- 	FTRACE_README_END,
- };
- 
-@@ -1027,6 +1028,7 @@ static struct {
- 	DEFINE_TYPE(FTRACE_README_PROBE_TYPE_X, "*type: * x8/16/32/64,*"),
- 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
- 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
-+	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
- };
- 
- static bool scan_ftrace_readme(enum ftrace_readme type)
-@@ -1087,3 +1089,8 @@ bool uprobe_ref_ctr_is_supported(void)
- {
- 	return scan_ftrace_readme(FTRACE_README_UPROBE_REF_CTR);
- }
-+
-+bool user_access_is_supported(void)
-+{
-+	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
-+}
-diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-index 2a249182f2a6..986c1c94f64f 100644
---- a/tools/perf/util/probe-file.h
-+++ b/tools/perf/util/probe-file.h
-@@ -70,6 +70,7 @@ int probe_cache__show_all_caches(struct strfilter *filter);
- bool probe_type_is_available(enum probe_type type);
- bool kretprobe_offset_is_supported(void);
- bool uprobe_ref_ctr_is_supported(void);
-+bool user_access_is_supported(void);
- #else	/* ! HAVE_LIBELF_SUPPORT */
- static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
- {
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index c37fbef1711d..c202027716d0 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -294,7 +294,7 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 
- static int convert_variable_type(Dwarf_Die *vr_die,
- 				 struct probe_trace_arg *tvar,
--				 const char *cast)
-+				 const char *cast, bool user_access)
- {
- 	struct probe_trace_arg_ref **ref_ptr = &tvar->ref;
- 	Dwarf_Die type;
-@@ -334,7 +334,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	pr_debug("%s type is %s.\n",
- 		 dwarf_diename(vr_die), dwarf_diename(&type));
- 
--	if (cast && strcmp(cast, "string") == 0) {	/* String type */
-+	if (cast && (!strcmp(cast, "string") || !strcmp(cast, "ustring"))) {
-+		/* String type */
- 		ret = dwarf_tag(&type);
- 		if (ret != DW_TAG_pointer_type &&
- 		    ret != DW_TAG_array_type) {
-@@ -357,6 +358,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 				pr_warning("Out of memory error\n");
- 				return -ENOMEM;
- 			}
-+			(*ref_ptr)->user_access = user_access;
- 		}
- 		if (!die_compare_name(&type, "char") &&
- 		    !die_compare_name(&type, "unsigned char")) {
-@@ -411,7 +413,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 				    struct perf_probe_arg_field *field,
- 				    struct probe_trace_arg_ref **ref_ptr,
--				    Dwarf_Die *die_mem)
-+				    Dwarf_Die *die_mem, bool user_access)
- {
- 	struct probe_trace_arg_ref *ref = *ref_ptr;
- 	Dwarf_Die type;
-@@ -448,6 +450,7 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 				*ref_ptr = ref;
- 		}
- 		ref->offset += dwarf_bytesize(&type) * field->index;
-+		ref->user_access = user_access;
- 		goto next;
- 	} else if (tag == DW_TAG_pointer_type) {
- 		/* Check the pointer and dereference */
-@@ -519,17 +522,18 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		}
- 	}
- 	ref->offset += (long)offs;
-+	ref->user_access = user_access;
- 
- 	/* If this member is unnamed, we need to reuse this field */
- 	if (!dwarf_diename(die_mem))
- 		return convert_variable_fields(die_mem, varname, field,
--						&ref, die_mem);
-+						&ref, die_mem, user_access);
- 
- next:
- 	/* Converting next field */
- 	if (field->next)
- 		return convert_variable_fields(die_mem, field->name,
--					field->next, &ref, die_mem);
-+				field->next, &ref, die_mem, user_access);
- 	else
- 		return 0;
- }
-@@ -555,11 +559,12 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- 	else if (ret == 0 && pf->pvar->field) {
- 		ret = convert_variable_fields(vr_die, pf->pvar->var,
- 					      pf->pvar->field, &pf->tvar->ref,
--					      &die_mem);
-+					      &die_mem, pf->pvar->user_access);
- 		vr_die = &die_mem;
- 	}
- 	if (ret == 0)
--		ret = convert_variable_type(vr_die, pf->tvar, pf->pvar->type);
-+		ret = convert_variable_type(vr_die, pf->tvar, pf->pvar->type,
-+					    pf->pvar->user_access);
- 	/* *expr will be cached in libdw. Don't free it. */
- 	return ret;
- }
+> Il giorno 8 mag 2019, alle ore 21:50, Guenter Roeck =
+<linux@roeck-us.net> ha scritto:
+>=20
+> Hi,
+>=20
+> we have seen the attached use-after-free in bfq_idle_slice_timer()
+> while running reboot tests. The code in these tests includes all
+> bfq patches up to and including commit eed47d19d936 ("block, bfq:
+> fix use after free in bfq_bfqq_expire").
+>=20
+> gdb points to the dereference of struct bfq_queue *bfqq in
+> bfq_bfqq_budget_timeout(). My suspicion is that the cleanup path
+> in bfq_put_queue() may not clear bfqd->in_service_queue, but I don't
+> understand the code well enough to be sure.
+>=20
+> Any thoughts / comments ?
+>=20
+> Thanks,
+> Guenter
+>=20
+> ---
+> [   25.307269] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   25.314555] BUG: KASAN: use-after-free in =
+bfq_idle_slice_timer+0x88/0x1d4
+> [   25.321359] Read of size 8 at addr fffffff089360440 by task =
+swapper/0/0
+> [   25.327975]=20
+> [   25.329487] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G S              =
+  4.19.38 #37
+> [   25.336974] Hardware name: <...> rev2 board (DT)
+> [   25.342378] Call trace:
+> [   25.344844]  dump_backtrace+0x0/0x358
+> [   25.348521]  show_stack+0x20/0x2c
+> [   25.351849]  dump_stack+0x130/0x19c
+> [   25.355353]  print_address_description+0x74/0x250
+> [   25.360068]  kasan_report+0x27c/0x2a0
+> [   25.363742]  __asan_report_load8_noabort+0x2c/0x38
+> [   25.368546]  bfq_idle_slice_timer+0x88/0x1d4
+> [   25.372829]  __hrtimer_run_queues+0x794/0xa34
+> [   25.377197]  hrtimer_interrupt+0x278/0x600
+> [   25.381310]  arch_timer_handler_phys+0x5c/0x6c
+> [   25.385767]  handle_percpu_devid_irq+0x2e4/0x754
+> [   25.390399]  __handle_domain_irq+0xd4/0x158
+> [   25.394593]  gic_handle_irq+0x208/0x260
+> [   25.398437]  el1_irq+0xb0/0x128
+> [   25.401591]  arch_cpu_idle+0x20c/0x548
+> [   25.405352]  do_idle+0x184/0x4dc
+> [   25.408590]  cpu_startup_entry+0x24/0x28
+> [   25.412526]  rest_init+0x114/0x148
+> [   25.415939]  start_kernel+0x4c8/0x5c4
+> [   25.419605]=20
+> [   25.421105] Allocated by task 1430:
+> [   25.424606]  kasan_kmalloc+0xe0/0x1ac
+> [   25.428279]  kasan_slab_alloc+0x14/0x1c
+> [   25.432127]  kmem_cache_alloc+0x178/0x278
+> [   25.436149]  bfq_get_queue+0x160/0x650
+> [   25.439911]  bfq_get_bfqq_handle_split+0xcc/0x2fc
+> [   25.444627]  bfq_init_rq+0x254/0x18c0
+> [   25.448301]  bfq_insert_requests+0x5d0/0x1048
+> [   25.452669]  blk_mq_sched_insert_requests+0x130/0x204
+> [   25.457734]  blk_mq_flush_plug_list+0x844/0x91c
+> [   25.462278]  blk_flush_plug_list+0x3e4/0x778
+> [   25.466559]  blk_finish_plug+0x54/0x78
+> [   25.470322]  read_pages+0x294/0x2f0
+> [   25.473824]  __do_page_cache_readahead+0x1a4/0x354
+> [   25.478628]  filemap_fault+0x8ec/0xbb4
+> [   25.482389]  ext4_filemap_fault+0x84/0xa4
+> [   25.486409]  __do_fault+0x128/0x338
+> [   25.489909]  handle_mm_fault+0x1de0/0x2588
+> [   25.494017]  do_page_fault+0x464/0x8d8
+> [   25.497777]  do_translation_fault+0x6c/0x88
+> [   25.501969]  do_mem_abort+0xd8/0x2d0
+> [   25.505554]  do_el0_ia_bp_hardening+0x13c/0x1a8
+> [   25.510094]  el0_ia+0x18/0x1c
+> [   25.513065]=20
+> [   25.514562] Freed by task 1430:
+> [   25.517715]  __kasan_slab_free+0x13c/0x21c
+> [   25.521821]  kasan_slab_free+0x10/0x1c
+> [   25.525582]  kmem_cache_free+0x7c/0x5f8
+> [   25.529429]  bfq_put_queue+0x19c/0x2e4
+> [   25.533191]  bfq_exit_icq_bfqq+0x108/0x228
+> [   25.537299]  bfq_exit_icq+0x20/0x38
+> [   25.540798]  ioc_exit_icq+0xe4/0x16c
+> [   25.544384]  put_io_context_active+0x174/0x234
+> [   25.548836]  exit_io_context+0x84/0x94
+> [   25.552599]  do_exit+0x13b4/0x18e4
+> [   25.556013]  do_group_exit+0x1cc/0x204
+> [   25.559775]  __wake_up_parent+0x0/0x5c
+> [   25.563537]  __se_sys_exit_group+0x0/0x24
+> [   25.567558]  el0_svc_common+0x124/0x1ec
+> [   25.571407]  el0_svc_compat_handler+0x84/0xb0
+> [   25.575774]  el0_svc_compat+0x8/0x18
+> [   25.579351]=20
+> [   25.580854] The buggy address belongs to the object at =
+fffffff089360338
+> [   25.580854]  which belongs to the cache bfq_queue of size 464
+> [   25.587350] cros-ec-spi spi2.0: SPI transfer timed out
+> [   25.593209] The buggy address is located 264 bytes inside of
+> [   25.593209]  464-byte region [fffffff089360338, fffffff089360508)
+> [   25.593216] The buggy address belongs to the page:
+> [   25.593234] page:ffffffbfc224d800 count:1 mapcount:0 =
+mapping:fffffff09916d880 index:0xfffffff089360cc8
+> [   25.598388] cros-ec-spi spi2.0: spi transfer failed: -110
+> [   25.610092]  compound_mapcount: 0
+> [   25.610109] flags: 0x4000000000008100(slab|head)
+> [   25.610133] raw: 4000000000008100 ffffffbfc14c1908 fffffff0991668a0 =
+fffffff09916d880
+> [   25.615021] cros-ec-spi spi2.0: Command xfer error (err:-110)
+> [   25.624225] raw: fffffff089360cc8 000000000014000d 00000001ffffffff =
+0000000000000000
+> [   25.624233] page dumped because: kasan: bad access detected
+> [   25.624237]=20
+> [   25.624243] Memory state around the buggy address:
+> [   25.624257]  fffffff089360300: fc fc fc fc fc fc fc fb fb fb fb fb =
+fb fb fb fb
+> [   25.624271]  fffffff089360380: fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb
+> [   25.630223] cros-ec-i2c-tunnel 11012000.spi:ec@0:i2c-tunnel: Error =
+transferring EC i2c message -110
+> [   25.632977] >fffffff089360400: fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb
+> [   25.632985]                                            ^
+> [   25.632997]  fffffff089360480: fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb
+> [   25.633010]  fffffff089360500: fb fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc fc
+> [   25.633016] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
 
