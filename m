@@ -2,146 +2,217 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C444C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9DFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DB920989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="tomGYe21"
+	by mail.kernel.org (Postfix) with ESMTP id F080E20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfEIPQg (ORCPT
+        id S1726769AbfEIPRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:16:36 -0400
-Received: from mx1.cock.li ([185.10.68.5]:40863 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726234AbfEIPQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:16:36 -0400
+        Thu, 9 May 2019 11:17:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34512 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbfEIPRW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:17:22 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49F6XkF141402
+        for <linux-kernel@vger.kernel.org>; Thu, 9 May 2019 11:17:20 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2scnahved3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 11:17:20 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.vnet.ibm.com>;
+        Thu, 9 May 2019 16:17:20 +0100
+Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 May 2019 16:17:16 +0100
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49FHFVh52953304
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 May 2019 15:17:15 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DE656A047;
+        Thu,  9 May 2019 15:17:15 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C366E6A051;
+        Thu,  9 May 2019 15:17:14 +0000 (GMT)
+Received: from [9.41.179.222] (unknown [9.41.179.222])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 May 2019 15:17:14 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] iio: dps310: Temperature measurement errata
+To:     Matt Ranostay <matt.ranostay@konsulko.com>,
+        Eddie James <eajames@linux.ibm.com>
+Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, joel@jms.id.au,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Christopher Bostic <cbostic@linux.vnet.ibm.com>
+References: <1557344128-690-1-git-send-email-eajames@linux.ibm.com>
+ <1557344128-690-3-git-send-email-eajames@linux.ibm.com>
+ <CAJCx=gn0Yv+oP56HQQNm-9JbH2aoZuEQ-73b1grLTVNfbYsDsg@mail.gmail.com>
+From:   Eddie James <eajames@linux.vnet.ibm.com>
+Date:   Thu, 9 May 2019 10:17:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1557414991; bh=kqjJnv1l7CqFUPIZGszkS4/Xm9Fm7HKOAlbIulWh1LQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tomGYe21zMHAXOOD2aWj4JGLcwG6gQKxJDv8LTQ/DN77Hy7pG0Pj0n1r2frofamPf
-         pSw/ax1fxx8nrxBcklk1VKgwVnyGlqqTsJerV0dtL/HzM/Rq4xZutL1pMH3gV61bM+
-         M5isifNAinqXe9QUZhPjACnqGmisvMfUF+PyTnfFTzQKH5BcuZAa+gxURbe63n8x0+
-         0BvBgjg6DCESUYiPsbm9Tu/3XJn1wpGOJc3caHSb36t9RdbTx2bfPyVBms8D6aNoHe
-         rpOZ9/+Ctjq+RDUTYYg5XRAr+YNEoeGDZe2gDy0Jsl/oHgXHoF6FmeIH6l0jE2Gd+a
-         QSsyjDwRw/8RQ==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAJCx=gn0Yv+oP56HQQNm-9JbH2aoZuEQ-73b1grLTVNfbYsDsg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 09 May 2019 15:16:31 +0000
-From:   informator@redchan.it
-To:     phk@phk.freebsd.dk
-Cc:     linux-kernel@vger.kernel.org, misc@openbsd.org,
-        freebsd-chat@freebsd.org
-Subject: Regarding threats to "CoC" you. - You do have recourse - license
- rescission
-Message-ID: <68ed688fdca3c53b6a79d5da5bbe5412@redchan.it>
-X-Sender: informator@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19050915-0016-0000-0000-000009AFBDAF
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011077; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01200873; UDB=6.00630127; IPR=6.00981763;
+ MB=3.00026812; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-09 15:17:19
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050915-0017-0000-0000-00004325D175
+Message-Id: <5217daa3-4f43-0fce-5d1f-438f8c9e47bb@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905090088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Poul-Henning "UNIX guru at large" Kamp;
-    Many have noticed threats made against you recently to seek your
-ejectment from the FreeBSD project as retaliation for statements
-you made protesting the ceaseless and ever on-going slaughter of
-innocents; A transparent attempt to censor your political speech,
-if there ever was one.
 
-    I am forwarding this message below to you because if such is
-attempted, you do have recourse: and that is the rescind the
-gratis license you have granted regarding the use of your works of
-authorship. You may rescind these grantsfrom your attackers, those
-who fail to defend your right to free speech, from the project
-itself, or from all free-takers (if such is your wish).
-
-    Remeber: A non-exclusive license grant is not a transfer of
-copyright, and such a license absent bargained-for consideration
-is just that: a license (permission); it is not a contract and does not 
-bind the /grantor/ to any terms. It can be revocated at
-any time, for any or no reason.
-
-    This applies to all the "classic" free licenses, from the MIT
-license, to the BSD license, to the GPL.
-
--------
-The proclamations made by some as to the irrevocability of freely given 
-non-exclusive licenses are incorrect.
-
-If the non-exclusive licensee did not pay the copyright holder 
-consideration for receipt of the permissions given regarding the 
-copyrighted work, the copyright holder can freely rescind those 
-permissions _AT_ANY_TIME_ .
-
-The reasons are as follows: For the licensee to "hold" the licensor to 
-any promise regarding when and how rescission is to take place there 
-must be a contract between the two. A contract requires valid 
-bargained-for consideration. Otherwise any "promise" made is an Illusory 
-Promise (unenforceable).
-
-"Nothing" is not valid consideration.
-
-Obeying a pre-existing duty is not valid consideration.
-
-The licensee has a pre-existing duty to obey copyright law, without 
-permission from the copyright holder he may not 
-use/modify/make-derivative-works-of/distribute/distribute-derivative-works-of. 
-That permission is what he is attempting to "contract" for. Saying one 
-will follow those permissions is not valid consideration to "pay" for 
-those permissions. Promising not to violate the copyright holder's 
-rights -by promising to only use the copyrighted works as freely 
-permitted by the copyright holder, is not valid consideration as that is 
-a pre-existing duty.
-
-Yes: you _C_A_N_ revoke GPL/BSD/MIT/etc permissions from free-takers at 
-your will. And you should do so if that is needed for your livelihood to 
-succeed.
-
-You should do so if it is simply your want.
-(And you should do so if you are attacked by those free-takers)
-
-Do not the pennyless leaches intimidate you from making your own 
-decisions regarding your work of authorship. They gave you nothing, you 
-asked for nothing, they have nothing. Remember: a non-exclusive license 
-is not a transfer, it is permission. Permission that can be ended at any 
-time unless there exists an attached interest (ie: the other side payed 
-you for a license contract)
-Also Remember: The FSF has _always_ (and still does) required Copyright 
-Transfers before it would accept a contribution.
-
-And yes: I am a lawyer.
-
-Of course: consult your local copyright attorney. Strategy is important 
-in these cases. The free-loaders feel they have the 9th circuit judges 
-in the bag, and that the 9th circuit will invalidate the concept of 
-consideration if needed to protect the California tech industry (so 
-revoke from those outside the 9th circuit first).
+On 5/8/19 10:09 PM, Matt Ranostay wrote:
+> On Thu, May 9, 2019 at 3:36 AM Eddie James <eajames@linux.ibm.com> wrote:
+>> From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+>>
+>> Add a manufacturer's suggested workaround to deal with early revisions
+>> of chip that don't indicate correct temperature. Readings can be in the
+>> ~60C range when they should be in the ~20's.
+>>
+>> Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   drivers/iio/pressure/dps310.c | 51 ++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 50 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/pressure/dps310.c b/drivers/iio/pressure/dps310.c
+>> index 7afaa88..c42808e 100644
+>> --- a/drivers/iio/pressure/dps310.c
+>> +++ b/drivers/iio/pressure/dps310.c
+>> @@ -221,6 +221,9 @@ static bool dps310_is_writeable_reg(struct device *dev, unsigned int reg)
+>>          case DPS310_MEAS_CFG:
+>>          case DPS310_CFG_REG:
+>>          case DPS310_RESET:
+>> +       case 0x0e:
+>> +       case 0x0f:
+>> +       case 0x62:
+> What is with the magic values? Are they not documented to what they
+> are, and hence not defining enum values for them?
+>
+> - Matt
 
 
+Thats correct. These don't show up in the data sheet so I left them as 
+raw values. Chris, do you know what the source for these values was?
+
+Thanks,
+
+Eddie
 
 
+>
+>>                  return true;
+>>          default:
+>>                  return false;
+>> @@ -237,6 +240,7 @@ static bool dps310_is_volatile_reg(struct device *dev, unsigned int reg)
+>>          case DPS310_TMP_B1:
+>>          case DPS310_TMP_B2:
+>>          case DPS310_MEAS_CFG:
+>> +       case 0x32:
+>>                  return true;
+>>          default:
+>>                  return false;
+>> @@ -314,7 +318,7 @@ static int dps310_read_raw(struct iio_dev *iio,
+>>          .writeable_reg = dps310_is_writeable_reg,
+>>          .volatile_reg = dps310_is_volatile_reg,
+>>          .cache_type = REGCACHE_RBTREE,
+>> -       .max_register = 0x29,
+>> +       .max_register = 0x62,
+>>   };
+>>
+>>   static const struct iio_info dps310_info = {
+>> @@ -322,6 +326,47 @@ static int dps310_read_raw(struct iio_dev *iio,
+>>          .write_raw = dps310_write_raw,
+>>   };
+>>
+>> +/*
+>> + * Some verions of chip will read temperatures in the ~60C range when
+>> + * its actually ~20C. This is the manufacturer recommended workaround
+>> + * to correct the issue.
+>> + */
+>> +static int dps310_temp_workaround(struct dps310_data *data)
+>> +{
+>> +       int r, reg;
+>> +
+>> +       r = regmap_read(data->regmap, 0x32, &reg);
+>> +       if (r < 0)
+>> +               return r;
+>> +
+>> +       /*
+>> +        * If bit 1 is set then the device is okay, and the workaround does not
+>> +        * need to be applied
+>> +        */
+>> +       if (reg & BIT(1))
+>> +               return 0;
+>> +
+>> +       r = regmap_write(data->regmap, 0x0e, 0xA5);
+>> +       if (r < 0)
+>> +               return r;
+>> +
+>> +       r = regmap_write(data->regmap, 0x0f, 0x96);
+>> +       if (r < 0)
+>> +               return r;
+>> +
+>> +       r = regmap_write(data->regmap, 0x62, 0x02);
+>> +       if (r < 0)
+>> +               return r;
+>> +
+>> +       r = regmap_write(data->regmap, 0x0e, 0x00);
+>> +       if (r < 0)
+>> +               return r;
+>> +
+>> +       r = regmap_write(data->regmap, 0x0f, 0x00);
+>> +
+>> +       return r;
+>> +}
+>> +
+>>   static int dps310_probe(struct i2c_client *client,
+>>                          const struct i2c_device_id *id)
+>>   {
+>> @@ -383,6 +428,10 @@ static int dps310_probe(struct i2c_client *client,
+>>          if (r < 0)
+>>                  goto err;
+>>
+>> +       r = dps310_temp_workaround(data);
+>> +       if (r < 0)
+>> +               return r;
+>> +
+>>          r = devm_iio_device_register(&client->dev, iio);
+>>          if (r)
+>>                  goto err;
+>> --
+>> 1.8.3.1
+>>
 
-
-For easy to read by lay-people discussions on this topic:
-lkml.org/lkml/2019/5/4/334
-lkml.org/lkml/2019/5/3/698
-
-For legal articles and treatises that agree: no consideration from GPL 
-free-taker, no contract, revocable by the copyright holder:
-scholarship.law.duke.edu/faculty_scholarship/1857/
-www.amazon.com/Open-Source-Licensing-Software-Intellectual/dp/0131487876
-papers.ssrn.com/sol3/papers.cfm?abstract_id=243237
-
-
-Sincerely;
-Pro-Bono Attorney
-
-(Note: all discussion herein is in relevance to US law)
