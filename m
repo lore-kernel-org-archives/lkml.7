@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B826C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE074C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65FAE2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A0A2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428735;
-	bh=6QL4gbroYHFM4CXyZoM/xXTLR89UPs6FMfba/74u2OE=;
+	s=default; t=1557428740;
+	bh=CnR3TvxcS0KSOhhW4/PduxXRqdxxOwZqadWNevT5HoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tvOJSAH9Ic0iYo84CCRvcFgLq9uNA38sCey2cfRrNtS2+NL8wJ0zhtxZXd9gFoTlL
-	 0AoGutS7LnYo53WrUP+KzlcLeDiGMiFCstan2I7UDdLyiDdSL0i2WmOvRCCQSw+e7J
-	 TrSRzkwBlN5uxeCr6T5X69rb48tnPGUw9GoLY6/E=
+	b=ODEaXd158mvljtM7byWR1iXvzsRynyr0fYZZO+VBAvBNgtITb5UZH9DryHvMgwdwV
+	 OI70Zz9tAH/vbs3LkVDbQI6LVON+JycRBGCNdaCa5CTac/2ppTVLgiu4lV6XgRZ6k4
+	 cwLV1bDwK/WMea7yy6HMj0mhIYpLwUViaind4H5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfEITFe (ORCPT
+        id S1726855AbfEISrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbfEISre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:34 -0400
+        id S1727309AbfEISr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1A2E217F4;
-        Thu,  9 May 2019 18:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A75217F4;
+        Thu,  9 May 2019 18:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427654;
-        bh=6QL4gbroYHFM4CXyZoM/xXTLR89UPs6FMfba/74u2OE=;
+        s=default; t=1557427646;
+        bh=CnR3TvxcS0KSOhhW4/PduxXRqdxxOwZqadWNevT5HoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlDO4CgpHpx1Kvf9/HMXqmoAwNVC+kIWsQoWTimf6179/F/LRUCU4P5C+FEVE6oXt
-         aH+wLUsErgrppbmEsDpYIMTVOyp1OefpRiiehVU1tkH48aI+vd7QXLmLlaz2TDwluc
-         z2mnCKLWHEdLmaFHlEVFiiNajrot4nrmiys4oFNE=
+        b=AqTy8SxNXIMZRojK+rJ8b7tDO89sDBCCCxXHkT5/87yurpSQoP5uk6KZ7wtBE6Cko
+         YvztFDuyttNcTtNBeFtewgsGjfcmERO72ev1uIETL0V7jJcbreZVruTZlZdPpzcobT
+         qLBWh6kLMHhx+D070XyFbBntKJ4FzlzIiXHJjB4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Maxime Jourdan <mjourdan@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 21/66] ASoC: cs4270: Set auto-increment bit for register writes
-Date:   Thu,  9 May 2019 20:41:56 +0200
-Message-Id: <20190509181304.124051555@linuxfoundation.org>
+Subject: [PATCH 4.19 18/66] clk: meson-gxbb: round the vdec dividers to closest
+Date:   Thu,  9 May 2019 20:41:53 +0200
+Message-Id: <20190509181303.822075234@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,35 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
+[ Upstream commit 9b70c697e87286ade406e6a02091757307dd4b7c ]
 
-The CS4270 does not by default increment the register address on
-consecutive writes. During normal operation it doesn't matter as all
-register accesses are done individually. At resume time after suspend,
-however, the regcache code gathers the biggest possible block of
-registers to sync and sends them one on one go.
+We want the video decoder clocks to always round to closest. While the
+muxes are already using CLK_MUX_ROUND_CLOSEST, the corresponding
+CLK_DIVIDER_ROUND_CLOSEST was forgotten for the dividers.
 
-To fix this, set the INCR bit in all cases.
+Fix this by adding the flag to the two vdec dividers.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: a565242eb9fc ("clk: meson: gxbb: add the video decoder clocks")
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://lkml.kernel.org/r/20190319102537.2043-1-mjourdan@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4270.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/meson/gxbb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 3c266eeb89bfb..007ce9f48e443 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -642,6 +642,7 @@ static const struct regmap_config cs4270_regmap = {
- 	.reg_defaults =		cs4270_reg_defaults,
- 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
- 	.cache_type =		REGCACHE_RBTREE,
-+	.write_flag_mask =	CS4270_I2C_INCR,
- 
- 	.readable_reg =		cs4270_reg_is_readable,
- 	.volatile_reg =		cs4270_reg_is_volatile,
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 6628ffa31383a..4d4f6d842c31c 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -1571,6 +1571,7 @@ static struct clk_regmap gxbb_vdec_1_div = {
+ 		.offset = HHI_VDEC_CLK_CNTL,
+ 		.shift = 0,
+ 		.width = 7,
++		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "vdec_1_div",
+@@ -1616,6 +1617,7 @@ static struct clk_regmap gxbb_vdec_hevc_div = {
+ 		.offset = HHI_VDEC2_CLK_CNTL,
+ 		.shift = 16,
+ 		.width = 7,
++		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "vdec_hevc_div",
 -- 
 2.20.1
 
