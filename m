@@ -2,159 +2,168 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD938C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10718C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8EF21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C886B205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="tkB1ce0/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qdi0xmA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfEIBjk (ORCPT
+        id S1726620AbfEIBlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:39:40 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:52986 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbfEIBjj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:39:39 -0400
-X-Greylist: delayed 18665 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 May 2019 21:39:38 EDT
-Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48KF0Mb019738
-        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 16:28:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=NBQDuoaJ1XrW6ALy4NvQGygfurvfzPp5iKN3XvrAFHM=;
- b=tkB1ce0/PlIyySHQi8pc9xhgf6WspqE+kR1rWxurx0p7T1Q4dMEhooftbSuduiLnUIR5
- TFHtcL8u51Y8ZyCVAV+o0SQN3KUY4B++ioNpVX2g/iIRBP2IJP5gv9Z685WCe2LBZELY
- x758QDI96ABHk28dT+kJKnDH+OJH8veV6DhOnsWHk3TlPSceP+iXSG103imIkA6WNFQ2
- C8Rf7xgcCWfV9Zx9IoUyacPsVu8YNG9szHAjPqYyMw92bfTitKPidLmySwwudN/zLU4R
- JWi6+DbCs+6LhPtrvn6s8LSo6Qf9Co42/o/VXyjdUhrf/WLY6gIkT8TiIAj5RNH1ujmj GA== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 2sbe014xgx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 16:28:33 -0400
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48KCfvI094764
-        for <linux-kernel@vger.kernel.org>; Wed, 8 May 2019 16:28:33 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0b-00154901.pphosted.com with ESMTP id 2sc32qjtac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 16:28:32 -0400
-X-LoopCount0: from 10.166.132.128
-X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
-   d="scan'208";a="1233298866"
-From:   <Mario.Limonciello@dell.com>
-To:     <hch@lst.de>
-CC:     <kai.heng.feng@canonical.com>, <kbusch@kernel.org>,
-        <keith.busch@intel.com>, <axboe@fb.com>, <sagi@grimberg.me>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-Thread-Topic: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-Thread-Index: AQHVBdBS/xizqbOjGUOY5SKUREVH6KZh7T4AgAAD4gD//6zksIAAWSuA//+yBvA=
-Date:   Wed, 8 May 2019 20:28:30 +0000
-Message-ID: <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
-References: <20190508185955.11406-1-kai.heng.feng@canonical.com>
- <20190508191624.GA8365@localhost.localdomain>
- <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com>
- <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM>
- <20190508195159.GA1530@lst.de>
-In-Reply-To: <20190508195159.GA1530@lst.de>
+        Wed, 8 May 2019 21:41:14 -0400
+Received: from mail-eopbgr50045.outbound.protection.outlook.com ([40.107.5.45]:1798
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725832AbfEIBlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:41:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9yjIi5T4r1k+Y5iVTrYemlvNvQlXb4Ph7NXm6a6DFwg=;
+ b=qdi0xmA0MepyFEWti81CqxQ9AWdcIuz1/4kC3xhacwIdGOfAUoik++ed81PI1Muyo9ZOB6U6IbIi93o7n/l9V84wi4tnZ6uQw2VFZuiG6mHUcYeuDsSdC+gqxK0bXsCYWO6r7Gt6ZUYMqJrLoz8q4NSVGROm/yc/HFPmKQk8eQs=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3929.eurprd04.prod.outlook.com (52.134.70.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.20; Thu, 9 May 2019 01:41:09 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1878.022; Thu, 9 May 2019
+ 01:41:09 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [RESEND] input: keyboard: imx: make sure keyboard can always wake
+ up system
+Thread-Topic: [RESEND] input: keyboard: imx: make sure keyboard can always
+ wake up system
+Thread-Index: AQHU6odaZd/8EWsin0yXXO1zjKS4q6ZMPHMggBX/AtA=
+Date:   Thu, 9 May 2019 01:41:09 +0000
+Message-ID: <DB3PR0402MB39169FB6DECE7E1DAC178539F5330@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
+ <DB3PR0402MB39167BC7D996F4FF70B5DD2FF53D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39167BC7D996F4FF70B5DD2FF53D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 824628c3-f030-45f1-2ea8-08d6d41f6925
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3929;
+x-ms-traffictypediagnostic: DB3PR0402MB3929:
+x-microsoft-antispam-prvs: <DB3PR0402MB3929E7E9623EE2F9AE5B3114F5330@DB3PR0402MB3929.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:923;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(376002)(346002)(396003)(189003)(199004)(13464003)(5660300002)(316002)(52536014)(7696005)(99286004)(229853002)(478600001)(76176011)(68736007)(8936002)(102836004)(11346002)(53546011)(476003)(446003)(9686003)(81156014)(44832011)(55016002)(81166006)(33656002)(53936002)(73956011)(8676002)(2501003)(486006)(26005)(6436002)(76116006)(66946007)(64756008)(66446008)(66476007)(66556008)(110136005)(14454004)(86362001)(4326008)(66066001)(6246003)(25786009)(186003)(2201001)(6506007)(2906002)(7736002)(305945005)(256004)(14444005)(71200400001)(71190400001)(3846002)(6116002)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3929;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 547PZskJZTgfEpZQCdALeeYZhPP4sg1kok9BdNe6JzvxzmJxKy76XWRWcwR3EhVqlmsiOwGXyinW0cBNFpl1B5Cz9r32e18XT8Uf0Zhr32Ush/MXmTv7R589TADPtNmOPVuuYivDDjdZPy5yDGIO6ZoNwyQNTmN1dVkV+pO6UHyPj1lHNQqo7Ofi1wO13ArewetlJVlFEj2h8Y69u1O+Mex7SEIQ9Whw9pEykmHZH1MtAyL/2cn4vC/tAVjm3UHeiZgN1ZFdefRAqMg62yVDKxGt69SNj3aJraIo7FnkGrYFwcPB+M3fM90V2G+/3ncWRzlLQfXnY4A4F+JQ5cZr/9dKSbogm1yiX98+xvQOo1cYUqO3bLJtIYrnOOsoqhle2LMm5jsWg44Lt1y5gISzAj352CzrMXWs+FSXys6/J3Q=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=624 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080124
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=711 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905080124
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 824628c3-f030-45f1-2ea8-08d6d41f6925
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 01:41:09.1322
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3929
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Christoph Hellwig <hch@lst.de>
-> Sent: Wednesday, May 8, 2019 2:52 PM
-> To: Limonciello, Mario
-> Cc: kai.heng.feng@canonical.com; kbusch@kernel.org; keith.busch@intel.com=
-;
-> axboe@fb.com; hch@lst.de; sagi@grimberg.me; linux-nvme@lists.infradead.or=
-g;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of=
- D3 on
-> Suspend-to-Idle
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> On Wed, May 08, 2019 at 07:38:50PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > The existing routines have an implied assumption that firmware will com=
-e
-> swinging
-> > with a hammer to control the rails the SSD sits on.
-> > With S2I everything needs to come from the driver side and it really is=
- a
-> > different paradigm.
->=20
-> And that is why is this patch is fundamentally broken.
->=20
-> When using the simple pm ops suspend the pm core expects the device
-> to be powered off.  If fancy suspend doesn't want that we need to
-> communicate what to do to the device in another way, as the whole
-> thing is a platform decision.  There probabl is one (or five) methods
-> in dev_pm_ops that do the right thing, but please coordinate this
-> with the PM maintainers to make sure it does the right thing and
-> doesn't for example break either hibernate where we really don't
-> expect just a lower power state, or=20
-
-You might think this would be adding runtime_suspend/runtime_resume
-callbacks, but those also get called actually at runtime which is not
-the goal here.  At runtime, these types of disks should rely on APST which
-should calculate the appropriate latencies around the different power state=
-s.
-
-This code path is only applicable in the suspend to idle state, which /does=
-/
-call suspend/resume functions associated with dev_pm_ops.  There isn't
-a dedicated function in there for use only in suspend to idle, which is
-why pm_suspend_via_s2idle() needs to get called.
-
-SIMPLE_DEV_PM_OPS normally sets the same function for suspend and
-freeze (hibernate), so to avoid any changes to the hibernate case it seems
-to me that there needs to be a new nvme_freeze() that calls into the existi=
-ng
-nvme_dev_disable for the freeze pm op and nvme_thaw() that calls into the
-existing nvme_reset_ctrl for the thaw pm op.
-
-> enterprise class NVMe devices
-> that don't do APST and don't really do different power states at
-> all in many cases.
-
-Enterprise class NVMe devices that don't do APST - do they typically
-have a non-zero value for ndev->ctrl.npss?
-
-If not, they wouldn't enter this new codepath even if the server entered in=
-to S2I.
+UGluZy4uLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuc29uIEh1
+YW5nDQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAyNSwgMjAxOSA5OjUwIEFNDQo+IFRvOiBkbWl0
+cnkudG9yb2tob3ZAZ21haWwuY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVyQHBl
+bmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsN
+Cj4gbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1s
+aW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTogW1JFU0VORF0gaW5w
+dXQ6IGtleWJvYXJkOiBpbXg6IG1ha2Ugc3VyZSBrZXlib2FyZCBjYW4gYWx3YXlzDQo+IHdha2Ug
+dXAgc3lzdGVtDQo+IA0KPiBHZW50bGUgcGluZy4uLg0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+IEZyb206IEFuc29uIEh1YW5nDQo+ID4gU2VudDogVGh1cnNkYXksIEFw
+cmlsIDQsIDIwMTkgOTo0MCBBTQ0KPiA+IFRvOiBkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tOyBz
+aGF3bmd1b0BrZXJuZWwub3JnOw0KPiA+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBw
+ZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiA+IGxpbnV4LWlucHV0QHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGxp
+bnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgt
+aW14QG54cC5jb20+DQo+ID4gU3ViamVjdDogW1JFU0VORF0gaW5wdXQ6IGtleWJvYXJkOiBpbXg6
+IG1ha2Ugc3VyZSBrZXlib2FyZCBjYW4gYWx3YXlzDQo+ID4gd2FrZSB1cCBzeXN0ZW0NCj4gPg0K
+PiA+IFRoZXJlIGFyZSBzZXZlcmFsIHNjZW5hcmlvcyB0aGF0IGtleWJvYXJkIGNhbiBOT1Qgd2Fr
+ZSB1cCBzeXN0ZW0gZnJvbQ0KPiA+IHN1c3BlbmQsIGUuZy4sIGlmIGEga2V5Ym9hcmQgaXMgZGVw
+cmVzc2VkIGJldHdlZW4gc3lzdGVtIGRldmljZQ0KPiA+IHN1c3BlbmQgcGhhc2UgYW5kIGRldmlj
+ZSBub2lycSBzdXNwZW5kIHBoYXNlLCB0aGUga2V5Ym9hcmQgSVNSIHdpbGwgYmUNCj4gPiBjYWxs
+ZWQgYW5kIGJvdGgga2V5Ym9hcmQgZGVwcmVzcyBhbmQgcmVsZWFzZSBpbnRlcnJ1cHRzIHdpbGwg
+YmUNCj4gPiBkaXNhYmxlZCwgdGhlbiBrZXlib2FyZCB3aWxsIG5vIGxvbmdlciBiZSBhYmxlIHRv
+IHdha2UgdXAgc3lzdGVtLg0KPiA+IEFub3RoZXIgc2NlbmFyaW8gd291bGQgYmUsIGlmIGEga2V5
+Ym9hcmQgaXMga2VwdCBkZXByZXNzZWQsIGFuZCB0aGVuDQo+ID4gc3lzdGVtIGdvZXMgaW50byBz
+dXNwZW5kLCB0aGUgZXhwZWN0ZWQgYmVoYXZpb3Igd291bGQgYmUgd2hlbiBrZXlib2FyZA0KPiA+
+IGlzIHJlbGVhc2VkLCBzeXN0ZW0gd2lsbCBiZSB3YWtlZCB1cCwgYnV0IGN1cnJlbnQgaW1wbGVt
+ZW50YXRpb24gY2FuDQo+ID4gTk9UIGFjaGlldmUgdGhhdCwgYmVjYXVzZSBib3RoIGRlcHJlc3Mg
+YW5kIHJlbGVhc2UgaW50ZXJydXB0cyBhcmUNCj4gPiBkaXNhYmxlZCBpbiBJU1IsIGFuZCB0aGUg
+ZXZlbnQgY2hlY2sgaXMgc3RpbGwgaW4gcHJvZ3Jlc3MuDQo+ID4NCj4gPiBUbyBmaXggdGhlc2Ug
+aXNzdWVzLCBuZWVkIHRvIG1ha2Ugc3VyZSBrZXlib2FyZCdzIGRlcHJlc3Mgb3IgcmVsZWFzZQ0K
+PiA+IGludGVycnVwdCBpcyBlbmFibGVkIGFmdGVyIG5vaXJxIGRldmljZSBzdXNwZW5kIHBoYXNl
+LCB0aGlzIHBhdGNoDQo+ID4gbW92ZXMgdGhlIHN1c3BlbmQvcmVzdW1lIGNhbGxiYWNrIHRvIG5v
+aXJxIHN1c3BlbmQvcmVzdW1lIHBoYXNlLCBhbmQNCj4gPiBlbmFibGUgdGhlIGNvcnJlc3BvbmRp
+bmcgaW50ZXJydXB0IGFjY29yZGluZyB0byBjdXJyZW50IGtleWJvYXJkIHN0YXR1cy4NCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+
+IC0tLQ0KPiA+ICBkcml2ZXJzL2lucHV0L2tleWJvYXJkL2lteF9rZXlwYWQuYyB8IDE4ICsrKysr
+KysrKysrKysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgNCBk
+ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0L2tleWJvYXJk
+L2lteF9rZXlwYWQuYw0KPiA+IGIvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9pbXhfa2V5cGFkLmMN
+Cj4gPiBpbmRleCBjZjA4ZjRhLi45NzUwMGEyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaW5w
+dXQva2V5Ym9hcmQvaW14X2tleXBhZC5jDQo+ID4gKysrIGIvZHJpdmVycy9pbnB1dC9rZXlib2Fy
+ZC9pbXhfa2V5cGFkLmMNCj4gPiBAQCAtNTI0LDExICs1MjQsMTIgQEAgc3RhdGljIGludCBpbXhf
+a2V5cGFkX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCXJl
+dHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiAtc3RhdGljIGludCBfX21heWJlX3VudXNlZCBpbXhf
+a2JkX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICtzdGF0aWMgaW50IF9fbWF5YmVf
+dW51c2VkIGlteF9rYmRfbm9pcnFfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gIHsN
+Cj4gPiAgCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9kZXZpY2Uo
+ZGV2KTsNCj4gPiAgCXN0cnVjdCBpbXhfa2V5cGFkICprYmQgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0
+YShwZGV2KTsNCj4gPiAgCXN0cnVjdCBpbnB1dF9kZXYgKmlucHV0X2RldiA9IGtiZC0+aW5wdXRf
+ZGV2Ow0KPiA+ICsJdW5zaWduZWQgc2hvcnQgcmVnX3ZhbCA9IHJlYWR3KGtiZC0+bW1pb19iYXNl
+ICsgS1BTUik7DQo+ID4NCj4gPiAgCS8qIGlteCBrYmQgY2FuIHdha2UgdXAgc3lzdGVtIGV2ZW4g
+Y2xvY2sgaXMgZGlzYWJsZWQgKi8NCj4gPiAgCW11dGV4X2xvY2soJmlucHV0X2Rldi0+bXV0ZXgp
+Ow0KPiA+IEBAIC01MzgsMTMgKzUzOSwyMCBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkDQo+
+IGlteF9rYmRfc3VzcGVuZChzdHJ1Y3QNCj4gPiBkZXZpY2UgKmRldikNCj4gPg0KPiA+ICAJbXV0
+ZXhfdW5sb2NrKCZpbnB1dF9kZXYtPm11dGV4KTsNCj4gPg0KPiA+IC0JaWYgKGRldmljZV9tYXlf
+d2FrZXVwKCZwZGV2LT5kZXYpKQ0KPiA+ICsJaWYgKGRldmljZV9tYXlfd2FrZXVwKCZwZGV2LT5k
+ZXYpKSB7DQo+ID4gKwkJaWYgKHJlZ192YWwgJiBLQkRfU1RBVF9LUEtEKQ0KPiA+ICsJCQlyZWdf
+dmFsIHw9IEtCRF9TVEFUX0tSSUU7DQo+ID4gKwkJaWYgKHJlZ192YWwgJiBLQkRfU1RBVF9LUEtS
+KQ0KPiA+ICsJCQlyZWdfdmFsIHw9IEtCRF9TVEFUX0tESUU7DQo+ID4gKwkJd3JpdGV3KHJlZ192
+YWwsIGtiZC0+bW1pb19iYXNlICsgS1BTUik7DQo+ID4gKw0KPiA+ICAJCWVuYWJsZV9pcnFfd2Fr
+ZShrYmQtPmlycSk7DQo+ID4gKwl9DQo+ID4NCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4N
+Cj4gPiAtc3RhdGljIGludCBfX21heWJlX3VudXNlZCBpbXhfa2JkX3Jlc3VtZShzdHJ1Y3QgZGV2
+aWNlICpkZXYpDQo+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaW14X2tiZF9ub2lycV9y
+ZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2aWNlKGRldik7DQo+ID4gIAlzdHJ1Y3QgaW14
+X2tleXBhZCAqa2JkID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7IEBAIC01NjgsNw0KPiA+
+ICs1NzYsOSBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGlteF9rYmRfcmVzdW1lKHN0cnVj
+dCBkZXZpY2UNCj4gKmRldikNCj4gPiAgCXJldHVybiByZXQ7DQo+ID4gIH0NCj4gPg0KPiA+IC1z
+dGF0aWMgU0lNUExFX0RFVl9QTV9PUFMoaW14X2tiZF9wbV9vcHMsIGlteF9rYmRfc3VzcGVuZCwN
+Cj4gPiBpbXhfa2JkX3Jlc3VtZSk7DQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29w
+cyBpbXhfa2JkX3BtX29wcyA9IHsNCj4gPiArCVNFVF9OT0lSUV9TWVNURU1fU0xFRVBfUE1fT1BT
+KGlteF9rYmRfbm9pcnFfc3VzcGVuZCwNCj4gPiAraW14X2tiZF9ub2lycV9yZXN1bWUpIH07DQo+
+ID4NCj4gPiAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgaW14X2tleXBhZF9kcml2ZXIg
+PSB7DQo+ID4gIAkuZHJpdmVyCQk9IHsNCj4gPiAtLQ0KPiA+IDIuNy40DQoNCg==
