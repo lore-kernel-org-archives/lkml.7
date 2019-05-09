@@ -2,51 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DCC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A09C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB31E217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85082177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427865;
-	bh=AIFK3L+c1H4rIB8vBSH4Xb25UaW6efGxn2GKIhav6QI=;
+	s=default; t=1557427868;
+	bh=WE7DH8v4uGIWCVhMwzNdRbqkimb09nk1+twnWPRqxgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6vdzg6BHWE/MAYDISDsiDDqTiywXY4Vt66IduptfI3B+x+b5zP5a0gK5JDllGmnL
-	 bHr1HdvmW+nh0nXqzCURvyMdtpMil8HlpreDH0OnWu8K0AoHmAcC+4ly2KLLMeLoZl
-	 b/6ifP8dfNkrIFekB1FvNIYY9wgBdAYpBtnEa2k8=
+	b=EWbZ/za4TfETOck8kjdjT97GvrnKOvl5Gn4mHvUWDIWTq0wjKAUahiWOP7Q+jqPVj
+	 Y1SfRl3lHBYpxoudCliHKfiNgTroz8m0D9Er7fKz7p+bfKNkDpkM0PN6qHssQbqgV+
+	 fox2wXT8tvW115CRWoqxdddjuiiVuQuT5t5DSL9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfEISvD (ORCPT
+        id S1728531AbfEISvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44594 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbfEISu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:50:59 -0400
+        id S1727913AbfEISvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 570652177E;
-        Thu,  9 May 2019 18:50:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C25A22177E;
+        Thu,  9 May 2019 18:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427858;
-        bh=AIFK3L+c1H4rIB8vBSH4Xb25UaW6efGxn2GKIhav6QI=;
+        s=default; t=1557427864;
+        bh=WE7DH8v4uGIWCVhMwzNdRbqkimb09nk1+twnWPRqxgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yZ+TbAopIeD8DaFCISMQ19StvlZ/0nwI1d9P3lXD2hkqOxkSrU1qs6mWfx0UusM9B
-         uXda0X2A1zlIumdm1kkSX7Mr/2eEffmdGJgw4M8wAZgD49LYAgL8sfdRriN0cA6L67
-         UCMRzYiSeFWo4ZnnCpmSD0qw5c91H7TxTKxT/FHg=
+        b=tYw1yLrOpiPmFN5F0aVIVSU+r1l+fgYVttK5EGUcaXuZS6J4MZ9E/Ntz/hgdeVmzI
+         KtuF8MkHUTf1dMqOVhCyobdvDz7jphOgrtw2OI8fmRpZ5gGDjHltJ2GfF15aHi8BB/
+         1i/dG3UdUVScjQ+FyW1QecQobABkGycNkyhT13PM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>,
-        Johan Hovold <johan@kernel.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>
-Subject: [PATCH 5.0 04/95] staging: greybus: power_supply: fix prop-descriptor request size
-Date:   Thu,  9 May 2019 20:41:21 +0200
-Message-Id: <20190509181309.568987665@linuxfoundation.org>
+        stable@vger.kernel.org, Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Christian Gromm <christian.gromm@microchip.com>
+Subject: [PATCH 5.0 06/95] staging: most: cdev: fix chrdev_region leak in mod_exit
+Date:   Thu,  9 May 2019 20:41:23 +0200
+Message-Id: <20190509181309.758266612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -59,40 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Suresh Udipi <sudipi@jp.adit-jv.com>
 
-commit 47830c1127ef166af787caf2f871f23089610a7f upstream.
+commit af708900e9a48c0aa46070c8a8cdf0608a1d2025 upstream.
 
-Since moving the message buffers off the stack, the dynamically
-allocated get-prop-descriptor request buffer is incorrectly sized due to
-using the pointer rather than request-struct size when creating the
-operation.
+It looks like v4.18-rc1 commit [0] which upstreams mld-1.8.0
+commit [1] missed to fix the memory leak in mod_exit function.
 
-Fortunately, the pointer size is always larger than this one-byte
-request, but this could still cause trouble on the remote end due to the
-unexpected message size.
+Do it now.
 
-Fixes: 9d15134d067e ("greybus: power_supply: rework get descriptors")
-Cc: stable <stable@vger.kernel.org>     # 4.9
-Cc: Rui Miguel Silva <rui.silva@linaro.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+[0] aba258b7310167 ("staging: most: cdev: fix chrdev_region leak")
+[1] https://github.com/microchip-ais/linux/commit/a2d8f7ae7ea381
+    ("staging: most: cdev: fix leak for chrdev_region")
+
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Christian Gromm <christian.gromm@microchip.com>
+Fixes: aba258b73101 ("staging: most: cdev: fix chrdev_region leak")
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/power_supply.c |    2 +-
+ drivers/staging/most/cdev/cdev.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/greybus/power_supply.c
-+++ b/drivers/staging/greybus/power_supply.c
-@@ -520,7 +520,7 @@ static int gb_power_supply_prop_descript
- 
- 	op = gb_operation_create(connection,
- 				 GB_POWER_SUPPLY_TYPE_GET_PROP_DESCRIPTORS,
--				 sizeof(req), sizeof(*resp) + props_count *
-+				 sizeof(*req), sizeof(*resp) + props_count *
- 				 sizeof(struct gb_power_supply_props_desc),
- 				 GFP_KERNEL);
- 	if (!op)
+--- a/drivers/staging/most/cdev/cdev.c
++++ b/drivers/staging/most/cdev/cdev.c
+@@ -546,7 +546,7 @@ static void __exit mod_exit(void)
+ 		destroy_cdev(c);
+ 		destroy_channel(c);
+ 	}
+-	unregister_chrdev_region(comp.devno, 1);
++	unregister_chrdev_region(comp.devno, CHRDEV_REGION_SIZE);
+ 	ida_destroy(&comp.minor_id);
+ 	class_destroy(comp.class);
+ }
 
 
