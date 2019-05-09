@@ -2,313 +2,116 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DCBC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6828217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557420498;
-	bh=kol39BephWYIHDzdaXrvumnDFI8vJt7AfTLmiFkdhCo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ntq7NrPsmQMBRaEEYdPwQAL2PzAdRbvFMG9//BzrhHJ1J4hMgc8fG9gzBfE4fpXIR
-	 piwcdlZoOt67c93Ljv84JJHBd2qROLqMsXEtnCwiGwWdN6ixvDR130LUPCmMmY5rLZ
-	 qQ+Oq3m73TQOToHMmc7CI8gZQEUqZ4IjwTIk888g=
+	by mail.kernel.org (Postfix) with ESMTP id 003DF217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfEIQsR (ORCPT
+        id S1726816AbfEIQso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57998 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 12:48:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48374 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfEIQsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:48:17 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726620AbfEIQsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 12:48:43 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C38982177E;
-        Thu,  9 May 2019 16:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557420495;
-        bh=kol39BephWYIHDzdaXrvumnDFI8vJt7AfTLmiFkdhCo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WyoiZFRaABWrxW8LjQOdrsYbo/2yLzc26cJp0FY7SnFSbaquCK8BNIliPm64CIcp/
-         fhQcQ5ydKk9kI0oXGIyzVozzFiqDIGT/avn3QVPT254RRB4OwwtkbkVn4gXmVZPef3
-         TpTcLMRT8lHftvdnQJ7J5M+TKIFELZF53SS4CE7c=
-Date:   Thu, 9 May 2019 09:48:14 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Randall Huang <huangrandall@google.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] f2fs: fix to avoid accessing xattr across the boundary
-Message-ID: <20190509164814.GA79912@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190411082646.169977-1-huangrandall@google.com>
- <20190509041535.GA62877@jaegeuk-macbookpro.roam.corp.google.com>
- <bdba5d01-4a31-d8f2-4805-81d167047c84@huawei.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 0DCCA3B712;
+        Thu,  9 May 2019 16:48:42 +0000 (UTC)
+Received: from work-vm (ovpn-116-174.ams2.redhat.com [10.36.116.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 95FF11710E;
+        Thu,  9 May 2019 16:48:28 +0000 (UTC)
+Date:   Thu, 9 May 2019 17:48:26 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190509164825.GG2868@work-vm>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+ <20190506014904.3621-1-yan.y.zhao@intel.com>
+ <20190507151826.502be009@x1.home>
+ <20190509173839.2b9b2b46.cohuck@redhat.com>
+ <20190509154857.GF2868@work-vm>
+ <20190509175404.512ae7aa.cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bdba5d01-4a31-d8f2-4805-81d167047c84@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20190509175404.512ae7aa.cohuck@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 09 May 2019 16:48:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09, Chao Yu wrote:
-> On 2019/5/9 12:15, Jaegeuk Kim wrote:
-> > On 04/11, Randall Huang wrote:
-> >> When we traverse xattr entries via __find_xattr(),
-> >> if the raw filesystem content is faked or any hardware failure occurs,
-> >> out-of-bound error can be detected by KASAN.
-> >> Fix the issue by introducing boundary check.
-> >>
-> >> [   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
-> >> [   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
-> >> [   38.402935] c7   1827 Call trace:
-> >> [   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
-> >> [   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
-> >> [   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
-> >> [   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
-> >> [   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
-> >> [   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
-> >> [   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
-> >> [   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
-> >> [   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
-> >> [   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
-> >> [   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
-> >> [   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
-> >> [   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
-> >> [   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
-> >> [   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
-> >> [   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
-> >> [   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
-> >> [   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
-> >> [   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
-> >> [   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
-> >> [   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
-> >> [   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
-> >>
-> >> Bug: 126558260
-> >>
-> >> Signed-off-by: Randall Huang <huangrandall@google.com>
-> >> ---
-> >> v2:
-> >> * return EFAULT if OOB error is detected
-> >>
-> >> v3:
-> >> * fix typo in setxattr()
-> >>
-> >> v4:
-> >> * change boundry definition
-> >>
-> >> v5:
-> >> * revise boundry definition
-> >> ---
-> >>  fs/f2fs/xattr.c | 32 +++++++++++++++++++++++++++-----
-> >>  1 file changed, 27 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-> >> index 848a785abe25..587429e29a69 100644
-> >> --- a/fs/f2fs/xattr.c
-> >> +++ b/fs/f2fs/xattr.c
-> >> @@ -202,12 +202,18 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
-> >>  	return handler;
-> >>  }
-> >>  
-> >> -static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
-> >> -					size_t len, const char *name)
-> >> +static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
-> >> +				void *last_base_addr, int index,
-> >> +				size_t len, const char *name)
-> >>  {
-> >>  	struct f2fs_xattr_entry *entry;
-> >>  
-> >>  	list_for_each_xattr(entry, base_addr) {
-> >> +		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
-> >> +			(void *)XATTR_NEXT_ENTRY(entry) +
-> >> +			sizeof(__u32) > last_base_addr)
-> >> +			return NULL;
-> >> +
-> >>  		if (entry->e_name_index != index)
-> >>  			continue;
-> >>  		if (entry->e_name_len != len)
-> >> @@ -298,6 +304,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
-> >>  				void **base_addr, int *base_size)
-> >>  {
-> >>  	void *cur_addr, *txattr_addr, *last_addr = NULL;
-> >> +	void *last_txattr_addr = NULL;
-> >>  	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
-> >>  	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
-> >>  	unsigned int inline_size = inline_xattr_size(inode);
-> >> @@ -311,6 +318,8 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
-> >>  	if (!txattr_addr)
-> >>  		return -ENOMEM;
-> >>  
-> >> +	last_txattr_addr = (void *)txattr_addr + inline_size + size;
-> > 
-> > I just found this should be + XATTR_PADDING_SIZE. Otherwise, generic/026 fails.
-> > Let me know, if there is any other concern below.
+* Cornelia Huck (cohuck@redhat.com) wrote:
+> On Thu, 9 May 2019 16:48:57 +0100
+> "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
 > 
-> We're trying to use [txattr_addr, last_txattr_addr] to indicate valid range of
-> xattr datas, any valid entries across the boundary is not allowed, so I think
-> it's correct to exclude padding space for last_txattr_addr.
+> > * Cornelia Huck (cohuck@redhat.com) wrote:
+> > > On Tue, 7 May 2019 15:18:26 -0600
+> > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > >   
+> > > > On Sun,  5 May 2019 21:49:04 -0400
+> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:  
+> > >   
+> > > > > +  Errno:
+> > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
+> > > > > +  devices, it should not register version attribute for this mdev device. But if
+> > > > > +  a vendor driver has already registered version attribute and it wants to claim
+> > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
+> > > > > +  -ENODEV on access to this mdev device's version attribute.
+> > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
+> > > > > +  incompatible mdev devices's version strings to its version attribute should
+> > > > > +  return -EINVAL;    
+> > > > 
+> > > > I think it's best not to define the specific errno returned for a
+> > > > specific situation, let the vendor driver decide, userspace simply
+> > > > needs to know that an errno on read indicates the device does not
+> > > > support migration version comparison and that an errno on write
+> > > > indicates the devices are incompatible or the target doesn't support
+> > > > migration versions.  
+> > > 
+> > > I think I have to disagree here: It's probably valuable to have an
+> > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
+> > > those two particular devices'. Userspace might want to do different
+> > > things (e.g. trying with different device pairs).  
+> > 
+> > Trying to stuff these things down an errno seems a bad idea; we can't
+> > get much information that way.
+> 
+> So, what would be a reasonable approach? Userspace should first read
+> the version attributes on both devices (to find out whether migration
+> is supported at all), and only then figure out via writing whether they
+> are compatible?
+> 
+> (Or just go ahead and try, if it does not care about the reason.)
 
-Okay, how about this?
+Well, I'm OK with something like writing to test whether it's
+compatible, it's just we need a better way of saying 'no'.
+I'm not sure if that involves reading back from somewhere after
+the write or what.
 
-From 2777e654371dd4207a3a7f4fb5fa39550053a080 Mon Sep 17 00:00:00 2001
-From: Randall Huang <huangrandall@google.com>
-Date: Thu, 11 Apr 2019 16:26:46 +0800
-Subject: [PATCH] f2fs: fix to avoid accessing xattr across the boundary
+Dave
 
-When we traverse xattr entries via __find_xattr(),
-if the raw filesystem content is faked or any hardware failure occurs,
-out-of-bound error can be detected by KASAN.
-Fix the issue by introducing boundary check.
-
-[   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
-[   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
-[   38.402935] c7   1827 Call trace:
-[   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
-[   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
-[   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
-[   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
-[   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
-[   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
-[   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
-[   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
-[   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
-[   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
-[   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
-[   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
-[   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
-[   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
-[   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
-[   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
-[   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
-[   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
-[   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
-[   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
-[   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
-[   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
-
-Signed-off-by: Randall Huang <huangrandall@google.com>
-[Jaegeuk Kim: Fix wrong ending boundary]
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/xattr.c | 36 +++++++++++++++++++++++++++---------
- fs/f2fs/xattr.h |  2 ++
- 2 files changed, 29 insertions(+), 9 deletions(-)
-
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index 848a785abe25..e791741d193b 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -202,12 +202,17 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
- 	return handler;
- }
- 
--static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
--					size_t len, const char *name)
-+static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
-+				void *last_base_addr, int index,
-+				size_t len, const char *name)
- {
- 	struct f2fs_xattr_entry *entry;
- 
- 	list_for_each_xattr(entry, base_addr) {
-+		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
-+			(void *)XATTR_NEXT_ENTRY(entry) > last_base_addr)
-+			return NULL;
-+
- 		if (entry->e_name_index != index)
- 			continue;
- 		if (entry->e_name_len != len)
-@@ -297,20 +302,22 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 				const char *name, struct f2fs_xattr_entry **xe,
- 				void **base_addr, int *base_size)
- {
--	void *cur_addr, *txattr_addr, *last_addr = NULL;
-+	void *cur_addr, *txattr_addr, *last_txattr_addr;
-+	void *last_addr = NULL;
- 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
--	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
- 	unsigned int inline_size = inline_xattr_size(inode);
- 	int err = 0;
- 
--	if (!size && !inline_size)
-+	if (!xnid && !inline_size)
- 		return -ENODATA;
- 
--	*base_size = inline_size + size + XATTR_PADDING_SIZE;
-+	*base_size = XATTR_SIZE(xnid, inode) + XATTR_PADDING_SIZE;
- 	txattr_addr = f2fs_kzalloc(F2FS_I_SB(inode), *base_size, GFP_NOFS);
- 	if (!txattr_addr)
- 		return -ENOMEM;
- 
-+	last_txattr_addr = (void *)txattr_addr + XATTR_SIZE(xnid, inode);
-+
- 	/* read from inline xattr */
- 	if (inline_size) {
- 		err = read_inline_xattr(inode, ipage, txattr_addr);
-@@ -337,7 +344,11 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 	else
- 		cur_addr = txattr_addr;
- 
--	*xe = __find_xattr(cur_addr, index, len, name);
-+	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
-+	if (!*xe) {
-+		err = -EFAULT;
-+		goto out;
-+	}
- check:
- 	if (IS_XATTR_LAST_ENTRY(*xe)) {
- 		err = -ENODATA;
-@@ -581,7 +592,8 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 			struct page *ipage, int flags)
- {
- 	struct f2fs_xattr_entry *here, *last;
--	void *base_addr;
-+	void *base_addr, *last_base_addr;
-+	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
- 	int found, newsize;
- 	size_t len;
- 	__u32 new_hsize;
-@@ -605,8 +617,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 	if (error)
- 		return error;
- 
-+	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
-+
- 	/* find entry with wanted name. */
--	here = __find_xattr(base_addr, index, len, name);
-+	here = __find_xattr(base_addr, last_base_addr, index, len, name);
-+	if (!here) {
-+		error = -EFAULT;
-+		goto exit;
-+	}
- 
- 	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
- 
-diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
-index 9172ee082ca8..a90920e2f949 100644
---- a/fs/f2fs/xattr.h
-+++ b/fs/f2fs/xattr.h
-@@ -71,6 +71,8 @@ struct f2fs_xattr_entry {
- 				entry = XATTR_NEXT_ENTRY(entry))
- #define VALID_XATTR_BLOCK_SIZE	(PAGE_SIZE - sizeof(struct node_footer))
- #define XATTR_PADDING_SIZE	(sizeof(__u32))
-+#define XATTR_SIZE(x,i)		(((x) ? VALID_XATTR_BLOCK_SIZE : 0) +	\
-+						(inline_xattr_size(i)))
- #define MIN_OFFSET(i)		XATTR_ALIGN(inline_xattr_size(i) +	\
- 						VALID_XATTR_BLOCK_SIZE)
- 
--- 
-2.19.0.605.g01d371f741-goog
-
+--
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
