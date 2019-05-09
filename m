@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAECC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0A5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22F320578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CBE20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428097;
-	bh=7wpS8JYjS9GcZiEDHPbPi/nxLw0FODqaTLwbfGZT1Is=;
+	s=default; t=1557428103;
+	bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLl94NH6dt7iYEOkSLxIyFAhwyi1rUry5GY/GntuDIh920dbXTHjLdAZi6sUuvX98
-	 nVwbnj/E7BKdWAziItWganyTR5JVAdgosuDAZUoDEa1dMoFFrM8vM0HJF66OtjIDGN
-	 5XMVPGWkB63nXJijrdJ/cHtIVByusehgjEBKA4MA=
+	b=eYGe7P6qLp1d5AYyn0VHCXDtDRcyIv1TXz40Z789D1GcBdkc61ur01VFoHt06PgY3
+	 8Ek68yH7mCGfz6KZUJZsC3nBgZ4X3GYvXBd81LPHOBYGIYGW0RWP/T+t/ZVzIuZZSK
+	 3q2GrV3d/4myb+jvcyUtfw5iw7LIKuGonLO5250s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfEISy4 (ORCPT
+        id S1729164AbfEISzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727700AbfEISyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:54:49 -0400
+        id S1728474AbfEISyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:54:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A02E7217D7;
-        Thu,  9 May 2019 18:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7346217D6;
+        Thu,  9 May 2019 18:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428089;
-        bh=7wpS8JYjS9GcZiEDHPbPi/nxLw0FODqaTLwbfGZT1Is=;
+        s=default; t=1557428094;
+        bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzqrS4j7rOc9PIn/4mfvjysD60U2HuBXDaIfLqwgLZx+pWVizhFIvWkJHktgdv2Ar
-         oBuIJGL4s6jFi4V2tKwLE3Y9I7zDzGpIpNk300VpWG3TjNerEsn+NcEK3lokujI7G6
-         p5iyWdLp8wSvElylzcnybhmyrXhaJEZWQdIsY10Q=
+        b=1erFEsXZUaFAH8o7ZQwNqSt2xn+zI+7En+5ATL4yMUWczGL+MNY2rcklTVsZQ6gtR
+         he717pLsD6Fws14xpwhDQ4+U4qSE5hF6UsOQyeS+oYw95IaNTnxcMR7AfTOdO+/Pca
+         E+QaRkugKeFAngXmMVCL5ScdNGLOTkn1/hfXoRYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qtran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.1 21/30] scsi: qla2xxx: Fix device staying in blocked state
-Date:   Thu,  9 May 2019 20:42:53 +0200
-Message-Id: <20190509181255.452950137@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 5.1 23/30] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+Date:   Thu,  9 May 2019 20:42:55 +0200
+Message-Id: <20190509181255.902104673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -61,49 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qtran@marvell.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 2137490f2147a8d0799b72b9a1023efb012d40c7 upstream.
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-This patch fixes issue reported by some of the customers, who discovered
-that after cable pull scenario the devices disappear and path seems to
-remain in blocked state. Once the device reappears, driver does not seem to
-update path to online. This issue appears because of the defer flag
-creating race condition where the same session reappears.  This patch fixes
-this issue by indicating SCSI-ML of device lost when
-qlt_free_session_done() is called from qlt_unreg_sess().
+The minimum encryption key size for LE connections is 56 bits and to
+align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
+BR/EDR connections as well.
 
-Fixes: 41dc529a4602a ("qla2xxx: Improve RSCN handling in driver")
-Signed-off-by: Quinn Tran <qtran@marvell.com>
-Cc: stable@vger.kernel.org #4.19
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_target.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/bluetooth/hci_core.h |    3 +++
+ net/bluetooth/hci_conn.c         |    8 ++++++++
+ 2 files changed, 11 insertions(+)
 
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -980,6 +980,8 @@ void qlt_free_session_done(struct work_s
- 		sess->send_els_logo);
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -190,6 +190,9 @@ struct adv_info {
  
- 	if (!IS_SW_RESV_ADDR(sess->d_id)) {
-+		qla2x00_mark_device_lost(vha, sess, 0, 0);
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
++/* Min encryption key size to match with SMP */
++#define HCI_MIN_ENC_KEY_SIZE		7
 +
- 		if (sess->send_els_logo) {
- 			qlt_port_logo_t logo;
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
  
-@@ -1160,8 +1162,6 @@ void qlt_unreg_sess(struct fc_port *sess
- 	if (sess->se_sess)
- 		vha->hw->tgt.tgt_ops->clear_nacl_from_fcport_map(sess);
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1276,6 +1276,14 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
  
--	qla2x00_mark_device_lost(vha, sess, 0, 0);
--
- 	sess->deleted = QLA_SESS_DELETION_IN_PROGRESS;
- 	sess->disc_state = DSC_DELETE_PEND;
- 	sess->last_rscn_gen = sess->rscn_gen;
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 */
++	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
++		return 0;
++
+ 	return 1;
+ }
+ 
 
 
