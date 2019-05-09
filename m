@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B500CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2BAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFEF204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F622177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428046;
-	bh=WSRye4QuqhDnD0KzcvLyhshoPeuDaJR9wrkaZyoDOMA=;
+	s=default; t=1557428050;
+	bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejboP2p9cOM8mMvvD+04wbFveGauWctxlVkC/3maQrcJYyrNh9OGq3qxMb6+xaJ2/
-	 74QHMG2+Cz2LQ+fId/StZFj00yxrqZ5gf93CPvErcsZLhCf6GjH4CkrcvQjIubvXNj
-	 p2xKJjDWy2kvazvDHC03JJJdI44wb6HlkPmQa8PY=
+	b=Qm8niWSIMzk6uQmvf1QGzrLNK4P/2nw2REubICGcx4FstV02mV/NHSpMO+ZuyPEJ5
+	 Ha37KcrB7fybUZxe5O3icQcZh6XSv8aM7K5mYKlZXOItavFxu4+abGdFowZYRFNa2/
+	 O1feIKAKy55GmDT5EdSPI7Te4+h5hHR3WqhOJp5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbfEISyE (ORCPT
+        id S1728622AbfEISyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48668 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728994AbfEISyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:54:02 -0400
+        id S1728256AbfEISyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:54:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA04217F5;
-        Thu,  9 May 2019 18:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B9A204FD;
+        Thu,  9 May 2019 18:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428042;
-        bh=WSRye4QuqhDnD0KzcvLyhshoPeuDaJR9wrkaZyoDOMA=;
+        s=default; t=1557428045;
+        bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k9T/2le6w7aTdOD4OH7Bzy1GPn27QlG+7WeyI3avUflcptqUaS2hOD+QS4u1YrSoo
-         88C1xZom91BeZRxsvlfxbdwOnSERCTt5Hs+tOKx+ARtpBWVKk/mSPmE8PCLx9XGCiB
-         SgycBdQcn4zTz15o9F0lTgIxKSrk3mFaqVUWyEH4=
+        b=THjV+UfxSchwZVtui26Lh8ba1PolQI48oxbVKUH95qKEEgFRVCRkEwldUTRG9KGM6
+         uZ+dOAQ7vF3NMXCpjXVOBtaXEek1/w5ClSM23QSYzfB3SEPZt4wKR5poS2zhWWPFGY
+         vyX+DpQY55k6ugKQ32ulWlBRE/zIQLeIRBBdkga8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.0 75/95] usb: dwc3: Fix default lpm_nyet_threshold value
-Date:   Thu,  9 May 2019 20:42:32 +0200
-Message-Id: <20190509181314.625961037@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.0 76/95] USB: serial: f81232: fix interrupt worker not stop
+Date:   Thu,  9 May 2019 20:42:33 +0200
+Message-Id: <20190509181314.681328937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -59,33 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
 
-commit 8d791929b2fbdf7734c1596d808e55cb457f4562 upstream.
+commit 804dbee1e49774918339c1e5a87400988c0819e8 upstream.
 
-The max possible value for DCTL.LPM_NYET_THRES is 15 and not 255. Change
-the default value to 15.
+The F81232 will use interrupt worker to handle MSR change.
+This patch will fix the issue that interrupt work should stop
+in close() and suspend().
 
-Cc: stable@vger.kernel.org
-Fixes: 80caf7d21adc ("usb: dwc3: add lpm erratum support")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+This also fixes line-status events being disabled after a suspend cycle
+until the port is re-opened.
+
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+[ johan: amend commit message ]
+Fixes: 87fe5adcd8de ("USB: f81232: implement read IIR/MSR with endpoint")
+Cc: stable <stable@vger.kernel.org>	# 4.1
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/f81232.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1218,7 +1218,7 @@ static void dwc3_get_properties(struct d
- 	u8			tx_max_burst_prd;
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -556,9 +556,12 @@ static int f81232_open(struct tty_struct
  
- 	/* default to highest possible threshold */
--	lpm_nyet_threshold = 0xff;
-+	lpm_nyet_threshold = 0xf;
+ static void f81232_close(struct usb_serial_port *port)
+ {
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->interrupt_work);
+ }
  
- 	/* default to -3.5dB de-emphasis */
- 	tx_de_emphasis = 1;
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -632,6 +635,40 @@ static int f81232_port_remove(struct usb
+ 	return 0;
+ }
+ 
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct usb_serial_port *port = serial->port[0];
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
++		usb_kill_urb(port->read_urbs[i]);
++
++	usb_kill_urb(port->interrupt_in_urb);
++
++	if (port_priv)
++		flush_work(&port_priv->interrupt_work);
++
++	return 0;
++}
++
++static int f81232_resume(struct usb_serial *serial)
++{
++	struct usb_serial_port *port = serial->port[0];
++	int result;
++
++	if (tty_port_initialized(&port->port)) {
++		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
++		if (result) {
++			dev_err(&port->dev, "submit interrupt urb failed: %d\n",
++					result);
++			return result;
++		}
++	}
++
++	return usb_serial_generic_resume(serial);
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -655,6 +692,8 @@ static struct usb_serial_driver f81232_d
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
 
 
