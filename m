@@ -2,53 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78AAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5FFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8308B20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F137920656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428527;
-	bh=0zZtPe/QZmm1wOMxxCB1OieNmsIUQ3UbVlb0wPX58Fw=;
+	s=default; t=1557428531;
+	bh=uA4kEIfZo9TbnlF7NqgBQomYfFPlnVNdd7ai6kUB0o0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j2l5JAXOngR4pyMknJ+x3aIa1zyJyRSTXfhU2SBi94eIhfnw81WNL5A3pWdZrpCdG
-	 C4VEMCot05GdQ+ZX3ewRU9vH3L3lxJ1y6YjYmGsyNlSC7HfAKH6AmsFKyTXwLm4JHd
-	 EqxAHHdKrDctTW2psqJJdLxIY+4ZMu1i2i4Y+YcI=
+	b=N+vpe2pgzgjJTfKu7JQg0/FSVSeJakP87fr+Y7okLb8jKFhcfn60peSxJ2ReMfr94
+	 9NA/EYlLLTCIeIdKEjZB7xuKXBMhEgWsHfIY4BFSXXL4EJYnZ1biZgRrkacd3I+hnP
+	 8KzAEUbySQmqECrGdkBouEz1/hSwwEv2Vue4amvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfEITCG (ORCPT
+        id S1728416AbfEISu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbfEISu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:50:27 -0400
+        id S1727693AbfEISuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:50:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EB312177E;
-        Thu,  9 May 2019 18:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC45020578;
+        Thu,  9 May 2019 18:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427826;
-        bh=0zZtPe/QZmm1wOMxxCB1OieNmsIUQ3UbVlb0wPX58Fw=;
+        s=default; t=1557427821;
+        bh=uA4kEIfZo9TbnlF7NqgBQomYfFPlnVNdd7ai6kUB0o0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aO1v7cDneCplmkhOI93BcaexmUVhj/0tXCcHZe8Pw5QSXO+KwxLRpHSOWzzvIhWgh
-         Btw/+X/gZLoh4CU8CZL5UgivKdP8x0dbjYSLsLltjhsd+ui0N50R4fpLzQEQTyWIbH
-         4f+e9Ronjm/x89QJdKHRYFSyV67h4wqhqgMBboQQ=
+        b=McwEYcXwWpta9OKjE7nfoigd+OqiKUMN99qPs05J7ubxNt6TQwwVgX3+bgsRKFl4z
+         BMX7W3sWNVfx+VqGtjwIxcUADHM6sGz8nnsxi4CxTA1LviI8Po7imwqYcQ4gPiFXRk
+         PBcx4Zm52lY37v5zRBaYPp+hOnYq8gusuugK5A/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, JaeChul Lee <jcsing.lee@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        stable@vger.kernel.org, John Hsu <KCHSU0@nuvoton.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 19/95] ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate
-Date:   Thu,  9 May 2019 20:41:36 +0200
-Message-Id: <20190509181310.684874052@linuxfoundation.org>
+Subject: [PATCH 5.0 17/95] ASoC: nau8824: fix the issue of the widget with prefix name
+Date:   Thu,  9 May 2019 20:41:34 +0200
+Message-Id: <20190509181310.549089444@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -61,45 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b13bee3884926cba22061efa75bd315e871de24 ]
+[ Upstream commit 844a4a362dbec166b44d6b9b3dd45b08cb273703 ]
 
-After commit fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate
-handling") the audio root clock frequency is configured improperly for
-44100 sample rate. Due to clock rate rounding it's 20070401 Hz instead
-of 22579000 Hz. This results in a too low value of the PSR clock divider
-in the CPU DAI driver and too fast actual sample rate for fs=44100. E.g.
-1 kHz tone has actual 1780 Hz frequency (1 kHz * 20070401/22579000 * 2).
+The driver has two issues when machine add prefix name for codec.
+(1)The stream name of DAI can't find the AIF widgets.
+(2)The drivr can enable/disalbe the MICBIAS and SAR widgets.
 
-Fix this by increasing the correction passed to clk_set_rate() to take
-into account inaccuracy of the EPLL frequency properly.
+The patch will fix these issues caused by prefixed name added.
 
-Fixes: fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate handling")
-Reported-by: JaeChul Lee <jcsing.lee@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/odroid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/nau8824.c | 46 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index e7b371b072304..45c6d73967852 100644
---- a/sound/soc/samsung/odroid.c
-+++ b/sound/soc/samsung/odroid.c
-@@ -64,11 +64,11 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
+diff --git a/sound/soc/codecs/nau8824.c b/sound/soc/codecs/nau8824.c
+index 468d5143e2c4f..663a208c2f784 100644
+--- a/sound/soc/codecs/nau8824.c
++++ b/sound/soc/codecs/nau8824.c
+@@ -681,8 +681,8 @@ static const struct snd_soc_dapm_widget nau8824_dapm_widgets[] = {
+ 	SND_SOC_DAPM_ADC("ADCR", NULL, NAU8824_REG_ANALOG_ADC_2,
+ 		NAU8824_ADCR_EN_SFT, 0),
  
- 	/*
--	 *  We add 1 to the rclk_freq value in order to avoid too low clock
-+	 *  We add 2 to the rclk_freq value in order to avoid too low clock
- 	 *  frequency values due to the EPLL output frequency not being exact
- 	 *  multiple of the audio sampling rate.
- 	 */
--	rclk_freq = params_rate(params) * rfs + 1;
-+	rclk_freq = params_rate(params) * rfs + 2;
+-	SND_SOC_DAPM_AIF_OUT("AIFTX", "HiFi Capture", 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("AIFRX", "HiFi Playback", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("AIFTX", "Capture", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("AIFRX", "Playback", 0, SND_SOC_NOPM, 0, 0),
  
- 	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
- 	if (ret < 0)
+ 	SND_SOC_DAPM_DAC("DACL", NULL, NAU8824_REG_RDAC,
+ 		NAU8824_DACL_EN_SFT, 0),
+@@ -831,6 +831,36 @@ static void nau8824_int_status_clear_all(struct regmap *regmap)
+ 	}
+ }
+ 
++static void nau8824_dapm_disable_pin(struct nau8824 *nau8824, const char *pin)
++{
++	struct snd_soc_dapm_context *dapm = nau8824->dapm;
++	const char *prefix = dapm->component->name_prefix;
++	char prefixed_pin[80];
++
++	if (prefix) {
++		snprintf(prefixed_pin, sizeof(prefixed_pin), "%s %s",
++			 prefix, pin);
++		snd_soc_dapm_disable_pin(dapm, prefixed_pin);
++	} else {
++		snd_soc_dapm_disable_pin(dapm, pin);
++	}
++}
++
++static void nau8824_dapm_enable_pin(struct nau8824 *nau8824, const char *pin)
++{
++	struct snd_soc_dapm_context *dapm = nau8824->dapm;
++	const char *prefix = dapm->component->name_prefix;
++	char prefixed_pin[80];
++
++	if (prefix) {
++		snprintf(prefixed_pin, sizeof(prefixed_pin), "%s %s",
++			 prefix, pin);
++		snd_soc_dapm_force_enable_pin(dapm, prefixed_pin);
++	} else {
++		snd_soc_dapm_force_enable_pin(dapm, pin);
++	}
++}
++
+ static void nau8824_eject_jack(struct nau8824 *nau8824)
+ {
+ 	struct snd_soc_dapm_context *dapm = nau8824->dapm;
+@@ -839,8 +869,8 @@ static void nau8824_eject_jack(struct nau8824 *nau8824)
+ 	/* Clear all interruption status */
+ 	nau8824_int_status_clear_all(regmap);
+ 
+-	snd_soc_dapm_disable_pin(dapm, "SAR");
+-	snd_soc_dapm_disable_pin(dapm, "MICBIAS");
++	nau8824_dapm_disable_pin(nau8824, "SAR");
++	nau8824_dapm_disable_pin(nau8824, "MICBIAS");
+ 	snd_soc_dapm_sync(dapm);
+ 
+ 	/* Enable the insertion interruption, disable the ejection
+@@ -870,8 +900,8 @@ static void nau8824_jdet_work(struct work_struct *work)
+ 	struct regmap *regmap = nau8824->regmap;
+ 	int adc_value, event = 0, event_mask = 0;
+ 
+-	snd_soc_dapm_force_enable_pin(dapm, "MICBIAS");
+-	snd_soc_dapm_force_enable_pin(dapm, "SAR");
++	nau8824_dapm_enable_pin(nau8824, "MICBIAS");
++	nau8824_dapm_enable_pin(nau8824, "SAR");
+ 	snd_soc_dapm_sync(dapm);
+ 
+ 	msleep(100);
+@@ -882,8 +912,8 @@ static void nau8824_jdet_work(struct work_struct *work)
+ 	if (adc_value < HEADSET_SARADC_THD) {
+ 		event |= SND_JACK_HEADPHONE;
+ 
+-		snd_soc_dapm_disable_pin(dapm, "SAR");
+-		snd_soc_dapm_disable_pin(dapm, "MICBIAS");
++		nau8824_dapm_disable_pin(nau8824, "SAR");
++		nau8824_dapm_disable_pin(nau8824, "MICBIAS");
+ 		snd_soc_dapm_sync(dapm);
+ 	} else {
+ 		event |= SND_JACK_HEADSET;
 -- 
 2.20.1
 
