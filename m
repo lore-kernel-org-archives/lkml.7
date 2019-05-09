@@ -2,270 +2,119 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A9CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1C9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318052173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18FF2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557432798;
+	bh=byOMmiFN+aDwBQkrF39uP9d8FcL5pyF77kwCPIZI+es=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zHqhAek6KsIvbx3EF1Iz9hQjjb5V0DYb2VpVbWAFWdcjaPRjAVULqAcZxajLgCYHB
+	 K7hLe5t1zqE+ZgwdUunjE1jsHZO5AHCaW8qhsG1DXpaCxC9yiCFaGtjKYXveY3NlmK
+	 cjbX4VBZL8e/oAS1qTuxJpOOyCE5Cts73SA9NYnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfEIUK7 (ORCPT
+        id S1727031AbfEIUNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 16:10:59 -0400
-Received: from mout1.fh-giessen.de ([212.201.18.42]:58512 "EHLO
-        mout1.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfEIUK7 (ORCPT
+        Thu, 9 May 2019 16:13:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38343 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEIUNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 16:10:59 -0400
-X-Greylist: delayed 1143 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 May 2019 16:10:57 EDT
-Received: from mx1.fh-giessen.de ([212.201.18.40])
-        by mout1.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hOp57-00086y-Lh; Thu, 09 May 2019 21:51:53 +0200
-Received: from mailgate-2.its.fh-giessen.de ([212.201.18.14])
-        by mx1.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hOp57-009hEs-GK; Thu, 09 May 2019 21:51:53 +0200
-Received: from p2e56130f.dip0.t-ipconnect.de ([46.86.19.15] helo=zwei.fritz.box)
-        by mailgate-2.its.fh-giessen.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hOp57-000F2O-5i; Thu, 09 May 2019 21:51:53 +0200
-From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org
-Cc:     Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Subject: [PATCH] drivers/media/dvb-frontends: Implement probe/remove for stv6110x
-Date:   Thu,  9 May 2019 21:51:18 +0200
-Message-Id: <20190509195118.23027-1-tobias.johannes.klausmann@mni.thm.de>
-X-Mailer: git-send-email 2.21.0
+        Thu, 9 May 2019 16:13:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 14so3137796ljj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 13:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3t0fHs/RWeFMshDhWS3M27ZDaMDmGQWEIuZaolYSKOY=;
+        b=KFMGxiwHsz+TJTucdhyCO545Xe7K448QMKBYqhw+gBzzcF+dUnwn7vjWCPE/LF/LOP
+         svKCJdzFU2X6nCXM8+xdHzEq+BncHOVnf1vpgRP3FR8lmREAimZ8dgpon5g/OAlbpykH
+         6C5uNTsWZcnwMQbb+IgOUIsgOHr2PH1aQ6dB8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3t0fHs/RWeFMshDhWS3M27ZDaMDmGQWEIuZaolYSKOY=;
+        b=eHmBi26IYRtspHd8svuzGcHlYlmhKVWX7P+CyGYk7V7FUAckCjv5QpmxlAeLVLa4pH
+         M24v2lhJyfUBglvWzBS0p4rJLSV2fVTnPGlMF98ubBJHOuqpcM5dmWg28QLUI9PBrk1W
+         e4FDTWMdbS0aleuEDqqXxFpWeHTw35iFEYHyZjQ53fuO2ynqdt2mugphtMp0vaY2ShNS
+         WWOOdb9zHhq8EHMJjl5FDAZYtTe7ut1y890acQmNxrsv4U6gjIpgmC339YXCAGvNoKuN
+         JCBLFZX2tbB1/JFMbH//uIGLAKRvVNxFbWRZ8C8OT4Y5KYJlqm9KbuECUMv9TdbfVmwB
+         dSeA==
+X-Gm-Message-State: APjAAAU8iWRZtZE5GXRdjtcE09isdxPg+SlIxTXKM8peaYkzKRmZTLlg
+        UxoLLdlNYUYl9a3CMbQlbf2prCgTMzs=
+X-Google-Smtp-Source: APXvYqxpTZjiX5ZH0Pl5UU2s72iy11GBv1BC6F5cbnjjsTyD2c/QguasiCybE7d8A87jb3yoX8r9MQ==
+X-Received: by 2002:a2e:9c89:: with SMTP id x9mr3453302lji.28.1557432794526;
+        Thu, 09 May 2019 13:13:14 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id v11sm606814lfb.68.2019.05.09.13.13.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 13:13:12 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id d15so3134820ljc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 13:13:12 -0700 (PDT)
+X-Received: by 2002:a2e:9044:: with SMTP id n4mr3436211ljg.94.1557432791964;
+ Thu, 09 May 2019 13:13:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190509154902.34ea14f8@gandalf.local.home>
+In-Reply-To: <20190509154902.34ea14f8@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 May 2019 13:12:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgZGWpXdscUHyuoRqkJ8XD5Wh2Q-320KGFBhGoBJGzAWQ@mail.gmail.com>
+Message-ID: <CAHk-=wgZGWpXdscUHyuoRqkJ8XD5Wh2Q-320KGFBhGoBJGzAWQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] ftrace/x86: Remove mcount support
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor out the common parts of stv6110x_probe() and stv6110x_attach() into
-separate functions.
+On Thu, May 9, 2019 at 12:49 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> diff --git a/arch/x86/include/asm/livepatch.h b/arch/x86/include/asm/livepatch.h
+> index ed80003ce3e2..2f2bdf0662f8 100644
+> --- a/arch/x86/include/asm/livepatch.h
+> +++ b/arch/x86/include/asm/livepatch.h
+> @@ -26,9 +26,6 @@
+>
+>  static inline int klp_check_compiler_support(void)
+>  {
+> -#ifndef CC_USING_FENTRY
+> -       return 1;
+> -#endif
+>         return 0;
+>  }
 
-This provides the needed functionality to use dvb_module_probe() instead of
-dvb_attach()!
+Please remove this entirely.
 
-Signed-off-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
----
- drivers/media/dvb-frontends/stv6110x.c      | 125 ++++++++++++++++----
- drivers/media/dvb-frontends/stv6110x.h      |   3 +
- drivers/media/dvb-frontends/stv6110x_priv.h |   3 +-
- 3 files changed, 109 insertions(+), 22 deletions(-)
+There are now three copies of klp_check_compiler_support(), and all
+three are now trivial "return 0" functions.
 
-diff --git a/drivers/media/dvb-frontends/stv6110x.c b/drivers/media/dvb-frontends/stv6110x.c
-index 82c002d3833a..17bc7adf3771 100644
---- a/drivers/media/dvb-frontends/stv6110x.c
-+++ b/drivers/media/dvb-frontends/stv6110x.c
-@@ -345,6 +345,33 @@ static void stv6110x_release(struct dvb_frontend *fe)
- 	kfree(stv6110x);
- }
- 
-+void st6110x_init_regs(struct stv6110x_state *stv6110x)
-+{
-+	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
-+
-+	memcpy(stv6110x->regs, default_regs, 8);
-+}
-+
-+void stv6110x_setup_divider(struct stv6110x_state *stv6110x)
-+{
-+	switch (stv6110x->config->clk_div) {
-+	default:
-+	case 1:
-+		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
-+		break;
-+	case 2:
-+		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
-+		break;
-+	case 4:
-+		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
-+		break;
-+	case 8:
-+	case 0:
-+		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
-+		break;
-+	}
-+}
-+
- static const struct dvb_tuner_ops stv6110x_ops = {
- 	.info = {
- 		.name		  = "STV6110(A) Silicon Tuner",
-@@ -354,7 +381,7 @@ static const struct dvb_tuner_ops stv6110x_ops = {
- 	.release		= stv6110x_release
- };
- 
--static const struct stv6110x_devctl stv6110x_ctl = {
-+static struct stv6110x_devctl stv6110x_ctl = {
- 	.tuner_init		= stv6110x_init,
- 	.tuner_sleep		= stv6110x_sleep,
- 	.tuner_set_mode		= stv6110x_set_mode,
-@@ -368,39 +395,77 @@ static const struct stv6110x_devctl stv6110x_ctl = {
- 	.tuner_get_status	= stv6110x_get_status,
- };
- 
-+void stv6110x_set_frontend_opts(struct stv6110x_state *stv6110x)
-+{
-+	stv6110x->frontend->tuner_priv		= stv6110x;
-+	stv6110x->frontend->ops.tuner_ops	= stv6110x_ops;
-+}
-+
-+static struct stv6110x_devctl *stv6110x_get_devctl(struct i2c_client *client)
-+{
-+	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
-+
-+	dev_dbg(&client->dev, "\n");
-+
-+	return stv6110x->devctl;
-+}
-+
-+static int stv6110x_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct stv6110x_config *config = client->dev.platform_data;
-+
-+	struct stv6110x_state *stv6110x;
-+
-+	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
-+	if (!stv6110x)
-+		return -ENOMEM;
-+
-+	stv6110x->frontend	= config->frontend;
-+	stv6110x->i2c		= client->adapter;
-+	stv6110x->config	= config;
-+	stv6110x->devctl	= &stv6110x_ctl;
-+
-+	st6110x_init_regs(stv6110x);
-+	stv6110x_setup_divider(stv6110x);
-+	stv6110x_set_frontend_opts(stv6110x);
-+
-+	printk(KERN_INFO "%s: Probed STV6110x\n", __func__);
-+
-+	i2c_set_clientdata(client, stv6110x);
-+
-+	/* setup callbacks */
-+	config->get_devctl = stv6110x_get_devctl;
-+
-+	return 0;
-+}
-+
-+static int stv6110x_remove(struct i2c_client *client)
-+{
-+	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
-+
-+	stv6110x_release(stv6110x->frontend);
-+	return 0;
-+}
-+
- const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
- 					const struct stv6110x_config *config,
- 					struct i2c_adapter *i2c)
- {
- 	struct stv6110x_state *stv6110x;
--	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
- 
--	stv6110x = kzalloc(sizeof (struct stv6110x_state), GFP_KERNEL);
-+	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
- 	if (!stv6110x)
- 		return NULL;
- 
-+	stv6110x->frontend	= fe;
- 	stv6110x->i2c		= i2c;
- 	stv6110x->config	= config;
- 	stv6110x->devctl	= &stv6110x_ctl;
--	memcpy(stv6110x->regs, default_regs, 8);
- 
--	/* setup divider */
--	switch (stv6110x->config->clk_div) {
--	default:
--	case 1:
--		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
--		break;
--	case 2:
--		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
--		break;
--	case 4:
--		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
--		break;
--	case 8:
--	case 0:
--		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
--		break;
--	}
-+	st6110x_init_regs(stv6110x);
-+	stv6110x_setup_divider(stv6110x);
-+	stv6110x_set_frontend_opts(stv6110x);
- 
- 	fe->tuner_priv		= stv6110x;
- 	fe->ops.tuner_ops	= stv6110x_ops;
-@@ -410,6 +475,24 @@ const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
- }
- EXPORT_SYMBOL(stv6110x_attach);
- 
-+static const struct i2c_device_id stv6110x_id_table[] = {
-+	{"stv6110x", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, stv6110x_id_table);
-+
-+static struct i2c_driver stv6110x_driver = {
-+	.driver = {
-+		.name	= "stv6110x",
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe		= stv6110x_probe,
-+	.remove		= stv6110x_remove,
-+	.id_table	= stv6110x_id_table,
-+};
-+
-+module_i2c_driver(stv6110x_driver);
-+
- MODULE_AUTHOR("Manu Abraham");
- MODULE_DESCRIPTION("STV6110x Silicon tuner");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/media/dvb-frontends/stv6110x.h b/drivers/media/dvb-frontends/stv6110x.h
-index 696b6e5b9e7b..7714adea5242 100644
---- a/drivers/media/dvb-frontends/stv6110x.h
-+++ b/drivers/media/dvb-frontends/stv6110x.h
-@@ -27,6 +27,9 @@ struct stv6110x_config {
- 	u8	addr;
- 	u32	refclk;
- 	u8	clk_div; /* divisor value for the output clock */
-+	struct dvb_frontend		*frontend;
-+
-+	struct stv6110x_devctl* (*get_devctl)(struct i2c_client *);
- };
- 
- enum tuner_mode {
-diff --git a/drivers/media/dvb-frontends/stv6110x_priv.h b/drivers/media/dvb-frontends/stv6110x_priv.h
-index 109dfaf4ba42..383549d25268 100644
---- a/drivers/media/dvb-frontends/stv6110x_priv.h
-+++ b/drivers/media/dvb-frontends/stv6110x_priv.h
-@@ -66,11 +66,12 @@
- #define REFCLOCK_MHz				(stv6110x->config->refclk / 1000000)
- 
- struct stv6110x_state {
-+	struct dvb_frontend		*frontend;
- 	struct i2c_adapter		*i2c;
- 	const struct stv6110x_config	*config;
- 	u8				regs[8];
- 
--	const struct stv6110x_devctl	*devctl;
-+	struct stv6110x_devctl	*devctl;
- };
- 
- #endif /* __STV6110x_PRIV_H */
--- 
-2.21.0
+Remove the whole thing, and remove the single use in kernel/livepatch/core.c.
 
+The only reason for this function existing was literally "mcount isn't
+good enough", so with mcount removed, the function should be removed
+too.
+
+                     Linus
