@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880DEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957C8C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D20E2184C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0A7217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427724;
-	bh=fuPoLE3V2yAUWFUBWayRnbpH4gfWO4t8LudXIxPk+J4=;
+	s=default; t=1557427730;
+	bh=AYeoGN273AXyjiMv89OcvbcdISNL0ikD9NfcKVEP0pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fb/52dkYaGKLknFFzOhr0M79NM5a7xfFdqPBJODt3wjccyto9TcU7nxXXDlHcD2BV
-	 rzRDj8euPfL18QFk2ygOYVa2eh153CJAskvirRKcc0KJAwA51gCl5ggqg9wWS28DD0
-	 x3Cpq21xKKWtha76mv6PM5/IZan09fulNptWAnho=
+	b=h+aoFMn3X1hQMYZ1Rf4dBbuzy62vSOMFMNjjh6AiQar0Ky8JgpFez+qzI+Rcnkaqk
+	 m9un8ROzzYTh/eY4W8xoKzbEETvk7auPZ/sjeYkdgEDKdWdeOQS0SlKJAJ9NTer5oO
+	 OJSfUnqAUkXoe4nDhu8quaZFpGhRsqHBGkeTv63M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfEISsn (ORCPT
+        id S1728099AbfEISst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbfEISsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:39 -0400
+        id S1726906AbfEISsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94B1020578;
-        Thu,  9 May 2019 18:48:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D3AF2183E;
+        Thu,  9 May 2019 18:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427719;
-        bh=fuPoLE3V2yAUWFUBWayRnbpH4gfWO4t8LudXIxPk+J4=;
+        s=default; t=1557427721;
+        bh=AYeoGN273AXyjiMv89OcvbcdISNL0ikD9NfcKVEP0pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YQLZR4vIPrTzxoeppc/gZIjhgm/La+cntd/McIKEiWhyv1TDbjWIorX/cw1TPPpso
-         izztYO8rn06HZQOkyhmdTWTOqN1Ibydqa4Ug3o1Zrt26MeWdOy/qClK5lQbiN5Jziv
-         v8jakqivYVY13rPihREOwZE3UdrmkUubfLx1qphU=
+        b=h0T19ikhrg3IBow/8936KD1zvqinR9emRhULnJxjrbpoFO72oWL9jv81ufFj9lCi/
+         7zv4SP+nHJv6pHiOHtvnPSi56+6CZ/JD8qXyx2COrGnAIciYX0iGqSSOalVpctscn5
+         /M1SmXnQdN2hJ5YlF6DAbWA1MOsZG701Ek9mUEbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/66] drm/mediatek: fix possible object reference leak
-Date:   Thu,  9 May 2019 20:42:18 +0200
-Message-Id: <20190509181306.423253638@linuxfoundation.org>
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 12/66] ASoC:intel:skl:fix a simultaneous playback & capture issue on hda platform
+Date:   Thu,  9 May 2019 20:41:47 +0200
+Message-Id: <20190509181303.215614019@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -66,44 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2ae2c3316fb77dcf64275d011596b60104c45426 ]
+[ Upstream commit c899df3e9b0bf7b76e642aed1a214582ea7012d5 ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+If playback and capture are enabled concurrently, when the capture stops
+the output becomes inaudile. The playback application will become stuck
+and underrun after a timeout.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/mediatek/mtk_hdmi.c:1521:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
-drivers/gpu/drm/mediatek/mtk_hdmi.c:1524:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1509, but without a corresponding object release within this function.
+This is caused by mistaken use of the stream_id, which should only be
+set for playback and not for capture
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Tested on Apollolake and Kabylake with SST driver.
+
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/intel/skylake/skl-pcm.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index c7a77d6f612b2..62444a3a5742a 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1508,6 +1508,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	of_node_put(remote);
+diff --git a/sound/soc/intel/skylake/skl-pcm.c b/sound/soc/intel/skylake/skl-pcm.c
+index 823e39103edd3..6b2c8c6e7a00f 100644
+--- a/sound/soc/intel/skylake/skl-pcm.c
++++ b/sound/soc/intel/skylake/skl-pcm.c
+@@ -180,6 +180,7 @@ int skl_pcm_link_dma_prepare(struct device *dev, struct skl_pipe_params *params)
+ 	struct hdac_stream *hstream;
+ 	struct hdac_ext_stream *stream;
+ 	struct hdac_ext_link *link;
++	unsigned char stream_tag;
  
- 	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
-+	of_node_put(i2c_np);
- 	if (!hdmi->ddc_adpt) {
- 		dev_err(dev, "Failed to get ddc i2c adapter by node\n");
+ 	hstream = snd_hdac_get_stream(bus, params->stream,
+ 					params->link_dma_id + 1);
+@@ -198,10 +199,13 @@ int skl_pcm_link_dma_prepare(struct device *dev, struct skl_pipe_params *params)
+ 
+ 	snd_hdac_ext_link_stream_setup(stream, format_val);
+ 
+-	list_for_each_entry(link, &bus->hlink_list, list) {
+-		if (link->index == params->link_index)
+-			snd_hdac_ext_link_set_stream_id(link,
+-					hstream->stream_tag);
++	stream_tag = hstream->stream_tag;
++	if (stream->hstream.direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		list_for_each_entry(link, &bus->hlink_list, list) {
++			if (link->index == params->link_index)
++				snd_hdac_ext_link_set_stream_id(link,
++								stream_tag);
++		}
+ 	}
+ 
+ 	stream->link_prepared = 1;
+@@ -640,6 +644,7 @@ static int skl_link_hw_free(struct snd_pcm_substream *substream,
+ 	struct hdac_ext_stream *link_dev =
+ 				snd_soc_dai_get_dma_data(dai, substream);
+ 	struct hdac_ext_link *link;
++	unsigned char stream_tag;
+ 
+ 	dev_dbg(dai->dev, "%s: %s\n", __func__, dai->name);
+ 
+@@ -649,7 +654,11 @@ static int skl_link_hw_free(struct snd_pcm_substream *substream,
+ 	if (!link)
  		return -EINVAL;
+ 
+-	snd_hdac_ext_link_clear_stream_id(link, hdac_stream(link_dev)->stream_tag);
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		stream_tag = hdac_stream(link_dev)->stream_tag;
++		snd_hdac_ext_link_clear_stream_id(link, stream_tag);
++	}
++
+ 	snd_hdac_ext_stream_release(link_dev, HDAC_EXT_STREAM_TYPE_LINK);
+ 	return 0;
+ }
 -- 
 2.20.1
 
