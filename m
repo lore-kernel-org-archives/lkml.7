@@ -2,147 +2,98 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC400C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38278C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3AE217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="WAECiaM4"
+	by mail.kernel.org (Postfix) with ESMTP id 15189205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfEIRDN (ORCPT
+        id S1726859AbfEIRDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:03:13 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:17257 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfEIRDN (ORCPT
+        Thu, 9 May 2019 13:03:35 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:52906 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfEIRDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:03:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1557421390;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=H3lnJ9dE3RVSGljpof8FDqvjGlBz4jQwVwWyCSSvC34=;
-        b=WAECiaM4cB7lJHQ3PB4vKaWRnAtMOSXJz3LFMRLqLog29C9H44JOgQn9HyLRFY3VyV
-        hSEJPCCyZoqtEGjj99hJwKPuiymrj3MgAmR7Z+UGmevIpYnX2Bw9VAR16H5VpDovrrID
-        uCOqeLDh6yBLHX21z6hAiuCGKyHfTiTno7NWQHtRFEIXHiNCxZQfOyJZ+FVKFr/+y6Y/
-        laxPWETgirMjqNFXm0GojR9ijcxXGiKUCWTq/sYgZo95FKOlcggU5v4+vEhTXbjdvkrZ
-        3I6iazqB/wb1t+GYlRNxmhzbZOs+VD2kc0wTgxSlqUTX4kHRO0cen5WBz5tgvMuomszh
-        RuQA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCym3tRTG2PRBNSU9ZENVnYhackh9D8ptgIbhm9v"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:263c:7500:a9fa:6d0c:a26d:f576]
-        by smtp.strato.de (RZmta 44.18 AUTH)
-        with ESMTPSA id j04dc1v49H2lNQX
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 9 May 2019 19:02:47 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [RFC v2] iio: input-bridge: optionally bridge iio acceleometers to create a /dev/input interface
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CA9A9410-C393-49B9-81FA-D9BC55F04468@goldelico.com>
-Date:   Thu, 9 May 2019 19:02:49 +0200
-Cc:     linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Eric Piel <eric.piel@tremplin-utc.net>,
-        linux-iio <linux-iio@vger.kernel.org>, kernel@pyra-handheld.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D4F87479-4FF7-4DBC-81D5-1BA836D2C889@goldelico.com>
-References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com> <20190407133037.0ad98897@archlinux> <CD44AFA0-6676-4842-9C80-61BB363DD556@goldelico.com> <20190414124029.1f1f6084@archlinux> <CD6219BE-61FF-4C38-9532-054C60A77F89@goldelico.com> <20190422152014.7c6637ab@archlinux> <CA9A9410-C393-49B9-81FA-D9BC55F04468@goldelico.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 9 May 2019 13:03:34 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x49H3Lc0001574;
+        Fri, 10 May 2019 02:03:21 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
+ Fri, 10 May 2019 02:03:21 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
+Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x49H3H8I001567
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 10 May 2019 02:03:21 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH] arm64: dts: rockchip: add PCIe nodes on rk3399-rockpro64
+Date:   Fri, 10 May 2019 02:03:14 +0900
+Message-Id: <20190509170314.12806-1-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds PCIe, PCIe phy and pinctrl (for PERST#) nodes for
+RockPro64 board.
 
-> Am 09.05.2019 um 11:09 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Jonathan,
->>=20
->>=20
->> And how does that work on the common case of a sensor in the lid of a =
-laptop?
->> how do you know what angle the screen is at? =20
->=20
-> Well, I am not aware of laptops where the sensor is in the lid because =
-I am in the handhelds
-> business, but let's assume it is common.
->=20
-> I realized that if the sensor orientation is related to the lid =
-position, while the reference
-> frame reported to user space is to be referenced to the lap or =
-keyboard of the laptop, there does
-> not exist a static mount-matrix to describe it properly. So no driver =
-can report that correctly.
->=20
-> Therefore, such a device needs a dynamic mount matrix, i.e. there =
-should be a kernel driver that
-> reads out the lid angle sensor and modifies the mount-matrix of the =
-accelerometer by some sin()/cos()
-> table.
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+---
+ .../boot/dts/rockchip/rk3399-rockpro64.dts     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-One more thought on this topic.
-
-My answer to the question "how do you know what angle the screen is at?" =
-by requiring an ADC to
-measure some potentiometer in the hinge to make the mount matrix dynamic =
-is probably completely
-wrong...
-
-If we take the definition for the mount matrix, it defines a specific =
-g-vector pointing to
-center of earth if the user is holding the device in a specific position =
-and looking on the display
-or the keyboard.
-
-So far the description assumes that there is a single accelerometer and =
-display and keys of a phone
-are in a single plane, i.e. there is no angle and everything is fine.
-
-Now if we simply take the two accelerometers separately, one z-axis is =
-going through the keyboard
-and the other through the display. Which means if the mount matrices are =
-well defined, the accelerometers
-should report almost the same values if the display is fully opened by =
-180 degrees, i.e. the display
-is sitting flat on the table. This is what my RFC does by autoscaling. =
-The values differ only
-by noise.
-
-Now what about measuring the lid angle? Well, it is already measured by =
-both accelerometers! If they
-do not agree, the angle can be calculated by some arctan() based on y =
-and z axis reports...
-
-If you close the lid, the display is turned upside down and y and z axes =
-reverse sign.
-
-So there remains only the issue that user-space must know which sensor =
-device file is which sensor
-and can do the calculation of the lid angle. This is possible because =
-the iio accelerometer name
-is available through the input event ioctls.
-
-In summary this case also does not need policy or configuration. Just =
-user space using the information
-that is already presented.
-
-BR,
-Nikolaus
-
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 20ec7d1c25d7..56d7eeedf07c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -513,6 +513,20 @@
+ 	gpio1830-supply = <&vcc_3v0>;
+ };
+ 
++&pcie0 {
++	ep-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_perst>;
++	vpcie12v-supply = <&vcc12v_dcin>;
++	vpcie3v3-supply = <&vcc3v3_pcie>;
++	num-lanes = <4>;
++	status = "okay";
++};
++
++&pcie_phy {
++	status = "okay";
++};
++
+ &pmu_io_domains {
+ 	pmu1830-supply = <&vcc_3v0>;
+ 	status = "okay";
+@@ -545,6 +559,10 @@
+ 		pcie_pwr_en: pcie-pwr-en {
+ 			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
++
++		pcie_perst: pcie-perst {
++			rockchip,pins = <2 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ 
+ 	pmic {
+-- 
+2.20.1
 
