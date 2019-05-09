@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626AEC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70504C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E09F21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C8721479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557411322;
-	bh=JUIHOpOWl8G/bzkBQeOThiXiw1eqS3UO5cr6p0ZvWOA=;
+	s=default; t=1557411332;
+	bh=kOMFfhOntyVJQRqygwwFSzAUSb53J3ApVLXaHoKlP1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JdTy1RBgpLG3ZXkZ/sWja1oA4GUseqy41C1rsv8KrL9CwNVBdZiI/uNaQq8FSeUCJ
-	 sFPceCMUbibaw6T9yI4ROp/3YYu5T7pS6n1hv996Zoy9aArXKrYEUpH1Y9rmgdw48Y
-	 YEhlv93qhLSShq2Vwlt7hml5VAdOEjLTj/AykNJc=
+	b=qWRuL1E/NDy6DP8ycmvh7Ar0qKmAfJ7UwMuXG8l0pV3ngdVT+sK+wvFjI8gUfAwaM
+	 Azrss+vL6LiMcE48sYUUH5/QHqK5OIW279TMvW79bBmx/yndwlrcOj3y8U0Ye/Nk5T
+	 iTg4hgR64jdv9XUKMPh2XC/MZwyKAjab4CGlI/0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfEIOPV (ORCPT
+        id S1727061AbfEIOPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 10:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfEIOPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:13 -0400
+        id S1727028AbfEIOPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:15:20 -0400
 Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F082D21479;
-        Thu,  9 May 2019 14:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F5A2173B;
+        Thu,  9 May 2019 14:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411313;
-        bh=JUIHOpOWl8G/bzkBQeOThiXiw1eqS3UO5cr6p0ZvWOA=;
+        s=default; t=1557411319;
+        bh=kOMFfhOntyVJQRqygwwFSzAUSb53J3ApVLXaHoKlP1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAK2mXWhGbuXKAzGUcsm0Cz7EXtcRGQ7bPsZOHrkInSXztIU+eb8JT5WRdL8/uhN7
-         9MEL0mVRPvBnPT+ILschTnOaBZXEdUEGJHEt2Qtw4DkcXL9cv3zpqZOoTEOnVIsxXL
-         +HzrSwWF7+f3OSohZiwUO1oCJcFII6lTyyp3d86g=
+        b=Z/hw1FETQY3kE1/sq0bcFWIIPjdF1pv8MCNcgOKokZ0f5I8w0y+qwJZE/K5ddEwWU
+         ysXeVybHTiqX7kN0IC7u9dKfD3Fyv09RGUAzxHZl3YbP1lOV4l+dnKD1KqNd9nQKCA
+         aeqfuvOwfxiELF+Ow0wqmIjlvvUFU1CIKIoaH2l8=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -48,9 +48,9 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sven Van Asbroeck <thesven73@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 05/10] PCI: pciehp: Remove pciehp_debug uses
-Date:   Thu,  9 May 2019 09:14:51 -0500
-Message-Id: <20190509141456.223614-6-helgaas@kernel.org>
+Subject: [PATCH 09/10] PCI: pciehp: Remove pointless PCIE_MODULE_NAME definition
+Date:   Thu,  9 May 2019 09:14:55 -0500
+Message-Id: <20190509141456.223614-10-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
 References: <20190509141456.223614-1-helgaas@kernel.org>
@@ -63,50 +63,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-We're about to convert pciehp to the dyndbg mechanism, which means we can
-eventually remove pciehp_debug.
-
-Replace uses of pciehp_debug with dbg() and ctrl_dbg(), which check
-pciehp_debug internally.
+PCIE_MODULE_NAME is only used once and offers no benefit, so remove it.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/pci/hotplug/pciehp_core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 6a2365cd794e..e121f1c06c21 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -232,8 +232,8 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
- 		delay -= step;
- 	} while (delay > 0);
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 1643e9aa261c..6ad0d86762cb 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -42,8 +42,6 @@ module_param(pciehp_poll_time, int, 0644);
+ MODULE_PARM_DESC(pciehp_poll_mode, "Using polling mechanism for hot-plug events or not");
+ MODULE_PARM_DESC(pciehp_poll_time, "Polling mechanism frequency, in seconds");
  
--	if (count > 1 && pciehp_debug)
--		printk(KERN_DEBUG "pci %04x:%02x:%02x.%d id reading try %d times with interval %d ms to get %08x\n",
-+	if (count > 1)
-+		dbg("pci %04x:%02x:%02x.%d id reading try %d times with interval %d ms to get %08x\n",
- 			pci_domain_nr(bus), bus->number, PCI_SLOT(devfn),
- 			PCI_FUNC(devfn), count, step, l);
- 
-@@ -822,14 +822,11 @@ static inline void dbg_ctrl(struct controller *ctrl)
- 	struct pci_dev *pdev = ctrl->pcie->port;
- 	u16 reg16;
- 
--	if (!pciehp_debug)
--		return;
+-#define PCIE_MODULE_NAME "pciehp"
 -
--	ctrl_info(ctrl, "Slot Capabilities      : 0x%08x\n", ctrl->slot_cap);
-+	ctrl_dbg(ctrl, "Slot Capabilities      : 0x%08x\n", ctrl->slot_cap);
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &reg16);
--	ctrl_info(ctrl, "Slot Status            : 0x%04x\n", reg16);
-+	ctrl_dbg(ctrl, "Slot Status            : 0x%04x\n", reg16);
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &reg16);
--	ctrl_info(ctrl, "Slot Control           : 0x%04x\n", reg16);
-+	ctrl_dbg(ctrl, "Slot Control           : 0x%04x\n", reg16);
- }
+ static int set_attention_status(struct hotplug_slot *slot, u8 value);
+ static int get_power_status(struct hotplug_slot *slot, u8 *value);
+ static int get_latch_status(struct hotplug_slot *slot, u8 *value);
+@@ -307,7 +305,7 @@ static int pciehp_runtime_resume(struct pcie_device *dev)
+ #endif /* PM */
  
- #define FLAG(x, y)	(((x) & (y)) ? '+' : '-')
+ static struct pcie_port_service_driver hpdriver_portdrv = {
+-	.name		= PCIE_MODULE_NAME,
++	.name		= "pciehp",
+ 	.port_type	= PCIE_ANY_PORT,
+ 	.service	= PCIE_PORT_SERVICE_HP,
+ 
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
