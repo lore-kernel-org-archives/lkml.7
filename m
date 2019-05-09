@@ -2,101 +2,160 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819CBC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44CFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C08217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A990E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:31:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rp8AADpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfEIS3G (ORCPT
+        id S1726788AbfEISbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfEIS3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:29:06 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94DE217D9;
-        Thu,  9 May 2019 18:29:03 +0000 (UTC)
-Date:   Thu, 9 May 2019 14:29:02 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Laight <David.Laight@aculab.com>,
+        Thu, 9 May 2019 14:31:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37713 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfEISbN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:31:13 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p15so1551182pll.4;
+        Thu, 09 May 2019 11:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HY7QqQ+KmdhIvYZmzOKSEVw2UJ4Gq2EwakuHOnYtbiI=;
+        b=rp8AADpk9oUNmzlxS94cQgGnte7s1XsOiRwhDqHH32hGZmFGi2OLkjbePvK8GPiHq+
+         BfwhNCq12fW/kq0FDboIEAqr/maLhZpggH0//y/Tf13p1upuBt/IE0118CkVbx+faNni
+         vZE1dQhBowAtSzC5TR23SrlN6w5/LFS/3jhvsVIgBk6hF/67xoF/yoRo7ujED+aatkjU
+         P48b+WAnLwDysNXjnE6eablfJfr7HgKZoOLq/hugWiJg08FPJik++V5O6jdsGQOHQg7A
+         6fnkFVeOx3VeZLVK8yW2d24ogh2GUK1yDwxo1j+xjPGmX5bwFiaYKk+Lr/xQI8/X81b/
+         bszw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HY7QqQ+KmdhIvYZmzOKSEVw2UJ4Gq2EwakuHOnYtbiI=;
+        b=iARETYFVC4Xg9SRqS2InWdszZhGG/g/f6/ZdzEY3lpgply2ct1F5HdYNvH2XSbEzZW
+         Lc/FF42zUauTkU2AdryZ7elcGetgbm/RQlqZch7WVbamGlCbHWKNJgs6vm8ZfJqfQJoi
+         idRtPfzpP39/gjFaSckMgIwqpUMWHLalPkldUErqsGYKAA58o2bfmrjvseqNIKyaLY/u
+         WE0BWWSoN14IiYDJ86JgVSJFC3uoYnMnY2EmvHDoQocdjHtOq1XeTjfOxz0jum0S0tM/
+         uOVsQvwtiozIbGzVnQLcn1+b2mlut64vA6MQgQ5V/IjcRq/RoU82arsJmRrjhS8VieS1
+         bZ6g==
+X-Gm-Message-State: APjAAAXgw0WRi/Kknacp23zzoBZAi8yn9WOmVLN+VP77ERpBYnZpwsOP
+        oUMFml0UyO85A3arvWk/+/c=
+X-Google-Smtp-Source: APXvYqzY1MtJHt2pGMbNqOiIin0+nvanfBc2iIiVPVtsZnIR1xr6UKQ03jMZVcyD22S9ZOpXEDOmnQ==
+X-Received: by 2002:a17:902:9343:: with SMTP id g3mr7176534plp.260.1557426672527;
+        Thu, 09 May 2019 11:31:12 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id v6sm3635090pgk.77.2019.05.09.11.31.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 11:31:11 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-mips@linux-mips.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-Message-ID: <20190509142902.08a32f20@gandalf.local.home>
-In-Reply-To: <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
-References: <20190318153840.906404905@infradead.org>
-        <20190318155140.058627431@infradead.org>
-        <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
-        <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
-        <20190509090058.6554dc81@gandalf.local.home>
-        <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+        linux-mips@vger.kernel.org (open list:MIPS)
+Subject: [PATCH fixes v2] MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000 enabled
+Date:   Thu,  9 May 2019 11:30:47 -0700
+Message-Id: <20190509183047.18408-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 09:51:59 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+arch/mips/kernel/perf_event_mipsxx.c: In function 'mipsxx_pmu_enable_event':
+arch/mips/kernel/perf_event_mipsxx.c:326:21: error: unused variable 'event' [-Werror=unused-variable]
+  struct perf_event *event = container_of(evt, struct perf_event, hw);
+                     ^~~~~
 
-> On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > This patch works. Can I get your Signed-off-by for it?  
-> 
-> Yes. Please write some kind of comprehensible commit log for it, but
+Fix this by making use of IS_ENABLED() to simplify the code and avoid
+unnecessary ifdefery.
 
-How's this:
+Fixes: 84002c88599d ("MIPS: perf: Fix perf with MT counting other threads")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/mips/kernel/perf_event_mipsxx.c | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-"Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
-macro converts the conditional to an array index.  This can cause GCC
-to create horrible code.  When there are nested ifs, the generated code
-uses register values to encode branching decisions.
+diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
+index 413863508f6f..d67fb64e908c 100644
+--- a/arch/mips/kernel/perf_event_mipsxx.c
++++ b/arch/mips/kernel/perf_event_mipsxx.c
+@@ -64,17 +64,11 @@ struct mips_perf_event {
+ 	#define CNTR_EVEN	0x55555555
+ 	#define CNTR_ODD	0xaaaaaaaa
+ 	#define CNTR_ALL	0xffffffff
+-#ifdef CONFIG_MIPS_MT_SMP
+ 	enum {
+ 		T  = 0,
+ 		V  = 1,
+ 		P  = 2,
+ 	} range;
+-#else
+-	#define T
+-	#define V
+-	#define P
+-#endif
+ };
+ 
+ static struct mips_perf_event raw_event;
+@@ -325,9 +319,7 @@ static void mipsxx_pmu_enable_event(struct hw_perf_event *evt, int idx)
+ {
+ 	struct perf_event *event = container_of(evt, struct perf_event, hw);
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-#ifdef CONFIG_MIPS_MT_SMP
+ 	unsigned int range = evt->event_base >> 24;
+-#endif /* CONFIG_MIPS_MT_SMP */
+ 
+ 	WARN_ON(idx < 0 || idx >= mipspmu.num_counters);
+ 
+@@ -336,21 +328,15 @@ static void mipsxx_pmu_enable_event(struct hw_perf_event *evt, int idx)
+ 		/* Make sure interrupt enabled. */
+ 		MIPS_PERFCTRL_IE;
+ 
+-#ifdef CONFIG_CPU_BMIPS5000
+-	{
++	if (IS_ENABLED(CONFIG_CPU_BMIPS5000)) {
+ 		/* enable the counter for the calling thread */
+ 		cpuc->saved_ctrl[idx] |=
+ 			(1 << (12 + vpe_id())) | BRCM_PERFCTRL_TC;
+-	}
+-#else
+-#ifdef CONFIG_MIPS_MT_SMP
+-	if (range > V) {
++	} else if (IS_ENABLED(CONFIG_MIPS_MT_SMP) && range > V) {
+ 		/* The counter is processor wide. Set it up to count all TCs. */
+ 		pr_debug("Enabling perf counter for all TCs\n");
+ 		cpuc->saved_ctrl[idx] |= M_TC_EN_ALL;
+-	} else
+-#endif /* CONFIG_MIPS_MT_SMP */
+-	{
++	} else {
+ 		unsigned int cpu, ctrl;
+ 
+ 		/*
+@@ -365,7 +351,6 @@ static void mipsxx_pmu_enable_event(struct hw_perf_event *evt, int idx)
+ 		cpuc->saved_ctrl[idx] |= ctrl;
+ 		pr_debug("Enabling perf counter for CPU%d\n", cpu);
+ 	}
+-#endif /* CONFIG_CPU_BMIPS5000 */
+ 	/*
+ 	 * We do not actually let the counter run. Leave it until start().
+ 	 */
+-- 
+2.17.1
 
-Josh Poimboeuf found that replacing the define "if" macro from using
-the condition as an array index and incrementing the branch statics
-with an if statement itself, reduced the asm complexity and shrinks the
-generated code quite a bit.
-
-But this can be simplified even further by replacing the internal if
-statement with a ternary operator.
-
-Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
-"
-
-> 
->    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-
-Thanks,
-
--- Steve
-
-> 
-> for the patch itself.
-> 
