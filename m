@@ -2,53 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB22BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07B2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1DD220578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1942177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428107;
-	bh=lioSarW61e1fg5cWblIDvNnD9WgAyJjR+Tnu0ISsUdQ=;
+	s=default; t=1557428111;
+	bh=zQzmm6dj+EOCZ8ur2FIbwdpP9bU2WnuSLDZZiJSOEa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gz1JFDRj07XYqT7ngX4MgeJki/xqVz5xpUkUte/OW72elTpj0KxOGtJxEvUSa5diU
-	 pQyK7efOQzhfGM8YANh2/54GuZ111T2vX0FKvMxzNpqRl9cepDrhDT1YYwq45plOE8
-	 UQqoH7w3kcbmYWIKrcEuyvcZZnm6z11kV4ZmI2YU=
+	b=vLEO8a9E5F85thPqNQQuSdSsTPIhoAgM+jfs9B+CHZsIlvVHZUpQ7xb3PPxRuvvDp
+	 QgO1TgC764TfXU2O83DSQTQ28Wqmp7WcSElgpOFAYaS2nTdKSgAF4JOqaOVGAR1SSx
+	 gIYyUaokkhffTRcvVgAo4clmgmlMHm5LUkqkLJII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfEISzG (ORCPT
+        id S1729187AbfEISzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbfEISzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:03 -0400
+        id S1729169AbfEISzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CB2204FD;
-        Thu,  9 May 2019 18:55:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF05C204FD;
+        Thu,  9 May 2019 18:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428102;
-        bh=lioSarW61e1fg5cWblIDvNnD9WgAyJjR+Tnu0ISsUdQ=;
+        s=default; t=1557428105;
+        bh=zQzmm6dj+EOCZ8ur2FIbwdpP9bU2WnuSLDZZiJSOEa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUbtSXLidaizvTbVrfpzeG9cnGJ4DDW8zxixUJ70iLBqfm++b21wUG4L2F61qf/Vq
-         8CaWitEUbXm2Vnt3zP0vjP2JrMpKCvGz3QHO2xoy0T66+PHtLLLZZFYNaNpDUlARFs
-         UljAA+mciweOuQ7pMqYtILO2P/+RC14p15wFg/v0=
+        b=AqKbz9PV0477e/BWPISKe/5FosCirUG3L1P1sSe67jL4qaohkdSMnZ9xdDLJjYtVx
+         WFIMjgXzBrS7mwMU92gnNxPSXpkpYiivJTmgJHEhetsdv2m7048KYPkkJdcysOMYS3
+         RhiR9SCTI9R5i9I/dXL+nS52mBQSzAdEPWbObYN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Adham Abozaeid <adham.abozaeid@microchip.com>
-Subject: [PATCH 5.1 04/30] staging: wilc1000: Avoid GFP_KERNEL allocation from atomic context.
-Date:   Thu,  9 May 2019 20:42:36 +0200
-Message-Id: <20190509181251.512793363@linuxfoundation.org>
+        stable@vger.kernel.org, Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Christian Gromm <christian.gromm@microchip.com>
+Subject: [PATCH 5.1 05/30] staging: most: cdev: fix chrdev_region leak in mod_exit
+Date:   Thu,  9 May 2019 20:42:37 +0200
+Message-Id: <20190509181251.856587212@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -61,34 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Suresh Udipi <sudipi@jp.adit-jv.com>
 
-commit ae26aa844679cdf660e12c7055f958cb90889eb6 upstream.
+commit af708900e9a48c0aa46070c8a8cdf0608a1d2025 upstream.
 
-Since wilc_set_multicast_list() is called with dev->addr_list_lock
-spinlock held, we can't use GFP_KERNEL memory allocation.
+It looks like v4.18-rc1 commit [0] which upstreams mld-1.8.0
+commit [1] missed to fix the memory leak in mod_exit function.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Fixes: e624c58cf8eb ("staging: wilc1000: refactor code to avoid use of wilc_set_multicast_list global")
-Cc: Ajay Singh <ajay.kathat@microchip.com>
-Reviewed-by: Adham Abozaeid <adham.abozaeid@microchip.com>
+Do it now.
+
+[0] aba258b7310167 ("staging: most: cdev: fix chrdev_region leak")
+[1] https://github.com/microchip-ais/linux/commit/a2d8f7ae7ea381
+    ("staging: most: cdev: fix leak for chrdev_region")
+
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Christian Gromm <christian.gromm@microchip.com>
+Fixes: aba258b73101 ("staging: most: cdev: fix chrdev_region leak")
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wilc1000/wilc_netdev.c |    2 +-
+ drivers/staging/most/cdev/cdev.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/wilc1000/wilc_netdev.c
-+++ b/drivers/staging/wilc1000/wilc_netdev.c
-@@ -708,7 +708,7 @@ static void wilc_set_multicast_list(stru
- 		return;
+--- a/drivers/staging/most/cdev/cdev.c
++++ b/drivers/staging/most/cdev/cdev.c
+@@ -549,7 +549,7 @@ static void __exit mod_exit(void)
+ 		destroy_cdev(c);
+ 		destroy_channel(c);
  	}
- 
--	mc_list = kmalloc_array(dev->mc.count, ETH_ALEN, GFP_KERNEL);
-+	mc_list = kmalloc_array(dev->mc.count, ETH_ALEN, GFP_ATOMIC);
- 	if (!mc_list)
- 		return;
- 
+-	unregister_chrdev_region(comp.devno, 1);
++	unregister_chrdev_region(comp.devno, CHRDEV_REGION_SIZE);
+ 	ida_destroy(&comp.minor_id);
+ 	class_destroy(comp.class);
+ }
 
 
