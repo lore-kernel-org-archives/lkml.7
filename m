@@ -2,381 +2,142 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C8C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12122C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84632177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C482177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IQk1IHtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfEIVDn (ORCPT
+        id S1727067AbfEIVDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:03:43 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:38751 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfEIVDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:03:43 -0400
-X-Originating-IP: 90.66.53.80
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8F98B40003;
-        Thu,  9 May 2019 21:03:40 +0000 (UTC)
-Date:   Thu, 9 May 2019 23:03:40 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 5.2
-Message-ID: <20190509210340.GA23061@piout.net>
+        Thu, 9 May 2019 17:03:48 -0400
+Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:24030
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725992AbfEIVDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 17:03:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NyaKgjSLIxq87DuT4W1BRtr+IwJjojMeS3MC8Fk8naY=;
+ b=IQk1IHtBtNfPwSU3qmkoF3zKJ71YrGhk67Lc8Inla1HFwQC61kzAJUBotLZuY5oyRXQb/NfdlQ5nWeTvFx8xhdf/tNnXYZFu1GoF5bg4hEbHFvHdUu1QgSqShhqwMAgUscr957wjrVJfbMxeGRbNMVqC9sadq2bdbObVIOKyvUs=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3066.namprd12.prod.outlook.com (20.178.30.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 9 May 2019 21:03:05 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::d119:23e5:be33:4ac6]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::d119:23e5:be33:4ac6%2]) with mapi id 15.20.1856.012; Thu, 9 May 2019
+ 21:03:05 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "Graf, Alexander" <graf@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+Subject: Re: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host APIC
+ ID 255
+Thread-Topic: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host
+ APIC ID 255
+Thread-Index: AQHVAbVYshI13bVJeUaA1Du2DOEuS6Zfu3aAgANdToCAADj+AA==
+Date:   Thu, 9 May 2019 21:03:05 +0000
+Message-ID: <c8950de7-bed3-06e0-9d4f-3d1ab1cad9a2@amd.com>
+References: <1556890631-9561-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <49a27e83-a83e-5d2d-9b11-bb09c15776d2@amazon.com>
+ <da74be11-1278-3b0f-db19-459f2f50e2ad@amd.com>
+In-Reply-To: <da74be11-1278-3b0f-db19-459f2f50e2ad@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
+x-originating-ip: [165.204.77.11]
+x-clientproxiedby: SN4PR0201CA0024.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::34) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24ff02cf-4afc-4362-9f1b-08d6d4c1bae9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3066;
+x-ms-traffictypediagnostic: DM6PR12MB3066:
+x-microsoft-antispam-prvs: <DM6PR12MB3066955B5C3C1CBFD39BBA3BF3330@DM6PR12MB3066.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(346002)(376002)(396003)(189003)(199004)(386003)(102836004)(53546011)(8936002)(6506007)(65806001)(11346002)(99286004)(5660300002)(52116002)(25786009)(476003)(486006)(65956001)(66066001)(478600001)(2616005)(446003)(66946007)(305945005)(31696002)(66476007)(71190400001)(66556008)(71200400001)(2906002)(26005)(36756003)(7736002)(86362001)(73956011)(2201001)(64756008)(186003)(66446008)(53936002)(72206003)(64126003)(31686004)(229853002)(81156014)(4326008)(76176011)(8676002)(81166006)(58126008)(110136005)(54906003)(14444005)(256004)(6436002)(68736007)(316002)(14454004)(6486002)(6512007)(65826007)(6116002)(3846002)(2501003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3066;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FGlppJOxw90diaz1eqmVLFaqlSevweaMYfFwrBvwhz1ZhMkGSxvNk6aAHrvNaFK5AE1I5dar9wctwEpeAPfdMAkD1NQVcN4sCIjhsX5/DJXkcxuEq8jMD3Yq18LxO/Uoao96DO5NGn5TZYPttmy4axltCR/9kvQC3n55FXoZseR2VS+PJMw859oKTz6k3rWA9FVU2ggAYhBm9wx7sIftpQ6f2Z2SwaxVUdxd5VJRPlbBNGc/Oo8qxVEZzSwrJYTYnZLmhLQIPAXliNXlL0/iu6fjFONPcxDKwxBMhmVAvJPGxspf6mDpDublshMM3vG+/W0k+u3VDX3IXoJB2o2aXz21i5IaHPMoJUER0mPiloXI7FsMlZy3Uu9B4ikjrtltWcficXGN71HCYFJ6bskEtdbZevwDGnrmBUvspXrZmIM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <49CD341922D76F49BD257EA771F9E849@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24ff02cf-4afc-4362-9f1b-08d6d4c1bae9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 21:03:05.1004
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
-
-A huge series from me this cycle. I went through many drivers to set the
-date and time range supported by the RTC which helps solving HW
-limitation when the time comes (as early as next year for some). This
-time, I focused on drivers using .set_mms and .set_mmss64, allowing me
-to remove those callbacks. About a third of the patches got reviews, I
-actually own the RTCs and I tested another third and the remaining one
-are unlikely to cause any issues.
-
-Other than that, a single new driver and the usual fixes here and there.
-
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.2
-
-for you to fetch changes up to dacb6a4035a010e41abaf81c1cfe2beadfb05ec8:
-
-  rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP (2019-05-08 22:14:36 +0200)
-
-----------------------------------------------------------------
-RTC for 5.2
-
-Subsystem:
- - set_mmss and set_mmss64 rtc_ops removal
- - Fix timestamp value for RTC_TIMESTAMP_BEGIN_1900
- - Use SPDX identifier for the core
- - validate upper bound of tm->tm_year
-
-New driver:
- - Aspeed BMC SoC RTC
-
-Drivers:
- - abx80x: use rtc_add_group
- - ds3232: nvram support
- - pcf85063: add alarm, nvram, offset correction and microcrystal rv8263 support
- - x1205: add of_match_table
- - Use set_time instead of set_mms/set_mmss64 for: ab3100, coh901331, digicolor,
-   ds1672, ds2404, ep93xx, imxdi, jz4740, lpc32xx, mc13xxx, mxc, pcap, stmp3xxx,
-   test, wm831x, xgene.
- - Set RTC range for: ab3100, at91sam9, coh901331, da9063, digicolor, dm355evm,
-   ds1672, ds2404, ep39xx, goldfish, imxdi, jz4740, lpc32xx, mc13xxx, mv, mxc,
-   omap, pcap, pcf85063, pcf85363, ps3, sh, stmp3xxx, sun4v, tegra, wm831x,
-   xgene.
- - Switch to rtc_time64_to_tm/rtc_tm_to_time64 for the driver that properly set
-   the RTC range.
- - Use dev_get_drvdata instead of multiple indirections.
-
-----------------------------------------------------------------
-Alexandre Belloni (150):
-      rtc: abx80x: convert to SPDX identifier
-      rtc: abx80x: use rtc_add_group
-      rtc: abx80x: remove useless .remove
-      rtc: zynqmp: convert to SPDX identifier
-      rtc: ab-b5ze-s3: remove mutex
-      rtc: ab-b5ze-s3: remove unnecessary gotos
-      rtc: ab-b5ze-s3: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: ab-b5ze-s3: convert to SPDX identifier
-      rtc: ab-b5ze-s3: remove unnecessary check
-      rtc: convert core to SPDX identifier
-      rtc: mv: convert to SPDX identifier
-      rtc: mv: convert to devm_rtc_allocate_device
-      rtc: mv: add range
-      rtc: omap: let the core handle range
-      rtc: core: correct trivial checkpatch warnings
-      rtc: ab-b5ze-s3: correct checkpatch issues
-      rtc: 88pm80x: convert to SPDX identifier
-      rtc: test: do not use assignment in if condition
-      rtc: xgene: fix possible race condition
-      rtc: xgene: set range
-      rtc: xgene: convert to SPDX identifier
-      rtc: xgene: correct checkpatch issues
-      rtc: xgene: stop caching alarm_time
-      rtc: xgene: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: xgene: use .set_time
-      rtc: goldfish: convert to devm_rtc_allocate_device
-      rtc: goldfish: add range
-      rtc: goldfish: sort headers
-      rtc: goldfish: allow building on more than MIPS
-      rtc: goldfish: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: goldfish: convert to SPDX identifier
-      rtc: dm355evm: convert to devm_rtc_allocate_device
-      rtc: dm355evm: set range
-      rtc: dm355evm: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: dm355evm: convert to SPDX identifier
-      rtc: sh: stop resetting time to epoch
-      rtc: sh: fix possible race condition
-      rtc: sh: set range
-      rtc: at91sam9: drop platform_data support
-      rtc: at91sam9: convert to devm_rtc_allocate_device
-      rtc: at91sam9: set range
-      rtc: at91sam9: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: at91sam9: convert to SPDX identifier
-      rtc: at91sam9: correct trivial checkpatch warnings
-      rtc: ps3: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: ps3: convert to SPDX identifier
-      rtc: ps3: convert to devm_rtc_allocate_device
-      rtc: ps3: set range
-      rtc: omap: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: omap: convert to SPDX identifier
-      rtc: sun4v: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: sun4v: set range
-      rtc: sun4v: switch to SPDX identifier
-      rtc: da9063: set range
-      rtc: da9063: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: wm831x: set range
-      rtc: wm831x: remove unnecessary goto
-      rtc: wm831x: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: wm831x: convert to SPDX identifier
-      rtc: brcmstb-waketimer: switch to rtc_time64_to_tm
-      rtc: pcf85063: switch to probe_new
-      rtc: pcf85063: convert to SPDX identifier
-      rtc: pcf85063: remove bogus i2c functionality check
-      rtc: pcf85063: convert to devm_rtc_allocate_device
-      rtc: pcf85063: set range
-      rtc: pcf85063: switch to regmap
-      rtc: pcf85063: differentiate pcf85063a and pcf85063tp
-      rtc: pcf85063: add alarm support
-      rtc: pcf85063: add Micro Crystal RV8263 support
-      rtc: pcf85063: add nvram support
-      rtc: pcf85063: add offset correction support
-      rtc: pcf85063: add RTC_VL_READ/RTC_VL_CLR support
-      rtc: remove unnecessary Kconfig dependencies
-      rtc: test: use .set_time
-      rtc: ds1672: set range
-      rtc: ds1672: move oscillator handling to .read_time
-      rtc: ds1672: remove sysfs debug interface
-      rtc: ds1672: remove useless indirection
-      rtc: ds1672: use rtc_time64_to_tm
-      rtc: ds1672: use .set_time
-      rtc: ds1672: convert to SPDX identifier
-      rtc: ds1672: switch debug message to %ptR
-      rtc: coh901331: set range
-      rtc: coh901331: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: coh901331: use .set_time
-      rtc: coh901331: convert to SPDX identifier
-      rtc: tegra: set range
-      rtc: tegra: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: tegra: convert to SPDX identifier
-      rtc: stmp3xxx: set range
-      rtc: stmp3xxx: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: stmp3xxx: use .set_time
-      rtc: stmp3xxx: convert to SPDX identifier
-      rtc: pcf85363: remove unused struct pcf85363 member
-      rtc: pcf85363: set range
-      rtc: pcf85363: remove bogus i2c functionality check
-      rtc: pcf85363: remove useless forward declaration
-      rtc: pcf85363: convert to SPDX identifier
-      rtc: ab3100: set range
-      rtc: ab3100: use .set_time
-      rtc: ab3100: convert to SPDX identifier
-      rtc: lpc32xx: convert to devm_rtc_allocate_device
-      rtc: lpc32xx: set range
-      rtc: lpc32xx: simplify IRQ setup
-      rtc: lpc32xx: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: lpc32xx: use .set_time
-      rtc: lpc32xx: convert to SPDX identifier
-      rtc: mc13xxx: set range
-      rtc: mc13xxx: use .set_time
-      rtc: mc13xxx: convert to SPDX identifier
-      rtc: mc13xxx: fix style issue
-      rtc: ep93xx: stop setting platform_data
-      rtc: ep93xx: convert to devm_rtc_allocate_device
-      rtc: ep93xx: use rtc_add_group
-      rtc: ep93xx: set range
-      rtc: ep93xx: switch to rtc_time64_to_tm
-      rtc: ep93xx: use .set_time
-      rtc: ep93xx: convert to SPDX identifier
-      rtc: ep93xx: fix checkpatch issues
-      rtc: ds2404: set range
-      rtc: ds2404: switch to rtc_time64_to_tm
-      rtc: ds2404: use .set_time
-      rtc: ds2404: convert to SPDX identifier
-      rtc: ds2404: remove ds2404_chip_ops
-      rtc: ds2404: simplify .probe and remove .remove
-      rtc: wm831x: use .set_time
-      rtc: mxc: fix possible race condition
-      rtc: mxc: set range
-      rtc: mxc: use .set_time
-      rtc: imxdi: set range
-      rtc: imxdi: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: imxdi: use .set_time
-      rtc: imxdi: remove unnecessary check
-      rtc: imxdi: convert to SPDX identifier
-      rtc: jz4740: set range
-      rtc: jz4740: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: jz4740: remove useless check
-      rtc: jz4740: use .set_time
-      rtc: jz4740: use dev_pm_set_wake_irq() to simplify code
-      rtc: jz4740: rework invalid time detection
-      rtc: jz4740: convert to SPDX identifier
-      rtc: digicolor: fix possible race condition
-      rtc: digicolor: set range
-      rtc: digicolor: use .set_time
-      rtc: digicolor: convert to SPDX identifier
-      rtc: pcap: set range
-      rtc: pcap: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: pcap: use .set_time
-      rtc: pcap: convert to SPDX identifier
-      rtc: drop set_mms and set_mmss64
-
-Anders Roxell (1):
-      rtc: imxdi: remove unused variable
-
-Andy Shevchenko (1):
-      rtc: rx8025: Fix a parameter to %ptR in rx8025_read_alarm()
-
-Anson Huang (6):
-      rtc: snvs: use dev_pm_set_wake_irq() to simplify code
-      rtc: mxc: use devm_platform_ioremap_resource() to simplify code
-      rtc: snvs: use devm_platform_ioremap_resource() to simplify code
-      rtc: mxc: use dev_pm_set_wake_irq() to simplify code
-      rtc: mxc_v2: use dev_pm_set_wake_irq() to simplify code
-      rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
-
-Daniel Gomez (1):
-      rtc: rx6110: declare missing of table
-
-Fabien Dessenne (1):
-      rtc: stm32: manage the get_irq probe defer case
-
-Geert Uytterhoeven (1):
-      rtc: Fix timestamp value for RTC_TIMESTAMP_BEGIN_1900
-
-Han Nandor (1):
-      rtc: ds3232: get SRAM access using NVMEM Framework
-
-Joel Stanley (2):
-      dt-bindings: rtc: Add on-chip ASPEED RTC documentation
-      rtc: Add ASPEED RTC driver
-
-Kefeng Wang (1):
-      rtc: Use dev_get_drvdata()
-
-Linus Walleij (2):
-      rtc: x1205: Add DT bindings
-      rtc: x1205: Add DT probing support
-
-Pi-Hsun Shih (1):
-      rtc: mt6397: Don't call irq_dispose_mapping.
-
-Sven Van Asbroeck (1):
-      rtc: 88pm860x: prevent use-after-free on device remove
-
-Thomas Bogendoerfer (3):
-      rtc: ds1685: fix crash caused by referencing wrong device struct
-      rtc: ds1685: remove dead code
-      rtc: ds1685: use threaded interrupt
-
-Wolfram Sang (2):
-      rtc: da9063: convert header to SPDX
-      rtc: don't reference bogus function pointer in kdoc
-
-Xuefeng Wang (1):
-      rtc: lib: check whether tm->tm_year in int32 range
-
-YueHaibing (2):
-      rtc: opal: Make opal_tpo_alarm_irq_enable static
-      rtc: sirfsoc: Make sysrtc_regmap_config static
-
- .../devicetree/bindings/rtc/nxp,pcf85063.txt       |   6 +-
- .../devicetree/bindings/rtc/rtc-aspeed.txt         |  22 +
- Documentation/devicetree/bindings/rtc/rtc.txt      |   1 +
- drivers/rtc/Kconfig                                |  19 +-
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/class.c                                |  21 +-
- drivers/rtc/dev.c                                  |  20 +-
- drivers/rtc/hctosys.c                              |  10 +-
- drivers/rtc/interface.c                            | 107 +++--
- drivers/rtc/lib.c                                  |  30 +-
- drivers/rtc/nvmem.c                                |   7 +-
- drivers/rtc/proc.c                                 |  21 +-
- drivers/rtc/rtc-88pm80x.c                          |  14 +-
- drivers/rtc/rtc-88pm860x.c                         |   2 +-
- drivers/rtc/rtc-ab-b5ze-s3.c                       | 189 +++------
- drivers/rtc/rtc-ab3100.c                           |  24 +-
- drivers/rtc/rtc-abx80x.c                           |  43 +-
- drivers/rtc/rtc-aspeed.c                           | 136 +++++++
- drivers/rtc/rtc-at91sam9.c                         | 108 ++---
- drivers/rtc/rtc-brcmstb-waketimer.c                |   2 +-
- drivers/rtc/rtc-coh901331.c                        |  37 +-
- drivers/rtc/rtc-da9063.c                           |  27 +-
- drivers/rtc/rtc-digicolor.c                        |  25 +-
- drivers/rtc/rtc-dm355evm.c                         |  24 +-
- drivers/rtc/rtc-ds1672.c                           | 127 ++----
- drivers/rtc/rtc-ds1685.c                           | 262 +++++-------
- drivers/rtc/rtc-ds2404.c                           |  73 +---
- drivers/rtc/rtc-ds3232.c                           |  40 +-
- drivers/rtc/rtc-ep93xx.c                           |  70 ++--
- drivers/rtc/rtc-goldfish.c                         |  50 +--
- drivers/rtc/rtc-hid-sensor-time.c                  |   3 +-
- drivers/rtc/rtc-imxdi.c                            |  50 +--
- drivers/rtc/rtc-jz4740.c                           |  95 ++---
- drivers/rtc/rtc-lpc32xx.c                          |  59 +--
- drivers/rtc/rtc-mc13xxx.c                          |  25 +-
- drivers/rtc/rtc-mt6397.c                           |   9 +-
- drivers/rtc/rtc-mv.c                               |  33 +-
- drivers/rtc/rtc-mxc.c                              |  86 ++--
- drivers/rtc/rtc-mxc_v2.c                           |  29 +-
- drivers/rtc/rtc-omap.c                             |  32 +-
- drivers/rtc/rtc-opal.c                             |   2 +-
- drivers/rtc/rtc-pcap.c                             |  28 +-
- drivers/rtc/rtc-pcf85063.c                         | 446 ++++++++++++++++-----
- drivers/rtc/rtc-pcf85363.c                         |  20 +-
- drivers/rtc/rtc-ps3.c                              |  30 +-
- drivers/rtc/rtc-pxa.c                              |   3 +-
- drivers/rtc/rtc-rk808.c                            |   6 +-
- drivers/rtc/rtc-rx6110.c                           |   9 +
- drivers/rtc/rtc-rx8025.c                           |   2 +-
- drivers/rtc/rtc-sh.c                               |  30 +-
- drivers/rtc/rtc-sirfsoc.c                          |   2 +-
- drivers/rtc/rtc-snvs.c                             |  48 +--
- drivers/rtc/rtc-stm32.c                            |   9 +-
- drivers/rtc/rtc-stmp3xxx.c                         |  34 +-
- drivers/rtc/rtc-sun4v.c                            |  21 +-
- drivers/rtc/rtc-tegra.c                            |  47 +--
- drivers/rtc/rtc-test.c                             |  11 +-
- drivers/rtc/rtc-tx4939.c                           |  17 +-
- drivers/rtc/rtc-wm831x.c                           |  69 ++--
- drivers/rtc/rtc-wm8350.c                           |  12 +-
- drivers/rtc/rtc-x1205.c                            |   7 +
- drivers/rtc/rtc-xgene.c                            |  61 ++-
- drivers/rtc/rtc-zynqmp.c                           |  13 +-
- drivers/rtc/sysfs.c                                |  23 +-
- drivers/rtc/systohc.c                              |  13 +-
- include/linux/rtc.h                                |   6 +-
- include/linux/rtc/ds1685.h                         |   2 -
- 67 files changed, 1400 insertions(+), 1510 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-aspeed.txt
- create mode 100644 drivers/rtc/rtc-aspeed.c
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+QWxleCwNCg0KQWN0dWFsbHksIGEgc2Vjb25kIHRob3VnaHQgb24gdGhpcyBwYXRjaCwgSSBzaG91
+bGQgaGF2ZSBiZWVuIHVzaW5nDQpBVklDX1BIWVNJQ0FMX0lEX0VOVFJZX0hPU1RfUEhZU0lDQUxf
+SURfTUFTSyAtLS0+DQoNCk9uIDUvOS8xOSAxMjozOSBQTSwgU3V0aGlrdWxwYW5pdCwgU3VyYXZl
+ZSB3cm90ZToNCj4gW0NBVVRJT046IEV4dGVybmFsIEVtYWlsXQ0KPiANCj4gQWxleCwNCj4gDQo+
+IE9uIDUvNy8xOSA5OjE2IEFNLCBHcmFmLCBBbGV4YW5kZXIgd3JvdGU6DQo+PiBbQ0FVVElPTjog
+RXh0ZXJuYWwgRW1haWxdDQo+Pg0KPj4gT24gMDMuMDUuMTkgMTU6MzcsIFN1dGhpa3VscGFuaXQs
+IFN1cmF2ZWUgd3JvdGU6DQo+Pj4gQ3VycmVudCBsb2dpYyBkb2VzIG5vdCBhbGxvdyBWQ1BVIHRv
+IGJlIGxvYWRlZCBvbnRvIENQVSB3aXRoDQo+Pj4gQVBJQyBJRCAyNTUuIFRoaXMgc2hvdWxkIGJl
+IGFsbG93ZWQgc2luY2UgdGhlIGhvc3QgcGh5c2ljYWwgQVBJQyBJRA0KPj4+IGZpZWxkIGluIHRo
+ZSBBVklDIFBoeXNpY2FsIEFQSUMgdGFibGUgZW50cnkgaXMgYW4gOC1iaXQgdmFsdWUsDQo+Pj4g
+YW5kIEFQSUMgSUQgMjU1IGlzIHZhbGlkIGluIHN5c3RlbSB3aXRoIHgyQVBJQyBlbmFibGVkLg0K
+Pj4+DQo+Pj4gSW5zdGVhZCwgZG8gbm90IGFsbG93IFZDUFUgbG9hZCBpZiB0aGUgaG9zdCBBUElD
+IElEIGNhbm5vdCBiZQ0KPj4+IHJlcHJlc2VudGVkIGJ5IGFuIDgtYml0IHZhbHVlLg0KPj4+DQo+
+Pj4gU2lnbmVkLW9mZi1ieTogU3VyYXZlZSBTdXRoaWt1bHBhbml0IDxzdXJhdmVlLnN1dGhpa3Vs
+cGFuaXRAYW1kLmNvbT4NCj4+DQo+PiBZb3VyIGNvbW1lbnQgZm9yIEFWSUNfTUFYX1BIWVNJQ0FM
+X0lEX0NPVU5UIHNheXMgdGhhdCAweGZmICgyNTUpIGlzDQo+PiBicm9hZGNhc3QgaGVuY2UgeW91
+IGRpc2FsbG93IHRoYXQgdmFsdWUuIEluIGZhY3QsIGV2ZW4gdGhlIGNvbW1lbnQgYSBmZXcNCj4+
+IGxpbmVzIGFib3ZlIHRoZSBwYXRjaCBodW5rIGRvZXMgc2F5IHRoYXQuIFdoeSB0aGUgY2hhbmdl
+IG9mIG1pbmQ/DQo+IA0KPiBBY3R1YWxseSwgSSB3b3VsZCBuZWVkIHRvIG1ha2UgY2hhbmdlIHRv
+IHRoYXQgY29tbWVudCB0byByZW1vdmUgdGhlIG1lbnRpb25pbmcNCj4gb2YgMjU1IGFzIGJyb2Fk
+Y2FzdC4gSSB3aWxsIHNlbmQgb3V0IFYyIHdpdGggcHJvcGVyIGNvbW1lbnQgZml4Lg0KPiANCj4g
+VGhlIHJlYXNvbiBpcyBiZWNhdXNlIG9uIHN5c3RlbSB3LyB4MkFQSUMsIHRoZSBBUElDIElEIDI1
+NSBpcyBhY3R1YWxseQ0KPiBub24tYnJvYWRjYXN0LCBhbmQgdGhpcyBzaG91bGQgYmUgYWxsb3dl
+ZC4gVGhlIGNvZGUgaGVyZSBzaG91bGQgbm90IG5lZWQNCj4gdG8gY2hlY2sgZm9yIGJyb2FkY2Fz
+dC4NCj4gDQo+IFRoYW5rcywNCj4gU3VyYXZlZQ0KPiANCj4+IEFsZXgNCj4+DQo+Pj4gLS0tDQo+
+Pj4gICAgYXJjaC94ODYva3ZtL3N2bS5jIHwgNiArKysrKy0NCj4+PiAgICAxIGZpbGUgY2hhbmdl
+ZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC94ODYva3ZtL3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQo+Pj4gaW5kZXggMjk0NDQ4
+ZS4uMTIyNzg4ZiAxMDA2NDQNCj4+PiAtLS0gYS9hcmNoL3g4Ni9rdm0vc3ZtLmMNCj4+PiArKysg
+Yi9hcmNoL3g4Ni9rdm0vc3ZtLmMNCj4+PiBAQCAtMjA3MSw3ICsyMDcxLDExIEBAIHN0YXRpYyB2
+b2lkIGF2aWNfdmNwdV9sb2FkKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgaW50IGNwdSkNCj4+PiAg
+ICAgICAgaWYgKCFrdm1fdmNwdV9hcGljdl9hY3RpdmUodmNwdSkpDQo+Pj4gICAgICAgICAgICAg
+ICAgcmV0dXJuOw0KPj4+DQo+Pj4gLSAgICAgaWYgKFdBUk5fT04oaF9waHlzaWNhbF9pZCA+PSBB
+VklDX01BWF9QSFlTSUNBTF9JRF9DT1VOVCkpDQo+Pj4gKyAgICAgLyoNCj4+PiArICAgICAgKiBT
+aW5jZSB0aGUgaG9zdCBwaHlzaWNhbCBBUElDIGlkIGlzIDggYml0cywNCj4+PiArICAgICAgKiB3
+ZSBjYW4gc3VwcG9ydCBob3N0IEFQSUMgSUQgdXB0byAyNTUuDQo+Pj4gKyAgICAgICovDQo+Pj4g
+KyAgICAgaWYgKFdBUk5fT04oaF9waHlzaWNhbF9pZCA+IEFWSUNfTUFYX1BIWVNJQ0FMX0lEX0NP
+VU5UKSkNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXiBIRVJF
+DQoNCkl0IGRvZXMgdGhlIHNhbWUgdGhpbmcsIGJ1dCB3b3VsZCBiZSBlYXNpZXIgdG8gdW5kZXJz
+dGFuZC4NCg0KVGhlIEFWSUNfTUFYX1BIWVNJQ0FMX0lEX0NPVU5UIGlzIG1lYW50IGZvciByZXBy
+ZXNlbnRpbmcgdGhlIG1heCBudW1iZXINCm9mIGVudHJ5IGFsbG93ZWQgZm9yIEFWSUMgcGh5c2lj
+YWwgQVBJQyBJRCB0YWJsZSwgd2hpY2ggaXMgYSBkaWZmZXJlbnQgdGhpbmcuDQoNCkknbGwgc2Vu
+ZCBvdXQgVjIuDQoNClN1cmF2ZWUNCj4+PiAgICAgICAgICAgICAgICByZXR1cm47DQo+Pj4NCj4+
+PiAgICAgICAgZW50cnkgPSBSRUFEX09OQ0UoKihzdm0tPmF2aWNfcGh5c2ljYWxfaWRfY2FjaGUp
+KTsNCj4+Pg0KPj4NCg==
