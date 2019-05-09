@@ -2,103 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7601DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20242C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEFF208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8FC208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:14:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eqeTUq9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfEIGM6 (ORCPT
+        id S1726882AbfEIGOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 02:12:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:43712 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfEIGM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 02:12:57 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id C038667358; Thu,  9 May 2019 08:12:37 +0200 (CEST)
-Date:   Thu, 9 May 2019 08:12:37 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mario.Limonciello@dell.com
-Cc:     hch@lst.de, kai.heng.feng@canonical.com, kbusch@kernel.org,
-        keith.busch@intel.com, axboe@fb.com, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of
- D3 on Suspend-to-Idle
-Message-ID: <20190509061237.GA15229@lst.de>
-References: <20190508185955.11406-1-kai.heng.feng@canonical.com> <20190508191624.GA8365@localhost.localdomain> <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com> <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM> <20190508195159.GA1530@lst.de> <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+        Thu, 9 May 2019 02:14:48 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33394 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfEIGOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 02:14:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s18so3410077wmh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 23:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=G2pFARh3jD41YsPZaIcRDmvVTe/jSjp+MpRky9XD4Eg=;
+        b=eqeTUq9Ocp1R9Rjg1wN0c5jKiDqvsCwbgj7KfR3B2lLAEAYpUHpIVlwl+uGAH+W7ue
+         6FSNSdzpuJZc8MmBxj5YszI/Mrzt7zgYrbiv6TPNeJeirpuDY6Hh2GT0CDMZX8k9vCrQ
+         WSEc0hvWQbRt6dAO5QJ5J3yUMCpAjrLUEzsT0hGpCvuDCiPnZneDUfivhTkQ7FojsBZc
+         ADEGBemkbUzbpZ9lW9U0WBKmM/Pgd8VxZ2MNaFDT1ACYDYbd82dHE4ZhtjEiyv8+/vTS
+         mfC84gqO2kemvx7+nWaPa4iVFl1sQgwX3nScHhGFeu3BzbzybCqIrwOYPI+0b3+WTOr/
+         RsZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=G2pFARh3jD41YsPZaIcRDmvVTe/jSjp+MpRky9XD4Eg=;
+        b=WNgxBJes3G/QtlVrlmO0DvCpb2mDlpnpqFJetV5TYXhfVFjjuyaEonb5nZwSt1D4NO
+         82zsrSAMO6lqeAJ0Kh+7J79W3L5PzxIvLGESNPUAqGfVYxblRfl8OZPUFlQRX3HPYI3N
+         g52PwtGH/yVG4sNW0E/3e/dBp8DL40oI97IScwUEah4w2gYrq5u0Ont1dbeR4FVaDXY0
+         1JTBsGCZgFZGN3RgZOS4mz/3BdY+Qvphmu2Q8++wYgM9+mq1P0Xoo4AR9LOIFLYA0Nhh
+         ceK/Ta5lVd6Eo3ps1v7Z5KB8/pPMsitVZU3Q81M7XrBIrmuBXim7WupTCsy8GvrFXco2
+         RwOg==
+X-Gm-Message-State: APjAAAXgiZ83s3pUEXAyW6yR2oYpipQ74/CJ2V+tx4X++7cBK/Jo3uLc
+        0WISvyCi9P4C7XaXl0gWC89yXA==
+X-Google-Smtp-Source: APXvYqxPIY1jQd4apWassxYYY8E0vNc4BXFm7KQORVOgWIQh/Ycw0ajJvSoEbk5ioXZ8ypDLevQcdA==
+X-Received: by 2002:a7b:c743:: with SMTP id w3mr1384464wmk.22.1557382485439;
+        Wed, 08 May 2019 23:14:45 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id t2sm1104419wma.13.2019.05.08.23.14.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 23:14:44 -0700 (PDT)
+Date:   Thu, 9 May 2019 07:14:43 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH next v2] mfd: Use dev_get_drvdata()
+Message-ID: <20190509061443.GU31645@dell>
+References: <20190508103202.GJ3995@dell>
+ <20190508135257.134747-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190508135257.134747-1-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 08:28:30PM +0000, Mario.Limonciello@dell.com wrote:
-> You might think this would be adding runtime_suspend/runtime_resume
-> callbacks, but those also get called actually at runtime which is not
-> the goal here.  At runtime, these types of disks should rely on APST which
-> should calculate the appropriate latencies around the different power states.
+On Wed, 08 May 2019, Kefeng Wang wrote:
+
+> Using dev_get_drvdata directly.
 > 
-> This code path is only applicable in the suspend to idle state, which /does/
-> call suspend/resume functions associated with dev_pm_ops.  There isn't
-> a dedicated function in there for use only in suspend to idle, which is
-> why pm_suspend_via_s2idle() needs to get called.
-
-The problem is that it also gets called for others paths:
-
-#ifdef CONFIG_PM_SLEEP
-#define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
-        .suspend = suspend_fn, \
-	.resume = resume_fn, \
-	.freeze = suspend_fn, \
-	.thaw = resume_fn, \
-	.poweroff = suspend_fn, \
-	.restore = resume_fn,
-#else
-else
-#define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
-#endif
-
-#define SIMPLE_DEV_PM_OPS(name, suspend_fn, resume_fn) \
-const struct dev_pm_ops name = { \
-	SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
-}
-
-And at least for poweroff this new code seems completely wrong, even
-for freeze it looks rather borderline.
-
-And more to the points - if these "modern MS standby" systems are
-becoming common, which it looks they are, we need support in the PM core
-for those instead of working around the decisions in low-level drivers.
-
-> SIMPLE_DEV_PM_OPS normally sets the same function for suspend and
-> freeze (hibernate), so to avoid any changes to the hibernate case it seems
-> to me that there needs to be a new nvme_freeze() that calls into the existing
-> nvme_dev_disable for the freeze pm op and nvme_thaw() that calls into the
-> existing nvme_reset_ctrl for the thaw pm op.
-
-At least, yes.
-
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> v2:
+> -use dev_get_drvdata() instead of to_ssbi()
 > 
-> > enterprise class NVMe devices
-> > that don't do APST and don't really do different power states at
-> > all in many cases.
-> 
-> Enterprise class NVMe devices that don't do APST - do they typically
-> have a non-zero value for ndev->ctrl.npss?
-> 
-> If not, they wouldn't enter this new codepath even if the server entered into S2I.
+>  drivers/mfd/ssbi.c     |  6 ++----
+>  drivers/mfd/t7l66xb.c  | 12 ++++--------
+>  drivers/mfd/tc6387xb.c | 12 ++++--------
+>  drivers/mfd/tc6393xb.c | 21 +++++++--------------
+>  4 files changed, 17 insertions(+), 34 deletions(-)
 
-No, devices that do set NPSS will have at least some power states
-per definition, although they might not be too useful.  I suspect checking
-APSTA might be safer, but if we don't want to rely on APST we should
-check for a power state supporting the condition that the MS document
-quoted in the original document supports.
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
