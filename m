@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D033C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C42EC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72B6205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638A6205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hO3AoZVI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKPUcC07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfEIRr1 (ORCPT
+        id S1726875AbfEIRra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:47:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41092 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfEIRrY (ORCPT
+        Thu, 9 May 2019 13:47:30 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:45817 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfEIRr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:47:24 -0400
-Received: by mail-qk1-f193.google.com with SMTP id g190so1987002qkf.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:47:24 -0700 (PDT)
+        Thu, 9 May 2019 13:47:28 -0400
+Received: by mail-qt1-f171.google.com with SMTP id t1so3460199qtc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dQe9Zkf+0yUTYC/ViEAV5j9gEyoYadU+fMjOcocTf+s=;
-        b=hO3AoZVIHWLRtmQsKIPN8pSDew0rD4iWCSoPcfVS9voJVbW1Be1n0S8EQjCgbPk86p
-         3yemyipPp1qt9vrFJMil9X6Pf7HR4hxyoeA9zv0XAEKL7MObkFRJ9ucjNw9/NGIxZqax
-         qAwN229FMIfkID9u9/THqJOEssHAfaS0Wbc8dWGq84lVEGZq3ouDS5RjyiV5fHViWx2s
-         6mcHBjC0KzuC6CugO2QPw8PNbdgapiznyEUF//lowvy5CK8FFn71JBOvMpntMEJIOejp
-         6UloN3wZgtDLWjZzVXb3yOKLOO1rFeKzVDAvOMU4JHWCfQgM5wTAkc6uBmVKvlPfLhKl
-         m/Bg==
+        bh=99hNsfwv1wBSWemPF3ysQllU+bttu/2/09vasul1uFo=;
+        b=gKPUcC07KUUITJXrTtyiy604O5ynb+fTQXDHCzVwaTcA3BXzEAfC2K3COyJE+rhRMC
+         V1FeF0uppaPFKf4VhTBLqeSGxQytLS1YQiahW/JsUPP7wMdlIqvVRuQtUzk8L9+9BNq9
+         aVzbHIviKeULqCCC5429hgwyTDhYm0Bd+I5fcI6w2TC+QB9tEb50Phmd3y/predNAAWk
+         VnDNTOpYyisMnjjLV/UglIj/PrJFf1F+rPjv8RJl7d7lD4E5lNlmOOZBrF1/UMZm4HlF
+         YK3GW1XboDLuzV+aBXJzJlHXU6bRHi3J0aw7wOyHKhJP2pKb6e5akucNQ70xD5WUcKZ7
+         c/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dQe9Zkf+0yUTYC/ViEAV5j9gEyoYadU+fMjOcocTf+s=;
-        b=biAtDRujUhW58KeVMeGP5TybJVM3VGZmtNzOepw4aNg2Yb7CrMJffhZOE3BY7ox3V9
-         qwnIQW0aLjLqkDFN1YLj3GI5mGd42oiqsvhPH7RXHyqvS1L55svA8KKgEvXLkdyWn0ZF
-         pbHRdpLy+08aQuP7cXufNA4kyOgFRBPDRH5rOmmc2+fhdaVjrkJzbOKsTCOQSK2fR7dy
-         e71AC5yV5iLoDEHiar6tP0CICMS3HD3II480/ypOzAXKv7QcDljD+KHTsuCFpRgSDsu5
-         EXsOUROVpEez5V/mnU+RC+XNiTMSOMaUouPEf1wOLqUjKH1eJTtwnvBULckz+Nxyf8YE
-         K/lA==
-X-Gm-Message-State: APjAAAX3lruLYda/xAkUkWEpr4TnCJq7WHtrVwe+zk6irscYLOVpSf1d
-        DSk+RXhPcPyTEcv+743Tig==
-X-Google-Smtp-Source: APXvYqyiq550gIwP2D2u9mXWJ/wOk/QImo+XJYUAbr/uFPUQycBc/vwBUN3OW1vU1eCq0zbM2dfDYg==
-X-Received: by 2002:a37:404b:: with SMTP id n72mr4610366qka.98.1557424043688;
-        Thu, 09 May 2019 10:47:23 -0700 (PDT)
+        bh=99hNsfwv1wBSWemPF3ysQllU+bttu/2/09vasul1uFo=;
+        b=oC0wM41xoAiWfgWDU/zZlKWo63DNS47Webb5141jlSnt7+M/zJdmfJm+UaI1B2Xi5e
+         Ddve6x6iUua4aGOD9tHBMVXfwqvOVx8WE0VDlE37O4xcPlESm5Ck6J6YJtdPbKqn87V7
+         hNSVsvgokQy5+Uu8bfjFjw2gXa9OEV6MT+LHSDDiY1AAtjqhBrOI8bUKLE2WPicK1sSq
+         PyPlxxTjARg7v/z1n8570h1yi29y7Yyo4A77Na4PA/NWY+xalkQM0wdQL1lEK2H+C4sR
+         7ja8BWVYUpK1zR6pryQZAV11jH26X2H8pZF4bqfbbkUKTAfEVXs+eVygNUVmCVOm4eb3
+         wbBg==
+X-Gm-Message-State: APjAAAVYGY5Ld1LPOdIKDuXUex2WQwWP6QlJYs5DZ2do6V8qJSig75AA
+        EFh1r7YC+6PdmX9jPMdWfd1HPRw=
+X-Google-Smtp-Source: APXvYqxMR4mdwnJ9Al6Wtc6PGOV8dSF9ScqjJEAqIK+8B34hxmDNuBy/3+Lb4rLnPSOmIcDlIBayPg==
+X-Received: by 2002:a0c:b99c:: with SMTP id v28mr4835816qvf.10.1557424047369;
+        Thu, 09 May 2019 10:47:27 -0700 (PDT)
 Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z11sm1262953qki.95.2019.05.09.10.47.22
+        by smtp.gmail.com with ESMTPSA id z11sm1262953qki.95.2019.05.09.10.47.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 10:47:23 -0700 (PDT)
+        Thu, 09 May 2019 10:47:26 -0700 (PDT)
 From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] ktest: introduce grub2bls REBOOT_TYPE option
-Date:   Thu,  9 May 2019 13:46:28 -0400
-Message-Id: <20190509174630.26713-4-msys.mizuma@gmail.com>
+Subject: [PATCH 5/5] ktest: update sample.conf for grub2bls
+Date:   Thu,  9 May 2019 13:46:30 -0400
+Message-Id: <20190509174630.26713-6-msys.mizuma@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190509174630.26713-1-msys.mizuma@gmail.com>
 References: <20190509174630.26713-1-msys.mizuma@gmail.com>
@@ -74,114 +74,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Fedora 30 introduces Boot Loader Specification (BLS),
-it changes around grub entry configuration.
-
-kernel entries aren't in grub.cfg. We can get the entries
-by "grubby --info=ALL" command.
-
-Introduce grub2bls as REBOOT_TYPE option for BLS.
+Update sample.conf for grub2bls.
 
 Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 ---
- tools/testing/ktest/ktest.pl | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ tools/testing/ktest/sample.conf | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 1255ea0d9df4..c910d7921f48 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -64,6 +64,7 @@ my %default = (
-     "STOP_TEST_AFTER"		=> 600,
-     "MAX_MONITOR_WAIT"		=> 1800,
-     "GRUB_REBOOT"		=> "grub2-reboot",
-+    "GRUB_BLS_GET"		=> "grubby --info=ALL",
-     "SYSLINUX"			=> "extlinux",
-     "SYSLINUX_PATH"		=> "/boot/extlinux",
-     "CONNECT_TIMEOUT"		=> 25,
-@@ -125,6 +126,7 @@ my $last_grub_menu;
- my $grub_file;
- my $grub_number;
- my $grub_reboot;
-+my $grub_bls_get;
- my $syslinux;
- my $syslinux_path;
- my $syslinux_label;
-@@ -295,6 +297,7 @@ my %option_map = (
-     "GRUB_MENU"			=> \$grub_menu,
-     "GRUB_FILE"			=> \$grub_file,
-     "GRUB_REBOOT"		=> \$grub_reboot,
-+    "GRUB_BLS_GET"		=> \$grub_bls_get,
-     "SYSLINUX"			=> \$syslinux,
-     "SYSLINUX_PATH"		=> \$syslinux_path,
-     "SYSLINUX_LABEL"		=> \$syslinux_label,
-@@ -440,7 +443,7 @@ EOF
-     ;
- $config_help{"REBOOT_TYPE"} = << "EOF"
-  Way to reboot the box to the test kernel.
-- Only valid options so far are "grub", "grub2", "syslinux", and "script".
-+ Only valid options so far are "grub", "grub2", "grub2bls", "syslinux", and "script".
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 8c893a58b68e..5ac32ab1f3bc 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -349,13 +349,13 @@
+ # option to boot to with GRUB_REBOOT
+ #GRUB_FILE = /boot/grub2/grub.cfg
  
-  If you specify grub, it will assume grub version 1
-  and will search in /boot/grub/menu.lst for the title \$GRUB_MENU
-@@ -454,6 +457,8 @@ $config_help{"REBOOT_TYPE"} = << "EOF"
-  If you specify grub2, then you also need to specify both \$GRUB_MENU
-  and \$GRUB_FILE.
+-# The tool for REBOOT_TYPE = grub2 to set the next reboot kernel
++# The tool for REBOOT_TYPE = grub2 or grub2bls to set the next reboot kernel
+ # to boot into (one shot mode).
+ # (default grub2_reboot)
+ #GRUB_REBOOT = grub2_reboot
  
-+ If you specify grub2bls, then you also need to specify \$GRUB_MENU.
-+
-  If you specify syslinux, then you may use SYSLINUX to define the syslinux
-  command (defaults to extlinux), and SYSLINUX_PATH to specify the path to
-  the syslinux install (defaults to /boot/extlinux). But you have to specify
-@@ -479,6 +484,9 @@ $config_help{"GRUB_MENU"} = << "EOF"
-  menu must be a non-nested menu. Add the quotes used in the menu
-  to guarantee your selection, as the first menuentry with the content
-  of \$GRUB_MENU that is found will be used.
-+
-+ For grub2bls, \$GRUB_MENU is searched on the result of \$GRUB_BLS_GET
-+ command for the lines that begin with "title".
- EOF
-     ;
- $config_help{"GRUB_FILE"} = << "EOF"
-@@ -695,7 +703,7 @@ sub get_mandatory_configs {
- 	}
-     }
+ # The grub title name for the test kernel to boot
+-# (Only mandatory if REBOOT_TYPE = grub or grub2)
++# (Only mandatory if REBOOT_TYPE = grub or grub2 or grub2bls)
+ #
+ # Note, ktest.pl will not update the grub menu.lst, you need to
+ # manually add an option for the test. ktest.pl will search
+@@ -374,6 +374,10 @@
+ # do a: GRUB_MENU = 'Test Kernel'
+ # For customizing, add your entry in /etc/grub.d/40_custom.
+ #
++# For grub2bls, a search of "title"s are done. The menu is found
++# by searching for the contents of GRUB_MENU in the line that starts
++# with "title".
++#
+ #GRUB_MENU = Test Kernel
  
--    if ($rtype eq "grub") {
-+    if (($rtype eq "grub") or ($rtype eq "grub2bls")) {
- 	get_mandatory_config("GRUB_MENU");
-     }
- 
-@@ -1939,7 +1947,8 @@ sub get_grub_index {
-     my $skip;
-     my $grub_menu_qt;
- 
--    return if ($reboot_type ne "grub") and ($reboot_type ne "grub2");
-+    return if ($reboot_type ne "grub") and ($reboot_type ne "grub2") and
-+	($reboot_type ne "grub2bls");
- 
-     $grub_menu_qt = quotemeta($grub_menu);
- 
-@@ -1951,6 +1960,10 @@ sub get_grub_index {
- 	$command = "cat $grub_file";
- 	$target = '^menuentry.*' . $grub_menu_qt;
- 	$skip = '^menuentry\s|^submenu\s';
-+    } elsif ($reboot_type eq "grub2bls") {
-+        $command = $grub_bls_get;
-+        $target = '^title=.*' . $grub_menu_qt;
-+        $skip = '^title=';
-     }
- 
-     _get_grub_index($command, $target, $skip);
-@@ -4306,7 +4319,7 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
- 
-     if (!$buildonly) {
- 	$target = "$ssh_user\@$machine";
--	if ($reboot_type eq "grub") {
-+	if (($reboot_type eq "grub") or ($reboot_type eq "grub2bls")) {
- 	    dodie "GRUB_MENU not defined" if (!defined($grub_menu));
- 	} elsif ($reboot_type eq "grub2") {
- 	    dodie "GRUB_MENU not defined" if (!defined($grub_menu));
+ # For REBOOT_TYPE = syslinux, the name of the syslinux executable
+@@ -593,6 +597,8 @@
+ # For REBOOT_TYPE = grub2, you must define both GRUB_MENU and
+ # GRUB_FILE.
+ #
++# For REBOOT_TYPE = grub2bls, you must define GRUB_MENU.
++#
+ # For REBOOT_TYPE = syslinux, you must define SYSLINUX_LABEL, and
+ # perhaps modify SYSLINUX (default extlinux) and SYSLINUX_PATH
+ # (default /boot/extlinux)
 -- 
 2.20.1
 
