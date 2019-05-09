@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D1BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEF1C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32D120656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1330520656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428361;
-	bh=90tcU6lbo5qtFJjvews1rJ8yuN3aCTLEDfe3UJATu4c=;
+	s=default; t=1557428373;
+	bh=WJvsFmiNnD3JAu2A7tBGnTicd1a08s3HqNRGliZJWsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zkjxW5c4XhZ6G0A+73dhpUYI4g1L33iTZPchrXF1I7+2Y9TL17zCR9E05b+3DU3Pg
-	 EFXmHqDWAdV2tkgG7oID6omG6/qkJhnNjY3ZBhxqCzaAE06Kppsg/9VXIdcNSr5SwK
-	 CzMN1Ie9hnKgYi0IKooKcQhir2kKspXHHxB7JgU8=
+	b=PuDk7riRA/oZvaUFL8AODf/SYhjAujRhbAoArgPrpPWzLaLCrVY84/Fm05OxD9Zrm
+	 R7m3dtjUi1deAyl7dGMS49WyMXga/xVl5cKIJBRKIxbYv4wp4JuSwm+m1SXax08PW1
+	 FKuYxd8nh53sl+PP/HGYDGf3M6UoQvHiEEkYGkbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfEIS7V (ORCPT
+        id S1728209AbfEIS7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfEISwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:32 -0400
+        id S1728158AbfEISwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB61F204FD;
-        Thu,  9 May 2019 18:52:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 189FB204FD;
+        Thu,  9 May 2019 18:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427951;
-        bh=90tcU6lbo5qtFJjvews1rJ8yuN3aCTLEDfe3UJATu4c=;
+        s=default; t=1557427943;
+        bh=WJvsFmiNnD3JAu2A7tBGnTicd1a08s3HqNRGliZJWsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0zigT9zPYiQCJJoeyHqkz2s+BTllvEr5s7fwYj6PTwObFv6ApfwE1zUD+EC0Tnp5l
-         YMv8nszk88rqkTzXXzpcA9pXGQ8HwXEj+/H/84gwGn0bMYRu4Z9O3T0+66AbP5wioB
-         9IdduyKJfI2F5lEX9VuD4Bmc0lctDqWZ3+hPRN6s=
+        b=Fli8QLd5SWczk4u05rxlrtsskZMb5cjSGB8zFkBD/msOjK1+j9rJM4zQPDa6LLNw2
+         gXXgHswfDxHgB8du4pYgRyEagkzDBiYivIlYnZ97t5GYk08RhtRGQkSZl3GZpV8mAt
+         kQvyI2uvXA55SoZPfTCNi+SJ10H6m1da5jKY2AIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 64/95] virtio-blk: limit number of hw queues by nr_cpu_ids
-Date:   Thu,  9 May 2019 20:42:21 +0200
-Message-Id: <20190509181313.952622984@linuxfoundation.org>
+        stable@vger.kernel.org, Tzung-Bi Shih <tzungbi@google.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 61/95] ASoC: Intel: kbl: fix wrong number of channels
+Date:   Thu,  9 May 2019 20:42:18 +0200
+Message-Id: <20190509181313.748466067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,42 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
+[ Upstream commit d6ba3f815bc5f3c4249d15c8bc5fbb012651b4a4 ]
 
-When tag_set->nr_maps is 1, the block layer limits the number of hw queues
-by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
-has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
+Fix wrong setting on number of channels.  The context wants to set
+constraint to 2 channels instead of 4.
 
-In addition, specifically for pci scenario, when the 'num-queues' specified
-by qemu is more than maxcpus, virtio-blk would not be able to allocate more
-than maxcpus vectors in order to have a vector for each queue. As a result,
-it falls back into MSI-X with one vector for config and one shared for
-queues.
-
-Considering above reasons, this patch limits the number of hw queues used
-by virtio-blk by nr_cpu_ids.
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index b16a887bbd02a..29bede887237f 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
- 	if (err)
- 		num_vqs = 1;
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index 7044d8c2b1873..879f14257a3ea 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -405,7 +405,7 @@ static const struct snd_pcm_hw_constraint_list constraints_dmic_channels = {
+ };
  
-+	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
-+
- 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
- 	if (!vblk->vqs)
- 		return -ENOMEM;
+ static const unsigned int dmic_2ch[] = {
+-	4,
++	2,
+ };
+ 
+ static const struct snd_pcm_hw_constraint_list constraints_dmic_2ch = {
 -- 
 2.20.1
 
