@@ -2,177 +2,129 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E538C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F7DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501FB21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8+t1ymT"
+	by mail.kernel.org (Postfix) with ESMTP id E30C221479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfEIMnG (ORCPT
+        id S1726608AbfEIMpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:43:06 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:32779 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfEIMnG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:43:06 -0400
-Received: by mail-ed1-f68.google.com with SMTP id n17so1922948edb.0;
-        Thu, 09 May 2019 05:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QsgdOJDYHn/tfXe+apw05fuvXqjWkWLQh0vbJ3o4icQ=;
-        b=X8+t1ymTYcyltAjf8v1dQF+XWnX6+Ka0h/n/Sp7NhymDucJNtZxdecMYnob2Injauf
-         prmYn1KR0VaeFSnO5nN8SN73MXJZF0qI0mBEWIBZB9pui+fjXk9cWdDD+EyINCqMgx1Q
-         PT6yJp94Qz0hthu8VQ2H1YaSFHjZ38HZ42VY4SnfYBSPXK/HDzFbSeoj3OQPuaOLAeFe
-         eEJ1P8uvRoUwH9aNBvgmstZw14Q6XOf7bFPU079ouZQh/1QDXXkqf2kPgwMwSU+bFA7e
-         LD8hzyVTjeLmlSqIETgbTm+FSLcZYsbhL7kX75dUPEc6gceTAXEWMhIGe/3LdCM831GM
-         7kmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QsgdOJDYHn/tfXe+apw05fuvXqjWkWLQh0vbJ3o4icQ=;
-        b=GL66Eqlr6Y2RoXRRKCR85TAk06fpVPPh6c77mFhdNOeYO/AP0wRyvglAzHVleVI1oI
-         TxQfnmVFDKVbxyuqafE9sMRiOMVWVLDJkQ16w4le02fLFOrT6iI0lwJYz3HSQvDXGMA4
-         SZ5v3LnqzopWgQVQAKOB9AEB3HprOOHJd+Hr8CMKW6IuJgmaANzEtGESa3uE4qXEdGFx
-         IKK0bq3ie2UiWCcEUwinQjyPO6PyD+cC5L9kxbk3NRCtYww35KzqX1OOUWZFw/oDtn2z
-         LDCocXRuiw/XXg4a2MV/G7/nSnCIslbB0tsR8TCU5phrUkBajPQj+5LeyLlI7sKn0wmo
-         ZB8Q==
-X-Gm-Message-State: APjAAAXOZNcBBTwJiKlWmapvQxKVBSjWinE4Q+bHo0AqcLvVUNLztbqz
-        bfCcUTma8WQ7EhnRy83Bt2U=
-X-Google-Smtp-Source: APXvYqwSMvc+IkN0goCuzZGHyfnoTzg7aUzcqfUpVzHNwIsf6cZyZm3yry5tEzCvNGV+FZLlTxCadw==
-X-Received: by 2002:a17:906:1984:: with SMTP id g4mr3006437ejd.260.1557405783809;
-        Thu, 09 May 2019 05:43:03 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id e21sm300748ejk.86.2019.05.09.05.43.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 05:43:02 -0700 (PDT)
-Date:   Thu, 9 May 2019 12:43:02 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
- after arch_add_memory()
-Message-ID: <20190509124302.at7jltfrycj7sxbd@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190507183804.5512-1-david@redhat.com>
- <20190507183804.5512-5-david@redhat.com>
+        Thu, 9 May 2019 08:45:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35480 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfEIMpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 08:45:00 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 75C62369D2;
+        Thu,  9 May 2019 12:45:00 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5FDE64F84;
+        Thu,  9 May 2019 12:45:00 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 31EFE3FAF4;
+        Thu,  9 May 2019 12:45:00 +0000 (UTC)
+Date:   Thu, 9 May 2019 08:44:57 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        akpm@linux-foundation.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        aneesh kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        npiggin@gmail.com, namit@vmware.com, minchan@kernel.org,
+        Mel Gorman <mgorman@suse.de>, Jan Stancek <jstancek@redhat.com>
+Message-ID: <436298752.21855393.1557405897147.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com> <20190509083726.GA2209@brain-police> <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507183804.5512-5-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.125, 10.4.195.27]
+Thread-Topic: mmu_gather: remove __tlb_reset_range() for force flush
+Thread-Index: DI/vebM+Rldg1xz41Sw2XzYn9lA53w==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 09 May 2019 12:45:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
->Only memory to be added to the buddy and to be onlined/offlined by
->user space using memory block devices needs (and should have!) memory
->block devices.
->
->Factor out creation of memory block devices Create all devices after
->arch_add_memory() succeeded. We can later drop the want_memblock parameter,
->because it is now effectively stale.
->
->Only after memory block devices have been added, memory can be onlined
->by user space. This implies, that memory is not visible to user space at
->all before arch_add_memory() succeeded.
->
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Cc: David Hildenbrand <david@redhat.com>
->Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Ingo Molnar <mingo@kernel.org>
->Cc: Andrew Banman <andrew.banman@hpe.com>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->Cc: Qian Cai <cai@lca.pw>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Cc: Arun KS <arunks@codeaurora.org>
->Cc: Mathieu Malaterre <malat@debian.org>
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
-> include/linux/memory.h |  2 +-
-> mm/memory_hotplug.c    | 15 ++++-----
-> 3 files changed, 53 insertions(+), 34 deletions(-)
->
->diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->index 6e0cb4fda179..862c202a18ca 100644
->--- a/drivers/base/memory.c
->+++ b/drivers/base/memory.c
->@@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
-> 	return 0;
-> }
+
+> > I don't think we can elide the call __tlb_reset_range() entirely, since I
+> > think we do want to clear the freed_pXX bits to ensure that we walk the
+> > range with the smallest mapping granule that we have. Otherwise couldn't we
+> > have a problem if we hit a PMD that had been cleared, but the TLB
+> > invalidation for the PTEs that used to be linked below it was still
+> > pending?
 > 
->+static void unregister_memory(struct memory_block *memory)
->+{
->+	BUG_ON(memory->dev.bus != &memory_subsys);
->+
->+	/* drop the ref. we got via find_memory_block() */
->+	put_device(&memory->dev);
->+	device_unregister(&memory->dev);
->+}
->+
-> /*
->- * need an interface for the VM to add new memory regions,
->- * but without onlining it.
->+ * Create memory block devices for the given memory area. Start and size
->+ * have to be aligned to memory block granularity. Memory block devices
->+ * will be initialized as offline.
->  */
->-int hotplug_memory_register(int nid, struct mem_section *section)
->+int hotplug_memory_register(unsigned long start, unsigned long size)
-> {
->-	int ret = 0;
->+	unsigned long block_nr_pages = memory_block_size_bytes() >> PAGE_SHIFT;
->+	unsigned long start_pfn = PFN_DOWN(start);
->+	unsigned long end_pfn = start_pfn + (size >> PAGE_SHIFT);
->+	unsigned long pfn;
-> 	struct memory_block *mem;
->+	int ret = 0;
+> That's tlb->cleared_p*, and yes agreed. That is, right until some
+> architecture has level dependent TLBI instructions, at which point we'll
+> need to have them all set instead of cleared.
 > 
->-	mutex_lock(&mem_sysfs_mutex);
->+	BUG_ON(!IS_ALIGNED(start, memory_block_size_bytes()));
->+	BUG_ON(!IS_ALIGNED(size, memory_block_size_bytes()));
+> > Perhaps we should just set fullmm if we see that here's a concurrent
+> > unmapper rather than do a worst-case range invalidation. Do you have a
+> > feeling
+> > for often the mm_tlb_flush_nested() triggers in practice?
+> 
+> Quite a bit for certain workloads I imagine, that was the whole point of
+> doing it.
+> 
+> Anyway; am I correct in understanding that the actual problem is that
+> we've cleared freed_tables and the ARM64 tlb_flush() will then not
+> invalidate the cache and badness happens?
 
-After this change, the call flow looks like this:
+That is my understanding, only last level is flushed, which is not enough.
 
-add_memory_resource
-    check_hotplug_memory_range
-    hotplug_memory_register
+> 
+> Because so far nobody has actually provided a coherent description of
+> the actual problem we're trying to solve. But I'm thinking something
+> like the below ought to do.
 
-Since in check_hotplug_memory_range() has checked the boundary, do we need to
-check here again?
+I applied it (and fixed small typo: s/tlb->full_mm/tlb->fullmm/).
+It fixes the problem for me.
 
--- 
-Wei Yang
-Help you, Help me
+> 
+> 
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 99740e1dd273..fe768f8d612e 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>  		unsigned long start, unsigned long end)
+>  {
+>  	/*
+> -	 * If there are parallel threads are doing PTE changes on same range
+> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> -	 * forcefully if we detect parallel PTE batching threads.
+> +	 * Sensible comment goes here..
+>  	 */
+> -	if (mm_tlb_flush_nested(tlb->mm)) {
+> -		__tlb_reset_range(tlb);
+> -		__tlb_adjust_range(tlb, start, end - start);
+> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
+> +		/*
+> +		 * Since we're can't tell what we actually should have
+> +		 * flushed flush everything in the given range.
+> +		 */
+> +		tlb->start = start;
+> +		tlb->end = end;
+> +		tlb->freed_tables = 1;
+> +		tlb->cleared_ptes = 1;
+> +		tlb->cleared_pmds = 1;
+> +		tlb->cleared_puds = 1;
+> +		tlb->cleared_p4ds = 1;
+>  	}
+>  
+>  	tlb_flush_mmu(tlb);
+> 
