@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC4EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6EEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4CDC21841
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE842183F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427511;
-	bh=0TjL81IqbnAkiwaGUHAMMPYNKAiIgC8Ggtg0x3pthj8=;
+	s=default; t=1557427518;
+	bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iB1t9DKsybIIKQIS7Z1kvPcAK9mE2mDT6+ICp+ZMwxx+18Z1cxDm0nEzR4m42ZLwc
-	 ustoEu4/fCdRccKe+KqKOkWUdnRVob1Z8dM8YyU+JM17jvT27H/i+Lh01nUbvAc/Ub
-	 TXCwVi1OnPJtTez9fIF5cdtq8KsnzILjw+dKgxV4=
+	b=ZjCjbx45jjqAVCYJR6r1eEiJSRezHWOMi6AdiUvzURpr+y44Rcm0Gco056HVl/haj
+	 jKquCVxu4gEhnjRW23+Y2Qmo+Omai1zI/f3dTSONzAUlVlS6aTyIZFRZh+gwkzbv86
+	 Mb1OglXzUHDpjJyOd5ESQiAMoxJX0k7DjobzswTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfEISpI (ORCPT
+        id S1727294AbfEISpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36764 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727221AbfEISpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:05 -0400
+        id S1727269AbfEISpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5D7217F5;
-        Thu,  9 May 2019 18:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25312217F9;
+        Thu,  9 May 2019 18:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427505;
-        bh=0TjL81IqbnAkiwaGUHAMMPYNKAiIgC8Ggtg0x3pthj8=;
+        s=default; t=1557427507;
+        bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7exAsSS9Fu9G0UggFJ0Cf7dJse9liUTOD5FMX5cWZi+RjuERf5dWxuONfc+dkBp9
-         ExV0fW4jKUsaFVX55Cgm08BE2gibplL5vhg1hDncJC/+gd5gN2keadaHeysd3efLjo
-         vA3LAwoyIYEGlQGNHqLhi5btNSJ8dih68q6X4NnU=
+        b=MpzpTdOZIEM+pXsSPqaoE8MuzT52iDto1imwWBJsUsm3UdGVAsMmMJ4tAqRe5hlLX
+         1uMdr8ciAJSORsVP7Dp3qtffRXA5+zD3jWkt+MoQ+WS3tA93QjG83s5GsK1QfPpMQD
+         JQ4mERKwKgGdIsqN5RE+mlXXgRJRILxErrD+isYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 28/28] timer/debug: Change /proc/timer_stats from 0644 to 0600
-Date:   Thu,  9 May 2019 20:42:20 +0200
-Message-Id: <20190509181256.196790585@linuxfoundation.org>
+        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.9 24/28] Bluetooth: hidp: fix buffer overflow
+Date:   Thu,  9 May 2019 20:42:16 +0200
+Message-Id: <20190509181255.392576707@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -58,34 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Young Xiao <YangX92@hotmail.com>
 
-The timer_stats facility should filter and translate PIDs if opened
-from a non-initial PID namespace, to avoid leaking information about
-the wider system.  It should also not show kernel virtual addresses.
-Unfortunately it has now been removed upstream (as redundant)
-instead of being fixed.
+commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
 
-For stable, fix the leak by restricting access to root only.  A
-similar change was already made for the /proc/timer_list file.
+Struct ca is copied from userspace. It is not checked whether the "name"
+field is NULL terminated, which allows local users to obtain potentially
+sensitive information from kernel stack memory, via a HIDPCONNADD command.
 
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+This vulnerability is similar to CVE-2011-1079.
+
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/timer_stats.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hidp/sock.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/time/timer_stats.c
-+++ b/kernel/time/timer_stats.c
-@@ -417,7 +417,7 @@ static int __init init_tstats_procfs(voi
- {
- 	struct proc_dir_entry *pe;
+--- a/net/bluetooth/hidp/sock.c
++++ b/net/bluetooth/hidp/sock.c
+@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
+ 			sockfd_put(csock);
+ 			return err;
+ 		}
++		ca.name[sizeof(ca.name)-1] = 0;
  
--	pe = proc_create("timer_stats", 0644, NULL, &tstats_fops);
-+	pe = proc_create("timer_stats", 0600, NULL, &tstats_fops);
- 	if (!pe)
- 		return -ENOMEM;
- 	return 0;
+ 		err = hidp_connection_add(&ca, csock, isock);
+ 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
 
 
