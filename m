@@ -2,149 +2,219 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FB2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D66C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B90E2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557430423;
-	bh=B8940uDPWwvLH7c3LJvYVhhJK9nH/nJxVq6EHC8ysVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=crEDVIC26dRj6BABmfC+WiaMBh5fL8dakKZPG0MeOGDge3iB6Vd6XCZBMu+Qyjnfw
-	 8UZ+HbpvMVOCCS05xYqPAPzIiBthbGF/2zIrhLGKOPCT7kVkXnpMYOiIy+QrADiVwo
-	 Hj4IEcLe7jhP0Kvx8ptU9FbE56d6K7/Pil15+Ovs=
+	by mail.kernel.org (Postfix) with ESMTP id 3258E21744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfEITdn (ORCPT
+        id S1726874AbfEIThs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:33:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:1557 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbfEITdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:33:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 12:33:41 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 May 2019 12:33:39 -0700
-Date:   Thu, 9 May 2019 13:28:08 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Mario.Limonciello@dell.com
-Cc:     kai.heng.feng@canonical.com, hch@lst.de, axboe@fb.com,
-        sagi@grimberg.me, rafael@kernel.org, linux-pm@vger.kernel.org,
-        rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, keith.busch@intel.com
-Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-Message-ID: <20190509192807.GB9675@localhost.localdomain>
-References: <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
- <20190509061237.GA15229@lst.de>
- <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
- <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
- <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
- <20190509095601.GA19041@lst.de>
- <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
- <20190509103142.GA19550@lst.de>
- <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com>
- <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
+        Thu, 9 May 2019 15:37:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49300 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726658AbfEIThr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:37:47 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49JRVFG098057
+        for <linux-kernel@vger.kernel.org>; Thu, 9 May 2019 15:37:46 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2scr8mnheh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 15:37:45 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 9 May 2019 20:37:44 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 May 2019 20:37:41 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49JaPi235586076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 May 2019 19:36:25 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EF52B2066;
+        Thu,  9 May 2019 19:36:25 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4317BB205F;
+        Thu,  9 May 2019 19:36:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  9 May 2019 19:36:25 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 8542916C2A42; Thu,  9 May 2019 12:36:25 -0700 (PDT)
+Date:   Thu, 9 May 2019 12:36:25 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com
+Subject: Re: Question about sched_setaffinity()
+Reply-To: paulmck@linux.ibm.com
+References: <20190427180246.GA15502@linux.ibm.com>
+ <20190430100318.GP2623@hirez.programming.kicks-ass.net>
+ <20190430105129.GA3923@linux.ibm.com>
+ <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+ <20190501191213.GX3923@linux.ibm.com>
+ <20190501151655.51469a4c@gandalf.local.home>
+ <20190501202713.GY3923@linux.ibm.com>
+ <20190507221613.GA11057@linux.ibm.com>
+ <20190509173654.GA23530@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190509173654.GA23530@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19050919-0040-0000-0000-000004ED82D3
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011078; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01200960; UDB=6.00630179; IPR=6.00981850;
+ MB=3.00026818; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-09 19:37:43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050919-0041-0000-0000-000008F98D31
+Message-Id: <20190509193625.GA12455@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905090111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 06:57:34PM +0000, Mario.Limonciello@dell.com wrote:
-> No, current Windows versions don't transition to D3 with inbox NVME driver.
-> You're correct, it's explicit state transitions even if APST was enabled
-> (as this patch is currently doing as well).
+On Thu, May 09, 2019 at 10:36:54AM -0700, Paul E. McKenney wrote:
+> On Tue, May 07, 2019 at 03:16:13PM -0700, Paul E. McKenney wrote:
+> > On Wed, May 01, 2019 at 01:27:13PM -0700, Paul E. McKenney wrote:
+> > > On Wed, May 01, 2019 at 03:16:55PM -0400, Steven Rostedt wrote:
+> > > > On Wed, 1 May 2019 12:12:13 -0700
+> > > > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+> > > > 
+> > > > 
+> > > > > OK, what I did was to apply the patch at the end of this email to -rcu
+> > > > > branch dev, then run rcutorture as follows:
+> > > > > 
+> > > > > nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs "TRIVIAL" --bootargs "trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop"
+> > > > > 
+> > > > > This resulted in the console output that I placed here:
+> > > > > 
+> > > > > http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > > > > 
+> > > > > But I don't see calls to sched_setaffinity() or migration_cpu_stop().
+> > > > > Steve, is something else needed on the kernel command line in addition to
+> > > > > the following?
+> > > > > 
+> > > > > ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop
+> > > > 
+> > > > Do you have function graph enabled in the config?
+> > > > 
+> > > > [    2.098303] ftrace bootup tracer 'function_graph' not registered.
+> > > 
+> > > I guess I don't!  Thank you, will fix.
+> > > 
+> > > Let's see...
+> > > 
+> > > My .config has CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y.  It looks like I
+> > > need CONFIG_FUNCTION_GRAPH_TRACER=y, which I don't have.  And it looks
+> > > like that needs CONFIG_FUNCTION_TRACER=y, which I also don't have.
+> > > But I do have CONFIG_HAVE_FUNCTION_TRACER=y.  So I should add this
+> > > to my rcutorture command line:
+> > > 
+> > > --kconfig "CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y".
+> > > 
+> > > I fired this up.  Here is hoping!  ;-)
+> > > 
+> > > And it does have sched_setaffinity(), woo-hoo!!!  I overwrote the old file:
+> > > 
+> > > 	http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > 
+> > And I reran after adding a trace_printk(), which shows up as follows:
+> > 
+> > [  211.409565]  6)               |  /* On unexpected CPU 6, expected 4!!! */
+> > 
+> > I placed the console log here:
+> > 
+> > 	http://www2.rdrop.com/~paulmck/submission/console.tpk.log.gz
+> > 
+> > Just in case the earlier log proves useful.
+> > 
+> > And it is acting as if the destination CPU proved to be offline.  Except
+> > that this rcutorture scenario doesn't offline anything, and I don't see
+> > any CPU-hotplug removal messages.  So I added another trace_printk() to
+> > print out cpu_online_mask.  This gets me the following:
+> > 
+> > [   31.565605]  0)               |  /* On unexpected CPU 0, expected 1!!! */
+> > [   31.565605]  0)               |  /* Online CPUs: 0-7 */
+> > 
+> > So we didn't make it to CPU 1 despite its being online.  I placed the
+> > console log here:
+> > 
+> > 	http://www2.rdrop.com/~paulmck/submission/console.tpkol.log.gz
+> > 
+> > Thoughts?
+> > 
+> > Updated patch against -rcu below in case it is useful.
+> 
+> I added more debug and got this:
+> 
+> [  215.097318]  4)               |  /* On unexpected CPU 4, expected 5!!! */
+> [  215.098285]  4)               |  /* Online CPUs: 0-7  Active CPUs: 0-7 */
+> [  215.099283]  4)               |  /* ret = 0, ->cpus_allowed 0-4,6-7 */
+> 
+> http://www.rdrop.com/~paulmck/submission/console.tpkm.log.gz
+> 
+> The task's ->cpus_allowed got set to the bitwise not of the requested
+> mask.  I took a quick scan through the code but don't see how this
+> happens.
+> 
+> Very strange.
+> 
+> Any suggestions for further debugging?  Left to myself, I would copy
+> the requested cpumask to a per-task location and insert checks in the
+> sched_setaffinity() code path, crude and ugly though that might seem.
+> (Ugly enough that I will wait until tomorrow to try it out.)
 
-The proposed patch does too much, and your resume latency will be worse
-off for doing an unnecessary controller reset.
+And of course the nicer approach is to simply drop a few trace_printk()
+calls into sched_setaffinity(), which got me this (with other CPU
+tracing removed):
 
-The following should be all that's needed if the device is spec
-compliant. The resume part isn't necessary if npss is non-operational, but
-we're not saving that info, and it shouldn't hurt to be explicit anyway.
+[  207.440153]  0)               |  /* sched_setaffinity: new_mask 5 */
+[  207.445567]  0)               |  /* On unexpected CPU 0, expected 5!!! */
+[  207.450017]  0)               |  /* Online CPUs: 0-7  Active CPUs: 0-7 */
+[  207.454943]  0)               |  /* ret = 0, ->cpus_allowed 0-4,6-7 */
 
-I don't have any PS capable devices, so this is just compile tested.
+http://www.rdrop.com/~paulmck/submission/console.tkpms.log.gz
+	(Search for "->cpus_allowed".)
 
----
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 6265d9225ec8..ce8b9bc949b9 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1132,6 +1132,22 @@ static int nvme_set_features(struct nvme_ctrl *dev, unsigned fid, unsigned dword
- 	return ret;
- }
- 
-+int nvme_set_power(struct nvme_ctrl *ctrl, unsigned npss)
-+{
-+	int ret;
-+
-+	mutex_lock(&ctrl->scan_lock);
-+	nvme_start_freeze(ctrl);
-+	nvme_wait_freeze(ctrl);
-+	ret = nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, npss, NULL, 0,
-+				NULL);
-+	nvme_unfreeze(ctrl);
-+	mutex_unlock(&ctrl->scan_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(nvme_set_power);
-+
- int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count)
- {
- 	u32 q_count = (*count - 1) | ((*count - 1) << 16);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 527d64545023..f2be6aad9804 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -459,6 +459,7 @@ int __nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
- 		unsigned timeout, int qid, int at_head,
- 		blk_mq_req_flags_t flags, bool poll);
- int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count);
-+int nvme_set_power(struct nvme_ctrl *ctrl, unsigned npss);
- void nvme_stop_keep_alive(struct nvme_ctrl *ctrl);
- int nvme_reset_ctrl(struct nvme_ctrl *ctrl);
- int nvme_reset_ctrl_sync(struct nvme_ctrl *ctrl);
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a90cf5d63aac..2c4154cb4e79 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -18,6 +18,7 @@
- #include <linux/mutex.h>
- #include <linux/once.h>
- #include <linux/pci.h>
-+#include <linux/suspend.h>
- #include <linux/t10-pi.h>
- #include <linux/types.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
-@@ -2851,6 +2852,8 @@ static int nvme_suspend(struct device *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
- 
-+	if (!pm_suspend_via_firmware())
-+		return nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
- 	nvme_dev_disable(ndev, true);
- 	return 0;
- }
-@@ -2860,6 +2863,8 @@ static int nvme_resume(struct device *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
- 
-+	if (!pm_suspend_via_firmware())
-+		return nvme_set_power(&ndev->ctrl, 0);
- 	nvme_reset_ctrl(&ndev->ctrl);
- 	return 0;
- }
---
+I forward-ported the relevant patches from -rcu and placed them on -rcu
+branch peterz.2019.05.09a, and this is what produced the output above.
+
+Any other debugging thoughts?
+
+Or, if you wish, you can reproduce by running the following:
+
+nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs "TRIVIAL" --bootargs "trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop" --kconfig "CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y"
+
+This gets me the following summary output:
+
+ --- Thu May  9 12:08:31 PDT 2019 Test summary:
+ Results directory: /home/git/linux-2.6-tip/tools/testing/selftests/rcutorture/res/2019.05.09-12:08:31
+ tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs TRIVIAL --bootargs trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop --kconfig CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y
+ TRIVIAL ------- 2177 GPs (18.1417/s) [trivial: g0 f0x0 ]
+ :CONFIG_HOTPLUG_CPU: improperly set
+ WARNING: BAD SEQ 2176:2176 last:2177 version 4
+     /home/git/linux-2.6-tip/tools/testing/selftests/rcutorture/res/2019.05.09-12:08:31/TRIVIAL/console.log
+     WARNING: Assertion failure in /home/git/linux-2.6-tip/tools/testing/selftests/rcutorture/res/2019.05.09-12:08:31/TRIVIAL/console.log
+     WARNING: Summary: Warnings: 1 Bugs: 1 Call Traces: 5 Stalls: 8
+
+							Thanx, Paul
+
