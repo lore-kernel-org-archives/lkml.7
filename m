@@ -2,104 +2,118 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0274CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D819C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07B32084E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520DB21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfEIPye (ORCPT
+        id S1726704AbfEIP4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:54:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37136 "EHLO mx1.redhat.com"
+        Thu, 9 May 2019 11:56:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35244 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfEIPye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:54:34 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1726187AbfEIP4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:56:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22D1599C1D;
-        Thu,  9 May 2019 15:54:28 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B360F1001E65;
-        Thu,  9 May 2019 15:54:06 +0000 (UTC)
-Date:   Thu, 9 May 2019 17:54:04 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
-        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190509175404.512ae7aa.cohuck@redhat.com>
-In-Reply-To: <20190509154857.GF2868@work-vm>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
-        <20190506014904.3621-1-yan.y.zhao@intel.com>
-        <20190507151826.502be009@x1.home>
-        <20190509173839.2b9b2b46.cohuck@redhat.com>
-        <20190509154857.GF2868@work-vm>
-Organization: Red Hat GmbH
+        by mx1.redhat.com (Postfix) with ESMTPS id BF84BDBD6F;
+        Thu,  9 May 2019 15:56:52 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4B9EC27BCD;
+        Thu,  9 May 2019 15:56:48 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  9 May 2019 17:56:51 +0200 (CEST)
+Date:   Thu, 9 May 2019 17:56:46 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190509155646.GB24526@redhat.com>
+References: <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
+ <20190318002949.mqknisgt7cmjmt7n@brauner.io>
+ <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io>
+ <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <20190507021622.GA27300@sultan-box.localdomain>
+ <20190507153154.GA5750@redhat.com>
+ <20190507163520.GA1131@sultan-box.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 09 May 2019 15:54:33 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507163520.GA1131@sultan-box.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 09 May 2019 15:56:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 16:48:57 +0100
-"Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+On 05/07, Sultan Alsawaf wrote:
+>
+> On Tue, May 07, 2019 at 05:31:54PM +0200, Oleg Nesterov wrote:
+>
+> > Did you test this patch with lockdep enabled?
+> >
+> > If I read the patch correctly, lockdep should complain. vtsk_is_duplicate()
+> > ensures that we do not take the same ->alloc_lock twice or more, but lockdep
+> > can't know this.
+>
+> Yeah, lockdep is fine with this, at least on 4.4.
 
-> * Cornelia Huck (cohuck@redhat.com) wrote:
-> > On Tue, 7 May 2019 15:18:26 -0600
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
-> >   
-> > > On Sun,  5 May 2019 21:49:04 -0400
-> > > Yan Zhao <yan.y.zhao@intel.com> wrote:  
-> >   
-> > > > +  Errno:
-> > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> > > > +  devices, it should not register version attribute for this mdev device. But if
-> > > > +  a vendor driver has already registered version attribute and it wants to claim
-> > > > +  a mdev device incompatible to all other mdev devices, it needs to return
-> > > > +  -ENODEV on access to this mdev device's version attribute.
-> > > > +  If a mdev device is only incompatible to certain mdev devices, write of
-> > > > +  incompatible mdev devices's version strings to its version attribute should
-> > > > +  return -EINVAL;    
-> > > 
-> > > I think it's best not to define the specific errno returned for a
-> > > specific situation, let the vendor driver decide, userspace simply
-> > > needs to know that an errno on read indicates the device does not
-> > > support migration version comparison and that an errno on write
-> > > indicates the devices are incompatible or the target doesn't support
-> > > migration versions.  
-> > 
-> > I think I have to disagree here: It's probably valuable to have an
-> > agreed error for 'cannot migrate at all' vs 'cannot migrate between
-> > those two particular devices'. Userspace might want to do different
-> > things (e.g. trying with different device pairs).  
-> 
-> Trying to stuff these things down an errno seems a bad idea; we can't
-> get much information that way.
+Impossible ;) I bet lockdep should report the deadlock as soon as find_victims()
+calls find_lock_task_mm() when you already have a locked victim.
 
-So, what would be a reasonable approach? Userspace should first read
-the version attributes on both devices (to find out whether migration
-is supported at all), and only then figure out via writing whether they
-are compatible?
+Nevermind, I guess this code won't run with lockdep enabled...
 
-(Or just go ahead and try, if it does not care about the reason.)
+
+As for https://github.com/kerneltoast/android_kernel_google_wahoo/commit/afc8c9bf2dbde95941253c168d1adb64cfa2e3ad
+Well,
+
+	mmdrop(mm);
+	simple_lmk_mm_freed(mm);
+
+looks racy because mmdrop(mm) can free this mm_struct. Yes, simple_lmk_mm_freed()
+does not dereference this pointer, but the same memory can be re-allocated as
+another ->mm for the new task which can be found by find_victims(), and _in theory_
+this all can happen in between, so the "victims[i].mm == mm" can be false positive.
+
+And this also means that simple_lmk_mm_freed() should clear victims[i].mm when
+it detects "victims[i].mm == mm", otherwise we have the same theoretical race,
+victims_to_kill is only cleared when the last victim goes away.
+
+
+Another nit... you can drop tasklist_lock right after the 1st "find_victims" loop.
+
+And it seems that you do not really need to walk the "victims" array twice after that,
+you can do everything in a single loop, but this is cosmetic.
+
+Oleg.
+
