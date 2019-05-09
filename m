@@ -2,150 +2,99 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0054BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F95C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87982053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF7521479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:09:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mOhCkhFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbfEIOGQ (ORCPT
+        id S1726659AbfEIOJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:06:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60536 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726192AbfEIOGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:06:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9158BAC31;
-        Thu,  9 May 2019 14:06:12 +0000 (UTC)
-Date:   Thu, 9 May 2019 16:06:09 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190509140609.n44v6kj27wb77jck@pathway.suse.cz>
-References: <20190509121923.8339-1-pmladek@suse.com>
- <20190509091357.0af3fcd7@gandalf.local.home>
+        Thu, 9 May 2019 10:09:02 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:26127 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfEIOJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:09:02 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x49E8mVK014119;
+        Thu, 9 May 2019 23:08:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x49E8mVK014119
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557410929;
+        bh=EZMLary+S+9G6cLchLp//JUrbW4OA+W27VKESK3gpQQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mOhCkhFl5O8yiIT+wwl0Y92WkVEr496DrkVp96FpOjHU+bVqIEhGzEBJAKz477626
+         REEq0wRshE0LNDOq+e40XhyHP5Uxu9TUZT2fDHSawEHhyh9F6yKNe1QsEMZg8se4Fg
+         8hq+gaxSNRblDwzAzbLI6rCfFaWB+0kxbOrahHkKkz3TF8WAVO6YlyYCigEfD/rtXU
+         dRLfwPj80JvcmojwnWptihjUPX3e6p8LuQ08PHBV4IZSktNPShrJ6PSqvSsjjHcWrh
+         QNmGn6WJh/SNI3JByG7726vOALdFvnWosyvoaZVl/cmZoWyeeEXA0SqltXLocLdD5y
+         Ey2mL/VmTjJQA==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id o10so1467280vsp.12;
+        Thu, 09 May 2019 07:08:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAVHDx3AEvOARZwSKvJ9KmQN5iX0YgnWn93ah/3RCY0b9BCK0xmE
+        MCYJNR+mURXSaGJDC5O6HPUFCxJ3SkhEX75MmHw=
+X-Google-Smtp-Source: APXvYqyXqKJ3SsM3Ps8XtfCp7GyYivlSpdHI1xek9RndBNDO1WT3kBOSIoE8oM8e7mGqFya2uRNXk1RdUg629T6kvyw=
+X-Received: by 2002:a67:f109:: with SMTP id n9mr2198293vsk.181.1557410927513;
+ Thu, 09 May 2019 07:08:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509091357.0af3fcd7@gandalf.local.home>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <1557146820-13059-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1557146820-13059-1-git-send-email-krzk@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 9 May 2019 23:08:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATFKHmgi+7LktGJg9FRJr3BoZb=r+OdPE4rf=q1WE0j3g@mail.gmail.com>
+Message-ID: <CAK7LNATFKHmgi+7LktGJg9FRJr3BoZb=r+OdPE4rf=q1WE0j3g@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: kbuild: Add pattern for scripts/*vmlinux*
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-05-09 09:13:57, Steven Rostedt wrote:
-> On Thu,  9 May 2019 14:19:23 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
-> 
-> > The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
-> > invalid pointers") broke boot on several architectures. The common
-> > pattern is that probe_kernel_read() is not working during early
-> > boot because userspace access framework is not ready.
-> > 
-> > The check is only the best effort. Let's not rush with it during
-> > the early boot.
-> > 
-> > Details:
-> > 
-> > 1. Report on Power:
-> > 
-> > Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
-> > CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
-> > 
-> > The problem is the combination of some new code called via printk(),
-> > check_pointer() which calls probe_kernel_read(). That then calls
-> > allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
-> > (before we've patched features). With the JUMP_LABEL debug enabled that
-> > causes us to call printk() & dump_stack() and we end up recursing and
-> > overflowing the stack.
-> > 
-> > Because it happens so early you don't get any output, just an apparently
-> > dead system.
-> > 
-> > The stack trace (which you don't see) is something like:
-> > 
-> >   ...
-> >   dump_stack+0xdc
-> >   probe_kernel_read+0x1a4
-> >   check_pointer+0x58
-> >   string+0x3c
-> >   vsnprintf+0x1bc
-> >   vscnprintf+0x20
-> >   printk_safe_log_store+0x7c
-> >   printk+0x40
-> >   dump_stack_print_info+0xbc
-> >   dump_stack+0x8
-> >   probe_kernel_read+0x1a4
-> >   probe_kernel_read+0x19c
-> >   check_pointer+0x58
-> >   string+0x3c
-> >   vsnprintf+0x1bc
-> >   vscnprintf+0x20
-> >   vprintk_store+0x6c
-> >   vprintk_emit+0xec
-> >   vprintk_func+0xd4
-> >   printk+0x40
-> >   cpufeatures_process_feature+0xc8
-> >   scan_cpufeatures_subnodes+0x380
-> >   of_scan_flat_dt_subnodes+0xb4
-> >   dt_cpu_ftrs_scan_callback+0x158
-> >   of_scan_flat_dt+0xf0
-> >   dt_cpu_ftrs_scan+0x3c
-> >   early_init_devtree+0x360
-> >   early_setup+0x9c
-> > 
-> > 2. Report on s390:
-> > 
-> > vsnprintf invocations, are broken on s390. For example, the early boot
-> > output now looks like this where the first (efault) should be
-> > the linux_banner:
-> > 
-> > [    0.099985] (efault)
-> > [    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
-> > [    0.100066] setup: The maximum memory size is 8192MB
-> > [    0.100070] cma: Reserved 4 MiB at (efault)
-> > [    0.100100] numa: NUMA mode: (efault)
-> > 
-> > The reason for this, is that the code assumes that
-> > probe_kernel_address() works very early. This however is not true on
-> > at least s390. Uaccess on KERNEL_DS works only after page tables have
-> > been setup on s390, which happens with setup_arch()->paging_init().
-> > 
-> > Any probe_kernel_address() invocation before that will return -EFAULT.
-> 
-> Hmm, this sounds to me that probe_kernel_address() is broken for these
-> architectures. Perhaps the system_state check should be in
-> probe_kernel_address() for those architectures?
+On Mon, May 6, 2019 at 9:47 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> scripts/link-vmlinux.sh is part of kbuild so extend the pattern to match
+> any vmlinux related scripts.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Yeah. Well, these problems are hard to debug. It left a dead power
-system with a blank screen. I am not sure if the added check is
-worth the pain.
+Applied to linux-kbuild.
 
-I hope that the check would help to debug problems. But it is yet
-another complexity in printk() path. I think that it is fine
-to keep it enabled only on the booted system for a while
-and get some more feedback.
+Thanks.
 
-Best Regards,
-Petr
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c61c49dd3643..aa0a61c7736b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8523,6 +8523,7 @@ F:        scripts/Kbuild*
+>  F:     scripts/Makefile*
+>  F:     scripts/basic/
+>  F:     scripts/mk*
+> +F:     scripts/*vmlinux*
+>  F:     scripts/mod/
+>  F:     scripts/package/
+>
+> --
+> 2.7.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
