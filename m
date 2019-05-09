@@ -2,165 +2,233 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A90C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80D4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C24B2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:58:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="owM2FhNd"
+	by mail.kernel.org (Postfix) with ESMTP id 7BDF12054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEIO66 (ORCPT
+        id S1726798AbfEIO7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:58:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33321 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfEIO66 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:58:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z28so1475095pfk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 07:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O2GVNaaLG3l4A7SJYHvhzrnNiIlglRkSlpfGLRzuylM=;
-        b=owM2FhNdQD3/AZ1QZczHAcumqaO62cKOzbcn0wo0srjYi0aJmUbBO5bCn3V5VdxSW0
-         74bIGkNFPqUHT5SLQKJGibcflH3UxMzbGuy/ZLbtw3AWBpjuTmllygACfswKRryWDjEE
-         7FcJwiuwkwdH1xJVyPDY4c7MOjCMsvjM4VqFrUofJd5m4BugNQLB0TGzkcZTS0NxFG5W
-         gUx85r8q9Gaagdgm41Zl2bDJt0YcjeOL130nHdSgAww8zP5BX5jpgAA4uU9e3Gm3G3zz
-         eozMavbAcKt3BHMsIdWIzk9olc+36VygZOIVr2T4PcDWEbeEIGlQGCM9CfctVEo1LPIp
-         Y8Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O2GVNaaLG3l4A7SJYHvhzrnNiIlglRkSlpfGLRzuylM=;
-        b=DZx+xSPMN/PjOI3HFbExDkTP7qpEDpzmcTSwOjvJkwS949AYRfeZOQbX3EtowUGQee
-         NVZzRtyV5rBNcbVAAb2yjO9Dpa3PC9Uuklf9W63vWE3j7q9Bkl6DMBiPDycDuuT0bvl1
-         Z8MVTakndeuI/vlaTXLzpvJjRpbcHuF6M9xue3qcwdTt4JvPVHs9OLp0aE/E6k5gpNqo
-         gN0SeaweiU/bTQIY1HIvW1psmiFtsHLzs30bh0ExD5MBnN3XnIcljS38jzszb4XZQ1ZC
-         FVv8etChTZ4E7V3Q5LjZJFkL8Kh7GHyqpQmalS3qzT319SA0bnHKsLrKOoVkaVlolFuV
-         t2OA==
-X-Gm-Message-State: APjAAAVDPlzVcWpNbyrvaFbzCfQNhnTev54sse7Oong4Jb2uodvYPpPP
-        YyWWg+7guZloOkUNIO3eYiUoWQ==
-X-Google-Smtp-Source: APXvYqzB08jbRTCZn/COGHwU59Jhcv8+bRZwlqaOwdUaHe25RZJvtDJY+ALgBmzW3A/k0UdMggom9w==
-X-Received: by 2002:a62:1b8a:: with SMTP id b132mr5780183pfb.19.1557413936856;
-        Thu, 09 May 2019 07:58:56 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g10sm6438908pfg.153.2019.05.09.07.58.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 07:58:55 -0700 (PDT)
-Date:   Thu, 9 May 2019 07:59:12 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RFC 4/6] ARM: dts: msm8974: add display support
-Message-ID: <20190509145912.GG2085@tuxbook-pro>
-References: <20190505130413.32253-1-masneyb@onstation.org>
- <20190505130413.32253-5-masneyb@onstation.org>
- <20190507063902.GA2085@tuxbook-pro>
- <20190509021616.GA26228@basecamp>
- <CAF6AEGsM382jB=h7oM3frhZ5fAp+qYUdgiiKSKo1RtR8+ffjrg@mail.gmail.com>
- <20190509030047.GE2085@tuxbook-pro>
- <20190509071243.GA27143@basecamp>
+        Thu, 9 May 2019 10:59:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34444 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbfEIO7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:59:02 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 610A53086200;
+        Thu,  9 May 2019 14:59:01 +0000 (UTC)
+Received: from [10.36.117.56] (ovpn-117-56.ams2.redhat.com [10.36.117.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 077175D717;
+        Thu,  9 May 2019 14:58:56 +0000 (UTC)
+Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
+ after arch_add_memory()
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+References: <20190507183804.5512-1-david@redhat.com>
+ <20190507183804.5512-5-david@redhat.com>
+ <20190509143151.zexjmwu3ikkmye7i@master>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <28071389-372c-14eb-1209-02464726b4f0@redhat.com>
+Date:   Thu, 9 May 2019 16:58:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509071243.GA27143@basecamp>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190509143151.zexjmwu3ikkmye7i@master>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 09 May 2019 14:59:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 09 May 00:12 PDT 2019, Brian Masney wrote:
-
-> On Wed, May 08, 2019 at 08:00:47PM -0700, Bjorn Andersson wrote:
-> > On Wed 08 May 19:25 PDT 2019, Rob Clark wrote:
-> > 
-> > > On Wed, May 8, 2019 at 7:16 PM Brian Masney <masneyb@onstation.org> wrote:
-> > > >
-> > > > On Mon, May 06, 2019 at 11:39:02PM -0700, Bjorn Andersson wrote:
-> > > > > On Sun 05 May 06:04 PDT 2019, Brian Masney wrote:
-> > > > > > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > > > > [..]
-> > > > > > +                           clocks = <&mmcc MDSS_MDP_CLK>,
-> > > > > > +                                    <&mmcc MDSS_AHB_CLK>,
-> > > > > > +                                    <&mmcc MDSS_AXI_CLK>,
-> > > > > > +                                    <&mmcc MDSS_BYTE0_CLK>,
-> > > > > > +                                    <&mmcc MDSS_PCLK0_CLK>,
-> > > > > > +                                    <&mmcc MDSS_ESC0_CLK>,
-> > > > > > +                                    <&mmcc MMSS_MISC_AHB_CLK>;
-> > > > > > +                           clock-names = "mdp_core",
-> > > > > > +                                         "iface",
-> > > > > > +                                         "bus",
-> > > > > > +                                         "byte",
-> > > > > > +                                         "pixel",
-> > > > > > +                                         "core",
-> > > > > > +                                         "core_mmss";
-> > > > >
-> > > > > Unless I enable MMSS_MMSSNOC_AXI_CLK and MMSS_S0_AXI_CLK I get some
-> > > > > underrun error from DSI. You don't see anything like this?
-> > > > >
-> > > > > (These clocks are controlled by msm_bus downstream and should be driven
-> > > > > by interconnect upstream)
-> > > > >
-> > > > >
-> > > > > Apart from this, I think this looks nice. Happy to see the progress.
-> > > >
-> > > > No, I'm not seeing an underrun errors from the DSI. I think the clocks
-> > > > are fine since I'm able to get this working with 4.17 using these same
-> > > > clocks. I just sent out v2 and the cover letter has some details, along
-> > > > with the full dmesg.
-> > > 
-> > > since we don't have interconnect driver for 8974, I guess there is
-> > > some chance that things work or not based on how lk leaves things?
-> > > 
-> > 
-> > Right, I guess the bootloader on my device does not leave the busses
-> > ticking - perhaps there's a boot splash involved on Brian's device?
-> > 
-> > Regardless, this works on Nexus 5 and allows Brian to make further
-> > progress so I'm all for merging it.
+On 09.05.19 16:31, Wei Yang wrote:
+> On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
+>> Only memory to be added to the buddy and to be onlined/offlined by
+>> user space using memory block devices needs (and should have!) memory
+>> block devices.
+>>
+>> Factor out creation of memory block devices Create all devices after
+>> arch_add_memory() succeeded. We can later drop the want_memblock parameter,
+>> because it is now effectively stale.
+>>
+>> Only after memory block devices have been added, memory can be onlined
+>> by user space. This implies, that memory is not visible to user space at
+>> all before arch_add_memory() succeeded.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Ingo Molnar <mingo@kernel.org>
+>> Cc: Andrew Banman <andrew.banman@hpe.com>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Qian Cai <cai@lca.pw>
+>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>> Cc: Arun KS <arunks@codeaurora.org>
+>> Cc: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
+>> include/linux/memory.h |  2 +-
+>> mm/memory_hotplug.c    | 15 ++++-----
+>> 3 files changed, 53 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>> index 6e0cb4fda179..862c202a18ca 100644
+>> --- a/drivers/base/memory.c
+>> +++ b/drivers/base/memory.c
+>> @@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
+>> 	return 0;
+>> }
+>>
+>> +static void unregister_memory(struct memory_block *memory)
+>> +{
+>> +	BUG_ON(memory->dev.bus != &memory_subsys);
+>> +
+>> +	/* drop the ref. we got via find_memory_block() */
+>> +	put_device(&memory->dev);
+>> +	device_unregister(&memory->dev);
+>> +}
+>> +
+>> /*
+>> - * need an interface for the VM to add new memory regions,
+>> - * but without onlining it.
+>> + * Create memory block devices for the given memory area. Start and size
+>> + * have to be aligned to memory block granularity. Memory block devices
+>> + * will be initialized as offline.
+>>  */
+>> -int hotplug_memory_register(int nid, struct mem_section *section)
+>> +int hotplug_memory_register(unsigned long start, unsigned long size)
 > 
-> There is a boot splash on the Nexus 5 and that may explain a behavior
-> that I observed. I attempted to add reset GPIO support to the simple
-> panel driver and the screen will clear but nothing will come on the
-> screen after a hard reset, even on 4.17. To be sure, I got the timing
-> information for how long to leave the GPIO high and low from the
-> downstream MSM 3.4 sources. That's when I had a script port all of the
-> ~400 panel on commands in the downstream device tree to a new panel
-> driver.
+> One trivial suggestion about the function name.
 > 
-> With the latest kernel kernel having a delay showing the console text,
-> I observe a brief second where the boot splash is shown along with the
-> startup text from Linux. A full refresh is performed and the boot
-> splash goes away. I don't see this with the 4.17 kernel; perhaps maybe
-> the full refresh occurs quick enough that its not noticeable.
+> For memory_block device, sometimes we use the full name
 > 
-> Can you point me to where the interconnect API is in the downstream
-> MSM 3.4 sources? https://github.com/AICP/kernel_lge_hammerhead
-> It looks like its in drivers/interconnect/ in the upstream sources.
+>     find_memory_block
+>     init_memory_block
+>     add_memory_block
 > 
+> But sometimes we use *nick* name
+> 
+>     hotplug_memory_register
+>     register_memory
+>     unregister_memory
+> 
+> This is a little bit confusion.
+> 
+> Can we use one name convention here?
 
-The data will be 8974 specific, but the plumbing should be reusable from
-8916 or 404. Hopefully we can get those landed shortly.
+We can just go for
 
-You can find the latest incarnation here:
-https://lore.kernel.org/lkml/20190415104357.5305-1-georgi.djakov@linaro.org/
+crate_memory_blocks() and free_memory_blocks(). Or do
+you have better suggestions?
 
-Regards,
-Bjorn
+(I would actually even prefer "memory_block_devices", because memory
+blocks have different meanins)
+
+> 
+> [...]
+> 
+>> /*
+>> @@ -1106,6 +1100,13 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>> 	if (ret < 0)
+>> 		goto error;
+>>
+>> +	/* create memory block devices after memory was added */
+>> +	ret = hotplug_memory_register(start, size);
+>> +	if (ret) {
+>> +		arch_remove_memory(nid, start, size, NULL);
+> 
+> Functionally, it works I think.
+> 
+> But arch_remove_memory() would remove pages from zone. At this point, we just
+> allocate section/mmap for pages, the zones are empty and pages are not
+> connected to zone.
+> 
+> Function  zone = page_zone(page); always gets zone #0, since pages->flags is 0
+> at  this point. This is not exact.
+> 
+> Would we add some comment to mention this? Or we need to clean up
+> arch_remove_memory() to take out __remove_zone()?
+
+That is precisely what is on my list next (see cover letter).This is
+already broken when memory that was never onlined is removed again.
+So I am planning to fix that independently.
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
