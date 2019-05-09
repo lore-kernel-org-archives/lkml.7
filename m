@@ -2,187 +2,80 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F42CC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15631C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0839121773
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXxBmE7z"
+	by mail.kernel.org (Postfix) with ESMTP id DCD3B2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557404738;
+	bh=3UPzRLHDfSoVigDN2UxnHZ4gUOJ1xilPkyQW4K1lCvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mCJyjK5hCC3VXGwLP5Ow3iT0LPwtpxo1U0OAccCxUmjG7hHy2zn31KG80cv51HpCe
+	 IojNLiPr3TghGzrz/x/xwlKY32fDcvCrsT9r51WLDLP5cJcvzdupqoefA3qI4mg265
+	 e0nIv46S0cPKsBlGFfyWKdQEMap/Wrr6jqwb3Dyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEIMZb (ORCPT
+        id S1726713AbfEIMZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:25:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41512 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfEIMZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:25:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k8so1822364lja.8;
-        Thu, 09 May 2019 05:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bgwFcpr4h0CqLDwaKDRvVqsaxrlGDdYtmYdrXixSeUQ=;
-        b=fXxBmE7ze/Z+gLUgPusLSOjeC8DPRni8xSXs72THlqUgvZ+YkB7C2X2joI2yabhZE3
-         8p3jL+zSxjqkE6WDx9RdpWMHV1BE+w1kk8V/mtEhJpgbCLjSPVymx2kjkrzPGSAIjr7D
-         w45LanlpZrGomO0jnZvIOzl4VSSIY4E3z+gyzmExHr1o6buuZO0GHkOYXoWSCeqrQLSb
-         FlCkYEZRTrKaSU02Al80SESzb5ftUvtSa4dEV1Il4KRbvvZUIkjl7K++UhJMBcIliYoC
-         xFLukUi+LA2L9H8oQGAQXR71a6J/JTXgKcmL1WnzuE5ndqFELwKSjnp7ngbqhxZBf77S
-         RirQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bgwFcpr4h0CqLDwaKDRvVqsaxrlGDdYtmYdrXixSeUQ=;
-        b=WG29ONTy+8hNEIqp57vq9kuI696SZwTlSrJv2O5qYfvzU5IRGYFKwSPhaBhjOSQBoa
-         KaxKVRz7N2nup9BcW6gZagaIH9iA0xKSDAts0s44PlMFYuQyf/uySqfaKnGKaDV6+tUf
-         lDzgt2HPDwf5/manucZ54R8EZRO8cZq3iTZkvmF5AD1c/oIffbTpzqP/Qz2maZWbChPo
-         XzlRcGHAPGOCyPm7f00ai1x30GWC64zOTf9f8Bes25iIb5cOM9dXkcGU+TJW+/5a+On7
-         bucRI7xMOdt+lr00iW+vhMni2dOrRaL+qyZTQznJFE+xtXU9U1Y9lgcCaJsN4JfeXU2n
-         TknA==
-X-Gm-Message-State: APjAAAUEZznMV7vnYefTRwKBufiZvKskb5cf/rYPU54xY0V4ViLF2Yol
-        9gmCtkp9gQ5Wx4CNOOJL/S/3YJ3+
-X-Google-Smtp-Source: APXvYqwy62cie0c9VYiWdxvOgL2dz0bVljr6TDZHfH9f2UgG36OiRDna8QWxOvWyDUp4EYX5rZFmew==
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr2163558ljg.25.1557404728231;
-        Thu, 09 May 2019 05:25:28 -0700 (PDT)
-Received: from esperanza ([176.120.239.149])
-        by smtp.gmail.com with ESMTPSA id y7sm306917ljj.34.2019.05.09.05.25.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 05:25:27 -0700 (PDT)
-Date:   Thu, 9 May 2019 15:25:26 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: Re: [PATCH] memcg: make it work on sparse non-0-node systems
-Message-ID: <20190509122526.ck25wscwanooxa3t@esperanza>
-References: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
- <20190429105939.11962-1-jslaby@suse.cz>
+        Thu, 9 May 2019 08:25:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbfEIMZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 08:25:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE2A216C4;
+        Thu,  9 May 2019 12:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557404737;
+        bh=3UPzRLHDfSoVigDN2UxnHZ4gUOJ1xilPkyQW4K1lCvg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VymesX1bFMmR6yZyA9P+9qVNcaucdCS85WQfJCwJ8QpTGj4PM9bMgEfja57tf57gP
+         1OypPTl+Ab/RLQaF3PnNA1DmFHuxgp9AkrUZoEruJ1zNpxk19ijmPF4OvfR61FauEi
+         Xc69wk5MHryV4WoJxNCEvDBFd5vZe111w1TvO3Ig=
+Date:   Thu, 9 May 2019 14:25:34 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jim Lin <jilin@nvidia.com>
+Cc:     mathias.nyman@intel.com, stern@rowland.harvard.edu,
+        kai.heng.feng@canonical.com, drinkcat@chromium.org,
+        keescook@chromium.org, nsaenzjulienne@suse.de, jflat@chromium.org,
+        malat@debian.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/1] usb: xhci: Add Clear_TT_Buffer
+Message-ID: <20190509122534.GA31542@kroah.com>
+References: <1557403395-30877-1-git-send-email-jilin@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429105939.11962-1-jslaby@suse.cz>
+In-Reply-To: <1557403395-30877-1-git-send-email-jilin@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 12:59:39PM +0200, Jiri Slaby wrote:
-> We have a single node system with node 0 disabled:
->   Scanning NUMA topology in Northbridge 24
->   Number of physical nodes 2
->   Skipping disabled node 0
->   Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
->   NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
-> 
-> This causes crashes in memcg when system boots:
->   BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
->   #PF error: [normal kernel read fault]
-> ...
->   RIP: 0010:list_lru_add+0x94/0x170
-> ...
->   Call Trace:
->    d_lru_add+0x44/0x50
->    dput.part.34+0xfc/0x110
->    __fput+0x108/0x230
->    task_work_run+0x9f/0xc0
->    exit_to_usermode_loop+0xf5/0x100
-> 
-> It is reproducible as far as 4.12. I did not try older kernels. You have
-> to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
-> investigated). Cannot be reproduced with systemd 234.
-> 
-> The system crashes because the size of lru array is never updated in
-> memcg_update_all_list_lrus and the reads are past the zero-sized array,
-> causing dereferences of random memory.
-> 
-> The root cause are list_lru_memcg_aware checks in the list_lru code.
-> The test in list_lru_memcg_aware is broken: it assumes node 0 is always
-> present, but it is not true on some systems as can be seen above.
-> 
-> So fix this by checking the first online node instead of node 0.
-> 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: <cgroups@vger.kernel.org>
-> Cc: <linux-mm@kvack.org>
-> Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-> ---
->  mm/list_lru.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 0730bf8ff39f..7689910f1a91 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
+On Thu, May 09, 2019 at 08:03:15PM +0800, Jim Lin wrote:
+> --- a/include/linux/usb.h
+> +++ b/include/linux/usb.h
+> @@ -625,6 +625,7 @@ struct usb3_lpm_parameters {
+>   *		parent->hub_delay + wHubDelay + tTPTransmissionDelay (40ns)
+>   *
+>   *	Will be used as wValue for SetIsochDelay requests.
+> + * @devaddr: address on a USB bus, assigned by controller like XHCI
+>   *
+>   * Notes:
+>   * Usbcore drivers should not set usbdev->state directly.  Instead use
+> @@ -709,6 +710,7 @@ struct usb_device {
+>  	unsigned lpm_disable_count;
 >  
->  static inline bool list_lru_memcg_aware(struct list_lru *lru)
->  {
-> -	/*
-> -	 * This needs node 0 to be always present, even
-> -	 * in the systems supporting sparse numa ids.
-> -	 */
-> -	return !!lru->node[0].memcg_lrus;
-> +	return !!lru->node[first_online_node].memcg_lrus;
->  }
->  
->  static inline struct list_lru_one *
+>  	u16 hub_delay;
+> +	int devaddr;
 
-Yep, I didn't expect node 0 could ever be unavailable, my bad.
-The patch looks fine to me:
+Shouldn't this be u32?
 
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 
-However, I tend to agree with Michal that (ab)using node[0].memcg_lrus
-to check if a list_lru is memcg aware looks confusing. I guess we could
-simply add a bool flag to list_lru instead. Something like this, may be:
-
-diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
-index aa5efd9351eb..d5ceb2839a2d 100644
---- a/include/linux/list_lru.h
-+++ b/include/linux/list_lru.h
-@@ -54,6 +54,7 @@ struct list_lru {
- #ifdef CONFIG_MEMCG_KMEM
- 	struct list_head	list;
- 	int			shrinker_id;
-+	bool			memcg_aware;
- #endif
- };
- 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 0730bf8ff39f..8e605e40a4c6 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
- 
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
- {
--	/*
--	 * This needs node 0 to be always present, even
--	 * in the systems supporting sparse numa ids.
--	 */
--	return !!lru->node[0].memcg_lrus;
-+	return lru->memcg_aware;
- }
- 
- static inline struct list_lru_one *
-@@ -451,6 +447,7 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
- {
- 	int i;
- 
-+	lru->memcg_aware = memcg_aware;
- 	if (!memcg_aware)
- 		return 0;
- 
