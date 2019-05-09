@@ -2,242 +2,82 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDCAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA21C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68005216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A062216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oO58vmbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfEIGin (ORCPT
+        id S1726561AbfEIGjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 02:38:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48775 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfEIGin (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 02:38:43 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1hOchT-0007Ak-4D; Thu, 09 May 2019 08:38:39 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5] (unknown [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5])
+        Thu, 9 May 2019 02:39:46 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57269 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbfEIGjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 02:39:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id B585540A097;
-        Thu,  9 May 2019 06:38:36 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>, wg@grandegger.com, davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190319172651.10012-1-dmurphy@ti.com>
- <8b53474d-9dbf-4b81-defd-1587e022990b@pengutronix.de>
- <35d179a7-2682-111e-638b-903559f0974a@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH v11 1/5] can: m_can: Create a m_can platform framework
-Message-ID: <b6d6daab-ff49-76d1-e363-6179100be560@pengutronix.de>
-Date:   Thu, 9 May 2019 08:38:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4503bz41lDz9s9y;
+        Thu,  9 May 2019 16:39:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557383983;
+        bh=Dy19V1ekO8bMEFYYDG7JNKoKSMUwbDVlOCMCfJEfQl8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oO58vmbXKH96T92p+Ai5DX9UCPdNnT23tQCUsWzVMxK+QD2l4YjfOSM8dhP4F56qy
+         TalpSbdFZF46HuvMXYmTajZR1DkxDDca9d1CJn0s2Iey/5tuozdL+OccGRGlZoXSEN
+         sviOdiUSp0w2Bx4ZQSFBGfGlQL2BoGkuRmR52GAAYPoycgH8eBWimWYVhypphZyN8o
+         Yb3FDZCcZbIDtET3gtBeRNI+Z4uwxXLH9LI1CEbRT7a8BzvluwsD/UVmpA9DyMucKy
+         4opYe6LllUQ0+tV9c6Mu/ZoGm7N+iJWZTTuXDWameJRuRUKp4A6PebCzWUVRWi/mHM
+         THIuupx0UDpWw==
+Date:   Thu, 9 May 2019 16:39:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: the merge window is open
+Message-ID: <20190509163942.6a233bf4@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <35d179a7-2682-111e-638b-903559f0974a@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="a3xXgYU38s46hzqdXcmCpGMtxhdaaPBt4"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/3ys0XM_FdcHI52m8E1ExmQU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---a3xXgYU38s46hzqdXcmCpGMtxhdaaPBt4
-Content-Type: multipart/mixed; boundary="VQj2Tbcz15jDp4XUoPDDM0DRxRoZdHHvZ";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, wg@grandegger.com, davem@davemloft.net
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <b6d6daab-ff49-76d1-e363-6179100be560@pengutronix.de>
-Subject: Re: [PATCH v11 1/5] can: m_can: Create a m_can platform framework
-References: <20190319172651.10012-1-dmurphy@ti.com>
- <8b53474d-9dbf-4b81-defd-1587e022990b@pengutronix.de>
- <35d179a7-2682-111e-638b-903559f0974a@ti.com>
-In-Reply-To: <35d179a7-2682-111e-638b-903559f0974a@ti.com>
-
---VQj2Tbcz15jDp4XUoPDDM0DRxRoZdHHvZ
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+--Sig_/3ys0XM_FdcHI52m8E1ExmQU
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On 5/8/19 9:54 PM, Dan Murphy wrote:
->>> -/* m_can private data structure */
->>> -struct m_can_priv {
->>> -	struct can_priv can;	/* must be the first member */
->>> -	struct napi_struct napi;
->>> -	struct net_device *dev;
->>> -	struct device *device;
->>> -	struct clk *hclk;
->>> -	struct clk *cclk;
->>> -	void __iomem *base;
->>> -	u32 irqstatus;
->>> -	int version;
->>> -
->>> -	/* message ram configuration */
->>> -	void __iomem *mram_base;
->>> -	struct mram_cfg mcfg[MRAM_CFG_NUM];
->>> -};
->>> +static u32 m_can_read(struct m_can_priv *priv, enum m_can_reg reg)
->>> +{
->>> +	if (priv->ops->read_reg)
->>> +		return priv->ops->read_reg(priv, reg);
->>> +	else
->>> +		return -EINVAL;
->>> +}
->>
->> How do you plan to check the return value here?
->> What's the difference between a register value of 0xffffffe9 and
->> returning -EINVAL?
->=20
-> Good point.  I could just inline this and return whatever is sent
-> from the callback and as you said allow a backtrace to happen if
-> read_reg is invalid.
+Hi all,
 
-ACK.
-A minimal function will look like this:
-
-static inline u32 m_can_read(struct m_can_priv *priv, enum m_can_reg reg)=
-
-{
-	return priv->ops->read_reg(priv, reg);
-}
-
-And of ops or read_reg is NULL, the kernel will access a NULL pointer
-that would then generate a backtrace.
-
->>> -static inline u32 m_can_read(const struct m_can_priv *priv, enum m_c=
-an_reg reg)
->>> +static int m_can_write(struct m_can_priv *priv, enum m_can_reg reg, =
-u32 val)
->>>  {
->>> -	return readl(priv->base + reg);
->>> +	if (priv->ops->write_reg)
->>> +		return priv->ops->write_reg(priv, reg, val);
->>> +	else
->>> +		return -EINVAL;
->>>  }
->>
->> I don't see anyone checking the return value. Better just dereference
->> the pointer and the kernel will produce a nice backtrace.
->>
->> Same should be done for all read and write variants.
->>
->=20
-> I will need to go through this and see if there is any caller checking =
-the return.  But
-> I think you are correct.  If thats true I will just change this to a vo=
-id, inline the function
-> and allow a backtrace if the callback is null
-
-ok
-
-regards,
-Marc
+Please do not add any v5.3 material to your linux-next included
+trees/branches until after v5.2-rc1 has been released.
 
 --=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Cheers,
+Stephen Rothwell
 
-
---VQj2Tbcz15jDp4XUoPDDM0DRxRoZdHHvZ--
-
---a3xXgYU38s46hzqdXcmCpGMtxhdaaPBt4
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/3ys0XM_FdcHI52m8E1ExmQU
+Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAlzTyuUACgkQWsYho5Hk
-nSBiEQgAomIXBCvMCBf188HH8++++IsfVDErPHlwIp+jyLFokfKE8bEUwxRR/U4R
-oa7B9WgfoejxfrLsN0AnmhW4lIZPwCWjbSUcVnS/FxQfHBG3L37xwD/qr5hz7Wtx
-CigXUeuKEQwH5phx7Ht+hDZNi1NCoAwuISekww7wTLlXGMRsJdmhrVFFaPk51S4o
-LnQALH2bcuwJB0VAAjGdIg05X+VQcdISRYlqydol7uVdPbvvE7UuHvUZMzg59AzQ
-wRT3s5nN5z+8d+41xtWYiFJgPQoUfFfIgrE+DppxaNxAbj9EqDVok1cylRmLiAcS
-K6sbNLefiU1uhw9UusZgFjYuWu8PaA==
-=7e44
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzTyy8ACgkQAVBC80lX
+0GyK+AgAiMiumY9MMQzlqX7AWpUsxiSqJi0LJP+qIAW8ZtdP7Mzy8k0B94hJgpk/
+zNzt1gPYEQoopZsn7do0Aww0uRK642q1DAVORR+qddlrujn/I18EBCDCXutft5PD
+sfzEM9cWL35kl8Qhrc7iTTaNdN9W4Bn7RdnDhkh1tL/B/EL1GmBo+u1QUHfKY/Fd
+HQsST5CIn1hW4FJI5bnvY3bobN8d99gIPpk/KsOyJsPIOp1IMGeurVjm4W4PSg2e
+y2OUv2QKnTguCo8GyKkmPCvNC13t8lR55T04f2+xmvlAscfksytq/uv/BldbOpNE
+3uiUdTIn2p+2HRRRreI2aj/h8atyag==
+=slrH
 -----END PGP SIGNATURE-----
 
---a3xXgYU38s46hzqdXcmCpGMtxhdaaPBt4--
+--Sig_/3ys0XM_FdcHI52m8E1ExmQU--
