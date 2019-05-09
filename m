@@ -2,173 +2,196 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5923C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0968C04AAE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FF32173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:36:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X9R3AlcC"
+	by mail.kernel.org (Postfix) with ESMTP id 9402C216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfEICgC (ORCPT
+        id S1726684AbfEICgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:36:02 -0400
-Received: from mail-eopbgr150074.outbound.protection.outlook.com ([40.107.15.74]:8854
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725891AbfEICgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:36:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OONjG6H4vLUi9w8g3oO4gpoe3wF5F0QcVtLtdHcCXwI=;
- b=X9R3AlcCKYC2kuEg3QDhqSJ84UDHvSYb7w5PAR+99sorcQ90XjGyHb1fKyilVT0zYJo0MQFwFGbo3NTDiPuUug76rPjAQhzLDO0EL98vYxMubGoZARrcM/rha1ujDVk276LMEIWpC+y9u9Pfn5pjryLktrYaJkttvgA2gObZG9E=
-Received: from VI1PR04MB3247.eurprd04.prod.outlook.com (10.170.232.160) by
- VI1PR04MB5933.eurprd04.prod.outlook.com (20.178.205.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.21; Thu, 9 May 2019 02:35:57 +0000
-Received: from VI1PR04MB3247.eurprd04.prod.outlook.com
- ([fe80::cd99:d9b2:d90a:6c2]) by VI1PR04MB3247.eurprd04.prod.outlook.com
- ([fe80::cd99:d9b2:d90a:6c2%2]) with mapi id 15.20.1856.012; Thu, 9 May 2019
- 02:35:57 +0000
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: RE: [EXT] [PATCH v2 6/6] soc/fsl/qe: qe.c: fold qe_get_num_of_snums
- into qe_snums_init
-Thread-Topic: [EXT] [PATCH v2 6/6] soc/fsl/qe: qe.c: fold qe_get_num_of_snums
- into qe_snums_init
-Thread-Index: AQHVAABXTquhlkr+A0av+N7ek+LWPaZiH4/Q
-Date:   Thu, 9 May 2019 02:35:56 +0000
-Message-ID: <VI1PR04MB3247EC77FE4096B891DFAA1F91330@VI1PR04MB3247.eurprd04.prod.outlook.com>
-References: <20190430133615.25721-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
- <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20190501092841.9026-7-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiang.zhao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 55156121-536d-4330-2608-08d6d42710d5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5933;
-x-ms-traffictypediagnostic: VI1PR04MB5933:
-x-microsoft-antispam-prvs: <VI1PR04MB59336EFA497DB2EB2F815A3091330@VI1PR04MB5933.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 003245E729
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(366004)(136003)(396003)(199004)(189003)(13464003)(86362001)(256004)(6436002)(55016002)(316002)(66946007)(73956011)(2501003)(6246003)(7696005)(6506007)(53546011)(3846002)(6116002)(102836004)(5660300002)(52536014)(7736002)(71200400001)(71190400001)(26005)(68736007)(2906002)(66476007)(8936002)(76176011)(4326008)(14454004)(25786009)(229853002)(81156014)(81166006)(8676002)(64756008)(66446008)(478600001)(66556008)(6636002)(11346002)(110136005)(99286004)(54906003)(486006)(74316002)(476003)(44832011)(66066001)(9686003)(186003)(33656002)(7416002)(53936002)(446003)(76116006)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5933;H:VI1PR04MB3247.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: H9Xo7D0f/02SuB3huP9Q1NItgM1lzRa9nKHyImg6HINtHNcslAtFqTkFPe1EL+nDChwNUtSYTiCavOiWfJ7G9eO0u+slj3iN2toO0a1JZFCzfC6WFx5ZSnKIpPwzxCdAqMjsdagXHpglCWWSMaNB4bj9GKGxynckCPRiyUYWwTnEg6lZ2lCjP8FR19mGr8BNWgKxmhFq5bEDQY+cH65AKWT1kcVWbrZXusqY/M4o9QzOmp1idmR3z7fXicNpzX95jEe2AdLOlhRXshmUwbJTtWrb6W6WtnkYnS+NOxxb5zIKtkWAwQsy+6uHN2c7DvrEL1UpCpUebHdnDTg7iOEBCwfvnflrg60QFlxmQ0+HIbC/lYbptqEhGAOUzAIYeos3oRr2Nzpj5xL+cElREoVzwOwVG7WRFZagWr+SuAR8QYE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 8 May 2019 22:36:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64592 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbfEICgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 22:36:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 May 2019 19:36:46 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 08 May 2019 19:36:43 -0700
+Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v3 1/8] iommu: Add ops entry for supported default domain
+ type
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Tom Murphy <tmurphy@arista.com>
+References: <20190429020925.18136-1-baolu.lu@linux.intel.com>
+ <20190429020925.18136-2-baolu.lu@linux.intel.com>
+ <CAPL0++4Q7p7gWRUF5vG5sazLNCmSR--Px-=OEtj6vm_gEpB_ng@mail.gmail.com>
+ <bba1f327-21b7-ed3c-8fd4-217ad97a6a7c@arm.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <3e0da076-4916-1a02-615c-927c1b3528b8@linux.intel.com>
+Date:   Thu, 9 May 2019 10:30:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55156121-536d-4330-2608-08d6d42710d5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 02:35:56.9180
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5933
+In-Reply-To: <bba1f327-21b7-ed3c-8fd4-217ad97a6a7c@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS81LzEgMTc6MjksIFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJl
-dmFzLmRrPiB3cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBS
-YXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4gU2VudDogMjAx
-OeW5tDXmnIgx5pelIDE3OjI5DQo+IFRvOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgUWlh
-bmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5j
-b20+DQo+IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBS
-b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgU2NvdHQgV29vZA0KPiA8b3NzQGJ1c2Vy
-cm9yLm5ldD47IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPjsgTWFy
-aw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJhc211cyBWaWxsZW1vZXMNCj4g
-PFJhc211cy5WaWxsZW1vZXNAcHJldmFzLnNlPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjIgNi82XSBz
-b2MvZnNsL3FlOiBxZS5jOiBmb2xkIHFlX2dldF9udW1fb2Zfc251bXMgaW50bw0KPiBxZV9zbnVt
-c19pbml0DQo+IA0KPiBUaGUgY29tbWVudCAiTm8gUUUgZXZlciBoYXMgZmV3ZXIgdGhhbiAyOCBT
-TlVNcyIgaXMgZmFsc2U7IGUuZy4gdGhlDQo+IE1QQzgzMDkgaGFzIDE0LiBUaGUgY29kZSBwYXRo
-IHJldHVybmluZyAtRUlOVkFMIGlzIGFsc28gYSByZWNpcGUgZm9yIGluc3RhbnQNCj4gZGlzYXN0
-ZXIsIHNpbmNlIHRoZSBjYWxsZXIgKHFlX3NudW1zX2luaXQpIHVuY3JpdGljYWxseSBhc3NpZ25z
-IHRoZSByZXR1cm4gdmFsdWUgdG8NCj4gdGhlIHVuc2lnbmVkIHFlX251bV9vZl9zbnVtLCBhbmQg
-d291bGQgdGh1cyBwcm9jZWVkIHRvIGF0dGVtcHQgdG8gY29weQ0KPiA0R0IgZnJvbSBzbnVtX2lu
-aXRfNDZbXSB0byB0aGUgc251bVtdIGFycmF5Lg0KPiANCj4gU28gZm9sZCB0aGUgaGFuZGxpbmcg
-b2YgdGhlIGxlZ2FjeSBmc2wscWUtbnVtLXNudW1zIGludG8gcWVfc251bXNfaW5pdCwgYW5kDQo+
-IG1ha2Ugc3VyZSB3ZSBkbyBub3QgZW5kIHVwIHVzaW5nIHRoZSBzbnVtX2luaXRfNDYgYXJyYXkg
-aW4gY2FzZXMgb3RoZXIgdGhhbg0KPiB0aGUgdHdvIHdoZXJlIHdlIGtub3cgaXQgbWFrZXMgc2Vu
-c2UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVt
-b2VzQHByZXZhcy5kaz4NCj4gLS0tDQogDQpSZXZpZXdlZC1ieTogUWlhbmcgWmhhbyA8cWlhbmcu
-emhhb0BueHAuY29tPg0KDQo+ICBkcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyB8IDQ2ICsrKysrKysr
-KysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTYg
-aW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9zb2MvZnNsL3FlL3FlLmMgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyBpbmRleA0KPiAzMjVk
-Njg5Y2JmNWMuLjI3NmQ3ZDc4ZWJmYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3Fl
-L3FlLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3FlL3FlLmMNCj4gQEAgLTMwOCwyNCArMzA4
-LDMzIEBAIHN0YXRpYyB2b2lkIHFlX3NudW1zX2luaXQodm9pZCkNCj4gICAgICAgICBpbnQgaTsN
-Cj4gDQo+ICAgICAgICAgYml0bWFwX3plcm8oc251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0K
-PiArICAgICAgIHFlX251bV9vZl9zbnVtID0gMjg7IC8qIFRoZSBkZWZhdWx0IG51bWJlciBvZiBz
-bnVtIGZvciB0aHJlYWRzDQo+ICsgaXMgMjggKi8NCj4gICAgICAgICBxZSA9IHFlX2dldF9kZXZp
-Y2Vfbm9kZSgpOw0KPiAgICAgICAgIGlmIChxZSkgew0KPiAgICAgICAgICAgICAgICAgaSA9IG9m
-X3Byb3BlcnR5X3JlYWRfdmFyaWFibGVfdThfYXJyYXkocWUsICJmc2wscWUtc251bXMiLA0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc251
-bXMsIDEsDQo+IFFFX05VTV9PRl9TTlVNKTsNCj4gLSAgICAgICAgICAgICAgIG9mX25vZGVfcHV0
-KHFlKTsNCj4gICAgICAgICAgICAgICAgIGlmIChpID4gMCkgew0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICBvZl9ub2RlX3B1dChxZSk7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHFlX251
-bV9vZl9zbnVtID0gaTsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOw0KPiAgICAg
-ICAgICAgICAgICAgfQ0KPiArICAgICAgICAgICAgICAgLyoNCj4gKyAgICAgICAgICAgICAgICAq
-IEZhbGwgYmFjayB0byBsZWdhY3kgYmluZGluZyBvZiB1c2luZyB0aGUgdmFsdWUgb2YNCj4gKyAg
-ICAgICAgICAgICAgICAqIGZzbCxxZS1udW0tc251bXMgdG8gY2hvb3NlIG9uZSBvZiB0aGUgc3Rh
-dGljIGFycmF5cw0KPiArICAgICAgICAgICAgICAgICogYWJvdmUuDQo+ICsgICAgICAgICAgICAg
-ICAgKi8NCj4gKyAgICAgICAgICAgICAgIG9mX3Byb3BlcnR5X3JlYWRfdTMyKHFlLCAiZnNsLHFl
-LW51bS1zbnVtcyIsDQo+ICZxZV9udW1fb2Zfc251bSk7DQo+ICsgICAgICAgICAgICAgICBvZl9u
-b2RlX3B1dChxZSk7DQo+ICAgICAgICAgfQ0KPiANCj4gLSAgICAgICBxZV9udW1fb2Zfc251bSA9
-IHFlX2dldF9udW1fb2Zfc251bXMoKTsNCj4gLQ0KPiAtICAgICAgIGlmIChxZV9udW1fb2Zfc251
-bSA9PSA3NikNCj4gKyAgICAgICBpZiAocWVfbnVtX29mX3NudW0gPT0gNzYpIHsNCj4gICAgICAg
-ICAgICAgICAgIHNudW1faW5pdCA9IHNudW1faW5pdF83NjsNCj4gLSAgICAgICBlbHNlDQo+ICsg
-ICAgICAgfSBlbHNlIGlmIChxZV9udW1fb2Zfc251bSA9PSAyOCB8fCBxZV9udW1fb2Zfc251bSA9
-PSA0Nikgew0KPiAgICAgICAgICAgICAgICAgc251bV9pbml0ID0gc251bV9pbml0XzQ2Ow0KPiAt
-DQo+ICsgICAgICAgfSBlbHNlIHsNCj4gKyAgICAgICAgICAgICAgIHByX2VycigiUUU6IHVuc3Vw
-cG9ydGVkIHZhbHVlIG9mIGZzbCxxZS1udW0tc251bXM6ICV1XG4iLA0KPiBxZV9udW1fb2Zfc251
-bSk7DQo+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+ICsgICAgICAgfQ0KPiAgICAgICAgIG1l
-bWNweShzbnVtcywgc251bV9pbml0LCBxZV9udW1fb2Zfc251bSk7ICB9DQo+IA0KPiBAQCAtNjQx
-LDMwICs2NTAsNyBAQCBFWFBPUlRfU1lNQk9MKHFlX2dldF9udW1fb2ZfcmlzYyk7DQo+IA0KPiAg
-dW5zaWduZWQgaW50IHFlX2dldF9udW1fb2Zfc251bXModm9pZCkNCj4gIHsNCj4gLSAgICAgICBz
-dHJ1Y3QgZGV2aWNlX25vZGUgKnFlOw0KPiAtICAgICAgIGludCBzaXplOw0KPiAtICAgICAgIHVu
-c2lnbmVkIGludCBudW1fb2Zfc251bXM7DQo+IC0gICAgICAgY29uc3QgdTMyICpwcm9wOw0KPiAt
-DQo+IC0gICAgICAgbnVtX29mX3NudW1zID0gMjg7IC8qIFRoZSBkZWZhdWx0IG51bWJlciBvZiBz
-bnVtIGZvciB0aHJlYWRzIGlzIDI4DQo+ICovDQo+IC0gICAgICAgcWUgPSBxZV9nZXRfZGV2aWNl
-X25vZGUoKTsNCj4gLSAgICAgICBpZiAoIXFlKQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIG51
-bV9vZl9zbnVtczsNCj4gLQ0KPiAtICAgICAgIHByb3AgPSBvZl9nZXRfcHJvcGVydHkocWUsICJm
-c2wscWUtbnVtLXNudW1zIiwgJnNpemUpOw0KPiAtICAgICAgIGlmIChwcm9wICYmIHNpemUgPT0g
-c2l6ZW9mKCpwcm9wKSkgew0KPiAtICAgICAgICAgICAgICAgbnVtX29mX3NudW1zID0gKnByb3A7
-DQo+IC0gICAgICAgICAgICAgICBpZiAoKG51bV9vZl9zbnVtcyA8IDI4KSB8fCAobnVtX29mX3Nu
-dW1zID4NCj4gUUVfTlVNX09GX1NOVU0pKSB7DQo+IC0gICAgICAgICAgICAgICAgICAgICAgIC8q
-IE5vIFFFIGV2ZXIgaGFzIGZld2VyIHRoYW4gMjggU05VTXMgKi8NCj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgcHJfZXJyKCJRRTogbnVtYmVyIG9mIHNudW0gaXMgaW52YWxpZFxuIik7DQo+IC0g
-ICAgICAgICAgICAgICAgICAgICAgIG9mX25vZGVfcHV0KHFlKTsNCj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+IC0gICAgICAgICAgICAgICB9DQo+IC0gICAgICAg
-fQ0KPiAtDQo+IC0gICAgICAgb2Zfbm9kZV9wdXQocWUpOw0KPiAtDQo+IC0gICAgICAgcmV0dXJu
-IG51bV9vZl9zbnVtczsNCj4gKyAgICAgICByZXR1cm4gcWVfbnVtX29mX3NudW07DQo+ICB9DQo+
-ICBFWFBPUlRfU1lNQk9MKHFlX2dldF9udW1fb2Zfc251bXMpOw0KPiANCj4gLS0NCj4gMi4yMC4x
-DQoNCkJlc3QgUmVnYXJkcw0KUWlhbmcgWmhhbw0K
+Hi Robin,
+
+On 5/7/19 6:28 PM, Robin Murphy wrote:
+> On 06/05/2019 16:32, Tom Murphy via iommu wrote:
+>> The AMD driver already solves this problem and uses the generic
+>> iommu_request_dm_for_dev function. It seems like both drivers have the
+>> same problem and could use the same solution. Is there any reason we
+>> can't have use the same solution for the intel and amd driver?
+>>
+>> Could we just  copy the implementation of the AMD driver? It would be
+>> nice to have the same behavior across both drivers especially as we
+>> move to make both drivers use more generic code.
+> 
+> TBH I don't think the API really needs to be involved at all here. 
+> Drivers can already not provide the requested default domain type if 
+> they don't support it, so as long as the driver can ensure that the 
+> device ends up with IOMMU or direct DMA ops as appropriate, I don't see 
+> any great problem with drivers just returning a passthrough domain when 
+> a DMA domain was requested, or vice versa (and logging a message that 
+> the requested type was overridden). The only type that we really do have 
+> to honour strictly is non-default (i.e. unmanaged) domains.
+
+I agree with you that we only have to honor strictly the non-default
+domains. But domain type saved in iommu_domain is consumed in iommu.c
+and exposed to user through sysfs. It's not clean if the iommu driver
+silently replace the default domain.
+
+Best regards,
+Lu Baolu
+
+> 
+> Robin.
+> 
+>> On Mon, Apr 29, 2019 at 3:16 AM Lu Baolu <baolu.lu@linux.intel.com> 
+>> wrote:
+>>>
+>>> This adds an optional ops entry to query the default domain
+>>> types supported by the iommu driver for  a specific device.
+>>> This is necessary in cases where the iommu driver can only
+>>> support a specific type of default domain for a device. In
+>>> normal cases, this ops will return IOMMU_DOMAIN_ANY which
+>>> indicates that the iommu driver supports both IOMMU_DOMAIN_DMA
+>>> and IOMMU_DOMAIN_IDENTITY, hence the static default domain
+>>> type will be used.
+>>>
+>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>> ---
+>>>   drivers/iommu/iommu.c | 13 ++++++++++---
+>>>   include/linux/iommu.h | 11 +++++++++++
+>>>   2 files changed, 21 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>> index acd6830e6e9b..1ad9a1f2e078 100644
+>>> --- a/drivers/iommu/iommu.c
+>>> +++ b/drivers/iommu/iommu.c
+>>> @@ -1097,15 +1097,22 @@ struct iommu_group 
+>>> *iommu_group_get_for_dev(struct device *dev)
+>>>           * IOMMU driver.
+>>>           */
+>>>          if (!group->default_domain) {
+>>> +               unsigned int domain_type = IOMMU_DOMAIN_ANY;
+>>>                  struct iommu_domain *dom;
+>>>
+>>> -               dom = __iommu_domain_alloc(dev->bus, 
+>>> iommu_def_domain_type);
+>>> -               if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
+>>> +               if (ops->def_domain_type)
+>>> +                       domain_type = ops->def_domain_type(dev);
+>>> +
+>>> +               if (domain_type == IOMMU_DOMAIN_ANY)
+>>> +                       domain_type = iommu_def_domain_type;
+>>> +
+>>> +               dom = __iommu_domain_alloc(dev->bus, domain_type);
+>>> +               if (!dom && domain_type != IOMMU_DOMAIN_DMA) {
+>>>                          dom = __iommu_domain_alloc(dev->bus, 
+>>> IOMMU_DOMAIN_DMA);
+>>>                          if (dom) {
+>>>                                  dev_warn(dev,
+>>>                                           "failed to allocate default 
+>>> IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
+>>> -                                        iommu_def_domain_type);
+>>> +                                        domain_type);
+>>>                          }
+>>>                  }
+>>>
+>>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>>> index 8239ece9fdfc..ba9a5b996a63 100644
+>>> --- a/include/linux/iommu.h
+>>> +++ b/include/linux/iommu.h
+>>> @@ -79,12 +79,16 @@ struct iommu_domain_geometry {
+>>>    *     IOMMU_DOMAIN_DMA        - Internally used for DMA-API 
+>>> implementations.
+>>>    *                               This flag allows IOMMU drivers to 
+>>> implement
+>>>    *                               certain optimizations for these 
+>>> domains
+>>> + *     IOMMU_DOMAIN_ANY        - All domain types defined here
+>>>    */
+>>>   #define IOMMU_DOMAIN_BLOCKED   (0U)
+>>>   #define IOMMU_DOMAIN_IDENTITY  (__IOMMU_DOMAIN_PT)
+>>>   #define IOMMU_DOMAIN_UNMANAGED (__IOMMU_DOMAIN_PAGING)
+>>>   #define IOMMU_DOMAIN_DMA       (__IOMMU_DOMAIN_PAGING |        \
+>>>                                   __IOMMU_DOMAIN_DMA_API)
+>>> +#define IOMMU_DOMAIN_ANY       (IOMMU_DOMAIN_IDENTITY |        \
+>>> +                                IOMMU_DOMAIN_UNMANAGED |       \
+>>> +                                IOMMU_DOMAIN_DMA)
+>>>
+>>>   struct iommu_domain {
+>>>          unsigned type;
+>>> @@ -196,6 +200,11 @@ enum iommu_dev_features {
+>>>    * @dev_feat_enabled: check enabled feature
+>>>    * @aux_attach/detach_dev: aux-domain specific attach/detach entries.
+>>>    * @aux_get_pasid: get the pasid given an aux-domain
+>>> + * @def_domain_type: get per-device default domain type that the IOMMU
+>>> + *             driver is able to support. Valid returns values:
+>>> + *             - IOMMU_DOMAIN_DMA: only suports non-identity domain
+>>> + *             - IOMMU_DOMAIN_IDENTITY: only supports identity domain
+>>> + *             - IOMMU_DOMAIN_ANY: supports all
+>>>    * @pgsize_bitmap: bitmap of all possible supported page sizes
+>>>    */
+>>>   struct iommu_ops {
+>>> @@ -251,6 +260,8 @@ struct iommu_ops {
+>>>          void (*aux_detach_dev)(struct iommu_domain *domain, struct 
+>>> device *dev);
+>>>          int (*aux_get_pasid)(struct iommu_domain *domain, struct 
+>>> device *dev);
+>>>
+>>> +       int (*def_domain_type)(struct device *dev);
+>>> +
+>>>          unsigned long pgsize_bitmap;
+>>>   };
+>>>
+>>> -- 
+>>> 2.17.1
+>>>
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>
+> 
