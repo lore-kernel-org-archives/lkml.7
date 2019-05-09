@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2BAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD6EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F622177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B5F204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428050;
-	bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
+	s=default; t=1557428054;
+	bh=k/TeH7BaKVX1u50l//zvo0KDlOFkKEQ+Vt+mzlbxyaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qm8niWSIMzk6uQmvf1QGzrLNK4P/2nw2REubICGcx4FstV02mV/NHSpMO+ZuyPEJ5
-	 Ha37KcrB7fybUZxe5O3icQcZh6XSv8aM7K5mYKlZXOItavFxu4+abGdFowZYRFNa2/
-	 O1feIKAKy55GmDT5EdSPI7Te4+h5hHR3WqhOJp5w=
+	b=kgZBkxY/myhzvT7Ml8GuOxyNcJcOeJsoiJ0rGw8p0v2wX0BEPUzIHU535gNu6Pro/
+	 4GkdFATFZoK8ddE/wVbs1MBheZeH3QAohpTjmYoJpEBzuDLeftZ2RgOOMSxM9qzNOt
+	 OzY3oiC/ZbEmepC/ep0hAycPBn2utHT6GBwT6K0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbfEISyI (ORCPT
+        id S1727888AbfEISyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:54:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728256AbfEISyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:54:05 -0400
+        id S1728749AbfEISyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:54:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94B9A204FD;
-        Thu,  9 May 2019 18:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 432DF2177E;
+        Thu,  9 May 2019 18:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428045;
-        bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
+        s=default; t=1557428047;
+        bh=k/TeH7BaKVX1u50l//zvo0KDlOFkKEQ+Vt+mzlbxyaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THjV+UfxSchwZVtui26Lh8ba1PolQI48oxbVKUH95qKEEgFRVCRkEwldUTRG9KGM6
-         uZ+dOAQ7vF3NMXCpjXVOBtaXEek1/w5ClSM23QSYzfB3SEPZt4wKR5poS2zhWWPFGY
-         vyX+DpQY55k6ugKQ32ulWlBRE/zIQLeIRBBdkga8=
+        b=yKQqLticbjJAzqMEqmJ5E13XuMNUFZP3F4OFzq52x/J/VtuuasTF3F+XQ27acIlCc
+         JzivhFOpWQpcfschntm0bEV83ZyZNDovYjow5G0DSmQS3J0VqFlqF75DrzVmYnacjd
+         705XkVENIAiCx7VhP6PGEsqDCkXZn+OjHLYeEGFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.0 76/95] USB: serial: f81232: fix interrupt worker not stop
-Date:   Thu,  9 May 2019 20:42:33 +0200
-Message-Id: <20190509181314.681328937@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 5.0 77/95] USB: cdc-acm: fix unthrottle races
+Date:   Thu,  9 May 2019 20:42:34 +0200
+Message-Id: <20190509181314.737330384@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,92 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 804dbee1e49774918339c1e5a87400988c0819e8 upstream.
+commit 764478f41130f1b8d8057575b89e69980a0f600d upstream.
 
-The F81232 will use interrupt worker to handle MSR change.
-This patch will fix the issue that interrupt work should stop
-in close() and suspend().
+Fix two long-standing bugs which could potentially lead to memory
+corruption or leave the port throttled until it is reopened (on weakly
+ordered systems), respectively, when read-URB completion races with
+unthrottle().
 
-This also fixes line-status events being disabled after a suspend cycle
-until the port is re-opened.
+First, the URB must not be marked as free before processing is complete
+to prevent it from being submitted by unthrottle() on another CPU.
 
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-[ johan: amend commit message ]
-Fixes: 87fe5adcd8de ("USB: f81232: implement read IIR/MSR with endpoint")
-Cc: stable <stable@vger.kernel.org>	# 4.1
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  process_urb();
+	  smp_mb__before_atomic();
+	  set_bit(i, free);		  if (test_and_clear_bit(i, free))
+						  submit_urb();
+
+Second, the URB must be marked as free before checking the throttled
+flag to prevent unthrottle() on another CPU from failing to observe that
+the URB needs to be submitted if complete() sees that the throttled flag
+is set.
+
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  set_bit(i, free);		  throttled = 0;
+	  smp_mb__after_atomic();	  smp_mb();
+	  if (throttled)		  if (test_and_clear_bit(i, free))
+		  return;			  submit_urb();
+
+Note that test_and_clear_bit() only implies barriers when the test is
+successful. To handle the case where the URB is still in use an explicit
+barrier needs to be added to unthrottle() for the second race condition.
+
+Also note that the first race was fixed by 36e59e0d70d6 ("cdc-acm: fix
+race between callback and unthrottle") back in 2015, but the bug was
+reintroduced a year later.
+
+Fixes: 1aba579f3cf5 ("cdc-acm: handle read pipe errors")
+Fixes: 088c64f81284 ("USB: cdc-acm: re-write read processing")
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/f81232.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/usb/class/cdc-acm.c |   32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
---- a/drivers/usb/serial/f81232.c
-+++ b/drivers/usb/serial/f81232.c
-@@ -556,9 +556,12 @@ static int f81232_open(struct tty_struct
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -470,12 +470,12 @@ static void acm_read_bulk_callback(struc
+ 	struct acm *acm = rb->instance;
+ 	unsigned long flags;
+ 	int status = urb->status;
++	bool stopped = false;
++	bool stalled = false;
  
- static void f81232_close(struct usb_serial_port *port)
- {
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+
- 	f81232_port_disable(port);
- 	usb_serial_generic_close(port);
- 	usb_kill_urb(port->interrupt_in_urb);
-+	flush_work(&port_priv->interrupt_work);
- }
+ 	dev_vdbg(&acm->data->dev, "got urb %d, len %d, status %d\n",
+ 		rb->index, urb->actual_length, status);
  
- static void f81232_dtr_rts(struct usb_serial_port *port, int on)
-@@ -632,6 +635,40 @@ static int f81232_port_remove(struct usb
- 	return 0;
- }
+-	set_bit(rb->index, &acm->read_urbs_free);
+-
+ 	if (!acm->dev) {
+ 		dev_dbg(&acm->data->dev, "%s - disconnected\n", __func__);
+ 		return;
+@@ -488,15 +488,16 @@ static void acm_read_bulk_callback(struc
+ 		break;
+ 	case -EPIPE:
+ 		set_bit(EVENT_RX_STALL, &acm->flags);
+-		schedule_work(&acm->work);
+-		return;
++		stalled = true;
++		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&acm->data->dev,
+ 			"%s - urb shutting down with status: %d\n",
+ 			__func__, status);
+-		return;
++		stopped = true;
++		break;
+ 	default:
+ 		dev_dbg(&acm->data->dev,
+ 			"%s - nonzero urb status received: %d\n",
+@@ -505,10 +506,24 @@ static void acm_read_bulk_callback(struc
+ 	}
  
-+static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
-+{
-+	struct usb_serial_port *port = serial->port[0];
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+	int i;
+ 	/*
+-	 * Unthrottle may run on another CPU which needs to see events
+-	 * in the same order. Submission has an implict barrier
++	 * Make sure URB processing is done before marking as free to avoid
++	 * racing with unthrottle() on another CPU. Matches the barriers
++	 * implied by the test_and_clear_bit() in acm_submit_read_urb().
+ 	 */
+ 	smp_mb__before_atomic();
++	set_bit(rb->index, &acm->read_urbs_free);
++	/*
++	 * Make sure URB is marked as free before checking the throttled flag
++	 * to avoid racing with unthrottle() on another CPU. Matches the
++	 * smp_mb() in unthrottle().
++	 */
++	smp_mb__after_atomic();
 +
-+	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
-+		usb_kill_urb(port->read_urbs[i]);
-+
-+	usb_kill_urb(port->interrupt_in_urb);
-+
-+	if (port_priv)
-+		flush_work(&port_priv->interrupt_work);
-+
-+	return 0;
-+}
-+
-+static int f81232_resume(struct usb_serial *serial)
-+{
-+	struct usb_serial_port *port = serial->port[0];
-+	int result;
-+
-+	if (tty_port_initialized(&port->port)) {
-+		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
-+		if (result) {
-+			dev_err(&port->dev, "submit interrupt urb failed: %d\n",
-+					result);
-+			return result;
-+		}
++	if (stopped || stalled) {
++		if (stalled)
++			schedule_work(&acm->work);
++		return;
 +	}
-+
-+	return usb_serial_generic_resume(serial);
-+}
-+
- static struct usb_serial_driver f81232_device = {
- 	.driver = {
- 		.owner =	THIS_MODULE,
-@@ -655,6 +692,8 @@ static struct usb_serial_driver f81232_d
- 	.read_int_callback =	f81232_read_int_callback,
- 	.port_probe =		f81232_port_probe,
- 	.port_remove =		f81232_port_remove,
-+	.suspend =		f81232_suspend,
-+	.resume =		f81232_resume,
- };
  
- static struct usb_serial_driver * const serial_drivers[] = {
+ 	/* throttle device if requested by tty */
+ 	spin_lock_irqsave(&acm->read_lock, flags);
+@@ -842,6 +857,9 @@ static void acm_tty_unthrottle(struct tt
+ 	acm->throttle_req = 0;
+ 	spin_unlock_irq(&acm->read_lock);
+ 
++	/* Matches the smp_mb__after_atomic() in acm_read_bulk_callback(). */
++	smp_mb();
++
+ 	if (was_throttled)
+ 		acm_submit_read_urbs(acm, GFP_KERNEL);
+ }
 
 
