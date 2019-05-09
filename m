@@ -2,91 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DD9C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB57C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416702183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557443498;
-	bh=4czGVVwxwttY99MriEH8D5p/ohHXnX9UEsQ9++fXAiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZqGCGh6Eo6GPA0Hg0e9oWICvan4S17oQz+SjwHGk0sxJtvprepmnOqxBN3qUm36hq
-	 U7ccglp81qImkaPvbxG0FSzh3K3eNJLEN+ahjJ1TSNCRflWsdhqtJk9Oj45nBJkIS0
-	 gYix5OrtZDVGH6KwyfOvcBq9xKLrxNIuozubD0V0=
+	by mail.kernel.org (Postfix) with ESMTP id A3DF2217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfEIXLh (ORCPT
+        id S1726789AbfEIXWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 19:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 19:22:25 -0400
+Received: from gate.crashing.org ([63.228.1.57]:58675 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbfEIXLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 19:11:37 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F642173C;
-        Thu,  9 May 2019 23:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557443496;
-        bh=4czGVVwxwttY99MriEH8D5p/ohHXnX9UEsQ9++fXAiw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AgZ9nGkinsJeJnmcfS5Jgm3wtmVHuRU5lptN1SIUZM/xc4SVbVTukk0uVJmEYFG63
-         fMg9LLzPL0e+JcHsSReAaSejpacJiUpDr0BieQ4pJA82YRn7b8Ey8V+LYXI+wAGnu0
-         Lk1B0ytS5mLdcAT5Yjxpl6AjFwv9CECO4jFRec8Y=
-Date:   Thu, 9 May 2019 16:11:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     yuyufen <yuyufen@huawei.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] hugetlbfs: always use address space in inode for
- resv_map pointer
-Message-Id: <20190509161135.00b542e5b4d0996b5089ea02@linux-foundation.org>
-In-Reply-To: <5d7dc0d5-7cd3-eb95-a1e7-9c68fe393647@oracle.com>
-References: <20190416065058.GB11561@dhcp22.suse.cz>
-        <20190419204435.16984-1-mike.kravetz@oracle.com>
-        <fafe9985-7db1-b65c-523d-875ab4b3b3b8@huawei.com>
-        <5d7dc0d5-7cd3-eb95-a1e7-9c68fe393647@oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        id S1726108AbfEIXWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 19:22:25 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x49NMF3O027885;
+        Thu, 9 May 2019 18:22:16 -0500
+Message-ID: <73b783e634551420dfa249816514fb31ed3487b6.camel@kernel.crashing.org>
+Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
+ directory
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Gaurav Kohli <gkohli@codeaurora.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Muchun Song <smuchun@gmail.com>
+Cc:     rafael@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+        zhaowuyun@wingtech.com, linux-arm-msm@vger.kernel.org
+Date:   Fri, 10 May 2019 09:22:14 +1000
+In-Reply-To: <e79201c2-a00b-d226-adc2-62769ae1ad81@codeaurora.org>
+References: <20190423143258.96706-1-smuchun@gmail.com>
+         <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
+         <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
+         <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
+         <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
+         <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
+         <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+         <20190504153440.GB19654@kroah.com>
+         <e79201c2-a00b-d226-adc2-62769ae1ad81@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 13:16:09 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
-
-> > I think it is better to add fixes label, like:
-> > Fixes: 58b6e5e8f1ad ("hugetlbfs: fix memory leak for resv_map")
-> > 
-> > Since the commit 58b6e5e8f1a has been merged to stable, this patch also be needed.
-> > https://www.spinics.net/lists/stable/msg298740.html
+On Thu, 2019-05-09 at 20:08 +0530, Gaurav Kohli wrote:
+> Hi ,
 > 
-> It must have been the AI that decided 58b6e5e8f1a needed to go to stable.
+> Last patch will serialize the addition of child to parent directory, 
+> won't it affect performance.
 
-grr.
+I doubt this is a significant issue, and there's already a global lock
+taken once or twice in that path, the fix is purely to make sure that
+the some locked section is used both for the lookup and the addition as
+the bug comes from the window in between those two operations allowing
+the object to be removed after it was "found".
 
-> Even though this technically does not fix 58b6e5e8f1a, I'm OK with adding
-> the Fixes: to force this to go to the same stable trees.
+Cheers,
+Ben.
+ 
+> 
+> Regards
+> Gaurav
+> 
+> On 5/4/2019 9:04 PM, Greg KH wrote:
+> > On Sat, May 04, 2019 at 10:47:07PM +0800, Muchun Song wrote:
+> > > Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四
+> > > 下午2:25写道：
+> > > 
+> > > > > > The basic idea yes, the whole bool *locked is horrid
+> > > > > > though.
+> > > > > > Wouldn't it
+> > > > > > work to have a get_device_parent_locked that always returns
+> > > > > > with
+> > > > > > the mutex held,
+> > > > > > or just move the mutex to the caller or something simpler
+> > > > > > like this
+> > > > > > ?
+> > > > > > 
+> > > > > 
+> > > > > Greg and Rafael, do you have any suggestions for this? Or you
+> > > > > also
+> > > > > agree with Ben?
+> > > > 
+> > > > Ping guys ? This is worth fixing...
+> > > 
+> > > I also agree with you. But Greg and Rafael seem to be high
+> > > latency right now.
+> > 
+> > It's in my list of patches to get to, sorry, hopefully will dig out
+> > of
+> > that next week with the buffer that the merge window provides me.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> 
 
-Why are we bothering with any of this, given that
-
-: Luckily, private_data is NULL for address spaces in all such cases
-: today but, there is no guarantee this will continue.
-
-?
-
-Even though 58b6e5e8f1ad was inappropriately backported, the above
-still holds, so what problem does a backport of "hugetlbfs: always use
-address space in inode for resv_map pointer" actually solve?
-
-And yes, some review of this would be nice
