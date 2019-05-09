@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D913C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDA0C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B2C20578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F193204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428168;
-	bh=WSRye4QuqhDnD0KzcvLyhshoPeuDaJR9wrkaZyoDOMA=;
+	s=default; t=1557428182;
+	bh=gB4rxXtmZhaQAk8GNiRvnotbYsWheyhY6t08SUjxvUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkQJtUbyycMcttOyGSwLOUz7l5efB/ht/mKxZG8zTBLJo6zmgY9FCWME0QVYgEWS3
-	 Fyet1wku8wWH6YcQ8yy1ljw1nfjrbWvCyVuTjRH62Id/dT8ZCBXwM0OjAz1vz3Y/jk
-	 SJvhO2uC0LktTfutEFXkHO3JnQwW/0erL9BsmoHY=
+	b=vqHmo9oeDXLDOHpVyYx+f1lfd0CBHuVYhW0wV3aid7db05Ooud9WO0SveqMBp2mNR
+	 nBW/1J+SaT+y9GLpP3Rq7r37JC6QRayyMBfINPYA2cejVkP63mkAU0WS9GVvdImgnL
+	 vifNZZGtIoD27W6Y8Of7aeujxN33qhNOfVQdQBMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfEISzU (ORCPT
+        id S1728933AbfEIS4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729198AbfEISzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:16 -0400
+        id S1729174AbfEISzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB47204FD;
-        Thu,  9 May 2019 18:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90104204FD;
+        Thu,  9 May 2019 18:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428115;
-        bh=WSRye4QuqhDnD0KzcvLyhshoPeuDaJR9wrkaZyoDOMA=;
+        s=default; t=1557428108;
+        bh=gB4rxXtmZhaQAk8GNiRvnotbYsWheyhY6t08SUjxvUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+DjTKgOJ+OxL9eKvzy7o4M/kA6kBdEYT6JYakj45OZZCb7EVGVwvVW+XNm/vccMq
-         QCrHPH2U7o7plbzwRodFIPYyP+iG8UUHC45WKglZUTaHbfBugDftfqA+0eqoV9dTS8
-         LpWcfrnDql+CgRENouQHyJCsyxqP3bHSjIhF6UKI=
+        b=zrsiV788cMIlCtq9S9M5BysuEDUz5aL2u4S0NLOjyOO9ijNJDGBK+l2Rv3GE3oK2u
+         xjhbbmouUwWVDKFSSdWvUA771HHSvgT6Qrfygq6oEyRjCaWueVA36fknc6zb3wxVnf
+         PynUw7NiGU/hXRfLnJzyEhWD0jkg+c5RFsERp4TQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.1 08/30] usb: dwc3: Fix default lpm_nyet_threshold value
-Date:   Thu,  9 May 2019 20:42:40 +0200
-Message-Id: <20190509181252.423027909@linuxfoundation.org>
+        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Christian Gromm <christian.gromm@microchip.com>
+Subject: [PATCH 5.1 06/30] staging: most: sound: pass correct device when creating a sound card
+Date:   Thu,  9 May 2019 20:42:38 +0200
+Message-Id: <20190509181252.039168954@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -59,33 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Christian Gromm <christian.gromm@microchip.com>
 
-commit 8d791929b2fbdf7734c1596d808e55cb457f4562 upstream.
+commit 98592c1faca82a9024a64e4ecead68b19f81c299 upstream.
 
-The max possible value for DCTL.LPM_NYET_THRES is 15 and not 255. Change
-the default value to 15.
+This patch fixes the usage of the wrong struct device when calling
+function snd_card_new.
 
-Cc: stable@vger.kernel.org
-Fixes: 80caf7d21adc ("usb: dwc3: add lpm erratum support")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
+Fixes: 69c90cf1b2fa ("staging: most: sound: call snd_card_new with struct device")
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/core.c |    2 +-
+ drivers/staging/most/sound/sound.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1218,7 +1218,7 @@ static void dwc3_get_properties(struct d
- 	u8			tx_max_burst_prd;
- 
- 	/* default to highest possible threshold */
--	lpm_nyet_threshold = 0xff;
-+	lpm_nyet_threshold = 0xf;
- 
- 	/* default to -3.5dB de-emphasis */
- 	tx_de_emphasis = 1;
+--- a/drivers/staging/most/sound/sound.c
++++ b/drivers/staging/most/sound/sound.c
+@@ -622,7 +622,7 @@ static int audio_probe_channel(struct mo
+ 	INIT_LIST_HEAD(&adpt->dev_list);
+ 	iface->priv = adpt;
+ 	list_add_tail(&adpt->list, &adpt_list);
+-	ret = snd_card_new(&iface->dev, -1, "INIC", THIS_MODULE,
++	ret = snd_card_new(iface->driver_dev, -1, "INIC", THIS_MODULE,
+ 			   sizeof(*channel), &adpt->card);
+ 	if (ret < 0)
+ 		goto err_free_adpt;
 
 
