@@ -2,224 +2,141 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BE7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED1CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024E921744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:20:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JVCBpRtM"
+	by mail.kernel.org (Postfix) with ESMTP id C1795214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfEIBUp (ORCPT
+        id S1726411AbfEIBgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:20:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:45811 "EHLO ozlabs.org"
+        Wed, 8 May 2019 21:36:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56290 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfEIBUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:20:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725778AbfEIBgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:36:55 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zwWp2Vddz9s55;
-        Thu,  9 May 2019 11:20:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557364839;
-        bh=iUNt+AiggzT1LswLDZrrMkDk7hiFd6QDbiaJHCHel9k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JVCBpRtMmfSVIuE0hLDxxYrw/hmSsxE2cm9yP/KNV7nEOpiWK+BZ6g3YLYDBR9Vsl
-         hcxdkADpH3po2PQHf+I21b6JFGbTi15qdAlJdYo5WG4wRGMsG0B0vktOwWWvd869gc
-         CZR4ql6cR2z8g6X5I4uQnXu3xLbhZ6LNeQKL/YM07UR/Yu7ot4Ohm9KyWGDd5KwQ0F
-         nMUazVCXgqftT+2U6YAxDvUrBn7BBGDK9Jj22enqBlvSUEkDoSnQp88Nw+hQBx4N8r
-         M8gSZP6IiTZWWATBV5XOvse74rKZ5ECly/ONYjd0H6s/V5vme7JlLkHjr2Xu2R4dw2
-         x2rCzqfrBVZEw==
-Date:   Thu, 9 May 2019 11:20:37 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-Subject: Re: linux-next: manual merge of the ipsec-next tree with the ipsec
- tree
-Message-ID: <20190509112037.32468e3d@canb.auug.org.au>
-In-Reply-To: <20190501130157.27fb69cd@canb.auug.org.au>
-References: <20190426114120.73e906e3@canb.auug.org.au>
-        <20190501130157.27fb69cd@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/8.7tSq7kxA1pH_HRAtOipbq"; protocol="application/pgp-signature"
+        by mx1.redhat.com (Postfix) with ESMTPS id 7AAEB3082E03;
+        Thu,  9 May 2019 01:36:54 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2752919744;
+        Thu,  9 May 2019 01:36:48 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
+        kirill.shutemov@linux.intel.com, x86@kernel.org, dyoung@redhat.com,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH v4 0/3] Add restrictions for kexec/kdump jumping between 5-level and 4-level kernel
+Date:   Thu,  9 May 2019 09:36:41 +0800
+Message-Id: <20190509013644.1246-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 09 May 2019 01:36:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8.7tSq7kxA1pH_HRAtOipbq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patchset is trying to fix several issues for kexec/kdump when
+dynamic switching of paging mode is enabled in x86_64. The current
+kernel supports 5-level paging mode, and supports dynamically choosing
+paging mode during bootup according to kernel image, hardware and
+kernel parameter setting. This flexibility brings several issues for
+kexec/kdump:
 
-Hi Dave,
+Issues:
+1)
+Dynamic switching between paging mode requires code change in target
+kernel. So we can't kexec jump from 5-level kernel to old 4-level
+kernel which lacks the code change.
 
-On Wed, 1 May 2019 13:01:57 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Fri, 26 Apr 2019 11:41:20 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > Today's linux-next merge of the ipsec-next tree got a conflict in:
-> >=20
-> >   net/ipv4/xfrm4_policy.c
-> >=20
-> > between commit:
-> >=20
-> >   8742dc86d0c7 ("xfrm4: Fix uninitialized memory read in _decode_sessio=
-n4")
-> >=20
-> > from the ipsec tree and commit:
-> >=20
-> >   c53ac41e3720 ("xfrm: remove decode_session indirection from afinfo_po=
-licy")
-> >=20
-> > from the ipsec-next tree.
-> >=20
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Fri, 26 Apr 2019 11:37:41 +1000
-> > Subject: [PATCH] xfrm4: fix up for moved _decode_session4
-> >=20
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  net/xfrm/xfrm_policy.c | 24 +++++++++++++-----------
-> >  1 file changed, 13 insertions(+), 11 deletions(-)
-> >=20
-> > diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-> > index 410233c5681e..7a43ae6b2a44 100644
-> > --- a/net/xfrm/xfrm_policy.c
-> > +++ b/net/xfrm/xfrm_policy.c
-> > @@ -3264,7 +3264,8 @@ static void
-> >  decode_session4(struct sk_buff *skb, struct flowi *fl, bool reverse)
-> >  {
-> >  	const struct iphdr *iph =3D ip_hdr(skb);
-> > -	u8 *xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +	int ihl =3D iph->ihl;
-> > +	u8 *xprth =3D skb_network_header(skb) + ihl * 4;
-> >  	struct flowi4 *fl4 =3D &fl->u.ip4;
-> >  	int oif =3D 0;
-> > =20
-> > @@ -3275,6 +3276,11 @@ decode_session4(struct sk_buff *skb, struct flow=
-i *fl, bool reverse)
-> >  	fl4->flowi4_mark =3D skb->mark;
-> >  	fl4->flowi4_oif =3D reverse ? skb->skb_iif : oif;
-> > =20
-> > +	fl4->flowi4_proto =3D iph->protocol;
-> > +	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
-> > +	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
-> > +	fl4->flowi4_tos =3D iph->tos;
-> > +
-> >  	if (!ip_is_fragment(iph)) {
-> >  		switch (iph->protocol) {
-> >  		case IPPROTO_UDP:
-> > @@ -3286,7 +3292,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
- *fl, bool reverse)
-> >  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
-> >  				__be16 *ports;
-> > =20
-> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +				xprth =3D skb_network_header(skb) + ihl * 4;
-> >  				ports =3D (__be16 *)xprth;
-> > =20
-> >  				fl4->fl4_sport =3D ports[!!reverse];
-> > @@ -3298,7 +3304,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
- *fl, bool reverse)
-> >  			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
-> >  				u8 *icmp;
-> > =20
-> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +				xprth =3D skb_network_header(skb) + ihl * 4;
-> >  				icmp =3D xprth;
-> > =20
-> >  				fl4->fl4_icmp_type =3D icmp[0];
-> > @@ -3310,7 +3316,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
- *fl, bool reverse)
-> >  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
-> >  				__be32 *ehdr;
-> > =20
-> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +				xprth =3D skb_network_header(skb) + ihl * 4;
-> >  				ehdr =3D (__be32 *)xprth;
-> > =20
-> >  				fl4->fl4_ipsec_spi =3D ehdr[0];
-> > @@ -3321,7 +3327,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
- *fl, bool reverse)
-> >  			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
-> >  				__be32 *ah_hdr;
-> > =20
-> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +				xprth =3D skb_network_header(skb) + ihl * 4;
-> >  				ah_hdr =3D (__be32 *)xprth;
-> > =20
-> >  				fl4->fl4_ipsec_spi =3D ah_hdr[1];
-> > @@ -3332,7 +3338,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
- *fl, bool reverse)
-> >  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
-> >  				__be16 *ipcomp_hdr;
-> > =20
-> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +				xprth =3D skb_network_header(skb) + ihl * 4;
-> >  				ipcomp_hdr =3D (__be16 *)xprth;
-> > =20
-> >  				fl4->fl4_ipsec_spi =3D htonl(ntohs(ipcomp_hdr[1]));
-> > @@ -3344,7 +3350,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
- *fl, bool reverse)
-> >  				__be16 *greflags;
-> >  				__be32 *gre_hdr;
-> > =20
-> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
-> > +				xprth =3D skb_network_header(skb) + ihl * 4;
-> >  				greflags =3D (__be16 *)xprth;
-> >  				gre_hdr =3D (__be32 *)xprth;
-> > =20
-> > @@ -3360,10 +3366,6 @@ decode_session4(struct sk_buff *skb, struct flow=
-i *fl, bool reverse)
-> >  			break;
-> >  		}
-> >  	}
-> > -	fl4->flowi4_proto =3D iph->protocol;
-> > -	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
-> > -	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
-> > -	fl4->flowi4_tos =3D iph->tos;
-> >  }
-> > =20
-> >  #if IS_ENABLED(CONFIG_IPV6) =20
->=20
-> This is now a conflict between the net and net-next trees.
+2)
+Switching from 5-level paging to 4-level paging kernel would fail, if
+kexec() put kernel image above 64TiB of memory.
 
-It looks like this fixup has been missed in Linus' merge of the
-net-next tree ...
+3)
+Kdump jumping has similar issue as 2). This require us to only
+reserve crashkernel below 64TB, otherwise jumping from 5-level to
+4-level kernel will fail.
 
---=20
-Cheers,
-Stephen Rothwell
+Note:
+Since we have two interfaces kexec_load() and kexec_file_load() to load
+kexec/kdump kernel, handling for them is a little different. For
+kexec_load(), most of the loading job is done in user space utility
+kexec_tools. However, for kexec_file_load(), most of the loading codes
+have moved into kernel because of kernel image verification.
 
---Sig_/8.7tSq7kxA1pH_HRAtOipbq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Fixes:
+a) For issue 1), we need check if XLF_5LEVEL is set, otherwise error out
+   a message.
+  -This need be done in both kernel and kexec_tools utility.
+  -Patch 2/3 is the handling of kernel part.
+  -Will post user space patch to kexec mailing list later.
 
------BEGIN PGP SIGNATURE-----
+b) For issue 2), we need check if both XLF_5LEVEL and XLF_5LEVEL_ENABLED
+   are set, otherwise error out a message.
+  -This only need be done in kexec_tools utility. Because for
+   kexec_file_load(), the current code searches area to put kernel from
+   bottom to up in system RAM, we usually can always find an area below
+   4 GB, no need to worry about 5-level kernel jumping to 4-level
+   kernel. While for kexec_load(), it's top down seraching area for kernel
+   loading, and implemented in user space. We need make sure that
+   5-level kernel find an area under 64 TB for a kexec-ed kernel of
+   4-level.
+  -Will post user space patch to kexec mailing list later.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzTgGUACgkQAVBC80lX
-0GzQgwf/aaYmzQSYs0z5lraiYgZFBRsMVA2vmwAANQGZN+mKzP6eHo02D+GFxI93
-HTbKgFEcHL2OGF0LHm/v1I7S4jH+2HMUQF2dB/af96/rOIBCIecLYYfOGjjS0mI9
-DGNpxCjkXM/CJA4nVdn3lJa7byWVM2Z6QqZDoMqqbyIkny6ZTrnOm8ifLXKrcCdJ
-xMNriAbNJD3dTX2wgz1o0ZARdrqf22aGiKpNs/IOlJ5nHZ4wQaRvUfyRQhqkyo/u
-IKMa8ZpkRiHVHzzCO3Ok4uG5wQSQVyMuSJLD99swFhpwsRwMVmtSaJ+eol4H5F9m
-col98L1Hy595I/mM7UNF0u/9LKpWSg==
-=mE28
------END PGP SIGNATURE-----
+c) For issues 3), just limit kernel to reserve crashkernel below 64 TB.
+  -This only need be done in kernel.
+  -It doesn't need to check bit XLF_5LEVEL or XLF_5LEVEL_ENABLED, we
+   just simply limit it below 64 TB which should be enough. Because
+   crashernel is reserved during the 1st kernel's bootup, we don't know
+   what kernel will be loaded for kdump usage.
+  -Patch 3/3 handles this.
 
---Sig_/8.7tSq7kxA1pH_HRAtOipbq--
+Changelog:
+v3->v4:
+  No functional change.
+  - Rewrite log of patch 1/3 tell who the newly added bits are gonna be
+    used.
+  - Rewrite log of patch 2/3 per tglx's words.
+  - Add Kirill's Acked-by.
+  
+  
+v2->v3:
+  Change the constant to match the notation for the rest of defines as
+  Kirill suggested;
+v1->v2:
+  Correct the subject of patch 1 according to tglx's comment;
+  Add more information to cover-letter to address reviewers' concerns;
+
+The original v1 post can be found here:
+http://lkml.kernel.org/r/20180829141624.13985-1-bhe@redhat.com
+
+Later a v1 RESEND version:
+http://lkml.kernel.org/r/20190125022817.29506-1-bhe@redhat.com
+
+V2 post is here:
+http://lkml.kernel.org/r/20190312005004.19182-1-bhe@redhat.com
+
+v3 post:
+http://lkml.kernel.org/r/20190312103051.18086-1-bhe@redhat.com
+
+Baoquan He (3):
+  x86/boot: Add xloadflags bits for 5-level kernel checking
+  x86/kexec/64: Error out if try to jump to old 4-level kernel from
+    5-level kernel
+  x86/kdump/64: Change the upper limit of crashkernel reservation
+
+ arch/x86/boot/header.S                | 12 +++++++++++-
+ arch/x86/include/uapi/asm/bootparam.h |  2 ++
+ arch/x86/kernel/kexec-bzimage64.c     |  5 +++++
+ arch/x86/kernel/setup.c               | 17 ++++++++++++++---
+ 4 files changed, 32 insertions(+), 4 deletions(-)
+
+-- 
+2.17.2
+
