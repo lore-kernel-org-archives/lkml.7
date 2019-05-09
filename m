@@ -2,107 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39268C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78AAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E7D2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBI0XAob"
+	by mail.kernel.org (Postfix) with ESMTP id 8308B20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557428527;
+	bh=0zZtPe/QZmm1wOMxxCB1OieNmsIUQ3UbVlb0wPX58Fw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j2l5JAXOngR4pyMknJ+x3aIa1zyJyRSTXfhU2SBi94eIhfnw81WNL5A3pWdZrpCdG
+	 C4VEMCot05GdQ+ZX3ewRU9vH3L3lxJ1y6YjYmGsyNlSC7HfAKH6AmsFKyTXwLm4JHd
+	 EqxAHHdKrDctTW2psqJJdLxIY+4ZMu1i2i4Y+YcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfEITBp (ORCPT
+        id S1728619AbfEITCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:01:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34173 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbfEITBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:01:44 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m20so4794127wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Rgk9P1zlX9vNqq+N6qE9gQvpeBtUXd8/IvWvzeY1nZI=;
-        b=UBI0XAobkjKTEaKxKiq6t8fiTA77iK7IuKR1KZ9/joqc6wZy5FVQsHmkiGsIsRAHz5
-         ZiAV2S41OG0DDrRnm5wG5JNoR74pi2zIMq+ypL7PEbxenrk25duyMbjHF83YyjPxvkLZ
-         lW5oy+hGXBWE33Ph5OpTuau6rSwfidErkgEEtd94cVUEiLWAE07sH8fgjHLnsAr/YXwS
-         lUTvp/6z6OE26bYD1ALODMGw2v/uiSYe/PkG60t/l6/wUdJ/5aIdYf4hiSv/nJDXUBct
-         wyUkwDYmPxah35cbcMLhFKnB3Ol6HbhnhGNsAM0692u3ordcuhRv031j4BjoUeHVmEjU
-         WXUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Rgk9P1zlX9vNqq+N6qE9gQvpeBtUXd8/IvWvzeY1nZI=;
-        b=bJrkayOWa1WFYN46ORIu1CM6ohiF+fjBvOZjeLyViek8kiv/Rgrz4QhomwU7FJmIio
-         d/C1OtYkXRYdaqMwrXVABj7CF325S1d+i7po7vxZnK8pQtju4p10fCpjh2JenUCvwG6a
-         s5WaaSZK4X2PJbZ/Ew5t7qI5eAD+iK9IfdAT5b182KzoOUJBUrQwr1RYjO5VkaIjkTxQ
-         vpuW14bYLPl7inaU97oADCuDnvmF9GV5u/mwH/dp73XHb4d0rvj7g2GyhX3p/ws2Kfam
-         uIkXlFIzCEQ5Liq4MB87MYQKm7INOdxmqo0hQYqmzUkJAITqOpEMmYnfTuQRc2H+mhpF
-         NJSg==
-X-Gm-Message-State: APjAAAUedc4xZ1ggRQVnYmvNzYenBJ+9+nyqQxJd/hTH7pbdcpTflXon
-        ffUK/9uV+WdvdGy999abS9sbkF7s
-X-Google-Smtp-Source: APXvYqxzRx5Buz6EIjtvH4aOM216ZGEdBxGMzOgsH9RJNJ7kb5Iu+8LMVo5yg552CohYRcgdWhEA1Q==
-X-Received: by 2002:a05:600c:24ca:: with SMTP id 10mr4189542wmu.45.1557428502270;
-        Thu, 09 May 2019 12:01:42 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id j1sm2833671wrt.52.2019.05.09.12.01.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 12:01:41 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
+        Thu, 9 May 2019 15:02:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728417AbfEISu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:50:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EB312177E;
+        Thu,  9 May 2019 18:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557427826;
+        bh=0zZtPe/QZmm1wOMxxCB1OieNmsIUQ3UbVlb0wPX58Fw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aO1v7cDneCplmkhOI93BcaexmUVhj/0tXCcHZe8Pw5QSXO+KwxLRpHSOWzzvIhWgh
+         Btw/+X/gZLoh4CU8CZL5UgivKdP8x0dbjYSLsLltjhsd+ui0N50R4fpLzQEQTyWIbH
+         4f+e9Ronjm/x89QJdKHRYFSyV67h4wqhqgMBboQQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/3] habanalabs: remove redundant CB size adjustment
-Date:   Thu,  9 May 2019 22:01:33 +0300
-Message-Id: <20190509190135.5634-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, JaeChul Lee <jcsing.lee@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 19/95] ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate
+Date:   Thu,  9 May 2019 20:41:36 +0200
+Message-Id: <20190509181310.684874052@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
+References: <20190509181309.180685671@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver-initiated DMA jobs are synchronized jobs, i.e. the driver polls on
-fence object until the job is finished. There is no interrupt from the
-device. Therefore, no need to add space for 2 * msg_prot packets to the
-end of the CB. Only a single msg_prot is needed (to write the fence).
+[ Upstream commit 2b13bee3884926cba22061efa75bd315e871de24 ]
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+After commit fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate
+handling") the audio root clock frequency is configured improperly for
+44100 sample rate. Due to clock rate rounding it's 20070401 Hz instead
+of 22579000 Hz. This results in a too low value of the PSR clock divider
+in the CPU DAI driver and too fast actual sample rate for fs=44100. E.g.
+1 kHz tone has actual 1780 Hz frequency (1 kHz * 20070401/22579000 * 2).
+
+Fix this by increasing the correction passed to clk_set_rate() to take
+into account inaccuracy of the EPLL frequency properly.
+
+Fixes: fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate handling")
+Reported-by: JaeChul Lee <jcsing.lee@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/goya/goya.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ sound/soc/samsung/odroid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index ccf9d925b6ed..756921c52cf7 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2827,12 +2827,6 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index e7b371b072304..45c6d73967852 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -64,11 +64,11 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
+ 		return ret;
  
- 	goya_qman0_set_security(hdev, true);
+ 	/*
+-	 *  We add 1 to the rclk_freq value in order to avoid too low clock
++	 *  We add 2 to the rclk_freq value in order to avoid too low clock
+ 	 *  frequency values due to the EPLL output frequency not being exact
+ 	 *  multiple of the audio sampling rate.
+ 	 */
+-	rclk_freq = params_rate(params) * rfs + 1;
++	rclk_freq = params_rate(params) * rfs + 2;
  
--	/*
--	 * goya cs parser saves space for 2xpacket_msg_prot at end of CB. For
--	 * synchronized kernel jobs we only need space for 1 packet_msg_prot
--	 */
--	job->job_cb_size -= sizeof(struct packet_msg_prot);
--
- 	cb = job->patched_cb;
- 
- 	fence_pkt = (struct packet_msg_prot *) (uintptr_t) (cb->kernel_address +
-@@ -4452,8 +4446,7 @@ static int goya_memset_device_memory(struct hl_device *hdev, u64 addr, u32 size,
- 	job->user_cb_size = cb_size;
- 	job->hw_queue_id = GOYA_QUEUE_ID_DMA_0;
- 	job->patched_cb = job->user_cb;
--	job->job_cb_size = job->user_cb_size +
--			sizeof(struct packet_msg_prot) * 2;
-+	job->job_cb_size = job->user_cb_size + sizeof(struct packet_msg_prot);
- 
- 	hl_debugfs_add_job(hdev, job);
- 
+ 	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
+ 	if (ret < 0)
 -- 
-2.17.1
+2.20.1
+
+
 
