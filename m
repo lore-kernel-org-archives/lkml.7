@@ -2,111 +2,171 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66567C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB1C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352A32085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39442085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BF8p9vAI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZz3d9Y8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfEISAK (ORCPT
+        id S1726795AbfEISAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:00:10 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36739 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfEISAK (ORCPT
+        Thu, 9 May 2019 14:00:45 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38063 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfEISAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:00:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id j187so4292897wmj.1;
-        Thu, 09 May 2019 11:00:08 -0700 (PDT)
+        Thu, 9 May 2019 14:00:45 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y19so2213197lfy.5;
+        Thu, 09 May 2019 11:00:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lDajNyiLeZkWi+ZncYbZJixPfPqjM2DrqCXv++hEGoM=;
-        b=BF8p9vAI/DkpGGkA+R2sO/uMkxI/QjgKWD/sCLf7e9PBJD71Ms/6xub/zk2rlfW10v
-         DhlDpsaqSwjjEfVUsx+gqyK7wz2eZ42JG9cb4oSATs9evrLB6dbVe1jQVLJAXpbhNelo
-         cC1yxLeggdebmWPMpLZuSkcbi6ehfuIvxByw/5ycKbieuHBWY3ILJUPkgI0oWeJTpJ5p
-         Jh17FiiuGHjpnJFzdocF0RCi0/DYPDp0BvUjK3X4TMtlnWTT4WcoMrFWFcTm9vWKw7U0
-         1E/BKz7MbDFw/ZxrXHADMOBdYyoEUUet/S0Fd0w/FtItFmDnGnmgCZEfIniTDbB36L2q
-         teXQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8IBAb1U4AHGolLyRh4wnILWJ7YPjMF8I4QRhEu/lDNQ=;
+        b=oZz3d9Y8lqRxl8XUFIBauj79NFGzhaIgVCsRnDu+nHqOgGtg/KfXxBmtyEa4iYIAtR
+         3ODP2NMrBGgfZUJbb3He9Ow/q7sqqEwi2lXjijncwPpBDRMY1qvFJdwVEcJ1AkgQ+QbZ
+         gOPJhJwu+BPpBnbR0OosoLxmUAZOL+XHUDJwPOpIhXwKC6/AOp8VtkhtzADVEQTc7p7Q
+         aaCwVlKMM+RMkmMm05UC8VXUEHPoPZXzWexnQS+99CT3OepvNZFWeLmptO/2H0sc+EOE
+         zLuheTVRB9E3d138PWMdUm7+LgWv3gLjaIWP7Y6tHlG0zxcF4FQ2oV2q0P+iya7Nf8ax
+         F/nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lDajNyiLeZkWi+ZncYbZJixPfPqjM2DrqCXv++hEGoM=;
-        b=mHpMPOuiEDPXDVjAkNizVH1fuqK7V60nzTsKr48TavsJU9V5PnnGfeYx8DCHckycAD
-         JNFh9YvLEfAJGzp24MLQWnGKoaLkd//tBCBDEgMDP9C0oLUDJICQXWgbhEg6uqJzPPm2
-         EmRqvzKo7feJHGc68eSw3jZzoZDiAnTo0wOTwOxoTidlKdJ4/Ijw6/AjQW51OKWD0/UQ
-         2sMvYvasZ+mMFGhfZEpY+q2dKWWmL5gayBAaMO9PUkq0PJNJJq6jMp5Jnd0Ayi9rq6fa
-         ngxV7I0x9s2YhBD0FkeCp4F7jsx/cBULRNbbRiC6WPX1VMcOkhOTwJAKloJAwkFeVRZl
-         ncZg==
-X-Gm-Message-State: APjAAAUhXFgD5J4vtJfRJMegTZPItnKEPnJTRVP41alwkP8cHXh8wvLK
-        cCEGn+a6H3VhznEWJ2q8kYc=
-X-Google-Smtp-Source: APXvYqx+MWwTxownaHVCQ8Qu4e22yDyu+r9Yg/DhLesxezeIeCdxYtyi/rwRUdm+FJpR6/rXpvfTjQ==
-X-Received: by 2002:a1c:4087:: with SMTP id n129mr3885861wma.14.1557424807994;
-        Thu, 09 May 2019 11:00:07 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id i127sm8173516wmg.21.2019.05.09.11.00.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 11:00:07 -0700 (PDT)
-Date:   Thu, 9 May 2019 20:00:05 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH net-next 00/11] net: stmmac: Selftests
-Message-ID: <20190509180005.GA16272@Red>
-References: <cover.1557300602.git.joabreu@synopsys.com>
- <20190509090416.GB1605@Red>
- <78EB27739596EE489E55E81C33FEC33A0B47AC7F@DE02WEMBXB.internal.synopsys.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8IBAb1U4AHGolLyRh4wnILWJ7YPjMF8I4QRhEu/lDNQ=;
+        b=ex8cZlLMl7DXirAJ4pgFNIA04O31UoAUeaVJKbywox9vREbclVANaj2AYyyQaRFC1h
+         OlEUKvHm1pm6vEz3CZXeNhLd4lqHtZhpRcz/s0JcK0pmUiM1sKnSOrs3cVU8Uts7IOYm
+         oYdExW7ruycn806f5w5daZ+1KXqY1D0nQ2dHMMimxQjFuuxhJSvhhP6wZlzAiYFVorg9
+         AcagSPnWvcYUb2stTicQQ332YlZPa0CBnUY4ixAf8zZZddrOBcBUuUG4LlIiQ7JDLz5Y
+         0LGeisQECsjPTAZFeEQiEootAmlOdCQtrxeHMLlTA1WoKPscUtD0SYBTXYyV0WyGSza/
+         5vCw==
+X-Gm-Message-State: APjAAAXQ7IkvCFnlZgqZ9+oeMPY1Xbr7qNUHdNGKryYaCb+gXbkDeyTl
+        ukyv+bpVlNeFgJfW/mxobblugVjtkRQt0cDOp8rn5mQ=
+X-Google-Smtp-Source: APXvYqxKDfL6B/hHddJAL2/0n2LWN+cD1YcUAbcuH9yCTFjqDi1jJQvIGvWp1Qc5qQHXGFmXLqei6h3DJQBXw/uWScU=
+X-Received: by 2002:a19:fc04:: with SMTP id a4mr3210598lfi.39.1557424842743;
+ Thu, 09 May 2019 11:00:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B47AC7F@DE02WEMBXB.internal.synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190405213635.24383-1-longli@linuxonhyperv.com> <20190405213635.24383-5-longli@linuxonhyperv.com>
+In-Reply-To: <20190405213635.24383-5-longli@linuxonhyperv.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Thu, 9 May 2019 11:00:31 -0700
+Message-ID: <CAKywueTBsHuBOchj7ysL8S+pU=nL6dfF65YT9YZrVk74HUoRVQ@mail.gmail.com>
+Subject: Re: [Patch (resend) 5/5] cifs: Call MID callback before destroying transport
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 10:11:53AM +0000, Jose Abreu wrote:
-> From: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Date: Thu, May 09, 2019 at 10:04:16
-> 
-> > What means 1 for "Perfect Filter UC" ?
-> 
-> Thank you for the testing :)
-> 
-> 1 means that either the expected packet was not received or that the 
-> filter did not work.
-> 
-> For GMAC there is the need to set the HPF bit in order for the test to 
-> pass. Do you have such bit in your HW ? It should be in EMAC_RX_FRM_FLT 
-> register.
+=D0=BF=D1=82, 5 =D0=B0=D0=BF=D1=80. 2019 =D0=B3. =D0=B2 14:39, Long Li <lon=
+gli@linuxonhyperv.com>:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> When transport is being destroyed, it's possible that some processes may
+> hold memory registrations that need to be deregistred.
+>
+> Call them first so nobody is using transport resources, and it can be
+> destroyed.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  fs/cifs/connect.c | 36 +++++++++++++++++++-----------------
+>  1 file changed, 19 insertions(+), 17 deletions(-)
+>
+> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> index 33e4d98..084756cf 100644
+> --- a/fs/cifs/connect.c
+> +++ b/fs/cifs/connect.c
+> @@ -528,22 +528,6 @@ cifs_reconnect(struct TCP_Server_Info *server)
+>         /* do not want to be sending data on a socket we are freeing */
+>         cifs_dbg(FYI, "%s: tearing down socket\n", __func__);
+>         mutex_lock(&server->srv_mutex);
+> -       if (server->ssocket) {
+> -               cifs_dbg(FYI, "State: 0x%x Flags: 0x%lx\n",
+> -                        server->ssocket->state, server->ssocket->flags);
+> -               kernel_sock_shutdown(server->ssocket, SHUT_WR);
+> -               cifs_dbg(FYI, "Post shutdown state: 0x%x Flags: 0x%lx\n",
+> -                        server->ssocket->state, server->ssocket->flags);
+> -               sock_release(server->ssocket);
+> -               server->ssocket =3D NULL;
+> -       } else if (cifs_rdma_enabled(server))
+> -               smbd_destroy(server);
+> -       server->sequence_number =3D 0;
+> -       server->session_estab =3D false;
+> -       kfree(server->session_key.response);
+> -       server->session_key.response =3D NULL;
+> -       server->session_key.len =3D 0;
+> -       server->lstrp =3D jiffies;
+>
+>         /* mark submitted MIDs for retry and issue callback */
+>         INIT_LIST_HEAD(&retry_list);
+> @@ -556,7 +540,6 @@ cifs_reconnect(struct TCP_Server_Info *server)
+>                 list_move(&mid_entry->qhead, &retry_list);
+>         }
+>         spin_unlock(&GlobalMid_Lock);
+> -       mutex_unlock(&server->srv_mutex);
+>
+>         cifs_dbg(FYI, "%s: issuing mid callbacks\n", __func__);
+>         list_for_each_safe(tmp, tmp2, &retry_list) {
+> @@ -565,6 +548,25 @@ cifs_reconnect(struct TCP_Server_Info *server)
+>                 mid_entry->callback(mid_entry);
+>         }
 
-The problem was missing IFF_UNICAST_FLT, so netcore put the device in promiscous when adding an unicast address.
+The original call was issuing callbacks without holding srv_mutex -
+callbacks may take this mutex for its internal needs. With the
+proposed patch the code will deadlock.
 
-Next step will be to enable Flow Control, but I will start a new thread for that.
+Also the idea of destroying the socket first is to allow possible
+retries (from callbacks) to return a proper error instead of trying to
+send anything through the reconnecting socket.
 
-> 
-> > I have added my patch below
-> 
-> Do you want me to add your patch to the series ? If you send me with 
-> git-send-email I can apply it with your SoB.
-> 
+>
+> +       if (server->ssocket) {
+> +               cifs_dbg(FYI, "State: 0x%x Flags: 0x%lx\n",
+> +                        server->ssocket->state, server->ssocket->flags);
+> +               kernel_sock_shutdown(server->ssocket, SHUT_WR);
+> +               cifs_dbg(FYI, "Post shutdown state: 0x%x Flags: 0x%lx\n",
+> +                        server->ssocket->state, server->ssocket->flags);
+> +               sock_release(server->ssocket);
+> +               server->ssocket =3D NULL;
+> +       } else if (cifs_rdma_enabled(server))
+> +               smbd_destroy(server);
 
-I will do.
-I will send the patch for IFF_UNICAST_FLT appart since it fixes a bug.
+If we need to call smbd_destroy() *after* callbacks, let's just move
+it alone without the rest of the code.
 
-Regards
+
+> +       server->sequence_number =3D 0;
+> +       server->session_estab =3D false;
+> +       kfree(server->session_key.response);
+> +       server->session_key.response =3D NULL;
+> +       server->session_key.len =3D 0;
+> +       server->lstrp =3D jiffies;
+> +
+> +       mutex_unlock(&server->srv_mutex);
+> +
+>         do {
+>                 try_to_freeze();
+>
+> --
+> 2.7.4
+>
+
+
+--
+Best regards,
+Pavel Shilovsky
