@@ -2,109 +2,85 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C944DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1C12173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913C42173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OoLkEMPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfEIAzJ (ORCPT
+        id S1726428AbfEIA6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 20:55:09 -0400
-Received: from www.osadl.org ([62.245.132.105]:59629 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfEIAzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 20:55:09 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x490sgfS028444;
-        Thu, 9 May 2019 02:54:43 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Laxman Dewangan <ldewangan@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH] i2c: tegra: use busendiannes variable
-Date:   Thu,  9 May 2019 02:48:57 +0200
-Message-Id: <1557362937-6591-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Wed, 8 May 2019 20:58:39 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:59227 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfEIA6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 20:58:38 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x490w9KG001364;
+        Thu, 9 May 2019 09:58:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x490w9KG001364
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557363490;
+        bh=A0ah3OCkj+C/oYyV6jDmlhQW2a5VM8SUDJDCzq+gWyY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OoLkEMPfpOStVZh2DnAFwrv0o3LRz8rFvjKMyETx3vgP3vMCn0KpPCBCuVVJHuT5R
+         fYVrVGJQSk9tgrcV3tG4I2p0ndgbmppZu+FDBcfXhHI2cU42vUa+2lenJgg8FL55GH
+         737BPKEytBL/APVwR079DBJFW2bMp3cZQVdFFf8kD7gc2Y8Sv/JdbKGlrzZ265LEO5
+         tTfoa0W3S8QvAxGvthsCVQNsR8N+iWbA5EKGM48X43ZxxDxkUOE33O5a4g/J1hcRLH
+         ydbDUCkumhRgPelyN9EK9oA7vc7Zm3gq9kXby9ZuGnrH863Bo1SGx0pzJR+HRnAO8o
+         Dn2XVbe4ovsPw==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: re-enable int-in-bool-context warning
+Date:   Thu,  9 May 2019 09:58:01 +0900
+Message-Id: <1557363481-27178-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converting from bus to host endiannes was done using the same variable
-which makes sparse unhappy as it can not verify the endiannes handling
-properly. To allow sparse to verify endiannes handling a __le32 is
-introduced. This patch does not actually change the code logic while
-the binary does change due to limit on instruction re-ordering induced
-by the additional constraint.
+This warning was disabled by commit bd664f6b3e37 ("disable new
+gcc-7.1.1 warnings for now") just because it was too noisy.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Thanks to Arnd Bergmann, all warnings have been fixed. Now, we are
+ready to re-enable it.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 ---
 
-Problem located by an experimental coccinelle script to locate
-patters that make sparse unhappy (false positives):
+Changes in v2:
+  - rebase
 
-sparse was complaining about:
-drivers/i2c/busses/i2c-tegra.c:596:23: warning: cast to restricted __le32
+ Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-Note that the binary does change in this case - from inspection of the
-.lst files it seems that the introduction of the __le32 limits
-the re-ordering options for the compiler so one instruction
-position changed (ldr     r1, [sp, #4]) but from my understanding
-that does not change the program logic here.
-
-Patch was compile-tested with: tegra_defconfig (implies I2C_TEGRA=y)
-
-Patch is against 5.1 (localversion-next is next-20190508)
-
- drivers/i2c/busses/i2c-tegra.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index ebaa78d..cbaddcc 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -543,18 +543,19 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- {
- 	u32 val;
-+	__le32 busval;
- 	int tx_fifo_avail;
- 	u8 *buf = i2c_dev->msg_buf;
- 	size_t buf_remaining = i2c_dev->msg_buf_remaining;
- 	int words_to_transfer;
+diff --git a/Makefile b/Makefile
+index a61a95b..2896518 100644
+--- a/Makefile
++++ b/Makefile
+@@ -692,7 +692,6 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-delete-null-pointer-checks,)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning,frame-address,)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
+-KBUILD_CFLAGS	+= $(call cc-disable-warning, int-in-bool-context)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
  
- 	if (i2c_dev->hw->has_mst_fifo) {
--		val = i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
--		tx_fifo_avail = (val & I2C_MST_FIFO_STATUS_TX_MASK) >>
-+		busval = i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
-+		tx_fifo_avail = (busval & I2C_MST_FIFO_STATUS_TX_MASK) >>
- 			I2C_MST_FIFO_STATUS_TX_SHIFT;
- 	} else {
--		val = i2c_readl(i2c_dev, I2C_FIFO_STATUS);
--		tx_fifo_avail = (val & I2C_FIFO_STATUS_TX_MASK) >>
-+		busval = i2c_readl(i2c_dev, I2C_FIFO_STATUS);
-+		tx_fifo_avail = (busval & I2C_FIFO_STATUS_TX_MASK) >>
- 			I2C_FIFO_STATUS_TX_SHIFT;
- 	}
- 
-@@ -592,8 +593,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 */
- 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
- 		BUG_ON(buf_remaining > 3);
--		memcpy(&val, buf, buf_remaining);
--		val = le32_to_cpu(val);
-+		memcpy(&busval, buf, buf_remaining);
-+		val = le32_to_cpu(busval);
- 
- 		/* Again update before writing to FIFO to make sure isr sees. */
- 		i2c_dev->msg_buf_remaining = 0;
+ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 -- 
-2.1.4
+2.7.4
 
