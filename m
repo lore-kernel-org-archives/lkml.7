@@ -2,109 +2,114 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EC9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9442DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBED204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F5120656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557420741;
-	bh=fe//PupwdkzzzoX9lLrjzpbGaaoccKORpOtn5feu/sQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nziBZihvEW4p/3ArvIRvJ32HscNz82dKf6LkZFtu5DK/iF3dE5gEoYwNBJlpaB5wi
-	 EMJDHG8u44rkTMKhnWfG7n6iDlsh7VYYfkcVBAUY406QI6eN4qaUHGw7TTnTtgrvTi
-	 VzMJWz774PC6BOdGUWJm71Sk0cUWApEzcZuP1UAQ=
+	s=default; t=1557420828;
+	bh=x9XaOPV8oeYyRvbwF/5YSwBbDw9XI2ioXgXp4ApXfwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wVDaJmNPnkBfJsfGHLAihlhpeLhJ1D+Z8K51up8uYFeOe8fZknJm+qnDmJEqsfUfJ
+	 p3iCNoilP/P4lmSsoni+iFfj2EParyUXE/rKJDk9wBOUjOIiwB2UYvPK4UPx5zFVIx
+	 UkwqE7W88327U9o9ICDYHsN/gPNiGlefxpnZ+R5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfEIQwU (ORCPT
+        id S1726734AbfEIQxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:52:20 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35531 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbfEIQwU (ORCPT
+        Thu, 9 May 2019 12:53:47 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42733 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfEIQxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:52:20 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j20so2082081lfh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:52:18 -0700 (PDT)
+        Thu, 9 May 2019 12:53:47 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d4so1866628qkc.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AhpmsrtucWguH3IXMMNnIIZguP4K9ooA7az5QKRrexA=;
-        b=MRXgNsW3/X37uCKGa+XBlAXjfP6xB4Y9F4UfQSVmMyMoxN9Nl0sarbkleypiHR5nR+
-         FyZcendGNNYq3dMcg9q/zgW0M7Ida8GHJxr7VbzXdkuyJ9hFMHE3fThGQx1xvL0P1Isv
-         Hcc6VPJJ4XpzrX/MFfZ4raCstrAV8aX3pLS38=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZCcib+4HBdkkyiz91cBBA/QR5BcBCmR0H5WvWgqdP7g=;
+        b=tSLMv3drSwwbzlR1l0tGdAUZkzjeBZsSkb2DDjXqig1uiMKZ/8kp+42+xkoG7WeB6C
+         Vx3k6EVgxmjqOd7jARsoPsDZ9YrEq1ZZWio+tyDv7RJKE1QW/LoahVe58RU12oHRHiTV
+         IgeYm9KSmW5pv5nPpv9PCf5LYyAQw6AkgXxKoBZijKkrCmWhPgo3q2OQNs2LQsmiqmgw
+         GDpg9IaFaGZyId30F2oQEsNOUqvvXnklPttau/fz3vte4EU5WIq53LeAmlovwexmzz4j
+         SatcKgCI82BFbNiaKHOa6np+MmEOcm6WHW8i7EQ9xFkx+2Z+55m7zXL+OqbcltD8SiBN
+         DsrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AhpmsrtucWguH3IXMMNnIIZguP4K9ooA7az5QKRrexA=;
-        b=WNYGC0CpJkf62pPL/jwMqfQ798haW94/YGeE/L7TPoyclzP5C5alIT9kkY7RSOxpzN
-         3lgeq6mk/fGcXRdFG0m1DS+MLfuGGRl6hjmUI6wjp/VZkHNOGnONZlfAlaOtJPFETpBj
-         M/ZOMQKelo5RMHgGigWEkLY4KF+5hjZNv5QowGo14VgmXWxA3ineLH378uSN3PkBKfWu
-         Hf1Z423fdQmHPjvaae6GrYN78AnIq3KZL1he6cN61B6SKCMemDqraTm1xdWrbgJq2rK4
-         bQjcBYbudQt1ahO0BIYtAktuCTGxMm4Lw8IcEFlZKS8Mpd19R2dsPskH4ylgeM0cpUnq
-         xlpQ==
-X-Gm-Message-State: APjAAAXp/+vUFbbBK5DK+NrVQNSyuKM8Q+y/rGGEbQtAUK18ci6mQ067
-        17rCsoapctwnaBJomrsy52qfkXCx/S0=
-X-Google-Smtp-Source: APXvYqyLYwcL01FFfEL5IE5Mjq96W8mYvyOK4vzfdejPYRjzykpMWuVXm4exz0QwT4dX+RF00eQxnA==
-X-Received: by 2002:ac2:5501:: with SMTP id j1mr3006101lfk.89.1557420737476;
-        Thu, 09 May 2019 09:52:17 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id m5sm481353lfb.47.2019.05.09.09.52.15
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZCcib+4HBdkkyiz91cBBA/QR5BcBCmR0H5WvWgqdP7g=;
+        b=JCha4+F5iJVAb9npc3KVPdaS6K4s40nwq9a9SlNNW9Cc5kBeTWRQi1PYh42VM+12Yd
+         NAwHY1JQQNdN43AUOvnEdB9DR2eWxxJzCOgEnpyP7EmL/H7VvTueJ3wvMDyYodOfghqq
+         jzy7eCBoztytsyTPGRHxP7c+G20XaNMWvexiKPEwf4Od+ajSZ9VN2CaEG/8u2bRSxtD7
+         g/T3WNBXvEPdfkKPIKdVflC7F3zb2PFp2mSU+VmPRWnAlK70uc7Z2QxIaeTIWOZ4qDgO
+         3/d14tstOOq/A4MoaCsTUP17ahcG9wceknaXK0rUrHaoj+Z3JUPbH+MgzFaVFw3n4TFE
+         8s1A==
+X-Gm-Message-State: APjAAAVVno99Rw7puAWL8QAj8KtcF+d7GNd+JI3jV1G7XUAduL4Wk5xv
+        GSRjzT0/iowvToXmuM/pw2I=
+X-Google-Smtp-Source: APXvYqwyd1bvz2xFFOqtBakqR5lcCDiU+UfTUKK0uz1daQwE0Mzt2DrwuhcaZkc8nO11aGNRZryPRA==
+X-Received: by 2002:a05:620a:1134:: with SMTP id p20mr4111090qkk.20.1557420825891;
+        Thu, 09 May 2019 09:53:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:c346])
+        by smtp.gmail.com with ESMTPSA id k53sm1489077qtb.65.2019.05.09.09.53.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 09:52:16 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id k8so2611250lja.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:52:15 -0700 (PDT)
-X-Received: by 2002:a2e:9044:: with SMTP id n4mr2928118ljg.94.1557420735319;
- Thu, 09 May 2019 09:52:15 -0700 (PDT)
+        Thu, 09 May 2019 09:53:45 -0700 (PDT)
+Date:   Thu, 9 May 2019 09:53:43 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <songliubraving@fb.com>,
+        Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 1/4] percpu_ref: introduce PERCPU_REF_ALLOW_REINIT flag
+Message-ID: <20190509165343.GX374014@devbig004.ftw2.facebook.com>
+References: <20190507170150.64051-1-guro@fb.com>
 MIME-Version: 1.0
-References: <20190318153840.906404905@infradead.org> <20190318155140.058627431@infradead.org>
- <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com> <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
- <20190509090058.6554dc81@gandalf.local.home>
-In-Reply-To: <20190509090058.6554dc81@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 May 2019 09:51:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
-Message-ID: <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507170150.64051-1-guro@fb.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> This patch works. Can I get your Signed-off-by for it?
+On Tue, May 07, 2019 at 10:01:47AM -0700, Roman Gushchin wrote:
+> In most cases percpu reference counters are not switched to the
+> percpu mode after they reach the atomic mode. Some obvious exceptions
+> are reference counters which are initialized into the atomic
+> mode (using PERCPU_REF_INIT_ATOMIC and PERCPU_REF_INIT_DEAD flags),
+> and there are few other exceptions.
+> 
+> But in most cases there is no way back, and once the reference counter
+> is switched to the atomic mode, there is no reason to wait for
+> percpu_ref_exit() to release the percpu memory. Of course, the size
+> of a single counter is not so big, but because it can pin the whole
+> percpu block in memory, the memory footprint can be noticeable
+> (e.g. on my 32 CPUs machine a percpu block is 8Mb large).
+> 
+> To make releasing of the percpu memory as early as possible, let's
+> introduce the PERCPU_REF_ALLOW_REINIT flag with the following semantics:
+> it has to be set in order to switch a percpu reference counter to the
+> percpu mode after the initialization. PERCPU_REF_INIT_ATOMIC and
+> PERCPU_REF_INIT_DEAD flags will implicitly assume PERCPU_REF_ALLOW_REINIT.
+> 
+> This patch doesn't introduce any functional change to avoid any
+> regressions. It will be done later in the patchset after adjusting
+> all call sites, which are reviving percpu counters.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Yes. Please write some kind of comprehensible commit log for it, but
+For all patches in the series:
 
-   Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  Acked-by: Tejun Heo <tj@kenrel.org>
 
-for the patch itself.
+Thanks.
 
-             Linus
+-- 
+tejun
