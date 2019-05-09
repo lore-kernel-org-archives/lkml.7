@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4205CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEEDC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123A0217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194E120989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557440118;
-	bh=qgyq7+yLpLnKg1MIv7N9dI3jFfUpFYJPDgorlRE2EYs=;
+	s=default; t=1557440122;
+	bh=BQobdt6CAD9lHDDvfoBIYnw9dhCRJcfjmwNu8OSy7H0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=08KM5HiNCc6T6hWMMQRK8P4noB2BZHSyJ2zLNIuCEKKAAPek7PjRBI9C0wz5cbV2t
-	 9tmtZWXmx0f8aeuK/vCln0Ujp13ep4YJ72+zp3SrND2svZ82lQDIMcONTzYglMZNUX
-	 qmEEg98+DrbCFAmBke2IGNHQkbxaiuW4YN16mRBU=
+	b=iTZcTiV6qfb81X/x0JkhofKrE9P1Z0ofqTKTgfXvGZ99sD7fLJwzAwsHiYDf84F+8
+	 rySZzO87vmUA3NtJxkK5VBq73bId4eg+OR78PONW/dpGfuwlW7dkwRgCxKunQ4EIlk
+	 GDHkWohsEm0cVFMBIp7VuZCYIlQGp0p1WttOvlJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfEIWPQ (ORCPT
+        id S1727324AbfEIWPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:15:16 -0400
+        Thu, 9 May 2019 18:15:21 -0400
 Received: from mail.kernel.org ([198.145.29.99]:42386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfEIWPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:15:15 -0400
-Subject: Re: [PULL REQUEST] i2c for 5.2
+        id S1727294AbfEIWPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:15:19 -0400
+Subject: Re: [GIT] Sparc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557440115;
-        bh=qgyq7+yLpLnKg1MIv7N9dI3jFfUpFYJPDgorlRE2EYs=;
+        s=default; t=1557440118;
+        bh=BQobdt6CAD9lHDDvfoBIYnw9dhCRJcfjmwNu8OSy7H0=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=RokjB1+Ntin/7xx2vnGBtx6GTUFwN91fbDGbAlOVgMsZhejdZjFy0smhOuKZQ6So4
-         7fxAO+bI/hS0mp9GkCNZ6rJg0JPiRH5YZutsMzvqNQxnYYct/Fk2Q+1+VoNzLW7jEW
-         1LJLO/UxhjRRy5l8Z/pE/9DSRnEjY3xVMMQ0Of30=
+        b=EXm7cFQscv9XNdTN1QC/UXcNAZ0arl270HZbyz2WX8Zo2BgR2NQ97BC65HGAzeSOw
+         rjVgYi0OuJjy6MjPjO4sZvD/ESf5AYQWqdSO4I7UHhrpKORVoBOtOfznYgiPfNGn6B
+         KKJvLoftmattMJ60YMEv/3VRlDNGcqjnqHO6TuC8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190509191132.GA9306@kunai>
-References: <20190509191132.GA9306@kunai>
+In-Reply-To: <20190509.143531.499657137828123463.davem@davemloft.net>
+References: <20190509.143531.499657137828123463.davem@davemloft.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190509191132.GA9306@kunai>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.2
-X-PR-Tracked-Commit-Id: e6ae3ca27477226eae77cc00d5fad89d7ce64aea
+X-PR-Tracked-Message-Id: <20190509.143531.499657137828123463.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: f4d9a23d3dad0252f375901bf4ff6523a2c97241
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 45182e4e1f8ac04708ca7508c51d9103f07d81ab
-Message-Id: <155744011521.23477.7035277562607237397.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 May 2019 22:15:15 +0000
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+X-PR-Merge-Commit-Id: 9b6c9e96f941c5ab13dad7278a3622f58e5672fc
+Message-Id: <155744011853.23477.16345216067726345740.pr-tracker-bot@kernel.org>
+Date:   Thu, 09 May 2019 22:15:18 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 9 May 2019 21:11:55 +0200:
+The pull request you sent on Thu, 09 May 2019 14:35:31 -0700 (PDT):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.2
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git refs/heads/master
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/45182e4e1f8ac04708ca7508c51d9103f07d81ab
+https://git.kernel.org/torvalds/c/9b6c9e96f941c5ab13dad7278a3622f58e5672fc
 
 Thank you!
 
