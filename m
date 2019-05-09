@@ -2,122 +2,159 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490A3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5259C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4222175B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557390680;
-	bh=w6+0OgT96wi41LlEwPXXmXtqjxHvuMZosQbtHCaClKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vqTfqnfvP6DdxLrb0ryuVfi7GlTDk5/iYVi56v+6965P789cZeBwE9WC0SNvnJ3GW
-	 eGvNU/G5nAd3v0c/3kqLZzggbnTgEjQX2OgZzyEZhwaah178mFdAImJ6LmK0AbqnHi
-	 euzeP6vyTC4O1vwt0K+A2129OtOFTcoDYOLtUzsg=
+	by mail.kernel.org (Postfix) with ESMTP id 7DD7B20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfEIIbR (ORCPT
+        id S1726563AbfEIIce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:31:17 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:35474 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfEIIbR (ORCPT
+        Thu, 9 May 2019 04:32:34 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50375 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfEIIce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:31:17 -0400
-Received: by mail-wm1-f46.google.com with SMTP id y197so2005379wmd.0;
-        Thu, 09 May 2019 01:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FzWOYssN0isWIIe9zGhm6nETA9v2GV7Jir7OO9+o9Vw=;
-        b=E2kz1FMl83tN2ABjW1mJurOeaAAcQShe1pSdN0kxvumUhNTI+TqC+JXIZb1PePIKJJ
-         ysk3UkyIsJU1IyF0QX1bzY9ls8u7jx8KohqfGd2WpkooA64l95qf7m/i1PXKKqW34KQF
-         NNcpCM/IAQlJ5s4gyXGZ9cMqAAd7CUf1vozzxU8QOI5PMk0lgpQQKZzWT1hz9HGssOvu
-         uKSWLGBKVYuEifUSTdaTScT7ZUK/rBVNeKSLxaCEgLJEzr+DuN5HYR3Wm+13avez/Z+N
-         IK5ls6J3TdDfsYGUe0WoryVlVbiG8KYRYsN6OokIHADtlhOTcp6Zf1M8DSc7jpHqbyfy
-         gN6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FzWOYssN0isWIIe9zGhm6nETA9v2GV7Jir7OO9+o9Vw=;
-        b=G+mHqoPaVIkhLpPYUKiUYAKh25vWzs3c/hGMLe/oXBgglU+XeLIymYF7f1KyU/6Woh
-         0wEgVrg8w5HHxUPOoa8dlzIh8WYC9zCgei61craZbdyrADQ93RcmcXCBoyNRgHdjc1OI
-         xB6vOSPk7s3F1hniqHtVZ8s1IT2T4YoSS86a0VjltW19gaa+rqSUoigYyQCspuZJcbaO
-         9385zNfnyGTSxNMmDxzC6oxbB41QxgIn/ajv91+LnqrMBcNT97x4fYM7JkQ4R1mii+f0
-         SlJEhEJkeD3v6z94GhRlitl2JHB7iOuid/fIIIrucCNQjtdnVP26BRcZGcWmTsaS1Kdn
-         Bm7Q==
-X-Gm-Message-State: APjAAAV8yQogelD4Is27GaBtbd2k8jcIsWAguwnsQjOWXK84TxjeXaCP
-        EAEWPrW0IqZTVYL3bBePAyUwz7oL
-X-Google-Smtp-Source: APXvYqwbP80+SsW7YO75fRTZDEwGG81tyowfGAEzJg/Pgbxk1mNQT7/K4RNdohJEwe6Atj6WEY8WAQ==
-X-Received: by 2002:a7b:c309:: with SMTP id k9mr1995617wmj.45.1557390675018;
-        Thu, 09 May 2019 01:31:15 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id x17sm1474400wru.27.2019.05.09.01.31.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 01:31:14 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:31:11 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, rguenther@suse.de,
-        hjl.tools@gmail.com, yang.shi@linux.alibaba.com, mhocko@suse.com,
-        vbabka@suse.cz, luto@amacapital.net, x86@kernel.org,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-um@lists.infradead.org, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au, linux-arch@vger.kernel.org,
-        gxt@pku.edu.cn, jdike@addtoit.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com
-Subject: Re: [PATCH] [v2] x86/mpx: fix recursive munmap() corruption
-Message-ID: <20190509083111.GA75918@gmail.com>
-References: <20190419194747.5E1AD6DC@viggo.jf.intel.com>
+        Thu, 9 May 2019 04:32:34 -0400
+X-Originating-IP: 90.88.28.253
+Received: from aptenodytes (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A02711C000E;
+        Thu,  9 May 2019 08:32:29 +0000 (UTC)
+Message-ID: <6ffb32e804a27557ca49216c4d8f117837c78f4e.camel@bootlin.com>
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Pekka Paalanen <ppaalanen@gmail.com>
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Date:   Thu, 09 May 2019 10:32:14 +0200
+In-Reply-To: <20190506112835.6d4ecf29@eldfell.localdomain>
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+         <20190506112835.6d4ecf29@eldfell.localdomain>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190419194747.5E1AD6DC@viggo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Pekka,
 
-* Dave Hansen <dave.hansen@linux.intel.com> wrote:
+Le lundi 06 mai 2019 à 11:28 +0300, Pekka Paalanen a écrit :
+> On Wed, 17 Apr 2019 20:10:15 +0200
+> Paul Kocialkowski <paul.kocialkowski@bootlin.com> wrote:
+> 
+> > There's also the possibility of writing up a drm-render DDX to handle
+> > these 2D blitters that can make things a lot faster when running a
+> > desktop environment. As for wayland, well, I don't really know what to
+> > think. I was under the impression that it relies on GL for 2D
+> > operations, but am really not sure how true that actually is.
+> 
+> Hi Paul,
+> 
+> Wayland does not rely on anything really, it does not even have any
+> rendering commands, and is completely agnostic to how applications or
+> display servers might be drawing things. Wayland (protocol) does care
+> about buffer types and fences though, since those are the things passed
+> between applications and servers.
+> 
+> In a Wayland architecture, each display server (called a Wayland
+> compositor, corresponding to Xorg + window manager + compositing
+> manager) uses whatever they want to use for putting the screen contents
+> together. OpenGL is a popular choice, yes, but they may also use Vulkan,
+> Pixman, Cairo, Skia, DRM KMS planes, and whatnot or a mix of any.
+> Sometimes it may so happen that the display server does not need to
+> render at all, the display hardware can realize the screen contents
+> through e.g. KMS planes.
 
-> Reported-by: Richard Biener <rguenther@suse.de>
-> Reported-by: H.J. Lu <hjl.tools@gmail.com>
-> Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: x86@kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: stable@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-um@lists.infradead.org
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linux-arch@vger.kernel.org
-> Cc: Guan Xuetao <gxt@pku.edu.cn>
-> Cc: Jeff Dike <jdike@addtoit.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Right, I looked some more at wayland and had some discussions over IRC
+(come to think of it, I'm pretty sure you were in the discussions too)
+to get a clearer understanding of the architecture. The fact that the
+wayland protocol is render-agnostic and does not alloc buffers on its
+own feels very sane to me.
 
-I've also added your:
+> Writing a hardware specific driver (like a DDX for Xorg) for one
+> display server (or a display server library like wlroots or libweston)
+> is no longer reasonable. You would have to do it on so many display
+> server projects. What really makes it infeasible is the
+> hardware-specific aspect. People would have to write a driver for every
+> display server project for every hardware model. That's just not
+> feasible today.
 
-  Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Yes, this is why I am suggesting implementing a DRM helper library for
+that, which would handle common drivers. Basically what mesa does for
+3D, but which a DRM-specific-but-device-agnostic userspace interface.
+So the overhead for integration in display servers would be minimal.
 
-Because I suppose you intended to sign off on it?
+> Some display server projects even refuse to take hardware-specific code
+> upstream, because keeping it working has a high cost and only very few
+> people can test it.
 
-Thanks,
+Right, maintainance aspects are quite importance and I think it's
+definitely best to centralize per-device support in a common library.
 
-	Ingo
+> The only way as I see that you could have Wayland compositors at large
+> take advantage of 2D hardware units is to come up with the common
+> userspace API in the sense similar to Vulkan or OpenGL, so that each
+> display server would only need to support the API, and the API
+> implementation would handle the hardware-specific parts. OpenWF by
+> Khronos may have been the most serious effort in that, good luck
+> finding any users or implementations today. Although maybe Android's
+> hwcomposer could be the next one.
+
+I would be very cautious regarding the approach of designing a
+"standardized" API across systems. Most of the time, this does not work
+well and ends up involving a glue layer of crap that is not always a
+good fit for the system. Things more or less worked out with GL (with
+significant effort put into it), but there are countless other examples
+where it didn't (things like OpenMAX, OpenVG, etc).
+
+In addition, this would mostly only be used in compositors, not in
+final applications, so the need to have a common API across systems is
+much reduced. There's also the fact that 2D is much less complicated
+than 3D.
+
+So I am not very interested in this form of standardization and I think
+a DRM-specific userspace API for this is not only sufficient, but
+probably also the best fit for the job. Maybe the library implementing
+this API and device support could later be extended to support a
+standardized API across systems too if one shows up (a bit like mesa
+supports different state trackers). That's definitely not a personal
+priority though and I firmly believe it should not be a blocker to get
+2D blitters support with DRM.
+
+> However, if someone is doing a special Wayland compositor to be used on
+> specific hardware, they can of course use whatever to put the screen
+> contents together in a downstream fork. Wayland does not restrict that
+> in any way, not even by buffer or fence types because you can extend
+> Wayland to deal with anything you need, as long as you also modify the
+> apps or toolkits to do it too. The limitations are really more
+> political and practical if you aim for upstream and wide-spread use of
+> 2D hardware blocks.
+
+Yes I understand that the issue is not so much on the technical side,
+but rather on governance and politics.
+
+Cheers,
+
+Paul
+
+-- 
+Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Bootlin
+
