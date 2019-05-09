@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83051C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510C8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A132173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220972175B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AauaUrfm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGyl/NoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfEIJdc (ORCPT
+        id S1726753AbfEIJdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:33:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37350 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEIJdb (ORCPT
+        Thu, 9 May 2019 05:33:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41075 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIJdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:33:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y5so2272751wma.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:33:30 -0700 (PDT)
+        Thu, 9 May 2019 05:33:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d12so2012368wrm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=SyRgRxtjdMJpbsjK9vjm2B3TwSm8QJJ2pjmdSOpbmps=;
-        b=AauaUrfm2cnOW6SNDfuMRv0+hlgU2BgvMMo5qTYqMWmgv0tM2Y605oJ9MDb6GCKkyr
-         xxLZDhgFvVAUlAqzhZZgGwA2pJ050Cg3c+g34asToSOFZ08TE2qbNZLS3DeuykRS59oz
-         8+wg3JumczxfcDO7Pl6qu7oRNbTm/41lIdyzvY1NkLggKzIkIhVByv0CcEtkutzoETEX
-         NxstvI4XTnL3mAERfoDswn2CPdQJx+hVe0gJm0AM6FQHrltYCRVbW5fJLJS4w4cxHgzg
-         ACVVbtk5SuzhgRFF6Z67DPh3S/iQNyWj0leAwGWeu9gnUt6RivRWexcjB7HEr88L+o0d
-         BWvg==
+        bh=o7y1Eq5XE68bwd6aXqoeahdc2GOPTkNRx2HYwO3zXRM=;
+        b=MGyl/NoSKew0c+r/VW5jKj8+RY1Be0lr7+iIyBpWo2JyYY2+4Zj0KIOT5UyS2IH7p6
+         Xl8Db2PnGHM3+pD5QLCTzzpzGSmEtTFTZ6XOaQOj2ECmn0uQBKyeIxF4HZBVzRqUiJI2
+         NEDAmdlp9PxYJcXxwi7whT1QkFYbEdWMx6tV43o4yLEvaQyl/FMlzPKNIZr4j26kLmou
+         amPYy2ATk+pcA9Lju+4267nyRZtaBxE1pCly3geHfLV8Bl8qMtI3tyJAkYKyWCIXlAY2
+         nu6Mdw5YSWjgkIa1xZ/wflstOgUkvca0cuPgMnpdZ+lPpSfs8EDVYQWEFaBKZ397A7hp
+         Bz7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=SyRgRxtjdMJpbsjK9vjm2B3TwSm8QJJ2pjmdSOpbmps=;
-        b=r/BOkP9pKCQNbJ8M/lYpyr0jpBLOV08NPZ4I9P0ub7bZVNZO+SnxWyNKCplT82pgAa
-         4GsGu3PquwVdtmItKtMpibd8WWcGd/kplP0w0qOT50xupup7w639R/85yHwZ9mz9k4op
-         ieuEAevQVzgbtkyDUFm4hIkHNN5av1QAY/36GpXJHUe123XpbMK1NGWqGORFppTD9cXY
-         ZVrJUExH047/12PLGPxP6UZ4Zu1wwC5imE7ss8xGJvCOvu133szjukkBJyfxZ7tufomv
-         UYK/DBkflENqsrgWzdIewZfslrkD+x26hZTS9V5XXmzgPypIU7AAWX7J3SHxUAXauyk/
-         vrhw==
-X-Gm-Message-State: APjAAAXi2o7j+WUyjPKUGb7YbvSEKR+qFSkG29uJ4cbmdMx/X4BpGY58
-        h2dYfvI7dkyt+uvRQEiX+yDigQ==
-X-Google-Smtp-Source: APXvYqzWxiSGBE8sUUva3+DpZ/awGVFeFFPJtZu5iHJoO63RJCNa28okuodpAuszCvvYsv8zSHsUTA==
-X-Received: by 2002:a1c:f111:: with SMTP id p17mr1919584wmh.62.1557394409462;
-        Thu, 09 May 2019 02:33:29 -0700 (PDT)
+        bh=o7y1Eq5XE68bwd6aXqoeahdc2GOPTkNRx2HYwO3zXRM=;
+        b=WKUZNgitay7ZuUHf56hpXYueJNmCggen0D/EAGHEw8U7YzzCz+prz44rEo6qcSZtFq
+         ZdqzusAFbCRLICAN4RPphf68SzTj/L2D6kORRb2V/vvJiufoGQx33v9XVX2RiokhKEeF
+         xgE+6f9ZsdilFaAjpvttn8LUrMz0VJl9SPgxjetBigznhgq/HHSD8HtQ4Hawlxfy17lk
+         ygWamNRykS44HJqNHX4hfDZlSTw91qEErnSxUM5E68lSxgs3Hn2P9VsIMW2npiZ8K/dc
+         Cedh3oDU2UHfUzoBb/fyJeKQA6vhaiqG9JmA9RbIvhxNw7eYYgs+X6BnKF4+uGCF+eRz
+         es9A==
+X-Gm-Message-State: APjAAAVm+72lfNtQ/kTAP4sxD4gPXOXVej3uQwSoO2TSeoJH/pkD0zUI
+        p1Xrp7U2knLFkVC+kKdwfJvL9w==
+X-Google-Smtp-Source: APXvYqyaoHx3f0sqPQbDtBs8Z9JyejUps85iOp6Wh0y/gQuPQM64c/u7mmfNhXTMA9EEM9TWbH/fpA==
+X-Received: by 2002:adf:ec51:: with SMTP id w17mr2358350wrn.326.1557394423897;
+        Thu, 09 May 2019 02:33:43 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id j131sm4430911wmb.9.2019.05.09.02.33.27
+        by smtp.gmail.com with ESMTPSA id u8sm1141266wmc.14.2019.05.09.02.33.41
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 02:33:28 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:33:26 +0100
+        Thu, 09 May 2019 02:33:43 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:33:38 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Amelie Delaunay <amelie.delaunay@st.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -68,16 +68,16 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v6 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
- (STMFX) core bindings
-Message-ID: <20190509093326.GV31645@dell>
+Subject: Re: [PATCH v6 2/9] mfd: Add ST Multi-Function eXpander (STMFX) core
+ driver
+Message-ID: <20190509093338.GW31645@dell>
 References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
- <1557392336-28239-2-git-send-email-amelie.delaunay@st.com>
+ <1557392336-28239-3-git-send-email-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557392336-28239-2-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <1557392336-28239-3-git-send-email-amelie.delaunay@st.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,17 +86,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, 09 May 2019, Amelie Delaunay wrote:
 
-> This patch adds documentation of device tree bindings for the
-> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
+> STMicroelectronics Multi-Function eXpander (STMFX) is a slave controller
+> using I2C for communication with the main MCU. Main features are:
+> - 16 fast GPIOs individually configurable in input/output
+> - 8 alternate GPIOs individually configurable in input/output when other
+> STMFX functions are not used
+> - Main MCU IDD measurement
+> - Resistive touchscreen controller
 > 
 > Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  drivers/mfd/Kconfig       |  13 ++
+>  drivers/mfd/Makefile      |   2 +-
+>  drivers/mfd/stmfx.c       | 545 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/stmfx.h | 123 +++++++++++
+>  4 files changed, 682 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/stmfx.c
+>  create mode 100644 include/linux/mfd/stmfx.h
 
 Applied, thanks.
 
