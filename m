@@ -2,263 +2,218 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D5EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086B4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40F320818
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:07:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QPVRsbDG"
+	by mail.kernel.org (Postfix) with ESMTP id B1E4820818
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:17:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557375467;
+	bh=e/nF58KXEV4PV2cf9jYy/djGPemf2Y/3E5BDg03I7Ls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A6U+3AI9UC6Q2JG1TgvTDmA41iJ2zZ/YYt3FAZ4DajVmGzL8mmSos1txeqBvTKiCW
+	 Z8p0cHGvu//w//JNht7xh/7sSPVncvh7+NMbffcNSOBGAKr2ZwtqSfeM7qa3EOi3/C
+	 /va8OeIWKMnivgTAiB28211Vmy/mQfwVj8T/voww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfEIEHx (ORCPT
+        id S1725940AbfEIEPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 00:07:53 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38923 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfEIEHx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 00:07:53 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e24so739590edq.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 21:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=rcSJ7jMxGzSyHBuvTtybXntBxEii0S3igF/TJN9iQIM=;
-        b=QPVRsbDGwbwOKduzLxNA/St9KZmC5Ae8sNTu9LmM5AJtu04sEiBz5fJHFNo9UD7hEs
-         8G3lxwQrInn/dkSYjdxreFZgNxIeYPSNjMEBtRQywrH2lwnTRpD0jktriN4AEzzrKN6Y
-         /kzkwF2nNfxFDwopA0LPJWgKdvEgYnlRe74bw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rcSJ7jMxGzSyHBuvTtybXntBxEii0S3igF/TJN9iQIM=;
-        b=Eqe1eV+1B2av9gDFTcridcwBNrScSvv9FaBERkGGKUwW2nhLDEHRB/o0UWWGkU+cfD
-         IgIDLyGpG11M4Jt9J5fw67TMDCsRBnAoAnBHCS5c+76DfnkZov5e9+bca/Aj4Gyqa9OI
-         G8Ul4oTSD155paO9Vd9Qd4dnsejHssU+smToKsK51/VtJ/ClA7Jq57DKa8qakvjx/lf/
-         ncZ6/0S19B6G8iunRuJ5DGlaKeEoWIQ5p8FdToSlm35h58lN+5M/yYChK0FWQXa1VM51
-         wY/F/bIx5H3ZMVAlii1Y22TXbUDO63ZQ1pWhaKt4RWFVXNcxnQ/37GjaTsxCjCPD08w0
-         jp5Q==
-X-Gm-Message-State: APjAAAU4w+VzvZ+gyG90W9xO08yAmBc5WyHK5jAz+sxmdjsMPsfndXFr
-        N3CqCWRnwf7nymfyUi3+VMQFfg==
-X-Google-Smtp-Source: APXvYqxcOrc5gd9eDfHxiUPAuBj3NuxKGu9eRVP6WLM+z/Zwia0Xcd911wSrmY3vokbdinZ67Lp8+w==
-X-Received: by 2002:a50:930e:: with SMTP id m14mr1438356eda.93.1557374870816;
-        Wed, 08 May 2019 21:07:50 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id a61sm257424edf.8.2019.05.08.21.07.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 08 May 2019 21:07:49 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-i2c@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Ray Jui <ray.jui@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Michael Cheng <ccheng@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH 1/1] i2c: iproc: Add multi byte read-write support for slave mode
-Date:   Thu,  9 May 2019 09:35:17 +0530
-Message-Id: <1557374717-14603-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 9 May 2019 00:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbfEIEPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 00:15:37 -0400
+Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1822C20818;
+        Thu,  9 May 2019 04:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557375336;
+        bh=e/nF58KXEV4PV2cf9jYy/djGPemf2Y/3E5BDg03I7Ls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RcvhGvZTl1YsaI0lgCHKBQzPvzq0NS+UnVcy9djGx+rq79RzaQoYlk32wH4tj8sZ+
+         +Ey5li/vdIWvOnspFYfYD5vzLoGmeQ51XIj587TgT6cK5TEYohelESVd+vPnODkzWA
+         OikllE4ywuedNsn2ryA7UpbrkIUJrCOFKEbZjCVc=
+Date:   Wed, 8 May 2019 21:15:35 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Randall Huang <huangrandall@google.com>
+Cc:     yuchao0@huawei.com, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] f2fs: fix to avoid accessing xattr across the boundary
+Message-ID: <20190509041535.GA62877@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190411082646.169977-1-huangrandall@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411082646.169977-1-huangrandall@google.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add multiple byte read-write support for slave mode.
+On 04/11, Randall Huang wrote:
+> When we traverse xattr entries via __find_xattr(),
+> if the raw filesystem content is faked or any hardware failure occurs,
+> out-of-bound error can be detected by KASAN.
+> Fix the issue by introducing boundary check.
+> 
+> [   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
+> [   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
+> [   38.402935] c7   1827 Call trace:
+> [   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
+> [   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
+> [   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
+> [   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
+> [   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
+> [   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
+> [   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
+> [   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
+> [   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
+> [   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
+> [   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
+> [   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
+> [   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
+> [   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
+> [   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
+> [   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
+> [   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
+> [   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
+> [   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
+> [   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
+> [   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
+> [   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
+> 
+> Bug: 126558260
+> 
+> Signed-off-by: Randall Huang <huangrandall@google.com>
+> ---
+> v2:
+> * return EFAULT if OOB error is detected
+> 
+> v3:
+> * fix typo in setxattr()
+> 
+> v4:
+> * change boundry definition
+> 
+> v5:
+> * revise boundry definition
+> ---
+>  fs/f2fs/xattr.c | 32 +++++++++++++++++++++++++++-----
+>  1 file changed, 27 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+> index 848a785abe25..587429e29a69 100644
+> --- a/fs/f2fs/xattr.c
+> +++ b/fs/f2fs/xattr.c
+> @@ -202,12 +202,18 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
+>  	return handler;
+>  }
+>  
+> -static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
+> -					size_t len, const char *name)
+> +static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
+> +				void *last_base_addr, int index,
+> +				size_t len, const char *name)
+>  {
+>  	struct f2fs_xattr_entry *entry;
+>  
+>  	list_for_each_xattr(entry, base_addr) {
+> +		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
+> +			(void *)XATTR_NEXT_ENTRY(entry) +
+> +			sizeof(__u32) > last_base_addr)
+> +			return NULL;
+> +
+>  		if (entry->e_name_index != index)
+>  			continue;
+>  		if (entry->e_name_len != len)
+> @@ -298,6 +304,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>  				void **base_addr, int *base_size)
+>  {
+>  	void *cur_addr, *txattr_addr, *last_addr = NULL;
+> +	void *last_txattr_addr = NULL;
+>  	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+>  	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
+>  	unsigned int inline_size = inline_xattr_size(inode);
+> @@ -311,6 +318,8 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>  	if (!txattr_addr)
+>  		return -ENOMEM;
+>  
+> +	last_txattr_addr = (void *)txattr_addr + inline_size + size;
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+I just found this should be + XATTR_PADDING_SIZE. Otherwise, generic/026 fails.
+Let me know, if there is any other concern below.
+
 ---
- drivers/i2c/busses/i2c-bcm-iproc.c | 117 +++++++++++++++++--------------------
- 1 file changed, 53 insertions(+), 64 deletions(-)
+ fs/f2fs/xattr.c | 12 ++++--------
+ fs/f2fs/xattr.h |  2 ++
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index a845b8d..2c7f145 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -165,12 +165,6 @@ enum i2c_slave_read_status {
- 	I2C_SLAVE_RX_END,
- };
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index 019778fb9a0d..cd199a09d436 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -306,19 +306,18 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 	void *cur_addr, *txattr_addr, *last_addr = NULL;
+ 	void *last_txattr_addr = NULL;
+ 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+-	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
+ 	unsigned int inline_size = inline_xattr_size(inode);
+ 	int err = 0;
  
--enum i2c_slave_xfer_dir {
--	I2C_SLAVE_DIR_READ = 0,
--	I2C_SLAVE_DIR_WRITE,
--	I2C_SLAVE_DIR_NONE,
--};
+-	if (!size && !inline_size)
++	if (!xnid && !inline_size)
+ 		return -ENODATA;
+ 
+-	*base_size = inline_size + size + XATTR_PADDING_SIZE;
++	*base_size = XATTR_SIZE(xnid, inode);
+ 	txattr_addr = f2fs_kzalloc(F2FS_I_SB(inode), *base_size, GFP_NOFS);
+ 	if (!txattr_addr)
+ 		return -ENOMEM;
+ 
+-	last_txattr_addr = (void *)txattr_addr + inline_size + size;
++	last_txattr_addr = (void *)txattr_addr + *base_size;
+ 
+ 	/* read from inline xattr */
+ 	if (inline_size) {
+@@ -599,9 +598,6 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 	size_t len;
+ 	__u32 new_hsize;
+ 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+-	unsigned int xnode_size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
+-	unsigned int inline_size = inline_xattr_size(inode);
 -
- enum bus_speed_index {
- 	I2C_SPD_100K = 0,
- 	I2C_SPD_400K,
-@@ -203,7 +197,6 @@ struct bcm_iproc_i2c_dev {
- 	struct i2c_msg *msg;
+ 	int error = 0;
  
- 	struct i2c_client *slave;
--	enum i2c_slave_xfer_dir xfer_dir;
+ 	if (name == NULL)
+@@ -621,7 +617,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 	error = read_all_xattrs(inode, ipage, &base_addr);
+ 	if (error)
+ 		return error;
+-	last_base_addr = (void *)base_addr + xnode_size + inline_size;
++	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
  
- 	/* bytes that have been transferred */
- 	unsigned int tx_bytes;
-@@ -219,7 +212,8 @@ struct bcm_iproc_i2c_dev {
- 		| BIT(IS_M_RX_THLD_SHIFT))
+ 	/* find entry with wanted name. */
+ 	here = __find_xattr(base_addr, last_base_addr, index, len, name);
+diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
+index 9172ee082ca8..1eca1a2d996a 100644
+--- a/fs/f2fs/xattr.h
++++ b/fs/f2fs/xattr.h
+@@ -71,6 +71,8 @@ struct f2fs_xattr_entry {
+ 				entry = XATTR_NEXT_ENTRY(entry))
+ #define VALID_XATTR_BLOCK_SIZE	(PAGE_SIZE - sizeof(struct node_footer))
+ #define XATTR_PADDING_SIZE	(sizeof(__u32))
++#define XATTR_SIZE(x,i)		(((x) ? VALID_XATTR_BLOCK_SIZE : 0) +	\
++				(inline_xattr_size(i)) + XATTR_PADDING_SIZE)
+ #define MIN_OFFSET(i)		XATTR_ALIGN(inline_xattr_size(i) +	\
+ 						VALID_XATTR_BLOCK_SIZE)
  
- #define ISR_MASK_SLAVE (BIT(IS_S_START_BUSY_SHIFT)\
--		| BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT))
-+		| BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT)\
-+		| BIT(IS_S_TX_UNDERRUN_SHIFT))
- 
- static int bcm_iproc_i2c_reg_slave(struct i2c_client *slave);
- static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave);
-@@ -297,15 +291,11 @@ static void bcm_iproc_i2c_slave_init(
- 	/* clear all pending slave interrupts */
- 	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
- 
--	/* Enable interrupt register for any READ event */
--	val = BIT(IE_S_RD_EVENT_SHIFT);
- 	/* Enable interrupt register to indicate a valid byte in receive fifo */
--	val |= BIT(IE_S_RX_EVENT_SHIFT);
-+	val = BIT(IE_S_RX_EVENT_SHIFT);
- 	/* Enable interrupt register for the Slave BUSY command */
- 	val |= BIT(IE_S_START_BUSY_SHIFT);
- 	iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
--
--	iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
- }
- 
- static void bcm_iproc_i2c_check_slave_status(
-@@ -314,8 +304,11 @@ static void bcm_iproc_i2c_check_slave_status(
- 	u32 val;
- 
- 	val = iproc_i2c_rd_reg(iproc_i2c, S_CMD_OFFSET);
--	val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
-+	/* status is valid only when START_BUSY is cleared after it was set */
-+	if (val & BIT(S_CMD_START_BUSY_SHIFT))
-+		return;
- 
-+	val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
- 	if (val == S_CMD_STATUS_TIMEOUT) {
- 		dev_err(iproc_i2c->device, "slave random stretch time timeout\n");
- 
-@@ -327,70 +320,66 @@ static void bcm_iproc_i2c_check_slave_status(
- }
- 
- static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
--				u32 status)
-+				    u32 status)
- {
--	u8 value;
- 	u32 val;
--	u32 rd_status;
--	u32 tmp;
-+	u8 value, rx_status;
- 
--	/* Start of transaction. check address and populate the direction */
--	if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_NONE) {
--		tmp = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
--		rd_status = (tmp >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
--		/* This condition checks whether the request is a new request */
--		if (((rd_status == I2C_SLAVE_RX_START) &&
--			(status & BIT(IS_S_RX_EVENT_SHIFT))) ||
--			((rd_status == I2C_SLAVE_RX_END) &&
--			(status & BIT(IS_S_RD_EVENT_SHIFT)))) {
--
--			/* Last bit is W/R bit.
--			 * If 1 then its a read request(by master).
--			 */
--			iproc_i2c->xfer_dir = tmp & SLAVE_READ_WRITE_BIT_MASK;
--			if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)
--				i2c_slave_event(iproc_i2c->slave,
--					I2C_SLAVE_READ_REQUESTED, &value);
--			else
--				i2c_slave_event(iproc_i2c->slave,
-+	/* Slave RX byte receive */
-+	if (status & BIT(IS_S_RX_EVENT_SHIFT)) {
-+		val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
-+		rx_status = (val >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
-+		if (rx_status == I2C_SLAVE_RX_START) {
-+			/* Start of SMBUS for Master write */
-+			i2c_slave_event(iproc_i2c->slave,
- 					I2C_SLAVE_WRITE_REQUESTED, &value);
--		}
--	}
- 
--	/* read request from master */
--	if ((status & BIT(IS_S_RD_EVENT_SHIFT)) &&
--		(iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)) {
--		i2c_slave_event(iproc_i2c->slave,
--			I2C_SLAVE_READ_PROCESSED, &value);
--		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
-+			val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
-+			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-+			i2c_slave_event(iproc_i2c->slave,
-+					I2C_SLAVE_WRITE_RECEIVED, &value);
-+		} else if (status & BIT(IS_S_RD_EVENT_SHIFT)) {
-+			/* Start of SMBUS for Master Read */
-+			i2c_slave_event(iproc_i2c->slave,
-+					I2C_SLAVE_READ_REQUESTED, &value);
-+			iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
- 
--		val = BIT(S_CMD_START_BUSY_SHIFT);
--		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
--	}
-+			val = BIT(S_CMD_START_BUSY_SHIFT);
-+			iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
- 
--	/* write request from master */
--	if ((status & BIT(IS_S_RX_EVENT_SHIFT)) &&
--		(iproc_i2c->xfer_dir == I2C_SLAVE_DIR_READ)) {
--		val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
--		/* Its a write request by Master to Slave.
--		 * We read data present in receive FIFO
--		 */
--		value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-+			/*
-+			 * Enable interrupt for TX FIFO becomes empty and
-+			 * less than PKT_LENGTH bytes were output on the SMBUS
-+			 */
-+			val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
-+			val |= BIT(IE_S_TX_UNDERRUN_SHIFT);
-+			iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
-+		} else {
-+			/* Master write other than start */
-+			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
-+			i2c_slave_event(iproc_i2c->slave,
-+					I2C_SLAVE_WRITE_RECEIVED, &value);
-+		}
-+	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
-+		/* Master read other than start */
- 		i2c_slave_event(iproc_i2c->slave,
--			I2C_SLAVE_WRITE_RECEIVED, &value);
--
--		/* check the status for the last byte of the transaction */
--		rd_status = (val >> S_RX_STATUS_SHIFT) & S_RX_STATUS_MASK;
--		if (rd_status == I2C_SLAVE_RX_END)
--			iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
-+				I2C_SLAVE_READ_PROCESSED, &value);
- 
--		dev_dbg(iproc_i2c->device, "\nread value = 0x%x\n", value);
-+		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
-+		val = BIT(S_CMD_START_BUSY_SHIFT);
-+		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
- 	}
- 
- 	/* Stop */
- 	if (status & BIT(IS_S_START_BUSY_SHIFT)) {
- 		i2c_slave_event(iproc_i2c->slave, I2C_SLAVE_STOP, &value);
--		iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
-+		/*
-+		 * Enable interrupt for TX FIFO becomes empty and
-+		 * less than PKT_LENGTH bytes were output on the SMBUS
-+		 */
-+		val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
-+		val &= ~BIT(IE_S_TX_UNDERRUN_SHIFT);
-+		iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
- 	}
- 
- 	/* clear interrupt status */
 -- 
-1.9.1
+2.19.0.605.g01d371f741-goog
 
