@@ -2,102 +2,240 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F410C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66D9C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332802173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557431653;
-	bh=gMSZvH2jlV+E3jQtFqiDNxyLY2LVd3yMAAHRjgUI8bI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qhSrsykoFKEOsjmotENnPpS4MP6M7uItpK8ssnQTaz15nLTDItxWA1n0wwbjgo0Ao
-	 cE8oDqwWzkwLICDKRBgfVqf6vP1ipmGEdVaUaKWvppflW1hFhJkeIWl7rdpTGH6mym
-	 Ch2VLRFRLgjOb/ulSmSym6Ss77j2SGwo1IH1+R9o=
+	by mail.kernel.org (Postfix) with ESMTP id A455C2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sjWzpAf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfEITyM (ORCPT
+        id S1727029AbfEIT4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:54:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37967 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfEITyM (ORCPT
+        Thu, 9 May 2019 15:56:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59868 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfEIT4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:54:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 14so3091381ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oGG06UbFIpIka8kH8mF+DXo9oIX85rLGrtvTzTqeUYQ=;
-        b=Bhff/nyavJfT40PuALUNmV3NXjnHsrbN+pAjB4c+7XVvzcKW/ubj0wSd2FNv9dp01I
-         PEmNRE69Gq1/nhGrWzYnZGlXBoDh5fsc7w049UJnCsXJIwhkrczb6bJT2fpYeG8x9oPA
-         +f0BOPIBNwyU7J3ce6H2g/VMV1QRPpnEEQ8wU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oGG06UbFIpIka8kH8mF+DXo9oIX85rLGrtvTzTqeUYQ=;
-        b=OA8zgkQGWKCCwUXwoR1hF2JiRmfyDJeqGxowc5ueAGtL/OGMsFebOdoy/F2qRZ0NMQ
-         Px4qu4qrEHm0nPiSSU5V4oIZ5YUB4xFrpBZzuCVC9TpnDQuwXkjIOU9i+TtMyQTxEIa4
-         2NeRkBS/xw+icCER4qeBx2zTWvAe8D4Hjl83oQHLlQ2NLgepnSHHwelxujuREnU6ihAo
-         Tdxe4x+x1240hEFIEXkHFfIy/yPlpKdChUtgad2QNsUCB+PzaJsWmLRTL0gYDmR3ODQr
-         FLBvkjdebfFHNnKgFHjrhYwUKPZKY1/MADFxaxgAuq2+wWKeBTGvMbkzq/rNVcGYXfSj
-         V3lw==
-X-Gm-Message-State: APjAAAVD+cayXMlc/0i4IfiiFHLbJa+u1FEEiOVl/xBBYFWvrbj1K4YW
-        h5r/EuLfjqPBCcKY/lPrYtl0rp71oX0=
-X-Google-Smtp-Source: APXvYqzyNy+5VVj8CsmAR2X6geD+QdKvKCWIayORaVBC3Z7I8bCwyXOOfNm2a082i7/KBsRjeX2OyA==
-X-Received: by 2002:a2e:86c5:: with SMTP id n5mr3491004ljj.184.1557431649700;
-        Thu, 09 May 2019 12:54:09 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id f4sm563077ljm.80.2019.05.09.12.54.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 12:54:09 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id d15so3089567ljc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:54:08 -0700 (PDT)
-X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr3140904ljj.79.1557431648546;
- Thu, 09 May 2019 12:54:08 -0700 (PDT)
+        Thu, 9 May 2019 15:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ot8IQXIdycRfbnAGWMYEHNduuMkLuyWPm0ppqN5UQU8=; b=sjWzpAf+RG2sk7Xun0Y3JguxV
+        Clw1VlgAF/0VHkox15p7PkRgGlnwoIoavF+resBPd0UAGNn4gi97iGsnxZirGpFCSa6ap5WOqu0XI
+        4JQ+eSoyPMii+x8peXrFm/WTEcesMShFMutGTh4ovK/0s7M+xAiz5DLPpslbg6CuvDwEGl4th5As8
+        +leYhoatWAVVGYkU4jZkU+mLA/BrV9kLnkCKewWS/Xkrxw6sp81AOu3UUPhSV6CLlwmEsuGcmR/3U
+        9LDMxX6avTpVNSNJkBEsIXjtiaaqgiGrqCaoTO6DA3FHyal3Wgqo28gxNRm9WTA1u4U/D3QzaRrrD
+        w+Xph81gQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOp9T-00066y-M8; Thu, 09 May 2019 19:56:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3640623E95D36; Thu,  9 May 2019 21:56:21 +0200 (CEST)
+Date:   Thu, 9 May 2019 21:56:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, jstancek@redhat.com,
+        akpm@linux-foundation.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, npiggin@gmail.com,
+        namit@vmware.com, minchan@kernel.org, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-ID: <20190509195621.GM2650@hirez.programming.kicks-ass.net>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <alpine.LRH.2.21.1905100320110.25349@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1905100320110.25349@namei.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 May 2019 12:53:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whqzNFfeNOouBjH2GKMVgMi22fsNOaCgbUOnCPmKmEXeQ@mail.gmail.com>
-Message-ID: <CAHk-=whqzNFfeNOouBjH2GKMVgMi22fsNOaCgbUOnCPmKmEXeQ@mail.gmail.com>
-Subject: Re: [GIT PULL] security subsytem: TPM changes for v5.2
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 10:23 AM James Morris <jmorris@namei.org> wrote:
->
-> Bugfixes and new selftests for v5.1 features (partial reads in /dev/tpm0).
+On Thu, May 09, 2019 at 12:38:13PM +0200, Peter Zijlstra wrote:
 
-What the heck is going on?
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 99740e1dd273..fe768f8d612e 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>  		unsigned long start, unsigned long end)
+>  {
+>  	/*
+> -	 * If there are parallel threads are doing PTE changes on same range
+> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> -	 * forcefully if we detect parallel PTE batching threads.
+> +	 * Sensible comment goes here..
+>  	 */
+> -	if (mm_tlb_flush_nested(tlb->mm)) {
+> -		__tlb_reset_range(tlb);
+> -		__tlb_adjust_range(tlb, start, end - start);
+> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
+> +		/*
+> +		 * Since we're can't tell what we actually should have
+> +		 * flushed flush everything in the given range.
+> +		 */
+> +		tlb->start = start;
+> +		tlb->end = end;
+> +		tlb->freed_tables = 1;
+> +		tlb->cleared_ptes = 1;
+> +		tlb->cleared_pmds = 1;
+> +		tlb->cleared_puds = 1;
+> +		tlb->cleared_p4ds = 1;
+>  	}
+>  
+>  	tlb_flush_mmu(tlb);
 
-I got all of these long ago in the "TPM fixes" branch for 5.1. One
-month ago, merge commit a556810d8e06.
+So PPC-radix has page-size dependent TLBI, but the above doesn't work
+for them, because they use the tlb_change_page_size() interface and
+don't look at tlb->cleared_p*().
 
-These are just rebased (!) copies of stuff I already have, and they should
+Concequently, they have their own special magic :/
 
- (a) never have been rebased in the first place
+Nick, how about you use the tlb_change_page_size() interface to
+find/flush on the page-size boundaries, but otherwise use the
+tlb->cleared_p* flags to select which actual sizes to flush?
 
- (b) certainly not be re-sent to me as a new branch
+AFAICT that should work just fine for you guys. Maybe something like so?
 
-Please throw this branch away and make sure it really is dead and
-buried and never shows up again.
+(fwiw, there's an aweful lot of almost identical functions there)
 
-And take a moment to look at what happened and why this broken branch
-was duplicated and sent twice!
+---
 
-              Linus
+diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+index 6a23b9ebd2a1..efc99ef78db6 100644
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -692,7 +692,7 @@ static unsigned long tlb_local_single_page_flush_ceiling __read_mostly = POWER9_
+ 
+ static inline void __radix__flush_tlb_range(struct mm_struct *mm,
+ 					unsigned long start, unsigned long end,
+-					bool flush_all_sizes)
++					bool pflush, bool hflush, bool gflush)
+ 
+ {
+ 	unsigned long pid;
+@@ -734,14 +734,9 @@ static inline void __radix__flush_tlb_range(struct mm_struct *mm,
+ 				_tlbie_pid(pid, RIC_FLUSH_TLB);
+ 		}
+ 	} else {
+-		bool hflush = flush_all_sizes;
+-		bool gflush = flush_all_sizes;
+ 		unsigned long hstart, hend;
+ 		unsigned long gstart, gend;
+ 
+-		if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+-			hflush = true;
+-
+ 		if (hflush) {
+ 			hstart = (start + PMD_SIZE - 1) & PMD_MASK;
+ 			hend = end & PMD_MASK;
+@@ -758,7 +753,9 @@ static inline void __radix__flush_tlb_range(struct mm_struct *mm,
+ 
+ 		asm volatile("ptesync": : :"memory");
+ 		if (local) {
+-			__tlbiel_va_range(start, end, pid, page_size, mmu_virtual_psize);
++			if (pflush)
++				__tlbiel_va_range(start, end, pid,
++						page_size, mmu_virtual_psize);
+ 			if (hflush)
+ 				__tlbiel_va_range(hstart, hend, pid,
+ 						PMD_SIZE, MMU_PAGE_2M);
+@@ -767,7 +764,9 @@ static inline void __radix__flush_tlb_range(struct mm_struct *mm,
+ 						PUD_SIZE, MMU_PAGE_1G);
+ 			asm volatile("ptesync": : :"memory");
+ 		} else {
+-			__tlbie_va_range(start, end, pid, page_size, mmu_virtual_psize);
++			if (pflush)
++				__tlbie_va_range(start, end, pid,
++						page_size, mmu_virtual_psize);
+ 			if (hflush)
+ 				__tlbie_va_range(hstart, hend, pid,
+ 						PMD_SIZE, MMU_PAGE_2M);
+@@ -785,12 +784,17 @@ void radix__flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 		     unsigned long end)
+ 
+ {
++	bool hflush = false;
++
+ #ifdef CONFIG_HUGETLB_PAGE
+ 	if (is_vm_hugetlb_page(vma))
+ 		return radix__flush_hugetlb_tlb_range(vma, start, end);
+ #endif
+ 
+-	__radix__flush_tlb_range(vma->vm_mm, start, end, false);
++	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
++		hflush = true;
++
++	__radix__flush_tlb_range(vma->vm_mm, start, end, true, hflush, false);
+ }
+ EXPORT_SYMBOL(radix__flush_tlb_range);
+ 
+@@ -881,49 +885,14 @@ void radix__tlb_flush(struct mmu_gather *tlb)
+ 	 */
+ 	if (tlb->fullmm) {
+ 		__flush_all_mm(mm, true);
+-#if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_HUGETLB_PAGE)
+-	} else if (mm_tlb_flush_nested(mm)) {
+-		/*
+-		 * If there is a concurrent invalidation that is clearing ptes,
+-		 * then it's possible this invalidation will miss one of those
+-		 * cleared ptes and miss flushing the TLB. If this invalidate
+-		 * returns before the other one flushes TLBs, that can result
+-		 * in it returning while there are still valid TLBs inside the
+-		 * range to be invalidated.
+-		 *
+-		 * See mm/memory.c:tlb_finish_mmu() for more details.
+-		 *
+-		 * The solution to this is ensure the entire range is always
+-		 * flushed here. The problem for powerpc is that the flushes
+-		 * are page size specific, so this "forced flush" would not
+-		 * do the right thing if there are a mix of page sizes in
+-		 * the range to be invalidated. So use __flush_tlb_range
+-		 * which invalidates all possible page sizes in the range.
+-		 *
+-		 * PWC flush probably is not be required because the core code
+-		 * shouldn't free page tables in this path, but accounting
+-		 * for the possibility makes us a bit more robust.
+-		 *
+-		 * need_flush_all is an uncommon case because page table
+-		 * teardown should be done with exclusive locks held (but
+-		 * after locks are dropped another invalidate could come
+-		 * in), it could be optimized further if necessary.
+-		 */
+-		if (!tlb->need_flush_all)
+-			__radix__flush_tlb_range(mm, start, end, true);
+-		else
+-			radix__flush_all_mm(mm);
+-#endif
+-	} else if ( (psize = radix_get_mmu_psize(page_size)) == -1) {
+-		if (!tlb->need_flush_all)
+-			radix__flush_tlb_mm(mm);
+-		else
+-			radix__flush_all_mm(mm);
+ 	} else {
+ 		if (!tlb->need_flush_all)
+-			radix__flush_tlb_range_psize(mm, start, end, psize);
++			__radix__flush_tlb_range(mm, start, end,
++					tlb->cleared_pte,
++				        tlb->cleared_pmd,
++					tlb->cleared_pud);
+ 		else
+-			radix__flush_tlb_pwc_range_psize(mm, start, end, psize);
++			radix__flush_all_mm(mm);
+ 	}
+ 	tlb->need_flush_all = 0;
+ }
