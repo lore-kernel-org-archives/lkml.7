@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5035C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7094CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24C2183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7712177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427909;
-	bh=yJF8lUBdAhNaHazmnRQ+EhrijC77SHZHX6lPsm/ryjI=;
+	s=default; t=1557427914;
+	bh=Qt77VUw4ge7hsZmIDo7QKSC2ysPJBo4tHgWGfWn3O7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVst/+sqo+7tdVDVODJsC3gmYCts6wG3NfTLEwR58dThX1o6/aMjeQkWmqzx+qJv1
-	 SmJ8/oD52WwskeU33DODxwN/uGJN8U1Lj9WG8/GOLo8piFEWlRFZ8ckUVT37nb75qW
-	 8wqSRsq7VbDinb9OaeS702Ni+ogVmxWceza9as1w=
+	b=1QvdBTG2Yh3h6vOuZJ8KAfUgHFH4EBH3KnR1G+kYFoN0PRyyeEoGjKcHddZyWEEM+
+	 mmjVAN+XvuRTectRxnNMDD94LF+n7X50lbaMgqsPqXb3exS2zk9nHfLffU/VbFrjvG
+	 xKIYAawmlWHdflT8gYT12dyfesMXJxYol3nHnW+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfEISvs (ORCPT
+        id S1728621AbfEISvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:51:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727147AbfEISvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:45 -0400
+        id S1728608AbfEISvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C6C1217D7;
-        Thu,  9 May 2019 18:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8D75217D7;
+        Thu,  9 May 2019 18:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427904;
-        bh=yJF8lUBdAhNaHazmnRQ+EhrijC77SHZHX6lPsm/ryjI=;
+        s=default; t=1557427907;
+        bh=Qt77VUw4ge7hsZmIDo7QKSC2ysPJBo4tHgWGfWn3O7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndgPu2W3BnaMCQahXz17j/TrqFcrBBeZeI/Q9d8gBCcumXsJ8HnHDrofkPQNDULkc
-         T9GAl+U/p6ePaf4G5b0+1acQpzTuMdWUQREyXPbvURFDwShexGJ+ynLsFI/Qj0IqQb
-         EGgCskxpZQI2mP96BW7CWWynJGTp35XII3/MJqRc=
+        b=rTZSz+99cQn4IcgjV2d+VvD7qleVdkONoXK4/MiAjVOCfXLew6P3aVUl0KhMeIq6+
+         FHs68FxSsobRnaZGFB8uYL5aSgafouFMxnMordDPxcBFtZk7RvppWC/1zoO2sueIEJ
+         avQwSJADPH+90ESHgc7frmSJ1GpIDsX2O57AT6A8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        "Tobin C. Harding" <tobin@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 48/95] slab: fix a crash by reading /proc/slab_allocators
-Date:   Thu,  9 May 2019 20:42:05 +0200
-Message-Id: <20190509181312.836321156@linuxfoundation.org>
+Subject: [PATCH 5.0 31/95] IB/hfi1: Eliminate opcode tests on mr deref
+Date:   Thu,  9 May 2019 20:41:48 +0200
+Message-Id: <20190509181311.480613377@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -62,42 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fcf88917dd435c6a4cb2830cb086ee58605a1d85 ]
+[ Upstream commit a8639a79e85c18c16c10089edd589c7948f19bbd ]
 
-The commit 510ded33e075 ("slab: implement slab_root_caches list")
-changes the name of the list node within "struct kmem_cache" from "list"
-to "root_caches_node", but leaks_show() still use the "list" which
-causes a crash when reading /proc/slab_allocators.
+When an old ack_queue entry is used to store an incoming request, it may
+need to clean up the old entry if it is still referencing the
+MR. Originally only RDMA READ request needed to reference MR on the
+responder side and therefore the opcode was tested when cleaning up the
+old entry. The introduction of tid rdma specific operations in the
+ack_queue makes the specific opcode tests wrong.  Multiple opcodes (RDMA
+READ, TID RDMA READ, and TID RDMA WRITE) may need MR ref cleanup.
 
-You need to have CONFIG_SLAB=y and CONFIG_MEMCG=y to see the problem,
-because without MEMCG all slab caches are root caches, and the "list"
-node happens to be the right one.
+Remove the opcode specific tests associated with the ack_queue.
 
-Fixes: 510ded33e075 ("slab: implement slab_root_caches list")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: f48ad614c100 ("IB/hfi1: Move driver out of staging")
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/rc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 2f2aa8eaf7d98..188c4b65255dc 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4297,7 +4297,8 @@ static void show_symbol(struct seq_file *m, unsigned long address)
- 
- static int leaks_show(struct seq_file *m, void *p)
- {
--	struct kmem_cache *cachep = list_entry(p, struct kmem_cache, list);
-+	struct kmem_cache *cachep = list_entry(p, struct kmem_cache,
-+					       root_caches_node);
- 	struct page *page;
- 	struct kmem_cache_node *n;
- 	const char *name;
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index be603f35d7e47..cfde43b1df960 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -2302,7 +2302,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
+@@ -2376,7 +2376,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			update_ack_queue(qp, next);
+ 		}
+ 		e = &qp->s_ack_queue[qp->r_head_ack_queue];
+-		if (e->opcode == OP(RDMA_READ_REQUEST) && e->rdma_sge.mr) {
++		if (e->rdma_sge.mr) {
+ 			rvt_put_mr(e->rdma_sge.mr);
+ 			e->rdma_sge.mr = NULL;
+ 		}
 -- 
 2.20.1
 
