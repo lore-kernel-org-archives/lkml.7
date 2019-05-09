@@ -2,136 +2,130 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E83C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA66CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4992820989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+FN6B2M"
+	by mail.kernel.org (Postfix) with ESMTP id 88E0820644
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfEIOwq (ORCPT
+        id S1726873AbfEIOw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:52:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55566 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfEIOwq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:52:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y2so3614100wmi.5;
-        Thu, 09 May 2019 07:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a1mSEvBcWliyo5EhRJMQRVCOMthYdHYHBHHuPNvU0UM=;
-        b=M+FN6B2MBKrB5K/MgMp3XiZNG9lhFHskRCTbyo1lnz1UAF+MtV1rCwKd3IToZ7cDCi
-         m7PjLF6yq03pWdrfNCH4LX7l4qajtgiwGCMG8y//ebtsMFdHa6fnCjSHuPv+XUbADhoq
-         VxiEnfykY/466xARZrXlh9gPjPprdd0SanmtndoJlAkd8A6JsCBTjla8dEXb+9gO1Nw+
-         C/lDlI1LF0Mp4Adm9rv4O2h9XbdX5t3W4c3/sscyBUFDepwtbriOdCaPFTx2Rx28oqUZ
-         8gS9YGUKz5pn2AZo4s3fHOisxtM/53DmP/1g0jGEJDcKppw+zDSr7eKnHreaXzeU1TIV
-         LS2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a1mSEvBcWliyo5EhRJMQRVCOMthYdHYHBHHuPNvU0UM=;
-        b=UkqkS45BUv2QVuIiU0Qu3PUyihxXbNtLC3ZHgNtjk/b30jAC4CBwJMkxhoowy7XTFy
-         YaJwRSYEQRE1n0u2ndwpTCJrhiyrAlz3Gh6JMeSK7e34ThZL4QszWKqdrWDOtlkaWo0w
-         INd/q85pfb3jiGNY7Jl/9jpK1hsELgAXchxQeFFs6zGNRa/u6Jnf7G8r7GycLLxLcUUD
-         g+7VQpw3Rd+rmV6nzdhecOZOqZwwmiMxtEQEdlhY8Tss25djO0BdktB0OaQlt9WSm6T7
-         ru7LSWLnZll+3CtgN6aPsilJSE6t0TLzlAFq5FXl9hTARJY9YFGsL6wXVnYOlmNbv+Kb
-         k7tg==
-X-Gm-Message-State: APjAAAU+ALBedewPkGaBIXCRmayJopHgNEyE7Oc+MDjFb2teDLKmIqTw
-        xaBNPIEwRl3pttuzf8ONSR1yC3jX+Ng=
-X-Google-Smtp-Source: APXvYqyp7HHKcshcQDFEs9klXPopVR55hJEby0tFHAI5KP3xTanR05+4OdehHVqjKJoqQl3kNr0Q2A==
-X-Received: by 2002:a1c:f70c:: with SMTP id v12mr3207118wmh.86.1557413564456;
-        Thu, 09 May 2019 07:52:44 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id q2sm3249998wrd.48.2019.05.09.07.52.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 07:52:43 -0700 (PDT)
-Date:   Thu, 9 May 2019 16:52:42 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de
-Subject: Re: [PATCH v2 1/1] pwm: meson: use the spin-lock only to protect
- register modifications
-Message-ID: <20190509145242.GZ8907@ulmo>
-References: <20190401175748.5376-1-martin.blumenstingl@googlemail.com>
- <20190401175748.5376-2-martin.blumenstingl@googlemail.com>
+        Thu, 9 May 2019 10:52:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7185 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726234AbfEIOw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:52:58 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F1AF7F6CEB7313DD1FC2;
+        Thu,  9 May 2019 22:52:55 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 May 2019
+ 22:52:48 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <willemb@google.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <edumazet@google.com>, <maximmi@mellanox.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] packet: Fix error path in packet_init
+Date:   Thu, 9 May 2019 22:52:20 +0800
+Message-ID: <20190509145220.37432-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190508153241.30776-1-yuehaibing@huawei.com>
+References: <20190508153241.30776-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LvlcLv3JjFtLV6y2"
-Content-Disposition: inline
-In-Reply-To: <20190401175748.5376-2-martin.blumenstingl@googlemail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+kernel BUG at lib/list_debug.c:47!
+invalid opcode: 0000 [#1
+CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_del_entry_valid+0x53/0x90
+Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
+89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
+RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
+RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
+RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
+R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
+FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
+Call Trace:
+ unregister_pernet_operations+0x34/0x120
+ unregister_pernet_subsys+0x1c/0x30
+ packet_exit+0x1c/0x369 [af_packet
+ __x64_sys_delete_module+0x156/0x260
+ ? lockdep_hardirqs_on+0x133/0x1b0
+ ? do_syscall_64+0x12/0x1f0
+ do_syscall_64+0x6e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
---LvlcLv3JjFtLV6y2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When modprobe af_packet, register_pernet_subsys
+fails and does a cleanup, ops->list is set to LIST_POISON1,
+but the module init is considered to success, then while rmmod it,
+BUG() is triggered in __list_del_entry_valid which is called from
+unregister_pernet_subsys. This patch fix error handing path in
+packet_init to avoid possilbe issue if some error occur.
 
-On Mon, Apr 01, 2019 at 07:57:48PM +0200, Martin Blumenstingl wrote:
-> Holding the spin-lock for all of the code in meson_pwm_apply() can
-> result in a "BUG: scheduling while atomic". This can happen because
-> clk_get_rate() (which is called from meson_pwm_calc()) may sleep.
-> Only hold the spin-lock when modifying registers to solve this.
->=20
-> The reason why we need a spin-lock in the driver is because the
-> REG_MISC_AB register is shared between the two channels provided by one
-> PWM controller. The only functions where REG_MISC_AB is modified are
-> meson_pwm_enable() and meson_pwm_disable() so the register reads/writes
-> in there need to be protected by the spin-lock.
->=20
-> The original code also used the spin-lock to protect the values in
-> struct meson_pwm_channel. This could be necessary if two consumers can
-> use the same PWM channel. However, PWM core doesn't allow this so we
-> don't need to protect the values in struct meson_pwm_channel with a
-> lock.
->=20
-> Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-meson.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: rework commit log
+---
+ net/packet/af_packet.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-Applied, thanks.
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 90d4e3c..fbc775fb 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4598,14 +4598,29 @@ static void __exit packet_exit(void)
+ 
+ static int __init packet_init(void)
+ {
+-	int rc = proto_register(&packet_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&packet_proto, 0);
++	if (rc)
+ 		goto out;
++	rc = sock_register(&packet_family_ops);
++	if (rc)
++		goto out_proto;
++	rc = register_pernet_subsys(&packet_net_ops);
++	if (rc)
++		goto out_sock;
++	rc = register_netdevice_notifier(&packet_netdev_notifier);
++	if (rc)
++		goto out_pernet;
+ 
+-	sock_register(&packet_family_ops);
+-	register_pernet_subsys(&packet_net_ops);
+-	register_netdevice_notifier(&packet_netdev_notifier);
++	return 0;
++
++out_pernet:
++	unregister_pernet_subsys(&packet_net_ops);
++out_sock:
++	sock_unregister(PF_PACKET);
++out_proto:
++	proto_unregister(&packet_proto);
+ out:
+ 	return rc;
+ }
+-- 
+1.8.3.1
 
-Thierry
 
---LvlcLv3JjFtLV6y2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUPrkACgkQ3SOs138+
-s6EbQQ//cCrVsIOMfus+LS3hL9db6Yhpor2moT9YI9tTtoyGZjgbCupOilKeMqDu
-jj5vflVwl/AWtW6okavjVj+xaUaUxNxHxm9Nx2yWwDo4fmhZ5BcRhg0O4bfo55eY
-ED1NvERiM9P5TCCsnakPJxc/VVUt9voqU0C7TR6CzxlucTUAn84GtQNhdyMKJV4Y
-3XHr2fYynP3UJbv/WXXSoIO4VPNOHO9/c/FkdPN+51lbum1pxeUXOB4OIqEzSwCh
-Y175JhoOMqt7nKy5AnWWm20IpgEOA7MT4/gZDOkeyVni2FzGeHFeA3w41fwdQnl6
-aM7mClWdYGY5WqDLpe+8GOhTD+LeNxlLsSPoo6H5M+YahDDULYoX2f0QT2U1UiX7
-MFMTjDy2gNWfPdO1y+ynScbFVW6VCuczmOelwMdQdWEf5U7kYxED7zNHDJGmemE8
-tQ0vuLZEDPqctCwACswaDYagHgDBFPD575sqJmf5FvA7aMedjFlNNamfK5t1rB/s
-lrgYobMqhatckbeeMUVBVipxtL6N6MYbfM8pFO1GULGnC5u9q8plRGsB+X0na0in
-gk9+9DAYpQgrkXRsKG0McHbvEWGckogX3FbckxivAj0wRnQwSM/cgswcHGwJs3GR
-ZfJBEEqf8UAEQSQPu+gpHm5py7KWRO/taKr98J4unhGfNzh9mow=
-=HHny
------END PGP SIGNATURE-----
-
---LvlcLv3JjFtLV6y2--
