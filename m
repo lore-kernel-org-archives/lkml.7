@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E42C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F41C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E783D217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE94217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427963;
-	bh=elQt22/biHgS3BwJJnZmglVqRpzudAYH7FQIJFh32wo=;
+	s=default; t=1557427967;
+	bh=NMYyZT0F0YGxz2ey2INVI3Xw3PP5AjmNPCWm6Y2eH8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ysDzqZaPrTFLaFCboj4EF+ISNCVraAIQ8QsRb+YKH/PgMkWgQ7ICxpL/fxQvsygRc
-	 xlpoj3hepc+qM3TCsa1g9/svWwbJ8foVrAvW4W3qY0TbgF+oXECR/c8aeeqKDmExdT
-	 dQgaSmNnJBpcY4JzlyhSICAf0FY1Md6kDwJKbDng=
+	b=RYDn5cfKMOWIVLAD/ewaKDHBi5U2/rXFpwBLDxtOEfjrV6rMnoPenagKsCT0Vjc3a
+	 gt3lACOG68GCHOXI9Fy12LF2T1oim8p7a1xIaXfTNTy92rRoR0qBHnaBgg/0Z0xyOt
+	 F0yPN+72MRoIxi9uWg8FvX/FB+ky9ed0LrGApo50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfEISwl (ORCPT
+        id S1728774AbfEISwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46840 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:52:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfEISwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:39 -0400
+        id S1728749AbfEISwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF5F217F5;
-        Thu,  9 May 2019 18:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2D4B217F5;
+        Thu,  9 May 2019 18:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427958;
-        bh=elQt22/biHgS3BwJJnZmglVqRpzudAYH7FQIJFh32wo=;
+        s=default; t=1557427961;
+        bh=NMYyZT0F0YGxz2ey2INVI3Xw3PP5AjmNPCWm6Y2eH8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVsYbYOOYRrTcF0mhsF8AsXVjOk9j75Mwjr/djHIxQDmcClGYdZ3OYTLk0v2CyK7i
-         MtsO9RiIIUaYJ2H2bz1UG6J0G3sPEQpWGxPK2x5BSRWu9hJ15zfoDco7Mlc2xKYk+X
-         28djoIhnMQdD8xOlnys+fDMmCnLRBXku5NTApZWE=
+        b=N1/jjW6rlUSLUXeFynj1CI7MUf4dDnMHsSjo9ihhlSLx8t7lx8qmm2iPqdf+vjFEN
+         XTT04+8pBayaBKVfiy+jz+uoyQxIUjKu4Rm1MV+V2HUNGs5xXdIabG6xh+p43Oujbf
+         F4U7OYTQVj7emrKigNtB+kN6fS3iItHT9msAmN4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 67/95] nvme-fc: correct csn initialization and increments on error
-Date:   Thu,  9 May 2019 20:42:24 +0200
-Message-Id: <20190509181314.146030798@linuxfoundation.org>
+        stable@vger.kernel.org, Chong Qiao <qiaochong@loongson.cn>,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 33/95] MIPS: KGDB: fix kgdb support for SMP platforms.
+Date:   Thu,  9 May 2019 20:41:50 +0200
+Message-Id: <20190509181311.612414702@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -61,94 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 67f471b6ed3b09033c4ac77ea03f92afdb1989fe ]
+[ Upstream commit ab8a6d821179ab9bea1a9179f535ccba6330c1ed ]
 
-This patch fixes a long-standing bug that initialized the FC-NVME
-cmnd iu CSN value to 1. Early FC-NVME specs had the connection starting
-with CSN=1. By the time the spec reached approval, the language had
-changed to state a connection should start with CSN=0.  This patch
-corrects the initialization value for FC-NVME connections.
+KGDB_call_nmi_hook is called by other cpu through smp call.
+MIPS smp call is processed in ipi irq handler and regs is saved in
+ handle_int.
+So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
+ to kgdb_cpu_enter.
 
-Additionally, in reviewing the transport, the CSN value is assigned to
-the new IU early in the start routine. It's possible that a later dma
-map request may fail, causing the command to never be sent to the
-controller.  Change the location of the assignment so that it is
-immediately prior to calling the lldd. Add a comment block to explain
-the impacts if the lldd were to additionally fail sending the command.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: QiaoChong <qiaochong@loongson.cn>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/fc.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ arch/mips/kernel/kgdb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index c37d5bbd72ab6..8625b73d94bf7 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1857,7 +1857,7 @@ nvme_fc_init_queue(struct nvme_fc_ctrl *ctrl, int idx)
- 	memset(queue, 0, sizeof(*queue));
- 	queue->ctrl = ctrl;
- 	queue->qnum = idx;
--	atomic_set(&queue->csn, 1);
-+	atomic_set(&queue->csn, 0);
- 	queue->dev = ctrl->dev;
+diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
+index 149100e1bc7c4..90f37626100fe 100644
+--- a/arch/mips/kernel/kgdb.c
++++ b/arch/mips/kernel/kgdb.c
+@@ -33,6 +33,7 @@
+ #include <asm/processor.h>
+ #include <asm/sigcontext.h>
+ #include <linux/uaccess.h>
++#include <asm/irq_regs.h>
  
- 	if (idx > 0)
-@@ -1899,7 +1899,7 @@ nvme_fc_free_queue(struct nvme_fc_queue *queue)
- 	 */
+ static struct hard_trap_info {
+ 	unsigned char tt;	/* Trap type code for MIPS R3xxx and R4xxx */
+@@ -214,7 +215,7 @@ void kgdb_call_nmi_hook(void *ignored)
+ 	old_fs = get_fs();
+ 	set_fs(get_ds());
  
- 	queue->connection_id = 0;
--	atomic_set(&queue->csn, 1);
-+	atomic_set(&queue->csn, 0);
+-	kgdb_nmicallback(raw_smp_processor_id(), NULL);
++	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
+ 
+ 	set_fs(old_fs);
  }
- 
- static void
-@@ -2195,7 +2195,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
- {
- 	struct nvme_fc_cmd_iu *cmdiu = &op->cmd_iu;
- 	struct nvme_command *sqe = &cmdiu->sqe;
--	u32 csn;
- 	int ret, opstate;
- 
- 	/*
-@@ -2210,8 +2209,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
- 
- 	/* format the FC-NVME CMD IU and fcp_req */
- 	cmdiu->connection_id = cpu_to_be64(queue->connection_id);
--	csn = atomic_inc_return(&queue->csn);
--	cmdiu->csn = cpu_to_be32(csn);
- 	cmdiu->data_len = cpu_to_be32(data_len);
- 	switch (io_dir) {
- 	case NVMEFC_FCP_WRITE:
-@@ -2269,11 +2266,24 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
- 	if (!(op->flags & FCOP_FLAGS_AEN))
- 		blk_mq_start_request(op->rq);
- 
-+	cmdiu->csn = cpu_to_be32(atomic_inc_return(&queue->csn));
- 	ret = ctrl->lport->ops->fcp_io(&ctrl->lport->localport,
- 					&ctrl->rport->remoteport,
- 					queue->lldd_handle, &op->fcp_req);
- 
- 	if (ret) {
-+		/*
-+		 * If the lld fails to send the command is there an issue with
-+		 * the csn value?  If the command that fails is the Connect,
-+		 * no - as the connection won't be live.  If it is a command
-+		 * post-connect, it's possible a gap in csn may be created.
-+		 * Does this matter?  As Linux initiators don't send fused
-+		 * commands, no.  The gap would exist, but as there's nothing
-+		 * that depends on csn order to be delivered on the target
-+		 * side, it shouldn't hurt.  It would be difficult for a
-+		 * target to even detect the csn gap as it has no idea when the
-+		 * cmd with the csn was supposed to arrive.
-+		 */
- 		opstate = atomic_xchg(&op->state, FCPOP_STATE_COMPLETE);
- 		__nvme_fc_fcpop_chk_teardowns(ctrl, op, opstate);
- 
 -- 
 2.20.1
 
