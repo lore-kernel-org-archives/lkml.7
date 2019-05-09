@@ -6,54 +6,50 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A347C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A739C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E2A20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0AA20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428773;
-	bh=Ss5X+RIKrkfObLBIwJoE0jZwf0fTuAOXHaRiDfCHvfw=;
+	s=default; t=1557428782;
+	bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eud4LdcffrJtzSwEdC1oYI8igXShfLJeT6UQgkqu/Nozhf5lGeOFFIz/yW37GsCUL
-	 /lVKwt2ygqMqSQUCU175puXPBYDf3PpDRpgL/Q+E2eEjROAbiKkEoNodnHBNi3KDZa
-	 80BnmpjQSQKbQ7lbLEdolCDiMXYmhGmCu2H+NmIE=
+	b=LBOfXnLve7/BTcy4akmWRfeID7if4kUCaXrDKfMl6R9PxixyrjdnMS0l8YNsfOTKV
+	 fbjTkFIxivDdhvLJks9tQ/RMRntf3Nr1O+TjpahAOv+4Bema+jOnNVYz5AZ4j3g8gK
+	 Wiv6DPoxbfcpDjzVeW/+Xm0Z+h9vzSnEQmUcr4Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfEITGM (ORCPT
+        id S1727686AbfEITGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39522 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727686AbfEISrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:04 -0400
+        id S1727248AbfEISq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:46:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FF4B2183E;
-        Thu,  9 May 2019 18:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5670F2183E;
+        Thu,  9 May 2019 18:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427623;
-        bh=Ss5X+RIKrkfObLBIwJoE0jZwf0fTuAOXHaRiDfCHvfw=;
+        s=default; t=1557427615;
+        bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3d6YlFgd4ZYlNlWeFwrcUgeMvtitS83IAheta+l3WE3MKDKn7Sjr/gaVYIl+q1hr
-         hvwNTnG5fJ8+2yR6wAZncjM1cvtinOsAww3QSlfuqZZ5djm3dUVVVwPuSGZmWTj7Gz
-         dt6I+Zj91Vqysdj5Gq7f8dUucPHUsEFm/IzxvoF4=
+        b=EOWtoGmz9WhE0xqlHXRHkJz7Xvsc9VGQngE2Y19CMpe2NtmJSTW3AQHb10af5wCjr
+         JHZ0vvCXWlRJd1KAu8rC8p+siCtQUD5t8FB148NeFN6SDxmWUp6cNvKt3QFxKlTXCd
+         BufKwLPFPFg0GMSuEYfH6LSG4ASRVwBFvg67lHcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.19 01/66] net: stmmac: Use bfsize1 in ndesc_init_rx_desc
-Date:   Thu,  9 May 2019 20:41:36 +0200
-Message-Id: <20190509181301.896150656@linuxfoundation.org>
+        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.14 37/42] Bluetooth: hidp: fix buffer overflow
+Date:   Thu,  9 May 2019 20:42:26 +0200
+Message-Id: <20190509181259.896495485@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
-References: <20190509181301.719249738@linuxfoundation.org>
+In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
+References: <20190509181252.616018683@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,39 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Young Xiao <YangX92@hotmail.com>
 
-commit f87db4dbd52f2f8a170a2b51cb0926221ca7c9e2 upstream.
+commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
 
-gcc warn this:
+Struct ca is copied from userspace. It is not checked whether the "name"
+field is NULL terminated, which allows local users to obtain potentially
+sensitive information from kernel stack memory, via a HIDPCONNADD command.
 
-drivers/net/ethernet/stmicro/stmmac/norm_desc.c: In function ndesc_init_rx_desc:
-drivers/net/ethernet/stmicro/stmmac/norm_desc.c:138:6: warning: variable 'bfsize1' set but not used [-Wunused-but-set-variable]
+This vulnerability is similar to CVE-2011-1079.
 
-Like enh_desc_init_rx_desc, we should use bfsize1
-in ndesc_init_rx_desc to calculate 'p->des1'
-
-Fixes: 583e63614149 ("net: stmmac: use correct DMA buffer size in the RX descriptor")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hidp/sock.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -140,7 +140,7 @@ static void ndesc_init_rx_desc(struct dm
- 	p->des0 |= cpu_to_le32(RDES0_OWN);
+--- a/net/bluetooth/hidp/sock.c
++++ b/net/bluetooth/hidp/sock.c
+@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
+ 			sockfd_put(csock);
+ 			return err;
+ 		}
++		ca.name[sizeof(ca.name)-1] = 0;
  
- 	bfsize1 = min(bfsize, BUF_SIZE_2KiB - 1);
--	p->des1 |= cpu_to_le32(bfsize & RDES1_BUFFER1_SIZE_MASK);
-+	p->des1 |= cpu_to_le32(bfsize1 & RDES1_BUFFER1_SIZE_MASK);
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ndesc_rx_set_on_chain(p, end);
+ 		err = hidp_connection_add(&ca, csock, isock);
+ 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
 
 
