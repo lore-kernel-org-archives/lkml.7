@@ -2,105 +2,173 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C5BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BD5C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902F4216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:47:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PO3TjmdB"
+	by mail.kernel.org (Postfix) with ESMTP id A15FC2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfEIGrY (ORCPT
+        id S1726583AbfEIGtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 02:47:24 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:21626 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfEIGrY (ORCPT
+        Thu, 9 May 2019 02:49:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35217 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIGtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 02:47:24 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x496kbIt007196;
-        Thu, 9 May 2019 15:46:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x496kbIt007196
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557384398;
-        bh=HgsrgIqjVdLF7UB2xpTSRSKdtXu7HsAgcng7Ba+OpTA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PO3TjmdBxpjxqRVYjOTtcotfTke1egGnqQSICQ1xOKcFhMZl7V9h4LnT6P4aACZuz
-         jgDx1drcBH0hGoY2n6qd5Iu3HQ9xZ6uZoPTEWregf7vvtGfPmVdhRK6yTrvihvsM76
-         6NNkt994VYhdlsEUeSgliaewR8jBa56YR1FyZQaSGOG38JWIkA/FM85u2+zaxSVFzp
-         zmgvoWlBdhbv/3+fy1WQq5LuoP8fTqkqqna2lPsssk9bmYRNN0f5Va+E8JW82Zh8g1
-         BS2GuX9uatxnhEds55n/Xc2med5nGKIjytqgsHlNdoO6XAvsrkMs/8YPL2bp4MceJP
-         VxrtGpHOsyPEg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: add some extra warning flags unconditionally
-Date:   Thu,  9 May 2019 15:46:35 +0900
-Message-Id: <20190509064635.1445-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 May 2019 02:49:07 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hOcrZ-0003dq-4u
+        for linux-kernel@vger.kernel.org; Thu, 09 May 2019 06:49:05 +0000
+Received: by mail-pg1-f200.google.com with SMTP id z12so1024784pgs.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 23:49:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=32kiJIP116e2mLUfbaNVIRXAUg5m0z/rzvErm/or1eE=;
+        b=WPIYS+nEyUwdD8e0S5fkNUi2H3hTaIV2xE0s+h0vcDpuIkIlI7FL4Z/ayNmYXydvUB
+         RRU1lq15X7VAgDFyV3SV/VOi5b+wTIin/K3L2u/VYblVq2fRqk86DDU43AfthcRdE6Nt
+         LjX6CiH6f66B3j6loWvoZYcIWfAtnmOwbtnSflnL8QDlxNe0WWz1Wvxieqrgcq0E7fe0
+         bnNkJGtsw7xIRacbB3GByaTB+tmSFaZZUG7Pm++TY7XrAAwjDTKGFxfwJDAV8AZMqibF
+         vNIY+IC/PHy3+MbB7Qium5g2Lbqap5OR0ruGd32PhOmMHIk9mI3RAmB9mkkmwsiXOk1L
+         EKTw==
+X-Gm-Message-State: APjAAAUomCqKZH4HFJ6PbPRPzyDcAquFGKA8w71Nw51eBMOX2XhCZgEq
+        2jGZnqepIP/WIafOJOAb2ZtvHuG5gUr08uFa1XOQlJxBgQ/MQXTf+d5VI9kpMgMABPl5nYUUjq0
+        EozqLgRVVkzoXOD6slX15CuGcOYBhLByjx9ju7BG9qw==
+X-Received: by 2002:a17:902:2927:: with SMTP id g36mr2893657plb.6.1557384543703;
+        Wed, 08 May 2019 23:49:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxJPM/iiIg9NOJAfxK2pfbyNTkSEm2UBAYNaAFq1fQROUzkh4woLlPJ4IuDqPN3TMlHwJyvEA==
+X-Received: by 2002:a17:902:2927:: with SMTP id g36mr2893630plb.6.1557384543367;
+        Wed, 08 May 2019 23:49:03 -0700 (PDT)
+Received: from 2001-b011-380f-14b9-f0ba-4a15-3e79-97f9.dynamic-ip6.hinet.net (2001-b011-380f-14b9-f0ba-4a15-3e79-97f9.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:f0ba:4a15:3e79:97f9])
+        by smtp.gmail.com with ESMTPSA id i12sm1460088pgb.61.2019.05.08.23.49.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 23:49:02 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190509061237.GA15229@lst.de>
+Date:   Thu, 9 May 2019 14:48:59 +0800
+Cc:     Mario.Limonciello@dell.com, Keith Busch <kbusch@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
+References: <20190508185955.11406-1-kai.heng.feng@canonical.com>
+ <20190508191624.GA8365@localhost.localdomain>
+ <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com>
+ <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM>
+ <20190508195159.GA1530@lst.de>
+ <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+ <20190509061237.GA15229@lst.de>
+To:     Christoph Hellwig <hch@lst.de>, rafael.j.wysocki@intel.com
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These flags are documented in the GCC 4.6 manual, and recognized by
-Clang as well. Let's rip off the cc-option / cc-disable-warning switches.
+Cc Rafael and linux-pm
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+at 14:12, Christoph Hellwig <hch@lst.de> wrote:
 
- scripts/Makefile.extrawarn | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+> On Wed, May 08, 2019 at 08:28:30PM +0000, Mario.Limonciello@dell.com wrote:
+>> You might think this would be adding runtime_suspend/runtime_resume
+>> callbacks, but those also get called actually at runtime which is not
+>> the goal here.  At runtime, these types of disks should rely on APST which
+>> should calculate the appropriate latencies around the different power  
+>> states.
+>>
+>> This code path is only applicable in the suspend to idle state, which  
+>> /does/
+>> call suspend/resume functions associated with dev_pm_ops.  There isn't
+>> a dedicated function in there for use only in suspend to idle, which is
+>> why pm_suspend_via_s2idle() needs to get called.
+>
+> The problem is that it also gets called for others paths:
+>
+> #ifdef CONFIG_PM_SLEEP
+> #define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+>         .suspend = suspend_fn, \
+> 	.resume = resume_fn, \
+> 	.freeze = suspend_fn, \
+> 	.thaw = resume_fn, \
+> 	.poweroff = suspend_fn, \
+> 	.restore = resume_fn,
+> #else
+> else
+> #define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
+> #endif
+>
+> #define SIMPLE_DEV_PM_OPS(name, suspend_fn, resume_fn) \
+> const struct dev_pm_ops name = { \
+> 	SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+> }
+>
+> And at least for poweroff this new code seems completely wrong, even
+> for freeze it looks rather borderline.
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 523c4cafe2dc..3ab8d1a303cd 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -23,15 +23,16 @@ warning-  := $(empty)
- warning-1 := -Wextra -Wunused -Wno-unused-parameter
- warning-1 += -Wmissing-declarations
- warning-1 += -Wmissing-format-attribute
--warning-1 += $(call cc-option, -Wmissing-prototypes)
-+warning-1 += -Wmissing-prototypes
- warning-1 += -Wold-style-definition
--warning-1 += $(call cc-option, -Wmissing-include-dirs)
-+warning-1 += -Wmissing-include-dirs
- warning-1 += $(call cc-option, -Wunused-but-set-variable)
- warning-1 += $(call cc-option, -Wunused-const-variable)
- warning-1 += $(call cc-option, -Wpacked-not-aligned)
- warning-1 += $(call cc-option, -Wstringop-truncation)
--warning-1 += $(call cc-disable-warning, missing-field-initializers)
--warning-1 += $(call cc-disable-warning, sign-compare)
-+# The following turn off the warnings enabled by -Wextra
-+warning-1 += -Wno-missing-field-initializers
-+warning-1 += -Wno-sign-compare
- 
- warning-2 := -Waggregate-return
- warning-2 += -Wcast-align
-@@ -39,8 +40,8 @@ warning-2 += -Wdisabled-optimization
- warning-2 += -Wnested-externs
- warning-2 += -Wshadow
- warning-2 += $(call cc-option, -Wlogical-op)
--warning-2 += $(call cc-option, -Wmissing-field-initializers)
--warning-2 += $(call cc-option, -Wsign-compare)
-+warning-2 += -Wmissing-field-initializers
-+warning-2 += -Wsign-compare
- warning-2 += $(call cc-option, -Wmaybe-uninitialized)
- warning-2 += $(call cc-option, -Wunused-macros)
- 
--- 
-2.17.1
+Not really, for hibernation pm_suspend_via_s2idle() evaluates to false so  
+the old code path will be taken.
+
+>
+> And more to the points - if these "modern MS standby" systems are
+> becoming common, which it looks they are, we need support in the PM core
+> for those instead of working around the decisions in low-level drivers.
+
+Rafael, what do you think about this?
+Including this patch, there are five drivers that use  
+pm_suspend_via_{firmware,s2idle}() to differentiate between S2I and S3.
+So I think maybe it’s time to introduce a new suspend callback for S2I?
+
+>
+>> SIMPLE_DEV_PM_OPS normally sets the same function for suspend and
+>> freeze (hibernate), so to avoid any changes to the hibernate case it seems
+>> to me that there needs to be a new nvme_freeze() that calls into the  
+>> existing
+>> nvme_dev_disable for the freeze pm op and nvme_thaw() that calls into the
+>> existing nvme_reset_ctrl for the thaw pm op.
+>
+> At least, yes.
+
+Hibernation should remain the same as stated above.
+
+>
+>>> enterprise class NVMe devices
+>>> that don't do APST and don't really do different power states at
+>>> all in many cases.
+>>
+>> Enterprise class NVMe devices that don't do APST - do they typically
+>> have a non-zero value for ndev->ctrl.npss?
+>>
+>> If not, they wouldn't enter this new codepath even if the server entered  
+>> into S2I.
+>
+> No, devices that do set NPSS will have at least some power states
+> per definition, although they might not be too useful.  I suspect checking
+> APSTA might be safer, but if we don't want to rely on APST we should
+> check for a power state supporting the condition that the MS document
+> quoted in the original document supports.
+
+If Modern Standby or Connected Standby is not supported by servers, I don’t  
+think the design documents mean much here.
+We probably should check if the platform firmware really supports S2I  
+instead.
+
+Kai-Heng
 
