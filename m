@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C9EC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D1BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6B020656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32D120656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428348;
-	bh=2PFsMYG+mKXHwmubDCUGEfYhxQOXD3Jk4Q8q1MGnEJI=;
+	s=default; t=1557428361;
+	bh=90tcU6lbo5qtFJjvews1rJ8yuN3aCTLEDfe3UJATu4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eGznmHJ9KtFoJoodOY15WvD2EzW9d8piWkgc+fZGUvnwd1qHYqHqlGh/Zf+PYfcCL
-	 iZcblKPjnE3GRMjgHS/DWPdoG4V9ne6s0Rn2wWVY8gwmJ54w7h/BDEJn6ogcHZx63p
-	 ZJrPC5y5jeghmG5R1/eIBv5/e9H6MCoDjTX71KeY=
+	b=zkjxW5c4XhZ6G0A+73dhpUYI4g1L33iTZPchrXF1I7+2Y9TL17zCR9E05b+3DU3Pg
+	 EFXmHqDWAdV2tkgG7oID6omG6/qkJhnNjY3ZBhxqCzaAE06Kppsg/9VXIdcNSr5SwK
+	 CzMN1Ie9hnKgYi0IKooKcQhir2kKspXHHxB7JgU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbfEIS7H (ORCPT
+        id S1728746AbfEIS7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:59:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46956 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbfEISwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:44 -0400
+        id S1728128AbfEISwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4556A217F9;
-        Thu,  9 May 2019 18:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB61F204FD;
+        Thu,  9 May 2019 18:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427963;
-        bh=2PFsMYG+mKXHwmubDCUGEfYhxQOXD3Jk4Q8q1MGnEJI=;
+        s=default; t=1557427951;
+        bh=90tcU6lbo5qtFJjvews1rJ8yuN3aCTLEDfe3UJATu4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBXidvFAadDinu2YNdprahZCf8IvJco/s+39RZ217IkyBgTY1xahc3l5P+qvkImNn
-         /11Hn0o2GbKynjxwR7o9cf+YRwWq6HMjf6jthI7b+u3bUVRzAV//KycwmZeteaG5/f
-         szBi7y0RMrrD5/b3sgK7ydu3aq5tBXrTu+frcXXc=
+        b=0zigT9zPYiQCJJoeyHqkz2s+BTllvEr5s7fwYj6PTwObFv6ApfwE1zUD+EC0Tnp5l
+         YMv8nszk88rqkTzXXzpcA9pXGQ8HwXEj+/H/84gwGn0bMYRu4Z9O3T0+66AbP5wioB
+         9IdduyKJfI2F5lEX9VuD4Bmc0lctDqWZ3+hPRN6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Annaliese McDermond <nh6z@nh6z.net>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 34/95] ASoC: tlv320aic32x4: Fix Common Pins
-Date:   Thu,  9 May 2019 20:41:51 +0200
-Message-Id: <20190509181311.689517422@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 64/95] virtio-blk: limit number of hw queues by nr_cpu_ids
+Date:   Thu,  9 May 2019 20:42:21 +0200
+Message-Id: <20190509181313.952622984@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,31 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
+[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
 
-The common pins were mistakenly not added to the DAPM graph.
-Adding these pins will allow valid graphs to be created.
+When tag_set->nr_maps is 1, the block layer limits the number of hw queues
+by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
+has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
 
-Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+In addition, specifically for pci scenario, when the 'num-queues' specified
+by qemu is more than maxcpus, virtio-blk would not be able to allocate more
+than maxcpus vectors in order to have a vector for each queue. As a result,
+it falls back into MSI-X with one vector for config and one shared for
+queues.
+
+Considering above reasons, this patch limits the number of hw queues used
+by virtio-blk by nr_cpu_ids.
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320aic32x4.c | 2 ++
+ drivers/block/virtio_blk.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index f03195d2ab2ea..45d9f4a090441 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -462,6 +462,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
- 	SND_SOC_DAPM_INPUT("IN2_R"),
- 	SND_SOC_DAPM_INPUT("IN3_L"),
- 	SND_SOC_DAPM_INPUT("IN3_R"),
-+	SND_SOC_DAPM_INPUT("CM_L"),
-+	SND_SOC_DAPM_INPUT("CM_R"),
- };
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index b16a887bbd02a..29bede887237f 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
+ 	if (err)
+ 		num_vqs = 1;
  
- static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
++	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
++
+ 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+ 	if (!vblk->vqs)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
