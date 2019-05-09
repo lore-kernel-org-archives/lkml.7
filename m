@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455F2C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A16AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCF42183F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56F9217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427980;
-	bh=KepZCZAG3aoM4cNeAy5B/zWkIBJbL9KhKmruBSnnJWk=;
+	s=default; t=1557427983;
+	bh=IDw46fZYrf8Ouu1BoNhchZFD0deoikTUfU2RsJt3vcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OaP6cFHGiExRStzRHYOZzOzLrDtBZg0HnYQKWZvYQgCgOiWkvLeX5HuYGSZWWNFvD
-	 PYnYV/0uyKwuU0Zo4ginCzZfbMXguqzT8YDxc5PSkZ9Pm4RbJs28O8625iQQaZ8hn8
-	 gBHZDh+hJTTt7RKhaOJ6qybaKlXe7XE0UA1DzqUk=
+	b=lQ6jHCio+MpEIbFyuaBuJkvl9TUaoz9xBX9AE8G62bxjLBJQYRpUCJV95a3tqcarA
+	 pHwmH5s5RJ7DJhMjgdXY0yXIjXUZ+scrx7fjQCmKgi6thPgp6aDJTsLKD3nnr3zQk6
+	 NEoQAsn+rdnKr+QH5rEmkdEUBkKFJiCbWHDZRADQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfEISw6 (ORCPT
+        id S1728802AbfEISxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbfEISwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:53 -0400
+        id S1728325AbfEISw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A656A20578;
-        Thu,  9 May 2019 18:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77142217D6;
+        Thu,  9 May 2019 18:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427971;
-        bh=KepZCZAG3aoM4cNeAy5B/zWkIBJbL9KhKmruBSnnJWk=;
+        s=default; t=1557427979;
+        bh=IDw46fZYrf8Ouu1BoNhchZFD0deoikTUfU2RsJt3vcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+VTq/lFW3ra4dRAWteTLfGnwxYHCtxbr7Bt9NQLdVOzY20+e+VtJuUIlk8EYT/5c
-         nMYW/MbLRuvKMkTDYMSmf16zE2Vfqw2zQV+9s6s4SAZ3HvkVLirXGf7lQ9yfr2GlxT
-         MsduNxw0hAp6+dJhjdfLbEHvVJnzrWwwxYTtvjRk=
+        b=NPPAs9n4Lu80ttjonFcqYLScaJsBh9HWwHw0sgvNG5GX8P0NWn9boSm6Rc7oL2jIo
+         g8boIVA9r6E9Y+W8eMkhA7EIfFhc42kNdi+x+JiByB+ekGgnpCvybcUKN688yORJnI
+         9MNpfuHrAUbTzYhGIDP7jlwJjA3Yx9z5fcqwNefA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Nelson DSouza <nelson.dsouza@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, tonyj@suse.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 37/95] perf/x86/intel: Initialize TFA MSR
-Date:   Thu,  9 May 2019 20:41:54 +0200
-Message-Id: <20190509181311.913201602@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 69/95] platform/x86: pmc_atom: Drop __initconst on dmi table
+Date:   Thu,  9 May 2019 20:42:26 +0200
+Message-Id: <20190509181314.280484929@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -67,47 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7262457e35dbe239659e62654e56f8ddb814bed ]
+[ Upstream commit b995dcca7cf12f208cfd95fd9d5768dca7cccec7 ]
 
-Stephane reported that the TFA MSR is not initialized by the kernel,
-but the TFA bit could set by firmware or as a leftover from a kexec,
-which makes the state inconsistent.
+It's used by probe and that isn't an init function. Drop this so that we
+don't get a section mismatch.
 
-Reported-by: Stephane Eranian <eranian@google.com>
-Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: tonyj@suse.com
-Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: David Müller <dave.mueller@gmx.ch>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/pmc_atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 77353555d491a..71fb8b7b29545 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3563,6 +3563,12 @@ static void intel_pmu_cpu_starting(int cpu)
- 
- 	cpuc->lbr_sel = NULL;
- 
-+	if (x86_pmu.flags & PMU_FL_TFA) {
-+		WARN_ON_ONCE(cpuc->tfa_shadow);
-+		cpuc->tfa_shadow = ~0ULL;
-+		intel_set_tfa(cpuc, false);
-+	}
-+
- 	if (x86_pmu.version > 1)
- 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
- 
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index eaec2d306481c..c7039f52ad518 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -396,7 +396,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+  * Some systems need one or more of their pmc_plt_clks to be
+  * marked as critical.
+  */
+-static const struct dmi_system_id critclk_systems[] __initconst = {
++static const struct dmi_system_id critclk_systems[] = {
+ 	{
+ 		.ident = "MPL CEC1x",
+ 		.matches = {
 -- 
 2.20.1
 
