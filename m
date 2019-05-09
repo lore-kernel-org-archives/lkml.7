@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE97C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4796C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EEF2177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4B52177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428413;
-	bh=ejtJlRKggDYSrnvS5XNrV6OwQHBXLxSQjZ7wIfmVLJI=;
+	s=default; t=1557428425;
+	bh=AFVKm1rtHlf4BYp39A7OOmkyXbVuznMWBpMiJDUsB8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pT9jyP142p8gi7FIiIbHmniFm4Q4d3Ux+WRMM4szvnQJm/dvoelYmb4uGuIhhBpXi
-	 nxHewSu9fVAbZNcHytYbpezWCLUKvq2RXEWhJMsc3tSrjsU+N3UzUtEzrz6wVjArnT
-	 Vjp5ilzmA7C6VbpDkCNKLQdqwyeG6kntDscxn3iA=
+	b=Kx43ym28v0UDOT3b3cGWwgjvfxIHup2/2qx3g29pO0Obj1nTjbi8+a+VfR1orysz8
+	 YDrhmyg6sehKuxkQXnG6ZmqexCXY62gNSqvu/V7ZjZBE3fUhpORsw1MAcQDMzYvMtV
+	 hgP75ZmFM5XLF+NgEPmUFtR/DGebBq8afWPUJlkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfEITAM (ORCPT
+        id S1728852AbfEITAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45714 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727147AbfEISvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:50 -0400
+        id S1728328AbfEISvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 857F7217F5;
-        Thu,  9 May 2019 18:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 035032177E;
+        Thu,  9 May 2019 18:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427910;
-        bh=ejtJlRKggDYSrnvS5XNrV6OwQHBXLxSQjZ7wIfmVLJI=;
+        s=default; t=1557427899;
+        bh=AFVKm1rtHlf4BYp39A7OOmkyXbVuznMWBpMiJDUsB8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1ioYN+7WxP6hj/BEWCGAkdN2/6xUc6XCUKXqN0rz0ju6mqVH/jJJFlBIseo+mE78
-         V3MCTX/MPKVEPKxsmtDt/a35PcI4BrxXbwBWUK5AjI7bwlgfWubJj0DpkAwPRZCrAS
-         t/PrB3TnilZjJA5fyOIPUoP4A/CJalTUlfNUQC1I=
+        b=rTiCu2urJk7DK8Nb9zpYgeKoq1X4UNSkNBx74aPqeCC7B9xQOgYuexubmkJV9JdDL
+         RgX0xk0kgWj3eEBNtxJdGsfIyep5hRBewWoYxrzNO8ufvMCT/YG4gaUdGOWedtKX6/
+         7EqEy7LnA3LEF8AznDMQBnCtYsfNBjsck+Ce/lBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 49/95] drm/sun4i: tcon top: Fix NULL/invalid pointer dereference in sun8i_tcon_top_un/bind
-Date:   Thu,  9 May 2019 20:42:06 +0200
-Message-Id: <20190509181312.902008471@linuxfoundation.org>
+Subject: [PATCH 5.0 46/95] ASoC: cs35l35: Disable regulators on driver removal
+Date:   Thu,  9 May 2019 20:42:03 +0200
+Message-Id: <20190509181312.688513493@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,69 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a07a94b47b1f528f39c3e6187b5eaf02efe44ea ]
+[ Upstream commit 47c4cc08cb5b34e93ab337b924c5ede77ca3c936 ]
 
-There are two problems here:
+The chips main power supplies VA and VP are enabled during probe but
+then never disabled, this will cause warnings from the regulator
+framework on driver removal. Fix this by adding a remove callback and
+disabling the supplies, whilst doing so follow best practice and put the
+chip back into reset as well.
 
-1. Not all clk_data->hws[] need to be initialized, depending on various
-   configured quirks. This leads to NULL ptr deref in
-   clk_hw_unregister_gate() in sun8i_tcon_top_unbind()
-2. If there is error when registering the clk_data->hws[],
-   err_unregister_gates error path will try to unregister
-   IS_ERR()=true (invalid) pointer.
-
-For problem (1) I have this stack trace:
-
-Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000008
-Call trace:
- clk_hw_unregister+0x8/0x18
- clk_hw_unregister_gate+0x14/0x28
- sun8i_tcon_top_unbind+0x2c/0x60
- component_unbind.isra.4+0x2c/0x50
- component_bind_all+0x1d4/0x230
- sun4i_drv_bind+0xc4/0x1a0
- try_to_bring_up_master+0x164/0x1c0
- __component_add+0xa0/0x168
- component_add+0x10/0x18
- sun8i_dw_hdmi_probe+0x18/0x20
- platform_drv_probe+0x3c/0x70
- really_probe+0xcc/0x278
- driver_probe_device+0x34/0xa8
-
-Problem (2) was identified by head scratching.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405233048.3823-1-megous@megous.com
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/codecs/cs35l35.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index fc36e0c10a374..b1e7c76e9c172 100644
---- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -227,7 +227,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
+index 9f4a59871cee7..c71696146c5ec 100644
+--- a/sound/soc/codecs/cs35l35.c
++++ b/sound/soc/codecs/cs35l35.c
+@@ -1635,6 +1635,16 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 	return ret;
+ }
  
- err_unregister_gates:
- 	for (i = 0; i < CLK_NUM; i++)
--		if (clk_data->hws[i])
-+		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
- 			clk_hw_unregister_gate(clk_data->hws[i]);
- 	clk_disable_unprepare(tcon_top->bus);
- err_assert_reset:
-@@ -245,7 +245,8 @@ static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
++static int cs35l35_i2c_remove(struct i2c_client *i2c_client)
++{
++	struct cs35l35_private *cs35l35 = i2c_get_clientdata(i2c_client);
++
++	regulator_bulk_disable(cs35l35->num_supplies, cs35l35->supplies);
++	gpiod_set_value_cansleep(cs35l35->reset_gpio, 0);
++
++	return 0;
++}
++
+ static const struct of_device_id cs35l35_of_match[] = {
+ 	{.compatible = "cirrus,cs35l35"},
+ 	{},
+@@ -1655,6 +1665,7 @@ static struct i2c_driver cs35l35_i2c_driver = {
+ 	},
+ 	.id_table = cs35l35_id,
+ 	.probe = cs35l35_i2c_probe,
++	.remove = cs35l35_i2c_remove,
+ };
  
- 	of_clk_del_provider(dev->of_node);
- 	for (i = 0; i < CLK_NUM; i++)
--		clk_hw_unregister_gate(clk_data->hws[i]);
-+		if (clk_data->hws[i])
-+			clk_hw_unregister_gate(clk_data->hws[i]);
- 
- 	clk_disable_unprepare(tcon_top->bus);
- 	reset_control_assert(tcon_top->rst);
+ module_i2c_driver(cs35l35_i2c_driver);
 -- 
 2.20.1
 
