@@ -2,165 +2,127 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1CBC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49153C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709252173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1953A2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:35:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="o6pb63bU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfEIWei (ORCPT
+        id S1726851AbfEIWes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:34:38 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41484 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfEIWeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:34:37 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 3BD88802A4; Fri, 10 May 2019 00:34:24 +0200 (CEST)
-Date:   Fri, 10 May 2019 00:34:37 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Thu, 9 May 2019 18:34:48 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50141 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfEIWer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:34:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 450Snw21ctz9s7h;
+        Fri, 10 May 2019 08:34:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557441284;
+        bh=nqt2J1Tvd3nd726L9NOu6y41YE7UUVKiEXFRxS9Io7o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=o6pb63bUrdyEQy66I2K5jxxfdMGEklSfe7tzSeFiMECiG/v+gwmRObK0/I1Ltpy8u
+         j8wInQZqTO0fPAv6FErt7Cg5CHgrvKeGhIvYm7L91LF9HaSzAS6rQpNb0O5nH4Jdaw
+         s372XpQfBlb8JZiVyV8yURMcImAHiyPeNo7zbH6u2rwpk+NfcOtFlMNU5IhxvK6MZR
+         yzZcWVEhRCGlY92kHPug0CdWux8W56ulUJ5/Gtp2Du88sZE7ocKQmHIA9kB5lEVuDG
+         bJEm52Q9Oomqy8Tc/1l7oosBzHHMacm6vy2xkKeTlQRlpqmY6GUjkg7PircBCg3Rrz
+         1K8l0+7xtHWaQ==
+Date:   Fri, 10 May 2019 08:34:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
- backlight
-Message-ID: <20190509223436.GB527@amd>
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
- <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
- <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
- <20190508171229.GA22024@amd>
- <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com>
- <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
+        Brett Mastbergen <bmastbergen@untangle.com>
+Subject: linux-next: manual merge of the netfilter tree with Linus' tree
+Message-ID: <20190510083435.68faecf5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
-Content-Disposition: inline
-In-Reply-To: <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/h7S8YNgI927TIl05dJJy0b6"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---CUfgB8w4ZwR/yMy5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/h7S8YNgI927TIl05dJJy0b6
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi all,
 
-> >> Yes, please. We have common interface for LED drivers; this needs to
-> >> use it.
-> >=20
-> > That is indeed a better option and I did in fact considered this first =
-and
-> > even did a test implementation. The discoveries were:
-> > 1. The WMI methods are write-only and only written all at once in a
-> > transaction manner (also invoking solely first RGB-interface method has=
- no
-> > effect until some other keyboard backlight method is called).
+Today's linux-next merge of the netfilter tree got a conflict in:
 
-Write-only is not a problem, right? Nor should be transaction. Just
-cache the values in kernel.
+  include/uapi/linux/netfilter/nf_tables.h
 
-> > 2. In addition to RGB there are several control values, which switch
-> > effects, speed and enable or disable the backlight under specific
-> > conditions or switch whether it is set temporarily or permanently (not =
-that
-> > these are critical functionalities, but for the sake of
-> > completeness).
+between commit:
 
-Yep, lets ignore that for now.
+  3087c3f7c23b ("netfilter: nft_ct: Add ct id support")
 
-> > 3. The EC is really slow
-> > # time bash -c "echo 1 > /sys/devices/platform/faustus/kbbl_set"
-> >=20
-> > real	0m0,691s
-> > user	0m0,000s
-> > sys	0m0,691s
-> >=20
-> > (please ignore the sysfs-path there, it's essentially the same code run=
-ning
-> > as in this patch). It is consistently same for both temporary and perma=
-nent
-> > configuration. Writing after every change would take about (6+)x of tha=
-t.
-> > Not that it's that unbearable though as it is not likely to be
-> > done often.
+from Linus' tree and commit:
 
-Yup, this is quite ugly.
+  c6c9c0596c21 ("netfilter: nf_tables: remove NFT_CT_TIMEOUT")
 
-What about simply ignoring changes as they happen, and then setting
-RGB channels when nothing changes for 10msec?
+from the netfilter tree.
 
-> > I was not quite happy with that implementation so I opted for writing s=
-ort
-> > of sysfs wrapper instead that would allow same sort of transactions as
-> > provided by BIOS. I agree that it's non-standard solution.
-> >=20
-> > If I understood correctly, the typical current RGB led_class devices fr=
-om
-> > the Linux tree currently provide channels as separate LEDs. There are a=
-lso
-> > blink / pattern options present, I guess one could misuse them for sett=
-ing
-> > effects and speed. So one could make 3 devices for RGB + 3 for awake,
-> > sleep, boot modes + 1 for setting effect / speed.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-Take a look at "pattern" trigger. That should give you effect/speed
-options. .. for single channel.
-
-> > I'd guess the end solution might be also either something like combinat=
-ion
-> > of both approaches (RGB leds + separate sysfs interface) or some extens=
-ion
-> > of the led_class device interface. Dropping support of the non-essential
-> > features for the sake of uniformity of ABI would also be an option to
-> > consider (exposing just three RGB LEDs with brightness only), not happy=
- one
-> > though.
-> >=20
-> > In any case this looks like it might need some additional research,
-> > discussion, development, and a pair of iterations so I tend to separate
-> > this patch from the series and post it extra after the others are throu=
-gh
-> > to avoid dragging 10+ patches around.
-
-Separate patch certainly makes sense.
-
-Best regards,
-									Pavel
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Cheers,
+Stephen Rothwell
 
---CUfgB8w4ZwR/yMy5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --cc include/uapi/linux/netfilter/nf_tables.h
+index f0cf7b0f4f35,92bb1e2b2425..000000000000
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@@ -966,8 -966,6 +966,7 @@@ enum nft_socket_keys=20
+   * @NFT_CT_DST_IP: conntrack layer 3 protocol destination (IPv4 address)
+   * @NFT_CT_SRC_IP6: conntrack layer 3 protocol source (IPv6 address)
+   * @NFT_CT_DST_IP6: conntrack layer 3 protocol destination (IPv6 address)
+-  * @NFT_CT_TIMEOUT: connection tracking timeout policy assigned to conntr=
+ack
+ + * @NFT_CT_ID: conntrack id
+   */
+  enum nft_ct_keys {
+  	NFT_CT_STATE,
+@@@ -993,8 -991,6 +992,7 @@@
+  	NFT_CT_DST_IP,
+  	NFT_CT_SRC_IP6,
+  	NFT_CT_DST_IP6,
+- 	NFT_CT_TIMEOUT,
+ +	NFT_CT_ID,
+  	__NFT_CT_MAX
+  };
+  #define NFT_CT_MAX		(__NFT_CT_MAX - 1)
+
+--Sig_/h7S8YNgI927TIl05dJJy0b6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlzUqvwACgkQMOfwapXb+vK90gCfa5VCwbhBeQ0RlMOZuDkqJBma
-raAAnj+RO123XbofMN8InUVu/ER8DTMR
-=EKgO
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzUqvsACgkQAVBC80lX
+0GxnZAf/SdTlpbKzDuxhI5RBK2yQNcTv6GgKfwVURQRdDOIjqr4jpzkRcd3zbVCh
+mFX+mAR1xmJ13MeSZ1Cis7o58GfkZuNV/i3GxKl4l7GSEtU6gAscrqqXnZ66wdd/
+oAlNyJLpmIpsL/rs9E5MWK/ZavrsYU4eQLLzqZvO63wx8zTYlhvyVpr3IF2pCyjb
+wUZgxUz4i1blraY756ULGw1G/vWHbWmbZEVbTubXzugYgqTfZqi1xSA3BjYM6Hvs
+yRRj1AZ4qOlhzyFe2UwUHXWJv+TgECO9iBpELW7IsUOsNqJaAZnQZ6WH5WxF9IwC
+FD/5SCnPAXGFHY6/CQf4Fu9wwdjuPA==
+=sJiz
 -----END PGP SIGNATURE-----
 
---CUfgB8w4ZwR/yMy5--
+--Sig_/h7S8YNgI927TIl05dJJy0b6--
