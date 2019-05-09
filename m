@@ -3,179 +3,199 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62616C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2154FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAE0216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1CD2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEINOC (ORCPT
+        id S1726648AbfEINSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfEINOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:14:01 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFEF52089E;
-        Thu,  9 May 2019 13:13:58 +0000 (UTC)
-Date:   Thu, 9 May 2019 09:13:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
- addresses
-Message-ID: <20190509091357.0af3fcd7@gandalf.local.home>
-In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
-References: <20190509121923.8339-1-pmladek@suse.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 May 2019 09:18:33 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42155 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfEINSc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:18:32 -0400
+Received: by mail-qt1-f195.google.com with SMTP id j53so2375242qta.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 06:18:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uCSIDRtIChXyP2xLf4vlTl4TN+QeSJxgQq5xMSigZ5w=;
+        b=Brk23/rLEhuHucj+v7Yj4xRdT4K790e3JIIm6/aAjRYLg5oQjejpgd4TjHkUBA/XoR
+         Sv9KRk+QuKH/CJ6sBufyykuXd2KRUSgTpnB16INmH4QsNYIH52eNjhxn1Ap47Vj54xSZ
+         65mTiVMhlmr8DNWcg2dVRb7AFVD9huSZkqPCT1SpDSQWbmAEotVGCWrQ1tvQ8JP1M/bX
+         xUUon7088vylQIImxvgqFXXoDXB3xCdp/G6kq0y660TIqrC8lfil3e27uFi0piq/Ow18
+         CkbmWAONOCpivJslqePIwNWOyo80pmTHVc/b51KVauvJwoxyNn9+WbAjv1ezuTm72tqN
+         mQgw==
+X-Gm-Message-State: APjAAAVlsgHvzWgXYjNw6AQmxJ7SMPh/zo6qUJg925N4vqfmTpKitEW6
+        HBI3Ie6mhMChNKnSECm4p6sBSF8YEKA=
+X-Google-Smtp-Source: APXvYqzuWDrp1vNxFhHyIepZh0BlL6Sk73vH5vDNAOlEraLrudzljNETMnRhgraKr8XDV4OMSkjv+w==
+X-Received: by 2002:ac8:610f:: with SMTP id a15mr3462116qtm.257.1557407911523;
+        Thu, 09 May 2019 06:18:31 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id x3sm1232202qtk.75.2019.05.09.06.18.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 09 May 2019 06:18:30 -0700 (PDT)
+Date:   Thu, 9 May 2019 09:18:22 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [RFC PATCH V2] vhost: don't use kmap() to log dirty pages
+Message-ID: <20190509090433-mutt-send-email-mst@kernel.org>
+References: <1557406680-4087-1-git-send-email-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557406680-4087-1-git-send-email-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  9 May 2019 14:19:23 +0200
-Petr Mladek <pmladek@suse.com> wrote:
+On Thu, May 09, 2019 at 08:58:00AM -0400, Jason Wang wrote:
+> Vhost log dirty pages directly to a userspace bitmap through GUP and
+> kmap_atomic() since kernel doesn't have a set_bit_to_user()
+> helper. This will cause issues for the arch that has virtually tagged
+> caches. The way to fix is to keep using userspace virtual
+> address. Fortunately, futex has arch_futex_atomic_op_inuser() which
+> could be used for setting a bit to user.
+> 
+> Note:
+> - There're archs (few non popular ones) that don't implement futex
+>   helper, we can't log dirty pages. We can fix them e.g for non
+>   virtually tagged archs implement a kmap fallback on top or simply
+>   disable LOG_ALL features of vhost.
+> - The helper also requires userspace pointer is located at 4-byte
+>   boundary, need to check during dirty log setting
 
-> The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
-> invalid pointers") broke boot on several architectures. The common
-> pattern is that probe_kernel_read() is not working during early
-> boot because userspace access framework is not ready.
-> 
-> The check is only the best effort. Let's not rush with it during
-> the early boot.
-> 
-> Details:
-> 
-> 1. Report on Power:
-> 
-> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
-> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
-> 
-> The problem is the combination of some new code called via printk(),
-> check_pointer() which calls probe_kernel_read(). That then calls
-> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
-> (before we've patched features). With the JUMP_LABEL debug enabled that
-> causes us to call printk() & dump_stack() and we end up recursing and
-> overflowing the stack.
-> 
-> Because it happens so early you don't get any output, just an apparently
-> dead system.
-> 
-> The stack trace (which you don't see) is something like:
-> 
->   ...
->   dump_stack+0xdc
->   probe_kernel_read+0x1a4
->   check_pointer+0x58
->   string+0x3c
->   vsnprintf+0x1bc
->   vscnprintf+0x20
->   printk_safe_log_store+0x7c
->   printk+0x40
->   dump_stack_print_info+0xbc
->   dump_stack+0x8
->   probe_kernel_read+0x1a4
->   probe_kernel_read+0x19c
->   check_pointer+0x58
->   string+0x3c
->   vsnprintf+0x1bc
->   vscnprintf+0x20
->   vprintk_store+0x6c
->   vprintk_emit+0xec
->   vprintk_func+0xd4
->   printk+0x40
->   cpufeatures_process_feature+0xc8
->   scan_cpufeatures_subnodes+0x380
->   of_scan_flat_dt_subnodes+0xb4
->   dt_cpu_ftrs_scan_callback+0x158
->   of_scan_flat_dt+0xf0
->   dt_cpu_ftrs_scan+0x3c
->   early_init_devtree+0x360
->   early_setup+0x9c
-> 
-> 2. Report on s390:
-> 
-> vsnprintf invocations, are broken on s390. For example, the early boot
-> output now looks like this where the first (efault) should be
-> the linux_banner:
-> 
-> [    0.099985] (efault)
-> [    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
-> [    0.100066] setup: The maximum memory size is 8192MB
-> [    0.100070] cma: Reserved 4 MiB at (efault)
-> [    0.100100] numa: NUMA mode: (efault)
-> 
-> The reason for this, is that the code assumes that
-> probe_kernel_address() works very early. This however is not true on
-> at least s390. Uaccess on KERNEL_DS works only after page tables have
-> been setup on s390, which happens with setup_arch()->paging_init().
-> 
-> Any probe_kernel_address() invocation before that will return -EFAULT.
+Why check? Round it down.
 
-Hmm, this sounds to me that probe_kernel_address() is broken for these
-architectures. Perhaps the system_state check should be in
-probe_kernel_address() for those architectures?
-
-
-> 
-> Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
 > ---
->  lib/vsprintf.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> Changes from V1:
+> - switch to use arch_futex_atomic_op_inuser()
+> ---
+>  drivers/vhost/vhost.c | 35 +++++++++++++++++------------------
+>  1 file changed, 17 insertions(+), 18 deletions(-)
 > 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 7b0a6140bfad..8b43a883be6b 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -640,8 +640,13 @@ static const char *check_pointer_msg(const void *ptr)
->  	if (!ptr)
->  		return "(null)";
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 351af88..4e5a004 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/interval_tree_generic.h>
+>  #include <linux/nospec.h>
+> +#include <asm/futex.h>
 >  
-> -	if (probe_kernel_address(ptr, byte))
-> -		return "(efault)";
-
-Either that, or we add a macro to those architectures and add:
-
-#ifdef ARCH_NO_EARLY_PROBE_KERNEL_ADDRESS
-
-> +	/* User space address handling is not ready during early boot. */
-> +	if (system_state <= SYSTEM_BOOTING) {
-> +		if ((unsigned long)ptr < PAGE_SIZE)
-> +			return "(efault)";
-> +	} else {
-
-#endif
-
-Why add an unnecessary branch for archs this is not a problem for?
-
--- Steve
-
-> +		if (probe_kernel_address(ptr, byte))
-> +			return "(efault)";
+>  #include "vhost.h"
 >  
->  	return NULL;
+> @@ -1652,6 +1653,10 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
+>  			r = -EFAULT;
+>  			break;
+>  		}
+> +		if (p & 0x3) {
+> +			r = -EINVAL;
+> +			break;
+> +		}
+>  		for (i = 0; i < d->nvqs; ++i) {
+>  			struct vhost_virtqueue *vq;
+>  			void __user *base = (void __user *)(unsigned long)p;
+
+That's an ABI change and might break some userspace. I don't think
+it's necessary: you are changing individual bits anyway.
+
+> @@ -1692,31 +1697,27 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
 >  }
+>  EXPORT_SYMBOL_GPL(vhost_dev_ioctl);
+>  
+> -/* TODO: This is really inefficient.  We need something like get_user()
+> - * (instruction directly accesses the data, with an exception table entry
+> - * returning -EFAULT). See Documentation/x86/exception-tables.txt.
+> - */
+> -static int set_bit_to_user(int nr, void __user *addr)
+> +static int set_bit_to_user(int nr, u32 __user *addr)
+>  {
+>  	unsigned long log = (unsigned long)addr;
+>  	struct page *page;
+> -	void *base;
+> -	int bit = nr + (log % PAGE_SIZE) * 8;
+> +	u32 old;
+>  	int r;
+>  
+>  	r = get_user_pages_fast(log, 1, 1, &page);
 
+OK so the trick is that page is pinned so you don't expect
+arch_futex_atomic_op_inuser below to fail.  get_user_pages_fast
+guarantees page is not going away but does it guarantee PTE won't be
+invaidated or write protected?
+
+>  	if (r < 0)
+>  		return r;
+>  	BUG_ON(r != 1);
+> -	base = kmap_atomic(page);
+> -	set_bit(bit, base);
+> -	kunmap_atomic(base);
+> +
+> +	r = arch_futex_atomic_op_inuser(FUTEX_OP_ADD, 1 << nr, &old, addr);
+> +	/* TODO: fallback to kmap() when -ENOSYS? */
+> +
+
+Add a comment why this won't fail? Maybe warn on EFAULT?
+
+Also down the road a variant that does not need tricks like this is
+still nice to have.
+
+
+>  	set_page_dirty_lock(page);
+>  	put_page(page);
+> -	return 0;
+> +	return r;
+>  }
+>  
+> -static int log_write(void __user *log_base,
+> +static int log_write(u32 __user *log_base,
+>  		     u64 write_address, u64 write_length)
+>  {
+>  	u64 write_page = write_address / VHOST_PAGE_SIZE;
+> @@ -1726,12 +1727,10 @@ static int log_write(void __user *log_base,
+>  		return 0;
+>  	write_length += write_address % VHOST_PAGE_SIZE;
+>  	for (;;) {
+> -		u64 base = (u64)(unsigned long)log_base;
+> -		u64 log = base + write_page / 8;
+> -		int bit = write_page % 8;
+> -		if ((u64)(unsigned long)log != log)
+> -			return -EFAULT;
+> -		r = set_bit_to_user(bit, (void __user *)(unsigned long)log);
+> +		u32 __user *log = log_base + write_page / 32;
+> +		int bit = write_page % 32;
+> +
+> +		r = set_bit_to_user(bit, log);
+>  		if (r < 0)
+>  			return r;
+>  		if (write_length <= VHOST_PAGE_SIZE)
+> -- 
+> 1.8.3.1
