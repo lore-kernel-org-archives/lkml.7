@@ -2,148 +2,348 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DBDC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDF3C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D304A21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3972184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="gzFJZzgJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEIQTl (ORCPT
+        id S1726767AbfEIQUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:19:41 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50563 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfEIQTl (ORCPT
+        Thu, 9 May 2019 12:20:10 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41981 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfEIQUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:19:41 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hOllW-00029d-0c; Thu, 09 May 2019 18:19:26 +0200
-Date:   Thu, 9 May 2019 18:19:25 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     minyard@acm.org
-Cc:     linux-rt-users@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190509161925.kul66w54wpjcinuc@linutronix.de>
-References: <20190508205728.25557-1-minyard@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190508205728.25557-1-minyard@acm.org>
-User-Agent: NeoMutt/20180716
+        Thu, 9 May 2019 12:20:09 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d9so1375983pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Da8NJHS+7ZThf+OYImudsb+xwESZVW3cTD3jbRasagk=;
+        b=gzFJZzgJPaZOucWo/vGMIWF9T1za1Iyi65SlihCeJbqtt/msKUw1nz7EPEN2hzNegz
+         b/dS6s4L0QhwAP4U2cgOxcvgj/l8oPYk8pKWywFPwniO7kF1aprd6AwIged5Z+PsVxWU
+         TqCDO3ZWBmCpYUwIJrzJ6dDaehTVjOVSGK1NKdQoUCr4q37afPcQth5OaU2/6A0ifAK5
+         FnlPX194aoxQCHrCS9nietKN0QRKYWrnfjhrrns2sdUrgd5PoqYM4JnVELcUYsrxDqZv
+         DNXgFaJclAHn4NjG4u8+xlMouUe40x6WTco8xHeJf60QyHdlgvgvmft/7D/eHzB3tZtV
+         ifkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Da8NJHS+7ZThf+OYImudsb+xwESZVW3cTD3jbRasagk=;
+        b=PcWWGyNQlzMYPAwwEG667hhuE0FKmS+4JIeLmyqSGlK11jB3O4gQh4uVfHNdN6/AAw
+         5r/jHPqICQz2Ys6meBPyYa7LyYu9mnK1WL83EdXt6pbT9HwayXMOOlRz75dbruYY84y9
+         Uhgaw2C7RNheQgBy8TJqZ7ENxQFwLy8Ww4gxAORfLxSrp09QvJDXeDyTytpNapAfLwFe
+         NUMC3w50oXgVmCl5eEC9WOS2Q/n7pLPtXo6h52Sx/vj0bfIKzHig8MdoUu8NanSd5bVj
+         sjXPWHmQTDbnTRmxJYvQ4dAKn3uSseLRPlyXx2vB8JWUvvRg6x20o3VvyfLz1nDtxSfF
+         ppsQ==
+X-Gm-Message-State: APjAAAWG82XmWOAej2W7yK0LlWKx/4+t4DbC85mSgHD8DOvDfaMvK7qc
+        pRVjeOzij4WtTJjpLuxanhw74A==
+X-Google-Smtp-Source: APXvYqyek3vYot8PDiUs/2GXtlTftVn0SxW+VEnhHWpmGG8ZBMqgEH+H6vf2yS0OxGzrlBxec9MXdQ==
+X-Received: by 2002:a17:902:9a81:: with SMTP id w1mr5118343plp.71.1557418808267;
+        Thu, 09 May 2019 09:20:08 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:8848:cc98:4f02:bf2c? ([2601:646:c200:1ef2:8848:cc98:4f02:bf2c])
+        by smtp.gmail.com with ESMTPSA id s78sm7785323pfs.187.2019.05.09.09.20.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 09:20:07 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+Date:   Thu, 9 May 2019 09:20:06 -0700
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
+References: <20190508074901.982470324@infradead.org> <20190508080612.721269814@infradead.org> <20190508115416.nblx7c2kocidpytm@treble> <20190508120416.GL2589@hirez.programming.kicks-ass.net> <20190508124248.u5ukpbhnh4wpiccq@treble> <20190508153907.GM2589@hirez.programming.kicks-ass.net> <20190508184848.qerg3flv3ej3xsev@treble> <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org> <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please:
- - add some RT developers on Cc:
- - add lkml
- - use [PATCH RT] instead just [PATCH] so it is visible that you target
-   the RT tree.
 
-On 2019-05-08 15:57:28 [-0500], minyard@acm.org wrote:
-> From: Corey Minyard <cminyard@mvista.com>
-> 
-> The function call do_wait_for_common() has a race condition that
-> can result in lockups waiting for completions.  Adding the thread
-> to (and removing the thread from) the wait queue for the completion
-> is done outside the do loop in that function.  However, if the thread
-> is woken up, the swake_up_locked() function will delete the entry
-> from the wait queue.  If that happens and another thread sneaks
-> in and decrements the done count in the completion to zero, the
-> loop will go around again, but the thread will no longer be in the
-> wait queue, so there is no way to wake it up.
-> 
-> Fix it by adding/removing the thread to/from the wait queue inside
-> the do loop.
 
-So you are saying:
-	T0			T1			    T2
-	wait_for_completion()
-	 do_wait_for_common()
-	  __prepare_to_swait()
-	   schedule()
-	    		       complete()
-			        x->done++ (0 -> 1)
-				raw_spin_lock_irqsave()
-				 swake_up_locked()           wait_for_completion()
-				  wake_up_process(T0)
-				  list_del_init()
-				raw_spin_unlock_irqrestore()
-	                                                      raw_spin_lock_irq(&x->wait.lock)
-	 raw_spin_lock_irq(&x->wait.lock)                      x->done != UINT_MAX, 1 -> 0
-							       return 1
-							      raw_spin_unlock_irq(&x->wait.lock)
-	 while (!x->done && timeout),
-	 continue loop, not enqueued
-	 on &x->wait
+> On May 9, 2019, at 1:14 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+>> On Thu, May 09, 2019 at 10:20:30AM +0900, Masami Hiramatsu wrote:
+>> Hi Josh,
+>>=20
+>> On Wed, 8 May 2019 13:48:48 -0500
+>> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>>=20
+>>>> On Wed, May 08, 2019 at 05:39:07PM +0200, Peter Zijlstra wrote:
+>>>>> On Wed, May 08, 2019 at 07:42:48AM -0500, Josh Poimboeuf wrote:
+>>>>> On Wed, May 08, 2019 at 02:04:16PM +0200, Peter Zijlstra wrote:
+>>>>=20
+>>>>>> Do the x86_64 variants also want some ORC annotation?
+>>>>>=20
+>>>>> Maybe so.  Though it looks like regs->ip isn't saved.  The saved
+>>>>> registers might need to be tweaked.  I'll need to look into it.
+>>>>=20
+>>>> What all these sites do (and maybe we should look at unifying them
+>>>> somehow) is turn a CALL frame (aka RET-IP) into an exception frame (aka=
 
-The difference compared to the non-swait based implementation is that
-swake_up_locked() removes woken up tasks from the list while the other
-implementation (wait_queue_entry based, default_wake_function()) does
-not. Buh
-
-One question for the upstream completion implementation:
-completion_done() returns true if there are no waiters. It acquires the
-wait.lock to ensure that complete()/complete_all() is done. However,
-once complete releases the lock it is guaranteed that the wake_up() (for
-the waiter) occurred. The waiter task still needs to be remove itself
-from the wait-queue before the completion can be removed.
-Do I miss something?
-
-> Fixes: a04ff6b4ec4ee7e ("completion: Use simple wait queues")
-> Signed-off-by: Corey Minyard <cminyard@mvista.com>
+>>>> pt_regs).
+>>>>=20
+>>>> So regs->ip will be the return address (which is fixed up to be the CAL=
+L
+>>>> address in the handler).
+>>>=20
+>>> But from what I can tell, trampoline_handler() hard-codes regs->ip to
+>>> point to kretprobe_trampoline(), and the original return address is
+>>> placed in regs->sp.
+>>>=20
+>>> Masami, is there a reason why regs->ip doesn't have the original return
+>>> address and regs->sp doesn't have the original SP?  I think that would
+>>> help the unwinder understand things.
+>>=20
+>> Yes, for regs->ip, there is a histrical reason. Since previously, we had
+>> an int3 at trampoline, so the user (kretprobe) handler expects that
+>> regs->ip is trampoline address and ri->ret_addr is original return addres=
+s.
+>> It is better to check the other archs, but I think it is possible to
+>> change the regs->ip to original return address, since no one cares such
+>> "fixed address". :)
+>>=20
+>> For the regs->sp, there are 2 reasons.
+>>=20
+>> For x86-64, it's just for over-optimizing (reduce stack usage).
+>> I think we can make a gap for putting return address, something like
+>>=20
+>>    "kretprobe_trampoline:\n"
+>> #ifdef CONFIG_X86_64
+>>    "    pushq %rsp\n"    /* Make a gap for return address */
+>>    "    pushq 0(%rsp)\n"    /* Copy original stack pointer */
+>>    "    pushfq\n"
+>>    SAVE_REGS_STRING
+>>    "    movq %rsp, %rdi\n"
+>>    "    call trampoline_handler\n"
+>>    /* Push the true return address to the bottom */
+>>    "    movq %rax, 20*8(%rsp)\n"
+>>    RESTORE_REGS_STRING
+>>    "    popfq\n"
+>>    "    addq $8, %rsp\n"    /* Skip original stack pointer */
+>>=20
+>> For i386 (x86-32), there is no other way to keep &regs->sp as
+>> the original stack pointer. It has to be changed with this series,
+>> maybe as same as x86-64.
+>=20
+> Right; I already fixed that in my patch changing i386's pt_regs.
+>=20
+> But what I'd love to do is something like the belwo patch, and make all
+> the trampolines (very much including ftrace) use that. Such that we then
+> only have 1 copy of this magic (well, 2 because x86_64 also needs an
+> implementation of this of course).
+>=20
+> Changing ftrace over to this would be a little more work but it can
+> easily chain things a little to get its original context back:
+>=20
+> ENTRY(ftrace_regs_caller)
+> GLOBAL(ftrace_regs_func)
+>    push ftrace_stub
+>    push ftrace_regs_handler
+>    jmp call_to_exception_trampoline
+> END(ftrace_regs_caller)
+>=20
+> typedef void (*ftrace_func_t)(unsigned long, unsigned long, struct ftrace_=
+op *, struct pt_regs *);
+>=20
+> struct ftrace_regs_stack {
+>    ftrace_func_t func;
+>    unsigned long parent_ip;
+> };
+>=20
+> void ftrace_regs_handler(struct pr_regs *regs)
+> {
+>    struct ftrace_regs_stack *st =3D (void *)regs->sp;
+>    ftrace_func_t func =3D st->func;
+>=20
+>    regs->sp +=3D sizeof(long); /* pop func */
+>=20
+>    func(regs->ip, st->parent_ip, function_trace_op, regs);
+> }
+>=20
+> Hmm? I didn't look into the function_graph thing, but I imagine it can
+> be added without too much pain.
+>=20
 > ---
-> I sent the wrong version of this, I had spotted this before but didn't
-> fix it here.  Adding the thread to the wait queue needs to come after
-> the signal check.  Sorry about the noise.
-> 
->  kernel/sched/completion.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-> index 755a58084978..4f9b4cc0c95a 100644
-> --- a/kernel/sched/completion.c
-> +++ b/kernel/sched/completion.c
-> @@ -70,20 +70,20 @@ do_wait_for_common(struct completion *x,
->  		   long (*action)(long), long timeout, int state)
->  {
->  	if (!x->done) {
-> -		DECLARE_SWAITQUEUE(wait);
-> -
-> -		__prepare_to_swait(&x->wait, &wait);
-
-you can keep DECLARE_SWAITQUEUE remove just __prepare_to_swait()
-
->  		do {
-> +			DECLARE_SWAITQUEUE(wait);
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -1576,3 +1576,100 @@ ENTRY(rewind_stack_do_exit)
+>    call    do_exit
+> 1:    jmp 1b
+> END(rewind_stack_do_exit)
 > +
->  			if (signal_pending_state(state, current)) {
->  				timeout = -ERESTARTSYS;
->  				break;
->  			}
-> +			__prepare_to_swait(&x->wait, &wait);
+> +/*
+> + * Transforms a CALL frame into an exception frame; IOW it pretends the C=
+ALL we
+> + * just did was in fact scribbled with an INT3.
+> + *
+> + * Use this trampoline like:
+> + *
+> + *   PUSH $func
+> + *   JMP call_to_exception_trampoline
+> + *
+> + * $func will see regs->ip point at the CALL instruction and must therefo=
+re
+> + * modify regs->ip in order to make progress (just like a normal INT3 scr=
+ibbled
+> + * CALL).
+> + *
+> + * NOTE: we do not restore any of the segment registers.
+> + */
+> +ENTRY(call_to_exception_trampoline)
+> +    /*
+> +     * On entry the stack looks like:
+> +     *
+> +     *   2*4(%esp) <previous context>
+> +     *   1*4(%esp) RET-IP
+> +     *   0*4(%esp) func
+> +     *
+> +     * transform this into:
+> +     *
+> +     *  19*4(%esp) <previous context>
+> +     *  18*4(%esp) gap / RET-IP
+> +     *  17*4(%esp) gap / func
+> +     *  16*4(%esp) ss
+> +     *  15*4(%esp) sp / <previous context>
+> +     *  14*4(%esp) flags
+> +     *  13*4(%esp) cs
+> +     *  12*4(%esp) ip / RET-IP
+> +     *  11*4(%esp) orig_eax
+> +     *  10*4(%esp) gs
+> +     *   9*4(%esp) fs
+> +     *   8*4(%esp) es
+> +     *   7*4(%esp) ds
+> +     *   6*4(%esp) eax
+> +     *   5*4(%esp) ebp
+> +     *   4*4(%esp) edi
+> +     *   3*4(%esp) esi
+> +     *   2*4(%esp) edx
+> +     *   1*4(%esp) ecx
+> +     *   0*4(%esp) ebx
+> +     */
+> +    pushl    %ss
+> +    pushl    %esp        # points at ss
+> +    addl    $3*4, (%esp)    #   point it at <previous context>
+> +    pushfl
+> +    pushl    %cs
+> +    pushl    5*4(%esp)    # RET-IP
+> +    subl    5, (%esp)    #   point at CALL instruction
+> +    pushl    $-1
+> +    pushl    %gs
+> +    pushl    %fs
+> +    pushl    %es
+> +    pushl    %ds
+> +    pushl    %eax
+> +    pushl    %ebp
+> +    pushl    %edi
+> +    pushl    %esi
+> +    pushl    %edx
+> +    pushl    %ecx
+> +    pushl    %ebx
+> +
+> +    ENCODE_FRAME_POINTER
+> +
+> +    movl    %esp, %eax    # 1st argument: pt_regs
+> +
+> +    movl    17*4(%esp), %ebx    # func
+> +    CALL_NOSPEC %ebx
+> +
+> +    movl    PT_OLDESP(%esp), %eax
+> +
+> +    movl    PT_EIP(%esp), %ecx
+> +    movl    %ecx, -1*4(%eax)
+> +
+> +    movl    PT_EFLAGS(%esp), %ecx
+> +    movl    %ecx, -2*4(%eax)
+> +
+> +    movl    PT_EAX(%esp), %ecx
+> +    movl    %ecx, -3*4(%eax)
+> +
+> +    popl    %ebx
+> +    popl    %ecx
+> +    popl    %edx
+> +    popl    %esi
+> +    popl    %edi
+> +    popl    %ebp
+> +
+> +    lea    -3*4(%eax), %esp
+> +    popl    %eax
+> +    popfl
+> +    ret
+> +END(call_to_exception_trampoline)
+> --- a/arch/x86/kernel/kprobes/core.c
+> +++ b/arch/x86/kernel/kprobes/core.c
+> @@ -731,29 +731,8 @@ asm(
+>    ".global kretprobe_trampoline\n"
+>    ".type kretprobe_trampoline, @function\n"
+>    "kretprobe_trampoline:\n"
+> -    /* We don't bother saving the ss register */
+> -#ifdef CONFIG_X86_64
+> -    "    pushq %rsp\n"
+> -    "    pushfq\n"
+> -    SAVE_REGS_STRING
+> -    "    movq %rsp, %rdi\n"
+> -    "    call trampoline_handler\n"
+> -    /* Replace saved sp with true return address. */
+> -    "    movq %rax, 19*8(%rsp)\n"
+> -    RESTORE_REGS_STRING
+> -    "    popfq\n"
+> -#else
+> -    "    pushl %esp\n"
+> -    "    pushfl\n"
+> -    SAVE_REGS_STRING
+> -    "    movl %esp, %eax\n"
+> -    "    call trampoline_handler\n"
+> -    /* Replace saved sp with true return address. */
+> -    "    movl %eax, 15*4(%esp)\n"
+> -    RESTORE_REGS_STRING
+> -    "    popfl\n"
+> -#endif
+> -    "    ret\n"
+> +    "push trampoline_handler\n"
+> +    "jmp call_to_exception_trampoline\n"
+>    ".size kretprobe_trampoline, .-kretprobe_trampoline\n"
+> );
 
-add this, yes and you are done.
 
->  			__set_current_state(state);
->  			raw_spin_unlock_irq(&x->wait.lock);
->  			timeout = action(timeout);
->  			raw_spin_lock_irq(&x->wait.lock);
-> +			__finish_swait(&x->wait, &wait);
->  		} while (!x->done && timeout);
-> -		__finish_swait(&x->wait, &wait);
->  		if (!x->done)
->  			return timeout;
->  	}
-
-Sebastian
+Potentially minor nit: you=E2=80=99re doing popfl, but you=E2=80=99re not do=
+ing TRACE_IRQ_whatever.  This makes me think that you should either add the t=
+racing (ugh!) or you should maybe just skip the popfl.=
