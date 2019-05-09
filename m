@@ -2,79 +2,84 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99102C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168A2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2B020644
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="T7byKNeu"
+	by mail.kernel.org (Postfix) with ESMTP id E590920644
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfEIOye (ORCPT
+        id S1726796AbfEIOyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:54:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37346 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbfEIOye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:54:34 -0400
-Received: from zn.tnic (p200300EC2F0F5F00A4EF991375FD2B9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:a4ef:9913:75fd:2b9a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA71E1EC0229;
-        Thu,  9 May 2019 16:54:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557413672;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=HoVmf9AN756VzHeCmA9mSEXehEDoZc/0MyWCdj5XOgU=;
-        b=T7byKNeu44qF10WqTKv81v42E651obZYY8Etz9WQVkNM29ytPZcCeKljOO3EC2ddqlzBq4
-        JG02joFxyvHmqngeoRuxVA6WGyelSn9nVVRUJUS8UgYJ7qtFJqjAXDVHQBJ4zAY6wqn5GW
-        qBCdUMJQaSd2sw+xHVWDpGKZO5xpNmw=
-Date:   Thu, 9 May 2019 16:54:26 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
-Message-ID: <20190509145426.GC17053@zn.tnic>
-References: <20190508224201.27120-1-colin.king@canonical.com>
- <20190509141313.GA17053@zn.tnic>
- <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
- <20190509144113.GB17053@zn.tnic>
- <20190509144650.GG21059@kadam>
+        Thu, 9 May 2019 10:54:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:57765 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726192AbfEIOyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:54:54 -0400
+X-UUID: 4d68c5eb26f54662a2d978ecfc2af531-20190509
+X-UUID: 4d68c5eb26f54662a2d978ecfc2af531-20190509
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1440209227; Thu, 09 May 2019 22:54:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 9 May 2019 22:54:46 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 9 May 2019 22:54:46 +0800
+Message-ID: <1557413686.23445.6.camel@mtkswgap22>
+Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Stephan Mueller <smueller@chronox.de>, <mpm@selenic.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <wsd_upstream@mediatek.com>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <Crystal.Guo@mediatek.com>
+Date:   Thu, 9 May 2019 22:54:46 +0800
+In-Reply-To: <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
+References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
+         <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
+         <12193108.aNnqf5ydOJ@tauon.chronox.de>
+         <1557311737.11818.11.camel@mtkswgap22>
+         <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190509144650.GG21059@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-SNTS-SMTP: DAF1C2FB982B2A5BC6E4832EA14731AB2E44B177010654C3FE819CDBF77FEEAE2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 05:46:50PM +0300, Dan Carpenter wrote:
-> On Thu, May 09, 2019 at 04:41:13PM +0200, Borislav Petkov wrote:
-> > Bottom line of what I'm trying to say is, those tags better be useful to
-> > the general kernel audience - that means, they should be documented so
-> > that people can look them up - or better not be in commit messages at
-> > all.
+On Thu, 2019-05-09 at 13:26 +0800, Herbert Xu wrote:
+> On Wed, May 08, 2019 at 06:35:37PM +0800, Neal Liu wrote:
+> > Hi Stephan,
+> > 	We think the cast is fine, and it cannot guarantee the buf is
+> > word-align.
+> > 	I reference multiple rng driver's implementation and found it's common
+> > usage for this. So it might be general usage for community. Is there any
+> > suggestion that is more appropriate?
 > 
-> Other people will complain if you don't mention the tool name...
+> If you don't know whether it's unaligned or not then you should
+> do an unaligned operation.
 
-To quote again what I said: "... they should be documented so that
-people can look them up... "
+Hi Stephan/Herbert,
+	My mistake. This buffer is allocated by kmalloc with larger than 32
+bytes. So yes, it's word-align for sure.
+	reference:
+https://elixir.bootlin.com/linux/latest/source/drivers/char/hw_random/core.c#L590
 
--- 
-Regards/Gruss,
-    Boris.
+	Thanks
+Best Regards,
+-Neal Liu
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+
