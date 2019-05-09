@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB747C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA4BC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C475217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601FB217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427679;
-	bh=2PFsMYG+mKXHwmubDCUGEfYhxQOXD3Jk4Q8q1MGnEJI=;
+	s=default; t=1557427682;
+	bh=4mFI387IeNJ4MiJZrdLcUmO36LiP/VWMQVImiHpAHgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mV41EzT5c4QRISj5bR9qC7HJRSA7msFCbifMpFvYp+IziZ9yGbZiGPvyye3kJ3HxW
-	 8rZ8p6U3jTsCXpser3AW36p1SXQFjy+MSR0MR70nTcZb1JA3F85BMOQzeKmFz+IutA
-	 LcgKG8faln+UvL1VRia4KQTcvP8bYKxp0B6XOhL8=
+	b=r2E0BXhtsfkLAC9Uh64AzdejqZhAyzQfFivEvGRFNS7VGLB8NAV96BSblrHnevTez
+	 VLvXBmjnu/DsAtSClhbv4WxCLXdVL/Ujq3jiBtOXg9IUon5UiKe6qjLDB5MiaELFyV
+	 hCGE7z6dDEKDtWaQjy0oNXNdeYaeCPQmQQLNOYgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfEISr5 (ORCPT
+        id S1727921AbfEISsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbfEISrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:52 -0400
+        id S1727132AbfEISrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76866217F5;
-        Thu,  9 May 2019 18:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2E1A20578;
+        Thu,  9 May 2019 18:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427671;
-        bh=2PFsMYG+mKXHwmubDCUGEfYhxQOXD3Jk4Q8q1MGnEJI=;
+        s=default; t=1557427674;
+        bh=4mFI387IeNJ4MiJZrdLcUmO36LiP/VWMQVImiHpAHgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NaVwAqEh3P0YvtNlljtChtB6mlS6Kv8bz8MeUTgiP9A9fks36T9rzpJkKrl0tMv/n
-         MW3a4T3e1MuHQjrmLAj+ma1AIDGHMQf4illH7m7m5rJI2JExKI60s53GOS703lv31v
-         nHMD6mopXaF793hqy0M1JyGBYgLEUwJdkCZVhAQo=
+        b=SGnGIKyuk+y4GD8TGDKHD35e+8rjO3x/V5wCCdxpLR69mzTF54+hXD5kQs8N5V9KD
+         96yk6jlnEmU2Hxmh+SBzrKaXcJH1ArkpjuuTsY+VhxNavpYlk3LJ/izdS/Zz7bzo78
+         SkqQrh121uxXBIXcFwzgvn6PmuOK4JBg5n8YZUBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Annaliese McDermond <nh6z@nh6z.net>,
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/66] ASoC: tlv320aic32x4: Fix Common Pins
-Date:   Thu,  9 May 2019 20:42:02 +0200
-Message-Id: <20190509181304.752392830@linuxfoundation.org>
+Subject: [PATCH 4.19 10/66] ASoC: stm32: sai: fix exposed capabilities in spdif mode
+Date:   Thu,  9 May 2019 20:41:45 +0200
+Message-Id: <20190509181302.985812404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,31 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
+[ Upstream commit b8468192971807c43a80d6e2c41f83141cb7b211 ]
 
-The common pins were mistakenly not added to the DAPM graph.
-Adding these pins will allow valid graphs to be created.
+Change capabilities exposed in SAI S/PDIF mode, to match
+actually supported formats.
+In S/PDIF mode only 32 bits stereo is supported.
 
-Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320aic32x4.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/stm/stm32_sai_sub.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index f03195d2ab2ea..45d9f4a090441 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -462,6 +462,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
- 	SND_SOC_DAPM_INPUT("IN2_R"),
- 	SND_SOC_DAPM_INPUT("IN3_L"),
- 	SND_SOC_DAPM_INPUT("IN3_R"),
-+	SND_SOC_DAPM_INPUT("CM_L"),
-+	SND_SOC_DAPM_INPUT("CM_R"),
- };
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index e8df3cc341b5e..2fb2b914e78b4 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -498,6 +498,14 @@ static int stm32_sai_startup(struct snd_pcm_substream *substream,
  
- static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
+ 	sai->substream = substream;
+ 
++	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
++		snd_pcm_hw_constraint_mask64(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_FORMAT,
++					     SNDRV_PCM_FMTBIT_S32_LE);
++		snd_pcm_hw_constraint_single(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
++	}
++
+ 	ret = clk_prepare_enable(sai->sai_ck);
+ 	if (ret < 0) {
+ 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
 -- 
 2.20.1
 
