@@ -2,185 +2,109 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6B8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662BBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EC62173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328FA2173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:05:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BxSg29KQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfEINEv (ORCPT
+        id S1726758AbfEINFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:04:51 -0400
-Received: from foss.arm.com ([217.140.101.70]:40882 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbfEINEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:04:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6261B374;
-        Thu,  9 May 2019 06:04:50 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D1673F7BD;
-        Thu,  9 May 2019 06:04:47 -0700 (PDT)
-Date:   Thu, 9 May 2019 14:04:44 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v8 04/16] sched/core: uclamp: Add system default clamps
-Message-ID: <20190509130444.4yawtbpjx2y7pp7g@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-5-patrick.bellasi@arm.com>
- <20190508190733.GC32547@worktop.programming.kicks-ass.net>
- <20190508191529.GA26813@worktop.programming.kicks-ass.net>
- <20190509091057.ckef2ley4eswyzds@e110439-lin>
- <20190509115307.GS2623@hirez.programming.kicks-ass.net>
+        Thu, 9 May 2019 09:05:44 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58264 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfEINFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:05:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0BxG/P6nTaRHuqfrtLoIVS1BNNS5MjTMtFgzd0GUMd4=; b=BxSg29KQW/uKNfhjMWs5rtImU
+        8kmU1YHUsnPgLAdVsq7IajVexZeJhCQmXXFr4xSyw93bYdvLNKDtXaNRluD5dvJw6cLW8Bwcp0dgT
+        LxU2aHHRDS349X+b3z724lYmmmDfu8MQnJYG2Icn3+8YzFITQhpgbF+zVebP/wHIajnu6kaqY4qwG
+        5QChwJRn2PqG4xZlcjH1gpU8QXTCWBHwubaGzgMLDX4EiIV5TSe6sUrhdNCDBi/n/nDD+g0T2cfSC
+        Sij+nfh51Y9j9s/s4oS3COZ4ee/dxE2UNxG/Ixygrc7c8HkWIjOfomFA3j+X5IGFped/HqPYyET2X
+        EwxMimN9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOijS-0003Ib-KB; Thu, 09 May 2019 13:05:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 28E9222158202; Thu,  9 May 2019 15:05:04 +0200 (CEST)
+Date:   Thu, 9 May 2019 15:05:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Petr Mladek <pmladek@suse.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [Intel-gfx] [PATCH] RFC: console: hack up console_lock more v2
+Message-ID: <20190509130504.GW2623@hirez.programming.kicks-ass.net>
+References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+ <20190506074553.21464-1-daniel.vetter@ffwll.ch>
+ <155739797736.28545.2942646931608459049@skylake-alporthouse-com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190509115307.GS2623@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <155739797736.28545.2942646931608459049@skylake-alporthouse-com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-May 13:53, Peter Zijlstra wrote:
-> On Thu, May 09, 2019 at 10:10:57AM +0100, Patrick Bellasi wrote:
-> > On 08-May 21:15, Peter Zijlstra wrote:
-> > > On Wed, May 08, 2019 at 09:07:33PM +0200, Peter Zijlstra wrote:
-> > > > On Tue, Apr 02, 2019 at 11:41:40AM +0100, Patrick Bellasi wrote:
-> > > > > +static inline struct uclamp_se
-> > > > > +uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
-> > > > > +{
-> > > > > +	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
-> > > > > +	struct uclamp_se uc_max = uclamp_default[clamp_id];
-> > > > > +
-> > > > > +	/* System default restrictions always apply */
-> > > > > +	if (unlikely(uc_req.value > uc_max.value))
-> > > > > +		return uc_max;
-> > > > > +
-> > > > > +	return uc_req;
-> > > > > +}
-> > > > > +
-> > > > > +static inline unsigned int
-> > > > > +uclamp_eff_bucket_id(struct task_struct *p, unsigned int clamp_id)
-> > > > > +{
-> > > > > +	struct uclamp_se uc_eff;
-> > > > > +
-> > > > > +	/* Task currently refcounted: use back-annotated (effective) bucket */
-> > > > > +	if (p->uclamp[clamp_id].active)
-> > > > > +		return p->uclamp[clamp_id].bucket_id;
-> > > > > +
-> > > > > +	uc_eff = uclamp_eff_get(p, clamp_id);
-> > > > > +
-> > > > > +	return uc_eff.bucket_id;
-> > > > > +}
-> > > > > +
-> > > > > +unsigned int uclamp_eff_value(struct task_struct *p, unsigned int clamp_id)
-> > > > > +{
-> > > > > +	struct uclamp_se uc_eff;
-> > > > > +
-> > > > > +	/* Task currently refcounted: use back-annotated (effective) value */
-> > > > > +	if (p->uclamp[clamp_id].active)
-> > > > > +		return p->uclamp[clamp_id].value;
-> > > > > +
-> > > > > +	uc_eff = uclamp_eff_get(p, clamp_id);
-> > > > > +
-> > > > > +	return uc_eff.value;
-> > > > > +}
-> > > > 
-> > > > This is 'wrong' because:
-> > > > 
-> > > >   uclamp_eff_value(p,id) := uclamp_eff(p,id).value
-> > > 
-> > > Clearly I means to say the above does not hold with the given
-> > > implementation, while the naming would suggest it does.
-> > 
-> > Not sure to completely get your point...
+On Thu, May 09, 2019 at 11:32:57AM +0100, Chris Wilson wrote:
+> Quoting Daniel Vetter (2019-05-06 08:45:53)
+> > +/**
+> > + * printk_safe_up - release the semaphore in console_unlock
+> > + * @sem: the semaphore to release
+> > + *
+> > + * Release the semaphore.  Unlike mutexes, up() may be called from any
+> > + * context and even by tasks which have never called down().
+> > + *
+> > + * NOTE: This is a special version of up() for console_unlock only. It is only
+> > + * safe if there are no killable, interruptible or timing out down() calls.
+> > + */
+> > +void printk_safe_up(struct semaphore *sem)
+> > +{
+> > +       unsigned long flags;
+> > +       struct semaphore_waiter *waiter = NULL;
+> > +
+> > +       raw_spin_lock_irqsave(&sem->lock, flags);
+> > +       if (likely(list_empty(&sem->wait_list))) {
+> > +               sem->count++;
+> > +       } else {
+> > +               waiter = list_first_entry(&sem->wait_list,
+> > +                                         struct semaphore_waiter, list);
+> > +               list_del(&waiter->list);
+> > +               waiter->up = true;
+> > +       }
+> > +       raw_spin_unlock_irqrestore(&sem->lock, flags);
+> > +
+> > +       if (waiter)
+> > +               wake_up_process(waiter->task);
 > 
-> the point is that uclamp_eff_get() doesn't do the back annotate thing
-> and therefore returns something entirely different from
-> uclamp_eff_{bucket_id,value}(), where the naming would suggest it in
-> fact returns the same thing.
+> From comparing against __down_common() there's a risk here that as soon
+> as waiter->up == true, the waiter may complete and make the onstack
+> struct semaphore_waiter invalid. If you store waiter->task locally under
+> the spinlock that problem is resolved.
 > 
-> > > > Which seems to suggest the uclamp_eff_*() functions want another name.
-> > 
-> > That function returns the effective value of a task, which is either:
-> >  1. the back annotated value for a RUNNABLE task
-> > or
-> >  2. the aggregation of task-specific, system-default and cgroup values
-> >     for a non RUNNABLE task.
-> 
-> Right, but uclamp_eff_get() doesn't do 1, while the other two do do it.
-> And that is confusing.
+> Then there is the issue of an unprotected dereference of the task in
+> wake_up_process() -- I think you can wrap this function with
+> rcu_read_lock() to keep that safe, and wake_up_process() should be a
+> no-op if it races against process termination.
 
-I see, right.
-
-> > > > Also, suppose the above would be true; does GCC really generate better
-> > > > code for the LHS compared to the RHS?
-> > 
-> > It generate "sane" code which implements the above logic and allows
-> > to know that whenever we call uclamp_eff_value(p,id) we get the most
-> > updated effective value for a task, independently from its {!}RUNNABLE
-> > state.
-> > 
-> > I would keep the function but, since Suren also complained also about
-> > the name... perhaps I should come up with a better name? Proposals?
-> 
-> Right, so they should move to the patch where they're needed, but I was
-
-Yes, I'll move _value() to 10/16:
-
-   sched/core: uclamp: Add uclamp_util_with()
-
-where we actually need to access the clamp value and...
-
-> wondering why you'd not written something like:
-> 
-> static inline
-> struct uclamp_se uclamp_active(struct task_struct *p, unsigned int clamp_id)
-> {
-> 	if (p->uclamp[clamp_id].active)
-> 		return p->uclamp[clamp_id];
-> 
-> 	return uclamp_eff(p, clamp_id);
-> }
-> 
-> And then used:
-> 
-> 	uclamp_active(p, id).{value,bucket_id}
-> 
-> - OR -
-> 
-> have uclamp_eff() include the active thing, afaict the callsite in
-> uclamp_rq_inc_id() guarantees !active.
-> 
-> In any case, I'm thinking the foo().member notation saves us from having
-> to have two almost identical functions and the 'inline' part should get
-> GCC to generate sane code.
-
-... look into this approach, seems reasonable and actually better to read.
-
-Thanks
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+task_struct is not RCU protected, see task_rcu_dereference() for magic.
