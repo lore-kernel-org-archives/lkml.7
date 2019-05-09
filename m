@@ -2,130 +2,146 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA66CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0866BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E0820644
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9A720644
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvO63F4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfEIOw7 (ORCPT
+        id S1726899AbfEIOxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:52:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7185 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726234AbfEIOw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:52:58 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F1AF7F6CEB7313DD1FC2;
-        Thu,  9 May 2019 22:52:55 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 May 2019
- 22:52:48 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <willemb@google.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <edumazet@google.com>, <maximmi@mellanox.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] packet: Fix error path in packet_init
-Date:   Thu, 9 May 2019 22:52:20 +0800
-Message-ID: <20190509145220.37432-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190508153241.30776-1-yuehaibing@huawei.com>
-References: <20190508153241.30776-1-yuehaibing@huawei.com>
+        Thu, 9 May 2019 10:53:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40984 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIOxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:53:03 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d12so3461121wrm.8;
+        Thu, 09 May 2019 07:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q+1TsGRKkwXUYYOoB2LIsila6ZhfcUv70iojfQ5/w9M=;
+        b=dvO63F4GKSuh+nx1VkFNjrbeq11WPXdaaDZIDHHzeqEb0NC2LSjjRvIMFTU6xWKCAS
+         NSz848cbvpQZmfWPe8Q5F4WzqTlzYFtIjQhq/iBANrIEZD29GrwhSUThKRvtqeTLxVga
+         8Jnwbvwxoh0zvK8gumUsopxm8EUOq5ylrRawCp/7M9GfeiySm5Bez81iFE3VNLSEd4V9
+         jvy8KDKUx8jOblvYJ49BYWvY6S1dho2EH1yeg2+zuUBZUaf+IwTxARnK76IGMxTYQJAV
+         WRDGN4TEsnlJ3OnxtVJzOpnEAq9+T/h8Es3/+9cWV6POPE+EwjxLrew7SYzA1rK8IDvB
+         +i9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q+1TsGRKkwXUYYOoB2LIsila6ZhfcUv70iojfQ5/w9M=;
+        b=krS2iM4mqA6SAr8Tmo2iIHjpKacd3B5nC8yvNJeY2+WSH5vWMU7RFSSrvGmi+eZwUW
+         D5e0R47C9ol743xwaUWNlMNrBPDvrvPQNlQzKZTlMWGcebBaU5gMQ+G9ll+5dAY2ijXk
+         tVcbSl9mfzXkYLMebLO0xaXHC7UX7l48UbjowXJ0jsk05IH2RF3EwV8p29d734aE5c9w
+         31sAhO7P3Xlhxgwvruh9pLD144PfGZaDWlNNLTbzCtPPcJlZpj+vobAD2/0TrzBJaN4e
+         62oNVDxZN1Gyt0m7SIivqQhsmDsHlX7tgWI40QRj4MLeF6AxoLm5BIm1KPELCqWqzfls
+         5bqg==
+X-Gm-Message-State: APjAAAVV/3p9L1AwpiJ3Rd7Crchvhv/DRhSGUB7gJugE/eiOSfpi4BPP
+        5Q3xtz7REQwRTaGmzzt+znI=
+X-Google-Smtp-Source: APXvYqzIxbcYRCSo8r50PrcP3rEHkfelhjH97R+hDzmn2hwZU4TaoWItIaQT7DNkBg+WqpZCTE6Naw==
+X-Received: by 2002:adf:9dd0:: with SMTP id q16mr3534840wre.28.1557413581230;
+        Thu, 09 May 2019 07:53:01 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id v184sm3707659wma.6.2019.05.09.07.53.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 07:53:00 -0700 (PDT)
+Date:   Thu, 9 May 2019 16:52:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        narmstrong@baylibre.com, jbrunet@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        u.kleine-koenig@pengutronix.de, bichao.zheng@amlogic.com
+Subject: Re: [PATCH 0/2] pwm: meson: two small bug-fixes
+Message-ID: <20190509145259.GA8907@ulmo>
+References: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sdOeJE8sLwpQaOMV"
+Content-Disposition: inline
+In-Reply-To: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernel BUG at lib/list_debug.c:47!
-invalid opcode: 0000 [#1
-CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__list_del_entry_valid+0x53/0x90
-Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
-89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
-RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
-RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
-RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
-FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
-Call Trace:
- unregister_pernet_operations+0x34/0x120
- unregister_pernet_subsys+0x1c/0x30
- packet_exit+0x1c/0x369 [af_packet
- __x64_sys_delete_module+0x156/0x260
- ? lockdep_hardirqs_on+0x133/0x1b0
- ? do_syscall_64+0x12/0x1f0
- do_syscall_64+0x6e/0x1f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-When modprobe af_packet, register_pernet_subsys
-fails and does a cleanup, ops->list is set to LIST_POISON1,
-but the module init is considered to success, then while rmmod it,
-BUG() is triggered in __list_del_entry_valid which is called from
-unregister_pernet_subsys. This patch fix error handing path in
-packet_init to avoid possilbe issue if some error occur.
+--sdOeJE8sLwpQaOMV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: rework commit log
----
- net/packet/af_packet.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+On Mon, Apr 01, 2019 at 08:18:15PM +0200, Martin Blumenstingl wrote:
+> This series applies on top of my other fix "pwm: meson: fix scheduling
+> while atomic issue" from [0]
+>=20
+> The first patch fixes an issue where the maximum possible pre-divider
+> (128) could not be used because there was an off-by-one error in the
+> code. I discovered this while testing with the longest supported period
+> (349514407ns) when running from XTAL. This is verified to work on my
+> Meson8b Odroid-C1 board using "pwm_b" on GPIOX_11.
+>=20
+> The second patch was suggested by Uwe Kleine-K=C3=B6nig but was actually
+> implemented much earlier (back in mid 2018) by Bichao Zheng from
+> Amlogic. This patch fixes changing the duty cycle by relying on the
+> hardware to re-start the PWM output (instead of adding an artificial
+> "constant LOW" of about 20ms - as measured by Bichao Zheng when
+> stopping and re-starting the PWM output from within the driver). I
+> tested this fix on my Meson8b Odroid-C1 board which uses a PWM driven
+> CPU regulator (DVFS with all supported OPPs is still working fine for
+> me, although I couldn't observe any issues before this patch).
+>=20
+> I also have some code-improvements queued which I'll send in the next
+> days, see [1]
+>=20
+>=20
+> [0] https://patchwork.kernel.org/cover/10880419/
+> [1] https://github.com/xdarklight/linux/commits/meson-pwm-for-5.2-v1
+>=20
+>=20
+> Bichao Zheng (1):
+>   pwm: meson: don't disable pwm when setting duty repeatedly
+>=20
+> Martin Blumenstingl (1):
+>   pwm: meson: consider 128 a valid pre-divider
+>=20
+>  drivers/pwm/pwm-meson.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 90d4e3c..fbc775fb 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4598,14 +4598,29 @@ static void __exit packet_exit(void)
- 
- static int __init packet_init(void)
- {
--	int rc = proto_register(&packet_proto, 0);
-+	int rc;
- 
--	if (rc != 0)
-+	rc = proto_register(&packet_proto, 0);
-+	if (rc)
- 		goto out;
-+	rc = sock_register(&packet_family_ops);
-+	if (rc)
-+		goto out_proto;
-+	rc = register_pernet_subsys(&packet_net_ops);
-+	if (rc)
-+		goto out_sock;
-+	rc = register_netdevice_notifier(&packet_netdev_notifier);
-+	if (rc)
-+		goto out_pernet;
- 
--	sock_register(&packet_family_ops);
--	register_pernet_subsys(&packet_net_ops);
--	register_netdevice_notifier(&packet_netdev_notifier);
-+	return 0;
-+
-+out_pernet:
-+	unregister_pernet_subsys(&packet_net_ops);
-+out_sock:
-+	sock_unregister(PF_PACKET);
-+out_proto:
-+	proto_unregister(&packet_proto);
- out:
- 	return rc;
- }
--- 
-1.8.3.1
+Both patches applied, thanks.
 
+Thierry
 
+--sdOeJE8sLwpQaOMV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUPssACgkQ3SOs138+
+s6HQ2w/5AYGbx7MbLUpSUjsimmVEVGLHZMNi+Ma8lE2mK2HKzvp1nHPQvai/Pob7
+2dnkyZjxB5FhHBJSuh92Wpk7rdLUMEG0mY/BJRkZG5Ne2dt94Jxyz2clVbM950kE
+7YtzMBuPmCWvn8noD9aSyiVqVAeBppUfQhBBWvWaC2byjmXW5YB0ND/yyZH6o33x
+ZS9gH8v6COySx2zNxzWjk3Fx7q8PjqnY2JvKZqpLSoE4rt49YJnUdafeRPDdBOoa
+odBOSmVE8u4NvjLL/lbHgfpX9ITApqBGsfIX9EQZiqsGsD3DFFJff7zuxjMJJLfZ
+cVsvWaTRzQhPxB2CkWQJ/yn8OI0JOPdCXKyZM1sK/apBRj3lEhD6AoYdwlslk4MW
+Qn4mqSf5yWE7i8XnSo9Bb3IvE0U0F9+WSRE9Cf/IeKryeE2SwbIGNbbHrtQNqD4I
+95xa0Ck4ijkwX4N3j1fL+/6VfLG/gRUs7aXUtwfMPyf4ln49hwHvAkFJfWU7fOqm
+zffAQhbmqEeuiGFO9BZGHtTF5l9WzOEhs+aqtupn226xLAAUA5AUUZeypRwswNIM
+x8X91p+Iy/EJdck2vcsLmFgl2CHuSo45bUepmicGOaOc1611ZZMry5fgqSgEn4iI
+pVmuiNeb8uZ//O5v+GG0vdt94+lLwZAwCARg/UHfmPf55T4AMuI=
+=7AFQ
+-----END PGP SIGNATURE-----
+
+--sdOeJE8sLwpQaOMV--
