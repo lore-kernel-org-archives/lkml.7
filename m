@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670CAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EAEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E71420656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BDFA2184D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428603;
-	bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
+	s=default; t=1557428610;
+	bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZutDtKxueHEnpcEuoRIQUUhHRyQMVndKJQP8xB5WwSKCO0tt5h/ZvZelAS/TrkVp
-	 jHZQJpZi+YVsZ63VK33Tqwsv6Aj/mhPpECWdw571XTNgN+S8uc+IEtAZvPUEm9y+Yu
-	 Q9cjnr7AJ8cVPts4qhJO5U0l/rXllNEV6La0/7/A=
+	b=PxVAWVvHSJTbQYp+rQug+3oigb8CLOx8PMhlsjaj5d6UHObs0mu04JtEZ47cPwYgA
+	 uJGp0BDcbfcG6Sqr/JheMHhcOtBPbOHmjGlHJiFb1JA8BNkg1cIMTZi0N/exTlUFJF
+	 QOuiqIdW9e3Gpz1yKsrshBCXTEH3pP83Vwrs2wvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfEITDV (ORCPT
+        id S1727964AbfEITD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:03:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbfEIStW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:49:22 -0400
+        id S1726715AbfEIStR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:49:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6773320578;
-        Thu,  9 May 2019 18:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38BE820578;
+        Thu,  9 May 2019 18:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427761;
-        bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
+        s=default; t=1557427756;
+        bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/oWImlQrN9mLvwiEBinU0g2/UkYhTlcZUn2NA7B490WerHTcaubt/Suw6G/5DKwr
-         gTg34Y8enAu7XdvMgrrxMagFqubThmDOs98XvATrMQWY9VfYuZxDBJwUbnpxhw0bKi
-         7ULg1vD6M72v8Kg06n6lwwqacyUCCb6dw/DvRu6g=
+        b=KnrEnyXksrwKaGERCdlVjCwMO/g0vX9UfUryFdN3WwXqxo6w2sDaWX8Q9ZEhqzwRJ
+         86JS+pco6oK0oupnUL9kBPjJoKVe0JZsSXQmmt5M00n6gVqxlydNoO84OaxZbpSt+K
+         n3MY12nv0oUiu53gyqpKx48/wAun3OPY258tNZlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.19 61/66] Bluetooth: hidp: fix buffer overflow
-Date:   Thu,  9 May 2019 20:42:36 +0200
-Message-Id: <20190509181307.845881067@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 59/66] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+Date:   Thu,  9 May 2019 20:42:34 +0200
+Message-Id: <20190509181307.679020537@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -59,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <YangX92@hotmail.com>
+From: Andrew Vasquez <andrewv@marvell.com>
 
-commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
+commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
 
-Struct ca is copied from userspace. It is not checked whether the "name"
-field is NULL terminated, which allows local users to obtain potentially
-sensitive information from kernel stack memory, via a HIDPCONNADD command.
+Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
+code") incorrectly set 'optrom_region_size' to 'start+size', which can
+overflow option-rom boundaries when 'start' is non-zero.  Continue setting
+optrom_region_size to the proper adjusted value of 'size'.
 
-This vulnerability is similar to CVE-2011-1079.
-
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
 Cc: stable@vger.kernel.org
+Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hidp/sock.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/bluetooth/hidp/sock.c
-+++ b/net/bluetooth/hidp/sock.c
-@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
- 			sockfd_put(csock);
- 			return err;
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -345,7 +345,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
  		}
-+		ca.name[sizeof(ca.name)-1] = 0;
  
- 		err = hidp_connection_add(&ca, csock, isock);
- 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
+ 
+ 		ha->optrom_state = QLA_SREADING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+@@ -418,7 +418,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
+ 
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
+ 
+ 		ha->optrom_state = QLA_SWRITING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
 
 
