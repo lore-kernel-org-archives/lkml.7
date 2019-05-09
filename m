@@ -2,122 +2,91 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ADBC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FC0C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8C6217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:44:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bmIfRFy/"
+	by mail.kernel.org (Postfix) with ESMTP id 08B4F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557438300;
+	bh=Kj740DwY+FRhrciLQQbonW6nNI9xuhneZMyp80mfXNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FqzhtgdxasM9fUuJSkEGuVq9lYz1MB61rIz4H3TSpBbszPWouUsbuh6UbGzQ7urDj
+	 xHla27t5GPRT0SzpOmGEVyOuGIUgcVgrRBoPqwb/TtAFmbY38k7P6bzOWCfwz9WrnP
+	 hzvJhsMSEpsBHy1TXueB7rjl8V1+IIFoeECobv88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfEIVod (ORCPT
+        id S1727005AbfEIVo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:44:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36514 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfEIVoc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:44:32 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x49LiG3a106503;
-        Thu, 9 May 2019 16:44:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557438256;
-        bh=Q9Z3Cdxba9fPA3W2vhRBY2VSHgjkNI6BHfKusWm8Mp4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bmIfRFy/ovPoRVIcnoCf8Y7JxDQqH7kkbi3CNdJjibENrV1yMOGIflHaS34rFdcI6
-         TnHtORV+qV6HC0PilD9ix7uV/TfWyYCXC9Vh/sJXbaohhJsp0RnFTTvXkXrvIvd3VG
-         8R/WiuMfVtuOEcq0cqGHo6B3xUhBL/6aFwF8goho=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x49LiG2J124075
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 May 2019 16:44:16 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 9 May
- 2019 16:44:16 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 9 May 2019 16:44:16 -0500
-Received: from [10.250.146.137] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x49LiBmv083926;
-        Thu, 9 May 2019 16:44:12 -0500
-Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
- backlight
+        Thu, 9 May 2019 17:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfEIVo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 17:44:58 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9FAF217D7;
+        Thu,  9 May 2019 21:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557438298;
+        bh=Kj740DwY+FRhrciLQQbonW6nNI9xuhneZMyp80mfXNI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zoOl8LeaDLy5d/um9PqvzzIdTN6giV7zytwYeyMpsX+eS8pqY6X/Kl8DtKtzC8pzC
+         Ms+60O1tixpxD83Hx8x1V8O1u2JYAv89OkWozp3OlOe5CWx9oao3EfdUAxpn32c2/A
+         s2xTVRHP8R9VNqf2IpQqoQdhtxa240/W6VC7fhE0=
+Date:   Thu, 9 May 2019 16:44:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-api@vger.kernel.org>
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
- <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
- <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
- <20190508171229.GA22024@amd> <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com>
- <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
- <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <962ec05e-b4ca-89b7-405c-f8a76f19427c@ti.com>
-Date:   Thu, 9 May 2019 16:44:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dongdong Liu <liudongdong3@huawei.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] PCI/AER: Log messages with pci_dev, not pcie_device
+Message-ID: <20190509214454.GE235064@google.com>
+References: <20190509141456.223614-1-helgaas@kernel.org>
+ <20190509141456.223614-5-helgaas@kernel.org>
+ <CAHp75Vfk0gftuSMQBzZUgoeBPLeUOUkcdKJFbXKq3-joDgT0fw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfk0gftuSMQBzZUgoeBPLeUOUkcdKJFbXKq3-joDgT0fw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy
-
-On 5/9/19 4:06 PM, Andy Shevchenko wrote:
-> On Thu, May 9, 2019 at 11:45 PM Dan Murphy <dmurphy@ti.com> wrote:
->> On 5/9/19 2:04 PM, Yurii Pavlovskyi wrote:
->> We are working on a framework for this.
->>
->> Please see this series
->> https://lore.kernel.org/patchwork/project/lkml/list/?series=390141
->>
->> It is still a work in progress
+On Thu, May 09, 2019 at 08:42:10PM +0300, Andy Shevchenko wrote:
+> On Thu, May 9, 2019 at 5:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > Log messages with pci_dev, not pcie_device.  Factor out common message
+> > prefixes with dev_fmt().
+> >
+> > Example output change:
+> >
+> >   - aer 0000:00:00.0:pci002: AER enabled with IRQ ...
+> >   + pcieport 0000:00:00.0: AER: enabled with IRQ ...
 > 
-> Side question:
-> Have you considered to convert existing color LED controllers? (It
-> seems to me that your proposal lacks of the idea to keep back
-> compatibility with the existing controllers whre user may create a
-> sysfs node based on the arbitrary label, while it's good to have
-> multicolor infrastructure like in your proposal. Did I miss
-> something?)
+> > +               pci_err(port, "request AER IRQ %d failed\n",
+> >                         dev->irq);
 > 
+> Possible to be on one line?
+
+Yep, fixed this in a previous patch.
+
+> > +                       pci_warn(edev->port,
+> > +                                "AER service is not initialized\n");
 > 
+> checkpatch won't complain if it would be on one line.
 
-Yes that is part of the work that is in progress.
-The LED driver should be able to register either a single color LED or a group of colored LEDs.
+Right, thanks, fixed this too.
 
-This can be based on a firmware entry and which LED framework the driver chooses to register to. Either the
-multicolor framework or the base LED framework.  Of course we can put this in code and keep it
-out of the firmware nodes again thats why it is wip.
-
-I have convert a couple of drivers over in my testing that support RGB modules or have a RGB cluter used to mix
-colors.
-
-If the product wants to expose a single red LED via the label then they use legacy registration.
-If the product wants to expose RGBW as a single group then the multicolor framework should be registered too.
-
-
-Dan
+Bjorn
