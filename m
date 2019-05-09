@@ -2,148 +2,86 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B91FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810F7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D356205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agNGjFRi"
+	by mail.kernel.org (Postfix) with ESMTP id 5F2E420645
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfEIPDB (ORCPT
+        id S1726894AbfEIPDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:03:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45657 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfEIPDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:03:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s15so3486805wra.12;
-        Thu, 09 May 2019 08:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+Sog/2qIfcLY1kwGbgsfnaLx1YInIBe0tmQKmP6und8=;
-        b=agNGjFRiqp7mKOA0sQBpnVLz6Is49Ht1R++OlJR51N5ZhOmXmn9B9bjKoaCplyoGZX
-         o0D4RPxiOoechErWKKdqUMf5YIG4QHxLWCBeVtmO5ML9eLa7vM2yXQQzSFBl102vPvB2
-         dN/VOVjGj4fu/GMzdxa+FuHn0nPsF9VBMoEygXoJN7Pjiuo7rNUpIWcs/jtyHrGhdmnv
-         NdQabe0Ddzt8U5wppFH1vxjGHqtKwrg3voWdW9wLdKu7UPE03HZ127Q7xZtAztFkZWdp
-         XBqFvUSs9+4jS4XOzZ+VnwNMCn4KcUUBUloB4TsVDNBSFaO3tDml4w05QNirotWIgYtW
-         ZFVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+Sog/2qIfcLY1kwGbgsfnaLx1YInIBe0tmQKmP6und8=;
-        b=SkP6bU9Ynu83HNxSdTAEHmfLl3tfb8XcjdxRLuCtgHn8kShvXt68V/KhADzm1m6G3/
-         f4F816efexWT3nAjZTIB3kkxUJ7j0sWfIe3UCOV/X+oqXHY3T6GMIXApncCqDkeA1S96
-         +TXWHVA7LOxN5GiTc71iCY7+S1adDweSpLSPW0lffH2dEHU4eAwYSBIyCUX32jObcaui
-         K06IDgknJRXDDkZyOE7Pw08PH+yaOZH7Gl381IGCCUEVpNNLWp/KY14wXWm1DFNCuIuP
-         rrry04XNgqacbhXdZpfmOgTu14zKr8VNVqRgy8NuKN3n+v3dKGUJKowcIcsOHCvflXBt
-         RZ1Q==
-X-Gm-Message-State: APjAAAXNx/ACOzgewzIaAVz6MOlpF3lSOUG7+sKThgz68rJUxj7IBTgn
-        LrXERqJse1Gatu3dzw2uuNs=
-X-Google-Smtp-Source: APXvYqx2U4Ma/5CCY1tcHElwBTn4qwsSkBBXTVWp/3t0oForQwbgZRUKZ2bl+MvX4wDPq89Ij4naKg==
-X-Received: by 2002:adf:edc8:: with SMTP id v8mr3701903wro.206.1557414178884;
-        Thu, 09 May 2019 08:02:58 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id x17sm3298766wru.27.2019.05.09.08.02.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 08:02:58 -0700 (PDT)
-Date:   Thu, 9 May 2019 17:02:57 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V12 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190509150257.GD8907@ulmo>
-References: <1557408252-21281-1-git-send-email-Anson.Huang@nxp.com>
- <1557408252-21281-3-git-send-email-Anson.Huang@nxp.com>
+        Thu, 9 May 2019 11:03:50 -0400
+Received: from foss.arm.com ([217.140.101.70]:43810 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbfEIPDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:03:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EEA7374;
+        Thu,  9 May 2019 08:03:49 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52BDD3F6C4;
+        Thu,  9 May 2019 08:03:45 -0700 (PDT)
+Subject: Re: [PATCH v8 05/20] KVM: PPC: Book3S HV: Remove pmd_is_leaf()
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>, linux-mm@kvack.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190403141627.11664-1-steven.price@arm.com>
+ <20190403141627.11664-6-steven.price@arm.com>
+ <20190429020555.GB11154@blackberry>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <bf689c22-92ab-e0bf-65d8-9cd495d9e6e1@arm.com>
+Date:   Thu, 9 May 2019 16:03:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h13GW2gLSV2TxsNR"
-Content-Disposition: inline
-In-Reply-To: <1557408252-21281-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190429020555.GB11154@blackberry>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 29/04/2019 03:05, Paul Mackerras wrote:
+> On Wed, Apr 03, 2019 at 03:16:12PM +0100, Steven Price wrote:
+>> Since pmd_large() is now always available, pmd_is_leaf() is redundant.
+>> Replace all uses with calls to pmd_large().
+> 
+> NAK.  I don't want to do this, because pmd_is_leaf() is purely about
+> the guest page tables (the "partition-scoped" radix tree which
+> specifies the guest physical to host physical translation), not about
+> anything to do with the Linux process page tables.  The guest page
+> tables have the same format as the Linux process page tables, but they
+> are managed separately.
 
---h13GW2gLSV2TxsNR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fair enough, I'll drop this patch in the next posting.
 
-On Thu, May 09, 2019 at 01:29:29PM +0000, Anson Huang wrote:
-> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
-> inside, it can support multiple PWM channels, all the channels
-> share same counter and period setting, but each channel can
-> configure its duty and polarity independently.
->=20
-> There are several TPM modules in i.MX7ULP, the number of channels
-> in TPM modules are different, it can be read from each TPM module's
-> PARAM register.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Changes since V11:
-> 	- ONLY add function comment to pwm_imx_tpm_round_state(), no code change.
-> ---
->  drivers/pwm/Kconfig       |  11 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-imx-tpm.c | 448 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 460 insertions(+)
->  create mode 100644 drivers/pwm/pwm-imx-tpm.c
+> If it makes things clearer, I could rename it to "guest_pmd_is_leaf()"
+> or something similar.
 
-Applied, thanks.
+I'll leave that decision up to you - it might prevent similar confusion
+in the future.
 
-Thierry
-
---h13GW2gLSV2TxsNR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUQSEACgkQ3SOs138+
-s6F/KA//UWmIXrWZOEJNfWpMu2ymqohHv39qDATl8P2EsfvZ2lFAEj+Q7KxyUghE
-VEbkXJksm+A8u8HBj1MKNzbxrc1xodUIWaOVo3/Nj8BY3gt1+yIaiVaEhRvUPaod
-18uhIWkFg2eZAw+3vHRumyHdL/DeYu1ejmvCD3qmeCbW7TPudKPy4DFzpD2zQmYG
-qVKChU8J6SA+jUNsUrAVaKBdSoorWWeImvgZeXWUN6ltRZnua5goJvWU6NSDhe5B
-PPvaJAOBJADlWJ3VmGieueuY4ds2k+XbFzXezgPQZNzFYrCgdMG+A6KCzbt5ZKS+
-3Hh4iSlVKwpvbK6bxOqSqqAi1AkqbGSX3FRLy1/vpm9t+SXrZWpuk/YczuaXkmNi
-PhKmIQGpeuBscTs9geeNY3bstqKouYoJr5KiPrk8AxeBdxxxv6QWJtoAOXr26OqM
-uGkZqYemfYjsfb8fS6Yix4NsXNfDDGU5NpHuzaoBZgbzKHZsCXYB4YYWOzX2vOE/
-7TzVOLSBy/sbjDxjclVrwMvbxz9JU+j//9wn4qU49fqI3IVOq8yOa+D2jZTHOrJN
-v0X6H5YQzDGtOwsPSPQIeCAxXeqvwBCmUsN65AlfVd6NHld4x/yuiXvezOqrobjn
-eVxK3nv9C88dJUO40pmTUBCe5P/rXFQk5NcSffby6hGUbz3UuCA=
-=SEhD
------END PGP SIGNATURE-----
-
---h13GW2gLSV2TxsNR--
+Steve
