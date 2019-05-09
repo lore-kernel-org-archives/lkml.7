@@ -2,127 +2,96 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C3C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC4FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6834204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428141;
-	bh=g85WHPlSeeNCZmBZ0LD/EXxEDcEyzF+M+UOePGG4gEc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLGoSlux68MfoqaYkndRXAgck7Aj7ddtB1SjBmx/k1jDLkDTQekY8jmMVOkWMiz5h
-	 3JwtzGqauCuMgLghgkBPykR9E8a8OjUoEGEkd0x9qpgRjEwOV8PKGLlRrctRbqbiTL
-	 ipQCgNRjuDtYnnavdW35oaNPS9LfT4E/lTzpHbjA=
+	by mail.kernel.org (Postfix) with ESMTP id 454D920578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkBo2kat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfEISzk (ORCPT
+        id S1729265AbfEISzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729258AbfEISzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9429217D6;
-        Thu,  9 May 2019 18:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428136;
-        bh=g85WHPlSeeNCZmBZ0LD/EXxEDcEyzF+M+UOePGG4gEc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcFJOTUY7RNhcOQJ+1fGIg3M22b+9lg1IKbxfo+djqO8dJiKjruSglBAqAQZR1u+a
-         JYj8nP5Enk87yGpneSeu1+ia75WFzL+UWTRIUJpjkqrakHtTkneCyG38AjlTRoJ53e
-         lCoNQMzQ2t3FZ73R+2xv9ZBVuIFIl+CWrJov3xsc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.1 25/30] Bluetooth: hci_bcm: Fix empty regulator supplies for Intel Macs
-Date:   Thu,  9 May 2019 20:42:57 +0200
-Message-Id: <20190509181256.346176831@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
-References: <20190509181250.417203112@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 9 May 2019 14:55:45 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40329 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728067AbfEISzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:43 -0400
+Received: by mail-yw1-f67.google.com with SMTP id 18so2699857ywe.7;
+        Thu, 09 May 2019 11:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4JFPFXVDH7pJ9CJTfoL2qJ+K7zcKHZ5roJuaHINr0fU=;
+        b=VkBo2kat9T4exVnlUA1bHK14ozicDJbZ7bEF/zNTVnMg+kDzu1jvmAWAkbD0Hyr+kr
+         dxeWekWbRiXvQtRC+ezW0VrSfDxmTqS5rVLLXtgQWs6YYHfDjrGOw0ORNZCkfyho8D/0
+         203ElUp4T/6HItf2fiinS4NkeaOj59/tYEbBnIxv3DOablRikKYSKZ9AMNFo1AwK0TYd
+         5PpgWFvp2hu9+eTd9mO7KKHMNKi1iyp5lnTTyv0b/Ig5nrVmCdnKM2NF0hJgQWFdMrGo
+         cd20NCP8uCgeAlj3PCgBGmHSovzlODFAkM/zwIcAHqiCyKNpBrq6hcLQJDf0fFSmu2Xj
+         pIqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4JFPFXVDH7pJ9CJTfoL2qJ+K7zcKHZ5roJuaHINr0fU=;
+        b=KBYgJ+GCkAyVtQ29NDt4VSVZfiJbwf0RKrs9RQfaMLFot/S3riS1blQt1A+dDCnep9
+         X9N9N5VHEqgBTnIeV3eW9sM0wF7pYkPI41i5lJh8fy8C2SoJPm4GDwtuzgr8lQpuNxuL
+         o39i5HZRLIuJH0IjgRKtpw0FAApNJkZ1KKa9j8Zj/0czkrG+NCtiv9XvKIoBQLqbNDkI
+         pC9dw8uE5eldey/LzFZD0Ld6cpqDHKcyPF4kgnMf8JutyZjrsHuIHKNcbOinqdkeeuvL
+         7lpGnhUpLt95y2hT5X3hCw6wYSJkiSdoLjqMuqOIQ8rgxKxY6lgXVo+jjcWL1Igv7xTK
+         0ozg==
+X-Gm-Message-State: APjAAAW2lHJShkn0Nk0X75pt2lFWjwjrLUQbbzNa4BDwcCqgOk0JEeoI
+        dgk9qu0QwYuGh0akw2lOalkRbA9wmU2mGFP3PR4=
+X-Google-Smtp-Source: APXvYqwNlGdkGWUPsJYGt/hFZGUABwbuzytLt/hWzpG1HIsldhR/35nTAj17XxIPutZ/+XfqJ0/Q/fsLJeS8d5kh4Jk=
+X-Received: by 2002:a0d:d7d0:: with SMTP id z199mr3300615ywd.468.1557428143045;
+ Thu, 09 May 2019 11:55:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190509181301.719249738@linuxfoundation.org> <20190509181305.327667203@linuxfoundation.org>
+In-Reply-To: <20190509181305.327667203@linuxfoundation.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Thu, 9 May 2019 11:55:31 -0700
+Message-ID: <CAMo8Bf+TZ_ptRjDVuKLZ2M6Bjo83ckuvj=6hCpiZ2ufJrnu80A@mail.gmail.com>
+Subject: Re: [PATCH 4.19 32/66] xtensa: fix initialization of pt_regs::syscall
+ in start_thread
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Hello,
 
-commit 62611abc8f37d00e3b0cff0eb2d72fa92b05fd27 upstream.
+On Thu, May 9, 2019 at 11:48 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> [ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
+>
+> New pt_regs should indicate that there's no syscall, not that there's
+> syscall #0. While at it wrap macro body in do/while and parenthesize
+> macro arguments.
+>
+> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
 
-The code path for Macs goes through bcm_apple_get_resources(), which
-skips over the code that sets up the regulator supplies. As a result,
-the call to regulator_bulk_enable() / regulator_bulk_disable() results
-in a NULL pointer dereference.
+This patch should not be taken to any of the stable trees, except maybe
+5.0.y, because NO_SYSCALL was introduced to arch/xtensa in 5.0.
 
-This was reported on the kernel.org Bugzilla, bug 202963.
+This patch doesn't have any cc:stable tags, I'm curious why was it chosen
+for stable and what can I do to prevent that in the future?
 
-Unbreak Broadcom Bluetooth support on Intel Macs by checking if the
-supplies were set up before enabling or disabling them.
-
-The same does not need to be done for the clocks, as the common clock
-framework API checks for NULL pointers.
-
-Fixes: 75d11676dccb ("Bluetooth: hci_bcm: Add support for regulator supplies")
-Cc: <stable@vger.kernel.org> # 5.0.x
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Tested-by: Imre Kaloz <kaloz@openwrt.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/bluetooth/hci_bcm.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -228,9 +228,15 @@ static int bcm_gpio_set_power(struct bcm
- 	int err;
- 
- 	if (powered && !dev->res_enabled) {
--		err = regulator_bulk_enable(BCM_NUM_SUPPLIES, dev->supplies);
--		if (err)
--			return err;
-+		/* Intel Macs use bcm_apple_get_resources() and don't
-+		 * have regulator supplies configured.
-+		 */
-+		if (dev->supplies[0].supply) {
-+			err = regulator_bulk_enable(BCM_NUM_SUPPLIES,
-+						    dev->supplies);
-+			if (err)
-+				return err;
-+		}
- 
- 		/* LPO clock needs to be 32.768 kHz */
- 		err = clk_set_rate(dev->lpo_clk, 32768);
-@@ -259,7 +265,13 @@ static int bcm_gpio_set_power(struct bcm
- 	if (!powered && dev->res_enabled) {
- 		clk_disable_unprepare(dev->txco_clk);
- 		clk_disable_unprepare(dev->lpo_clk);
--		regulator_bulk_disable(BCM_NUM_SUPPLIES, dev->supplies);
-+
-+		/* Intel Macs use bcm_apple_get_resources() and don't
-+		 * have regulator supplies configured.
-+		 */
-+		if (dev->supplies[0].supply)
-+			regulator_bulk_disable(BCM_NUM_SUPPLIES,
-+					       dev->supplies);
- 	}
- 
- 	/* wait for device to power on and come out of reset */
-
-
+-- 
+Thanks.
+-- Max
