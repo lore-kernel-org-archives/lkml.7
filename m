@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A739C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0AA20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7E020656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428782;
-	bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
+	s=default; t=1557428788;
+	bh=U2ddoaxNddJnFuld8DffmPpRIoM8TBSm6suNkKdVHy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LBOfXnLve7/BTcy4akmWRfeID7if4kUCaXrDKfMl6R9PxixyrjdnMS0l8YNsfOTKV
-	 fbjTkFIxivDdhvLJks9tQ/RMRntf3Nr1O+TjpahAOv+4Bema+jOnNVYz5AZ4j3g8gK
-	 Wiv6DPoxbfcpDjzVeW/+Xm0Z+h9vzSnEQmUcr4Sc=
+	b=AKYzIeVSB7fCWkdw3/Nkvyocgvx7kkjkBhMc/4eDJC7Ewvl9Wr2d5q12tJmbwtbyf
+	 8c/4Ft1gmh46A6113Baw+7ghzigMvV2C06Z0FaV2AajlyoewAJiHfQRbaZNSWwFt4Z
+	 IyioXKjnWK3rqfN2Ga82tH2DqTPk1J2+vr150Mbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfEITGV (ORCPT
+        id S1727754AbfEITG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727248AbfEISq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:46:56 -0400
+        id S1727678AbfEISqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:46:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5670F2183E;
-        Thu,  9 May 2019 18:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2401C2182B;
+        Thu,  9 May 2019 18:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427615;
-        bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
+        s=default; t=1557427610;
+        bh=U2ddoaxNddJnFuld8DffmPpRIoM8TBSm6suNkKdVHy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOWtoGmz9WhE0xqlHXRHkJz7Xvsc9VGQngE2Y19CMpe2NtmJSTW3AQHb10af5wCjr
-         JHZ0vvCXWlRJd1KAu8rC8p+siCtQUD5t8FB148NeFN6SDxmWUp6cNvKt3QFxKlTXCd
-         BufKwLPFPFg0GMSuEYfH6LSG4ASRVwBFvg67lHcg=
+        b=i7yB6EDIUSQ348LDI67bCLnu46RX+lGHqajvgFSUIc4w5UrglTe7/XNb2E54zozhJ
+         OJzagiUpkPljHB6k9rGwWe8aHPENlJnYBCVeZdUnRbgxv7h7mXhsx8QbVGa2SWf/4y
+         WmWZ3uFv+ayb4aSZ4tQAojEn6vzWCqpBrecyeoq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.14 37/42] Bluetooth: hidp: fix buffer overflow
-Date:   Thu,  9 May 2019 20:42:26 +0200
-Message-Id: <20190509181259.896495485@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.14 35/42] intel_th: pci: Add Comet Lake support
+Date:   Thu,  9 May 2019 20:42:24 +0200
+Message-Id: <20190509181259.622269659@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -58,34 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <YangX92@hotmail.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
+commit e60e9a4b231a20a199d7a61caadc48693c30d695 upstream.
 
-Struct ca is copied from userspace. It is not checked whether the "name"
-field is NULL terminated, which allows local users to obtain potentially
-sensitive information from kernel stack memory, via a HIDPCONNADD command.
+This adds support for Intel TH on Comet Lake.
 
-This vulnerability is similar to CVE-2011-1079.
-
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hidp/sock.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/bluetooth/hidp/sock.c
-+++ b/net/bluetooth/hidp/sock.c
-@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
- 			sockfd_put(csock);
- 			return err;
- 		}
-+		ca.name[sizeof(ca.name)-1] = 0;
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -173,6 +173,11 @@ static const struct pci_device_id intel_
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x34a6),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
++	{
++		/* Comet Lake */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x02a6),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
+ 	{ 0 },
+ };
  
- 		err = hidp_connection_add(&ca, csock, isock);
- 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
 
 
