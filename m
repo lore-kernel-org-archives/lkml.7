@@ -2,52 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A5EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38460C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285D3217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E43A217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427654;
-	bh=NjlHdrYD8SEIGp3Pv0nvCnU+4Dwgg6GDZ3nj/qIUb2g=;
+	s=default; t=1557427659;
+	bh=DRhEhGyYWBssR7wYLehVy2xwuilR7RyWyiKA0TLdZbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q1wKyuMMQ4DEA8WpnaEqswYto1DOrnX0K8gJr1ANC5TPKK3lCFCdZbwhJ6mqIfTt0
-	 pAdGIFE6GWuWH/I5fBG4kmrREHajtc2YWvhu8XBCGA0n/JIIuBrsJ3zn71zvsagi1O
-	 +ScJWUfAab1cFkQoNkcQ9svH1d7ViFUmAdvJPurg=
+	b=K96ftE1O5X6GFv8PIFFP5S8UT8M8iXdSUCac3kegnh6Zpy5vU33SEkvfarfPEmslC
+	 Sqdh53mYVFwa9mOtVWg6FiuZDp9RZ4YqYBnJs25TqI71N9rORuJ/JBO4++WygRhX3W
+	 09eMZHaoZxK7OVwaEz1DT6LQwYMggS8rUydc0tyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfEISrd (ORCPT
+        id S1727866AbfEISrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:47:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727812AbfEISrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:24 -0400
+        id S1727842AbfEISrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95E38217D7;
-        Thu,  9 May 2019 18:47:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65184217D7;
+        Thu,  9 May 2019 18:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427644;
-        bh=NjlHdrYD8SEIGp3Pv0nvCnU+4Dwgg6GDZ3nj/qIUb2g=;
+        s=default; t=1557427651;
+        bh=DRhEhGyYWBssR7wYLehVy2xwuilR7RyWyiKA0TLdZbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7tMIj+I8AlZhTn9RDBfu2Hp5YsRQrHhqyx5mvdmQ3j55vTRg0KF6zbrAlIddiZJ2
-         s7O8b5rNpcwR2eQI8zo5xiR+AuMxNGyYLNzsq67MWYfC6upWXyszuMTcaelHyOLHR1
-         w7VsgMDRZ1I6PyzadzPkQXp6sazG+1CjVHRZIb5Q=
+        b=BzC/R/PUG1UawOMEVYjYuxNdL8JoArROj/d2a56JUZ23dBzBKLfhG9gS8GFp3Ht3A
+         yMaHlAx229cQG6f++fDY0ekJEirQQR+H8iFRlhhNQb+JTc7s8/sDY6UERXRO3luysW
+         VIO10NN9BjSFV1O/dfGUCW9Y6z6SDmtO2MDwZUHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/66] ASoC: stm32: sai: fix iec958 controls indexation
-Date:   Thu,  9 May 2019 20:41:44 +0200
-Message-Id: <20190509181302.872416549@linuxfoundation.org>
+Subject: [PATCH 4.19 20/66] ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+Date:   Thu,  9 May 2019 20:41:55 +0200
+Message-Id: <20190509181304.025650625@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,46 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f8a1000c3e630c3ac06f1d664eeaa755bce8823 ]
+[ Upstream commit c47255b61129857b74b0d86eaf59335348be05e0 ]
 
-Allow indexation of sai iec958 controls according
-to device id.
+Register platform component with a prefix, to avoid warnings
+on debugfs entries creation, due to component name
+redundancy.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_sai_sub.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/soc/stm/stm32_adfsdm.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 85c4b6d8e89db..e8df3cc341b5e 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -96,7 +96,7 @@
-  * @slot_mask: rx or tx active slots mask. set at init or at runtime
-  * @data_size: PCM data width. corresponds to PCM substream width.
-  * @spdif_frm_cnt: S/PDIF playback frame counter
-- * @snd_aes_iec958: iec958 data
-+ * @iec958: iec958 data
-  * @ctrl_lock: control lock
-  */
- struct stm32_sai_sub_data {
-@@ -888,11 +888,12 @@ static int stm32_sai_pcm_new(struct snd_soc_pcm_runtime *rtd,
- 			     struct snd_soc_dai *cpu_dai)
+diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
+index 71d341b732a4d..24948b95eb19f 100644
+--- a/sound/soc/stm/stm32_adfsdm.c
++++ b/sound/soc/stm/stm32_adfsdm.c
+@@ -304,6 +304,7 @@ MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
+ static int stm32_adfsdm_probe(struct platform_device *pdev)
  {
- 	struct stm32_sai_sub_data *sai = dev_get_drvdata(cpu_dai->dev);
-+	struct snd_kcontrol_new knew = iec958_ctls;
+ 	struct stm32_adfsdm_priv *priv;
++	struct snd_soc_component *component;
+ 	int ret;
  
- 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
- 		dev_dbg(&sai->pdev->dev, "%s: register iec controls", __func__);
--		return snd_ctl_add(rtd->pcm->card,
--				   snd_ctl_new1(&iec958_ctls, sai));
-+		knew.device = rtd->pcm->device;
-+		return snd_ctl_add(rtd->pcm->card, snd_ctl_new1(&knew, sai));
- 	}
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -331,9 +332,15 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->iio_cb))
+ 		return PTR_ERR(priv->iio_cb);
  
- 	return 0;
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &stm32_adfsdm_soc_platform,
+-					      NULL, 0);
++	component = devm_kzalloc(&pdev->dev, sizeof(*component), GFP_KERNEL);
++	if (!component)
++		return -ENOMEM;
++#ifdef CONFIG_DEBUG_FS
++	component->debugfs_prefix = "pcm";
++#endif
++
++	ret = snd_soc_add_component(&pdev->dev, component,
++				    &stm32_adfsdm_soc_platform, NULL, 0);
+ 	if (ret < 0)
+ 		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
+ 			__func__);
+@@ -341,12 +348,20 @@ static int stm32_adfsdm_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int stm32_adfsdm_remove(struct platform_device *pdev)
++{
++	snd_soc_unregister_component(&pdev->dev);
++
++	return 0;
++}
++
+ static struct platform_driver stm32_adfsdm_driver = {
+ 	.driver = {
+ 		   .name = STM32_ADFSDM_DRV_NAME,
+ 		   .of_match_table = stm32_adfsdm_of_match,
+ 		   },
+ 	.probe = stm32_adfsdm_probe,
++	.remove = stm32_adfsdm_remove,
+ };
+ 
+ module_platform_driver(stm32_adfsdm_driver);
 -- 
 2.20.1
 
