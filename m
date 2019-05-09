@@ -2,121 +2,90 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32114C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCB9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A622208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D65F2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfEIHBK (ORCPT
+        id S1726702AbfEIHBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:01:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:5938 "EHLO mga01.intel.com"
+        Thu, 9 May 2019 03:01:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56846 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfEIHBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:01:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 00:01:10 -0700
-X-ExtLoop1: 1
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
-  by fmsmga001.fm.intel.com with ESMTP; 09 May 2019 00:01:05 -0700
-Date:   Thu, 9 May 2019 02:55:27 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Boris Fiuczynski <fiuczy@linux.ibm.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [libvirt] [PATCH v2 1/2] vfio/mdev: add version attribute for
- mdev device
-Message-ID: <20190509065527.GG24397@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
- <20190506014904.3621-1-yan.y.zhao@intel.com>
- <20190507151826.502be009@x1.home>
- <20190508112740.GA24397@joy-OptiPlex-7040>
- <20190508152242.4b54a5e7@x1.home>
- <5eac912c-e753-b5f6-83a4-b646f991d858@linux.ibm.com>
+        id S1725908AbfEIHBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 03:01:17 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 997EB3097035;
+        Thu,  9 May 2019 07:01:17 +0000 (UTC)
+Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B97A5D9D1;
+        Thu,  9 May 2019 07:01:13 +0000 (UTC)
+Date:   Thu, 9 May 2019 15:01:11 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
+        kirill.shutemov@linux.intel.com, x86@kernel.org, dyoung@redhat.com
+Subject: Re: [PATCH v4 2/3] x86/kexec/64: Error out if try to jump to old
+ 4-level kernel from 5-level kernel
+Message-ID: <20190509070111.GE24922@MiWiFi-R3L-srv>
+References: <20190509013644.1246-1-bhe@redhat.com>
+ <20190509013644.1246-3-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5eac912c-e753-b5f6-83a4-b646f991d858@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190509013644.1246-3-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 09 May 2019 07:01:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 11:27:47PM +0800, Boris Fiuczynski wrote:
-> On 5/8/19 11:22 PM, Alex Williamson wrote:
-> >>> I thought there was a request to make this more specific to migration
-> >>> by renaming it to something like migration_version.  Also, as an
-> >>>   
-> >> so this attribute may not only include a mdev device's parent device info and
-> >> mdev type, but also include numeric software version of vendor specific
-> >> migration code, right?
-> > It's a vendor defined string, it should be considered opaque to the
-> > user, the vendor can include whatever they feel is relevant.
-> > 
-> Would a vendor also be allowed to provide a string expressing required 
-> features as well as containing backend resource requirements which need 
-> to be compatible for a successful migration? Somehow a bit like a cpu 
-> model... maybe even as json or xml...
-> I am asking this with vfio-ap in mind. In that context checking 
-> compatibility of two vfio-ap mdev devices is not as simple as checking 
-> if version A is smaller or equal to version B.
->
-I think so. vendor driver is allowed to put whatever content into the
-migration_version string as long as it thinks it's necessary. 
-vendor driver only needs ensure in the target mdev device, the write(2)
-operation on its migration_version attribute would correctly fail or succeeed
-based on the input string.
-
-Thanks
-Yan
-> -- 
-> Mit freundlichen Grüßen/Kind regards
->     Boris Fiuczynski
+On 05/09/19 at 09:36am, Baoquan He wrote:
+> If the running kernel has 5-level paging activated, the 5-level paging
+> mode is preserved across kexec. If the kexec'ed kernel does not contain
+> support for handling active 5-level paging mode in the decompressor, the
+> decompressor will crash with #GP.
 > 
-> IBM Deutschland Research & Development GmbH
-> Vorsitzender des Aufsichtsrats: Matthias Hartmann
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen
-> Registergericht: Amtsgericht Stuttgart, HRB 243294
+> Prevent this situation at load time. If 5-level paging is active, check the
+> xloadflags whether the kexec kernel can handle 5-level paging at least in
+> the decompressor. If not, reject the load attempt and print out error
+> message.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 22f60dd26460..858cc892672f 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -321,6 +321,11 @@ static int bzImage64_probe(const char *buf, unsigned long len)
+>  		return ret;
+>  	}
+>  
+> +	if (!(header->xloadflags & XLF_5LEVEL) && pgtable_l5_enabled()) {
+> +		pr_err("Can not jump to old 4-level kernel from 5-level kernel.\n");
+
+Check the old thread again, found Thomas also had comment about this
+error message. Just forgot updating it. Will update it with a new one.
+
+> +		return ret;
+> +	}
+> +
+>  	/* I've got a bzImage */
+>  	pr_debug("It's a relocatable bzImage64\n");
+>  	ret = 0;
+> -- 
+> 2.17.2
 > 
