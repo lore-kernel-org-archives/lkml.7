@@ -2,114 +2,220 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE34C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ADFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4700221019
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D56A2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FnXQrJHU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFnXhuif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfEIHUt (ORCPT
+        id S1726694AbfEIHVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:20:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43134 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfEIHUs (ORCPT
+        Thu, 9 May 2019 03:21:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38158 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfEIHVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:20:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dHPcM7BToWSY7XBTx45AtDbkmyX1K9o4jR86GMXyrWY=; b=FnXQrJHUhhe9vAR/2fLP8tRF7
-        Di7W3Iao30bbViXAWg8zQHkmSzSqDScbjfSyWwxECcCw/QIyiZ2VwyWxI6oote2HhxVGV6JvvYGHU
-        DGHbILgpPHBNfr2K93OqJaInQAN63uEd4XSP1zlTyFkiwB4uqrFM/7rScwHdU3Eva4syMG5fYyrqH
-        YwWI505e5A2W8UK8K/bl1DjHrWEBB/iyj4cNQosK59L20lc/p7jMnJud1Rebq7sDjeCcBrAjRhn8C
-        6XGYuw28SADvfL7wQGN6ZiJktLnkjTXVCP09fYqwPkmFTS0hkcyLJ/57wajLhB3n/YBcWBpyBxkdP
-        VCLWV4aXg==;
-Received: from 089144210233.atnat0019.highway.a1.net ([89.144.210.233] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOdME-00067H-Jh; Thu, 09 May 2019 07:20:47 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dma-mapping: don't use the atomic pool for DMA_ATTR_NO_KERNEL_MAPPING
-Date:   Thu,  9 May 2019 09:20:06 +0200
-Message-Id: <20190509072006.727-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Thu, 9 May 2019 03:21:18 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v11so1441215wru.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 00:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=owEgLo/HcmCzShJRdQ87tV9B/UkMK9st7rnftaLXHhA=;
+        b=ZFnXhuifD3P93A3YswTNqy26WNVcmwR47CC74gBYFa3On/syduZVP9NORmfuTbK2bh
+         ebFOr5uNDPk2R+jIaOB/FJ9oNXbo0R0rZVnC0CWHjnM4zIY+oPARuuUUuzkefWo8YpX+
+         KUaWZQwa27yjeWgbzIerxs5m2Bl2R76ih4xtvxiiU55QvPZxsb0ACyX951phFOTfxna5
+         UnNtIfteP/VCD+AzQ7k8oKxAKRA1fvKJ/AiqXQKcd9esk+P2xS5cN+M0rJuPvLe7SQ3f
+         SaBUrGYyCkc8SQK97dnsanSKYlqnKgYtDcW0S1qc2Fc7lJM7Wopf1ItFUbmeXLPlEPD4
+         GB+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=owEgLo/HcmCzShJRdQ87tV9B/UkMK9st7rnftaLXHhA=;
+        b=m/Dxa4cxu0comKh8Si303tyApTySx+mT8FIu1pHYc0/4zmiG1BGWVJrSwZg6sZvsUS
+         f31NiB1GMX9zA+TJHI0u+/dtwaKb/N9UTtSGqAZpOsH4m2ut6W7RnK9m43U1yQ77RVeg
+         5sUNXw9qCzovzhKuEv3aCcQ81iqGrVG/t7/3tRZX5z/tIcQ4T12ozeyLtidRNbq2BxFw
+         L2PFFt0VSJKc19tZPzy1mlDtQHjmx/v2OZJ9feA7OYLgRFIzWqSbwZmp6QZodKprGQIw
+         Lo/8UV4TtJ8ibzeYEXQ+p6FgDSIHb3Lyfp4+h5cAwcL+xL52KAOLbi4WkoC/10+V/Ha0
+         klyA==
+X-Gm-Message-State: APjAAAWDYB9P096j133OxKZAaXC1V48fVOKWa9Q/e1yCqyjL8Olwb+4o
+        1RdhutFjf+xhBVffnWbCwQw=
+X-Google-Smtp-Source: APXvYqyq/mLovs7TqPawx0IlYAl/xDLwTuPSgQ4VOpuJJ5ZFkDTCCIPeddTRvQAR9mYAlbp6uhyvOA==
+X-Received: by 2002:adf:ec51:: with SMTP id w17mr1767999wrn.326.1557386476248;
+        Thu, 09 May 2019 00:21:16 -0700 (PDT)
+Received: from localhost.localdomain (lputeaux-657-1-239-64.w80-14.abo.wanadoo.fr. [80.14.206.64])
+        by smtp.gmail.com with ESMTPSA id x18sm1208632wrw.14.2019.05.09.00.21.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 00:21:15 -0700 (PDT)
+From:   Antonio Borneo <borneo.antonio@gmail.com>
+To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        "Elliott, Robert (Servers)" <elliott@hpe.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v4] checkpatch: add command-line option for TAB size
+Date:   Thu,  9 May 2019 09:21:04 +0200
+Message-Id: <20190509072104.18734-1-borneo.antonio@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA allocations with the DMA_ATTR_NO_KERNEL_MAPPING do not return a kernel
-virtual address for use in driver, but are expected to be used entirely
-for userspace mappings and/or device private memory.
+Linux kernel coding style requires a size of 8 characters for
+both TAB and indentation, and such value is embedded as magic
+value allover the checkpatch script.
+This makes hard to reuse the script by other projects with
+different requirements in their coding style (e.g. OpenOCD [1]
+requires TAB size of 4 characters [2]).
 
-Because of that we don't need to remap them as uncached, and thus don't need
-the atomic pool for non-blocking allocations.  Note that using the
-DMA allocator with DMA_ATTR_NO_KERNEL_MAPPING from non-blocking context
-on a non-coherent device is actually broken without this patch as well, as
-we feed the address passes to dma_free_attrs directly to the genpool
-allocator, but for DMA_ATTR_NO_KERNEL_MAPPING allocations it actually
-contains the address of the first page pointer.
+Replace the magic value 8 with a variable.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Add a command-line option "--tab-size" to let the user select a
+TAB size value other than 8.
+
+[1] http://openocd.org/
+[2] http://openocd.org/doc/doxygen/html/stylec.html#styleformat
+
+Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+Signed-off-by: Erik Ahlén <erik.ahlen@avalonenterprise.com>
+Signed-off-by: Spencer Oliver <spen@spen-soft.co.uk>
 ---
- arch/arm/mm/dma-mapping.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+v1 -> v2
+	add the command line option
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index d029fa31624b..f74d824f8fc1 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -706,6 +706,7 @@ static void *__dma_alloc(struct device *dev, size_t size, dma_addr_t *handle,
- 			 gfp_t gfp, pgprot_t prot, bool is_coherent,
- 			 unsigned long attrs, const void *caller)
- {
-+	bool want_vaddr = !(attrs & DMA_ATTR_NO_KERNEL_MAPPING);
- 	u64 mask = get_coherent_dma_mask(dev);
- 	struct page *page = NULL;
- 	void *addr;
-@@ -717,7 +718,7 @@ static void *__dma_alloc(struct device *dev, size_t size, dma_addr_t *handle,
- 		.gfp = gfp,
- 		.prot = prot,
- 		.caller = caller,
--		.want_vaddr = ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) == 0),
-+		.want_vaddr = want_vaddr,
- 		.coherent_flag = is_coherent ? COHERENT : NORMAL,
- 	};
+v2 -> v3
+	rewrite commit msg to remove script readability issue
+
+v3 -> v4
+	check for command line value positive
+---
+ scripts/checkpatch.pl | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 916a3fbd4d47..216f2c8db7aa 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -62,6 +62,7 @@ my $conststructsfile = "$D/const_structs.checkpatch";
+ my $typedefsfile = "";
+ my $color = "auto";
+ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
++my $tabsize = 8;
  
-@@ -755,14 +756,14 @@ static void *__dma_alloc(struct device *dev, size_t size, dma_addr_t *handle,
- 	allowblock = gfpflags_allow_blocking(gfp);
- 	cma = allowblock ? dev_get_cma_area(dev) : false;
+ sub help {
+ 	my ($exitcode) = @_;
+@@ -96,6 +97,7 @@ Options:
+   --show-types               show the specific message type in the output
+   --max-line-length=n        set the maximum line length, if exceeded, warn
+   --min-conf-desc-length=n   set the min description length, if shorter, warn
++  --tab-size=n               set the number of spaces for tab (default 8)
+   --root=PATH                PATH to the kernel tree root
+   --no-summary               suppress the per-file summary
+   --mailback                 only produce a report in case of warnings/errors
+@@ -213,6 +215,7 @@ GetOptions(
+ 	'list-types!'	=> \$list_types,
+ 	'max-line-length=i' => \$max_line_length,
+ 	'min-conf-desc-length=i' => \$min_conf_desc_length,
++	'tab-size=i'	=> \$tabsize,
+ 	'root=s'	=> \$root,
+ 	'summary!'	=> \$summary,
+ 	'mailback!'	=> \$mailback,
+@@ -265,6 +268,8 @@ if ($color =~ /^[01]$/) {
+ 	die "Invalid color mode: $color\n";
+ }
  
--	if (cma)
-+	if (!allowblock && !is_coherent && want_vaddr)
-+		buf->allocator = &pool_allocator;
-+	else if (cma)
- 		buf->allocator = &cma_allocator;
- 	else if (is_coherent)
- 		buf->allocator = &simple_allocator;
--	else if (allowblock)
--		buf->allocator = &remap_allocator;
- 	else
--		buf->allocator = &pool_allocator;
-+		buf->allocator = &remap_allocator;
++die "Invalid TAB size: $tabsize\n" if ($tabsize <= 0);
++
+ sub hash_save_array_words {
+ 	my ($hashRef, $arrayRef) = @_;
  
- 	addr = buf->allocator->alloc(&args, &page);
+@@ -1211,7 +1216,7 @@ sub expand_tabs {
+ 		if ($c eq "\t") {
+ 			$res .= ' ';
+ 			$n++;
+-			for (; ($n % 8) != 0; $n++) {
++			for (; ($n % $tabsize) != 0; $n++) {
+ 				$res .= ' ';
+ 			}
+ 			next;
+@@ -2224,7 +2229,7 @@ sub string_find_replace {
+ sub tabify {
+ 	my ($leading) = @_;
  
+-	my $source_indent = 8;
++	my $source_indent = $tabsize;
+ 	my $max_spaces_before_tab = $source_indent - 1;
+ 	my $spaces_to_tab = " " x $source_indent;
+ 
+@@ -3153,7 +3158,7 @@ sub process {
+ 		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+ 
+ # at the beginning of a line any tabs must come first and anything
+-# more than 8 must use tabs.
++# more than $tabsize must use tabs.
+ 		if ($rawline =~ /^\+\s* \t\s*\S/ ||
+ 		    $rawline =~ /^\+\s*        \s*/) {
+ 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
+@@ -3172,7 +3177,7 @@ sub process {
+ 				"please, no space before tabs\n" . $herevet) &&
+ 			    $fix) {
+ 				while ($fixed[$fixlinenr] =~
+-					   s/(^\+.*) {8,8}\t/$1\t\t/) {}
++					   s/(^\+.*) {$tabsize,$tabsize}\t/$1\t\t/) {}
+ 				while ($fixed[$fixlinenr] =~
+ 					   s/(^\+.*) +\t/$1\t/) {}
+ 			}
+@@ -3194,11 +3199,11 @@ sub process {
+ 		if ($perl_version_ok &&
+ 		    $sline =~ /^\+\t+( +)(?:$c90_Keywords\b|\{\s*$|\}\s*(?:else\b|while\b|\s*$)|$Declare\s*$Ident\s*[;=])/) {
+ 			my $indent = length($1);
+-			if ($indent % 8) {
++			if ($indent % $tabsize) {
+ 				if (WARN("TABSTOP",
+ 					 "Statements should start on a tabstop\n" . $herecurr) &&
+ 				    $fix) {
+-					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/8)@e;
++					$fixed[$fixlinenr] =~ s@(^\+\t+) +@$1 . "\t" x ($indent/$tabsize)@e;
+ 				}
+ 			}
+ 		}
+@@ -3216,8 +3221,8 @@ sub process {
+ 				my $newindent = $2;
+ 
+ 				my $goodtabindent = $oldindent .
+-					"\t" x ($pos / 8) .
+-					" "  x ($pos % 8);
++					"\t" x ($pos / $tabsize) .
++					" "  x ($pos % $tabsize);
+ 				my $goodspaceindent = $oldindent . " "  x $pos;
+ 
+ 				if ($newindent ne $goodtabindent &&
+@@ -3688,11 +3693,11 @@ sub process {
+ 			#print "line<$line> prevline<$prevline> indent<$indent> sindent<$sindent> check<$check> continuation<$continuation> s<$s> cond_lines<$cond_lines> stat_real<$stat_real> stat<$stat>\n";
+ 
+ 			if ($check && $s ne '' &&
+-			    (($sindent % 8) != 0 ||
++			    (($sindent % $tabsize) != 0 ||
+ 			     ($sindent < $indent) ||
+ 			     ($sindent == $indent &&
+ 			      ($s !~ /^\s*(?:\}|\{|else\b)/)) ||
+-			     ($sindent > $indent + 8))) {
++			     ($sindent > $indent + $tabsize))) {
+ 				WARN("SUSPECT_CODE_INDENT",
+ 				     "suspect code indent for conditional statements ($indent, $sindent)\n" . $herecurr . "$stat_real\n");
+ 			}
 -- 
-2.20.1
+2.21.0
 
