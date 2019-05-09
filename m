@@ -2,128 +2,151 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DA7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC5C205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:49:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2IuBIh9"
+	by mail.kernel.org (Postfix) with ESMTP id 653312173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557410020;
+	bh=5bgQ6CHqRJTKqil2SYpOdeiLLfAUR1hz6lrikzEL1R8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ljb8hxg+x4mOVQ31/hLNJ4fhYNsONobE0ymHxhFn2owq5YlC+i27szondvbD1N7Kp
+	 f4Sv3Q3ZikjcTQVu2yizrFRkj73S9ml7jUBH31Q+KLZZAPuDQAfrA46SxFAxbWF9tT
+	 zygudinG7OH2qe+RSOmUfxoMVUIRCxG/vy5CTlQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfEINtq (ORCPT
+        id S1726650AbfEINxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:49:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44658 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfEINtq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:49:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c5so3136630wrs.11;
-        Thu, 09 May 2019 06:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=8aNzdQydgV0JN9gnkWZdb88bayQRUcesogfi+tTCa+o=;
-        b=h2IuBIh9sVN4Qk734XE4pCs2s3fXTu5EznMO8OeK4fp5LkdDiCrCob9MVlz03u/5eR
-         ns7aUv+WMwGkYI2Nby9sxPR9hTElKEbxCGT/yrmMdU+TkHYD+FJTfEtDFAn2lEfySWUl
-         t635ENJ0TIf8eCvMr/26VMKjEdwCLXUEkiPS9mFRx0nP5n9oFDy9cyjJ6MZqyj6TWoib
-         tvUJZbiqzAdDfMJcrUD4uadVIOCEk8BFByad2aYuGtDY1WeIqI3a66+TwJa7QVXZQPfn
-         2CsGadYT2FOBf/Y692nKkz0T9IVQV7dxYGcBHhEx2Fm8KWn0yda7TYKIdtyTwh9lU7xl
-         siMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=8aNzdQydgV0JN9gnkWZdb88bayQRUcesogfi+tTCa+o=;
-        b=plL/KpBhctD/Dkf5g48i4scWjtOt+r4+p97692urZWGgJBdBK06tpaMOBKxDkHWVed
-         GYlvnDg89LCv4lnHC1woYsYj+2/bP/VW/l2CeRFVFTVSfe8utAggE0AcLFxNHfWUvbUO
-         3ZIEkoMReywj5GPI6NujTQln2Tc/edXSItoT8h9KawdL79owkAnZTpJv6KiYsuVuV1Ce
-         TPino3u5YnU2tIyLEK+RCvuIWWoAGc84PCQ0w5P7GBqGEk+E2bp6vrnxE1EpzCudWABl
-         ETiA32G+7+DhG1+ONYmgz5/1pFLh43AkZKIrDjrJ4x+PcBVdpV9jsK4mHNy4DT90ps2b
-         n2AA==
-X-Gm-Message-State: APjAAAXewaF9OfUdT4TI2RBe6tXLi9ADJecre4/ef3QUBFbUMv7iWV69
-        ZtRo3ES4GsPp3c5MnQZ4csOkIeYXY8341ph+LoU=
-X-Google-Smtp-Source: APXvYqxMO6zIdBnRmjRHXwSKDiGcHF9gWqucB+hpEEiKv/rwzlDTHfCZ0iKt4ucN2JYEyfTifAX//A/v4syk8eV/6+g=
-X-Received: by 2002:adf:dc4b:: with SMTP id m11mr3361338wrj.66.1557409784452;
- Thu, 09 May 2019 06:49:44 -0700 (PDT)
+        Thu, 9 May 2019 09:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbfEINxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:53:39 -0400
+Received: from linux-8ccs (ip5f5adeaa.dynamic.kabel-deutschland.de [95.90.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46F8120675;
+        Thu,  9 May 2019 13:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557410018;
+        bh=5bgQ6CHqRJTKqil2SYpOdeiLLfAUR1hz6lrikzEL1R8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LlWIUdggLWAE6LoVh7f4hVZUYYoNDUd+InUDc8WAv8kUZ6qdyGYx54sIYhSa3EDfZ
+         csGB/Xw6OCdoqjS8Id/j4Vk4LxmNNthp/3ib5iqE6MiyTVB5tUv+8PChj8ry4APTHB
+         7Dp43vqFTtWzvYv4S18Yl5BeNqaV67n3DrrlEF5k=
+Date:   Thu, 9 May 2019 15:53:34 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+Subject: Re: [PATCH v2] modules: Only return -EEXIST for modules that have
+ finished loading
+Message-ID: <20190509135333.GA9337@linux-8ccs>
+References: <20190507145413.16297-1-prarit@redhat.com>
 MIME-Version: 1.0
-References: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
- <20190509114824.25866-1-natechancellor@gmail.com>
-In-Reply-To: <20190509114824.25866-1-natechancellor@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 9 May 2019 15:49:32 +0200
-Message-ID: <CA+icZUUN7cVXnkUv9DzYC7voys_CS=DJDm19EeYSWPyQwVdXVw@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Don't try to add '-fcatch-undefined-behavior' flag
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190507145413.16297-1-prarit@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 1:49 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
++++ Prarit Bhargava [07/05/19 10:54 -0400]:
+>Heiko, it would still be good to get a test of this patch from you.  I
+>tested this here at Red Hat on some System Z machines.  Without the
+>modification made here in v2, the systems failed to boot ~10% of the time.
+>After the modification I do not see any boot failures.  I also was
+>able to reproduce the boot issue with the acpi_cpufreq driver on a very
+>large & fast x86 system which had closer to 100% failure rate without
+>the changes in v2.  After the modification in v2 the system has rebooted
+>all weekend without any issues.
 >
-> This is no longer a valid option in clang, it was removed in 3.5, which
-> we don't support.
+>P.
 >
-> https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
+>---8<---
 >
+>Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+>linux guests boot with repeated errors:
+>
+>amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+>amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+>
+>The warnings occur because the module code erroneously returns -EEXIST
+>for modules that have failed to load and are in the process of being
+>removed from the module list.
+>
+>module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+>modules.dep, systemd will load edac_mce_amd for every request of
+>amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+>state MODULE_STATE_UNFORMED and once the module load fails and the state
+>becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+>executes and add_unformed_module() will erroneously return -EEXIST even
+>though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+>Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+>fails because of unknown symbols from edac_mce_amd.
+>
+>add_unformed_module() must wait to return for any case other than
+>MODULE_STATE_LIVE to prevent a race between multiple loads of
+>dependent modules.
+>
+>v2: The initial (old->state != MODULE_STATE_LIVE) change exposed an
+>additional issue in the code.  wait_event_interruptible() puts each thread
+>to sleep until the a module finishes loading an executes the module_wq
+>workqueue.  The result is a long delay during the boot.  Switching to
+>wait_event_interruptible_timeout() resolves the sleep problem.
+>
+>Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>Cc: Jessica Yu <jeyu@kernel.org>
+>Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>Cc: David Arcari <darcari@redhat.com>
 
-Cool.
+Hi Prarit,
 
-Can you test with -mglobal-merge (inverted -mno-global-merge) which is
-default for Clang?
-I could build, link and boot with my llvm-toolchain (incl. lld-9) on x86-64.
+Thanks a lot for the revised patch. I'll queue this up right after the
+merge window is over.
 
-Maybe this is also no more needed?
+Thanks!
 
-Thanks.
+Jessica
 
-- Sedat -
-
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+>---
+> kernel/module.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> Let me know if you want this incremental to your patch. I figured it
-> made more sense to remove this then do the cc-option/cc-disable-warning
-> removal because it will simplify the commit message.
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 1c429d8d2d74..6c868aabaf37 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -3568,12 +3568,12 @@ static int add_unformed_module(struct module *mod)
+> 	mutex_lock(&module_mutex);
+> 	old = find_module_all(mod->name, strlen(mod->name), true);
+> 	if (old != NULL) {
+>-		if (old->state == MODULE_STATE_COMING
+>-		    || old->state == MODULE_STATE_UNFORMED) {
+>+		if (old->state != MODULE_STATE_LIVE) {
+> 			/* Wait in case it fails to load. */
+> 			mutex_unlock(&module_mutex);
+>-			err = wait_event_interruptible(module_wq,
+>-					       finished_loading(mod->name));
+>+			err = wait_event_interruptible_timeout(module_wq,
+>+					       finished_loading(mod->name),
+>+					       HZ/1000);
+> 			if (err)
+> 				goto out_unlocked;
+> 			goto again;
+>-- 
+>2.18.1
 >
->  Makefile | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index d24f5a8009ee..e4788eb2c9b9 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -740,7 +740,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
->  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
->  # See modpost pattern 2
->  KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
-> -KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
->  else
->
->  # These warnings generated too much noise in a regular build.
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To post to this group, send email to clang-built-linux@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190509114824.25866-1-natechancellor%40gmail.com.
-> For more options, visit https://groups.google.com/d/optout.
