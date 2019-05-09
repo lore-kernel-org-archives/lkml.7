@@ -2,130 +2,148 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78654C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7760DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497032177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47613217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IO+KoQF0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J+ogomPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfEIUT2 (ORCPT
+        id S1727073AbfEIUTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 16:19:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39791 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfEIUT1 (ORCPT
+        Thu, 9 May 2019 16:19:33 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:46123 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfEIUTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 16:19:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n25so4674513wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 13:19:26 -0700 (PDT)
+        Thu, 9 May 2019 16:19:30 -0400
+Received: by mail-pl1-f202.google.com with SMTP id y1so2208192plr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 13:19:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GJZ5Q6jA4O7aJU9I1R7Mdcv4Tb9to2ZldjQmNYgzvPA=;
-        b=IO+KoQF0XExQgYMUQurYWk908PrOrvDWgPkKvUFydb54+mGRvonFr1iT+FubWy3OBA
-         QpyEdwU8/OJ4+G9+lxN1J9UzAAXIDbt6s41pTK12AlT2em+Ibb/YaLYfaKzygpMPJPJC
-         P3ICeH3z4JYLoMXM7xdSW1PhUn+yUn4epbKK8=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9SJVZdHZDV7vMt7Q88/HKWL/kPExbd/JsbUOjuQz1C4=;
+        b=J+ogomPB45YKyRjFLwwk5dz5jQbrbFwqH8ZsYquGZgo7y9Gh9cGSZa5peLq7SGYIoD
+         UVa7cicag0uG4ZrjPBHYXgqmcOhuLK8mICQWDu5y+sOVvT1IUrZZAo69xt5VZXuI+fOz
+         Ev0HPV6/QfGN5GmovTV136dC4bdCThh9RzPbzrWKbZUaYsL5tqAAbh+MW9Se3uGi5fkA
+         d2WPDV8KotABIkIRHYEvN/PYtIPVtgwU5cVNtvAn/SqSYn2r0Uk0gjCZVgwZdG1KQsoL
+         IOkYf2UlWkxfeOXsFqV0zW26sXCPhObUu7mbMqab23wYxEx/gdWA08yl+nba0lnsC/bD
+         drGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GJZ5Q6jA4O7aJU9I1R7Mdcv4Tb9to2ZldjQmNYgzvPA=;
-        b=bxW7l/JkVMFkxiouRy3Hf8MBUK/8Nf84y9LVyAJecCjo+6qoUZ/zQGajovgShyX2yq
-         I5oUvEh5mlUpoFKBQEt/J1epAbJ/S4Kb6AllN54c9ga88kMxPJPN1KSJt98I4r+XjXFg
-         BhDBaRpXSk1MUYH2h1HykgXQ0V1N+XPmaptgomhgEtUcHn68V3GMKibi+cT1q1cIS8u4
-         bdWi8RhaJ8oyZ9g55LGRkbhgfdeeJ844dmR105pUV0koQOBhTaG4Y35EZYPffosgnXJg
-         3neKVIbnGQUnVQWCCqdLgf+a2egd/XdVZ3o932yjQSMPAihB+nL4ZX/8nntnE9CQ7KeS
-         FRzw==
-X-Gm-Message-State: APjAAAVhLdu12W1vRHR2VDEHJsL6lbLcG+EdZZx+Re+5cvryoXNqXPJz
-        RdYVKZh0SFKEyeHFHuboqazwhYVzi56YmA==
-X-Google-Smtp-Source: APXvYqzxxHBFuaNUV6bBo6nlGo/Tnntlk9agUnyauDkHld2lgHrK9FItg2MrJoRjimGw6vVaZIhwAg==
-X-Received: by 2002:a1c:cb48:: with SMTP id b69mr4393573wmg.109.1557433165640;
-        Thu, 09 May 2019 13:19:25 -0700 (PDT)
-Received: from andrea ([91.252.228.170])
-        by smtp.gmail.com with ESMTPSA id z74sm9649240wmc.2.2019.05.09.13.19.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 13:19:24 -0700 (PDT)
-Date:   Thu, 9 May 2019 22:19:15 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 1/5] drm/msm: Fix improper uses of
- smp_mb__{before,after}_atomic()
-Message-ID: <20190509201915.GA2931@andrea>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-2-git-send-email-andrea.parri@amarulasolutions.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556568902-12464-2-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9SJVZdHZDV7vMt7Q88/HKWL/kPExbd/JsbUOjuQz1C4=;
+        b=GKciKtMeCm+K5Y+PuTyG/suIJF9ZI/b1zvteMbWXPdjK4OmOPjIswCQYOaZa1f0bJf
+         t1186u7duhrLvx/AwY2AmjMi2p22/To16ZMb1BQiUf0tEd1BXB3bLxxiOiWIaCCW1gvG
+         fSbLDYIRKh1lEecatLpEc/fm4lsKOxgMOexX2Ywev+BIESd+xGgIPEx4zRi9LkahftJk
+         YZCbXfJKHiGVOzqiRt/RB2atFxbvakQrCrgot5hX5+3wkPTWHjoW5KHcmr55C7YP4jeY
+         gKx2nMVYPt7IC3w2OfCoI+vbiCtd5A5/YuuYMtbvarRQdvhez7NTDfUIySob0wiVJylA
+         bwXw==
+X-Gm-Message-State: APjAAAW5rXhxCGLzYyCQYCZcU4WOEXCsbMItFwKdCllwh3GspZQZUAHm
+        hqXJOUYT4+9BDvzaKR6evTeaJP7vKavZyd9fPUk=
+X-Google-Smtp-Source: APXvYqwNgTQqsYAQwXXENS1CQQw7MSN+Qd5+znnAg7E14rm4nbYN8MAHXcwcVTLcdGau3oywBZiwzmMBSKUQ2CQvlYY=
+X-Received: by 2002:a63:8949:: with SMTP id v70mr8548978pgd.196.1557433169453;
+ Thu, 09 May 2019 13:19:29 -0700 (PDT)
+Date:   Thu,  9 May 2019 13:19:21 -0700
+Message-Id: <20190509201925.189615-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] kbuild: add script check for cross compilation utilities
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     yamada.masahiro@socionext.com
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 10:14:57PM +0200, Andrea Parri wrote:
-> These barriers only apply to the read-modify-write operations; in
-> particular, they do not apply to the atomic_set() primitive.
-> 
-> Replace the barriers with smp_mb()s.
-> 
-> Fixes: b1fc2839d2f92 ("drm/msm: Implement preemption for A5XX targets")
-> Cc: stable@vger.kernel.org
-> Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Reported-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Rob Clark <robdclark@gmail.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Jordan Crouse <jcrouse@codeaurora.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: freedreno@lists.freedesktop.org
+When cross compiling via setting CROSS_COMPILE, if the prefixed tools
+are not found, then the host utilities are often instead invoked, and
+produce often difficult to understand errors.  This is most commonly the
+case for developers new to cross compiling the kernel that have yet to
+install the proper cross compilation toolchain. Rather than charge
+headlong into a build that will fail obscurely, check that the tools
+exist before starting to compile, and fail with a friendly error
+message.
 
-Rob, Sean, Jordan: any suggestions to move this patch forward?
+Before:
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang
+...
+/usr/bin/as: unrecognized option '-EL'
+clang: error: assembler command failed with exit code 1 (use -v to see
+invocation)
+make[2]: *** [../scripts/Makefile.build:279: scripts/mod/empty.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/linux/Makefile:1118:
+prepare0] Error 2
+make: *** [Makefile:179: sub-make] Error 2
 
-Thanx,
-  Andrea
+After:
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang
+$CROSS_COMPILE set to arm-linux-gnueabihf-, but unable to find
+arm-linux-gnueabihf-as.
+Makefile:522: recipe for target 'outputmakefile' failed
+make: *** [outputmakefile] Error 1
 
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Note: this is probably more generally useful, but after a few minutes
+wrestling with Make errors related to "recipe commences before first
+target" and "missing separator," I came to understand my hatred of GNU
+Make. Open to sugguestions for where better to invoke this from the top
+level Makefile.
 
-> ---
->  drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> index 3d62310a535fb..ee0820ee0c664 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> @@ -39,10 +39,10 @@ static inline void set_preempt_state(struct a5xx_gpu *gpu,
->  	 * preemption or in the interrupt handler so barriers are needed
->  	 * before...
->  	 */
-> -	smp_mb__before_atomic();
-> +	smp_mb();
->  	atomic_set(&gpu->preempt_state, new);
->  	/* ... and after*/
-> -	smp_mb__after_atomic();
-> +	smp_mb();
->  }
->  
->  /* Write the most recent wptr for the given ring into the hardware */
-> -- 
-> 2.7.4
-> 
+ Makefile                      |  1 +
+ scripts/check_crosscompile.sh | 18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+)
+ create mode 100755 scripts/check_crosscompile.sh
+
+diff --git a/Makefile b/Makefile
+index a61a95b6b38f..774339674b59 100644
+--- a/Makefile
++++ b/Makefile
+@@ -519,6 +519,7 @@ endif
+ 
+ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+ ifneq ($(CROSS_COMPILE),)
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/check_crosscompile.sh
+ CLANG_FLAGS	:= --target=$(notdir $(CROSS_COMPILE:%-=%))
+ GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+ CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
+diff --git a/scripts/check_crosscompile.sh b/scripts/check_crosscompile.sh
+new file mode 100755
+index 000000000000..f4586fbfee18
+--- /dev/null
++++ b/scripts/check_crosscompile.sh
+@@ -0,0 +1,18 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# (c) 2019, Nick Desaulniers <ndesaulniers@google.com>
++function check () {
++  # Remove trailing commands, for example arch/arm/Makefile may add `-EL`.
++  utility=$(echo ${1} | awk '{print $1;}')
++  command -v "${utility}" &> /dev/null
++  if [[ $? != 0 ]]; then
++    echo "\$CROSS_COMPILE set to ${CROSS_COMPILE}," \
++      "but unable to find ${utility}."
++    exit 1
++  fi
++}
++utilities=("${AS}" "${LD}" "${CC}" "${AR}" "${NM}" "${STRIP}" "${OBJCOPY}"
++  "${OBJDUMP}")
++for utility in "${utilities[@]}"; do
++  check "${utility}"
++done
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
