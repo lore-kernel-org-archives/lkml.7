@@ -2,153 +2,349 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54985C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD52C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE2620656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51A220656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfEITKT (ORCPT
+        id S1726861AbfEITMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:10:19 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51028 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726784AbfEITKS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:10:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TRHKq3L_1557429003;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRHKq3L_1557429003)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 May 2019 03:10:07 +0800
-Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "jstancek@redhat.com" <jstancek@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        Mel Gorman <mgorman@suse.de>
-References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190509083726.GA2209@brain-police>
- <20190509103813.GP2589@hirez.programming.kicks-ass.net>
- <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
- <20190509182435.GA2623@hirez.programming.kicks-ass.net>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <84720bb8-bf3d-8c10-d675-0670f13b2efc@linux.alibaba.com>
-Date:   Thu, 9 May 2019 12:10:02 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 9 May 2019 15:12:00 -0400
+Received: from sauhun.de ([88.99.104.3]:35258 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfEITL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:11:59 -0400
+Received: from localhost (p54B33113.dip0.t-ipconnect.de [84.179.49.19])
+        by pokefinder.org (Postfix) with ESMTPSA id 3C6412E3571;
+        Thu,  9 May 2019 21:11:56 +0200 (CEST)
+Date:   Thu, 9 May 2019 21:11:55 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.2
+Message-ID: <20190509191132.GA9306@kunai>
 MIME-Version: 1.0
-In-Reply-To: <20190509182435.GA2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 5/9/19 11:24 AM, Peter Zijlstra wrote:
-> On Thu, May 09, 2019 at 05:36:29PM +0000, Nadav Amit wrote:
->>> On May 9, 2019, at 3:38 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->>> index 99740e1dd273..fe768f8d612e 100644
->>> --- a/mm/mmu_gather.c
->>> +++ b/mm/mmu_gather.c
->>> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>> 		unsigned long start, unsigned long end)
->>> {
->>> 	/*
->>> -	 * If there are parallel threads are doing PTE changes on same range
->>> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
->>> -	 * flush by batching, a thread has stable TLB entry can fail to flush
->>> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
->>> -	 * forcefully if we detect parallel PTE batching threads.
->>> +	 * Sensible comment goes here..
->>> 	 */
->>> -	if (mm_tlb_flush_nested(tlb->mm)) {
->>> -		__tlb_reset_range(tlb);
->>> -		__tlb_adjust_range(tlb, start, end - start);
->>> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
->>> +		/*
->>> +		 * Since we're can't tell what we actually should have
->>> +		 * flushed flush everything in the given range.
->>> +		 */
->>> +		tlb->start = start;
->>> +		tlb->end = end;
->>> +		tlb->freed_tables = 1;
->>> +		tlb->cleared_ptes = 1;
->>> +		tlb->cleared_pmds = 1;
->>> +		tlb->cleared_puds = 1;
->>> +		tlb->cleared_p4ds = 1;
->>> 	}
->>>
->>> 	tlb_flush_mmu(tlb);
->> As a simple optimization, I think it is possible to hold multiple nesting
->> counters in the mm, similar to tlb_flush_pending, for freed_tables,
->> cleared_ptes, etc.
->>
->> The first time you set tlb->freed_tables, you also atomically increase
->> mm->tlb_flush_freed_tables. Then, in tlb_flush_mmu(), you just use
->> mm->tlb_flush_freed_tables instead of tlb->freed_tables.
-> That sounds fraught with races and expensive; I would much prefer to not
-> go there for this arguably rare case.
->
-> Consider such fun cases as where CPU-0 sees and clears a PTE, CPU-1
-> races and doesn't see that PTE. Therefore CPU-0 sets and counts
-> cleared_ptes. Then if CPU-1 flushes while CPU-0 is still in mmu_gather,
-> it will see cleared_ptes count increased and flush that granularity,
-> OTOH if CPU-1 flushes after CPU-0 completes, it will not and potentiall
-> miss an invalidate it should have had.
->
-> This whole concurrent mmu_gather stuff is horrible.
->
->    /me ponders more....
->
-> So I think the fundamental race here is this:
->
-> 	CPU-0				CPU-1
->
-> 	tlb_gather_mmu(.start=1,	tlb_gather_mmu(.start=2,
-> 		       .end=3);			       .end=4);
->
-> 	ptep_get_and_clear_full(2)
-> 	tlb_remove_tlb_entry(2);
-> 	__tlb_remove_page();
-> 					if (pte_present(2)) // nope
->
-> 					tlb_finish_mmu();
->
-> 					// continue without TLBI(2)
-> 					// whoopsie
->
-> 	tlb_finish_mmu();
-> 	  tlb_flush()		->	TLBI(2)
+Linus,
 
-I'm not quite sure if this is the case Jan really met. But, according to 
-his test, once correct tlb->freed_tables and tlb->cleared_* are set, his 
-test works well.
+I2C has for you:
 
->
->
-> And we can fix that by having tlb_finish_mmu() sync up. Never let a
-> concurrent tlb_finish_mmu() complete until all concurrenct mmu_gathers
-> have completed.
+* API for late atomic transfers (e.g. to shut down via PMIC). We have a
+  seperate callback now which is called under clearly defined
+  conditions. In-kernel users are converted, too.
+* new driver for the AMD PCIe MP2 I2C controller
+* large refactoring for at91 and bcm-iproc (both gain slave support
+  due to this)
+* and a good share of various driver improvements anf fixes
 
-Not sure if this will scale well.
+Please pull.
 
->
-> This should not be too hard to make happen.
+Thanks,
 
+   Wolfram
+
+
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.2
+
+for you to fetch changes up to e6ae3ca27477226eae77cc00d5fad89d7ce64aea:
+
+  dt-bindings: i2c: riic: document r7s9210 support (2019-05-03 16:53:31 +0200)
+
+----------------------------------------------------------------
+Adamski, Krzysztof (Nokia - PL/Wroclaw) (1):
+      i2c: axxia: use auto cmd for last message
+
+Andy Shevchenko (1):
+      i2c: at91: Convert to use struct i2c_timings
+
+Anson Huang (1):
+      i2c: imx-lpi2c: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+
+Bartosz Golaszewski (1):
+      MAINTAINERS: change my e-mail address for at24
+
+Bich HEMON (2):
+      dt-bindings: i2c: stm32: remove extra spaces
+      dt-bindings: i2c: stm32: update optional properties for stm32h7/stm32mp1
+
+Bjorn Helgaas (1):
+      i2c: isch: Remove unnecessary acpi.h include
+
+Chris Brandt (1):
+      dt-bindings: i2c: riic: document r7s9210 support
+
+Dan Carpenter (1):
+      i2c: nomadik: remove an unnecessary NULL check in nmk_i2c_remove()
+
+Elie Morisse (1):
+      i2c: Add drivers for the AMD PCIe MP2 I2C controller
+
+Fabien Parent (1):
+      dt-bindings: i2c: i2c-mtk: add support for MT8516
+
+Geert Uytterhoeven (2):
+      dt-bindings: at24: add Renesas R1EX24016
+      i2c: riic: Add Runtime PM support
+
+Gustavo A. R. Silva (1):
+      i2c: mux: demux-pinctrl: use struct_size() in devm_kzalloc()
+
+Juergen Fitschen (3):
+      i2c: at91: segregate master mode specific code from probe and init func
+      i2c: at91: split driver into core and master file
+      i2c: at91: added slave mode support
+
+Michael Cheng (1):
+      i2c: iproc: Add support for more master error status
+
+Nicolas Le Bayon (1):
+      i2c: i2c-stm32f7: improve loopback in timing algorithm
+
+Phil Edworthy (2):
+      dt: snps,designware-i2c: Add clock bindings documentation
+      i2c: designware: Add support for an interface clock
+
+Pu Wen (1):
+      i2c-piix4: Add Hygon Dhyana SMBus support
+
+Qii Wang (5):
+      i2c: mediatek: Add offsets array for new i2c registers
+      dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+      i2c: mediatek: Add arb clock in i2c driver
+      i2c: mediatek: Add i2c and apdma sync in i2c driver
+      i2c: mediatek: Add i2c support for MediaTek MT8183
+
+Ray Jui (2):
+      dt-bindings: i2c: iproc: make 'interrupts' optional
+      i2c: iproc: Change driver to use 'BIT' macro
+
+Rayagonda Kokatanur (4):
+      i2c: iproc: add polling support
+      i2c: iproc: use wrapper for read/write access
+      dt-bindings: i2c: iproc: add "brcm, iproc-nic-i2c" compatible string
+      i2c: iproc: add NIC I2C support
+
+Robert Shearman (3):
+      i2c: mux: pca954x: remove support for unused platform data
+      i2c: mux: pca9541: remove support for unused platform data
+      i2c: mux: pca954x: allow management of device idle state via sysfs
+
+Shreesha Rajashekar (2):
+      i2c: iproc: Extend I2C read up to 255 bytes
+      i2c: iproc: Add slave mode support
+
+Wolfram Sang (21):
+      i2c: rcar: sanity check for minimal DMA length
+      i2c: rcar: let DMA enable routine return success status
+      i2c: rcar: wait for data empty before starting DMA
+      i2c: apply coding style for struct i2c_adapter
+      i2c: brcmstb: remove unused struct member
+      i2c: core: remove use of in_atomic()
+      i2c: core: use I2C locking behaviour also for SMBUS
+      i2c: core: introduce callbacks for atomic transfers
+      i2c: mux: populate the new *_atomic callbacks
+      i2c: demux: handle the new atomic callbacks
+      i2c: omap: Add the master_xfer_atomic hook
+      i2c: tegra-bpmp: convert to use new atomic callbacks
+      i2c: ocores: refactor setup for polling
+      i2c: ocores: enable atomic xfers
+      i2c: stu300: use xfer_atomic callback to bail out early
+      i2c: algo: bit: add flag to whitelist atomic transfers
+      i2c: gpio: flag atomic capability if possible
+      Merge tag 'at24-v5.2-updates-for-wolfram' of git://git.kernel.org/.../brgl/linux into i2c/for-5.2
+      Merge branch 'i2c-mux/for-next' of https://github.com/peda-r/i2c-mux into i2c/for-5.2
+      i2c: core: ratelimit 'transfer when suspended' errors
+      i2c: core: apply 'is_suspended' check for SMBus, too
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Alexander Sverdlin (1):
+      (Rev.) i2c: axxia: use auto cmd for last message
+
+Andrew Lunn (2):
+      (Rev.) i2c: ocores: enable atomic xfers
+      (Rev.) i2c: ocores: refactor setup for polling
+
+Andy Shevchenko (1):
+      (Rev.) i2c: apply coding style for struct i2c_adapter
+
+Chris Brandt (1):
+      (Test) i2c: riic: Add Runtime PM support
+
+Geert Uytterhoeven (3):
+      (Rev.) dt-bindings: i2c: riic: document r7s9210 support
+      (Rev.) i2c: rcar: let DMA enable routine return success status
+      (Rev.) i2c: rcar: sanity check for minimal DMA length
+
+Jarkko Nikula (2):
+      (Test) i2c: designware: Add support for an interface clock
+      (Rev.) dt: snps,designware-i2c: Add clock bindings documentation
+
+Jean Delvare (2):
+      (Rev.) i2c-piix4: Add Hygon Dhyana SMBus support
+      (Rev.) i2c: isch: Remove unnecessary acpi.h include
+
+Linus Walleij (2):
+      (Rev.) i2c: gpio: flag atomic capability if possible
+      (Rev.) i2c: stu300: use xfer_atomic callback to bail out early
+
+Matthias Brugger (5):
+      (Rev.) i2c: mediatek: Add i2c support for MediaTek MT8183
+      (Rev.) i2c: mediatek: Add i2c and apdma sync in i2c driver
+      (Rev.) i2c: mediatek: Add arb clock in i2c driver
+      (Rev.) dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+      (Rev.) i2c: mediatek: Add offsets array for new i2c registers
+
+Mukesh Ojha (1):
+      (Rev.) i2c: isch: Remove unnecessary acpi.h include
+
+Nicolas Boichat (3):
+      (Rev.) i2c: mediatek: Add i2c support for MediaTek MT8183
+      (Rev.) i2c: mediatek: Add i2c and apdma sync in i2c driver
+      (Rev.) i2c: mediatek: Add arb clock in i2c driver
+
+Niklas S??derlund (1):
+      (Rev.) i2c: riic: Add Runtime PM support
+
+Peter Rosin (1):
+      (Rev.) i2c: mux: populate the new *_atomic callbacks
+
+Pierre-Yves MORDRET (3):
+      (Rev.) dt-bindings: i2c: stm32: update optional properties for stm32h7/stm32mp1
+      (Rev.) dt-bindings: i2c: stm32: remove extra spaces
+      (Rev.) i2c: i2c-stm32f7: improve loopback in timing algorithm
+
+Rob Herring (5):
+      (Rev.) dt-bindings: i2c: riic: document r7s9210 support
+      (Rev.) dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+      (Rev.) dt-bindings: i2c: iproc: add "brcm, iproc-nic-i2c" compatible string
+      (Rev.) dt-bindings: i2c: iproc: make 'interrupts' optional
+      (Rev.) dt: snps,designware-i2c: Add clock bindings documentation
+
+Simon Horman (8):
+      (Rev.) i2c: core: apply 'is_suspended' check for SMBus, too
+      (Rev.) i2c: core: ratelimit 'transfer when suspended' errors
+      (Rev.) i2c: tegra-bpmp: convert to use new atomic callbacks
+      (Rev.) i2c: omap: Add the master_xfer_atomic hook
+      (Rev.) i2c: apply coding style for struct i2c_adapter
+      (Rev.) i2c: rcar: wait for data empty before starting DMA
+      (Rev.) i2c: rcar: let DMA enable routine return success status
+      (Rev.) i2c: rcar: sanity check for minimal DMA length
+
+Stefan Lengfeld (2):
+      (Test) i2c: core: introduce callbacks for atomic transfers
+      (Test) i2c: core: remove use of in_atomic()
+
+Timo Alho (1):
+      (Rev.) i2c: tegra-bpmp: convert to use new atomic callbacks
+
+ .../ABI/testing/sysfs-bus-i2c-devices-pca954x      |  20 +
+ Documentation/devicetree/bindings/eeprom/at24.txt  |   1 +
+ .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |  17 +-
+ .../devicetree/bindings/i2c/i2c-designware.txt     |   9 +
+ .../devicetree/bindings/i2c/i2c-mt65xx.txt         |   5 +-
+ Documentation/devicetree/bindings/i2c/i2c-riic.txt |   5 +-
+ .../devicetree/bindings/i2c/i2c-stm32.txt          |  37 +-
+ Documentation/i2c/busses/i2c-amd-mp2               |  23 +
+ Documentation/i2c/busses/i2c-piix4                 |   2 +
+ MAINTAINERS                                        |  13 +-
+ drivers/i2c/algos/i2c-algo-bit.c                   |  22 +-
+ drivers/i2c/busses/Kconfig                         |  25 +
+ drivers/i2c/busses/Makefile                        |   5 +
+ drivers/i2c/busses/i2c-amd-mp2-pci.c               | 483 +++++++++++++
+ drivers/i2c/busses/i2c-amd-mp2-plat.c              | 367 ++++++++++
+ drivers/i2c/busses/i2c-amd-mp2.h                   | 219 ++++++
+ drivers/i2c/busses/i2c-at91-core.c                 | 376 ++++++++++
+ .../i2c/busses/{i2c-at91.c => i2c-at91-master.c}   | 480 +------------
+ drivers/i2c/busses/i2c-at91-slave.c                | 143 ++++
+ drivers/i2c/busses/i2c-at91.h                      | 174 +++++
+ drivers/i2c/busses/i2c-axxia.c                     |  57 +-
+ drivers/i2c/busses/i2c-bcm-iproc.c                 | 764 +++++++++++++++++----
+ drivers/i2c/busses/i2c-brcmstb.c                   |   1 -
+ drivers/i2c/busses/i2c-designware-common.c         |  18 +-
+ drivers/i2c/busses/i2c-designware-core.h           |   2 +
+ drivers/i2c/busses/i2c-designware-platdrv.c        |   5 +
+ drivers/i2c/busses/i2c-gpio.c                      |   2 +
+ drivers/i2c/busses/i2c-imx-lpi2c.c                 |  11 +-
+ drivers/i2c/busses/i2c-isch.c                      |   1 -
+ drivers/i2c/busses/i2c-mt65xx.c                    | 255 +++++--
+ drivers/i2c/busses/i2c-nomadik.c                   |   3 +-
+ drivers/i2c/busses/i2c-ocores.c                    |  16 +-
+ drivers/i2c/busses/i2c-omap.c                      |  76 +-
+ drivers/i2c/busses/i2c-piix4.c                     |  15 +-
+ drivers/i2c/busses/i2c-rcar.c                      |  30 +-
+ drivers/i2c/busses/i2c-riic.c                      |  43 +-
+ drivers/i2c/busses/i2c-stm32f7.c                   |   4 +
+ drivers/i2c/busses/i2c-stu300.c                    |  25 +-
+ drivers/i2c/busses/i2c-tegra-bpmp.c                |  25 +-
+ drivers/i2c/i2c-core-base.c                        |  23 +-
+ drivers/i2c/i2c-core-smbus.c                       |  29 +-
+ drivers/i2c/i2c-core.h                             |  36 +
+ drivers/i2c/i2c-mux.c                              |   6 +
+ drivers/i2c/muxes/i2c-demux-pinctrl.c              |   6 +-
+ drivers/i2c/muxes/i2c-mux-pca9541.c                |   8 +-
+ drivers/i2c/muxes/i2c-mux-pca954x.c                | 106 ++-
+ include/linux/i2c-algo-bit.h                       |   1 +
+ include/linux/i2c.h                                |  41 +-
+ include/linux/platform_data/pca954x.h              |  48 --
+ 49 files changed, 3151 insertions(+), 932 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-pca954x
+ create mode 100644 Documentation/i2c/busses/i2c-amd-mp2
+ create mode 100644 drivers/i2c/busses/i2c-amd-mp2-pci.c
+ create mode 100644 drivers/i2c/busses/i2c-amd-mp2-plat.c
+ create mode 100644 drivers/i2c/busses/i2c-amd-mp2.h
+ create mode 100644 drivers/i2c/busses/i2c-at91-core.c
+ rename drivers/i2c/busses/{i2c-at91.c => i2c-at91-master.c} (65%)
+ create mode 100644 drivers/i2c/busses/i2c-at91-slave.c
+ create mode 100644 drivers/i2c/busses/i2c-at91.h
+ delete mode 100644 include/linux/platform_data/pca954x.h
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzUe10ACgkQFA3kzBSg
+KbYh7w/+P7EgsTY2Lf++2poJw4YFJKPynb1vBRZSZ99IaEUevz/k92CT3/d5U2kB
+XV56CRJu/IohVSWrh+w2OvBBJxe5dMxy+MjmQhrBn1a1xDAsjmMFNEDajpXd+iZO
+vXy0bEKxvkwTCgN2ZOkSSRLp2lcX2RbwEbAfs0aC2gS1NJVz+m4EUok1eiwkaNHN
+g+deGclLltvo/AK6pPeSqX3ojy7GeOr9yvWvmM7UUAKP48UrwwPTBPVf65XRRRpa
+GE14tOOuDpRIzKiZk+6+w/JHVAXP04UquC1zl9nuUVAL71aJtOyp0uhj8e5G6Znz
+aGF0X5ED6aRPULVDxCdCzC8z96f7h89Zh0RIJyLYTbc0aw4opjy1Gxh4hvDWIDn4
+Uz3E9H7AWVy0gTk5C9xxRtZQ6ArCOH0JWrY1M3i5+K87Mc5f9TNYdTPcWVCtZTUq
+pccKk28fXk6vG4haLFIYKBZtVQWW8LbzeMoMz5VUVkS5lrc1CRAOxEOgwDvoOV2Q
+QlH/DPMjZ8wak+MDxjCfUYrBsK5xLYhOPs3GaHQBc+Y/Up6JjIsEwonmvbLYhLDv
+0Bo8a0zxD/kuVeLH2IfMuawEWSbyDuHh2zx/ix2vBOn6LVqAcVIyOFiiUSq1I8Qg
+54sVms8iWIqhRl+BA2tieZr3gyrGQm+pt4vvvHGnvfdcWeYQG48=
+=xSPh
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
