@@ -2,143 +2,131 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A5DC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59F9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74DF21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF20206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:13:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDkwyiO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfEIJLE (ORCPT
+        id S1726449AbfEIJNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:11:04 -0400
-Received: from foss.arm.com ([217.140.101.70]:35286 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfEIJLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:11:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BF4B374;
-        Thu,  9 May 2019 02:11:03 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D13F3F575;
-        Thu,  9 May 2019 02:11:00 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:10:57 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v8 04/16] sched/core: uclamp: Add system default clamps
-Message-ID: <20190509091057.ckef2ley4eswyzds@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-5-patrick.bellasi@arm.com>
- <20190508190733.GC32547@worktop.programming.kicks-ass.net>
- <20190508191529.GA26813@worktop.programming.kicks-ass.net>
+        Thu, 9 May 2019 05:13:00 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52184 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfEIJNA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:13:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id o189so2268800wmb.1;
+        Thu, 09 May 2019 02:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UcO77C1d2oPlXYkp6CkiRlKtVOMkq5wxTIYeAm1syxo=;
+        b=CDkwyiO65SSVbxmKPkBw+7CcNdsw7cmG/lXhK57rnCu5hWuqjioqvSYy2l9aUikO5M
+         /nW8VgaATNCzJhdIcK9nIZxH0TZfYz86n0vwCqqh1C//E0g2pG660CNOtzmxqm6EqpgK
+         ZWIpx5vT9WYGFEmAXUpEgd/buHjfmaAOtX6UH2Bw+XR37DkBzqcVhOmXL2ZHV4oI4jxf
+         Q6v6TKLWoy9BL+/a+HF5QnTS14Sj1q9oOGmb1RYruBTgAgXTxEzipUKxBtN49pQAYrNG
+         4uZj/gIv9bT4vK48zVMSQsSJ5yDQ1b2WgQORXIz4ZaauynohR8iJft+JXpAWii7StqKO
+         1cXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UcO77C1d2oPlXYkp6CkiRlKtVOMkq5wxTIYeAm1syxo=;
+        b=GHbMDfYvEaa6C85q8xjApQegAkKhNKpwdC6JFwukJP2D41N3ADfvFSiMwiftpU/ygr
+         dLYpYxEnSca9u0vi66vbWGvoDKqsVyeThGPIR03kQD/CGLY5w4MGmTulB5MjGCxF2Gla
+         ljcySJ0VOnSWMm4vEDeCukIvofeQTZd3ilhOOxk8s8JGWkNcC859OcfM54ZHSskaH5WA
+         jwJnUC3zsiy0HYpbnjicb+GnVje5Lr4GZFK/K7p+AkbCLCy8qFhd4kM0oRWYVtmPbkf+
+         P6TvvNujlFahf63BlUDRRGOr3NnnSdPlmdV0s1BMDCaqUAlUMOY3qIpgK0Yogdff0VQd
+         ytPw==
+X-Gm-Message-State: APjAAAX1QshsvAAJyC1SghQ8O+4OlEpkBzNraqZVk6jqHAYEmvp3PICF
+        fDGYMpB/NdnioOKjYXfDtYo=
+X-Google-Smtp-Source: APXvYqw0VKhI0WziMTaFb1wtWXZnzZOn5XxmOI7BEJXN6voxMBVpcjaeQu+MCIZq24v6HE7IT31/cQ==
+X-Received: by 2002:a1c:b756:: with SMTP id h83mr1888506wmf.64.1557393177619;
+        Thu, 09 May 2019 02:12:57 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id e8sm4815404wrc.34.2019.05.09.02.12.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 02:12:56 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:12:55 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Fam Zheng <fam@euphon.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
+Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
+Message-ID: <20190509091255.GB15331@stefanha-x1.localdomain>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+ <20190503121838.GA21041@lst.de>
+ <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
 Content-Disposition: inline
-In-Reply-To: <20190508191529.GA26813@worktop.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-May 21:15, Peter Zijlstra wrote:
-> On Wed, May 08, 2019 at 09:07:33PM +0200, Peter Zijlstra wrote:
-> > On Tue, Apr 02, 2019 at 11:41:40AM +0100, Patrick Bellasi wrote:
-> > > +static inline struct uclamp_se
-> > > +uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
-> > > +{
-> > > +	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
-> > > +	struct uclamp_se uc_max = uclamp_default[clamp_id];
-> > > +
-> > > +	/* System default restrictions always apply */
-> > > +	if (unlikely(uc_req.value > uc_max.value))
-> > > +		return uc_max;
-> > > +
-> > > +	return uc_req;
-> > > +}
-> > > +
-> > > +static inline unsigned int
-> > > +uclamp_eff_bucket_id(struct task_struct *p, unsigned int clamp_id)
-> > > +{
-> > > +	struct uclamp_se uc_eff;
-> > > +
-> > > +	/* Task currently refcounted: use back-annotated (effective) bucket */
-> > > +	if (p->uclamp[clamp_id].active)
-> > > +		return p->uclamp[clamp_id].bucket_id;
-> > > +
-> > > +	uc_eff = uclamp_eff_get(p, clamp_id);
-> > > +
-> > > +	return uc_eff.bucket_id;
-> > > +}
-> > > +
-> > > +unsigned int uclamp_eff_value(struct task_struct *p, unsigned int clamp_id)
-> > > +{
-> > > +	struct uclamp_se uc_eff;
-> > > +
-> > > +	/* Task currently refcounted: use back-annotated (effective) value */
-> > > +	if (p->uclamp[clamp_id].active)
-> > > +		return p->uclamp[clamp_id].value;
-> > > +
-> > > +	uc_eff = uclamp_eff_get(p, clamp_id);
-> > > +
-> > > +	return uc_eff.value;
-> > > +}
-> > 
-> > This is 'wrong' because:
-> > 
-> >   uclamp_eff_value(p,id) := uclamp_eff(p,id).value
-> 
-> Clearly I means to say the above does not hold with the given
-> implementation, while the naming would suggest it does.
 
-Not sure to completely get your point...
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-AFAIU, what you call uclamp_eff(p, id).value is the "value" member of
-the struct returned by uclamp_eff_get(p,id), which is back annotate
-by uclamp_rq_inc_id(p, rq, id) in:
+On Mon, May 06, 2019 at 12:04:06PM +0300, Maxim Levitsky wrote:
+> On top of that, it is expected that newer hardware will support the PASID based
+> device subdivision, which will allow us to _directly_ pass through the
+> submission queues of the device and _force_ us to use the NVME protocol for the
+> frontend.
 
-   p->uclamp[clamp_id].value
+I don't understand the PASID argument.  The data path will be 100%
+passthrough and this driver won't be necessary.
 
-when a task becomes RUNNABLE.
+In the meantime there is already SPDK for users who want polling.  This
+driver's main feature is that the host can still access the device at
+the same time as VMs, but I'm not sure that's useful in
+performance-critical use cases and for non-performance use cases this
+driver isn't necessary.
 
-> > Which seems to suggest the uclamp_eff_*() functions want another name.
+Stefan
 
-That function returns the effective value of a task, which is either:
- 1. the back annotated value for a RUNNABLE task
-or
- 2. the aggregation of task-specific, system-default and cgroup values
-    for a non RUNNABLE task.
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > Also, suppose the above would be true; does GCC really generate better
-> > code for the LHS compared to the RHS?
+-----BEGIN PGP SIGNATURE-----
 
-It generate "sane" code which implements the above logic and allows
-to know that whenever we call uclamp_eff_value(p,id) we get the most
-updated effective value for a task, independently from its {!}RUNNABLE
-state.
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzT7xcACgkQnKSrs4Gr
+c8h67Qf/cCzGWh6iM657Q87QZaDIfXuEdFC5VBJt+JUTAJrD1K+vJeppmlITSNe9
+7i6nrm+Y7G2icJW5PZmv7Ym7Pl9na4VDNU+G13f/ErGEniwuY8YdvW5VyO7v8Ilo
+ShnXoNT6DY0yhSi7TZalmpq/o9GAw/i0A/QEoMs89A1jQgcnbYZjXemlRTuy+RaT
+NcXQxGSVvjW3QXT/qSiwD2GgeNVWbGTp5pCFME/GBY5tlad9blpJJIKkQQLHyhdW
+U/UqokQr4hAbb1C1W+Y4nzQsGaHxB8AN+mQoD3luyDs0qqYNeHLiQCAm3mXdRna5
+A/tkfOjwvZxT/OhJqWDcjIHB9NsWmA==
+=YaAX
+-----END PGP SIGNATURE-----
 
-I would keep the function but, since Suren also complained also about
-the name... perhaps I should come up with a better name? Proposals?
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+--qlTNgmc+xy1dBmNv--
