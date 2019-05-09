@@ -2,86 +2,122 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B07FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3177C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BA421479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5FB21479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfEIJ3k (ORCPT
+        id S1726744AbfEIJ3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:29:40 -0400
-Received: from smtprelay0195.hostedemail.com ([216.40.44.195]:57114 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725826AbfEIJ3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:29:39 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id CFD69100E86CA;
-        Thu,  9 May 2019 09:29:37 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: skate64_198a4048ff50b
-X-Filterd-Recvd-Size: 2238
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  9 May 2019 09:29:35 +0000 (UTC)
-Message-ID: <1f6fbb9fdcea4a39ff11cd977a5ce46babe34454.camel@perches.com>
-Subject: Re: [RFC PATCH 1/2] rtl8xxxu: Add rate adaptive related data
-From:   Joe Perches <joe@perches.com>
-To:     Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>
-Cc:     jes.sorensen@gmail.com, Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Date:   Thu, 09 May 2019 02:29:34 -0700
-In-Reply-To: <CAD8Lp45WmPz2c+OnszFyaRL=veF0avEffwv3muwXNoeLcE0fhw@mail.gmail.com>
-References: <20190503072146.49999-1-chiu@endlessm.com>
-         <20190503072146.49999-2-chiu@endlessm.com>
-         <CAD8Lp45WmPz2c+OnszFyaRL=veF0avEffwv3muwXNoeLcE0fhw@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 9 May 2019 05:29:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58592 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbfEIJ3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:29:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 966AAAB42;
+        Thu,  9 May 2019 09:29:43 +0000 (UTC)
+Date:   Thu, 9 May 2019 11:29:42 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Crashes in linux-next on powerpc with CONFIG_PPC_KUAP and
+ CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+Message-ID: <20190509092942.ei4myfzt5dczuptj@pathway.suse.cz>
+References: <87k1f2wc04.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k1f2wc04.fsf@concordia.ellerman.id.au>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-09 at 16:11 +0800, Daniel Drake wrote:
-> On Fri, May 3, 2019 at 3:22 PM Chris Chiu <chiu@endlessm.com> wrote:
-> > Add wireless mode, signal strength level, and rate table index
-> > to tell the firmware that we need to adjust the tx rate bitmap
-> > accordingly.
-[]
-> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-[]
-> > +/*mlme related.*/
-> > +enum wireless_mode {
-> > +       WIRELESS_MODE_UNKNOWN = 0,
-> > +       //Sub-Element
+On Wed 2019-05-08 00:54:51, Michael Ellerman wrote:
+> Hi folks,
 > 
-> Run these patches through checkpatch.pl, it'll have some suggestions
-> to bring the coding style in line, for example not using // style
-> comments.
+> Just an FYI in case anyone else is seeing crashes very early in boot in
+> linux-next with the above config options.
+>
+> The problem is the combination of some new code called via printk(),
+> check_pointer() which calls probe_kernel_read(). That then calls 
+> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+> (before we've patched features). With the JUMP_LABEL debug enabled that
+> causes us to call printk() & dump_stack() and we end up recursing and
+> overflowing the stack.
 
-just fyi:
+Sigh, the check_pointer() stuff is in Linus's tree now, see
+the commit 3e5903eb9cff707301712 ("vsprintf: Prevent crash when
+dereferencing invalid pointers").
 
-checkpatch ignores // comments since 2016
-(new in 2019: unless you add --ignore=c99_comment_tolerance)
+> Because it happens so early you don't get any output, just an apparently
+> dead system.
+> 
+> The stack trace (which you don't see) is something like:
+> 
+>   ...
+>   dump_stack+0xdc
+>   probe_kernel_read+0x1a4
+>   check_pointer+0x58
+>   string+0x3c
+>   vsnprintf+0x1bc
+>   vscnprintf+0x20
+>   printk_safe_log_store+0x7c
+>   printk+0x40
+>   dump_stack_print_info+0xbc
+>   dump_stack+0x8
+>   probe_kernel_read+0x1a4
+>   probe_kernel_read+0x19c
+>   check_pointer+0x58
+>   string+0x3c
+>   vsnprintf+0x1bc
+>   vscnprintf+0x20
+>   vprintk_store+0x6c
+>   vprintk_emit+0xec
+>   vprintk_func+0xd4
+>   printk+0x40
+>   cpufeatures_process_feature+0xc8
+>   scan_cpufeatures_subnodes+0x380
+>   of_scan_flat_dt_subnodes+0xb4
+>   dt_cpu_ftrs_scan_callback+0x158
+>   of_scan_flat_dt+0xf0
+>   dt_cpu_ftrs_scan+0x3c
+>   early_init_devtree+0x360
+>   early_setup+0x9c
+> 
+> 
+> The simple fix is to use early_mmu_has_feature() in allow_user_access(),
+> but we'd rather not do that because it penalises all
+> copy_to/from_users() for the life of the system with the cost of the
+> runtime check vs the jump label. The irony is probe_kernel_read()
+> shouldn't be allowing user access at all, because we're reading the
+> kernel not userspace.
 
-These are the relevant checkpatch commits:
+I have tried to find a lightweight way for a safe reading of unknown
+kernel pointer. But I have not succeeded so far. I see only variants
+with user access. The user access is handled in arch-specific code
+and I do not see any variant without it.
 
-In 2016, commit dadf680de3c2 ("checkpatch: allow c99 style // comments")
-In 2019, commit 98005e8c743f ("checkpatch: allow reporting C99 style comments")
+I am not sure on which level it should get fixed.
 
+Could you please send it to lkml to get a wider audience?
 
+Best Regards,
+Petr
 
-
+> For now if you're hitting it just turn off 
+> CONFIG_PPC_KUAP and/or CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG.
+> 
+> cheers
