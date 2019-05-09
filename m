@@ -2,96 +2,122 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322C9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD66C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081662173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1E4216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iDGKS2pp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfEIKvN (ORCPT
+        id S1726411AbfEIKzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 06:51:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58140 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbfEIKvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 06:51:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 51078AC2D;
-        Thu,  9 May 2019 10:51:12 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 264201E3C7F; Thu,  9 May 2019 12:51:10 +0200 (CEST)
-Date:   Thu, 9 May 2019 12:51:10 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Chengguang Xu <cgxu519@gmail.com>
-Cc:     jack@suse.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: add dqi_dirty_list description to comment of
- Dquot List Management
-Message-ID: <20190509105110.GE23589@quack2.suse.cz>
-References: <1557106743-19157-1-git-send-email-cgxu519@gmail.com>
+        Thu, 9 May 2019 06:55:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57240 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfEIKzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 06:55:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bxtS26xVOjMNdacI/cyf12bZjI1vE2fsrBEFKhrTk7g=; b=iDGKS2ppg8lbhcOC+BzYkdvjM
+        z5i/B1R6hdkzVBmMJWHMxfFimmt4hdp3TzbU+MywQd+Xwu663pbMFF8BIv0Iarlkg/ymD1fSsC9bo
+        6Zu8tuFyf6WvfJvQh+SKe+oHS378YgAqvmedIMRbj/Q6ReFedtC9T2QQJ7SFiF8Nkkvb4Ze5tbYGt
+        lyKf09vFEeOoMkA7Tt3FgpN43Cdw0XE5U5EWAPI32slF+0IWwSfFHvJSta5SlAuhDVCMUcapq/mfh
+        eU+riuTeHZPZqLqIcGmHqsuZW8z6GV8wszrd2pJXqjK14AKZpqVeiInwSygR0y95cUmGO4Ls9iavp
+        xryW1hWcw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOghM-0002T0-Bg; Thu, 09 May 2019 10:54:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D7A9220274AF5; Thu,  9 May 2019 12:54:46 +0200 (CEST)
+Date:   Thu, 9 May 2019 12:54:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, jstancek@redhat.com,
+        akpm@linux-foundation.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, npiggin@gmail.com,
+        namit@vmware.com, minchan@kernel.org, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-ID: <20190509105446.GL2650@hirez.programming.kicks-ass.net>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557106743-19157-1-git-send-email-cgxu519@gmail.com>
+In-Reply-To: <20190509103813.GP2589@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06-05-19 09:39:03, Chengguang Xu wrote:
-> Actually there are four lists for dquot management, so add
-> the description of dqui_dirty_list to comment.
+On Thu, May 09, 2019 at 12:38:13PM +0200, Peter Zijlstra wrote:
+
+> That's tlb->cleared_p*, and yes agreed. That is, right until some
+> architecture has level dependent TLBI instructions, at which point we'll
+> need to have them all set instead of cleared.
+
+> Anyway; am I correct in understanding that the actual problem is that
+> we've cleared freed_tables and the ARM64 tlb_flush() will then not
+> invalidate the cache and badness happens?
 > 
-> Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+> Because so far nobody has actually provided a coherent description of
+> the actual problem we're trying to solve. But I'm thinking something
+> like the below ought to do.
 
-Thanks applied with small addition:
+There's another 'fun' issue I think. For architectures like ARM that
+have range invalidation and care about VM_EXEC for I$ invalidation, the
+below doesn't quite work right either.
 
-Note that some filesystems do dirty dquot tracking on their own (e.g. in a
-journal) and thus don't use dqi_dirty_list.
+I suspect we also have to force: tlb->vma_exec = 1.
 
-								Honza
+And I don't think there's an architecture that cares, but depending on
+details I can construct cases where any setting of tlb->vm_hugetlb is
+wrong, so that is _awesome_. But I suspect the sane thing for now is to
+force it 0.
 
-> ---
->  fs/quota/dquot.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index fc20e06c56ba..6a236bdaef89 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -223,9 +223,9 @@ static void put_quota_format(struct quota_format_type *fmt)
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 99740e1dd273..fe768f8d612e 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>  		unsigned long start, unsigned long end)
+>  {
+>  	/*
+> -	 * If there are parallel threads are doing PTE changes on same range
+> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> -	 * forcefully if we detect parallel PTE batching threads.
+> +	 * Sensible comment goes here..
+>  	 */
+> -	if (mm_tlb_flush_nested(tlb->mm)) {
+> -		__tlb_reset_range(tlb);
+> -		__tlb_adjust_range(tlb, start, end - start);
+> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
+> +		/*
+> +		 * Since we're can't tell what we actually should have
+> +		 * flushed flush everything in the given range.
+> +		 */
+> +		tlb->start = start;
+> +		tlb->end = end;
+> +		tlb->freed_tables = 1;
+> +		tlb->cleared_ptes = 1;
+> +		tlb->cleared_pmds = 1;
+> +		tlb->cleared_puds = 1;
+> +		tlb->cleared_p4ds = 1;
+>  	}
 >  
->  /*
->   * Dquot List Management:
-> - * The quota code uses three lists for dquot management: the inuse_list,
-> - * free_dquots, and dquot_hash[] array. A single dquot structure may be
-> - * on all three lists, depending on its current state.
-> + * The quota code uses four lists for dquot management: the inuse_list,
-> + * free_dquots, dqi_dirty_list, and dquot_hash[] array. A single dquot
-> + * structure may be on some of those lists, depending on its current state.
->   *
->   * All dquots are placed to the end of inuse_list when first created, and this
->   * list is used for invalidate operation, which must look at every dquot.
-> @@ -236,6 +236,10 @@ static void put_quota_format(struct quota_format_type *fmt)
->   * dqstats.free_dquots gives the number of dquots on the list. When
->   * dquot is invalidated it's completely released from memory.
->   *
-> + * Dirty dquots are added to the dqi_dirty_list of quota_info when mark
-> + * dirtied, and this list is searched when writeback diry dquots to
-> + * quota file.
-> + *
->   * Dquots with a specific identity (device, type and id) are placed on
->   * one of the dquot_hash[] hash chains. The provides an efficient search
->   * mechanism to locate a specific dquot.
-> -- 
-> 2.17.2
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>  	tlb_flush_mmu(tlb);
