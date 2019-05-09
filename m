@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1CDC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8338BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726282173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539F3216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IkP6Skkf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RuOMJ/m9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfEII72 (ORCPT
+        id S1726882AbfEII7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:59:28 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11690 "EHLO
+        Thu, 9 May 2019 04:59:50 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11666 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726744AbfEII7Y (ORCPT
+        by vger.kernel.org with ESMTP id S1726097AbfEII7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:59:24 -0400
+        Thu, 9 May 2019 04:59:23 -0400
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x498wbLb026180;
-        Thu, 9 May 2019 10:59:14 +0200
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x498wcEN026185;
+        Thu, 9 May 2019 10:59:13 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=oLZyIe7lj1qZRAFN9CE7bWOFUZpkOiLQPFfjp/TdlWY=;
- b=IkP6Skkf+kuudMp1hbpQxNe1F092UbtdKAug2zFdfCOvz0cpee1XEZDhvJFFCV21EqvE
- naJnPKNcTih4+XzIFred7XZNYrPBvBA4lYEGE/n/A301LHKmfThtyiNdAlLyNiYbBUdT
- lsMHFh2YicYnrf3gTccewFSgLbuv3RQNOa4wDlMXu3yaQM24F8sZt4+CZ2H1azeshVrX
- +plBgdHkNzH8AXugRBdOc6puEHs37nTyJknbHR/W6w+Ub7rEmHg1sZiT7losaf8fSQa+
- Bq6Qgl8suuzeJVa6IeYqbPh8ZJF1i71OzVR3mJ/oEmFgV6FvuaOXTNwgt0WoU70IVb2n mQ== 
+ bh=+7wNELEx78IRxLLIQk8fXMQ2yhAOu8VYD8rixLi4P0o=;
+ b=RuOMJ/m96uyrFZcBu+GqwXXVQJzstwy50w8HKoiY1vJpIuLXtJQAFRy4Z4ECZBlBvTkp
+ XkHbclF5/ilVvnU8UjqFhTt6Py9xXQaE5XIOdUQhtFCT0yjD8s/wtzPNwfURr6ePw2WR
+ 9Hdqpz7hvVWPV4li+3MFWqWoHLeG0mRzx5yb3Kg4jthmiKvkJ292/Hua8+bpVITr+2BU
+ KRO93AphyjcQqfFUzI7l2ZgBng5WHu8kfLNcoSTLa835PI9sDiOqmztVLhF9x9G4bjcE
+ VylfmfGkog5dO6cLzmIz5hrol2/U7yE2NcbBq1jBF3dalpw3B2Hux3j7HBSycDUG4s7U CA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4a9m7-1
+        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4a9m3-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 09 May 2019 10:59:14 +0200
+        Thu, 09 May 2019 10:59:13 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D03CD3D;
-        Thu,  9 May 2019 08:59:13 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A59A7153C;
-        Thu,  9 May 2019 08:59:13 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 9 May 2019
- 10:59:13 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 782523F;
+        Thu,  9 May 2019 08:59:12 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5EC5E153C;
+        Thu,  9 May 2019 08:59:12 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 9 May 2019
+ 10:59:12 +0200
 Received: from localhost (10.201.20.5) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 9 May 2019 10:59:12 +0200
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 9 May 2019 10:59:11 +0200
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -62,9 +62,9 @@ CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v6 8/9] ARM: dts: stm32: add STMFX support on stm32mp157c-ev1
-Date:   Thu, 9 May 2019 10:58:55 +0200
-Message-ID: <1557392336-28239-9-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH v6 7/9] ARM: dts: stm32: add orange and blue leds on stm32746g-eval
+Date:   Thu, 9 May 2019 10:58:54 +0200
+Message-ID: <1557392336-28239-8-git-send-email-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
 References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
@@ -78,41 +78,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for STMicroelectronics Multi-Function eXpander
-(STMFX) on stm32mp157c-ev1. It is connected on i2c2.
+Orange (LD2) and blue (LD4) leds on stm32746g-eval are connected on
+STMFX gpio expander, offset 17 and 19.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/boot/dts/stm32746g-eval.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index b6aca40..eec3c79 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -99,6 +99,22 @@
- 	i2c-scl-rising-time-ns = <185>;
- 	i2c-scl-falling-time-ns = <20>;
- 	status = "okay";
-+
-+	stmfx: stmfx@42 {
-+		compatible = "st,stmfx-0300";
-+		reg = <0x42>;
-+		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-parent = <&gpioi>;
-+
-+		stmfx_pinctrl: stmfx-pin-controller {
-+			compatible = "st,stmfx-0300-pinctrl";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
+index 21e8912..2b166488 100644
+--- a/arch/arm/boot/dts/stm32746g-eval.dts
++++ b/arch/arm/boot/dts/stm32746g-eval.dts
+@@ -70,9 +70,15 @@
+ 			gpios = <&gpiof 10 1>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
++		orange {
++			gpios = <&stmfx_pinctrl 17 1>;
 +		};
-+	};
- };
+ 		red {
+ 			gpios = <&gpiob 7 1>;
+ 		};
++		blue {
++			gpios = <&stmfx_pinctrl 19 1>;
++		};
+ 	};
  
- &i2c5 {
+ 	gpio_keys {
 -- 
 2.7.4
 
