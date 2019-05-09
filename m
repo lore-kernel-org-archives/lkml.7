@@ -7,317 +7,294 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65843C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634E6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EF72173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26865217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xmt6jd5k"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z1AdviOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfEIRKu (ORCPT
+        id S1726772AbfEIROJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:10:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43800 "EHLO
+        Thu, 9 May 2019 13:14:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35872 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEIRKt (ORCPT
+        with ESMTP id S1726653AbfEIROJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:10:49 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c6so1634607pfa.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:10:49 -0700 (PDT)
+        Thu, 9 May 2019 13:14:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v80so1657221pfa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:14:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rnsWVEfgES/Bm159b334TIA+Lzx3hSfjZ0w87I9bQpM=;
-        b=Xmt6jd5kZjEFHYo8bmyvt5K2iPweMXr3BM1BRlGnco9hx6yAkaL1VXDwGBcyNrQadZ
-         vsJLjVx5lW2ddUCRiilG0U98ddLAYbutWpOCm50QELXaB7rIrGiJ7d/VKIIMHQIBHwsM
-         VeVsYZ5P3h7Y5KEO3v7BFGqfmKIu/x+m1EGtM=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=S42wLF8DqiazmIgnqiYi8pJSaWpKh/ng4T41SuYQhkk=;
+        b=Z1AdviOY+UrNYpqr8+dHD6vOBj1ZXwomyMMvpcDNBOn4PRJZ+gEF3bz9dnkyMXetXs
+         U2tMrTb447RqV8zv59to0oIcXjzkDStbK25LAyuDE95s2JrT8wMtU9/ePvDjgIENErCP
+         oI+LOH5X5LYwEN0kI0gcl1XTxZ4+TDFOwk+C0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rnsWVEfgES/Bm159b334TIA+Lzx3hSfjZ0w87I9bQpM=;
-        b=blG9Q/Lr+bPvbsd8GPup3fvHd+JkYbFX8lNNbfo+4fO2dMpZoUPSe8dKm0H4UtzIHn
-         g+Eh5NIOYYWl5eZikBKWoBDIJwEvC79ReP9FoqiOqWekakaLEqTVPwlc9/4UO/ajGp+C
-         xIj8M5w84IPL0lI5SHNm4lI7UeyvFFy6sRFrSqiqR10Hbf8ByZoSnCUGdu+KVejMLs5f
-         7xiwh77ttE84GGV7iOaKepStsVoEBHN1TmPUfRFMBvT27fH8NSMfb3kC2u6D4gOhWJ7H
-         zcGG+hHhPjMPwGh8AwbioZj367Td7GpnSakqlya0AvsebutjZWDMPoSGaa+8YSCjlxxB
-         u7+w==
-X-Gm-Message-State: APjAAAWrXBzel1w5JU0HEqPe2v7UeaQkx/76K580PDIBWb/HZFd4kb55
-        96xMFEDR8Chaj7E3zumUx2ei8w==
-X-Google-Smtp-Source: APXvYqwRPX/rCd8h7TvqaXjNIW4dIOyUxz6wGxf46umtlRJt4ZDtxqxP+VPrJJTtB92JWoet/hirSA==
-X-Received: by 2002:a63:5b58:: with SMTP id l24mr6862966pgm.139.1557421848309;
-        Thu, 09 May 2019 10:10:48 -0700 (PDT)
-Received: from [10.136.8.252] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x4sm3696708pfm.19.2019.05.09.10.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 10:10:47 -0700 (PDT)
-Subject: Re: [PATCH 1/1] i2c: iproc: Add multi byte read-write support for
- slave mode
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Michael Cheng <ccheng@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-References: <1557375708-14830-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <508d6d50-29a6-dfa7-8e25-b64fa2cbbb8a@broadcom.com>
- <CAHO=5PGpY6g01w7DO7JYrx3WPMtjhp9jwaQmiM15jv+x=+oNaw@mail.gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <3f3938ea-3710-99ef-4f35-433cb7156e05@broadcom.com>
-Date:   Thu, 9 May 2019 10:10:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=S42wLF8DqiazmIgnqiYi8pJSaWpKh/ng4T41SuYQhkk=;
+        b=XRdyqxehm6lA9qkKGnxAMTyaTA0fJ0yd7poe4GMHkmcPmUQ99g9Kz7pU90si4yzgv3
+         9Fl/ia98AU4eyIUPKtaCdWzmfy3HQmqvHMXssZR4IukWF3ary6mBeGtohpImHPIbH1VG
+         nqXI0YyZEPyJ888VnfhzXy0rqx64mthUqZy+Kj5Vv8JK6ojESGqjPN3sAPFBIrqF3oG2
+         AgN8CLdooveOtw/ydvVK2s0ofqJaabg1qzuMkAMxR34JVmOnZbssXO3UNilg8rnsXnCA
+         9J3lbgzpPdHtrwkMah4BggDB5KJZyj2GxSr88gsNSdHMzSU+K6EK1qYlNZPChFIswhjq
+         85ug==
+X-Gm-Message-State: APjAAAVfADCIOHPd91e4sPlWphdybKAJl+MDNYAThgsuE+VXI7deINfJ
+        6tHT/T8R3ayGcS2EMJsR1CSsdw==
+X-Google-Smtp-Source: APXvYqzEpGjEEQr9wRCziFPQerirAmhYX1TfzqvbhYjF9dVM1aJn7ynTkvg809wHw1VvkjJpyYdH7Q==
+X-Received: by 2002:a63:1a42:: with SMTP id a2mr6993575pgm.358.1557422047739;
+        Thu, 09 May 2019 10:14:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o2sm7744824pgq.1.2019.05.09.10.14.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 10:14:06 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:14:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/lkdtm: Add tests for LKDTM targets
+Message-ID: <201905091013.E228F0F0BE@keescook>
 MIME-Version: 1.0
-In-Reply-To: <CAHO=5PGpY6g01w7DO7JYrx3WPMtjhp9jwaQmiM15jv+x=+oNaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds a basic framework for running all the "safe" lkdtm tests.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS                             |  1 +
+ tools/testing/selftests/Makefile        |  1 +
+ tools/testing/selftests/lkdtm/Makefile  | 11 ++++
+ tools/testing/selftests/lkdtm/config    |  1 +
+ tools/testing/selftests/lkdtm/run.sh    | 86 +++++++++++++++++++++++++
+ tools/testing/selftests/lkdtm/tests.txt | 64 ++++++++++++++++++
+ 6 files changed, 164 insertions(+)
+ create mode 100644 tools/testing/selftests/lkdtm/Makefile
+ create mode 100644 tools/testing/selftests/lkdtm/config
+ create mode 100755 tools/testing/selftests/lkdtm/run.sh
+ create mode 100644 tools/testing/selftests/lkdtm/tests.txt
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c2fce72e694..055f1a09b1da 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8977,6 +8977,7 @@ LINUX KERNEL DUMP TEST MODULE (LKDTM)
+ M:	Kees Cook <keescook@chromium.org>
+ S:	Maintained
+ F:	drivers/misc/lkdtm/*
++F:	tools/testing/selftests/lkdtm/*
+ 
+ LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
+ M:	Alan Stern <stern@rowland.harvard.edu>
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 971fc8428117..c2397baeb777 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -23,6 +23,7 @@ TARGETS += kcmp
+ TARGETS += kvm
+ TARGETS += lib
+ TARGETS += livepatch
++TARGETS += lkdtm
+ TARGETS += membarrier
+ TARGETS += memfd
+ TARGETS += memory-hotplug
+diff --git a/tools/testing/selftests/lkdtm/Makefile b/tools/testing/selftests/lkdtm/Makefile
+new file mode 100644
+index 000000000000..f322d281fd8e
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
++# Makefile for LKDTM regression tests
++
++include ../lib.mk
++
++# NOTE: $(OUTPUT) won't get default value if used before lib.mk
++TEST_GEN_PROGS = $(patsubst %,$(OUTPUT)/%.sh,$(shell awk '{print $$1}' tests.txt | sed -e 's/\#//'))
++all: $(TEST_GEN_PROGS)
++
++$(OUTPUT)/%: run.sh tests.txt
++	install -m 0744 run.sh $@
+diff --git a/tools/testing/selftests/lkdtm/config b/tools/testing/selftests/lkdtm/config
+new file mode 100644
+index 000000000000..d874990e442b
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/config
+@@ -0,0 +1 @@
++CONFIG_LKDTM=y
+diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+new file mode 100755
+index 000000000000..117349bf78ca
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/run.sh
+@@ -0,0 +1,86 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# This reads tests.txt for the list of LKDTM tests to invoke. Any marked
++# with a leading "#" are skipped. The line after the test name is either
++# the text to look for in dmesg for a "success", or the rationale for why
++# a test is marked to be skipped.
++#
++set -e
++TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
++
++# Verify we have LKDTM available in the kernel.
++if [ ! -r $TRIGGER ] ; then
++	/sbin/modprobe -q lkdtm || true
++	if [ ! -r $TRIGGER ] ; then
++		echo "Cannot find $TRIGGER (missing CONFIG_LKDTM?)"
++	else
++		echo "Cannot write $TRIGGER (need to run as root?)"
++	fi
++	# Skip this test
++	exit 4
++fi
++
++# Figure out which test to run from our script name.
++test=$(basename $0 .sh)
++# Look up details about the test from master list of LKDTM tests.
++line=$(egrep '^#?'"$test"'\b' tests.txt)
++if [ -z "$line" ]; then
++	echo "Skipped: missing test '$test' in tests.txt"
++	exit 4
++fi
++# Check that the test is known to LKDTM.
++if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
++	echo "Skipped: test '$test' missing in $TRIGGER!"
++	exit 4
++fi
++
++# Extract notes/expected output from test list.
++test=$(echo "$line" | cut -d" " -f1)
++if echo "$line" | grep -q ' ' ; then
++	expect=$(echo "$line" | cut -d" " -f2-)
++else
++	expect=""
++fi
++
++# If the test is commented out, report a skip
++if echo "$test" | grep -q '^#' ; then
++	test=$(echo "$test" | cut -c2-)
++	if [ -z "$expect" ]; then
++		expect="crashes entire system"
++	fi
++	echo "Skipping $test: $expect"
++	exit 4
++fi
++
++# If no expected output given, assume an Oops with back trace is success.
++if [ -z "$expect" ]; then
++	expect="call trace:"
++fi
++
++# Clear out dmesg for output reporting
++dmesg -c >/dev/null
++
++# Prepare log for report checking
++LOG=$(mktemp --tmpdir -t lkdtm-XXXXXX)
++cleanup() {
++	rm -f "$LOG"
++}
++trap cleanup EXIT
++
++# Most shells yell about signals and we're expecting the "cat" process
++# to usually be killed by the kernel. So we have to run it in a sub-shell
++# and silence errors.
++($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
++
++# Record and dump the results
++dmesg -c >"$LOG"
++cat "$LOG"
++# Check for expected output
++if grep -qi "$expect" "$LOG" ; then
++	echo "$test: saw '$expect': ok"
++	exit 0
++else
++	echo "$test: missing '$expect': [FAIL]"
++	exit 1
++fi
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+new file mode 100644
+index 000000000000..59df8a23db45
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -0,0 +1,64 @@
++#PANIC
++BUG kernel BUG at
++WARNING WARNING:
++EXCEPTION BUG: unable to handle kernel
++#LOOP Hangs the system
++#EXHAUST_STACK Corrupts memory on failure
++#CORRUPT_STACK Crashes entire system on success
++#CORRUPT_STACK_STRONG Crashes entire system on success
++CORRUPT_LIST_ADD list_add corruption
++CORRUPT_LIST_DEL list_del corruption
++CORRUPT_USER_DS Invalid address limit on user-mode return
++STACK_GUARD_PAGE_LEADING
++STACK_GUARD_PAGE_TRAILING
++UNALIGNED_LOAD_STORE_WRITE
++#OVERWRITE_ALLOCATION Corrupts memory on failure
++#WRITE_AFTER_FREE Corrupts memory on failure
++READ_AFTER_FREE
++#WRITE_BUDDY_AFTER_FREE Corrupts memory on failure
++READ_BUDDY_AFTER_FREE
++#SOFTLOCKUP Hangs the system
++#HARDLOCKUP Hangs the system
++#SPINLOCKUP Hangs the system
++#HUNG_TASK Hangs the system
++EXEC_DATA
++EXEC_STACK
++EXEC_KMALLOC
++EXEC_VMALLOC
++EXEC_RODATA
++EXEC_USERSPACE
++EXEC_NULL
++ACCESS_USERSPACE
++ACCESS_NULL
++WRITE_RO
++WRITE_RO_AFTER_INIT
++WRITE_KERN
++REFCOUNT_INC_OVERFLOW
++REFCOUNT_ADD_OVERFLOW
++REFCOUNT_INC_NOT_ZERO_OVERFLOW
++REFCOUNT_ADD_NOT_ZERO_OVERFLOW
++REFCOUNT_DEC_ZERO
++REFCOUNT_DEC_NEGATIVE Negative detected: saturated
++REFCOUNT_DEC_AND_TEST_NEGATIVE Negative detected: saturated
++REFCOUNT_SUB_AND_TEST_NEGATIVE Negative detected: saturated
++REFCOUNT_INC_ZERO
++REFCOUNT_ADD_ZERO
++REFCOUNT_INC_SATURATED Saturation detected: still saturated
++REFCOUNT_DEC_SATURATED Saturation detected: still saturated
++REFCOUNT_ADD_SATURATED Saturation detected: still saturated
++REFCOUNT_INC_NOT_ZERO_SATURATED
++REFCOUNT_ADD_NOT_ZERO_SATURATED
++REFCOUNT_DEC_AND_TEST_SATURATED Saturation detected: still saturated
++REFCOUNT_SUB_AND_TEST_SATURATED Saturation detected: still saturated
++#REFCOUNT_TIMING timing only
++#ATOMIC_TIMING timing only
++USERCOPY_HEAP_SIZE_TO
++USERCOPY_HEAP_SIZE_FROM
++USERCOPY_HEAP_WHITELIST_TO
++USERCOPY_HEAP_WHITELIST_FROM
++USERCOPY_STACK_FRAME_TO
++USERCOPY_STACK_FRAME_FROM
++USERCOPY_STACK_BEYOND
++USERCOPY_KERNEL
++USERCOPY_KERNEL_DS
++STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
+-- 
+2.17.1
 
 
-On 5/9/2019 10:03 AM, Rayagonda Kokatanur wrote:
-> No change,  it's just duplicate, please ignore. 
-> 
-> I am not able to find my patch over network , I tried sending second
-> time by setting plain text mode,  but still it's not visible.
-> 
-
-I can see your patch from the linux-i2c mailing list:
-https://patchwork.ozlabs.org/project/linux-i2c/list/
-
-> Best regards 
-> Rayagonda
-> 
-> On Thu, May 9, 2019, 9:58 PM Ray Jui <ray.jui@broadcom.com
-> <mailto:ray.jui@broadcom.com> wrote:
-> 
->     Why is the email sent twice? What has changed?
-> 
->     On 5/8/2019 9:21 PM, Rayagonda Kokatanur wrote:
->     > Add multiple byte read-write support for slave mode.
->     >
->     > Signed-off-by: Rayagonda Kokatanur
->     <rayagonda.kokatanur@broadcom.com
->     <mailto:rayagonda.kokatanur@broadcom.com>>
->     > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com
->     <mailto:srinath.mannam@broadcom.com>>
->     > ---
->     >  drivers/i2c/busses/i2c-bcm-iproc.c | 117
->     +++++++++++++++++--------------------
->     >  1 file changed, 53 insertions(+), 64 deletions(-)
->     >
->     > diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c
->     b/drivers/i2c/busses/i2c-bcm-iproc.c
->     > index a845b8d..2c7f145 100644
->     > --- a/drivers/i2c/busses/i2c-bcm-iproc.c
->     > +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
->     > @@ -165,12 +165,6 @@ enum i2c_slave_read_status {
->     >       I2C_SLAVE_RX_END,
->     >  };
->     > 
->     > -enum i2c_slave_xfer_dir {
->     > -     I2C_SLAVE_DIR_READ = 0,
->     > -     I2C_SLAVE_DIR_WRITE,
->     > -     I2C_SLAVE_DIR_NONE,
->     > -};
->     > -
->     >  enum bus_speed_index {
->     >       I2C_SPD_100K = 0,
->     >       I2C_SPD_400K,
->     > @@ -203,7 +197,6 @@ struct bcm_iproc_i2c_dev {
->     >       struct i2c_msg *msg;
->     > 
->     >       struct i2c_client *slave;
->     > -     enum i2c_slave_xfer_dir xfer_dir;
->     > 
->     >       /* bytes that have been transferred */
->     >       unsigned int tx_bytes;
->     > @@ -219,7 +212,8 @@ struct bcm_iproc_i2c_dev {
->     >               | BIT(IS_M_RX_THLD_SHIFT))
->     > 
->     >  #define ISR_MASK_SLAVE (BIT(IS_S_START_BUSY_SHIFT)\
->     > -             | BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT))
->     > +             | BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT)\
->     > +             | BIT(IS_S_TX_UNDERRUN_SHIFT))
->     > 
->     >  static int bcm_iproc_i2c_reg_slave(struct i2c_client *slave);
->     >  static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave);
->     > @@ -297,15 +291,11 @@ static void bcm_iproc_i2c_slave_init(
->     >       /* clear all pending slave interrupts */
->     >       iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
->     > 
->     > -     /* Enable interrupt register for any READ event */
->     > -     val = BIT(IE_S_RD_EVENT_SHIFT);
->     >       /* Enable interrupt register to indicate a valid byte in
->     receive fifo */
->     > -     val |= BIT(IE_S_RX_EVENT_SHIFT);
->     > +     val = BIT(IE_S_RX_EVENT_SHIFT);
->     >       /* Enable interrupt register for the Slave BUSY command */
->     >       val |= BIT(IE_S_START_BUSY_SHIFT);
->     >       iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
->     > -
->     > -     iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
->     >  }
->     > 
->     >  static void bcm_iproc_i2c_check_slave_status(
->     > @@ -314,8 +304,11 @@ static void bcm_iproc_i2c_check_slave_status(
->     >       u32 val;
->     > 
->     >       val = iproc_i2c_rd_reg(iproc_i2c, S_CMD_OFFSET);
->     > -     val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
->     > +     /* status is valid only when START_BUSY is cleared after it
->     was set */
->     > +     if (val & BIT(S_CMD_START_BUSY_SHIFT))
->     > +             return;
->     > 
->     > +     val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
->     >       if (val == S_CMD_STATUS_TIMEOUT) {
->     >               dev_err(iproc_i2c->device, "slave random stretch
->     time timeout\n");
->     > 
->     > @@ -327,70 +320,66 @@ static void bcm_iproc_i2c_check_slave_status(
->     >  }
->     > 
->     >  static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev
->     *iproc_i2c,
->     > -                             u32 status)
->     > +                                 u32 status)
->     >  {
->     > -     u8 value;
->     >       u32 val;
->     > -     u32 rd_status;
->     > -     u32 tmp;
->     > +     u8 value, rx_status;
->     > 
->     > -     /* Start of transaction. check address and populate the
->     direction */
->     > -     if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_NONE) {
->     > -             tmp = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
->     > -             rd_status = (tmp >> S_RX_STATUS_SHIFT) &
->     S_RX_STATUS_MASK;
->     > -             /* This condition checks whether the request is a
->     new request */
->     > -             if (((rd_status == I2C_SLAVE_RX_START) &&
->     > -                     (status & BIT(IS_S_RX_EVENT_SHIFT))) ||
->     > -                     ((rd_status == I2C_SLAVE_RX_END) &&
->     > -                     (status & BIT(IS_S_RD_EVENT_SHIFT)))) {
->     > -
->     > -                     /* Last bit is W/R bit.
->     > -                      * If 1 then its a read request(by master).
->     > -                      */
->     > -                     iproc_i2c->xfer_dir = tmp &
->     SLAVE_READ_WRITE_BIT_MASK;
->     > -                     if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)
->     > -                             i2c_slave_event(iproc_i2c->slave,
->     > -                                     I2C_SLAVE_READ_REQUESTED,
->     &value);
->     > -                     else
->     > -                             i2c_slave_event(iproc_i2c->slave,
->     > +     /* Slave RX byte receive */
->     > +     if (status & BIT(IS_S_RX_EVENT_SHIFT)) {
->     > +             val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
->     > +             rx_status = (val >> S_RX_STATUS_SHIFT) &
->     S_RX_STATUS_MASK;
->     > +             if (rx_status == I2C_SLAVE_RX_START) {
->     > +                     /* Start of SMBUS for Master write */
->     > +                     i2c_slave_event(iproc_i2c->slave,
->     >                                       I2C_SLAVE_WRITE_REQUESTED,
->     &value);
->     > -             }
->     > -     }
->     > 
->     > -     /* read request from master */
->     > -     if ((status & BIT(IS_S_RD_EVENT_SHIFT)) &&
->     > -             (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)) {
->     > -             i2c_slave_event(iproc_i2c->slave,
->     > -                     I2C_SLAVE_READ_PROCESSED, &value);
->     > -             iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
->     > +                     val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
->     > +                     value = (u8)((val >> S_RX_DATA_SHIFT) &
->     S_RX_DATA_MASK);
->     > +                     i2c_slave_event(iproc_i2c->slave,
->     > +                                     I2C_SLAVE_WRITE_RECEIVED,
->     &value);
->     > +             } else if (status & BIT(IS_S_RD_EVENT_SHIFT)) {
->     > +                     /* Start of SMBUS for Master Read */
->     > +                     i2c_slave_event(iproc_i2c->slave,
->     > +                                     I2C_SLAVE_READ_REQUESTED,
->     &value);
->     > +                     iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
->     > 
->     > -             val = BIT(S_CMD_START_BUSY_SHIFT);
->     > -             iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
->     > -     }
->     > +                     val = BIT(S_CMD_START_BUSY_SHIFT);
->     > +                     iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
->     > 
->     > -     /* write request from master */
->     > -     if ((status & BIT(IS_S_RX_EVENT_SHIFT)) &&
->     > -             (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_READ)) {
->     > -             val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
->     > -             /* Its a write request by Master to Slave.
->     > -              * We read data present in receive FIFO
->     > -              */
->     > -             value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
->     > +                     /*
->     > +                      * Enable interrupt for TX FIFO becomes
->     empty and
->     > +                      * less than PKT_LENGTH bytes were output on
->     the SMBUS
->     > +                      */
->     > +                     val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
->     > +                     val |= BIT(IE_S_TX_UNDERRUN_SHIFT);
->     > +                     iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
->     > +             } else {
->     > +                     /* Master write other than start */
->     > +                     value = (u8)((val >> S_RX_DATA_SHIFT) &
->     S_RX_DATA_MASK);
->     > +                     i2c_slave_event(iproc_i2c->slave,
->     > +                                     I2C_SLAVE_WRITE_RECEIVED,
->     &value);
->     > +             }
->     > +     } else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
->     > +             /* Master read other than start */
->     >               i2c_slave_event(iproc_i2c->slave,
->     > -                     I2C_SLAVE_WRITE_RECEIVED, &value);
->     > -
->     > -             /* check the status for the last byte of the
->     transaction */
->     > -             rd_status = (val >> S_RX_STATUS_SHIFT) &
->     S_RX_STATUS_MASK;
->     > -             if (rd_status == I2C_SLAVE_RX_END)
->     > -                     iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
->     > +                             I2C_SLAVE_READ_PROCESSED, &value);
->     > 
->     > -             dev_dbg(iproc_i2c->device, "\nread value = 0x%x\n",
->     value);
->     > +             iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
->     > +             val = BIT(S_CMD_START_BUSY_SHIFT);
->     > +             iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
->     >       }
->     > 
->     >       /* Stop */
->     >       if (status & BIT(IS_S_START_BUSY_SHIFT)) {
->     >               i2c_slave_event(iproc_i2c->slave, I2C_SLAVE_STOP,
->     &value);
->     > -             iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
->     > +             /*
->     > +              * Enable interrupt for TX FIFO becomes empty and
->     > +              * less than PKT_LENGTH bytes were output on the SMBUS
->     > +              */
->     > +             val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
->     > +             val &= ~BIT(IE_S_TX_UNDERRUN_SHIFT);
->     > +             iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
->     >       }
->     > 
->     >       /* clear interrupt status */
->     >
-> 
+-- 
+Kees Cook
