@@ -2,106 +2,89 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF696C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D3C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A6120656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80C620656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557428443;
+	bh=TMZ6zPgSlmugN5V2TsBStkTQ1fYYai4lrVnTOz3IRrY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dMT3nNkeh8OEQbgoRmFvcRe4r2X4EGKKz6TxX0DIALXgTs5CoyC/mhcDiiYKyYj6F
+	 9QGEXru2IWhgz12Kgd2E0I43WNFkZsYVig4Y8NM2IM9lbiT6Rt/Zs88umKJCfuOkSr
+	 MqGFdGrc1DEdKavIyEfWna7rzwa0C5BoUxLfcG7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfEITAg (ORCPT
+        id S1728845AbfEITAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:00:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49042 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726996AbfEITAe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:00:34 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hOoHQ-0001b6-MT; Thu, 09 May 2019 20:00:32 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hOoHQ-0001rA-F2; Thu, 09 May 2019 20:00:32 +0100
-Message-ID: <3ac380160a8531fcb5db85e5985dcac19cdd8150.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 00/10] 3.16.67-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Thu, 09 May 2019 20:00:26 +0100
-In-Reply-To: <20190509173809.GA28365@roeck-us.net>
-References: <lsq.1557410896.171359878@decadent.org.uk>
-         <20190509173809.GA28365@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-D0ikVV8XcqjJkyFMem/j"
-User-Agent: Evolution 3.30.5-1 
+        Thu, 9 May 2019 15:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727222AbfEISv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70DD6217D7;
+        Thu,  9 May 2019 18:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557427888;
+        bh=TMZ6zPgSlmugN5V2TsBStkTQ1fYYai4lrVnTOz3IRrY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kj3KMbVi8W/m1/uBF9N6M+l4LISiL4HydCM5Uyh0iqxkVRIl1N2JIf9yiXfiERbLE
+         h5rMzkKIkegYIgzme/6nqST+nocQWDY2EXzPRItF7/oQjMPJozBatLrKKVksRQaSJy
+         9bw20gRCVsHJGvs1HWICVxiVwf1+uFRuEAJZRDZU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kent Russell <kent.russell@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 42/95] drm/amdkfd: Add picasso pci id
+Date:   Thu,  9 May 2019 20:41:59 +0200
+Message-Id: <20190509181312.345494066@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
+References: <20190509181309.180685671@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit e7ad88553aa1d48e950ca9a4934d246c1bee4be4 ]
 
---=-D0ikVV8XcqjJkyFMem/j
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Picasso is a new raven variant.
 
-On Thu, 2019-05-09 at 10:38 -0700, Guenter Roeck wrote:
-> On Thu, May 09, 2019 at 03:08:16PM +0100, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.67 release.
-> > There are 10 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Sat May 11 14:08:16 UTC 2019.
-> > Anything received after that time might be too late.
-> >=20
->=20
-> Build results:
-> 	total: 137 pass: 136 fail: 1
-> Failed builds:=20
-> 	i386:tools/perf=20
-> Qemu test results:
-> 	total: 226 pass: 226 fail: 0
+Reviewed-by: Kent Russell <kent.russell@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for testing.
-
-Ben.
-
---=20
-Ben Hutchings
-Any sufficiently advanced bug is indistinguishable from a feature.
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 8be9677c0c07d..cf9a49f49d3a4 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -320,6 +320,7 @@ static const struct kfd_deviceid supported_devices[] = {
+ 	{ 0x9876, &carrizo_device_info },	/* Carrizo */
+ 	{ 0x9877, &carrizo_device_info },	/* Carrizo */
+ 	{ 0x15DD, &raven_device_info },		/* Raven */
++	{ 0x15D8, &raven_device_info },		/* Raven */
+ #endif
+ 	{ 0x67A0, &hawaii_device_info },	/* Hawaii */
+ 	{ 0x67A1, &hawaii_device_info },	/* Hawaii */
+-- 
+2.20.1
 
 
 
---=-D0ikVV8XcqjJkyFMem/j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlzUeMsACgkQ57/I7JWG
-EQktMxAAtExddFOCnH8u+thgZQiE3IdloL5kzuWcAkRHGghxiDcT0CgXzcxDy+Ap
-NqG1y2x9TlU6ZiBrFpjXhR3+c2otDYbECnxfWrvA+09t5Wejja24MlyD+GAALojq
-HmsyIkHPWoNlHAnewDW28SUa423U8o/96/xhIh8a8Q+dRufD7iz+yOBCH1mw2hZA
-uL2eRSht3RPx+xlw1YSmSipv/07ingx/YZcuHYNhHAW/FFaquzoy/u4P56K+oZ+n
-Hk68nARwmSwarqHJYBw80ElOlF8r9UxxSnucXMHdgpVn1WNqOwL67czOWyfesrQi
-gde5BSguJQf6l7COILEh/pcTyYKVL9xUHgn5edkbrafCOnV6A1dkK+JT3KYEXv0f
-GDrwVDU8P3tfPlgT5t/WDWcoY7Wxcqrvk888CTxpMCVw9vjWyR5aSeYRm92dR5th
-uMIQOH3l5u9aSXqqv3JIpHLOfhtoOWyNdzyJpLUhaZ4AioogNUjweeL5Zilr8qGn
-VbXDMQamCGsciwBvHxq6UKXSf8s0Z2L0oHFDzHx/RAbjcXdCkS+kG6nVrHeCTlf9
-epOsa40K+74iK4h4S+HyZKuNBnn4aQpnx1MLy5uLzcgFu1QEC4cU1wCQz3TXgAYT
-nH7lmWDvwCMufFN7SIR4bt6ep707PGaw+GlnUNl9JNZM0bNsgGc=
-=fkEX
------END PGP SIGNATURE-----
-
---=-D0ikVV8XcqjJkyFMem/j--
