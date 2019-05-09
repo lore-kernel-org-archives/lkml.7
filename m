@@ -2,208 +2,335 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B771C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72DBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5EF216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BC9216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GA0bAGEL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8B93p38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfEIIOi (ORCPT
+        id S1726736AbfEIIOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:14:38 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15130 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfEIIOh (ORCPT
+        Thu, 9 May 2019 04:14:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33452 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfEIIOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:14:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd3e1730000>; Thu, 09 May 2019 01:14:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 May 2019 01:14:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 May 2019 01:14:35 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
- 2019 08:14:34 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
- 2019 08:14:23 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 9 May 2019 08:14:23 +0000
-Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cd3e0230000>; Thu, 09 May 2019 01:09:09 -0700
-From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
-To:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
-        <smangipudi@nvidia.com>, <ldewangan@nvidia.com>,
-        <vidyas@nvidia.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [Patch-V2 1/4] dt-binding: Tegra194 pinctrl support
-Date:   Thu, 9 May 2019 13:38:13 +0530
-Message-ID: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Thu, 9 May 2019 04:14:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4gsCH6N3Jjf/QP36vZJIojLa6bdh4xfLgPH+yAuJwg4=; b=l8B93p389xzMXHJCBPJt2khaw
+        gib8irniUqaKdnWpBPFa3V7SSdPwp5Rd37Z0intpllPZ3858M/CC7Bp/8ZV4FQNrzjkA9cUiRqIhS
+        9bEBZU33cQkc3JqoaqMAmQJa6j/I769q5AxmZBqEIzZ6JEWrhqCQwcW1k6JrSJ+ttSGOplR0QFMrV
+        L83RhV9aZKmVLE1A3AWnCYB0KvCc05n1AJh2i1z01n78CeeNGs7UQJpLFLvMrs6Q5IIK8mTBXciRW
+        6v5hy9Hong6DEoHFBkDFjQQy12EPlDcpzmxj5P2vGli95Pf7DqChwZEkbAZSOxR34zIHel0v7PS5a
+        6n7lGB8ig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOeCH-0007kz-JH; Thu, 09 May 2019 08:14:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4FB97209DFF18; Thu,  9 May 2019 10:14:31 +0200 (CEST)
+Date:   Thu, 9 May 2019 10:14:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+References: <20190508074901.982470324@infradead.org>
+ <20190508080612.721269814@infradead.org>
+ <20190508115416.nblx7c2kocidpytm@treble>
+ <20190508120416.GL2589@hirez.programming.kicks-ass.net>
+ <20190508124248.u5ukpbhnh4wpiccq@treble>
+ <20190508153907.GM2589@hirez.programming.kicks-ass.net>
+ <20190508184848.qerg3flv3ej3xsev@treble>
+ <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557389683; bh=sB+iNXK22PqlMOrwAHWKGUHwkQpr8r09L+/nsBMb4Sc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=GA0bAGEL/DAPS78zX5a367cWB8RdvvBw6tWe/9m6LlC9zib6Q24SBDrVMm93RYtIB
-         BYe6kZ9ljbw/36gmgTRWe5R4g2gJKgRAXYmnYImmwsWRMrSBIFrhHE6X2H8Zvtsgbk
-         oDsTmApIIT0rj5ZvR4bYXVtPyWf7/jldKzAJbRpOjmtju/oi+wNXidJe4ETA6YfxGw
-         xhi2Lbu0JJFK4awN/Qk8VBDP8QyQa1FCoqhENDZNg03Kc/9ytl7wB15MUM1dBujcDY
-         FHHb+GG/mBROKlF65R6khL9Ifz9vo/zy4JctqZLqoZDExh0+mzZxvJjHAlAL2kXVHb
-         xYpmKmbu42gBw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding doc for Tegra 194 pinctrl driver
+On Thu, May 09, 2019 at 10:20:30AM +0900, Masami Hiramatsu wrote:
+> Hi Josh,
+> 
+> On Wed, 8 May 2019 13:48:48 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> 
+> > On Wed, May 08, 2019 at 05:39:07PM +0200, Peter Zijlstra wrote:
+> > > On Wed, May 08, 2019 at 07:42:48AM -0500, Josh Poimboeuf wrote:
+> > > > On Wed, May 08, 2019 at 02:04:16PM +0200, Peter Zijlstra wrote:
+> > > 
+> > > > > Do the x86_64 variants also want some ORC annotation?
+> > > > 
+> > > > Maybe so.  Though it looks like regs->ip isn't saved.  The saved
+> > > > registers might need to be tweaked.  I'll need to look into it.
+> > > 
+> > > What all these sites do (and maybe we should look at unifying them
+> > > somehow) is turn a CALL frame (aka RET-IP) into an exception frame (aka
+> > > pt_regs).
+> > > 
+> > > So regs->ip will be the return address (which is fixed up to be the CALL
+> > > address in the handler).
+> > 
+> > But from what I can tell, trampoline_handler() hard-codes regs->ip to
+> > point to kretprobe_trampoline(), and the original return address is
+> > placed in regs->sp.
+> > 
+> > Masami, is there a reason why regs->ip doesn't have the original return
+> > address and regs->sp doesn't have the original SP?  I think that would
+> > help the unwinder understand things.
+> 
+> Yes, for regs->ip, there is a histrical reason. Since previously, we had
+> an int3 at trampoline, so the user (kretprobe) handler expects that
+> regs->ip is trampoline address and ri->ret_addr is original return address.
+> It is better to check the other archs, but I think it is possible to
+> change the regs->ip to original return address, since no one cares such
+> "fixed address". :)
+> 
+> For the regs->sp, there are 2 reasons.
+> 
+> For x86-64, it's just for over-optimizing (reduce stack usage).
+> I think we can make a gap for putting return address, something like
+> 
+> 	"kretprobe_trampoline:\n"
+> #ifdef CONFIG_X86_64
+> 	"	pushq %rsp\n"	/* Make a gap for return address */
+> 	"	pushq 0(%rsp)\n"	/* Copy original stack pointer */
+> 	"	pushfq\n"
+> 	SAVE_REGS_STRING
+> 	"	movq %rsp, %rdi\n"
+> 	"	call trampoline_handler\n"
+> 	/* Push the true return address to the bottom */
+> 	"	movq %rax, 20*8(%rsp)\n"
+> 	RESTORE_REGS_STRING
+> 	"	popfq\n"
+> 	"	addq $8, %rsp\n"	/* Skip original stack pointer */
+> 
+> For i386 (x86-32), there is no other way to keep &regs->sp as
+> the original stack pointer. It has to be changed with this series,
+> maybe as same as x86-64.
 
-Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Right; I already fixed that in my patch changing i386's pt_regs.
+
+But what I'd love to do is something like the belwo patch, and make all
+the trampolines (very much including ftrace) use that. Such that we then
+only have 1 copy of this magic (well, 2 because x86_64 also needs an
+implementation of this of course).
+
+Changing ftrace over to this would be a little more work but it can
+easily chain things a little to get its original context back:
+
+ENTRY(ftrace_regs_caller)
+GLOBAL(ftrace_regs_func)
+	push ftrace_stub
+	push ftrace_regs_handler
+	jmp call_to_exception_trampoline
+END(ftrace_regs_caller)
+
+typedef void (*ftrace_func_t)(unsigned long, unsigned long, struct ftrace_op *, struct pt_regs *);
+
+struct ftrace_regs_stack {
+	ftrace_func_t func;
+	unsigned long parent_ip;
+};
+
+void ftrace_regs_handler(struct pr_regs *regs)
+{
+	struct ftrace_regs_stack *st = (void *)regs->sp;
+	ftrace_func_t func = st->func;
+
+	regs->sp += sizeof(long); /* pop func */
+
+	func(regs->ip, st->parent_ip, function_trace_op, regs);
+}
+
+Hmm? I didn't look into the function_graph thing, but I imagine it can
+be added without too much pain.
+
 ---
-Changes in V2:
-created new binding doc to handle Tegra194 pinctrl driver
-
- .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    | 116 +++++++++++++++++++++
- 1 file changed, 116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
-new file mode 100644
-index 0000000..80e36c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
-@@ -0,0 +1,116 @@
-+NVIDIA Tegra194 pinmux controller
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1576,3 +1576,100 @@ ENTRY(rewind_stack_do_exit)
+ 	call	do_exit
+ 1:	jmp 1b
+ END(rewind_stack_do_exit)
 +
-+Required properties:
-+- compatible: "nvidia,tegra194-pinmux"
-+- reg: Should contain a list of base address and size pairs for:
-+  - first entry: The APB_MISC_GP_*_PADCTRL registers (pad control)
-+  - second entry: The PINMUX_AUX_* registers (pinmux)
++/*
++ * Transforms a CALL frame into an exception frame; IOW it pretends the CALL we
++ * just did was in fact scribbled with an INT3.
++ *
++ * Use this trampoline like:
++ *
++ *   PUSH $func
++ *   JMP call_to_exception_trampoline
++ *
++ * $func will see regs->ip point at the CALL instruction and must therefore
++ * modify regs->ip in order to make progress (just like a normal INT3 scribbled
++ * CALL).
++ *
++ * NOTE: we do not restore any of the segment registers.
++ */
++ENTRY(call_to_exception_trampoline)
++	/*
++	 * On entry the stack looks like:
++	 *
++	 *   2*4(%esp) <previous context>
++	 *   1*4(%esp) RET-IP
++	 *   0*4(%esp) func
++	 *
++	 * transform this into:
++	 *
++	 *  19*4(%esp) <previous context>
++	 *  18*4(%esp) gap / RET-IP
++	 *  17*4(%esp) gap / func
++	 *  16*4(%esp) ss
++	 *  15*4(%esp) sp / <previous context>
++	 *  14*4(%esp) flags
++	 *  13*4(%esp) cs
++	 *  12*4(%esp) ip / RET-IP
++	 *  11*4(%esp) orig_eax
++	 *  10*4(%esp) gs
++	 *   9*4(%esp) fs
++	 *   8*4(%esp) es
++	 *   7*4(%esp) ds
++	 *   6*4(%esp) eax
++	 *   5*4(%esp) ebp
++	 *   4*4(%esp) edi
++	 *   3*4(%esp) esi
++	 *   2*4(%esp) edx
++	 *   1*4(%esp) ecx
++	 *   0*4(%esp) ebx
++	 */
++	pushl	%ss
++	pushl	%esp		# points at ss
++	addl	$3*4, (%esp)	#   point it at <previous context>
++	pushfl
++	pushl	%cs
++	pushl	5*4(%esp)	# RET-IP
++	subl	5, (%esp)	#   point at CALL instruction
++	pushl	$-1
++	pushl	%gs
++	pushl	%fs
++	pushl	%es
++	pushl	%ds
++	pushl	%eax
++	pushl	%ebp
++	pushl	%edi
++	pushl	%esi
++	pushl	%edx
++	pushl	%ecx
++	pushl	%ebx
 +
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
++	ENCODE_FRAME_POINTER
 +
-+Tegra's pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for a
-+pin, a group, or a list of pins or groups. This configuration can include the
-+mux function to select on those pin(s)/group(s), and various pin configuration
-+parameters, such as pull-up, tristate, drive strength, etc.
++	movl	%esp, %eax	# 1st argument: pt_regs
 +
-+See the TRM to determine which properties and values apply to each pin/group.
-+Macro values for property values are defined in
-+include/dt-binding/pinctrl/pinctrl-tegra.h.
++	movl	17*4(%esp), %ebx	# func
++	CALL_NOSPEC %ebx
 +
-+Required subnode-properties:
-+- nvidia,pins : An array of strings. Each string contains the name of a pin or
-+    group. Valid values for these names are listed below.
++	movl	PT_OLDESP(%esp), %eax
 +
-+Optional subnode-properties:
-+- nvidia,function: A string containing the name of the function to mux to the
-+    pin or group.
-+- nvidia,pull: Integer, representing the pull-down/up to apply to the pin.
-+    0: none, 1: down, 2: up.
-+- nvidia,tristate: Integer.
-+    0: drive, 1: tristate.
-+- nvidia,enable-input: Integer. Enable the pin's input path.
-+    enable :TEGRA_PIN_ENABLE and
-+    disable or output only: TEGRA_PIN_DISABLE.
-+- nvidia,open-drain: Integer.
-+    enable: TEGRA_PIN_ENABLE.
-+    disable: TEGRA_PIN_DISABLE.
-+- nvidia,lock: Integer. Lock the pin configuration against further changes
-+    until reset.
-+    enable: TEGRA_PIN_ENABLE.
-+    disable: TEGRA_PIN_DISABLE.
-+- nvidia,io-hv: Integer. Select high-voltage receivers.
-+    normal: TEGRA_PIN_DISABLE
-+    high: TEGRA_PIN_ENABLE
-+- nvidia,high-speed-mode: Integer. Enable high speed mode the pins.
-+    normal: TEGRA_PIN_DISABLE
-+    high: TEGRA_PIN_ENABLE
-+- nvidia,schmitt: Integer. Enables Schmitt Trigger on the input.
-+    normal: TEGRA_PIN_DISABLE
-+    high: TEGRA_PIN_ENABLE
-+- nvidia,drive-type: Integer. Valid range 0...3.
-+- nvidia,pull-down-strength: Integer. Controls drive strength. 0 is weakest.
-+    The range of valid values depends on the pingroup. See "CAL_DRVDN" in the
-+    Tegra TRM.
-+- nvidia,pull-up-strength: Integer. Controls drive strength. 0 is weakest.
-+    The range of valid values depends on the pingroup. See "CAL_DRVUP" in the
-+    Tegra TRM.
-+- nvidia,slew-rate-rising: Integer. Controls rising signal slew rate. 0 is
-+    fastest. The range of valid values depends on the pingroup. See
-+    "DRVDN_SLWR" in the Tegra TRM.
-+- nvidia,slew-rate-falling: Integer. Controls falling signal slew rate. 0 is
-+    fastest. The range of valid values depends on the pingroup. See
-+    "DRVUP_SLWF" in the Tegra TRM.
++	movl	PT_EIP(%esp), %ecx
++	movl	%ecx, -1*4(%eax)
 +
-+Valid values for pin and group names (nvidia,pin) are:
++	movl	PT_EFLAGS(%esp), %ecx
++	movl	%ecx, -2*4(%eax)
 +
-+    These correspond to Tegra PADCTL_* (pinmux) registers.
++	movl	PT_EAX(%esp), %ecx
++	movl	%ecx, -3*4(%eax)
 +
-+  Mux groups:
++	popl	%ebx
++	popl	%ecx
++	popl	%edx
++	popl	%esi
++	popl	%edi
++	popl	%ebp
 +
-+    These correspond to Tegra PADCTL_* (pinmux) registers. Any property
-+    that exists in those registers may be set for the following pin names.
++	lea	-3*4(%eax), %esp
++	popl	%eax
++	popfl
++	ret
++END(call_to_exception_trampoline)
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -731,29 +731,8 @@ asm(
+ 	".global kretprobe_trampoline\n"
+ 	".type kretprobe_trampoline, @function\n"
+ 	"kretprobe_trampoline:\n"
+-	/* We don't bother saving the ss register */
+-#ifdef CONFIG_X86_64
+-	"	pushq %rsp\n"
+-	"	pushfq\n"
+-	SAVE_REGS_STRING
+-	"	movq %rsp, %rdi\n"
+-	"	call trampoline_handler\n"
+-	/* Replace saved sp with true return address. */
+-	"	movq %rax, 19*8(%rsp)\n"
+-	RESTORE_REGS_STRING
+-	"	popfq\n"
+-#else
+-	"	pushl %esp\n"
+-	"	pushfl\n"
+-	SAVE_REGS_STRING
+-	"	movl %esp, %eax\n"
+-	"	call trampoline_handler\n"
+-	/* Replace saved sp with true return address. */
+-	"	movl %eax, 15*4(%esp)\n"
+-	RESTORE_REGS_STRING
+-	"	popfl\n"
+-#endif
+-	"	ret\n"
++	"push trampoline_handler\n"
++	"jmp call_to_exception_trampoline\n"
+ 	".size kretprobe_trampoline, .-kretprobe_trampoline\n"
+ );
+ NOKPROBE_SYMBOL(kretprobe_trampoline);
+@@ -791,12 +770,7 @@ static __used void *trampoline_handler(s
+ 
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+-	/* fixup registers */
+-	regs->cs = __KERNEL_CS;
+-#ifdef CONFIG_X86_32
+-	regs->cs |= get_kernel_rpl();
+-	regs->gs = 0;
+-#endif
 +
-+    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
-+
-+  Drive groups:
-+
-+    These registers controls a single pin for which a mux group exists.
-+    See the list above for the pin name to use when configuring the pinmux.
-+
-+    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
-+
-+Valid values for nvidia,functions are:
-+
-+    pe5
-+
-+Power Domain:
-+    pex_l5_clkreq_n_pgg0 and pex_l5_rst_n_pgg1 are part of PCIE C5 power
-+    partition. Client devices must enable this partition before accessing
-+    these pins here.
-+
-+
-+Example:
-+
-+		tegra_pinctrl: pinmux: pinmux@2430000 {
-+			compatible = "nvidia,tegra194-pinmux";
-+			reg = <0x2430000 0x17000
-+			       0xc300000 0x4000>;
-+
-+			pinctrl-names = "pex_rst";
-+			pinctrl-0 = <&pex_rst_c5_out_state>;
-+
-+			pex_rst_c5_out_state: pex_rst_c5_out {
-+				pex_rst {
-+					nvidia,pins = "pex_l5_rst_n_pgg1";
-+					nvidia,schmitt = <TEGRA_PIN_DISABLE>;
-+					nvidia,lpdr = <TEGRA_PIN_ENABLE>;
-+					nvidia,enable-input = <TEGRA_PIN_DISABLE>;
-+					nvidia,io-high-voltage = <TEGRA_PIN_ENABLE>;
-+					nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+					nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				};
-+			};
-+		};
--- 
-2.7.4
-
+ 	/* We use pt_regs->sp for return address holder. */
+ 	frame_pointer = &regs->sp;
+ 	regs->ip = trampoline_address;
