@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E207C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79B1C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF69E21841
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9786C2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428131;
-	bh=K7/Z7ULPaiMrGML8CskPhXEpmnsruK7vDzfr3sp2vPA=;
+	s=default; t=1557428135;
+	bh=w5ymQl7lHM1mS1Q4LCFLffre3cuHotjrwiYmGOLvaco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0yB1Ycm49wIHwEaB0/4wPG9J2M+a/Fivz2YDOKbx8FJUfxfgNxErTFcVySDF0Ao5
-	 /l7AD9BlsW8XmiVoz1C3HizDaPWN+9als0de8Rtr7CH1G27fzcx0mxTJsp6USxtv8u
-	 N691SvALeGm6SadnPABxHQKjTfsdaE3ye9aqECxo=
+	b=uzICbgQaOCjxaiiv0YEBazPLUrTK3ZRusrxqvDlJtV0Ce102fWXMUgDIlQM/VzzXw
+	 4qpe5ks24zQEkvbVeJl0FH+BoXUyegDHeZqctBcPSJS1U4MxKCdUC6D7lE6c2dJL0h
+	 JFckjuqi+k64JcfL+OmBTY2eQG7w0U6i632/fLSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfEISza (ORCPT
+        id S1729253AbfEISze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50506 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729011AbfEISz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:26 -0400
+        id S1729231AbfEISz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B1432177E;
-        Thu,  9 May 2019 18:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 145232183F;
+        Thu,  9 May 2019 18:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428125;
-        bh=K7/Z7ULPaiMrGML8CskPhXEpmnsruK7vDzfr3sp2vPA=;
+        s=default; t=1557428128;
+        bh=w5ymQl7lHM1mS1Q4LCFLffre3cuHotjrwiYmGOLvaco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ickvzl07rWdrHRgouaVTh0rgN4EOFCgXx91yMtcFLOpJrlIbEefDK4ezs3WQWQphY
-         MglOhLcLZslJLQwNsg8OLigOkKRrs3zncflpnqlYS61fFYmDwhAidgMYM93/V0gFO5
-         hD2Qb4XSMd/M8n/mtlWKp4Ryw1ox2hUTQCVlQgc0=
+        b=xK5FNZ8NU6fYjarHPMg/8dlARJCet77ZS0KPPGpCsguZhFSFrAZn4XzpYj25BOy6N
+         JVOe6dowCc79cqXys3LBVeEjAcRGDGoNx3Gx8OetHC+qscWpg8OFdkpMqlEMdV4qQ9
+         ooWTM/K6AAx/Pqs0F+1V4lMNQli10GbOEa/rKJC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.1 27/30] ASoC: Intel: avoid Oops if DMA setup fails
-Date:   Thu,  9 May 2019 20:42:59 +0200
-Message-Id: <20190509181256.790938036@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH 5.1 28/30] i3c: Fix a shift wrap bug in i3c_bus_set_addr_slot_status()
+Date:   Thu,  9 May 2019 20:43:00 +0200
+Message-Id: <20190509181257.001930575@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -60,62 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Zwisler <zwisler@chromium.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 0efa3334d65b7f421ba12382dfa58f6ff5bf83c4 upstream.
+commit 476c7e1d34f2a03b1aa5a924c50703053fe5f77c upstream.
 
-Currently in sst_dsp_new() if we get an error return from sst_dma_new()
-we just print an error message and then still complete the function
-successfully.  This means that we are trying to run without sst->dma
-properly set up, which will result in NULL pointer dereference when
-sst->dma is later used.  This was happening for me in
-sst_dsp_dma_get_channel():
+The problem here is that addr can be I3C_BROADCAST_ADDR (126).  That
+means we're shifting by (126 * 2) % 64 which is 60.  The
+I3C_ADDR_SLOT_STATUS_MASK is an enum which is an unsigned int in GCC
+so shifts greater than 31 are undefined.
 
-        struct sst_dma *dma = dsp->dma;
-	...
-        dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
-
-This resulted in:
-
-   BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
-   IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
-
-Fix this by adding proper error handling for the case where we fail to
-set up DMA.
-
-This change only affects Haswell and Broadwell systems.  Baytrail
-systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
-being set to -1.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Cc: stable@vger.kernel.org
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/intel/common/sst-firmware.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/i3c/master.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/sound/soc/intel/common/sst-firmware.c
-+++ b/sound/soc/intel/common/sst-firmware.c
-@@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct devic
- 		goto irq_err;
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -385,8 +385,9 @@ static void i3c_bus_set_addr_slot_status
+ 		return;
  
- 	err = sst_dma_new(sst);
--	if (err)
--		dev_warn(dev, "sst_dma_new failed %d\n", err);
-+	if (err)  {
-+		dev_err(dev, "sst_dma_new failed %d\n", err);
-+		goto dma_err;
-+	}
+ 	ptr = bus->addrslots + (bitpos / BITS_PER_LONG);
+-	*ptr &= ~(I3C_ADDR_SLOT_STATUS_MASK << (bitpos % BITS_PER_LONG));
+-	*ptr |= status << (bitpos % BITS_PER_LONG);
++	*ptr &= ~((unsigned long)I3C_ADDR_SLOT_STATUS_MASK <<
++						(bitpos % BITS_PER_LONG));
++	*ptr |= (unsigned long)status << (bitpos % BITS_PER_LONG);
+ }
  
- 	return sst;
- 
-+dma_err:
-+	free_irq(sst->irq, sst);
- irq_err:
- 	if (sst->ops->free)
- 		sst->ops->free(sst);
+ static bool i3c_bus_dev_addr_is_avail(struct i3c_bus *bus, u8 addr)
 
 
