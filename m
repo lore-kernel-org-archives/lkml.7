@@ -2,172 +2,80 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA1DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BA1C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB24A2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="wPsup362"
+	by mail.kernel.org (Postfix) with ESMTP id 643B821744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfEITkx (ORCPT
+        id S1726974AbfEITmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:40:53 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34596 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfEITkx (ORCPT
+        Thu, 9 May 2019 15:42:08 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:36891 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfEITmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:40:53 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j24so2259447ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ch5HLiNUbdzzp7mAUxeBmeNjCFg/GpZc2QwMMzZyJng=;
-        b=wPsup362DAd3psjSHvLU2BYR3/+cIDk35eRFxJv7OPLf4B8DBxK2P1pTH73GwbPBpL
-         DBo/pH0buXy6/OQbqrgDUAeibeKLDvf0PaO+qVg6j6LcOHTT42pbWhmDoHwJnusB2/B3
-         +3oEeZnBwBljOkFfIGk3/XpKAH5vbCn1Rp0NegsLz7zWvyhV2OryUjcT8w85j31OW8Q+
-         gVqCTZWYE61xodZLRna0NxS4FS2QQneroTYWpueE02IeWADyXmztqRnFBPSyF/xCfJPW
-         Ei/tRFtWVvtX4AlJ6PulL161qULpVK8Gadg7pU88J1B+eJ+v6O2Wx3iPYJFxaY/TKYdR
-         gsHQ==
+        Thu, 9 May 2019 15:42:08 -0400
+Received: by mail-ot1-f51.google.com with SMTP id r10so2699828otd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:42:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ch5HLiNUbdzzp7mAUxeBmeNjCFg/GpZc2QwMMzZyJng=;
-        b=gHtKr/RuqKRN5XqCPCOtXOR/k+IsP4iO7SJrPN99h57IfvnFCu5Z1kWNEs2/Ji75+s
-         pRk34eSgFRk4tMP2TeofYa5BTiVwXZp3mawtcTmRr4UxPAntw+2zxDXJUHm8raeShfwi
-         F5//SwrAvzRN3Bcm+8OM3nuDMVPgyV615QzpkS9BsGNhnXLSH6bqUyt0U2w4TlCTYRDx
-         NEiXkoUJ45AjN+CgAtk//JbMkDm+uTSdPbCpY8co1VGZJmmfUxT+aPqu9QLlreUmxw07
-         7TVKKsixAYBafZbXejLqMXU0t2KCUPOXgqKzhNyhBsKvOd8jpzf/AJdvUpO8SnqzeKzK
-         OpNQ==
-X-Gm-Message-State: APjAAAW39Y4TmBsgMOjIDi7jx6OLBbzM69wvj+nwoIA6x/AQnXokNGhq
-        OcZAWlIQu6we8HGfXhFW9zaY+ZWWPVHHo9lrtz55YrKAtQ==
-X-Google-Smtp-Source: APXvYqwxm6N56BeGMIOKk8zY4FBZH0CSAHQssmwSOJvYO3VgbeLoLoGm/zXMN3y0gspjWxfItrilybhsu1plcWp7nY0=
-X-Received: by 2002:a2e:9d0a:: with SMTP id t10mr3432630lji.95.1557430850530;
- Thu, 09 May 2019 12:40:50 -0700 (PDT)
+        bh=lb6VOp98OIaqRZN4upLwnFRejDmIpr7ArQUXnLPL/xA=;
+        b=iTDoyNqKN8yV4+0JlYB4MnhA5ye48Ln3YbpwMG78xbxgqwxecuO8RoD5hx1camoTmU
+         ZeJR3m/KldI75e64061fJtdsIQoTGd+Nb7Ys7IYphd2RyfDwkqC7pVXQd01/zbiuOQoB
+         VGl9YqHbKQ+Yro1FIAi4+MG+z3jrYNImEXPdfMUDKyAjx5CDZRbFbjPI7EfCnf3fikry
+         M4MAJqLnm4kuOkDf6qsYhd4B7wujjKzKh+wyGqqIEuQpVXRsjXbKC6xaw1YLnoC6UvP9
+         cWzWh59w+IAttmhnhq2dBzAftdFvCF7RnNVesaDuqVBX4Pd6TA+VBZj+QESQMrqkMNca
+         D2og==
+X-Gm-Message-State: APjAAAUvsMe/V0WhJa171wAErtA7sewAUyunRVPj6xCUCHl7ZbkXRrAe
+        g4Ro/sNrBux9WDDkGi3fTwfl6njCEejNM9tLXyiB0g==
+X-Google-Smtp-Source: APXvYqwZHZne22OMyNcCdbl074mCyMVr7GDQroLQs2g/gilbVKQBuIBk9jEYw6dz6OWAtXUdYRIyulK/7ZVrhtuSkcM=
+X-Received: by 2002:a9d:739a:: with SMTP id j26mr3886370otk.242.1557430927529;
+ Thu, 09 May 2019 12:42:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557296477-4694-1-git-send-email-hofrat@osadl.org>
- <CAHC9VhSU7pzWby78gHkYKm3t1LopSCoHBfmp=uBc+mF234K8mg@mail.gmail.com> <20190509001345.GA23407@osadl.at>
-In-Reply-To: <20190509001345.GA23407@osadl.at>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 9 May 2019 15:40:39 -0400
-Message-ID: <CAHC9VhQ2qnZEzJAh027TgT8LMrtpzLyj79p=BCVGJKSFMQjjEw@mail.gmail.com>
-Subject: Re: [PATCH RFC] selinux: provide __le variables explicitly
-To:     Nicholas Mc Guire <der.herr@hofr.at>
-Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        peter enderborg <peter.enderborg@sony.com>,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
+In-Reply-To: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
+From:   Igor Mozolevsky <igor@hybrid-lab.co.uk>
+Date:   Thu, 9 May 2019 20:41:31 +0100
+Message-ID: <CADWvR2hc2Jaar-AtaWYra2xvQ-9_nheDJYwtLpmnAP-OgN+dGg@mail.gmail.com>
+Subject: Re: Danish FreeBSD Developer hates jews collectively
+To:     ossobserver@redchan.it
+Cc:     linux-kernel@vger.kernel.org, misc@openbsd.org,
+        freebsd-current <freebsd-current@freebsd.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 8:14 PM Nicholas Mc Guire <der.herr@hofr.at> wrote:
-> On Wed, May 08, 2019 at 05:47:32PM -0400, Paul Moore wrote:
-> > On Wed, May 8, 2019 at 2:27 AM Nicholas Mc Guire <hofrat@osadl.org> wrote:
-> > > While the endiannes is being handled properly sparse was unable to verify
-> > > this due to type inconsistency. So introduce an additional __le32
-> > > respectively _le64 variable to be passed to le32/64_to_cpu() to allow
-> > > sparse to verify proper typing. Note that this patch does not change
-> > > the generated binary on little-endian systems - on 32bit powerpc it
-> > > does change the binary.
-> > >
-> > > Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-> > > ---
-> > >
-> > > Problem located by an experimental coccinelle script to locate
-> > > patters that make sparse unhappy (false positives):
-> > >
-> > > sparse complaints on different architectures fixed by this patch are:
-> > >
-> > > ppc6xx_defconfig
-> > >   CHECK   security/selinux/ss/ebitmap.c
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > >
-> > > Little-endian systems:
-> > >
-> > > loongson3_defconfig
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > >
-> > > x86_64_defconfig
-> > > security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> > > security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> > >
-> > > Patch was compile-tested with: x86_64_defconfig,loongson3_defconfig (both
-> > > little-endian) and ppc603_defconfig (big-endian).
-> > >
-> > > On little-endian systems the patch has no impact on the generated binary
-> > > (which is expected) but on the 32bit powerpc it does change the binary
-> > > which is not expected but since I'm not able to generate the .lst files
-> > > in security/selinux/ss/ due to the lack of a Makefile it is not clear
-> > > if this is an unexpected side-effect or due only to the introduction of
-> > > the additional variables. From my understanding the patch does not change
-> > > the program logic so if the code was correct on big-endian systems before
-> > > it should still be correct now.
-> >
-> > This is a bit worrisome, but I tend to agree that this patch *should*
-> > be correct.  I'm thinking you're probably right in that the resulting
-> > binary difference could be due to the extra variable.  Have you tried
-> > any other big-endian arches?
-> >
+On Thu, 9 May 2019 at 19:07, <ossobserver@redchan.it> wrote:
 >
-> just tried ppc64_defconfig + AUDIT=y, SECURITY=y, SECURITY_NETWORK=y, SECURITY_SELINUX=y
->
-> sparse will complain in the original version about:
->   CHECK   security/selinux/ss/ebitmap.c
-> security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> security/selinux/ss/ebitmap.c:389:28: warning: cast to restricted __le32
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
-> security/selinux/ss/ebitmap.c:431:23: warning: cast to restricted __le64
->
-> which is the same as 32bit ppc - after the patch is applied that is resolved
-> and and the generated ebitmap.o files are binary identical.
->
-> I just had chosen ppc6xx_defconfig as my big-endian test-target as SELINUX
-> was on there by default so I assumed it would be the most reasonable
-> compile-test target.
+> Background: Apparently a FreeBSD developer, a viking looking fellow,
+> has been hiding a secret: just as many of his predecessors in the Danish
+> cities during WWII (collaborators); He has a disdain for "the jews"
+> collectively.
 
-Thanks.
+<snip>
 
-I think this is probably safe to merge once the merge window closes.
+
+
+Freedom of expression exists to protect the rights of others to
+express views one might find distasteful; for a likeable/favourable
+expression needs no protection---it's axiomatically welcome. When
+opposing views are oppressed through gross generalisation and appeal
+to emotion, it is a clear sign that those who oppose a particular
+unpalatable expression lack logical argument to oppose it. For that
+reason, while I might (or might not) disagree with any particular
+expression, I would defend their right to express their views without
+fear, and implore others to do same while pointing big fingers of
+shame at those who actively suppress or oppress fundamental human
+freedoms!
+
 
 -- 
-paul moore
-www.paul-moore.com
+Igor M.
