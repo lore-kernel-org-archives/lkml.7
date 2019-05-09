@@ -2,100 +2,109 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B798FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B275C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5386B216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585A0208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DP3elEC2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmPLQVvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfEIIRH (ORCPT
+        id S1726469AbfEIIWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:17:07 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49386 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725822AbfEIIRH (ORCPT
+        Thu, 9 May 2019 04:22:38 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54805 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfEIIWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:17:07 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 26E2BC00FF;
-        Thu,  9 May 2019 08:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557389830; bh=/rAPkCX+h3mO5IIHf8mYqsYYjiVjat0JV+HA8HZ9cZQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=DP3elEC22Raw6u58ZxKE6cHYO4d/vP2PxC4Zrcov3iVLEq/foyaeZFCp+dNRRmzqK
-         5okKSktu2buW2yf6QoVRhUtEW1cLTFmwTSHGYIOu8CINxDWvOOwCSbT3NLeCbixZ2f
-         xeI42f4Od30xnZfYrAcUMRzT321E72HrLjXMkO/jVYpyE3MHzuA1wRxpvduZ2tcxKA
-         VUCUHz3PE/+CtviIyNuFT8SPknWM8Rg9szSwmo1lWCK+i22U/9zb7vQkRmzexGwTmh
-         a1F7CJ+McQN1N1rzsdX0W3iijq4J1gvPijzT25lrDwqB8IPKU4x2m3ROx7cJ/Um3Ds
-         +bhzcEfMPX4xQ==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id CCE96A00AF;
-        Thu,  9 May 2019 08:17:05 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 9 May 2019 01:17:05 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Thu,
- 9 May 2019 10:17:03 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: RE: [PATCH net-next 00/11] net: stmmac: Selftests
-Thread-Topic: [PATCH net-next 00/11] net: stmmac: Selftests
-Thread-Index: AQHVBXLZwJ2RZgEDF0CNP6MWY759gKZhghGAgADw7NA=
-Date:   Thu, 9 May 2019 08:17:02 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B47AAEE@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1557300602.git.joabreu@synopsys.com>
- <20190508195011.GK25013@lunn.ch>
-In-Reply-To: <20190508195011.GK25013@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 May 2019 04:22:38 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b203so2034287wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 01:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DPrdW9+2z6ZUxmiIwYAl4ynBRRcGa0YhreGJjxJguQ0=;
+        b=QmPLQVvj57rGV5eY/pOEbo6GIUkWcw6d9oUOE7QHLnfcdKoxk2KqjtiWRImeUGIcm5
+         0Up9IGbrN8JuEE8ypnd21uvPQHk4dqJ6WPaiqM7nqzxEmqSfRh2+ugnjDB6Oj8ZagY8a
+         W7I2bhppa6pXaRfOnkdG8In9Sj1j6Xy1iGERi4GTtU2RxOcexjX1LEkB6EhnUTmwAFzC
+         wllilfkp2qkpEdYLzPFRPKTur7Gu2fDxEaOzBfDFJUINzM+wSxF9kAIAbCLXuolSwlmF
+         fAyLBnF7zhkDv0IIBUXgdTexqDQ0bF0VbontWfZX/jZ6LjTfnbSA2aK/5Is0lBlj8uif
+         vIfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=DPrdW9+2z6ZUxmiIwYAl4ynBRRcGa0YhreGJjxJguQ0=;
+        b=UGZU/ERhzbIBt7D3xg6mYOCQgRCCxJx+y80ZbFEq4pbnE6Pr2ZC0ws3KbJSHj4Kq/q
+         p8gSwss/7O9WW7f+tUobT5ckH1dL+mBnVbhjhmtQafi8UmIJirJw2pOtJ8y+3RzuF+qc
+         dmxcKoIsOFoXDn4qVKJybo96mELTbxUlYbqC4OOm9D0Kl37UHAWWBfOoHNiy9Lo2ZP7H
+         J1dia2FHK9xqSCAszIwND9WB87bgneCybczQRmt1pMKY5H4k7kHLldMu0eXsxFF4FWCa
+         j4BgwZzrQBL1OEN/028+SDTaF5ifUWwaqawret+BN0uIQB0hL1L9t+xp/jGebz/8VfUN
+         zvnQ==
+X-Gm-Message-State: APjAAAWwuOHCFBBtfdgottNEtnYyswt7HMJsZQUH7QIZ/d50nWwdI34U
+        60wgRB44nFchNtrjV/a0aaL9KvLN
+X-Google-Smtp-Source: APXvYqwuVBrRYXA/qgWO+V/oJ48tgq/iYoF8W2SZh0ogr8u9IBBsUqPCV7b8QNgavEqkxzXlJ7sGDw==
+X-Received: by 2002:a1c:9942:: with SMTP id b63mr1905051wme.116.1557390155439;
+        Thu, 09 May 2019 01:22:35 -0700 (PDT)
+Received: from cizrna.lan ([109.72.12.206])
+        by smtp.gmail.com with ESMTPSA id v189sm2519556wma.3.2019.05.09.01.22.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 01:22:34 -0700 (PDT)
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/panfrost: Only put sync_out if non-NULL
+Date:   Thu,  9 May 2019 10:21:51 +0200
+Message-Id: <20190509082151.8823-1-tomeu.vizoso@collabora.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507080405.GA9436@mwanda>
+References: <20190507080405.GA9436@mwanda>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Wed, May 08, 2019 at 20:50:11
+Dan Carpenter's static analysis tool reported:
 
-> The normal operation is interrupted by the tests you carry out
-> here. But i don't see any code looking for ETH_TEST_FL_OFFLINE
+drivers/gpu/drm/panfrost/panfrost_drv.c:222 panfrost_ioctl_submit()
+error: we previously assumed 'sync_out' could be null (see line 216)
 
-Ok will fix to only run in offline mode then.
+Indeed, sync_out could be NULL if userspace doesn't send a sync object
+ID for the out fence.
 
->=20
-> > (Error code -95 means EOPNOTSUPP in current HW).
->=20
-> How deep do you have to go before you know about EOPNOTSUPP?  It would
-> be better to not return the string and result at all. Or patch ethtool
-> to call strerror(3).
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lists.freedesktop.org/archives/dri-devel/2019-May/217014.html
+---
+ drivers/gpu/drm/panfrost/panfrost_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-When I looked at other drivers I saw that they return positive value (1)=20
-or zero so calling strerror in ethtool may not be ideal.
+diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+index 94b0819ad50b..d11e2281dde6 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_drv.c
++++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+@@ -219,7 +219,8 @@ static int panfrost_ioctl_submit(struct drm_device *dev, void *data,
+ fail_job:
+ 	panfrost_job_put(job);
+ fail_out_sync:
+-	drm_syncobj_put(sync_out);
++	if (sync_out)
++		drm_syncobj_put(sync_out);
+ 
+ 	return ret;
+ }
+-- 
+2.20.1
 
-I think its useful to let the user know if a given test is not supported=20
-in HW so maybe I can return 1 instead of EOPNOTSUPP ?
-
-Thanks,
-Jose Miguel Abreu
