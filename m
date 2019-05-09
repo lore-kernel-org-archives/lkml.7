@@ -2,103 +2,103 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D211C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BE8C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6340B21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848DF217D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e1POAryf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+DkPo2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfEIRfP (ORCPT
+        id S1726779AbfEIRg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:35:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38685 "EHLO
+        Thu, 9 May 2019 13:36:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38800 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfEIRfN (ORCPT
+        with ESMTP id S1726576AbfEIRg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:35:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id j26so1562512pgl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:35:12 -0700 (PDT)
+        Thu, 9 May 2019 13:36:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id j26so1564218pgl.5;
+        Thu, 09 May 2019 10:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=zX74GvSVOEa3r9Bsv+StbAMT/sdno07qDVSzxK/DkMM=;
-        b=e1POAryfWOAkgAo7r+nE7m/OBxAvTUNZneYzdM/CAG/P2iw7nP6MVlZbhlm2mXQNf3
-         6pnpb9xETfdJ1oRG94kw4lxgas2VviA3Lt8Z0IOpwQ3f6P/zowtru1v7xUIkLFCDE5Vw
-         YWIIu9MwWy0bTxDqZKCXLpioP8lRzzG3U6iH46YK4k73AAjPUobuk1a5zHIMe4SJ0eRV
-         dpUSo/mXt6X7t68d2AznkwJqO09clJ50Q7hlIe0Kt18SpWIJ8ogKEapQGigaD+9UbXXb
-         m9hL9XvifvxTrI0LSy9pnCA/yRUZXF4hlWX3XRLhTWFg841BJWZs0bdOnxL7yGDZ31oN
-         wWsA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fm/Yx4WlkdFkzJYcjEnD/dd0EBFK33lb3Y6Zhd2dmmo=;
+        b=n+DkPo2Wn6se53eSBGHwiyCJckhtHBjNob8IoMYkYeCfIsIxOFbeQz5ZOOj4O0GycI
+         20CaxEAZLScyslugWCcRWRPZRwT3pYt/Lg5Ms0kDwntJ7YfHkA+bgSetBORLeA7xrv0s
+         o5iifv81W0CuE7LhiWh0Yo+V/94Drd/BIH/h5fd0WUbK0yggDyPZnUgQDxbbTlyv8sxj
+         cIrrSH0skGlLoIP/0qPfEf2KNGvw6CIKmKYcqIk5a+ruLbHFJ+etyGTp8jrMPFG8JfS7
+         MEix7ZOqva0CwZ4uuiS+Qrg7N0TuWh2wLCyUdBXYmpvH2nd4jZKK0B2aKfxoPS0flEZY
+         IRHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=zX74GvSVOEa3r9Bsv+StbAMT/sdno07qDVSzxK/DkMM=;
-        b=PUEUHWQF+HkIQEHKAtFWpu807zeXHJnG1VMp/xfK764bZ6C2Eg8ev9wnttpyr5a5zO
-         keSfXYZqzE5Ecy/2nnEs4u044nUAsZ3QSl8FENgYeD+xiynC8bXneOborZp8sOcMFhZk
-         czUgcIGcZ+rffkqYpYokYgtAVK9X6RED4QSfwWINgWfK8QxZol91siHpeT29wcydP3XW
-         ZUOrmz1GN8LWu49BLOemAI70jHulviOopnqV2z9TVT1uVYYd+TgAIFDIlM3IfNo2C0qM
-         e795lbOTVRLSaP0fHfv5ga77lwaA+qRz/oySL5fY4KP96TC0uNlMDRuTsboUf6cYP5MQ
-         137w==
-X-Gm-Message-State: APjAAAX+Ovw7bCSl3MevBXZZQX9OkWQ+OeP9veRQsyHH3ftOE3AN7kuL
-        xXkm1Hu+ZGa0HORPdJUtzGFGXQ==
-X-Google-Smtp-Source: APXvYqwS7WimrfI1E3YNXr+sXRr9qBkaFQ0XqpEKS/H76BcklmD6ZZmvCasxKn1QPxA/n0YZ3uRJOQ==
-X-Received: by 2002:a63:ba5a:: with SMTP id l26mr7236440pgu.183.1557423312287;
-        Thu, 09 May 2019 10:35:12 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:7849:6889:3e03:e97c])
-        by smtp.googlemail.com with ESMTPSA id j32sm3288300pgi.73.2019.05.09.10.35.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 10:35:11 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>,
-        linus.walleij@linaro.org
-Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/6] dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-In-Reply-To: <20190509162920.7054-2-glaroque@baylibre.com>
-References: <20190509162920.7054-1-glaroque@baylibre.com> <20190509162920.7054-2-glaroque@baylibre.com>
-Date:   Thu, 09 May 2019 10:35:11 -0700
-Message-ID: <7hzhnvfs4w.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fm/Yx4WlkdFkzJYcjEnD/dd0EBFK33lb3Y6Zhd2dmmo=;
+        b=WuxAjC4MLnlWdIaFKzRmvHQwnMQSPXyHRSTZU+aMWbYIjyrX/JeTGgA+WKsKHHfnsB
+         5efhDUa+Yy8gN0bB4Z0GnicKHcV6pa5dZfigLrCRRl4PYVKv5wF+poANLzikDkaHs47D
+         NIXoypZBoEziVUxrNZ8Y91XZRe6X57nyyJjYkkCwy/bez5/Du8bNZIRpmgWG+37tP/94
+         Zn70O8U19d0wAuuIMwCrfMo3+nAX6HyCsqtH84h20ZqN2jZMOo49xiOVlkBzr6qtxUMI
+         rkYH8AR3oA9aLeOegUYPRs2xn7Zs5AFq4r7So7zFjWdw3iC/ktAJmt+SayXayHHPqlnS
+         b/8Q==
+X-Gm-Message-State: APjAAAXuj/5eGwlqs3JSRpYjIFjJ4L0kOpGM8Ez2qsAKdTo3PfA8+E5+
+        7xzZnf0Uv69S3bYJrmRZVUTd2NxViJnVSvvpkq8=
+X-Google-Smtp-Source: APXvYqyQBj0be6yZUsdhV/FaLQE4dE9UbIMdQUscEX9Vtv0rdrB086A6j3O5qennG3h3d9XE8kTPBmlaCG8eRscTZ6A=
+X-Received: by 2002:a63:42:: with SMTP id 63mr7231179pga.337.1557423387477;
+ Thu, 09 May 2019 10:36:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190509141456.223614-1-helgaas@kernel.org> <20190509141456.223614-2-helgaas@kernel.org>
+In-Reply-To: <20190509141456.223614-2-helgaas@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 May 2019 20:36:16 +0300
+Message-ID: <CAHp75VfbVvpMaKdeKKTs_zF6CcJf5==oV8PR+YF+RTAtZrtRfg@mail.gmail.com>
+Subject: Re: [PATCH 01/10] PCI/AER: Replace dev_printk(KERN_DEBUG) with dev_info()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dongdong Liu <liudongdong3@huawei.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
-
-> This property allow drive-strength parameter in uA instead of mA.
+On Thu, May 9, 2019 at 5:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> From: Frederick Lawler <fred@fredlawl.com>
 >
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> index cef2b5855d60..84adce9f2a75 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -258,6 +258,7 @@ drive-push-pull		- drive actively high and low
->  drive-open-drain	- drive with open drain
->  drive-open-source	- drive with open source
->  drive-strength		- sink or source at most X mA
-> +drive-strength-microamp	- sink or source at most X uA
->  input-enable		- enable input on pin (no effect on output, such as
->  			  enabling an input buffer)
->  input-disable		- disable input on pin (no effect on output, such as
-> @@ -326,6 +327,8 @@ arguments are described below.
->  
->  - drive-strength takes as argument the target strength in mA.
->  
-> +- drive-strength-uA takes as argument the target strength in uA.
+> Replace dev_printk(KERN_DEBUG) with dev_info() or dev_err() to be more
+> consistent with other logging.
+>
+> These could be converted to dev_dbg(), but that depends on
+> CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
+> *always* be in the dmesg log.
+>
+> Also remove a redundant kzalloc() failure message.
 
-s/uA/microamp/
+> +               pci_info(parent, "can't find device of ID%04x\n",
+> +                        e_info->id);
 
+Would it be a chance to take them one line instead of two?
+
+> +               dev_err(device, "request AER IRQ %d failed\n",
+> +                       dev->irq);
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
