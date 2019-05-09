@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E146C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE3DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB87C217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B40E216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3842AqDI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ODdi+BeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfEIR0C (ORCPT
+        id S1726947AbfEIR0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:26:02 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:41858 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfEIRZ7 (ORCPT
+        Thu, 9 May 2019 13:26:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35224 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfEIR0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:25:59 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HJSBL162321;
-        Thu, 9 May 2019 17:25:50 GMT
+        Thu, 9 May 2019 13:26:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HK1tB169783;
+        Thu, 9 May 2019 17:25:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=Yk7rv8RXBJruI/gHyJZRpw6blRShhbnurNLnUDXHVG8=;
- b=3842AqDIae0mBybH8EwVXHVP7Az1QqpsCu9UqGSrKXcJdjk4pT/v3IY1JZLehGBTMQla
- Ka/PebsY9rjiZA9OjQPCy5SuDcUgDt2stmSliya0SqaaPfrEp87L7254aVOndOtu0YqW
- iP4oUPRJMH8OLN5ToG/AF2dxOU5EHpqaEbh+UkTOL8x/2Xn/kH+cmXBf7Mq6GfMlLEWA
- 4sDsWHxYSbgvGIKi0z3gVlLt+XLIGgns8WyntldRhfU74w98YZsxxxJn4J0mtkmGArEr
- jALu42mtQ/i/knlbAB1R7AlwWXf9VeBShvck+EqMkMK7rFP2V2pW30stZCM0R8etoQQo Bw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2s94b6cf0q-1
+ bh=5+AicXrLgHpXctVt8cnc/EdJ5KuJS7IwnasckkiqbqI=;
+ b=ODdi+BeCjUmOTqRFTQ20OkerBYSOw3szijBMBMkJEdwfVLvYNhh0aDMaLTVBaZfQRbe5
+ gtx0vg55G24rR+MgEwDef/1Lm/h5drNye5oxe+xsVw19kWIVKAZzke889Lmc4PqMG3MN
+ dYBAMRUBFtbnLCmuD7WnljTWsF35XAb77fgcAAT65B3V7OZTeEdl18MwZTKA0fTnifkM
+ vnTqDL3lP8sx/g5jHeFAM9Cb2fEzQCaE6DuJGrzwi6IBC6Iw183ZUVaMQv8fTfOKmibe
+ 5uFHlDHWpkOq+vhp9veLn8+64hkEyS1eTVZI5919HwDLOoRDpqV+EfobwK9LBQWrsetF QQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2s94b14e31-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 17:25:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HP7wJ152264;
-        Thu, 9 May 2019 17:25:49 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2schvyy7xq-1
+        Thu, 09 May 2019 17:25:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HNxdO109630;
+        Thu, 9 May 2019 17:25:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2sagyvcg4y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 17:25:49 +0000
+        Thu, 09 May 2019 17:25:42 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x49HPmEI031352;
-        Thu, 9 May 2019 17:25:48 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x49HPfic011094;
+        Thu, 9 May 2019 17:25:41 GMT
 Received: from aa1-ca-oracle-com.ca.oracle.com (/10.156.75.204)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 May 2019 10:25:47 -0700
+        with ESMTP ; Thu, 09 May 2019 10:25:41 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
 Cc:     jgross@suse.com, pbonzini@redhat.com, boris.ostrovsky@oracle.com,
         konrad.wilk@oracle.com, sstabellini@kernel.org,
         joao.m.martins@oracle.com, ankur.a.arora@oracle.com
-Subject: [RFC PATCH 16/16] xen/grant-table: host_addr fixup in mapping on xenhost_r0
-Date:   Thu,  9 May 2019 10:25:40 -0700
-Message-Id: <20190509172540.12398-17-ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 08/16] x86/xen: irq/upcall handling with multiple xenhosts
+Date:   Thu,  9 May 2019 10:25:32 -0700
+Message-Id: <20190509172540.12398-9-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190509172540.12398-1-ankur.a.arora@oracle.com>
 References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1905090100
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905090100
@@ -81,165 +81,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xenhost type xenhost_r0 does not support standard GNTTABOP_map_grant_ref
-semantics (map a gref onto a specified host_addr). That's because
-since the hypervisor is local (same address space as the caller of
-GNTTABOP_map_grant_ref), there is no external entity that could
-map an arbitrary page underneath an arbitrary address.
+For configurations with multiple xenhosts, we need to handle events
+generated from multiple xenhosts.
 
-To handle this, the GNTTABOP_map_grant_ref hypercall on xenhost_r0
-treats the host_addr as an OUT parameter instead of IN and expects the
-gnttab_map_refs() and similar to fixup any state that caches the
-value of host_addr from before the hypercall.
+Having more than one upcall handler might be quite hairy, and it would
+be simpler if the callback from L0-Xen could be bounced via L1-Xen.
+This will also mean simpler pv_irq_ops code because now the IF flag
+maps onto the xh_default->vcpu_info->evtchn_upcall_mask.
 
-Accordingly gnttab_map_refs() now adds two parameters, a fixup function
-and a pointer to cached maps to fixup:
- int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
- 		    struct gnttab_map_grant_ref *kmap_ops,
--		    struct page **pages, unsigned int count)
-+		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
-+		    void **map_fixup[], unsigned int count)
-
-The reason we use a fixup function and not an additional mapping op
-in the xenhost_t is because, depending on the caller, what we are fixing
-might be different: blkback, netback for instance cache host_addr in
-via a struct page *, while __xenbus_map_ring() caches a phys_addr.
-
-This patch fixes up xen-blkback and xen-gntdev drivers.
+However, we still update the xh_remote->vcpu_info->evtchn_upcall_mask
+on a best effort basis to minimize unnecessary work in remote xenhost.
 
 TODO:
-  - also rewrite gnttab_batch_map() and __xenbus_map_ring().
-  - modify xen-netback, scsiback, pciback etc
+  - direct pv_ops.irq are disabled.
 
-Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
- drivers/block/xen-blkback/blkback.c | 14 +++++++++++++-
- drivers/xen/gntdev.c                |  2 +-
- drivers/xen/grant-table.c           | 20 ++++++++++++++------
- include/xen/grant_table.h           | 11 ++++++++++-
- 4 files changed, 38 insertions(+), 9 deletions(-)
+ arch/x86/xen/Makefile       |  2 +-
+ arch/x86/xen/enlighten_pv.c |  4 ++-
+ arch/x86/xen/irq.c          | 69 +++++++++++++++++++++++++++++--------
+ arch/x86/xen/smp_pv.c       | 11 ++++++
+ 4 files changed, 70 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index d366a17a4bd8..50ce40ba35e5 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -806,11 +806,18 @@ static void xen_blkbk_unmap(struct xen_blkif_ring *ring,
+diff --git a/arch/x86/xen/Makefile b/arch/x86/xen/Makefile
+index 564b4dddbc15..3c7056ad3520 100644
+--- a/arch/x86/xen/Makefile
++++ b/arch/x86/xen/Makefile
+@@ -34,7 +34,7 @@ obj-$(CONFIG_XEN_PV)		+= enlighten_pv.o
+ obj-$(CONFIG_XEN_PV)		+= mmu_pv.o
+ obj-$(CONFIG_XEN_PV)		+= irq.o
+ obj-$(CONFIG_XEN_PV)		+= multicalls.o
+-obj-$(CONFIG_XEN_PV)		+= xen-asm.o
++obj-n		+= xen-asm.o
+ obj-$(CONFIG_XEN_PV)		+= xen-asm_$(BITS).o
+ 
+ obj-$(CONFIG_XEN_PVH)		+= enlighten_pvh.o
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 5f6a1475ec0c..77b1a0d4aef2 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -996,8 +996,9 @@ void __init xen_setup_vcpu_info_placement(void)
+ 	 * xen_vcpu_setup managed to place the vcpu_info within the
+ 	 * percpu area for all cpus, so make use of it.
+ 	 */
++#if 0
++	/* Disable direct access for now. */
+ 	if (xen_have_vcpu_info_placement && false) {
+-		/* Disable direct access until we have proper pcpu data structures. */
+ 		pv_ops.irq.save_fl = __PV_IS_CALLEE_SAVE(xen_save_fl_direct);
+ 		pv_ops.irq.restore_fl =
+ 			__PV_IS_CALLEE_SAVE(xen_restore_fl_direct);
+@@ -1007,6 +1008,7 @@ void __init xen_setup_vcpu_info_placement(void)
+ 			__PV_IS_CALLEE_SAVE(xen_irq_enable_direct);
+ 		pv_ops.mmu.read_cr2 = xen_read_cr2_direct;
  	}
++#endif
  }
  
-+static void blkbk_map_fixup(uint64_t host_addr, void **fixup)
-+{
-+	struct page **pg = (struct page **)fixup;
-+	*pg = virt_to_page(host_addr);
-+}
-+
- static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			 struct grant_page *pages[],
- 			 int num, bool ro)
+ static const struct pv_info xen_info __initconst = {
+diff --git a/arch/x86/xen/irq.c b/arch/x86/xen/irq.c
+index 38ad1a1c4763..f760a6abfb1e 100644
+--- a/arch/x86/xen/irq.c
++++ b/arch/x86/xen/irq.c
+@@ -19,9 +19,9 @@
+  * callback mask. We do this in a very simple manner, by making a call
+  * down into Xen. The pending flag will be checked by Xen on return.
+  */
+-void xen_force_evtchn_callback(void)
++void xen_force_evtchn_callback(xenhost_t *xh)
  {
- 	struct gnttab_map_grant_ref map[BLKIF_MAX_SEGMENTS_PER_REQUEST];
-+	struct page **map_fixup[BLKIF_MAX_SEGMENTS_PER_REQUEST];
- 	struct page *pages_to_gnt[BLKIF_MAX_SEGMENTS_PER_REQUEST];
- 	struct persistent_gnt *persistent_gnt = NULL;
- 	phys_addr_t addr = 0;
-@@ -858,6 +865,9 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			gnttab_set_map_op(&map[segs_to_map++], addr,
- 					  flags, pages[i]->gref,
- 					  blkif->domid);
-+
-+			if (gnttab_map_fixup(dev->xh))
-+				  map_fixup[i] = &pages[i]->page;
- 		}
- 		map_until = i + 1;
- 		if (segs_to_map == BLKIF_MAX_SEGMENTS_PER_REQUEST)
-@@ -865,7 +875,9 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 	}
+-	(void)HYPERVISOR_xen_version(0, NULL);
++	(void)hypervisor_xen_version(xh, 0, NULL);
+ }
  
- 	if (segs_to_map) {
--		ret = gnttab_map_refs(dev->xh, map, NULL, pages_to_gnt, segs_to_map);
-+		ret = gnttab_map_refs(dev->xh, map, NULL, pages_to_gnt,
-+			gnttab_map_fixup(dev->xh) ? blkbk_map_fixup : NULL,
-+					(void ***) map_fixup, segs_to_map);
- 		BUG_ON(ret);
- 	}
+ asmlinkage __visible unsigned long xen_save_fl(void)
+@@ -29,6 +29,21 @@ asmlinkage __visible unsigned long xen_save_fl(void)
+ 	struct vcpu_info *vcpu;
+ 	unsigned long flags;
  
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index 40a42abe2dd0..32c6471834ba 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -342,7 +342,7 @@ int gntdev_map_grant_pages(struct gntdev_grant_map *map)
++	/*
++	 * In scenarios with more than one xenhost, the primary xenhost
++	 * is responsible for all the upcalls, with the remote xenhost
++	 * bouncing its upcalls through it (see comment in
++	 * cpu_initialize_context().)
++	 *
++	 * To minimize unnecessary upcalls, the remote xenhost still looks at
++	 * the value of vcpu_info->evtchn_upcall_mask, so we still set and reset
++	 * that.
++	 *
++	 * The fact that the upcall itself is gated by the default xenhost,
++	 * also helps in simplifying the logic here because we don't have to
++	 * worry about guaranteeing atomicity with updates to
++	 * xh_remote->vcpu_info->evtchn_upcall_mask.
++	 */
+ 	vcpu = xh_default->xen_vcpu[smp_processor_id()];
  
- 	pr_debug("map %d+%d\n", map->index, map->count);
- 	err = gnttab_map_refs(xh, map->map_ops, use_ptemod ? map->kmap_ops : NULL,
--			map->pages, map->count);
-+			map->pages, NULL, NULL, map->count);
- 	if (err)
- 		return err;
+ 	/* flag has opposite sense of mask */
+@@ -38,26 +53,34 @@ asmlinkage __visible unsigned long xen_save_fl(void)
+ 	   -0 -> 0x00000000
+ 	   -1 -> 0xffffffff
+ 	*/
+-	return (-flags) & X86_EFLAGS_IF;
++	return ((-flags) & X86_EFLAGS_IF);
+ }
+ PV_CALLEE_SAVE_REGS_THUNK(xen_save_fl);
  
-diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
-index 959b81ade113..2f3a0a4a2660 100644
---- a/drivers/xen/grant-table.c
-+++ b/drivers/xen/grant-table.c
-@@ -1084,7 +1084,8 @@ void gnttab_foreach_grant(struct page **pages,
- 
- int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
- 		    struct gnttab_map_grant_ref *kmap_ops,
--		    struct page **pages, unsigned int count)
-+		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
-+		    void **map_fixup[], unsigned int count)
+ __visible void xen_restore_fl(unsigned long flags)
  {
- 	int i, ret;
+ 	struct vcpu_info *vcpu;
++	xenhost_t **xh;
  
-@@ -1096,12 +1097,19 @@ int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
- 		switch (map_ops[i].status) {
- 		case GNTST_okay:
- 		{
--			struct xen_page_foreign *foreign;
-+			if (!gnttab_map_fixup(xh)) {
-+				struct xen_page_foreign *foreign;
+ 	/* convert from IF type flag */
+ 	flags = !(flags & X86_EFLAGS_IF);
  
--			SetPageForeign(pages[i]);
--			foreign = xen_page_foreign(pages[i]);
--			foreign->domid = map_ops[i].dom;
--			foreign->gref = map_ops[i].ref;
-+				SetPageForeign(pages[i]);
-+				foreign = xen_page_foreign(pages[i]);
-+				foreign->domid = map_ops[i].dom;
-+				foreign->gref = map_ops[i].ref;
-+			} else {
-+				pages[i] = virt_to_page(map_ops[i].host_addr);
+ 	/* See xen_irq_enable() for why preemption must be disabled. */
+ 	preempt_disable();
+-	vcpu = xh_default->xen_vcpu[smp_processor_id()];
+-	vcpu->evtchn_upcall_mask = flags;
++	for_each_xenhost(xh) {
++		vcpu = (*xh)->xen_vcpu[smp_processor_id()];
++		vcpu->evtchn_upcall_mask = flags;
++	}
+ 
+ 	if (flags == 0) {
+ 		barrier(); /* unmask then check (avoid races) */
+-		if (unlikely(vcpu->evtchn_upcall_pending))
+-			xen_force_evtchn_callback();
++		for_each_xenhost(xh) {
++			/* Preemption is disabled so we should not have
++			 * gotten moved to a different VCPU. */
++			vcpu = (*xh)->xen_vcpu[smp_processor_id()];
++			if (unlikely(vcpu->evtchn_upcall_pending))
++				xen_force_evtchn_callback(*xh);
++		}
+ 		preempt_enable();
+ 	} else
+ 		preempt_enable_no_resched();
+@@ -66,11 +89,19 @@ PV_CALLEE_SAVE_REGS_THUNK(xen_restore_fl);
+ 
+ asmlinkage __visible void xen_irq_disable(void)
+ {
++	xenhost_t **xh;
 +
-+				if (map_fixup_fn)
-+					map_fixup_fn(map_ops[i].host_addr, map_fixup[i]);
-+			}
- 			break;
- 		}
+ 	/* There's a one instruction preempt window here.  We need to
+ 	   make sure we're don't switch CPUs between getting the vcpu
+ 	   pointer and updating the mask. */
+ 	preempt_disable();
+-	xh_default->xen_vcpu[smp_processor_id()]->evtchn_upcall_mask = 1;
++	for_each_xenhost(xh)
++		/*
++		 * Mask events on this CPU for both the xenhosts.  As the
++		 * comment above mentions, disabling preemption means we
++		 * can safely do that.
++		 */
++		(*xh)->xen_vcpu[smp_processor_id()]->evtchn_upcall_mask = 1;
+ 	preempt_enable_no_resched();
+ }
+ PV_CALLEE_SAVE_REGS_THUNK(xen_irq_disable);
+@@ -78,6 +109,7 @@ PV_CALLEE_SAVE_REGS_THUNK(xen_irq_disable);
+ asmlinkage __visible void xen_irq_enable(void)
+ {
+ 	struct vcpu_info *vcpu;
++	xenhost_t **xh;
  
-diff --git a/include/xen/grant_table.h b/include/xen/grant_table.h
-index 827b790199fb..14f7cc70cd01 100644
---- a/include/xen/grant_table.h
-+++ b/include/xen/grant_table.h
-@@ -219,9 +219,18 @@ int gnttab_dma_free_pages(xenhost_t *xh, struct gnttab_dma_alloc_args *args);
- int gnttab_pages_set_private(int nr_pages, struct page **pages);
- void gnttab_pages_clear_private(int nr_pages, struct page **pages);
+ 	/*
+ 	 * We may be preempted as soon as vcpu->evtchn_upcall_mask is
+@@ -86,16 +118,25 @@ asmlinkage __visible void xen_irq_enable(void)
+ 	 */
+ 	preempt_disable();
  
-+static inline bool
-+gnttab_map_fixup(xenhost_t *xh)
-+{
-+	return xh->type == xenhost_r0;
-+}
-+
-+typedef void (*gnttab_map_fixup_t)(uint64_t host_addr, void **map_fixup);
-+
- int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
- 		    struct gnttab_map_grant_ref *kmap_ops,
--		    struct page **pages, unsigned int count);
-+		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
-+		    void **map_fixup[], unsigned int count);
- int gnttab_unmap_refs(xenhost_t *xh, struct gnttab_unmap_grant_ref *unmap_ops,
- 		      struct gnttab_unmap_grant_ref *kunmap_ops,
- 		      struct page **pages, unsigned int count);
+-	vcpu = xh_default->xen_vcpu[smp_processor_id()];
+-	vcpu->evtchn_upcall_mask = 0;
++	/* Given that the interrupts are generated from the default xenhost,
++	 * we should do this in reverse order.
++	 */
++	for_each_xenhost(xh) {
++		vcpu = (*xh)->xen_vcpu[smp_processor_id()];
++		vcpu->evtchn_upcall_mask = 0;
+ 
+-	/* Doesn't matter if we get preempted here, because any
+-	   pending event will get dealt with anyway. */
++		/* We could get preempted by an incoming interrupt here with a
++		 * half enabled irq (for the first xenhost.)
++		 */
++	}
+ 
+ 	barrier(); /* unmask then check (avoid races) */
+-	if (unlikely(vcpu->evtchn_upcall_pending))
+-		xen_force_evtchn_callback();
+ 
++	for_each_xenhost(xh) {
++		vcpu = (*xh)->xen_vcpu[smp_processor_id()];
++		if (unlikely(vcpu->evtchn_upcall_pending))
++			xen_force_evtchn_callback(*xh);
++	}
+ 	preempt_enable();
+ }
+ PV_CALLEE_SAVE_REGS_THUNK(xen_irq_enable);
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 6d9c3e6611ef..f4ea9eac8b6a 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -343,6 +343,17 @@ cpu_initialize_context(unsigned int cpu, struct task_struct *idle)
+ #else
+ 	ctxt->gs_base_kernel = per_cpu_offset(cpu);
+ #endif
++	/*
++	 * We setup an upcall handler only for the default xenhost. The remote
++	 * xenhost will generate evtchn events, but an additional callback would be
++	 * quite hairy, since we would have VCPU state initialised in multiple
++	 * hypervisors and issues like re-entrancy of upcalls.
++	 *
++	 * It would be simpler if the callback from L0-Xen could be bounced
++	 * bounced via L1-Xen. This also simplifies the pv_irq_ops code
++	 * because now the CPU's IF processing only needs to happen on
++	 * xh_default->vcpu_info.
++	 */
+ 	ctxt->event_callback_eip    =
+ 		(unsigned long)xen_hypervisor_callback;
+ 	ctxt->failsafe_callback_eip =
 -- 
 2.20.1
 
