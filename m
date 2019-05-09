@@ -2,113 +2,93 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB8C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA529C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB3020656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557422638;
-	bh=SmDmkaW75MsL1jEDf7tS9WHYvMugppiXPKUjEfdfYgQ=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=2CrQOviB/UFQu0lr0jPJEQCpKRNO3atzoajbJ7QfGli18QWQiq+9iMmAcYN4FFuNH
-	 16yGi/rDUsBsIuk011u7RuRkZ76uqzbHkHYMceUfAEO1ca93/gQzD72BzwLdCCBNQz
-	 P9+nZw3Bu3gAqONit4yGFe/QG/+cBIDeAQrlt+ec=
+	by mail.kernel.org (Postfix) with ESMTP id 8E6DC20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:24:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B7L2LlJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfEIRX5 (ORCPT
+        id S1726753AbfEIRYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEIRX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:23:57 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7204720656;
-        Thu,  9 May 2019 17:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557422636;
-        bh=SmDmkaW75MsL1jEDf7tS9WHYvMugppiXPKUjEfdfYgQ=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=fryQ9HWOM2wn3nJ37x5ERhLcU+2eAx82GgdJywncy/wlg3h6tznemY3L0slFeJ65A
-         9j4ZOzx+19yYqGVB/2VFMTwMSgclzbMjdXpHyu02R0E580qshrZI04aEI8qlWzIe3J
-         lVVEDaYzcCcZ/G/LxI4BZP3aPUfgSCkyYtN2dCJg=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <857bce4e87bc473e533c53abc0b612ee918f2474.camel@analog.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com> <20190508112842.11654-4-alexandru.ardelean@analog.com> <155733480678.14659.15999974975874060801@swboyd.mtv.corp.google.com> <857bce4e87bc473e533c53abc0b612ee918f2474.camel@analog.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 02/16] treewide: rename match_string() -> __match_string()
-Cc:     "heiko@sntech.de" <heiko@sntech.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <155742263550.14659.13420287678025539904@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 09 May 2019 10:23:55 -0700
+        Thu, 9 May 2019 13:24:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33504 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIRYf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:24:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so1676067pfk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=O7p7NTvVuCz3Gx9e1JJz1oyAzlFcn1IdSFVX36X3QfA=;
+        b=B7L2LlJN021oT4mU4t8DmWuWOHn9EHEhxgaMb30YkPy61+GfoLji1wxe6NTpWb5pLw
+         qpma7dhni1viZxz+Aw7AHXQLazmpPZnq5boazM+nfeZrdOc5yH+MjngOd1Fit+aPZmKG
+         Jwk/vIl26z4LUxRtoUM6auka6TlvyMavdVLOU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=O7p7NTvVuCz3Gx9e1JJz1oyAzlFcn1IdSFVX36X3QfA=;
+        b=jXrJhowfC10F92rtT1/2a4b4d3JQRuxGCJA2RglUY6rUH5Nlm9QPrqRgSAK6MsBkfX
+         O02oBAFr3H6Mb4ZbFJXRTo+0cEvYaruSejQA41SxM1I2TG3evlzkY5JAp+Pa3BUKMDex
+         9jhuOmqUy6wsyq7WUeidTmJdaan9fW9IiG0f8t5DfH6X6dg22Gn3i+nhJJ3WniHqbAcv
+         Xjzpspw2sxrZI+PoonsGzlTBGObbiCTs4BSm1OoEIaGLoWWFj5ebx20nfGwqpgXLrSGZ
+         OjPiEIWVj4EOngI1n+E0cTiN8TE8to5TcXNEjdkRz4Q1oJDgwJNlIl2qPb5PQ8n4mgd2
+         cMkA==
+X-Gm-Message-State: APjAAAU0d9xkMVXhlGmbfhf0bqzb5q6MxoIm6lGWU3TvkjfWVKGv+25z
+        GnAoPp+J8cVxylaibdfIjBHhLQ==
+X-Google-Smtp-Source: APXvYqxCYbzrMzhW5xZiImCpKDe6+G2qK6l5xaDKLeoFmS7L6yU4j623I/gTKX5S9B6AvIdcLsVn5g==
+X-Received: by 2002:a63:1820:: with SMTP id y32mr7065621pgl.287.1557422674957;
+        Thu, 09 May 2019 10:24:34 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id m8sm3989699pgn.59.2019.05.09.10.24.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 10:24:34 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v3 0/2] mmc: sdhci-iproc: fixes for HS50 data hold time
+Date:   Thu,  9 May 2019 10:24:25 -0700
+Message-Id: <20190509172427.17835-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Ardelean, Alexandru (2019-05-09 01:52:53)
-> On Wed, 2019-05-08 at 10:00 -0700, Stephen Boyd wrote:
-> > [External]
-> >=20
-> >=20
-> > (Trimming the lists but keeping lkml)
-> >=20
-> > Quoting Alexandru Ardelean (2019-05-08 04:28:28)
-> > > This change does a rename of match_string() -> __match_string().
-> > >=20
-> > > There are a few parts to the intention here (with this change):
-> > > 1. Align with sysfs_match_string()/__sysfs_match_string()
-> > > 2. This helps to group users of `match_string()` into simple users:
-> > >    a. those that use ARRAY_SIZE(_a) to specify the number of elements
-> > >    b. those that use -1 to pass a NULL terminated array of strings
-> > >    c. special users, which (after eliminating 1 & 2) are not that many
-> > > 3. The final intent is to fix match_string()/__match_string() which is
-> > >    slightly broken, in the sense that passing -1 or a positive value
-> > > does
-> > >    not make any difference: the iteration will stop at the first NULL
-> > >    element.
-> > >=20
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> >=20
-> > [...]
-> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > > index 96053a96fe2f..0b6c3d300411 100644
-> > > --- a/drivers/clk/clk.c
-> > > +++ b/drivers/clk/clk.c
-> > > @@ -2305,8 +2305,8 @@ bool clk_has_parent(struct clk *clk, struct clk
-> > > *parent)
-> > >         if (core->parent =3D=3D parent_core)
-> > >                 return true;
-> > >=20
-> > > -       return match_string(core->parent_names, core->num_parents,
-> > > -                           parent_core->name) >=3D 0;
-> > > +       return __match_string(core->parent_names, core->num_parents,
-> > > +                             parent_core->name) >=3D 0;
-> >=20
-> > This is essentially ARRAY_SIZE(core->parent_names) so it should be fine
-> > to put this back to match_string() later in the series.
->=20
-> I don't think so.
-> core->parents & core->parent_names seem to be dynamically allocated array.
-> ARRAY_SIZE() is a macro that expands at pre-compile time and evaluates
-> correctly at compile time only for static arrays.
->=20
+This patch series fixes data hold timing issues for various sdhci-iproc
+ip blocks that do not meet the HS50 data hold time.  NO_HISPD bit is set
+in quirks.
 
-Ah ok. The ARRAY_SIZE() is done inside the match_string() function? I
-missed that.
+Changes from v2:
+ - Added info to commit message as to stable tag selection decision
+   as per Adrian Hunter
+
+Changes from v1:
+ - Change fixes tag to Cc: stable@vger.kernel.org to specify version
+   to backport to
+
+Trac Hoang (2):
+  mmc: sdhci-iproc: cygnus: Set NO_HISPD bit to fix HS50 data hold time
+    problem
+  mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
+
+ drivers/mmc/host/sdhci-iproc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
 
