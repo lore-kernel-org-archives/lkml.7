@@ -2,161 +2,285 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D00C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24360C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696B5216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PiVaQAlR"
+	by mail.kernel.org (Postfix) with ESMTP id EB71E216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfEIJEV (ORCPT
+        id S1726523AbfEIJGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:04:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43897 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfEIJEV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:04:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r4so1867390wro.10;
-        Thu, 09 May 2019 02:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JpLDmJ7s889veboW3Rv53oO/LHxCjZWmDgHuSW3TagQ=;
-        b=PiVaQAlRCqcaxH/t1Ma0i3Mv3txU3+BTLiQ709cQeQESh9ShOWallWzcSJfmgI/jKx
-         yXPtQXSV9IO2sowYJ8/0mMEdlDC1houJq2slnF41bqMBfMb7r3LB8NuA7fRN0sIrm87S
-         tH6iyFvGktgqAlJgR6nOnRaHCkB+jutadvwTQWA7wDhq8alYs4JmpYmSShEsu2qOcTtS
-         9XqO1NN9gPhPv71gscI6jmzlp+j08Yt9Q2Gg4QqCnO5ii/muZz6ZgLnzq8ZaGeA2RzH5
-         +9OsLguIkPPQsuiL1RyJXa5tZmyNw8ZXEqysIMg3Zurs8TaMSpMTeqjSVrGab3JuvgEK
-         rJfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JpLDmJ7s889veboW3Rv53oO/LHxCjZWmDgHuSW3TagQ=;
-        b=EufEkL9LpuwGhPjzAch28uRj06Y4XUIRS7FoCThJAwLz5QSsKjGbXfjVaFzGVpp9Xl
-         URYkY4uFC6MmMJ3bTZdtfcWLttsLXw8eQ+6D0JtI/2gVW0TxLllaxP9392qOB6HEOgfc
-         W7ySvHWIBzGi6sN1b7LKnJHSWw+rk1VkEU6aOVwZxPu3880/ShtI1JxS/npMaiuDPFob
-         igF8du5uYQzKAdR0ozoGEHBk1jA26D1jvYp1Cm0pouQo8pgr7gXh+6YtVLm1TZlc4ARN
-         lMzb/ZM2nYr0rVgyXusPF0eNOMpnC6atv0OT1di284HcQdhgQzvbLgm28dlkGKW3RmSP
-         SoVw==
-X-Gm-Message-State: APjAAAUwZqnCjlkT7DGAgm81W/+Cvqyt+XGiRS6/Liv3NyWVdF0wjBAk
-        9U4KScm6Zunu/evigp0h2EM=
-X-Google-Smtp-Source: APXvYqyttn1Qx8cKR4bIGf+yaqR0e3OpYZiBxXqTERuvfXIerrcaq5xBFdU42WbLdfKODFctvuI9xA==
-X-Received: by 2002:adf:e845:: with SMTP id d5mr2295362wrn.154.1557392659400;
-        Thu, 09 May 2019 02:04:19 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id l12sm975072wmj.0.2019.05.09.02.04.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 02:04:18 -0700 (PDT)
-Date:   Thu, 9 May 2019 11:04:16 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH net-next 00/11] net: stmmac: Selftests
-Message-ID: <20190509090416.GB1605@Red>
-References: <cover.1557300602.git.joabreu@synopsys.com>
+        Thu, 9 May 2019 05:06:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56730 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfEIJGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:06:33 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BCAF63001800;
+        Thu,  9 May 2019 09:06:32 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B70E5B681;
+        Thu,  9 May 2019 09:06:28 +0000 (UTC)
+Date:   Thu, 9 May 2019 11:06:00 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove sequence
+Message-ID: <20190509110600.5354463c.cohuck@redhat.com>
+In-Reply-To: <VI1PR0501MB2271CFAFF2ACF145FDFD8E2ED1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190430224937.57156-1-parav@mellanox.com>
+        <20190430224937.57156-9-parav@mellanox.com>
+        <20190508190957.673dd948.cohuck@redhat.com>
+        <VI1PR0501MB2271CFAFF2ACF145FDFD8E2ED1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 09 May 2019 09:06:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 09:51:00AM +0200, Jose Abreu wrote:
-> [ Submitting with net-next closed for proper review and testing. ]
-> 
-> This introduces selftests support in stmmac driver. We add 4 basic sanity
-> checks and MAC loopback support for all cores within the driver. This way
-> more tests can easily be added in the future and can be run in virtually
-> any MAC/GMAC/QoS/XGMAC platform.
-> 
-> Having this we can find regressions and missing features in the driver
-> while at the same time we can check if the IP is correctly working.
-> 
-> We have been using this for some time now and I do have more tests to
-> submit in the feature. My experience is that although writing the tests
-> adds more development time, the gain results are obvious.
-> 
-> I let this feature optional within the driver under a Kconfig option.
-> 
-> For this series the output result will be something like this
-> (e.g. for dwmac1000):
-> ----
-> # ethtool -t eth0
-> The test result is PASS
-> The test extra info:
-> 1. MAC Loopback                 0
-> 2. PHY Loopback                 -95
-> 3. MMC Counters                 0
-> 4. EEE                          -95
-> 5. Hash Filter MC               0
-> 6. Perfect Filter UC            0
-> 7. Flow Control                 0
-> ----
-> 
-> (Error code -95 means EOPNOTSUPP in current HW).
-> 
+[vfio-ap folks: find a question regarding removal further down]
 
-Hello
+On Wed, 8 May 2019 22:06:48 +0000
+Parav Pandit <parav@mellanox.com> wrote:
 
-I have started to patch dwmac_sun8i for using your patchset and get the following:
-The test result is FAIL
-The test extra info:
- 1. MAC Loopback         	 0
- 2. PHY Loopback         	 -95
- 3. MMC Counters         	 -95
- 4. EEE                  	 -95
- 5. Hash Filter MC       	 0
- 6. Perfect Filter UC    	 1
- 7. Flow Control         	 -95
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Wednesday, May 8, 2019 12:10 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
+> > Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove
+> > sequence
+> > 
+> > On Tue, 30 Apr 2019 17:49:35 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > This patch addresses below two issues and prepares the code to address
+> > > 3rd issue listed below.
+> > >
+> > > 1. mdev device is placed on the mdev bus before it is created in the
+> > > vendor driver. Once a device is placed on the mdev bus without
+> > > creating its supporting underlying vendor device, mdev driver's probe()  
+> > gets triggered.  
+> > > However there isn't a stable mdev available to work on.
+> > >
+> > >    create_store()
+> > >      mdev_create_device()
+> > >        device_register()
+> > >           ...
+> > >          vfio_mdev_probe()
+> > >         [...]
+> > >         parent->ops->create()
+> > >           vfio_ap_mdev_create()
+> > >             mdev_set_drvdata(mdev, matrix_mdev);
+> > >             /* Valid pointer set above */
+> > >
+> > > Due to this way of initialization, mdev driver who want to use the
 
-What means 1 for "Perfect Filter UC" ?
+s/want/wants/
 
-I have added my patch below
+> > > mdev, doesn't have a valid mdev to work on.
+> > >
+> > > 2. Current creation sequence is,
+> > >    parent->ops_create()
+> > >    groups_register()
+> > >
+> > > Remove sequence is,
+> > >    parent->ops->remove()
+> > >    groups_unregister()
+> > >
+> > > However, remove sequence should be exact mirror of creation sequence.
+> > > Once this is achieved, all users of the mdev will be terminated first
+> > > before removing underlying vendor device.
+> > > (Follow standard linux driver model).
+> > > At that point vendor's remove() ops shouldn't failed because device is
 
-Regards
+s/failed/fail/
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -976,6 +976,18 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
-                regulator_disable(gmac->regulator);
- }
- 
-+static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
-+{
-+       u32 value = readl(ioaddr + EMAC_BASIC_CTL0);
-+
-+       if (enable)
-+               value |= EMAC_LOOPBACK;
-+       else
-+               value &= ~EMAC_LOOPBACK;
-+
-+       writel(value, ioaddr + EMAC_BASIC_CTL0);
-+}
-+
- static const struct stmmac_ops sun8i_dwmac_ops = {
-        .core_init = sun8i_dwmac_core_init,
-        .set_mac = sun8i_dwmac_set_mac,
-@@ -985,6 +997,7 @@ static const struct stmmac_ops sun8i_dwmac_ops = {
-        .flow_ctrl = sun8i_dwmac_flow_ctrl,
-        .set_umac_addr = sun8i_dwmac_set_umac_addr,
-        .get_umac_addr = sun8i_dwmac_get_umac_addr,
-+       .set_mac_loopback = sun8i_dwmac_set_mac_loopback,
- };
- 
- static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
+> > > taken off the bus that should terminate the users.
+
+"because taking the device off the bus should terminate any usage" ?
+
+> > >
+> > > 3. When remove operation fails, mdev sysfs removal attempts to add the
+> > > file back on already removed device. Following call trace [1] is observed.
+> > >
+> > > [1] call trace:
+> > > kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
+> > > sysfs_create_file_ns+0x7f/0x90
+> > > kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted
+> > > 5.1.0-rc6-vdevbus+ #6
+> > > kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b
+> > > 08/09/2016
+> > > kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
+> > > kernel: Call Trace:
+> > > kernel: remove_store+0xdc/0x100 [mdev]
+> > > kernel: kernfs_fop_write+0x113/0x1a0
+> > > kernel: vfs_write+0xad/0x1b0
+> > > kernel: ksys_write+0x5a/0xe0
+> > > kernel: do_syscall_64+0x5a/0x210
+> > > kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > >
+> > > Therefore, mdev core is improved in following ways.
+> > >
+> > > 1. Before placing mdev devices on the bus, perform vendor drivers
+> > > creation which supports the mdev creation.
+
+"invoke the vendor driver ->create callback" ?
+
+> > > This ensures that mdev specific all necessary fields are initialized
+
+"that all necessary mdev specific fields are initialized" ?
+
+> > > before a given mdev can be accessed by bus driver.
+> > > This follows standard Linux kernel bus and device model similar to
+> > > other widely used PCI bus.
+
+"This follows standard practice on other Linux device model buses." ?
+
+> > >
+> > > 2. During remove flow, first remove the device from the bus. This
+> > > ensures that any bus specific devices and data is cleared.
+> > > Once device is taken of the mdev bus, perform remove() of mdev from
+
+s/of/off/
+
+> > > the vendor driver.
+> > >
+> > > 3. Linux core device model provides way to register and auto
+> > > unregister the device sysfs attribute groups at dev->groups.
+
+"The driver core provides a way to automatically register and
+unregister sysfs attributes via dev->groups." ?
+
+> > > Make use of this groups to let core create the groups and simplify
+> > > code to avoid explicit groups creation and removal.
+> > >
+> > > A below stack dump of a mdev device remove process also ensures that
+> > > vfio driver guards against device removal already in use.
+> > >
+> > >  cat /proc/21962/stack
+> > > [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio] [<0>]
+> > > mdev_remove+0x21/0x40 [mdev] [<0>]
+> > > device_release_driver_internal+0xe8/0x1b0
+> > > [<0>] bus_remove_device+0xf9/0x170
+> > > [<0>] device_del+0x168/0x350
+> > > [<0>] mdev_device_remove_common+0x1d/0x50 [mdev] [<0>]
+> > > mdev_device_remove+0x8c/0xd0 [mdev] [<0>] remove_store+0x71/0x90
+> > > [mdev] [<0>] kernfs_fop_write+0x113/0x1a0 [<0>] vfs_write+0xad/0x1b0
+> > > [<0>] ksys_write+0x5a/0xe0 [<0>] do_syscall_64+0x5a/0x210 [<0>]
+> > > entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > [<0>] 0xffffffffffffffff
+> > >
+> > > This prepares the code to eliminate calling device_create_file() in
+> > > subsquent patch.  
+
+I find this stack dump and explanation more confusing than
+enlightening. Maybe just drop it?
+
+> > 
+> > I'm afraid I have a bit of a problem following this explanation, so let me try
+> > to summarize what the patch does to make sure that I understand it
+> > correctly:
+> > 
+> > - Add the sysfs groups to device->groups so that the driver core deals
+> >   with proper registration/deregistration.
+> > - Split the device registration/deregistration sequence so that some
+> >   things can be done between initialization of the device and hooking
+> >   it up to the infrastructure respectively after deregistering it from
+> >   the infrastructure but before giving up our final reference. In
+> >   particular, this means invoking the ->create and ->remove callback in
+> >   those new windows. This gives the vendor driver an initialized mdev
+> >   device to work with during creation.
+> > - Don't allow ->remove to fail, as the device is already removed from
+> >   the infrastructure at that point in time.
+> >   
+> You got all the points pretty accurate.
+
+Ok, good.
+
+> 
+> > >
+> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > ---
+> > >  drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
+> > >  drivers/vfio/mdev/mdev_private.h |  2 +-
+> > >  drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
+> > >  3 files changed, 27 insertions(+), 71 deletions(-)  
+> > 
+> > (...)
+
+> > > @@ -373,16 +330,15 @@ int mdev_device_remove(struct device *dev,  
+> > bool force_remove)  
+> > >  	mutex_unlock(&mdev_list_lock);
+> > >
+> > >  	type = to_mdev_type(mdev->type_kobj);
+> > > +	mdev_remove_sysfs_files(dev, type);
+> > > +	device_del(&mdev->dev);
+> > >  	parent = mdev->parent;
+> > > +	ret = parent->ops->remove(mdev);
+> > > +	if (ret)
+> > > +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);  
+> > 
+> > I think carrying on with removal regardless of the return code of the  
+> > ->remove callback makes sense, as it simply matches usual practice.  
+> > However, are we sure that every vendor driver works well with that? I think
+> > it should, as removal from bus unregistration (vs. from the sysfs
+> > file) was always something it could not veto, but have you looked at the
+> > individual drivers?
+> >   
+> I looked at following drivers a little while back.
+> Looked again now.
+> 
+> drivers/gpu/drm/i915/gvt/kvmgt.c which clears the handle valid in intel_vgpu_release(), which should finish first before remove() is invoked.
+> 
+> s390 vfio_ccw_mdev_remove() driver drivers/s390/cio/vfio_ccw_ops.c remove() always returns 0.
+> s39 crypo fails the remove() once vfio_ap_mdev_release marks kvm null, which should finish before remove() is invoked.
+
+That one is giving me a bit of a headache (the ->kvm reference is
+supposed to keep us from detaching while a vm is running), so let's cc:
+the vfio-ap maintainers to see whether they have any concerns.
+
+> samples/vfio-mdev/mbochs.c mbochs_remove() always returns 0.
+> 
+> > >
+> > > -	ret = mdev_device_remove_ops(mdev, force_remove);
+> > > -	if (ret) {
+> > > -		mdev->active = true;
+> > > -		return ret;
+> > > -	}
+> > > -
+> > > -	mdev_remove_sysfs_files(dev, type);
+> > > -	device_unregister(dev);
+> > > +	/* Balances with device_initialize() */
+> > > +	put_device(&mdev->dev);
+> > >  	mdev_put_parent(parent);
+> > >
+> > >  	return 0;  
+> > 
+> > I think that looks sane in general, but the commit message might benefit
+> > from tweaking.  
+> Part of your description is more crisp than my commit message, I can probably take snippet from it to improve?
+> Or any specific entries in commit message that I should address?
+
+I have added some comments inline (mostly some wording tweaks).
+
+Feel free to take anything from my summary as well.
