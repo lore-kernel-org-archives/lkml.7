@@ -2,131 +2,130 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43A4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1F9C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D76216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB8D208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="cpV4dHle"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jwEB7KhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfEIHg3 (ORCPT
+        id S1726611AbfEIHk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:36:29 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:29879 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfEIHg3 (ORCPT
+        Thu, 9 May 2019 03:40:56 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17140 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725774AbfEIHk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:36:29 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x497a876027332;
-        Thu, 9 May 2019 16:36:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x497a876027332
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557387369;
-        bh=WvsKxYjmrZ0o9zogyEYzJJvBoltHq2gquWxe1gHwrUc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cpV4dHleODex4lgIfIxVwNfYJJEtBo43pLaA/Q9t8GWvQgeRihIoS6kAxsi11IX2V
-         aBvELu+ReG0iOkTZ/PORlvSmyGKDkn+B6HUbcLUl9Iui6BHLKeY1KnyFHDXprvEbmC
-         tDh1MGztCrDKncS4JnDqhaO3jP9G1s4A0n0VobzIR0CKa9AT+QT9WoNvUmN+S68yu4
-         /ap3fmIkrs4oioU2uRgpfGnhLdmw578XbsNwY2ZJFYDkCsXgr2dWizSIsz9z1Oy0GM
-         A6BGU2TiCQ3IDcZ7I+E5y6U8w1HL7SD9JZmDjwI4VDhLNPPKkvKm92a7P1jVDdJ7f1
-         7+0fsu/TDbLIA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: terminate Kconfig when $(CC) or $(LD) is missing
-Date:   Thu,  9 May 2019 16:35:55 +0900
-Message-Id: <20190509073555.15545-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 May 2019 03:40:56 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x497aplJ008618;
+        Thu, 9 May 2019 09:40:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=sqNpP69L58AngmIqsKX38wmvLOxCSntjhIdSEkZAi8g=;
+ b=jwEB7KhJEy+0Bn4pLlcxZ4JJRVqCaMQhypzCNZC5POQUwQCOiYHGKSTPOJOZqP57BPaT
+ OuOfyzHm6n4o5ZcC04hKiy6Kn1Z1qAvTNwzNihgxs6IxhhQPNe0wVTMmLt28qabvvie6
+ 6ib/VRlY+Ox4yvlLBrjFAIjem9+Q2O9R8+PTGAzQZfoLA4SUPk1YQbgtckZ8+8WiQ/Rm
+ Ht9hvU7jUDwc3/qe5FKgOswbnv07QtVoLEebmYo4DxHBqOXfM/rogcVp+tEp7RBUGq6X
+ 1clzep2LLQye4hK1yglkuqkQTbvoImGXhNGcZ33iRLxMkJZKgxQ+tLUyxbdufFbcYQUU Bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2scdjp0rhx-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 09 May 2019 09:40:18 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3AD5342;
+        Thu,  9 May 2019 07:40:16 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1355B1394;
+        Thu,  9 May 2019 07:40:16 +0000 (GMT)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 May
+ 2019 09:40:15 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 9 May 2019 09:40:15 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>
+CC:     Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
+ trigger driver
+Thread-Topic: [PATCH] IIO: stm32: Remove quadrature related functions from
+ trigger driver
+Thread-Index: AQHVBLUCz+/gAEZUoUqVHnsxvwgdIqZfUXyAgAAmvICAAT3NAIABk+oA
+Date:   Thu, 9 May 2019 07:40:15 +0000
+Message-ID: <e515e57d-697d-8d4b-3873-645aed53d394@st.com>
+References: <20190507091224.17781-1-benjamin.gaignard@st.com>
+ <20190507101729.GA3420@icarus>
+ <CA+M3ks4LhOFTeArnh3d=C02qLJWj_u6tWDDOhD8kZnJPRkXC8w@mail.gmail.com>
+ <20190508073434.GA3277@icarus>
+In-Reply-To: <20190508073434.GA3277@icarus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D844A18717961F469DF8736CA5405E54@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the compiler specified by $(CC) is not present, the Kconfig stage
-sprinkles 'not found' messages, then succeeds.
-
-  $ make CROSS_COMPILE=foo defconfig
-  /bin/sh: 1: foogcc: not found
-  /bin/sh: 1: foogcc: not found
-  *** Default configuration is based on 'x86_64_defconfig'
-  ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
-  ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
-  ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
-  ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
-  ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
-  ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
-  ./scripts/clang-version.sh: 11: ./scripts/clang-version.sh: foogcc: not found
-  ./scripts/gcc-plugin.sh: 11: ./scripts/gcc-plugin.sh: foogcc: not found
-  init/Kconfig:16:warning: 'GCC_VERSION': number is invalid
-  #
-  # configuration written to .config
-  #
-
-Terminate parsing files immediately if $(CC) or $(LD) is not found.
-"make *config" will fail more nicely.
-
-  $ make CROSS_COMPILE=foo defconfig
-  *** Default configuration is based on 'x86_64_defconfig'
-  scripts/Kconfig.include:34: compiler 'foogcc' not found
-  make[1]: *** [scripts/kconfig/Makefile;82: defconfig] Error 1
-  make: *** [Makefile;557: defconfig] Error 2
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- Makefile                | 2 +-
- scripts/Kconfig.include | 8 ++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 28965187c528..bd7ae11947cb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -537,7 +537,7 @@ endif
- # Some architectures define CROSS_COMPILE in arch/$(SRCARCH)/Makefile.
- # CC_VERSION_TEXT is referenced from Kconfig (so it needs export),
- # and from include/config/auto.conf.cmd to detect the compiler upgrade.
--CC_VERSION_TEXT = $(shell $(CC) --version | head -n 1)
-+CC_VERSION_TEXT = $(shell $(CC) --version 2>/dev/null | head -n 1)
- 
- ifeq ($(config-targets),1)
- # ===========================================================================
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 87ff1dcc6bd5..0b267fb27f07 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -18,6 +18,10 @@ if-success = $(shell,{ $(1); } >/dev/null 2>&1 && echo "$(2)" || echo "$(3)")
- # Return y if <command> exits with 0, n otherwise
- success = $(if-success,$(1),y,n)
- 
-+# $(failure,<command>)
-+# Return n if <command> exits with 0, y otherwise
-+failure = $(if-success,$(1),n,y)
-+
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
- cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-@@ -26,5 +30,9 @@ cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
- # Return y if the linker supports <flag>, n otherwise
- ld-option = $(success,$(LD) -v $(1))
- 
-+# check if $(CC) and $(LD) exist
-+$(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
-+$(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
-+
- # gcc version including patch level
- gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
--- 
-2.17.1
-
+DQpPbiA1LzgvMTkgOTozNCBBTSwgV2lsbGlhbSBCcmVhdGhpdHQgR3JheSB3cm90ZToNCj4gT24g
+VHVlLCBNYXkgMDcsIDIwMTkgYXQgMDI6Mzc6MDdQTSArMDIwMCwgQmVuamFtaW4gR2FpZ25hcmQg
+d3JvdGU6DQo+PiBMZSBtYXIuIDcgbWFpIDIwMTkgw6AgMTI6MTksIFdpbGxpYW0gQnJlYXRoaXR0
+IEdyYXkNCj4+IDx2aWxoZWxtLmdyYXlAZ21haWwuY29tPiBhIMOpY3JpdCA6DQo+Pj4gT24gVHVl
+LCBNYXkgMDcsIDIwMTkgYXQgMTE6MTI6MjRBTSArMDIwMCwgQmVuamFtaW4gR2FpZ25hcmQgd3Jv
+dGU6DQo+Pj4+IFF1YWRyYXR1cmUgZmVhdHVyZSBpcyBub3cgaG9zdGVkIG9uIGl0IG93biBmcmFt
+ZXdvcmsuDQo+Pj4+IFJlbW92ZSBxdWFkcmF0dXJlIHJlbGF0ZWQgY29kZSBmcm9tIHN0bTMyLXRy
+aWdnZXIgZHJpdmVyIHRvIGF2b2lkDQo+Pj4+IGNvZGUgZHVwbGljYXRpb24gYW5kIHNpbXBsaWZ5
+IHRoZSBBQkkuDQo+Pj4+DQo+Pj4+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxi
+ZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+Pj4gQWx0aG91Z2ggdGhpcyBmdW5jdGlvbmFsaXR5
+IGlzIG5vdyBwcm92aWRlZCBieSB0aGUgQ291bnRlciBzdWJzeXN0ZW0sIHdlDQo+Pj4gc2hvdWxk
+IGtlZXAgdGhlIElJTyBDb3VudGVyIGludGVyZmFjZSBmb3IgdGhpcyBkcml2ZXIgaW50YWN0IHNp
+bmNlDQo+Pj4gZXhpc3RpbmcgdXNlciBhcHBsaWNhdGlvbnMgbWF5IGRlcGVuZCBvbiBpdDsgdGhp
+cyBpcyB0aGUgc2FtZSByZWFzb24gd2h5DQo+Pj4gdGhlIElJTyBDb3VudGVyIGNvZGUgaW4gdGhl
+IDEwNC1RVUFELTggZGV2aWNlIGRyaXZlciB3YXMgbm90IHJlbW92ZWQNCj4+PiBkZXNwaXRlIG1v
+dmluZyB0byB0aGUgQ291bnRlciBzdWJzeXN0ZW0uDQo+Pj4NCj4+PiBPbmNlIHVzZXIgYXBwbGlj
+YXRpb25zIGhhdmUgaGFkIGVub3VnaCB0aW1lIHRvIG1pZ3JhdGUgdG8gdGhlIEdlbmVyaWMNCj4+
+PiBDb3VudGVyIGludGVyZmFjZSwgd2UgY2FuIGNvbnNpZGVyIHJlbW92aW5nIHRoZSBkZXByZWNh
+dGVkIElJTyBDb3VudGVyDQo+Pj4gaW50ZXJmYWNlLg0KPj4gSGkgV2lsbGlhbSwNCj4+DQo+PiBU
+aGlzIFNvQyBpcyBub3QgeWV0IGluIHByb2R1Y3Rpb24gc28gdGhlaXIgaXMgbm8gbGVnYWN5IG9u
+IHRoZSBvbGQgaW50ZXJmYWNlDQo+PiBhbmQgSSB3b3VsZCBsaWtlIHRvIGF2b2lkIHRvIGNyZWF0
+ZSBvbmUuDQo+Pg0KPj4gQmVuamFtaW4NCj4gQWgsIEkgc2VlIHdoYXQgeW91IG1lYW4sIHRoaXMg
+ZHJpdmVyIGlzIGZvciBmdXR1cmUgZGV2aWNlcy4gRG8gdGhlDQo+IGVhcmxpZXIgU1RNMzIgSDcg
+c2VyaWVzIGRldmljZXMgaGF2ZSBhIHF1YWRyYXR1cmUgZmVhdHVyZSBhcyB3ZWxsLCBvciBpcw0K
+PiB0aGlzIGZ1bmN0aW9uYWxpdHkgb25seSBhdmFpbGFibGUgd2l0aCB0aGUgbmV3IGRldmljZXM/
+DQoNCkl0IGlzIGF2YWlsYWJsZSBvbiBTVE0zMiBINyBidXQgSSBoYXZlIG5ldmVyIHNlZSBhbnkg
+TGludXggcHJvZHVjdCBvbiANCnRob3NlIFNPQw0KDQphbmQgZXZlbiBsZXNzIHVzaW5nIHF1YWRy
+YXRpYyBlbmNvZGVyIDstKQ0KDQpCZW5qYW1pbg0KDQo+DQo+IFdpbGxpYW0gQnJlYXRoaXR0IEdy
+YXkNCj4NCj4+PiBXaWxsaWFtIEJyZWF0aGl0dCBHcmF5DQo+Pj4NCj4+PiBfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPj4+IGxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0DQo+Pj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
+Pj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVs
