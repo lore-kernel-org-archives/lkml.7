@@ -2,116 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2EAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83051C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E262D21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A132173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KqSPRhDS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AauaUrfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfEIJdX (ORCPT
+        id S1726713AbfEIJdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:33:23 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:45524 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEIJdX (ORCPT
+        Thu, 9 May 2019 05:33:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37350 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIJdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:33:23 -0400
-Received: by mail-vk1-f196.google.com with SMTP id h127so414974vkd.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:33:23 -0700 (PDT)
+        Thu, 9 May 2019 05:33:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y5so2272751wma.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BjNhpWRs8f71yrAy3RgUQYa6ESreaTDpHDF1kJYFLi4=;
-        b=KqSPRhDS3nRo6SLQ0wCjG0lGUyZOeVoZJ2tjzg1y89vGU86T/aglOfWjN70bV/PozK
-         SAQdDSt46ucXZgJcYI6xYNd4nFSG3cVQgB9iMZzfJNa6xQHrZU54uFOofmTVvvGkCslG
-         EuCVUYEKIrKT8zWq2ATAwg+uYKnBlO9FvOxNEbeiNlJPDQGtHBnNNkae9Yb7U4mf8+A0
-         nUFznRgVCbXsfBW0qnQORreJPuSBrxVMUYohEHe/gMaq0Plod8r+j1aRgNCbAuzIJKpJ
-         isFey/3STdqpSu7IJb0l+4UQADxf2l5/vKY43R4EPnXXLbuWjsvVfRs5YVzFw/GSo1NB
-         2oag==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=SyRgRxtjdMJpbsjK9vjm2B3TwSm8QJJ2pjmdSOpbmps=;
+        b=AauaUrfm2cnOW6SNDfuMRv0+hlgU2BgvMMo5qTYqMWmgv0tM2Y605oJ9MDb6GCKkyr
+         xxLZDhgFvVAUlAqzhZZgGwA2pJ050Cg3c+g34asToSOFZ08TE2qbNZLS3DeuykRS59oz
+         8+wg3JumczxfcDO7Pl6qu7oRNbTm/41lIdyzvY1NkLggKzIkIhVByv0CcEtkutzoETEX
+         NxstvI4XTnL3mAERfoDswn2CPdQJx+hVe0gJm0AM6FQHrltYCRVbW5fJLJS4w4cxHgzg
+         ACVVbtk5SuzhgRFF6Z67DPh3S/iQNyWj0leAwGWeu9gnUt6RivRWexcjB7HEr88L+o0d
+         BWvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BjNhpWRs8f71yrAy3RgUQYa6ESreaTDpHDF1kJYFLi4=;
-        b=CkEkNreH/6xfFwKBAFCo1ZsU/tFDzayM0oG3Cszluhtk7/z2pNOekYHFjDyKEL3WAA
-         HdjPWXCJuQxn1NFlu9+2FRc0/wp9PZjjTMmXS1rshhpR8Mna8AHmkctda8Ttuw89OQkv
-         w9fckstoPlo4ORF+IBOcavyW8lbJErMA+tYtxSSQQMfg+ueU6o/n1DKNt1b2QZFrlkW2
-         +Gj0CuEaMBY+IxF+uvypWyKU37u0++z4ducVRvaORed2HRaUSdo2cMdyCJxwVIqJItPa
-         7ynPtRmsVmr4m1+4x8RusX4Lsp0Z/Grg0CvOM/TY03Cb46CSPeZm7EEbQXSkq9yiOdCO
-         gLdQ==
-X-Gm-Message-State: APjAAAVC4Jbb5ioaXpLY0ts9x6FWzeo0tZAmuKjsSw9PjZi+XG3n+YYv
-        GHzRoxPzsG3553kiSBKNJZlWmkkG3y9n3lKkVlB+1A==
-X-Google-Smtp-Source: APXvYqw6L3/4Ch+tH/DhayP44e50T5LigFBZhZJZQfM8xmm5TYt/0B4S7cFMoCH6vW3b0Xni4ybNxsJKxGoH6NVT8pU=
-X-Received: by 2002:a1f:2d90:: with SMTP id t138mr1110666vkt.14.1557394402774;
- Thu, 09 May 2019 02:33:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SyRgRxtjdMJpbsjK9vjm2B3TwSm8QJJ2pjmdSOpbmps=;
+        b=r/BOkP9pKCQNbJ8M/lYpyr0jpBLOV08NPZ4I9P0ub7bZVNZO+SnxWyNKCplT82pgAa
+         4GsGu3PquwVdtmItKtMpibd8WWcGd/kplP0w0qOT50xupup7w639R/85yHwZ9mz9k4op
+         ieuEAevQVzgbtkyDUFm4hIkHNN5av1QAY/36GpXJHUe123XpbMK1NGWqGORFppTD9cXY
+         ZVrJUExH047/12PLGPxP6UZ4Zu1wwC5imE7ss8xGJvCOvu133szjukkBJyfxZ7tufomv
+         UYK/DBkflENqsrgWzdIewZfslrkD+x26hZTS9V5XXmzgPypIU7AAWX7J3SHxUAXauyk/
+         vrhw==
+X-Gm-Message-State: APjAAAXi2o7j+WUyjPKUGb7YbvSEKR+qFSkG29uJ4cbmdMx/X4BpGY58
+        h2dYfvI7dkyt+uvRQEiX+yDigQ==
+X-Google-Smtp-Source: APXvYqzWxiSGBE8sUUva3+DpZ/awGVFeFFPJtZu5iHJoO63RJCNa28okuodpAuszCvvYsv8zSHsUTA==
+X-Received: by 2002:a1c:f111:: with SMTP id p17mr1919584wmh.62.1557394409462;
+        Thu, 09 May 2019 02:33:29 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id j131sm4430911wmb.9.2019.05.09.02.33.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 02:33:28 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:33:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v6 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+Message-ID: <20190509093326.GV31645@dell>
+References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+ <1557392336-28239-2-git-send-email-amelie.delaunay@st.com>
 MIME-Version: 1.0
-References: <1557310449-30450-1-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1557310449-30450-1-git-send-email-sumit.garg@linaro.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 9 May 2019 15:03:11 +0530
-Message-ID: <CAFA6WYMPKxwxzbU=CFYLw83kpXP9LwMQ3-N-hp2NyExhs_HjSQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add mailing list for the TEE subsystem
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557392336-28239-2-git-send-email-amelie.delaunay@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 at 15:44, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Add a mailing list for patch reviews and discussions related to TEE
-> subsystem.
->
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+On Thu, 09 May 2019, Amelie Delaunay wrote:
 
-I forgot to include following tag as this change was suggested by Daniel. So:
-
-Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-
--Sumit
-
+> This patch adds documentation of device tree bindings for the
+> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  MAINTAINERS | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 920a0a1..c05dff7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11556,11 +11556,13 @@ F:    drivers/scsi/st.h
->
->  OP-TEE DRIVER
->  M:     Jens Wiklander <jens.wiklander@linaro.org>
-> +L:     tee-dev@lists.linaro.org
->  S:     Maintained
->  F:     drivers/tee/optee/
->
->  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
->  M:     Sumit Garg <sumit.garg@linaro.org>
-> +L:     tee-dev@lists.linaro.org
->  S:     Maintained
->  F:     drivers/char/hw_random/optee-rng.c
->
-> @@ -15312,6 +15314,7 @@ F:      include/media/i2c/tw9910.h
->
->  TEE SUBSYSTEM
->  M:     Jens Wiklander <jens.wiklander@linaro.org>
-> +L:     tee-dev@lists.linaro.org
->  S:     Maintained
->  F:     include/linux/tee_drv.h
->  F:     include/uapi/linux/tee.h
-> --
-> 2.7.4
->
+>  Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
