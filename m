@@ -2,106 +2,72 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59418C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94990C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2649820675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWc7+YOL"
+	by mail.kernel.org (Postfix) with ESMTP id 6B21E217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557423711;
+	bh=ES/xr8fFDSwHRvHasEo0bgEx+FZPlfyiAM+2CUsY9OA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uWjRX4oMY3fFHK1cZMLhPzyOpJlmpCcqvypUP3UXAIMEA3bF5OUI9JumAATOQFuD7
+	 MO2xAjFvb4w73zF7p+vCNQjiXn4Agojqd0Ln9IpO/BWYp5CIGUGmxwOE7pycT49E6s
+	 +nw+CvkU4mnDeFshNANx04xG/SFYNrXESwsmEROc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfEIRjn (ORCPT
+        id S1726716AbfEIRlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:39:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37601 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfEIRjk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:39:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g3so1687947pfi.4;
-        Thu, 09 May 2019 10:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G488tD19TVWHIOWsjCdbHdhwCsIhFZLwFL+fr08o8yY=;
-        b=DWc7+YOLeKjZcWm01IV8h1YnJP1hiMBzcwboBwpZtqdZ8Kum8i1u9sl2nzvG8XWtMw
-         pQRcvpvWkVfRnHmysa7W0d3lo1e7K6LVn3HhmblUHAe2rJrWCx3aoeJrlwMiPC7EfDS1
-         1ehLLzz5lhswSLpPn/+XVz4o52FoAGPCBCIH/52E+Av+0I6BB+vqnexXsbqw5gT1fGO/
-         yf/+a020oHz6vNDJvNXjJ++BSruR/u8sCaVx0IaqjSypiVimilzFLX5uthqx6norQGjI
-         p50FqRt+aMJpAK1wFzEHWnhljXaXq6xZmqKgME7w7MYbWar8FodFXzx+R6/Hp+e8nP8L
-         hwLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G488tD19TVWHIOWsjCdbHdhwCsIhFZLwFL+fr08o8yY=;
-        b=VzzcXL+KyJ1X4H2/U7pohtaRjSWUMZlWwO/CY1P1Dv94qOecTv+UFvkjqENHiSE8Et
-         S40J1JezgWphgMs2ENdZ5ZljgG9uEasDJhkdAty+MqOOw6f/kGhDmC/z5PXT2eOy74xZ
-         eRtO+d/eNxmAOTjX0fet6uFth0jb4tDUDZDHxxsRrAYne0dqYTc2CDzfNVETDQvXxbxg
-         8TkgVAjBajQgFq6xj0nPUIoLzwkxtlVAnggLO2o9hq47RI9AsbcmSRpkltcdizavBE6m
-         DLhtgeBLyMUyi09rjc8Tkw75RdqJ4gBchFUhTk9aRgffOC6xwaM3Vba/dTZTskDRI6e9
-         nlVA==
-X-Gm-Message-State: APjAAAVMDmI0RR581AdX8LwHjBUPUvzF69kpQ9wFVhG3o9r0YLbC/mB0
-        L1aB5513aSpR/LLoFun7s7eaTVXBmcqnlXnzdydWReHv
-X-Google-Smtp-Source: APXvYqybBsI5M5pIlHneeTgkKElb1tKBLhckJ3TJ+ZTU0oRNNydY760+OhWLcqcERf/d8hA3KxMjmxek5UUh3jRRY74=
-X-Received: by 2002:a62:ee04:: with SMTP id e4mr7018095pfi.232.1557423579900;
- Thu, 09 May 2019 10:39:39 -0700 (PDT)
+        Thu, 9 May 2019 13:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbfEIRlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:41:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D1120675;
+        Thu,  9 May 2019 17:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557423709;
+        bh=ES/xr8fFDSwHRvHasEo0bgEx+FZPlfyiAM+2CUsY9OA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uccyXC+BzMM4uJkqkR6sAKQy0ByCs4NbEnzmK5+ahJG2Cm1Q8dcJHTOcRVOp4HGe0
+         BLoPlqCMciuiURFOwz2H8XtulCIcxk2O0HjUQOzQwwZ23K71+xJtAlXl7fjLuUUuwq
+         dPDSegMMQ5Vv0fRV4lPyQCf6PUVATPAmBXllf5z8=
+Date:   Thu, 9 May 2019 19:41:47 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [linux-4.4.y PATCH] ASoC: Intel: avoid Oops if DMA setup fails
+Message-ID: <20190509174147.GA17342@kroah.com>
+References: <20190429182710.GA209252@google.com>
+ <20190503194503.77923-1-zwisler@google.com>
+ <20190505131553.GB25640@kroah.com>
 MIME-Version: 1.0
-References: <20190509141456.223614-1-helgaas@kernel.org> <20190509141456.223614-4-helgaas@kernel.org>
-In-Reply-To: <20190509141456.223614-4-helgaas@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 May 2019 20:39:28 +0300
-Message-ID: <CAHp75Vd=fm4Sdc_ymiPgXnrCsU_9gBF16TsP0VX=ghDrbvk1Yw@mail.gmail.com>
-Subject: Re: [PATCH 03/10] PCI/DPC: Log messages with pci_dev, not pcie_device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dongdong Liu <liudongdong3@huawei.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190505131553.GB25640@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> Log messages with pci_dev, not pcie_device.  Factor out common message
-> prefixes with dev_fmt().
->
-> Example output change:
->
->   - dpc 0000:00:01.1:pcie008: DPC error containment capabilities...
->   + pcieport 0000:00:01.1: DPC: error containment capabilities...
+On Sun, May 05, 2019 at 03:15:53PM +0200, Greg KH wrote:
+> On Fri, May 03, 2019 at 01:45:03PM -0600, Ross Zwisler wrote:
+> > From: Ross Zwisler <zwisler@chromium.org>
+> > 
+> > commit 0efa3334d65b7f421ba12382dfa58f6ff5bf83c4 upstream.
+> 
+> This commit id is not in Linus's tree :(
+> 
 
-Overall same question about Capitalizing sentences.
-
-> +       pci_err(pdev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
-
-And here perhaps RP PIO status: ... mask: ... ?
-See below I left examples from this patch.
-
->                 status, mask);
-
-> +       pci_err(pdev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
->                 sev, syserr, exc);
-
-> +       pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
-
-> +                       pci_err(pdev, "RP PIO log size %u is invalid\n",
->                                 dpc->rp_log_size);
-
--- 
-With Best Regards,
-Andy Shevchenko
+Sorry for the noise, I didn't read your note :(
