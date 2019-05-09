@@ -2,98 +2,322 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9139BC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65843C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63444217D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557421844;
-	bh=ePDT910qeCCB9+pl2V+45tNJ6H0z2LowBahjSs0X0hY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cF939Czb04QwW9kE5J3Hc6WAxCr39iYt4HMDpHM7olkuA3l/v4CvLQou7GXAbmULX
-	 nkKjvsHLZPnF9ld+gqSnLnmu+PImgm2oP7D7nE0ZC+kSoFQXnKrUhGacrg1fowMlrN
-	 OnbRZaXuADhLuHv+eHqxO8ik1Sqs8pQwo0jALtlU=
+	by mail.kernel.org (Postfix) with ESMTP id 24EF72173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xmt6jd5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfEIRKn (ORCPT
+        id S1726828AbfEIRKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEIRKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:10:43 -0400
-Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2ED2173C;
-        Thu,  9 May 2019 17:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557421842;
-        bh=ePDT910qeCCB9+pl2V+45tNJ6H0z2LowBahjSs0X0hY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0UwfT/Y8RegfplmoTwREBxXtcS/YHnWJijH6uSUGsfNprFHOdFI7ARADjEw8M8Nw1
-         DKfE5pz0SIUR7Ka1JGxnDZyIuCGZMGmp0Gdz+e4Dmj4xS/roJGBtj9kaXceXqh8TqL
-         UkS5uDDeWhnOhZBz9Nl9kP/bY0I0Afv7dcT4HYUA=
-Date:   Thu, 9 May 2019 12:10:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Frederick Lawler <fred@fredlawl.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dongdong Liu <liudongdong3@huawei.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] PCI: Log with pci_dev, not pcie_device
-Message-ID: <20190509171040.GA235064@google.com>
-References: <20190509141456.223614-1-helgaas@kernel.org>
+        Thu, 9 May 2019 13:10:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43800 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIRKt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:10:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c6so1634607pfa.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rnsWVEfgES/Bm159b334TIA+Lzx3hSfjZ0w87I9bQpM=;
+        b=Xmt6jd5kZjEFHYo8bmyvt5K2iPweMXr3BM1BRlGnco9hx6yAkaL1VXDwGBcyNrQadZ
+         vsJLjVx5lW2ddUCRiilG0U98ddLAYbutWpOCm50QELXaB7rIrGiJ7d/VKIIMHQIBHwsM
+         VeVsYZ5P3h7Y5KEO3v7BFGqfmKIu/x+m1EGtM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rnsWVEfgES/Bm159b334TIA+Lzx3hSfjZ0w87I9bQpM=;
+        b=blG9Q/Lr+bPvbsd8GPup3fvHd+JkYbFX8lNNbfo+4fO2dMpZoUPSe8dKm0H4UtzIHn
+         g+Eh5NIOYYWl5eZikBKWoBDIJwEvC79ReP9FoqiOqWekakaLEqTVPwlc9/4UO/ajGp+C
+         xIj8M5w84IPL0lI5SHNm4lI7UeyvFFy6sRFrSqiqR10Hbf8ByZoSnCUGdu+KVejMLs5f
+         7xiwh77ttE84GGV7iOaKepStsVoEBHN1TmPUfRFMBvT27fH8NSMfb3kC2u6D4gOhWJ7H
+         zcGG+hHhPjMPwGh8AwbioZj367Td7GpnSakqlya0AvsebutjZWDMPoSGaa+8YSCjlxxB
+         u7+w==
+X-Gm-Message-State: APjAAAWrXBzel1w5JU0HEqPe2v7UeaQkx/76K580PDIBWb/HZFd4kb55
+        96xMFEDR8Chaj7E3zumUx2ei8w==
+X-Google-Smtp-Source: APXvYqwRPX/rCd8h7TvqaXjNIW4dIOyUxz6wGxf46umtlRJt4ZDtxqxP+VPrJJTtB92JWoet/hirSA==
+X-Received: by 2002:a63:5b58:: with SMTP id l24mr6862966pgm.139.1557421848309;
+        Thu, 09 May 2019 10:10:48 -0700 (PDT)
+Received: from [10.136.8.252] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id x4sm3696708pfm.19.2019.05.09.10.10.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 10:10:47 -0700 (PDT)
+Subject: Re: [PATCH 1/1] i2c: iproc: Add multi byte read-write support for
+ slave mode
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Cheng <ccheng@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+References: <1557375708-14830-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <508d6d50-29a6-dfa7-8e25-b64fa2cbbb8a@broadcom.com>
+ <CAHO=5PGpY6g01w7DO7JYrx3WPMtjhp9jwaQmiM15jv+x=+oNaw@mail.gmail.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <3f3938ea-3710-99ef-4f35-433cb7156e05@broadcom.com>
+Date:   Thu, 9 May 2019 10:10:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHO=5PGpY6g01w7DO7JYrx3WPMtjhp9jwaQmiM15jv+x=+oNaw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 09:14:46AM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> This is a collection of updates to Fred's v2 patches from:
-> 
->   https://lore.kernel.org/lkml/20190503035946.23608-1-fred@fredlawl.com
-> 
-> and some follow-on discussion.
-> 
-> Bjorn Helgaas (3):
->   PCI: pciehp: Remove pciehp_debug uses
->   PCI: pciehp: Remove pointless PCIE_MODULE_NAME definition
->   PCI: pciehp: Remove pointless MY_NAME definition
-> 
-> Frederick Lawler (7):
->   PCI/AER: Replace dev_printk(KERN_DEBUG) with dev_info()
->   PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()
->   PCI/DPC: Log messages with pci_dev, not pcie_device
->   PCI/AER: Log messages with pci_dev, not pcie_device
->   PCI: pciehp: Replace pciehp_debug module param with dyndbg
->   PCI: pciehp: Log messages with pci_dev, not pcie_device
->   PCI: pciehp: Remove unused dbg/err/info/warn() wrappers
-> 
->  drivers/pci/hotplug/pciehp.h      | 31 +++++++-------------------
->  drivers/pci/hotplug/pciehp_core.c | 18 +++++++--------
->  drivers/pci/hotplug/pciehp_ctrl.c |  2 ++
->  drivers/pci/hotplug/pciehp_hpc.c  | 17 +++++++-------
->  drivers/pci/hotplug/pciehp_pci.c  |  2 ++
->  drivers/pci/pcie/aer.c            | 32 ++++++++++++++------------
->  drivers/pci/pcie/aer_inject.c     | 22 +++++++++---------
->  drivers/pci/pcie/dpc.c            | 37 +++++++++++++++----------------
->  drivers/pci/pcie/pme.c            | 10 +++++----
->  9 files changed, 82 insertions(+), 89 deletions(-)
 
-I applied these to pci/printk-portdrv with Keith's reviewed-by, hoping to
-still squeeze these into v5.2.
+
+On 5/9/2019 10:03 AM, Rayagonda Kokatanur wrote:
+> No change,  it's just duplicate, please ignore. 
+> 
+> I am not able to find my patch over network , I tried sending second
+> time by setting plain text mode,  but still it's not visible.
+> 
+
+I can see your patch from the linux-i2c mailing list:
+https://patchwork.ozlabs.org/project/linux-i2c/list/
+
+> Best regards 
+> Rayagonda
+> 
+> On Thu, May 9, 2019, 9:58 PM Ray Jui <ray.jui@broadcom.com
+> <mailto:ray.jui@broadcom.com> wrote:
+> 
+>     Why is the email sent twice? What has changed?
+> 
+>     On 5/8/2019 9:21 PM, Rayagonda Kokatanur wrote:
+>     > Add multiple byte read-write support for slave mode.
+>     >
+>     > Signed-off-by: Rayagonda Kokatanur
+>     <rayagonda.kokatanur@broadcom.com
+>     <mailto:rayagonda.kokatanur@broadcom.com>>
+>     > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com
+>     <mailto:srinath.mannam@broadcom.com>>
+>     > ---
+>     >  drivers/i2c/busses/i2c-bcm-iproc.c | 117
+>     +++++++++++++++++--------------------
+>     >  1 file changed, 53 insertions(+), 64 deletions(-)
+>     >
+>     > diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c
+>     b/drivers/i2c/busses/i2c-bcm-iproc.c
+>     > index a845b8d..2c7f145 100644
+>     > --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+>     > +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+>     > @@ -165,12 +165,6 @@ enum i2c_slave_read_status {
+>     >       I2C_SLAVE_RX_END,
+>     >  };
+>     > 
+>     > -enum i2c_slave_xfer_dir {
+>     > -     I2C_SLAVE_DIR_READ = 0,
+>     > -     I2C_SLAVE_DIR_WRITE,
+>     > -     I2C_SLAVE_DIR_NONE,
+>     > -};
+>     > -
+>     >  enum bus_speed_index {
+>     >       I2C_SPD_100K = 0,
+>     >       I2C_SPD_400K,
+>     > @@ -203,7 +197,6 @@ struct bcm_iproc_i2c_dev {
+>     >       struct i2c_msg *msg;
+>     > 
+>     >       struct i2c_client *slave;
+>     > -     enum i2c_slave_xfer_dir xfer_dir;
+>     > 
+>     >       /* bytes that have been transferred */
+>     >       unsigned int tx_bytes;
+>     > @@ -219,7 +212,8 @@ struct bcm_iproc_i2c_dev {
+>     >               | BIT(IS_M_RX_THLD_SHIFT))
+>     > 
+>     >  #define ISR_MASK_SLAVE (BIT(IS_S_START_BUSY_SHIFT)\
+>     > -             | BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT))
+>     > +             | BIT(IS_S_RX_EVENT_SHIFT) | BIT(IS_S_RD_EVENT_SHIFT)\
+>     > +             | BIT(IS_S_TX_UNDERRUN_SHIFT))
+>     > 
+>     >  static int bcm_iproc_i2c_reg_slave(struct i2c_client *slave);
+>     >  static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave);
+>     > @@ -297,15 +291,11 @@ static void bcm_iproc_i2c_slave_init(
+>     >       /* clear all pending slave interrupts */
+>     >       iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
+>     > 
+>     > -     /* Enable interrupt register for any READ event */
+>     > -     val = BIT(IE_S_RD_EVENT_SHIFT);
+>     >       /* Enable interrupt register to indicate a valid byte in
+>     receive fifo */
+>     > -     val |= BIT(IE_S_RX_EVENT_SHIFT);
+>     > +     val = BIT(IE_S_RX_EVENT_SHIFT);
+>     >       /* Enable interrupt register for the Slave BUSY command */
+>     >       val |= BIT(IE_S_START_BUSY_SHIFT);
+>     >       iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
+>     > -
+>     > -     iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
+>     >  }
+>     > 
+>     >  static void bcm_iproc_i2c_check_slave_status(
+>     > @@ -314,8 +304,11 @@ static void bcm_iproc_i2c_check_slave_status(
+>     >       u32 val;
+>     > 
+>     >       val = iproc_i2c_rd_reg(iproc_i2c, S_CMD_OFFSET);
+>     > -     val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
+>     > +     /* status is valid only when START_BUSY is cleared after it
+>     was set */
+>     > +     if (val & BIT(S_CMD_START_BUSY_SHIFT))
+>     > +             return;
+>     > 
+>     > +     val = (val >> S_CMD_STATUS_SHIFT) & S_CMD_STATUS_MASK;
+>     >       if (val == S_CMD_STATUS_TIMEOUT) {
+>     >               dev_err(iproc_i2c->device, "slave random stretch
+>     time timeout\n");
+>     > 
+>     > @@ -327,70 +320,66 @@ static void bcm_iproc_i2c_check_slave_status(
+>     >  }
+>     > 
+>     >  static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev
+>     *iproc_i2c,
+>     > -                             u32 status)
+>     > +                                 u32 status)
+>     >  {
+>     > -     u8 value;
+>     >       u32 val;
+>     > -     u32 rd_status;
+>     > -     u32 tmp;
+>     > +     u8 value, rx_status;
+>     > 
+>     > -     /* Start of transaction. check address and populate the
+>     direction */
+>     > -     if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_NONE) {
+>     > -             tmp = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+>     > -             rd_status = (tmp >> S_RX_STATUS_SHIFT) &
+>     S_RX_STATUS_MASK;
+>     > -             /* This condition checks whether the request is a
+>     new request */
+>     > -             if (((rd_status == I2C_SLAVE_RX_START) &&
+>     > -                     (status & BIT(IS_S_RX_EVENT_SHIFT))) ||
+>     > -                     ((rd_status == I2C_SLAVE_RX_END) &&
+>     > -                     (status & BIT(IS_S_RD_EVENT_SHIFT)))) {
+>     > -
+>     > -                     /* Last bit is W/R bit.
+>     > -                      * If 1 then its a read request(by master).
+>     > -                      */
+>     > -                     iproc_i2c->xfer_dir = tmp &
+>     SLAVE_READ_WRITE_BIT_MASK;
+>     > -                     if (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)
+>     > -                             i2c_slave_event(iproc_i2c->slave,
+>     > -                                     I2C_SLAVE_READ_REQUESTED,
+>     &value);
+>     > -                     else
+>     > -                             i2c_slave_event(iproc_i2c->slave,
+>     > +     /* Slave RX byte receive */
+>     > +     if (status & BIT(IS_S_RX_EVENT_SHIFT)) {
+>     > +             val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+>     > +             rx_status = (val >> S_RX_STATUS_SHIFT) &
+>     S_RX_STATUS_MASK;
+>     > +             if (rx_status == I2C_SLAVE_RX_START) {
+>     > +                     /* Start of SMBUS for Master write */
+>     > +                     i2c_slave_event(iproc_i2c->slave,
+>     >                                       I2C_SLAVE_WRITE_REQUESTED,
+>     &value);
+>     > -             }
+>     > -     }
+>     > 
+>     > -     /* read request from master */
+>     > -     if ((status & BIT(IS_S_RD_EVENT_SHIFT)) &&
+>     > -             (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_WRITE)) {
+>     > -             i2c_slave_event(iproc_i2c->slave,
+>     > -                     I2C_SLAVE_READ_PROCESSED, &value);
+>     > -             iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
+>     > +                     val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+>     > +                     value = (u8)((val >> S_RX_DATA_SHIFT) &
+>     S_RX_DATA_MASK);
+>     > +                     i2c_slave_event(iproc_i2c->slave,
+>     > +                                     I2C_SLAVE_WRITE_RECEIVED,
+>     &value);
+>     > +             } else if (status & BIT(IS_S_RD_EVENT_SHIFT)) {
+>     > +                     /* Start of SMBUS for Master Read */
+>     > +                     i2c_slave_event(iproc_i2c->slave,
+>     > +                                     I2C_SLAVE_READ_REQUESTED,
+>     &value);
+>     > +                     iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
+>     > 
+>     > -             val = BIT(S_CMD_START_BUSY_SHIFT);
+>     > -             iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
+>     > -     }
+>     > +                     val = BIT(S_CMD_START_BUSY_SHIFT);
+>     > +                     iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
+>     > 
+>     > -     /* write request from master */
+>     > -     if ((status & BIT(IS_S_RX_EVENT_SHIFT)) &&
+>     > -             (iproc_i2c->xfer_dir == I2C_SLAVE_DIR_READ)) {
+>     > -             val = iproc_i2c_rd_reg(iproc_i2c, S_RX_OFFSET);
+>     > -             /* Its a write request by Master to Slave.
+>     > -              * We read data present in receive FIFO
+>     > -              */
+>     > -             value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
+>     > +                     /*
+>     > +                      * Enable interrupt for TX FIFO becomes
+>     empty and
+>     > +                      * less than PKT_LENGTH bytes were output on
+>     the SMBUS
+>     > +                      */
+>     > +                     val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+>     > +                     val |= BIT(IE_S_TX_UNDERRUN_SHIFT);
+>     > +                     iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
+>     > +             } else {
+>     > +                     /* Master write other than start */
+>     > +                     value = (u8)((val >> S_RX_DATA_SHIFT) &
+>     S_RX_DATA_MASK);
+>     > +                     i2c_slave_event(iproc_i2c->slave,
+>     > +                                     I2C_SLAVE_WRITE_RECEIVED,
+>     &value);
+>     > +             }
+>     > +     } else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
+>     > +             /* Master read other than start */
+>     >               i2c_slave_event(iproc_i2c->slave,
+>     > -                     I2C_SLAVE_WRITE_RECEIVED, &value);
+>     > -
+>     > -             /* check the status for the last byte of the
+>     transaction */
+>     > -             rd_status = (val >> S_RX_STATUS_SHIFT) &
+>     S_RX_STATUS_MASK;
+>     > -             if (rd_status == I2C_SLAVE_RX_END)
+>     > -                     iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
+>     > +                             I2C_SLAVE_READ_PROCESSED, &value);
+>     > 
+>     > -             dev_dbg(iproc_i2c->device, "\nread value = 0x%x\n",
+>     value);
+>     > +             iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
+>     > +             val = BIT(S_CMD_START_BUSY_SHIFT);
+>     > +             iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
+>     >       }
+>     > 
+>     >       /* Stop */
+>     >       if (status & BIT(IS_S_START_BUSY_SHIFT)) {
+>     >               i2c_slave_event(iproc_i2c->slave, I2C_SLAVE_STOP,
+>     &value);
+>     > -             iproc_i2c->xfer_dir = I2C_SLAVE_DIR_NONE;
+>     > +             /*
+>     > +              * Enable interrupt for TX FIFO becomes empty and
+>     > +              * less than PKT_LENGTH bytes were output on the SMBUS
+>     > +              */
+>     > +             val = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+>     > +             val &= ~BIT(IE_S_TX_UNDERRUN_SHIFT);
+>     > +             iproc_i2c_wr_reg(iproc_i2c, IE_OFFSET, val);
+>     >       }
+>     > 
+>     >       /* clear interrupt status */
+>     >
+> 
