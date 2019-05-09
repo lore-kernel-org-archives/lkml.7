@@ -2,122 +2,129 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3177C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77B6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5FB21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0BB21479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfEIJ3q (ORCPT
+        id S1726590AbfEIJbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:29:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58592 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbfEIJ3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:29:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 966AAAB42;
-        Thu,  9 May 2019 09:29:43 +0000 (UTC)
-Date:   Thu, 9 May 2019 11:29:42 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Crashes in linux-next on powerpc with CONFIG_PPC_KUAP and
- CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
-Message-ID: <20190509092942.ei4myfzt5dczuptj@pathway.suse.cz>
-References: <87k1f2wc04.fsf@concordia.ellerman.id.au>
+        Thu, 9 May 2019 05:31:05 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:48097 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725821AbfEIJbF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:31:05 -0400
+Received: from [IPv6:2001:983:e9a7:1:1542:3ab9:816d:970b] ([IPv6:2001:983:e9a7:1:1542:3ab9:816d:970b])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id OfOHh6L403qlsOfOIhQmEV; Thu, 09 May 2019 11:31:03 +0200
+Subject: Re: [RFC PATCH v2] media: cec: expose HDMI connector to CEC dev
+ mapping
+To:     Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-kernel@vger.kernel.org
+References: <20190416083852.126786-1-darekm@google.com>
+ <dcb189af-f67f-ede3-b4fb-de1da7b53ccb@xs4all.nl>
+ <CALFZZQEoiikyXmHJyEgEJTRNryTN8ScNK4P3bDCp-9v9GtvU8g@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <b78864b4-e470-99b2-5505-890d178b72f8@xs4all.nl>
+Date:   Thu, 9 May 2019 11:31:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k1f2wc04.fsf@concordia.ellerman.id.au>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <CALFZZQEoiikyXmHJyEgEJTRNryTN8ScNK4P3bDCp-9v9GtvU8g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPVW+EYWfvMTySPs+TIBikdXTfaQvEVYhqmd95mshnRSFk0NGsg6PbPu8Gat7g7pY2YAc3StSKTGHaaygGQgwf03XKhWIFkpcaO8O+wvJE6dRNlvAmy2
+ vtRlb4Vn0u5Lk5JPmmXGGpg9vGToUe2xtQ0sWJekk2kNbKlZ4RiKkCK6DOVIybdRy2JP+hlYuBSrLqMHWjSjiIMQ2/3xO9LgrPElFfQHD5TSjS25MVKnZXY1
+ O8CZ4yCJ8yic4KqWlO7HOFnltl4SP0jgvH/ORQUD+y5KFJMiVZV/FWsqWfm5uZFyravVq3DJFcw2Y2LnKcrcOOYo0ShFLdyRUFLe26NGucdTPN2augsvWTJZ
+ ++LOej8H9Ti3u5FZ8DpZAYlNEEXRBA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-05-08 00:54:51, Michael Ellerman wrote:
-> Hi folks,
+On 5/9/19 9:52 AM, Dariusz Marcinkiewicz wrote:
+> Hi Hans.
 > 
-> Just an FYI in case anyone else is seeing crashes very early in boot in
-> linux-next with the above config options.
->
-> The problem is the combination of some new code called via printk(),
-> check_pointer() which calls probe_kernel_read(). That then calls 
-> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
-> (before we've patched features). With the JUMP_LABEL debug enabled that
-> causes us to call printk() & dump_stack() and we end up recursing and
-> overflowing the stack.
-
-Sigh, the check_pointer() stuff is in Linus's tree now, see
-the commit 3e5903eb9cff707301712 ("vsprintf: Prevent crash when
-dereferencing invalid pointers").
-
-> Because it happens so early you don't get any output, just an apparently
-> dead system.
+> On Wed, Apr 24, 2019 at 2:09 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> Hi Dariusz,
+>>
+>> This is getting close, so I think for the next version you can drop
+>> the RFC tag.
+>>
+>> Some comments:
+>>
+> ...
+>>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-cec.c
+>>> @@ -261,7 +261,7 @@ static int dw_hdmi_cec_probe(struct platform_device *pdev)
+>>>       cec->adap = cec_allocate_adapter(&dw_hdmi_cec_ops, cec, "dw_hdmi",
+>>>                                        CEC_CAP_LOG_ADDRS | CEC_CAP_TRANSMIT |
+>>>                                        CEC_CAP_RC | CEC_CAP_PASSTHROUGH,
+>>> -                                      CEC_MAX_LOG_ADDRS);
+>>> +                                      CEC_MAX_LOG_ADDRS, NULL);
+>>
+>> Hmm, the connector information is actually available through cec->hdmi.
+>>
+>> I think it would make sense to create a helper function that fills in
+>> struct cec_connector_info based on a struct drm_connector pointer.
+>> And add a function to drivers/gpu/drm/bridge/synopsys/dw-hdmi.c that
+>> dw-hdmi-cec.c can call that does the same.
 > 
-> The stack trace (which you don't see) is something like:
+> Looking at the code here, is the connector info guaranteed to be
+> available at the time cec_allocate_adapter is called here?
+> drm_connector won't be initialized until dw_hdmi_bridge_attach is
+> called, which happens after the cec platform device is created.
+
+Good point. The creation of the cec platform device should probably
+be moved to dw_hdmi_bridge_attach.
+
+> ...
+>>>       priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
+>>>                                         CEC_CAP_DEFAULTS,
+>>> -                                       CEC_MAX_LOG_ADDRS);
+>>> +                                       CEC_MAX_LOG_ADDRS,
+>>> +                                       NULL);
+>>
+>> Here too the drm_connector can be found via struct tda9950_glue.
+>> So it is easy to provide proper connector information.
 > 
->   ...
->   dump_stack+0xdc
->   probe_kernel_read+0x1a4
->   check_pointer+0x58
->   string+0x3c
->   vsnprintf+0x1bc
->   vscnprintf+0x20
->   printk_safe_log_store+0x7c
->   printk+0x40
->   dump_stack_print_info+0xbc
->   dump_stack+0x8
->   probe_kernel_read+0x1a4
->   probe_kernel_read+0x19c
->   check_pointer+0x58
->   string+0x3c
->   vsnprintf+0x1bc
->   vscnprintf+0x20
->   vprintk_store+0x6c
->   vprintk_emit+0xec
->   vprintk_func+0xd4
->   printk+0x40
->   cpufeatures_process_feature+0xc8
->   scan_cpufeatures_subnodes+0x380
->   of_scan_flat_dt_subnodes+0xb4
->   dt_cpu_ftrs_scan_callback+0x158
->   of_scan_flat_dt+0xf0
->   dt_cpu_ftrs_scan+0x3c
->   early_init_devtree+0x360
->   early_setup+0x9c
+> The same concern as with the comment before.
+
+Same solution: this has to be moved.
+
+I have hardware to test patches for both drivers. It might take 2-3 weeks
+before I can test as I don't always has access to the hardware, but at
+least I can verify that moving this code won't break anything.
+
+It's best to first move the code in separate patches before applying the
+"expose HDMI connector to CEC dev mapping" patch on top of them.
+
+> ...
+>>> +/**
+>>> + * struct cec_event_connector - tells if and which connector is associated
+>>> + * with the CEC adapter.
+>>> + * @card_no: drm card number, -1 if no connector
+>>
+>> If there is no connector, then type is NO_CONNECTOR. So this
+>> doesn't make sense. Wouldn't it be better to just use '__u32 card_no'?
+>>
+> Yes, removed (leftover from previous revision where there was no
+> connector type field).
+> This and remaining comments are (hopefully) resolved in the new
+> version of the patch, I've just sent.
 > 
+> Will add more docs in subsequent revs.
 > 
-> The simple fix is to use early_mmu_has_feature() in allow_user_access(),
-> but we'd rather not do that because it penalises all
-> copy_to/from_users() for the life of the system with the cost of the
-> runtime check vs the jump label. The irony is probe_kernel_read()
-> shouldn't be allowing user access at all, because we're reading the
-> kernel not userspace.
-
-I have tried to find a lightweight way for a safe reading of unknown
-kernel pointer. But I have not succeeded so far. I see only variants
-with user access. The user access is handled in arch-specific code
-and I do not see any variant without it.
-
-I am not sure on which level it should get fixed.
-
-Could you please send it to lkml to get a wider audience?
-
-Best Regards,
-Petr
-
-> For now if you're hitting it just turn off 
-> CONFIG_PPC_KUAP and/or CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG.
+> Thank you!
 > 
-> cheers
+
+Regards,
+
+	Hans
