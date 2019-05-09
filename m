@@ -2,84 +2,87 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52956C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B60C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304E6208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49D8208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfEIOcB (ORCPT
+        id S1726798AbfEIOb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:32:01 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:43782 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726704AbfEIOcA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:32:00 -0400
-Received: (qmail 14260 invoked by uid 2102); 9 May 2019 10:31:59 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 9 May 2019 10:31:59 -0400
-Date:   Thu, 9 May 2019 10:31:59 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     Jim Lin <jilin@nvidia.com>, <mathias.nyman@intel.com>,
-        <kai.heng.feng@canonical.com>, <drinkcat@chromium.org>,
-        <keescook@chromium.org>, <nsaenzjulienne@suse.de>,
-        <jflat@chromium.org>, <malat@debian.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 1/1] usb: xhci: Add Clear_TT_Buffer
-In-Reply-To: <20190509122534.GA31542@kroah.com>
-Message-ID: <Pine.LNX.4.44L0.1905091015440.1480-100000@iolanthe.rowland.org>
+        Thu, 9 May 2019 10:31:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726716AbfEIObx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:31:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1944EACBA;
+        Thu,  9 May 2019 14:31:52 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, stefan.wahren@i2se.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Subject: [PATCH v3 3/4] staging: vchiq: make wait events interruptible
+Date:   Thu,  9 May 2019 16:31:35 +0200
+Message-Id: <20190509143137.31254-4-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509143137.31254-1-nsaenzjulienne@suse.de>
+References: <20190509143137.31254-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019, Greg KH wrote:
+The killable version of wait_event() is meant to be used on situations
+where it should not fail at all costs, but still have the convenience of
+being able to kill it if really necessary. Wait events in VCHIQ doesn't
+fit this criteria, as it's mainly used as an interface to V4L2 and ALSA
+devices.
 
-> On Thu, May 09, 2019 at 08:03:15PM +0800, Jim Lin wrote:
-> > --- a/include/linux/usb.h
-> > +++ b/include/linux/usb.h
-> > @@ -625,6 +625,7 @@ struct usb3_lpm_parameters {
-> >   *		parent->hub_delay + wHubDelay + tTPTransmissionDelay (40ns)
-> >   *
-> >   *	Will be used as wValue for SetIsochDelay requests.
-> > + * @devaddr: address on a USB bus, assigned by controller like XHCI
-> >   *
-> >   * Notes:
-> >   * Usbcore drivers should not set usbdev->state directly.  Instead use
-> > @@ -709,6 +710,7 @@ struct usb_device {
-> >  	unsigned lpm_disable_count;
-> >  
-> >  	u16 hub_delay;
-> > +	int devaddr;
-> 
-> Shouldn't this be u32?
+Fixes: 852b2876a8a8 ("staging: vchiq: rework remove_event handling")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ .../vc04_services/interface/vchiq_arm/vchiq_core.c     | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-In fact the device address is an unsigned 7-bit value.  The size of the 
-variable we store it in doesn't matter much.
-
-BUT!  If it's going to be stored in a regular int then it's foolish to 
-leave a 16-bit gap between it and the preceding field in the structure.  
-It should be added at some appropriate spot in the structure, not at 
-the end.
-
-Overall I think this should be broken up into two patches: one to
-introduce the new field and one to implement Clear-TT-Buffer for xHCI.
-
-Furthermore, update_devnum() in hub.c should do:
-
-	if (udev->devaddr == 0)
-		udev->devaddr = devnum;
-
-Then the code usb_hub_clear_tt_buffer() can just use devaddr without
-needing to check the HCD type.
-
-Alan Stern
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+index c65cf1e6f910..44bfa890e0e5 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+@@ -395,13 +395,21 @@ remote_event_create(wait_queue_head_t *wq, struct remote_event *event)
+ 	init_waitqueue_head(wq);
+ }
+ 
++/*
++ * All the event waiting routines in VCHIQ used a custom semaphore
++ * implementation that filtered most signals. This achieved a behaviour similar
++ * to the "killable" family of functions. While cleaning up this code all the
++ * routines where switched to the "interruptible" family of functions, as the
++ * former was deemed unjustified and the use "killable" set all VCHIQ's
++ * threads in D state.
++ */
+ static inline int
+ remote_event_wait(wait_queue_head_t *wq, struct remote_event *event)
+ {
+ 	if (!event->fired) {
+ 		event->armed = 1;
+ 		dsb(sy);
+-		if (wait_event_killable(*wq, event->fired)) {
++		if (wait_event_interruptible(*wq, event->fired)) {
+ 			event->armed = 0;
+ 			return 0;
+ 		}
+-- 
+2.21.0
 
