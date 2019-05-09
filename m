@@ -2,155 +2,85 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB05C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF9AC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5E42177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08CD2084E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:09:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EMv/t0mJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfEISI3 (ORCPT
+        id S1726768AbfEISJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:09:31 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36912 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfEISI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:08:29 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726658AbfEISJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:09:31 -0400
+Received: from zn.tnic (p200300EC2F0F5F0071783F241746291C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:7178:3f24:1746:291c])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C1A82084E;
-        Thu,  9 May 2019 18:08:27 +0000 (UTC)
-Date:   Thu, 9 May 2019 14:08:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     minyard@acm.org
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH RT] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190509140825.5bac9591@gandalf.local.home>
-In-Reply-To: <20190509180211.14893-1-minyard@acm.org>
-References: <20190509180211.14893-1-minyard@acm.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 125891EC0AB1;
+        Thu,  9 May 2019 20:09:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557425370;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=mduwd8VPwCT+8HAKZuwZeDzsg6qp6pIE8pJGHr6OqNg=;
+        b=EMv/t0mJcoZ2lY7XLwkfgReYWYwB8dF2UmQ68gP2iuv7kI/sKiRwvATgcikgkrdE9MSmPu
+        BfLojZO1asnetnj8/vOVCGxrNCHblySQTvJ02dKKUnRfcoFKuK2114LtBqs2kMXbvyuhk3
+        hSiiMDVJ6z6hjCOVSfc9JKa0pkpAWPk=
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/11] RAS/CEC: Fixes and cleanups
+Date:   Thu,  9 May 2019 20:09:15 +0200
+Message-Id: <20190509180926.31932-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  9 May 2019 13:02:11 -0500
-minyard@acm.org wrote:
+From: Borislav Petkov <bp@suse.de>
 
-> From: Corey Minyard <cminyard@mvista.com>
-> 
-> The function call do_wait_for_common() has a race condition that
-> can result in lockups waiting for completions.  Adding the thread
-> to (and removing the thread from) the wait queue for the completion
-> is done outside the do loop in that function.  However, if the thread
-> is woken up, the swake_up_locked() function will delete the entry
-> from the wait queue.  If that happens and another thread sneaks
-> in and decrements the done count in the completion to zero, the
-> loop will go around again, but the thread will no longer be in the
-> wait queue, so there is no way to wake it up.
-> 
-> Visually, here's a diagram from Sebastian Andrzej Siewior:
->   T0                    T1                       T2
->   wait_for_completion()
->    do_wait_for_common()
->     __prepare_to_swait()
->      schedule()
->                         complete()
->                          x->done++ (0 -> 1)
->                          raw_spin_lock_irqsave()
->                          swake_up_locked()       wait_for_completion()
->                           wake_up_process(T0)
->                           list_del_init()
->                          raw_spin_unlock_irqrestore()
->                                                   raw_spin_lock_irq(&x->wait.lock)
->   raw_spin_lock_irq(&x->wait.lock)                x->done != UINT_MAX, 1 -> 0
->                                                   raw_spin_unlock_irq(&x->wait.lock)
->                                                   return 1
->    while (!x->done && timeout),
->    continue loop, not enqueued
->    on &x->wait
-> 
-> Basically, the problem is that the original wait queues used in
-> completions did not remove the item from the queue in the wakeup
-> function, but swake_up_locked() does.
-> 
-> Fix it by adding/removing the thread to/from the wait queue inside
-> the do loop.
-> 
-> Fixes: a04ff6b4ec4ee7e ("completion: Use simple wait queues")
-> Signed-off-by: Corey Minyard <cminyard@mvista.com>
-> ---
-> This looks like a fairly serious bug, I guess, but I've never seen a
-> report on it before.
-> 
-> I found it because I have an out-of-tree feature (hopefully in tree some
-> day) that takes a core dump of a running process without killing it.  It
-> makes extensive use of completions, and the test code is fairly brutal.
-> It didn't lock up on stock 4.19, but failed with the RT patches applied.
-> 
-> The funny thing is, I've never seen this test code fail before on earlier
-> releases, but it locks up pretty reliably on 4.19-rt.  It looks like this
-> bug goes back to at least the 4.4-rt kernel.  But we haven't received any
-> customer reports of failures.  I'm guessing that almost all completion
-> users have a single waiter, so you would never see this.
-> 
-> The feature and test are in a public tree if someone wants to try to
-> reproduce this.  But hopefully this is pretty obvious with the explaination.
-> 
-> Also, you could put the DECLARE_SWAITQUEUE() outside the loop, I think,
-> but maybe it's cleaner or safer to declare it in the loop?  If someone
-> cares I can test it that way.
-> 
-> -corey
-> 
->  kernel/sched/completion.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-> index 755a58084978..4f9b4cc0c95a 100644
-> --- a/kernel/sched/completion.c
-> +++ b/kernel/sched/completion.c
-> @@ -70,20 +70,20 @@ do_wait_for_common(struct completion *x,
->  		   long (*action)(long), long timeout, int state)
->  {
->  	if (!x->done) {
-> -		DECLARE_SWAITQUEUE(wait);
-> -
-> -		__prepare_to_swait(&x->wait, &wait);
->  		do {
-> +			DECLARE_SWAITQUEUE(wait);
-> +
->  			if (signal_pending_state(state, current)) {
->  				timeout = -ERESTARTSYS;
->  				break;
->  			}
-> +			__prepare_to_swait(&x->wait, &wait);
+Hi all,
 
-Sebastian mentioned that moving the __prepare_to_swait() was the only
-change needed. Please do that.
+here are a bunch of fixes and cleanups to the correctable errors
+collector which we've been working on in the recent weeks.
 
-Thanks!
+Thx.
 
--- Steve
+Borislav Petkov (9):
+  RAS/CEC: Fix binary search function
+  RAS/CEC: Fix pfn insertion
+  RAS/CEC: Check count_threshold unconditionally
+  RAS/CEC: Do not set decay value on error
+  RAS/CEC: Fix potential memory leak
+  RAS/CEC: Sanity-check array on every insertion
+  RAS/CEC: Rename count_threshold to action_threshold
+  RAS/CEC: Dump the different array element sections
+  RAS/CEC: Add copyright
 
->  			__set_current_state(state);
->  			raw_spin_unlock_irq(&x->wait.lock);
->  			timeout = action(timeout);
->  			raw_spin_lock_irq(&x->wait.lock);
-> +			__finish_swait(&x->wait, &wait);
->  		} while (!x->done && timeout);
-> -		__finish_swait(&x->wait, &wait);
->  		if (!x->done)
->  			return timeout;
->  	}
+Cong Wang (1):
+  RAS/CEC: Convert the timer callback to a workqueue
+
+Tony Luck (1):
+  RAS/CEC: Add CONFIG_RAS_CEC_DEBUG and move CEC debug features there
+
+ arch/x86/ras/Kconfig |  10 ++
+ drivers/ras/cec.c    | 216 +++++++++++++++++++++++++------------------
+ 2 files changed, 135 insertions(+), 91 deletions(-)
+
+-- 
+2.21.0
 
