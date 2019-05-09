@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF0EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368D9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B350F20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2AD20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428937;
-	bh=FeuoLYrKFjwXsEkDfYktpq5SL9o0dXT4W2nvFWAizQU=;
+	s=default; t=1557428944;
+	bh=6n0GKdS7BlfEBRnyPq2cxQ+2dRUOf7IlbbWhpkO/mt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01zGQC2VsqpYfZqdwAMiRO41geRI+desDldyKoBK9oi4gkFcgM+17rLylXnOYXIf2
-	 W6uBqIg2gbRzUf6/gW2aVTP+YenbjIs5WbqJWJ8PnffGfghF6vbFyEIdf9LzYB9NU+
-	 K4ZVmTp50pSPB1jh++Y0Qz/RDm7E0kCOlXuyIPjA=
+	b=bLyg+6qZUMFkY5sEk05rysjYUfLa50qZ5pMURk8mCKjOUtkfSJIUcYHqVI662FHbg
+	 bWR7aVkiSj6tV+huaeSaN/kzgS4QwR6z/hcGkl4XTsop23a3MvIzcb2Hhsxq5Nc6I0
+	 k/9tp+t9cD91zHpw36jBoCq50Nq6iEw/PNy6dbYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfEITI4 (ORCPT
+        id S1727401AbfEITJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbfEISog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:36 -0400
+        id S1727048AbfEISoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DABB2183F;
-        Thu,  9 May 2019 18:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B715217F5;
+        Thu,  9 May 2019 18:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427476;
-        bh=FeuoLYrKFjwXsEkDfYktpq5SL9o0dXT4W2nvFWAizQU=;
+        s=default; t=1557427470;
+        bh=6n0GKdS7BlfEBRnyPq2cxQ+2dRUOf7IlbbWhpkO/mt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=opkQmquclT/UPioY0E2sHtRDAcNo1EZmDsq/Hba5WAoOHLWAvoG+eaXf88Sqqx/gk
-         NMj5iHVegosI77t3DSvRkhyJyQur3t/lrBqk6aBCMdq0SlE2eiKIcmQZBnFINwhhxd
-         PNCZArCQakIfO+9YS7MVPY3ehaJH8MHCyvnHqdlA=
+        b=2CSvX8Nclut2pUEUyMZ0FYLasweJpxCkiI+VeaVJHTG4rQkjo0WyDQJe7UCN4UzM4
+         2IHCMr7jePgIflg010ImyyMr9aEEPWCMqu0WDYZejPxIYKrPNkBGEKW9uIefLndtZO
+         z7TUwTWeCngXAHdPruvoMAgp86pTtAvdKoj6Oink=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>,
-        Johan Hovold <johan@kernel.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>
-Subject: [PATCH 4.9 03/28] staging: greybus: power_supply: fix prop-descriptor request size
-Date:   Thu,  9 May 2019 20:41:55 +0200
-Message-Id: <20190509181250.816103692@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Seth Bollinger <Seth.Bollinger@digi.com>,
+        Ming Lei <tom.leiming@gmail.com>
+Subject: [PATCH 4.9 22/28] usb-storage: Set virt_boundary_mask to avoid SG overflows
+Date:   Thu,  9 May 2019 20:42:14 +0200
+Message-Id: <20190509181254.988450875@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -60,40 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 47830c1127ef166af787caf2f871f23089610a7f upstream.
+commit 747668dbc061b3e62bc1982767a3a1f9815fcf0e upstream.
 
-Since moving the message buffers off the stack, the dynamically
-allocated get-prop-descriptor request buffer is incorrectly sized due to
-using the pointer rather than request-struct size when creating the
-operation.
+The USB subsystem has always had an unusual requirement for its
+scatter-gather transfers: Each element in the scatterlist (except the
+last one) must have a length divisible by the bulk maxpacket size.
+This is a particular issue for USB mass storage, which uses SG lists
+created by the block layer rather than setting up its own.
 
-Fortunately, the pointer size is always larger than this one-byte
-request, but this could still cause trouble on the remote end due to the
-unexpected message size.
+So far we have scraped by okay because most devices have a logical
+block size of 512 bytes or larger, and the bulk maxpacket sizes for
+USB 2 and below are all <= 512.  However, USB 3 has a bulk maxpacket
+size of 1024.  Since the xhci-hcd driver includes native SG support,
+this hasn't mattered much.  But now people are trying to use USB-3
+mass storage devices with USBIP, and the vhci-hcd driver currently
+does not have full SG support.
 
-Fixes: 9d15134d067e ("greybus: power_supply: rework get descriptors")
-Cc: stable <stable@vger.kernel.org>     # 4.9
-Cc: Rui Miguel Silva <rui.silva@linaro.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+The result is an overflow error, when the driver attempts to implement
+an SG transfer of 63 512-byte blocks as a single
+3584-byte (7 blocks) transfer followed by seven 4096-byte (8 blocks)
+transfers.  The device instead sends 31 1024-byte packets followed by
+a 512-byte packet, and this overruns the first SG buffer.
+
+Ideally this would be fixed by adding better SG support to vhci-hcd.
+But for now it appears we can work around the problem by
+asking the block layer to respect the maxpacket limitation, through
+the use of the virt_boundary_mask.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: Seth Bollinger <Seth.Bollinger@digi.com>
+Tested-by: Seth Bollinger <Seth.Bollinger@digi.com>
+CC: Ming Lei <tom.leiming@gmail.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/power_supply.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/storage/scsiglue.c |   26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
---- a/drivers/staging/greybus/power_supply.c
-+++ b/drivers/staging/greybus/power_supply.c
-@@ -521,7 +521,7 @@ static int gb_power_supply_prop_descript
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -81,6 +81,7 @@ static const char* host_info(struct Scsi
+ static int slave_alloc (struct scsi_device *sdev)
+ {
+ 	struct us_data *us = host_to_us(sdev->host);
++	int maxp;
  
- 	op = gb_operation_create(connection,
- 				 GB_POWER_SUPPLY_TYPE_GET_PROP_DESCRIPTORS,
--				 sizeof(req), sizeof(*resp) + props_count *
-+				 sizeof(*req), sizeof(*resp) + props_count *
- 				 sizeof(struct gb_power_supply_props_desc),
- 				 GFP_KERNEL);
- 	if (!op)
+ 	/*
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -90,20 +91,17 @@ static int slave_alloc (struct scsi_devi
+ 	sdev->inquiry_len = 36;
+ 
+ 	/*
+-	 * USB has unusual DMA-alignment requirements: Although the
+-	 * starting address of each scatter-gather element doesn't matter,
+-	 * the length of each element except the last must be divisible
+-	 * by the Bulk maxpacket value.  There's currently no way to
+-	 * express this by block-layer constraints, so we'll cop out
+-	 * and simply require addresses to be aligned at 512-byte
+-	 * boundaries.  This is okay since most block I/O involves
+-	 * hardware sectors that are multiples of 512 bytes in length,
+-	 * and since host controllers up through USB 2.0 have maxpacket
+-	 * values no larger than 512.
+-	 *
+-	 * But it doesn't suffice for Wireless USB, where Bulk maxpacket
+-	 * values can be as large as 2048.  To make that work properly
+-	 * will require changes to the block layer.
++	 * USB has unusual scatter-gather requirements: the length of each
++	 * scatterlist element except the last must be divisible by the
++	 * Bulk maxpacket value.  Fortunately this value is always a
++	 * power of 2.  Inform the block layer about this requirement.
++	 */
++	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
++	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
++
++	/*
++	 * Some host controllers may have alignment requirements.
++	 * We'll play it safe by requiring 512-byte alignment always.
+ 	 */
+ 	blk_queue_update_dma_alignment(sdev->request_queue, (512 - 1));
+ 
 
 
