@@ -2,154 +2,98 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5EAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45939C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CBD21773
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC312173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEIPqq (ORCPT
+        id S1726698AbfEIPtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:46:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726561AbfEIPqp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:46:45 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49FdKhT047521
-        for <linux-kernel@vger.kernel.org>; Thu, 9 May 2019 11:46:43 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2scnahdnmg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 11:46:43 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 9 May 2019 16:46:40 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 May 2019 16:46:34 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49FkX0Q36700272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 May 2019 15:46:33 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 859404C04A;
-        Thu,  9 May 2019 15:46:33 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A6A54C04E;
-        Thu,  9 May 2019 15:46:31 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.95.107])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 May 2019 15:46:31 +0000 (GMT)
-Subject: Re: [PATCH v10 06/12] ima: Use designated initializers for struct
- ima_event_data
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Date:   Thu, 09 May 2019 11:46:20 -0400
-In-Reply-To: <20190418035120.2354-7-bauerman@linux.ibm.com>
-References: <20190418035120.2354-1-bauerman@linux.ibm.com>
-         <20190418035120.2354-7-bauerman@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050915-0020-0000-0000-0000033AFAC4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050915-0021-0000-0000-0000218DA29E
-Message-Id: <1557416780.10635.66.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090090
+        Thu, 9 May 2019 11:49:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17718 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbfEIPtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:49:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CFA953079B73;
+        Thu,  9 May 2019 15:49:14 +0000 (UTC)
+Received: from work-vm (ovpn-116-174.ams2.redhat.com [10.36.116.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 347CF5B681;
+        Thu,  9 May 2019 15:49:00 +0000 (UTC)
+Date:   Thu, 9 May 2019 16:48:57 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190509154857.GF2868@work-vm>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+ <20190506014904.3621-1-yan.y.zhao@intel.com>
+ <20190507151826.502be009@x1.home>
+ <20190509173839.2b9b2b46.cohuck@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509173839.2b9b2b46.cohuck@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 09 May 2019 15:49:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
-> Designated initializers allow specifying only the members of the struct
-> that need initialization. Non-mentioned members are initialized to zero.
+* Cornelia Huck (cohuck@redhat.com) wrote:
+> On Tue, 7 May 2019 15:18:26 -0600
+> Alex Williamson <alex.williamson@redhat.com> wrote:
 > 
-> This makes the code a bit clearer (particularly in ima_add_boot_aggregate()
-> and also allows adding a new member to the struct without having to update
-> all struct initializations.
+> > On Sun,  5 May 2019 21:49:04 -0400
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
-Reviewed-by:  Mimi Zohar <zohar@linux.ibm.com>
-
-> ---
->  security/integrity/ima/ima_api.c  | 11 +++++++----
->  security/integrity/ima/ima_init.c |  4 ++--
->  2 files changed, 9 insertions(+), 6 deletions(-)
+> > > +  Errno:
+> > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
+> > > +  devices, it should not register version attribute for this mdev device. But if
+> > > +  a vendor driver has already registered version attribute and it wants to claim
+> > > +  a mdev device incompatible to all other mdev devices, it needs to return
+> > > +  -ENODEV on access to this mdev device's version attribute.
+> > > +  If a mdev device is only incompatible to certain mdev devices, write of
+> > > +  incompatible mdev devices's version strings to its version attribute should
+> > > +  return -EINVAL;  
+> > 
+> > I think it's best not to define the specific errno returned for a
+> > specific situation, let the vendor driver decide, userspace simply
+> > needs to know that an errno on read indicates the device does not
+> > support migration version comparison and that an errno on write
+> > indicates the devices are incompatible or the target doesn't support
+> > migration versions.
 > 
-> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-> index c7505fb122d4..0639d0631f2c 100644
-> --- a/security/integrity/ima/ima_api.c
-> +++ b/security/integrity/ima/ima_api.c
-> @@ -133,8 +133,9 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
->  {
->  	struct ima_template_entry *entry;
->  	struct inode *inode = file_inode(file);
-> -	struct ima_event_data event_data = {iint, file, filename, NULL, 0,
-> -					    cause};
-> +	struct ima_event_data event_data = { .iint = iint, .file = file,
-> +					     .filename = filename,
-> +					     .violation = cause };
->  	int violation = 1;
->  	int result;
->  
-> @@ -284,8 +285,10 @@ void ima_store_measurement(struct integrity_iint_cache *iint,
->  	int result = -ENOMEM;
->  	struct inode *inode = file_inode(file);
->  	struct ima_template_entry *entry;
-> -	struct ima_event_data event_data = {iint, file, filename, xattr_value,
-> -					    xattr_len, NULL};
-> +	struct ima_event_data event_data = { .iint = iint, .file = file,
-> +					     .filename = filename,
-> +					     .xattr_value = xattr_value,
-> +					     .xattr_len = xattr_len };
->  	int violation = 0;
->  
->  	if (iint->measured_pcrs & (0x1 << pcr))
-> diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-> index 6c9295449751..ef6c3a26296e 100644
-> --- a/security/integrity/ima/ima_init.c
-> +++ b/security/integrity/ima/ima_init.c
-> @@ -49,8 +49,8 @@ static int __init ima_add_boot_aggregate(void)
->  	const char *audit_cause = "ENOMEM";
->  	struct ima_template_entry *entry;
->  	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-> -	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
-> -					    NULL, 0, NULL};
-> +	struct ima_event_data event_data = { .iint = iint,
-> +					     .filename = boot_aggregate_name };
->  	int result = -ENOMEM;
->  	int violation = 0;
->  	struct {
+> I think I have to disagree here: It's probably valuable to have an
+> agreed error for 'cannot migrate at all' vs 'cannot migrate between
+> those two particular devices'. Userspace might want to do different
+> things (e.g. trying with different device pairs).
 
+Trying to stuff these things down an errno seems a bad idea; we can't
+get much information that way.
+
+Dave
+
+--
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
