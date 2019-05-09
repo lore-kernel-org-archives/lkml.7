@@ -2,128 +2,257 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B345DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1575C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92043204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FD5205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557428247;
+	bh=3X5YdOqJHbz8Jj1Su7duO+N7W/wIastC3yBPuBnU54Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JFd4if6JMiXF6dGibErcZAwxFCYJL38iGvd6gm7IpUQmdSHK+U01ip3BiJlglbdX3
+	 sv0tT28aWw1N4wwzRhzkT1kJbWECsEv/DYey9uawfTodfa4UW7rMWKLhRyCE5MG7T5
+	 /D9E4EtJcD1vOIKtCdR+WCgjmBaPXuuWdUuW/PNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfEIS5L (ORCPT
+        id S1729047AbfEIS50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:57:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50984 "EHLO mx1.redhat.com"
+        Thu, 9 May 2019 14:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbfEIS5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:57:08 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728256AbfEISyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:54:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 398D0C0601F2;
-        Thu,  9 May 2019 18:57:08 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3D5460FE6;
-        Thu,  9 May 2019 18:57:03 +0000 (UTC)
-Date:   Thu, 9 May 2019 13:57:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-Message-ID: <20190509185701.hocym3zlc4x4pmx5@treble>
-References: <20190318153840.906404905@infradead.org>
- <20190318155140.058627431@infradead.org>
- <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
- <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
- <20190509090058.6554dc81@gandalf.local.home>
- <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
- <20190509142902.08a32f20@gandalf.local.home>
- <20190509184531.jhinxi2x2pdfaefb@treble>
- <20190509184715.6y2uzlld4irlm3tw@treble>
- <3998ab5d-225b-0680-5edf-60b4068e3e59@infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3F2204FD;
+        Thu,  9 May 2019 18:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557428050;
+        bh=3X5YdOqJHbz8Jj1Su7duO+N7W/wIastC3yBPuBnU54Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CQ9RQ6Q98sh1+bLrTzwOiD+cK8c1QrMqUUiQRFDzhxfgOSFtGoLVkjFxeYxs+8alu
+         FkEU5yONx6IYPpryWzYpj2bVBWso4GRFxXRQixriL2L/dwR1U1mJi9gW+8r+JSEmtb
+         +7gFUyvJPK1vkQp+E8mh/zgDKeiOY0QXjxU14fh4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        Minwoo Im <minwoo.im@samsung.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Hannes Reinecke <hare@suse.com>,
+        James Smart <james.smart@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 68/95] nvmet: fix discover log page when offsets are used
+Date:   Thu,  9 May 2019 20:42:25 +0200
+Message-Id: <20190509181314.210243549@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
+References: <20190509181309.180685671@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3998ab5d-225b-0680-5edf-60b4068e3e59@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 09 May 2019 18:57:08 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 11:48:43AM -0700, Randy Dunlap wrote:
-> On 5/9/19 11:47 AM, Josh Poimboeuf wrote:
-> > On Thu, May 09, 2019 at 01:45:31PM -0500, Josh Poimboeuf wrote:
-> >> On Thu, May 09, 2019 at 02:29:02PM -0400, Steven Rostedt wrote:
-> >>> On Thu, 9 May 2019 09:51:59 -0700
-> >>> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> >>>
-> >>>> On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >>>>>
-> >>>>> This patch works. Can I get your Signed-off-by for it?  
-> >>>>
-> >>>> Yes. Please write some kind of comprehensible commit log for it, but
-> >>>
-> >>> How's this:
-> >>>
-> >>> "Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
-> >>> macro converts the conditional to an array index.  This can cause GCC
-> >>> to create horrible code.  When there are nested ifs, the generated code
-> >>> uses register values to encode branching decisions.
-> >>>
-> >>> Josh Poimboeuf found that replacing the define "if" macro from using
-> >>> the condition as an array index and incrementing the branch statics
-> >>> with an if statement itself, reduced the asm complexity and shrinks the
-> >>> generated code quite a bit.
-> >>>
-> >>> But this can be simplified even further by replacing the internal if
-> >>> statement with a ternary operator.
-> >>>
-> >>> Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >>> Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> >>
-> >> Actually, my original fix already went in:
-> >>
-> >>   37686b1353cf ("tracing: Improve "if" macro code generation")
-> >>
-> >> But it introduced a regression:
-> >>
-> >>   https://lkml.kernel.org/r/201905040509.iqQ2CrOU%lkp@intel.com
-> >>
-> >> which Linus' patch fixes for some reason.
-> > 
-> > /me curses URL encoding
-> > 
-> > https://lkml.kernel.org/r/201905040509.iqQ2CrOU%25lkp@intel.com
-> > 
-> 
-> Still fails for me.
+[ Upstream commit d808b7f759b50acf0784ce6230ffa63e12ef465d ]
 
-Sorry, another URL fail.  It wasn't on lkml.  I should actually try
-clicking my own links.
+The nvme target hadn't been taking the Get Log Page offset parameter
+into consideration, and so has been returning corrupted log pages when
+offsets are used. Since many tools, including nvme-cli, split the log
+request to 4k, we've been breaking discovery log responses when more
+than 3 subsystems exist.
 
-https://lists.01.org/pipermail/kbuild-all/2019-May/060554.html
+Fix the returned data by internally generating the entire discovery
+log page and copying only the requested bytes into the user buffer. The
+command log page offset type has been modified to a native __le64 to
+make it easier to extract the value from a command.
 
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Tested-by: Minwoo Im <minwoo.im@samsung.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/target/admin-cmd.c |  5 +++
+ drivers/nvme/target/discovery.c | 68 ++++++++++++++++++++++-----------
+ drivers/nvme/target/nvmet.h     |  1 +
+ include/linux/nvme.h            |  9 ++++-
+ 4 files changed, 58 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index 11baeb14c3881..8fdae510c5ac0 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -32,6 +32,11 @@ u32 nvmet_get_log_page_len(struct nvme_command *cmd)
+ 	return len;
+ }
+ 
++u64 nvmet_get_log_page_offset(struct nvme_command *cmd)
++{
++	return le64_to_cpu(cmd->get_log_page.lpo);
++}
++
+ static void nvmet_execute_get_log_page_noop(struct nvmet_req *req)
+ {
+ 	nvmet_req_complete(req, nvmet_zero_sgl(req, 0, req->data_len));
+diff --git a/drivers/nvme/target/discovery.c b/drivers/nvme/target/discovery.c
+index d2cb71a0b419d..389c1a90197d9 100644
+--- a/drivers/nvme/target/discovery.c
++++ b/drivers/nvme/target/discovery.c
+@@ -139,54 +139,76 @@ static void nvmet_set_disc_traddr(struct nvmet_req *req, struct nvmet_port *port
+ 		memcpy(traddr, port->disc_addr.traddr, NVMF_TRADDR_SIZE);
+ }
+ 
++static size_t discovery_log_entries(struct nvmet_req *req)
++{
++	struct nvmet_ctrl *ctrl = req->sq->ctrl;
++	struct nvmet_subsys_link *p;
++	struct nvmet_port *r;
++	size_t entries = 0;
++
++	list_for_each_entry(p, &req->port->subsystems, entry) {
++		if (!nvmet_host_allowed(p->subsys, ctrl->hostnqn))
++			continue;
++		entries++;
++	}
++	list_for_each_entry(r, &req->port->referrals, entry)
++		entries++;
++	return entries;
++}
++
+ static void nvmet_execute_get_disc_log_page(struct nvmet_req *req)
+ {
+ 	const int entry_size = sizeof(struct nvmf_disc_rsp_page_entry);
+ 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
+ 	struct nvmf_disc_rsp_page_hdr *hdr;
++	u64 offset = nvmet_get_log_page_offset(req->cmd);
+ 	size_t data_len = nvmet_get_log_page_len(req->cmd);
+-	size_t alloc_len = max(data_len, sizeof(*hdr));
+-	int residual_len = data_len - sizeof(*hdr);
++	size_t alloc_len;
+ 	struct nvmet_subsys_link *p;
+ 	struct nvmet_port *r;
+ 	u32 numrec = 0;
+ 	u16 status = 0;
++	void *buffer;
++
++	/* Spec requires dword aligned offsets */
++	if (offset & 0x3) {
++		status = NVME_SC_INVALID_FIELD | NVME_SC_DNR;
++		goto out;
++	}
+ 
+ 	/*
+ 	 * Make sure we're passing at least a buffer of response header size.
+ 	 * If host provided data len is less than the header size, only the
+ 	 * number of bytes requested by host will be sent to host.
+ 	 */
+-	hdr = kzalloc(alloc_len, GFP_KERNEL);
+-	if (!hdr) {
++	down_read(&nvmet_config_sem);
++	alloc_len = sizeof(*hdr) + entry_size * discovery_log_entries(req);
++	buffer = kzalloc(alloc_len, GFP_KERNEL);
++	if (!buffer) {
++		up_read(&nvmet_config_sem);
+ 		status = NVME_SC_INTERNAL;
+ 		goto out;
+ 	}
+ 
+-	down_read(&nvmet_config_sem);
++	hdr = buffer;
+ 	list_for_each_entry(p, &req->port->subsystems, entry) {
++		char traddr[NVMF_TRADDR_SIZE];
++
+ 		if (!nvmet_host_allowed(p->subsys, ctrl->hostnqn))
+ 			continue;
+-		if (residual_len >= entry_size) {
+-			char traddr[NVMF_TRADDR_SIZE];
+-
+-			nvmet_set_disc_traddr(req, req->port, traddr);
+-			nvmet_format_discovery_entry(hdr, req->port,
+-					p->subsys->subsysnqn, traddr,
+-					NVME_NQN_NVME, numrec);
+-			residual_len -= entry_size;
+-		}
++
++		nvmet_set_disc_traddr(req, req->port, traddr);
++		nvmet_format_discovery_entry(hdr, req->port,
++				p->subsys->subsysnqn, traddr,
++				NVME_NQN_NVME, numrec);
+ 		numrec++;
+ 	}
+ 
+ 	list_for_each_entry(r, &req->port->referrals, entry) {
+-		if (residual_len >= entry_size) {
+-			nvmet_format_discovery_entry(hdr, r,
+-					NVME_DISC_SUBSYS_NAME,
+-					r->disc_addr.traddr,
+-					NVME_NQN_DISC, numrec);
+-			residual_len -= entry_size;
+-		}
++		nvmet_format_discovery_entry(hdr, r,
++				NVME_DISC_SUBSYS_NAME,
++				r->disc_addr.traddr,
++				NVME_NQN_DISC, numrec);
+ 		numrec++;
+ 	}
+ 
+@@ -198,8 +220,8 @@ static void nvmet_execute_get_disc_log_page(struct nvmet_req *req)
+ 
+ 	up_read(&nvmet_config_sem);
+ 
+-	status = nvmet_copy_to_sgl(req, 0, hdr, data_len);
+-	kfree(hdr);
++	status = nvmet_copy_to_sgl(req, 0, buffer + offset, data_len);
++	kfree(buffer);
+ out:
+ 	nvmet_req_complete(req, status);
+ }
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 3e4719fdba854..d253c45c1aa6e 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -436,6 +436,7 @@ u16 nvmet_copy_from_sgl(struct nvmet_req *req, off_t off, void *buf,
+ u16 nvmet_zero_sgl(struct nvmet_req *req, off_t off, size_t len);
+ 
+ u32 nvmet_get_log_page_len(struct nvme_command *cmd);
++u64 nvmet_get_log_page_offset(struct nvme_command *cmd);
+ 
+ extern struct list_head *nvmet_ports;
+ void nvmet_port_disc_changed(struct nvmet_port *port,
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index bbcc83886899c..7ba0368f16e6e 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -975,8 +975,13 @@ struct nvme_get_log_page_command {
+ 	__le16			numdl;
+ 	__le16			numdu;
+ 	__u16			rsvd11;
+-	__le32			lpol;
+-	__le32			lpou;
++	union {
++		struct {
++			__le32 lpol;
++			__le32 lpou;
++		};
++		__le64 lpo;
++	};
+ 	__u32			rsvd14[2];
+ };
+ 
 -- 
-Josh
+2.20.1
+
+
+
