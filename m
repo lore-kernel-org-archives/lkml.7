@@ -2,70 +2,92 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18418C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BBFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5552173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5B6208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557419135;
-	bh=xto6+id0Mi1ewqtcVp1HIIrd38CrS4FIKCZ/SeV5aRU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=YrtI5Jai6HeDUuGiGto2T3i3XgCglYkCtwOCBiYeTjpeWrapC2A8yiw5WLLhRgBmG
-	 QD6eujejAXR4pXrcDNBHzkRm2lIpIl4MTBTH3VqJ8UdTSSEcHISbkg7dSayShVwDOd
-	 CPDeJQ740mNXSGw4Fo3uHqdB7UvQ3Cv5wrClRRLU=
+	s=default; t=1557419172;
+	bh=yeHxd2WqKdY5sdzHMwMaHUaROcyc42J//CKBpBJnTLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q89W5ifKz8of06SxBKNAXZpLMP5Aq4RDJOs4Fxebz0167iVn+eux0TT/7CqeL4KQ5
+	 qNs+/yCyChM1K5Fcw/N0oy0Nwy8eC3+xH/m+f67fwly+TRdyUyK8vz9MWouAmKYATd
+	 x3mErmFHgiDV+ppuQhcKQiOv3H8BnAe0cMJ3qmLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfEIQZd (ORCPT
+        id S1727035AbfEIQ0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 12:26:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40864 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbfEIQZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:25:15 -0400
-Subject: Re: [GIT PULL]: dmaengine updates for v5.2-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557419115;
-        bh=xto6+id0Mi1ewqtcVp1HIIrd38CrS4FIKCZ/SeV5aRU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=RJ01z0r5hV8yRJPQqu0moSU/03WIYLne678hMSvMcMSHigwHAFIcwnGupTHDKRPvC
-         wpW/Q6Yf2IE1TXMlfVg+e8OdnmMb8CnQRu3/KV8MufZQP1OxI7KeG/GM1QhZTpuZTT
-         eU+aOgXUi8y73EAoTtolXWWU1pRTmY/z9H9bMJOw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190509074615.GB16052@vkoul-mobl>
-References: <20190509074615.GB16052@vkoul-mobl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190509074615.GB16052@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-5.2-rc1
-X-PR-Tracked-Commit-Id: f33e7bb3eb922618612a90f0a828c790e8880773
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 055128ee008b00fba14e3638e7e84fc2cff8d77d
-Message-Id: <155741911494.30533.404952002387503115.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 May 2019 16:25:14 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
+        id S1727028AbfEIQ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 12:26:10 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 09:26:10 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga005.fm.intel.com with ESMTP; 09 May 2019 09:26:09 -0700
+Date:   Thu, 9 May 2019 10:20:38 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        "Busch, Keith" <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+Message-ID: <20190509162038.GC9548@localhost.localdomain>
+References: <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com>
+ <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM>
+ <20190508195159.GA1530@lst.de>
+ <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+ <20190509061237.GA15229@lst.de>
+ <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
+ <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
+ <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
+ <20190509095601.GA19041@lst.de>
+ <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 9 May 2019 13:16:15 +0530:
+On Thu, May 09, 2019 at 03:28:32AM -0700, Kai-Heng Feng wrote:
+> at 17:56, Christoph Hellwig <hch@lst.de> wrote:
+> > The we have the sequence in your patch.  This seems to be related to
+> > some of the MS wording, but I'm not sure what for example tearing down
+> > the queues buys us.  Can you explain a bit more where those bits
+> > make a difference?
+> 
+> Based on my testing if queues (IRQ) are not disabled, NVMe controller won’t  
+> be quiesced.
+> Symptoms can be high power drain or system freeze.
+> 
+> I can check with vendors whether this also necessary under Windows.
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.2-rc1
+Hm, that doesn't sound right based on the spec's description of how this
+feature works. We should not need to tear down IO queues for entering
+low power, nor reset the controller to exit it.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/055128ee008b00fba14e3638e7e84fc2cff8d77d
+The sequence for entering non-operational low power should just be freeze
+request queues, set the power feature, then unfreeze request queues.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+We shouldn't have to do anything to exit the state as the spec requires
+devices autonomously return to operational when an IO doorbell is written.
