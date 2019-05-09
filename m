@@ -2,69 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A67C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3633BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158C420989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557440133;
-	bh=ZhKJNDh4FnQO7UQnPY8DmUDINQaGP6NyfJZilGgJ/b0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=MSgb+ceUgyX4uQi05vWyStlb5O1mfmdpH8yfx1bsmLPCWA78syaeSQMU/2egXkXIS
-	 4LJaM6s3p5pnPYqAETvWs7blcJNTP1Xk4baLHHgl7qlBvr8B/5THThJ1ppl/SgEOzA
-	 Wq/CBonxRWkGPLKiXLmAxBPRdQYhvm9aDdCaFgU0=
+	by mail.kernel.org (Postfix) with ESMTP id 06092216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfEIWPc (ORCPT
+        id S1727391AbfEIWPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfEIWPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:15:18 -0400
-Subject: Re: [GIT PULL] clk changes for the merge window
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557440117;
-        bh=ZhKJNDh4FnQO7UQnPY8DmUDINQaGP6NyfJZilGgJ/b0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hf/gy18KnkjCQ4cH/sjRa0WC5mvSYamiWnkf+UsmJf+4dx4p1JtOr1OdnrQoHMAWm
-         fp513XFtFR0dqeT+y9lwtec/T6HZegUKE27XwLUSQvArUVw6HwZdRzuhxJiVNuWslK
-         DUC91YTpqzj4U6kZrGtjCAh6yCAUM1x6xyYlalP0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190509211510.36920-1-sboyd@kernel.org>
-References: <20190509211510.36920-1-sboyd@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190509211510.36920-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
- tags/clk-for-linus
-X-PR-Tracked-Commit-Id: c1157f60d72e8b20efc670cef28883832f42406c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ea5aee6d97fd2d4499b1eebc233861c1def70f06
-Message-Id: <155744011772.23477.12754028248628964733.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 May 2019 22:15:17 +0000
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+        Thu, 9 May 2019 18:15:40 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40966 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbfEIWPj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:15:39 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 81585802A4; Fri, 10 May 2019 00:15:25 +0200 (CEST)
+Date:   Fri, 10 May 2019 00:15:38 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
+ backlight
+Message-ID: <20190509221538.GA527@amd>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
+ <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
+ <20190508171229.GA22024@amd>
+ <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com>
+ <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
+ <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu,  9 May 2019 14:15:10 -0700:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ea5aee6d97fd2d4499b1eebc233861c1def70f06
+On Fri 2019-05-10 00:06:11, Andy Shevchenko wrote:
+> On Thu, May 9, 2019 at 11:45 PM Dan Murphy <dmurphy@ti.com> wrote:
+> > On 5/9/19 2:04 PM, Yurii Pavlovskyi wrote:
+> > We are working on a framework for this.
+> >
+> > Please see this series
+> > https://lore.kernel.org/patchwork/project/lkml/list/?series=3D390141
+> >
+> > It is still a work in progress
+>=20
+> Side question:
+> Have you considered to convert existing color LED controllers? (It
+> seems to me that your proposal lacks of the idea to keep back
+> compatibility with the existing controllers whre user may create a
+> sysfs node based on the arbitrary label, while it's good to have
+> multicolor infrastructure like in your proposal. Did I miss
+> something?)
 
-Thank you!
+That's undecided at the moment. We have enough fun trying to figure
+out reasonable interface...
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzUpooACgkQMOfwapXb+vJdigCgo3jVz3Quc3OXTEWsOVYA1oYS
+f6AAoL5RxwgYeNlUWliZQo02BD1pZ2Df
+=7Nn9
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
