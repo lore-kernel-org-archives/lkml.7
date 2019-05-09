@@ -2,122 +2,94 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C6EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E24FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C461D21019
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF31121019
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:38:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtGxLGHC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfEIRhw (ORCPT
+        id S1726858AbfEIRiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEIRhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:37:52 -0400
-Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66CDD20675;
-        Thu,  9 May 2019 17:37:49 +0000 (UTC)
-Date:   Thu, 9 May 2019 13:37:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190509173741.pfvecznqdndihxzg@home.goodmis.org>
-References: <20190508074901.982470324@infradead.org>
- <20190508080612.721269814@infradead.org>
- <20190508115416.nblx7c2kocidpytm@treble>
- <20190508120416.GL2589@hirez.programming.kicks-ass.net>
- <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
- <20190508184848.qerg3flv3ej3xsev@treble>
- <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
- <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+        Thu, 9 May 2019 13:38:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33533 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIRiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:38:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so1577289pgv.0;
+        Thu, 09 May 2019 10:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f4d+zUvWSp076co/UEghpzeuE5XMvDzMZv9OPdz0Fho=;
+        b=QtGxLGHCCuQdIzSY0pMaYXLV3vvrla34kJG+0exw7HANJF5fNMTfR7c2tr0Pd+Dyns
+         4M/h6TGxRyze6lnUWkYzRtH+5MhyVJyPy9qhrDYbIOQQdiQqo8LrYzHqy5hOVBY/e9jy
+         km7kntmd3VcGjzMGCRLaKWZ25p1T5Wq6mqGZc3edVky021c8rRTojDC4oWEtYpigP1lr
+         xQ0bE2IBUgnwgOLhbjGOQQyRI/g8hwnUFqewabqStZqHv+IWbJNGGHT6sI3Q1cd2hhIu
+         HY06CyJ+mrzLjNiJIGhgEI/4vSIky9YIbtPmLerr9viJt+lYRsCcgjxfABrDthTBeDXl
+         nifA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f4d+zUvWSp076co/UEghpzeuE5XMvDzMZv9OPdz0Fho=;
+        b=XPng5GOIRvanK8osBKBEXorvBs0eGDLX3HanGKYnGC+uE0tPMhyBh+FW5G0fCYD+71
+         HuFaArweaJEIFELR5Wj/2KW5w/KbLWBjAxPeDeq8K3HNEb91veBBus6PwAZ0zADEZhzd
+         /5EpZ0abYl8fwfxAp0GXmNY34mjEclOPd5QxZPVWl1fywrEJNEP8cInb5LTmds0RzxR6
+         R35PtkKb1T01HOjuXteucCqlu/Y0KF0kUnHFPa9ew/4J7ey1+dXkFJtaEa+F4sLr8RyA
+         5MVdlDI/nq9T59SePZycvhI2Hg+PRIripZ0cL7ZwD44m0KoDiFlQ4beINL/nIaP4rgHl
+         l7Zw==
+X-Gm-Message-State: APjAAAUREJi2l3qiU4jLzvVlq45mJm+8PKX3r1ebM8Ge/6iKjY4EXIkZ
+        Fwa48P3tom4JjRyG3BMRKeayucUJ
+X-Google-Smtp-Source: APXvYqzyyS1q4NMHTanVzs6FfP0UL8mgF06W2JAoYOItAnnfh5+BodP+1E9ckk8girs+SvXD7oPq7w==
+X-Received: by 2002:a63:445d:: with SMTP id t29mr7225134pgk.303.1557423492126;
+        Thu, 09 May 2019 10:38:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i22sm3612911pfa.127.2019.05.09.10.38.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 10:38:11 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:38:09 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Subject: Re: [PATCH 3.16 00/10] 3.16.67-rc1 review
+Message-ID: <20190509173809.GA28365@roeck-us.net>
+References: <lsq.1557410896.171359878@decadent.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190509081431.GO2589@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <lsq.1557410896.171359878@decadent.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 10:14:31AM +0200, Peter Zijlstra wrote:
+On Thu, May 09, 2019 at 03:08:16PM +0100, Ben Hutchings wrote:
+> This is the start of the stable review cycle for the 3.16.67 release.
+> There are 10 patches in this series, which will be posted as responses
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Right; I already fixed that in my patch changing i386's pt_regs.
+> Responses should be made by Sat May 11 14:08:16 UTC 2019.
+> Anything received after that time might be too late.
 > 
-> But what I'd love to do is something like the belwo patch, and make all
-> the trampolines (very much including ftrace) use that. Such that we then
-> only have 1 copy of this magic (well, 2 because x86_64 also needs an
-> implementation of this of course).
-> 
-> Changing ftrace over to this would be a little more work but it can
-> easily chain things a little to get its original context back:
-> 
-> ENTRY(ftrace_regs_caller)
-> GLOBAL(ftrace_regs_func)
-> 	push ftrace_stub
-> 	push ftrace_regs_handler
 
-Note, ftrace_stub is dynamically modified to remove any indirect calls.
+Build results:
+	total: 137 pass: 136 fail: 1
+Failed builds: 
+	i386:tools/perf 
+Qemu test results:
+	total: 226 pass: 226 fail: 0
 
-> 	jmp call_to_exception_trampoline
-> END(ftrace_regs_caller)
-> 
-> typedef void (*ftrace_func_t)(unsigned long, unsigned long, struct ftrace_op *, struct pt_regs *);
-> 
-> struct ftrace_regs_stack {
-> 	ftrace_func_t func;
-> 	unsigned long parent_ip;
-> };
-> 
-> void ftrace_regs_handler(struct pr_regs *regs)
-> {
-> 	struct ftrace_regs_stack *st = (void *)regs->sp;
-> 	ftrace_func_t func = st->func;
-> 
-> 	regs->sp += sizeof(long); /* pop func */
-> 
-> 	func(regs->ip, st->parent_ip, function_trace_op, regs);
-
-I try very hard to limit all indirect function calls from the function tracing
-path, as they do add noticeable overhead.
-
--- Steve
-
-> }
-> 
-> Hmm? I didn't look into the function_graph thing, but I imagine it can
-> be added without too much pain.
-> 
+Thanks,
+Guenter
