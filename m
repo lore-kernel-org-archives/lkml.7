@@ -2,88 +2,185 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1DDC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D0C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575032175B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B21D20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfEINJO (ORCPT
+        id S1726726AbfEINKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:09:14 -0400
-Received: from foss.arm.com ([217.140.101.70]:40990 "EHLO foss.arm.com"
+        Thu, 9 May 2019 09:10:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:37976 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfEINJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:09:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3DB9374;
-        Thu,  9 May 2019 06:09:13 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF5EF3F7BD;
-        Thu,  9 May 2019 06:09:10 -0700 (PDT)
-Date:   Thu, 9 May 2019 14:09:08 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v8 00/16] Add utilization clamping support
-Message-ID: <20190509130908.vn24ucm5b2k36knc@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190509130215.GV2623@hirez.programming.kicks-ass.net>
+        id S1726583AbfEINKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:10:21 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 06:05:18 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga005.jf.intel.com with ESMTP; 09 May 2019 06:05:13 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hOijY-0006lB-3R; Thu, 09 May 2019 16:05:12 +0300
+Date:   Thu, 9 May 2019 16:05:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190509130512.GS9224@smile.fi.intel.com>
+References: <20190509121923.8339-1-pmladek@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190509130215.GV2623@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-May 15:02, Peter Zijlstra wrote:
-> On Tue, Apr 02, 2019 at 11:41:36AM +0100, Patrick Bellasi wrote:
-> > Series Organization
-> > ===================
-> > 
-> > The series is organized into these main sections:
-> > 
-> >  - Patches [01-07]: Per task (primary) API
-> >  - Patches [08-09]: Schedutil integration for FAIR and RT tasks
-> >  - Patches [10-11]: Integration with EAS's energy_compute()
+On Thu, May 09, 2019 at 02:19:23PM +0200, Petr Mladek wrote:
+> The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
+> invalid pointers") broke boot on several architectures. The common
+> pattern is that probe_kernel_read() is not working during early
+> boot because userspace access framework is not ready.
 > 
-> Aside from the comments already provided, I think this is starting to
-> look really good.
+> The check is only the best effort. Let's not rush with it during
+> the early boot.
+> 
+> Details:
+> 
+> 1. Report on Power:
+> 
+> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
+> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+> 
+> The problem is the combination of some new code called via printk(),
+> check_pointer() which calls probe_kernel_read(). That then calls
+> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+> (before we've patched features). With the JUMP_LABEL debug enabled that
+> causes us to call printk() & dump_stack() and we end up recursing and
+> overflowing the stack.
+> 
+> Because it happens so early you don't get any output, just an apparently
+> dead system.
+> 
+> The stack trace (which you don't see) is something like:
+> 
+>   ...
+>   dump_stack+0xdc
+>   probe_kernel_read+0x1a4
+>   check_pointer+0x58
+>   string+0x3c
+>   vsnprintf+0x1bc
+>   vscnprintf+0x20
+>   printk_safe_log_store+0x7c
+>   printk+0x40
+>   dump_stack_print_info+0xbc
+>   dump_stack+0x8
+>   probe_kernel_read+0x1a4
+>   probe_kernel_read+0x19c
+>   check_pointer+0x58
+>   string+0x3c
+>   vsnprintf+0x1bc
+>   vscnprintf+0x20
+>   vprintk_store+0x6c
+>   vprintk_emit+0xec
+>   vprintk_func+0xd4
+>   printk+0x40
+>   cpufeatures_process_feature+0xc8
+>   scan_cpufeatures_subnodes+0x380
+>   of_scan_flat_dt_subnodes+0xb4
+>   dt_cpu_ftrs_scan_callback+0x158
+>   of_scan_flat_dt+0xf0
+>   dt_cpu_ftrs_scan+0x3c
+>   early_init_devtree+0x360
+>   early_setup+0x9c
+> 
+> 2. Report on s390:
+> 
+> vsnprintf invocations, are broken on s390. For example, the early boot
+> output now looks like this where the first (efault) should be
+> the linux_banner:
+> 
+> [    0.099985] (efault)
+> [    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
+> [    0.100066] setup: The maximum memory size is 8192MB
+> [    0.100070] cma: Reserved 4 MiB at (efault)
+> [    0.100100] numa: NUMA mode: (efault)
+> 
+> The reason for this, is that the code assumes that
+> probe_kernel_address() works very early. This however is not true on
+> at least s390. Uaccess on KERNEL_DS works only after page tables have
+> been setup on s390, which happens with setup_arch()->paging_init().
+> 
+> Any probe_kernel_address() invocation before that will return -EFAULT.
+> 
 
-Thanks Peter for the very useful review...
- 
-> Thanks!
-> 
-> >  - Patches [12-16]: Per task group (secondary) API
-> 
-> I still have to stare at these, but maybe a little later...
+It's seems as a good enough fix.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-... I'll soon post a v9 to factor in all the last comments from this
-round so that you have a better base for when you wanna start looking
-at the cgroup bits.
+Though in all cases would be nice to distinguish error pointers as well.
+Something like
+
+if (IS_ERR(ptr))
+	return err_pointer_str(ptr);
+
+in check_pointer_msg().
+
+> Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  lib/vsprintf.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7b0a6140bfad..8b43a883be6b 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -640,8 +640,13 @@ static const char *check_pointer_msg(const void *ptr)
+>  	if (!ptr)
+>  		return "(null)";
+>  
+> -	if (probe_kernel_address(ptr, byte))
+> -		return "(efault)";
+> +	/* User space address handling is not ready during early boot. */
+> +	if (system_state <= SYSTEM_BOOTING) {
+> +		if ((unsigned long)ptr < PAGE_SIZE)
+> +			return "(efault)";
+> +	} else {
+> +		if (probe_kernel_address(ptr, byte))
+> +			return "(efault)";
+>  
+>  	return NULL;
+>  }
+> -- 
+> 2.16.4
+> 
 
 -- 
-#include <best/regards.h>
+With Best Regards,
+Andy Shevchenko
 
-Patrick Bellasi
+
