@@ -2,53 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B19C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A489C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD5121848
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC7220578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427774;
-	bh=mESJRP+Mw6KkSs5rmMeYGTbvR9DiHjYe7Zp09k4ufj0=;
+	s=default; t=1557427776;
+	bh=K7/Z7ULPaiMrGML8CskPhXEpmnsruK7vDzfr3sp2vPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yxeioyg50FnYgUp05+CpcKAAgSfv6/0NL54cidBzXykXuRvO919X4/DQ/LYf+JJQJ
-	 9wC9zFH1p2ILEvpVKWK1cwFHHb6ng7PUYZJaq260nx/eHltA5oAyrx/EqUizhFy0nC
-	 8eLjPwpYrRtokv6+thSz2LXAQ9cNGaSEHyVaqCJw=
+	b=LhvKREdEbswEYebQNrJpQVJfsuAU9dk2aUKIwQ/MB/kM+WkkAZPcFniWpfVjX6zB3
+	 m+HIUtJUMAwnFKgU/44itlk/1IEVPMbaClwsaWyV9GHCMp68tqxwCT50FjBnRityGz
+	 3MaXCkcSG9fCaal43gi1mRdNZHg/HTq1PgZjHEkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfEIStc (ORCPT
+        id S1728255AbfEIStf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42802 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfEISta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:49:30 -0400
+        id S1728239AbfEIStc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:49:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31C7E20578;
-        Thu,  9 May 2019 18:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C401320578;
+        Thu,  9 May 2019 18:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427769;
-        bh=mESJRP+Mw6KkSs5rmMeYGTbvR9DiHjYe7Zp09k4ufj0=;
+        s=default; t=1557427772;
+        bh=K7/Z7ULPaiMrGML8CskPhXEpmnsruK7vDzfr3sp2vPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NOOj/HH+EnwMpMCwbo1EhjV4hg7mIiTrgbeiF62FmrAhonU8nLCroQ8Jj0Pkc1q3i
-         +88I3M/rTx1D8uVU1g9CdcNwjOKwDcFO16q+WuGZBf3P2QY70ijboEUkd2aywV4fXn
-         aLjlK1C61YvemM1mPB8V5buzOeGYvwViNUaq07Ig=
+        b=fbNp7PiylVii+xeuwG/HYvqNdmMtpG3aIqLCQZuXlabTNoCUPMzusH00cM1uvA/B+
+         Bqq+h72qtUqWZAV5GrmUUBtg9W09HTx09gKHuyWgEv1BRGZ2wLAzQfymEN7yJ4r7NT
+         e/j7kyWKRq/Q0FYzXUI5xVSQoGrVmMtjIqZWSY9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/66] nvme-fc: correct csn initialization and increments on error
-Date:   Thu,  9 May 2019 20:42:21 +0200
-Message-Id: <20190509181306.657565576@linuxfoundation.org>
+        stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 64/66] ASoC: Intel: avoid Oops if DMA setup fails
+Date:   Thu,  9 May 2019 20:42:39 +0200
+Message-Id: <20190509181308.092615871@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -61,96 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 67f471b6ed3b09033c4ac77ea03f92afdb1989fe ]
+From: Ross Zwisler <zwisler@chromium.org>
 
-This patch fixes a long-standing bug that initialized the FC-NVME
-cmnd iu CSN value to 1. Early FC-NVME specs had the connection starting
-with CSN=1. By the time the spec reached approval, the language had
-changed to state a connection should start with CSN=0.  This patch
-corrects the initialization value for FC-NVME connections.
+commit 0efa3334d65b7f421ba12382dfa58f6ff5bf83c4 upstream.
 
-Additionally, in reviewing the transport, the CSN value is assigned to
-the new IU early in the start routine. It's possible that a later dma
-map request may fail, causing the command to never be sent to the
-controller.  Change the location of the assignment so that it is
-immediately prior to calling the lldd. Add a comment block to explain
-the impacts if the lldd were to additionally fail sending the command.
+Currently in sst_dsp_new() if we get an error return from sst_dma_new()
+we just print an error message and then still complete the function
+successfully.  This means that we are trying to run without sst->dma
+properly set up, which will result in NULL pointer dereference when
+sst->dma is later used.  This was happening for me in
+sst_dsp_dma_get_channel():
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+        struct sst_dma *dma = dsp->dma;
+	...
+        dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
+
+This resulted in:
+
+   BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
+   IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
+
+Fix this by adding proper error handling for the case where we fail to
+set up DMA.
+
+This change only affects Haswell and Broadwell systems.  Baytrail
+systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
+being set to -1.
+
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Cc: stable@vger.kernel.org
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/host/fc.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ sound/soc/intel/common/sst-firmware.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 9375fa705d829..67dec8860bf3c 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1844,7 +1844,7 @@ nvme_fc_init_queue(struct nvme_fc_ctrl *ctrl, int idx)
- 	memset(queue, 0, sizeof(*queue));
- 	queue->ctrl = ctrl;
- 	queue->qnum = idx;
--	atomic_set(&queue->csn, 1);
-+	atomic_set(&queue->csn, 0);
- 	queue->dev = ctrl->dev;
+--- a/sound/soc/intel/common/sst-firmware.c
++++ b/sound/soc/intel/common/sst-firmware.c
+@@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct devic
+ 		goto irq_err;
  
- 	if (idx > 0)
-@@ -1886,7 +1886,7 @@ nvme_fc_free_queue(struct nvme_fc_queue *queue)
- 	 */
+ 	err = sst_dma_new(sst);
+-	if (err)
+-		dev_warn(dev, "sst_dma_new failed %d\n", err);
++	if (err)  {
++		dev_err(dev, "sst_dma_new failed %d\n", err);
++		goto dma_err;
++	}
  
- 	queue->connection_id = 0;
--	atomic_set(&queue->csn, 1);
-+	atomic_set(&queue->csn, 0);
- }
+ 	return sst;
  
- static void
-@@ -2182,7 +2182,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
- {
- 	struct nvme_fc_cmd_iu *cmdiu = &op->cmd_iu;
- 	struct nvme_command *sqe = &cmdiu->sqe;
--	u32 csn;
- 	int ret, opstate;
- 
- 	/*
-@@ -2197,8 +2196,6 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
- 
- 	/* format the FC-NVME CMD IU and fcp_req */
- 	cmdiu->connection_id = cpu_to_be64(queue->connection_id);
--	csn = atomic_inc_return(&queue->csn);
--	cmdiu->csn = cpu_to_be32(csn);
- 	cmdiu->data_len = cpu_to_be32(data_len);
- 	switch (io_dir) {
- 	case NVMEFC_FCP_WRITE:
-@@ -2256,11 +2253,24 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
- 	if (!(op->flags & FCOP_FLAGS_AEN))
- 		blk_mq_start_request(op->rq);
- 
-+	cmdiu->csn = cpu_to_be32(atomic_inc_return(&queue->csn));
- 	ret = ctrl->lport->ops->fcp_io(&ctrl->lport->localport,
- 					&ctrl->rport->remoteport,
- 					queue->lldd_handle, &op->fcp_req);
- 
- 	if (ret) {
-+		/*
-+		 * If the lld fails to send the command is there an issue with
-+		 * the csn value?  If the command that fails is the Connect,
-+		 * no - as the connection won't be live.  If it is a command
-+		 * post-connect, it's possible a gap in csn may be created.
-+		 * Does this matter?  As Linux initiators don't send fused
-+		 * commands, no.  The gap would exist, but as there's nothing
-+		 * that depends on csn order to be delivered on the target
-+		 * side, it shouldn't hurt.  It would be difficult for a
-+		 * target to even detect the csn gap as it has no idea when the
-+		 * cmd with the csn was supposed to arrive.
-+		 */
- 		opstate = atomic_xchg(&op->state, FCPOP_STATE_COMPLETE);
- 		__nvme_fc_fcpop_chk_teardowns(ctrl, op, opstate);
- 
--- 
-2.20.1
-
++dma_err:
++	free_irq(sst->irq, sst);
+ irq_err:
+ 	if (sst->ops->free)
+ 		sst->ops->free(sst);
 
 
