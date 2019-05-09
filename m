@@ -2,124 +2,166 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F58C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63957C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFB22177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557438004;
-	bh=h0vamqYqgeYBxehRh0DXqKVcaFd/9IQkmJmfb7YuCY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HTcWPF1VrHjqsyYOXxCQ51hWs9dzhzuA1ieuc2DHdoBD3pfMEUKOcK5PpavT2/+iw
-	 Qb6MfePfsjw+2mDwV49zI8T1AuIDHaaUL4tKyG6YGb55jwSWu4CUkDh19Iso+HkEFj
-	 +YoZ53FnxUMQtuM9M4+ZhBhn28t/vkhVbpZjsqe8=
+	by mail.kernel.org (Postfix) with ESMTP id 9530A2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="haoasArP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfEIVkD (ORCPT
+        id S1726952AbfEIVkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:40:03 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42511 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfEIVkC (ORCPT
+        Thu, 9 May 2019 17:40:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41255 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfEIVkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:40:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so3056636oig.9;
-        Thu, 09 May 2019 14:40:02 -0700 (PDT)
+        Thu, 9 May 2019 17:40:36 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d12so4988584wrm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h2jBjXGG/LxKqbPIKLSy4NYaQVWD1OWeaqfqz7Vo+Wc=;
+        b=haoasArPwJX4hpLK6K2z3rPbR1ZDtlVnCJh5QYCnPHJpC4AOrTqf91WWmCVM+a6yj6
+         Z8OcUWh2XGlyEWXroLS6es5J65Y/Rwq7Xe8ssfJEB1drFTbohhuYAYuzQ9FZpuWB5E5j
+         vc4yjbebzPhL4oSwm/av9LaHRs9b2UphZiWT8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rWqUG/1Q13/Mgi8WYJUSOwOl7Nvw/G1FqiVogS2PJUU=;
-        b=LFEtzodD7pm6u/S9cgqcjmWu4IoOF6tDGg734x3h8Bjq2RKSs1UyB4/A7aOwPLdsOr
-         dmKEvg1Lf0ZNIc8c3u/fY4BOOLV73SzUI0b4zTLa7Vk1Dvzoe0aLURF/ze+Zl+nnHSqb
-         oODTpv2m2GCYYGV4VNsyI/QlHnfG6lfvPs4JgHTMUYAPOYOPtkcxtQw9kJQW90Di+I1g
-         wXxmQJ9x0SwsTJmGzN6KbU3L6XeHfeSTEbMJPo21GqGpeCPAzU9lAhZtKkvgXh3igcDn
-         cREPrbSVm8tzblININGRky6LHTWSFSm8xqZwVjXGkXXD4bJkmNV/nvKBQvW9hqo0IGuk
-         LXcA==
-X-Gm-Message-State: APjAAAV3yms4BoeIbdDO2UysgYJLcc9s3mG+OFWzVjXPSKXwzVm19NRM
-        fz8yTKEpOrb/sl9N4DhZZFfT7TikHl/CcDa6ovw=
-X-Google-Smtp-Source: APXvYqyKl5SlkcDFgO5vnRTd1pL4AcZ5QulP6DrlxtnNmeZsn1LLArtlg5CH58bHUEjFNoX4LuDOC98A5i+IaWekgTQ=
-X-Received: by 2002:aca:f4c3:: with SMTP id s186mr2791143oih.68.1557438002008;
- Thu, 09 May 2019 14:40:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h2jBjXGG/LxKqbPIKLSy4NYaQVWD1OWeaqfqz7Vo+Wc=;
+        b=C0vCz99v/OfRXMS9/qkdpxdASNStKB5GOBVYP9ppW4Np6VBSMtnxsN1SwyaS2V/xia
+         Hlbp6buZGe1eJUNaHdJPCmEnyWIHw9WgXYZ5vdqW82qD+e0v/nw/df9sw3HxbA27ZJHG
+         DyOGkvG22TASnXi5WG0OFGI2mZ9sZru1x1le+OKmEvlC0SQ3BIlWFdu7Y2Nga7MK6cXE
+         hn2zW8xFy0AwqsCOHhMJbVbnGza5+lt2j+2CLVN8LxaflFo6WcH1yIn1kZqnB7I2YYMn
+         JZ640CCNKaIGWIqH7XrdHALaEvBAM3YZfUXvECwR2ZoaaqjlgNg0+8bpm9cPzd6Qi7nc
+         ynyw==
+X-Gm-Message-State: APjAAAUIPAX0qXN7ebJkJSIxQzOPlWjILOmJY0aiJ4LmvZ5p1PG8RMRX
+        k22eAPwfiH1DbWFY4Yt0FLI2xQ==
+X-Google-Smtp-Source: APXvYqwSgo4ndFtz8p1G31juXiK2md0vDdvLmcwXkGfgUJcIW+ytPKeNOcUJkJqF9EWSMqBJkQKGxw==
+X-Received: by 2002:adf:ce90:: with SMTP id r16mr4966011wrn.156.1557438034292;
+        Thu, 09 May 2019 14:40:34 -0700 (PDT)
+Received: from andrea ([91.252.228.170])
+        by smtp.gmail.com with ESMTPSA id z5sm9543607wre.70.2019.05.09.14.40.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 14:40:33 -0700 (PDT)
+Date:   Thu, 9 May 2019 23:40:25 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: Question about sched_setaffinity()
+Message-ID: <20190509214025.GA5385@andrea>
+References: <20190427180246.GA15502@linux.ibm.com>
+ <20190430100318.GP2623@hirez.programming.kicks-ass.net>
+ <20190430105129.GA3923@linux.ibm.com>
+ <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+ <20190501191213.GX3923@linux.ibm.com>
+ <20190501151655.51469a4c@gandalf.local.home>
+ <20190501202713.GY3923@linux.ibm.com>
+ <20190507221613.GA11057@linux.ibm.com>
+ <20190509173654.GA23530@linux.ibm.com>
 MIME-Version: 1.0
-References: <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
- <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
- <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com> <20190509095601.GA19041@lst.de>
- <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com> <20190509103142.GA19550@lst.de>
- <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com> <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
- <20190509192807.GB9675@localhost.localdomain> <CAJZ5v0ivyByegTMzqdvxqRM2kyjcWmg-LktuwpQJETjMCzGJiw@mail.gmail.com>
- <20190509211608.GC9675@localhost.localdomain>
-In-Reply-To: <20190509211608.GC9675@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 May 2019 23:39:50 +0200
-Message-ID: <CAJZ5v0geQV2Z4SdnisPKgEKJY0kypjgd9bRmwaYvf2pp0Rw4dg@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <keith.busch@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509173654.GA23530@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 11:21 PM Keith Busch <kbusch@kernel.org> wrote:
->
-> On Thu, May 09, 2019 at 10:54:04PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, May 9, 2019 at 9:33 PM Keith Busch <kbusch@kernel.org> wrote:
-> > >  #include <linux/io-64-nonatomic-lo-hi.h>
-> > > @@ -2851,6 +2852,8 @@ static int nvme_suspend(struct device *dev)
-> > >         struct pci_dev *pdev = to_pci_dev(dev);
-> > >         struct nvme_dev *ndev = pci_get_drvdata(pdev);
-> > >
-> > > +       if (!pm_suspend_via_firmware())
-> > > +               return nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
-> >
-> > You probably want to call pci_save_state(pdev) in the branch above to
-> > prevent pci_pm_suspend_noirq() from calling pci_prepare_to_sleep()
-> > going forward, so I would write this routine as
-> >
-> > if (pm_suspend_via_firmware()) {
-> >         nvme_dev_disable(ndev, true);
-> >         return 0;
-> > }
-> >
-> > pci_save_state(pdev)
-> > return nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
->
-> Ah, good point. I'll make sure that's added and will wait to see hear if
-> there's any other feedback.
->
-> I am trying to test the paths by faking out PS capabilities, and have
-> a question on how to force each:
->
-> Running "rtcwake -m freeze ...", that takes the !pm_suspend_via_firmware()
-> path as I expected.
->
-> But trying to test the original path, I thought using "-m mem" would
-> have been a suspend via firmware, but that is still returning false.
->
-> Is that expected?
+On Thu, May 09, 2019 at 10:36:54AM -0700, Paul E. McKenney wrote:
+> On Tue, May 07, 2019 at 03:16:13PM -0700, Paul E. McKenney wrote:
+> > On Wed, May 01, 2019 at 01:27:13PM -0700, Paul E. McKenney wrote:
+> > > On Wed, May 01, 2019 at 03:16:55PM -0400, Steven Rostedt wrote:
+> > > > On Wed, 1 May 2019 12:12:13 -0700
+> > > > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+> > > > 
+> > > > 
+> > > > > OK, what I did was to apply the patch at the end of this email to -rcu
+> > > > > branch dev, then run rcutorture as follows:
+> > > > > 
+> > > > > nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs "TRIVIAL" --bootargs "trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop"
+> > > > > 
+> > > > > This resulted in the console output that I placed here:
+> > > > > 
+> > > > > http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > > > > 
+> > > > > But I don't see calls to sched_setaffinity() or migration_cpu_stop().
+> > > > > Steve, is something else needed on the kernel command line in addition to
+> > > > > the following?
+> > > > > 
+> > > > > ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop
+> > > > 
+> > > > Do you have function graph enabled in the config?
+> > > > 
+> > > > [    2.098303] ftrace bootup tracer 'function_graph' not registered.
+> > > 
+> > > I guess I don't!  Thank you, will fix.
+> > > 
+> > > Let's see...
+> > > 
+> > > My .config has CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y.  It looks like I
+> > > need CONFIG_FUNCTION_GRAPH_TRACER=y, which I don't have.  And it looks
+> > > like that needs CONFIG_FUNCTION_TRACER=y, which I also don't have.
+> > > But I do have CONFIG_HAVE_FUNCTION_TRACER=y.  So I should add this
+> > > to my rcutorture command line:
+> > > 
+> > > --kconfig "CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y".
+> > > 
+> > > I fired this up.  Here is hoping!  ;-)
+> > > 
+> > > And it does have sched_setaffinity(), woo-hoo!!!  I overwrote the old file:
+> > > 
+> > > 	http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > 
+> > And I reran after adding a trace_printk(), which shows up as follows:
+> > 
+> > [  211.409565]  6)               |  /* On unexpected CPU 6, expected 4!!! */
+> > 
+> > I placed the console log here:
+> > 
+> > 	http://www2.rdrop.com/~paulmck/submission/console.tpk.log.gz
+> > 
+> > Just in case the earlier log proves useful.
+> > 
+> > And it is acting as if the destination CPU proved to be offline.  Except
+> > that this rcutorture scenario doesn't offline anything, and I don't see
+> > any CPU-hotplug removal messages.  So I added another trace_printk() to
+> > print out cpu_online_mask.  This gets me the following:
+> > 
+> > [   31.565605]  0)               |  /* On unexpected CPU 0, expected 1!!! */
+> > [   31.565605]  0)               |  /* Online CPUs: 0-7 */
+> > 
+> > So we didn't make it to CPU 1 despite its being online.  I placed the
+> > console log here:
+> > 
+> > 	http://www2.rdrop.com/~paulmck/submission/console.tpkol.log.gz
+> > 
+> > Thoughts?
 
-Yes, if s2idle is the default on that platform.  You should be able to
-switch over to S3 by writing "deep" into /sys/power/mem_sleep as long
-as it is supported on that platform at all.
+And I can finally see/reproduce it!!
 
-> I've only tried this on one platform so far, so might
-> just be this particular one is missing a firmware capability.
+Frankly, no idea how this is happening (I have been staring at these
+traces/functions for hours/days now...  ;-/ )
 
-You can check that by looking into /sys/power/mem_sleep (if there is
-only "[s2idle]" in there, S3 is not supported).
+Adding some "sched" folks in Cc: hopefully, they can shed some light
+about this.
+
+And yes, my only suggestion/approach would be to keep bisecting this
+code with printk*..., 'fun' ;-/
+
+  Andrea
