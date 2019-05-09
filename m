@@ -3,58 +3,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0FCC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B519C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E8D2173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9C92173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfEIQWg (ORCPT
+        id S1726806AbfEIQWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:22:36 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36452 "EHLO
+        Thu, 9 May 2019 12:22:44 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:36462 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfEIQWf (ORCPT
+        with ESMTP id S1726631AbfEIQWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:22:35 -0400
+        Thu, 9 May 2019 12:22:43 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 224DE14CF8672;
-        Thu,  9 May 2019 09:22:35 -0700 (PDT)
-Date:   Thu, 09 May 2019 09:22:34 -0700 (PDT)
-Message-Id: <20190509.092234.285409406486740265.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 524EB14CF8672;
+        Thu,  9 May 2019 09:22:43 -0700 (PDT)
+Date:   Thu, 09 May 2019 09:22:42 -0700 (PDT)
+Message-Id: <20190509.092242.151546265607007899.davem@davemloft.net>
 To:     jasowang@redhat.com
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         yuehaibing@huawei.com, xiyou.wangcong@gmail.com,
         weiyongjun1@huawei.com, eric.dumazet@gmail.com
-Subject: Re: [PATCH net V3 1/2] tuntap: fix dividing by zero in ebpf queue
- selection
+Subject: Re: [PATCH net V3 2/2] tuntap: synchronize through tfiles array
+ instead of tun->numqueues
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1557372018-18544-1-git-send-email-jasowang@redhat.com>
+In-Reply-To: <1557372018-18544-2-git-send-email-jasowang@redhat.com>
 References: <1557372018-18544-1-git-send-email-jasowang@redhat.com>
+        <1557372018-18544-2-git-send-email-jasowang@redhat.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 May 2019 09:22:35 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 May 2019 09:22:43 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jason Wang <jasowang@redhat.com>
-Date: Wed,  8 May 2019 23:20:17 -0400
+Date: Wed,  8 May 2019 23:20:18 -0400
 
-> We need check if tun->numqueues is zero (e.g for the persist device)
-> before trying to use it for modular arithmetic.
+> When a queue(tfile) is detached through __tun_detach(), we move the
+> last enabled tfile to the position where detached one sit but don't
+> NULL out last position. We expect to synchronize the datapath through
+> tun->numqueues. Unfortunately, this won't work since we're lacking
+> sufficient mechanism to order or synchronize the access to
+> tun->numqueues.
 > 
-> Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-> Fixes: 96f84061620c6("tun: add eBPF based queue selection method")
+> To fix this, NULL out the last position during detaching and check
+> RCU protected tfile against NULL instead of checking tun->numqueues in
+> datapath.
+> 
+> Cc: YueHaibing <yuehaibing@huawei.com>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: weiyongjun (A) <weiyongjun1@huawei.com>
+> Cc: Eric Dumazet <eric.dumazet@gmail.com>
+> Fixes: c8d68e6be1c3b ("tuntap: multiqueue support")
 > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+> Changes from V2:
+> - resample during detach in tun_xdp_xmit()
+> Changes from V1:
+> - keep the check in tun_xdp_xmit()
 
 Applied and queued up for -stable.
