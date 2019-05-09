@@ -2,224 +2,114 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3834C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ACC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD7D208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557387983;
-	bh=KtcjRZP4ucm527TvlD27ppwZGdEIAwlIHfU35QQ0cDw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=pai15LuHK6IJgVNb2DHCNhZwhQIbP8k6dOpCmauoBuEZTQsshPFY6G0+J4KQQVy5o
-	 XijMTJuRkSdGOlxVJEPcOel/ZeAiua9zoMFO08ppm/muMhPU1rPqgnGSllXNfY2M1V
-	 mtdeLpZNCWHMIr2YbargjB80pl+OXTYoM2IB+ULU=
+	by mail.kernel.org (Postfix) with ESMTP id D91F1208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEIHqW (ORCPT
+        id S1726653AbfEIHsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfEIHqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:46:22 -0400
-Received: from localhost (unknown [106.200.210.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1907208C3;
-        Thu,  9 May 2019 07:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557387980;
-        bh=KtcjRZP4ucm527TvlD27ppwZGdEIAwlIHfU35QQ0cDw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=th5eLfIda6Lrjes/LRLw7hScvlDhR110tr/U2Wl37eS5CTUBBx+MSz4XNCJpaxa3H
-         68OECXZiLQK39nYDA2ylG8E2YCoMXCw+JJhmvI6ihqV+up8uN5qBYZ6hCt1nrEd88R
-         EmZneXYSacytReywETVDH9XAKT4fbwG6iANIomgs=
-Date:   Thu, 9 May 2019 13:16:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine updates for v5.2-rc1
-Message-ID: <20190509074615.GB16052@vkoul-mobl>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5I6of5zJg18YgZEa"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Thu, 9 May 2019 03:48:54 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32952 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbfEIHsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 03:48:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7018DA78;
+        Thu,  9 May 2019 00:48:53 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09E013F7BD;
+        Thu,  9 May 2019 00:48:43 -0700 (PDT)
+Date:   Thu, 09 May 2019 08:48:26 +0100
+Message-ID: <868svg9igl.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Heyi Guo <guoheyi@huawei.com>
+Cc:     <linux-kernel@vger.kernel.org>,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
+        kvmarm <kvmarm@lists.cs.columbia.edu>
+Subject: Re: ARM/gic-v4: deadlock occurred
+In-Reply-To: <4d60d130-b7ce-96cb-5f8a-11e83329601a@huawei.com>
+References: <9efe0260-4a84-7489-ecdd-2e9561599320@huawei.com>
+        <86lfzl9ofe.wl-marc.zyngier@arm.com>
+        <0b413592-7d98-ebe8-35c5-da330f800326@huawei.com>
+        <86a7fx9lg8.wl-marc.zyngier@arm.com>
+        <4d60d130-b7ce-96cb-5f8a-11e83329601a@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Heyi,
 
---5I6of5zJg18YgZEa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 08 May 2019 14:01:48 +0100,
+Heyi Guo <guoheyi@huawei.com> wrote:
+> 
+> Hi Marc,
+> 
+> The bad news is that though your previous patch fixed the lockdep
+> warnings, we can still reproduce soft lockup panics and some other
+> exceptions... So our issue may not be related with this lock defect.
+> 
+> Most of the call traces are as below, stuck in smp_call_function_many:
+> 
+> [ 6862.660611] watchdog: BUG: soft lockup - CPU#27 stuck for 23s! [CPU 18/KVM:95311]
+> [ 6862.668283] Modules linked in: ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter vport_vxlan vxlan ip6_udp_tunnel udp_tunnel openvswitch nsh nf_nat_ipv6 nf_nat_ipv4 nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib ib_umad rpcrdma sunrpc rdma_ucm ib_uverbs ib_iser rdma_cm iw_cm ib_cm hns_roce_hw_v2 hns_roce aes_ce_blk crypto_simd ib_core cryptd aes_ce_cipher crc32_ce ghash_ce sha2_ce sha256_arm64 sha1_ce marvell ses enclosure hibmc_drm ttm drm_kms_helper drm sg ixgbe mdio fb_sys_fops syscopyarea hns3 hclge sysfillrect hnae3 sysimgblt sbsa_gwdt vhost_net tun vhost tap ip_tables dm_mod megaraid_sas hisi_sas_v3_hw hisi_sas_main ipmi_si ipmi_devintf ipmi_msghandler br_netfilter xt_sctp
+> [ 6862.668519] irq event stamp: 1670812
+> [ 6862.668526] hardirqs last  enabled at (1670811): [<ffff000008083498>] el1_irq+0xd8/0x180
+> [ 6862.668530] hardirqs last disabled at (1670812): [<ffff000008083448>] el1_irq+0x88/0x180
+> [ 6862.668534] softirqs last  enabled at (1661542): [<ffff000008081d2c>] __do_softirq+0x41c/0x51c
+> [ 6862.668539] softirqs last disabled at (1661535): [<ffff0000080fafc4>] irq_exit+0x18c/0x198
+> [ 6862.668544] CPU: 27 PID: 95311 Comm: CPU 18/KVM Kdump: loaded Tainted: G        W         4.19.36-1.2.141.aarch64 #1
+> [ 6862.668548] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS TaiShan 2280 V2 - B900 01/29/2019
+> [ 6862.668551] pstate: 80400009 (Nzcv daif +PAN -UAO)
+> [ 6862.668557] pc : smp_call_function_many+0x360/0x3b8
+> [ 6862.668560] lr : smp_call_function_many+0x320/0x3b8
+> [ 6862.668563] sp : ffff000028f338e0
+> [ 6862.668566] x29: ffff000028f338e0 x28: ffff000009893fb4
+> [ 6862.668575] x27: 0000000000000400 x26: 0000000000000000
+> [ 6862.668583] x25: ffff0000080b1e08 x24: 0000000000000001
+> [ 6862.668591] x23: ffff000009891bc8 x22: ffff000009891bc8
+> [ 6862.668599] x21: ffff805f7d6da408 x20: ffff000009893fb4
+> [ 6862.668608] x19: ffff805f7d6da400 x18: 0000000000000000
+> [ 6862.668616] x17: 0000000000000000 x16: 0000000000000000
+> [ 6862.668624] x15: 0000000000000000 x14: 0000000000000000
+> [ 6862.668632] x13: 0000000000000040 x12: 0000000000000228
+> [ 6862.668640] x11: 0000000000000020 x10: 0000000000000040
+> [ 6862.668648] x9 : 0000000000000000 x8 : 0000000000000010
+> [ 6862.668656] x7 : 0000000000000000 x6 : ffff805f7d329660
+> [ 6862.668664] x5 : ffff000028f33850 x4 : 0000000002000402
+> [ 6862.668673] x3 : 0000000000000000 x2 : ffff803f7f3dc678
+> [ 6862.668681] x1 : 0000000000000003 x0 : 000000000000000a
+> [ 6862.668689] Call trace:
+> [ 6862.668693]  smp_call_function_many+0x360/0x3b8
 
-Hi Linus,
+This would tend to indicate that one of the CPUs isn't responding to
+the IPI because it has its interrupts disabled, or has crashed badly
+already. Can you check where in smp_call_function_many this is
+hanging? My bet is on the wait loop at the end of the function.
 
-Here is the updates to dmaengine subsystem for v5.2-rc1. Please pull to
-get following updates:
+You'll need to find out what this unresponsive CPU is doing...
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> Any idea is appreciated.
+> 
+> We will find some time and board to test your new patch set, but
+> right now our top priority is to debug the above issue, so it may
+> take some time to get back with the test result. Sorry for that.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+No worries, that can wait.
 
-are available in the Git repository at:
+	M.
 
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.2-rc1
-
-for you to fetch changes up to f33e7bb3eb922618612a90f0a828c790e8880773:
-
-  dmaengine: tegra210-adma: restore channel status (2019-05-04 16:13:42 +05=
-30)
-
-----------------------------------------------------------------
-dmaengine updates for v5.2-rc1
-
- - Updates to stm32 dma residue calculations
- - Interleave dma capability to axi-dmac and
-   support for ZynqMP arch
- - Rework of channel assignment for rcar dma
- - Debugfs for pl330 driver
- - Support for Tegra186/Tegra194, refactoring for new chips
-   and support for pause/resume
- - Updates to axi-dmac, bcm2835, fsl-edma, idma64, imx-sdma,
-   rcar-dmac, stm32-dma etc
- - dev_get_drvdata() updates on few drivers
-
-----------------------------------------------------------------
-Alexandru Ardelean (1):
-      dmaengine: axi-dmac: Don't check the number of frames for alignment
-
-Andy Shevchenko (2):
-      dmaengine: idma64: Use actual device for DMA transfers
-      dmaengine: idma64: Move driver name to the header
-
-Angus Ainslie (Purism) (1):
-      dmaengine: imx-sdma: Only check ratio on parts that support 1:1
-
-Arnaud Pouliquen (1):
-      dmaengine: stm32-dma: fix residue calculation in stm32-dma
-
-Colin Ian King (1):
-      dmaengine: xgene-dma: fix spelling mistake "descripto" -> "descriptor"
-
-Dan Carpenter (1):
-      dmaengine: at_xdmac: remove a stray bottom half unlock
-
-Dragos Bogdan (1):
-      dmaengine: axi-dmac: Enable DMA_INTERLEAVE capability
-
-Fabien Dessenne (1):
-      dmaengine: stm32-dma: use platform_get_irq()
-
-Hiroyuki Yokoyama (1):
-      dmaengine: rcar-dmac: Update copyright information
-
-Jean-Nicolas Graux (1):
-      dmaengine: pl08x: be fair when re-assigning physical channel
-
-Jeff Xie (1):
-      dmaengine: xgene-dma: move spin_lock_bh to spin_lock in tasklet
-
-Katsuhiro Suzuki (1):
-      dmaengine: pl330: introduce debugfs interface
-
-Kefeng Wang (2):
-      dmaengine: bcm-sba-raid: Use dev_get_drvdata()
-      dmaengine: nbpfaxi: Use dev_get_drvdata()
-
-Krzysztof Kozlowski (2):
-      dmaengine: fsl-edma: Fix typo in Vybrid name
-      dmaengine: fsl-edma: Adjust indentation
-
-Lars-Peter Clausen (2):
-      dmaengine: axi-dmac: Split too large segments
-      dmaengine: axi-dmac: Infer synthesis configuration parameters hardware
-
-Michael Hennerich (1):
-      dmaengine: axi-dmac: extend support for ZynqMP arch
-
-Michal Suchanek (1):
-      dmaengine: bcm2835: Drop duplicate capability setting.
-
-Nicolas Ferre (3):
-      dmaengine: at_xdmac: remove BUG_ON macro in tasklet
-      dmaengine: at_xdmac: enhance channel errors handling in tasklet
-      dmaengine: at_xdmac: only monitor overflow errors for peripheral xfer
-
-Sameer Pujar (8):
-      dmaengine: tegra210-adma: use devm_clk_*() helpers
-      dmaengine: tegra210-adma: update system sleep callbacks
-      dmaengine: tegra210-adma: prepare for supporting newer Tegra chips
-      Documentation: DT: Add compatibility binding for Tegra186
-      dmaengine: tegra210-adma: add support for Tegra186/Tegra194
-      dmaengine: tegra210-adma: add pause/resume support
-      dmaengine: tegra210-dma: free dma controller in remove()
-      dmaengine: tegra210-adma: restore channel status
-
-Sugar Zhang (1):
-      dmaengine: pl330: _stop: clear interrupt status
-
-Vinod Koul (1):
-      dmaengine: stm32-dma: Fix unsigned variable compared with zero
-
- .../devicetree/bindings/dma/adi,axi-dmac.txt       |   4 +-
- .../bindings/dma/nvidia,tegra210-adma.txt          |   4 +-
- drivers/dma/Kconfig                                |   2 +-
- drivers/dma/amba-pl08x.c                           |  22 +-
- drivers/dma/at_xdmac.c                             |  67 ++++-
- drivers/dma/bcm-sba-raid.c                         |   3 +-
- drivers/dma/bcm2835-dma.c                          |   1 -
- drivers/dma/dma-axi-dmac.c                         | 116 ++++++---
- drivers/dma/fsl-edma-common.h                      |   2 +-
- drivers/dma/fsl-edma.c                             |   6 +-
- drivers/dma/idma64.c                               |  15 +-
- drivers/dma/idma64.h                               |   2 +
- drivers/dma/imx-sdma.c                             |  15 +-
- drivers/dma/nbpfaxi.c                              |   4 +-
- drivers/dma/pl330.c                                |  61 ++++-
- drivers/dma/sh/rcar-dmac.c                         |   4 +-
- drivers/dma/stm32-dma.c                            | 103 ++++++--
- drivers/dma/tegra210-adma.c                        | 269 ++++++++++++++++-=
-----
- drivers/dma/xgene-dma.c                            |   6 +-
- drivers/mfd/intel-lpss.c                           |   4 +-
- drivers/spi/spi-pxa2xx.c                           |   7 +-
- drivers/tty/serial/8250/8250_dw.c                  |   4 +-
- include/linux/dma/idma64.h                         |  14 ++
- 23 files changed, 566 insertions(+), 169 deletions(-)
- create mode 100644 include/linux/dma/idma64.h
-
-Thanks
---=20
-~Vinod
-
---5I6of5zJg18YgZEa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJc09rHAAoJEHwUBw8lI4NHifkP/1g+an09RrQmVnUxWz9emBO9
-Ea0i1xQYF7zg8p7MblRC3yQNBuphJ9Qhd51GlOHR/uy+4JP0Llg4RfAh4WhuVLCJ
-GlLk3BHwI2jb9okfe5dBFP09RRdG/XarBp5nl9qqcRIfyXg8iwADwBBvEabaXT1L
-vkvjyRpH6uGHRiTmP6ZPB1pRTF4OoiyJWLc4g2i40Xn0NMRGrMNUHYuTOHq7aDJO
-MK+WbCgL6KJFlPHnJt1rRCtp7EdY092pFNhyw79BMXE5uvwWnxihDB+ylf+eHgLL
-8mfnBYlUnKPkIPwGiaNb/uv9xKfXejN41ZK0FhC4GjkKU2tbwKAAJduVyLccwq9v
-KcrYcCvwyBXpAOlfWxNZ+97jQBqL4iG7fMq0OUViv96HXJNXc8ynu6r495rPX69I
-b/ZgJ5FmXkkR2Fl/wiE9Jdr6q83ASHNvaV+LXDHTsIj8OYxod+Z+qVBs31iUNlXL
-wHxVcn61edvfRZp4EOD+/dgEPCsNfRWOTmTCSdjlyj0fwr2qs40WjAOXC5f1uOHu
-QwetmVNvKg3d5WURUH89SDb+Xh/7DaLzkkgbyMqlBQDu+OHOTrJva2ekZczdIpIY
-CGdplxGz7tVD01JeswoRkBYyeuIXi9bjp6Eyda/qLfHL0ybAC2z00Y8HTFKYTE0U
-vF9uXW6yL7DAqfMmEOBq
-=WatB
------END PGP SIGNATURE-----
-
---5I6of5zJg18YgZEa--
+-- 
+Jazz is not dead, it just smell funny.
