@@ -2,143 +2,165 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FABC04AAD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6D1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AB42173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C5A216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 00:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M9LozMDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfEIARH (ORCPT
+        id S1727784AbfEIAb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 20:17:07 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:33742 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfEIARH (ORCPT
+        Wed, 8 May 2019 20:31:29 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41792 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfEIAb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 20:17:07 -0400
-Received: by mail-it1-f197.google.com with SMTP id x3so2159713itj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 17:17:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=e87X274QzI+nGsJX1NYlS+xDvqLPNZh6bmnfqFL/Rcs=;
-        b=tQoG49/JhhZtq9KsBFcvqCHkm7W9s4B9jJN08CDBBLKzUhM/8CQCfsblW2EOQfiUjE
-         jiKXGcFzeAVN0CfQ5qlOilMznfdtzWqqW9OTZl3IUECA9WvJwEZYT/9s21AhHn+DkUPX
-         hR+BQnYvKQGc7hGYKNM35WK8MDmBH31mb4spoFLkyLVV3JB/gf9ROGjaVRQLQ5sWvRsh
-         AEgtjgOK/rY1M8LHmMNf5lvGYbJC/overMOYuZsc9lV5VCeckp9EniV75y//wgc1b9pl
-         3NBYCYiS3wbwMQHISbshhXOPEUn0H1CJpSoWgAtBl7kodmIZT3W55PJ3Re3SH+VQZ6pV
-         33vg==
-X-Gm-Message-State: APjAAAXQtS5+qkeL/3LFzDzIN+Lnow1aEFzDyfcoG5LLuvOkmQ/usxXa
-        /KvixoN5EvZ+cTJdrhW/QLxcwr2OnIMI+gBf1XYddr6kAtLp
-X-Google-Smtp-Source: APXvYqwwvCXOA9r67ZLdGaDwNv8X5U/qdtVWHggK/l3JkUrEAEQ2MJhIVOyxH2fDWM2+OY384WZHJC1kCyxtgXO6gmJR7hYhl/51
+        Wed, 8 May 2019 20:31:29 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x490JkoL125474;
+        Thu, 9 May 2019 00:29:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=5a8ymBcKcFPJxxELmpnxY6JCQmHZSan+3t+baag2wZ8=;
+ b=M9LozMDlfVzkuZPmrgKeo2tStYfS5uOvzEuEgc50ej0XyZgzHD9NNPt22gCi7IWfmm0I
+ klmsAIKT3DxSMDGTre/duDhgOGICpnh+BFMdcgZjesdfe2nAbhbH2l+L82uW7thg/oZV
+ U2flYIplpXz7/Jt4px+7Vr6DwWZ3vkktmaBnbljdPu132YXmYxJlz8y3MmETk+imYS6w
+ 2HhPGBu2YCvO/VISpPo07Pwyzd1J1KleqOTxKmDwszpSXsQHoaPtyMcEOv1vZ8Z5tU87
+ lzmSoBBjRoDBQIl2rBm60QmrtOGoBeQk5XuZEakUdwXqMEb31GrC00yrXItCIvmIaIO0 QA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2s94b67mcs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 00:29:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x490RvZi101903;
+        Thu, 9 May 2019 00:29:25 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2sagyuxafj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 00:29:24 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x490TEVM009905;
+        Thu, 9 May 2019 00:29:14 GMT
+Received: from [10.132.91.213] (/10.132.91.213)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 May 2019 17:29:13 -0700
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+ <20190429061516.GA9796@aaronlu>
+ <6dfc392f-e24b-e641-2f7d-f336a90415fa@linux.intel.com>
+ <777b7674-4811-dac4-17df-29bd028d6b26@linux.intel.com>
+ <CAERHkrvU0nay-cG9equdOBejOZ5Ffdxo+67ZRp9q0L9BQkcAtQ@mail.gmail.com>
+ <eb9abb34-d946-c63c-750b-8f52ed842670@oracle.com>
+ <28fb6854-2772-5d29-087a-6a0cf6afe626@oracle.com>
+ <CAERHkrsavsBoEOR5Eq-nm6ADarS0zTi5Mu-T7TO6JoSUi7TRfQ@mail.gmail.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <8098b70b-2095-91ea-d4ad-9181829066c7@oracle.com>
+Date:   Wed, 8 May 2019 17:25:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2286:: with SMTP id d6mr586903iod.257.1557361026392;
- Wed, 08 May 2019 17:17:06 -0700 (PDT)
-Date:   Wed, 08 May 2019 17:17:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c3e9dc0588695e22@google.com>
-Subject: WARNING: locking bug in nfs_get_client
-From:   syzbot <syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com>
-To:     anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CAERHkrsavsBoEOR5Eq-nm6ADarS0zTi5Mu-T7TO6JoSUi7TRfQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905090000
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905090000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
-
-HEAD commit:    31ccad9b Add linux-next specific files for 20190508
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1082d2aca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=63cd766601c6c9fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=228a82b263b5da91883d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140fdce8a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134dce02a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(depth <= 0)
-WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052 __lock_release  
-kernel/locking/lockdep.c:4052 [inline]
-WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052  
-lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 7948 Comm: syz-executor561 Not tainted 5.1.0-next-20190508 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x75a kernel/panic.c:218
-  __warn.cold+0x20/0x47 kernel/panic.c:575
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:__lock_release kernel/locking/lockdep.c:4052 [inline]
-RIP: 0010:lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
-Code: 0f 85 a0 03 00 00 8b 35 a7 02 09 08 85 f6 75 23 48 c7 c6 e0 57 6b 87  
-48 c7 c7 80 27 6b 87 4c 89 85 70 ff ff ff e8 37 7c eb ff <0f> 0b 4c 8b 85  
-70 ff ff ff 4c 89 ea 4c 89 e6 4c 89 c7 e8 52 63 ff
-RSP: 0018:ffff888095867730 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: 1ffff11012b0ceec RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815b20c6 RDI: ffffed1012b0ced8
-RBP: ffff8880958677e8 R08: ffff88809a5b83c0 R09: fffffbfff1133071
-R10: fffffbfff1133070 R11: ffffffff88998383 R12: ffff888219eeb700
-R13: ffffffff821668ab R14: ffffffff8a45bd40 R15: ffff8880958677c0
-  __raw_spin_unlock include/linux/spinlock_api_smp.h:150 [inline]
-  _raw_spin_unlock+0x1b/0x50 kernel/locking/spinlock.c:183
-  spin_unlock include/linux/spinlock.h:378 [inline]
-  nfs_get_client+0xc1b/0x1300 fs/nfs/client.c:412
-  nfs_init_server+0x26f/0xea0 fs/nfs/client.c:675
-  nfs_create_server+0x12b/0x6d0 fs/nfs/client.c:962
-  nfs_try_mount+0x15a/0x910 fs/nfs/super.c:1882
-  nfs_fs_mount+0x184a/0x2690 fs/nfs/super.c:2718
-  legacy_get_tree+0x10a/0x220 fs/fs_context.c:665
-  vfs_get_tree+0x93/0x3a0 fs/super.c:1476
-  do_new_mount fs/namespace.c:2790 [inline]
-  do_mount+0x138c/0x1c00 fs/namespace.c:3110
-  ksys_mount+0xdb/0x150 fs/namespace.c:3319
-  __do_sys_mount fs/namespace.c:3333 [inline]
-  __se_sys_mount fs/namespace.c:3330 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3330
-  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4467d9
-Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f54c53e0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004467d9
-RDX: 0000000020fb5ffc RSI: 0000000020343ff8 RDI: 0000000000000000
-RBP: 00000000006dbc30 R08: 000000002000a000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 00007ffe22037e2f R14: 00007f54c53e19c0 R15: 20c49ba5e353f7cf
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+On 5/8/19 5:01 PM, Aubrey Li wrote:
+> On Thu, May 9, 2019 at 2:41 AM Subhra Mazumdar
+> <subhra.mazumdar@oracle.com> wrote:
+>>
+>> On 5/8/19 11:19 AM, Subhra Mazumdar wrote:
+>>> On 5/8/19 8:49 AM, Aubrey Li wrote:
+>>>>> Pawan ran an experiment setting up 2 VMs, with one VM doing a
+>>>>> parallel kernel build and one VM doing sysbench,
+>>>>> limiting both VMs to run on 16 cpu threads (8 physical cores), with
+>>>>> 8 vcpu for each VM.
+>>>>> Making the fix did improve kernel build time by 7%.
+>>>> I'm gonna agree with the patch below, but just wonder if the testing
+>>>> result is consistent,
+>>>> as I didn't see any improvement in my testing environment.
+>>>>
+>>>> IIUC, from the code behavior, especially for 2 VMs case(only 2
+>>>> different cookies), the
+>>>> per-rq rb tree unlikely has nodes with different cookies, that is, all
+>>>> the nodes on this
+>>>> tree should have the same cookie, so:
+>>>> - if the parameter cookie is equal to the rb tree cookie, we meet a
+>>>> match and go the
+>>>> third branch
+>>>> - else, no matter we go left or right, we can't find a match, and
+>>>> we'll return idle thread
+>>>> finally.
+>>>>
+>>>> Please correct me if I was wrong.
+>>>>
+>>>> Thanks,
+>>>> -Aubrey
+>>> This is searching in the per core rb tree (rq->core_tree) which can have
+>>> 2 different cookies. But having said that, even I didn't see any
+>>> improvement with the patch for my DB test case. But logically it is
+>>> correct.
+>>>
+>> Ah, my bad. It is per rq. But still can have 2 different cookies. Not sure
+>> why you think it is unlikely?
+> Yeah, I meant 2 different cookies on the system, but unlikely 2
+> different cookies
+> on one same rq.
+>
+> If I read the source correctly, for the sched_core_balance path, when try to
+> steal cookie from another CPU, sched_core_find() uses dst's cookie to search
+> if there is a cookie match in src's rq, and sched_core_find() returns idle or
+> matched task, and later put this matched task onto dst's rq (activate_task() in
+> sched_core_find()). At this moment, the nodes on the rq's rb tree should have
+> same cookies.
+>
+> Thanks,
+> -Aubrey
+Yes, but sched_core_find is also called from pick_task to find a local
+matching task. The enqueue side logic of the scheduler is unchanged with
+core scheduling, so it is possible tasks with different cookies are
+enqueued on the same rq. So while searching for a matching task locally
+doing it correctly should matter.
