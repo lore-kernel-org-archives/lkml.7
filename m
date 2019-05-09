@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5477C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864D5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A02B2217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E43421744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BlfEwnw9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A/E7qhQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfEIVQR (ORCPT
+        id S1727588AbfEIVQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:16:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36666 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfEIVOT (ORCPT
+        Thu, 9 May 2019 17:16:23 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40440 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfEIVOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:14:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v80so1963535pfa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:19 -0700 (PDT)
+        Thu, 9 May 2019 17:14:16 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so1728194plr.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 14:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uaJsxtRSz7Gp1mSEkwxRyQYxA/E3JN7w4ZIeh5Z/k6I=;
-        b=BlfEwnw9XbH0TMZbXU9nMxzyTq5pNGfIKBEigTowQChP6kIb2ivlJzwFuT0bFd0fJE
-         +SqlsVcgFOyBivX9sslqKOKHm3Ps6Eloaib/EFyRFXI8F7H6jzVqZXNLAKHQXKWZKjup
-         DuiPm0AlKPJOi6448tAbtk/RTQ1A6lU9mCtNo=
+        bh=NwVaVEj7IXkfmug377A9Z+9dSGylKGF+5h+RjN0OFaU=;
+        b=A/E7qhQDkeCjMU7u8vo/8V7X0hd7RW+pgz94GzLUstAg6w7yaxsyFUDxVrMLvWNZQZ
+         Pas+nRZfxa+rDf65S/txv4hVSL4XrVfglmn5F7PDt7U3VE1JkiaNKp2gHc7eLUBGUM6I
+         85Xp0DyL7jIGWL/6RBHnpILJVzN3k0l1yWqfA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uaJsxtRSz7Gp1mSEkwxRyQYxA/E3JN7w4ZIeh5Z/k6I=;
-        b=Q0gxcdMHi9OktsYzEdPN1Uppu6vKTlhfSy+sDYvVX50p/scL2FvK0La6VOcOE1d5rt
-         b3FinXkOhm3ev/mOdKTc5H0SA50UcewM2kJhNxAPct7nRpRaiTKYItALiC4DrutbutVx
-         QDS4WF/YswVqmlzM8wPVb6QMwx/LyegoVVbTTY7o4WCXLmcCs9rbHtWPSLttFx45SMqr
-         9jH9tY1/bNPnkUST8hT+ysyYbCj7OjOpPpVEAp/KTKEWVWDFoNGV76Nbl/ihwxn0wjuF
-         Pk3XC8rze4NKnMkEQQdqFTC0fGV0epaTCNyYQ6XCW5AzFNQO3BptN8EtfwoU8fbSJtT+
-         SofQ==
-X-Gm-Message-State: APjAAAUta2XcZv8ItcpqxmA3RkGzbW/lebrxxQmEC5qE33sjW23pgtbP
-        6K3AsiHe95cHIaZONjVlst2k7w==
-X-Google-Smtp-Source: APXvYqzmR6UP7QFDsPP7XFJh5ZWSFAjHq9Q5qqMTlAp4c2cu8CjtuaZdJq/AjE7hrRFln1J8MfwVVA==
-X-Received: by 2002:aa7:925a:: with SMTP id 26mr8424340pfp.152.1557436458458;
-        Thu, 09 May 2019 14:14:18 -0700 (PDT)
+        bh=NwVaVEj7IXkfmug377A9Z+9dSGylKGF+5h+RjN0OFaU=;
+        b=WulDfjwsHMsW57eHuKoEShmrWtDBO3TQM9jD0iqWN9/QuZXlt3DZeKtb2SW1WZwxH5
+         KgddRLmM0LB4xy/T0RD6hsPTa0sbaDQ4XVeQVRGnBCj2taYL/8eaZbOKeCePb+XmFx4B
+         A0lD2EvkS7yXksPjsOo0gxYgxnkbLQyci5bfjH9VYFFh52McZ/j9Bv8ou5l61nQYnL/z
+         dnUnjNbrFFdsCwJvrObdemlqC+/5OK34PUewbPrOl1d17QHbfcqz3QeFQkg8cxMesMNi
+         DAw6jdk9MPScSCWdyHEMfSy33VqaoSQiyEO83g+V6xlkdlRPhSPTRyzrIXVV/Xknl431
+         yLNQ==
+X-Gm-Message-State: APjAAAXamMzcBKbloEGZdF2xI+TWd9kBTA/S7OEJbqL9hwLYLSY0vfqe
+        X0+44+vP+LQtfTMlNKOcZeTHPCXs9SA=
+X-Google-Smtp-Source: APXvYqyAqUWCamq5W3ViI979pnhQ0eXBaJ7eHHx3S9QuPlAeQtfsDptKfJi5qvsTHDCplKEp6+9HhA==
+X-Received: by 2002:a17:902:e28a:: with SMTP id cf10mr8136527plb.77.1557436455436;
+        Thu, 09 May 2019 14:14:15 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id 4sm3990290pfd.55.2019.05.09.14.14.17
+        by smtp.gmail.com with ESMTPSA id c14sm3573892pgl.43.2019.05.09.14.14.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:14:17 -0700 (PDT)
+        Thu, 09 May 2019 14:14:14 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
@@ -60,9 +60,9 @@ To:     enric.balletbo@collabora.com, bleung@chromium.org,
 Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v3 10/30] mfd: cros_ec: Add Flash V2 commands API
-Date:   Thu,  9 May 2019 14:13:33 -0700
-Message-Id: <20190509211353.213194-11-gwendal@chromium.org>
+Subject: [PATCH v3 08/30] mfd: cros_ec: move HDMI CEC API definition
+Date:   Thu,  9 May 2019 14:13:31 -0700
+Message-Id: <20190509211353.213194-9-gwendal@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509211353.213194-1-gwendal@chromium.org>
 References: <20190509211353.213194-1-gwendal@chromium.org>
@@ -73,240 +73,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added for supporting larger embedded controller flash.
+Move near the end of file.
 
 Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Benson Leung <bleung@chromium.org>
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 150 ++++++++++++++++++++++++++-
- 1 file changed, 147 insertions(+), 3 deletions(-)
+ include/linux/mfd/cros_ec_commands.h | 148 ++++++++++++++-------------
+ 1 file changed, 75 insertions(+), 73 deletions(-)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index fabf341af97f..3d1d26f62bd3 100644
+index 575066b90bab..d8bde2b5e9ce 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -1138,6 +1138,7 @@ struct ec_response_get_features {
- 
- /* Get flash info */
- #define EC_CMD_FLASH_INFO 0x0010
-+#define EC_VER_FLASH_INFO 2
- 
- /**
-  * struct ec_response_flash_info - Response to the flash info command.
-@@ -1164,6 +1165,15 @@ struct ec_response_flash_info {
-  */
- #define EC_FLASH_INFO_ERASE_TO_0 BIT(0)
- 
-+/*
-+ * Flash must be selected for read/write/erase operations to succeed.  This may
-+ * be necessary on a chip where write/erase can be corrupted by other board
-+ * activity, or where the chip needs to enable some sort of programming voltage,
-+ * or where the read/write/erase operations require cleanly suspending other
-+ * chip functionality.
-+ */
-+#define EC_FLASH_INFO_SELECT_REQUIRED BIT(1)
-+
- /**
-  * struct ec_response_flash_info_1 - Response to the flash info v1 command.
-  * @flash_size: Usable flash size in bytes.
-@@ -1186,6 +1196,12 @@ struct ec_response_flash_info {
-  * gcc anonymous structs don't seem to get along with the __packed directive;
-  * if they did we'd define the version 0 structure as a sub-structure of this
-  * one.
-+ *
-+ * Version 2 supports flash banks of different sizes:
-+ * The caller specified the number of banks it has preallocated
-+ * (num_banks_desc)
-+ * The EC returns the number of banks describing the flash memory.
-+ * It adds banks descriptions up to num_banks_desc.
-  */
- struct ec_response_flash_info_1 {
- 	/* Version 0 fields; see above for description */
-@@ -1199,6 +1215,42 @@ struct ec_response_flash_info_1 {
- 	uint32_t flags;
+@@ -3211,6 +3211,81 @@ struct ec_response_battery_vendor_param {
  } __ec_align4;
  
-+struct ec_params_flash_info_2 {
-+	/* Number of banks to describe */
-+	uint16_t num_banks_desc;
-+	/* Reserved; set 0; ignore on read */
-+	uint8_t reserved[2];
-+} __ec_align4;
-+
-+struct ec_flash_bank {
-+	/* Number of sector is in this bank. */
-+	uint16_t count;
-+	/* Size in power of 2 of each sector (8 --> 256 bytes) */
-+	uint8_t size_exp;
-+	/* Minimal write size for the sectors in this bank */
-+	uint8_t write_size_exp;
-+	/* Erase size for the sectors in this bank */
-+	uint8_t erase_size_exp;
-+	/* Size for write protection, usually identical to erase size. */
-+	uint8_t protect_size_exp;
-+	/* Reserved; set 0; ignore on read */
-+	uint8_t reserved[2];
-+};
-+
-+struct ec_response_flash_info_2 {
-+	/* Total flash in the EC. */
-+	uint32_t flash_size;
-+	/* Flags; see EC_FLASH_INFO_* */
-+	uint32_t flags;
-+	/* Maximum size to use to send data to write to the EC. */
-+	uint32_t write_ideal_size;
-+	/* Number of banks present in the EC. */
-+	uint16_t num_banks_total;
-+	/* Number of banks described in banks array. */
-+	uint16_t num_banks_desc;
-+	struct ec_flash_bank banks[0];
-+} __ec_align4;
-+
- /*
-  * Read flash
-  *
-@@ -1238,7 +1290,7 @@ struct ec_params_flash_write {
- #define EC_CMD_FLASH_ERASE 0x0013
- 
- /**
-- * struct ec_params_flash_erase - Parameters for the flash erase command.
-+ * struct ec_params_flash_erase - Parameters for the flash erase command, v0.
-  * @offset: Byte offset to erase.
-  * @size: Size to erase in bytes.
-  */
-@@ -1247,6 +1299,43 @@ struct ec_params_flash_erase {
- 	uint32_t size;
- } __ec_align4;
- 
+ /*****************************************************************************/
 +/*
-+ * v1 add async erase:
-+ * subcommands can returns:
-+ * EC_RES_SUCCESS : erased (see ERASE_SECTOR_ASYNC case below).
-+ * EC_RES_INVALID_PARAM : offset/size are not aligned on a erase boundary.
-+ * EC_RES_ERROR : other errors.
-+ * EC_RES_BUSY : an existing erase operation is in progress.
-+ * EC_RES_ACCESS_DENIED: Trying to erase running image.
++ * HDMI CEC commands
 + *
-+ * When ERASE_SECTOR_ASYNC returns EC_RES_SUCCESS, the operation is just
-+ * properly queued. The user must call ERASE_GET_RESULT subcommand to get
-+ * the proper result.
-+ * When ERASE_GET_RESULT returns EC_RES_BUSY, the caller must wait and send
-+ * ERASE_GET_RESULT again to get the result of ERASE_SECTOR_ASYNC.
-+ * ERASE_GET_RESULT command may timeout on EC where flash access is not
-+ * permitted while erasing. (For instance, STM32F4).
++ * These commands are for sending and receiving message via HDMI CEC
 + */
-+enum ec_flash_erase_cmd {
-+	FLASH_ERASE_SECTOR,     /* Erase and wait for result */
-+	FLASH_ERASE_SECTOR_ASYNC,  /* Erase and return immediately. */
-+	FLASH_ERASE_GET_RESULT,  /* Ask for last erase result */
-+};
++
++#define MAX_CEC_MSG_LEN 16
++
++/* CEC message from the AP to be written on the CEC bus */
++#define EC_CMD_CEC_WRITE_MSG 0x00B8
 +
 +/**
-+ * struct ec_params_flash_erase_v1 - Parameters for the flash erase command, v1.
-+ * @cmd: One of ec_flash_erase_cmd.
-+ * @reserved: Pad byte; currently always contains 0.
-+ * @flag: No flags defined yet; set to 0.
-+ * @params: Same as v0 parameters.
++ * struct ec_params_cec_write - Message to write to the CEC bus
++ * @msg: message content to write to the CEC bus
 + */
-+struct ec_params_flash_erase_v1 {
-+	uint8_t  cmd;
-+	uint8_t  reserved;
-+	uint16_t flag;
-+	struct ec_params_flash_erase params;
-+} __ec_align4;
-+
- /*
-  * Get/set flash protection.
-  *
-@@ -1282,6 +1371,15 @@ struct ec_params_flash_erase {
- #define EC_FLASH_PROTECT_ERROR_INCONSISTENT BIT(5)
- /* Entire flash code protected when the EC boots */
- #define EC_FLASH_PROTECT_ALL_AT_BOOT        BIT(6)
-+/* RW flash code protected when the EC boots */
-+#define EC_FLASH_PROTECT_RW_AT_BOOT         BIT(7)
-+/* RW flash code protected now. */
-+#define EC_FLASH_PROTECT_RW_NOW             BIT(8)
-+/* Rollback information flash region protected when the EC boots */
-+#define EC_FLASH_PROTECT_ROLLBACK_AT_BOOT   BIT(9)
-+/* Rollback information flash region protected now */
-+#define EC_FLASH_PROTECT_ROLLBACK_NOW       BIT(10)
-+
- 
- /**
-  * struct ec_params_flash_protect - Parameters for the flash protect command.
-@@ -1320,16 +1418,31 @@ struct ec_response_flash_protect {
- enum ec_flash_region {
- 	/* Region which holds read-only EC image */
- 	EC_FLASH_REGION_RO = 0,
--	/* Region which holds rewritable EC image */
--	EC_FLASH_REGION_RW,
-+	/*
-+	 * Region which holds active RW image. 'Active' is different from
-+	 * 'running'. Active means 'scheduled-to-run'. Since RO image always
-+	 * scheduled to run, active/non-active applies only to RW images (for
-+	 * the same reason 'update' applies only to RW images. It's a state of
-+	 * an image on a flash. Running image can be RO, RW_A, RW_B but active
-+	 * image can only be RW_A or RW_B. In recovery mode, an active RW image
-+	 * doesn't enter 'running' state but it's still active on a flash.
-+	 */
-+	EC_FLASH_REGION_ACTIVE,
- 	/*
- 	 * Region which should be write-protected in the factory (a superset of
- 	 * EC_FLASH_REGION_RO)
- 	 */
- 	EC_FLASH_REGION_WP_RO,
-+	/* Region which holds updatable (non-active) RW image */
-+	EC_FLASH_REGION_UPDATE,
- 	/* Number of regions */
- 	EC_FLASH_REGION_COUNT,
- };
-+/*
-+ * 'RW' is vague if there are multiple RW images; we mean the active one,
-+ * so the old constant is deprecated.
-+ */
-+#define EC_FLASH_REGION_RW EC_FLASH_REGION_ACTIVE
- 
- /**
-  * struct ec_params_flash_region_info - Parameters for the flash region info
-@@ -1364,6 +1477,37 @@ struct ec_response_vbnvcontext {
- 	uint8_t block[EC_VBNV_BLOCK_SIZE];
- } __ec_align4;
- 
-+
-+/* Get SPI flash information */
-+#define EC_CMD_FLASH_SPI_INFO 0x0018
-+
-+struct ec_response_flash_spi_info {
-+	/* JEDEC info from command 0x9F (manufacturer, memory type, size) */
-+	uint8_t jedec[3];
-+
-+	/* Pad byte; currently always contains 0 */
-+	uint8_t reserved0;
-+
-+	/* Manufacturer / device ID from command 0x90 */
-+	uint8_t mfr_dev_id[2];
-+
-+	/* Status registers from command 0x05 and 0x35 */
-+	uint8_t sr1, sr2;
++struct ec_params_cec_write {
++	uint8_t msg[MAX_CEC_MSG_LEN];
 +} __ec_align1;
 +
-+
-+/* Select flash during flash operations */
-+#define EC_CMD_FLASH_SELECT 0x0019
++/* Set various CEC parameters */
++#define EC_CMD_CEC_SET 0x00BA
 +
 +/**
-+ * struct ec_params_flash_select - Parameters for the flash select command.
-+ * @select: 1 to select flash, 0 to deselect flash
++ * struct ec_params_cec_set - CEC parameters set
++ * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
++ * @val: in case cmd is CEC_CMD_ENABLE, this field can be 0 to disable CEC
++ *	or 1 to enable CEC functionality, in case cmd is
++ *	CEC_CMD_LOGICAL_ADDRESS, this field encodes the requested logical
++ *	address between 0 and 15 or 0xff to unregister
 + */
-+struct ec_params_flash_select {
-+	uint8_t select;
-+} __ec_align4;
++struct ec_params_cec_set {
++	uint8_t cmd; /* enum cec_command */
++	uint8_t val;
++} __ec_align1;
 +
++/* Read various CEC parameters */
++#define EC_CMD_CEC_GET 0x00BB
 +
- /*****************************************************************************/
- /* PWM commands */
++/**
++ * struct ec_params_cec_get - CEC parameters get
++ * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
++ */
++struct ec_params_cec_get {
++	uint8_t cmd; /* enum cec_command */
++} __ec_align1;
++
++/**
++ * struct ec_response_cec_get - CEC parameters get response
++ * @val: in case cmd was CEC_CMD_ENABLE, this field will 0 if CEC is
++ *	disabled or 1 if CEC functionality is enabled,
++ *	in case cmd was CEC_CMD_LOGICAL_ADDRESS, this will encode the
++ *	configured logical address between 0 and 15 or 0xff if unregistered
++ */
++struct ec_response_cec_get {
++	uint8_t val;
++} __ec_align1;
++
++/* CEC parameters command */
++enum cec_command {
++	/* CEC reading, writing and events enable */
++	CEC_CMD_ENABLE,
++	/* CEC logical address  */
++	CEC_CMD_LOGICAL_ADDRESS,
++};
++
++/* Events from CEC to AP */
++enum mkbp_cec_event {
++	/* Outgoing message was acknowledged by a follower */
++	EC_MKBP_CEC_SEND_OK			= BIT(0),
++	/* Outgoing message was not acknowledged */
++	EC_MKBP_CEC_SEND_FAILED			= BIT(1),
++};
++
++/*****************************************************************************/
++
+ /* Commands for I2S recording on audio codec. */
  
+ #define EC_CMD_CODEC_I2S 0x00BC
+@@ -3339,79 +3414,6 @@ struct ec_params_reboot_ec {
+  */
+ #define EC_CMD_GET_PANIC_INFO 0x00D3
+ 
+-/*****************************************************************************/
+-/*
+- * HDMI CEC commands
+- *
+- * These commands are for sending and receiving message via HDMI CEC
+- */
+-#define EC_MAX_CEC_MSG_LEN 16
+-
+-/* CEC message from the AP to be written on the CEC bus */
+-#define EC_CMD_CEC_WRITE_MSG 0x00B8
+-
+-/**
+- * struct ec_params_cec_write - Message to write to the CEC bus
+- * @msg: message content to write to the CEC bus
+- */
+-struct ec_params_cec_write {
+-	uint8_t msg[EC_MAX_CEC_MSG_LEN];
+-} __ec_align1;
+-
+-/* Set various CEC parameters */
+-#define EC_CMD_CEC_SET 0x00BA
+-
+-/**
+- * struct ec_params_cec_set - CEC parameters set
+- * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
+- * @val: in case cmd is CEC_CMD_ENABLE, this field can be 0 to disable CEC
+- *	or 1 to enable CEC functionality, in case cmd is CEC_CMD_LOGICAL_ADDRESS,
+- *	this field encodes the requested logical address between 0 and 15
+- *	or 0xff to unregister
+- */
+-struct ec_params_cec_set {
+-	uint8_t cmd; /* enum cec_command */
+-	uint8_t val;
+-} __ec_align1;
+-
+-/* Read various CEC parameters */
+-#define EC_CMD_CEC_GET 0x00BB
+-
+-/**
+- * struct ec_params_cec_get - CEC parameters get
+- * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
+- */
+-struct ec_params_cec_get {
+-	uint8_t cmd; /* enum cec_command */
+-} __ec_align1;
+-
+-/**
+- * struct ec_response_cec_get - CEC parameters get response
+- * @val: in case cmd was CEC_CMD_ENABLE, this field will 0 if CEC is
+- *	disabled or 1 if CEC functionality is enabled,
+- *	in case cmd was CEC_CMD_LOGICAL_ADDRESS, this will encode the
+- *	configured logical address between 0 and 15 or 0xff if unregistered
+- */
+-struct ec_response_cec_get {
+-	uint8_t val;
+-} __ec_align1;
+-
+-/* CEC parameters command */
+-enum ec_cec_command {
+-	/* CEC reading, writing and events enable */
+-	CEC_CMD_ENABLE,
+-	/* CEC logical address  */
+-	CEC_CMD_LOGICAL_ADDRESS,
+-};
+-
+-/* Events from CEC to AP */
+-enum mkbp_cec_event {
+-	/* Outgoing message was acknowledged by a follower */
+-	EC_MKBP_CEC_SEND_OK			= BIT(0),
+-	/* Outgoing message was not acknowledged */
+-	EC_MKBP_CEC_SEND_FAILED			= BIT(1),
+-};
+-
+ /*****************************************************************************/
+ /*
+  * Special commands
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
