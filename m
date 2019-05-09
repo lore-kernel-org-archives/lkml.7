@@ -2,107 +2,381 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCFDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4544FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8FF20989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 04:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557377150;
-	bh=u3QW9vBYid5Ezravg8TbV4VSKrkB0Jh23puiUanQIHk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Sks8oJUfuLtQg4t5PaqHn2HupcpCUMW0DQNdwzsD3vO6+cvSt+k1YXuvbZ4zKdyA9
-	 dr9JFVa4TwiUiJqp+1Nq378AqJIXnQo7bwYVKSWF8Ivmy4u+SWWLSKcOhJVevArTrp
-	 FFEKcRUnxDko/0lfFJbu12iXVe7W6/VFYbBZDwIg=
+	by mail.kernel.org (Postfix) with ESMTP id EF7072173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:09:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jRbPPzof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfEIEpt (ORCPT
+        id S1728798AbfEIFJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 00:45:49 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45085 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfEIEps (ORCPT
+        Thu, 9 May 2019 01:09:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40310 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfEIFJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 00:45:48 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r76so775581lja.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 21:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AQ3ahBtrby00WGAyZWof9Vlr6BSMHsqFyhjQEamJnzE=;
-        b=V1aIeV7NQDjmmXhVAKkywYFX6AKTuO6do8R9nS8zNOfezCIDk7mpi1oKUNpvDujRq7
-         9tjfCPAh139UsCgLmGYasz6j3iOgjZuAB3H3fmE0Yk9elQxT5rGKkCd7f11W8OqmGil2
-         BNo+a22azdGP+taAkZXgH3LYllXbknT3A7PHc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AQ3ahBtrby00WGAyZWof9Vlr6BSMHsqFyhjQEamJnzE=;
-        b=XJ/X+6X5UFVGPaCVldcLChSXa4LSiVgaAdEUeDTbNeOMfencwWlMB1GR0A2AOL3r0U
-         XaEzKYoujr8jn1GUJJGBjhJDIJy1psWanRWKTLbVLu+5uXQDoY+q2YwKmKSXaxRurwHN
-         52/y95sfFNGkuviiJS5DrStWgpy58/CNRYg4fvpeOL7+ir9yuWPspRqvZcnZYoFdWWMJ
-         y9xe0tJ+6inNx8/Jgd33LQeEWi3fL7ivWAQ6WxQTAEsuRR1bS1J4lHB/sH1iyiXQrbIu
-         ch4kvu1mH0CigXSgGkZY2ZD0eEJl9VlJhOyvzgPXEtmlgTQVhL8f4JSjXZ4UpDJRPegl
-         n2Jw==
-X-Gm-Message-State: APjAAAW5OMEwRMVsGR52D/Feu2GTJd7extpRIrg7aK0hAvi6D8C+fwCu
-        5c3vQcttdg5QIKV65EAbwJbEWHkl/sE=
-X-Google-Smtp-Source: APXvYqyItNC7cMLP29yMRInHJ0+Ra6MDBn4nVlCWh6Xq3YQqnBg8eSg3KHtlKtMSLuz1BwZMVC+HYQ==
-X-Received: by 2002:a2e:9812:: with SMTP id a18mr909811ljj.146.1557377146359;
-        Wed, 08 May 2019 21:45:46 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id q15sm158565lfh.59.2019.05.08.21.45.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 21:45:45 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id w23so526264lfc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 21:45:45 -0700 (PDT)
-X-Received: by 2002:a19:ca02:: with SMTP id a2mr1028796lfg.88.1557377144919;
- Wed, 08 May 2019 21:45:44 -0700 (PDT)
+        Thu, 9 May 2019 01:09:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NNe0y+97iUcwK05a9nkV9wH7IZjVtahy0Z6vkV2mXOw=; b=jRbPPzof6Ktsnziebi6xfF99P
+        SbTKPP2E6yzxvTH+okgPD0ip0bhGy70pW1AsI5bvKqzIZ1DSSiVC65bC2dlXBwhAo+lzguh6f0YAg
+        B9eH/249VWBLWwUuwwqoYJFnnAnjXv7O80ITFrnaHCcSlOYz9iLYRABm4ujJMast4XC2iOhJQ4Lat
+        HGI9/4sZ0KMUiOHBS27fuwKkZswSjGQ4pi8/fiCu4y9XvY2/Ncrct36VyIGXj+dae/U2j5CQxDVx9
+        yG0agwwk1XN9QEOFvTejbgTxPFkhLo8zws5LpVUb8w4FoqOGU2ztE7ozh5i/gCrN3807NnWbNV0hd
+        PISuuo7UA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hObIV-0004Ni-Pv; Thu, 09 May 2019 05:08:47 +0000
+Subject: Re: [PATCH v2 14/17] Documentation: kunit: add documentation for
+ KUnit
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-15-brendanhiggins@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <498d42d8-0b8b-6ee4-c0ad-42760a7e89d4@infradead.org>
+Date:   Wed, 8 May 2019 22:08:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAPM=9tyFp5LZ6QO1TaDK5jSb5+2SCe3Rjmk0_juVfr-zfspBLg@mail.gmail.com>
-In-Reply-To: <CAPM=9tyFp5LZ6QO1TaDK5jSb5+2SCe3Rjmk0_juVfr-zfspBLg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 8 May 2019 21:45:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg6imuGGw_4d6ywhu=0Kxr+H2S=hHavoDXYjN6o7SqMUg@mail.gmail.com>
-Message-ID: <CAHk-=wg6imuGGw_4d6ywhu=0Kxr+H2S=hHavoDXYjN6o7SqMUg@mail.gmail.com>
-Subject: Re: [git pull] drm for 5.2-rc1
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190501230126.229218-15-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave,
+Hi,
 
-On Wed, May 8, 2019 at 8:28 PM Dave Airlie <airlied@gmail.com> wrote:
->
-> This is the main drm pull request for 5.2.
+On 5/1/19 4:01 PM, Brendan Higgins wrote:
+> Add documentation for KUnit, the Linux kernel unit testing framework.
+> - Add intro and usage guide for KUnit
+> - Add API reference
+> 
+> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  Documentation/index.rst           |   1 +
+>  Documentation/kunit/api/index.rst |  16 ++
+>  Documentation/kunit/api/test.rst  |  15 +
+>  Documentation/kunit/faq.rst       |  46 +++
+>  Documentation/kunit/index.rst     |  80 ++++++
+>  Documentation/kunit/start.rst     | 180 ++++++++++++
+>  Documentation/kunit/usage.rst     | 447 ++++++++++++++++++++++++++++++
+>  7 files changed, 785 insertions(+)
+>  create mode 100644 Documentation/kunit/api/index.rst
+>  create mode 100644 Documentation/kunit/api/test.rst
+>  create mode 100644 Documentation/kunit/faq.rst
+>  create mode 100644 Documentation/kunit/index.rst
+>  create mode 100644 Documentation/kunit/start.rst
+>  create mode 100644 Documentation/kunit/usage.rst
+> 
 
-Thanks. I've merged it, but I got a couple of conflicts with fixes
-(reverts) to mainline in the meantime.
+> diff --git a/Documentation/kunit/api/index.rst b/Documentation/kunit/api/index.rst
+> new file mode 100644
+> index 0000000000000..c31c530088153
+> --- /dev/null
+> +++ b/Documentation/kunit/api/index.rst
+> @@ -0,0 +1,16 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=============
+> +API Reference
+> +=============
+> +.. toctree::
+> +
+> +	test
+> +
+> +This section documents the KUnit kernel testing API. It is divided into 3
+> +sections:
+> +
+> +================================= ==============================================
+> +:doc:`test`                       documents all of the standard testing API
+> +                                  excluding mocking or mocking related features.
+> +================================= ==============================================
 
-The one to the i915 driver you seem to have applied again (after the
-function was moved and renamed).
+What 3 sections does the above refer to?  seems to be missing.
 
-The one to the virtgpu driver, I really don't know if is needed any
-more. I suspect I completely unnecessarily merged that
-virtgpu_gem_prime_import_sg_table() function that came in because I
-decided to do the merge of the revert.
 
-It's a trivial function that just returns an error, and your tree just
-leaves it as NULL, and I suspect my merge doesn't hurt, but it also
-probably doesn't matter.
 
-So you should check my merge.
+> diff --git a/Documentation/kunit/start.rst b/Documentation/kunit/start.rst
+> new file mode 100644
+> index 0000000000000..5cdba5091905e
+> --- /dev/null
+> +++ b/Documentation/kunit/start.rst
+> @@ -0,0 +1,180 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===============
+> +Getting Started
+> +===============
+> +
+> +Installing dependencies
+> +=======================
+> +KUnit has the same dependencies as the Linux kernel. As long as you can build
+> +the kernel, you can run KUnit.
+> +
+> +KUnit Wrapper
+> +=============
+> +Included with KUnit is a simple Python wrapper that helps format the output to
+> +easily use and read KUnit output. It handles building and running the kernel, as
+> +well as formatting the output.
+> +
+> +The wrapper can be run with:
+> +
+> +.. code-block:: bash
+> +
+> +   ./tools/testing/kunit/kunit.py
+> +
+> +Creating a kunitconfig
+> +======================
+> +The Python script is a thin wrapper around Kbuild as such, it needs to be
 
-Thanks,
+                                       around Kbuild. As such,
 
-                Linus
+> +configured with a ``kunitconfig`` file. This file essentially contains the
+> +regular Kernel config, with the specific test targets as well.
+> +
+> +.. code-block:: bash
+> +
+> +	git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
+> +	cd $PATH_TO_LINUX_REPO
+> +	ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
+> +
+> +You may want to add kunitconfig to your local gitignore.
+> +
+> +Verifying KUnit Works
+> +-------------------------
+
+I would expect Sphinx to complain about the underline length not being the
+same as the header/title above it.
+
+> +
+> +To make sure that everything is set up correctly, simply invoke the Python
+> +wrapper from your kernel repo:
+> +
+> +.. code-block:: bash
+> +
+> +	./tools/testing/kunit/kunit.py
+> +
+> +.. note::
+> +   You may want to run ``make mrproper`` first.
+> +
+> +If everything worked correctly, you should see the following:
+> +
+> +.. code-block:: bash
+> +
+> +	Generating .config ...
+> +	Building KUnit Kernel ...
+> +	Starting KUnit Kernel ...
+> +
+> +followed by a list of tests that are run. All of them should be passing.
+> +
+> +.. note::
+> +   Because it is building a lot of sources for the first time, the ``Building
+> +   kunit kernel`` step may take a while.
+> +
+> +Writing your first test
+> +==========================
+
+underline length warning?
+
+> +
+> +In your kernel repo let's add some code that we can test. Create a file
+> +``drivers/misc/example.h`` with the contents:
+> +
+> +.. code-block:: c
+> +
+> +	int misc_example_add(int left, int right);
+> +
+> +create a file ``drivers/misc/example.c``:
+> +
+> +.. code-block:: c
+> +
+> +	#include <linux/errno.h>
+> +
+> +	#include "example.h"
+> +
+> +	int misc_example_add(int left, int right)
+> +	{
+> +		return left + right;
+> +	}
+> +
+> +Now add the following lines to ``drivers/misc/Kconfig``:
+> +
+> +.. code-block:: kconfig
+> +
+> +	config MISC_EXAMPLE
+> +		bool "My example"
+> +
+> +and the following lines to ``drivers/misc/Makefile``:
+> +
+> +.. code-block:: make
+> +
+> +	obj-$(CONFIG_MISC_EXAMPLE) += example.o
+> +
+> +Now we are ready to write the test. The test will be in
+> +``drivers/misc/example-test.c``:
+> +
+> +.. code-block:: c
+> +
+> +	#include <kunit/test.h>
+> +	#include "example.h"
+> +
+> +	/* Define the test cases. */
+> +
+> +	static void misc_example_add_test_basic(struct kunit *test)
+> +	{
+> +		KUNIT_EXPECT_EQ(test, 1, misc_example_add(1, 0));
+> +		KUNIT_EXPECT_EQ(test, 2, misc_example_add(1, 1));
+> +		KUNIT_EXPECT_EQ(test, 0, misc_example_add(-1, 1));
+> +		KUNIT_EXPECT_EQ(test, INT_MAX, misc_example_add(0, INT_MAX));
+> +		KUNIT_EXPECT_EQ(test, -1, misc_example_add(INT_MAX, INT_MIN));
+> +	}
+> +
+> +	static void misc_example_test_failure(struct kunit *test)
+> +	{
+> +		KUNIT_FAIL(test, "This test never passes.");
+> +	}
+> +
+> +	static struct kunit_case misc_example_test_cases[] = {
+> +		KUNIT_CASE(misc_example_add_test_basic),
+> +		KUNIT_CASE(misc_example_test_failure),
+> +		{},
+> +	};
+> +
+> +	static struct kunit_module misc_example_test_module = {
+> +		.name = "misc-example",
+> +		.test_cases = misc_example_test_cases,
+> +	};
+> +	module_test(misc_example_test_module);
+> +
+> +Now add the following to ``drivers/misc/Kconfig``:
+> +
+> +.. code-block:: kconfig
+> +
+> +	config MISC_EXAMPLE_TEST
+> +		bool "Test for my example"
+> +		depends on MISC_EXAMPLE && KUNIT
+> +
+> +and the following to ``drivers/misc/Makefile``:
+> +
+> +.. code-block:: make
+> +
+> +	obj-$(CONFIG_MISC_EXAMPLE_TEST) += example-test.o
+> +
+> +Now add it to your ``kunitconfig``:
+> +
+> +.. code-block:: none
+> +
+> +	CONFIG_MISC_EXAMPLE=y
+> +	CONFIG_MISC_EXAMPLE_TEST=y
+> +
+> +Now you can run the test:
+> +
+> +.. code-block:: bash
+> +
+> +	./tools/testing/kunit/kunit.py
+> +
+> +You should see the following failure:
+> +
+> +.. code-block:: none
+> +
+> +	...
+> +	[16:08:57] [PASSED] misc-example:misc_example_add_test_basic
+> +	[16:08:57] [FAILED] misc-example:misc_example_test_failure
+> +	[16:08:57] EXPECTATION FAILED at drivers/misc/example-test.c:17
+> +	[16:08:57] 	This test never passes.
+> +	...
+> +
+> +Congrats! You just wrote your first KUnit test!
+> +
+> +Next Steps
+> +=============
+
+underline length warning. (?)
+
+> +*   Check out the :doc:`usage` page for a more
+> +    in-depth explanation of KUnit.
+> diff --git a/Documentation/kunit/usage.rst b/Documentation/kunit/usage.rst
+> new file mode 100644
+> index 0000000000000..5c83ea9e21bc5
+> --- /dev/null
+> +++ b/Documentation/kunit/usage.rst
+> @@ -0,0 +1,447 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=============
+> +Using KUnit
+> +=============
+
+over/underline length warnings?
+
+> +
+> +The purpose of this document is to describe what KUnit is, how it works, how it
+> +is intended to be used, and all the concepts and terminology that are needed to
+> +understand it. This guide assumes a working knowledge of the Linux kernel and
+> +some basic knowledge of testing.
+> +
+> +For a high level introduction to KUnit, including setting up KUnit for your
+> +project, see :doc:`start`.
+> +
+> +Organization of this document
+> +=================================
+
+underline length?  (and more below, but not being marked)
+
+> +
+> +This document is organized into two main sections: Testing and Isolating
+> +Behavior. The first covers what a unit test is and how to use KUnit to write
+> +them. The second covers how to use KUnit to isolate code and make it possible
+> +to unit test code that was otherwise un-unit-testable.
+> +
+> +Testing
+> +==========
+> +
+> +What is KUnit?
+> +------------------
+> +
+> +"K" is short for "kernel" so "KUnit" is the "(Linux) Kernel Unit Testing
+> +Framework." KUnit is intended first and foremost for writing unit tests; it is
+> +general enough that it can be used to write integration tests; however, this is
+> +a secondary goal. KUnit has no ambition of being the only testing framework for
+> +the kernel; for example, it does not intend to be an end-to-end testing
+> +framework.
+> +
+> +What is Unit Testing?
+> +-------------------------
+
+
+thanks.
+-- 
+~Randy
