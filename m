@@ -2,199 +2,128 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B1FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F296C205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC5C205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jumJcAck";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OuRyXcdP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2IuBIh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfEINrh (ORCPT
+        id S1726631AbfEINtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:47:37 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51592 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726087AbfEINrh (ORCPT
+        Thu, 9 May 2019 09:49:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44658 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfEINtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:47:37 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49DhibE006545;
-        Thu, 9 May 2019 06:47:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=ohBojUMaUhvn01/pKXZleZDJ6DsKSzIYXAyGvc2CfLY=;
- b=jumJcAckPPjoupJ6yp+p1s4hvzsGCkXCuPFHkeoltwE5dtiSbsLc1OyGtEEJBbnSo1JF
- Gn4abMEGsVHcLtOtZAURYrko43Di9njwkhmTfn9w9UzTrDIx9XKfFOXTn8OP68Gqcv2k
- pjfievoCWiRsfLQJdlV3v8PxpkBwlcr4jlY= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sca9w9us8-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 09 May 2019 06:47:25 -0700
-Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 9 May 2019 06:47:23 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 9 May 2019 06:47:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ohBojUMaUhvn01/pKXZleZDJ6DsKSzIYXAyGvc2CfLY=;
- b=OuRyXcdPTwF+j1sB3cdYK+DiAiwDdYR2+p0JvkcxcOzNlh60EBm7rH57OLPcPtNOo2SZ4/WgkHH3O8l2LxiiHRdwWutXuXl1ZNtMb63dy5xCrLfnSC529objHWIpYyup68tXD33fuqkn9CLy8GWE7EiP+QUzbVmeJp1dpLJODpM=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1839.namprd15.prod.outlook.com (10.174.255.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 9 May 2019 13:47:22 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1856.012; Thu, 9 May 2019
- 13:47:22 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2] perf: allow non-privileged uprobe for user processes
-Thread-Topic: [PATCH v2] perf: allow non-privileged uprobe for user processes
-Thread-Index: AQHVBPAjOV4IrrhQe0KNd0XfOUkTh6Zi0ZEA
-Date:   Thu, 9 May 2019 13:47:21 +0000
-Message-ID: <00FF6475-45B9-49B6-B434-A5F7BD884A87@fb.com>
-References: <20190507161545.788381-1-songliubraving@fb.com>
-In-Reply-To: <20190507161545.788381-1-songliubraving@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.8)
-x-originating-ip: [2620:10d:c090:180::fb1a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3150842-acd7-471c-d2d4-08d6d484dc8a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1839;
-x-ms-traffictypediagnostic: MWHPR15MB1839:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MWHPR15MB1839C6CAD87D49B2CC2FB6B4B3330@MWHPR15MB1839.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 003245E729
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(396003)(136003)(346002)(376002)(199004)(189003)(8676002)(6506007)(53546011)(14454004)(81166006)(81156014)(6436002)(6116002)(102836004)(2616005)(305945005)(11346002)(478600001)(68736007)(99286004)(82746002)(8936002)(71190400001)(71200400001)(486006)(966005)(476003)(83716004)(50226002)(76176011)(446003)(33656002)(25786009)(36756003)(6512007)(53936002)(86362001)(229853002)(5024004)(54906003)(6306002)(7736002)(6246003)(5660300002)(316002)(110136005)(76116006)(66476007)(66556008)(64756008)(66446008)(73956011)(66946007)(186003)(4326008)(256004)(6486002)(57306001)(6636002)(46003)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1839;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: j2XAzzPPa7pnNEelvvUDTQUhkuCpdOMa/tx9BksKAHA4PI/XkM1KuTmdhJG2Fclr6oXcWiKplUFoHqtQS8da1wfipj+tJBDOjzdiznk1EbdkIXi/E1jJFRp16Iqi2eQELh+v1eUc9Eqe2uDa/ES1oRGpm/8aypEZhkP6DMQIJ8PCFtpcuC00cUPoMTMUm1BXhZCefJMQZGzqsw3JaxRkU7nDYh8lDyvjqp13K8dczAnyw8acpb+cn8zP22Blw6+MWHreZVVxLajv0puGAthdtIOOfUWHNMCSzkJoe3mF7J226QIo+TU83nm5IVDyAEKv4A2c5nFkyQzRgNKZaRe3dJPZIKyGw1xxcWZVk7rhA1ex6vtVHCmk+HESd/4EouYfoAfYtC4bunINjx+dot1qpwsTxfgWo9+uyam8CTfSiTo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B09B18B2F2CBB746BAB7E492316B2459@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 May 2019 09:49:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c5so3136630wrs.11;
+        Thu, 09 May 2019 06:49:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=8aNzdQydgV0JN9gnkWZdb88bayQRUcesogfi+tTCa+o=;
+        b=h2IuBIh9sVN4Qk734XE4pCs2s3fXTu5EznMO8OeK4fp5LkdDiCrCob9MVlz03u/5eR
+         ns7aUv+WMwGkYI2Nby9sxPR9hTElKEbxCGT/yrmMdU+TkHYD+FJTfEtDFAn2lEfySWUl
+         t635ENJ0TIf8eCvMr/26VMKjEdwCLXUEkiPS9mFRx0nP5n9oFDy9cyjJ6MZqyj6TWoib
+         tvUJZbiqzAdDfMJcrUD4uadVIOCEk8BFByad2aYuGtDY1WeIqI3a66+TwJa7QVXZQPfn
+         2CsGadYT2FOBf/Y692nKkz0T9IVQV7dxYGcBHhEx2Fm8KWn0yda7TYKIdtyTwh9lU7xl
+         siMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=8aNzdQydgV0JN9gnkWZdb88bayQRUcesogfi+tTCa+o=;
+        b=plL/KpBhctD/Dkf5g48i4scWjtOt+r4+p97692urZWGgJBdBK06tpaMOBKxDkHWVed
+         GYlvnDg89LCv4lnHC1woYsYj+2/bP/VW/l2CeRFVFTVSfe8utAggE0AcLFxNHfWUvbUO
+         3ZIEkoMReywj5GPI6NujTQln2Tc/edXSItoT8h9KawdL79owkAnZTpJv6KiYsuVuV1Ce
+         TPino3u5YnU2tIyLEK+RCvuIWWoAGc84PCQ0w5P7GBqGEk+E2bp6vrnxE1EpzCudWABl
+         ETiA32G+7+DhG1+ONYmgz5/1pFLh43AkZKIrDjrJ4x+PcBVdpV9jsK4mHNy4DT90ps2b
+         n2AA==
+X-Gm-Message-State: APjAAAXewaF9OfUdT4TI2RBe6tXLi9ADJecre4/ef3QUBFbUMv7iWV69
+        ZtRo3ES4GsPp3c5MnQZ4csOkIeYXY8341ph+LoU=
+X-Google-Smtp-Source: APXvYqxMO6zIdBnRmjRHXwSKDiGcHF9gWqucB+hpEEiKv/rwzlDTHfCZ0iKt4ucN2JYEyfTifAX//A/v4syk8eV/6+g=
+X-Received: by 2002:adf:dc4b:: with SMTP id m11mr3361338wrj.66.1557409784452;
+ Thu, 09 May 2019 06:49:44 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3150842-acd7-471c-d2d4-08d6d484dc8a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 13:47:21.8099
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1839
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090083
-X-FB-Internal: deliver
+References: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
+ <20190509114824.25866-1-natechancellor@gmail.com>
+In-Reply-To: <20190509114824.25866-1-natechancellor@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 9 May 2019 15:49:32 +0200
+Message-ID: <CA+icZUUN7cVXnkUv9DzYC7voys_CS=DJDm19EeYSWPyQwVdXVw@mail.gmail.com>
+Subject: Re: [PATCH] Makefile: Don't try to add '-fcatch-undefined-behavior' flag
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,=20
+On Thu, May 9, 2019 at 1:49 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> This is no longer a valid option in clang, it was removed in 3.5, which
+> we don't support.
+>
+> https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
+>
 
-> On May 7, 2019, at 9:15 AM, Song Liu <songliubraving@fb.com> wrote:
->=20
-> Currently, non-privileged user could only use uprobe with
->=20
->    kernel.perf_event_paranoid =3D -1
->=20
-> However, setting perf_event_paranoid to -1 leaks other users' processes t=
-o
-> non-privileged uprobes.
->=20
-> To introduce proper permission control of uprobes, we are building the
-> following system:
->  A daemon with CAP_SYS_ADMIN is in charge to create uprobes via tracefs;
->  Users asks the daemon to create uprobes;
->  Then user can attach uprobe only to processes owned by the user.
->=20
-> This patch allows non-privileged user to attach uprobe to processes owned
-> by the user.
->=20
-> The following example shows how to use uprobe with non-privileged user.
-> This is based on Brendan's blog post [1]
->=20
-> 1. Create uprobe with root:
->  sudo perf probe -x 'readline%return +0($retval):string'
->=20
-> 2. Then non-root user can use the uprobe as:
->  perf record -vvv -e probe_bash:readline__return -p <pid> sleep 20
->  perf script
->=20
-> [1] http://www.brendangregg.com/blog/2015-06-28/linux-ftrace-uprobe.html
->=20
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Jiri Olsa <jolsa@redhat.com>
+Cool.
+
+Can you test with -mglobal-merge (inverted -mno-global-merge) which is
+default for Clang?
+I could build, link and boot with my llvm-toolchain (incl. lld-9) on x86-64.
+
+Maybe this is also no more needed?
+
+Thanks.
+
+- Sedat -
+
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
-> kernel/events/core.c        | 4 ++--
-> kernel/trace/trace_uprobe.c | 2 +-
-> 2 files changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index abbd4b3b96c2..3005c80f621d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8532,9 +8532,9 @@ static int perf_tp_event_match(struct perf_event *e=
-vent,
-> 	if (event->hw.state & PERF_HES_STOPPED)
-> 		return 0;
-> 	/*
-> -	 * All tracepoints are from kernel-space.
-> +	 * If exclude_kernel, only trace user-space tracepoints (uprobes)
-> 	 */
-> -	if (event->attr.exclude_kernel)
-> +	if (event->attr.exclude_kernel && !user_mode(regs))
-> 		return 0;
->=20
-> 	if (!perf_tp_filter_match(event, data))
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index be78d99ee6bc..bfd3040b4cfb 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -1304,7 +1304,7 @@ static inline void init_trace_event_call(struct tra=
-ce_uprobe *tu,
-> 	call->event.funcs =3D &uprobe_funcs;
-> 	call->class->define_fields =3D uprobe_event_define_fields;
->=20
-> -	call->flags =3D TRACE_EVENT_FL_UPROBE;
-> +	call->flags =3D TRACE_EVENT_FL_UPROBE | TRACE_EVENT_FL_CAP_ANY;
-> 	call->class->reg =3D trace_uprobe_register;
-> 	call->data =3D tu;
-> }
-> --=20
-> 2.17.1
->=20
-
-Could you please share your feedback on this version?
-
-Thanks,
-Song
-
+>
+> Let me know if you want this incremental to your patch. I figured it
+> made more sense to remove this then do the cc-option/cc-disable-warning
+> removal because it will simplify the commit message.
+>
+>  Makefile | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index d24f5a8009ee..e4788eb2c9b9 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -740,7 +740,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+>  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+>  # See modpost pattern 2
+>  KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
+> -KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
+>  else
+>
+>  # These warnings generated too much noise in a regular build.
+> --
+> 2.21.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To post to this group, send email to clang-built-linux@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190509114824.25866-1-natechancellor%40gmail.com.
+> For more options, visit https://groups.google.com/d/optout.
