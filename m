@@ -2,146 +2,79 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0866BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99102C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9A720644
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2B020644
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvO63F4G"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="T7byKNeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfEIOxF (ORCPT
+        id S1726711AbfEIOye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:53:05 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40984 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfEIOxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:53:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d12so3461121wrm.8;
-        Thu, 09 May 2019 07:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q+1TsGRKkwXUYYOoB2LIsila6ZhfcUv70iojfQ5/w9M=;
-        b=dvO63F4GKSuh+nx1VkFNjrbeq11WPXdaaDZIDHHzeqEb0NC2LSjjRvIMFTU6xWKCAS
-         NSz848cbvpQZmfWPe8Q5F4WzqTlzYFtIjQhq/iBANrIEZD29GrwhSUThKRvtqeTLxVga
-         8Jnwbvwxoh0zvK8gumUsopxm8EUOq5ylrRawCp/7M9GfeiySm5Bez81iFE3VNLSEd4V9
-         jvy8KDKUx8jOblvYJ49BYWvY6S1dho2EH1yeg2+zuUBZUaf+IwTxARnK76IGMxTYQJAV
-         WRDGN4TEsnlJ3OnxtVJzOpnEAq9+T/h8Es3/+9cWV6POPE+EwjxLrew7SYzA1rK8IDvB
-         +i9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q+1TsGRKkwXUYYOoB2LIsila6ZhfcUv70iojfQ5/w9M=;
-        b=krS2iM4mqA6SAr8Tmo2iIHjpKacd3B5nC8yvNJeY2+WSH5vWMU7RFSSrvGmi+eZwUW
-         D5e0R47C9ol743xwaUWNlMNrBPDvrvPQNlQzKZTlMWGcebBaU5gMQ+G9ll+5dAY2ijXk
-         tVcbSl9mfzXkYLMebLO0xaXHC7UX7l48UbjowXJ0jsk05IH2RF3EwV8p29d734aE5c9w
-         31sAhO7P3Xlhxgwvruh9pLD144PfGZaDWlNNLTbzCtPPcJlZpj+vobAD2/0TrzBJaN4e
-         62oNVDxZN1Gyt0m7SIivqQhsmDsHlX7tgWI40QRj4MLeF6AxoLm5BIm1KPELCqWqzfls
-         5bqg==
-X-Gm-Message-State: APjAAAVV/3p9L1AwpiJ3Rd7Crchvhv/DRhSGUB7gJugE/eiOSfpi4BPP
-        5Q3xtz7REQwRTaGmzzt+znI=
-X-Google-Smtp-Source: APXvYqzIxbcYRCSo8r50PrcP3rEHkfelhjH97R+hDzmn2hwZU4TaoWItIaQT7DNkBg+WqpZCTE6Naw==
-X-Received: by 2002:adf:9dd0:: with SMTP id q16mr3534840wre.28.1557413581230;
-        Thu, 09 May 2019 07:53:01 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id v184sm3707659wma.6.2019.05.09.07.53.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 07:53:00 -0700 (PDT)
-Date:   Thu, 9 May 2019 16:52:59 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de, bichao.zheng@amlogic.com
-Subject: Re: [PATCH 0/2] pwm: meson: two small bug-fixes
-Message-ID: <20190509145259.GA8907@ulmo>
-References: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
+        Thu, 9 May 2019 10:54:34 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37346 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbfEIOye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:54:34 -0400
+Received: from zn.tnic (p200300EC2F0F5F00A4EF991375FD2B9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:a4ef:9913:75fd:2b9a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA71E1EC0229;
+        Thu,  9 May 2019 16:54:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557413672;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=HoVmf9AN756VzHeCmA9mSEXehEDoZc/0MyWCdj5XOgU=;
+        b=T7byKNeu44qF10WqTKv81v42E651obZYY8Etz9WQVkNM29ytPZcCeKljOO3EC2ddqlzBq4
+        JG02joFxyvHmqngeoRuxVA6WGyelSn9nVVRUJUS8UgYJ7qtFJqjAXDVHQBJ4zAY6wqn5GW
+        qBCdUMJQaSd2sw+xHVWDpGKZO5xpNmw=
+Date:   Thu, 9 May 2019 16:54:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
+Message-ID: <20190509145426.GC17053@zn.tnic>
+References: <20190508224201.27120-1-colin.king@canonical.com>
+ <20190509141313.GA17053@zn.tnic>
+ <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
+ <20190509144113.GB17053@zn.tnic>
+ <20190509144650.GG21059@kadam>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sdOeJE8sLwpQaOMV"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190509144650.GG21059@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 09, 2019 at 05:46:50PM +0300, Dan Carpenter wrote:
+> On Thu, May 09, 2019 at 04:41:13PM +0200, Borislav Petkov wrote:
+> > Bottom line of what I'm trying to say is, those tags better be useful to
+> > the general kernel audience - that means, they should be documented so
+> > that people can look them up - or better not be in commit messages at
+> > all.
+> 
+> Other people will complain if you don't mention the tool name...
 
---sdOeJE8sLwpQaOMV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To quote again what I said: "... they should be documented so that
+people can look them up... "
 
-On Mon, Apr 01, 2019 at 08:18:15PM +0200, Martin Blumenstingl wrote:
-> This series applies on top of my other fix "pwm: meson: fix scheduling
-> while atomic issue" from [0]
->=20
-> The first patch fixes an issue where the maximum possible pre-divider
-> (128) could not be used because there was an off-by-one error in the
-> code. I discovered this while testing with the longest supported period
-> (349514407ns) when running from XTAL. This is verified to work on my
-> Meson8b Odroid-C1 board using "pwm_b" on GPIOX_11.
->=20
-> The second patch was suggested by Uwe Kleine-K=C3=B6nig but was actually
-> implemented much earlier (back in mid 2018) by Bichao Zheng from
-> Amlogic. This patch fixes changing the duty cycle by relying on the
-> hardware to re-start the PWM output (instead of adding an artificial
-> "constant LOW" of about 20ms - as measured by Bichao Zheng when
-> stopping and re-starting the PWM output from within the driver). I
-> tested this fix on my Meson8b Odroid-C1 board which uses a PWM driven
-> CPU regulator (DVFS with all supported OPPs is still working fine for
-> me, although I couldn't observe any issues before this patch).
->=20
-> I also have some code-improvements queued which I'll send in the next
-> days, see [1]
->=20
->=20
-> [0] https://patchwork.kernel.org/cover/10880419/
-> [1] https://github.com/xdarklight/linux/commits/meson-pwm-for-5.2-v1
->=20
->=20
-> Bichao Zheng (1):
->   pwm: meson: don't disable pwm when setting duty repeatedly
->=20
-> Martin Blumenstingl (1):
->   pwm: meson: consider 128 a valid pre-divider
->=20
->  drivers/pwm/pwm-meson.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
+-- 
+Regards/Gruss,
+    Boris.
 
-Both patches applied, thanks.
-
-Thierry
-
---sdOeJE8sLwpQaOMV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUPssACgkQ3SOs138+
-s6HQ2w/5AYGbx7MbLUpSUjsimmVEVGLHZMNi+Ma8lE2mK2HKzvp1nHPQvai/Pob7
-2dnkyZjxB5FhHBJSuh92Wpk7rdLUMEG0mY/BJRkZG5Ne2dt94Jxyz2clVbM950kE
-7YtzMBuPmCWvn8noD9aSyiVqVAeBppUfQhBBWvWaC2byjmXW5YB0ND/yyZH6o33x
-ZS9gH8v6COySx2zNxzWjk3Fx7q8PjqnY2JvKZqpLSoE4rt49YJnUdafeRPDdBOoa
-odBOSmVE8u4NvjLL/lbHgfpX9ITApqBGsfIX9EQZiqsGsD3DFFJff7zuxjMJJLfZ
-cVsvWaTRzQhPxB2CkWQJ/yn8OI0JOPdCXKyZM1sK/apBRj3lEhD6AoYdwlslk4MW
-Qn4mqSf5yWE7i8XnSo9Bb3IvE0U0F9+WSRE9Cf/IeKryeE2SwbIGNbbHrtQNqD4I
-95xa0Ck4ijkwX4N3j1fL+/6VfLG/gRUs7aXUtwfMPyf4ln49hwHvAkFJfWU7fOqm
-zffAQhbmqEeuiGFO9BZGHtTF5l9WzOEhs+aqtupn226xLAAUA5AUUZeypRwswNIM
-x8X91p+Iy/EJdck2vcsLmFgl2CHuSo45bUepmicGOaOc1611ZZMry5fgqSgEn4iI
-pVmuiNeb8uZ//O5v+GG0vdt94+lLwZAwCARg/UHfmPf55T4AMuI=
-=7AFQ
------END PGP SIGNATURE-----
-
---sdOeJE8sLwpQaOMV--
+Good mailing practices for 400: avoid top-posting and trim the reply.
