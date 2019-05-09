@@ -2,87 +2,105 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AAAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65749C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B2020675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557410090;
-	bh=5aUZsPMDNITsiVWH42IYSX+Tk2YAwPnoE+eAF8ZDfGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x3+HC+ep9ShgzZDVucSINRimDLaeuOuabEIExeiwdzbHa2je3urXiFDk/4bZN+g40
-	 IiM3OKNKlVz4zL1vDg2Pe91sHmxoX4xir8SKbve+8heCf3CB0VES30QuUpxKbGR3xs
-	 FS+HL486vLQLKYsa/WPtncG3NxwGTL1jQH7auv0o=
+	by mail.kernel.org (Postfix) with ESMTP id 35C2720675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEINyt (ORCPT
+        id S1726709AbfEINy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:54:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:28319 "EHLO mga11.intel.com"
+        Thu, 9 May 2019 09:54:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34424 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbfEINyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:54:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 06:54:48 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga001.fm.intel.com with ESMTP; 09 May 2019 06:54:49 -0700
-Date:   Thu, 9 May 2019 07:49:17 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Fam Zheng <fam@euphon.net>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
-Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
-Message-ID: <20190509134917.GC8365@localhost.localdomain>
-References: <20190502114801.23116-1-mlevitsk@redhat.com>
- <20190503121838.GA21041@lst.de>
- <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
- <20190509091255.GB15331@stefanha-x1.localdomain>
+        id S1726560AbfEINyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 09:54:54 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2D3E8C057F3B;
+        Thu,  9 May 2019 13:54:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id BE9E31001E7C;
+        Thu,  9 May 2019 13:54:52 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  9 May 2019 15:54:53 +0200 (CEST)
+Date:   Thu, 9 May 2019 15:54:51 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH] cgroup: never call do_group_exit() with task->frozen bit
+ set
+Message-ID: <20190509135450.GA24526@redhat.com>
+References: <20190508203420.580163-1-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190509091255.GB15331@stefanha-x1.localdomain>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190508203420.580163-1-guro@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 09 May 2019 13:54:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 02:12:55AM -0700, Stefan Hajnoczi wrote:
-> On Mon, May 06, 2019 at 12:04:06PM +0300, Maxim Levitsky wrote:
-> > On top of that, it is expected that newer hardware will support the PASID based
-> > device subdivision, which will allow us to _directly_ pass through the
-> > submission queues of the device and _force_ us to use the NVME protocol for the
-> > frontend.
-> 
-> I don't understand the PASID argument.  The data path will be 100%
-> passthrough and this driver won't be necessary.
+On 05/08, Roman Gushchin wrote:
+>
+> To resolve this problem, let's move cgroup_leave_frozen(true) call to
+> just after the fatal label. If the task is going to die, the frozen
+> bit must be cleared no matter how we get into this point.
 
-We still need a non-passthrough component to handle slow path,
-non-doorbell controller registers and admin queue. That doesn't
-necessarily need to be a kernel driver, though.
+OK, agreed, better than nothing.
+
+but please see my previous email. enter_frozen() in ptrace_stop() is not safe
+anyway. In fact somehow I thought it does leave_frozen(), iirc this was true
+in the earlier versions...
+
+> 
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Reported-by: Qian Cai <cai@lca.pw>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  kernel/signal.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 16b72f4f14df..8607b11ff936 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2483,10 +2483,6 @@ bool get_signal(struct ksignal *ksig)
+>  		ksig->info.si_signo = signr = SIGKILL;
+>  		sigdelset(&current->pending.signal, SIGKILL);
+>  		recalc_sigpending();
+> -		current->jobctl &= ~JOBCTL_TRAP_FREEZE;
+> -		spin_unlock_irq(&sighand->siglock);
+> -		if (unlikely(cgroup_task_frozen(current)))
+> -			cgroup_leave_frozen(true);
+>  		goto fatal;
+>  	}
+>  
+> @@ -2608,8 +2604,10 @@ bool get_signal(struct ksignal *ksig)
+>  			continue;
+>  		}
+>  
+> -		spin_unlock_irq(&sighand->siglock);
+>  	fatal:
+> +		spin_unlock_irq(&sighand->siglock);
+> +		if (unlikely(cgroup_task_frozen(current)))
+> +			cgroup_leave_frozen(true);
+>  
+>  		/*
+>  		 * Anything else is fatal, maybe with a core dump.
+> -- 
+> 2.20.1
+> 
+
