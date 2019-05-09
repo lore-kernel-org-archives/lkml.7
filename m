@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219B8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FACFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA001217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AE821848
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427667;
-	bh=KcBNhjf5N9TzoKLJ8rSU60ZB8nQ2vfmXWLvk1pOJ5Jk=;
+	s=default; t=1557427672;
+	bh=0qiApIinSQpmgDoOzOgJ38/YX73pV+QO8LPvi9kV604=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0qC0HjCHm5K8qrK0RiUTVO9IsYkM7eVudjQRzH//3kwWBF1JvP/bLwM1GhyYszO/
-	 U4E14rC1uURmnrjVKRNoVH1nrMm5zdvREr2PqGRBNh9lCYORZtzXIDIAzof8gJXWon
-	 yKC+K8YppM0oKCV5BTQurgc6mKQPdrayaccVQjLA=
+	b=sXs+72KLoq3X9uEPd33WQHAnntmrhYBq9/+Hh2SeN0krbENNjICReUg1/JndhL2lP
+	 QZLwq2JwPja0mpLMVVe+PFwBC/b/t4HZT20I3xkZiZ/9ioNcsBeaM0xFLStC9NLYgn
+	 qOt4N7JUyz0+38K1ehVICNqYm+Lpcq4PUoYfbZaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfEISrp (ORCPT
+        id S1727894AbfEISru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40358 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfEISrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:41 -0400
+        id S1727470AbfEISrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 091A2217D7;
-        Thu,  9 May 2019 18:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 452C1208C3;
+        Thu,  9 May 2019 18:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427660;
-        bh=KcBNhjf5N9TzoKLJ8rSU60ZB8nQ2vfmXWLvk1pOJ5Jk=;
+        s=default; t=1557427665;
+        bh=0qiApIinSQpmgDoOzOgJ38/YX73pV+QO8LPvi9kV604=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gRcdliTgGQNJ8VTa3m3gMCrsZOj7sYFAFO+nPe7gc1CV6y/OlP1p6w6HamFm9aSxl
-         SI0/UcuaibpbMG6TAhOQgwewxR1ciQ7rUNhwQIlOmJF+IzxU2Im1/622Pn2jNwY1aT
-         M1Qmc4q/xTqsrhYcDPG4rrVq+qNHEirj90kvtwX4=
+        b=Xt3uftlBsjRYf9+wmk7dGPVDBh+1C8niNYAjqW47SdzDqLy/i23gOsu1knbLAj5jn
+         KTxJymE+c4NHAY1drBa7zvYCsv0GKuYZGwmN+baHJZUOWjvd/eR4zw+5zhJnYh2ubq
+         PWIwwaFE9T8aepEtxy90FJv6bEMz0CCepaQ7cgDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/66] drm/omap: hdmi4_cec: Fix CEC clock handling for PM
-Date:   Thu,  9 May 2019 20:41:58 +0200
-Message-Id: <20190509181304.343756327@linuxfoundation.org>
+Subject: [PATCH 4.19 25/66] IB/hfi1: Fix the allocation of RSM table
+Date:   Thu,  9 May 2019 20:42:00 +0200
+Message-Id: <20190509181304.553509875@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -64,99 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 36a1da15b5df493241b0011d2185fdd724ac1ed1 ]
+[ Upstream commit d0294344470e6b52d097aa7369173f32d11f2f52 ]
 
-If CONFIG_OMAP4_DSS_HDMI_CEC is enabled in .config, deeper SoC idle
-states are blocked because the CEC clock gets always enabled on init.
+The receive side mapping (RSM) on hfi1 hardware is a special
+matching mechanism to direct an incoming packet to a given
+hardware receive context. It has 4 instances of matching capabilities
+(RSM0 - RSM3) that share the same RSM table (RMT). The RMT has a total of
+256 entries, each of which points to a receive context.
 
-Let's fix the issue by moving the CEC clock handling to happen later in
-hdmi_cec_adap_enable() as suggested by Hans Verkuil <hverkuil@xs4all.nl>.
-This way the CEC clock gets only enabled when needed. This can be tested
-by doing cec-ctl --playback to enable the CEC, and doing cec-ctl --clear
-to disable it.
+Currently, three instances of RSM have been used:
+1. RSM0 by QOS;
+2. RSM1 by PSM FECN;
+3. RSM2 by VNIC.
 
-Let's also fix the typo for "divider" in the comments while at it.
+Each RSM instance should reserve enough entries in RMT to function
+properly. Since both PSM and VNIC could allocate any receive context
+between dd->first_dyn_alloc_ctxt and dd->num_rcv_contexts, PSM FECN must
+reserve enough RMT entries to cover the entire receive context index
+range (dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt) instead of only
+the user receive contexts allocated for PSM
+(dd->num_user_contexts). Consequently, the sizing of
+dd->num_user_contexts in set_up_context_variables is incorrect.
 
-Fixes: 8d7f934df8d8 ("omapdrm: hdmi4_cec: add OMAP4 HDMI CEC support")
-Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190326151438.32414-1-tony@atomide.com
+Fixes: 2280740f01ae ("IB/hfi1: Virtual Network Interface Controller (VNIC) HW support")
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c | 26 ++++++++++++++++++-------
+ drivers/infiniband/hw/hfi1/chip.c | 26 +++++++++++++++++++-------
  1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-index 340383150fb98..ebf9c96d43eee 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
-@@ -175,6 +175,7 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 		REG_FLD_MOD(core->base, HDMI_CORE_SYS_INTR_UNMASK4, 0, 3, 3);
- 		hdmi_wp_clear_irqenable(core->wp, HDMI_IRQ_CORE);
- 		hdmi_wp_set_irqstatus(core->wp, HDMI_IRQ_CORE);
-+		REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
- 		hdmi4_core_disable(core);
- 		return 0;
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 902d12d6d88b0..b12c8ff8ed666 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -13388,7 +13388,7 @@ static int set_up_context_variables(struct hfi1_devdata *dd)
+ 	int total_contexts;
+ 	int ret;
+ 	unsigned ngroups;
+-	int qos_rmt_count;
++	int rmt_count;
+ 	int user_rmt_reduced;
+ 	u32 n_usr_ctxts;
+ 	u32 send_contexts = chip_send_contexts(dd);
+@@ -13450,10 +13450,20 @@ static int set_up_context_variables(struct hfi1_devdata *dd)
+ 		n_usr_ctxts = rcv_contexts - total_contexts;
  	}
-@@ -182,16 +183,24 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 	if (err)
- 		return err;
  
+-	/* each user context requires an entry in the RMT */
+-	qos_rmt_count = qos_rmt_entries(dd, NULL, NULL);
+-	if (qos_rmt_count + n_usr_ctxts > NUM_MAP_ENTRIES) {
+-		user_rmt_reduced = NUM_MAP_ENTRIES - qos_rmt_count;
 +	/*
-+	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
-+	 * set the divider to 24 to get 48/24=2MHz clock
++	 * The RMT entries are currently allocated as shown below:
++	 * 1. QOS (0 to 128 entries);
++	 * 2. FECN for PSM (num_user_contexts + num_vnic_contexts);
++	 * 3. VNIC (num_vnic_contexts).
++	 * It should be noted that PSM FECN oversubscribe num_vnic_contexts
++	 * entries of RMT because both VNIC and PSM could allocate any receive
++	 * context between dd->first_dyn_alloc_text and dd->num_rcv_contexts,
++	 * and PSM FECN must reserve an RMT entry for each possible PSM receive
++	 * context.
 +	 */
-+	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
-+
- 	/* Clear TX FIFO */
- 	if (!hdmi_cec_clear_tx_fifo(adap)) {
- 		pr_err("cec-%s: could not clear TX FIFO\n", adap->name);
--		return -EIO;
-+		err = -EIO;
-+		goto err_disable_clk;
- 	}
++	rmt_count = qos_rmt_entries(dd, NULL, NULL) + (num_vnic_contexts * 2);
++	if (rmt_count + n_usr_ctxts > NUM_MAP_ENTRIES) {
++		user_rmt_reduced = NUM_MAP_ENTRIES - rmt_count;
+ 		dd_dev_err(dd,
+ 			   "RMT size is reducing the number of user receive contexts from %u to %d\n",
+ 			   n_usr_ctxts,
+@@ -14441,9 +14451,11 @@ static void init_user_fecn_handling(struct hfi1_devdata *dd,
+ 	u64 reg;
+ 	int i, idx, regoff, regidx;
+ 	u8 offset;
++	u32 total_cnt;
  
- 	/* Clear RX FIFO */
- 	if (!hdmi_cec_clear_rx_fifo(adap)) {
- 		pr_err("cec-%s: could not clear RX FIFO\n", adap->name);
--		return -EIO;
-+		err = -EIO;
-+		goto err_disable_clk;
+ 	/* there needs to be enough room in the map table */
+-	if (rmt->used + dd->num_user_contexts >= NUM_MAP_ENTRIES) {
++	total_cnt = dd->num_rcv_contexts - dd->first_dyn_alloc_ctxt;
++	if (rmt->used + total_cnt >= NUM_MAP_ENTRIES) {
+ 		dd_dev_err(dd, "User FECN handling disabled - too many user contexts allocated\n");
+ 		return;
  	}
+@@ -14497,7 +14509,7 @@ static void init_user_fecn_handling(struct hfi1_devdata *dd,
+ 	/* add rule 1 */
+ 	add_rsm_rule(dd, RSM_INS_FECN, &rrd);
  
- 	/* Clear CEC interrupts */
-@@ -236,6 +245,12 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
- 		hdmi_write_reg(core->base, HDMI_CEC_INT_STATUS_1, temp);
- 	}
- 	return 0;
-+
-+err_disable_clk:
-+	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
-+	hdmi4_core_disable(core);
-+
-+	return err;
+-	rmt->used += dd->num_user_contexts;
++	rmt->used += total_cnt;
  }
  
- static int hdmi_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
-@@ -333,11 +348,8 @@ int hdmi4_cec_init(struct platform_device *pdev, struct hdmi_core_data *core,
- 		return ret;
- 	core->wp = wp;
- 
--	/*
--	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
--	 * set the devider to 24 to get 48/24=2MHz clock
--	 */
--	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
-+	/* Disable clock initially, hdmi_cec_adap_enable() manages it */
-+	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
- 
- 	ret = cec_register_adapter(core->adap, &pdev->dev);
- 	if (ret < 0) {
+ /* Initialize RSM for VNIC */
 -- 
 2.20.1
 
