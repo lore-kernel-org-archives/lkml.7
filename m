@@ -2,129 +2,235 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F62CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB77C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DC720675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E43A2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gfgkk5oZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfEIGJm (ORCPT
+        id S1726828AbfEIGML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 02:09:42 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:55327 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725869AbfEIGJl (ORCPT
+        Thu, 9 May 2019 02:12:11 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38706 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEIGML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 02:09:41 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.85)
-          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1hOcFO-004Aev-8p>; Thu, 09 May 2019 08:09:38 +0200
-Received: from p5b13a412.dip0.t-ipconnect.de ([91.19.164.18] helo=[192.168.178.40])
-          by inpost2.zedat.fu-berlin.de (Exim 4.85)
-          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1hOcFN-003H7s-UG>; Thu, 09 May 2019 08:09:38 +0200
-Subject: Re: [PATCH v2] sh: vsyscall: drop unnecessary cc-ldoption
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <CAK7LNASLBQ=w9YFBD80s7dit1bd_Tr+ggVyRNms0jf1pR9k=ZA@mail.gmail.com>
- <20190424180223.253025-1-ndesaulniers@google.com>
- <CAKwvOd=5SVBFsfEgYc9Dpgr--h+pQgCwOnpAjg9B4HG2VY6kFg@mail.gmail.com>
- <CAKwvOdkpjwgt3pP9rjZtm=rEK9MhEfQdc6PEr91Bnb9tMVDBEA@mail.gmail.com>
- <CAK7LNASL+oNNbZ4YaPtGnwka06sRr3Pz8HjjM7oxUC-JkvqF2Q@mail.gmail.com>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <fc61a1c2-5503-b18d-e178-491952e059f6@physik.fu-berlin.de>
-Date:   Thu, 9 May 2019 08:09:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 02:12:11 -0400
+Received: by mail-oi1-f193.google.com with SMTP id u199so1035363oie.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 23:12:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P+8FULLffFx7fYiQWZzicW549K/RiT8LNAYFVRsp9uI=;
+        b=gfgkk5oZUTqBetQJ1TO2YA+AncASlOUi39E1dmeJ5RDB4mVXfUdq85hI0MNduiP9ce
+         2i5KFtiJrkml3dUdXV1SXvGeGqb5/fZuf3sTRr003bUh3+qsmdLG9Eo9R/tr4m0Be+1f
+         53te+tTTJPMuRe+D459apCxOOdAunZ0itZNNdB/Q/haRNVRybWCVNQ8WBlTYhcGW1ybq
+         Psnqc7utsHleE5rhER7+4fOaV7y3y2jKsdsRZQLk/KdT6mpejWyCfkEnVvfKSh/+lXKx
+         gk5P/jqFz2rpvezDXC2I0OEn6218DvqDAdMhgoxu9/tdkVPPrvhv84grSBeYxpqxX9Hi
+         9/ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P+8FULLffFx7fYiQWZzicW549K/RiT8LNAYFVRsp9uI=;
+        b=TogqEP+T1aZ4VNvnwMkiVIrKEY2nHJnNQinlBS1Oet9/KIRuv8O+RqNYJEc8nG+gME
+         qdVggC+bzmfZ7ZpAYDGjd5wBZ+BuoicIWxJqu8+qAOG/CR9cDjp2DFxlB27n4d5BaxhH
+         sDJUjFGdQrYhrfPs1hHZ0o3kCNOYEkH25r5S5IBsniCi+p701B01+WgaRuQpbBiOrskk
+         7UZ2j35JAii6a4NUw30Ms8WS5LWBCrYifQzvnnEhiSuyQIDk5vtqwJhkkW1fk7k+EJid
+         iP02KR8zviSNqkrcnEGBAXOgSVf19s4o1XvNxaC2nZwLTulE7kinuxdWrbm0WrwPZDlg
+         5mcw==
+X-Gm-Message-State: APjAAAWCJRIiGflFaYGd9aPvEjrAWVOU/TLxZ/K4rpblSczDeeD7tFfM
+        2GuWyS1lSNumNUg49e7fwDs/zikS+7wpT7bbSTG9Cg==
+X-Google-Smtp-Source: APXvYqwSzRk255YY1C+R1hKUV1ccGvW7nQS5fdqp0fsRSSL9pVF18LpVg2cPnymxZyYOnqQGeEKfhezPyo2yqMKTTXo=
+X-Received: by 2002:aca:aa43:: with SMTP id t64mr436047oie.12.1557382329361;
+ Wed, 08 May 2019 23:12:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASL+oNNbZ4YaPtGnwka06sRr3Pz8HjjM7oxUC-JkvqF2Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: 91.19.164.18
+References: <20190423233904.195842-1-furquan@google.com>
+In-Reply-To: <20190423233904.195842-1-furquan@google.com>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Wed, 8 May 2019 23:11:57 -0700
+Message-ID: <CAEGmHFEf4RTn5mrQ4pn+WPz=WnD5id9joEdGQnu==ibx+r1L8g@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Todd Broch <tbroch@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/19 2:44 AM, Masahiro Yamada wrote:
-> On Thu, May 9, 2019 at 5:13 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
->>
->> bumping for review, as the merge window is now open.
-> 
-> 
-> sh is not very active these days.
+On Tue, Apr 23, 2019 at 4:39 PM Furquan Shaikh <furquan@google.com> wrote:
+>
+> During boot-up, ACPI bus scan enables all power resources so that
+> respective device drivers can talk to their device. This causes acpi
+> ref_count for the power resource to be incremented to 1. When system
+> suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
+> power off on all power resources whose ref_count is 1 i.e. no other
+> user of this power resource and thus resulting in _OFF routine being
+> called for it.
+>
+> However, in case of poweroff, DPM is not involved and so the power
+> resources are left on when the system is entering S5. This results in
+> the violation of power down sequencing for certain devices
+> e.g. touchscreen or digitizer I2C devices. In order to ensure that the
+> power down sequencing does the right thing, it is necessary for ACPI
+> to disable all power resources while preparing for S5.
+>
+> This change updates the function acpi_turn_off_unused_power_resources
+> to accept a parameter acpi_system_state, This function turns off power
+> resources according to the targeted system ACPI state:
+> 1. For S0: Unused power resources are turned off i.e. power resources
+> whose ref_count is already 0.
+> 2. For S5: ref_count is decremented first to undo the increment
+> performed during ACPI bus scan and then power resources with ref_count
+> 0 are turned off.
+> 3. All other suspend/hibernate states: No action is required since DPM
+> takes care of turning off power resources.
+>
+> This change should not affect the wake capable devices since:
+> 1. If wake capable devices are enabled before this call, their
+> refcount should be greater than 1. Thus, they won't be turned off.
+> 2. If wake capable devices are not enabled yet when this call is made,
+> they would eventually get turned on by call to
+> acpi_enable_wakeup_devices.
+>
+> Signed-off-by: Furquan Shaikh <furquan@google.com>
+> ---
+>  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
+>  drivers/acpi/sleep.c |  5 ++++-
+>  drivers/acpi/sleep.h |  2 +-
+>  3 files changed, 46 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+> index 665e93ca0b40f..945db762861a3 100644
+> --- a/drivers/acpi/power.c
+> +++ b/drivers/acpi/power.c
+> @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
+>
+>         mutex_unlock(&power_resource_list_lock);
+>  }
+> +#endif
+>
+> -void acpi_turn_off_unused_power_resources(void)
+> +/**
+> + * acpi_turn_off_power_resources: This function is used to turn off power
+> + * resources in provided ACPI system state.
+> + *
+> + * Behavior differs based on the target system state:
+> + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
+> + *                with ref_count zero.
+> + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
+> + *                ref_count zero. This is done to ensure that the ref_count
+> + *                incremented during ACPI bus scan is undone and any power
+> + *                resources that are not required during S5 are turned off.
+> + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
+> + *                resources while suspending/hibernating.
+> + */
+> +void acpi_turn_off_power_resources(int acpi_system_state)
+>  {
+>         struct acpi_power_resource *resource;
+> +       int decrement;
+> +
+> +       if (acpi_system_state == ACPI_STATE_S0) {
+> +               /*
+> +                * In case of ACPI_STATE_S0, turn off only unused power
+> +                * resources. So, no need to decrement ref_count.
+> +                */
+> +               decrement = 0;
+> +       } else if (acpi_system_state == ACPI_STATE_S5) {
+> +               /*
+> +                * In case of ACPI_STATE_S5, ref_count needs to be decremented
+> +                * first before checking if it is okay to power off the
+> +                * resource.
+> +                */
+> +               decrement = 1;
+> +       } else
+> +               return;
+>
+>         mutex_lock(&power_resource_list_lock);
+>
+> @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
+>                         continue;
+>                 }
+>
+> -               if (state == ACPI_POWER_RESOURCE_STATE_ON
+> -                   && !resource->ref_count) {
+> -                       dev_info(&resource->device.dev, "Turning OFF\n");
+> -                       __acpi_power_off(resource);
+> +               if (state == ACPI_POWER_RESOURCE_STATE_ON) {
+> +                       if (resource->ref_count)
+> +                               resource->ref_count -= decrement;
+> +
+> +                       if (!resource->ref_count) {
+> +                               dev_info(&resource->device.dev, "Turning OFF\n");
+> +                               __acpi_power_off(resource);
+> +                       }
+>                 }
+>
+>                 mutex_unlock(&resource->resource_lock);
+> @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
+>
+>         mutex_unlock(&power_resource_list_lock);
+>  }
+> -#endif
+> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> index 403c4ff153498..fb6b3ca0eeb91 100644
+> --- a/drivers/acpi/sleep.c
+> +++ b/drivers/acpi/sleep.c
+> @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+>         printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
+>                 acpi_state);
+>         acpi_enable_wakeup_devices(acpi_state);
+> +
+> +       acpi_turn_off_power_resources(acpi_state);
+> +
+>         acpi_enter_sleep_state_prep(acpi_state);
+>         return 0;
+>  }
+> @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
+>   */
+>  static void acpi_pm_end(void)
+>  {
+> -       acpi_turn_off_unused_power_resources();
+> +       acpi_turn_off_power_resources(ACPI_STATE_S0);
+>         acpi_scan_lock_release();
+>         /*
+>          * This is necessary in case acpi_pm_finish() is not called during a
+> diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
+> index 41675d24a9bc0..a495c91e2bf3b 100644
+> --- a/drivers/acpi/sleep.h
+> +++ b/drivers/acpi/sleep.h
+> @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
+>  extern struct mutex acpi_device_lock;
+>
+>  extern void acpi_resume_power_resources(void);
+> -extern void acpi_turn_off_unused_power_resources(void);
+> +extern void acpi_turn_off_power_resources(int acpi_system_state);
+>
+>  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
+>  {
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
 
-We're still supporting SH with an up-to-date kernel and userland in Debian, so
-if your patch broke something, we will notice that soonish. This also applies
-to ia64 and many other architectures.
+Hi Rafael,
 
-So, if in doubt, there are folks in Debian which can test your kernel patch
-if you fear that it breaks something.
+Gentle ping. Just checking if you got a chance to look at this one. It
+is actually causing problems in one of our devices since power off
+sequencing is not honored when entering S5.
 
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Thanks,
+Furquan
