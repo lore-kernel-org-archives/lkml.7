@@ -2,125 +2,90 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1524C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1025217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F88E217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfEISgL (ORCPT
+        id S1726812AbfEISge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:36:11 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:42964 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbfEISgL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:36:11 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TRHO45d_1557426956;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRHO45d_1557426956)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 May 2019 02:36:00 +0800
-Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     jstancek@redhat.com, akpm@linux-foundation.org,
-        stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
-        npiggin@gmail.com, namit@vmware.com, minchan@kernel.org,
-        Mel Gorman <mgorman@suse.de>
-References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190509083726.GA2209@brain-police>
- <20190509103813.GP2589@hirez.programming.kicks-ass.net>
- <20190509105446.GL2650@hirez.programming.kicks-ass.net>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <6a907073-67ec-04fe-aaae-c1adcb62e3df@linux.alibaba.com>
-Date:   Thu, 9 May 2019 11:35:55 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 9 May 2019 14:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbfEISge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:36:34 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB76217D6;
+        Thu,  9 May 2019 18:36:31 +0000 (UTC)
+Date:   Thu, 9 May 2019 14:36:29 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190509143629.5c104011@gandalf.local.home>
+In-Reply-To: <20190509182622.GB2623@hirez.programming.kicks-ass.net>
+References: <20190508074901.982470324@infradead.org>
+        <20190508080612.721269814@infradead.org>
+        <20190508115416.nblx7c2kocidpytm@treble>
+        <20190508120416.GL2589@hirez.programming.kicks-ass.net>
+        <20190508124248.u5ukpbhnh4wpiccq@treble>
+        <20190508153907.GM2589@hirez.programming.kicks-ass.net>
+        <20190508184848.qerg3flv3ej3xsev@treble>
+        <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
+        <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+        <20190509173741.pfvecznqdndihxzg@home.goodmis.org>
+        <20190509182622.GB2623@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190509105446.GL2650@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 9 May 2019 20:26:22 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
+> Still, maybe we can wrap the thing in a .macro and reuse things that
+> way. Because I really hate there are at least 3 (x2 for x86_64) copies
+> of this around.
 
-On 5/9/19 3:54 AM, Peter Zijlstra wrote:
-> On Thu, May 09, 2019 at 12:38:13PM +0200, Peter Zijlstra wrote:
->
->> That's tlb->cleared_p*, and yes agreed. That is, right until some
->> architecture has level dependent TLBI instructions, at which point we'll
->> need to have them all set instead of cleared.
->> Anyway; am I correct in understanding that the actual problem is that
->> we've cleared freed_tables and the ARM64 tlb_flush() will then not
->> invalidate the cache and badness happens?
->>
->> Because so far nobody has actually provided a coherent description of
->> the actual problem we're trying to solve. But I'm thinking something
->> like the below ought to do.
-> There's another 'fun' issue I think. For architectures like ARM that
-> have range invalidation and care about VM_EXEC for I$ invalidation, the
-> below doesn't quite work right either.
->
-> I suspect we also have to force: tlb->vma_exec = 1.
+I'm good with something like this. Have a single place that does the
+pt_regs saving would be great. Then I could separate ftrace_regs_caller
+from ftrace_caller, and simplify them both, as I would only need to
+make sure frame pointers still work for ftrace_caller, and
+ftrace_regs_caller would depend on the macro to make sure it works.
 
-Isn't the below code in tlb_flush enough to guarantee this?
-
-...
-} else if (tlb->end) {
-                struct vm_area_struct vma = {
-                        .vm_mm = tlb->mm,
-                        .vm_flags = (tlb->vma_exec ? VM_EXEC    : 0) |
-                                    (tlb->vma_huge ? VM_HUGETLB : 0),
-                };
-...
-
->
-> And I don't think there's an architecture that cares, but depending on
-> details I can construct cases where any setting of tlb->vm_hugetlb is
-> wrong, so that is _awesome_. But I suspect the sane thing for now is to
-> force it 0.
->
->> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->> index 99740e1dd273..fe768f8d612e 100644
->> --- a/mm/mmu_gather.c
->> +++ b/mm/mmu_gather.c
->> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>   		unsigned long start, unsigned long end)
->>   {
->>   	/*
->> -	 * If there are parallel threads are doing PTE changes on same range
->> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
->> -	 * flush by batching, a thread has stable TLB entry can fail to flush
->> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
->> -	 * forcefully if we detect parallel PTE batching threads.
->> +	 * Sensible comment goes here..
->>   	 */
->> -	if (mm_tlb_flush_nested(tlb->mm)) {
->> -		__tlb_reset_range(tlb);
->> -		__tlb_adjust_range(tlb, start, end - start);
->> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
->> +		/*
->> +		 * Since we're can't tell what we actually should have
->> +		 * flushed flush everything in the given range.
->> +		 */
->> +		tlb->start = start;
->> +		tlb->end = end;
->> +		tlb->freed_tables = 1;
->> +		tlb->cleared_ptes = 1;
->> +		tlb->cleared_pmds = 1;
->> +		tlb->cleared_puds = 1;
->> +		tlb->cleared_p4ds = 1;
->>   	}
->>   
->>   	tlb_flush_mmu(tlb);
-
+-- Steve
