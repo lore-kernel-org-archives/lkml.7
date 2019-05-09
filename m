@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85515C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13984C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A60020578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7D42177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428019;
-	bh=+MeY4MgWJ4dyuu9ZqGGVbumkiUOWOv10xp0i2fvugKM=;
+	s=default; t=1557428023;
+	bh=DSgNyAu3218PTqN3ZNvpI+NYW6lqI+fUcvQx/HBEHVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHlnTF9OPX6q012mPyRuADBY9979HKLc119TounAPFtlBaK1pnFy2a+kxK/WYLOHb
-	 b1UakSR+kUW7BGKBakhWJy0vHqrbiX9kmA+wC5d8QTNHobuvFvEzEvC9SfnhzVvrAr
-	 1T5Ui2gpGSuUkjLGvMdlo6ZQZCvcaf2/D2vyYVGo=
+	b=JgfNcdggiLRmFk4iF1Duf2uLKAG/todMzHXXRDSc6DmPJieoEkG3iIOx1YKKae4aU
+	 Pk/c/qA/DoOSxc7KLcl5CXh/c60aYu/ASG+elddnsj571nj85fpV+y3+bnCs4tjvIr
+	 LCCyIvt9s9hSLNNuV9yKA//5i2nQAk4mdli9WAeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfEISxi (ORCPT
+        id S1728939AbfEISxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:53:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728508AbfEISxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:53:34 -0400
+        id S1728915AbfEISxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:53:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE09720578;
-        Thu,  9 May 2019 18:53:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCEF6217D7;
+        Thu,  9 May 2019 18:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428013;
-        bh=+MeY4MgWJ4dyuu9ZqGGVbumkiUOWOv10xp0i2fvugKM=;
+        s=default; t=1557428018;
+        bh=DSgNyAu3218PTqN3ZNvpI+NYW6lqI+fUcvQx/HBEHVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=up2j3GlecNp4ZxCG+16ZFmDXzApFyVBEJDQH1mrTYxUZ1hlrKcEHngZh8H4f2ctCP
-         Qk5xPc053GLZmtaVjoXsHMP+yf1SCPAc/cwTe4R2fFM/8GASCOS5XtbY7U8yiL5KL1
-         3ihS3qyaXlclDR/G0x4JJAlZwtsjHwUrGeImlgOM=
+        b=vaPPLxx/MrCh1OSUoLXeyG+uN4+mIIDzryQo6u0yTI2fXr1v6G6lMFHMRfGZsfZXV
+         L+WJ5l0I6X/8k6Q6yznu62XwJhJ730SB6fUzFIa4zwp5fRQdHgYsr7KQ+I2r/maKZr
+         V5ckDwpo/TuPBYc5Kepn5M0G2A8TxuKWinNhcLjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.0 89/95] Bluetooth: Fix not initializing L2CAP tx_credits
-Date:   Thu,  9 May 2019 20:42:46 +0200
-Message-Id: <20190509181315.467602708@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 5.0 91/95] UAS: fix alignment of scatter/gather segments
+Date:   Thu,  9 May 2019 20:42:48 +0200
+Message-Id: <20190509181315.584004736@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,62 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit ba8f5289f706aed94cc95b15cc5b89e22062f61f upstream.
+commit 3ae62a42090f1ed48e2313ed256a1182a85fb575 upstream.
 
-l2cap_le_flowctl_init was reseting the tx_credits which works only for
-outgoing connection since that set the tx_credits on the response, for
-incoming connections that was not the case which leaves the channel
-without any credits causing it to be suspended.
+This is the UAS version of
 
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org # 4.20+
+747668dbc061b3e62bc1982767a3a1f9815fcf0e
+usb-storage: Set virt_boundary_mask to avoid SG overflows
+
+We are not as likely to be vulnerable as storage, as it is unlikelier
+that UAS is run over a controller without native support for SG,
+but the issue exists.
+The issue has been existing since the inception of the driver.
+
+Fixes: 115bb1ffa54c ("USB: Add UAS driver")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/l2cap_core.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/usb/storage/uas.c |   35 ++++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -510,12 +510,12 @@ void l2cap_chan_set_defaults(struct l2ca
- }
- EXPORT_SYMBOL_GPL(l2cap_chan_set_defaults);
- 
--static void l2cap_le_flowctl_init(struct l2cap_chan *chan)
-+static void l2cap_le_flowctl_init(struct l2cap_chan *chan, u16 tx_credits)
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -796,24 +796,33 @@ static int uas_slave_alloc(struct scsi_d
  {
- 	chan->sdu = NULL;
- 	chan->sdu_last_frag = NULL;
- 	chan->sdu_len = 0;
--	chan->tx_credits = 0;
-+	chan->tx_credits = tx_credits;
- 	/* Derive MPS from connection MTU to stop HCI fragmentation */
- 	chan->mps = min_t(u16, chan->imtu, chan->conn->mtu - L2CAP_HDR_SIZE);
- 	/* Give enough credits for a full packet */
-@@ -1281,7 +1281,7 @@ static void l2cap_le_connect(struct l2ca
- 	if (test_and_set_bit(FLAG_LE_CONN_REQ_SENT, &chan->flags))
- 		return;
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
++	int maxp;
  
--	l2cap_le_flowctl_init(chan);
-+	l2cap_le_flowctl_init(chan, 0);
+ 	sdev->hostdata = devinfo;
  
- 	req.psm     = chan->psm;
- 	req.scid    = cpu_to_le16(chan->scid);
-@@ -5531,11 +5531,10 @@ static int l2cap_le_connect_req(struct l
- 	chan->dcid = scid;
- 	chan->omtu = mtu;
- 	chan->remote_mps = mps;
--	chan->tx_credits = __le16_to_cpu(req->credits);
+ 	/*
+-	 * USB has unusual DMA-alignment requirements: Although the
+-	 * starting address of each scatter-gather element doesn't matter,
+-	 * the length of each element except the last must be divisible
+-	 * by the Bulk maxpacket value.  There's currently no way to
+-	 * express this by block-layer constraints, so we'll cop out
+-	 * and simply require addresses to be aligned at 512-byte
+-	 * boundaries.  This is okay since most block I/O involves
+-	 * hardware sectors that are multiples of 512 bytes in length,
+-	 * and since host controllers up through USB 2.0 have maxpacket
+-	 * values no larger than 512.
++	 * We have two requirements here. We must satisfy the requirements
++	 * of the physical HC and the demands of the protocol, as we
++	 * definitely want no additional memory allocation in this path
++	 * ruling out using bounce buffers.
+ 	 *
+-	 * But it doesn't suffice for Wireless USB, where Bulk maxpacket
+-	 * values can be as large as 2048.  To make that work properly
+-	 * will require changes to the block layer.
++	 * For a transmission on USB to continue we must never send
++	 * a package that is smaller than maxpacket. Hence the length of each
++         * scatterlist element except the last must be divisible by the
++         * Bulk maxpacket value.
++	 * If the HC does not ensure that through SG,
++	 * the upper layer must do that. We must assume nothing
++	 * about the capabilities off the HC, so we use the most
++	 * pessimistic requirement.
++	 */
++
++	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
++	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
++
++	/*
++	 * The protocol has no requirements on alignment in the strict sense.
++	 * Controllers may or may not have alignment restrictions.
++	 * As this is not exported, we use an extremely conservative guess.
+ 	 */
+ 	blk_queue_update_dma_alignment(sdev->request_queue, (512 - 1));
  
- 	__l2cap_chan_add(conn, chan);
- 
--	l2cap_le_flowctl_init(chan);
-+	l2cap_le_flowctl_init(chan, __le16_to_cpu(req->credits));
- 
- 	dcid = chan->scid;
- 	credits = chan->rx_credits;
 
 
