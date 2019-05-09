@@ -2,115 +2,91 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C12C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B45AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DA42173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF5821479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557412912;
-	bh=N2vQy9JTK8LN7IWchKikRhEJ1xsEYEkPcuyuyxOaX88=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0EC9VkH5+Z0L1+kAbJ3Ohi/D11HRiqlx04Xc99Jl55A9pNBDl1tDiG3D2bgpdCjUF
-	 Z8klPu9U45sGJpaRaoR4TBz2sbnUx/T+vrAX+3z0l1ajnIap1/L0EDdUoFfHFKNxLK
-	 4AiWcutmdyvHNCOzWrJ8/gyiT2Yq3l2oeGsRL61w=
+	s=default; t=1557412918;
+	bh=Wfj1GabWdVoULFKoG6CT8frw0TykxTd53AcRNApM0TU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KHmiFzf3Jp7JN8LfOVADqi3KOW3WRhlSBMdNsLGKUq7IDktukELlEwsfslI2am4mq
+	 f9tkln5ylcopJQWBoMiyoOcuqsaSYUMSv/8Lft3rhMe4nutmgAlDMhigfFtwBWa7Zm
+	 WCC3FgPJP8LNuVxagBm1nWtuosj1fc/WTx+2Tq0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfEIOlv (ORCPT
+        id S1726882AbfEIOl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 10:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfEIOlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:41:51 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726234AbfEIOl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:41:56 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 898D42053B;
-        Thu,  9 May 2019 14:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A030E2173B;
+        Thu,  9 May 2019 14:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557412910;
-        bh=N2vQy9JTK8LN7IWchKikRhEJ1xsEYEkPcuyuyxOaX88=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=faB1yoGJaYipGa3/KWKFQOxY5+j7FnG9QjqYccubTWIyYg4d36SGpo2eOvvxv6Z9/
-         iwHmyQBxcVA6wdEmhm5XJhOoWT4mCfP+FfOe++l68ufJnxSXY5Za1A1F/7p9IffZ03
-         xoUiVpOT/C4ZlNPVcn4mm+T9oHTw0OJeyKPtWqCA=
-Date:   Thu, 9 May 2019 23:41:43 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: Re: [PATCH v7 6/6] perf-probe: Add user memory access attribute
- support
-Message-Id: <20190509234143.d2f6cc6979daba4252ba410f@kernel.org>
-In-Reply-To: <20190509091735.GC90202@gmail.com>
-References: <155732230159.12756.15040196512285621636.stgit@devnote2>
-        <155732238071.12756.3969249515654160948.stgit@devnote2>
-        <20190509091735.GC90202@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1557412915;
+        bh=Wfj1GabWdVoULFKoG6CT8frw0TykxTd53AcRNApM0TU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dSTpkE90aqWN5gHVRcjqIZnCD3GEq5VmiaK4NaEFcN0f+J9mtqEzqiGaBcyEpNAMh
+         50SmW9Q4RZiEUmPi+RvzMOKH/OOG1b0mQvyRJ3nnJq0XcVPgame5xJCYcb0RlCEyqw
+         MZTy5HMRElfb3Fweomhs4nxRi051oGa/p6tZGVek=
+Received: by mail-ed1-f47.google.com with SMTP id f37so2227061edb.13;
+        Thu, 09 May 2019 07:41:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAWTudLnXQ0LLLjMS/X/oc2Cko7HJmR0u6a7uuydkV5ZQcVzFee3
+        IKHz7HzjE0dTesFVwwz8KlgYR7/YkhNI09MQ1w4=
+X-Google-Smtp-Source: APXvYqx1UQeeC0LITggJzVsAZ70ni/5qHB/4tt0KGr2SyrDc9s/pfLRRg2SVZ25V+mjZN/v1DknmtTiZ8MKTxBS1wRU=
+X-Received: by 2002:a50:fa90:: with SMTP id w16mr4447844edr.184.1557412914233;
+ Thu, 09 May 2019 07:41:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <1556528151-17221-1-git-send-email-hao.wu@intel.com> <1556528151-17221-13-git-send-email-hao.wu@intel.com>
+In-Reply-To: <1556528151-17221-13-git-send-email-hao.wu@intel.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Thu, 9 May 2019 09:41:18 -0500
+X-Gmail-Original-Message-ID: <CANk1AXQ6mcQ2td02j2g=n5cxOri--bp3yV5t7OCgK5Rc3QVHMQ@mail.gmail.com>
+Message-ID: <CANk1AXQ6mcQ2td02j2g=n5cxOri--bp3yV5t7OCgK5Rc3QVHMQ@mail.gmail.com>
+Subject: Re: [PATCH v2 12/18] fpga: dfl: afu: add error reporting support.
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 11:17:35 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
+>
+> Error reporting is one important private feature, it reports error
+> detected on port and accelerated function unit (AFU). It introduces
+> several sysfs interfaces to allow userspace to check and clear
+> errors detected by hardware.
+>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
 
-> 
-> * Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > --- a/tools/perf/util/probe-event.h
-> > +++ b/tools/perf/util/probe-event.h
-> > @@ -37,6 +37,7 @@ struct probe_trace_point {
-> >  struct probe_trace_arg_ref {
-> >  	struct probe_trace_arg_ref	*next;	/* Next reference */
-> >  	long				offset;	/* Offset value */
-> > +	bool				user;	/* User-memory access */
-> >  };
-> >  
-> >  /* kprobe-tracer and uprobe-tracer tracing argument */
-> > @@ -82,6 +83,7 @@ struct perf_probe_arg {
-> >  	char				*var;	/* Variable name */
-> >  	char				*type;	/* Type name */
-> >  	struct perf_probe_arg_field	*field;	/* Structure fields */
-> > +	bool				user;	/* User-memory */
-> 
-> Why did the 'access' qualifier get dropped from the second comment?
+Acked-by: Alan Tull <atull@kernel.org>
 
-Ah, it's my typo.
+Thanks!
+Alan
 
-> Also, please name it and related parameters and local variables 
-> 'user_access' - in that case no comments are needed and it's all super 
-> clear. Only 'user' is ambiguous really.
-
-Yes, that's a good idea! OK. I'll change it.
-
-Thank you!
-
-> 
-> Thanks,
-> 
-> 	ngo
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+> v2: add more error code description for error clear sysfs in doc.
+>     return -EINVAL instead of -EBUSY when input error code doesn't
+>     match in error clear sysfs.
+> ---
+>  Documentation/ABI/testing/sysfs-platform-dfl-port |  39 ++++
+>  drivers/fpga/Makefile                             |   1 +
+>  drivers/fpga/dfl-afu-error.c                      | 225 ++++++++++++++++++++++
+>  drivers/fpga/dfl-afu-main.c                       |   4 +
+>  drivers/fpga/dfl-afu.h                            |   4 +
+>  5 files changed, 273 insertions(+)
+>  create mode 100644 drivers/fpga/dfl-afu-error.c
