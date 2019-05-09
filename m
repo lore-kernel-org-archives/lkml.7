@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C41C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63ECC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5B0217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECE8217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427742;
-	bh=TvIgUxE/jg4U8tFihnytSuY5nITRgIV5hwKbFi2V/uU=;
+	s=default; t=1557427744;
+	bh=E+ykIYYUrQjojjmCEIaMF/p9FlFHiedvAriHI6DW6HI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bSuOuNxu5x4nRDwmFWRArIAkQ+VtDKw2iSs7tEGRN2nBAw/J8dUeFHa0Rl+Vj0rob
-	 A4E9ZioMAtsRfR1Y1K63O9VLjJacklA8rHzb8D3MMv+o8JH79p99cTrcWvJEkV4sQY
-	 C/mekoj5tsaLsD/EKm5SYQHYSGmKTdvIVgfUYasQ=
+	b=Tx4Lo3J1uBkZXSu0MHLfun+iMNHcpoO4XavtYH+F6bnbiarYUPryQKcUhwV3tvh06
+	 YhfrI7fl2023ZZX0+7vAM8x9z73P6Y6/sTZ9SJLzUgey2ScyqJtllinDz4oF5NX/uO
+	 HJjxsmHK4BuhzTDZkD9c0B25+XBCUUViyXdHIrOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfEIStA (ORCPT
+        id S1728160AbfEIStD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:49:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727649AbfEISsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:55 -0400
+        id S1728140AbfEIStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:49:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 547A42182B;
-        Thu,  9 May 2019 18:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B932182B;
+        Thu,  9 May 2019 18:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427734;
-        bh=TvIgUxE/jg4U8tFihnytSuY5nITRgIV5hwKbFi2V/uU=;
+        s=default; t=1557427739;
+        bh=E+ykIYYUrQjojjmCEIaMF/p9FlFHiedvAriHI6DW6HI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjYPkMt+8o2e2cw2OeuPbt1Z4pfwu7BuMtm048qowW5ulQgBoZC+naf64s+66HS6I
-         hsfDzdaUpUv3WTrQlxs1r9R0HJNH0uxdZI6hJ36wRBsZQsjwFmz2j3qXaSRRLQYSmU
-         mwnt6Ar9X4tg3e4MhWVUzd0EkZmzQ/Lm6uwu8eYw=
+        b=GQJSbCsasN05gfyyZeoiGxI+Xq20x9dGu6jr0lz7dHXQLmEqpZX/PvKIBNFc5pZiN
+         PGlGPSrCl1oSlceUwWCunUUlPa54FRHtfB4RhNn8b3tNT5Y7OTNomRx67apCmSSDlm
+         er9q6ZGENKh1XpXZ5BnfmWlVBI8GojzjVQI/mpiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/66] ASoC: wm_adsp: Add locking to wm_adsp2_bus_error
-Date:   Thu,  9 May 2019 20:41:52 +0200
-Message-Id: <20190509181303.724648986@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 45/66] virtio-blk: limit number of hw queues by nr_cpu_ids
+Date:   Thu,  9 May 2019 20:42:20 +0200
+Message-Id: <20190509181306.582804242@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -61,65 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a2225a6d155fcb247fe4c6d87f7c91807462966d ]
+[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
 
-Best to lock across handling the bus error to ensure the DSP doesn't
-change power state as we are reading the status registers.
+When tag_set->nr_maps is 1, the block layer limits the number of hw queues
+by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
+has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+In addition, specifically for pci scenario, when the 'num-queues' specified
+by qemu is more than maxcpus, virtio-blk would not be able to allocate more
+than maxcpus vectors in order to have a vector for each queue. As a result,
+it falls back into MSI-X with one vector for config and one shared for
+queues.
+
+Considering above reasons, this patch limits the number of hw queues used
+by virtio-blk by nr_cpu_ids.
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm_adsp.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/block/virtio_blk.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index a651fed62a27d..ee85056a85774 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -3819,11 +3819,13 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 	struct regmap *regmap = dsp->regmap;
- 	int ret = 0;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 23752dc99b008..dd64f586679e1 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -446,6 +446,8 @@ static int init_vq(struct virtio_blk *vblk)
+ 	if (err)
+ 		num_vqs = 1;
  
-+	mutex_lock(&dsp->pwr_lock);
++	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
 +
- 	ret = regmap_read(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL, &val);
- 	if (ret) {
- 		adsp_err(dsp,
- 			"Failed to read Region Lock Ctrl register: %d\n", ret);
--		return IRQ_HANDLED;
-+		goto error;
- 	}
- 
- 	if (val & ADSP2_WDT_TIMEOUT_STS_MASK) {
-@@ -3842,7 +3844,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 			adsp_err(dsp,
- 				 "Failed to read Bus Err Addr register: %d\n",
- 				 ret);
--			return IRQ_HANDLED;
-+			goto error;
- 		}
- 
- 		adsp_err(dsp, "bus error address = 0x%x\n",
-@@ -3855,7 +3857,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 			adsp_err(dsp,
- 				 "Failed to read Pmem Xmem Err Addr register: %d\n",
- 				 ret);
--			return IRQ_HANDLED;
-+			goto error;
- 		}
- 
- 		adsp_err(dsp, "xmem error address = 0x%x\n",
-@@ -3868,6 +3870,9 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
- 	regmap_update_bits(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL,
- 			   ADSP2_CTRL_ERR_EINT, ADSP2_CTRL_ERR_EINT);
- 
-+error:
-+	mutex_unlock(&dsp->pwr_lock);
-+
- 	return IRQ_HANDLED;
- }
- EXPORT_SYMBOL_GPL(wm_adsp2_bus_error);
+ 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+ 	if (!vblk->vqs)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
