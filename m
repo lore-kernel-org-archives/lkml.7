@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01059C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4BAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD1A2084E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2930F2084E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GOaoKn77"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BuWO1rZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfEISJi (ORCPT
+        id S1726906AbfEISJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:09:38 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36934 "EHLO mail.skyhub.de"
+        Thu, 9 May 2019 14:09:43 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37022 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbfEISJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:09:34 -0400
+        id S1726843AbfEISJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:09:40 -0400
 Received: from zn.tnic (p200300EC2F0F5F0071783F241746291C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:7178:3f24:1746:291c])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0E02F1EC0AD6;
-        Thu,  9 May 2019 20:09:32 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E53C31EC0AE4;
+        Thu,  9 May 2019 20:09:38 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557425372;
+        t=1557425379;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CTSWferuopSTk+5bTEvUe/yp4XGUgbHDYYkqAF/AO24=;
-        b=GOaoKn77S673U0thLhtlvQe99BzeJQkI2AyvIcdiOlj/iUi86lXVi9Tmw6hcK9tyHEVCL6
-        7SXUUpPeqF4dd/DliDgQkzNrMUFBKqG0B41eHVaLbrmotYri3SryWH20sgJqi37wf4MKUr
-        kLw8p/MS4CU0ruKns+nLD7bkEZ2HD8M=
+        bh=DDbdI1Xv5E0wL2q6g9rFaPnlpU1Wj0FKYyRPwdVhOOw=;
+        b=BuWO1rZdfzNmJgoDbpJJVjHE9yUXAfI9nWcCL9MtJF25EWAdFGzdzqWx3NrRh7cZlCul77
+        2VhFwe+/YTps7VcIX0djw+c0YYkffuLmSVUwnoY2IR0fJWjp+2zuRTo+ItIxs2vPO8zw+t
+        kWi2GPMtLZW/cgs9aUvjGohW22tD6CE=
 From:   Borislav Petkov <bp@alien8.de>
 To:     Tony Luck <tony.luck@intel.com>
 Cc:     linux-edac <linux-edac@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 01/11] RAS/CEC: Fix binary search function
-Date:   Thu,  9 May 2019 20:09:16 +0200
-Message-Id: <20190509180926.31932-2-bp@alien8.de>
+Subject: [PATCH 08/11] RAS/CEC: Rename count_threshold to action_threshold
+Date:   Thu,  9 May 2019 20:09:23 +0200
+Message-Id: <20190509180926.31932-9-bp@alien8.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509180926.31932-1-bp@alien8.de>
 References: <20190509180926.31932-1-bp@alien8.de>
@@ -56,87 +56,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Borislav Petkov <bp@suse.de>
 
-Switch to using Donald Knuth's binary search algorithm (The Art of
-Computer Programming, vol. 3, section 6.2.1). This should've been done
-from the very beginning but the author must've been smoking something
-very potent at the time.
+... which is the better, more-fitting name anyway.
 
-The problem with the current one was that it would return the wrong
-element index in certain situations:
+Tony:
+ - make action_threshold u64 due to debugfs accessors expecting u64.
+ - rename the remaining: s/count_threshold/action_threshold/g
 
-  https://lkml.kernel.org/r/CAM_iQpVd02zkVJ846cj-Fg1yUNuz6tY5q1Vpj4LrXmE06dPYYg@mail.gmail.com
-
-and the noodling code after the loop was fishy at best.
-
-So switch to using Knuth's binary search. The final result is much
-cleaner and straightforward.
-
-Fixes: 011d82611172 ("RAS: Add a Corrected Errors Collector")
-Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Co-developed-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
 Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: <stable@vger.kernel.org>
 ---
- drivers/ras/cec.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ drivers/ras/cec.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 88e4f3ff0cb8..dbfe3e61d2c2 100644
+index 2c92a70fa2f0..1cbc1ed82afe 100644
 --- a/drivers/ras/cec.c
 +++ b/drivers/ras/cec.c
-@@ -183,32 +183,38 @@ static void cec_timer_fn(struct timer_list *unused)
-  */
- static int __find_elem(struct ce_array *ca, u64 pfn, unsigned int *to)
+@@ -37,9 +37,9 @@
+  * thus emulate an an LRU-like behavior when deleting elements to free up space
+  * in the page.
+  *
+- * When an element reaches it's max count of count_threshold, we try to poison
+- * it by assuming that errors triggered count_threshold times in a single page
+- * are excessive and that page shouldn't be used anymore. count_threshold is
++ * When an element reaches it's max count of action_threshold, we try to poison
++ * it by assuming that errors triggered action_threshold times in a single page
++ * are excessive and that page shouldn't be used anymore. action_threshold is
+  * initialized to COUNT_MASK which is the maximum.
+  *
+  * That error event entry causes cec_add_elem() to return !0 value and thus
+@@ -122,7 +122,7 @@ static DEFINE_MUTEX(ce_mutex);
+ static u64 dfs_pfn;
+ 
+ /* Amount of errors after which we offline */
+-static unsigned int count_threshold = COUNT_MASK;
++static u64 action_threshold = COUNT_MASK;
+ 
+ /* Each element "decays" each decay_interval which is 24hrs by default. */
+ #define CEC_DECAY_DEFAULT_INTERVAL	24 * 60 * 60	/* 24 hrs */
+@@ -345,7 +345,7 @@ int cec_add_elem(u64 pfn)
+ 
+ 	/* Check action threshold and soft-offline, if reached. */
+ 	count = COUNT(ca->array[to]);
+-	if (count >= count_threshold) {
++	if (count >= action_threshold) {
+ 		u64 pfn = ca->array[to] >> PAGE_SHIFT;
+ 
+ 		if (!pfn_valid(pfn)) {
+@@ -416,18 +416,18 @@ static int decay_interval_set(void *data, u64 val)
+ }
+ DEFINE_DEBUGFS_ATTRIBUTE(decay_interval_ops, pfn_get, decay_interval_set, "%lld\n");
+ 
+-static int count_threshold_set(void *data, u64 val)
++static int action_threshold_set(void *data, u64 val)
  {
-+	int min = 0, max = ca->n - 1;
- 	u64 this_pfn;
--	int min = 0, max = ca->n;
+ 	*(u64 *)data = val;
  
--	while (min < max) {
--		int tmp = (max + min) >> 1;
-+	while (min <= max) {
-+		int i = (min + max) >> 1;
+ 	if (val > COUNT_MASK)
+ 		val = COUNT_MASK;
  
--		this_pfn = PFN(ca->array[tmp]);
-+		this_pfn = PFN(ca->array[i]);
+-	count_threshold = val;
++	action_threshold = val;
  
- 		if (this_pfn < pfn)
--			min = tmp + 1;
-+			min = i + 1;
- 		else if (this_pfn > pfn)
--			max = tmp;
--		else {
--			min = tmp;
--			break;
-+			max = i - 1;
-+		else if (this_pfn == pfn) {
-+			if (to)
-+				*to = i;
-+
-+			return i;
- 		}
+ 	return 0;
+ }
+-DEFINE_DEBUGFS_ATTRIBUTE(count_threshold_ops, pfn_get, count_threshold_set, "%lld\n");
++DEFINE_DEBUGFS_ATTRIBUTE(action_threshold_ops, pfn_get, action_threshold_set, "%lld\n");
+ 
+ static int array_dump(struct seq_file *m, void *v)
+ {
+@@ -453,7 +453,7 @@ static int array_dump(struct seq_file *m, void *v)
+ 	seq_printf(m, "Decay interval: %lld seconds\n", decay_interval);
+ 	seq_printf(m, "Decays: %lld\n", ca->decays_done);
+ 
+-	seq_printf(m, "Action threshold: %d\n", count_threshold);
++	seq_printf(m, "Action threshold: %lld\n", action_threshold);
+ 
+ 	mutex_unlock(&ce_mutex);
+ 
+@@ -502,10 +502,10 @@ static int __init create_debugfs_nodes(void)
+ 		goto err;
  	}
  
-+	/*
-+	 * When the loop terminates without finding @pfn, min has the index of
-+	 * the element slot where the new @pfn should be inserted. The loop
-+	 * terminates when min > max, which means the min index points to the
-+	 * bigger element while the max index to the smaller element, in-between
-+	 * which the new @pfn belongs to.
-+	 *
-+	 * For more details, see exercise 1, Section 6.2.1 in TAOCP, vol. 3.
-+	 */
- 	if (to)
- 		*to = min;
- 
--	this_pfn = PFN(ca->array[min]);
--
--	if (this_pfn == pfn)
--		return min;
--
- 	return -ENOKEY;
- }
+-	count = debugfs_create_file("count_threshold", S_IRUSR | S_IWUSR, d,
+-				    &count_threshold, &count_threshold_ops);
++	count = debugfs_create_file("action_threshold", S_IRUSR | S_IWUSR, d,
++				    &action_threshold, &action_threshold_ops);
+ 	if (!count) {
+-		pr_warn("Error creating count_threshold debugfs node!\n");
++		pr_warn("Error creating action_threshold debugfs node!\n");
+ 		goto err;
+ 	}
  
 -- 
 2.21.0
