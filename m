@@ -2,425 +2,225 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF151C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0B2C46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71510217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2QsJGwD"
+	by mail.kernel.org (Postfix) with ESMTP id 5651A204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfEIWJh (ORCPT
+        id S1726963AbfEIWMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:09:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44205 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfEIWJh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:09:37 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n134so2664451lfn.11;
-        Thu, 09 May 2019 15:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cqxj3Us4XNCJxPZJKTLFD9+lFBvcLoAAs1I09WGFKIc=;
-        b=k2QsJGwD7GfnAL8nlZ6tryBWDeJM5DurbQh5t466dQbs62rPSV/ROy6oqKs1YCkXBo
-         bg9AnUXl1Lz25xuwpqeZIAgHD3rhpaLzsVYlDLPKrtiF2wGCFkWa1CZel3uijL5m98Qg
-         f2xifmk4eA+xPPgKkRLJaR6kXPt7glNL2MKabCnl7BawvDXH1TAUFT6UFAPImDdRizds
-         UmlCimp1x2F4pNO7CZvVtzCU4SIT1J0pvUhlxbvNnYl2xzqO1lYVkfbIJH4KJRknhUrV
-         wXfuv/5w1ETdLR5OgU4TpsLGI9e/lsnZ+RDazun8LtIrv1jXFkjIMHaStv0AtU9l9fnH
-         eXLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cqxj3Us4XNCJxPZJKTLFD9+lFBvcLoAAs1I09WGFKIc=;
-        b=gqA56qHSrtDPW3o34Vh0ey38BoV4mZtpZ2mDZ+yizUtKwrbxwyemi9uqwCAPXGkRoH
-         nFr1B+q15xQ/Ul8Yay/wDTjGCbSKh+cts65Ix1nPIILRFNGlBuOIQ9VIu/yawzL2N4hu
-         FTDGNf6/0Z/odhIjGJOc2UMuO30ouwVcgeapbBUW0CzJjqiZlbX7ok8k5qu+BvaE4nyP
-         4G/k2avXxkepIJOLqtBuPrgyAlBYrFYgkH+Hj/Mp3NCEqcklUJuVh94C7fh4Ct0Km/7V
-         61ioT6mkaTWh/yLGVjpr40+z2HgD7zX/GibuG8aE4YGZZKOGWBmG5Vk/c0D9N3dpfSBt
-         BV+g==
-X-Gm-Message-State: APjAAAURWSqczPfok0tya7fO5+iDqE7HR+ezD1Xsg0PxoqBOBRf3eknz
-        rHe2tefbKUy8QtcprqN5SYd8wIEOYCc=
-X-Google-Smtp-Source: APXvYqyRTVCW6g7aaCx7yK6lc6ZkcQTLPyEfsMtT7MLJ9QWIe+UhelPnfn8oMeDUrGPhddx2wd/DxA==
-X-Received: by 2002:a19:97c8:: with SMTP id z191mr3715814lfd.167.1557439774043;
-        Thu, 09 May 2019 15:09:34 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id k25sm631543lji.40.2019.05.09.15.09.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 15:09:33 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [RFC PATCH] media: v4l2-subdev: Verify arguments of v4l2_subdev_call()
-Date:   Fri, 10 May 2019 00:09:01 +0200
-Message-Id: <20190509220901.19737-1-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 9 May 2019 18:12:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59302 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726892AbfEIWMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:12:33 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 57F7E8665A;
+        Thu,  9 May 2019 22:12:32 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 20A752E035;
+        Thu,  9 May 2019 22:12:32 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id D6BF718089C9;
+        Thu,  9 May 2019 22:12:31 +0000 (UTC)
+Date:   Thu, 9 May 2019 18:12:28 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        aneesh kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        npiggin@gmail.com, minchan@kernel.org,
+        Mel Gorman <mgorman@suse.de>, Jan Stancek <jstancek@redhat.com>
+Message-ID: <723588321.21952404.1557439948824.JavaMail.zimbra@redhat.com>
+In-Reply-To: <6f606e4f-d151-0c43-11f4-4a78e6dfabbf@linux.alibaba.com>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com> <20190509083726.GA2209@brain-police> <20190509103813.GP2589@hirez.programming.kicks-ass.net> <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com> <20190509182435.GA2623@hirez.programming.kicks-ass.net> <84720bb8-bf3d-8c10-d675-0670f13b2efc@linux.alibaba.com> <249230644.21949166.1557435998550.JavaMail.zimbra@redhat.com> <6f606e4f-d151-0c43-11f4-4a78e6dfabbf@linux.alibaba.com>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.125, 10.4.195.27]
+Thread-Topic: mmu_gather: remove __tlb_reset_range() for force flush
+Thread-Index: GURBsAdvqVJn9wCKGeKzRM66jWF8ow==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 09 May 2019 22:12:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correctness of format type (try or active) and pad number parameters
-passed to subdevice operation callbacks is now verified only for IOCTL
-calls.  However, those callbacks are also used by drivers, e.g., V4L2
-host interfaces.
 
-Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
-macro while calling subdevice operations, move those parameter checks
-from subdev_do_ioctl() to v4l2_subdev_call() so we can avoid
-reimplementing those checks inside drivers.
+----- Original Message -----
+> 
+> 
+> On 5/9/19 2:06 PM, Jan Stancek wrote:
+> > ----- Original Message -----
+> >>
+> >> On 5/9/19 11:24 AM, Peter Zijlstra wrote:
+> >>> On Thu, May 09, 2019 at 05:36:29PM +0000, Nadav Amit wrote:
+> >>>>> On May 9, 2019, at 3:38 AM, Peter Zijlstra <peterz@infradead.org>
+> >>>>> wrote:
+> >>>>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> >>>>> index 99740e1dd273..fe768f8d612e 100644
+> >>>>> --- a/mm/mmu_gather.c
+> >>>>> +++ b/mm/mmu_gather.c
+> >>>>> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+> >>>>> 		unsigned long start, unsigned long end)
+> >>>>> {
+> >>>>> 	/*
+> >>>>> -	 * If there are parallel threads are doing PTE changes on same range
+> >>>>> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> >>>>> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+> >>>>> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> >>>>> -	 * forcefully if we detect parallel PTE batching threads.
+> >>>>> +	 * Sensible comment goes here..
+> >>>>> 	 */
+> >>>>> -	if (mm_tlb_flush_nested(tlb->mm)) {
+> >>>>> -		__tlb_reset_range(tlb);
+> >>>>> -		__tlb_adjust_range(tlb, start, end - start);
+> >>>>> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
+> >>>>> +		/*
+> >>>>> +		 * Since we're can't tell what we actually should have
+> >>>>> +		 * flushed flush everything in the given range.
+> >>>>> +		 */
+> >>>>> +		tlb->start = start;
+> >>>>> +		tlb->end = end;
+> >>>>> +		tlb->freed_tables = 1;
+> >>>>> +		tlb->cleared_ptes = 1;
+> >>>>> +		tlb->cleared_pmds = 1;
+> >>>>> +		tlb->cleared_puds = 1;
+> >>>>> +		tlb->cleared_p4ds = 1;
+> >>>>> 	}
+> >>>>>
+> >>>>> 	tlb_flush_mmu(tlb);
+> >>>> As a simple optimization, I think it is possible to hold multiple
+> >>>> nesting
+> >>>> counters in the mm, similar to tlb_flush_pending, for freed_tables,
+> >>>> cleared_ptes, etc.
+> >>>>
+> >>>> The first time you set tlb->freed_tables, you also atomically increase
+> >>>> mm->tlb_flush_freed_tables. Then, in tlb_flush_mmu(), you just use
+> >>>> mm->tlb_flush_freed_tables instead of tlb->freed_tables.
+> >>> That sounds fraught with races and expensive; I would much prefer to not
+> >>> go there for this arguably rare case.
+> >>>
+> >>> Consider such fun cases as where CPU-0 sees and clears a PTE, CPU-1
+> >>> races and doesn't see that PTE. Therefore CPU-0 sets and counts
+> >>> cleared_ptes. Then if CPU-1 flushes while CPU-0 is still in mmu_gather,
+> >>> it will see cleared_ptes count increased and flush that granularity,
+> >>> OTOH if CPU-1 flushes after CPU-0 completes, it will not and potentiall
+> >>> miss an invalidate it should have had.
+> >>>
+> >>> This whole concurrent mmu_gather stuff is horrible.
+> >>>
+> >>>     /me ponders more....
+> >>>
+> >>> So I think the fundamental race here is this:
+> >>>
+> >>> 	CPU-0				CPU-1
+> >>>
+> >>> 	tlb_gather_mmu(.start=1,	tlb_gather_mmu(.start=2,
+> >>> 		       .end=3);			       .end=4);
+> >>>
+> >>> 	ptep_get_and_clear_full(2)
+> >>> 	tlb_remove_tlb_entry(2);
+> >>> 	__tlb_remove_page();
+> >>> 					if (pte_present(2)) // nope
+> >>>
+> >>> 					tlb_finish_mmu();
+> >>>
+> >>> 					// continue without TLBI(2)
+> >>> 					// whoopsie
+> >>>
+> >>> 	tlb_finish_mmu();
+> >>> 	  tlb_flush()		->	TLBI(2)
+> >> I'm not quite sure if this is the case Jan really met. But, according to
+> >> his test, once correct tlb->freed_tables and tlb->cleared_* are set, his
+> >> test works well.
+> > My theory was following sequence:
+> >
+> > t1: map_write_unmap()                 t2: dummy()
+> >
+> >    map_address = mmap()
+> >    map_address[i] = 'b'
+> >    munmap(map_address)
+> >    downgrade_write(&mm->mmap_sem);
+> >    unmap_region()
+> >    tlb_gather_mmu()
+> >      inc_tlb_flush_pending(tlb->mm);
+> >    free_pgtables()
+> >      tlb->freed_tables = 1
+> >      tlb->cleared_pmds = 1
+> >
+> >                                          pthread_exit()
+> >                                          madvise(thread_stack, 8M,
+> >                                          MADV_DONTNEED)
+> 
+> I'm not quite familiar with the implementation detail of pthread_exit(),
+> does pthread_exit() call MADV_DONTNEED all the time? I don't see your
+> test call it.
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/v4l2-core/v4l2-subdev.c | 121 +++-----------------------
- include/media/v4l2-subdev.h           |  79 +++++++++++++++++
- 2 files changed, 89 insertions(+), 111 deletions(-)
+It's called by glibc:
+  https://sourceware.org/git/?p=glibc.git;a=blob;f=nptl/allocatestack.c;h=fcbc46f0d796abce8d58970d4a1d3df685981e33;hb=refs/heads/master#l380
+  https://sourceware.org/git/?p=glibc.git;a=blob;f=nptl/pthread_create.c;h=18b7bbe7659c027dfd7b0ce3b0c83f54a6f15b18;hb=refs/heads/master#l569
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index d75815ab0d7b..186749d31abf 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -121,53 +121,17 @@ static int subdev_close(struct file *file)
- }
- 
- #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
--static int check_format(struct v4l2_subdev *sd,
--			struct v4l2_subdev_format *format)
-+void *v4l2_subdev_call_va_arg(int n, ...)
- {
--	if (format->which != V4L2_SUBDEV_FORMAT_TRY &&
--	    format->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--		return -EINVAL;
--
--	if (format->pad >= sd->entity.num_pads)
--		return -EINVAL;
--
--	return 0;
--}
--
--static int check_crop(struct v4l2_subdev *sd, struct v4l2_subdev_crop *crop)
--{
--	if (crop->which != V4L2_SUBDEV_FORMAT_TRY &&
--	    crop->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--		return -EINVAL;
--
--	if (crop->pad >= sd->entity.num_pads)
--		return -EINVAL;
--
--	return 0;
--}
--
--static int check_selection(struct v4l2_subdev *sd,
--			   struct v4l2_subdev_selection *sel)
--{
--	if (sel->which != V4L2_SUBDEV_FORMAT_TRY &&
--	    sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--		return -EINVAL;
--
--	if (sel->pad >= sd->entity.num_pads)
--		return -EINVAL;
--
--	return 0;
--}
--
--static int check_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
--{
--	if (edid->pad >= sd->entity.num_pads)
--		return -EINVAL;
--
--	if (edid->blocks && edid->edid == NULL)
--		return -EINVAL;
--
--	return 0;
-+	va_list ap;
-+	int i;
-+	void *p;
-+
-+	va_start(ap, n);
-+	for (i = 9; i < n; i++)
-+		p = va_arg(ap, void *);
-+	va_end(ap);
-+	return p;
- }
- #endif
- 
-@@ -292,10 +256,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_G_FMT: {
- 		struct v4l2_subdev_format *format = arg;
- 
--		rval = check_format(sd, format);
--		if (rval)
--			return rval;
--
- 		memset(format->reserved, 0, sizeof(format->reserved));
- 		memset(format->format.reserved, 0, sizeof(format->format.reserved));
- 		return v4l2_subdev_call(sd, pad, get_fmt, subdev_fh->pad, format);
-@@ -304,10 +264,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_S_FMT: {
- 		struct v4l2_subdev_format *format = arg;
- 
--		rval = check_format(sd, format);
--		if (rval)
--			return rval;
--
- 		memset(format->reserved, 0, sizeof(format->reserved));
- 		memset(format->format.reserved, 0, sizeof(format->format.reserved));
- 		return v4l2_subdev_call(sd, pad, set_fmt, subdev_fh->pad, format);
-@@ -317,10 +273,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 		struct v4l2_subdev_crop *crop = arg;
- 		struct v4l2_subdev_selection sel;
- 
--		rval = check_crop(sd, crop);
--		if (rval)
--			return rval;
--
- 		memset(crop->reserved, 0, sizeof(crop->reserved));
- 		memset(&sel, 0, sizeof(sel));
- 		sel.which = crop->which;
-@@ -340,10 +292,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 		struct v4l2_subdev_selection sel;
- 
- 		memset(crop->reserved, 0, sizeof(crop->reserved));
--		rval = check_crop(sd, crop);
--		if (rval)
--			return rval;
--
- 		memset(&sel, 0, sizeof(sel));
- 		sel.which = crop->which;
- 		sel.pad = crop->pad;
-@@ -361,13 +309,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_ENUM_MBUS_CODE: {
- 		struct v4l2_subdev_mbus_code_enum *code = arg;
- 
--		if (code->which != V4L2_SUBDEV_FORMAT_TRY &&
--		    code->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--			return -EINVAL;
--
--		if (code->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		memset(code->reserved, 0, sizeof(code->reserved));
- 		return v4l2_subdev_call(sd, pad, enum_mbus_code, subdev_fh->pad,
- 					code);
-@@ -376,13 +317,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_ENUM_FRAME_SIZE: {
- 		struct v4l2_subdev_frame_size_enum *fse = arg;
- 
--		if (fse->which != V4L2_SUBDEV_FORMAT_TRY &&
--		    fse->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--			return -EINVAL;
--
--		if (fse->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		memset(fse->reserved, 0, sizeof(fse->reserved));
- 		return v4l2_subdev_call(sd, pad, enum_frame_size, subdev_fh->pad,
- 					fse);
-@@ -391,9 +325,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_G_FRAME_INTERVAL: {
- 		struct v4l2_subdev_frame_interval *fi = arg;
- 
--		if (fi->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		memset(fi->reserved, 0, sizeof(fi->reserved));
- 		return v4l2_subdev_call(sd, video, g_frame_interval, arg);
- 	}
-@@ -401,9 +332,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_S_FRAME_INTERVAL: {
- 		struct v4l2_subdev_frame_interval *fi = arg;
- 
--		if (fi->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		memset(fi->reserved, 0, sizeof(fi->reserved));
- 		return v4l2_subdev_call(sd, video, s_frame_interval, arg);
- 	}
-@@ -411,13 +339,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_ENUM_FRAME_INTERVAL: {
- 		struct v4l2_subdev_frame_interval_enum *fie = arg;
- 
--		if (fie->which != V4L2_SUBDEV_FORMAT_TRY &&
--		    fie->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--			return -EINVAL;
--
--		if (fie->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		memset(fie->reserved, 0, sizeof(fie->reserved));
- 		return v4l2_subdev_call(sd, pad, enum_frame_interval, subdev_fh->pad,
- 					fie);
-@@ -426,10 +347,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_G_SELECTION: {
- 		struct v4l2_subdev_selection *sel = arg;
- 
--		rval = check_selection(sd, sel);
--		if (rval)
--			return rval;
--
- 		memset(sel->reserved, 0, sizeof(sel->reserved));
- 		return v4l2_subdev_call(
- 			sd, pad, get_selection, subdev_fh->pad, sel);
-@@ -438,10 +355,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_SUBDEV_S_SELECTION: {
- 		struct v4l2_subdev_selection *sel = arg;
- 
--		rval = check_selection(sd, sel);
--		if (rval)
--			return rval;
--
- 		memset(sel->reserved, 0, sizeof(sel->reserved));
- 		return v4l2_subdev_call(
- 			sd, pad, set_selection, subdev_fh->pad, sel);
-@@ -450,38 +363,24 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
- 	case VIDIOC_G_EDID: {
- 		struct v4l2_subdev_edid *edid = arg;
- 
--		rval = check_edid(sd, edid);
--		if (rval)
--			return rval;
--
- 		return v4l2_subdev_call(sd, pad, get_edid, edid);
- 	}
- 
- 	case VIDIOC_S_EDID: {
- 		struct v4l2_subdev_edid *edid = arg;
- 
--		rval = check_edid(sd, edid);
--		if (rval)
--			return rval;
--
- 		return v4l2_subdev_call(sd, pad, set_edid, edid);
- 	}
- 
- 	case VIDIOC_SUBDEV_DV_TIMINGS_CAP: {
- 		struct v4l2_dv_timings_cap *cap = arg;
- 
--		if (cap->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		return v4l2_subdev_call(sd, pad, dv_timings_cap, cap);
- 	}
- 
- 	case VIDIOC_SUBDEV_ENUM_DV_TIMINGS: {
- 		struct v4l2_enum_dv_timings *dvt = arg;
- 
--		if (dvt->pad >= sd->entity.num_pads)
--			return -EINVAL;
--
- 		return v4l2_subdev_call(sd, pad, enum_dv_timings, dvt);
- 	}
- 
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index a7fa5b80915a..a0ad8c6f588b 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -1091,6 +1091,82 @@ void v4l2_subdev_free_pad_config(struct v4l2_subdev_pad_config *cfg);
- void v4l2_subdev_init(struct v4l2_subdev *sd,
- 		      const struct v4l2_subdev_ops *ops);
- 
-+#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
-+void *v4l2_subdev_call_va_arg(int n, ...);
-+
-+#define v4l2_subdev_call_chk_args(sd, o, f, args...)			\
-+({									\
-+	__u32 __which = V4L2_SUBDEV_FORMAT_ACTIVE;			\
-+	__u32 __pad = 0;						\
-+	if ((void *)&sd->ops->o == &sd->ops->pad) {			\
-+		if ((void *)&sd->ops->o->f == &sd->ops->pad->get_fmt ||	\
-+		    (void *)&sd->ops->o->f == &sd->ops->pad->set_fmt) {	\
-+			struct v4l2_subdev_format *__fmt;		\
-+			__fmt = v4l2_subdev_call_va_arg(2, ##args);	\
-+			__which = __fmt->which;				\
-+			__pad = __fmt->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->enum_mbus_code) {	\
-+			struct v4l2_subdev_mbus_code_enum *__code;	\
-+			__code = v4l2_subdev_call_va_arg(2, ##args);	\
-+			__which = __code->which;			\
-+			__pad = __code->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->enum_frame_size) {	\
-+			struct v4l2_subdev_frame_size_enum *__fse;	\
-+			__fse = v4l2_subdev_call_va_arg(2, ##args);	\
-+			__which = __fse->which;				\
-+			__pad = __fse->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->enum_frame_interval) {\
-+			struct v4l2_subdev_frame_interval_enum *__fie;	\
-+			__fie = v4l2_subdev_call_va_arg(2, ##args);	\
-+			__which = __fie->which;				\
-+			__pad = __fie->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->get_selection ||	\
-+			   (void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->set_selection) {	\
-+			struct v4l2_subdev_selection *__sel;		\
-+			__sel = v4l2_subdev_call_va_arg(2, ##args);	\
-+			__which = __sel->which;				\
-+			__pad = __sel->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->get_edid ||		\
-+			   (void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->set_edid) {		\
-+			struct v4l2_subdev_edid *__edid;		\
-+			__edid = v4l2_subdev_call_va_arg(1, ##args);	\
-+			__pad = __edid->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->dv_timings_cap) {	\
-+			struct v4l2_dv_timings_cap *__cap;		\
-+			__cap = v4l2_subdev_call_va_arg(1, ##args);	\
-+			__pad = __cap->pad;				\
-+		} else if ((void *)&sd->ops->o->f ==			\
-+				   &sd->ops->pad->enum_dv_timings) {	\
-+			struct v4l2_enum_dv_timings *__dvt;		\
-+			__dvt = v4l2_subdev_call_va_arg(1, ##args);	\
-+			__pad = __dvt->pad;				\
-+		}							\
-+	} else if ((void *)&sd->ops->o == &sd->ops->video) {		\
-+		if ((void *)&sd->ops->o->f ==				\
-+			    &sd->ops->video->g_frame_interval ||	\
-+		    (void *)&sd->ops->o->f ==				\
-+			    &sd->ops->video->s_frame_interval) {	\
-+			struct v4l2_subdev_frame_interval *__fi;	\
-+			__fi = v4l2_subdev_call_va_arg(1, ##args);	\
-+			__pad = __fi->pad;				\
-+		}							\
-+	}								\
-+	(__which == V4L2_SUBDEV_FORMAT_ACTIVE ||			\
-+	 __which == V4L2_SUBDEV_FORMAT_TRY) &&				\
-+	__pad < (sd->entity.num_pads ? : 1) ? 0 : -EINVAL;		\
-+})
-+#else
-+#define v4l2_subdev_call_chk_args(sd, o, f, args...) 0
-+#endif
-+
- /**
-  * v4l2_subdev_call - call an operation of a v4l2_subdev.
-  *
-@@ -1112,6 +1188,9 @@ void v4l2_subdev_init(struct v4l2_subdev *sd,
- 			__result = -ENODEV;				\
- 		else if (!(__sd->ops->o && __sd->ops->o->f))		\
- 			__result = -ENOIOCTLCMD;			\
-+		else if (v4l2_subdev_call_chk_args(sd, o, f, ##args))	\
-+			__result = v4l2_subdev_call_chk_args(sd, o, f,	\
-+							     ##args);	\
- 		else							\
- 			__result = __sd->ops->o->f(__sd, ##args);	\
- 		__result;						\
--- 
-2.21.0
+(gdb) bt
+#0  madvise () at ../sysdeps/unix/syscall-template.S:78
+#1  0x0000ffffbe7679f8 in advise_stack_range (guardsize=<optimized out>, pd=281474976706191, size=<optimized out>, mem=0xffffbddd0000)
+    at allocatestack.c:392
+#2  start_thread (arg=0xffffffffee8f) at pthread_create.c:576
+#3  0x0000ffffbe6b157c in thread_start () at ../sysdeps/unix/sysv/linux/aarch64/clone.S:78
 
+Dump of assembler code for function madvise:
+=> 0x0000ffffbe6adaf0 <+0>:     mov     x8, #0xe9                       // #233
+   0x0000ffffbe6adaf4 <+4>:     svc     #0x0
+   0x0000ffffbe6adaf8 <+8>:     cmn     x0, #0xfff
+   0x0000ffffbe6adafc <+12>:    b.cs    0xffffbe6adb04 <madvise+20>  // b.hs, b.nlast
+   0x0000ffffbe6adb00 <+16>:    ret
+   0x0000ffffbe6adb04 <+20>:    b       0xffffbe600e18 <__GI___syscall_error>
+
+
+> If so this pattern is definitely possible.
+> 
+> >                                            zap_page_range()
+> >                                              tlb_gather_mmu()
+> >                                                inc_tlb_flush_pending(tlb->mm);
+> >
+> >    tlb_finish_mmu()
+> >      if (mm_tlb_flush_nested(tlb->mm))
+> >        __tlb_reset_range()
+> >          tlb->freed_tables = 0
+> >          tlb->cleared_pmds = 0
+> >      __flush_tlb_range(last_level = 0)
+> >    ...
+> >    map_address = mmap()
+> >      map_address[i] = 'b'
+> >        <page fault loop>
+> >        # PTE appeared valid to me,
+> >        # so I suspected stale TLB entry at higher level as result of
+> >        "freed_tables = 0"
+> >
+> >
+> > I'm happy to apply/run any debug patches to get more data that would help.
+> >
+> >>>
+> >>> And we can fix that by having tlb_finish_mmu() sync up. Never let a
+> >>> concurrent tlb_finish_mmu() complete until all concurrenct mmu_gathers
+> >>> have completed.
+> >> Not sure if this will scale well.
+> >>
+> >>> This should not be too hard to make happen.
+> >>
+> 
+> 
