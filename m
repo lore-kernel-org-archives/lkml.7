@@ -2,159 +2,165 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E69C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1CBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B765420989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709252173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfEIWU6 (ORCPT
+        id S1726808AbfEIWei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:20:58 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:36450 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfEIWU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:20:58 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.141])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hOrOj-00055b-MR; Thu, 09 May 2019 16:20:18 -0600
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        brendanhiggins@google.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, amir73il@gmail.com,
-        dan.carpenter@oracle.com, dan.j.williams@intel.com,
-        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
-        julia.lawall@lip6.fr, khilman@baylibre.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-References: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
- <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
- <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
-Date:   Thu, 9 May 2019 16:20:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 18:34:38 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41484 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfEIWeh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:34:37 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 3BD88802A4; Fri, 10 May 2019 00:34:24 +0200 (CEST)
+Date:   Fri, 10 May 2019 00:34:37 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
+ backlight
+Message-ID: <20190509223436.GB527@amd>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
+ <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
+ <20190508171229.GA22024@amd>
+ <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com>
+ <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509214233.GA20877@mit.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: wfg@linux.intel.com, rostedt@goodmis.org, rientjes@google.com, richard@nod.at, pmladek@suse.com, mpe@ellerman.id.au, khilman@baylibre.com, julia.lawall@lip6.fr, joel@jms.id.au, jdike@addtoit.com, daniel@ffwll.ch, dan.j.williams@intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Alexander.Levin@microsoft.com, linux-um@lists.infradead.org, linux-nvdimm@lists.01.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org, robh@kernel.org, mcgrof@kernel.org, kieran.bingham@ideasonboard.com, keescook@google.com, brendanhiggins@google.com, gregkh@linuxfoundation.org, knut.omang@oracle.com, Tim.Bird@sony.com, frowand.list@gmail.com, tytso@mit.edu
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
+Content-Disposition: inline
+In-Reply-To: <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--CUfgB8w4ZwR/yMy5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019-05-09 3:42 p.m., Theodore Ts'o wrote:
-> On Thu, May 09, 2019 at 11:12:12AM -0700, Frank Rowand wrote:
->>
->>     "My understanding is that the intent of KUnit is to avoid booting a kernel on
->>     real hardware or in a virtual machine.  That seems to be a matter of semantics
->>     to me because isn't invoking a UML Linux just running the Linux kernel in
->>     a different form of virtualization?
->>
->>     So I do not understand why KUnit is an improvement over kselftest.
->>
->>     ...
->>
->>     What am I missing?"
-> 
-> One major difference: kselftest requires a userspace environment; it
-> starts systemd, requires a root file system from which you can load
-> modules, etc.  Kunit doesn't require a root file system; doesn't
-> require that you start systemd; doesn't allow you to run arbitrary
-> perl, python, bash, etc. scripts.  As such, it's much lighter weight
-> than kselftest, and will have much less overhead before you can start
-> running tests.  So it's not really the same kind of virtualization.
+Hi!
 
-I largely agree with everything Ted has said in this thread, but I 
-wonder if we are conflating two different ideas that is causing an 
-impasse. From what I see, Kunit actually provides two different things:
+> >> Yes, please. We have common interface for LED drivers; this needs to
+> >> use it.
+> >=20
+> > That is indeed a better option and I did in fact considered this first =
+and
+> > even did a test implementation. The discoveries were:
+> > 1. The WMI methods are write-only and only written all at once in a
+> > transaction manner (also invoking solely first RGB-interface method has=
+ no
+> > effect until some other keyboard backlight method is called).
 
-1) An execution environment that can be run very quickly in userspace on 
-tests in the kernel source. This speeds up the tests and gives a lot of 
-benefit to developers using those tests because they can get feedback on 
-their code changes a *lot* quicker.
+Write-only is not a problem, right? Nor should be transaction. Just
+cache the values in kernel.
 
-2) A framework to write unit tests that provides a lot of the same 
-facilities as other common unit testing frameworks from userspace (ie. a 
-runner that runs a list of tests and a bunch of helpers such as 
-KUNIT_EXPECT_* to simplify test passes and failures).
+> > 2. In addition to RGB there are several control values, which switch
+> > effects, speed and enable or disable the backlight under specific
+> > conditions or switch whether it is set temporarily or permanently (not =
+that
+> > these are critical functionalities, but for the sake of
+> > completeness).
 
-The first item from Kunit is novel and I see absolutely no overlap with 
-anything kselftest does. It's also the valuable thing I'd like to see 
-merged and grow.
+Yep, lets ignore that for now.
 
-The second item, arguably, does have significant overlap with kselftest. 
-Whether you are running short tests in a light weight UML environment or 
-higher level tests in an heavier VM the two could be using the same 
-framework for writing or defining in-kernel tests. It *may* also be 
-valuable for some people to be able to run all the UML tests in the 
-heavy VM environment along side other higher level tests.
+> > 3. The EC is really slow
+> > # time bash -c "echo 1 > /sys/devices/platform/faustus/kbbl_set"
+> >=20
+> > real	0m0,691s
+> > user	0m0,000s
+> > sys	0m0,691s
+> >=20
+> > (please ignore the sysfs-path there, it's essentially the same code run=
+ning
+> > as in this patch). It is consistently same for both temporary and perma=
+nent
+> > configuration. Writing after every change would take about (6+)x of tha=
+t.
+> > Not that it's that unbearable though as it is not likely to be
+> > done often.
 
-Looking at the selftests tree in the repo, we already have similar items 
-to what Kunit is adding as I described in point (2) above. 
-kselftest_harness.h contains macros like EXPECT_* and ASSERT_* with very 
-similar intentions to the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
+Yup, this is quite ugly.
 
-However, the number of users of this harness appears to be quite small. 
-Most of the code in the selftests tree seems to be a random mismash of 
-scripts and userspace code so it's not hard to see it as something 
-completely different from the new Kunit:
+What about simply ignoring changes as they happen, and then setting
+RGB channels when nothing changes for 10msec?
 
-$ git grep --files-with-matches kselftest_harness.h *
-Documentation/dev-tools/kselftest.rst
-MAINTAINERS
-tools/testing/selftests/kselftest_harness.h
-tools/testing/selftests/net/tls.c
-tools/testing/selftests/rtc/rtctest.c
-tools/testing/selftests/seccomp/Makefile
-tools/testing/selftests/seccomp/seccomp_bpf.c
-tools/testing/selftests/uevent/Makefile
-tools/testing/selftests/uevent/uevent_filtering.c
+> > I was not quite happy with that implementation so I opted for writing s=
+ort
+> > of sysfs wrapper instead that would allow same sort of transactions as
+> > provided by BIOS. I agree that it's non-standard solution.
+> >=20
+> > If I understood correctly, the typical current RGB led_class devices fr=
+om
+> > the Linux tree currently provide channels as separate LEDs. There are a=
+lso
+> > blink / pattern options present, I guess one could misuse them for sett=
+ing
+> > effects and speed. So one could make 3 devices for RGB + 3 for awake,
+> > sleep, boot modes + 1 for setting effect / speed.
 
-Thus, I can personally see a lot of value in integrating the kunit test 
-framework with this kselftest harness. There's only a small number of 
-users of the kselftest harness today, so one way or another it seems 
-like getting this integrated early would be a good idea. Letting Kunit 
-and Kselftests progress independently for a few years will only make 
-this worse and may become something we end up regretting.
+Take a look at "pattern" trigger. That should give you effect/speed
+options. .. for single channel.
 
-Logan
+> > I'd guess the end solution might be also either something like combinat=
+ion
+> > of both approaches (RGB leds + separate sysfs interface) or some extens=
+ion
+> > of the led_class device interface. Dropping support of the non-essential
+> > features for the sake of uniformity of ABI would also be an option to
+> > consider (exposing just three RGB LEDs with brightness only), not happy=
+ one
+> > though.
+> >=20
+> > In any case this looks like it might need some additional research,
+> > discussion, development, and a pair of iterations so I tend to separate
+> > this patch from the series and post it extra after the others are throu=
+gh
+> > to avoid dragging 10+ patches around.
 
+Separate patch certainly makes sense.
 
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--CUfgB8w4ZwR/yMy5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAlzUqvwACgkQMOfwapXb+vK90gCfa5VCwbhBeQ0RlMOZuDkqJBma
+raAAnj+RO123XbofMN8InUVu/ER8DTMR
+=EKgO
+-----END PGP SIGNATURE-----
 
-
+--CUfgB8w4ZwR/yMy5--
