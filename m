@@ -2,158 +2,223 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EFEC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F91C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA106208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F7721744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y/3bdnkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbfEIK1I (ORCPT
+        id S1726674AbfEIK1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 06:27:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39401 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbfEIK1G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 06:27:06 -0400
-Received: by mail-io1-f70.google.com with SMTP id l19so1338150iob.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 03:27:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=FWnqg6sX3r1817LO9gnC9fDXXV3wsSjf0w4i8zX7O4Y=;
-        b=SCxNGgu+rwJH5Nq3FxqIjOXMGrHOUJcM9dls2HHlx9Zs7WreF6BS17HibhLJx4+PbA
-         Wnc7HJs5fUlH+745HU6NqUtaZlF08940pZTsCyNuBeYKXrPrhYoSXWjr02fci3KOF/9Z
-         5PgOSulZfL+7uDSoc2G+0VUo4wUx10PGO8zaKHz5th9B4Kp7KbUzWFWKtLLpUi3e3xkL
-         R/eiyu1m59WbbIXgRWnWY9sn42OH77y3GdgVLJ/e9kLP9hIgC1TXnPrpXLMZE/tBZxAf
-         SrTvYRiRwqDQNgNvBESgBfC19a/LGbBmhkkvggl4cCiPKHC1VRjWFjzpfLwMeZGSQCUQ
-         kTvQ==
-X-Gm-Message-State: APjAAAXANYmBn65pMLdLn6kNkwyOF93PQg/WUmehQEnEhak8Ve2YFR0W
-        RxVfCW35p9fGbdJq8uY7eF0/QTXDcAax6Auhf3aIikVhRcvH
-X-Google-Smtp-Source: APXvYqx2VnF7yyuNGUSk3cxaOTHyGBLkTV43ZkhuqH93/8SOoZZ0mfjGitcdq9IOtJxvf69LPaewIOxJs6g25zGuPu0ioh6o8c0a
+        Thu, 9 May 2019 06:27:33 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:62858 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfEIK1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 06:27:32 -0400
+Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd4009e0000>; Thu, 09 May 2019 18:27:43 +0800
+Received: from HKMAIL103.nvidia.com ([10.18.16.12])
+  by hkpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 May 2019 03:27:24 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate101.nvidia.com on Thu, 09 May 2019 03:27:24 -0700
+Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 May
+ 2019 10:27:25 +0000
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.55) by
+ HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Thu, 9 May 2019 10:27:24 +0000
+Received: from SN6PR12MB2734.namprd12.prod.outlook.com (52.135.107.25) by
+ SN6PR12MB2830.namprd12.prod.outlook.com (20.177.250.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.15; Thu, 9 May 2019 10:27:22 +0000
+Received: from SN6PR12MB2734.namprd12.prod.outlook.com
+ ([fe80::e104:f933:eac3:17e1]) by SN6PR12MB2734.namprd12.prod.outlook.com
+ ([fe80::e104:f933:eac3:17e1%3]) with mapi id 15.20.1856.016; Thu, 9 May 2019
+ 10:27:21 +0000
+From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
+To:     Jonathan Hunter <jonathanh@nvidia.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Suresh Mangipudi <smangipudi@nvidia.com>,
+        "Laxman Dewangan" <ldewangan@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+Subject: RE: [Patch-V2 1/4] dt-binding: Tegra194 pinctrl support
+Thread-Topic: [Patch-V2 1/4] dt-binding: Tegra194 pinctrl support
+Thread-Index: AQHVBj6KET6veNuQRUGyzRHlwar6sKZiilEAgAAMP6A=
+Date:   Thu, 9 May 2019 10:27:21 +0000
+Message-ID: <SN6PR12MB2734B6AAEEADCF432DD4001EC3330@SN6PR12MB2734.namprd12.prod.outlook.com>
+References: <1557389296-10257-1-git-send-email-kyarlagadda@nvidia.com>
+ <41dbf606-0a15-a0bc-07fd-2c7101d7f6a1@nvidia.com>
+In-Reply-To: <41dbf606-0a15-a0bc-07fd-2c7101d7f6a1@nvidia.com>
+Accept-Language: en-IN, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=kyarlagadda@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2019-05-09T10:27:17.8907820Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic;
+ Sensitivity=Unrestricted
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kyarlagadda@nvidia.com; 
+x-originating-ip: [115.114.118.135]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a23d28e-43f2-46b7-8800-08d6d468ebf8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN6PR12MB2830;
+x-ms-traffictypediagnostic: SN6PR12MB2830:
+x-microsoft-antispam-prvs: <SN6PR12MB2830AA65E1606FB27D76CFB2C3330@SN6PR12MB2830.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(13464003)(8676002)(81156014)(8936002)(81166006)(53936002)(25786009)(2501003)(76176011)(6116002)(53546011)(55236004)(102836004)(9686003)(3846002)(229853002)(55016002)(6436002)(14454004)(478600001)(107886003)(6246003)(316002)(86362001)(4326008)(33656002)(54906003)(110136005)(2201001)(11346002)(476003)(446003)(73956011)(5660300002)(6506007)(66946007)(71190400001)(71200400001)(76116006)(66446008)(64756008)(66556008)(66476007)(68736007)(256004)(14444005)(52536014)(99286004)(486006)(7736002)(66066001)(305945005)(74316002)(2906002)(186003)(26005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2830;H:SN6PR12MB2734.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nvidia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CalroI1aH+uXyI+Uz2PFQmPvQD94fhrqxwKmOXgJL4g04cAbSy33VsUUP2x/bacUHQ+rpl8bvGIASUz8b+f0rl5aC40qbJMQcKGU/sh6OwXX4E0q+CpZuLmZPH84Bd2Fnq8ApsydP0JvC+rQ40vSLl/AntV/WR2YK0UmsquV5MUzQYl753PsA7vgp++kgRXHW8VxloAUzKcZA91ZgPdWYYC/QOz2E6m68lsuhWT9QUhAao+J/4TEiHT8RkqOSQLkaUgzqGmxrCihar1Q4yJ1097G18ZjDUQqYj8/ICucv5pkk069WXa1PtcNU/WwwnLyGAqr37QbaB1BnUpLTOobhXXN8dHdz/xNTvmCSjLvz6YhPeyZyYeHumgxyhKK9OViAP76IAfFsxh54ZDrpWkh3wc/RidEtx6L57UwgAxDZJI=
 MIME-Version: 1.0
-X-Received: by 2002:a24:d941:: with SMTP id p62mr2114471itg.174.1557397625396;
- Thu, 09 May 2019 03:27:05 -0700 (PDT)
-Date:   Thu, 09 May 2019 03:27:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003c6794058871e40a@google.com>
-Subject: general protection fault in sisusb_probe
-From:   syzbot <syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a23d28e-43f2-46b7-8800-08d6d468ebf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 10:27:21.8033
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2830
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557397663; bh=/k3plfuAWvtaORwooBUC1u46VgmnYzLxhpSwluxyXCs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
+         Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
+         X-MS-TNEF-Correlator:msip_labels:authentication-results:
+         x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
+         x-ms-traffictypediagnostic:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
+         x-forefront-antispam-report:received-spf:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
+         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=Y/3bdnkc1iWMciiaT9JzZLyqsjG3uGyzw6f9pSSiQ3j3xefV/QhABuZxcnz9AlDyB
+         Sq+r8+cFiNx6OHxpm8E+/QeYvmjlE/Xe+B6Rg0c6YRpcSm5CZUCn9X/JYSEjsadvz/
+         Zl4RU2AVLgs5CgL5yLyPC5/WzP4l8/el6GPCDzWkmg+DD7BQpvtZ52y24tU7mdUJcr
+         c1UT6MKuedRscg0cQT9iwvBLjRBa1sUiEpJN1ycDiuZU566d4ON785z/+45yko7CFR
+         XIsJz3JxTvcrrbTLwa2BwGoJlN6cad+sDmDjh9zg4X+JTfnKCa4mXZQm03smujCqs9
+         bfGv6GOdNjN6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e18c00a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-dashboard link: https://syzkaller.appspot.com/bug?extid=a0cbdbd6d169020c8959
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
-
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 5666 Comm: kworker/0:4 Not tainted 5.1.0-rc3-319004-g43151d6 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:dev_name include/linux/device.h:1087 [inline]
-RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
-Code: 89 f5 53 e8 8e 53 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 80 53 1c fc 48  
-8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-05 e8 41 68 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 53
-RSP: 0018:ffff8880994cf1c8 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffed1013299e40 RCX: ffffc900117a8000
-RDX: 000000000000001e RSI: ffffffff855576f0 RDI: 00000000000000f0
-RBP: 00000000000000a0 R08: ffff88808f13b100 R09: 0000000000000006
-R10: ffff88808f13ba08 R11: ffff88808f13b100 R12: ffffffff8f031080
-R13: ffff8880994cf220 R14: ffff888092c23300 R15: ffff88808e3e4c80
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd141d55000 CR3: 00000000995ae000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  _dev_err+0xdc/0x10e drivers/base/core.c:3251
-  sisusb_probe+0x1c8/0xbd6 drivers/usb/misc/sisusbvga/sisusb.c:3035
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2023
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace ad8f42e42c90866c ]---
-RIP: 0010:dev_name include/linux/device.h:1087 [inline]
-RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
-Code: 89 f5 53 e8 8e 53 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 80 53 1c fc 48  
-8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-05 e8 41 68 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 53
-RSP: 0018:ffff8880994cf1c8 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffed1013299e40 RCX: ffffc900117a8000
-RDX: 000000000000001e RSI: ffffffff855576f0 RDI: 00000000000000f0
-RBP: 00000000000000a0 R08: ffff88808f13b100 R09: 0000000000000006
-R10: ffff88808f13ba08 R11: ffff88808f13b100 R12: ffffffff8f031080
-R13: ffff8880994cf220 R14: ffff888092c23300 R15: ffff88808e3e4c80
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd141d55000 CR3: 00000000995ae000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvbmF0aGFuIEh1bnRlciA8
+am9uYXRoYW5oQG52aWRpYS5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBNYXkgOSwgMjAxOSAzOjEy
+IFBNDQo+IFRvOiBLcmlzaG5hIFlhcmxhZ2FkZGEgPGt5YXJsYWdhZGRhQG52aWRpYS5jb20+OyBs
+aW51cy53YWxsZWlqQGxpbmFyby5vcmc7DQo+IHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbTsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGdwaW9Admdlci5rZXJuZWwub3Jn
+OyBsaW51eC10ZWdyYUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnDQo+IENjOiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29tPjsg
+Sm9zZXBoIExvDQo+IDxqb3NlcGhsQG52aWRpYS5jb20+OyBTdXJlc2ggTWFuZ2lwdWRpIDxzbWFu
+Z2lwdWRpQG52aWRpYS5jb20+Ow0KPiBMYXhtYW4gRGV3YW5nYW4gPGxkZXdhbmdhbkBudmlkaWEu
+Y29tPjsgVmlkeWEgU2FnYXINCj4gPHZpZHlhc0BudmlkaWEuY29tPg0KPiBTdWJqZWN0OiBSZTog
+W1BhdGNoLVYyIDEvNF0gZHQtYmluZGluZzogVGVncmExOTQgcGluY3RybCBzdXBwb3J0DQo+IA0K
+PiANCj4gT24gMDkvMDUvMjAxOSAwOTowOCwgS3Jpc2huYSBZYXJsYWdhZGRhIHdyb3RlOg0KPiA+
+IEFkZCBiaW5kaW5nIGRvYyBmb3IgVGVncmEgMTk0IHBpbmN0cmwgZHJpdmVyDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBLcmlzaG5hIFlhcmxhZ2FkZGEgPGt5YXJsYWdhZGRhQG52aWRpYS5jb20+
+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiBWMjoNCj4gPiBjcmVhdGVkIG5ldyBiaW5kaW5nIGRv
+YyB0byBoYW5kbGUgVGVncmExOTQgcGluY3RybCBkcml2ZXINCj4gPg0KPiA+ICAuLi4vYmluZGlu
+Z3MvcGluY3RybC9udmlkaWEsdGVncmExOTQtcGlubXV4LnR4dCAgICB8IDExNg0KPiArKysrKysr
+KysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExNiBpbnNlcnRpb25zKCspDQo+
+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waW5jdHJsL252aWRpYSx0ZWdyYTE5NC1waW5tdXgudHh0DQo+ID4NCj4gPiBkaWZmIC0t
+Z2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9udmlk
+aWEsdGVncmExOTQtcGlubXV4LnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BpbmN0cmwvbnZpZGlhLHRlZ3JhMTk0LXBpbm11eC50eHQNCj4gPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjgwZTM2YzcNCj4gPiAtLS0gL2Rldi9udWxs
+DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbnZp
+ZGlhLHRlZ3JhMTk0LXBpbm11eA0KPiA+ICsrKyAudHh0DQo+ID4gQEAgLTAsMCArMSwxMTYgQEAN
+Cj4gPiArTlZJRElBIFRlZ3JhMTk0IHBpbm11eCBjb250cm9sbGVyDQo+ID4gKw0KPiA+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6ICJudmlkaWEsdGVncmExOTQtcGlu
+bXV4Ig0KPiA+ICstIHJlZzogU2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIGJhc2UgYWRkcmVzcyBh
+bmQgc2l6ZSBwYWlycyBmb3I6DQo+ID4gKyAgLSBmaXJzdCBlbnRyeTogVGhlIEFQQl9NSVNDX0dQ
+XypfUEFEQ1RSTCByZWdpc3RlcnMgKHBhZCBjb250cm9sKQ0KPiA+ICsgIC0gc2Vjb25kIGVudHJ5
+OiBUaGUgUElOTVVYX0FVWF8qIHJlZ2lzdGVycyAocGlubXV4KQ0KPiA+ICsNCj4gPiArUGxlYXNl
+IHJlZmVyIHRvIHBpbmN0cmwtYmluZGluZ3MudHh0IGluIHRoaXMgZGlyZWN0b3J5IGZvciBkZXRh
+aWxzIG9mDQo+ID4gK3RoZSBjb21tb24gcGluY3RybCBiaW5kaW5ncyB1c2VkIGJ5IGNsaWVudCBk
+ZXZpY2VzLCBpbmNsdWRpbmcgdGhlDQo+ID4gK21lYW5pbmcgb2YgdGhlIHBocmFzZSAicGluIGNv
+bmZpZ3VyYXRpb24gbm9kZSIuDQo+ID4gKw0KPiA+ICtUZWdyYSdzIHBpbiBjb25maWd1cmF0aW9u
+IG5vZGVzIGFjdCBhcyBhIGNvbnRhaW5lciBmb3IgYW4gYXJiaXRyYXJ5DQo+ID4gK251bWJlciBv
+ZiBzdWJub2Rlcy4gRWFjaCBvZiB0aGVzZSBzdWJub2RlcyByZXByZXNlbnRzIHNvbWUgZGVzaXJl
+ZA0KPiA+ICtjb25maWd1cmF0aW9uIGZvciBhIHBpbiwgYSBncm91cCwgb3IgYSBsaXN0IG9mIHBp
+bnMgb3IgZ3JvdXBzLiBUaGlzDQo+ID4gK2NvbmZpZ3VyYXRpb24gY2FuIGluY2x1ZGUgdGhlIG11
+eCBmdW5jdGlvbiB0byBzZWxlY3Qgb24gdGhvc2UNCj4gPiArcGluKHMpL2dyb3VwKHMpLCBhbmQg
+dmFyaW91cyBwaW4gY29uZmlndXJhdGlvbiBwYXJhbWV0ZXJzLCBzdWNoIGFzIHB1bGwtdXAsDQo+
+IHRyaXN0YXRlLCBkcml2ZSBzdHJlbmd0aCwgZXRjLg0KPiA+ICsNCj4gPiArU2VlIHRoZSBUUk0g
+dG8gZGV0ZXJtaW5lIHdoaWNoIHByb3BlcnRpZXMgYW5kIHZhbHVlcyBhcHBseSB0byBlYWNoDQo+
+IHBpbi9ncm91cC4NCj4gPiArTWFjcm8gdmFsdWVzIGZvciBwcm9wZXJ0eSB2YWx1ZXMgYXJlIGRl
+ZmluZWQgaW4NCj4gPiAraW5jbHVkZS9kdC1iaW5kaW5nL3BpbmN0cmwvcGluY3RybC10ZWdyYS5o
+Lg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgc3Vibm9kZS1wcm9wZXJ0aWVzOg0KPiA+ICstIG52aWRp
+YSxwaW5zIDogQW4gYXJyYXkgb2Ygc3RyaW5ncy4gRWFjaCBzdHJpbmcgY29udGFpbnMgdGhlIG5h
+bWUgb2YgYSBwaW4gb3INCj4gPiArICAgIGdyb3VwLiBWYWxpZCB2YWx1ZXMgZm9yIHRoZXNlIG5h
+bWVzIGFyZSBsaXN0ZWQgYmVsb3cuDQo+ID4gKw0KPiA+ICtPcHRpb25hbCBzdWJub2RlLXByb3Bl
+cnRpZXM6DQo+ID4gKy0gbnZpZGlhLGZ1bmN0aW9uOiBBIHN0cmluZyBjb250YWluaW5nIHRoZSBu
+YW1lIG9mIHRoZSBmdW5jdGlvbiB0byBtdXggdG8NCj4gdGhlDQo+ID4gKyAgICBwaW4gb3IgZ3Jv
+dXAuDQo+ID4gKy0gbnZpZGlhLHB1bGw6IEludGVnZXIsIHJlcHJlc2VudGluZyB0aGUgcHVsbC1k
+b3duL3VwIHRvIGFwcGx5IHRvIHRoZSBwaW4uDQo+ID4gKyAgICAwOiBub25lLCAxOiBkb3duLCAy
+OiB1cC4NCj4gPiArLSBudmlkaWEsdHJpc3RhdGU6IEludGVnZXIuDQo+ID4gKyAgICAwOiBkcml2
+ZSwgMTogdHJpc3RhdGUuDQo+ID4gKy0gbnZpZGlhLGVuYWJsZS1pbnB1dDogSW50ZWdlci4gRW5h
+YmxlIHRoZSBwaW4ncyBpbnB1dCBwYXRoLg0KPiA+ICsgICAgZW5hYmxlIDpURUdSQV9QSU5fRU5B
+QkxFIGFuZA0KPiA+ICsgICAgZGlzYWJsZSBvciBvdXRwdXQgb25seTogVEVHUkFfUElOX0RJU0FC
+TEUuDQo+ID4gKy0gbnZpZGlhLG9wZW4tZHJhaW46IEludGVnZXIuDQo+ID4gKyAgICBlbmFibGU6
+IFRFR1JBX1BJTl9FTkFCTEUuDQo+ID4gKyAgICBkaXNhYmxlOiBURUdSQV9QSU5fRElTQUJMRS4N
+Cj4gPiArLSBudmlkaWEsbG9jazogSW50ZWdlci4gTG9jayB0aGUgcGluIGNvbmZpZ3VyYXRpb24g
+YWdhaW5zdCBmdXJ0aGVyIGNoYW5nZXMNCj4gPiArICAgIHVudGlsIHJlc2V0Lg0KPiA+ICsgICAg
+ZW5hYmxlOiBURUdSQV9QSU5fRU5BQkxFLg0KPiA+ICsgICAgZGlzYWJsZTogVEVHUkFfUElOX0RJ
+U0FCTEUuDQo+ID4gKy0gbnZpZGlhLGlvLWh2OiBJbnRlZ2VyLiBTZWxlY3QgaGlnaC12b2x0YWdl
+IHJlY2VpdmVycy4NCj4gPiArICAgIG5vcm1hbDogVEVHUkFfUElOX0RJU0FCTEUNCj4gPiArICAg
+IGhpZ2g6IFRFR1JBX1BJTl9FTkFCTEUNCj4gPiArLSBudmlkaWEsaGlnaC1zcGVlZC1tb2RlOiBJ
+bnRlZ2VyLiBFbmFibGUgaGlnaCBzcGVlZCBtb2RlIHRoZSBwaW5zLg0KPiA+ICsgICAgbm9ybWFs
+OiBURUdSQV9QSU5fRElTQUJMRQ0KPiA+ICsgICAgaGlnaDogVEVHUkFfUElOX0VOQUJMRQ0KPiA+
+ICstIG52aWRpYSxzY2htaXR0OiBJbnRlZ2VyLiBFbmFibGVzIFNjaG1pdHQgVHJpZ2dlciBvbiB0
+aGUgaW5wdXQuDQo+ID4gKyAgICBub3JtYWw6IFRFR1JBX1BJTl9ESVNBQkxFDQo+ID4gKyAgICBo
+aWdoOiBURUdSQV9QSU5fRU5BQkxFDQo+ID4gKy0gbnZpZGlhLGRyaXZlLXR5cGU6IEludGVnZXIu
+IFZhbGlkIHJhbmdlIDAuLi4zLg0KPiA+ICstIG52aWRpYSxwdWxsLWRvd24tc3RyZW5ndGg6IElu
+dGVnZXIuIENvbnRyb2xzIGRyaXZlIHN0cmVuZ3RoLiAwIGlzIHdlYWtlc3QuDQo+ID4gKyAgICBU
+aGUgcmFuZ2Ugb2YgdmFsaWQgdmFsdWVzIGRlcGVuZHMgb24gdGhlIHBpbmdyb3VwLiBTZWUgIkNB
+TF9EUlZETiINCj4gaW4gdGhlDQo+ID4gKyAgICBUZWdyYSBUUk0uDQo+ID4gKy0gbnZpZGlhLHB1
+bGwtdXAtc3RyZW5ndGg6IEludGVnZXIuIENvbnRyb2xzIGRyaXZlIHN0cmVuZ3RoLiAwIGlzIHdl
+YWtlc3QuDQo+ID4gKyAgICBUaGUgcmFuZ2Ugb2YgdmFsaWQgdmFsdWVzIGRlcGVuZHMgb24gdGhl
+IHBpbmdyb3VwLiBTZWUgIkNBTF9EUlZVUCINCj4gaW4gdGhlDQo+ID4gKyAgICBUZWdyYSBUUk0u
+DQo+ID4gKy0gbnZpZGlhLHNsZXctcmF0ZS1yaXNpbmc6IEludGVnZXIuIENvbnRyb2xzIHJpc2lu
+ZyBzaWduYWwgc2xldyByYXRlLiAwIGlzDQo+ID4gKyAgICBmYXN0ZXN0LiBUaGUgcmFuZ2Ugb2Yg
+dmFsaWQgdmFsdWVzIGRlcGVuZHMgb24gdGhlIHBpbmdyb3VwLiBTZWUNCj4gPiArICAgICJEUlZE
+Tl9TTFdSIiBpbiB0aGUgVGVncmEgVFJNLg0KPiA+ICstIG52aWRpYSxzbGV3LXJhdGUtZmFsbGlu
+ZzogSW50ZWdlci4gQ29udHJvbHMgZmFsbGluZyBzaWduYWwgc2xldyByYXRlLiAwIGlzDQo+ID4g
+KyAgICBmYXN0ZXN0LiBUaGUgcmFuZ2Ugb2YgdmFsaWQgdmFsdWVzIGRlcGVuZHMgb24gdGhlIHBp
+bmdyb3VwLiBTZWUNCj4gPiArICAgICJEUlZVUF9TTFdGIiBpbiB0aGUgVGVncmEgVFJNLg0KPiAN
+Cj4gQXJlIGFsbCB0aGVzZSBwcm9wZXJ0aWVzIGFwcGxpY2FibGUgdG8gdGhlIHBleF9sNV9jbGty
+ZXEgYW5kIHBleF9sNV9yc3QgcGlucz8NCj4gUGFydGljdWxhcmx5IHRoZSBzbGV3LXJhdGUgcHJv
+cGVydGllcz8NCj4gDQo+IENoZWVycw0KPiBKb24NClNsZXctcmF0ZSwgaGlnaC1zcGVlZC1tb2Rl
+IGFyZSBzdXBwb3J0ZWQgYnkgZHJpdmVyIGJ1dCBub3QgdGhlc2UgcGlucy4NCldpbGwgcmVtb3Zl
+IHByb3BlcnRpZXMgbm90IHN1cHBvcnRlZCBieSBwZXggcGlucyBpbiBuZXh0IHZlcnNpb24uDQo+
+IA0KPiAtLQ0KPiBudnB1YmxpYw0K
