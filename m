@@ -2,84 +2,114 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AC5C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EADC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7271F2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EEC2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfEIP0p (ORCPT
+        id S1726767AbfEIP1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:26:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41728 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfEIP0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:26:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 08E60ABB1;
-        Thu,  9 May 2019 15:26:44 +0000 (UTC)
-Subject: Re: [PATCH] scsi: myrs: Fix uninitialized variable
-To:     YueHaibing <yuehaibing@huawei.com>, hare@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20190509152247.26164-1-yuehaibing@huawei.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <f57c9744-6208-cbc5-50eb-854d335b4d7f@suse.de>
-Date:   Thu, 9 May 2019 17:26:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 11:27:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:44358 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbfEIP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:27:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3E09374;
+        Thu,  9 May 2019 08:27:32 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B30093F6C4;
+        Thu,  9 May 2019 08:27:32 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 16712682412; Thu,  9 May 2019 16:27:31 +0100 (BST)
+Date:   Thu, 9 May 2019 16:27:31 +0100
+From:   "liviu.dudau@arm.com" <liviu.dudau@arm.com>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "brian.starkey@arm.com" <brian.starkey@arm.com>,
+        Leo Li <leoyang.li@nxp.com>
+Subject: Re: [v1] drm/arm/mali-dp: Add a loop around the second set CVAL and
+ try 5 times
+Message-ID: <20190509152730.GP15144@e110455-lin.cambridge.arm.com>
+References: <20190508105956.6107-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509152247.26164-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190508105956.6107-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/19 5:22 PM, YueHaibing wrote:
-> drivers/scsi/myrs.c: In function 'myrs_log_event':
-> drivers/scsi/myrs.c:821:24: warning: 'sshdr.sense_key' may be used uninitialized in this function [-Wmaybe-uninitialized]
->    struct scsi_sense_hdr sshdr;
+On Wed, May 08, 2019 at 10:58:18AM +0000, Wen He wrote:
+> This patch trying to fix monitor freeze issue caused by drm error
+> 'flip_done timed out' on LS1028A platform. this set try is make a loop
+> around the second setting CVAL and try like 5 times before giveing up.
 > 
-> If ev->ev_code is not 0x1C, sshdr.sense_key may
-> be used uninitialized. Fix this by initializing
-> variable 'sshdr' to 0.
-> 
-> Fixes: 77266186397c ("scsi: myrs: Add Mylex RAID controller (SCSI interface)")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Liviu <liviu.Dudau@arm.com>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+
+I will pull this into my mali-dp tree and send it as fixes after v5.2-rc1.
+
+Best regards,
+Liviu
+
 > ---
->   drivers/scsi/myrs.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpu/drm/arm/malidp_drv.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/scsi/myrs.c b/drivers/scsi/myrs.c
-> index b8d54ef..eb0dd56 100644
-> --- a/drivers/scsi/myrs.c
-> +++ b/drivers/scsi/myrs.c
-> @@ -818,7 +818,7 @@ static void myrs_log_event(struct myrs_hba *cs, struct myrs_event *ev)
->   	unsigned char ev_type, *ev_msg;
->   	struct Scsi_Host *shost = cs->host;
->   	struct scsi_device *sdev;
-> -	struct scsi_sense_hdr sshdr;
-> +	struct scsi_sense_hdr sshdr = {0};
->   	unsigned char sense_info[4];
->   	unsigned char cmd_specific[4];
->   
+> diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
+> index 21725c9b9f5e..18cb7f134f4e 100644
+> --- a/drivers/gpu/drm/arm/malidp_drv.c
+> +++ b/drivers/gpu/drm/arm/malidp_drv.c
+> @@ -192,6 +192,7 @@ static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
+>  {
+>  	struct drm_device *drm = state->dev;
+>  	struct malidp_drm *malidp = drm->dev_private;
+> +	int loop = 5;
+>  
+>  	malidp->event = malidp->crtc.state->event;
+>  	malidp->crtc.state->event = NULL;
+> @@ -206,8 +207,18 @@ static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
+>  			drm_crtc_vblank_get(&malidp->crtc);
+>  
+>  		/* only set config_valid if the CRTC is enabled */
+> -		if (malidp_set_and_wait_config_valid(drm) < 0)
+> +		if (malidp_set_and_wait_config_valid(drm) < 0) {
+> +			/*
+> +			 * make a loop around the second CVAL setting and
+> +			 * try 5 times before giving up.
+> +			 */
+> +			while (loop--) {
+> +				if (!malidp_set_and_wait_config_valid(drm))
+> +					break;
+> +			}
+>  			DRM_DEBUG_DRIVER("timed out waiting for updated configuration\n");
+> +		}
+> +
+>  	} else if (malidp->event) {
+>  		/* CRTC inactive means vblank IRQ is disabled, send event directly */
+>  		spin_lock_irq(&drm->event_lock);
+> -- 
+> 2.17.1
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.com>
 
-Cheers,
-
-Hannes
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                              +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
