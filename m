@@ -2,118 +2,122 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEB5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86947C04AAD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507AA21530
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E8D21530
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 02:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="avoHY4QO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfEICAN (ORCPT
+        id S1726583AbfEICEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 22:00:13 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46167 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726109AbfEICAM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 22:00:12 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x491wvb2023686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 8 May 2019 21:58:57 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D504A420024; Wed,  8 May 2019 21:58:56 -0400 (EDT)
-Date:   Wed, 8 May 2019 21:58:56 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190509015856.GB7031@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
-        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
- <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+        Wed, 8 May 2019 22:04:09 -0400
+Received: from onstation.org ([52.200.56.107]:56736 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfEICEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 22:04:09 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 326613E93E;
+        Thu,  9 May 2019 02:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1557367447;
+        bh=Kod5cFvQdGvUj1Lnt7VCuJqda/vsktWbnD0AqfqQtBM=;
+        h=From:To:Subject:Date:From;
+        b=avoHY4QOKE7h8iwJZLUDGJ03o7HT/mmKbQfWKFvZRstKgm1jYHzOLHkAeOniPvqZm
+         Q/aCMx8JdyrMGst5x5gzXNH7ERfSlIvee1ChfoJ0tIvs4fe0bGLnYvdMc0O1LOvEY4
+         Jql6i9yJY3qsAxnFURoWRNTb4+FkH6AOWOUPQ1z0=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, sean@poorly.run,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        jonathan@marek.ca, robh@kernel.org
+Subject: [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
+Date:   Wed,  8 May 2019 22:03:46 -0400
+Message-Id: <20190509020352.14282-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:35PM -0700, Frank Rowand wrote:
-> kselftest provides a mechanism for in-kernel tests via modules.  For
-> example, see:
-> 
->   tools/testing/selftests/vm/run_vmtests invokes:
->     tools/testing/selftests/vm/test_vmalloc.sh
->       loads module:
->         test_vmalloc
->         (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
+Here is a patch series that adds initial display support for the LG
+Nexus 5 (hammerhead) phone. It's not fully working so that's why some
+of these patches are RFC until we can get it fully working.
 
-The majority of the kselftests are implemented as userspace programs.
+The phones boots into terminal mode, however there is a several second
+(or more) delay when writing to tty1 compared to when the changes are
+actually shown on the screen. The following errors are in dmesg:
 
-You *can* run in-kernel test using modules; but there is no framework
-for the in-kernel code found in the test modules, which means each of
-the in-kernel code has to create their own in-kernel test
-infrastructure.  
+    [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:49:crtc-0] flip_done timed out
+    [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:32:plane-0] flip_done timed out
 
-That's much like saying you can use vice grips to turn a nut or
-bolt-head.  You *can*, but it might be that using a monkey wrench
-would be a much better tool that is much easier.
+    WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1430 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
+    [CRTC:49:crtc-0] vblank wait timed out
+    Modules linked in:
+    CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc6-next-20190426-00006-g35c0d32a96e1-dirty #191
+    Hardware name: Generic DT based system
+    Workqueue: events deferred_probe_work_func
+    [<c031229c>] (unwind_backtrace) from [<c030d5ac>] (show_stack+0x10/0x14)
+    [<c030d5ac>] (show_stack) from [<c0ac134c>] (dump_stack+0x78/0x8c)
+    [<c0ac134c>] (dump_stack) from [<c0321660>] (__warn.part.3+0xb8/0xd4)
+    [<c0321660>] (__warn.part.3) from [<c03216e0>] (warn_slowpath_fmt+0x64/0x88)
+    [<c03216e0>] (warn_slowpath_fmt) from [<c0761a0c>] (drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290)
+    [<c0761a0c>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c07b0a98>] (mdp5_complete_commit+0x14/0x40)
+    [<c07b0a98>] (mdp5_complete_commit) from [<c07ddb80>] (msm_atomic_commit_tail+0xa8/0x140)
+    [<c07ddb80>] (msm_atomic_commit_tail) from [<c0763304>] (commit_tail+0x40/0x6c)
+    [<c07633f4>] (drm_atomic_helper_commit) from [<c07667f0>] (restore_fbdev_mode_atomic+0x168/0x1d4)
+    ....
 
-What would you say to a wood worker objecting that a toolbox should
-contain a monkey wrench because he already knows how to use vise
-grips, and his tiny brain shouldn't be forced to learn how to use a
-wrench when he knows how to use a vise grip, which is a perfectly good
-tool?
+I can get the text console to work with a 4.17 kernel with this patch
+https://patchwork.kernel.org/patch/10321845/ plus about a dozen or more
+other patches that have been mainlined since that release.
 
-If you want to use vice grips as a hammer, screwdriver, monkey wrench,
-etc.  there's nothing stopping you from doing that.  But it's not fair
-to object to other people who might want to use better tools.
+I'm new to the DRM subsystem and continuing to dig into the issue,
+however I'd appreciate any suggestions. I suspect the issue lies
+somewhere in the second patch in this series.
 
-The reality is that we have a lot of testing tools.  It's not just
-kselftests.  There is xfstests for file system code, blktests for
-block layer tests, etc.   We use the right tool for the right job.
+Changes since v1:
+- Shortened problem description above. I'll reply to this email and send
+  a full dmesg with the boot log with debugging turned on.
+- Dropped patch 'fix null pointer dereference in
+  msm_atomic_prepare_fb()'
+- New patch: Remove resv fields from msm_gem_object struct that was
+  incorrectly being referenced by the prepare_fb callbacks.
+- Add drm_plane_enable_fb_damage_clips() to plane init for mdp4, mdp5,
+  and dpu1.
+- Add Linus Walleij's reviewed-by to patches 3-6
 
-						- Ted
+Brian Masney (6):
+  drm: msm: remove resv fields from msm_gem_object struct
+  drm: msm: add dirty framebuffer helper
+  ARM: qcom_defconfig: add display-related options
+  ARM: dts: msm8974: add display support
+  ARM: dts: qcom: msm8974-hammerhead: add support for backlight
+  ARM: dts: qcom: msm8974-hammerhead: add support for display
+
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    |  79 +++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi           | 132 ++++++++++++++++++
+ arch/arm/configs/qcom_defconfig               |   5 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     |   7 +-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c    |   3 +
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |   3 +
+ drivers/gpu/drm/msm/msm_atomic.c              |   4 +-
+ drivers/gpu/drm/msm/msm_fb.c                  |   2 +
+ drivers/gpu/drm/msm/msm_gem.c                 |   3 -
+ drivers/gpu/drm/msm/msm_gem.h                 |   4 -
+ 10 files changed, 229 insertions(+), 13 deletions(-)
+
+-- 
+2.20.1
+
