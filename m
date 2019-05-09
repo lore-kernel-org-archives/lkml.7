@@ -2,50 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D706DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79383C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5012182B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C0D217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427872;
-	bh=gB4rxXtmZhaQAk8GNiRvnotbYsWheyhY6t08SUjxvUk=;
+	s=default; t=1557427877;
+	bh=tn/Owjpp3Jru80bpgmicmEK6vh4fN5P+SJ+VHX4bfv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=la2b418Ehi2wK8w0BZwJhqssBkcpPVCAfXeXgJq6EUQvwXTXh/RYoqPTs9d4xZqgy
-	 T405XLTRPpHtrgHMliatgtWNFBYh/uNGx7+CdN27wcuWxU9HSdpHOSg+przXSePt2O
-	 nMt2ErldN/Z3vzWmCl/nc3sr6SbdB6MskVzxAJCw=
+	b=JnI4ReZTs92EmHNhhU7x5bj+ZRBsyOvxUopvmWrmF+2bPUnwgCxakfzAvT+qPUWoz
+	 ktN8YdXyHL1/6PbRcjjFPDw7GVVy7vkZ9Dq8zxb0BYYtEiXlMGMojbpCdTKcm2vgzN
+	 BnRE+j9JN/Cre8vO3W8XeEl0XbgL/DTtbgkDMszM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfEISvL (ORCPT
+        id S1728544AbfEISvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44742 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbfEISvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:07 -0400
+        id S1727321AbfEISvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD4C20578;
-        Thu,  9 May 2019 18:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B9920578;
+        Thu,  9 May 2019 18:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427867;
-        bh=gB4rxXtmZhaQAk8GNiRvnotbYsWheyhY6t08SUjxvUk=;
+        s=default; t=1557427872;
+        bh=tn/Owjpp3Jru80bpgmicmEK6vh4fN5P+SJ+VHX4bfv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0HzF2CuPFFMZGpINi7xre6BSpLx3DanGYJlYoi/usEgpfoVZ9bCoGx5kyiMuPy8b
-         WiJ0kBq7Rpkolq/WSJeXoFWUWR/bfeX69fAAJKp/TgCQr3jeC3GMu5bTgR6XtQLjyU
-         sZS6AaKVU6alAox/vjLW6ir5yth10dRz/3YxrTZ0=
+        b=rJdltkQsTYTfk8XnQ2Vs7DMi2pYct6JE+lGfixv+CZirGk3A9zHh5yAki75x2de1h
+         qlepIyLYZ6aUHFyPxX7AjvD4zc7uHRvL3b/q4FY4JRudNdJMc9+DskJlQ/8gx1V1RJ
+         HM/ByzOjhhUjfSpcul/YBJFxP8NH6TEIgAUTh700=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Christian Gromm <christian.gromm@microchip.com>
-Subject: [PATCH 5.0 07/95] staging: most: sound: pass correct device when creating a sound card
-Date:   Thu,  9 May 2019 20:41:24 +0200
-Message-Id: <20190509181309.829009338@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 09/95] ASoC: hdmi-codec: fix S/PDIF DAI
+Date:   Thu,  9 May 2019 20:41:26 +0200
+Message-Id: <20190509181309.978659199@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -58,33 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gromm <christian.gromm@microchip.com>
+[ Upstream commit 2e95f984aae4cf0608d0ba2189c756f2bd50b44a ]
 
-commit 98592c1faca82a9024a64e4ecead68b19f81c299 upstream.
+When using the S/PDIF DAI, there is no requirement to call
+snd_soc_dai_set_fmt() as there is no DAI format definition that defines
+S/PDIF.  In any case, S/PDIF does not have separate clocks, this is
+embedded into the data stream.
 
-This patch fixes the usage of the wrong struct device when calling
-function snd_card_new.
+Consequently, when attempting to use TDA998x in S/PDIF mode, the attempt
+to configure TDA998x via the hw_params callback fails as the
+hdmi_codec_daifmt is left initialised to zero.
 
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
-Fixes: 69c90cf1b2fa ("staging: most: sound: call snd_card_new with struct device")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Since the S/PDIF DAI will only be used by S/PDIF, prepare the
+hdmi_codec_daifmt structure for this format.
 
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/most/sound/sound.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/hdmi-codec.c | 118 +++++++++++++++++-----------------
+ 1 file changed, 59 insertions(+), 59 deletions(-)
 
---- a/drivers/staging/most/sound/sound.c
-+++ b/drivers/staging/most/sound/sound.c
-@@ -622,7 +622,7 @@ static int audio_probe_channel(struct mo
- 	INIT_LIST_HEAD(&adpt->dev_list);
- 	iface->priv = adpt;
- 	list_add_tail(&adpt->list, &adpt_list);
--	ret = snd_card_new(&iface->dev, -1, "INIC", THIS_MODULE,
-+	ret = snd_card_new(iface->driver_dev, -1, "INIC", THIS_MODULE,
- 			   sizeof(*channel), &adpt->card);
- 	if (ret < 0)
- 		goto err_free_adpt;
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index e5b6769b97977..d5f73c8372817 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -529,73 +529,71 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
+ {
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ 	struct hdmi_codec_daifmt cf = { 0 };
+-	int ret = 0;
+ 
+ 	dev_dbg(dai->dev, "%s()\n", __func__);
+ 
+-	if (dai->id == DAI_ID_SPDIF) {
+-		cf.fmt = HDMI_SPDIF;
+-	} else {
+-		switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+-		case SND_SOC_DAIFMT_CBM_CFM:
+-			cf.bit_clk_master = 1;
+-			cf.frame_clk_master = 1;
+-			break;
+-		case SND_SOC_DAIFMT_CBS_CFM:
+-			cf.frame_clk_master = 1;
+-			break;
+-		case SND_SOC_DAIFMT_CBM_CFS:
+-			cf.bit_clk_master = 1;
+-			break;
+-		case SND_SOC_DAIFMT_CBS_CFS:
+-			break;
+-		default:
+-			return -EINVAL;
+-		}
++	if (dai->id == DAI_ID_SPDIF)
++		return 0;
++
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		cf.bit_clk_master = 1;
++		cf.frame_clk_master = 1;
++		break;
++	case SND_SOC_DAIFMT_CBS_CFM:
++		cf.frame_clk_master = 1;
++		break;
++	case SND_SOC_DAIFMT_CBM_CFS:
++		cf.bit_clk_master = 1;
++		break;
++	case SND_SOC_DAIFMT_CBS_CFS:
++		break;
++	default:
++		return -EINVAL;
++	}
+ 
+-		switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
+-		case SND_SOC_DAIFMT_NB_NF:
+-			break;
+-		case SND_SOC_DAIFMT_NB_IF:
+-			cf.frame_clk_inv = 1;
+-			break;
+-		case SND_SOC_DAIFMT_IB_NF:
+-			cf.bit_clk_inv = 1;
+-			break;
+-		case SND_SOC_DAIFMT_IB_IF:
+-			cf.frame_clk_inv = 1;
+-			cf.bit_clk_inv = 1;
+-			break;
+-		}
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	case SND_SOC_DAIFMT_NB_IF:
++		cf.frame_clk_inv = 1;
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		cf.bit_clk_inv = 1;
++		break;
++	case SND_SOC_DAIFMT_IB_IF:
++		cf.frame_clk_inv = 1;
++		cf.bit_clk_inv = 1;
++		break;
++	}
+ 
+-		switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+-		case SND_SOC_DAIFMT_I2S:
+-			cf.fmt = HDMI_I2S;
+-			break;
+-		case SND_SOC_DAIFMT_DSP_A:
+-			cf.fmt = HDMI_DSP_A;
+-			break;
+-		case SND_SOC_DAIFMT_DSP_B:
+-			cf.fmt = HDMI_DSP_B;
+-			break;
+-		case SND_SOC_DAIFMT_RIGHT_J:
+-			cf.fmt = HDMI_RIGHT_J;
+-			break;
+-		case SND_SOC_DAIFMT_LEFT_J:
+-			cf.fmt = HDMI_LEFT_J;
+-			break;
+-		case SND_SOC_DAIFMT_AC97:
+-			cf.fmt = HDMI_AC97;
+-			break;
+-		default:
+-			dev_err(dai->dev, "Invalid DAI interface format\n");
+-			return -EINVAL;
+-		}
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		cf.fmt = HDMI_I2S;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		cf.fmt = HDMI_DSP_A;
++		break;
++	case SND_SOC_DAIFMT_DSP_B:
++		cf.fmt = HDMI_DSP_B;
++		break;
++	case SND_SOC_DAIFMT_RIGHT_J:
++		cf.fmt = HDMI_RIGHT_J;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		cf.fmt = HDMI_LEFT_J;
++		break;
++	case SND_SOC_DAIFMT_AC97:
++		cf.fmt = HDMI_AC97;
++		break;
++	default:
++		dev_err(dai->dev, "Invalid DAI interface format\n");
++		return -EINVAL;
+ 	}
+ 
+ 	hcp->daifmt[dai->id] = cf;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
+@@ -792,8 +790,10 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		i++;
+ 	}
+ 
+-	if (hcd->spdif)
++	if (hcd->spdif) {
+ 		hcp->daidrv[i] = hdmi_spdif_dai;
++		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
++	}
+ 
+ 	dev_set_drvdata(dev, hcp);
+ 
+-- 
+2.20.1
+
 
 
