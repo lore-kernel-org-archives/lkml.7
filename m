@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE9BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AE4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7351120578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3A1217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427840;
-	bh=UybR7+64MctBP4TSmvRsvq3QhxyQyi/1HhQQ7WoABHI=;
+	s=default; t=1557427843;
+	bh=RBIgf2JVStOFrPQJlrAZn1a5G/Tyuy9fTFEE+q3i9BM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dN2iMEY0dQxNgsDyyFqxwhUWvK2Ldxcu2JkV3LHFzJD7g9pvcz7yh6tlFgcYviw7M
-	 Gm4pvvx3/BR3Omuni+D+9B+JvhUH8r46ruo3Cr0WD9T3kcZ34WAnH9rAdvmiIYARO2
-	 86yqPWET3T6eizvTpm9wg5tznIFCVHxIyIkzgEt4=
+	b=GGOUdLXwr/UJ1TBzklsHhNegN+13ZX5c7LjxxQXcmo32DUWD+toaSgxmZqqf1o+Ek
+	 5Tl22HvfzW/sK14f6qp79wjdQ/HcQlEp5SwSHC9aOTYfEeSDQFy3gF2JKg7Lvp0edi
+	 YpfrMPmb8D1686Zk1pFIJmgkEXkxkS7zCuCph1zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfEISui (ORCPT
+        id S1728479AbfEISum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44128 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:50:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbfEISuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:50:35 -0400
+        id S1728447AbfEISuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:50:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E732183F;
-        Thu,  9 May 2019 18:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF88E2177E;
+        Thu,  9 May 2019 18:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427834;
-        bh=UybR7+64MctBP4TSmvRsvq3QhxyQyi/1HhQQ7WoABHI=;
+        s=default; t=1557427840;
+        bh=RBIgf2JVStOFrPQJlrAZn1a5G/Tyuy9fTFEE+q3i9BM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YFUH/uYfL+E7vf8ttcSdu4VecVFXgKXRQZFl5aVu0stCyT0twjYDuGULSkaZT/I3d
-         zlC19WTgr0UruicLeuHssLTYMJmVg010VuFyv+S/aD1YAEw8WYUDAJ3iH4NyacxeHY
-         AY0/EvXjjjTZXvw6wliq+qYDxGzvwQic28TGrEF4=
+        b=aVzoI5zSdzm1S2+56V334I6nRz+O+xK1JTe3XwQ7L05cAsHJcVaWlQZnqDFaMryly
+         NiB/cDdtY+LEBQyUP1qnm43fUy6RQHuTYTnzmaETbfgQr2ArAYTydFEBAU90riCAI9
+         88cTrYg1Dj0VBcE2XIlWC3vm+Pt0j6H4KxAf2BF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 21/95] ASoC: rt5682: fix jack type detection issue
-Date:   Thu,  9 May 2019 20:41:38 +0200
-Message-Id: <20190509181310.821993471@linuxfoundation.org>
+Subject: [PATCH 5.0 23/95] ASoC: wm_adsp: Add locking to wm_adsp2_bus_error
+Date:   Thu,  9 May 2019 20:41:40 +0200
+Message-Id: <20190509181310.952468258@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,68 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 675212bfb23394514b7f68ebf3954ba936281ccc ]
+[ Upstream commit a2225a6d155fcb247fe4c6d87f7c91807462966d ]
 
-The jack type detection needs the main bias power of analog.
-The modification makes sure the main bias power on/off while jack plug/unplug.
+Best to lock across handling the bus error to ensure the DSP doesn't
+change power state as we are reading the status registers.
 
-Signed-off-by: Shuming Fan <shumingf@realtek.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5682.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ sound/soc/codecs/wm_adsp.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index 49ff5e52db584..9331c13d2017a 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -909,7 +909,8 @@ static int rt5682_headset_detect(struct snd_soc_component *component,
- 	if (jack_insert) {
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index 0600e4404f908..eb5b1be77c479 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -3821,11 +3821,13 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 	struct regmap *regmap = dsp->regmap;
+ 	int ret = 0;
  
- 		snd_soc_component_update_bits(component, RT5682_PWR_ANLG_1,
--			RT5682_PWR_VREF2, RT5682_PWR_VREF2);
-+			RT5682_PWR_VREF2 | RT5682_PWR_MB,
-+			RT5682_PWR_VREF2 | RT5682_PWR_MB);
- 		snd_soc_component_update_bits(component,
- 				RT5682_PWR_ANLG_1, RT5682_PWR_FV2, 0);
- 		usleep_range(15000, 20000);
-@@ -946,7 +947,7 @@ static int rt5682_headset_detect(struct snd_soc_component *component,
- 		snd_soc_component_update_bits(component, RT5682_CBJ_CTRL_1,
- 			RT5682_TRIG_JD_MASK, RT5682_TRIG_JD_LOW);
- 		snd_soc_component_update_bits(component, RT5682_PWR_ANLG_1,
--			RT5682_PWR_VREF2, 0);
-+			RT5682_PWR_VREF2 | RT5682_PWR_MB, 0);
- 		snd_soc_component_update_bits(component, RT5682_PWR_ANLG_3,
- 			RT5682_PWR_CBJ, 0);
++	mutex_lock(&dsp->pwr_lock);
++
+ 	ret = regmap_read(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL, &val);
+ 	if (ret) {
+ 		adsp_err(dsp,
+ 			"Failed to read Region Lock Ctrl register: %d\n", ret);
+-		return IRQ_HANDLED;
++		goto error;
+ 	}
  
-@@ -2295,16 +2296,13 @@ static int rt5682_set_bias_level(struct snd_soc_component *component,
- 	switch (level) {
- 	case SND_SOC_BIAS_PREPARE:
- 		regmap_update_bits(rt5682->regmap, RT5682_PWR_ANLG_1,
--			RT5682_PWR_MB | RT5682_PWR_BG,
--			RT5682_PWR_MB | RT5682_PWR_BG);
-+			RT5682_PWR_BG, RT5682_PWR_BG);
- 		regmap_update_bits(rt5682->regmap, RT5682_PWR_DIG_1,
- 			RT5682_DIG_GATE_CTRL | RT5682_PWR_LDO,
- 			RT5682_DIG_GATE_CTRL | RT5682_PWR_LDO);
- 		break;
+ 	if (val & ADSP2_WDT_TIMEOUT_STS_MASK) {
+@@ -3844,7 +3846,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 			adsp_err(dsp,
+ 				 "Failed to read Bus Err Addr register: %d\n",
+ 				 ret);
+-			return IRQ_HANDLED;
++			goto error;
+ 		}
  
- 	case SND_SOC_BIAS_STANDBY:
--		regmap_update_bits(rt5682->regmap, RT5682_PWR_ANLG_1,
--			RT5682_PWR_MB, RT5682_PWR_MB);
- 		regmap_update_bits(rt5682->regmap, RT5682_PWR_DIG_1,
- 			RT5682_DIG_GATE_CTRL, RT5682_DIG_GATE_CTRL);
- 		break;
-@@ -2312,7 +2310,7 @@ static int rt5682_set_bias_level(struct snd_soc_component *component,
- 		regmap_update_bits(rt5682->regmap, RT5682_PWR_DIG_1,
- 			RT5682_DIG_GATE_CTRL | RT5682_PWR_LDO, 0);
- 		regmap_update_bits(rt5682->regmap, RT5682_PWR_ANLG_1,
--			RT5682_PWR_MB | RT5682_PWR_BG, 0);
-+			RT5682_PWR_BG, 0);
- 		break;
+ 		adsp_err(dsp, "bus error address = 0x%x\n",
+@@ -3857,7 +3859,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 			adsp_err(dsp,
+ 				 "Failed to read Pmem Xmem Err Addr register: %d\n",
+ 				 ret);
+-			return IRQ_HANDLED;
++			goto error;
+ 		}
  
- 	default:
+ 		adsp_err(dsp, "xmem error address = 0x%x\n",
+@@ -3870,6 +3872,9 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 	regmap_update_bits(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL,
+ 			   ADSP2_CTRL_ERR_EINT, ADSP2_CTRL_ERR_EINT);
+ 
++error:
++	mutex_unlock(&dsp->pwr_lock);
++
+ 	return IRQ_HANDLED;
+ }
+ EXPORT_SYMBOL_GPL(wm_adsp2_bus_error);
 -- 
 2.20.1
 
