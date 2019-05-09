@@ -2,156 +2,288 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AADEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEB2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C206E2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BAD2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nw8h4OMb"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lfcT9wl1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfEIMBR (ORCPT
+        id S1726680AbfEIMCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:01:17 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:48232 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfEIMBQ (ORCPT
+        Thu, 9 May 2019 08:02:13 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:64810 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726411AbfEIMCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:01:16 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190509120114euoutp019c6db41fbdaa3f84db0f626f05af6a9d~dAgbCIT980640906409euoutp01P
-        for <linux-kernel@vger.kernel.org>; Thu,  9 May 2019 12:01:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190509120114euoutp019c6db41fbdaa3f84db0f626f05af6a9d~dAgbCIT980640906409euoutp01P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557403274;
-        bh=qiD6lRtF4wFiAqbHs9VVmyccR0AScqMMNG8nnc7i+Fs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nw8h4OMbLeACI14ysETF3yx789i0PTWMGQpPKfuEGPPz6ZYcq5otmRCEJgWWQSlmC
-         bHfVOWEIrNdRJidtJFEcUsZYcyFNVrUWDrIy5+PW9mgd1nXtC54PIS6gz0oI2ROMhq
-         ZAA6cfSriReTeP09CyXz0s1KBrps7tqwCBSIkCek=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190509120113eucas1p26b764a8af5501d7e96e132f6b02a42b6~dAgaPtk9N2799027990eucas1p2u;
-        Thu,  9 May 2019 12:01:13 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1A.D7.04298.98614DC5; Thu,  9
-        May 2019 13:01:13 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190509120112eucas1p252b59f7cf1bfa4a67a00accd03766bcf~dAgZloE8C2799127991eucas1p2v;
-        Thu,  9 May 2019 12:01:12 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190509120112eusmtrp1f330e69651b69b5a141efd5eef4a46fc~dAgZXhXro1886318863eusmtrp1D;
-        Thu,  9 May 2019 12:01:12 +0000 (GMT)
-X-AuditID: cbfec7f2-3615e9c0000010ca-18-5cd41689e560
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 03.FB.04140.88614DC5; Thu,  9
-        May 2019 13:01:12 +0100 (BST)
-Received: from amdc2143 (unknown [106.120.51.59]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190509120111eusmtip23fda3d7ae222be3f7c54dbdd80beb0c1~dAgYqpa281332313323eusmtip2C;
-        Thu,  9 May 2019 12:01:11 +0000 (GMT)
-Message-ID: <0510351d1fbd17f11018b7c934fb3a525c265936.camel@samsung.com>
-Subject: Re: [PATCH v2] netfilter: xt_owner: Add supplementary groups option
-From:   Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lukasz Pawelczyk <havner@gmail.com>
-Date:   Thu, 09 May 2019 14:01:10 +0200
-In-Reply-To: <ffbaeda9-1e0c-f526-15aa-e865fcb4ec95@gmail.com>
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 9 May 2019 08:02:13 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49C1E1t018521;
+        Thu, 9 May 2019 14:02:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=sEvzOi/QzaGsuHXN7zZECXWsXfKXQgXC8Cgqu9yuy9o=;
+ b=lfcT9wl1TT9pptAszVisUS+VizxTZbMklRc2ywkEO2SqMGZ6TRLzbe09gCTQ1m5hYnYb
+ XA7KD+Ngu/DQNhhspYYc42OQ/gg1jj+8qC2a/fLMZuvtxJeTQYaBQr8zMDHD1KYfxa7u
+ o7KAIqtlU3DqpQOWGBFjPJUL+M5rWcbDvC246W3xG5R+R80LZXNSHniNCgNkuE4OQGSj
+ VdDopDdQYPjA4WUypsy1BT1Jisic31eNpQefzc9lvjNa76Fx2PJbtrtrjzPkau2XzztP
+ e5425HB2bagLogFIgJmhtFVYhHdXcTXqGuRoMK3UTumiJ+YtbKiBLxC0DZg5STl0PVFz Jg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2scdjp278h-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 09 May 2019 14:02:07 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A27F231;
+        Thu,  9 May 2019 12:02:06 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 556E524D3;
+        Thu,  9 May 2019 12:02:06 +0000 (GMT)
+Received: from [10.48.0.131] (10.75.127.47) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 May
+ 2019 14:02:05 +0200
+Subject: Re: [PATCH 2/3] rpmsg: virtio_rpmsg_bus: allocate rx/tx buffer
+ separately
+To:     Xiang Xiao <xiaoxiang781216@gmail.com>, <ohad@wizery.com>,
+        <bjorn.andersson@linaro.org>, <wendy.liang@xilinx.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Xiang Xiao <xiaoxiang@xiaomi.com>
+References: <1548949280-31794-1-git-send-email-xiaoxiang@xiaomi.com>
+ <1548949280-31794-3-git-send-email-xiaoxiang@xiaomi.com>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=arnaud.pouliquen@st.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8mOik8I/F6EW8XyQAA2P
+Message-ID: <01b88b99-ebc1-a5a3-2ff9-39fe476847be@st.com>
+Date:   Thu, 9 May 2019 14:02:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7qdYldiDE6/ZrX4u7Od2WLO+RYW
-        i33vz7JZbOtdzWjx/7WOxeW+acwWl3fNYbM4tkDMYsK6UywW099cZXbg8jjdtJHFY8vKm0we
-        O2fdZfd4+/sEk8eh7wtYPT5vkgtgi+KySUnNySxLLdK3S+DKOPHnPUvBNI6K3ueLWRsYl7N1
-        MXJySAiYSHy7tJi5i5GLQ0hgBaPE58nX2UESQgJfGCWO9vNCJD4zSvzYuZkRpmPt9zesEInl
-        QIn9jYwQzjNGid4Nj5hBqngFPCReP9oMVMXBISzgI7HlpQVImE3AQOL7hb1g60QEDjJJdG26
-        DbaOWUBdYunsZhYQm0VAVeLM9j4mEJtTwFbiav8UsLiogK7EjQ3P2CDmC0qcnPmEBaJXXqJ5
-        62ywoRICh9gljm85wwayWELARWLfojSIq4UlXh3fwg5hy0icntzDAlFSLXHyTAVEawejxMYX
-        s6G+tJb4PGkLM0gNs4CmxPpd+hDljhKTP0lBmHwSN94KQhzAJzFp23RmiDCvREebEMQMVYnX
-        e2DmSUt8/LMXar+HxOEbW5gmMCrOQvLKLCSvzEJYu4CReRWjeGppcW56arFhXmq5XnFibnFp
-        Xrpecn7uJkZgIjr97/inHYxfLyUdYhTgYFTi4bXgvxIjxJpYVlyZe4hRgoNZSYT3+sRLMUK8
-        KYmVValF+fFFpTmpxYcYpTlYlMR5qxkeRAsJpCeWpGanphakFsFkmTg4pRoY4yaseteYrHpL
-        a+6/AIee/wmtyueS4ksnTo6+kLM+peHCqrDs7s+qRVH8P84s+Bj4e9Pa1Y//ndupGzfrgZ7o
-        80f78o4Vlt+vtLO5tXGxT8G3Hw1ZB0KenflqNuVdYBPXyh7xGV+uq9U8rFq/1uui0IZdjfL3
-        vCXfb5KfeLVk/kkpScmjy68JP1ZiKc5INNRiLipOBADj8V2QQAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xe7odYldiDLrOsVj83dnObDHnfAuL
-        xb73Z9kstvWuZrT4/1rH4nLfNGaLy7vmsFkcWyBmMWHdKRaL6W+uMjtweZxu2sjisWXlTSaP
-        nbPusnu8/X2CyePQ9wWsHp83yQWwRenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8da
-        GZkq6dvZpKTmZJalFunbJehlnPjznqVgGkdF7/PFrA2My9m6GDk5JARMJNZ+f8PaxcjFISSw
-        lFHiV/t2RoiEtMTxAwtZIWxhiT/Xutggip4wSsx7+podJMEr4CHx+tFmoCIODmEBH4ktLy1A
-        wmwCBhLfL+xlBqkXETjIJDHx7XNmkASzgLrE0tnNLCA2i4CqxJntfUwgNqeArcTV/iksEAsW
-        s0isPvKNBaJBU6J1+2+wZaICuhI3Njxjg1gsKHFy5hOoGnmJ5q2zmScwCs5C0jILSdksJGUL
-        GJlXMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbatmM/t+xg7HoXfIhRgINRiYfXgv9KjBBr
-        YllxZe4hRgkOZiUR3usTL8UI8aYkVlalFuXHF5XmpBYfYjQF+mgis5Rocj4wDeSVxBuaGppb
-        WBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamA8eomFd5khI0+CeibL2i/36lZp
-        cp21XF1wMMnmwXWRPdFX/ulwRc6UK6kxXqBzxqXRv1mn3HzmtTdfP+36GWl380pl1P2M3T4h
-        Mrt+LJ725cDiz3Ne1m5NmXqy2+ZCnIHntLhbvuzPlyxu2CPJHc+jsmFX/f+L1a6SEYlzrs5s
-        DjiZ397xTvOEEktxRqKhFnNRcSIAg2lTWMsCAAA=
-X-CMS-MailID: 20190509120112eucas1p252b59f7cf1bfa4a67a00accd03766bcf
-X-Msg-Generator: CA
+In-Reply-To: <1548949280-31794-3-git-send-email-xiaoxiang@xiaomi.com>
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190508141219eucas1p1e5a899714747b497499976113ea9681f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190508141219eucas1p1e5a899714747b497499976113ea9681f
-References: <CGME20190508141219eucas1p1e5a899714747b497499976113ea9681f@eucas1p1.samsung.com>
-        <20190508141211.4191-1-l.pawelczyk@samsung.com>
-        <98f71c64-3887-b715-effb-894224a71ef9@gmail.com>
-        <cdba4a3b7f31ae8ece81be270233032fe774bd86.camel@samsung.com>
-        <6a6e9754-4f2b-3433-6df0-bbb9d9915582@gmail.com>
-        <cf34c829002177e89806e9f7260559aefb3c2ac7.camel@samsung.com>
-        <afc200a8-438f-5d73-2236-6d9e4979bb59@gmail.com>
-        <cd06d09489cd723b3cc48e42f7cccc21737bfd9e.camel@samsung.com>
-        <ffbaeda9-1e0c-f526-15aa-e865fcb4ec95@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-09 at 04:57 -0700, Eric Dumazet wrote:
-> sk_socket keeps reference to f_cred. f_cred keeps reference to
-> > group_info. As long as f_cred is alive and it doesn't seem to be
-> > the
-> > issue in the owner_mt() function, group_info should be alive as
-> > well as
-> > far as I can see. Its refcount will go down only when f_cred is
-> > freed
-> > (put_cred_rcu()).
-> > 
-> > If there is something I'm missing please correct me.
+Hello Xiang,
+
+This patch has the opposite effect on my platform as DMA allocation is
+aligned on 4k page.
+For instance i declared:
+- in RX  6 buffers (of 512 bytes)
+- in TX  4 buffers ( of 512 bytes)
+
+The result is (kernel trace)
+[   41.915896] virtio_rpmsg_bus virtio0: rx buffers: va ebb5f5ca, dma
+0x0x10042000
+[   41.915922] virtio_rpmsg_bus virtio0: tx buffers: va a7865153, dma
+0x0x10043000
+
+The TX buffer memory is allocated on next 4k page...
+
+Anyway separate the RX and TX allocation makes sense. This could also
+allow to allocate buffers in 2 different memories.
+For time being, issue is that only one memory area can be attached to
+the virtio device for DMA allocation... and PA/DA translations are missing.
+This means that we probably need (in a first step) a new remoteproc API
+for memory allocation.
+These memories should be declared and mmaped in rproc platform drivers
+(memory region) or in resource table (carveout).
+This is partially done in the API for the platform driver
+(rproc_mem_entry_init) but not available for rproc clients.
+
+Regards
+Arnaud
+
+
+On 1/31/19 4:41 PM, Xiang Xiao wrote:
+> many dma allocator align the returned address with buffer size,
+> so two small allocation could reduce the alignment requirement
+> and save the the memory space wasted by the potential alignment.
 > 
-> The problem is that you can´t clearly explain why the code is safe :/
+> Signed-off-by: Xiang Xiao <xiaoxiang@xiaomi.com>
+> ---
+>  drivers/rpmsg/virtio_rpmsg_bus.c | 58 +++++++++++++++++++++++-----------------
+>  1 file changed, 34 insertions(+), 24 deletions(-)
 > 
-> Why would get_group_info() be needed then ?
-
-Originally I though it wouldn't, that's why I did not include it in the
-patch. Your question made me doubt that for a second. I also got
-confused a little because the group_info code looked completely
-different a while back, it got reworked and simplified.
-
+> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+> index fb0d2eb..59c4554 100644
+> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+> @@ -40,7 +40,8 @@
+>   * @num_sbufs:	total number of buffers for tx
+>   * @buf_size:	size of one rx or tx buffer
+>   * @last_sbuf:	index of last tx buffer used
+> - * @bufs_dma:	dma base addr of the buffers
+> + * @rbufs_dma:	dma base addr of rx buffers
+> + * @sbufs_dma:	dma base addr of tx buffers
+>   * @tx_lock:	protects svq, sbufs and sleepers, to allow concurrent senders.
+>   *		sending a message might require waking up a dozing remote
+>   *		processor, which involves sleeping, hence the mutex.
+> @@ -62,7 +63,8 @@ struct virtproc_info {
+>  	unsigned int num_sbufs;
+>  	unsigned int buf_size;
+>  	int last_sbuf;
+> -	dma_addr_t bufs_dma;
+> +	dma_addr_t rbufs_dma;
+> +	dma_addr_t sbufs_dma;
+>  	struct mutex tx_lock;
+>  	struct idr endpoints;
+>  	struct mutex endpoints_lock;
+> @@ -872,9 +874,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>  	static const char * const names[] = { "input", "output" };
+>  	struct virtqueue *vqs[2];
+>  	struct virtproc_info *vrp;
+> -	void *bufs_va;
+>  	int err = 0, i;
+> -	size_t total_buf_space;
+>  	bool notify;
+>  
+>  	vrp = kzalloc(sizeof(*vrp), GFP_KERNEL);
+> @@ -909,25 +909,28 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>  
+>  	vrp->buf_size = MAX_RPMSG_BUF_SIZE;
+>  
+> -	total_buf_space = (vrp->num_rbufs + vrp->num_sbufs) * vrp->buf_size;
+> -
+>  	/* allocate coherent memory for the buffers */
+> -	bufs_va = dma_alloc_coherent(vdev->dev.parent->parent,
+> -				     total_buf_space, &vrp->bufs_dma,
+> -				     GFP_KERNEL);
+> -	if (!bufs_va) {
+> +	vrp->rbufs = dma_alloc_coherent(vdev->dev.parent->parent,
+> +					vrp->num_rbufs * vrp->buf_size,
+> +					&vrp->rbufs_dma, GFP_KERNEL);
+> +	if (!vrp->rbufs) {
+>  		err = -ENOMEM;
+>  		goto vqs_del;
+>  	}
+>  
+> -	dev_dbg(&vdev->dev, "buffers: va %p, dma %pad\n",
+> -		bufs_va, &vrp->bufs_dma);
+> +	dev_dbg(&vdev->dev, "rx buffers: va %p, dma 0x%pad\n",
+> +		vrp->rbufs, &vrp->rbufs_dma);
+>  
+> -	/* first part of the buffers is dedicated for RX */
+> -	vrp->rbufs = bufs_va;
+> +	vrp->sbufs = dma_alloc_coherent(vdev->dev.parent->parent,
+> +					vrp->num_sbufs * vrp->buf_size,
+> +					&vrp->sbufs_dma, GFP_KERNEL);
+> +	if (!vrp->sbufs) {
+> +		err = -ENOMEM;
+> +		goto free_rbufs;
+> +	}
+>  
+> -	/* and second part is dedicated for TX */
+> -	vrp->sbufs = bufs_va + vrp->num_rbufs * vrp->buf_size;
+> +	dev_dbg(&vdev->dev, "tx buffers: va %p, dma 0x%pad\n",
+> +		vrp->sbufs, &vrp->sbufs_dma);
+>  
+>  	/* set up the receive buffers */
+>  	for (i = 0; i < vrp->num_rbufs; i++) {
+> @@ -954,7 +957,7 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>  		if (!vrp->ns_ept) {
+>  			dev_err(&vdev->dev, "failed to create the ns ept\n");
+>  			err = -ENOMEM;
+> -			goto free_coherent;
+> +			goto free_sbufs;
+>  		}
+>  	}
+>  
+> @@ -979,9 +982,14 @@ static int rpmsg_probe(struct virtio_device *vdev)
+>  
+>  	return 0;
+>  
+> -free_coherent:
+> -	dma_free_coherent(vdev->dev.parent->parent, total_buf_space,
+> -			  bufs_va, vrp->bufs_dma);
+> +free_sbufs:
+> +	dma_free_coherent(vdev->dev.parent->parent,
+> +			  vrp->num_sbufs * vrp->buf_size,
+> +			  vrp->sbufs, vrp->sbufs_dma);
+> +free_rbufs:
+> +	dma_free_coherent(vdev->dev.parent->parent,
+> +			  vrp->num_rbufs * vrp->buf_size,
+> +			  vrp->rbufs, vrp->rbufs_dma);
+>  vqs_del:
+>  	vdev->config->del_vqs(vrp->vdev);
+>  free_vrp:
+> @@ -999,8 +1007,6 @@ static int rpmsg_remove_device(struct device *dev, void *data)
+>  static void rpmsg_remove(struct virtio_device *vdev)
+>  {
+>  	struct virtproc_info *vrp = vdev->priv;
+> -	unsigned int num_bufs = vrp->num_rbufs + vrp->num_sbufs;
+> -	size_t total_buf_space = num_bufs * vrp->buf_size;
+>  	int ret;
+>  
+>  	vdev->config->reset(vdev);
+> @@ -1016,8 +1022,12 @@ static void rpmsg_remove(struct virtio_device *vdev)
+>  
+>  	vdev->config->del_vqs(vrp->vdev);
+>  
+> -	dma_free_coherent(vdev->dev.parent->parent, total_buf_space,
+> -			  vrp->rbufs, vrp->bufs_dma);
+> +	dma_free_coherent(vdev->dev.parent->parent,
+> +			  vrp->num_sbufs * vrp->buf_size,
+> +			  vrp->sbufs, vrp->sbufs_dma);
+> +	dma_free_coherent(vdev->dev.parent->parent,
+> +			  vrp->num_rbufs * vrp->buf_size,
+> +			  vrp->rbufs, vrp->rbufs_dma);
+>  
+>  	kfree(vrp);
+>  }
 > 
-> You need to explain this in the changelog, so that future bug hunters
-> do not have
-> to guess.
-
-Ok, I will.
-
--- 
-Lukasz Pawelczyk
-Samsung R&D Institute Poland
-Samsung Electronics
-
-
-
