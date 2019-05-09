@@ -2,119 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C37C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BAFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75725217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD18217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbfEIV2p (ORCPT
+        id S1727043AbfEIVaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:28:45 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45726 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfEIV2o (ORCPT
+        Thu, 9 May 2019 17:30:35 -0400
+Received: from www62.your-server.de ([213.133.104.62]:59618 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfEIVaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:28:44 -0400
-Received: from 79.184.254.161.ipv4.supernova.orange.pl (79.184.254.161) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 37c162ea729ea0f2; Thu, 9 May 2019 23:28:42 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Ido Schimmel <idosch@idosch.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
-Subject: [PATCH] x86: intel_epb: Take CONFIG_PM into account
-Date:   Thu, 09 May 2019 23:28:41 +0200
-Message-ID: <3431308.1mSSVdqTRr@kreacher>
-In-Reply-To: <20190509174338.GA24432@splinter>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan> <1627338.1fd8ofggM8@kreacher> <20190509174338.GA24432@splinter>
+        Thu, 9 May 2019 17:30:35 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hOqca-0007ay-Nx; Thu, 09 May 2019 23:30:32 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hOqca-000J7d-Hy; Thu, 09 May 2019 23:30:32 +0200
+Subject: Re: [PATCH bpf v1] bpf: Fix undefined behavior in narrow load
+ handling
+To:     Krzesimir Nowak <krzesimir@kinvolk.io>, bpf@vger.kernel.org
+Cc:     Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=c3=b3pez_Galeiras?= <iago@kinvolk.io>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190508160859.4380-1-krzesimir@kinvolk.io>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <46056c60-f106-e539-b614-498cb1e9e3d0@iogearbox.net>
+Date:   Thu, 9 May 2019 23:30:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190508160859.4380-1-krzesimir@kinvolk.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25444/Thu May  9 09:57:18 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 05/08/2019 06:08 PM, Krzesimir Nowak wrote:
+> Commit 31fd85816dbe ("bpf: permits narrower load from bpf program
+> context fields") made the verifier add AND instructions to clear the
+> unwanted bits with a mask when doing a narrow load. The mask is
+> computed with
+> 
+> (1 << size * 8) - 1
+> 
+> where "size" is the size of the narrow load. When doing a 4 byte load
+> of a an 8 byte field the verifier shifts the literal 1 by 32 places to
+> the left. This results in an overflow of a signed integer, which is an
+> undefined behavior. Typically the computed mask was zero, so the
+> result of the narrow load ended up being zero too.
+> 
+> Cast the literal to long long to avoid overflows. Note that narrow
+> load of the 4 byte fields does not have the undefined behavior,
+> because the load size can only be either 1 or 2 bytes, so shifting 1
+> by 8 or 16 places will not overflow it. And reading 4 bytes would not
+> be a narrow load of a 4 bytes field.
+> 
+> Reviewed-by: Alban Crequy <alban@kinvolk.io>
+> Reviewed-by: Iago López Galeiras <iago@kinvolk.io>
+> Fixes: 31fd85816dbe ("bpf: permits narrower load from bpf program context fields")
+> Cc: Yonghong Song <yhs@fb.com>
+> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> ---
+>  kernel/bpf/verifier.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 09d5d972c9ff..950fac024fbb 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -7296,7 +7296,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+>  									insn->dst_reg,
+>  									shift);
+>  				insn_buf[cnt++] = BPF_ALU64_IMM(BPF_AND, insn->dst_reg,
+> -								(1 << size * 8) - 1);
+> +								(1ULL << size * 8) - 1);
+>  			}
 
-Commit b9c273babce7 (PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs
-interface) caused kernels built with CONFIG_PM unset to crash on
-systems supporting the Performance and Energy Bias Hint (EPB),
-because it attempts to add files to sysfs directories that don't
-exist on those systems.
+Makes sense, good catch & thanks for the fix!
 
-Prevent that from happening by taking CONFIG_PM into account so
-that the code depending on it is not compiled at all when it is
-not set.
+Could you also add a test case to test_verifier.c so we keep track of this?
 
-Fixes: b9c273babce7 (PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs interface)
-Reported-by: Ido Schimmel <idosch@mellanox.com>
-Tested-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- arch/x86/kernel/cpu/intel_epb.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-Index: linux-pm/arch/x86/kernel/cpu/intel_epb.c
-===================================================================
---- linux-pm.orig/arch/x86/kernel/cpu/intel_epb.c
-+++ linux-pm/arch/x86/kernel/cpu/intel_epb.c
-@@ -97,6 +97,7 @@ static void intel_epb_restore(void)
- 	wrmsrl(MSR_IA32_ENERGY_PERF_BIAS, (epb & ~EPB_MASK) | val);
- }
- 
-+#ifdef CONFIG_PM
- static struct syscore_ops intel_epb_syscore_ops = {
- 	.suspend = intel_epb_save,
- 	.resume = intel_epb_restore,
-@@ -193,6 +194,25 @@ static int intel_epb_offline(unsigned in
- 	return 0;
- }
- 
-+static inline void register_intel_ebp_syscore_ops(void)
-+{
-+	register_syscore_ops(&intel_epb_syscore_ops);
-+}
-+#else /* !CONFIG_PM */
-+static int intel_epb_online(unsigned int cpu)
-+{
-+	intel_epb_restore();
-+	return 0;
-+}
-+
-+static int intel_epb_offline(unsigned int cpu)
-+{
-+	return intel_epb_save();
-+}
-+
-+static inline void register_intel_ebp_syscore_ops(void) {}
-+#endif
-+
- static __init int intel_epb_init(void)
- {
- 	int ret;
-@@ -206,7 +226,7 @@ static __init int intel_epb_init(void)
- 	if (ret < 0)
- 		goto err_out_online;
- 
--	register_syscore_ops(&intel_epb_syscore_ops);
-+	register_intel_ebp_syscore_ops();
- 	return 0;
- 
- err_out_online:
-
-
-
+Thanks,
+Daniel
