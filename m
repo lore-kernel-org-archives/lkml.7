@@ -2,128 +2,221 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE01C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3761DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1E52173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9FF2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucidpixels.com header.i=@lucidpixels.com header.b="PjVLUqAc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRoMKFsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfEILR4 (ORCPT
+        id S1726714AbfEILTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:17:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42072 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfEILR4 (ORCPT
+        Thu, 9 May 2019 07:19:10 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36481 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfEILTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:17:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k9so1577466oig.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 04:17:55 -0700 (PDT)
+        Thu, 9 May 2019 07:19:10 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a8so1691417edx.3;
+        Thu, 09 May 2019 04:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lucidpixels.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=smWLjGUg06jn9mNxgI74eqHgAJH964ix3KVxduwpFHo=;
-        b=PjVLUqAc1KV1M6/mhdzVfBQoYSg827xJyQbCwimbsw53fCylR88pdp/7GMQZqHdkCz
-         p1rAXcAjX485WC4t3+EVFBuypekm+n9UCaOJSHybRy1TnGDsD/IDlleMwllUx+a+6Ju5
-         Wm9Kc1Umy4Ybqie5pLqYTpQQtQOWl3o+8ujrA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Svie9yUR/Ki3ERUJrCqza9pq7RGH5A+LU5XetAHZSY=;
+        b=lRoMKFszdaZJXqdKVeaIsXxiaARvYZ0Yf1JHwCDUwRDmQuL9eCEjpJelCnhhWZsvzY
+         yxj38hYULI9qscPUamGzBPjFQradK7txRfFQcDw9mv9eHdzDPQk5WxFMvtyjIW4wAC8Y
+         xbib3RucZ9PZpigU012rkrGjQgbDMZb9wNpDq3S2bWezcO2CREUMgDbhQTbj/LspgqkZ
+         7h3pDrtuwsF38yZIBbBY5idgTCUI0jtkHdMfK8xp+RnmtMuDzZEAVhLI2T+y/JoJbhPk
+         GEi4Hk8yqCWjXC68CeZS56kDye5pB/LPj5daU/WcP0pPYPcUisL0+vP3J17GXjLPi8pJ
+         EoIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=smWLjGUg06jn9mNxgI74eqHgAJH964ix3KVxduwpFHo=;
-        b=G9h8s/EXXURRvJ32N7v8udnJ0u5RtxyDy85LOJO8O1wOWIcarqCEFSlmpcLBlH9g1b
-         hPOFq2s1tjM3UVxXHFac68LZdGpdlGuBweXDW18cXXgL6Hwl4Y3Eu2o9iCPYbKOIpXrJ
-         BNgYa1fEL7a2tWbgzIm4SstnE5rE+pkBy7tfsef/nPA6TVul8p12YEbNQk1sJ/o2IZBV
-         1AdWywVS45HJkJ7MwmcLn/Wq0UQ0kYL3J8Svbj/2dSss6d7cTvC7dy72NzMt1cVqwlLL
-         8Z//krIGbY9swgcuU3qgkYNDGyaxYh/TOwCOX/8xndq3XNX/hmPA+3KtBDj42BOp/RK+
-         ck0w==
-X-Gm-Message-State: APjAAAXLUYakrz7Dcy+Xrj7rPYk6NKzXoCTalYYdnfX6AlH50a3fOTDT
-        +5pxAR4ggKar8oroq5iyKtDOVjXT7DeZVc2301bynVToT133EQ==
-X-Google-Smtp-Source: APXvYqyRgRhvS4MZY/iC+DYai/9+rQqTrcvKWa3Eb1xRLuJBThR1P6FVckreMZUImp5heB5ZMwgBCHahDh9k/grm8VM=
-X-Received: by 2002:aca:43d5:: with SMTP id q204mr1174599oia.100.1557400674685;
- Thu, 09 May 2019 04:17:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Svie9yUR/Ki3ERUJrCqza9pq7RGH5A+LU5XetAHZSY=;
+        b=sDjOdK89nYlsMj4o0c5pO/UjlXqPXukGSwRcF9ql8W2O6d4aZsSZ+qqRgaRr4/RZU1
+         jW1yufBhJBCF+IgeJM+7rVIyYzG/G5OAkCVwCGM7+OQC/mjglUgUU5zrarPLcGKPPlpe
+         79mom8wtct3dlCalgE/oyY2N0UkQle8+/JJPhWXJ71MMF0OkvxpFuZ+FAX0DDieWSp0L
+         ZaPZYb6AxBfA1OYEhZjlk5HHPc7YtHSfoSZuqFFS9zJXO2DVhZ+r52wr2tgBwCVs109U
+         pfDWN9gV0E71zWryxisZcLaoQ43bjoRcei2wUnDZwo7LqmnMZwYgXHZfXd4PtmbLynyy
+         Uddg==
+X-Gm-Message-State: APjAAAV5h7ZidImViu4LmP7qFCqKLGm/sQoZQraVPvpBkZUmRMGxMTNh
+        fDwlXycrZNL578skmXR5QiE2JfmE
+X-Google-Smtp-Source: APXvYqyrKGN7RnGuN/OiBPlVnzUaz82ehvNxbBnu8pq6PN5SG9ycY6kGXiNHW8M/Nxz2rnpxRS98FA==
+X-Received: by 2002:a17:906:2447:: with SMTP id a7mr2693190ejb.235.1557400747703;
+        Thu, 09 May 2019 04:19:07 -0700 (PDT)
+Received: from geeko.suse.cz (189.114.218.127.dynamic.adsl.gvt.net.br. [189.114.218.127])
+        by smtp.gmail.com with ESMTPSA id j3sm290382edh.82.2019.05.09.04.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 04:19:05 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     neilb@suse.com, Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Shaohua Li <shli@kernel.org>,
+        linux-raid@vger.kernel.org (open list:SOFTWARE RAID (Multiple Disks)
+        SUPPORT)
+Subject: [PATCH] drivers: md: Unify common definitions of raid1 and raid10
+Date:   Thu,  9 May 2019 08:18:49 -0300
+Message-Id: <20190509111849.22927-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <002901d5064d$42355ea0$c6a01be0$@lucidpixels.com>
-In-Reply-To: <002901d5064d$42355ea0$c6a01be0$@lucidpixels.com>
-From:   Justin Piszcz <jpiszcz@lucidpixels.com>
-Date:   Thu, 9 May 2019 07:17:43 -0400
-Message-ID: <CAO9zADwmyFZiiHPdggrxkyJ2jL8YOcBY9Wj35zGz5SYAvk+Vvg@mail.gmail.com>
-Subject: Re: 5.1 kernel: khugepaged stuck at 100%
-To:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 5:54 AM Justin Piszcz <jpiszcz@lucidpixels.com> wrote:
->
-> Hello,
->
-> Kernel: 5.1 (self-compiled, no modules)
-> Arch: x86_64
-> Distro: Debian Testing
->
-> Issue: I was performing a dump of ext3 and ext4 filesystems and then
-> restoring them to a separate volume (testing)-- afterwards I noticed that
-> khugepaged is stuck at 100% CPU. It is currently still stuck at 100% CPU, is
-> there anything I can do to debug what is happening prior to a reboot to work
-> around the issue?  I have never seen this behavior prior to 5.1.
->
-> $ cat /proc/cmdline
-> auto BOOT_IMAGE=5.1.0-2 ro root=901 3w-sas.use_msi=1 nohugeiomap
-> page_poison=1 pcie_aspm=off pti=on rootfstype=ext4 slub_debug=P
-> zram.enabled=1 zram.num_devices=12 zswap.enabled=1 zswap.compressor=lz4
-> zswap.zpool=z3fold
->
-> $ 5.1 .config attached: config.txt.gz
->
-> $ attachment: graphic.JPG -> graph of the processes, dark green ->
-> khugepaged
->
-> $ top
->
->   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
->    77 root      39  19       0      0      0 R 100.0   0.0  23:29.27
-> khugepaged
->     1 root      20   0  171800   7832   4948 S   0.0   0.0   1:25.59 systemd
->     2 root      20   0       0      0      0 S   0.0   0.0   0:00.02
-> kthreadd
->     3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 rcu_gp
->     4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00
-> rcu_par_gp
->     6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00
-> kworker/0+
->     8 root       0 -20       0      0      0 I   0.0   0.0   0:00.00
-> mm_percpu+
->
+These definitions are being moved to raid1-10.c.
 
-Will disable zcache/zswap for now, but FWIW
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
+ drivers/md/raid1-10.c | 25 +++++++++++++++++++++++++
+ drivers/md/raid1.c    | 29 ++---------------------------
+ drivers/md/raid10.c   | 27 +--------------------------
+ 3 files changed, 28 insertions(+), 53 deletions(-)
 
-From perf top:
+diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+index 400001b815db..7d968bf08e54 100644
+--- a/drivers/md/raid1-10.c
++++ b/drivers/md/raid1-10.c
+@@ -3,6 +3,31 @@
+ #define RESYNC_BLOCK_SIZE (64*1024)
+ #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
+ 
++/*
++ * Number of guaranteed raid bios in case of extreme VM load:
++ */
++#define	NR_RAID_BIOS 256
++
++/* when we get a read error on a read-only array, we redirect to another
++ * device without failing the first device, or trying to over-write to
++ * correct the read error.  To keep track of bad blocks on a per-bio
++ * level, we store IO_BLOCKED in the appropriate 'bios' pointer
++ */
++#define IO_BLOCKED ((struct bio *)1)
++/* When we successfully write to a known bad-block, we need to remove the
++ * bad-block marking which must be done from process context.  So we record
++ * the success by setting devs[n].bio to IO_MADE_GOOD
++ */
++#define IO_MADE_GOOD ((struct bio *)2)
++
++#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
++
++/* When there are this many requests queue to be written by
++ * the raid thread, we become 'congested' to provide back-pressure
++ * for writeback.
++ */
++static int max_queued_requests = 1024;
++
+ /* for managing resync I/O pages */
+ struct resync_pages {
+ 	void		*raid_bio;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 0c8a098d220e..bb052c35bf29 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -50,31 +50,6 @@
+ 	 (1L << MD_HAS_PPL) |		\
+ 	 (1L << MD_HAS_MULTIPLE_PPLS))
+ 
+-/*
+- * Number of guaranteed r1bios in case of extreme VM load:
+- */
+-#define	NR_RAID1_BIOS 256
+-
+-/* when we get a read error on a read-only array, we redirect to another
+- * device without failing the first device, or trying to over-write to
+- * correct the read error.  To keep track of bad blocks on a per-bio
+- * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+- */
+-#define IO_BLOCKED ((struct bio *)1)
+-/* When we successfully write to a known bad-block, we need to remove the
+- * bad-block marking which must be done from process context.  So we record
+- * the success by setting devs[n].bio to IO_MADE_GOOD
+- */
+-#define IO_MADE_GOOD ((struct bio *)2)
+-
+-#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+-
+-/* When there are this many requests queue to be written by
+- * the raid1 thread, we become 'congested' to provide back-pressure
+- * for writeback.
+- */
+-static int max_queued_requests = 1024;
+-
+ static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
+ static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
+ 
+@@ -2955,7 +2930,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+ 	if (!conf->poolinfo)
+ 		goto abort;
+ 	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
+-	err = mempool_init(&conf->r1bio_pool, NR_RAID1_BIOS, r1bio_pool_alloc,
++	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
+ 			   r1bio_pool_free, conf->poolinfo);
+ 	if (err)
+ 		goto abort;
+@@ -3240,7 +3215,7 @@ static int raid1_reshape(struct mddev *mddev)
+ 	newpoolinfo->mddev = mddev;
+ 	newpoolinfo->raid_disks = raid_disks * 2;
+ 
+-	ret = mempool_init(&newpool, NR_RAID1_BIOS, r1bio_pool_alloc,
++	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
+ 			   r1bio_pool_free, newpoolinfo);
+ 	if (ret) {
+ 		kfree(newpoolinfo);
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 3b6880dd648d..24cb116d950f 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -73,31 +73,6 @@
+  *    [B A] [D C]    [B A] [E C D]
+  */
+ 
+-/*
+- * Number of guaranteed r10bios in case of extreme VM load:
+- */
+-#define	NR_RAID10_BIOS 256
+-
+-/* when we get a read error on a read-only array, we redirect to another
+- * device without failing the first device, or trying to over-write to
+- * correct the read error.  To keep track of bad blocks on a per-bio
+- * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+- */
+-#define IO_BLOCKED ((struct bio *)1)
+-/* When we successfully write to a known bad-block, we need to remove the
+- * bad-block marking which must be done from process context.  So we record
+- * the success by setting devs[n].bio to IO_MADE_GOOD
+- */
+-#define IO_MADE_GOOD ((struct bio *)2)
+-
+-#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+-
+-/* When there are this many requests queued to be written by
+- * the raid10 thread, we become 'congested' to provide back-pressure
+- * for writeback.
+- */
+-static int max_queued_requests = 1024;
+-
+ static void allow_barrier(struct r10conf *conf);
+ static void lower_barrier(struct r10conf *conf);
+ static int _enough(struct r10conf *conf, int previous, int ignore);
+@@ -3684,7 +3659,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
+ 
+ 	conf->geo = geo;
+ 	conf->copies = copies;
+-	err = mempool_init(&conf->r10bio_pool, NR_RAID10_BIOS, r10bio_pool_alloc,
++	err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
+ 			   r10bio_pool_free, conf);
+ 	if (err)
+ 		goto out;
+-- 
+2.21.0
 
-   PerfTop:    1181 irqs/sec  kernel:83.1%  exact: 96.9% lost: 73/137
-drop: 0/0 [4000Hz cycles],  (all, 12 CPUs)
--------------------------------------------------------------------------------
-
-    54.56%  [kernel]            [k] compaction_alloc
-    29.46%  [kernel]            [k] __pageblock_pfn_to_page
-    10.66%  [kernel]            [k] nmi
-     0.61%  [kernel]            [k] _cond_resched
-     0.32%  [kernel]            [k] format_decode
-     0.25%  [kernel]            [k] __lock_text_start
-     0.20%  [kernel]            [k] __vma_adjust
-     0.16%  perf                [.] __symbols__insert
-     0.13%  perf                [.] rb_insert_color_cached
-
-I tried dropping caches, etc, I will disable huge pages for now.
-
-Some other posts:
-https://bugzilla.redhat.com/show_bug.cgi?id=879801
-https://lkml.org/lkml/2012/6/27/565
-https://lkml.org/lkml/2011/11/9/252
