@@ -2,91 +2,165 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974F6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A490C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625F62173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46B22173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nzz1DnJ9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="G0q8E1Lj";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="NVX0snrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfEIQLz (ORCPT
+        id S1726701AbfEIQO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:11:55 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36779 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfEIQLk (ORCPT
+        Thu, 9 May 2019 12:14:26 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:38718 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfEIQOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:11:40 -0400
-Received: by mail-vs1-f68.google.com with SMTP id c76so1778473vsd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:11:39 -0700 (PDT)
+        Thu, 9 May 2019 12:14:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1557418464; x=1588954464;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=8LZd++GvUtjRxcQDG5mDhFqli3LGkDTDaKrLtwCwMBM=;
+  b=G0q8E1LjryDJQz8lA6P/0FrmSe3hoMCx9B/Np/XDQycrNb9FbY4+bCAU
+   pidw9kmuvslrGCvwTIwKNNJzXVfk6etw0ORf5x/edA8JBS3lpElBEY1Zd
+   f6j4TXiGBQzUrHzzipJpiaRFRV6qDiTrsHUILlfatypD66GzwwJoLbWJT
+   yrtqDr2UJdWjIIL7cuJqSvzpZomC5iteeMqfZ6AtrgKuMW0390bySVOXn
+   3VqbOJaz/iIKWF+pieKRbL3Mgb5VUbN9hOXxNy3r5iZxRvy7/4zDlplhZ
+   FzU6QvpPswIGrWITelVyJAEdep469UCD6/iYfiReP3iAgqHyDEPw0hzJG
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.60,450,1549900800"; 
+   d="scan'208";a="109627200"
+Received: from mail-co1nam05lp2054.outbound.protection.outlook.com (HELO NAM05-CO1-obe.outbound.protection.outlook.com) ([104.47.48.54])
+  by ob1.hgst.iphmx.com with ESMTP; 10 May 2019 00:14:23 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SGvBfOsWL3Wi+dnFRPgL2CSHV9bM5eevOaTWbHZZuDE=;
-        b=nzz1DnJ9BjEj1kg7AW6KUgUZlu7zGHA9FSRGd+vLU/L8x1Ifys0nieltpWrVOTytwS
-         EiyrtldcK6DQKdtKFp5okPwfl1DFhaKke1rI9Vb381WUOwsV9+l0ZKYix9zjra7pv/ON
-         nxoU2ZAcc9KIgPu90LxZfOub19uzYZ98Qy1Ss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SGvBfOsWL3Wi+dnFRPgL2CSHV9bM5eevOaTWbHZZuDE=;
-        b=Hfa7CrSI4udHJmYEp7f7ortaRz5/FjeIVOsGkixsx8vnKd9fr+niWMVOTJ4kGxejqh
-         BcHGOPWMmqMQvG/Z7qa6pjXE1t9p+0inTXMs0SdC+FJSy1pIoCX9n/Z/TOuFbG52hGmr
-         Vo9jfvlP+4vzt+DpGnTbynSucmpnUXBblhaJrsBEmgIWHRE7RJYNmq/Ye4q0a9CIY+bV
-         b86LMy0Af6gPM7n6Kz7SrmVj7Oosj/SV20iHZ19pMmaqu827MT2qnK+dKxYFJGbeddw1
-         de68fsj1+FSOIrwTtKeMmzBtWf5aPefaq55G42McAfBIbAO8fT3W5Hle2yvz+yWop5VD
-         cuVw==
-X-Gm-Message-State: APjAAAWyN3nh3wq4ZOUpRcnkjEFWuOUZK846PZkrehaRLaZiaN/gS6UR
-        /tl9r7VPEfSxkhjlturQ/CbAu1yZDBw=
-X-Google-Smtp-Source: APXvYqyYZVaVLgBzF9Nofvn6MUw92aUAh9foSdRyWctAk8BAttk4j1uhdYsWZ2XrBeM8+LnMP/Ktvg==
-X-Received: by 2002:a67:f849:: with SMTP id b9mr2889342vsp.188.1557418298523;
-        Thu, 09 May 2019 09:11:38 -0700 (PDT)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id k128sm1365788vkb.54.2019.05.09.09.11.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 09:11:37 -0700 (PDT)
-Received: by mail-vk1-f179.google.com with SMTP id l17so722534vke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:11:37 -0700 (PDT)
-X-Received: by 2002:a1f:9710:: with SMTP id z16mr2186751vkd.92.1557418296626;
- Thu, 09 May 2019 09:11:36 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/gx8MNmYxZSjkPzjBQvzzyyndgHb7KMFFsLGnEkquWM=;
+ b=NVX0snrBt6O1mNCYPguAzLl7ZXvgT9QL5XXAvmswu0oGiSDZQL0UK5vguJhNymzw6GacNaffu7A7Kdt+ppFn9uULqo/jMfpE8Oqw1v3mXDSwOTnI0MwQ/lUV1sYFC+Y0hEAbp/iy+1vdXmWjMYk1HtepWwbGMYnaUK4kBDsqSY8=
+Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
+ SN6PR04MB5054.namprd04.prod.outlook.com (52.135.116.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 9 May 2019 16:13:53 +0000
+Received: from SN6PR04MB4527.namprd04.prod.outlook.com
+ ([fe80::c4f:1604:178c:d974]) by SN6PR04MB4527.namprd04.prod.outlook.com
+ ([fe80::c4f:1604:178c:d974%5]) with mapi id 15.20.1856.012; Thu, 9 May 2019
+ 16:13:53 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Evan Green <evgreen@chromium.org>, Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>
+CC:     Bart Van Assche <bvanassche@acm.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Alexis Savery <asavery@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] loop: Report EOPNOTSUPP properly
+Thread-Topic: [PATCH v5 1/2] loop: Report EOPNOTSUPP properly
+Thread-Index: AQHVBDnP+NEOiOrWR0eHzVHg4XqcIQ==
+Date:   Thu, 9 May 2019 16:13:53 +0000
+Message-ID: <SN6PR04MB4527AEB53F1CDF938B2E686C86330@SN6PR04MB4527.namprd04.prod.outlook.com>
+References: <20190506182736.21064-1-evgreen@chromium.org>
+ <20190506182736.21064-2-evgreen@chromium.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6adc0b94-eb81-4e9c-48ec-08d6d499549c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5054;
+x-ms-traffictypediagnostic: SN6PR04MB5054:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB50547451276D2E8953D7C45686330@SN6PR04MB5054.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(136003)(39860400002)(396003)(376002)(199004)(189003)(72206003)(76176011)(55016002)(2906002)(316002)(7696005)(81166006)(53546011)(6506007)(476003)(81156014)(14454004)(8936002)(52536014)(486006)(8676002)(102836004)(66066001)(68736007)(25786009)(186003)(5660300002)(6246003)(64756008)(66556008)(86362001)(66446008)(73956011)(4326008)(66476007)(66946007)(446003)(76116006)(91956017)(26005)(478600001)(53936002)(71200400001)(71190400001)(9686003)(229853002)(305945005)(54906003)(74316002)(33656002)(256004)(14444005)(99286004)(7736002)(110136005)(6436002)(6116002)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5054;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qsYi5QMqNkjHo6J6AdNr6fj1HsgRKzUAl0thNcWFEIK0G69CBpQuihojlXje+/zurVITpqHmasDCO1ptVKxsHM5R0JMiQc8vgECGtfbntrDIFfC8Mc2R0xJIW1MihqVoNXldeiuHFgxSJx6YsDse2nO6sBx28F/yB05vrl7c0bDvse6XEufaO8RSbVuN6smjy9T3+y4Ni0WZr8UrFsqa5snmyxuNhKby3w7OOgFIZY7wqR5LwZLDfoLVCkxm/CZWZd6G2uNX+05/Yjltmh2BZHB1L7lpStwQ6XFGnBg4pPKYWqBvQqxDnsnLl/O8+7oXFUYss5GI5hUlP43AC0H37RPF3yUxLLalwXCk92soJJnsKB4FpUJyDJvcAcSMH8MJKXeZMiKc8mhZKzMhJIRosa9cvzT0RXEKr7TX2v3y76I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190509064549.1302-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190509064549.1302-1-yamada.masahiro@socionext.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 9 May 2019 09:11:25 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKDELCthqEcnL3TvC8DtMnfoWnOd14wrKpcReUxubdMCg@mail.gmail.com>
-Message-ID: <CAGXu5jKDELCthqEcnL3TvC8DtMnfoWnOd14wrKpcReUxubdMCg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add -Wvla flag unconditionally
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux@googlegroups.com,
-        Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6adc0b94-eb81-4e9c-48ec-08d6d499549c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 16:13:53.2726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 11:46 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> This flag is documented in the GCC 4.6 manual, and recognized by
-> Clang as well. Let's rip off the cc-option switch.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Acked-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Looks good to me.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+On 05/06/2019 11:30 AM, Evan Green wrote:=0A=
+> Properly plumb out EOPNOTSUPP from loop driver operations, which may=0A=
+> get returned when for instance a discard operation is attempted but not=
+=0A=
+> supported by the underlying block device. Before this change, everything=
+=0A=
+> was reported in the log as an I/O error, which is scary and not=0A=
+> helpful in debugging.=0A=
+>=0A=
+> Signed-off-by: Evan Green <evgreen@chromium.org>=0A=
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>=0A=
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>=0A=
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>=0A=
+> ---=0A=
+>=0A=
+> Changes in v5: None=0A=
+> Changes in v4: None=0A=
+> Changes in v3:=0A=
+> - Updated tags=0A=
+>=0A=
+> Changes in v2:=0A=
+> - Unnested error if statement (Bart)=0A=
+>=0A=
+>   drivers/block/loop.c | 9 +++++++--=0A=
+>   1 file changed, 7 insertions(+), 2 deletions(-)=0A=
+>=0A=
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c=0A=
+> index bf1c61cab8eb..bbf21ebeccd3 100644=0A=
+> --- a/drivers/block/loop.c=0A=
+> +++ b/drivers/block/loop.c=0A=
+> @@ -458,7 +458,9 @@ static void lo_complete_rq(struct request *rq)=0A=
+>=0A=
+>   	if (!cmd->use_aio || cmd->ret < 0 || cmd->ret =3D=3D blk_rq_bytes(rq) =
+||=0A=
+>   	    req_op(rq) !=3D REQ_OP_READ) {=0A=
+> -		if (cmd->ret < 0)=0A=
+> +		if (cmd->ret =3D=3D -EOPNOTSUPP)=0A=
+> +			ret =3D BLK_STS_NOTSUPP;=0A=
+> +		else if (cmd->ret < 0)=0A=
+>   			ret =3D BLK_STS_IOERR;=0A=
+>   		goto end_io;=0A=
+>   	}=0A=
+> @@ -1892,7 +1894,10 @@ static void loop_handle_cmd(struct loop_cmd *cmd)=
+=0A=
+>    failed:=0A=
+>   	/* complete non-aio request */=0A=
+>   	if (!cmd->use_aio || ret) {=0A=
+> -		cmd->ret =3D ret ? -EIO : 0;=0A=
+> +		if (ret =3D=3D -EOPNOTSUPP)=0A=
+> +			cmd->ret =3D ret;=0A=
+> +		else=0A=
+> +			cmd->ret =3D ret ? -EIO : 0;=0A=
+>   		blk_mq_complete_request(rq);=0A=
+>   	}=0A=
+>   }=0A=
+>=0A=
+=0A=
