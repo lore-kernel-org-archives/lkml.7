@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF72AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B826C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A894620656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FAE2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428723;
-	bh=n6R/SMkEDuB4xZ6Ddy+01pQ8t9J5hnVCEn33UDP+TM8=;
+	s=default; t=1557428735;
+	bh=6QL4gbroYHFM4CXyZoM/xXTLR89UPs6FMfba/74u2OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bryi83I3SH+8i+VFAtdEU3lwYWWFyOsp09gL3rk7L4QteLS13Ubr2ZN11tjlt7gkE
-	 yLU87Rb1plaHjb/wraaidpTnHSFsLOYxBARk+zFBgQlgYZgtGulbI5vWBUeIorwNW8
-	 STGEat2fdYM3a9NzlTYmr0ILcG5HtljTuCamJ8Fo=
+	b=tvOJSAH9Ic0iYo84CCRvcFgLq9uNA38sCey2cfRrNtS2+NL8wJ0zhtxZXd9gFoTlL
+	 0AoGutS7LnYo53WrUP+KzlcLeDiGMiFCstan2I7UDdLyiDdSL0i2WmOvRCCQSw+e7J
+	 TrSRzkwBlN5uxeCr6T5X69rb48tnPGUw9GoLY6/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfEITFW (ORCPT
+        id S1727592AbfEITFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfEISrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:49 -0400
+        id S1727851AbfEISre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9533217D7;
-        Thu,  9 May 2019 18:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1A2E217F4;
+        Thu,  9 May 2019 18:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427668;
-        bh=n6R/SMkEDuB4xZ6Ddy+01pQ8t9J5hnVCEn33UDP+TM8=;
+        s=default; t=1557427654;
+        bh=6QL4gbroYHFM4CXyZoM/xXTLR89UPs6FMfba/74u2OE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0gSLRpLGzlrygrgVLNoX274O9PD91rfrNNcTYUjanFjJAHmyMBlFUz6z9MwPIsVP
-         zfRSV3f9Bt8yIfA9N1Y7M/Hi2Sk8qaoMwWAOkp1gw+CWxzWUgs8+Lc5fqJZma+4TXR
-         RBGtGtt65FQ9MAGUw8qHEhRwj/KENUjLL/zXmGdI=
+        b=dlDO4CgpHpx1Kvf9/HMXqmoAwNVC+kIWsQoWTimf6179/F/LRUCU4P5C+FEVE6oXt
+         aH+wLUsErgrppbmEsDpYIMTVOyp1OefpRiiehVU1tkH48aI+vd7QXLmLlaz2TDwluc
+         z2mnCKLWHEdLmaFHlEVFiiNajrot4nrmiys4oFNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chong Qiao <qiaochong@loongson.cn>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/66] MIPS: KGDB: fix kgdb support for SMP platforms.
-Date:   Thu,  9 May 2019 20:42:01 +0200
-Message-Id: <20190509181304.656350630@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 21/66] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Thu,  9 May 2019 20:41:56 +0200
+Message-Id: <20190509181304.124051555@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -66,51 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ab8a6d821179ab9bea1a9179f535ccba6330c1ed ]
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-KGDB_call_nmi_hook is called by other cpu through smp call.
-MIPS smp call is processed in ipi irq handler and regs is saved in
- handle_int.
-So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
- to kgdb_cpu_enter.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: QiaoChong <qiaochong@loongson.cn>
+To fix this, set the INCR bit in all cases.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/kgdb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/cs4270.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
-index eb6c0d582626b..2c1e30ca7ee4e 100644
---- a/arch/mips/kernel/kgdb.c
-+++ b/arch/mips/kernel/kgdb.c
-@@ -33,6 +33,7 @@
- #include <asm/processor.h>
- #include <asm/sigcontext.h>
- #include <linux/uaccess.h>
-+#include <asm/irq_regs.h>
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 3c266eeb89bfb..007ce9f48e443 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -642,6 +642,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
  
- static struct hard_trap_info {
- 	unsigned char tt;	/* Trap type code for MIPS R3xxx and R4xxx */
-@@ -214,7 +215,7 @@ static void kgdb_call_nmi_hook(void *ignored)
- 	old_fs = get_fs();
- 	set_fs(get_ds());
- 
--	kgdb_nmicallback(raw_smp_processor_id(), NULL);
-+	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
- 
- 	set_fs(old_fs);
- }
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
 -- 
 2.20.1
 
