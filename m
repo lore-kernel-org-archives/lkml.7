@@ -2,115 +2,86 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B8BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B07FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2933A21479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WcNQDklE"
+	by mail.kernel.org (Postfix) with ESMTP id D4BA421479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfEIJ1z (ORCPT
+        id S1726704AbfEIJ3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:27:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53116 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfEIJ1y (ORCPT
+        Thu, 9 May 2019 05:29:40 -0400
+Received: from smtprelay0195.hostedemail.com ([216.40.44.195]:57114 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725826AbfEIJ3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:27:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mh9wv/1YPcHFRafECtG9vJbg2xftnq1zTlCLnERm8MU=; b=WcNQDklEwzguV0Z8pENKDWZGy
-        q0ZhOFX23ffs/Z0ITznG7dFVyKrFXBU1mzR0rEH9ph2nFYgCZgEoCJ8NYQ8PiM/HXqGsgzPAN/t2N
-        hOf8xuAdOAgu3dZ/mA1bKacT3QmaI64yJcgDYx5eKV17UA8zIVQ2/DraLKQGFyAC2SYX3GzBp5L5P
-        B/25wkTsE2uUU6lYGClvMLTLCup3Jp7aN28XJ1dnTFAC+LMBIe6SRJ78XHXCppfLNkn32F2FEJbh1
-        72aI8gkU0C2UZxwH7dZ9qVXTFo6XheLrzDxnH03Wv3NafxemGD8/KGKZ2+JNxgaFYSZ9/2w15WaPk
-        /8Im51tRw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOfL2-0004y6-SB; Thu, 09 May 2019 09:27:41 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C2EF029CD4D51; Thu,  9 May 2019 11:27:38 +0200 (CEST)
-Date:   Thu, 9 May 2019 11:27:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190509092738.GK2650@hirez.programming.kicks-ass.net>
-References: <20190508074901.982470324@infradead.org>
- <20190508080612.721269814@infradead.org>
- <20190508115416.nblx7c2kocidpytm@treble>
- <20190508120416.GL2589@hirez.programming.kicks-ass.net>
- <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
- <20190508184848.qerg3flv3ej3xsev@treble>
- <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
- <20190509081431.GO2589@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509081431.GO2589@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 9 May 2019 05:29:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id CFD69100E86CA;
+        Thu,  9 May 2019 09:29:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: skate64_198a4048ff50b
+X-Filterd-Recvd-Size: 2238
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  9 May 2019 09:29:35 +0000 (UTC)
+Message-ID: <1f6fbb9fdcea4a39ff11cd977a5ce46babe34454.camel@perches.com>
+Subject: Re: [RFC PATCH 1/2] rtl8xxxu: Add rate adaptive related data
+From:   Joe Perches <joe@perches.com>
+To:     Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>
+Cc:     jes.sorensen@gmail.com, Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Date:   Thu, 09 May 2019 02:29:34 -0700
+In-Reply-To: <CAD8Lp45WmPz2c+OnszFyaRL=veF0avEffwv3muwXNoeLcE0fhw@mail.gmail.com>
+References: <20190503072146.49999-1-chiu@endlessm.com>
+         <20190503072146.49999-2-chiu@endlessm.com>
+         <CAD8Lp45WmPz2c+OnszFyaRL=veF0avEffwv3muwXNoeLcE0fhw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 10:14:31AM +0200, Peter Zijlstra wrote:
-> struct ftrace_regs_stack {
-> 	ftrace_func_t func;
-> 	unsigned long parent_ip;
-> };
+On Thu, 2019-05-09 at 16:11 +0800, Daniel Drake wrote:
+> On Fri, May 3, 2019 at 3:22 PM Chris Chiu <chiu@endlessm.com> wrote:
+> > Add wireless mode, signal strength level, and rate table index
+> > to tell the firmware that we need to adjust the tx rate bitmap
+> > accordingly.
+[]
+> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+[]
+> > +/*mlme related.*/
+> > +enum wireless_mode {
+> > +       WIRELESS_MODE_UNKNOWN = 0,
+> > +       //Sub-Element
 > 
-> void ftrace_regs_handler(struct pr_regs *regs)
-> {
-> 	struct ftrace_regs_stack *st = (void *)regs->sp;
-> 	ftrace_func_t func = st->func;
-> 
-> 	regs->sp += sizeof(long); /* pop func */
-> 
-> 	func(regs->ip, st->parent_ip, function_trace_op, regs);
-> }
+> Run these patches through checkpatch.pl, it'll have some suggestions
+> to bring the coding style in line, for example not using // style
+> comments.
 
-Alternatively we can add things like:
+just fyi:
 
-static inline unsigned long int3_emulate_pop(struct pt_regs *regs)
-{
-	unsigned long val = *(unsigned long *)regs->sp;
-	regs->sp += sizeof(unsigned long);
-	return val;
-}
+checkpatch ignores // comments since 2016
+(new in 2019: unless you add --ignore=c99_comment_tolerance)
 
-And do:
+These are the relevant checkpatch commits:
 
-	ftrace_func_t func = (void *)int3_emulate_pop(regs);
+In 2016, commit dadf680de3c2 ("checkpatch: allow c99 style // comments")
+In 2019, commit 98005e8c743f ("checkpatch: allow reporting C99 style comments")
+
+
+
+
