@@ -2,235 +2,103 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB77C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7601DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E43A2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gfgkk5oZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4DEFF208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 06:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfEIGML (ORCPT
+        id S1726873AbfEIGM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 02:12:11 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38706 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEIGML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 02:12:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u199so1035363oie.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 23:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P+8FULLffFx7fYiQWZzicW549K/RiT8LNAYFVRsp9uI=;
-        b=gfgkk5oZUTqBetQJ1TO2YA+AncASlOUi39E1dmeJ5RDB4mVXfUdq85hI0MNduiP9ce
-         2i5KFtiJrkml3dUdXV1SXvGeGqb5/fZuf3sTRr003bUh3+qsmdLG9Eo9R/tr4m0Be+1f
-         53te+tTTJPMuRe+D459apCxOOdAunZ0itZNNdB/Q/haRNVRybWCVNQ8WBlTYhcGW1ybq
-         Psnqc7utsHleE5rhER7+4fOaV7y3y2jKsdsRZQLk/KdT6mpejWyCfkEnVvfKSh/+lXKx
-         gk5P/jqFz2rpvezDXC2I0OEn6218DvqDAdMhgoxu9/tdkVPPrvhv84grSBeYxpqxX9Hi
-         9/ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P+8FULLffFx7fYiQWZzicW549K/RiT8LNAYFVRsp9uI=;
-        b=TogqEP+T1aZ4VNvnwMkiVIrKEY2nHJnNQinlBS1Oet9/KIRuv8O+RqNYJEc8nG+gME
-         qdVggC+bzmfZ7ZpAYDGjd5wBZ+BuoicIWxJqu8+qAOG/CR9cDjp2DFxlB27n4d5BaxhH
-         sDJUjFGdQrYhrfPs1hHZ0o3kCNOYEkH25r5S5IBsniCi+p701B01+WgaRuQpbBiOrskk
-         7UZ2j35JAii6a4NUw30Ms8WS5LWBCrYifQzvnnEhiSuyQIDk5vtqwJhkkW1fk7k+EJid
-         iP02KR8zviSNqkrcnEGBAXOgSVf19s4o1XvNxaC2nZwLTulE7kinuxdWrbm0WrwPZDlg
-         5mcw==
-X-Gm-Message-State: APjAAAWCJRIiGflFaYGd9aPvEjrAWVOU/TLxZ/K4rpblSczDeeD7tFfM
-        2GuWyS1lSNumNUg49e7fwDs/zikS+7wpT7bbSTG9Cg==
-X-Google-Smtp-Source: APXvYqwSzRk255YY1C+R1hKUV1ccGvW7nQS5fdqp0fsRSSL9pVF18LpVg2cPnymxZyYOnqQGeEKfhezPyo2yqMKTTXo=
-X-Received: by 2002:aca:aa43:: with SMTP id t64mr436047oie.12.1557382329361;
- Wed, 08 May 2019 23:12:09 -0700 (PDT)
+        Thu, 9 May 2019 02:12:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:43712 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfEIGM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 02:12:57 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id C038667358; Thu,  9 May 2019 08:12:37 +0200 (CEST)
+Date:   Thu, 9 May 2019 08:12:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Mario.Limonciello@dell.com
+Cc:     hch@lst.de, kai.heng.feng@canonical.com, kbusch@kernel.org,
+        keith.busch@intel.com, axboe@fb.com, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of
+ D3 on Suspend-to-Idle
+Message-ID: <20190509061237.GA15229@lst.de>
+References: <20190508185955.11406-1-kai.heng.feng@canonical.com> <20190508191624.GA8365@localhost.localdomain> <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com> <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM> <20190508195159.GA1530@lst.de> <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-References: <20190423233904.195842-1-furquan@google.com>
-In-Reply-To: <20190423233904.195842-1-furquan@google.com>
-From:   Furquan Shaikh <furquan@google.com>
-Date:   Wed, 8 May 2019 23:11:57 -0700
-Message-ID: <CAEGmHFEf4RTn5mrQ4pn+WPz=WnD5id9joEdGQnu==ibx+r1L8g@mail.gmail.com>
-Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Todd Broch <tbroch@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 4:39 PM Furquan Shaikh <furquan@google.com> wrote:
->
-> During boot-up, ACPI bus scan enables all power resources so that
-> respective device drivers can talk to their device. This causes acpi
-> ref_count for the power resource to be incremented to 1. When system
-> suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
-> power off on all power resources whose ref_count is 1 i.e. no other
-> user of this power resource and thus resulting in _OFF routine being
-> called for it.
->
-> However, in case of poweroff, DPM is not involved and so the power
-> resources are left on when the system is entering S5. This results in
-> the violation of power down sequencing for certain devices
-> e.g. touchscreen or digitizer I2C devices. In order to ensure that the
-> power down sequencing does the right thing, it is necessary for ACPI
-> to disable all power resources while preparing for S5.
->
-> This change updates the function acpi_turn_off_unused_power_resources
-> to accept a parameter acpi_system_state, This function turns off power
-> resources according to the targeted system ACPI state:
-> 1. For S0: Unused power resources are turned off i.e. power resources
-> whose ref_count is already 0.
-> 2. For S5: ref_count is decremented first to undo the increment
-> performed during ACPI bus scan and then power resources with ref_count
-> 0 are turned off.
-> 3. All other suspend/hibernate states: No action is required since DPM
-> takes care of turning off power resources.
->
-> This change should not affect the wake capable devices since:
-> 1. If wake capable devices are enabled before this call, their
-> refcount should be greater than 1. Thus, they won't be turned off.
-> 2. If wake capable devices are not enabled yet when this call is made,
-> they would eventually get turned on by call to
-> acpi_enable_wakeup_devices.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> ---
->  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
->  drivers/acpi/sleep.c |  5 ++++-
->  drivers/acpi/sleep.h |  2 +-
->  3 files changed, 46 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
-> index 665e93ca0b40f..945db762861a3 100644
-> --- a/drivers/acpi/power.c
-> +++ b/drivers/acpi/power.c
-> @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
->
->         mutex_unlock(&power_resource_list_lock);
->  }
-> +#endif
->
-> -void acpi_turn_off_unused_power_resources(void)
-> +/**
-> + * acpi_turn_off_power_resources: This function is used to turn off power
-> + * resources in provided ACPI system state.
-> + *
-> + * Behavior differs based on the target system state:
-> + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
-> + *                with ref_count zero.
-> + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
-> + *                ref_count zero. This is done to ensure that the ref_count
-> + *                incremented during ACPI bus scan is undone and any power
-> + *                resources that are not required during S5 are turned off.
-> + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
-> + *                resources while suspending/hibernating.
-> + */
-> +void acpi_turn_off_power_resources(int acpi_system_state)
->  {
->         struct acpi_power_resource *resource;
-> +       int decrement;
-> +
-> +       if (acpi_system_state == ACPI_STATE_S0) {
-> +               /*
-> +                * In case of ACPI_STATE_S0, turn off only unused power
-> +                * resources. So, no need to decrement ref_count.
-> +                */
-> +               decrement = 0;
-> +       } else if (acpi_system_state == ACPI_STATE_S5) {
-> +               /*
-> +                * In case of ACPI_STATE_S5, ref_count needs to be decremented
-> +                * first before checking if it is okay to power off the
-> +                * resource.
-> +                */
-> +               decrement = 1;
-> +       } else
-> +               return;
->
->         mutex_lock(&power_resource_list_lock);
->
-> @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
->                         continue;
->                 }
->
-> -               if (state == ACPI_POWER_RESOURCE_STATE_ON
-> -                   && !resource->ref_count) {
-> -                       dev_info(&resource->device.dev, "Turning OFF\n");
-> -                       __acpi_power_off(resource);
-> +               if (state == ACPI_POWER_RESOURCE_STATE_ON) {
-> +                       if (resource->ref_count)
-> +                               resource->ref_count -= decrement;
-> +
-> +                       if (!resource->ref_count) {
-> +                               dev_info(&resource->device.dev, "Turning OFF\n");
-> +                               __acpi_power_off(resource);
-> +                       }
->                 }
->
->                 mutex_unlock(&resource->resource_lock);
-> @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
->
->         mutex_unlock(&power_resource_list_lock);
->  }
-> -#endif
-> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> index 403c4ff153498..fb6b3ca0eeb91 100644
-> --- a/drivers/acpi/sleep.c
-> +++ b/drivers/acpi/sleep.c
-> @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
->         printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
->                 acpi_state);
->         acpi_enable_wakeup_devices(acpi_state);
-> +
-> +       acpi_turn_off_power_resources(acpi_state);
-> +
->         acpi_enter_sleep_state_prep(acpi_state);
->         return 0;
->  }
-> @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
->   */
->  static void acpi_pm_end(void)
->  {
-> -       acpi_turn_off_unused_power_resources();
-> +       acpi_turn_off_power_resources(ACPI_STATE_S0);
->         acpi_scan_lock_release();
->         /*
->          * This is necessary in case acpi_pm_finish() is not called during a
-> diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
-> index 41675d24a9bc0..a495c91e2bf3b 100644
-> --- a/drivers/acpi/sleep.h
-> +++ b/drivers/acpi/sleep.h
-> @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
->  extern struct mutex acpi_device_lock;
->
->  extern void acpi_resume_power_resources(void);
-> -extern void acpi_turn_off_unused_power_resources(void);
-> +extern void acpi_turn_off_power_resources(int acpi_system_state);
->
->  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
->  {
-> --
-> 2.21.0.593.g511ec345e18-goog
->
+On Wed, May 08, 2019 at 08:28:30PM +0000, Mario.Limonciello@dell.com wrote:
+> You might think this would be adding runtime_suspend/runtime_resume
+> callbacks, but those also get called actually at runtime which is not
+> the goal here.  At runtime, these types of disks should rely on APST which
+> should calculate the appropriate latencies around the different power states.
+> 
+> This code path is only applicable in the suspend to idle state, which /does/
+> call suspend/resume functions associated with dev_pm_ops.  There isn't
+> a dedicated function in there for use only in suspend to idle, which is
+> why pm_suspend_via_s2idle() needs to get called.
 
-Hi Rafael,
+The problem is that it also gets called for others paths:
 
-Gentle ping. Just checking if you got a chance to look at this one. It
-is actually causing problems in one of our devices since power off
-sequencing is not honored when entering S5.
+#ifdef CONFIG_PM_SLEEP
+#define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+        .suspend = suspend_fn, \
+	.resume = resume_fn, \
+	.freeze = suspend_fn, \
+	.thaw = resume_fn, \
+	.poweroff = suspend_fn, \
+	.restore = resume_fn,
+#else
+else
+#define SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
+#endif
 
-Thanks,
-Furquan
+#define SIMPLE_DEV_PM_OPS(name, suspend_fn, resume_fn) \
+const struct dev_pm_ops name = { \
+	SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+}
+
+And at least for poweroff this new code seems completely wrong, even
+for freeze it looks rather borderline.
+
+And more to the points - if these "modern MS standby" systems are
+becoming common, which it looks they are, we need support in the PM core
+for those instead of working around the decisions in low-level drivers.
+
+> SIMPLE_DEV_PM_OPS normally sets the same function for suspend and
+> freeze (hibernate), so to avoid any changes to the hibernate case it seems
+> to me that there needs to be a new nvme_freeze() that calls into the existing
+> nvme_dev_disable for the freeze pm op and nvme_thaw() that calls into the
+> existing nvme_reset_ctrl for the thaw pm op.
+
+At least, yes.
+
+> 
+> > enterprise class NVMe devices
+> > that don't do APST and don't really do different power states at
+> > all in many cases.
+> 
+> Enterprise class NVMe devices that don't do APST - do they typically
+> have a non-zero value for ndev->ctrl.npss?
+> 
+> If not, they wouldn't enter this new codepath even if the server entered into S2I.
+
+No, devices that do set NPSS will have at least some power states
+per definition, although they might not be too useful.  I suspect checking
+APSTA might be safer, but if we don't want to rely on APST we should
+check for a power state supporting the condition that the MS document
+quoted in the original document supports.
