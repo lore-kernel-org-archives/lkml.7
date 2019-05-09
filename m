@@ -2,283 +2,119 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99F9C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90328208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDE92053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EJX8j9Ri";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KVLMA6xn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfEIOcO (ORCPT
+        id S1726674AbfEIOiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:32:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44668 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726234AbfEIObw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:31:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4DE02ACB1;
-        Thu,  9 May 2019 14:31:51 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     dan.carpenter@oracle.com, stefan.wahren@i2se.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Subject: [PATCH v3 2/4] staging: vchiq: revert "switch to wait_for_completion_killable"
-Date:   Thu,  9 May 2019 16:31:34 +0200
-Message-Id: <20190509143137.31254-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509143137.31254-1-nsaenzjulienne@suse.de>
-References: <20190509143137.31254-1-nsaenzjulienne@suse.de>
+        Thu, 9 May 2019 10:38:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56980 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfEIOiV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:38:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BD3A960779; Thu,  9 May 2019 14:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557412699;
+        bh=m/9MIbexuBdPxCFPr6oX4nJ8E4mDFLipijNpmR33xf0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EJX8j9RinsUzb5V1hvPYqVOPERp2yIR1uT/0HBSVR0Q+O6CI0LwmKwYLq0rKQ4ies
+         zGVXpsPJRiso66Ua8hTfNohOiDKOVE8jhxX3gZ3wJ3mbNjHr2fSOS1Zb7OUpvuUkBI
+         Xt2uYLXIwmn05nTC5BwCkI2TIq8o8q0yazTOrfbQ=
+Received: from [10.204.78.109] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gkohli@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9491D6016D;
+        Thu,  9 May 2019 14:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557412698;
+        bh=m/9MIbexuBdPxCFPr6oX4nJ8E4mDFLipijNpmR33xf0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KVLMA6xnVzPYMMB8pD2qrzzyV4Ipd559Wuq/B/1f73knIZWmE0yQ3DBOJxGoFNIz8
+         PcGr67buW45zYJd+Hi9O/tZuj7J0sKHqYyxJxSxSZgaXyJl25MdQLz0eLBFB6kqPO0
+         hUp/EkRKZzI8FDXFHswA4oppfmczHonEPG+nM4tc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9491D6016D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
+ directory
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Muchun Song <smuchun@gmail.com>
+Cc:     rafael@kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        zhaowuyun@wingtech.com, linux-arm-msm@vger.kernel.org
+References: <20190423143258.96706-1-smuchun@gmail.com>
+ <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
+ <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
+ <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
+ <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
+ <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
+ <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+ <20190504153440.GB19654@kroah.com>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <e79201c2-a00b-d226-adc2-62769ae1ad81@codeaurora.org>
+Date:   Thu, 9 May 2019 20:08:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190504153440.GB19654@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The killable version of wait_for_completion() is meant to be used on
-situations where it should not fail at all costs, but still have the
-convenience of being able to kill it if really necessary. VCHIQ doesn't
-fit this criteria, as it's mainly used as an interface to V4L2 and ALSA
-devices.
+Hi ,
 
-Fixes: a772f116702e ("staging: vchiq: switch to wait_for_completion_killable")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- .../interface/vchiq_arm/vchiq_arm.c           | 21 ++++++++++---------
- .../interface/vchiq_arm/vchiq_core.c          | 21 ++++++++++---------
- .../interface/vchiq_arm/vchiq_util.c          |  6 +++---
- 3 files changed, 25 insertions(+), 23 deletions(-)
+Last patch will serialize the addition of child to parent directory, 
+won't it affect performance.
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index ab7d6a0ce94c..62d8f599e765 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -532,7 +532,8 @@ add_completion(VCHIQ_INSTANCE_T instance, VCHIQ_REASON_T reason,
- 		vchiq_log_trace(vchiq_arm_log_level,
- 			"%s - completion queue full", __func__);
- 		DEBUG_COUNT(COMPLETION_QUEUE_FULL_COUNT);
--		if (wait_for_completion_killable(&instance->remove_event)) {
-+		if (wait_for_completion_interruptible(
-+					&instance->remove_event)) {
- 			vchiq_log_info(vchiq_arm_log_level,
- 				"service_callback interrupted");
- 			return VCHIQ_RETRY;
-@@ -643,7 +644,7 @@ service_callback(VCHIQ_REASON_T reason, struct vchiq_header *header,
- 			}
- 
- 			DEBUG_TRACE(SERVICE_CALLBACK_LINE);
--			if (wait_for_completion_killable(
-+			if (wait_for_completion_interruptible(
- 						&user_service->remove_event)
- 				!= 0) {
- 				vchiq_log_info(vchiq_arm_log_level,
-@@ -978,7 +979,7 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		   has been closed until the client library calls the
- 		   CLOSE_DELIVERED ioctl, signalling close_event. */
- 		if (user_service->close_pending &&
--			wait_for_completion_killable(
-+			wait_for_completion_interruptible(
- 				&user_service->close_event))
- 			status = VCHIQ_RETRY;
- 		break;
-@@ -1154,7 +1155,7 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 			DEBUG_TRACE(AWAIT_COMPLETION_LINE);
- 			mutex_unlock(&instance->completion_mutex);
--			rc = wait_for_completion_killable(
-+			rc = wait_for_completion_interruptible(
- 						&instance->insert_event);
- 			mutex_lock(&instance->completion_mutex);
- 			if (rc != 0) {
-@@ -1324,7 +1325,7 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 			do {
- 				spin_unlock(&msg_queue_spinlock);
- 				DEBUG_TRACE(DEQUEUE_MESSAGE_LINE);
--				if (wait_for_completion_killable(
-+				if (wait_for_completion_interruptible(
- 					&user_service->insert_event)) {
- 					vchiq_log_info(vchiq_arm_log_level,
- 						"DEQUEUE_MESSAGE interrupted");
-@@ -2328,7 +2329,7 @@ vchiq_keepalive_thread_func(void *v)
- 	while (1) {
- 		long rc = 0, uc = 0;
- 
--		if (wait_for_completion_killable(&arm_state->ka_evt)
-+		if (wait_for_completion_interruptible(&arm_state->ka_evt)
- 				!= 0) {
- 			vchiq_log_error(vchiq_susp_log_level,
- 				"%s interrupted", __func__);
-@@ -2579,7 +2580,7 @@ block_resume(struct vchiq_arm_state *arm_state)
- 		write_unlock_bh(&arm_state->susp_res_lock);
- 		vchiq_log_info(vchiq_susp_log_level, "%s wait for previously "
- 			"blocked clients", __func__);
--		if (wait_for_completion_killable_timeout(
-+		if (wait_for_completion_interruptible_timeout(
- 				&arm_state->blocked_blocker, timeout_val)
- 					<= 0) {
- 			vchiq_log_error(vchiq_susp_log_level, "%s wait for "
-@@ -2605,7 +2606,7 @@ block_resume(struct vchiq_arm_state *arm_state)
- 		write_unlock_bh(&arm_state->susp_res_lock);
- 		vchiq_log_info(vchiq_susp_log_level, "%s wait for resume",
- 			__func__);
--		if (wait_for_completion_killable_timeout(
-+		if (wait_for_completion_interruptible_timeout(
- 				&arm_state->vc_resume_complete, timeout_val)
- 					<= 0) {
- 			vchiq_log_error(vchiq_susp_log_level, "%s wait for "
-@@ -2812,7 +2813,7 @@ vchiq_arm_force_suspend(struct vchiq_state *state)
- 	do {
- 		write_unlock_bh(&arm_state->susp_res_lock);
- 
--		rc = wait_for_completion_killable_timeout(
-+		rc = wait_for_completion_interruptible_timeout(
- 				&arm_state->vc_suspend_complete,
- 				msecs_to_jiffies(FORCE_SUSPEND_TIMEOUT_MS));
- 
-@@ -2908,7 +2909,7 @@ vchiq_arm_allow_resume(struct vchiq_state *state)
- 	write_unlock_bh(&arm_state->susp_res_lock);
- 
- 	if (resume) {
--		if (wait_for_completion_killable(
-+		if (wait_for_completion_interruptible(
- 			&arm_state->vc_resume_complete) < 0) {
- 			vchiq_log_error(vchiq_susp_log_level,
- 				"%s interrupted", __func__);
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 0c387b6473a5..c65cf1e6f910 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -560,7 +560,7 @@ reserve_space(struct vchiq_state *state, size_t space, int is_blocking)
- 			remote_event_signal(&state->remote->trigger);
- 
- 			if (!is_blocking ||
--				(wait_for_completion_killable(
-+				(wait_for_completion_interruptible(
- 				&state->slot_available_event)))
- 				return NULL; /* No space available */
- 		}
-@@ -830,7 +830,7 @@ queue_message(struct vchiq_state *state, struct vchiq_service *service,
- 			spin_unlock(&quota_spinlock);
- 			mutex_unlock(&state->slot_mutex);
- 
--			if (wait_for_completion_killable(
-+			if (wait_for_completion_interruptible(
- 						&state->data_quota_event))
- 				return VCHIQ_RETRY;
- 
-@@ -861,7 +861,7 @@ queue_message(struct vchiq_state *state, struct vchiq_service *service,
- 				service_quota->slot_use_count);
- 			VCHIQ_SERVICE_STATS_INC(service, quota_stalls);
- 			mutex_unlock(&state->slot_mutex);
--			if (wait_for_completion_killable(
-+			if (wait_for_completion_interruptible(
- 						&service_quota->quota_event))
- 				return VCHIQ_RETRY;
- 			if (service->closing)
-@@ -1710,7 +1710,8 @@ parse_rx_slots(struct vchiq_state *state)
- 					&service->bulk_rx : &service->bulk_tx;
- 
- 				DEBUG_TRACE(PARSE_LINE);
--				if (mutex_lock_killable(&service->bulk_mutex)) {
-+				if (mutex_lock_killable(
-+					&service->bulk_mutex) != 0) {
- 					DEBUG_TRACE(PARSE_LINE);
- 					goto bail_not_ready;
- 				}
-@@ -2428,7 +2429,7 @@ vchiq_open_service_internal(struct vchiq_service *service, int client_id)
- 			       QMFLAGS_IS_BLOCKING);
- 	if (status == VCHIQ_SUCCESS) {
- 		/* Wait for the ACK/NAK */
--		if (wait_for_completion_killable(&service->remove_event)) {
-+		if (wait_for_completion_interruptible(&service->remove_event)) {
- 			status = VCHIQ_RETRY;
- 			vchiq_release_service_internal(service);
- 		} else if ((service->srvstate != VCHIQ_SRVSTATE_OPEN) &&
-@@ -2795,7 +2796,7 @@ vchiq_connect_internal(struct vchiq_state *state, VCHIQ_INSTANCE_T instance)
- 	}
- 
- 	if (state->conn_state == VCHIQ_CONNSTATE_CONNECTING) {
--		if (wait_for_completion_killable(&state->connect))
-+		if (wait_for_completion_interruptible(&state->connect))
- 			return VCHIQ_RETRY;
- 
- 		vchiq_set_conn_state(state, VCHIQ_CONNSTATE_CONNECTED);
-@@ -2894,7 +2895,7 @@ vchiq_close_service(VCHIQ_SERVICE_HANDLE_T handle)
- 	}
- 
- 	while (1) {
--		if (wait_for_completion_killable(&service->remove_event)) {
-+		if (wait_for_completion_interruptible(&service->remove_event)) {
- 			status = VCHIQ_RETRY;
- 			break;
- 		}
-@@ -2955,7 +2956,7 @@ vchiq_remove_service(VCHIQ_SERVICE_HANDLE_T handle)
- 		request_poll(service->state, service, VCHIQ_POLL_REMOVE);
- 	}
- 	while (1) {
--		if (wait_for_completion_killable(&service->remove_event)) {
-+		if (wait_for_completion_interruptible(&service->remove_event)) {
- 			status = VCHIQ_RETRY;
- 			break;
- 		}
-@@ -3038,7 +3039,7 @@ VCHIQ_STATUS_T vchiq_bulk_transfer(VCHIQ_SERVICE_HANDLE_T handle,
- 		VCHIQ_SERVICE_STATS_INC(service, bulk_stalls);
- 		do {
- 			mutex_unlock(&service->bulk_mutex);
--			if (wait_for_completion_killable(
-+			if (wait_for_completion_interruptible(
- 						&service->bulk_remove_event)) {
- 				status = VCHIQ_RETRY;
- 				goto error_exit;
-@@ -3115,7 +3116,7 @@ VCHIQ_STATUS_T vchiq_bulk_transfer(VCHIQ_SERVICE_HANDLE_T handle,
- 
- 	if (bulk_waiter) {
- 		bulk_waiter->bulk = bulk;
--		if (wait_for_completion_killable(&bulk_waiter->event))
-+		if (wait_for_completion_interruptible(&bulk_waiter->event))
- 			status = VCHIQ_RETRY;
- 		else if (bulk_waiter->actual == VCHIQ_BULK_ACTUAL_ABORTED)
- 			status = VCHIQ_ERROR;
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
-index 6c519d8e48cb..8ee85c5e6f77 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
-@@ -50,7 +50,7 @@ void vchiu_queue_push(struct vchiu_queue *queue, struct vchiq_header *header)
- 		return;
- 
- 	while (queue->write == queue->read + queue->size) {
--		if (wait_for_completion_killable(&queue->pop))
-+		if (wait_for_completion_interruptible(&queue->pop))
- 			flush_signals(current);
- 	}
- 
-@@ -63,7 +63,7 @@ void vchiu_queue_push(struct vchiu_queue *queue, struct vchiq_header *header)
- struct vchiq_header *vchiu_queue_peek(struct vchiu_queue *queue)
- {
- 	while (queue->write == queue->read) {
--		if (wait_for_completion_killable(&queue->push))
-+		if (wait_for_completion_interruptible(&queue->push))
- 			flush_signals(current);
- 	}
- 
-@@ -77,7 +77,7 @@ struct vchiq_header *vchiu_queue_pop(struct vchiu_queue *queue)
- 	struct vchiq_header *header;
- 
- 	while (queue->write == queue->read) {
--		if (wait_for_completion_killable(&queue->push))
-+		if (wait_for_completion_interruptible(&queue->push))
- 			flush_signals(current);
- 	}
- 
+Regards
+Gaurav
+
+On 5/4/2019 9:04 PM, Greg KH wrote:
+> On Sat, May 04, 2019 at 10:47:07PM +0800, Muchun Song wrote:
+>> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四 下午2:25写道：
+>>
+>>>>> The basic idea yes, the whole bool *locked is horrid though.
+>>>>> Wouldn't it
+>>>>> work to have a get_device_parent_locked that always returns with
+>>>>> the mutex held,
+>>>>> or just move the mutex to the caller or something simpler like this
+>>>>> ?
+>>>>>
+>>>>
+>>>> Greg and Rafael, do you have any suggestions for this? Or you also
+>>>> agree with Ben?
+>>>
+>>> Ping guys ? This is worth fixing...
+>>
+>> I also agree with you. But Greg and Rafael seem to be high latency right now.
+> 
+> It's in my list of patches to get to, sorry, hopefully will dig out of
+> that next week with the buffer that the merge window provides me.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
 -- 
-2.21.0
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
