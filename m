@@ -2,167 +2,129 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A124EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99847C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711912173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B53F206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:19:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557393590;
+	bh=Vw+5iQxQkLR03iyKKENjiOsnN+rhVtnARDK02rKf9IM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ELeVh2aOYGnZbFBSOnXwDCNvjmLITLotkiD7jbkz6RhZo1o3SFSgtkIrTC5fdnIKo
+	 Mw1Ea6sVZU9K2eMhb30QEPkkvbTRgFlYwUGQZnKs9E0qVgYMfxe+7+TRiJdu1c5Nma
+	 rY1pyStLhXYw+2ev5cfqW06zz4xHhZ/FFxzUTE7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfEIJSY (ORCPT
+        id S1726254AbfEIJTt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:18:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37742 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbfEIJSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:18:23 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3779FC05E76E;
-        Thu,  9 May 2019 09:18:23 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C24049084;
-        Thu,  9 May 2019 09:18:19 +0000 (UTC)
-Date:   Thu, 9 May 2019 11:18:17 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCHv2 09/10] vfio/mdev: Avoid creating sysfs remove file on
- stale device removal
-Message-ID: <20190509111817.36ff1791.cohuck@redhat.com>
-In-Reply-To: <VI1PR0501MB2271E76A8B5E8D00AFEA8D97D1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190430224937.57156-1-parav@mellanox.com>
-        <20190430224937.57156-10-parav@mellanox.com>
-        <20190508191635.05a0f277.cohuck@redhat.com>
-        <VI1PR0501MB2271E76A8B5E8D00AFEA8D97D1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-Organization: Red Hat GmbH
+        Thu, 9 May 2019 05:19:49 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39656 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfEIJTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:19:49 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x16so1368672oic.6;
+        Thu, 09 May 2019 02:19:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4keILsDdqaPQc14jyFTpZX6LIK4odMSSe93jLxQHABU=;
+        b=W/XbgC50ALdwluJg8m1rzMozunxBIpTUeZbRPKhhgiDg1S1AU+MvbVsXsAkrVGNi1t
+         pvgyT9rSbhHEHQQUKrbnW407KD7h2u6gcZTXp/oPHSvGDOp5IzmFdAW0RSwTyjctqdhl
+         X8wyCJdQDWR/wIRpgBZWcQ0F9uepetkkSUwhxilL+um7KqtDWPiCdP+CGvuVWY+CP/eV
+         72K2dCXFCu/cTGnWh4/4cIdUXZ9XV9iNjcFwGyOacM0SvcpRjBiP00YDTOxxsmePvl/F
+         dkWvf5zKSBgorncu5wkgACPcqjsBVBeJlOZ4yE75/AX0XJvalJhcXS1l9/PFSdJ4OR4i
+         YZYg==
+X-Gm-Message-State: APjAAAXDK50venox4rqDpyXyK/J05ryQeHj23XYLjG/s0+JYvCu7yE8o
+        81jMfuW3/EpLUUL97YzuSV8g7wCzWbrh9X91H7I=
+X-Google-Smtp-Source: APXvYqzINNimXp/wssQDr1dHiM1zCcFSUTOXnE+YF/EMLzLVAtAUB+htJwxgffMl8EOF4ySMIiljSIyv+JYs/ghVU6M=
+X-Received: by 2002:aca:f444:: with SMTP id s65mr777412oih.115.1557393588629;
+ Thu, 09 May 2019 02:19:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 09 May 2019 09:18:23 +0000 (UTC)
+References: <20190508185955.11406-1-kai.heng.feng@canonical.com>
+ <20190508191624.GA8365@localhost.localdomain> <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com>
+ <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM>
+ <20190508195159.GA1530@lst.de> <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+ <20190509061237.GA15229@lst.de> <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
+ <20190509065223.GA15984@lst.de>
+In-Reply-To: <20190509065223.GA15984@lst.de>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 May 2019 11:19:37 +0200
+Message-ID: <CAJZ5v0h51nMCte4yL76nMWaYrrXDPrOK=CeUpc50=r2Pp_icPw@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 22:13:28 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On Thu, May 9, 2019 at 8:52 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Thu, May 09, 2019 at 02:48:59PM +0800, Kai-Heng Feng wrote:
+> > Not really, for hibernation pm_suspend_via_s2idle() evaluates to false so
+> > the old code path will be taken.
+> >
+> >>
+> >> And more to the points - if these "modern MS standby" systems are
+> >> becoming common, which it looks they are, we need support in the PM core
+> >> for those instead of working around the decisions in low-level drivers.
+> >
+> > Rafael, what do you think about this?
+> > Including this patch, there are five drivers that use
+> > pm_suspend_via_{firmware,s2idle}() to differentiate between S2I and S3.
+> > So I think maybe it’s time to introduce a new suspend callback for S2I?
+>
+> We also really need something like that to avoid the PCI_DEV_FLAGS_NO_D3
+> abuse - that flag is a quirk statically set on a device at probe time
+> to prevent any entering of D3 state.
 
-> > -----Original Message-----
-> > From: Cornelia Huck <cohuck@redhat.com>
-> > Sent: Wednesday, May 8, 2019 12:17 PM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
-> > Subject: Re: [PATCHv2 09/10] vfio/mdev: Avoid creating sysfs remove file on
-> > stale device removal
-> > 
-> > On Tue, 30 Apr 2019 17:49:36 -0500
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >   
-> > > If device is removal is initiated by two threads as below, mdev core
-> > > attempts to create a syfs remove file on stale device.
-> > > During this flow, below [1] call trace is observed.
-> > >
-> > >      cpu-0                                    cpu-1
-> > >      -----                                    -----
-> > >   mdev_unregister_device()
-> > >     device_for_each_child
-> > >        mdev_device_remove_cb
-> > >           mdev_device_remove
-> > >                                        user_syscall
-> > >                                          remove_store()
-> > >                                            mdev_device_remove()
-> > >                                         [..]
-> > >    unregister device();
-> > >                                        /* not found in list or
-> > >                                         * active=false.
-> > >                                         */
-> > >                                           sysfs_create_file()
-> > >                                           ..Call trace
-> > >
-> > > Now that mdev core follows correct device removal system of the linux
-> > > bus model, remove shouldn't fail in normal cases. If it fails, there
-> > > is no point of creating a stale file or checking for specific error status.  
-> > 
-> > Which error cases are left? Is there anything that does not indicate that
-> > something got terribly messed up internally?
-> >   
-> Few reasons I can think of that can fail remove are:
-> 
-> 1. Some device removal requires allocating memory too as it needs to issue commands to device.
-> If on the path, such allocation fails, remove can fail. However such fail to allocate memory will probably result into more serious warnings before this.
+I agree that PCI_DEV_FLAGS_NO_D3 has to be avoided.
 
-Nod. If we're OOM, we probably have some bigger problems anyway.
+However, IMO introducing a new set of suspend (and resume) callbacks
+for S2I would not be practical, because
 
-> 2. if the device firmware has crashed, device removal commands will likely timeout and return such error upto user.
+(a) the only difference between S2I and S2R from a driver perspective
+is that it may be expected to do something "special" about setting the
+device power state in the S2I case (the rest of what needs to be done
+during system-wide suspend/resume remains the same in both cases),
 
-In that case, I'd consider the device pretty much unusable in any case.
+(b) the new callbacks would only be really useful for a handful of drivers.
 
-> 3. If user tries to remove a device, while parent is already in removal path, this call will eventually fail as it won't find the device in the internal list.
+> >> per definition, although they might not be too useful.  I suspect checking
+> >> APSTA might be safer, but if we don't want to rely on APST we should
+> >> check for a power state supporting the condition that the MS document
+> >> quoted in the original document supports.
+> >
+> > If Modern Standby or Connected Standby is not supported by servers, I
+> > don’t think the design documents mean much here.
+> > We probably should check if the platform firmware really supports S2I
+> > instead.
+>
+> That too.  As said this really is a platform decision, and needs to
+> be managed by the platform code through the PM core.
 
-This should be benign, I think.
+I'm not what you mean by "platform decision" here.
 
-> 
-> > >
-> > > kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
-> > > sysfs_create_file_ns+0x7f/0x90
-> > > kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted
-> > > 5.1.0-rc6-vdevbus+ #6
-> > > kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b
-> > > 08/09/2016
-> > > kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
-> > > kernel: Call Trace:
-> > > kernel: remove_store+0xdc/0x100 [mdev]
-> > > kernel: kernfs_fop_write+0x113/0x1a0
-> > > kernel: vfs_write+0xad/0x1b0
-> > > kernel: ksys_write+0x5a/0xe0
-> > > kernel: do_syscall_64+0x5a/0x210
-> > > kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > >
-> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > > ---
-> > >  drivers/vfio/mdev/mdev_sysfs.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/vfio/mdev/mdev_sysfs.c
-> > > b/drivers/vfio/mdev/mdev_sysfs.c index 9f774b91d275..ffa3dcebf201
-> > > 100644
-> > > --- a/drivers/vfio/mdev/mdev_sysfs.c
-> > > +++ b/drivers/vfio/mdev/mdev_sysfs.c
-> > > @@ -237,10 +237,8 @@ static ssize_t remove_store(struct device *dev,  
-> > struct device_attribute *attr,  
-> > >  		int ret;
-> > >
-> > >  		ret = mdev_device_remove(dev);
-> > > -		if (ret) {
-> > > -			device_create_file(dev, attr);
-> > > +		if (ret)  
-> > 
-> > Should you merge this into the previous patch?
-> >   
-> I am not sure. Previous patch changes the sequence. I think that deserved an own patch by itself.
-> This change is making use of that sequence.
-> So its easier to review? Alex had comment in v0 to split into more logical patches, so...
-> Specially to capture a different call trace, I cut into different patch.
-> Otherwise previous patch's commit message is too long.
+>  Individual drivers like nvme can just implement the behavior, but are the absolute wrong
+> place to make decisions on what kinds of suspend to enter.
 
-I'm not sure if splitting out this one is worth it... your call.
-
-> 
-> > >  			return ret;
-> > > -		}
-> > >  	}
-> > >
-> > >  	return count;  
-> 
-
+Right, the choice of the target system state has already been made
+when their callbacks get invoked (and it has been made by user space,
+not by the platform).
