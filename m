@@ -2,129 +2,82 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99847C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBE3C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B53F206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557393590;
-	bh=Vw+5iQxQkLR03iyKKENjiOsnN+rhVtnARDK02rKf9IM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ELeVh2aOYGnZbFBSOnXwDCNvjmLITLotkiD7jbkz6RhZo1o3SFSgtkIrTC5fdnIKo
-	 Mw1Ea6sVZU9K2eMhb30QEPkkvbTRgFlYwUGQZnKs9E0qVgYMfxe+7+TRiJdu1c5Nma
-	 rY1pyStLhXYw+2ev5cfqW06zz4xHhZ/FFxzUTE7w=
+	by mail.kernel.org (Postfix) with ESMTP id 2092721479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfEIJTt convert rfc822-to-8bit (ORCPT
+        id S1726381AbfEIJXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:19:49 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39656 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfEIJTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:19:49 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x16so1368672oic.6;
-        Thu, 09 May 2019 02:19:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4keILsDdqaPQc14jyFTpZX6LIK4odMSSe93jLxQHABU=;
-        b=W/XbgC50ALdwluJg8m1rzMozunxBIpTUeZbRPKhhgiDg1S1AU+MvbVsXsAkrVGNi1t
-         pvgyT9rSbhHEHQQUKrbnW407KD7h2u6gcZTXp/oPHSvGDOp5IzmFdAW0RSwTyjctqdhl
-         X8wyCJdQDWR/wIRpgBZWcQ0F9uepetkkSUwhxilL+um7KqtDWPiCdP+CGvuVWY+CP/eV
-         72K2dCXFCu/cTGnWh4/4cIdUXZ9XV9iNjcFwGyOacM0SvcpRjBiP00YDTOxxsmePvl/F
-         dkWvf5zKSBgorncu5wkgACPcqjsBVBeJlOZ4yE75/AX0XJvalJhcXS1l9/PFSdJ4OR4i
-         YZYg==
-X-Gm-Message-State: APjAAAXDK50venox4rqDpyXyK/J05ryQeHj23XYLjG/s0+JYvCu7yE8o
-        81jMfuW3/EpLUUL97YzuSV8g7wCzWbrh9X91H7I=
-X-Google-Smtp-Source: APXvYqzINNimXp/wssQDr1dHiM1zCcFSUTOXnE+YF/EMLzLVAtAUB+htJwxgffMl8EOF4ySMIiljSIyv+JYs/ghVU6M=
-X-Received: by 2002:aca:f444:: with SMTP id s65mr777412oih.115.1557393588629;
- Thu, 09 May 2019 02:19:48 -0700 (PDT)
+        Thu, 9 May 2019 05:23:54 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35642 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfEIJXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:23:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4768A374;
+        Thu,  9 May 2019 02:23:53 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 528793F575;
+        Thu,  9 May 2019 02:23:50 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:23:47 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v8 06/16] sched/core: uclamp: Extend sched_setattr() to
+ support utilization clamping
+Message-ID: <20190509092347.2ny2kb74hrea323v@e110439-lin>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-7-patrick.bellasi@arm.com>
+ <20190508194107.GE32547@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190508185955.11406-1-kai.heng.feng@canonical.com>
- <20190508191624.GA8365@localhost.localdomain> <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com>
- <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM>
- <20190508195159.GA1530@lst.de> <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
- <20190509061237.GA15229@lst.de> <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
- <20190509065223.GA15984@lst.de>
-In-Reply-To: <20190509065223.GA15984@lst.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 9 May 2019 11:19:37 +0200
-Message-ID: <CAJZ5v0h51nMCte4yL76nMWaYrrXDPrOK=CeUpc50=r2Pp_icPw@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508194107.GE32547@worktop.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 8:52 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Thu, May 09, 2019 at 02:48:59PM +0800, Kai-Heng Feng wrote:
-> > Not really, for hibernation pm_suspend_via_s2idle() evaluates to false so
-> > the old code path will be taken.
-> >
-> >>
-> >> And more to the points - if these "modern MS standby" systems are
-> >> becoming common, which it looks they are, we need support in the PM core
-> >> for those instead of working around the decisions in low-level drivers.
-> >
-> > Rafael, what do you think about this?
-> > Including this patch, there are five drivers that use
-> > pm_suspend_via_{firmware,s2idle}() to differentiate between S2I and S3.
-> > So I think maybe it’s time to introduce a new suspend callback for S2I?
->
-> We also really need something like that to avoid the PCI_DEV_FLAGS_NO_D3
-> abuse - that flag is a quirk statically set on a device at probe time
-> to prevent any entering of D3 state.
+On 08-May 21:41, Peter Zijlstra wrote:
+> On Tue, Apr 02, 2019 at 11:41:42AM +0100, Patrick Bellasi wrote:
+> > @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
+> >  #else /* CONFIG_UCLAMP_TASK */
+> >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+> >  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
+> > +static inline int uclamp_validate(struct task_struct *p,
+> > +				  const struct sched_attr *attr)
+> > +{
+> > +	return -ENODEV;
+> 
+> Does that maybe want to be -EOPNOTSUPP ?
 
-I agree that PCI_DEV_FLAGS_NO_D3 has to be avoided.
+Suren propose ENOSYS for another similar case, i.e.
+!CONFIG_UCLAMP_TASK definitions.
 
-However, IMO introducing a new set of suspend (and resume) callbacks
-for S2I would not be practical, because
+But EOPNOTSUPP seems more appropriate to me too.
 
-(a) the only difference between S2I and S2R from a driver perspective
-is that it may be expected to do something "special" about setting the
-device power state in the S2I case (the rest of what needs to be done
-during system-wide suspend/resume remains the same in both cases),
+-- 
+#include <best/regards.h>
 
-(b) the new callbacks would only be really useful for a handful of drivers.
-
-> >> per definition, although they might not be too useful.  I suspect checking
-> >> APSTA might be safer, but if we don't want to rely on APST we should
-> >> check for a power state supporting the condition that the MS document
-> >> quoted in the original document supports.
-> >
-> > If Modern Standby or Connected Standby is not supported by servers, I
-> > don’t think the design documents mean much here.
-> > We probably should check if the platform firmware really supports S2I
-> > instead.
->
-> That too.  As said this really is a platform decision, and needs to
-> be managed by the platform code through the PM core.
-
-I'm not what you mean by "platform decision" here.
-
->  Individual drivers like nvme can just implement the behavior, but are the absolute wrong
-> place to make decisions on what kinds of suspend to enter.
-
-Right, the choice of the target system state has already been made
-when their callbacks get invoked (and it has been made by user space,
-not by the platform).
+Patrick Bellasi
