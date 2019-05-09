@@ -2,52 +2,50 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70716C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40355C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CD82183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173ED2183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427591;
-	bh=y/uQpF+sT1hS2ewMcrT/AYs4ZxyJipvwZvjTwsz/pfs=;
+	s=default; t=1557427594;
+	bh=DSgNyAu3218PTqN3ZNvpI+NYW6lqI+fUcvQx/HBEHVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IC3fk0jPbi7SMyJ3ZIzyFNN5UdVdHQG0z2ZW4RCMgoKN0q5m0HAfIoBo+E/bbpoao
-	 8MySyC5gFE/Qb9KWJf/3kxneH4a1+PK1g3YkEVZVHCfOc/0KlTf7OlQpdp31ToGV9V
-	 OOANpvd2q3SWHzsVmdW1+TkUmVX9mBcm4h7eiOGc=
+	b=HDH00HnvN2zMmtD31zgwQ9RdNn7mQAJ822ZATVOUNrmEVa4yKJTyKPnR8JYnoh+Cw
+	 CvOeDU7Bp0aQEbfdrmhlf8du//m+Jw7ARwgNCykAnyQIFFUq4DlMi+fdE4keIeRdmE
+	 KUVgXDJh6QWsQz6mhHax+XByzuBXY+T3HoaXBuYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfEISqa (ORCPT
+        id S1727614AbfEISqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38816 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbfEISq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:46:28 -0400
+        id S1727595AbfEISqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:46:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA6BA21848;
-        Thu,  9 May 2019 18:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C242182B;
+        Thu,  9 May 2019 18:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427587;
-        bh=y/uQpF+sT1hS2ewMcrT/AYs4ZxyJipvwZvjTwsz/pfs=;
+        s=default; t=1557427590;
+        bh=DSgNyAu3218PTqN3ZNvpI+NYW6lqI+fUcvQx/HBEHVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pr5U1bWU/9sAtUmUS3v1JQy3+c6mb042uiP4PGwmgH3Dy2IJ2Vt5iILxW3qs/soyA
-         lymQPf4VL3NJ9uo0hsRJ1zQo3A8Z6Z/tGz7xsgH4D69hN1KmqADLa2gyh768+F+MUY
-         gf3B+y0ZI8/28D+xfapfVa81bOT1S0RPekbvXqGE=
+        b=uxl75r4lZTfXV/qrwRl0iKecwL5Lau2URDnPIFxEpAGVMXQic+PeXUlgJZpg/vxHe
+         pJbUNpFGo/asSxj3OPUAdcBQ0wWSLzvyI1efM94EHEbEiL5E4O9iDDVIQt1AWlh7Mm
+         MlA/dCIJjMazoc9uCsXu+XyMzao7HsR+3n9O6Gcs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prasad Sodagudi <psodagud@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>, marc.zyngier@arm.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/42] genirq: Prevent use-after-free and work list corruption
-Date:   Thu,  9 May 2019 20:42:19 +0200
-Message-Id: <20190509181258.720007945@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.14 39/42] UAS: fix alignment of scatter/gather segments
+Date:   Thu,  9 May 2019 20:42:28 +0200
+Message-Id: <20190509181300.133539796@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -60,43 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 59c39840f5abf4a71e1810a8da71aaccd6c17d26 ]
+From: Oliver Neukum <oneukum@suse.com>
 
-When irq_set_affinity_notifier() replaces the notifier, then the
-reference count on the old notifier is dropped which causes it to be
-freed. But nothing ensures that the old notifier is not longer queued
-in the work list. If it is queued this results in a use after free and
-possibly in work list corruption.
+commit 3ae62a42090f1ed48e2313ed256a1182a85fb575 upstream.
 
-Ensure that the work is canceled before the reference is dropped.
+This is the UAS version of
 
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: marc.zyngier@arm.com
-Link: https://lkml.kernel.org/r/1553439424-6529-1-git-send-email-psodagud@codeaurora.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+747668dbc061b3e62bc1982767a3a1f9815fcf0e
+usb-storage: Set virt_boundary_mask to avoid SG overflows
+
+We are not as likely to be vulnerable as storage, as it is unlikelier
+that UAS is run over a controller without native support for SG,
+but the issue exists.
+The issue has been existing since the inception of the driver.
+
+Fixes: 115bb1ffa54c ("USB: Add UAS driver")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/irq/manage.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/storage/uas.c |   35 ++++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 6c877d28838f2..9c86a3e451101 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -323,8 +323,10 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
- 	desc->affinity_notify = notify;
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -796,24 +796,33 @@ static int uas_slave_alloc(struct scsi_d
+ {
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
++	int maxp;
  
--	if (old_notify)
-+	if (old_notify) {
-+		cancel_work_sync(&old_notify->work);
- 		kref_put(&old_notify->kref, old_notify->release);
-+	}
+ 	sdev->hostdata = devinfo;
  
- 	return 0;
- }
--- 
-2.20.1
-
+ 	/*
+-	 * USB has unusual DMA-alignment requirements: Although the
+-	 * starting address of each scatter-gather element doesn't matter,
+-	 * the length of each element except the last must be divisible
+-	 * by the Bulk maxpacket value.  There's currently no way to
+-	 * express this by block-layer constraints, so we'll cop out
+-	 * and simply require addresses to be aligned at 512-byte
+-	 * boundaries.  This is okay since most block I/O involves
+-	 * hardware sectors that are multiples of 512 bytes in length,
+-	 * and since host controllers up through USB 2.0 have maxpacket
+-	 * values no larger than 512.
++	 * We have two requirements here. We must satisfy the requirements
++	 * of the physical HC and the demands of the protocol, as we
++	 * definitely want no additional memory allocation in this path
++	 * ruling out using bounce buffers.
+ 	 *
+-	 * But it doesn't suffice for Wireless USB, where Bulk maxpacket
+-	 * values can be as large as 2048.  To make that work properly
+-	 * will require changes to the block layer.
++	 * For a transmission on USB to continue we must never send
++	 * a package that is smaller than maxpacket. Hence the length of each
++         * scatterlist element except the last must be divisible by the
++         * Bulk maxpacket value.
++	 * If the HC does not ensure that through SG,
++	 * the upper layer must do that. We must assume nothing
++	 * about the capabilities off the HC, so we use the most
++	 * pessimistic requirement.
++	 */
++
++	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
++	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
++
++	/*
++	 * The protocol has no requirements on alignment in the strict sense.
++	 * Controllers may or may not have alignment restrictions.
++	 * As this is not exported, we use an extremely conservative guess.
+ 	 */
+ 	blk_queue_update_dma_alignment(sdev->request_queue, (512 - 1));
+ 
 
 
