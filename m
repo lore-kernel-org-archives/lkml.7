@@ -2,116 +2,111 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DF0C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C18820989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1369420989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SY9KuSHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfEIL1e (ORCPT
+        id S1726648AbfEIL17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:27:34 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32927 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbfEIL1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:27:33 -0400
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EE505197B016B0870572;
-        Thu,  9 May 2019 12:27:31 +0100 (IST)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
- by smtpsuk.huawei.com (10.201.108.44) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 9 May 2019 12:27:25 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <viro@zeniv.linux.org.uk>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
-        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
-        <takondra@cisco.com>, <kamensky@cisco.com>, <hpa@zytor.com>,
-        <arnd@arndb.de>, <rob@landley.net>, <james.w.mcmechan@gmail.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v2 0/3] initramfs: add support for xattrs in the initial ram disk
-Date:   Thu, 9 May 2019 13:24:17 +0200
-Message-ID: <20190509112420.15671-1-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 May 2019 07:27:59 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:28430 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbfEIL17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 07:27:59 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 450B0X4Z0Xz9v114;
+        Thu,  9 May 2019 13:27:56 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=SY9KuSHm; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id YU_cHU7ABhH9; Thu,  9 May 2019 13:27:56 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 450B0X3SDxz9v10f;
+        Thu,  9 May 2019 13:27:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557401276; bh=te5Ea9Nu7fIuisOgqijviIon2+QUqVw422cO21j19e8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SY9KuSHmnrVh2Yoqk8T/eCt5yHV5/NpWi6CRNnujTHOhKVF3ddsxyof+YRlucevjn
+         mr1IY0uPe088P/n1iLq5V2QRJNuJEKH+pB3Tlgi5VPekRTQxWYuE9ncek1jbTFYkQN
+         pjBh+r7J8axOCTugpg+JoO8Bz7BmjLyEbLqTcTE0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C265E8B913;
+        Thu,  9 May 2019 13:27:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id OYNhdwwfftva; Thu,  9 May 2019 13:27:57 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5555E8B90D;
+        Thu,  9 May 2019 13:27:57 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/ftrace: Enable C Version of recordmcount
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <4464516c0b6835b42acc65e088b6d7f88fe886f2.1557235811.git.christophe.leroy@c-s.fr>
+ <87ef59wz8n.fsf@concordia.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1a731776-2b9f-ae62-c858-cfd22923f03a@c-s.fr>
+Date:   Thu, 9 May 2019 13:27:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <87ef59wz8n.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set aims at solving the following use case: appraise files from
-the initial ram disk. To do that, IMA checks the signature/hash from the
-security.ima xattr. Unfortunately, this use case cannot be implemented
-currently, as the CPIO format does not support xattrs.
-
-This proposal consists in marshaling pathnames and xattrs in a file called
-.xattr-list. They are unmarshaled by the CPIO parser after all files have
-been extracted.
-
-The difference from v1 (https://lkml.org/lkml/2018/11/22/1182) is that all
-xattrs are stored in a single file and not per file (solves the file name
-limitation issue, as it is not necessary to add a suffix to files
-containing xattrs).
-
-The difference with another proposal
-(https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
-included in an image without changing the image format, as opposed to
-defining a new one. As seen from the discussion, if a new format has to be
-defined, it should fix the issues of the existing format, which requires
-more time.
-
-To fulfill both requirements, adding support for xattrs in a short time and
-defining a new image format properly, this patch set takes an incremental
-approach: it introduces a parser of xattrs that can be used either if
-xattrs are in a regular file or directly added to the image (this patch set
-reuses patch 9/15 of the existing proposal); in addition, it introduces a
-wrapper of the xattr parser, to read xattrs from a file.
-
-The changes introduced by this patch set don't cause any compatibility
-issue: kernels without the xattr parser simply extracts .xattr-list and
-don't unmarshal xattrs; kernels with the xattr parser don't unmarshal
-xattrs if .xattr-list is not found in the image.
-
-From the kernel space perspective, backporting this functionality to older
-kernels should be very easy. It is sufficient to add a call to the new
-function do_readxattrs(). From the user space perspective, no change is
-required for the use case. A new dracut module (module-setup.sh) will
-execute:
-
-getfattr --absolute-names -d -P -R -e hex -m security.ima \
-    <file list> | xattr.awk -b > ${initdir}/.xattr-list
-
-where xattr.awk is the script that marshals xattrs (see patch 3/3). The
-same can be done with the initramfs-tools ram disk generator.
-
-Changelog
-
-v1:
-
-- move xattr unmarshaling to CPIO parser
 
 
-Mimi Zohar (1):
-  initramfs: set extended attributes
+Le 08/05/2019 à 02:45, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> Selects HAVE_C_RECORDMCOUNT to use the C version of the recordmcount
+>> intead of the old Perl Version of recordmcount.
+>>
+>> This should improve build time. It also seems like the old Perl Version
+>> misses some calls to _mcount that the C version finds.
+> 
+> That would make this a bug fix possibly for stable even.
+> 
+> Any more details on what the difference is, is it just some random
+> subset of functions or some pattern?
 
-Roberto Sassu (2):
-  fs: add ksys_lsetxattr() wrapper
-  initramfs: introduce do_readxattrs()
+I have not been able to identify any pattern. Will add a few details in 
+the 'issue' on github.
 
- fs/xattr.c               |   9 ++-
- include/linux/syscalls.h |   3 +
- init/initramfs.c         | 152 ++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 161 insertions(+), 3 deletions(-)
+Christophe
 
--- 
-2.17.1
-
+> 
+> cheers
+> 
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 2711aac24621..d87de4f9da61 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -180,6 +180,7 @@ config PPC
+>>   	select HAVE_ARCH_NVRAM_OPS
+>>   	select HAVE_ARCH_SECCOMP_FILTER
+>>   	select HAVE_ARCH_TRACEHOOK
+>> +	select HAVE_C_RECORDMCOUNT
+>>   	select HAVE_CBPF_JIT			if !PPC64
+>>   	select HAVE_STACKPROTECTOR		if PPC64 && $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=r13)
+>>   	select HAVE_STACKPROTECTOR		if PPC32 && $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=r2)
+>> -- 
+>> 2.13.3
