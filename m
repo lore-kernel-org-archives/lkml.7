@@ -2,87 +2,119 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913F6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB071C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD89216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82041216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:39:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gb5pAJWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfEIPi7 (ORCPT
+        id S1726772AbfEIPjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:38:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53930 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbfEIPi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:38:59 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ACEFF307D9CE;
-        Thu,  9 May 2019 15:38:56 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8403279B9;
-        Thu,  9 May 2019 15:38:41 +0000 (UTC)
-Date:   Thu, 9 May 2019 17:38:39 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Yan Zhao <yan.y.zhao@intel.com>,
-        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, dgilbert@redhat.com,
-        kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
-        berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190509173839.2b9b2b46.cohuck@redhat.com>
-In-Reply-To: <20190507151826.502be009@x1.home>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
-        <20190506014904.3621-1-yan.y.zhao@intel.com>
-        <20190507151826.502be009@x1.home>
-Organization: Red Hat GmbH
+        Thu, 9 May 2019 11:39:10 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42625 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbfEIPjK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:39:10 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so2219393oig.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 08:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pRrwlxjj+nqUwQKzCVPQDW+zUXQGGWC5tBHdWs2mPtI=;
+        b=gb5pAJWKRsBwdzipU8w3qhL3oH6jyQ6/SVOIpLg2g1C8IEY9O6GY8vCXM1WJHJDIW4
+         WP6K8wNXsr+CBjsIfqtnAcjSH6rKs03wUQTObwjaVERsPRRKhg9wfTe0fhXkaz5EDoou
+         lRwIwP9dd+KN5OoOzT9u7n4TPwuAU3JDFU4CbyFJ1uvyA3i/drmFY+Hwed25XMXUWDY4
+         ofrdVFM5mTXTJPFIdMXwJqTnoXvbqH/bvIlp9oBQCk+Ll065GA27EQpcr/JKyTayZxCF
+         QVbvdZ13RLA5wJGTaW9nwREVJYRNGKjl5hl3agSy7QY7St/ZlmtPSAOI2OgJ5e+Bszzn
+         BqKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pRrwlxjj+nqUwQKzCVPQDW+zUXQGGWC5tBHdWs2mPtI=;
+        b=Gru4yS2TOPvrHi+V+3auyi/oApEAP/KB8vx0Cm4Azg6JW6IiCsFoHJI7DI/ZIHvAEy
+         eIf79YTLviNe7q/hEMH2fDZWtd5+aSdcEmgg0qrjjm4lz53xVk+NE1olAc6+t7M5oy81
+         IkSt8oS8TmNC7sjTPu+SBUb7vKakqOUXZd+Oul9jSq/RHe/0oGVay4i/sn8qCGv+jk/P
+         Hcu57F2A/NRfQKjDW+c2zatsQg7TCX2wbuh3rOsEx6yEU/t8os8VVd0hBMra1U6cNUJd
+         kfAIcPIDrWHKioAXANJEAyuvzKdbV8qXBUNQ4/d0eCcbc7TvipmRT+Xjszyc5za/DQ+U
+         jQvw==
+X-Gm-Message-State: APjAAAVZ0Ac8yDtGmNv+E2zovBF+iM98BON84IBM3D05+i3HJDQW+Jci
+        UOfDcpsV1EHBoarRHkNJBNpucw==
+X-Google-Smtp-Source: APXvYqzAB/c0Nn91nrkOtM4l2ZUflo45O57TS9/QSjBdu3Wqo1fajxgoMsNWpaoeLq5rUn7ZexZanA==
+X-Received: by 2002:aca:fd47:: with SMTP id b68mr1800995oii.12.1557416349306;
+        Thu, 09 May 2019 08:39:09 -0700 (PDT)
+Received: from brauner.io ([172.56.6.91])
+        by smtp.gmail.com with ESMTPSA id e31sm996126ote.61.2019.05.09.08.39.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 09 May 2019 08:39:08 -0700 (PDT)
+Date:   Thu, 9 May 2019 17:39:04 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] fsopen: use square brackets around "fscontext"
+Message-ID: <20190509153902.tqkoooxtviafrla5@brauner.io>
+References: <20190508152509.13336-1-christian@brauner.io>
+ <20190508152509.13336-2-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 09 May 2019 15:38:59 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190508152509.13336-2-christian@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 15:18:26 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Wed, May 08, 2019 at 05:25:09PM +0200, Christian Brauner wrote:
+> Make the name of the anon inode fd "[fscontext]" instead of "fscontext".
+> This is minor but most core-kernel anon inode fds carry square brackets
+> around their name (cf. [1]). For the sake of consistency lets do the same
 
-> On Sun,  5 May 2019 21:49:04 -0400
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
+This "(cf. [1])" reference was supposed to point to the list below. But
+since I rewrote the paragraph it can simply be dropped.  Sorry for the
+oversight.
 
-> > +  Errno:
-> > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> > +  devices, it should not register version attribute for this mdev device. But if
-> > +  a vendor driver has already registered version attribute and it wants to claim
-> > +  a mdev device incompatible to all other mdev devices, it needs to return
-> > +  -ENODEV on access to this mdev device's version attribute.
-> > +  If a mdev device is only incompatible to certain mdev devices, write of
-> > +  incompatible mdev devices's version strings to its version attribute should
-> > +  return -EINVAL;  
+Christian
+
+> for the mount api:
 > 
-> I think it's best not to define the specific errno returned for a
-> specific situation, let the vendor driver decide, userspace simply
-> needs to know that an errno on read indicates the device does not
-> support migration version comparison and that an errno on write
-> indicates the devices are incompatible or the target doesn't support
-> migration versions.
-
-I think I have to disagree here: It's probably valuable to have an
-agreed error for 'cannot migrate at all' vs 'cannot migrate between
-those two particular devices'. Userspace might want to do different
-things (e.g. trying with different device pairs).
+> [eventfd]
+> [eventpoll]
+> [fanotify]
+> [fscontext]
+> [io_uring]
+> [pidfd]
+> [signalfd]
+> [timerfd]
+> [userfaultfd]
+> 
+> Signed-off-by: Christian Brauner <christian@brauner.io>
+> ---
+>  fs/fsopen.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/fsopen.c b/fs/fsopen.c
+> index a38fa8c616cf..83d0d2001bb2 100644
+> --- a/fs/fsopen.c
+> +++ b/fs/fsopen.c
+> @@ -92,7 +92,7 @@ static int fscontext_create_fd(struct fs_context *fc)
+>  {
+>  	int fd;
+>  
+> -	fd = anon_inode_getfd("fscontext", &fscontext_fops, fc,
+> +	fd = anon_inode_getfd("[fscontext]", &fscontext_fops, fc,
+>  			      O_RDWR | O_CLOEXEC);
+>  	if (fd < 0)
+>  		put_fs_context(fc);
+> -- 
+> 2.21.0
+> 
