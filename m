@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D28C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B355FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B533217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72976217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427999;
-	bh=if2nZ56rO+pMZc+Myfq3f0Ur5avwSADbbKcVIDE0cJU=;
+	s=default; t=1557428006;
+	bh=AvzCBlu9b21RH+Bn5XnyCH1lsWQ02IjRZ9x6cTTvQXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvaep+eHufJ6f4jnsv6cloxxpXh/HNUF8/oFfkiEOC9WqdWU8hoT7uICIj8GAFHnk
-	 X02qQL7NkDxdx66tAFl7Uv2hX3KkongysKSm9XQrWRN84tQav+gIVi2ToJBMDatYEo
-	 Gc+eCfQcCbQcHeb4nuj9gbQqc6yJxjMdTLs0C1w8=
+	b=L1xWiFoGcvp/yUOVB4P3JnOF0KeTQL4l4vW9Z38rWM1XSLV/6mr7gu6Wa5jhG7v1O
+	 0fDFl4PPDMNITjvNYuzFDrAe2ROkYj10GR+vD70UAYQoHxCaJMwYMppI6MgIfj7CrG
+	 fZdIxNvtArBQ1Cd/QTf5dMNkOxuN05Qdl3Iahr5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfEISxS (ORCPT
+        id S1728889AbfEISxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:53:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:53:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728853AbfEISxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:53:15 -0400
+        id S1726998AbfEISxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:53:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30405217F5;
-        Thu,  9 May 2019 18:53:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0B8020578;
+        Thu,  9 May 2019 18:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427994;
-        bh=if2nZ56rO+pMZc+Myfq3f0Ur5avwSADbbKcVIDE0cJU=;
+        s=default; t=1557428000;
+        bh=AvzCBlu9b21RH+Bn5XnyCH1lsWQ02IjRZ9x6cTTvQXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXWZZ94o9G3PtR2gtXpXdeyxqOnGhP+rUAbfIJ1LwVmxrHlrH2yXPbmnrAJGWsggW
-         qSjtQbnTHwUqimqMXX/OoxEd7MqEZ7tdEWowzHvoFvOfP690x30bzoJgWjXk3/05Ph
-         8z4NBmBRNtywuUWDw7k5lrKpa7n+kcXv57Iop27M=
+        b=AsQiJH2P/SXUMPAXICC+/P2de+u5V6kwquKa9c7oR5eeUOpbuccHpVFNUYE+co3rU
+         gYjBh+qAuxb2OD2piqqKkQnn9WqqqYT2ACG8n9XBUtgWRn2e0KmehYDv2BN7XGinuD
+         EK7hhW1cJer4SawfBfh9r3raeONS4z+UdsSrua3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 5.0 83/95] soc: sunxi: Fix missing dependency on REGMAP_MMIO
-Date:   Thu,  9 May 2019 20:42:40 +0200
-Message-Id: <20190509181315.094360476@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 85/95] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+Date:   Thu,  9 May 2019 20:42:42 +0200
+Message-Id: <20190509181315.221891173@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,67 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Andrew Vasquez <andrewv@marvell.com>
 
-commit a84014e1db35d8e7af09878d0b4bf30804fb17d5 upstream.
+commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
 
-When enabling ARCH_SUNXI from allnoconfig, SUNXI_SRAM is enabled, but
-not REGMAP_MMIO, so the kernel fails to link with an undefined reference
-to __devm_regmap_init_mmio_clk. Select REGMAP_MMIO, as suggested in
-drivers/base/regmap/Kconfig.
+Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
+code") incorrectly set 'optrom_region_size' to 'start+size', which can
+overflow option-rom boundaries when 'start' is non-zero.  Continue setting
+optrom_region_size to the proper adjusted value of 'size'.
 
-This creates the following dependency loop:
-
-  drivers/of/Kconfig:68:                symbol OF_IRQ depends on IRQ_DOMAIN
-  kernel/irq/Kconfig:63:                symbol IRQ_DOMAIN is selected by REGMAP
-  drivers/base/regmap/Kconfig:7:        symbol REGMAP default is visible depending on REGMAP_MMIO
-  drivers/base/regmap/Kconfig:39:       symbol REGMAP_MMIO is selected by SUNXI_SRAM
-  drivers/soc/sunxi/Kconfig:4:          symbol SUNXI_SRAM is selected by USB_MUSB_SUNXI
-  drivers/usb/musb/Kconfig:63:          symbol USB_MUSB_SUNXI depends on GENERIC_PHY
-  drivers/phy/Kconfig:7:                symbol GENERIC_PHY is selected by PHY_BCM_NS_USB3
-  drivers/phy/broadcom/Kconfig:29:      symbol PHY_BCM_NS_USB3 depends on MDIO_BUS
-  drivers/net/phy/Kconfig:12:           symbol MDIO_BUS default is visible depending on PHYLIB
-  drivers/net/phy/Kconfig:181:          symbol PHYLIB is selected by ARC_EMAC_CORE
-  drivers/net/ethernet/arc/Kconfig:18:  symbol ARC_EMAC_CORE is selected by ARC_EMAC
-  drivers/net/ethernet/arc/Kconfig:24:  symbol ARC_EMAC depends on OF_IRQ
-
-To fix the circular dependency, make USB_MUSB_SUNXI select GENERIC_PHY
-instead of depending on it. This matches the use of GENERIC_PHY by all
-but two other drivers.
-
-Cc: <stable@vger.kernel.org> # 4.19
-Fixes: 5828729bebbb ("soc: sunxi: export a regmap for EMAC clock reg on A64")
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/sunxi/Kconfig |    1 +
- drivers/usb/musb/Kconfig  |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/soc/sunxi/Kconfig
-+++ b/drivers/soc/sunxi/Kconfig
-@@ -4,6 +4,7 @@
- config SUNXI_SRAM
- 	bool
- 	default ARCH_SUNXI
-+	select REGMAP_MMIO
- 	help
- 	  Say y here to enable the SRAM controller support. This
- 	  device is responsible on mapping the SRAM in the sunXi SoCs
---- a/drivers/usb/musb/Kconfig
-+++ b/drivers/usb/musb/Kconfig
-@@ -66,7 +66,7 @@ config USB_MUSB_SUNXI
- 	depends on NOP_USB_XCEIV
- 	depends on PHY_SUN4I_USB
- 	depends on EXTCON
--	depends on GENERIC_PHY
-+	select GENERIC_PHY
- 	select SUNXI_SRAM
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -364,7 +364,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
  
- config USB_MUSB_DAVINCI
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
+ 
+ 		ha->optrom_state = QLA_SREADING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+@@ -437,7 +437,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
+ 
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
+ 
+ 		ha->optrom_state = QLA_SWRITING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
 
 
