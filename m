@@ -6,102 +6,198 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3633BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C432C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06092216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15624208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfEIWPk (ORCPT
+        id S1727507AbfEIWRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:15:40 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40966 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfEIWPj (ORCPT
+        Thu, 9 May 2019 18:17:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727224AbfEIWRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:15:39 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 81585802A4; Fri, 10 May 2019 00:15:25 +0200 (CEST)
-Date:   Fri, 10 May 2019 00:15:38 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
- backlight
-Message-ID: <20190509221538.GA527@amd>
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
- <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
- <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
- <20190508171229.GA22024@amd>
- <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com>
- <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
- <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
+        Thu, 9 May 2019 18:17:39 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49MGWhT071376
+        for <linux-kernel@vger.kernel.org>; Thu, 9 May 2019 18:17:38 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2scsufxmyn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 18:17:37 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 9 May 2019 23:17:35 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 May 2019 23:17:31 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49MHUlD37224552
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 May 2019 22:17:31 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE4D6B2072;
+        Thu,  9 May 2019 22:17:30 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80192B205F;
+        Thu,  9 May 2019 22:17:30 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  9 May 2019 22:17:30 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id DC87A16C5DD8; Thu,  9 May 2019 15:17:30 -0700 (PDT)
+Date:   Thu, 9 May 2019 15:17:30 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: Question about sched_setaffinity()
+Reply-To: paulmck@linux.ibm.com
+References: <20190430100318.GP2623@hirez.programming.kicks-ass.net>
+ <20190430105129.GA3923@linux.ibm.com>
+ <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+ <20190501191213.GX3923@linux.ibm.com>
+ <20190501151655.51469a4c@gandalf.local.home>
+ <20190501202713.GY3923@linux.ibm.com>
+ <20190507221613.GA11057@linux.ibm.com>
+ <20190509173654.GA23530@linux.ibm.com>
+ <20190509214025.GA5385@andrea>
+ <20190509215505.GB5820@andrea>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190509215505.GB5820@andrea>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19050922-0060-0000-0000-0000033E2C24
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011079; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01201013; UDB=6.00630211; IPR=6.00981904;
+ MB=3.00026819; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-09 22:17:35
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050922-0061-0000-0000-00004949E7B9
+Message-Id: <20190509221730.GM3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905090127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 09, 2019 at 11:56:35PM +0200, Andrea Parri wrote:
+> On Thu, May 09, 2019 at 11:40:25PM +0200, Andrea Parri wrote:
+> > On Thu, May 09, 2019 at 10:36:54AM -0700, Paul E. McKenney wrote:
+> > > On Tue, May 07, 2019 at 03:16:13PM -0700, Paul E. McKenney wrote:
+> > > > On Wed, May 01, 2019 at 01:27:13PM -0700, Paul E. McKenney wrote:
+> > > > > On Wed, May 01, 2019 at 03:16:55PM -0400, Steven Rostedt wrote:
+> > > > > > On Wed, 1 May 2019 12:12:13 -0700
+> > > > > > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > > OK, what I did was to apply the patch at the end of this email to -rcu
+> > > > > > > branch dev, then run rcutorture as follows:
+> > > > > > > 
+> > > > > > > nohup tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 2 --configs "TRIVIAL" --bootargs "trace_event=sched:sched_switch,sched:sched_wakeup ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop"
+> > > > > > > 
+> > > > > > > This resulted in the console output that I placed here:
+> > > > > > > 
+> > > > > > > http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > > > > > > 
+> > > > > > > But I don't see calls to sched_setaffinity() or migration_cpu_stop().
+> > > > > > > Steve, is something else needed on the kernel command line in addition to
+> > > > > > > the following?
+> > > > > > > 
+> > > > > > > ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop
+> > > > > > 
+> > > > > > Do you have function graph enabled in the config?
+> > > > > > 
+> > > > > > [    2.098303] ftrace bootup tracer 'function_graph' not registered.
+> > > > > 
+> > > > > I guess I don't!  Thank you, will fix.
+> > > > > 
+> > > > > Let's see...
+> > > > > 
+> > > > > My .config has CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y.  It looks like I
+> > > > > need CONFIG_FUNCTION_GRAPH_TRACER=y, which I don't have.  And it looks
+> > > > > like that needs CONFIG_FUNCTION_TRACER=y, which I also don't have.
+> > > > > But I do have CONFIG_HAVE_FUNCTION_TRACER=y.  So I should add this
+> > > > > to my rcutorture command line:
+> > > > > 
+> > > > > --kconfig "CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y".
+> > > > > 
+> > > > > I fired this up.  Here is hoping!  ;-)
+> > > > > 
+> > > > > And it does have sched_setaffinity(), woo-hoo!!!  I overwrote the old file:
+> > > > > 
+> > > > > 	http://www2.rdrop.com/~paulmck/submission/console.log.gz
+> > > > 
+> > > > And I reran after adding a trace_printk(), which shows up as follows:
+> > > > 
+> > > > [  211.409565]  6)               |  /* On unexpected CPU 6, expected 4!!! */
+> > > > 
+> > > > I placed the console log here:
+> > > > 
+> > > > 	http://www2.rdrop.com/~paulmck/submission/console.tpk.log.gz
+> > > > 
+> > > > Just in case the earlier log proves useful.
+> > > > 
+> > > > And it is acting as if the destination CPU proved to be offline.  Except
+> > > > that this rcutorture scenario doesn't offline anything, and I don't see
+> > > > any CPU-hotplug removal messages.  So I added another trace_printk() to
+> > > > print out cpu_online_mask.  This gets me the following:
+> > > > 
+> > > > [   31.565605]  0)               |  /* On unexpected CPU 0, expected 1!!! */
+> > > > [   31.565605]  0)               |  /* Online CPUs: 0-7 */
+> > > > 
+> > > > So we didn't make it to CPU 1 despite its being online.  I placed the
+> > > > console log here:
+> > > > 
+> > > > 	http://www2.rdrop.com/~paulmck/submission/console.tpkol.log.gz
+> > > > 
+> > > > Thoughts?
+> > 
+> > And I can finally see/reproduce it!!
+> > 
+> > Frankly, no idea how this is happening (I have been staring at these
+> > traces/functions for hours/days now...  ;-/ )
+> > 
+> > Adding some "sched" folks in Cc: hopefully, they can shed some light
+> > about this.
+> 
+> +Thomas, +Sebastian
+> 
+> Thread starts here:
+> 
+> http://lkml.kernel.org/r/20190427180246.GA15502@linux.ibm.com
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Peter Zijlstra kindly volunteered over IRC to look at this more closely
+tomorrow (well, today, his time).  It is quite strange, though!  ;-)
 
-On Fri 2019-05-10 00:06:11, Andy Shevchenko wrote:
-> On Thu, May 9, 2019 at 11:45 PM Dan Murphy <dmurphy@ti.com> wrote:
-> > On 5/9/19 2:04 PM, Yurii Pavlovskyi wrote:
-> > We are working on a framework for this.
-> >
-> > Please see this series
-> > https://lore.kernel.org/patchwork/project/lkml/list/?series=3D390141
-> >
-> > It is still a work in progress
->=20
-> Side question:
-> Have you considered to convert existing color LED controllers? (It
-> seems to me that your proposal lacks of the idea to keep back
-> compatibility with the existing controllers whre user may create a
-> sysfs node based on the arbitrary label, while it's good to have
-> multicolor infrastructure like in your proposal. Did I miss
-> something?)
+							Thanx, Paul
 
-That's undecided at the moment. We have enough fun trying to figure
-out reasonable interface...
+>   Andrea
+> 
+> 
+> > 
+> > And yes, my only suggestion/approach would be to keep bisecting this
+> > code with printk*..., 'fun' ;-/
+> > 
+> >   Andrea
+> 
 
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzUpooACgkQMOfwapXb+vJdigCgo3jVz3Quc3OXTEWsOVYA1oYS
-f6AAoL5RxwgYeNlUWliZQo02BD1pZ2Df
-=7Nn9
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
