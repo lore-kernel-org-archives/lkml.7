@@ -2,79 +2,232 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC10C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E29EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD132208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372442173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557387709;
+	bh=/k/jKycODfpSva7zsqgSvH/Ogl6rkFExwcf2OxcRsNo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=drgonwsp/SDT3WEgGjs2yOTZMf5i4wP27aat6MhuEPfeJSoS9QTnDltjjsu7q/2yQ
+	 nk/JQU72NxiBEVKxhyjZ4PWjvIZpLwcEUjEaMiuppNBUJC3ednLyfLawnLrvfjophx
+	 r4tEmyUt39NWSGDAWs6KlEsVTJhnl8nhuVq/uRY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfEIHlV (ORCPT
+        id S1726720AbfEIHls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:41:21 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:14607 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725961AbfEIHlU (ORCPT
+        Thu, 9 May 2019 03:41:48 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35015 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfEIHls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:41:20 -0400
-X-IronPort-AV: E=Sophos;i="5.60,449,1549900800"; 
-   d="scan'208";a="62230554"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 09 May 2019 15:40:56 +0800
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
-        by cn.fujitsu.com (Postfix) with ESMTP id 473E44CDBCD7;
-        Thu,  9 May 2019 15:40:56 +0800 (CST)
-Received: from iridescent.g08.fujitsu.local (10.167.225.140) by
- G08CNEXCHPEKD02.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Thu, 9 May 2019 15:40:58 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <corbet@lwn.net>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>
-Subject: [PATCH v2] Documentation: nvdimm: Fix typo
-Date:   Thu, 9 May 2019 15:40:49 +0800
-Message-ID: <20190509074049.12192-1-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190509023744.4936-1-ruansy.fnst@cn.fujitsu.com>
-References: <20190509023744.4936-1-ruansy.fnst@cn.fujitsu.com>
+        Thu, 9 May 2019 03:41:48 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a132so1206805oib.2;
+        Thu, 09 May 2019 00:41:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3KulEKizWIWmp7w/J6WXP00Agbtffv61w2wzB/s1EJA=;
+        b=c/bczytAdbCbHroPCVVFMW/CzLbxYECwIwdx4Rt1QFBjitJvRGIwdUHPPnfqE1+qi4
+         CVXL+vgY+AuEah8PVTANrFgquQQzSqyeZgeOzUa2vHKvy8EVXyvA8RHeOCYfFsHNAqOh
+         ZCS9NcYJZVlN+6fhvp6X1QtJrIFkaJyGBj/086WTXifB8CkYYQcZJKtegO8095a7ucrY
+         +dDp5Bs+YE+2XqfwV/vRCUmg17jY0u+suwu6eybhta70IVLFXKdT9jDDmfgDarXuxxy4
+         ytHg2gxPAcb0Mtuf22dOxxRfsdHeq2e6sf7mUnv30Aa8omaTReDGykFkeoMGBBrf+KVh
+         lSkA==
+X-Gm-Message-State: APjAAAVKdKyukCjbVP2qfjRkgWKP0566yKJebJnh55d5lQ2jPqWSExWj
+        qK6XzzwSacdA9LXF/NrtWIAwHN/hfkjNuO0203A=
+X-Google-Smtp-Source: APXvYqy8UbHR0TetuMPKUzgFolqlADKSIUxY1HI1z6VG4KO9XzUx91AMrAi8WJbhSGc8oVYNI2cA6noHBvMte/Q431s=
+X-Received: by 2002:aca:ba82:: with SMTP id k124mr642037oif.110.1557387706984;
+ Thu, 09 May 2019 00:41:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.167.225.140]
-X-yoursite-MailScanner-ID: 473E44CDBCD7.A7B27
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+References: <20190423233904.195842-1-furquan@google.com> <CAEGmHFEf4RTn5mrQ4pn+WPz=WnD5id9joEdGQnu==ibx+r1L8g@mail.gmail.com>
+In-Reply-To: <CAEGmHFEf4RTn5mrQ4pn+WPz=WnD5id9joEdGQnu==ibx+r1L8g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 May 2019 09:41:33 +0200
+Message-ID: <CAJZ5v0ieonHdgFh_GQUSAEoUh3JyOj2rMp174Xvhsq_HHRNEHg@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
+To:     Furquan Shaikh <furquan@google.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Todd Broch <tbroch@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the extra 'we '.
+On Thu, May 9, 2019 at 8:12 AM Furquan Shaikh <furquan@google.com> wrote:
+>
+> On Tue, Apr 23, 2019 at 4:39 PM Furquan Shaikh <furquan@google.com> wrote:
+> >
+> > During boot-up, ACPI bus scan enables all power resources so that
+> > respective device drivers can talk to their device. This causes acpi
+> > ref_count for the power resource to be incremented to 1. When system
+> > suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
+> > power off on all power resources whose ref_count is 1 i.e. no other
+> > user of this power resource and thus resulting in _OFF routine being
+> > called for it.
+> >
+> > However, in case of poweroff, DPM is not involved and so the power
+> > resources are left on when the system is entering S5. This results in
+> > the violation of power down sequencing for certain devices
+> > e.g. touchscreen or digitizer I2C devices. In order to ensure that the
+> > power down sequencing does the right thing, it is necessary for ACPI
+> > to disable all power resources while preparing for S5.
+> >
+> > This change updates the function acpi_turn_off_unused_power_resources
+> > to accept a parameter acpi_system_state, This function turns off power
+> > resources according to the targeted system ACPI state:
+> > 1. For S0: Unused power resources are turned off i.e. power resources
+> > whose ref_count is already 0.
+> > 2. For S5: ref_count is decremented first to undo the increment
+> > performed during ACPI bus scan and then power resources with ref_count
+> > 0 are turned off.
+> > 3. All other suspend/hibernate states: No action is required since DPM
+> > takes care of turning off power resources.
+> >
+> > This change should not affect the wake capable devices since:
+> > 1. If wake capable devices are enabled before this call, their
+> > refcount should be greater than 1. Thus, they won't be turned off.
+> > 2. If wake capable devices are not enabled yet when this call is made,
+> > they would eventually get turned on by call to
+> > acpi_enable_wakeup_devices.
+> >
+> > Signed-off-by: Furquan Shaikh <furquan@google.com>
+> > ---
+> >  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
+> >  drivers/acpi/sleep.c |  5 ++++-
+> >  drivers/acpi/sleep.h |  2 +-
+> >  3 files changed, 46 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+> > index 665e93ca0b40f..945db762861a3 100644
+> > --- a/drivers/acpi/power.c
+> > +++ b/drivers/acpi/power.c
+> > @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
+> >
+> >         mutex_unlock(&power_resource_list_lock);
+> >  }
+> > +#endif
+> >
+> > -void acpi_turn_off_unused_power_resources(void)
+> > +/**
+> > + * acpi_turn_off_power_resources: This function is used to turn off power
+> > + * resources in provided ACPI system state.
+> > + *
+> > + * Behavior differs based on the target system state:
+> > + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
+> > + *                with ref_count zero.
+> > + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
+> > + *                ref_count zero. This is done to ensure that the ref_count
+> > + *                incremented during ACPI bus scan is undone and any power
+> > + *                resources that are not required during S5 are turned off.
+> > + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
+> > + *                resources while suspending/hibernating.
+> > + */
+> > +void acpi_turn_off_power_resources(int acpi_system_state)
+> >  {
+> >         struct acpi_power_resource *resource;
+> > +       int decrement;
+> > +
+> > +       if (acpi_system_state == ACPI_STATE_S0) {
+> > +               /*
+> > +                * In case of ACPI_STATE_S0, turn off only unused power
+> > +                * resources. So, no need to decrement ref_count.
+> > +                */
+> > +               decrement = 0;
+> > +       } else if (acpi_system_state == ACPI_STATE_S5) {
+> > +               /*
+> > +                * In case of ACPI_STATE_S5, ref_count needs to be decremented
+> > +                * first before checking if it is okay to power off the
+> > +                * resource.
+> > +                */
+> > +               decrement = 1;
+> > +       } else
+> > +               return;
+> >
+> >         mutex_lock(&power_resource_list_lock);
+> >
+> > @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
+> >                         continue;
+> >                 }
+> >
+> > -               if (state == ACPI_POWER_RESOURCE_STATE_ON
+> > -                   && !resource->ref_count) {
+> > -                       dev_info(&resource->device.dev, "Turning OFF\n");
+> > -                       __acpi_power_off(resource);
+> > +               if (state == ACPI_POWER_RESOURCE_STATE_ON) {
+> > +                       if (resource->ref_count)
+> > +                               resource->ref_count -= decrement;
+> > +
+> > +                       if (!resource->ref_count) {
+> > +                               dev_info(&resource->device.dev, "Turning OFF\n");
+> > +                               __acpi_power_off(resource);
+> > +                       }
+> >                 }
+> >
+> >                 mutex_unlock(&resource->resource_lock);
+> > @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
+> >
+> >         mutex_unlock(&power_resource_list_lock);
+> >  }
+> > -#endif
+> > diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> > index 403c4ff153498..fb6b3ca0eeb91 100644
+> > --- a/drivers/acpi/sleep.c
+> > +++ b/drivers/acpi/sleep.c
+> > @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+> >         printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
+> >                 acpi_state);
+> >         acpi_enable_wakeup_devices(acpi_state);
+> > +
+> > +       acpi_turn_off_power_resources(acpi_state);
+> > +
+> >         acpi_enter_sleep_state_prep(acpi_state);
+> >         return 0;
+> >  }
+> > @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
+> >   */
+> >  static void acpi_pm_end(void)
+> >  {
+> > -       acpi_turn_off_unused_power_resources();
+> > +       acpi_turn_off_power_resources(ACPI_STATE_S0);
+> >         acpi_scan_lock_release();
+> >         /*
+> >          * This is necessary in case acpi_pm_finish() is not called during a
+> > diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
+> > index 41675d24a9bc0..a495c91e2bf3b 100644
+> > --- a/drivers/acpi/sleep.h
+> > +++ b/drivers/acpi/sleep.h
+> > @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
+> >  extern struct mutex acpi_device_lock;
+> >
+> >  extern void acpi_resume_power_resources(void);
+> > -extern void acpi_turn_off_unused_power_resources(void);
+> > +extern void acpi_turn_off_power_resources(int acpi_system_state);
+> >
+> >  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
+> >  {
+> > --
+> > 2.21.0.593.g511ec345e18-goog
+> >
+>
+> Hi Rafael,
+>
+> Gentle ping. Just checking if you got a chance to look at this one. It
+> is actually causing problems in one of our devices since power off
+> sequencing is not honored when entering S5.
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- Documentation/nvdimm/nvdimm.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I have looked at it and I didn't like it.
 
-diff --git a/Documentation/nvdimm/nvdimm.txt b/Documentation/nvdimm/nvdimm.txt
-index e894de69915a..1669f626b037 100644
---- a/Documentation/nvdimm/nvdimm.txt
-+++ b/Documentation/nvdimm/nvdimm.txt
-@@ -284,8 +284,8 @@ A bus has a 1:1 relationship with an NFIT.  The current expectation for
- ACPI based systems is that there is only ever one platform-global NFIT.
- That said, it is trivial to register multiple NFITs, the specification
- does not preclude it.  The infrastructure supports multiple busses and
--we we use this capability to test multiple NFIT configurations in the
--unit test.
-+we use this capability to test multiple NFIT configurations in the unit
-+test.
- 
- LIBNVDIMM: control class device in /sys/class
- 
--- 
-2.17.0
-
-
-
+I'll post my comments on this patch later.
