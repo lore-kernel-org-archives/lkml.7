@@ -2,91 +2,114 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B45AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09397C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF5821479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557412918;
-	bh=Wfj1GabWdVoULFKoG6CT8frw0TykxTd53AcRNApM0TU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KHmiFzf3Jp7JN8LfOVADqi3KOW3WRhlSBMdNsLGKUq7IDktukELlEwsfslI2am4mq
-	 f9tkln5ylcopJQWBoMiyoOcuqsaSYUMSv/8Lft3rhMe4nutmgAlDMhigfFtwBWa7Zm
-	 WCC3FgPJP8LNuVxagBm1nWtuosj1fc/WTx+2Tq0A=
+	by mail.kernel.org (Postfix) with ESMTP id CAEA82173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:42:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mbz+1Y7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfEIOl5 (ORCPT
+        id S1726790AbfEIOmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfEIOl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:41:56 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A030E2173B;
-        Thu,  9 May 2019 14:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557412915;
-        bh=Wfj1GabWdVoULFKoG6CT8frw0TykxTd53AcRNApM0TU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dSTpkE90aqWN5gHVRcjqIZnCD3GEq5VmiaK4NaEFcN0f+J9mtqEzqiGaBcyEpNAMh
-         50SmW9Q4RZiEUmPi+RvzMOKH/OOG1b0mQvyRJ3nnJq0XcVPgame5xJCYcb0RlCEyqw
-         MZTy5HMRElfb3Fweomhs4nxRi051oGa/p6tZGVek=
-Received: by mail-ed1-f47.google.com with SMTP id f37so2227061edb.13;
-        Thu, 09 May 2019 07:41:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAWTudLnXQ0LLLjMS/X/oc2Cko7HJmR0u6a7uuydkV5ZQcVzFee3
-        IKHz7HzjE0dTesFVwwz8KlgYR7/YkhNI09MQ1w4=
-X-Google-Smtp-Source: APXvYqx1UQeeC0LITggJzVsAZ70ni/5qHB/4tt0KGr2SyrDc9s/pfLRRg2SVZ25V+mjZN/v1DknmtTiZ8MKTxBS1wRU=
-X-Received: by 2002:a50:fa90:: with SMTP id w16mr4447844edr.184.1557412914233;
- Thu, 09 May 2019 07:41:54 -0700 (PDT)
+        Thu, 9 May 2019 10:42:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40226 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIOmM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:42:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49Ecgl2195698;
+        Thu, 9 May 2019 14:41:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=oHoNVXLo0KzT+7QLoewEj851rlFBBW83cdM6UjKZD+g=;
+ b=mbz+1Y7XpMyQTGne7eS0tih1rqkEUTZzPfvvlBd6L++B1mQxKsKZH1P7QTYieGTumTXQ
+ T/FKWwk2x2LURAt8NJHuB0ZDK2sJi3FGhLCTpyul5szJzqC4wELPfzm9hDFaWIFbtMRo
+ 9iWqVKDEiI4fgQTKSETOT6NxM0tKXr0ooDahNMqeaNvfVqMFI9ZScXO4OSt3mN/h60Iq
+ YGaZ0/N36rBEI9u8mttIxGWRz9UCuhvcLJQT+1Yc9wj2zjIxQBqC7udYnRed2lPMRAoa
+ gXT1QkBhw2yIfW+OXruYoB7tD20L1syoM7/oBNim31KOzg/Uqpjh+bPuy7UQ7ffxaB1I 5w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2s94bgbb4a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 14:41:50 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49EdwvR035003;
+        Thu, 9 May 2019 14:41:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2sagyv9fgp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 14:41:50 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x49EffaY010615;
+        Thu, 9 May 2019 14:41:41 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 May 2019 07:41:40 -0700
+Date:   Thu, 9 May 2019 17:41:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] staging: vchiq: stop explicitly comparing with
+ zero to catch errors
+Message-ID: <20190509144132.GF21059@kadam>
+References: <20190509143137.31254-1-nsaenzjulienne@suse.de>
+ <20190509143137.31254-5-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <1556528151-17221-1-git-send-email-hao.wu@intel.com> <1556528151-17221-13-git-send-email-hao.wu@intel.com>
-In-Reply-To: <1556528151-17221-13-git-send-email-hao.wu@intel.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Thu, 9 May 2019 09:41:18 -0500
-X-Gmail-Original-Message-ID: <CANk1AXQ6mcQ2td02j2g=n5cxOri--bp3yV5t7OCgK5Rc3QVHMQ@mail.gmail.com>
-Message-ID: <CANk1AXQ6mcQ2td02j2g=n5cxOri--bp3yV5t7OCgK5Rc3QVHMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 12/18] fpga: dfl: afu: add error reporting support.
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509143137.31254-5-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905090086
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905090086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
->
-> Error reporting is one important private feature, it reports error
-> detected on port and accelerated function unit (AFU). It introduces
-> several sysfs interfaces to allow userspace to check and clear
-> errors detected by hardware.
->
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
+On Thu, May 09, 2019 at 04:31:36PM +0200, Nicolas Saenz Julienne wrote:
+> The vchiq code tends to follow a coding pattern that's not accepted as
+> per the Linux kernel coding style
+> 
+> We have this:
+> 	if (expression != 0)
+> 
+> We want this:
+> 	if (expression)
+> 
+> We make an exception if the expression refers to a size, in which case
+> it's accepted for the sake of clarity.
 
-Acked-by: Alan Tull <atull@kernel.org>
+It's not really Linux kernel style, it's just my style...  I wouldn't
+have complained if the original code were consistent one way or the
+other.  But since I was encouraging you to pick a style and use it
+consistently, then I'm always going to advocate my style...  :P
 
-Thanks!
-Alan
+Anyway, thanks!  Looks good to me.
 
-> ---
-> v2: add more error code description for error clear sysfs in doc.
->     return -EINVAL instead of -EBUSY when input error code doesn't
->     match in error clear sysfs.
-> ---
->  Documentation/ABI/testing/sysfs-platform-dfl-port |  39 ++++
->  drivers/fpga/Makefile                             |   1 +
->  drivers/fpga/dfl-afu-error.c                      | 225 ++++++++++++++++++++++
->  drivers/fpga/dfl-afu-main.c                       |   4 +
->  drivers/fpga/dfl-afu.h                            |   4 +
->  5 files changed, 273 insertions(+)
->  create mode 100644 drivers/fpga/dfl-afu-error.c
+regards,
+dan carpenter
+
