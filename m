@@ -2,52 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8E2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BCAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C10217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E26B217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427856;
-	bh=7YSVyEHR9cbz+EdC4WPtdFFJbGSeC6z/9Zzn4FDvP2c=;
+	s=default; t=1557427861;
+	bh=2+wJWHmZ26eV1OAXuax4U93r970Y/gDnqZQalH7tako=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6S7WFUTKFI6H4Afxfyr9zVEkHB1+vOtgk+cZQN6xlf51XAttZaatL1HaV0dYTVXv
-	 aS2bMvYoCfrW83/QbsKVEmXO0dtqYW0GjYApm9dC+AuIQ9BWfewnI6VjlkKZdJFYFt
-	 Hhfi+hIaRZtsjVyEuE1tGi27BfvhQn+t1Qb99uD4=
+	b=vMyq2dtmDZ8D2s5AvBNP7n2hViCmHTtlNjpLz3HK7pzV3tjhd4MOq7KrDdKtjjcWE
+	 +ybXo2jJkUIt9ZMu9bB9QyW7F3AqKLM2EH0F9/SIMGfbPdabxteHfchee4cehr4IZD
+	 iFhAK6iWGVgOe1OKB5+GVtcKI4H3yK2fH+V0xuZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfEISuz (ORCPT
+        id S1728515AbfEISvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44450 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbfEISuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:50:51 -0400
+        id S1727469AbfEISu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD912177E;
-        Thu,  9 May 2019 18:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C15A620578;
+        Thu,  9 May 2019 18:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427851;
-        bh=7YSVyEHR9cbz+EdC4WPtdFFJbGSeC6z/9Zzn4FDvP2c=;
+        s=default; t=1557427856;
+        bh=2+wJWHmZ26eV1OAXuax4U93r970Y/gDnqZQalH7tako=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vX/0eR5Yk9lvripiHPhe2CPazRbqBeNO2ph1nA8K/FJhTZrr3jsmD1lsZynKlmL+y
-         w1xBI0EPONKxOtSPmGYJXlHWh5Dp7M2JgQ+KQBhzNSiZfISgm5mhCjwdeL99ily4yl
-         jqEqOHCfq/+z1Kd9EWGVOkRpIRp5Ple3bdsEH4f0=
+        b=KWdPwGn/xcRARu0dvcEqrsf0mELGApyB924Xqua757z3w69sfpKXVpt5A4JBewH5Y
+         Rt7BYBkvnI9xr2qlGMLV8d26r/eFl+mM6K+vD9KLvekK4he/h0JwiX4hF+yt2p50u0
+         dtX2E1EXFS+IJP3kg9h5cbpUaffcKh7bF87keBYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 27/95] ASoC: cs4270: Set auto-increment bit for register writes
-Date:   Thu,  9 May 2019 20:41:44 +0200
-Message-Id: <20190509181311.208741542@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: [PATCH 5.0 03/95] ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings
+Date:   Thu,  9 May 2019 20:41:20 +0200
+Message-Id: <20190509181309.488289922@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,37 +60,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
 
-The CS4270 does not by default increment the register address on
-consecutive writes. During normal operation it doesn't matter as all
-register accesses are done individually. At resume time after suspend,
-however, the regcache code gathers the biggest possible block of
-registers to sync and sends them one on one go.
+commit f0996bc2978e02d2ea898101462b960f6119b18f upstream.
 
-To fix this, set the INCR bit in all cases.
+Building lib/ubsan.c with gcc-9 results in a ton of nasty warnings like
+this one:
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    lib/ubsan.c warning: conflicting types for built-in function
+         ‘__ubsan_handle_negate_overflow’; expected ‘void(void *, void *)’ [-Wbuiltin-declaration-mismatch]
+
+The kernel's declarations of __ubsan_handle_*() often uses 'unsigned
+long' types in parameters while GCC these parameters as 'void *' types,
+hence the mismatch.
+
+Fix this by using 'void *' to match GCC's declarations.
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Fixes: c6d308534aef ("UBSAN: run-time undefined behavior sanity checker")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/codecs/cs4270.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/ubsan.c |   49 +++++++++++++++++++++++--------------------------
+ 1 file changed, 23 insertions(+), 26 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 33d74f163bd75..793a14d586672 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -642,6 +642,7 @@ static const struct regmap_config cs4270_regmap = {
- 	.reg_defaults =		cs4270_reg_defaults,
- 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
- 	.cache_type =		REGCACHE_RBTREE,
-+	.write_flag_mask =	CS4270_I2C_INCR,
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -86,11 +86,13 @@ static bool is_inline_int(struct type_de
+ 	return bits <= inline_bits;
+ }
  
- 	.readable_reg =		cs4270_reg_is_readable,
- 	.volatile_reg =		cs4270_reg_is_volatile,
--- 
-2.20.1
-
+-static s_max get_signed_val(struct type_descriptor *type, unsigned long val)
++static s_max get_signed_val(struct type_descriptor *type, void *val)
+ {
+ 	if (is_inline_int(type)) {
+ 		unsigned extra_bits = sizeof(s_max)*8 - type_bit_width(type);
+-		return ((s_max)val) << extra_bits >> extra_bits;
++		unsigned long ulong_val = (unsigned long)val;
++
++		return ((s_max)ulong_val) << extra_bits >> extra_bits;
+ 	}
+ 
+ 	if (type_bit_width(type) == 64)
+@@ -99,15 +101,15 @@ static s_max get_signed_val(struct type_
+ 	return *(s_max *)val;
+ }
+ 
+-static bool val_is_negative(struct type_descriptor *type, unsigned long val)
++static bool val_is_negative(struct type_descriptor *type, void *val)
+ {
+ 	return type_is_signed(type) && get_signed_val(type, val) < 0;
+ }
+ 
+-static u_max get_unsigned_val(struct type_descriptor *type, unsigned long val)
++static u_max get_unsigned_val(struct type_descriptor *type, void *val)
+ {
+ 	if (is_inline_int(type))
+-		return val;
++		return (unsigned long)val;
+ 
+ 	if (type_bit_width(type) == 64)
+ 		return *(u64 *)val;
+@@ -116,7 +118,7 @@ static u_max get_unsigned_val(struct typ
+ }
+ 
+ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
+-	unsigned long value)
++			void *value)
+ {
+ 	if (type_is_int(type)) {
+ 		if (type_bit_width(type) == 128) {
+@@ -163,8 +165,8 @@ static void ubsan_epilogue(unsigned long
+ 	current->in_ubsan--;
+ }
+ 
+-static void handle_overflow(struct overflow_data *data, unsigned long lhs,
+-			unsigned long rhs, char op)
++static void handle_overflow(struct overflow_data *data, void *lhs,
++			void *rhs, char op)
+ {
+ 
+ 	struct type_descriptor *type = data->type;
+@@ -191,8 +193,7 @@ static void handle_overflow(struct overf
+ }
+ 
+ void __ubsan_handle_add_overflow(struct overflow_data *data,
+-				unsigned long lhs,
+-				unsigned long rhs)
++				void *lhs, void *rhs)
+ {
+ 
+ 	handle_overflow(data, lhs, rhs, '+');
+@@ -200,23 +201,21 @@ void __ubsan_handle_add_overflow(struct
+ EXPORT_SYMBOL(__ubsan_handle_add_overflow);
+ 
+ void __ubsan_handle_sub_overflow(struct overflow_data *data,
+-				unsigned long lhs,
+-				unsigned long rhs)
++				void *lhs, void *rhs)
+ {
+ 	handle_overflow(data, lhs, rhs, '-');
+ }
+ EXPORT_SYMBOL(__ubsan_handle_sub_overflow);
+ 
+ void __ubsan_handle_mul_overflow(struct overflow_data *data,
+-				unsigned long lhs,
+-				unsigned long rhs)
++				void *lhs, void *rhs)
+ {
+ 	handle_overflow(data, lhs, rhs, '*');
+ }
+ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
+ 
+ void __ubsan_handle_negate_overflow(struct overflow_data *data,
+-				unsigned long old_val)
++				void *old_val)
+ {
+ 	unsigned long flags;
+ 	char old_val_str[VALUE_LENGTH];
+@@ -237,8 +236,7 @@ EXPORT_SYMBOL(__ubsan_handle_negate_over
+ 
+ 
+ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+-				unsigned long lhs,
+-				unsigned long rhs)
++				void *lhs, void *rhs)
+ {
+ 	unsigned long flags;
+ 	char rhs_val_str[VALUE_LENGTH];
+@@ -323,7 +321,7 @@ static void ubsan_type_mismatch_common(s
+ }
+ 
+ void __ubsan_handle_type_mismatch(struct type_mismatch_data *data,
+-				unsigned long ptr)
++				void *ptr)
+ {
+ 	struct type_mismatch_data_common common_data = {
+ 		.location = &data->location,
+@@ -332,12 +330,12 @@ void __ubsan_handle_type_mismatch(struct
+ 		.type_check_kind = data->type_check_kind
+ 	};
+ 
+-	ubsan_type_mismatch_common(&common_data, ptr);
++	ubsan_type_mismatch_common(&common_data, (unsigned long)ptr);
+ }
+ EXPORT_SYMBOL(__ubsan_handle_type_mismatch);
+ 
+ void __ubsan_handle_type_mismatch_v1(struct type_mismatch_data_v1 *data,
+-				unsigned long ptr)
++				void *ptr)
+ {
+ 
+ 	struct type_mismatch_data_common common_data = {
+@@ -347,12 +345,12 @@ void __ubsan_handle_type_mismatch_v1(str
+ 		.type_check_kind = data->type_check_kind
+ 	};
+ 
+-	ubsan_type_mismatch_common(&common_data, ptr);
++	ubsan_type_mismatch_common(&common_data, (unsigned long)ptr);
+ }
+ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
+ 
+ void __ubsan_handle_vla_bound_not_positive(struct vla_bound_data *data,
+-					unsigned long bound)
++					void *bound)
+ {
+ 	unsigned long flags;
+ 	char bound_str[VALUE_LENGTH];
+@@ -369,8 +367,7 @@ void __ubsan_handle_vla_bound_not_positi
+ }
+ EXPORT_SYMBOL(__ubsan_handle_vla_bound_not_positive);
+ 
+-void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data,
+-				unsigned long index)
++void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
+ {
+ 	unsigned long flags;
+ 	char index_str[VALUE_LENGTH];
+@@ -388,7 +385,7 @@ void __ubsan_handle_out_of_bounds(struct
+ EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
+ 
+ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+-					unsigned long lhs, unsigned long rhs)
++					void *lhs, void *rhs)
+ {
+ 	unsigned long flags;
+ 	struct type_descriptor *rhs_type = data->rhs_type;
+@@ -439,7 +436,7 @@ void __ubsan_handle_builtin_unreachable(
+ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+ 
+ void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
+-				unsigned long val)
++				void *val)
+ {
+ 	unsigned long flags;
+ 	char val_str[VALUE_LENGTH];
 
 
