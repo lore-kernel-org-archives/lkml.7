@@ -2,112 +2,122 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C2EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ADBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37276217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8C6217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:44:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bmIfRFy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfEIVoR (ORCPT
+        id S1726962AbfEIVod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:44:17 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45284 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726219AbfEIVoQ (ORCPT
+        Thu, 9 May 2019 17:44:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36514 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfEIVoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:44:16 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x49LgY32008689
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 9 May 2019 17:42:35 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id B6256420024; Thu,  9 May 2019 17:42:33 -0400 (EDT)
-Date:   Thu, 9 May 2019 17:42:33 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Tim.Bird@sony.com, knut.omang@oracle.com,
-        gregkh@linuxfoundation.org, brendanhiggins@google.com,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190509214233.GA20877@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        brendanhiggins@google.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
-        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-References: <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
- <20190507080119.GB28121@kroah.com>
- <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
- <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+        Thu, 9 May 2019 17:44:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x49LiG3a106503;
+        Thu, 9 May 2019 16:44:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1557438256;
+        bh=Q9Z3Cdxba9fPA3W2vhRBY2VSHgjkNI6BHfKusWm8Mp4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bmIfRFy/ovPoRVIcnoCf8Y7JxDQqH7kkbi3CNdJjibENrV1yMOGIflHaS34rFdcI6
+         TnHtORV+qV6HC0PilD9ix7uV/TfWyYCXC9Vh/sJXbaohhJsp0RnFTTvXkXrvIvd3VG
+         8R/WiuMfVtuOEcq0cqGHo6B3xUhBL/6aFwF8goho=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x49LiG2J124075
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 May 2019 16:44:16 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 9 May
+ 2019 16:44:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 9 May 2019 16:44:16 -0500
+Received: from [10.250.146.137] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x49LiBmv083926;
+        Thu, 9 May 2019 16:44:12 -0500
+Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
+ backlight
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-api@vger.kernel.org>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
+ <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
+ <20190508171229.GA22024@amd> <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com>
+ <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
+ <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <962ec05e-b4ca-89b7-405c-f8a76f19427c@ti.com>
+Date:   Thu, 9 May 2019 16:44:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 11:12:12AM -0700, Frank Rowand wrote:
-> 
->    "My understanding is that the intent of KUnit is to avoid booting a kernel on
->    real hardware or in a virtual machine.  That seems to be a matter of semantics
->    to me because isn't invoking a UML Linux just running the Linux kernel in
->    a different form of virtualization?
-> 
->    So I do not understand why KUnit is an improvement over kselftest.
-> 
->    ...
-> 
->    What am I missing?"
+Andy
 
-One major difference: kselftest requires a userspace environment; it
-starts systemd, requires a root file system from which you can load
-modules, etc.  Kunit doesn't require a root file system; doesn't
-require that you start systemd; doesn't allow you to run arbitrary
-perl, python, bash, etc. scripts.  As such, it's much lighter weight
-than kselftest, and will have much less overhead before you can start
-running tests.  So it's not really the same kind of virtualization.
+On 5/9/19 4:06 PM, Andy Shevchenko wrote:
+> On Thu, May 9, 2019 at 11:45 PM Dan Murphy <dmurphy@ti.com> wrote:
+>> On 5/9/19 2:04 PM, Yurii Pavlovskyi wrote:
+>> We are working on a framework for this.
+>>
+>> Please see this series
+>> https://lore.kernel.org/patchwork/project/lkml/list/?series=390141
+>>
+>> It is still a work in progress
+> 
+> Side question:
+> Have you considered to convert existing color LED controllers? (It
+> seems to me that your proposal lacks of the idea to keep back
+> compatibility with the existing controllers whre user may create a
+> sysfs node based on the arbitrary label, while it's good to have
+> multicolor infrastructure like in your proposal. Did I miss
+> something?)
+> 
+> 
 
-Does this help?
+Yes that is part of the work that is in progress.
+The LED driver should be able to register either a single color LED or a group of colored LEDs.
 
-					- Ted
+This can be based on a firmware entry and which LED framework the driver chooses to register to. Either the
+multicolor framework or the base LED framework.  Of course we can put this in code and keep it
+out of the firmware nodes again thats why it is wip.
+
+I have convert a couple of drivers over in my testing that support RGB modules or have a RGB cluter used to mix
+colors.
+
+If the product wants to expose a single red LED via the label then they use legacy registration.
+If the product wants to expose RGBW as a single group then the multicolor framework should be registered too.
+
+
+Dan
