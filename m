@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2920C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF67DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B34320656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A860F20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428847;
-	bh=scQnLSil0ImaITJO60dTpxacwCQbUf+OJuPDTSNB3n4=;
+	s=default; t=1557428862;
+	bh=vF+lWQtoC6+UM7ZibawzX9nioyvhBcNcaLQEhoJC92I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TBNE+pSZmoD+2zwT2hIF63IcbhZscKO/o8/awU6+cJ9POxmuaXDS5HOHvvdwuCIto
-	 5x9P0DoqTBVwHCj4Cxy9v2jfMnE/68HB57H3SjTsw4ecDqq1dufhWnhZ5e1gZRn4KA
-	 Wl42ubUy55UugDLlkJBYTN5ahE+uUrRqIsmVv8iY=
+	b=WogdB5OFILIoC1ztprb+P0s7fwkjb04G7X/v5cpHpLPByORo8F0cX4C7+iX++KzWy
+	 B1J4azShQOIPvtPmnlZjj5P++eKaOuxR1yC3amsJZfoiJIv0bD/NdOxslrR/Jkdl+E
+	 RCIcMlo4qEHjl9y8HqnQ9PJDFrynXMKtOJaLSk0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfEITH0 (ORCPT
+        id S1727382AbfEISpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727442AbfEISpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:45:52 -0400
+        id S1726802AbfEISpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CFB21848;
-        Thu,  9 May 2019 18:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C617217F5;
+        Thu,  9 May 2019 18:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427551;
-        bh=scQnLSil0ImaITJO60dTpxacwCQbUf+OJuPDTSNB3n4=;
+        s=default; t=1557427535;
+        bh=vF+lWQtoC6+UM7ZibawzX9nioyvhBcNcaLQEhoJC92I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZnFvQ3yrB7YXehTzAl5SQTXTIqfQHdCHcs/FUE9onjbdRTsPNlzbKKsUDxIWarwH
-         62A0evFUcJcQFb2DyARVA4OSAstZYVdVowUMAvFA3DPOQDCQw308sMbzGKqcVNVVnw
-         aFFaw1G1L8cTeLBq7N/p+0b6JLoU+BRSlExjPnCo=
+        b=XcULc3VM9BSqD0Kb7E/vYLGAOHHke+ATKw+8cBS3gfNsXo9HorXo2mn1PJYkqHJ9K
+         Uhgi5GKA5htodJR4PMrM2TPnrSc9ZawMKmekn2nHQHzRhFRlXokrKXAh2ssyuuxg2M
+         /iCe2GwgrhcMTy9ADj6DPukWwupBQOcosJSnesKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/42] scsi: csiostor: fix missing data copy in csio_scsi_err_handler()
-Date:   Thu,  9 May 2019 20:42:13 +0200
-Message-Id: <20190509181257.517067473@linuxfoundation.org>
+Subject: [PATCH 4.14 19/42] xtensa: fix initialization of pt_regs::syscall in start_thread
+Date:   Thu,  9 May 2019 20:42:08 +0200
+Message-Id: <20190509181256.614576168@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -60,36 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5c2442fd78998af60e13aba506d103f7f43f8701 ]
+[ Upstream commit 2663147dc7465cb29040a05cc4286fdd839978b5 ]
 
-If scsi cmd sglist is not suitable for DDP then csiostor driver uses
-preallocated buffers for DDP, because of this data copy is required from
-DDP buffer to scsi cmd sglist before calling ->scsi_done().
+New pt_regs should indicate that there's no syscall, not that there's
+syscall #0. While at it wrap macro body in do/while and parenthesize
+macro arguments.
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_scsi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/xtensa/include/asm/processor.h | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_scsi.c b/drivers/scsi/csiostor/csio_scsi.c
-index dab0d3f9bee13..e09c7f360dbde 100644
---- a/drivers/scsi/csiostor/csio_scsi.c
-+++ b/drivers/scsi/csiostor/csio_scsi.c
-@@ -1713,8 +1713,11 @@ csio_scsi_err_handler(struct csio_hw *hw, struct csio_ioreq *req)
- 	}
+diff --git a/arch/xtensa/include/asm/processor.h b/arch/xtensa/include/asm/processor.h
+index a39cd81b741ad..3a0a8a53f2e72 100644
+--- a/arch/xtensa/include/asm/processor.h
++++ b/arch/xtensa/include/asm/processor.h
+@@ -195,15 +195,18 @@ struct thread_struct {
  
- out:
--	if (req->nsge > 0)
-+	if (req->nsge > 0) {
- 		scsi_dma_unmap(cmnd);
-+		if (req->dcopy && (host_status == DID_OK))
-+			host_status = csio_scsi_copy_to_sgl(hw, req);
-+	}
+ /* Clearing a0 terminates the backtrace. */
+ #define start_thread(regs, new_pc, new_sp) \
+-	memset(regs, 0, sizeof(*regs)); \
+-	regs->pc = new_pc; \
+-	regs->ps = USER_PS_VALUE; \
+-	regs->areg[1] = new_sp; \
+-	regs->areg[0] = 0; \
+-	regs->wmask = 1; \
+-	regs->depc = 0; \
+-	regs->windowbase = 0; \
+-	regs->windowstart = 1;
++	do { \
++		memset((regs), 0, sizeof(*(regs))); \
++		(regs)->pc = (new_pc); \
++		(regs)->ps = USER_PS_VALUE; \
++		(regs)->areg[1] = (new_sp); \
++		(regs)->areg[0] = 0; \
++		(regs)->wmask = 1; \
++		(regs)->depc = 0; \
++		(regs)->windowbase = 0; \
++		(regs)->windowstart = 1; \
++		(regs)->syscall = NO_SYSCALL; \
++	} while (0)
  
- 	cmnd->result = (((host_status) << 16) | scsi_status);
- 	cmnd->scsi_done(cmnd);
+ /* Forward declaration */
+ struct task_struct;
 -- 
 2.20.1
 
