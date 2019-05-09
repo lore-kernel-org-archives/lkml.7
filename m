@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5E6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E15C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94FB217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E68C217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427695;
-	bh=oyTjSecDC36hOUXR6U4y+GsvDs0eI8Nz8IgZeszoFVE=;
+	s=default; t=1557427699;
+	bh=r/gG9fHbgSH+e8w0+yw+2NRJygv2eH5liffGZQMgvFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glsTnZJwEM+KDCgxzZk0P0SnAXBqXPdpedlKYcVJ5kRue5SBrg1pP96lH7dm26h8W
-	 y4GunxMPbAVhYhnOHsHRLWk76NoNanPqocpRuvZzQY6EPbNHK7N4sse3kk+GZYjfhb
-	 rptk7AQnOrTBmunfZqrpEArMTOjm37YKVtT2xDEw=
+	b=HOAdaixhnKOMPw0WEFmlI8IEhxh2YHHbYMWHxrVAY1pZ1Zi0HjS+kkS724qpPLgeY
+	 ytjTupLAoG76/kHJs7KtIvFxNGqunSzWCJFKDQk7frdZQ9xfAS08O3w8ySymihzJFV
+	 5PNyVJPZe2u6tmv9FBTfUk+TE/2g1bZRtwgLOPik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfEISsN (ORCPT
+        id S1727996AbfEISsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41028 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfEISsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:11 -0400
+        id S1727525AbfEISsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38B5220578;
-        Thu,  9 May 2019 18:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3231217F5;
+        Thu,  9 May 2019 18:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427690;
-        bh=oyTjSecDC36hOUXR6U4y+GsvDs0eI8Nz8IgZeszoFVE=;
+        s=default; t=1557427693;
+        bh=r/gG9fHbgSH+e8w0+yw+2NRJygv2eH5liffGZQMgvFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EDZ7mWgVROzL6aWPt2il9XufgdH4U2efOli5mrdgMHG8iT14O7SrLCzWqVh9PIRO5
-         4WVf4X7Jb5KuAcQcmqw3sCGbmNbj3R7hL99+1CvcolH8HsE3WJNSv81/QraPvkEVr3
-         1GwkReVT8GGvBrZJppY1FqxlSCbVoLvAr4krJAHg=
+        b=oEDdUYVsX5e4P3xVO7ru4qzQ64fQVIhnYfEfsL8qIsQKx541+zci5GCDgNbQGQQIo
+         qdnladPp3RPdEYcmvDdPMVwf2oufrOqvXfBBcUumpxNSYxzkqqDIoJosfGNCms0hxe
+         XdjqeA+akDrOw++WZUh2hkUWBL+ppZIhgGgihHkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Tianci Yin <tianci.yin@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/66] ASoC: rockchip: pdm: fix regmap_ops hang issue
-Date:   Thu,  9 May 2019 20:42:08 +0200
-Message-Id: <20190509181305.487739394@linuxfoundation.org>
+Subject: [PATCH 4.19 34/66] drm/amd/display: fix cursor black issue
+Date:   Thu,  9 May 2019 20:42:09 +0200
+Message-Id: <20190509181305.612568910@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,33 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c85064435fe7a216ec0f0238ef2b8f7cd850a450 ]
+[ Upstream commit c1cefe115d1cdc460014483319d440b2f0d07c68 ]
 
-This is because set_fmt ops maybe called when PD is off,
-and in such case, regmap_ops will lead system hang.
-enale PD before doing regmap_ops.
+[Why]
+the member sdr_white_level of struct dc_cursor_attributes was not
+initialized, then the random value result that
+dcn10_set_cursor_sdr_white_level() set error hw_scale value 0x20D9(normal
+value is 0x3c00), this cause the black cursor issue.
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[how]
+just initilize the obj of struct dc_cursor_attributes to zero to avoid
+the random value.
+
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Tianci Yin <tianci.yin@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/rockchip/rockchip_pdm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
-index 400e29edb1c9c..8a2e3bbce3a16 100644
---- a/sound/soc/rockchip/rockchip_pdm.c
-+++ b/sound/soc/rockchip/rockchip_pdm.c
-@@ -208,7 +208,9 @@ static int rockchip_pdm_set_fmt(struct snd_soc_dai *cpu_dai,
- 		return -EINVAL;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 2b8b892eb846f..76ee2de43ea66 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4028,6 +4028,7 @@ static void handle_cursor_update(struct drm_plane *plane,
+ 	amdgpu_crtc->cursor_width = plane->state->crtc_w;
+ 	amdgpu_crtc->cursor_height = plane->state->crtc_h;
  
-+	pm_runtime_get_sync(cpu_dai->dev);
- 	regmap_update_bits(pdm->regmap, PDM_CLK_CTRL, mask, val);
-+	pm_runtime_put(cpu_dai->dev);
- 
- 	return 0;
- }
++	memset(&attributes, 0, sizeof(attributes));
+ 	attributes.address.high_part = upper_32_bits(address);
+ 	attributes.address.low_part  = lower_32_bits(address);
+ 	attributes.width             = plane->state->crtc_w;
 -- 
 2.20.1
 
