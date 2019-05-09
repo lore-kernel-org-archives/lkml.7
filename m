@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0093FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DADC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953E020675
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F46220675
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fesHRt60"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2uRpHG+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfEIR2J (ORCPT
+        id S1727073AbfEIR2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:28:09 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44074 "EHLO
+        Thu, 9 May 2019 13:28:11 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44072 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfEIR2I (ORCPT
+        with ESMTP id S1726698AbfEIR2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:28:08 -0400
+        Thu, 9 May 2019 13:28:10 -0400
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HJMt2162236;
-        Thu, 9 May 2019 17:27:49 GMT
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HJMtB162249;
+        Thu, 9 May 2019 17:27:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=FvwJdH247VIR+T7d8TULPFfutaAeqdcje9WExwJ1RHc=;
- b=fesHRt605BuU7kaQjJ33JtffhGU3oVjx2bxIZ9mfdG91NgEWIx/1+mU9UWZtlJFS9iyf
- VGGdqwyyHULxcM+K/tsFE7hiSuv8WT+oBtvY6kb3epYjI07oH5lHqwpaL2FsTzFIJdjo
- Sm9yjcncu7QSNhdQuUInprQ39Ns7I/HkcaP9RR8HucQg+ri3KXLpM53+u2TYCqBOILVt
- oojaxNmtyEzMNzCsTHmSS1ZKPVQQJHXXXZzmIUu7ztx0WWoFPOWugfLtEN32IxrEu54F
- JHGpbSI5IrM8G9l0bPz2bIxsntzximkwF7olKmmQhWSl9KnaUOsZhNcnyz1axZ5rE5jg /w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2s94b6cf9s-1
+ bh=qADDO5XbYDC5p6Cw305RMwRKa5GuJxNYpTDOSlCGey4=;
+ b=2uRpHG+0Oa6u+Fr3EJRP8c6OSt8R3D0E2fi3ueDJy/WY75/zcvKH1qnFqQHkZN6obTe6
+ xRa9STbdfb1Rs08NkmQxncRDrgOPI28d374A7sJLGroeBuO7IW5AEZcB1V737YX6PG0A
+ fR5Ihfeixd3mHNXgTYmhbMBstGkkV0DcrxGP1wgF50rxcH3rOT7DECAHHE4Sas+IEjev
+ 0rAa4A3046b5aWtMtUmFxir4DOV1YvM3oeUNR4b8ORMjd04nhT2pFehkrbjDlx/0UA22
+ 5qY69JwH4I5zMS7k3PKPEH7dCsw5UQ1URLRjDun8cYPxL1CsmX4xssEkgZ8uNkIgYFaS pw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2s94b6cf9m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 17:27:49 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HNxqa109565;
-        Thu, 9 May 2019 17:25:48 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2sagyvcg73-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 17:25:48 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x49HPlha019366;
+        Thu, 09 May 2019 17:27:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HP4lo119491;
         Thu, 9 May 2019 17:25:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2scpy5t23m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 May 2019 17:25:46 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x49HPkFf019362;
+        Thu, 9 May 2019 17:25:46 GMT
 Received: from aa1-ca-oracle-com.ca.oracle.com (/10.156.75.204)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 May 2019 10:25:47 -0700
+        with ESMTP ; Thu, 09 May 2019 10:25:46 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
 Cc:     jgross@suse.com, pbonzini@redhat.com, boris.ostrovsky@oracle.com,
         konrad.wilk@oracle.com, sstabellini@kernel.org,
         joao.m.martins@oracle.com, ankur.a.arora@oracle.com
-Subject: [RFC PATCH 15/16] xen/net: gnttab, evtchn, xenbus API changes
-Date:   Thu,  9 May 2019 10:25:39 -0700
-Message-Id: <20190509172540.12398-16-ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 14/16] xen/blk: gnttab, evtchn, xenbus API changes
+Date:   Thu,  9 May 2019 10:25:38 -0700
+Message-Id: <20190509172540.12398-15-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190509172540.12398-1-ankur.a.arora@oracle.com>
 References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
@@ -81,798 +81,683 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the most part, we now pass xenhost_t * as parameter.
+For the most part, we now pass xenhost_t * as a parameter.
 
 Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
- drivers/net/xen-netback/hash.c      |   7 +-
- drivers/net/xen-netback/interface.c |   7 +-
- drivers/net/xen-netback/netback.c   |  11 +--
- drivers/net/xen-netback/rx.c        |   3 +-
- drivers/net/xen-netback/xenbus.c    |  81 +++++++++++-----------
- drivers/net/xen-netfront.c          | 102 +++++++++++++++-------------
- 6 files changed, 117 insertions(+), 94 deletions(-)
+ drivers/block/xen-blkback/blkback.c |  34 +++++----
+ drivers/block/xen-blkback/common.h  |   2 +-
+ drivers/block/xen-blkback/xenbus.c  |  63 ++++++++---------
+ drivers/block/xen-blkfront.c        | 103 +++++++++++++++-------------
+ 4 files changed, 107 insertions(+), 95 deletions(-)
 
-diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
-index 0ccb021f1e78..93a449571ef3 100644
---- a/drivers/net/xen-netback/hash.c
-+++ b/drivers/net/xen-netback/hash.c
-@@ -289,6 +289,8 @@ u32 xenvif_set_hash_flags(struct xenvif *vif, u32 flags)
- u32 xenvif_set_hash_key(struct xenvif *vif, u32 gref, u32 len)
- {
- 	u8 *key = vif->hash.key;
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(vif);
-+
- 	struct gnttab_copy copy_op = {
- 		.source.u.ref = gref,
- 		.source.domid = vif->domid,
-@@ -303,7 +305,7 @@ u32 xenvif_set_hash_key(struct xenvif *vif, u32 gref, u32 len)
- 		return XEN_NETIF_CTRL_STATUS_INVALID_PARAMETER;
- 
- 	if (copy_op.len != 0) {
--		gnttab_batch_copy(&copy_op, 1);
-+		gnttab_batch_copy(dev->xh, &copy_op, 1);
- 
- 		if (copy_op.status != GNTST_okay)
- 			return XEN_NETIF_CTRL_STATUS_INVALID_PARAMETER;
-@@ -334,6 +336,7 @@ u32 xenvif_set_hash_mapping(struct xenvif *vif, u32 gref, u32 len,
- 			    u32 off)
- {
- 	u32 *mapping = vif->hash.mapping[!vif->hash.mapping_sel];
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(vif);
- 	unsigned int nr = 1;
- 	struct gnttab_copy copy_op[2] = {{
- 		.source.u.ref = gref,
-@@ -363,7 +366,7 @@ u32 xenvif_set_hash_mapping(struct xenvif *vif, u32 gref, u32 len,
- 	       vif->hash.size * sizeof(*mapping));
- 
- 	if (copy_op[0].len != 0) {
--		gnttab_batch_copy(copy_op, nr);
-+		gnttab_batch_copy(dev->xh, copy_op, nr);
- 
- 		if (copy_op[0].status != GNTST_okay ||
- 		    copy_op[nr - 1].status != GNTST_okay)
-diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-index 53d4e6351f1e..329a4c701042 100644
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -519,6 +519,7 @@ struct xenvif *xenvif_alloc(struct device *parent, domid_t domid,
- int xenvif_init_queue(struct xenvif_queue *queue)
- {
- 	int err, i;
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(queue->vif);
- 
- 	queue->credit_bytes = queue->remaining_credit = ~0UL;
- 	queue->credit_usec  = 0UL;
-@@ -542,7 +543,7 @@ int xenvif_init_queue(struct xenvif_queue *queue)
- 	 * better enable it. The long term solution would be to use just a
- 	 * bunch of valid page descriptors, without dependency on ballooning
- 	 */
--	err = gnttab_alloc_pages(MAX_PENDING_REQS,
-+	err = gnttab_alloc_pages(dev->xh, MAX_PENDING_REQS,
- 				 queue->mmap_pages);
- 	if (err) {
- 		netdev_err(queue->vif->dev, "Could not reserve mmap_pages\n");
-@@ -790,7 +791,9 @@ void xenvif_disconnect_ctrl(struct xenvif *vif)
-  */
- void xenvif_deinit_queue(struct xenvif_queue *queue)
- {
--	gnttab_free_pages(MAX_PENDING_REQS, queue->mmap_pages);
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(queue->vif);
-+
-+	gnttab_free_pages(dev->xh, MAX_PENDING_REQS, queue->mmap_pages);
+diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+index 7ad4423c24b8..d366a17a4bd8 100644
+--- a/drivers/block/xen-blkback/blkback.c
++++ b/drivers/block/xen-blkback/blkback.c
+@@ -142,7 +142,7 @@ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
+ 		HZ * xen_blkif_pgrant_timeout);
  }
  
- void xenvif_free(struct xenvif *vif)
-diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
-index 80aae3a32c2a..055de62ecbf5 100644
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1244,6 +1244,7 @@ static inline void xenvif_tx_dealloc_action(struct xenvif_queue *queue)
- 	pending_ring_idx_t dc, dp;
- 	u16 pending_idx, pending_idx_release[MAX_PENDING_REQS];
- 	unsigned int i = 0;
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(queue->vif);
- 
- 	dc = queue->dealloc_cons;
- 	gop = queue->tx_unmap_ops;
-@@ -1280,7 +1281,7 @@ static inline void xenvif_tx_dealloc_action(struct xenvif_queue *queue)
- 
- 	if (gop - queue->tx_unmap_ops > 0) {
- 		int ret;
--		ret = gnttab_unmap_refs(queue->tx_unmap_ops,
-+		ret = gnttab_unmap_refs(dev->xh, queue->tx_unmap_ops,
- 					NULL,
- 					queue->pages_to_unmap,
- 					gop - queue->tx_unmap_ops);
-@@ -1310,6 +1311,7 @@ int xenvif_tx_action(struct xenvif_queue *queue, int budget)
+-static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
++static inline int get_free_page(xenhost_t *xh, struct xen_blkif_ring *ring, struct page **page)
  {
- 	unsigned nr_mops, nr_cops = 0;
- 	int work_done, ret;
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(queue->vif);
+ 	unsigned long flags;
  
- 	if (unlikely(!tx_work_todo(queue)))
- 		return 0;
-@@ -1319,9 +1321,9 @@ int xenvif_tx_action(struct xenvif_queue *queue, int budget)
- 	if (nr_cops == 0)
- 		return 0;
- 
--	gnttab_batch_copy(queue->tx_copy_ops, nr_cops);
-+	gnttab_batch_copy(dev->xh, queue->tx_copy_ops, nr_cops);
- 	if (nr_mops != 0) {
--		ret = gnttab_map_refs(queue->tx_map_ops,
-+		ret = gnttab_map_refs(dev->xh, queue->tx_map_ops,
- 				      NULL,
- 				      queue->pages_to_map,
- 				      nr_mops);
-@@ -1391,6 +1393,7 @@ void xenvif_idx_unmap(struct xenvif_queue *queue, u16 pending_idx)
- {
- 	int ret;
- 	struct gnttab_unmap_grant_ref tx_unmap_op;
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(queue->vif);
- 
- 	gnttab_set_unmap_op(&tx_unmap_op,
- 			    idx_to_kaddr(queue, pending_idx),
-@@ -1398,7 +1401,7 @@ void xenvif_idx_unmap(struct xenvif_queue *queue, u16 pending_idx)
- 			    queue->grant_tx_handle[pending_idx]);
- 	xenvif_grant_handle_reset(queue, pending_idx);
- 
--	ret = gnttab_unmap_refs(&tx_unmap_op, NULL,
-+	ret = gnttab_unmap_refs(dev->xh, &tx_unmap_op, NULL,
- 				&queue->mmap_pages[pending_idx], 1);
- 	if (ret) {
- 		netdev_err(queue->vif->dev,
-diff --git a/drivers/net/xen-netback/rx.c b/drivers/net/xen-netback/rx.c
-index ef5887037b22..aa8fcbe315a6 100644
---- a/drivers/net/xen-netback/rx.c
-+++ b/drivers/net/xen-netback/rx.c
-@@ -134,8 +134,9 @@ static void xenvif_rx_copy_flush(struct xenvif_queue *queue)
- {
- 	unsigned int i;
- 	int notify;
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(queue->vif);
- 
--	gnttab_batch_copy(queue->rx_copy.op, queue->rx_copy.num);
-+	gnttab_batch_copy(dev->xh, queue->rx_copy.op, queue->rx_copy.num);
- 
- 	for (i = 0; i < queue->rx_copy.num; i++) {
- 		struct gnttab_copy *op;
-diff --git a/drivers/net/xen-netback/xenbus.c b/drivers/net/xen-netback/xenbus.c
-index 2625740bdc4a..09316c221db9 100644
---- a/drivers/net/xen-netback/xenbus.c
-+++ b/drivers/net/xen-netback/xenbus.c
-@@ -257,7 +257,7 @@ static int netback_remove(struct xenbus_device *dev)
- 	if (be->vif) {
- 		kobject_uevent(&dev->dev.kobj, KOBJ_OFFLINE);
- 		xen_unregister_watchers(be->vif);
--		xenbus_rm(XBT_NIL, dev->nodename, "hotplug-status");
-+		xenbus_rm(dev->xh, XBT_NIL, dev->nodename, "hotplug-status");
- 		xenvif_free(be->vif);
- 		be->vif = NULL;
+@@ -150,7 +150,7 @@ static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
+ 	if (list_empty(&ring->free_pages)) {
+ 		BUG_ON(ring->free_pages_num != 0);
+ 		spin_unlock_irqrestore(&ring->free_pages_lock, flags);
+-		return gnttab_alloc_pages(1, page);
++		return gnttab_alloc_pages(xh, 1, page);
  	}
-@@ -299,26 +299,26 @@ static int netback_probe(struct xenbus_device *dev,
- 	sg = 1;
+ 	BUG_ON(ring->free_pages_num == 0);
+ 	page[0] = list_first_entry(&ring->free_pages, struct page, lru);
+@@ -174,7 +174,7 @@ static inline void put_free_pages(struct xen_blkif_ring *ring, struct page **pag
+ 	spin_unlock_irqrestore(&ring->free_pages_lock, flags);
+ }
  
- 	do {
--		err = xenbus_transaction_start(&xbt);
-+		err = xenbus_transaction_start(dev->xh, &xbt);
- 		if (err) {
- 			xenbus_dev_fatal(dev, err, "starting transaction");
- 			goto fail;
+-static inline void shrink_free_pagepool(struct xen_blkif_ring *ring, int num)
++static inline void shrink_free_pagepool(xenhost_t *xh, struct xen_blkif_ring *ring, int num)
+ {
+ 	/* Remove requested pages in batches of NUM_BATCH_FREE_PAGES */
+ 	struct page *page[NUM_BATCH_FREE_PAGES];
+@@ -190,14 +190,14 @@ static inline void shrink_free_pagepool(struct xen_blkif_ring *ring, int num)
+ 		ring->free_pages_num--;
+ 		if (++num_pages == NUM_BATCH_FREE_PAGES) {
+ 			spin_unlock_irqrestore(&ring->free_pages_lock, flags);
+-			gnttab_free_pages(num_pages, page);
++			gnttab_free_pages(xh, num_pages, page);
+ 			spin_lock_irqsave(&ring->free_pages_lock, flags);
+ 			num_pages = 0;
+ 		}
+ 	}
+ 	spin_unlock_irqrestore(&ring->free_pages_lock, flags);
+ 	if (num_pages != 0)
+-		gnttab_free_pages(num_pages, page);
++		gnttab_free_pages(xh, num_pages, page);
+ }
+ 
+ #define vaddr(page) ((unsigned long)pfn_to_kaddr(page_to_pfn(page)))
+@@ -301,8 +301,8 @@ static void put_persistent_gnt(struct xen_blkif_ring *ring,
+ 	atomic_dec(&ring->persistent_gnt_in_use);
+ }
+ 
+-static void free_persistent_gnts(struct xen_blkif_ring *ring, struct rb_root *root,
+-                                 unsigned int num)
++static void free_persistent_gnts(xenhost_t *xh, struct xen_blkif_ring *ring,
++				struct rb_root *root, unsigned int num)
+ {
+ 	struct gnttab_unmap_grant_ref unmap[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+ 	struct page *pages[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+@@ -314,6 +314,7 @@ static void free_persistent_gnts(struct xen_blkif_ring *ring, struct rb_root *ro
+ 	unmap_data.pages = pages;
+ 	unmap_data.unmap_ops = unmap;
+ 	unmap_data.kunmap_ops = NULL;
++	unmap_data.xh = xh;
+ 
+ 	foreach_grant_safe(persistent_gnt, n, root, node) {
+ 		BUG_ON(persistent_gnt->handle ==
+@@ -351,10 +352,12 @@ void xen_blkbk_unmap_purged_grants(struct work_struct *work)
+ 	int segs_to_unmap = 0;
+ 	struct xen_blkif_ring *ring = container_of(work, typeof(*ring), persistent_purge_work);
+ 	struct gntab_unmap_queue_data unmap_data;
++	struct xenbus_device *dev = xen_blkbk_xenbus(ring->blkif->be);
+ 
+ 	unmap_data.pages = pages;
+ 	unmap_data.unmap_ops = unmap;
+ 	unmap_data.kunmap_ops = NULL;
++	unmap_data.xh = dev->xh;
+ 
+ 	while(!list_empty(&ring->persistent_purge_list)) {
+ 		persistent_gnt = list_first_entry(&ring->persistent_purge_list,
+@@ -615,6 +618,7 @@ int xen_blkif_schedule(void *arg)
+ 	struct xen_vbd *vbd = &blkif->vbd;
+ 	unsigned long timeout;
+ 	int ret;
++	struct xenbus_device *dev = xen_blkbk_xenbus(blkif->be);
+ 
+ 	set_freezable();
+ 	while (!kthread_should_stop()) {
+@@ -657,7 +661,7 @@ int xen_blkif_schedule(void *arg)
  		}
  
--		err = xenbus_printf(xbt, dev->nodename, "feature-sg", "%d", sg);
-+		err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-sg", "%d", sg);
- 		if (err) {
- 			message = "writing feature-sg";
- 			goto abort_transaction;
+ 		/* Shrink if we have more than xen_blkif_max_buffer_pages */
+-		shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
++		shrink_free_pagepool(dev->xh, ring, xen_blkif_max_buffer_pages);
+ 
+ 		if (log_stats && time_after(jiffies, ring->st_print))
+ 			print_stats(ring);
+@@ -677,18 +681,18 @@ int xen_blkif_schedule(void *arg)
+ /*
+  * Remove persistent grants and empty the pool of free pages
+  */
+-void xen_blkbk_free_caches(struct xen_blkif_ring *ring)
++void xen_blkbk_free_caches(xenhost_t *xh, struct xen_blkif_ring *ring)
+ {
+ 	/* Free all persistent grant pages */
+ 	if (!RB_EMPTY_ROOT(&ring->persistent_gnts))
+-		free_persistent_gnts(ring, &ring->persistent_gnts,
++		free_persistent_gnts(xh, ring, &ring->persistent_gnts,
+ 			ring->persistent_gnt_c);
+ 
+ 	BUG_ON(!RB_EMPTY_ROOT(&ring->persistent_gnts));
+ 	ring->persistent_gnt_c = 0;
+ 
+ 	/* Since we are shutting down remove all pages from the buffer */
+-	shrink_free_pagepool(ring, 0 /* All */);
++	shrink_free_pagepool(xh, ring, 0 /* All */);
+ }
+ 
+ static unsigned int xen_blkbk_unmap_prepare(
+@@ -784,6 +788,7 @@ static void xen_blkbk_unmap(struct xen_blkif_ring *ring,
+ 	struct gnttab_unmap_grant_ref unmap[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+ 	struct page *unmap_pages[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+ 	unsigned int invcount = 0;
++	struct xenbus_device *dev = xen_blkbk_xenbus(ring->blkif->be);
+ 	int ret;
+ 
+ 	while (num) {
+@@ -792,7 +797,7 @@ static void xen_blkbk_unmap(struct xen_blkif_ring *ring,
+ 		invcount = xen_blkbk_unmap_prepare(ring, pages, batch,
+ 						   unmap, unmap_pages);
+ 		if (invcount) {
+-			ret = gnttab_unmap_refs(unmap, NULL, unmap_pages, invcount);
++			ret = gnttab_unmap_refs(dev->xh, unmap, NULL, unmap_pages, invcount);
+ 			BUG_ON(ret);
+ 			put_free_pages(ring, unmap_pages, invcount);
+ 		}
+@@ -815,6 +820,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 	int last_map = 0, map_until = 0;
+ 	int use_persistent_gnts;
+ 	struct xen_blkif *blkif = ring->blkif;
++	struct xenbus_device *dev = xen_blkbk_xenbus(blkif->be); /* function call */
+ 
+ 	use_persistent_gnts = (blkif->vbd.feature_gnt_persistent);
+ 
+@@ -841,7 +847,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			pages[i]->page = persistent_gnt->page;
+ 			pages[i]->persistent_gnt = persistent_gnt;
+ 		} else {
+-			if (get_free_page(ring, &pages[i]->page))
++			if (get_free_page(dev->xh, ring, &pages[i]->page))
+ 				goto out_of_memory;
+ 			addr = vaddr(pages[i]->page);
+ 			pages_to_gnt[segs_to_map] = pages[i]->page;
+@@ -859,7 +865,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 	}
+ 
+ 	if (segs_to_map) {
+-		ret = gnttab_map_refs(map, NULL, pages_to_gnt, segs_to_map);
++		ret = gnttab_map_refs(dev->xh, map, NULL, pages_to_gnt, segs_to_map);
+ 		BUG_ON(ret);
+ 	}
+ 
+diff --git a/drivers/block/xen-blkback/common.h b/drivers/block/xen-blkback/common.h
+index 1d3002d773f7..633115888765 100644
+--- a/drivers/block/xen-blkback/common.h
++++ b/drivers/block/xen-blkback/common.h
+@@ -382,7 +382,7 @@ int xen_blkif_xenbus_init(void);
+ irqreturn_t xen_blkif_be_int(int irq, void *dev_id);
+ int xen_blkif_schedule(void *arg);
+ int xen_blkif_purge_persistent(void *arg);
+-void xen_blkbk_free_caches(struct xen_blkif_ring *ring);
++void xen_blkbk_free_caches(xenhost_t *xh, struct xen_blkif_ring *ring);
+ 
+ int xen_blkbk_flush_diskcache(struct xenbus_transaction xbt,
+ 			      struct backend_info *be, int state);
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index beea4272cfd3..a3ed34269b23 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -65,7 +65,7 @@ static int blkback_name(struct xen_blkif *blkif, char *buf)
+ 	char *devpath, *devname;
+ 	struct xenbus_device *dev = blkif->be->dev;
+ 
+-	devpath = xenbus_read(XBT_NIL, dev->nodename, "dev", NULL);
++	devpath = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "dev", NULL);
+ 	if (IS_ERR(devpath))
+ 		return PTR_ERR(devpath);
+ 
+@@ -246,6 +246,7 @@ static int xen_blkif_disconnect(struct xen_blkif *blkif)
+ 	struct pending_req *req, *n;
+ 	unsigned int j, r;
+ 	bool busy = false;
++	struct xenbus_device *dev = xen_blkbk_xenbus(blkif->be);
+ 
+ 	for (r = 0; r < blkif->nr_rings; r++) {
+ 		struct xen_blkif_ring *ring = &blkif->rings[r];
+@@ -279,7 +280,7 @@ static int xen_blkif_disconnect(struct xen_blkif *blkif)
  		}
  
--		err = xenbus_printf(xbt, dev->nodename, "feature-gso-tcpv4",
-+		err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-gso-tcpv4",
- 				    "%d", sg);
- 		if (err) {
- 			message = "writing feature-gso-tcpv4";
- 			goto abort_transaction;
- 		}
+ 		/* Remove all persistent grants and the cache of ballooned pages. */
+-		xen_blkbk_free_caches(ring);
++		xen_blkbk_free_caches(dev->xh, ring);
  
--		err = xenbus_printf(xbt, dev->nodename, "feature-gso-tcpv6",
-+		err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-gso-tcpv6",
- 				    "%d", sg);
- 		if (err) {
- 			message = "writing feature-gso-tcpv6";
-@@ -326,7 +326,7 @@ static int netback_probe(struct xenbus_device *dev,
- 		}
+ 		/* Check that there is no request in use */
+ 		list_for_each_entry_safe(req, n, &ring->pending_free, free_list) {
+@@ -507,7 +508,7 @@ static int xen_blkbk_remove(struct xenbus_device *dev)
+ 		xenvbd_sysfs_delif(dev);
  
- 		/* We support partial checksum setup for IPv6 packets */
+ 	if (be->backend_watch.node) {
+-		unregister_xenbus_watch(&be->backend_watch);
++		unregister_xenbus_watch(dev->xh, &be->backend_watch);
+ 		kfree(be->backend_watch.node);
+ 		be->backend_watch.node = NULL;
+ 	}
+@@ -530,7 +531,7 @@ int xen_blkbk_flush_diskcache(struct xenbus_transaction xbt,
+ 	struct xenbus_device *dev = be->dev;
+ 	int err;
+ 
+-	err = xenbus_printf(xbt, dev->nodename, "feature-flush-cache",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-flush-cache",
+ 			    "%d", state);
+ 	if (err)
+ 		dev_warn(&dev->dev, "writing feature-flush-cache (%d)", err);
+@@ -547,18 +548,18 @@ static void xen_blkbk_discard(struct xenbus_transaction xbt, struct backend_info
+ 	struct block_device *bdev = be->blkif->vbd.bdev;
+ 	struct request_queue *q = bdev_get_queue(bdev);
+ 
+-	if (!xenbus_read_unsigned(dev->nodename, "discard-enable", 1))
++	if (!xenbus_read_unsigned(dev->xh, dev->nodename, "discard-enable", 1))
+ 		return;
+ 
+ 	if (blk_queue_discard(q)) {
 -		err = xenbus_printf(xbt, dev->nodename,
 +		err = xenbus_printf(dev->xh, xbt, dev->nodename,
- 				    "feature-ipv6-csum-offload",
- 				    "%d", 1);
+ 			"discard-granularity", "%u",
+ 			q->limits.discard_granularity);
  		if (err) {
-@@ -335,7 +335,7 @@ static int netback_probe(struct xenbus_device *dev,
+ 			dev_warn(&dev->dev, "writing discard-granularity (%d)", err);
+ 			return;
  		}
- 
- 		/* We support rx-copy path. */
 -		err = xenbus_printf(xbt, dev->nodename,
 +		err = xenbus_printf(dev->xh, xbt, dev->nodename,
- 				    "feature-rx-copy", "%d", 1);
+ 			"discard-alignment", "%u",
+ 			q->limits.discard_alignment);
  		if (err) {
- 			message = "writing feature-rx-copy";
-@@ -346,7 +346,7 @@ static int netback_probe(struct xenbus_device *dev,
- 		 * We don't support rx-flip path (except old guests who don't
- 		 * grok this feature flag).
- 		 */
+@@ -567,7 +568,7 @@ static void xen_blkbk_discard(struct xenbus_transaction xbt, struct backend_info
+ 		}
+ 		state = 1;
+ 		/* Optional. */
 -		err = xenbus_printf(xbt, dev->nodename,
 +		err = xenbus_printf(dev->xh, xbt, dev->nodename,
- 				    "feature-rx-flip", "%d", 0);
+ 				    "discard-secure", "%d",
+ 				    blkif->vbd.discard_secure);
  		if (err) {
- 			message = "writing feature-rx-flip";
-@@ -354,14 +354,14 @@ static int netback_probe(struct xenbus_device *dev,
+@@ -575,7 +576,7 @@ static void xen_blkbk_discard(struct xenbus_transaction xbt, struct backend_info
+ 			return;
  		}
+ 	}
+-	err = xenbus_printf(xbt, dev->nodename, "feature-discard",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-discard",
+ 			    "%d", state);
+ 	if (err)
+ 		dev_warn(&dev->dev, "writing feature-discard (%d)", err);
+@@ -586,7 +587,7 @@ int xen_blkbk_barrier(struct xenbus_transaction xbt,
+ 	struct xenbus_device *dev = be->dev;
+ 	int err;
  
- 		/* We support dynamic multicast-control. */
--		err = xenbus_printf(xbt, dev->nodename,
-+		err = xenbus_printf(dev->xh, xbt, dev->nodename,
- 				    "feature-multicast-control", "%d", 1);
- 		if (err) {
- 			message = "writing feature-multicast-control";
- 			goto abort_transaction;
- 		}
+-	err = xenbus_printf(xbt, dev->nodename, "feature-barrier",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-barrier",
+ 			    "%d", state);
+ 	if (err)
+ 		dev_warn(&dev->dev, "writing feature-barrier (%d)", err);
+@@ -625,7 +626,7 @@ static int xen_blkbk_probe(struct xenbus_device *dev,
+ 		goto fail;
+ 	}
  
--		err = xenbus_printf(xbt, dev->nodename,
-+		err = xenbus_printf(dev->xh, xbt, dev->nodename,
- 				    "feature-dynamic-multicast-control",
- 				    "%d", 1);
- 		if (err) {
-@@ -369,7 +369,7 @@ static int netback_probe(struct xenbus_device *dev,
- 			goto abort_transaction;
- 		}
+-	err = xenbus_printf(XBT_NIL, dev->nodename,
++	err = xenbus_printf(dev->xh, XBT_NIL, dev->nodename,
+ 			    "feature-max-indirect-segments", "%u",
+ 			    MAX_INDIRECT_SEGMENTS);
+ 	if (err)
+@@ -634,7 +635,7 @@ static int xen_blkbk_probe(struct xenbus_device *dev,
+ 			 dev->nodename, err);
  
--		err = xenbus_transaction_end(xbt, 0);
-+		err = xenbus_transaction_end(dev->xh, xbt, 0);
- 	} while (err == -EAGAIN);
+ 	/* Multi-queue: advertise how many queues are supported by us.*/
+-	err = xenbus_printf(XBT_NIL, dev->nodename,
++	err = xenbus_printf(dev->xh, XBT_NIL, dev->nodename,
+ 			    "multi-queue-max-queues", "%u", xenblk_max_queues);
+ 	if (err)
+ 		pr_warn("Error writing multi-queue-max-queues\n");
+@@ -647,7 +648,7 @@ static int xen_blkbk_probe(struct xenbus_device *dev,
+ 	if (err)
+ 		goto fail;
  
+-	err = xenbus_printf(XBT_NIL, dev->nodename, "max-ring-page-order", "%u",
++	err = xenbus_printf(dev->xh, XBT_NIL, dev->nodename, "max-ring-page-order", "%u",
+ 			    xen_blkif_max_ring_order);
+ 	if (err)
+ 		pr_warn("%s write out 'max-ring-page-order' failed\n", __func__);
+@@ -685,7 +686,7 @@ static void backend_changed(struct xenbus_watch *watch,
+ 
+ 	pr_debug("%s %p %d\n", __func__, dev, dev->otherend_id);
+ 
+-	err = xenbus_scanf(XBT_NIL, dev->nodename, "physical-device", "%x:%x",
++	err = xenbus_scanf(dev->xh, XBT_NIL, dev->nodename, "physical-device", "%x:%x",
+ 			   &major, &minor);
+ 	if (XENBUS_EXIST_ERR(err)) {
+ 		/*
+@@ -707,7 +708,7 @@ static void backend_changed(struct xenbus_watch *watch,
+ 		return;
+ 	}
+ 
+-	be->mode = xenbus_read(XBT_NIL, dev->nodename, "mode", NULL);
++	be->mode = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "mode", NULL);
+ 	if (IS_ERR(be->mode)) {
+ 		err = PTR_ERR(be->mode);
+ 		be->mode = NULL;
+@@ -715,7 +716,7 @@ static void backend_changed(struct xenbus_watch *watch,
+ 		return;
+ 	}
+ 
+-	device_type = xenbus_read(XBT_NIL, dev->otherend, "device-type", NULL);
++	device_type = xenbus_read(dev->xh, XBT_NIL, dev->otherend, "device-type", NULL);
+ 	if (!IS_ERR(device_type)) {
+ 		cdrom = strcmp(device_type, "cdrom") == 0;
+ 		kfree(device_type);
+@@ -849,7 +850,7 @@ static void connect(struct backend_info *be)
+ 
+ 	/* Supply the information about the device the frontend needs */
+ again:
+-	err = xenbus_transaction_start(&xbt);
++	err = xenbus_transaction_start(dev->xh, &xbt);
  	if (err) {
-@@ -381,25 +381,25 @@ static int netback_probe(struct xenbus_device *dev,
- 	 * Split event channels support, this is optional so it is not
- 	 * put inside the above loop.
+ 		xenbus_dev_fatal(dev, err, "starting transaction");
+ 		return;
+@@ -862,14 +863,14 @@ static void connect(struct backend_info *be)
+ 
+ 	xen_blkbk_barrier(xbt, be, be->blkif->vbd.flush_support);
+ 
+-	err = xenbus_printf(xbt, dev->nodename, "feature-persistent", "%u", 1);
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-persistent", "%u", 1);
+ 	if (err) {
+ 		xenbus_dev_fatal(dev, err, "writing %s/feature-persistent",
+ 				 dev->nodename);
+ 		goto abort;
+ 	}
+ 
+-	err = xenbus_printf(xbt, dev->nodename, "sectors", "%llu",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "sectors", "%llu",
+ 			    (unsigned long long)vbd_sz(&be->blkif->vbd));
+ 	if (err) {
+ 		xenbus_dev_fatal(dev, err, "writing %s/sectors",
+@@ -878,7 +879,7 @@ static void connect(struct backend_info *be)
+ 	}
+ 
+ 	/* FIXME: use a typename instead */
+-	err = xenbus_printf(xbt, dev->nodename, "info", "%u",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "info", "%u",
+ 			    be->blkif->vbd.type |
+ 			    (be->blkif->vbd.readonly ? VDISK_READONLY : 0));
+ 	if (err) {
+@@ -886,7 +887,7 @@ static void connect(struct backend_info *be)
+ 				 dev->nodename);
+ 		goto abort;
+ 	}
+-	err = xenbus_printf(xbt, dev->nodename, "sector-size", "%lu",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "sector-size", "%lu",
+ 			    (unsigned long)
+ 			    bdev_logical_block_size(be->blkif->vbd.bdev));
+ 	if (err) {
+@@ -894,13 +895,13 @@ static void connect(struct backend_info *be)
+ 				 dev->nodename);
+ 		goto abort;
+ 	}
+-	err = xenbus_printf(xbt, dev->nodename, "physical-sector-size", "%u",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "physical-sector-size", "%u",
+ 			    bdev_physical_block_size(be->blkif->vbd.bdev));
+ 	if (err)
+ 		xenbus_dev_error(dev, err, "writing %s/physical-sector-size",
+ 				 dev->nodename);
+ 
+-	err = xenbus_transaction_end(xbt, 0);
++	err = xenbus_transaction_end(dev->xh, xbt, 0);
+ 	if (err == -EAGAIN)
+ 		goto again;
+ 	if (err)
+@@ -913,7 +914,7 @@ static void connect(struct backend_info *be)
+ 
+ 	return;
+  abort:
+-	xenbus_transaction_end(xbt, 1);
++	xenbus_transaction_end(dev->xh, xbt, 1);
+ }
+ 
+ /*
+@@ -928,7 +929,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 	struct xenbus_device *dev = blkif->be->dev;
+ 	unsigned int ring_page_order, nr_grefs, evtchn;
+ 
+-	err = xenbus_scanf(XBT_NIL, dir, "event-channel", "%u",
++	err = xenbus_scanf(dev->xh, XBT_NIL, dir, "event-channel", "%u",
+ 			  &evtchn);
+ 	if (err != 1) {
+ 		err = -EINVAL;
+@@ -936,10 +937,10 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 		return err;
+ 	}
+ 
+-	err = xenbus_scanf(XBT_NIL, dev->otherend, "ring-page-order", "%u",
++	err = xenbus_scanf(dev->xh, XBT_NIL, dev->otherend, "ring-page-order", "%u",
+ 			  &ring_page_order);
+ 	if (err != 1) {
+-		err = xenbus_scanf(XBT_NIL, dir, "ring-ref", "%u", &ring_ref[0]);
++		err = xenbus_scanf(dev->xh, XBT_NIL, dir, "ring-ref", "%u", &ring_ref[0]);
+ 		if (err != 1) {
+ 			err = -EINVAL;
+ 			xenbus_dev_fatal(dev, err, "reading %s/ring-ref", dir);
+@@ -962,7 +963,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 			char ring_ref_name[RINGREF_NAME_LEN];
+ 
+ 			snprintf(ring_ref_name, RINGREF_NAME_LEN, "ring-ref%u", i);
+-			err = xenbus_scanf(XBT_NIL, dir, ring_ref_name,
++			err = xenbus_scanf(dev->xh, XBT_NIL, dir, ring_ref_name,
+ 					   "%u", &ring_ref[i]);
+ 			if (err != 1) {
+ 				err = -EINVAL;
+@@ -1034,7 +1035,7 @@ static int connect_ring(struct backend_info *be)
+ 	pr_debug("%s %s\n", __func__, dev->otherend);
+ 
+ 	be->blkif->blk_protocol = BLKIF_PROTOCOL_DEFAULT;
+-	err = xenbus_scanf(XBT_NIL, dev->otherend, "protocol",
++	err = xenbus_scanf(dev->xh, XBT_NIL, dev->otherend, "protocol",
+ 			   "%63s", protocol);
+ 	if (err <= 0)
+ 		strcpy(protocol, "unspecified, assuming default");
+@@ -1048,7 +1049,7 @@ static int connect_ring(struct backend_info *be)
+ 		xenbus_dev_fatal(dev, err, "unknown fe protocol %s", protocol);
+ 		return -ENOSYS;
+ 	}
+-	pers_grants = xenbus_read_unsigned(dev->otherend, "feature-persistent",
++	pers_grants = xenbus_read_unsigned(dev->xh, dev->otherend, "feature-persistent",
+ 					   0);
+ 	be->blkif->vbd.feature_gnt_persistent = pers_grants;
+ 	be->blkif->vbd.overflow_max_grants = 0;
+@@ -1056,7 +1057,7 @@ static int connect_ring(struct backend_info *be)
+ 	/*
+ 	 * Read the number of hardware queues from frontend.
  	 */
--	err = xenbus_printf(XBT_NIL, dev->nodename,
-+	err = xenbus_printf(dev->xh, XBT_NIL, dev->nodename,
- 			    "feature-split-event-channels",
- 			    "%u", separate_tx_rx_irq);
- 	if (err)
- 		pr_debug("Error writing feature-split-event-channels\n");
+-	requested_num_queues = xenbus_read_unsigned(dev->otherend,
++	requested_num_queues = xenbus_read_unsigned(dev->xh, dev->otherend,
+ 						    "multi-queue-num-queues",
+ 						    1);
+ 	if (requested_num_queues > xenblk_max_queues
+diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+index a06716424023..3929370d1f2f 100644
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -341,10 +341,11 @@ static struct grant *get_free_grant(struct blkfront_ring_info *rinfo)
+ 	return gnt_list_entry;
+ }
  
- 	/* Multi-queue support: This is an optional feature. */
--	err = xenbus_printf(XBT_NIL, dev->nodename,
-+	err = xenbus_printf(dev->xh, XBT_NIL, dev->nodename,
- 			    "multi-queue-max-queues", "%u", xenvif_max_queues);
- 	if (err)
- 		pr_debug("Error writing multi-queue-max-queues\n");
+-static inline void grant_foreign_access(const struct grant *gnt_list_entry,
++static inline void grant_foreign_access(xenhost_t *xh,
++					const struct grant *gnt_list_entry,
+ 					const struct blkfront_info *info)
+ {
+-	gnttab_page_grant_foreign_access_ref_one(gnt_list_entry->gref,
++	gnttab_page_grant_foreign_access_ref_one(xh, gnt_list_entry->gref,
+ 						 info->xbdev->otherend_id,
+ 						 gnt_list_entry->page,
+ 						 0);
+@@ -361,13 +362,13 @@ static struct grant *get_grant(grant_ref_t *gref_head,
+ 		return gnt_list_entry;
  
--	err = xenbus_printf(XBT_NIL, dev->nodename,
-+	err = xenbus_printf(dev->xh, XBT_NIL, dev->nodename,
- 			    "feature-ctrl-ring",
- 			    "%u", true);
- 	if (err)
- 		pr_debug("Error writing feature-ctrl-ring\n");
+ 	/* Assign a gref to this page */
+-	gnt_list_entry->gref = gnttab_claim_grant_reference(gref_head);
++	gnt_list_entry->gref = gnttab_claim_grant_reference(info->xbdev->xh, gref_head);
+ 	BUG_ON(gnt_list_entry->gref == -ENOSPC);
+ 	if (info->feature_persistent)
+-		grant_foreign_access(gnt_list_entry, info);
++		grant_foreign_access(info->xbdev->xh, gnt_list_entry, info);
+ 	else {
+ 		/* Grant access to the GFN passed by the caller */
+-		gnttab_grant_foreign_access_ref(gnt_list_entry->gref,
++		gnttab_grant_foreign_access_ref(info->xbdev->xh, gnt_list_entry->gref,
+ 						info->xbdev->otherend_id,
+ 						gfn, 0);
+ 	}
+@@ -385,7 +386,7 @@ static struct grant *get_indirect_grant(grant_ref_t *gref_head,
+ 		return gnt_list_entry;
  
--	script = xenbus_read(XBT_NIL, dev->nodename, "script", NULL);
-+	script = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "script", NULL);
- 	if (IS_ERR(script)) {
- 		err = PTR_ERR(script);
- 		xenbus_dev_fatal(dev, err, "reading script");
-@@ -417,7 +417,7 @@ static int netback_probe(struct xenbus_device *dev,
+ 	/* Assign a gref to this page */
+-	gnt_list_entry->gref = gnttab_claim_grant_reference(gref_head);
++	gnt_list_entry->gref = gnttab_claim_grant_reference(info->xbdev->xh, gref_head);
+ 	BUG_ON(gnt_list_entry->gref == -ENOSPC);
+ 	if (!info->feature_persistent) {
+ 		struct page *indirect_page;
+@@ -397,7 +398,7 @@ static struct grant *get_indirect_grant(grant_ref_t *gref_head,
+ 		list_del(&indirect_page->lru);
+ 		gnt_list_entry->page = indirect_page;
+ 	}
+-	grant_foreign_access(gnt_list_entry, info);
++	grant_foreign_access(info->xbdev->xh, gnt_list_entry, info);
+ 
+ 	return gnt_list_entry;
+ }
+@@ -723,10 +724,10 @@ static int blkif_queue_rw_req(struct request *req, struct blkfront_ring_info *ri
+ 	if (rinfo->persistent_gnts_c < max_grefs) {
+ 		new_persistent_gnts = true;
+ 
+-		if (gnttab_alloc_grant_references(
++		if (gnttab_alloc_grant_references(info->xbdev->xh,
+ 		    max_grefs - rinfo->persistent_gnts_c,
+ 		    &setup.gref_head) < 0) {
+-			gnttab_request_free_callback(
++			gnttab_request_free_callback(info->xbdev->xh,
+ 				&rinfo->callback,
+ 				blkif_restart_queue_callback,
+ 				rinfo,
+@@ -835,7 +836,7 @@ static int blkif_queue_rw_req(struct request *req, struct blkfront_ring_info *ri
+ 		rinfo->shadow[extra_id].req = *extra_ring_req;
+ 
+ 	if (new_persistent_gnts)
+-		gnttab_free_grant_references(setup.gref_head);
++		gnttab_free_grant_references(info->xbdev->xh, setup.gref_head);
+ 
+ 	return 0;
+ }
+@@ -1195,7 +1196,7 @@ static void xlvbd_release_gendisk(struct blkfront_info *info)
+ 		struct blkfront_ring_info *rinfo = &info->rinfo[i];
+ 
+ 		/* No more gnttab callback work. */
+-		gnttab_cancel_free_callback(&rinfo->callback);
++		gnttab_cancel_free_callback(info->xbdev->xh, &rinfo->callback);
+ 
+ 		/* Flush gnttab callback work. Must be done with no locks held. */
+ 		flush_work(&rinfo->work);
+@@ -1265,7 +1266,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
+ 					 &rinfo->grants, node) {
+ 			list_del(&persistent_gnt->node);
+ 			if (persistent_gnt->gref != GRANT_INVALID_REF) {
+-				gnttab_end_foreign_access(persistent_gnt->gref,
++				gnttab_end_foreign_access(info->xbdev->xh, persistent_gnt->gref,
+ 							  0, 0UL);
+ 				rinfo->persistent_gnts_c--;
+ 			}
+@@ -1289,7 +1290,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
+ 		       rinfo->shadow[i].req.u.rw.nr_segments;
+ 		for (j = 0; j < segs; j++) {
+ 			persistent_gnt = rinfo->shadow[i].grants_used[j];
+-			gnttab_end_foreign_access(persistent_gnt->gref, 0, 0UL);
++			gnttab_end_foreign_access(info->xbdev->xh, persistent_gnt->gref, 0, 0UL);
+ 			if (info->feature_persistent)
+ 				__free_page(persistent_gnt->page);
+ 			kfree(persistent_gnt);
+@@ -1304,7 +1305,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
+ 
+ 		for (j = 0; j < INDIRECT_GREFS(segs); j++) {
+ 			persistent_gnt = rinfo->shadow[i].indirect_grants[j];
+-			gnttab_end_foreign_access(persistent_gnt->gref, 0, 0UL);
++			gnttab_end_foreign_access(info->xbdev->xh, persistent_gnt->gref, 0, 0UL);
+ 			__free_page(persistent_gnt->page);
+ 			kfree(persistent_gnt);
+ 		}
+@@ -1319,7 +1320,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
+ 	}
+ 
+ 	/* No more gnttab callback work. */
+-	gnttab_cancel_free_callback(&rinfo->callback);
++	gnttab_cancel_free_callback(info->xbdev->xh, &rinfo->callback);
+ 
+ 	/* Flush gnttab callback work. Must be done with no locks held. */
+ 	flush_work(&rinfo->work);
+@@ -1327,7 +1328,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
+ 	/* Free resources associated with old device channel. */
+ 	for (i = 0; i < info->nr_ring_pages; i++) {
+ 		if (rinfo->ring_ref[i] != GRANT_INVALID_REF) {
+-			gnttab_end_foreign_access(rinfo->ring_ref[i], 0, 0);
++			gnttab_end_foreign_access(info->xbdev->xh, rinfo->ring_ref[i], 0, 0);
+ 			rinfo->ring_ref[i] = GRANT_INVALID_REF;
+ 		}
+ 	}
+@@ -1491,7 +1492,7 @@ static bool blkif_completion(unsigned long *id,
+ 	}
+ 	/* Add the persistent grant into the list of free grants */
+ 	for (i = 0; i < num_grant; i++) {
+-		if (gnttab_query_foreign_access(s->grants_used[i]->gref)) {
++		if (gnttab_query_foreign_access(info->xbdev->xh, s->grants_used[i]->gref)) {
+ 			/*
+ 			 * If the grant is still mapped by the backend (the
+ 			 * backend has chosen to make this grant persistent)
+@@ -1510,14 +1511,14 @@ static bool blkif_completion(unsigned long *id,
+ 			 * so it will not be picked again unless we run out of
+ 			 * persistent grants.
+ 			 */
+-			gnttab_end_foreign_access(s->grants_used[i]->gref, 0, 0UL);
++			gnttab_end_foreign_access(info->xbdev->xh, s->grants_used[i]->gref, 0, 0UL);
+ 			s->grants_used[i]->gref = GRANT_INVALID_REF;
+ 			list_add_tail(&s->grants_used[i]->node, &rinfo->grants);
+ 		}
+ 	}
+ 	if (s->req.operation == BLKIF_OP_INDIRECT) {
+ 		for (i = 0; i < INDIRECT_GREFS(num_grant); i++) {
+-			if (gnttab_query_foreign_access(s->indirect_grants[i]->gref)) {
++			if (gnttab_query_foreign_access(info->xbdev->xh, s->indirect_grants[i]->gref)) {
+ 				if (!info->feature_persistent)
+ 					pr_alert_ratelimited("backed has not unmapped grant: %u\n",
+ 							     s->indirect_grants[i]->gref);
+@@ -1526,7 +1527,7 @@ static bool blkif_completion(unsigned long *id,
+ 			} else {
+ 				struct page *indirect_page;
+ 
+-				gnttab_end_foreign_access(s->indirect_grants[i]->gref, 0, 0UL);
++				gnttab_end_foreign_access(info->xbdev->xh, s->indirect_grants[i]->gref, 0, 0UL);
+ 				/*
+ 				 * Add the used indirect page back to the list of
+ 				 * available pages for indirect grefs.
+@@ -1726,9 +1727,10 @@ static int write_per_ring_nodes(struct xenbus_transaction xbt,
+ 	unsigned int i;
+ 	const char *message = NULL;
+ 	struct blkfront_info *info = rinfo->dev_info;
++	xenhost_t *xh = info->xbdev->xh;
+ 
+ 	if (info->nr_ring_pages == 1) {
+-		err = xenbus_printf(xbt, dir, "ring-ref", "%u", rinfo->ring_ref[0]);
++		err = xenbus_printf(xh, xbt, dir, "ring-ref", "%u", rinfo->ring_ref[0]);
+ 		if (err) {
+ 			message = "writing ring-ref";
+ 			goto abort_transaction;
+@@ -1738,7 +1740,7 @@ static int write_per_ring_nodes(struct xenbus_transaction xbt,
+ 			char ring_ref_name[RINGREF_NAME_LEN];
+ 
+ 			snprintf(ring_ref_name, RINGREF_NAME_LEN, "ring-ref%u", i);
+-			err = xenbus_printf(xbt, dir, ring_ref_name,
++			err = xenbus_printf(xh, xbt, dir, ring_ref_name,
+ 					    "%u", rinfo->ring_ref[i]);
+ 			if (err) {
+ 				message = "writing ring-ref";
+@@ -1747,7 +1749,7 @@ static int write_per_ring_nodes(struct xenbus_transaction xbt,
+ 		}
+ 	}
+ 
+-	err = xenbus_printf(xbt, dir, "event-channel", "%u", rinfo->evtchn);
++	err = xenbus_printf(xh, xbt, dir, "event-channel", "%u", rinfo->evtchn);
+ 	if (err) {
+ 		message = "writing event-channel";
+ 		goto abort_transaction;
+@@ -1756,7 +1758,7 @@ static int write_per_ring_nodes(struct xenbus_transaction xbt,
  	return 0;
  
  abort_transaction:
 -	xenbus_transaction_end(xbt, 1);
-+	xenbus_transaction_end(dev->xh, xbt, 1);
- 	xenbus_dev_fatal(dev, err, "%s", message);
- fail:
- 	pr_debug("failed\n");
-@@ -459,7 +459,7 @@ static int backend_create_xenvif(struct backend_info *be)
- 	if (be->vif != NULL)
- 		return 0;
- 
--	err = xenbus_scanf(XBT_NIL, dev->nodename, "handle", "%li", &handle);
-+	err = xenbus_scanf(dev->xh, XBT_NIL, dev->nodename, "handle", "%li", &handle);
- 	if (err != 1) {
- 		xenbus_dev_fatal(dev, err, "reading handle");
- 		return (err < 0) ? err : -EINVAL;
-@@ -680,7 +680,7 @@ static void xen_net_read_rate(struct xenbus_device *dev,
- 	*bytes = ~0UL;
- 	*usec = 0;
- 
--	ratestr = xenbus_read(XBT_NIL, dev->nodename, "rate", NULL);
-+	ratestr = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "rate", NULL);
- 	if (IS_ERR(ratestr))
- 		return;
- 
-@@ -710,7 +710,7 @@ static int xen_net_read_mac(struct xenbus_device *dev, u8 mac[])
- 	char *s, *e, *macstr;
- 	int i;
- 
--	macstr = s = xenbus_read(XBT_NIL, dev->nodename, "mac", NULL);
-+	macstr = s = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "mac", NULL);
- 	if (IS_ERR(macstr))
- 		return PTR_ERR(macstr);
- 
-@@ -765,7 +765,7 @@ static int xen_register_credit_watch(struct xenbus_device *dev,
- 	snprintf(node, maxlen, "%s/rate", dev->nodename);
- 	vif->credit_watch.node = node;
- 	vif->credit_watch.callback = xen_net_rate_changed;
--	err = register_xenbus_watch(&vif->credit_watch);
-+	err = register_xenbus_watch(dev->xh, &vif->credit_watch);
- 	if (err) {
- 		pr_err("Failed to set watcher %s\n", vif->credit_watch.node);
- 		kfree(node);
-@@ -777,8 +777,9 @@ static int xen_register_credit_watch(struct xenbus_device *dev,
- 
- static void xen_unregister_credit_watch(struct xenvif *vif)
- {
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(vif);
- 	if (vif->credit_watch.node) {
--		unregister_xenbus_watch(&vif->credit_watch);
-+		unregister_xenbus_watch(dev->xh, &vif->credit_watch);
- 		kfree(vif->credit_watch.node);
- 		vif->credit_watch.node = NULL;
- 	}
-@@ -791,7 +792,7 @@ static void xen_mcast_ctrl_changed(struct xenbus_watch *watch,
- 					  mcast_ctrl_watch);
- 	struct xenbus_device *dev = xenvif_to_xenbus_device(vif);
- 
--	vif->multicast_control = !!xenbus_read_unsigned(dev->otherend,
-+	vif->multicast_control = !!xenbus_read_unsigned(dev->xh, dev->otherend,
- 					"request-multicast-control", 0);
- }
- 
-@@ -817,7 +818,7 @@ static int xen_register_mcast_ctrl_watch(struct xenbus_device *dev,
- 		 dev->otherend);
- 	vif->mcast_ctrl_watch.node = node;
- 	vif->mcast_ctrl_watch.callback = xen_mcast_ctrl_changed;
--	err = register_xenbus_watch(&vif->mcast_ctrl_watch);
-+	err = register_xenbus_watch(dev->xh, &vif->mcast_ctrl_watch);
- 	if (err) {
- 		pr_err("Failed to set watcher %s\n",
- 		       vif->mcast_ctrl_watch.node);
-@@ -830,8 +831,10 @@ static int xen_register_mcast_ctrl_watch(struct xenbus_device *dev,
- 
- static void xen_unregister_mcast_ctrl_watch(struct xenvif *vif)
- {
-+	struct xenbus_device *dev = xenvif_to_xenbus_device(vif);
-+
- 	if (vif->mcast_ctrl_watch.node) {
--		unregister_xenbus_watch(&vif->mcast_ctrl_watch);
-+		unregister_xenbus_watch(dev->xh, &vif->mcast_ctrl_watch);
- 		kfree(vif->mcast_ctrl_watch.node);
- 		vif->mcast_ctrl_watch.node = NULL;
- 	}
-@@ -853,7 +856,7 @@ static void xen_unregister_watchers(struct xenvif *vif)
- static void unregister_hotplug_status_watch(struct backend_info *be)
- {
- 	if (be->have_hotplug_status_watch) {
--		unregister_xenbus_watch(&be->hotplug_status_watch);
-+		unregister_xenbus_watch(be->dev->xh, &be->hotplug_status_watch);
- 		kfree(be->hotplug_status_watch.node);
- 	}
- 	be->have_hotplug_status_watch = 0;
-@@ -869,7 +872,7 @@ static void hotplug_status_changed(struct xenbus_watch *watch,
- 	char *str;
- 	unsigned int len;
- 
--	str = xenbus_read(XBT_NIL, be->dev->nodename, "hotplug-status", &len);
-+	str = xenbus_read(be->dev->xh, XBT_NIL, be->dev->nodename, "hotplug-status", &len);
- 	if (IS_ERR(str))
- 		return;
- 	if (len == sizeof("connected")-1 && !memcmp(str, "connected", len)) {
-@@ -891,14 +894,14 @@ static int connect_ctrl_ring(struct backend_info *be)
- 	unsigned int evtchn;
- 	int err;
- 
--	err = xenbus_scanf(XBT_NIL, dev->otherend,
-+	err = xenbus_scanf(dev->xh, XBT_NIL, dev->otherend,
- 			   "ctrl-ring-ref", "%u", &val);
- 	if (err < 0)
- 		goto done; /* The frontend does not have a control ring */
- 
- 	ring_ref = val;
- 
--	err = xenbus_scanf(XBT_NIL, dev->otherend,
-+	err = xenbus_scanf(dev->xh, XBT_NIL, dev->otherend,
- 			   "event-channel-ctrl", "%u", &val);
- 	if (err < 0) {
- 		xenbus_dev_fatal(dev, err,
-@@ -936,7 +939,7 @@ static void connect(struct backend_info *be)
- 	/* Check whether the frontend requested multiple queues
- 	 * and read the number requested.
- 	 */
--	requested_num_queues = xenbus_read_unsigned(dev->otherend,
-+	requested_num_queues = xenbus_read_unsigned(dev->xh, dev->otherend,
- 					"multi-queue-num-queues", 1);
- 	if (requested_num_queues > xenvif_max_queues) {
- 		/* buggy or malicious guest */
-@@ -1087,7 +1090,7 @@ static int connect_data_rings(struct backend_info *be,
- 			 queue->id);
- 	}
- 
--	err = xenbus_gather(XBT_NIL, xspath,
-+	err = xenbus_gather(dev->xh, XBT_NIL, xspath,
- 			    "tx-ring-ref", "%lu", &tx_ring_ref,
- 			    "rx-ring-ref", "%lu", &rx_ring_ref, NULL);
- 	if (err) {
-@@ -1098,11 +1101,11 @@ static int connect_data_rings(struct backend_info *be,
- 	}
- 
- 	/* Try split event channels first, then single event channel. */
--	err = xenbus_gather(XBT_NIL, xspath,
-+	err = xenbus_gather(dev->xh, XBT_NIL, xspath,
- 			    "event-channel-tx", "%u", &tx_evtchn,
- 			    "event-channel-rx", "%u", &rx_evtchn, NULL);
- 	if (err < 0) {
--		err = xenbus_scanf(XBT_NIL, xspath,
-+		err = xenbus_scanf(dev->xh, XBT_NIL, xspath,
- 				   "event-channel", "%u", &tx_evtchn);
- 		if (err < 0) {
- 			xenbus_dev_fatal(dev, err,
-@@ -1137,7 +1140,7 @@ static int read_xenbus_vif_flags(struct backend_info *be)
- 	unsigned int rx_copy;
- 	int err;
- 
--	err = xenbus_scanf(XBT_NIL, dev->otherend, "request-rx-copy", "%u",
-+	err = xenbus_scanf(dev->xh, XBT_NIL, dev->otherend, "request-rx-copy", "%u",
- 			   &rx_copy);
- 	if (err == -ENOENT) {
- 		err = 0;
-@@ -1151,7 +1154,7 @@ static int read_xenbus_vif_flags(struct backend_info *be)
- 	if (!rx_copy)
- 		return -EOPNOTSUPP;
- 
--	if (!xenbus_read_unsigned(dev->otherend, "feature-rx-notify", 0)) {
-+	if (!xenbus_read_unsigned(dev->xh, dev->otherend, "feature-rx-notify", 0)) {
- 		/* - Reduce drain timeout to poll more frequently for
- 		 *   Rx requests.
- 		 * - Disable Rx stall detection.
-@@ -1160,20 +1163,20 @@ static int read_xenbus_vif_flags(struct backend_info *be)
- 		be->vif->stall_timeout = 0;
- 	}
- 
--	vif->can_sg = !!xenbus_read_unsigned(dev->otherend, "feature-sg", 0);
-+	vif->can_sg = !!xenbus_read_unsigned(dev->xh, dev->otherend, "feature-sg", 0);
- 
- 	vif->gso_mask = 0;
- 
--	if (xenbus_read_unsigned(dev->otherend, "feature-gso-tcpv4", 0))
-+	if (xenbus_read_unsigned(dev->xh, dev->otherend, "feature-gso-tcpv4", 0))
- 		vif->gso_mask |= GSO_BIT(TCPV4);
- 
--	if (xenbus_read_unsigned(dev->otherend, "feature-gso-tcpv6", 0))
-+	if (xenbus_read_unsigned(dev->xh, dev->otherend, "feature-gso-tcpv6", 0))
- 		vif->gso_mask |= GSO_BIT(TCPV6);
- 
--	vif->ip_csum = !xenbus_read_unsigned(dev->otherend,
-+	vif->ip_csum = !xenbus_read_unsigned(dev->xh, dev->otherend,
- 					     "feature-no-csum-offload", 0);
- 
--	vif->ipv6_csum = !!xenbus_read_unsigned(dev->otherend,
-+	vif->ipv6_csum = !!xenbus_read_unsigned(dev->xh, dev->otherend,
- 						"feature-ipv6-csum-offload", 0);
- 
- 	return 0;
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index ee28e8b85406..71007ad822c0 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -285,6 +285,7 @@ static void xennet_alloc_rx_buffers(struct netfront_queue *queue)
- 	RING_IDX req_prod = queue->rx.req_prod_pvt;
- 	int notify;
- 	int err = 0;
-+	struct xenbus_device *dev = queue->info->xbdev;
- 
- 	if (unlikely(!netif_carrier_ok(queue->info->netdev)))
- 		return;
-@@ -309,14 +310,14 @@ static void xennet_alloc_rx_buffers(struct netfront_queue *queue)
- 		BUG_ON(queue->rx_skbs[id]);
- 		queue->rx_skbs[id] = skb;
- 
--		ref = gnttab_claim_grant_reference(&queue->gref_rx_head);
-+		ref = gnttab_claim_grant_reference(dev->xh, &queue->gref_rx_head);
- 		WARN_ON_ONCE(IS_ERR_VALUE((unsigned long)(int)ref));
- 		queue->grant_rx_ref[id] = ref;
- 
- 		page = skb_frag_page(&skb_shinfo(skb)->frags[0]);
- 
- 		req = RING_GET_REQUEST(&queue->rx, req_prod);
--		gnttab_page_grant_foreign_access_ref_one(ref,
-+		gnttab_page_grant_foreign_access_ref_one(dev->xh, ref,
- 							 queue->info->xbdev->otherend_id,
- 							 page,
- 							 0);
-@@ -377,6 +378,7 @@ static void xennet_tx_buf_gc(struct netfront_queue *queue)
- 	unsigned short id;
- 	struct sk_buff *skb;
- 	bool more_to_do;
-+	struct xenbus_device *dev = queue->info->xbdev;
- 
- 	BUG_ON(!netif_carrier_ok(queue->info->netdev));
- 
-@@ -393,15 +395,15 @@ static void xennet_tx_buf_gc(struct netfront_queue *queue)
- 
- 			id  = txrsp->id;
- 			skb = queue->tx_skbs[id].skb;
--			if (unlikely(gnttab_query_foreign_access(
-+			if (unlikely(gnttab_query_foreign_access(dev->xh,
- 				queue->grant_tx_ref[id]) != 0)) {
- 				pr_alert("%s: warning -- grant still in use by backend domain\n",
- 					 __func__);
- 				BUG();
- 			}
--			gnttab_end_foreign_access_ref(
-+			gnttab_end_foreign_access_ref(dev->xh,
- 				queue->grant_tx_ref[id], GNTMAP_readonly);
--			gnttab_release_grant_reference(
-+			gnttab_release_grant_reference(dev->xh,
- 				&queue->gref_tx_head, queue->grant_tx_ref[id]);
- 			queue->grant_tx_ref[id] = GRANT_INVALID_REF;
- 			queue->grant_tx_page[id] = NULL;
-@@ -436,13 +438,14 @@ static void xennet_tx_setup_grant(unsigned long gfn, unsigned int offset,
- 	struct page *page = info->page;
- 	struct netfront_queue *queue = info->queue;
- 	struct sk_buff *skb = info->skb;
-+	struct xenbus_device *dev = queue->info->xbdev;
- 
- 	id = get_id_from_freelist(&queue->tx_skb_freelist, queue->tx_skbs);
- 	tx = RING_GET_REQUEST(&queue->tx, queue->tx.req_prod_pvt++);
--	ref = gnttab_claim_grant_reference(&queue->gref_tx_head);
-+	ref = gnttab_claim_grant_reference(dev->xh, &queue->gref_tx_head);
- 	WARN_ON_ONCE(IS_ERR_VALUE((unsigned long)(int)ref));
- 
--	gnttab_grant_foreign_access_ref(ref, queue->info->xbdev->otherend_id,
-+	gnttab_grant_foreign_access_ref(dev->xh, ref, queue->info->xbdev->otherend_id,
- 					gfn, GNTMAP_readonly);
- 
- 	queue->tx_skbs[id].skb = skb;
-@@ -786,6 +789,7 @@ static int xennet_get_responses(struct netfront_queue *queue,
- 	struct xen_netif_rx_response *rx = &rinfo->rx;
- 	struct xen_netif_extra_info *extras = rinfo->extras;
- 	struct device *dev = &queue->info->netdev->dev;
-+	struct xenbus_device *xdev = queue->info->xbdev;
- 	RING_IDX cons = queue->rx.rsp_cons;
- 	struct sk_buff *skb = xennet_get_rx_skb(queue, cons);
- 	grant_ref_t ref = xennet_get_rx_ref(queue, cons);
-@@ -823,10 +827,10 @@ static int xennet_get_responses(struct netfront_queue *queue,
- 			goto next;
- 		}
- 
--		ret = gnttab_end_foreign_access_ref(ref, 0);
-+		ret = gnttab_end_foreign_access_ref(xdev->xh, ref, 0);
- 		BUG_ON(!ret);
- 
--		gnttab_release_grant_reference(&queue->gref_rx_head, ref);
-+		gnttab_release_grant_reference(xdev->xh, &queue->gref_rx_head, ref);
- 
- 		__skb_queue_tail(list, skb);
- 
-@@ -1130,6 +1134,7 @@ static void xennet_release_tx_bufs(struct netfront_queue *queue)
- {
- 	struct sk_buff *skb;
- 	int i;
-+	struct xenbus_device *dev = queue->info->xbdev;
- 
- 	for (i = 0; i < NET_TX_RING_SIZE; i++) {
- 		/* Skip over entries which are actually freelist references */
-@@ -1138,7 +1143,7 @@ static void xennet_release_tx_bufs(struct netfront_queue *queue)
- 
- 		skb = queue->tx_skbs[i].skb;
- 		get_page(queue->grant_tx_page[i]);
--		gnttab_end_foreign_access(queue->grant_tx_ref[i],
-+		gnttab_end_foreign_access(dev->xh, queue->grant_tx_ref[i],
- 					  GNTMAP_readonly,
- 					  (unsigned long)page_address(queue->grant_tx_page[i]));
- 		queue->grant_tx_page[i] = NULL;
-@@ -1151,6 +1156,7 @@ static void xennet_release_tx_bufs(struct netfront_queue *queue)
- static void xennet_release_rx_bufs(struct netfront_queue *queue)
- {
- 	int id, ref;
-+	struct xenbus_device *dev = queue->info->xbdev;
- 
- 	spin_lock_bh(&queue->rx_lock);
- 
-@@ -1172,7 +1178,7 @@ static void xennet_release_rx_bufs(struct netfront_queue *queue)
- 		 * foreign access is ended (which may be deferred).
- 		 */
- 		get_page(page);
--		gnttab_end_foreign_access(ref, 0,
-+		gnttab_end_foreign_access(dev->xh, ref, 0,
- 					  (unsigned long)page_address(page));
- 		queue->grant_rx_ref[id] = GRANT_INVALID_REF;
- 
-@@ -1186,22 +1192,23 @@ static netdev_features_t xennet_fix_features(struct net_device *dev,
- 	netdev_features_t features)
- {
- 	struct netfront_info *np = netdev_priv(dev);
-+	struct xenbus_device *xdev = np->xbdev;
- 
- 	if (features & NETIF_F_SG &&
--	    !xenbus_read_unsigned(np->xbdev->otherend, "feature-sg", 0))
-+	    !xenbus_read_unsigned(xdev->xh, np->xbdev->otherend, "feature-sg", 0))
- 		features &= ~NETIF_F_SG;
- 
- 	if (features & NETIF_F_IPV6_CSUM &&
--	    !xenbus_read_unsigned(np->xbdev->otherend,
-+	    !xenbus_read_unsigned(xdev->xh, np->xbdev->otherend,
- 				  "feature-ipv6-csum-offload", 0))
- 		features &= ~NETIF_F_IPV6_CSUM;
- 
- 	if (features & NETIF_F_TSO &&
--	    !xenbus_read_unsigned(np->xbdev->otherend, "feature-gso-tcpv4", 0))
-+	    !xenbus_read_unsigned(xdev->xh, np->xbdev->otherend, "feature-gso-tcpv4", 0))
- 		features &= ~NETIF_F_TSO;
- 
- 	if (features & NETIF_F_TSO6 &&
--	    !xenbus_read_unsigned(np->xbdev->otherend, "feature-gso-tcpv6", 0))
-+	    !xenbus_read_unsigned(xdev->xh, np->xbdev->otherend, "feature-gso-tcpv6", 0))
- 		features &= ~NETIF_F_TSO6;
- 
- 	return features;
-@@ -1375,17 +1382,18 @@ static int netfront_probe(struct xenbus_device *dev,
- 	return 0;
- }
- 
--static void xennet_end_access(int ref, void *page)
-+static void xennet_end_access(xenhost_t *xh, int ref, void *page)
- {
- 	/* This frees the page as a side-effect */
- 	if (ref != GRANT_INVALID_REF)
--		gnttab_end_foreign_access(ref, 0, (unsigned long)page);
-+		gnttab_end_foreign_access(xh, ref, 0, (unsigned long)page);
- }
- 
- static void xennet_disconnect_backend(struct netfront_info *info)
- {
- 	unsigned int i = 0;
- 	unsigned int num_queues = info->netdev->real_num_tx_queues;
-+	struct xenbus_device *dev = info->xbdev;
- 
- 	netif_carrier_off(info->netdev);
- 
-@@ -1408,12 +1416,12 @@ static void xennet_disconnect_backend(struct netfront_info *info)
- 
- 		xennet_release_tx_bufs(queue);
- 		xennet_release_rx_bufs(queue);
--		gnttab_free_grant_references(queue->gref_tx_head);
--		gnttab_free_grant_references(queue->gref_rx_head);
-+		gnttab_free_grant_references(dev->xh, queue->gref_tx_head);
-+		gnttab_free_grant_references(dev->xh, queue->gref_rx_head);
- 
- 		/* End access and free the pages */
--		xennet_end_access(queue->tx_ring_ref, queue->tx.sring);
--		xennet_end_access(queue->rx_ring_ref, queue->rx.sring);
-+		xennet_end_access(dev->xh, queue->tx_ring_ref, queue->tx.sring);
-+		xennet_end_access(dev->xh, queue->rx_ring_ref, queue->rx.sring);
- 
- 		queue->tx_ring_ref = GRANT_INVALID_REF;
- 		queue->rx_ring_ref = GRANT_INVALID_REF;
-@@ -1443,7 +1451,7 @@ static int xen_net_read_mac(struct xenbus_device *dev, u8 mac[])
- 	char *s, *e, *macstr;
- 	int i;
- 
--	macstr = s = xenbus_read(XBT_NIL, dev->nodename, "mac", NULL);
-+	macstr = s = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "mac", NULL);
- 	if (IS_ERR(macstr))
- 		return PTR_ERR(macstr);
- 
-@@ -1588,11 +1596,11 @@ static int setup_netfront(struct xenbus_device *dev,
- 	 * granted pages because backend is not accessing it at this point.
- 	 */
- alloc_evtchn_fail:
--	gnttab_end_foreign_access_ref(queue->rx_ring_ref, 0);
-+	gnttab_end_foreign_access_ref(dev->xh, queue->rx_ring_ref, 0);
- grant_rx_ring_fail:
- 	free_page((unsigned long)rxs);
- alloc_rx_ring_fail:
--	gnttab_end_foreign_access_ref(queue->tx_ring_ref, 0);
-+	gnttab_end_foreign_access_ref(dev->xh, queue->tx_ring_ref, 0);
- grant_tx_ring_fail:
- 	free_page((unsigned long)txs);
- fail:
-@@ -1608,6 +1616,7 @@ static int xennet_init_queue(struct netfront_queue *queue)
- 	unsigned short i;
- 	int err = 0;
- 	char *devid;
-+	struct xenbus_device *dev = queue->info->xbdev;
- 
- 	spin_lock_init(&queue->tx_lock);
- 	spin_lock_init(&queue->rx_lock);
-@@ -1633,7 +1642,7 @@ static int xennet_init_queue(struct netfront_queue *queue)
- 	}
- 
- 	/* A grant for every tx ring slot */
--	if (gnttab_alloc_grant_references(NET_TX_RING_SIZE,
-+	if (gnttab_alloc_grant_references(dev->xh, NET_TX_RING_SIZE,
- 					  &queue->gref_tx_head) < 0) {
- 		pr_alert("can't alloc tx grant refs\n");
- 		err = -ENOMEM;
-@@ -1641,7 +1650,7 @@ static int xennet_init_queue(struct netfront_queue *queue)
- 	}
- 
- 	/* A grant for every rx ring slot */
--	if (gnttab_alloc_grant_references(NET_RX_RING_SIZE,
-+	if (gnttab_alloc_grant_references(dev->xh, NET_RX_RING_SIZE,
- 					  &queue->gref_rx_head) < 0) {
- 		pr_alert("can't alloc rx grant refs\n");
- 		err = -ENOMEM;
-@@ -1651,7 +1660,7 @@ static int xennet_init_queue(struct netfront_queue *queue)
- 	return 0;
- 
-  exit_free_tx:
--	gnttab_free_grant_references(queue->gref_tx_head);
-+	gnttab_free_grant_references(dev->xh, queue->gref_tx_head);
-  exit:
- 	return err;
- }
-@@ -1685,14 +1694,14 @@ static int write_queue_xenstore_keys(struct netfront_queue *queue,
- 	}
- 
- 	/* Write ring references */
--	err = xenbus_printf(*xbt, path, "tx-ring-ref", "%u",
-+	err = xenbus_printf(dev->xh, *xbt, path, "tx-ring-ref", "%u",
- 			queue->tx_ring_ref);
- 	if (err) {
- 		message = "writing tx-ring-ref";
- 		goto error;
- 	}
- 
--	err = xenbus_printf(*xbt, path, "rx-ring-ref", "%u",
-+	err = xenbus_printf(dev->xh, *xbt, path, "rx-ring-ref", "%u",
- 			queue->rx_ring_ref);
- 	if (err) {
- 		message = "writing rx-ring-ref";
-@@ -1704,7 +1713,7 @@ static int write_queue_xenstore_keys(struct netfront_queue *queue,
- 	 */
- 	if (queue->tx_evtchn == queue->rx_evtchn) {
- 		/* Shared event channel */
--		err = xenbus_printf(*xbt, path,
-+		err = xenbus_printf(dev->xh,*xbt, path,
- 				"event-channel", "%u", queue->tx_evtchn);
- 		if (err) {
- 			message = "writing event-channel";
-@@ -1712,14 +1721,14 @@ static int write_queue_xenstore_keys(struct netfront_queue *queue,
- 		}
- 	} else {
- 		/* Split event channels */
--		err = xenbus_printf(*xbt, path,
-+		err = xenbus_printf(dev->xh, *xbt, path,
- 				"event-channel-tx", "%u", queue->tx_evtchn);
- 		if (err) {
- 			message = "writing event-channel-tx";
- 			goto error;
- 		}
- 
--		err = xenbus_printf(*xbt, path,
-+		err = xenbus_printf(dev->xh, *xbt, path,
- 				"event-channel-rx", "%u", queue->rx_evtchn);
- 		if (err) {
- 			message = "writing event-channel-rx";
-@@ -1810,12 +1819,12 @@ static int talk_to_netback(struct xenbus_device *dev,
- 	info->netdev->irq = 0;
- 
- 	/* Check if backend supports multiple queues */
--	max_queues = xenbus_read_unsigned(info->xbdev->otherend,
-+	max_queues = xenbus_read_unsigned(dev->xh, info->xbdev->otherend,
- 					  "multi-queue-max-queues", 1);
- 	num_queues = min(max_queues, xennet_max_queues);
- 
- 	/* Check feature-split-event-channels */
--	feature_split_evtchn = xenbus_read_unsigned(info->xbdev->otherend,
-+	feature_split_evtchn = xenbus_read_unsigned(dev->xh, info->xbdev->otherend,
- 					"feature-split-event-channels", 0);
- 
- 	/* Read mac addr. */
-@@ -1847,16 +1856,16 @@ static int talk_to_netback(struct xenbus_device *dev,
++	xenbus_transaction_end(xh, xbt, 1);
+ 	if (message)
+ 		xenbus_dev_fatal(info->xbdev, err, "%s", message);
+ 
+@@ -1782,7 +1784,7 @@ static int talk_to_blkback(struct xenbus_device *dev,
+ 	if (!info)
+ 		return -ENODEV;
+ 
+-	max_page_order = xenbus_read_unsigned(info->xbdev->otherend,
++	max_page_order = xenbus_read_unsigned(dev->xh, info->xbdev->otherend,
+ 					      "max-ring-page-order", 0);
+ 	ring_page_order = min(xen_blkif_max_ring_order, max_page_order);
+ 	info->nr_ring_pages = 1 << ring_page_order;
+@@ -1801,14 +1803,14 @@ static int talk_to_blkback(struct xenbus_device *dev,
  	}
  
  again:
@@ -880,91 +765,192 @@ index ee28e8b85406..71007ad822c0 100644
 +	err = xenbus_transaction_start(dev->xh, &xbt);
  	if (err) {
  		xenbus_dev_fatal(dev, err, "starting transaction");
- 		goto destroy_ring;
+ 		goto destroy_blkring;
  	}
  
--	if (xenbus_exists(XBT_NIL,
-+	if (xenbus_exists(dev->xh, XBT_NIL,
- 			  info->xbdev->otherend, "multi-queue-max-queues")) {
- 		/* Write the number of queues */
--		err = xenbus_printf(xbt, dev->nodename,
-+		err = xenbus_printf(dev->xh, xbt, dev->nodename,
- 				    "multi-queue-num-queues", "%u", num_queues);
+ 	if (info->nr_ring_pages > 1) {
+-		err = xenbus_printf(xbt, dev->nodename, "ring-page-order", "%u",
++		err = xenbus_printf(dev->xh, xbt, dev->nodename, "ring-page-order", "%u",
+ 				    ring_page_order);
+ 		if (err) {
+ 			message = "writing ring-page-order";
+@@ -1825,7 +1827,7 @@ static int talk_to_blkback(struct xenbus_device *dev,
+ 		char *path;
+ 		size_t pathsize;
+ 
+-		err = xenbus_printf(xbt, dev->nodename, "multi-queue-num-queues", "%u",
++		err = xenbus_printf(dev->xh, xbt, dev->nodename, "multi-queue-num-queues", "%u",
+ 				    info->nr_rings);
  		if (err) {
  			message = "writing multi-queue-num-queues";
-@@ -1879,45 +1888,45 @@ static int talk_to_netback(struct xenbus_device *dev,
+@@ -1851,19 +1853,19 @@ static int talk_to_blkback(struct xenbus_device *dev,
+ 		}
+ 		kfree(path);
  	}
- 
- 	/* The remaining keys are not queue-specific */
--	err = xenbus_printf(xbt, dev->nodename, "request-rx-copy", "%u",
-+	err = xenbus_printf(dev->xh, xbt, dev->nodename, "request-rx-copy", "%u",
- 			    1);
+-	err = xenbus_printf(xbt, dev->nodename, "protocol", "%s",
++	err = xenbus_printf(dev->xh, xbt, dev->nodename, "protocol", "%s",
+ 			    XEN_IO_PROTO_ABI_NATIVE);
  	if (err) {
- 		message = "writing request-rx-copy";
+ 		message = "writing protocol";
  		goto abort_transaction;
  	}
- 
--	err = xenbus_printf(xbt, dev->nodename, "feature-rx-notify", "%d", 1);
-+	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-rx-notify", "%d", 1);
- 	if (err) {
- 		message = "writing feature-rx-notify";
- 		goto abort_transaction;
- 	}
- 
--	err = xenbus_printf(xbt, dev->nodename, "feature-sg", "%d", 1);
-+	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-sg", "%d", 1);
- 	if (err) {
- 		message = "writing feature-sg";
- 		goto abort_transaction;
- 	}
- 
--	err = xenbus_printf(xbt, dev->nodename, "feature-gso-tcpv4", "%d", 1);
-+	err = xenbus_printf(dev->xh, xbt, dev->nodename, "feature-gso-tcpv4", "%d", 1);
- 	if (err) {
- 		message = "writing feature-gso-tcpv4";
- 		goto abort_transaction;
- 	}
- 
--	err = xenbus_write(xbt, dev->nodename, "feature-gso-tcpv6", "1");
-+	err = xenbus_write(dev->xh, xbt, dev->nodename, "feature-gso-tcpv6", "1");
- 	if (err) {
- 		message = "writing feature-gso-tcpv6";
- 		goto abort_transaction;
- 	}
- 
--	err = xenbus_write(xbt, dev->nodename, "feature-ipv6-csum-offload",
-+	err = xenbus_write(dev->xh, xbt, dev->nodename, "feature-ipv6-csum-offload",
- 			   "1");
- 	if (err) {
- 		message = "writing feature-ipv6-csum-offload";
- 		goto abort_transaction;
- 	}
+-	err = xenbus_printf(xbt, dev->nodename,
++	err = xenbus_printf(dev->xh, xbt, dev->nodename,
+ 			    "feature-persistent", "%u", 1);
+ 	if (err)
+ 		dev_warn(&dev->dev,
+ 			 "writing persistent grants feature to xenbus");
  
 -	err = xenbus_transaction_end(xbt, 0);
 +	err = xenbus_transaction_end(dev->xh, xbt, 0);
  	if (err) {
  		if (err == -EAGAIN)
  			goto again;
-@@ -1930,7 +1939,7 @@ static int talk_to_netback(struct xenbus_device *dev,
+@@ -1884,7 +1886,7 @@ static int talk_to_blkback(struct xenbus_device *dev,
+ 	return 0;
+ 
   abort_transaction:
- 	xenbus_dev_fatal(dev, err, "%s", message);
- abort_transaction_no_dev_fatal:
 -	xenbus_transaction_end(xbt, 1);
 +	xenbus_transaction_end(dev->xh, xbt, 1);
-  destroy_ring:
- 	xennet_disconnect_backend(info);
- 	rtnl_lock();
-@@ -1949,8 +1958,9 @@ static int xennet_connect(struct net_device *dev)
- 	int err;
- 	unsigned int j = 0;
- 	struct netfront_queue *queue = NULL;
-+	struct xenbus_device *xdev = np->xbdev;
+ 	if (message)
+ 		xenbus_dev_fatal(dev, err, "%s", message);
+  destroy_blkring:
+@@ -1907,7 +1909,7 @@ static int negotiate_mq(struct blkfront_info *info)
+ 	BUG_ON(info->nr_rings);
  
--	if (!xenbus_read_unsigned(np->xbdev->otherend, "feature-rx-copy", 0)) {
-+	if (!xenbus_read_unsigned(xdev->xh, np->xbdev->otherend, "feature-rx-copy", 0)) {
- 		dev_info(&dev->dev,
- 			 "backend does not support copying receive path\n");
- 		return -ENODEV;
+ 	/* Check if backend supports multiple queues. */
+-	backend_max_queues = xenbus_read_unsigned(info->xbdev->otherend,
++	backend_max_queues = xenbus_read_unsigned(info->xbdev->xh, info->xbdev->otherend,
+ 						  "multi-queue-max-queues", 1);
+ 	info->nr_rings = min(backend_max_queues, xen_blkif_max_queues);
+ 	/* We need at least one ring. */
+@@ -1948,11 +1950,11 @@ static int blkfront_probe(struct xenbus_device *dev,
+ 	struct blkfront_info *info;
+ 
+ 	/* FIXME: Use dynamic device id if this is not set. */
+-	err = xenbus_scanf(XBT_NIL, dev->nodename,
++	err = xenbus_scanf(dev->xh, XBT_NIL, dev->nodename,
+ 			   "virtual-device", "%i", &vdevice);
+ 	if (err != 1) {
+ 		/* go looking in the extended area instead */
+-		err = xenbus_scanf(XBT_NIL, dev->nodename, "virtual-device-ext",
++		err = xenbus_scanf(dev->xh, XBT_NIL, dev->nodename, "virtual-device-ext",
+ 				   "%i", &vdevice);
+ 		if (err != 1) {
+ 			xenbus_dev_fatal(dev, err, "reading virtual-device");
+@@ -1980,7 +1982,7 @@ static int blkfront_probe(struct xenbus_device *dev,
+ 			}
+ 		}
+ 		/* do not create a PV cdrom device if we are an HVM guest */
+-		type = xenbus_read(XBT_NIL, dev->nodename, "device-type", &len);
++		type = xenbus_read(dev->xh, XBT_NIL, dev->nodename, "device-type", &len);
+ 		if (IS_ERR(type))
+ 			return -ENODEV;
+ 		if (strncmp(type, "cdrom", 5) == 0) {
+@@ -2173,7 +2175,7 @@ static void blkfront_setup_discard(struct blkfront_info *info)
+ 	unsigned int discard_alignment;
+ 
+ 	info->feature_discard = 1;
+-	err = xenbus_gather(XBT_NIL, info->xbdev->otherend,
++	err = xenbus_gather(info->xbdev->xh, XBT_NIL, info->xbdev->otherend,
+ 		"discard-granularity", "%u", &discard_granularity,
+ 		"discard-alignment", "%u", &discard_alignment,
+ 		NULL);
+@@ -2182,7 +2184,7 @@ static void blkfront_setup_discard(struct blkfront_info *info)
+ 		info->discard_alignment = discard_alignment;
+ 	}
+ 	info->feature_secdiscard =
+-		!!xenbus_read_unsigned(info->xbdev->otherend, "discard-secure",
++		!!xenbus_read_unsigned(info->xbdev->xh, info->xbdev->otherend, "discard-secure",
+ 				       0);
+ }
+ 
+@@ -2279,6 +2281,7 @@ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo)
+ static void blkfront_gather_backend_features(struct blkfront_info *info)
+ {
+ 	unsigned int indirect_segments;
++	xenhost_t *xh = info->xbdev->xh;
+ 
+ 	info->feature_flush = 0;
+ 	info->feature_fua = 0;
+@@ -2290,7 +2293,8 @@ static void blkfront_gather_backend_features(struct blkfront_info *info)
+ 	 *
+ 	 * If there are barriers, then we use flush.
+ 	 */
+-	if (xenbus_read_unsigned(info->xbdev->otherend, "feature-barrier", 0)) {
++	if (xenbus_read_unsigned(xh, info->xbdev->otherend,
++					"feature-barrier", 0)) {
+ 		info->feature_flush = 1;
+ 		info->feature_fua = 1;
+ 	}
+@@ -2299,20 +2303,21 @@ static void blkfront_gather_backend_features(struct blkfront_info *info)
+ 	 * And if there is "feature-flush-cache" use that above
+ 	 * barriers.
+ 	 */
+-	if (xenbus_read_unsigned(info->xbdev->otherend, "feature-flush-cache",
+-				 0)) {
++	if (xenbus_read_unsigned(xh, info->xbdev->otherend,
++					"feature-flush-cache", 0)) {
+ 		info->feature_flush = 1;
+ 		info->feature_fua = 0;
+ 	}
+ 
+-	if (xenbus_read_unsigned(info->xbdev->otherend, "feature-discard", 0))
++	if (xenbus_read_unsigned(xh, info->xbdev->otherend,
++					"feature-discard", 0))
+ 		blkfront_setup_discard(info);
+ 
+ 	info->feature_persistent =
+-		!!xenbus_read_unsigned(info->xbdev->otherend,
++		!!xenbus_read_unsigned(xh, info->xbdev->otherend,
+ 				       "feature-persistent", 0);
+ 
+-	indirect_segments = xenbus_read_unsigned(info->xbdev->otherend,
++	indirect_segments = xenbus_read_unsigned(xh, info->xbdev->otherend,
+ 					"feature-max-indirect-segments", 0);
+ 	if (indirect_segments > xen_blkif_max_segments)
+ 		indirect_segments = xen_blkif_max_segments;
+@@ -2346,7 +2351,7 @@ static void blkfront_connect(struct blkfront_info *info)
+ 		 * Potentially, the back-end may be signalling
+ 		 * a capacity change; update the capacity.
+ 		 */
+-		err = xenbus_scanf(XBT_NIL, info->xbdev->otherend,
++		err = xenbus_scanf(info->xbdev->xh, XBT_NIL, info->xbdev->otherend,
+ 				   "sectors", "%Lu", &sectors);
+ 		if (XENBUS_EXIST_ERR(err))
+ 			return;
+@@ -2375,7 +2380,7 @@ static void blkfront_connect(struct blkfront_info *info)
+ 	dev_dbg(&info->xbdev->dev, "%s:%s.\n",
+ 		__func__, info->xbdev->otherend);
+ 
+-	err = xenbus_gather(XBT_NIL, info->xbdev->otherend,
++	err = xenbus_gather(info->xbdev->xh, XBT_NIL, info->xbdev->otherend,
+ 			    "sectors", "%llu", &sectors,
+ 			    "info", "%u", &binfo,
+ 			    "sector-size", "%lu", &sector_size,
+@@ -2392,7 +2397,7 @@ static void blkfront_connect(struct blkfront_info *info)
+ 	 * provide this. Assume physical sector size to be the same as
+ 	 * sector_size in that case.
+ 	 */
+-	physical_sector_size = xenbus_read_unsigned(info->xbdev->otherend,
++	physical_sector_size = xenbus_read_unsigned(info->xbdev->xh, info->xbdev->otherend,
+ 						    "physical-sector-size",
+ 						    sector_size);
+ 	blkfront_gather_backend_features(info);
+@@ -2668,11 +2673,11 @@ static void purge_persistent_grants(struct blkfront_info *info)
+ 		list_for_each_entry_safe(gnt_list_entry, tmp, &rinfo->grants,
+ 					 node) {
+ 			if (gnt_list_entry->gref == GRANT_INVALID_REF ||
+-			    gnttab_query_foreign_access(gnt_list_entry->gref))
++			    gnttab_query_foreign_access(info->xbdev->xh, gnt_list_entry->gref))
+ 				continue;
+ 
+ 			list_del(&gnt_list_entry->node);
+-			gnttab_end_foreign_access(gnt_list_entry->gref, 0, 0UL);
++			gnttab_end_foreign_access(info->xbdev->xh, gnt_list_entry->gref, 0, 0UL);
+ 			rinfo->persistent_gnts_c--;
+ 			gnt_list_entry->gref = GRANT_INVALID_REF;
+ 			list_add_tail(&gnt_list_entry->node, &rinfo->grants);
 -- 
 2.20.1
 
