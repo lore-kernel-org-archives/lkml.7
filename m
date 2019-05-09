@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F98C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219B8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CF6208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA001217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427662;
-	bh=aD/N5gPsVhM0JlMNYj0g6pyBk36ukHSTrEyvxuYlAt8=;
+	s=default; t=1557427667;
+	bh=KcBNhjf5N9TzoKLJ8rSU60ZB8nQ2vfmXWLvk1pOJ5Jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=btY/4G7LHO+qjRR3EUnl2inArDcbVwDHdGYSyw+79sEkKnkqPmTlOAR7W9itsBTSB
-	 cJYNjzwBfUp+07q+KkH+VVXBZnYQi1Q55eigcqAgE19QOSrrM7gMKoZ5z4DrQEOHCp
-	 6g/hWIIiORwfQAnfRoXdJYif2SmGPHi26QPWc0kk=
+	b=G0qC0HjCHm5K8qrK0RiUTVO9IsYkM7eVudjQRzH//3kwWBF1JvP/bLwM1GhyYszO/
+	 U4E14rC1uURmnrjVKRNoVH1nrMm5zdvREr2PqGRBNh9lCYORZtzXIDIAzof8gJXWon
+	 yKC+K8YppM0oKCV5BTQurgc6mKQPdrayaccVQjLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbfEISrk (ORCPT
+        id S1727036AbfEISrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfEISrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:47:37 -0400
+        id S1727874AbfEISrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B82C217F9;
-        Thu,  9 May 2019 18:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 091A2217D7;
+        Thu,  9 May 2019 18:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427656;
-        bh=aD/N5gPsVhM0JlMNYj0g6pyBk36ukHSTrEyvxuYlAt8=;
+        s=default; t=1557427660;
+        bh=KcBNhjf5N9TzoKLJ8rSU60ZB8nQ2vfmXWLvk1pOJ5Jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixcHbQeYMHXTtonhLqTEGvnouFwCROz/R5OWsdC1EoZoaOcPfR/pqBVJSZRWVEopd
-         Eh3atlheNSLK8us3uZMVOkKCf1JjSKBc2+OD08G1ptrd80ykBFhyk/9zcClKYo6wjE
-         3wrFRHkFPU0+BFbmhLcl1IyXUyOyb77ylK5wgDEk=
+        b=gRcdliTgGQNJ8VTa3m3gMCrsZOj7sYFAFO+nPe7gc1CV6y/OlP1p6w6HamFm9aSxl
+         SI0/UcuaibpbMG6TAhOQgwewxR1ciQ7rUNhwQIlOmJF+IzxU2Im1/622Pn2jNwY1aT
+         M1Qmc4q/xTqsrhYcDPG4rrVq+qNHEirj90kvtwX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Jyri Sarha <jsarha@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/66] ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
-Date:   Thu,  9 May 2019 20:41:57 +0200
-Message-Id: <20190509181304.226182023@linuxfoundation.org>
+Subject: [PATCH 4.19 23/66] drm/omap: hdmi4_cec: Fix CEC clock handling for PM
+Date:   Thu,  9 May 2019 20:41:58 +0200
+Message-Id: <20190509181304.343756327@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -62,34 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cacea3a90e211f0c111975535508d446a4a928d2 ]
+[ Upstream commit 36a1da15b5df493241b0011d2185fdd724ac1ed1 ]
 
-w_text_param can be NULL and it is being dereferenced without checking.
-Add the missing sanity check to prevent  NULL pointer dereference.
+If CONFIG_OMAP4_DSS_HDMI_CEC is enabled in .config, deeper SoC idle
+states are blocked because the CEC clock gets always enabled on init.
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Let's fix the issue by moving the CEC clock handling to happen later in
+hdmi_cec_adap_enable() as suggested by Hans Verkuil <hverkuil@xs4all.nl>.
+This way the CEC clock gets only enabled when needed. This can be tested
+by doing cec-ctl --playback to enable the CEC, and doing cec-ctl --clear
+to disable it.
+
+Let's also fix the typo for "divider" in the comments while at it.
+
+Fixes: 8d7f934df8d8 ("omapdrm: hdmi4_cec: add OMAP4 HDMI CEC support")
+Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jyri Sarha <jsarha@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190326151438.32414-1-tony@atomide.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c | 26 ++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 9b78fb3daa7bb..2257b1b0151c4 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3847,6 +3847,10 @@ snd_soc_dapm_free_kcontrol(struct snd_soc_card *card,
- 	int count;
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
+index 340383150fb98..ebf9c96d43eee 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c
+@@ -175,6 +175,7 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
+ 		REG_FLD_MOD(core->base, HDMI_CORE_SYS_INTR_UNMASK4, 0, 3, 3);
+ 		hdmi_wp_clear_irqenable(core->wp, HDMI_IRQ_CORE);
+ 		hdmi_wp_set_irqstatus(core->wp, HDMI_IRQ_CORE);
++		REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
+ 		hdmi4_core_disable(core);
+ 		return 0;
+ 	}
+@@ -182,16 +183,24 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
+ 	if (err)
+ 		return err;
  
- 	devm_kfree(card->dev, (void *)*private_value);
++	/*
++	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
++	 * set the divider to 24 to get 48/24=2MHz clock
++	 */
++	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
 +
-+	if (!w_param_text)
-+		return;
+ 	/* Clear TX FIFO */
+ 	if (!hdmi_cec_clear_tx_fifo(adap)) {
+ 		pr_err("cec-%s: could not clear TX FIFO\n", adap->name);
+-		return -EIO;
++		err = -EIO;
++		goto err_disable_clk;
+ 	}
+ 
+ 	/* Clear RX FIFO */
+ 	if (!hdmi_cec_clear_rx_fifo(adap)) {
+ 		pr_err("cec-%s: could not clear RX FIFO\n", adap->name);
+-		return -EIO;
++		err = -EIO;
++		goto err_disable_clk;
+ 	}
+ 
+ 	/* Clear CEC interrupts */
+@@ -236,6 +245,12 @@ static int hdmi_cec_adap_enable(struct cec_adapter *adap, bool enable)
+ 		hdmi_write_reg(core->base, HDMI_CEC_INT_STATUS_1, temp);
+ 	}
+ 	return 0;
 +
- 	for (count = 0 ; count < num_params; count++)
- 		devm_kfree(card->dev, (void *)w_param_text[count]);
- 	devm_kfree(card->dev, w_param_text);
++err_disable_clk:
++	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
++	hdmi4_core_disable(core);
++
++	return err;
+ }
+ 
+ static int hdmi_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
+@@ -333,11 +348,8 @@ int hdmi4_cec_init(struct platform_device *pdev, struct hdmi_core_data *core,
+ 		return ret;
+ 	core->wp = wp;
+ 
+-	/*
+-	 * Initialize CEC clock divider: CEC needs 2MHz clock hence
+-	 * set the devider to 24 to get 48/24=2MHz clock
+-	 */
+-	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0x18, 5, 0);
++	/* Disable clock initially, hdmi_cec_adap_enable() manages it */
++	REG_FLD_MOD(core->wp->base, HDMI_WP_CLK, 0, 5, 0);
+ 
+ 	ret = cec_register_adapter(core->adap, &pdev->dev);
+ 	if (ret < 0) {
 -- 
 2.20.1
 
