@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDA0C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED7AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F193204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D4C20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428182;
-	bh=gB4rxXtmZhaQAk8GNiRvnotbYsWheyhY6t08SUjxvUk=;
+	s=default; t=1557428188;
+	bh=GnB4mLSRRipVoJKGB3Hsztd53ht23uQOmOMWNCqXfsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqHmo9oeDXLDOHpVyYx+f1lfd0CBHuVYhW0wV3aid7db05Ooud9WO0SveqMBp2mNR
-	 nBW/1J+SaT+y9GLpP3Rq7r37JC6QRayyMBfINPYA2cejVkP63mkAU0WS9GVvdImgnL
-	 vifNZZGtIoD27W6Y8Of7aeujxN33qhNOfVQdQBMM=
+	b=ih6odcP5A8wpB5lm3IfgkaGj5a122JhR72gru8/bOin6WR5TDy/foCl5g92IE8q+3
+	 31XQBzS8VrrgmB3hUbIWwJmdl3nxHJSGl3z7gSWTnv3Fn/fPiG6Hm+kjWeQAuw/PAh
+	 wL14W2I9pedO2DosDB7LXVtYDyHNZkwoFSLJu5ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfEIS4V (ORCPT
+        id S1729135AbfEIS41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:56:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbfEISzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:08 -0400
+        id S1728919AbfEISzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90104204FD;
-        Thu,  9 May 2019 18:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6331F217D6;
+        Thu,  9 May 2019 18:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428108;
-        bh=gB4rxXtmZhaQAk8GNiRvnotbYsWheyhY6t08SUjxvUk=;
+        s=default; t=1557428099;
+        bh=GnB4mLSRRipVoJKGB3Hsztd53ht23uQOmOMWNCqXfsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrsiV788cMIlCtq9S9M5BysuEDUz5aL2u4S0NLOjyOO9ijNJDGBK+l2Rv3GE3oK2u
-         xjhbbmouUwWVDKFSSdWvUA771HHSvgT6Qrfygq6oEyRjCaWueVA36fknc6zb3wxVnf
-         PynUw7NiGU/hXRfLnJzyEhWD0jkg+c5RFsERp4TQ=
+        b=PNSHXZ4n3k8iugyg9w+PJxBA2Se1Wv1DH3iJDKarlXx7Z2o7olxlI68O5mipNzB8v
+         bG0ExrZ3L7pCF1lVOg72YIpCXoQrdGrfLfzGo8FzARYm/nM/x0GzL3shQC+cTAKR5a
+         wSpJH+IUmvCvNeWxP5rpXJkQGmDzH/G/9qXqvArs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Christian Gromm <christian.gromm@microchip.com>
-Subject: [PATCH 5.1 06/30] staging: most: sound: pass correct device when creating a sound card
-Date:   Thu,  9 May 2019 20:42:38 +0200
-Message-Id: <20190509181252.039168954@linuxfoundation.org>
+        stable@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>,
+        Johan Hovold <johan@kernel.org>,
+        Rui Miguel Silva <rmfrfs@gmail.com>
+Subject: [PATCH 5.1 03/30] staging: greybus: power_supply: fix prop-descriptor request size
+Date:   Thu,  9 May 2019 20:42:35 +0200
+Message-Id: <20190509181251.309889371@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -59,33 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gromm <christian.gromm@microchip.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 98592c1faca82a9024a64e4ecead68b19f81c299 upstream.
+commit 47830c1127ef166af787caf2f871f23089610a7f upstream.
 
-This patch fixes the usage of the wrong struct device when calling
-function snd_card_new.
+Since moving the message buffers off the stack, the dynamically
+allocated get-prop-descriptor request buffer is incorrectly sized due to
+using the pointer rather than request-struct size when creating the
+operation.
 
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
-Fixes: 69c90cf1b2fa ("staging: most: sound: call snd_card_new with struct device")
-Cc: stable <stable@vger.kernel.org>
+Fortunately, the pointer size is always larger than this one-byte
+request, but this could still cause trouble on the remote end due to the
+unexpected message size.
+
+Fixes: 9d15134d067e ("greybus: power_supply: rework get descriptors")
+Cc: stable <stable@vger.kernel.org>     # 4.9
+Cc: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/most/sound/sound.c |    2 +-
+ drivers/staging/greybus/power_supply.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/most/sound/sound.c
-+++ b/drivers/staging/most/sound/sound.c
-@@ -622,7 +622,7 @@ static int audio_probe_channel(struct mo
- 	INIT_LIST_HEAD(&adpt->dev_list);
- 	iface->priv = adpt;
- 	list_add_tail(&adpt->list, &adpt_list);
--	ret = snd_card_new(&iface->dev, -1, "INIC", THIS_MODULE,
-+	ret = snd_card_new(iface->driver_dev, -1, "INIC", THIS_MODULE,
- 			   sizeof(*channel), &adpt->card);
- 	if (ret < 0)
- 		goto err_free_adpt;
+--- a/drivers/staging/greybus/power_supply.c
++++ b/drivers/staging/greybus/power_supply.c
+@@ -520,7 +520,7 @@ static int gb_power_supply_prop_descript
+ 
+ 	op = gb_operation_create(connection,
+ 				 GB_POWER_SUPPLY_TYPE_GET_PROP_DESCRIPTORS,
+-				 sizeof(req), sizeof(*resp) + props_count *
++				 sizeof(*req), sizeof(*resp) + props_count *
+ 				 sizeof(struct gb_power_supply_props_desc),
+ 				 GFP_KERNEL);
+ 	if (!op)
 
 
