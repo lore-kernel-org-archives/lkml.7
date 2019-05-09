@@ -2,125 +2,179 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD31C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CDC2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF4621773
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tfJrJiKO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wm1dH3s9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfEILwZ (ORCPT
+        id S1726608AbfEILx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:52:25 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33352 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfEILwZ (ORCPT
+        Thu, 9 May 2019 07:53:28 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57688 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfEILx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:52:25 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m204so1686326oib.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 04:52:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iST7jMDClAzvyVwro4n5ml4YF9xDAvujMjiBR6BcQCA=;
-        b=tfJrJiKO3X51qShaVmgzO/MiU1GCxxnAb4Mq0Dm1hekkmBTXYqu0bBuAKtVbfy7fmq
-         GRTn/d1UuFpn0ifvaih4gEc5Dqg8lXbtc6OIjPMc5Q+ONvCj8Q8O3HwdayDjG3BPhnxl
-         lv8TGml4iEBRGtVxPP/1jxVjiWSI2dq7MSyZykYH2TQLs6MkAN76KZZ7JJgjb9+x7qwg
-         l1uxRorElxsOF0+qP4bZcXbKYPgJ15EEHojRBPFQuhlGhmDo+RQJ5P4SRx9KqESPHnPK
-         JL0T5YtyHRwUSesfqqPoUaTFynSoQnHfd8Sva1YG0o0NieT1YgeV8SyWcMswPUAjAjzB
-         LXRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iST7jMDClAzvyVwro4n5ml4YF9xDAvujMjiBR6BcQCA=;
-        b=YiPOgfcJ+YNMcEJ/axz8FoPdf4pACL+uIPQbjJJiVcL7dL69Bg/h3E9D4Mn5i0X9xl
-         34f/xWYEJB41fob+nO7bgNPoLiDDpFCAa+sPPaEisz0eq8ZiCh+YI3WYctqtCgEL/aN8
-         jtOoWRV8B3WmZMhkymRl45ubomKoyGL2Nmn7kMJ2XhXa3VpT2+WM1TDbez1gnbBes2aw
-         dCxf/PNPnwag3dw3ril2Mu+Hvh6cvNozYpC6b1NSePqy+xLSvf4YUyR2EI0n5rdB3wYZ
-         RbkS082MaVygHLbK3IjM6ayStI+8KvJpwojN2GkRUbw9rQE/M1CPIPldJOK9XS2Tz6nH
-         MYHg==
-X-Gm-Message-State: APjAAAUYKUOnv0naFyUr9PohEajTdANQrdb0dp/eCv1GPL2vEVmlWok/
-        cOqm9PpRU62L8XVHlX1hf66g82cJ9EXNwyaS9vr1xA==
-X-Google-Smtp-Source: APXvYqzfbIKjWMZvLgY5HFX4aYZrPdOggzW32bQke3976sbDwqKvdqLAZs9W7DmV0kFlifRbsDnZvEqeREvhJAYLw7Y=
-X-Received: by 2002:aca:5986:: with SMTP id n128mr1174792oib.2.1557402744008;
- Thu, 09 May 2019 04:52:24 -0700 (PDT)
+        Thu, 9 May 2019 07:53:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WEmDk6UA0mKEAIOMzekDc5S1hEk04SivBh1zhxTc3zI=; b=Wm1dH3s9bdRNqyyTki9T0RnUc
+        8jrBIACYi/tZ6usBaEfAoRS/f0oz0FV3xupnk8a/Dsz459j7txFBPigZuHGdZfPh5dr8Cg6ekYhoq
+        lVhbZgWKqv8kIAgaO2M+5gS5OGNKobAbQ3HI2tw1w8inhvG3sfESnF9DQgw8qajnAlHak+/hL+pqs
+        puC3Q/+utjJWUAXlY3WNSI5JnszSlEoqG9a1qV7qBdLe0memcpibzZ5Tgv1B4umRNh/QJvhYjvfyx
+        UtWcaR0YGZXPr9D2DhmsRP2Z/mIA4LaJMlrnL0V+4t/jVFXn173CtbwJO085Viy9T1+ooZMRSR+64
+        mHXlmnZCA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOhbs-0002ix-D0; Thu, 09 May 2019 11:53:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6619A2029F87E; Thu,  9 May 2019 13:53:07 +0200 (CEST)
+Date:   Thu, 9 May 2019 13:53:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v8 04/16] sched/core: uclamp: Add system default clamps
+Message-ID: <20190509115307.GS2623@hirez.programming.kicks-ass.net>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-5-patrick.bellasi@arm.com>
+ <20190508190733.GC32547@worktop.programming.kicks-ass.net>
+ <20190508191529.GA26813@worktop.programming.kicks-ass.net>
+ <20190509091057.ckef2ley4eswyzds@e110439-lin>
 MIME-Version: 1.0
-References: <s5hsgu0ihyg.wl-tiwai@suse.de> <EksOpJxc6GB@mike.franken.de>
- <20190430090021.GF26516@lahna.fi.intel.com> <CAJZ5v0j_fYqtMv07C-V_9fCJ6=1ec3GjvT2M7PXVNSbZpoM67Q@mail.gmail.com>
- <20190502114839.GC24696@kroah.com> <CAEGmHFFGpUmK1VitkUxqXL29dBrKwbceT0pEOeR_7+_4+eLzvA@mail.gmail.com>
- <20190506064534.GG2895@lahna.fi.intel.com>
-In-Reply-To: <20190506064534.GG2895@lahna.fi.intel.com>
-From:   Furquan Shaikh <furquan@google.com>
-Date:   Thu, 9 May 2019 04:52:12 -0700
-Message-ID: <CAEGmHFHfMtuNk9MAFxFAabZnTxQPQyqaiqZyH2Ou7AWZ4ePS5w@mail.gmail.com>
-Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and thunderbolt)
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>, mh@mike.franken.de,
-        Lukas Wunner <lukas@wunner.de>, Takashi Iwai <tiwai@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, ckellner@redhat.com,
-        Jiri Slaby <jslaby@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Robert Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509091057.ckef2ley4eswyzds@e110439-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 5, 2019 at 11:45 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Fri, May 03, 2019 at 04:35:02PM -0700, Furquan Shaikh wrote:
-> > Thanks for reporting the issue and apologize for the breakage. When I
-> > pushed the patch, my understanding was that the device drivers do not
-> > depend on stale GPE events to take any action.
-> >
-> > I am curious to understand the behavior for the thunderbolt device
-> > since I do not have one to test with. The failure seems to be a result
-> > of either having a edge-triggered interrupt or a pulse interrupt which
-> > indicates some kind of ready condition to the kernel driver. All the
-> > runtime GPEs seem to be initialized as part of acpi_init before ACPI
-> > bus is scanned. So, is this some special kind of requirement for
-> > thunderbolt that requires GPE enabled before the device can actually
-> > be probed. And so the GPEs going active before being enabled are then
-> > used as a way to call into ACPI Method to enable something which is
-> > essential for probing of device?
->
-> IIRC the idea is that when you boot with a TBT device connected (this is
-> only for the BIOS assisted/ACPI enumeration mode) the Thunderbolt host
-> router (the device with PCIe switch + xHCI + NHI) is configured in two
-> phases. The basic configuration is done in the ASL code that then waits
-> for a synchronization event (signal) from the SMI hotplug handler that
-> allows it to continue. The GPE which can be either edge or level is then
-> used to call the SMI hotplug handler to initialize the host router and
-> its resources properly.
->
-> If this is not done the PCI stack finds the host router half-configured
-> causing the failure.
+On Thu, May 09, 2019 at 10:10:57AM +0100, Patrick Bellasi wrote:
+> On 08-May 21:15, Peter Zijlstra wrote:
+> > On Wed, May 08, 2019 at 09:07:33PM +0200, Peter Zijlstra wrote:
+> > > On Tue, Apr 02, 2019 at 11:41:40AM +0100, Patrick Bellasi wrote:
+> > > > +static inline struct uclamp_se
+> > > > +uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+> > > > +{
+> > > > +	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
+> > > > +	struct uclamp_se uc_max = uclamp_default[clamp_id];
+> > > > +
+> > > > +	/* System default restrictions always apply */
+> > > > +	if (unlikely(uc_req.value > uc_max.value))
+> > > > +		return uc_max;
+> > > > +
+> > > > +	return uc_req;
+> > > > +}
+> > > > +
+> > > > +static inline unsigned int
+> > > > +uclamp_eff_bucket_id(struct task_struct *p, unsigned int clamp_id)
+> > > > +{
+> > > > +	struct uclamp_se uc_eff;
+> > > > +
+> > > > +	/* Task currently refcounted: use back-annotated (effective) bucket */
+> > > > +	if (p->uclamp[clamp_id].active)
+> > > > +		return p->uclamp[clamp_id].bucket_id;
+> > > > +
+> > > > +	uc_eff = uclamp_eff_get(p, clamp_id);
+> > > > +
+> > > > +	return uc_eff.bucket_id;
+> > > > +}
+> > > > +
+> > > > +unsigned int uclamp_eff_value(struct task_struct *p, unsigned int clamp_id)
+> > > > +{
+> > > > +	struct uclamp_se uc_eff;
+> > > > +
+> > > > +	/* Task currently refcounted: use back-annotated (effective) value */
+> > > > +	if (p->uclamp[clamp_id].active)
+> > > > +		return p->uclamp[clamp_id].value;
+> > > > +
+> > > > +	uc_eff = uclamp_eff_get(p, clamp_id);
+> > > > +
+> > > > +	return uc_eff.value;
+> > > > +}
+> > > 
+> > > This is 'wrong' because:
+> > > 
+> > >   uclamp_eff_value(p,id) := uclamp_eff(p,id).value
+> > 
+> > Clearly I means to say the above does not hold with the given
+> > implementation, while the naming would suggest it does.
+> 
+> Not sure to completely get your point...
 
-Thanks for the explanation!
+the point is that uclamp_eff_get() doesn't do the back annotate thing
+and therefore returns something entirely different from
+uclamp_eff_{bucket_id,value}(), where the naming would suggest it in
+fact returns the same thing.
 
->
-> > The other question I have is given that handling of GPE events that
-> > were active before being enabled is required at least for some set of
-> > devices (e.g. thunderbolt), what is a good way to solve the original
-> > problem that was being addressed by the patch being reverted i.e.
-> > stale events resulting in spurious wakes on wakeup GPEs. One way I can
-> > think of is clearing the status of GPEs when they are setup for
-> > wake(acpi_setup_gpe_for_wake). What do you think?
->
-> Sounds good to me.
+> > > Which seems to suggest the uclamp_eff_*() functions want another name.
+> 
+> That function returns the effective value of a task, which is either:
+>  1. the back annotated value for a RUNNABLE task
+> or
+>  2. the aggregation of task-specific, system-default and cgroup values
+>     for a non RUNNABLE task.
 
-I will work on this and test it out to see how it goes. Thanks!
+Right, but uclamp_eff_get() doesn't do 1, while the other two do do it.
+And that is confusing.
+
+> > > Also, suppose the above would be true; does GCC really generate better
+> > > code for the LHS compared to the RHS?
+> 
+> It generate "sane" code which implements the above logic and allows
+> to know that whenever we call uclamp_eff_value(p,id) we get the most
+> updated effective value for a task, independently from its {!}RUNNABLE
+> state.
+> 
+> I would keep the function but, since Suren also complained also about
+> the name... perhaps I should come up with a better name? Proposals?
+
+Right, so they should move to the patch where they're needed, but I was
+wondering why you'd not written something like:
+
+static inline
+struct uclamp_se uclamp_active(struct task_struct *p, unsigned int clamp_id)
+{
+	if (p->uclamp[clamp_id].active)
+		return p->uclamp[clamp_id];
+
+	return uclamp_eff(p, clamp_id);
+}
+
+And then used:
+
+	uclamp_active(p, id).{value,bucket_id}
+
+- OR -
+
+have uclamp_eff() include the active thing, afaict the callsite in
+uclamp_rq_inc_id() guarantees !active.
+
+In any case, I'm thinking the foo().member notation saves us from having
+to have two almost identical functions and the 'inline' part should get
+GCC to generate sane code.
