@@ -2,116 +2,202 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BA9C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C667EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419B52145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="YJnaVUoZ"
+	by mail.kernel.org (Postfix) with ESMTP id 968B72145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfEIXyu (ORCPT
+        id S1726870AbfEIXzi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 19:54:50 -0400
-Received: from mail-eopbgr810125.outbound.protection.outlook.com ([40.107.81.125]:6064
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726701AbfEIXyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 19:54:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U6LpKe26DCexrrqFo0FVXVMPJNvpHbzyDK1HZIWiICg=;
- b=YJnaVUoZ6PByzQwTEdz18zlPV9dr0/+OP/YTNY+CFxIP/pWZrb9CZqLMNu09Wm+l6nIWP4QmMrO4pZ/qk1Xf82rNur5SU4wQy9kfFP5gah8wFw8iSRySSc1ztyOihsxRb2x9GcNEb0EWIfjkJYSuCAIaN1dZE28RoiNSl42XxZY=
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
- CY4PR2201MB1047.namprd22.prod.outlook.com (10.171.221.167) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Thu, 9 May 2019 23:54:46 +0000
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::954e:662f:d233:dc53]) by CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::954e:662f:d233:dc53%4]) with mapi id 15.20.1856.012; Thu, 9 May 2019
- 23:54:46 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/3] MIPS: SGI-IP27: move IP27 specific code out of
- pci-ip27.c into new file
-Thread-Topic: [PATCH v4 1/3] MIPS: SGI-IP27: move IP27 specific code out of
- pci-ip27.c into new file
-Thread-Index: AQHVBRkpG9b84HQxUEuMbXrsdvRr/6ZgwXGAgAAaYICAAp8jAA==
-Date:   Thu, 9 May 2019 23:54:46 +0000
-Message-ID: <20190509235444.3bvfwkl7y3cjc2yv@pburton-laptop>
-References: <20190507210917.4691-1-tbogendoerfer@suse.de>
- <20190507210917.4691-2-tbogendoerfer@suse.de>
- <20190508061815.GB19227@infradead.org>
- <20190508095239.d055251e838a9e4fd2eff522@suse.de>
-In-Reply-To: <20190508095239.d055251e838a9e4fd2eff522@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR04CA0034.namprd04.prod.outlook.com
- (2603:10b6:a03:40::47) To CY4PR2201MB1272.namprd22.prod.outlook.com
- (2603:10b6:910:6e::23)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [73.93.154.214]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f23a97b3-e54c-4461-a8d8-08d6d4d9b6c1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR2201MB1047;
-x-ms-traffictypediagnostic: CY4PR2201MB1047:
-x-microsoft-antispam-prvs: <CY4PR2201MB1047E216A0271FB94852DB7CC1330@CY4PR2201MB1047.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 003245E729
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(39850400004)(346002)(366004)(396003)(376002)(189003)(199004)(76176011)(99286004)(6916009)(6512007)(9686003)(102836004)(52116002)(2906002)(7736002)(229853002)(305945005)(6486002)(6436002)(6506007)(4326008)(386003)(6246003)(6116002)(3846002)(316002)(54906003)(26005)(53936002)(58126008)(478600001)(256004)(186003)(4744005)(1076003)(73956011)(64756008)(14454004)(66446008)(66556008)(66946007)(66476007)(33716001)(8676002)(486006)(8936002)(81166006)(81156014)(476003)(11346002)(446003)(44832011)(68736007)(5660300002)(42882007)(71200400001)(71190400001)(66066001)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1047;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xPHLggLPhxFE24Ny85cuUs1B7s35tIjcG1uA0Exu4xZMZzkCqCd1j66GqtFMZvZ29CbU24ma4gYL4E5n7eSxmKIxpN3NrZvZU0lY+2rDpO7JXldo7QdIgonp++xwPJRyQ5WPBDcmPH5ARkRdDfp8+dWBLfNcD77NeDjiK9bJW0D0qwkCADaeFgouD2VzAFWKGuzihNb6/lpoZ3+obKmm3hXwj/vFBhktUnx7+F8RrNrPTnFh9kasSzKpBdDb8Zkm8Pq+THChS8MJwvXyvSL5xtjCiVchwsAQ636R6rL4/ZVwvlMuNFgiHnE1ISDDq9LV6Exm22Hvgo3CFKT5fRTAUkyU0g48ijadW9XdTuYmZf+CFZPH+0mKkbq/+Leq188rpkiRlo5noxWhFIXgTF5s3mG3niqiYWn7fLQT0Fn7tco=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2D7D8AA3636B67449B080C63319D98A7@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f23a97b3-e54c-4461-a8d8-08d6d4d9b6c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 23:54:46.2023
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1047
+        Thu, 9 May 2019 19:55:38 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42962 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbfEIXzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 19:55:38 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 01C6E14DEA669;
+        Thu,  9 May 2019 16:55:36 -0700 (PDT)
+Date:   Thu, 09 May 2019 16:55:36 -0700 (PDT)
+Message-Id: <20190509.165536.716778200205224094.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 May 2019 16:55:37 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
 
-On Wed, May 08, 2019 at 09:52:39AM +0200, Thomas Bogendoerfer wrote:
-> On Tue, 7 May 2019 23:18:15 -0700
-> Christoph Hellwig <hch@infradead.org> wrote:
->=20
-> > On Tue, May 07, 2019 at 11:09:13PM +0200, Thomas Bogendoerfer wrote:
-> > > Code in pci-ip27.c will be moved to drivers/pci/controller therefore
-> > > platform specific needs to be extracted and put to the right place.
-> >=20
-> > I thogh the drivers/pci/controller was nixed by Lorenzo?
->=20
-> yes, I missed this. Paul should I respin ?
+Several bug fixes, many are quick merge-window regression cures:
 
-No, I've basically dropped this patch whilst applying patches 2 & 3.
-Could you check that mips-next looks good? I checked that ip27_defconfig
-builds but don't have any way to run it.
+1) When NLM_F_EXCL is not set, allow same fib rule insertion.  From
+   Hangbin Liu.
 
-Thanks,
-    Paul
+2) Several cures in sja1105 DSA driver (while loop exit condition fix,
+   return of negative u8, etc.) from Vladimir Oltean.
+
+3) Handle tx/rx delays in realtek PHY driver properly, from Serge
+   Semin.
+
+4) Double free in cls_matchall, from Pieter Jansen van Vuuren.
+
+5) Disable SIOCSHWTSTAMP in macvlan/vlan containers, from Hangbin Liu.
+
+6) Endainness fixes in aqc111, from Oliver Neukum.
+
+7) Handle errors in packet_init properly, from Haibing Yue.
+
+8) Various W=1 warning fixes in kTLS, from Jakub Kicinski.
+
+Please pull, thanks a lot!
+
+The following changes since commit 80f232121b69cc69a31ccb2b38c1665d770b0710:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next (2019-05-07 22:03:58 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net 
+
+for you to fetch changes up to 6c9f05441477e29783e8391d06c067e4a3b23d47:
+
+  nfp: add missing kdoc (2019-05-09 16:41:46 -0700)
+
+----------------------------------------------------------------
+Cheng Han (1):
+      dwmac4_prog_mtl_tx_algorithms() missing write operation
+
+Claudiu Manoil (1):
+      ptp_qoriq: fix NULL access if ptp dt node missing
+
+Colin Ian King (3):
+      net: dsa: lantiq: fix spelling mistake "brigde" -> "bridge"
+      net: hns3: remove redundant assignment of l2_hdr to itself
+      net: dsa: sja1105: fix check on while loop exit
+
+David Ahern (1):
+      ipv4: Fix raw socket lookup for local traffic
+
+David S. Miller (4):
+      Merge branch 'phy-realtek-delays'
+      Merge tag 'batadv-net-for-davem-20190509' of git://git.open-mesh.org/linux-merge
+      Merge git://git.kernel.org/.../bpf/bpf
+      Merge branch 'tls-warnings'
+
+Gary Lin (1):
+      docs/btf: fix the missing section marks
+
+Geert Uytterhoeven (1):
+      openvswitch: Replace removed NF_NAT_NEEDED with IS_ENABLED(CONFIG_NF_NAT)
+
+Hangbin Liu (3):
+      fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
+      macvlan: disable SIOCSHWTSTAMP in container
+      vlan: disable SIOCSHWTSTAMP in container
+
+Jakub Kicinski (4):
+      net/tcp: use deferred jump label for TCP acked data hook
+      net/tls: remove set but not used variables
+      net/tls: handle errors from padding_length()
+      nfp: add missing kdoc
+
+Jason Wang (2):
+      tuntap: fix dividing by zero in ebpf queue selection
+      tuntap: synchronize through tfiles array instead of tun->numqueues
+
+Jiong Wang (1):
+      nfp: bpf: fix static check error through tightening shift amount adjustment
+
+Kefeng Wang (1):
+      net: aquantia: fix undefined devm_hwmon_device_register_with_info reference
+
+Linus Lüssing (1):
+      batman-adv: mcast: fix multicast tt/tvlv worker locking
+
+Lorenz Bauer (1):
+      selftests: bpf: initialize bpf_object pointers where needed
+
+Oliver Neukum (3):
+      aqc111: fix endianness issue in aqc111_change_mtu
+      aqc111: fix writing to the phy on BE
+      aqc111: fix double endianness swap on BE
+
+Paolo Abeni (1):
+      selinux: do not report error on connect(AF_UNSPEC)
+
+Parthasarathy Bhuvaragan (1):
+      tipc: fix hanging clients using poll with EPOLLOUT flag
+
+Pieter Jansen van Vuuren (2):
+      nfp: reintroduce ndo_get_port_parent_id for representor ports
+      net/sched: avoid double free on matchall reoffload
+
+Serge Semin (2):
+      net: phy: realtek: Add rtl8211e rx/tx delays config
+      net: phy: realtek: Change TX-delay setting for RGMII modes only
+
+Simon Wunderlich (1):
+      batman-adv: Start new development cycle
+
+Vladimir Oltean (1):
+      net: dsa: sja1105: Don't return a negative in u8 sja1105_stp_state_get
+
+Wang Hai (1):
+      net: dsa: sja1105: Make 'sja1105et_regs' and 'sja1105pqrs_regs' static
+
+YueHaibing (1):
+      packet: Fix error path in packet_init
+
+ Documentation/bpf/btf.rst                                 |  2 ++
+ drivers/net/dsa/lantiq_gswip.c                            |  8 ++++----
+ drivers/net/dsa/sja1105/sja1105_main.c                    |  6 +++++-
+ drivers/net/dsa/sja1105/sja1105_spi.c                     | 11 ++++++-----
+ drivers/net/ethernet/aquantia/atlantic/aq_drvinfo.c       |  5 +++++
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c           |  2 +-
+ drivers/net/ethernet/netronome/nfp/bpf/jit.c              | 13 ++++++++++++-
+ drivers/net/ethernet/netronome/nfp/ccm.h                  |  2 ++
+ drivers/net/ethernet/netronome/nfp/nfp_net_repr.c         |  1 +
+ drivers/net/ethernet/netronome/nfp/nfp_port.c             | 16 ++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c         |  2 ++
+ drivers/net/macvlan.c                                     |  2 ++
+ drivers/net/phy/realtek.c                                 | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ drivers/net/tun.c                                         | 14 ++++++++++++--
+ drivers/net/usb/aqc111.c                                  | 31 +++++++++++++++++++++++--------
+ drivers/ptp/ptp_qoriq.c                                   |  3 +++
+ include/net/tcp.h                                         |  2 +-
+ net/8021q/vlan_dev.c                                      |  4 +++-
+ net/batman-adv/main.c                                     |  1 +
+ net/batman-adv/main.h                                     |  2 +-
+ net/batman-adv/multicast.c                                | 11 +++--------
+ net/batman-adv/types.h                                    |  5 +++++
+ net/core/fib_rules.c                                      |  6 +++---
+ net/ipv4/raw.c                                            |  4 ++--
+ net/ipv4/tcp_input.c                                      | 16 +++++++++++-----
+ net/openvswitch/conntrack.c                               |  4 ++--
+ net/packet/af_packet.c                                    | 25 ++++++++++++++++++++-----
+ net/sched/cls_matchall.c                                  |  1 +
+ net/tipc/socket.c                                         |  4 ++--
+ net/tls/tls_device.c                                      |  6 ++----
+ net/tls/tls_sw.c                                          | 30 ++++++++++++++++++++++--------
+ security/selinux/hooks.c                                  |  8 ++++----
+ tools/testing/selftests/bpf/prog_tests/bpf_verif_scale.c  |  2 +-
+ tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c |  2 +-
+ tools/testing/selftests/bpf/prog_tests/tp_attach_query.c  |  3 +++
+ 35 files changed, 250 insertions(+), 74 deletions(-)
