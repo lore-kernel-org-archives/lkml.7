@@ -2,125 +2,113 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,
+	URIBL_SBL_A,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439EBC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54ACDC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24529208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB7A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEIO3q (ORCPT
+        id S1726706AbfEIObv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:29:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44123 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfEIO3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:29:46 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hOk3K-0000kg-Oh; Thu, 09 May 2019 14:29:42 +0000
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190508224201.27120-1-colin.king@canonical.com>
- <20190509141313.GA17053@zn.tnic>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
-Message-ID: <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
-Date:   Thu, 9 May 2019 15:29:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 10:31:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44636 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726234AbfEIObv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:31:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E498EABD4;
+        Thu,  9 May 2019 14:31:49 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, stefan.wahren@i2se.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Subject: [PATCH v3 0/4] staging: vchiq: use interruptible waits
+Date:   Thu,  9 May 2019 16:31:32 +0200
+Message-Id: <20190509143137.31254-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190509141313.GA17053@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/2019 15:13, Borislav Petkov wrote:
-> On Wed, May 08, 2019 at 11:42:01PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The variable tad_base is being set to a value that is never read
->> and is being over-written on the next iteration of a for-loop.
->> This assignment is therefore redundant and can be removed.
->>
->> Addresses-Coverity: ("Unused value")
-> 
-> What's that tag's function supposed to be?
+Hi,
+this series tries to address an issue that came up in Raspbian's kernel
+tree [1] and upstream distros [2][3].
 
-These are the Coverity static analysis warning/error message
-classifications.  Tagging them should be useful for several reasons:
+We adopted some changes that moved wait calls from a custom
+implementation to the more standard killable family of functions. Users
+complained that all the VCHIQ threads showed up in D state (which is the
+expected behaviour).
 
-1. We can classify the types of issues being fixed
-2. We can see how many issues are being found/fixed with the use of
-static analysis tools like Coverity
-3. It provides some context on how these bugs were being found.
+The custom implementation we deleted tried to mimic the killable family
+of functions, yet accepted more signals than the later; SIGKILL |
+SIGINT | SIGQUIT | SIGTRAP | SIGSTOP | SIGCONT for the custom
+implementation as opposed to plain old SIGKILL.
 
-I hope that helps.
+Raspbian maintainers decided roll back some of those changes and leave
+the wait functions as interruptible. Hence creating some divergence
+between both trees.
 
-> 
-> I see a lot of those in commit messages but it is nowhere documented in
-> the tree.
-> 
-> $ git grep -i coverity
-> 
-> doesn't give anything relevant.
-> 
-> Hmm?
-> 
+One could argue that not liking having the threads stuck in D state is
+not really a software issue. It's more a cosmetic thing that can scare
+people when they look at "uptime". On the other hand, if we are ever to
+unstage this driver, we'd really need a proper justification for using
+the killable family of functions. Which I think it's not really clear at
+the moment.
+
+As Raspbian's kernel has been working for a while with interruptible
+waits I propose we follow through. If needed we can always go back to
+killable. But at least we'll have a proper understanding on the actual
+needs. In the end the driver is in staging, and the potential for errors
+small.
+
+The first 3 commits fix the issue, and should probably get in as soon as
+possible, the last commit is just cosmetic and can wait until 5.3.
+
+Regards,
+Nicolas
+
+[1] https://github.com/raspberrypi/linux/issues/2881
+[2] https://archlinuxarm.org/forum/viewtopic.php?f=65&t=13485
+[3] https://lists.fedoraproject.org/archives/list/arm@lists.fedoraproject.org/message/GBXGJ7DOV5CQQXFPOZCXTRD6W4BEPT4Q/
+
+--
+
+Changes since v2:
+  - Cleaned up revert commit message
+  - Rebase & merge conflict resolutions
+  - Add code cleanup suggested by Dan Carpenter
+
+Changes since v1:
+  - Proplery format revert commits
+  - Add code comment to remind of this issue
+  - Add Fixes tags
+
+Nicolas Saenz Julienne (4):
+  staging: vchiq_2835_arm: revert "quit using custom
+    down_interruptible()"
+  staging: vchiq: revert "switch to wait_for_completion_killable"
+  staging: vchiq: make wait events interruptible
+  staging: vchiq: stop explicitly comparing with zero to catch errors
+
+ .../bcm2835-camera/bcm2835-camera.c           | 11 ++-
+ .../interface/vchiq_arm/vchiq_2835_arm.c      |  2 +-
+ .../interface/vchiq_arm/vchiq_arm.c           | 85 +++++++++----------
+ .../interface/vchiq_arm/vchiq_connected.c     |  4 +-
+ .../interface/vchiq_arm/vchiq_core.c          | 53 +++++++-----
+ .../interface/vchiq_arm/vchiq_debugfs.c       |  4 +-
+ .../interface/vchiq_arm/vchiq_util.c          |  6 +-
+ 7 files changed, 82 insertions(+), 83 deletions(-)
+
+-- 
+2.21.0
 
