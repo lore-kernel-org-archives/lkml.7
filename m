@@ -2,156 +2,86 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B21DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D948C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B66D216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:40:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/utyUsD"
+	by mail.kernel.org (Postfix) with ESMTP id 790AD216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfEILkg (ORCPT
+        id S1726533AbfEILmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:40:36 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43205 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEILkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:40:35 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w33so1713948edb.10;
-        Thu, 09 May 2019 04:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FSGip4z/KWPVhsGKvSPgIq1lTytmruK7XInlkHDILPQ=;
-        b=G/utyUsDGRbuwFw0aoATcV1Xs4hDEh6HtyvdbaS9GevdPOcc3EAjTiEIo4dx+BuNnh
-         TORxF4jXdIFxvm3gGPOAzvcHBEW61kVc5dAlLgTC8tBKh4NF1PPRjsezvGRiE68l8W03
-         cuU6NvlzFHbZCnFcMqZWje++5pVuDqs8fbUAJ2TH6RhQrPrYG47lCUNWI1S0+hhA9b6H
-         c11R/rKzyeXHQ/8SWLK1l2xo1/rvpL6rWyHRaMmjAu1tymoUB7udpUET1HOHzZ2bT4Y7
-         SM1NMAyOCDdSwPaGeNRl4ziFQf9NsD3T0y4cAL2F6ttfXfnXmt255lONKHwVGTA1ItJu
-         8H6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FSGip4z/KWPVhsGKvSPgIq1lTytmruK7XInlkHDILPQ=;
-        b=Xs7rzd1iCo9PjaC6lOZ+QPgnd4oNHJ7nr37UpR5+Mnme+enuC5wVTulAat0cNz7WW0
-         rre3coFFqfaeNiFG7KcByI+DZnfx1OgTEkIa1iafqWy7XlFbQEVl4GQzD7ynk/2qz/LN
-         uNYQ/aYS8tSQvznLTSWccGC/jCtjVqJqeLaI/RNZxfxIdrqqWnppV8UEoLxOxQ+SDLh0
-         LvdkQ3bnJkbRSTyOOBW3bsEIWm/EtiypDydwEuFF8ZntQwvb8U1vGLgmmpxllAvq0tbm
-         VMW54s25v8nVLcDAffCSE0f4la3X3zUpX2M79qDdQa/26gS80i2/Em2ct6iLJ9sCSpOI
-         ajqA==
-X-Gm-Message-State: APjAAAU0Hx09/mEexgrtM1sm8Li5MPyddUUIXFIPLmdvyRJj726n69zq
-        oOLn8mEcdGa06giRRZ7nDiE=
-X-Google-Smtp-Source: APXvYqzzlDI8hv5Fkj2ZDSYXOri3/NCIu89/EmxXrDVN/5b4RJLnpbK1VQ4uXtluq50oNcsLlvJXwg==
-X-Received: by 2002:a50:991d:: with SMTP id k29mr3253480edb.29.1557402033554;
-        Thu, 09 May 2019 04:40:33 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id w10sm294057eja.30.2019.05.09.04.40.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 09 May 2019 04:40:32 -0700 (PDT)
-Date:   Thu, 9 May 2019 04:40:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: add most of Clang-specific flags unconditionally
-Message-ID: <20190509114030.GA7556@archlinux-i9>
-References: <20190509064455.1173-1-yamada.masahiro@socionext.com>
- <20190509111534.GA32696@archlinux-i9>
- <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
+        Thu, 9 May 2019 07:42:49 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2953 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725961AbfEILmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 07:42:49 -0400
+Received: from dggeml406-hub.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id CB2EC76134EE808CBEE2;
+        Thu,  9 May 2019 19:42:46 +0800 (CST)
+Received: from DGGEML423-HUB.china.huawei.com (10.1.199.40) by
+ dggeml406-hub.china.huawei.com (10.3.17.50) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 May 2019 19:42:46 +0800
+Received: from DGGEML532-MBS.china.huawei.com ([169.254.7.161]) by
+ dggeml423-hub.china.huawei.com ([10.1.199.40]) with mapi id 14.03.0439.000;
+ Thu, 9 May 2019 19:42:37 +0800
+From:   "weiyongjun (A)" <weiyongjun1@huawei.com>
+To:     Jason Wang <jasowang@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     yuehaibing <yuehaibing@huawei.com>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
+        "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>
+Subject: RE: [PATCH net V3 2/2] tuntap: synchronize through tfiles array
+ instead of tun->numqueues
+Thread-Topic: [PATCH net V3 2/2] tuntap: synchronize through tfiles array
+ instead of tun->numqueues
+Thread-Index: AQHVBhYoSZ6ZRjg1Y0O4UWjtdsAfSKZirDbg
+Date:   Thu, 9 May 2019 11:42:36 +0000
+Message-ID: <6AADFAC011213A4C87B956458587ADB40221319A@dggeml532-mbs.china.huawei.com>
+References: <1557372018-18544-1-git-send-email-jasowang@redhat.com>
+ <1557372018-18544-2-git-send-email-jasowang@redhat.com>
+In-Reply-To: <1557372018-18544-2-git-send-email-jasowang@redhat.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.30.138]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 08:35:05PM +0900, Masahiro Yamada wrote:
-> Hi.
-> 
-> On Thu, May 9, 2019 at 8:15 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Thu, May 09, 2019 at 03:44:55PM +0900, Masahiro Yamada wrote:
-> > > We do not support old Clang versions. Upgrade your clang version
-> > > if any of these flags is unsupported.
-> > >
-> > > Let's add flags within ifdef CONFIG_CC_IS_CLANG unconditionally,
-> > > except -fcatch-undefined-behavior.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > ---
-> > >
-> > >  Makefile                   | 10 +++++-----
-> > >  scripts/Makefile.extrawarn | 12 ++++++------
-> > >  2 files changed, 11 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index bd7ae11947cb..c71ffb6f55b5 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -731,15 +731,15 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
-> > >  KBUILD_CFLAGS += $(stackp-flags-y)
-> > >
-> > >  ifdef CONFIG_CC_IS_CLANG
-> > > -KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
-> > > -KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
-> > > -KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
-> > > +KBUILD_CPPFLAGS += -Qunused-arguments
-> > > +KBUILD_CFLAGS += -Wno-format-invalid-specifier
-> > > +KBUILD_CFLAGS += -Wno-gnu
-> > >  # Quiet clang warning: comparison of unsigned expression < 0 is always false
-> > > -KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
-> > > +KBUILD_CFLAGS += -Wno-tautological-compare
-> > >  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
-> > >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
-> > >  # See modpost pattern 2
-> > > -KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
-> > > +KBUILD_CFLAGS += -mno-global-merge
-> > >  KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
-> >
-> > I think we should just remove this, I'm fairly confident the kernel
-> > can't be reliably compiled with anything earlier than Clang 4 (Pixel 2
-> > was shipped with it but had some hacks, this commit is from Clang 3.5):
-> >
-> > https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
-> 
-> 
-> Oh, I did not know this was deprecated.
-> 
-> Could you send a patch to remove it
-> with filling the commit log ?
-
-Sure!
-
-> 
-> 
-> Thanks.
-> 
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To post to this group, send email to clang-built-linux@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAK7LNASpsid7_sh4rdRNSTwZ1YtW_%2BuH2eoarJNNUttntQZ-kg%40mail.gmail.com.
-> For more options, visit https://groups.google.com/d/optout.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXNvbiBXYW5nIFttYWlsdG86
+amFzb3dhbmdAcmVkaGF0LmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE1heSAwOSwgMjAxOSAxMToy
+MCBBTQ0KPiBUbzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZw0KPiBDYzogeXVlaGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPjsgeGl5b3Uu
+d2FuZ2NvbmdAZ21haWwuY29tOw0KPiB3ZWl5b25nanVuIChBKSA8d2VpeW9uZ2p1bjFAaHVhd2Vp
+LmNvbT47IGVyaWMuZHVtYXpldEBnbWFpbC5jb207DQo+IEphc29uIFdhbmcgPGphc293YW5nQHJl
+ZGhhdC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSCBuZXQgVjMgMi8yXSB0dW50YXA6IHN5bmNocm9u
+aXplIHRocm91Z2ggdGZpbGVzIGFycmF5IGluc3RlYWQNCj4gb2YgdHVuLT5udW1xdWV1ZXMNCj4g
+DQo+IFdoZW4gYSBxdWV1ZSh0ZmlsZSkgaXMgZGV0YWNoZWQgdGhyb3VnaCBfX3R1bl9kZXRhY2go
+KSwgd2UgbW92ZSB0aGUNCj4gbGFzdCBlbmFibGVkIHRmaWxlIHRvIHRoZSBwb3NpdGlvbiB3aGVy
+ZSBkZXRhY2hlZCBvbmUgc2l0IGJ1dCBkb24ndA0KPiBOVUxMIG91dCBsYXN0IHBvc2l0aW9uLiBX
+ZSBleHBlY3QgdG8gc3luY2hyb25pemUgdGhlIGRhdGFwYXRoIHRocm91Z2gNCj4gdHVuLT5udW1x
+dWV1ZXMuIFVuZm9ydHVuYXRlbHksIHRoaXMgd29uJ3Qgd29yayBzaW5jZSB3ZSdyZSBsYWNraW5n
+DQo+IHN1ZmZpY2llbnQgbWVjaGFuaXNtIHRvIG9yZGVyIG9yIHN5bmNocm9uaXplIHRoZSBhY2Nl
+c3MgdG8NCj4gdHVuLT5udW1xdWV1ZXMuDQo+IA0KPiBUbyBmaXggdGhpcywgTlVMTCBvdXQgdGhl
+IGxhc3QgcG9zaXRpb24gZHVyaW5nIGRldGFjaGluZyBhbmQgY2hlY2sNCj4gUkNVIHByb3RlY3Rl
+ZCB0ZmlsZSBhZ2FpbnN0IE5VTEwgaW5zdGVhZCBvZiBjaGVja2luZyB0dW4tPm51bXF1ZXVlcyBp
+bg0KPiBkYXRhcGF0aC4NCj4gDQo+IENjOiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5j
+b20+DQo+IENjOiBDb25nIFdhbmcgPHhpeW91Lndhbmdjb25nQGdtYWlsLmNvbT4NCj4gQ2M6IHdl
+aXlvbmdqdW4gKEEpIDx3ZWl5b25nanVuMUBodWF3ZWkuY29tPg0KPiBDYzogRXJpYyBEdW1hemV0
+IDxlcmljLmR1bWF6ZXRAZ21haWwuY29tPg0KPiBGaXhlczogYzhkNjhlNmJlMWMzYiAoInR1bnRh
+cDogbXVsdGlxdWV1ZSBzdXBwb3J0IikNCj4gU2lnbmVkLW9mZi1ieTogSmFzb24gV2FuZyA8amFz
+b3dhbmdAcmVkaGF0LmNvbT4NCj4gLS0tDQo+IENoYW5nZXMgZnJvbSBWMjoNCj4gLSByZXNhbXBs
+ZSBkdXJpbmcgZGV0YWNoIGluIHR1bl94ZHBfeG1pdCgpDQo+IENoYW5nZXMgZnJvbSBWMToNCj4g
+LSBrZWVwIHRoZSBjaGVjayBpbiB0dW5feGRwX3htaXQoKQ0KPiAtLS0NCg0KUmV2aWV3ZWQtYnk6
+IFdlaSBZb25nanVuIDx3ZWl5b25nanVuMUBodWF3ZWkuY29tPg0KDQpUaGFua3MNCg==
