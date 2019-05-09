@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38547C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8019C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D04C217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8742183F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427971;
-	bh=Ibtws5LG+vnbLSs2hHATQTdPi9vzfuTzlRM6ycO2Opo=;
+	s=default; t=1557427976;
+	bh=bAL8kjRN4RC2lhZGCofR/JGu5vg/0k3sxbHAr5YsJRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2oNyB0JyAntJLFW3nmM+YgZ1LD8tTFlXbkMXNBjC1pTAOXZA3z6AVSownNPeAN+x
-	 sFnzVNqfnY4bQV0TqL1MR3cVVSUehp2zqY35/YkTvgFDcfS4MFGYwQ8tvpQBKk7YCF
-	 2Ssq7vi1ALh9eDw4zcq4WChLPaGU50V6LrfIeKCo=
+	b=MuYHF2tgCthduYSKEAzy4CNN0l3aX89GhrW3eEd7lvF/GyLOPBolhj35D9+Eu5l/W
+	 yCWrR1jgpDsFdxaOziuMTA5juag+mTHqjTTaGI+otMA3HT4UMsKgiRXaGowbwyWXqr
+	 692RB4/mb+6gX8sDHlIBS6zfvDoOHPimd17/9rB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbfEISwt (ORCPT
+        id S1728784AbfEISwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:52:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728749AbfEISwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:46 -0400
+        id S1728334AbfEISwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDE0120578;
-        Thu,  9 May 2019 18:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354FB2177E;
+        Thu,  9 May 2019 18:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427966;
-        bh=Ibtws5LG+vnbLSs2hHATQTdPi9vzfuTzlRM6ycO2Opo=;
+        s=default; t=1557427968;
+        bh=bAL8kjRN4RC2lhZGCofR/JGu5vg/0k3sxbHAr5YsJRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+smWmF5BWf7KBYqeltLDr+Y3VSXmi1tBc1iNh0Sv6uoTCdpK2lrQodj1694kfmHv
-         Y7L9BDQnDecMZsjBDYSFeNg2TAnR+O0vkjq3y/ag4Fv9zjkcOyhSMtEaNTkWILBupM
-         GfW/nRo9RSZgb5OeXeLCnHBGwrscgkVoQzaNXE04=
+        b=mZnU3IUw18gDh3IaxVQsapxMA28QfVXfUssVwNsFicXVbjouVMP8E8WLGko02ksNU
+         iA1vWo3vRE/ZuR4++rZJbyY09UuWfER8muYGsnIkJ/14afCY1RUb3egpd+tmK48WI4
+         9AzcC/yu6x1vVhgO5MzKOpTLtBuvrJ2G3s8IU/AA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 35/95] drm/mediatek: Fix an error code in mtk_hdmi_dt_parse_pdata()
-Date:   Thu,  9 May 2019 20:41:52 +0200
-Message-Id: <20190509181311.753102908@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 36/95] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+Date:   Thu,  9 May 2019 20:41:53 +0200
+Message-Id: <20190509181311.821760144@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -59,31 +67,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d85978341e6a32e7443d9f28639da254d53f400 ]
+[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
 
-We don't want to overwrite "ret", it already holds the correct error
-code.  The "regmap" variable might be a valid pointer as this point.
+When an event is programmed with attr.wakeup_events=N (N>0), it means
+the caller is interested in getting a user level notification after
+N samples have been recorded in the kernel sampling buffer.
 
-Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+With precise events on Intel processors, the kernel uses PEBS.
+The kernel tries minimize sampling overhead by verifying
+if the event configuration is compatible with multi-entry PEBS mode.
+If so, the kernel is notified only when the buffer has reached its threshold.
+Other PEBS operates in single-entry mode, the kenrel is notified for each
+PEBS sample.
+
+The problem is that the current implementation look at frequency
+mode and event sample_type but ignores the wakeup_events field. Thus,
+it may not be possible to receive a notification after each precise event.
+
+This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
+is non-zero.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 862f3ec221318..c910850d20770 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1479,7 +1479,6 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	if (IS_ERR(regmap))
- 		ret = PTR_ERR(regmap);
- 	if (ret) {
--		ret = PTR_ERR(regmap);
- 		dev_err(dev,
- 			"Failed to get system configuration registers: %d\n",
- 			ret);
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 470d7daa915d9..77353555d491a 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3184,7 +3184,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
+ 
+ 	if (event->attr.precise_ip) {
+-		if (!event->attr.freq) {
++		if (!(event->attr.freq || event->attr.wakeup_events)) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_large_pebs_flags(event)))
 -- 
 2.20.1
 
