@@ -2,138 +2,132 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551AEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59431C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E4321019
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2C121744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXfXVZOp"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="T6AQPGcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfEIHLP (ORCPT
+        id S1726656AbfEIHMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:11:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56297 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbfEIHLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:11:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y2so1727484wmi.5;
-        Thu, 09 May 2019 00:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=yeih5zxBtRqzhLwIXeQlFEwe+jl8VzzLNsf4IP3ROwA=;
-        b=dXfXVZOpYbnXfmJSdxkI1o8u0QDAWtPiqHIh5zvHZEO4ZeRLxUw7hkEI+4noCdaf9I
-         A++DCjT69jHpSy5bvIp6OxxTHCeQH8JS8aJtPc59yQPhgetaDXWhGlUXAITHWJa3Ehic
-         uQwkQO7oOfXB7tYngUFD0kvD48AB5mnablTTKK8nFXhXCSN4FMssF7NR17MlfPvHUC7m
-         SN7m0ca4gVh8bR91szeQM9JrirHqrkpnUw7L3U2d4xE+7RcLA2FkQwhoJu5ojCVmnWL9
-         7Kh1iXatVJKpd5geNCiRgVOlUnFq8HwTU6TxVOQqpOBqCQ93DU1/ToU77CTWCltHKQOB
-         sMpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=yeih5zxBtRqzhLwIXeQlFEwe+jl8VzzLNsf4IP3ROwA=;
-        b=tVaQPhI5An4+IueZMP8yLhb24npsXVYNcXEx0U7uGWv1R9TDk07I2gI1MShYOdmYKq
-         rI9X0oPA2LkgrMss8hO+xTtc/eB80gCWsx0K5J6g5aJzMppR84kYDjiPaBEFIjR2Beo6
-         vRdgb2brR/fcxSpuc9/qywxAgLbp04s9PAH6pu94gS2ZeDJ94xvg4mPFBsGki5dKC+fH
-         J0WPmbgC0ZUeieiEPZfvifxPBM9dGFfxz6eBZbr/8/NJ+fNiEUwLKHc3c/c7SBlA6hqz
-         ua3aK+cZUrVTZ2FE+NuE03qedDsgdUraF/Uu1urvN/LbvvlvvLd+dT4z/uYs+1Z24d4V
-         AWfA==
-X-Gm-Message-State: APjAAAUA34iUz2YZr1osVYlBIXeCIxsrD0M7DQETLBiaIQ3duKGYkdjX
-        pGLyCGRzSMDVCkXHLlbYHCqutlUg7hqP06F+hFA=
-X-Google-Smtp-Source: APXvYqzrjaoDZ/XLiP+p9W7lN0KqpC7DK+suSZt20efzjxz+kllGXY/3cRWqyeQz5BYHkYrm8Et4SI0GPtSmH7DYZs0=
-X-Received: by 2002:a1c:dd44:: with SMTP id u65mr1546907wmg.109.1557385872835;
- Thu, 09 May 2019 00:11:12 -0700 (PDT)
+        Thu, 9 May 2019 03:12:45 -0400
+Received: from onstation.org ([52.200.56.107]:57424 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbfEIHMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 03:12:45 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 57C7A3E93E;
+        Thu,  9 May 2019 07:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1557385963;
+        bh=Jb3P351PcNcvj6RN68GVuceqLFPSl29qLpr7PA9LBkI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T6AQPGcd6DudjY2velB/ZZ5XXAJ8cIHX9sjlYmzwHNrit2iKxINLDAugSQrGe+HHD
+         qkHUXbu/zRWVy6kdw6TAJuJ2CFoOWcrVg251Dfo8Px+nsp+C48v6w4oP5+Jf3xuFcB
+         IPJUj1RpNsNKuGEE2VzV59bh7KMGuIuk8yZI2dIs=
+Date:   Thu, 9 May 2019 03:12:43 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RFC 4/6] ARM: dts: msm8974: add display support
+Message-ID: <20190509071243.GA27143@basecamp>
+References: <20190505130413.32253-1-masneyb@onstation.org>
+ <20190505130413.32253-5-masneyb@onstation.org>
+ <20190507063902.GA2085@tuxbook-pro>
+ <20190509021616.GA26228@basecamp>
+ <CAF6AEGsM382jB=h7oM3frhZ5fAp+qYUdgiiKSKo1RtR8+ffjrg@mail.gmail.com>
+ <20190509030047.GE2085@tuxbook-pro>
 MIME-Version: 1.0
-References: <20190509064635.1445-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190509064635.1445-1-yamada.masahiro@socionext.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 9 May 2019 09:11:02 +0200
-Message-ID: <CA+icZUV03ZF_FWMMyY=36-zQZPWO0YUBuSs9bjQqpmXJzVYYRA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add some extra warning flags unconditionally
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509030047.GE2085@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 8:47 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> These flags are documented in the GCC 4.6 manual, and recognized by
-> Clang as well. Let's rip off the cc-option / cc-disable-warning switches.
->
+On Wed, May 08, 2019 at 08:00:47PM -0700, Bjorn Andersson wrote:
+> On Wed 08 May 19:25 PDT 2019, Rob Clark wrote:
+> 
+> > On Wed, May 8, 2019 at 7:16 PM Brian Masney <masneyb@onstation.org> wrote:
+> > >
+> > > On Mon, May 06, 2019 at 11:39:02PM -0700, Bjorn Andersson wrote:
+> > > > On Sun 05 May 06:04 PDT 2019, Brian Masney wrote:
+> > > > > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > > > [..]
+> > > > > +                           clocks = <&mmcc MDSS_MDP_CLK>,
+> > > > > +                                    <&mmcc MDSS_AHB_CLK>,
+> > > > > +                                    <&mmcc MDSS_AXI_CLK>,
+> > > > > +                                    <&mmcc MDSS_BYTE0_CLK>,
+> > > > > +                                    <&mmcc MDSS_PCLK0_CLK>,
+> > > > > +                                    <&mmcc MDSS_ESC0_CLK>,
+> > > > > +                                    <&mmcc MMSS_MISC_AHB_CLK>;
+> > > > > +                           clock-names = "mdp_core",
+> > > > > +                                         "iface",
+> > > > > +                                         "bus",
+> > > > > +                                         "byte",
+> > > > > +                                         "pixel",
+> > > > > +                                         "core",
+> > > > > +                                         "core_mmss";
+> > > >
+> > > > Unless I enable MMSS_MMSSNOC_AXI_CLK and MMSS_S0_AXI_CLK I get some
+> > > > underrun error from DSI. You don't see anything like this?
+> > > >
+> > > > (These clocks are controlled by msm_bus downstream and should be driven
+> > > > by interconnect upstream)
+> > > >
+> > > >
+> > > > Apart from this, I think this looks nice. Happy to see the progress.
+> > >
+> > > No, I'm not seeing an underrun errors from the DSI. I think the clocks
+> > > are fine since I'm able to get this working with 4.17 using these same
+> > > clocks. I just sent out v2 and the cover letter has some details, along
+> > > with the full dmesg.
+> > 
+> > since we don't have interconnect driver for 8974, I guess there is
+> > some chance that things work or not based on how lk leaves things?
+> > 
+> 
+> Right, I guess the bootloader on my device does not leave the busses
+> ticking - perhaps there's a boot splash involved on Brian's device?
+> 
+> Regardless, this works on Nexus 5 and allows Brian to make further
+> progress so I'm all for merging it.
 
-BTW, is this a speedup when doing CC/LD FLAGS etc checks unconditionally?
-Asking in general - do you have any numbers :-)?
+There is a boot splash on the Nexus 5 and that may explain a behavior
+that I observed. I attempted to add reset GPIO support to the simple
+panel driver and the screen will clear but nothing will come on the
+screen after a hard reset, even on 4.17. To be sure, I got the timing
+information for how long to leave the GPIO high and low from the
+downstream MSM 3.4 sources. That's when I had a script port all of the
+~400 panel on commands in the downstream device tree to a new panel
+driver.
 
-- Sedat -
+With the latest kernel kernel having a delay showing the console text,
+I observe a brief second where the boot splash is shown along with the
+startup text from Linux. A full refresh is performed and the boot
+splash goes away. I don't see this with the 4.17 kernel; perhaps maybe
+the full refresh occurs quick enough that its not noticeable.
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  scripts/Makefile.extrawarn | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 523c4cafe2dc..3ab8d1a303cd 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -23,15 +23,16 @@ warning-  := $(empty)
->  warning-1 := -Wextra -Wunused -Wno-unused-parameter
->  warning-1 += -Wmissing-declarations
->  warning-1 += -Wmissing-format-attribute
-> -warning-1 += $(call cc-option, -Wmissing-prototypes)
-> +warning-1 += -Wmissing-prototypes
->  warning-1 += -Wold-style-definition
-> -warning-1 += $(call cc-option, -Wmissing-include-dirs)
-> +warning-1 += -Wmissing-include-dirs
->  warning-1 += $(call cc-option, -Wunused-but-set-variable)
->  warning-1 += $(call cc-option, -Wunused-const-variable)
->  warning-1 += $(call cc-option, -Wpacked-not-aligned)
->  warning-1 += $(call cc-option, -Wstringop-truncation)
-> -warning-1 += $(call cc-disable-warning, missing-field-initializers)
-> -warning-1 += $(call cc-disable-warning, sign-compare)
-> +# The following turn off the warnings enabled by -Wextra
-> +warning-1 += -Wno-missing-field-initializers
-> +warning-1 += -Wno-sign-compare
->
->  warning-2 := -Waggregate-return
->  warning-2 += -Wcast-align
-> @@ -39,8 +40,8 @@ warning-2 += -Wdisabled-optimization
->  warning-2 += -Wnested-externs
->  warning-2 += -Wshadow
->  warning-2 += $(call cc-option, -Wlogical-op)
-> -warning-2 += $(call cc-option, -Wmissing-field-initializers)
-> -warning-2 += $(call cc-option, -Wsign-compare)
-> +warning-2 += -Wmissing-field-initializers
-> +warning-2 += -Wsign-compare
->  warning-2 += $(call cc-option, -Wmaybe-uninitialized)
->  warning-2 += $(call cc-option, -Wunused-macros)
->
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To post to this group, send email to clang-built-linux@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190509064635.1445-1-yamada.masahiro%40socionext.com.
-> For more options, visit https://groups.google.com/d/optout.
+Can you point me to where the interconnect API is in the downstream
+MSM 3.4 sources? https://github.com/AICP/kernel_lge_hammerhead
+It looks like its in drivers/interconnect/ in the upstream sources.
+
+Brian
