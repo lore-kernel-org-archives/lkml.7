@@ -4,62 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9407DC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4205CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F5F2182B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123A0217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557440105;
-	bh=HR9k27RukiNS7295rpPWPj8IBMw3MQXBHVTb19a7odc=;
+	s=default; t=1557440118;
+	bh=qgyq7+yLpLnKg1MIv7N9dI3jFfUpFYJPDgorlRE2EYs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=WGQ55VNzBRq1gvctsCw+5P2ufTph9pPusPq43hfpdVd+sP1gnUSymdklOGg/LHf19
-	 uo6gCcufjTk69Yw7bNNMoRA9FHVpfmcasxk4bLNtDE8wMw3V6srlMxXfeq7Tixgtsb
-	 faQy6uIvkno7ZuHRdUv7DgW1APo16Hm73Wv82akw=
+	b=08KM5HiNCc6T6hWMMQRK8P4noB2BZHSyJ2zLNIuCEKKAAPek7PjRBI9C0wz5cbV2t
+	 9tmtZWXmx0f8aeuK/vCln0Ujp13ep4YJ72+zp3SrND2svZ82lQDIMcONTzYglMZNUX
+	 qmEEg98+DrbCFAmBke2IGNHQkbxaiuW4YN16mRBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfEIWPE (ORCPT
+        id S1727272AbfEIWPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:15:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 18:15:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727215AbfEIWPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:15:04 -0400
-Subject: Re: [GIT PULL] RTC for 5.2
+        id S1726715AbfEIWPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 18:15:15 -0400
+Subject: Re: [PULL REQUEST] i2c for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557440103;
-        bh=HR9k27RukiNS7295rpPWPj8IBMw3MQXBHVTb19a7odc=;
+        s=default; t=1557440115;
+        bh=qgyq7+yLpLnKg1MIv7N9dI3jFfUpFYJPDgorlRE2EYs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KZ2PGvlOmCDCiHkOYvP82sAv6hZmBwfmdhhxyAACA8Xfk+I4rP8ivzfgNFQxALl2k
-         AD1zsiP0KN36AbmwePw9KwKszdAWySG8FCxAuuD9UbclPTgaQiLk7gXdG06zumIY/8
-         gYr5Sj7ac3kIXqP9Gccy6OX8rawOfNL+wMwB4oUU=
+        b=RokjB1+Ntin/7xx2vnGBtx6GTUFwN91fbDGbAlOVgMsZhejdZjFy0smhOuKZQ6So4
+         7fxAO+bI/hS0mp9GkCNZ6rJg0JPiRH5YZutsMzvqNQxnYYct/Fk2Q+1+VoNzLW7jEW
+         1LJLO/UxhjRRy5l8Z/pE/9DSRnEjY3xVMMQ0Of30=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190509210340.GA23061@piout.net>
-References: <20190509210340.GA23061@piout.net>
-X-PR-Tracked-List-Id: <linux-rtc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190509210340.GA23061@piout.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.2
-X-PR-Tracked-Commit-Id: dacb6a4035a010e41abaf81c1cfe2beadfb05ec8
+In-Reply-To: <20190509191132.GA9306@kunai>
+References: <20190509191132.GA9306@kunai>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190509191132.GA9306@kunai>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.2
+X-PR-Tracked-Commit-Id: e6ae3ca27477226eae77cc00d5fad89d7ce64aea
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8e4ff713ce313dcabbb60e6ede1ffc193e67631f
-Message-Id: <155744010342.23477.10954246669924043219.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 May 2019 22:15:03 +0000
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+X-PR-Merge-Commit-Id: 45182e4e1f8ac04708ca7508c51d9103f07d81ab
+Message-Id: <155744011521.23477.7035277562607237397.pr-tracker-bot@kernel.org>
+Date:   Thu, 09 May 2019 22:15:15 +0000
+To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 9 May 2019 23:03:40 +0200:
+The pull request you sent on Thu, 9 May 2019 21:11:55 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.2
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8e4ff713ce313dcabbb60e6ede1ffc193e67631f
+https://git.kernel.org/torvalds/c/45182e4e1f8ac04708ca7508c51d9103f07d81ab
 
 Thank you!
 
