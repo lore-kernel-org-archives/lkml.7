@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BDCC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9C8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBD120644
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0C020644
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fBGeZQwy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVNkiLZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfEILLo (ORCPT
+        id S1726771AbfEILLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:11:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35622 "EHLO
+        Thu, 9 May 2019 07:11:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46200 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfEILLk (ORCPT
+        with ESMTP id S1726715AbfEILLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:11:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so2495084wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 04:11:39 -0700 (PDT)
+        Thu, 9 May 2019 07:11:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so1824236wrr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 04:11:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uXE39cHm/ePcze6cpMzENlQKnSZwc2KOJnys2n77A3I=;
-        b=fBGeZQwyL/GXofUWkHPptZvFcDgg6iRQ++N6BG24UZql7XkRmLSIX4wGmFMKMv4h3k
-         4A2HvUQ0oG01QZkjGdkGZdsU8wVM0kW1i0xpcdINkL9OTkEysMjKwlfM2f2xjtVkJ5M1
-         vyIL7PeHONfja5TfFdesuMUyT5Gf9aeKARGKfnkaCoN040fl1ZhlP57jcMFhfjU1lU8A
-         8DOqB1GVLAYA02p2ACgceWtoWXflDkJ/sZTSCWrYUzESvuQDmtVOqvV5iH4SmGNIAhT2
-         zpUUUrjdvSIH3exFamyAB5SdEg0+58LvjhYcCwdzvOZ5jOglUzEGuFNYeKHgZtAecmBj
-         t3ow==
+        bh=LvXnZafEYce3eQKqHnoNFRM0UdhTjWak2LbszgnoCDw=;
+        b=nVNkiLZZnD0l0mljltaU+TL2K/INQVTmvo6L6LxI4KN1XdK8+rV4sSWsBWCDaI0v2u
+         4MV/gdQ/dH//yjmesEhgh7co8VVsOg9SGz0aNJi3RMSiZNJN3uhnXNWjqYPg3i+7NE9g
+         P9UG4KP4Wkn+o3i52xoJSa4mp90sh1Cu0F0XUfRXvhkjojFuWq5usvUFwTVVZxktGnz4
+         m9sdKKS5d9WX3FDpvhMfwERGRJm8Pc8S0w6keRmjiXlVF9SkrEQHLO6oHpBUtHiHzZTU
+         s8pidw8/Xl2K9ntFRohkonecIOKkLuZCK8UKelRWP563YP6k8Qe0pLvW9rMEC6F1mIAb
+         n1mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=uXE39cHm/ePcze6cpMzENlQKnSZwc2KOJnys2n77A3I=;
-        b=bNN/r6ImfFGajaXAdGC38ESTPNXSiY8CcIzzqEavkRsMYatNK4Bo/NFOjzbx0nqNJs
-         WqmStAd8O/sWQzwbZcxLB/0bZvfgWP0OGTFcik+3IuLChmLrWy7qm9hvSSJlaKPYNfGR
-         1dvoxDWOelNvQggztkMn8vW/AlM3uIQCOHNcPfxrfZsDMtxhSa3oWSubp1HMUqTDBcPK
-         DpyFxptT2WGKKR7W6GuZf06IEmSZwK3toMNiAZgSy7Pi2LyCJaNtIFRS7YKEknZeUwbj
-         HEutBX5PkWBIi/mxknpJntJzh+q5G4alnzz0xHh0NRzFnPfhwy7eaf5DHDqX0/YK4FWb
-         EKvw==
-X-Gm-Message-State: APjAAAWEpGtvO2tp1xqYT6jGW3FemH3YbT52T3O3RnBRou5zf+U0pari
-        pzDt79Mo16OdIeeROW2ABZRs6Q==
-X-Google-Smtp-Source: APXvYqzUngphJjXPgwCdPMD+HnCjgeFAhWbgsnM6xO7Dgm9TJSdwV6DIRiqVuLArj7eqjF8ScYtSYw==
-X-Received: by 2002:a5d:518d:: with SMTP id k13mr889239wrv.285.1557400298313;
-        Thu, 09 May 2019 04:11:38 -0700 (PDT)
+        bh=LvXnZafEYce3eQKqHnoNFRM0UdhTjWak2LbszgnoCDw=;
+        b=MT2MTPY7OJaUSUl/pY1abi2zv962TH5VnWqXGw9Fz5rTbTYkLsQ/kF8wwEuKDEJmZ/
+         r+GIJTroTJMeUAouLq2FadLXnPOP/h5N+sTWXLLmM3iCHb4Ew8IxfHGoyJCm1ScwK+q6
+         u6frq7+Zgt6SHp/rfY/GBiG90Nt84l4NsoYK13FtPt9YzPvkS6z9f4/SiwMLRlspBDhv
+         SmKKfJqkMdMpwteGFgtcFSPxfUGGk0UDS23PV4PEToqIv7SnmN8acAGClCXEgrcUQ8tc
+         yyW3ddBy2bvHy1dsKhypsrhMrRRLdVzUw0MiQ6MuM9Y8d0dck2R0bbERqJcVRRMMWB0r
+         nVSg==
+X-Gm-Message-State: APjAAAUsxCq8QXStGan2xzWbemo0up3BRTRDAJup5AApHQxPaZxJP3Nm
+        rBHTc+WSLts8jbEmasHvMi/AQA==
+X-Google-Smtp-Source: APXvYqz/tfg0kvd52vftBvhMXj5rBnbW/SfA92OndwT53A//UUiNej0enl6FDxrI74BMaCHgrSeBmg==
+X-Received: by 2002:adf:f108:: with SMTP id r8mr814863wro.221.1557400301093;
+        Thu, 09 May 2019 04:11:41 -0700 (PDT)
 Received: from mai.irit.fr ([141.115.39.235])
-        by smtp.gmail.com with ESMTPSA id z7sm2299778wme.26.2019.05.09.04.11.37
+        by smtp.gmail.com with ESMTPSA id z7sm2299778wme.26.2019.05.09.04.11.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 04:11:37 -0700 (PDT)
+        Thu, 09 May 2019 04:11:40 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:MICROCHIP TIMER
-        COUNTER (TC) AND CLOCKSOURCE DR...)
-Subject: [PATCH 09/15] clocksource/drivers/tcb_clksrc: Use tcb as sched_clock
-Date:   Thu,  9 May 2019 13:10:42 +0200
-Message-Id: <20190509111048.11151-9-daniel.lezcano@linaro.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 11/15] clocksource/drivers/tcb_clksrc: Move Kconfig option
+Date:   Thu,  9 May 2019 13:10:44 +0200
+Message-Id: <20190509111048.11151-11-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190509111048.11151-1-daniel.lezcano@linaro.org>
 References: <7e786ba3-a664-8fd9-dd17-6a5be996a712@linaro.org>
@@ -76,77 +75,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Now that the driver is registered early enough, use the TCB as the
-sched_clock which is much more accurate than the jiffies implementation.
+Move the ATMEL_TCB_CLKSRC option to drivers/clocksource and make it silent
+if COMPILE_TEST is not selected.
 
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/tcb_clksrc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/clocksource/Kconfig |  7 +++++++
+ drivers/misc/Kconfig        | 14 --------------
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
-index bf68504da94a..9de8c10ab546 100644
---- a/drivers/clocksource/tcb_clksrc.c
-+++ b/drivers/clocksource/tcb_clksrc.c
-@@ -11,6 +11,7 @@
- #include <linux/io.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-+#include <linux/sched_clock.h>
- #include <linux/syscore_ops.h>
- #include <soc/at91/atmel_tcb.h>
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index ede5d20299b9..eb1560187434 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -410,6 +410,13 @@ config ATMEL_ST
+ 	help
+ 	  Support for the Atmel ST timer.
  
-@@ -114,6 +115,16 @@ static struct clocksource clksrc = {
- 	.resume		= tc_clksrc_resume,
- };
- 
-+static u64 notrace tc_sched_clock_read(void)
-+{
-+	return tc_get_cycles(&clksrc);
-+}
++config ATMEL_TCB_CLKSRC
++	bool "Atmel TC Block timer driver" if COMPILE_TEST
++	depends on HAS_IOMEM
++	select TIMER_OF if OF
++	help
++	  Support for Timer Counter Blocks on Atmel SoCs.
 +
-+static u64 notrace tc_sched_clock_read32(void)
-+{
-+	return tc_get_cycles32(&clksrc);
-+}
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
+ config CLKSRC_EXYNOS_MCT
+ 	bool "Exynos multi core timer driver" if COMPILE_TEST
+ 	depends on ARM || ARM64
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 268a01d3d6f3..c84033909395 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -59,20 +59,6 @@ config ATMEL_TCLIB
+ 	  blocks found on many Atmel processors.  This facilitates using
+ 	  these blocks by different drivers despite processor differences.
  
- struct tc_clkevt_device {
-@@ -335,6 +346,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	struct atmel_tc tc;
- 	struct clk *t0_clk;
- 	const struct of_device_id *match;
-+	u64 (*tc_sched_clock)(void);
- 	u32 rate, divided_rate = 0;
- 	int best_divisor_idx = -1;
- 	int clk32k_divisor_idx = -1;
-@@ -419,6 +431,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		clksrc.read = tc_get_cycles32;
- 		/* setup ony channel 0 */
- 		tcb_setup_single_chan(&tc, best_divisor_idx);
-+		tc_sched_clock = tc_sched_clock_read32;
- 	} else {
- 		/* we have three clocks no matter what the
- 		 * underlying platform supports.
-@@ -430,6 +443,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		}
- 		/* setup both channel 0 & 1 */
- 		tcb_setup_dual_chan(&tc, best_divisor_idx);
-+		tc_sched_clock = tc_sched_clock_read;
- 	}
- 
- 	/* and away we go! */
-@@ -442,6 +456,8 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	if (ret)
- 		goto err_unregister_clksrc;
- 
-+	sched_clock_register(tc_sched_clock, 32, divided_rate);
-+
- 	return 0;
- 
- err_unregister_clksrc:
+-config ATMEL_TCB_CLKSRC
+-	bool "TC Block Clocksource"
+-	depends on ARCH_AT91
+-	select TIMER_OF if OF
+-	default y
+-	help
+-	  Select this to get a high precision clocksource based on a
+-	  TC block with a 5+ MHz base clock rate.  Two timer channels
+-	  are combined to make a single 32-bit timer.
+-
+-	  When GENERIC_CLOCKEVENTS is defined, the third timer channel
+-	  may be used as a clock event device supporting oneshot mode
+-	  (delays of up to two seconds) based on the 32 KiHz clock.
+-
+ config DUMMY_IRQ
+ 	tristate "Dummy IRQ handler"
+ 	default n
 -- 
 2.17.1
 
