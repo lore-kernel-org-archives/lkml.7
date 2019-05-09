@@ -2,82 +2,94 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6B6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373BEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20109204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAD921479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 13:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XXaYn4b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfEINcm (ORCPT
+        id S1726620AbfEINe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 09:32:42 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50148 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfEINcm (ORCPT
+        Thu, 9 May 2019 09:34:28 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:48506 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfEINe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 09:32:42 -0400
-Received: from [85.235.16.11] (helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hOjA3-0007a7-6H; Thu, 09 May 2019 15:32:35 +0200
-Date:   Thu, 9 May 2019 15:32:19 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Kirkendall, Garrett" <Garrett.Kirkendall@amd.com>
-cc:     "nstange@suse.de" <nstange@suse.de>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "natechancellor@gmail.com" <natechancellor@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: arch/x86/kernel/apic/apic.c: calibrate_APIC_clock() soft hangs
- when PIC is not configured by BIOS before kernel is launched.
-In-Reply-To: <SN6PR12MB2734B49FDFEAC6CE5D93687185330@SN6PR12MB2734.namprd12.prod.outlook.com>
-Message-ID: <alpine.DEB.2.21.1905091526440.3139@nanos.tec.linutronix.de>
-References: <SN6PR12MB2734813FB27C43E06F5B4E3D85330@SN6PR12MB2734.namprd12.prod.outlook.com> <SN6PR12MB2734B49FDFEAC6CE5D93687185330@SN6PR12MB2734.namprd12.prod.outlook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 9 May 2019 09:34:28 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x49DY1R8004660;
+        Thu, 9 May 2019 22:34:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x49DY1R8004660
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557408841;
+        bh=p1/kF2GRRHb9jLz8W1w8YVgWkE62qa9K21kt7paiW0E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XXaYn4b2/sVk9r9wHkG4nxC78dUpWOZY3JKDzAA6UabBudeEfVJOiUWe0vEO3xfAj
+         QJEnbWfOnwtP8nwXphDEPqrvGen74aVk9xBc2RDyiItpeMEGG+uaFfy+lOrOClIRIa
+         DtbaQf0/bs1BWInGwt5CSa26sKDuf9niPirqTFTkbwT8MxXatn3O2iuuB90ex40+Tz
+         9ZnhQ5Teshxfu98R5IMqXLUdUE3JOTxOJmZlr/sIbq6sKtwP4UD9ao6tB5h2tCBc+I
+         MYFZG8Fx8oM99Bn/TOOB8+HAVsAPcT62LKev0vCnMqtQLNuqmrG+VKHLfOpd2ERpWM
+         g63CiRPLI9c9w==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id s30so787871uas.8;
+        Thu, 09 May 2019 06:34:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAWI+s19rm75nw+sU3IaiGM2qGNSRnlFp60+KYZazQJNohlRwVm0
+        mJQHTE01giZIhSEWZNOMnwuh5AxQhg20OsmO9dM=
+X-Google-Smtp-Source: APXvYqxPJYBTOfHdTFoE3UqrX6S/TkwHbWFdK4raf5Y3eHYmPF3bdZwcOUZLBXdO1rdRQQek1br7uryrLlJL3Z8CwP8=
+X-Received: by 2002:ab0:20c1:: with SMTP id z1mr1695951ual.109.1557408840366;
+ Thu, 09 May 2019 06:34:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1735728731-1557408570=:3139"
-Content-ID: <alpine.DEB.2.21.1905091529410.3139@nanos.tec.linutronix.de>
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
+ <20190509114824.25866-1-natechancellor@gmail.com>
+In-Reply-To: <20190509114824.25866-1-natechancellor@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 9 May 2019 22:33:23 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARBH7tpZLJCC4EGvLDGCCt0_425p4nSE5+fimakP5o3NA@mail.gmail.com>
+Message-ID: <CAK7LNARBH7tpZLJCC4EGvLDGCCt0_425p4nSE5+fimakP5o3NA@mail.gmail.com>
+Subject: Re: [PATCH] Makefile: Don't try to add '-fcatch-undefined-behavior' flag
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1735728731-1557408570=:3139
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.DEB.2.21.1905091529411.3139@nanos.tec.linutronix.de>
-
-On Thu, 9 May 2019, Kirkendall, Garrett wrote:
-> I am trying to boot a UEFI BIOS with minimal legacy hardware support. 
-> The Linux kernel soft hangs when the PIC is not configured by the BIOS
-> because it is using IOAPIC.  Hopefully, this provides enough information.
+On Thu, May 9, 2019 at 8:49 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> Soft hang occurs in calibrate_APIC_clock():
+> This is no longer a valid option in clang, it was removed in 3.5, which
+> we don't support.
+>
+> https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
+>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> Let me know if you want this incremental to your patch.
 
-...
+No problem. I will rebase mine on top of this.
 
-> If 8259A PIC is not configured before kernel is launched, HPET IRQ 0
-> registration fails because probe_8259A returns PIC as not available and
-> therefore interrupt descriptors 0-15 are not allocated.  This happens
-> when BIOS does not configure 8259A PIC because it uses IOAPIC.
+> I figured it
+> made more sense to remove this then do the cc-option/cc-disable-warning
+> removal because it will simplify the commit message.
 
-Right. Works as designed.
+Yes, I agree!
 
-There is not much we can do at that point, unless your platform has other
-means to provide the TSC frequency (cpuid or MSR) along with the bus
-frequency which is fed into the local apic timer.
 
-Thanks,
+Thanks.
 
-	tglx
---8323329-1735728731-1557408570=:3139--
+-- 
+Best Regards
+Masahiro Yamada
