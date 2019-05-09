@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8457CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80953C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527072183F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589BE2183F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427455;
-	bh=fb5qVJ1dgFlDRnAAv5EDHjPvlZSzWD7dFrcRcwTlqJ0=;
+	s=default; t=1557427458;
+	bh=tNjYUTZ1DOGAjleLkG3kpghjYkmPPY5p4WMIEZcqOlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1sFX6NmsjE2IRDd8n0Mp+h+TMHQSidebUfk3e0RvzGy4O92PyAA7/X9/sEVk0zeRS
-	 Kj8ESb7ggSgdaI6/w1P2LoLjAyhn5d0EVOo584sCFda+DoE6lEC1v4sNTLrHZ4WEk/
-	 conCqphvG7owFP7WetYRG/kYZ6dtvmfIpptt+tSY=
+	b=WPDAg6FASVx5SsK+QkuwjWHYcehbyFgQLqvrfF7cdi2pqZSzR1i5Q3NJNACS/7Sdb
+	 AKohlEu26MksPGM4uLdgZXu7ELusD04eO5Sb/A3eLeIVMXeLClgJHyUqD5r4gECZ/p
+	 Ya9SHKVesxL7ELDmBYBHop2T5yovwLjW+gdWBFQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfEISoO (ORCPT
+        id S1726966AbfEISoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35380 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfEISoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:44:10 -0400
+        id S1726620AbfEISoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:44:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791D92183E;
-        Thu,  9 May 2019 18:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C81212183E;
+        Thu,  9 May 2019 18:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427450;
-        bh=fb5qVJ1dgFlDRnAAv5EDHjPvlZSzWD7dFrcRcwTlqJ0=;
+        s=default; t=1557427455;
+        bh=tNjYUTZ1DOGAjleLkG3kpghjYkmPPY5p4WMIEZcqOlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVB+Jflw6jOLFocTBNeOVfXnym0BK/SZ5DmHzlXtrBZiHlWzdAKgKJRIzTnk4iiUS
-         L34ETi7fyms8S/Pz4mjaQ07nuV9qTKhX0l2IpO0IxqB8qmmAS/NjFfqgLwtVe/UNVs
-         acTzB3JHhjE/3Fv16WF65tlzHQVENzxRy3MLaG8k=
+        b=GyEf5MGQJCdnJflZts/co78p519k7bNn/ldJJ0WuzhY+IQr5mQ57/TbxgH7FpGLrR
+         HIDt4c3xhg0Lr5CcdF6TQyYBeFPnyNxO0h31KSxqcB8TKgEMqk2OX8JNCLldsfcR1B
+         tjyhAhQt1Y+kjb3FDr5/bKsGIVmoWRagCXAgjRkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/28] virtio-blk: limit number of hw queues by nr_cpu_ids
-Date:   Thu,  9 May 2019 20:42:07 +0200
-Message-Id: <20190509181253.306665846@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>, stable@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 17/28] mm: add try_get_page() helper function
+Date:   Thu,  9 May 2019 20:42:09 +0200
+Message-Id: <20190509181253.918151808@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
 References: <20190509181247.647767531@linuxfoundation.org>
@@ -60,42 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bf348f9b78d413e75bb079462751a1d86b6de36c ]
+[ Upstream commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 ]
 
-When tag_set->nr_maps is 1, the block layer limits the number of hw queues
-by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
-has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
+This is the same as the traditional 'get_page()' function, but instead
+of unconditionally incrementing the reference count of the page, it only
+does so if the count was "safe".  It returns whether the reference count
+was incremented (and is marked __must_check, since the caller obviously
+has to be aware of it).
 
-In addition, specifically for pci scenario, when the 'num-queues' specified
-by qemu is more than maxcpus, virtio-blk would not be able to allocate more
-than maxcpus vectors in order to have a vector for each queue. As a result,
-it falls back into MSI-X with one vector for config and one shared for
-queues.
+Also like 'get_page()', you can't use this function unless you already
+had a reference to the page.  The intent is that you can use this
+exactly like get_page(), but in situations where you want to limit the
+maximum reference count.
 
-Considering above reasons, this patch limits the number of hw queues used
-by virtio-blk by nr_cpu_ids.
+The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+the reference count issues (either zero or negative), as a notification
+that the conditional non-increment actually happened.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+NOTE! The count access for the "safety" check is inherently racy, but
+that doesn't matter since the buffer we use is basically half the range
+of the reference count (ie we look at the sign of the count).
+
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/mm.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 10332c24f9610..44ef1d66caa68 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -392,6 +392,8 @@ static int init_vq(struct virtio_blk *vblk)
- 	if (err)
- 		num_vqs = 1;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 11a5a46ce72be..e3c8d40a18b5b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -777,6 +777,15 @@ static inline void get_page(struct page *page)
+ 		get_zone_device_page(page);
+ }
  
-+	num_vqs = min_t(unsigned int, nr_cpu_ids, num_vqs);
++static inline __must_check bool try_get_page(struct page *page)
++{
++	page = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
++		return false;
++	page_ref_inc(page);
++	return true;
++}
 +
- 	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
- 	if (!vblk->vqs)
- 		return -ENOMEM;
+ static inline void put_page(struct page *page)
+ {
+ 	page = compound_head(page);
 -- 
 2.20.1
 
