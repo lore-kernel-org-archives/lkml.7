@@ -2,82 +2,113 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01466C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB8C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BB620656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB3020656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557422638;
+	bh=SmDmkaW75MsL1jEDf7tS9WHYvMugppiXPKUjEfdfYgQ=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=2CrQOviB/UFQu0lr0jPJEQCpKRNO3atzoajbJ7QfGli18QWQiq+9iMmAcYN4FFuNH
+	 16yGi/rDUsBsIuk011u7RuRkZ76uqzbHkHYMceUfAEO1ca93/gQzD72BzwLdCCBNQz
+	 P9+nZw3Bu3gAqONit4yGFe/QG/+cBIDeAQrlt+ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfEIRXY (ORCPT
+        id S1726796AbfEIRX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:23:24 -0400
-Received: from namei.org ([65.99.196.166]:38258 "EHLO namei.org"
+        Thu, 9 May 2019 13:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfEIRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:23:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x49HNMvU025826;
-        Thu, 9 May 2019 17:23:22 GMT
-Date:   Fri, 10 May 2019 03:23:22 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: [GIT PULL] security subsytem: TPM changes for v5.2
-Message-ID: <alpine.LRH.2.21.1905100320110.25349@namei.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1726576AbfEIRX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:23:57 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7204720656;
+        Thu,  9 May 2019 17:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557422636;
+        bh=SmDmkaW75MsL1jEDf7tS9WHYvMugppiXPKUjEfdfYgQ=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=fryQ9HWOM2wn3nJ37x5ERhLcU+2eAx82GgdJywncy/wlg3h6tznemY3L0slFeJ65A
+         9j4ZOzx+19yYqGVB/2VFMTwMSgclzbMjdXpHyu02R0E580qshrZI04aEI8qlWzIe3J
+         lVVEDaYzcCcZ/G/LxI4BZP3aPUfgSCkyYtN2dCJg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <857bce4e87bc473e533c53abc0b612ee918f2474.camel@analog.com>
+References: <20190508112842.11654-1-alexandru.ardelean@analog.com> <20190508112842.11654-4-alexandru.ardelean@analog.com> <155733480678.14659.15999974975874060801@swboyd.mtv.corp.google.com> <857bce4e87bc473e533c53abc0b612ee918f2474.camel@analog.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 02/16] treewide: rename match_string() -> __match_string()
+Cc:     "heiko@sntech.de" <heiko@sntech.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <155742263550.14659.13420287678025539904@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 09 May 2019 10:23:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From Jarkko:
+Quoting Ardelean, Alexandru (2019-05-09 01:52:53)
+> On Wed, 2019-05-08 at 10:00 -0700, Stephen Boyd wrote:
+> > [External]
+> >=20
+> >=20
+> > (Trimming the lists but keeping lkml)
+> >=20
+> > Quoting Alexandru Ardelean (2019-05-08 04:28:28)
+> > > This change does a rename of match_string() -> __match_string().
+> > >=20
+> > > There are a few parts to the intention here (with this change):
+> > > 1. Align with sysfs_match_string()/__sysfs_match_string()
+> > > 2. This helps to group users of `match_string()` into simple users:
+> > >    a. those that use ARRAY_SIZE(_a) to specify the number of elements
+> > >    b. those that use -1 to pass a NULL terminated array of strings
+> > >    c. special users, which (after eliminating 1 & 2) are not that many
+> > > 3. The final intent is to fix match_string()/__match_string() which is
+> > >    slightly broken, in the sense that passing -1 or a positive value
+> > > does
+> > >    not make any difference: the iteration will stop at the first NULL
+> > >    element.
+> > >=20
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> >=20
+> > [...]
+> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > index 96053a96fe2f..0b6c3d300411 100644
+> > > --- a/drivers/clk/clk.c
+> > > +++ b/drivers/clk/clk.c
+> > > @@ -2305,8 +2305,8 @@ bool clk_has_parent(struct clk *clk, struct clk
+> > > *parent)
+> > >         if (core->parent =3D=3D parent_core)
+> > >                 return true;
+> > >=20
+> > > -       return match_string(core->parent_names, core->num_parents,
+> > > -                           parent_core->name) >=3D 0;
+> > > +       return __match_string(core->parent_names, core->num_parents,
+> > > +                             parent_core->name) >=3D 0;
+> >=20
+> > This is essentially ARRAY_SIZE(core->parent_names) so it should be fine
+> > to put this back to match_string() later in the series.
+>=20
+> I don't think so.
+> core->parents & core->parent_names seem to be dynamically allocated array.
+> ARRAY_SIZE() is a macro that expands at pre-compile time and evaluates
+> correctly at compile time only for static arrays.
+>=20
 
-Bugfixes and new selftests for v5.1 features (partial reads in /dev/tpm0).
+Ah ok. The ARRAY_SIZE() is done inside the match_string() function? I
+missed that.
 
-
-The following changes since commit 8d93e952fba216cd0811247f6360d97e0465d5fc:
-
-  LSM: lsm_hooks.h: fix documentation format (2019-03-26 16:46:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-tpm
-
-for you to fetch changes up to a94e55b91c7d1494c1a4598178dc5f1d7dfe12aa:
-
-  Merge tag 'tpmdd-next-20190329' of git://git.infradead.org/users/jjs/linux-tpmdd into next-tpm (2019-03-29 11:39:20 -0700)
-
-----------------------------------------------------------------
-James Morris (1):
-      Merge tag 'tpmdd-next-20190329' of git://git.infradead.org/users/jjs/linux-tpmdd into next-tpm
-
-Jarkko Sakkinen (2):
-      KEYS: trusted: allow trusted.ko to initialize w/o a TPM
-      tpm: turn on TPM on suspend for TPM 1.x
-
-Tadeusz Struk (3):
-      selftests/tpm2: Open tpm dev in unbuffered mode
-      selftests/tpm2: Extend tests to cover partial reads
-      tpm: fix an invalid condition in tpm_common_poll
-
-Yue Haibing (1):
-      tpm: Fix the type of the return value in calc_tpm2_event_size()
-
-ndesaulniers@google.com (1):
-      KEYS: trusted: fix -Wvarags warning
-
- drivers/char/tpm/eventlog/tpm2.c           |  4 +-
- drivers/char/tpm/tpm-dev-common.c          |  9 ++++-
- drivers/char/tpm/tpm-interface.c           | 14 +++----
- include/keys/trusted.h                     |  2 +-
- security/keys/trusted.c                    | 32 +++++++++++----
- tools/testing/selftests/tpm2/tpm2.py       |  5 ++-
- tools/testing/selftests/tpm2/tpm2_tests.py | 63 ++++++++++++++++++++++++++++++
- 7 files changed, 108 insertions(+), 21 deletions(-)
