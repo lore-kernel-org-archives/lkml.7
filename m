@@ -2,130 +2,89 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4D6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F47C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0ACE20989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Zl3JG7Wt"
+	by mail.kernel.org (Postfix) with ESMTP id A85B420989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfEILgD (ORCPT
+        id S1726687AbfEILhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 07:36:03 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:37903 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfEILgD (ORCPT
+        Thu, 9 May 2019 07:37:07 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:56432 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfEILhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 07:36:03 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x49BZfwU026748;
-        Thu, 9 May 2019 20:35:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x49BZfwU026748
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557401742;
-        bh=PL01WUsmxYOgu3vvcvfxyKA3luTzFek4V3LVb2hS7LE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zl3JG7WtdomkCaZilW11XTnQ8h60XrG3uZ1n/QNohO1lekita6uGX7GZJ5jsCdbgu
-         snBJ21Ip5+rIyCps+V4HRHMgc+12Ww9rAOBtlUnsb0sqe4BX2luFe+MAFqGVPBg7Ct
-         JrMtq7kryfgO1uxwAwfGxrQH+dA6g84kOoX9dmOFVrDplCFi1v59cTVnpS8M1uUNiz
-         MGLPx7Q1lsVN1Oyn8DTgJTWDwAUDSXlIEhlx5fpS8J1Y3haRHLyLeonwPZXzoiFNYj
-         2kX3FqWbzuJ2tBxVPVKQq2sAR9Dr48c1UIeuDw3G1KrecSA7Un9I1/y9J0604w5eLz
-         6w9YFmuxylsLw==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id g187so1179276vsc.8;
-        Thu, 09 May 2019 04:35:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAVzC+DVcCgaauI/TShSEQSCmE98neO3plPooYnldks4UurQIvb/
-        qCf1rMLtU/VU/YGVw3Ji7SyD6ocWzTrJ9UL5Q8U=
-X-Google-Smtp-Source: APXvYqz43z6deMTelju4IlQu5Tc9PL6TkjY78McJ94t4eOCDAyZwLfGsNngbI9QUWmS6JshI9Y4ds/CNXiA7mo1hHcM=
-X-Received: by 2002:a67:fd89:: with SMTP id k9mr1943399vsq.54.1557401741466;
- Thu, 09 May 2019 04:35:41 -0700 (PDT)
+        Thu, 9 May 2019 07:37:07 -0400
+Received: by mail-io1-f70.google.com with SMTP id s184so1400918iod.23
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 04:37:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ehHiCH7SYbQmOW8XlMeAAbAZBYEjB3xQM+LCER9pDJw=;
+        b=r1fdtncyTe/foEkrwO4tj924sW0N+CXXkmEuwsgnxEqTCBUIVt9HqK8dQUWlApFCa9
+         IONbtx3XU/9QUOirpCxRzw99NfR6SzW97QkhxsBrfxayAfuZJX5Jm+lfrd2jlalXMsvI
+         MJjd3bQrNJ26a+nhwlp7RFmAUC7oJhD7on1TJ2Mq7BQi7qnKCy+B6dBuNA6gLOMbH2ng
+         EzWKmdsUZiPZRduvrMcd1TmPpAKPDviWW4DtWNTFcY5lj3YjjYNXjYneHg0MExZKqlmE
+         HQ0DKJrBAPbkx8NmMPIZF8JUPvl+l1ief6W8uVCGAEprTTwfb/fKGad/+6Ae+oAQGrZo
+         ChNg==
+X-Gm-Message-State: APjAAAX2lHVM8Xdx3oBu7rkqMXQL4wbSmxBNhpTPgjwcpb80kCgRrnrB
+        maabIwK7ZAb3QIjJIlFPIZkGIn8BolUfXwe1LXAajC7hhKXE
+X-Google-Smtp-Source: APXvYqzwz3nMaZbEVPxd55R7GnE0algi/np8iEFDRXg/gjyJH1v67KwF/+6jDgkqSULnCnavOkbGb9KAP/a+2/lC9qjQBqBbVhz3
 MIME-Version: 1.0
-References: <20190509064455.1173-1-yamada.masahiro@socionext.com> <20190509111534.GA32696@archlinux-i9>
-In-Reply-To: <20190509111534.GA32696@archlinux-i9>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 9 May 2019 20:35:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
-Message-ID: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add most of Clang-specific flags unconditionally
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:694f:: with SMTP id e76mr2771706jac.111.1557401826476;
+ Thu, 09 May 2019 04:37:06 -0700 (PDT)
+Date:   Thu, 09 May 2019 04:37:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3ca70058872de7c@google.com>
+Subject: WARNING: ath10k USB support is incomplete, don't expect anything to work!
+From:   syzbot <syzbot+c1b25598aa60dcd47e78@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Hello,
 
-On Thu, May 9, 2019 at 8:15 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Thu, May 09, 2019 at 03:44:55PM +0900, Masahiro Yamada wrote:
-> > We do not support old Clang versions. Upgrade your clang version
-> > if any of these flags is unsupported.
-> >
-> > Let's add flags within ifdef CONFIG_CC_IS_CLANG unconditionally,
-> > except -fcatch-undefined-behavior.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  Makefile                   | 10 +++++-----
-> >  scripts/Makefile.extrawarn | 12 ++++++------
-> >  2 files changed, 11 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index bd7ae11947cb..c71ffb6f55b5 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -731,15 +731,15 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
-> >  KBUILD_CFLAGS += $(stackp-flags-y)
-> >
-> >  ifdef CONFIG_CC_IS_CLANG
-> > -KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
-> > -KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
-> > -KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
-> > +KBUILD_CPPFLAGS += -Qunused-arguments
-> > +KBUILD_CFLAGS += -Wno-format-invalid-specifier
-> > +KBUILD_CFLAGS += -Wno-gnu
-> >  # Quiet clang warning: comparison of unsigned expression < 0 is always false
-> > -KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
-> > +KBUILD_CFLAGS += -Wno-tautological-compare
-> >  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
-> >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
-> >  # See modpost pattern 2
-> > -KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
-> > +KBUILD_CFLAGS += -mno-global-merge
-> >  KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
->
-> I think we should just remove this, I'm fairly confident the kernel
-> can't be reliably compiled with anything earlier than Clang 4 (Pixel 2
-> was shipped with it but had some hacks, this commit is from Clang 3.5):
->
-> https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
+syzbot found the following crash on:
+
+HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=178c8394a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
+dashboard link: https://syzkaller.appspot.com/bug?extid=c1b25598aa60dcd47e78
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c22222a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ddce02a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c1b25598aa60dcd47e78@syzkaller.appspotmail.com
+
+usb 1-1: new low-speed USB device number 2 using dummy_hcd
+usb 1-1: config 0 has an invalid interface number: 93 but max is 0
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=13b1, idProduct=0042,  
+bcdDevice=f9.d4
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+usb 1-1: WARNING: ath10k USB support is incomplete, don't expect anything  
+to work!
 
 
-Oh, I did not know this was deprecated.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Could you send a patch to remove it
-with filling the commit log ?
-
-
-Thanks.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
