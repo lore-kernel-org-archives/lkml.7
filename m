@@ -2,89 +2,97 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_MED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0900C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD161C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C042220850
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92ED521479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:28:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ge8R844S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfEIT1d (ORCPT
+        id S1726940AbfEIT2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:27:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38898 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfEIT1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:27:32 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 91B2E81112;
-        Thu,  9 May 2019 19:27:32 +0000 (UTC)
-Received: from gimli.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CEBD5C582;
-        Thu,  9 May 2019 19:27:22 +0000 (UTC)
-Subject: [PATCH] PCI: Always allow probing with driver_override
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
-        laine@redhat.com
-Date:   Thu, 09 May 2019 13:27:22 -0600
-Message-ID: <155742996741.21878.569845487290798703.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Thu, 9 May 2019 15:28:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39839 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfEIT2B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:28:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w22so1707001pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mSogdT1b1TrauWJdc0+lW0R8qL7KGKdwvRVPra/F2u4=;
+        b=ge8R844S9rhQhPZywYJzkfKzn0+UrddioB1eT3CI+Rxgh7FM5k/Nj631+ajLB5i98z
+         qBuIhlAi7+7nh6F7Z1rJckUuSkcwqxtG9sGhGQoT+x1lUg6X3OXiC6ccNVUb1g4+KJ3l
+         N1+vO7n2+b3u1X/Did/QTcwhdXYLekpehe87DVnoLH6kY+122yYPr/Ex9cn7pf7BP/W1
+         FlrT5uOI64/8jOOZYvR1fypE9LJklRZHypbB9rqVJZx8+MtL+1Nrohw+knyr2bfi5W17
+         OI+nfZAAHolUUB31C+q4yU4AmDT6PfWpOuppbMD9XX7P7zp9QAx71kIPMtx5e3xSH1Q5
+         tKkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mSogdT1b1TrauWJdc0+lW0R8qL7KGKdwvRVPra/F2u4=;
+        b=Y5hJFozeBlEeIBkHmyXO2Ot/YWygWvOf+c43/Vupl4Gcu/OAJTx0V73uNYCBdWYHv0
+         HS/GMzdx1QDKc//YueXOimLQA59pXBjzhUFEbjGsAdNEO7J6x4Rm6o9c7Mx/Nfp7o3+W
+         8T6orvx+cIGgUlS91LZTeF6w276Xlpc+Mzq55OKvjN1OLolzuoqmmgd+VwtFCWkDyQn1
+         42HaHj26ZNbwyIjs+foMtSt/oCHbgucH6eqOEShMDIye1TzfrhMNOXPvRCkAF2nHAjLl
+         uDGvUWBErkmC+J75FEAMi13RcnR+iZpAYkKgl8VJSZyXvZcHaalOXjxeWobPnmQ1USMH
+         Y7Ig==
+X-Gm-Message-State: APjAAAXYIi2tfaSvKJ8O1iCk2GZY8avUWU7SuJjBdCRPxgCInC6p7eYV
+        y+ZEBpcTYlk37z4v6c4hCddepw==
+X-Google-Smtp-Source: APXvYqz/zYt5LNbOUqYwUYqUaZNqn28INg1eTCOj3kgCLcwZ9Gnpmql4xKPflas+TJJo6HIP9ZvJow==
+X-Received: by 2002:a62:1897:: with SMTP id 145mr7992573pfy.122.1557430079463;
+        Thu, 09 May 2019 12:27:59 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id j12sm3809086pff.148.2019.05.09.12.27.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 09 May 2019 12:27:58 -0700 (PDT)
+Date:   Thu, 9 May 2019 12:27:53 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Joao Moreira <jmoreira@suse.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH v3 0/7] crypto: x86: Fix indirect function call casts
+Message-ID: <20190509192753.GA233211@google.com>
+References: <20190507161321.34611-1-keescook@chromium.org>
+ <20190507170039.GB1399@sol.localdomain>
+ <CAGXu5jL7pWWXuJMinghn+3GjQLLBYguEtwNdZSQy++XGpGtsHQ@mail.gmail.com>
+ <20190507215045.GA7528@sol.localdomain>
+ <20190508133606.nsrzthbad5kynavp@gondor.apana.org.au>
+ <CAGXu5jKdsuzX6KF74zAYw3PpEf8DExS9P0Y_iJrJVS+goHFbcA@mail.gmail.com>
+ <20190509020439.GB693@sol.localdomain>
+ <20190509153828.GA261205@google.com>
+ <20190509175822.GB12602@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 09 May 2019 19:27:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509175822.GB12602@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
-VF driver binding") introduced the sriov_drivers_autoprobe attribute
-which allows users to prevent the kernel from automatically probing a
-driver for new VFs as they are created.  This allows VFs to be spawned
-without automatically binding the new device to a host driver, such as
-in cases where the user intends to use the device only with a meta
-driver like vfio-pci.  However, the current implementation prevents any
-use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
-blocks the now current general practice of setting driver_override
-followed by using drivers_probe to bind a device to a specified driver.
+On Thu, May 09, 2019 at 10:58:23AM -0700, Eric Biggers wrote:
+> Is there any way to annotate assembly functions such that they work
+> directly with CFI?
 
-The kernel never automatically sets a driver_override therefore it seems
-we can assume a driver_override reflects the intent of the user.  Also,
-probing a device using a driver_override match seems outside the scope
-of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
-driver_override matches regardless of sriov_drivers_autoprobe, which we
-can do by simply testing if a driver_override is set for a device as a
-'can probe' condition.
+Not to my knowledge.
 
-Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
-
- drivers/pci/pci-driver.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index da7b82e56c83..9b9e9c63cde8 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -399,7 +399,8 @@ void __weak pcibios_free_irq(struct pci_dev *dev)
- #ifdef CONFIG_PCI_IOV
- static inline bool pci_device_can_probe(struct pci_dev *pdev)
- {
--	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
-+	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
-+		pdev->driver_override);
- }
- #else
- static inline bool pci_device_can_probe(struct pci_dev *pdev)
-
+Sami
