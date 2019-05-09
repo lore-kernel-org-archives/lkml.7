@@ -2,103 +2,270 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BE8C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E76C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848DF217D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233CF217D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+DkPo2W"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="cjQ5WC8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfEIRg3 (ORCPT
+        id S1726802AbfEIRgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:36:29 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38800 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEIRg3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:36:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id j26so1564218pgl.5;
-        Thu, 09 May 2019 10:36:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fm/Yx4WlkdFkzJYcjEnD/dd0EBFK33lb3Y6Zhd2dmmo=;
-        b=n+DkPo2Wn6se53eSBGHwiyCJckhtHBjNob8IoMYkYeCfIsIxOFbeQz5ZOOj4O0GycI
-         20CaxEAZLScyslugWCcRWRPZRwT3pYt/Lg5Ms0kDwntJ7YfHkA+bgSetBORLeA7xrv0s
-         o5iifv81W0CuE7LhiWh0Yo+V/94Drd/BIH/h5fd0WUbK0yggDyPZnUgQDxbbTlyv8sxj
-         cIrrSH0skGlLoIP/0qPfEf2KNGvw6CIKmKYcqIk5a+ruLbHFJ+etyGTp8jrMPFG8JfS7
-         MEix7ZOqva0CwZ4uuiS+Qrg7N0TuWh2wLCyUdBXYmpvH2nd4jZKK0B2aKfxoPS0flEZY
-         IRHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fm/Yx4WlkdFkzJYcjEnD/dd0EBFK33lb3Y6Zhd2dmmo=;
-        b=WuxAjC4MLnlWdIaFKzRmvHQwnMQSPXyHRSTZU+aMWbYIjyrX/JeTGgA+WKsKHHfnsB
-         5efhDUa+Yy8gN0bB4Z0GnicKHcV6pa5dZfigLrCRRl4PYVKv5wF+poANLzikDkaHs47D
-         NIXoypZBoEziVUxrNZ8Y91XZRe6X57nyyJjYkkCwy/bez5/Du8bNZIRpmgWG+37tP/94
-         Zn70O8U19d0wAuuIMwCrfMo3+nAX6HyCsqtH84h20ZqN2jZMOo49xiOVlkBzr6qtxUMI
-         rkYH8AR3oA9aLeOegUYPRs2xn7Zs5AFq4r7So7zFjWdw3iC/ktAJmt+SayXayHHPqlnS
-         b/8Q==
-X-Gm-Message-State: APjAAAXuj/5eGwlqs3JSRpYjIFjJ4L0kOpGM8Ez2qsAKdTo3PfA8+E5+
-        7xzZnf0Uv69S3bYJrmRZVUTd2NxViJnVSvvpkq8=
-X-Google-Smtp-Source: APXvYqyQBj0be6yZUsdhV/FaLQE4dE9UbIMdQUscEX9Vtv0rdrB086A6j3O5qennG3h3d9XE8kTPBmlaCG8eRscTZ6A=
-X-Received: by 2002:a63:42:: with SMTP id 63mr7231179pga.337.1557423387477;
- Thu, 09 May 2019 10:36:27 -0700 (PDT)
+        Thu, 9 May 2019 13:36:37 -0400
+Received: from mail-eopbgr760050.outbound.protection.outlook.com ([40.107.76.50]:34403
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726576AbfEIRgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:36:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nmJlQHnyxWKpE2tFnlIITdB+xJYRJxRTmsD4Isj4Iu8=;
+ b=cjQ5WC8pQdg83EDEcqTJPzKKCYvfHOuCcsKv5gLezQbUUJEExMdCDPD3O7VHruN6e5m1LdmCx68wSBIEJLIKCWJ/KQKSoWSyhh0vdh5fz5mcUYN3j9ZzPdcEUkbmmavWOlkFHwolCNVxFVdvn4oIkUvp7J7eJ+gM44MA03Bt2b8=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4247.namprd05.prod.outlook.com (20.176.252.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.4; Thu, 9 May 2019 17:36:29 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.006; Thu, 9 May 2019
+ 17:36:29 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Will Deacon <will.deacon@arm.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Topic: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Index: AQHVBlNcdgyGQHvMg0ymTH6Y7O8srKZjDs8A
+Date:   Thu, 9 May 2019 17:36:29 +0000
+Message-ID: <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cdc4f936-48aa-49af-f768-08d6d4a4deed
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4247;
+x-ms-traffictypediagnostic: BYAPR05MB4247:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR05MB424786746F70CE42FB017980D0330@BYAPR05MB4247.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(31014005)(53754006)(54534003)(71190400001)(99286004)(6916009)(86362001)(6506007)(102836004)(76176011)(7416002)(71200400001)(966005)(33656002)(82746002)(83716004)(45080400002)(478600001)(14454004)(4326008)(68736007)(6246003)(25786009)(36756003)(53936002)(66066001)(53546011)(66476007)(66946007)(66556008)(64756008)(66446008)(73956011)(76116006)(316002)(446003)(11346002)(486006)(476003)(26005)(186003)(2616005)(229853002)(6486002)(256004)(14444005)(5660300002)(6512007)(6306002)(6436002)(3846002)(6116002)(8676002)(81156014)(81166006)(8936002)(54906003)(7736002)(305945005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4247;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ki/tjrBreloibQFmkhncPLsiKjP29Wy2yUcrtIRutaEDPAjs3C0WZGDPmidY0mXwqts/RYNhujDxbn9KXMT2sx4B67Xhx944WMjZAF65slU25DV7eEHpCA+MxLv0jGYm/LW97kaV0nZmMKLLVCqk802qz52JJglxcxmSLwK1UQaux9SGEeWs8WCApC0VuUECVhAp4rQ89kBsnSyVZFS9nNhI0DbiFdF1g6geZPCaA1pLOOdQKXnh7HPMl1MY328Q/Dh0Hx11zBrvao63X/ywKYTd7jKxVwjXyHuOFOsNFRWEmNwihUk01PQvOQbrvoDXIi1pZxfOVz6hK87JyMuGd00MGBR1Jtl1e2Vy1O55VXshPAiMs19JvBtXGB/ixLQ7TYKInrOe32YvG/yYFOUxfFGKF3aHYBiWxqMXlsNdNCk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E5E4CD6BAFEC2E4F9C0A9DBFDA3782F3@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190509141456.223614-1-helgaas@kernel.org> <20190509141456.223614-2-helgaas@kernel.org>
-In-Reply-To: <20190509141456.223614-2-helgaas@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 May 2019 20:36:16 +0300
-Message-ID: <CAHp75VfbVvpMaKdeKKTs_zF6CcJf5==oV8PR+YF+RTAtZrtRfg@mail.gmail.com>
-Subject: Re: [PATCH 01/10] PCI/AER: Replace dev_printk(KERN_DEBUG) with dev_info()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dongdong Liu <liudongdong3@huawei.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdc4f936-48aa-49af-f768-08d6d4a4deed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 17:36:29.4858
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4247
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 5:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Frederick Lawler <fred@fredlawl.com>
->
-> Replace dev_printk(KERN_DEBUG) with dev_info() or dev_err() to be more
-> consistent with other logging.
->
-> These could be converted to dev_dbg(), but that depends on
-> CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
-> *always* be in the dmesg log.
->
-> Also remove a redundant kzalloc() failure message.
+> On May 9, 2019, at 3:38 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Thu, May 09, 2019 at 09:37:26AM +0100, Will Deacon wrote:
+>> Hi all, [+Peter]
+>=20
+> Right, mm/mmu_gather.c has a MAINTAINERS entry; use it.
+>=20
+> Also added Nadav and Minchan who've poked at this issue before. And Mel,
+> because he loves these things :-)
+>=20
+>> Apologies for the delay; I'm attending a conference this week so it's tr=
+icky
+>> to keep up with email.
+>>=20
+>> On Wed, May 08, 2019 at 05:34:49AM +0800, Yang Shi wrote:
+>>> A few new fields were added to mmu_gather to make TLB flush smarter for
+>>> huge page by telling what level of page table is changed.
+>>>=20
+>>> __tlb_reset_range() is used to reset all these page table state to
+>>> unchanged, which is called by TLB flush for parallel mapping changes fo=
+r
+>>> the same range under non-exclusive lock (i.e. read mmap_sem).  Before
+>>> commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in
+>>> munmap"), MADV_DONTNEED is the only one who may do page zapping in
+>>> parallel and it doesn't remove page tables.  But, the forementioned com=
+mit
+>>> may do munmap() under read mmap_sem and free page tables.  This causes =
+a
+>>> bug [1] reported by Jan Stancek since __tlb_reset_range() may pass the
+>=20
+> Please don't _EVER_ refer to external sources to describe the actual bug
+> a patch is fixing. That is the primary purpose of the Changelog.
+>=20
+> Worse, the email you reference does _NOT_ describe the actual problem.
+> Nor do you.
+>=20
+>>> wrong page table state to architecture specific TLB flush operations.
+>>=20
+>> Yikes. Is it actually safe to run free_pgtables() concurrently for a giv=
+en
+>> mm?
+>=20
+> Yeah.. sorta.. it's been a source of 'interesting' things. This really
+> isn't the first issue here.
+>=20
+> Also, change_protection_range() is 'fun' too.
+>=20
+>>> So, removing __tlb_reset_range() sounds sane.  This may cause more TLB
+>>> flush for MADV_DONTNEED, but it should be not called very often, hence
+>>> the impact should be negligible.
+>>>=20
+>>> The original proposed fix came from Jan Stancek who mainly debugged thi=
+s
+>>> issue, I just wrapped up everything together.
+>>=20
+>> I'm still paging the nested flush logic back in, but I have some comment=
+s on
+>> the patch below.
+>>=20
+>>> [1] https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
+Flore.kernel.org%2Flinux-mm%2F342bf1fd-f1bf-ed62-1127-e911b5032274%40linux.=
+alibaba.com%2FT%2F%23m7a2ab6c878d5a256560650e56189cfae4e73217f&amp;data=3D0=
+2%7C01%7Cnamit%40vmware.com%7C7be2f2b29b654aba7de308d6d46a7b93%7Cb39138ca3c=
+ee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C636929951176903247&amp;sdata=3DgGptCMeb9vW=
+4jXUnG53amgvrv8TB9F52JYBHmPeHFvs%3D&amp;reserved=3D0
+>>>=20
+>>> Reported-by: Jan Stancek <jstancek@redhat.com>
+>>> Tested-by: Jan Stancek <jstancek@redhat.com>
+>>> Cc: Will Deacon <will.deacon@arm.com>
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>> Signed-off-by: Jan Stancek <jstancek@redhat.com>
+>>> ---
+>>> mm/mmu_gather.c | 7 ++++---
+>>> 1 file changed, 4 insertions(+), 3 deletions(-)
+>>>=20
+>>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+>>> index 99740e1..9fd5272 100644
+>>> --- a/mm/mmu_gather.c
+>>> +++ b/mm/mmu_gather.c
+>>> @@ -249,11 +249,12 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>>> 	 * flush by batching, a thread has stable TLB entry can fail to flush
+>>=20
+>> Urgh, we should rewrite this comment while we're here so that it makes s=
+ense...
+>=20
+> Yeah, that's atrocious. We should put the actual race in there.
+>=20
+>>>  * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+>>> 	 * forcefully if we detect parallel PTE batching threads.
+>>> +	 *
+>>> +	 * munmap() may change mapping under non-excluse lock and also free
+>>> +	 * page tables.  Do not call __tlb_reset_range() for it.
+>>> 	 */
+>>> -	if (mm_tlb_flush_nested(tlb->mm)) {
+>>> -		__tlb_reset_range(tlb);
+>>> +	if (mm_tlb_flush_nested(tlb->mm))
+>>> 		__tlb_adjust_range(tlb, start, end - start);
+>>> -	}
+>>=20
+>> I don't think we can elide the call __tlb_reset_range() entirely, since =
+I
+>> think we do want to clear the freed_pXX bits to ensure that we walk the
+>> range with the smallest mapping granule that we have. Otherwise couldn't=
+ we
+>> have a problem if we hit a PMD that had been cleared, but the TLB
+>> invalidation for the PTEs that used to be linked below it was still pend=
+ing?
+>=20
+> That's tlb->cleared_p*, and yes agreed. That is, right until some
+> architecture has level dependent TLBI instructions, at which point we'll
+> need to have them all set instead of cleared.
+>=20
+>> Perhaps we should just set fullmm if we see that here's a concurrent
+>> unmapper rather than do a worst-case range invalidation. Do you have a f=
+eeling
+>> for often the mm_tlb_flush_nested() triggers in practice?
+>=20
+> Quite a bit for certain workloads I imagine, that was the whole point of
+> doing it.
+>=20
+> Anyway; am I correct in understanding that the actual problem is that
+> we've cleared freed_tables and the ARM64 tlb_flush() will then not
+> invalidate the cache and badness happens?
+>=20
+> Because so far nobody has actually provided a coherent description of
+> the actual problem we're trying to solve. But I'm thinking something
+> like the below ought to do.
+>=20
+>=20
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 99740e1dd273..fe768f8d612e 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+> 		unsigned long start, unsigned long end)
+> {
+> 	/*
+> -	 * If there are parallel threads are doing PTE changes on same range
+> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> -	 * forcefully if we detect parallel PTE batching threads.
+> +	 * Sensible comment goes here..
+> 	 */
+> -	if (mm_tlb_flush_nested(tlb->mm)) {
+> -		__tlb_reset_range(tlb);
+> -		__tlb_adjust_range(tlb, start, end - start);
+> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
+> +		/*
+> +		 * Since we're can't tell what we actually should have
+> +		 * flushed flush everything in the given range.
+> +		 */
+> +		tlb->start =3D start;
+> +		tlb->end =3D end;
+> +		tlb->freed_tables =3D 1;
+> +		tlb->cleared_ptes =3D 1;
+> +		tlb->cleared_pmds =3D 1;
+> +		tlb->cleared_puds =3D 1;
+> +		tlb->cleared_p4ds =3D 1;
+> 	}
+>=20
+> 	tlb_flush_mmu(tlb);
 
-> +               pci_info(parent, "can't find device of ID%04x\n",
-> +                        e_info->id);
+As a simple optimization, I think it is possible to hold multiple nesting
+counters in the mm, similar to tlb_flush_pending, for freed_tables,
+cleared_ptes, etc.
 
-Would it be a chance to take them one line instead of two?
+The first time you set tlb->freed_tables, you also atomically increase
+mm->tlb_flush_freed_tables. Then, in tlb_flush_mmu(), you just use
+mm->tlb_flush_freed_tables instead of tlb->freed_tables.
 
-> +               dev_err(device, "request AER IRQ %d failed\n",
-> +                       dev->irq);
-
-Ditto.
-
--- 
-With Best Regards,
-Andy Shevchenko
