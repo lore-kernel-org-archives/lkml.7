@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EAEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1079AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDFA2184D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADEF20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428610;
-	bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
+	s=default; t=1557428615;
+	bh=if2nZ56rO+pMZc+Myfq3f0Ur5avwSADbbKcVIDE0cJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PxVAWVvHSJTbQYp+rQug+3oigb8CLOx8PMhlsjaj5d6UHObs0mu04JtEZ47cPwYgA
-	 uJGp0BDcbfcG6Sqr/JheMHhcOtBPbOHmjGlHJiFb1JA8BNkg1cIMTZi0N/exTlUFJF
-	 QOuiqIdW9e3Gpz1yKsrshBCXTEH3pP83Vwrs2wvA=
+	b=uRkKMMy3kt7N4ps0IaOI3Vti6QGZETk5BVLbVfVo8V5LZ/QSdNCMQduPBGB4s7iB4
+	 Tt/FH9sHKwTxyw5fTIzDnZYUpQLENAy3BWae0WJY6Tk2nAdEVq46wGudBy6MIekIj1
+	 Ismw7bIKnENbAADWLgKhG37iNAipGrAOu+9PPYeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfEITD2 (ORCPT
+        id S1728365AbfEITDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42544 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:03:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfEIStR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:49:17 -0400
+        id S1727692AbfEIStL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:49:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38BE820578;
-        Thu,  9 May 2019 18:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B4D2182B;
+        Thu,  9 May 2019 18:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427756;
-        bh=hEuToZTYTh+72tR79gRIV7bx32NRmE1y/XhSGpfYvRw=;
+        s=default; t=1557427750;
+        bh=if2nZ56rO+pMZc+Myfq3f0Ur5avwSADbbKcVIDE0cJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnrEnyXksrwKaGERCdlVjCwMO/g0vX9UfUryFdN3WwXqxo6w2sDaWX8Q9ZEhqzwRJ
-         86JS+pco6oK0oupnUL9kBPjJoKVe0JZsSXQmmt5M00n6gVqxlydNoO84OaxZbpSt+K
-         n3MY12nv0oUiu53gyqpKx48/wAun3OPY258tNZlc=
+        b=sa6BqvQXbPekqFKQuBK3bynypz39S0Qg50Bc5xxyFlAtK0uTHj1Ib9QyXcHNrS8NT
+         EoQsI0daRNScp66NjIxgO02Vd/+5axOdFvnZvedyEyu5XPBqUnXx8t6JqOQKA8D0Jn
+         tmU90xQQmlbROWwyCv/XhYp1zPxRldSVyuO2gZHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 59/66] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
-Date:   Thu,  9 May 2019 20:42:34 +0200
-Message-Id: <20190509181307.679020537@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 4.19 57/66] soc: sunxi: Fix missing dependency on REGMAP_MMIO
+Date:   Thu,  9 May 2019 20:42:32 +0200
+Message-Id: <20190509181307.508024707@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,45 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Vasquez <andrewv@marvell.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
+commit a84014e1db35d8e7af09878d0b4bf30804fb17d5 upstream.
 
-Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
-code") incorrectly set 'optrom_region_size' to 'start+size', which can
-overflow option-rom boundaries when 'start' is non-zero.  Continue setting
-optrom_region_size to the proper adjusted value of 'size'.
+When enabling ARCH_SUNXI from allnoconfig, SUNXI_SRAM is enabled, but
+not REGMAP_MMIO, so the kernel fails to link with an undefined reference
+to __devm_regmap_init_mmio_clk. Select REGMAP_MMIO, as suggested in
+drivers/base/regmap/Kconfig.
 
-Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This creates the following dependency loop:
+
+  drivers/of/Kconfig:68:                symbol OF_IRQ depends on IRQ_DOMAIN
+  kernel/irq/Kconfig:63:                symbol IRQ_DOMAIN is selected by REGMAP
+  drivers/base/regmap/Kconfig:7:        symbol REGMAP default is visible depending on REGMAP_MMIO
+  drivers/base/regmap/Kconfig:39:       symbol REGMAP_MMIO is selected by SUNXI_SRAM
+  drivers/soc/sunxi/Kconfig:4:          symbol SUNXI_SRAM is selected by USB_MUSB_SUNXI
+  drivers/usb/musb/Kconfig:63:          symbol USB_MUSB_SUNXI depends on GENERIC_PHY
+  drivers/phy/Kconfig:7:                symbol GENERIC_PHY is selected by PHY_BCM_NS_USB3
+  drivers/phy/broadcom/Kconfig:29:      symbol PHY_BCM_NS_USB3 depends on MDIO_BUS
+  drivers/net/phy/Kconfig:12:           symbol MDIO_BUS default is visible depending on PHYLIB
+  drivers/net/phy/Kconfig:181:          symbol PHYLIB is selected by ARC_EMAC_CORE
+  drivers/net/ethernet/arc/Kconfig:18:  symbol ARC_EMAC_CORE is selected by ARC_EMAC
+  drivers/net/ethernet/arc/Kconfig:24:  symbol ARC_EMAC depends on OF_IRQ
+
+To fix the circular dependency, make USB_MUSB_SUNXI select GENERIC_PHY
+instead of depending on it. This matches the use of GENERIC_PHY by all
+but two other drivers.
+
+Cc: <stable@vger.kernel.org> # 4.19
+Fixes: 5828729bebbb ("soc: sunxi: export a regmap for EMAC clock reg on A64")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/sunxi/Kconfig |    1 +
+ drivers/usb/musb/Kconfig  |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -345,7 +345,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
+--- a/drivers/soc/sunxi/Kconfig
++++ b/drivers/soc/sunxi/Kconfig
+@@ -4,6 +4,7 @@
+ config SUNXI_SRAM
+ 	bool
+ 	default ARCH_SUNXI
++	select REGMAP_MMIO
+ 	help
+ 	  Say y here to enable the SRAM controller support. This
+ 	  device is responsible on mapping the SRAM in the sunXi SoCs
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -66,7 +66,7 @@ config USB_MUSB_SUNXI
+ 	depends on NOP_USB_XCEIV
+ 	depends on PHY_SUN4I_USB
+ 	depends on EXTCON
+-	depends on GENERIC_PHY
++	select GENERIC_PHY
+ 	select SUNXI_SRAM
  
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SREADING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-@@ -418,7 +418,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
- 
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SWRITING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+ config USB_MUSB_DAVINCI
 
 
