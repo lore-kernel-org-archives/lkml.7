@@ -2,121 +2,185 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C8AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B18DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025B72053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFE9216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:54:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csVtQtV2"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="bbFlrxFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfEIFms (ORCPT
+        id S1726804AbfEIFyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 01:42:48 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46440 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfEIFms (ORCPT
+        Thu, 9 May 2019 01:54:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33412 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEIFyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 01:42:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi2so544400plb.13;
-        Wed, 08 May 2019 22:42:48 -0700 (PDT)
+        Thu, 9 May 2019 01:54:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so722315pfk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=s2x7LoSc32lEvDkAoL480aj+nvBiwY0CVx5bvNfBU9w=;
-        b=csVtQtV2inpBwOs4SzreziyFUbTddSpdZwh3TtZNEKES3WBzVVfQo22rH99jXdchRj
-         wdTcbhtY/wbeexkXvyEZzixQCc8C0AKTeMmAOamYGlEG75/OYQA9qAV07CeFlu3YwBzW
-         1+WXafAjmM7iDnCRsG8iyWsG+fj5pYAzcXU5ockry1mnvf+h/Y9ZcI3wuugepWGOnket
-         SEzYoDv4J8t1L9ePPQNDqYHSxss1AsK2/pgcPCMPQFEY4fvDt5uHzV7vVge7ubb0ivOG
-         mfSSfq11dvQ/FuF2egKLlrMcG0GEsffVGzknWnLT+e76XEqo3xOigAr5+TgxcZ7LKBeW
-         IxSQ==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MyoriVMIilTeJ9qFpR6AU4DWacDTYEkqJme7/MxnVqg=;
+        b=bbFlrxFYylFXUH5ZVeD6MYXyaFIdK+gVBVe+gfkSRidRYbDhicWM49Y/QrJRf8haYP
+         Ataz1DsFGwFCLfELOnmvl00Ms6iR26Yp+aUUarVlWYz/ha1u6HPFM6xrKL5MDRz2unna
+         KNPjMy0Zi1ZqKnjEkPI3OcbScAE3Nm6IEQUrOtoTsptqMX1namJuj0xKY5qpXB8HxWEU
+         2M8HFtfjtNQLuuM8J2VAxSmMcJ21cvFLmS7jaucXvACmNswDtq1zXVdcQHekiZxo7Trp
+         OlizbT7t8VFKyARiFE+vqVLPSwPDZvda7A1joUFIF/YzqpLWYpXzdgFwi/mQ8uzLjOLA
+         7TSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=s2x7LoSc32lEvDkAoL480aj+nvBiwY0CVx5bvNfBU9w=;
-        b=nEskWZB5ZTZiVNyOXq6UNlpHRYqSR6lHwuZ7dFCVKhx1lWVUvJOiG3cm0fDhVEv5Hr
-         q9acJQ/P0cRrn4v4fo69WzpsPz6YCQdFAwAIdFDGom9HBHCxgbsHnv9gX17MJXCY065r
-         bsjdJwXxUvjD6GPvaP7VHaCsX3EVTWxjQ9OtHVYDYxzfa1n/0gWX4RWgLOFQLuqB7Gsj
-         aLRt1h6DRPVQGlcoiy9a3rADcDaVhjNQ+DB32xQrDup3dVZJFsT93R74CrkhMG7WQZ+n
-         LlTfrFT05Ofq4G6XICgR0RhePnVDStIeZlr5X4dDKlwnH3s6UWyB/Vfwn1q3EbV8E39q
-         vOvQ==
-X-Gm-Message-State: APjAAAU2dba/KEbTuQhHcVPaykky+5Vuc60Ry6MouPBZ3RbNYCW0GDgl
-        uaqSdUOPn3awHEBpfoz6x6eNZ8OH
-X-Google-Smtp-Source: APXvYqze8v6crZWAl58N5X/Scx9NrUlvHZ/iyQMejrI8ikqUnJl0inftxptETIK8zBoZb48dU+v3Jw==
-X-Received: by 2002:a17:902:108a:: with SMTP id c10mr2749122pla.48.1557380567984;
-        Wed, 08 May 2019 22:42:47 -0700 (PDT)
-Received: from sh04182tmp293.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 2sm1881814pgc.49.2019.05.08.22.42.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 08 May 2019 22:42:47 -0700 (PDT)
-From:   Lanqing Liu <liuhhome@gmail.com>
-To:     baolin.wang@unisoc.com, baolin.wang@linaro.org,
-        gregkh@linuxfoundation.org, jslaby@suse.com
-Cc:     lanqing.liu@unisoc.com, liuhhome@gmail.com, robh@kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chunyan.zhang@unisoc.com, orson.zhai@unisoc.com,
-        zhang.lyra@gmail.com
-Subject: [PATCH] tty: serial_core: Fix the incorrect configuration of baud rate and data length at the console serial port resume
-Date:   Thu,  9 May 2019 13:42:39 +0800
-Message-Id: <a8bd7d19de25b799098659334de7e19670a806fc.1557379676.git.liuhhome@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MyoriVMIilTeJ9qFpR6AU4DWacDTYEkqJme7/MxnVqg=;
+        b=i/zD9s9SeWUZQorz3DVs2vik+1p/I7118neUNHx1mAQgfjg5sca7FVtkuJW9BqzNj+
+         bb94CG5TUR95GZr8wBqVGIxB5Yk28Zg/0YsWsJ6Yzuk2WO9JRAkdjV90ztAb5ZqTwSFe
+         lek47FxOeE9DIQM9suAHcMzJdTvAtMReiW+K0rWxfNHCRby5mgVvgSQHjqF+1gkJlLHC
+         741w475r56KKcO07RkcPjjhPm4xX9JRl9llIXx4Glo7dCZcRlL/qDZC3veXMTxFY0hJl
+         MEK1SafPC8M/rwGRrPvPVnr7p0txRTB1v7C7+jidXmHZtDp50tblIN2P84RMbybO1itt
+         jcuw==
+X-Gm-Message-State: APjAAAXsqgbWo17AILlrF16qdwXbxPYNt+kVWikdB+d3TlLR/y0tZge0
+        gNp82EA4Avpv2xvmDrRi9uDXGA==
+X-Google-Smtp-Source: APXvYqxdmBN/lHsDvX6PGNtCQWDni9gx70ciWVTNJGJX9FO/ZuzKDfvfQ5f8fc0IdJFPM02/VoJjIA==
+X-Received: by 2002:a62:6c88:: with SMTP id h130mr2573755pfc.106.1557381263835;
+        Wed, 08 May 2019 22:54:23 -0700 (PDT)
+Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id f20sm1363137pff.176.2019.05.08.22.54.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 22:54:22 -0700 (PDT)
+From:   Daniel Drake <drake@endlessm.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        len.brown@intel.com, rafael.j.wysocki@intel.com,
+        linux@endlessm.com, peterz@infradead.org
+Subject: [PATCH v2 1/3] x86/tsc: use CPUID.0x16 to calculate missing crystal frequency
+Date:   Thu,  9 May 2019 13:54:15 +0800
+Message-Id: <20190509055417.13152-1-drake@endlessm.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When userspace opens a serial port for console, uart_port_startup()
-is called. This function assigns the uport->cons->cflag value to
-TTY->termios.c_cflag, then it is cleared to 0. When the user space
-closes this serial port, the TTY structure will be released, and at
-this time uport->cons->cflag has also been cleared.
+native_calibrate_tsc() had a data mapping Intel CPU families
+and crystal clock speed, but hardcoded tables are not ideal, and this
+approach was already problematic at least in the Skylake X case, as
+seen in commit b51120309348 ("x86/tsc: Fix erroneous TSC rate on Skylake
+Xeon").
 
-On the Spreadtrum platform, in some special scenarios, like charging mode,
-userspace needs to close the console, which means the uport->cons->cflag
-has also been cleared. But printing logs is still needed in the kernel. So
-when system enters suspend and resume, the console needs to be configure
-the baud rate and data length of the serial port according to its own cflag
-when resuming the console port. At this time, the cflag is 0, which will
-cause serial port to produce configuration errors that do not meet user
-expectations.
+By examining CPUID data from http://instlatx64.atw.hu/ and units
+in the lab, we have found that 3 different scenarios need to be dealt
+with, and we can eliminate most of the hardcoded data using an approach a
+little more advanced than before:
 
-To fix this, assigning the TTY->termios.c_cflag value to uport->cons->cflag
-before the userspace closes this console serial port. It will ensure that
-the correct cflag value can be gotten when the console serial port was
-resumed.
+ 1. ApolloLake, GeminiLake, CannonLake (and presumably all new chipsets
+    from this point) report the crystal frequency directly via CPUID.0x15.
+    That's definitive data that we can rely upon.
 
-Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
+ 2. Skylake, Kabylake and all variants of those two chipsets report a
+    crystal frequency of zero, however we can calculate the crystal clock
+    speed by condidering data from CPUID.0x16.
+
+    This method correctly distinguishes between the two crystal clock
+    frequencies present on different Skylake X variants that caused
+    headaches before.
+
+    As the calculations do not quite match the previously-hardcoded values
+    in some cases (e.g. 23913043Hz instead of 24MHz), TSC refinement is
+    enabled on all platforms where we had to calculate the crystal
+    frequency in this way.
+
+ 3. Denverton (GOLDMONT_X) reports a crystal frequency of zero and does
+    not support CPUID.0x16, so we leave this entry hardcoded.
+
+Link: https://lkml.kernel.org/r/20190419083533.32388-1-drake@endlessm.com
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
 ---
- drivers/tty/serial/serial_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 351843f..f233cf8 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1539,6 +1539,7 @@ static void uart_set_termios(struct tty_struct *tty,
- static void uart_close(struct tty_struct *tty, struct file *filp)
- {
- 	struct uart_state *state = tty->driver_data;
-+	struct uart_port *uport;
+Notes:
+    v2:
+     - Clarify the situation around Skylake X better.
+     - Enable TSC refinement when we had to calculate the crystal clock,
+       in case slight differences in the calculation result cause problems
+       similar to those reported earlier on Skylake X.
+
+ arch/x86/kernel/tsc.c | 47 +++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 15b5e98a86f9..6e6d933fb99c 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -631,31 +631,38 @@ unsigned long native_calibrate_tsc(void)
  
- 	if (!state) {
- 		struct uart_driver *drv = tty->driver->driver_state;
-@@ -1553,6 +1554,9 @@ static void uart_close(struct tty_struct *tty, struct file *filp)
- 	}
+ 	crystal_khz = ecx_hz / 1000;
  
- 	pr_debug("uart_close(%d) called\n", tty->index);
-+	uport = uart_port_check(state);
-+	if (uport && uart_console(uport))
-+		uport->cons->cflag = tty->termios.c_cflag;
+-	if (crystal_khz == 0) {
+-		switch (boot_cpu_data.x86_model) {
+-		case INTEL_FAM6_SKYLAKE_MOBILE:
+-		case INTEL_FAM6_SKYLAKE_DESKTOP:
+-		case INTEL_FAM6_KABYLAKE_MOBILE:
+-		case INTEL_FAM6_KABYLAKE_DESKTOP:
+-			crystal_khz = 24000;	/* 24.0 MHz */
+-			break;
+-		case INTEL_FAM6_ATOM_GOLDMONT_X:
+-			crystal_khz = 25000;	/* 25.0 MHz */
+-			break;
+-		case INTEL_FAM6_ATOM_GOLDMONT:
+-			crystal_khz = 19200;	/* 19.2 MHz */
+-			break;
+-		}
+-	}
++	/*
++	 * Denverton SoCs don't report crystal clock, and also don't support
++	 * CPUID.0x16 for the calculation below, so hardcode the 25MHz crystal
++	 * clock.
++	 */
++	if (crystal_khz == 0 &&
++			boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT_X)
++		crystal_khz = 25000;
  
- 	tty_port_close(tty->port, tty, filp);
- }
+-	if (crystal_khz == 0)
+-		return 0;
+ 	/*
+-	 * TSC frequency determined by CPUID is a "hardware reported"
++	 * TSC frequency reported directly by CPUID is a "hardware reported"
+ 	 * frequency and is the most accurate one so far we have. This
+ 	 * is considered a known frequency.
+ 	 */
+-	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
++	if (crystal_khz != 0)
++		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
++
++	/*
++	 * Some Intel SoCs like Skylake and Kabylake don't report the crystal
++	 * clock, but we can easily calculate it to a high degree of accuracy
++	 * by considering the crystal ratio and the CPU speed.
++	 */
++	if (crystal_khz == 0 && boot_cpu_data.cpuid_level >= 0x16) {
++		unsigned int eax_base_mhz, ebx, ecx, edx;
++
++		cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
++		crystal_khz = eax_base_mhz * 1000 *
++			eax_denominator / ebx_numerator;
++	}
++
++	if (crystal_khz == 0)
++		return 0;
+ 
+ 	/*
+ 	 * For Atom SoCs TSC is the only reliable clocksource.
 -- 
-1.9.1
+2.20.1
 
