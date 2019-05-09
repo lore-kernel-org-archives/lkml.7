@@ -2,116 +2,117 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0D5C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D18C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623D721019
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AE82173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqzPXIyX"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xBDKH6rh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfEIHIN (ORCPT
+        id S1726744AbfEIHIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:08:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36059 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfEIHIN (ORCPT
+        Thu, 9 May 2019 03:08:35 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:19541 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfEIHIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:08:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id j187so1696577wmj.1;
-        Thu, 09 May 2019 00:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=+JOrLqUHtbdGmjNwbWJ1kYriu6LOEscnnflNAnMNam4=;
-        b=iqzPXIyX4DxG9SwiCeeBm48s1axEx8WQvArG2LZUllfkGLRt53n05tqMzCzuPGEWJT
-         97A0CHufyqKdfVmaKoPuDVTGtOiBflrL6xP/eI0EHHRsF82pjimaP3KwTivHWRssx0KN
-         5Tja9iCo1xlz+pfBFTv/I0DXM9OAa8fjqNWDxc34PIeFjAXy4wRadzuf2HkIBabTEdBM
-         g0K31faLRl9NxlW/ko7aMHOxztZWtKlMFU+HOtcUL/UwNuAQ4wFNwX0wYlnp7pz2SE5P
-         GnTW1i+OaPHA2I3mnWmXTpSfuCCjGRxQIm5Aerk8mts+bKwAemDy7gRwF0CbLxC9vjk5
-         KvbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=+JOrLqUHtbdGmjNwbWJ1kYriu6LOEscnnflNAnMNam4=;
-        b=Tx7Eq/ohqdExcUqe1dAyfqQ1bTriDcKcGMM6XqOpkY9gsJiW94jfiMbmhYN+9pjNLK
-         FCiNlR0Jla8R6Y9aH9gwaLU6JYIrzeCIvjSk1MM7ohOHNXUBIkJDPgVOQoc0VvVLdVjq
-         SXtK2zF9V0L2M/C80Ck/LxMcZSVXuSkeLMzOPTcQaQKcy1zvT680vvauNBUyDvqjjoOc
-         JwyHTND6pksEgfNH4DnOQZqrodWAB/nUOtdIULSm4rHIWESG17958scFXIBHY8DwJOq2
-         hIKwMSgblsPm5aQvDXgs1tsNR9bJ68JKyf5BmezPsbdEGdUOCPoXNBN1OqYET9v+Ngs6
-         /WSg==
-X-Gm-Message-State: APjAAAXDLGVxu65ZAWQ5OzqVus92ky8DJHlgIB3VJzBvheW5/29PPvJw
-        NGm7uOCRclG2afJGYRFxVaLP8jIKS93NdSl/3y0=
-X-Google-Smtp-Source: APXvYqw6s2zkJ7rv3Hf0YWguHDWrt34GzGW72V6Wm0pRY9+4M3H1zplAXFFScgo6ysLaEG324UeVSFx3nF2G0Vt6ifU=
-X-Received: by 2002:a1c:a008:: with SMTP id j8mr1573477wme.73.1557385691165;
- Thu, 09 May 2019 00:08:11 -0700 (PDT)
+        Thu, 9 May 2019 03:08:35 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x4978VeH014122;
+        Thu, 9 May 2019 16:08:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4978VeH014122
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557385712;
+        bh=0PXGM4BK4jSqcwrnNMFHPK9/6aXejRLVrTdCjlzhgjU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xBDKH6rhURPqD3T6WfiY1hOTULL238/if9EqvcN+7wkxjt4wztlbuAfuCG/mh7D5G
+         GY7F3ehGGaaFaDE1QXz2EgZt9nPQlTd9i3LpQAI4xxjZCVWriHqzoaVkp9Wnfj0neO
+         kL0NG1AgZRIVNn/Pj8u7smnDb5lLJ7x6K45osfeA32jwuDRow/qNwD24yRXtJ0slOv
+         k+hFXQrzhVy7Gfcz3Jq699WEufA3g8H73afhbewUuVJYk8OjKJ7tnVSr+LsUHcaC/N
+         9uFw5I2Bn24lqQz1zmWmajxlx8MQ6E4oe48tl2TYv7czLK4lUJV3ylnD6rDFCB82j/
+         05jm0zIEZkLuA==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id z17so417332uar.3;
+        Thu, 09 May 2019 00:08:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAUOH2YQaL8lVUmQyYmu7MQFF2sGFREAC1O8bcLG/oQgJ99730qI
+        Y2IXVY/w5/Ls9KqYOhkNjOBn1ztOg83mhXUjmhs=
+X-Google-Smtp-Source: APXvYqyuWuezYXHGKR6yDqqcIT5AS6uKQtZ3SfsYBJiRXZ0khuwBsCpd4TiCOIGlG3PgK91XPq7CjUQuT6qu8NR5J8A=
+X-Received: by 2002:ab0:2bd8:: with SMTP id s24mr1000432uar.121.1557385710510;
+ Thu, 09 May 2019 00:08:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509064549.1302-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190509064549.1302-1-yamada.masahiro@socionext.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 9 May 2019 09:07:59 +0200
-Message-ID: <CA+icZUUB7EZhzfjoQcLLbSy8t=RroWNWSdMdzbvAje2wdXtJ=g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add -Wvla flag unconditionally
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <CAK7LNASLBQ=w9YFBD80s7dit1bd_Tr+ggVyRNms0jf1pR9k=ZA@mail.gmail.com>
+ <20190424180223.253025-1-ndesaulniers@google.com> <CAKwvOd=5SVBFsfEgYc9Dpgr--h+pQgCwOnpAjg9B4HG2VY6kFg@mail.gmail.com>
+ <CAKwvOdkpjwgt3pP9rjZtm=rEK9MhEfQdc6PEr91Bnb9tMVDBEA@mail.gmail.com>
+ <CAK7LNASL+oNNbZ4YaPtGnwka06sRr3Pz8HjjM7oxUC-JkvqF2Q@mail.gmail.com> <fc61a1c2-5503-b18d-e178-491952e059f6@physik.fu-berlin.de>
+In-Reply-To: <fc61a1c2-5503-b18d-e178-491952e059f6@physik.fu-berlin.de>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 9 May 2019 16:07:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATEizpakgj_UT4-OyUy8cs7C_kz8wEWDJAdoftfVK=uKw@mail.gmail.com>
+Message-ID: <CAK7LNATEizpakgj_UT4-OyUy8cs7C_kz8wEWDJAdoftfVK=uKw@mail.gmail.com>
+Subject: Re: [PATCH v2] sh: vsyscall: drop unnecessary cc-ldoption
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 8:46 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Thu, May 9, 2019 at 3:11 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
 >
-> This flag is documented in the GCC 4.6 manual, and recognized by
-> Clang as well. Let's rip off the cc-option switch.
+> On 5/9/19 2:44 AM, Masahiro Yamada wrote:
+> > On Thu, May 9, 2019 at 5:13 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >>
+> >> bumping for review, as the merge window is now open.
+> >
+> >
+> > sh is not very active these days.
 >
+> We're still supporting SH with an up-to-date kernel and userland in Debian, so
+> if your patch broke something, we will notice that soonish. This also applies
+> to ia64 and many other architectures.
+>
+> So, if in doubt, there are folks in Debian which can test your kernel patch
+> if you fear that it breaks something.
 
-[ CC Kees who did the VLA removal/cleanup ]
+Thanks for taking care of them in Debian.
 
-Looks good to me.
+I am talking about the sh sub-system in the kernel here.
 
-Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+SH patches occasionally fly around in LKML, but
+the SH maintainers are not picking up them these days.
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+This one is trivial from the build system point of view.
+So, I offer to apply it to my tree.
+
+Thanks.
+
+
+
+
+> Adrian
 >
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index c71ffb6f55b5..3f5e8a0f4561 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -841,7 +841,7 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
->  KBUILD_CFLAGS += -Wdeclaration-after-statement
->
->  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
-> -KBUILD_CFLAGS += $(call cc-option,-Wvla)
-> +KBUILD_CFLAGS += -Wvla
->
->  # disable pointer signed / unsigned warnings in gcc 4.0
->  KBUILD_CFLAGS += -Wno-pointer-sign
 > --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To post to this group, send email to clang-built-linux@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190509064549.1302-1-yamada.masahiro%40socionext.com.
-> For more options, visit https://groups.google.com/d/optout.
+>  .''`.  John Paul Adrian Glaubitz
+> : :' :  Debian Developer - glaubitz@debian.org
+> `. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+>   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
