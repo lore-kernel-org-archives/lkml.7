@@ -2,118 +2,258 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D819C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06A5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520DB21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B572175B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Gv0Tl3mQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfEIP4y (ORCPT
+        id S1726711AbfEIP6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:56:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35244 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfEIP4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:56:53 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BF84BDBD6F;
-        Thu,  9 May 2019 15:56:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4B9EC27BCD;
-        Thu,  9 May 2019 15:56:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  9 May 2019 17:56:51 +0200 (CEST)
-Date:   Thu, 9 May 2019 17:56:46 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190509155646.GB24526@redhat.com>
-References: <CAKOZuetZPhqQqSgZpyY0cLgy0jroLJRx-B93rkQzcOByL8ih_Q@mail.gmail.com>
- <20190318002949.mqknisgt7cmjmt7n@brauner.io>
- <20190318235052.GA65315@google.com>
- <20190319221415.baov7x6zoz7hvsno@brauner.io>
- <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
- <20190319231020.tdcttojlbmx57gke@brauner.io>
- <20190320015249.GC129907@google.com>
- <20190507021622.GA27300@sultan-box.localdomain>
- <20190507153154.GA5750@redhat.com>
- <20190507163520.GA1131@sultan-box.localdomain>
+        Thu, 9 May 2019 11:58:19 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43825 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfEIP6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:58:19 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j9so2270135oie.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 08:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TF73EmvbI7Z5dXmHDil6Q2j+RhQV0CqT1gtIzo12/Is=;
+        b=Gv0Tl3mQJQeO5SvzEucu1JWtcJNnktS7H76gOBffk58w7v6kyMvJN9IjXRV8V4hvc4
+         f/mJumHW/oUzAE9efbWe2Ck9oQJHFz3b11xzu8VmwAZynx7pLXyRWh6aMqJ405HxqvuC
+         zNAeUf8c/cXUhpYbOtggBzvUOI9SZ6A9+tbqH06wda/uOWfnqTnSBhXyn9Msf6SIdnfR
+         S5L7mriXMrq121NAbcmB+arpDwidApHTLJWmHVUi+bwDNCQX2ojx79CDeqX0RJ12DK7C
+         cma+vYH4DXPNQgavXRzIcmu0moxk7JXxG9KVDRXDNujfhUqhn3CPQDjYkyHrkiM0WMam
+         iQkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TF73EmvbI7Z5dXmHDil6Q2j+RhQV0CqT1gtIzo12/Is=;
+        b=DK2huRrOiiWPMAhje/VH2jL0YxnaRtAC98jfBYJL39qbCwtqqsPbPhbFRqlEFFWcqs
+         5sNP8UV6YQoWJi2kb/m1EdCBHRhrBtN8ri3NnT5W1W6awdC/GFghAJ8G9VBsuPsvqzSu
+         KDfQdTKlQaS1L9fU+gsqItJaD2ULDRqUq+Dt1aSIbpobwKJ9DNMk3HmAsMxdZfR3Rkuh
+         KbzTp7ssV665Xvtr6luBlPJixaCR2feflMMC8y5p6p1/mB7dxaGthj+NV7H9YODB1JmQ
+         5mKShIp3r0Hy1gMZDTXpTIJqdfAlmiFOub0AhxTopsS+oqBkdqDSArqSELRm68gjAslE
+         1NEQ==
+X-Gm-Message-State: APjAAAVZZcwGMXMXhN25Bj2rpgZLEy/iTMTgeUZ44VMGetMzvxIllPMC
+        XfAW5TTTl1lV+fHF8O+R2smAJWX8F39W7Q==
+X-Google-Smtp-Source: APXvYqwNJ7VmcawicRKiyxZJUfNhc7Km5XTn3X0TuriZ+w0JBRGeo6olquA+EddNH/aV4/ncFKRe9g==
+X-Received: by 2002:aca:40d5:: with SMTP id n204mr2078118oia.59.1557417498099;
+        Thu, 09 May 2019 08:58:18 -0700 (PDT)
+Received: from localhost.localdomain ([172.56.6.91])
+        by smtp.gmail.com with ESMTPSA id a1sm1130991oiy.38.2019.05.09.08.58.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 08:58:17 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian@brauner.io>
+Subject: [PATCH v2 1/2] fs: make all new mount api fds cloexec by default
+Date:   Thu,  9 May 2019 17:58:00 +0200
+Message-Id: <20190509155801.8369-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507163520.GA1131@sultan-box.localdomain>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 09 May 2019 15:56:53 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07, Sultan Alsawaf wrote:
->
-> On Tue, May 07, 2019 at 05:31:54PM +0200, Oleg Nesterov wrote:
->
-> > Did you test this patch with lockdep enabled?
-> >
-> > If I read the patch correctly, lockdep should complain. vtsk_is_duplicate()
-> > ensures that we do not take the same ->alloc_lock twice or more, but lockdep
-> > can't know this.
->
-> Yeah, lockdep is fine with this, at least on 4.4.
+This makes all file descriptors returned from new syscalls of the new mount
+api cloexec by default.
 
-Impossible ;) I bet lockdep should report the deadlock as soon as find_victims()
-calls find_lock_task_mm() when you already have a locked victim.
+From a userspace perspective it is rarely the case that fds are supposed to
+be inherited across exec. Having them not cloexec by default forces
+userspace to remember to pass the <SPECIFIC>_CLOEXEC flag along or to
+invoke fcntl() on the fd to prevent leaking it. And leaking the fd is a
+much bigger issue than forgetting to remove the cloexec flag and failing to
+inherit the fd.
+For old fd types we can't break userspace. But for new ones we should
+whenever reasonable make them cloexec by default (Examples of this policy
+are the new seccomp notify fds and also pidfds.). If userspace wants to
+inherit fds across exec they can remove the O_CLOEXEC flag and so opt in to
+inheritance explicitly.
 
-Nevermind, I guess this code won't run with lockdep enabled...
+This patch also has the advantage that we can get rid of all the special
+flags per file descriptor type for the new mount api. In total this lets us
+remove 4 flags:
+- FSMOUNT_CLOEXEC
+- FSOPEN_CLOEXEC
+- FSPICK_CLOEXEC
+- OPEN_TREE_CLOEXEC
 
+Signed-off-by: Christian Brauner <christian@brauner.io>
+---
+v1:
+- David Howells <dhowells@redhat.com>:
+  - ensure that only O_CLOEXEC is passed so that fd allocation doesn't
+    break when new flags are added to a syscall
+v2:
+- reworded commit message
+---
+ fs/fsopen.c                | 13 ++++++-------
+ fs/namespace.c             | 11 ++++-------
+ include/uapi/linux/mount.h | 18 +++---------------
+ 3 files changed, 13 insertions(+), 29 deletions(-)
 
-As for https://github.com/kerneltoast/android_kernel_google_wahoo/commit/afc8c9bf2dbde95941253c168d1adb64cfa2e3ad
-Well,
-
-	mmdrop(mm);
-	simple_lmk_mm_freed(mm);
-
-looks racy because mmdrop(mm) can free this mm_struct. Yes, simple_lmk_mm_freed()
-does not dereference this pointer, but the same memory can be re-allocated as
-another ->mm for the new task which can be found by find_victims(), and _in theory_
-this all can happen in between, so the "victims[i].mm == mm" can be false positive.
-
-And this also means that simple_lmk_mm_freed() should clear victims[i].mm when
-it detects "victims[i].mm == mm", otherwise we have the same theoretical race,
-victims_to_kill is only cleared when the last victim goes away.
-
-
-Another nit... you can drop tasklist_lock right after the 1st "find_victims" loop.
-
-And it seems that you do not really need to walk the "victims" array twice after that,
-you can do everything in a single loop, but this is cosmetic.
-
-Oleg.
+diff --git a/fs/fsopen.c b/fs/fsopen.c
+index 3bb9c0c8cbcc..a38fa8c616cf 100644
+--- a/fs/fsopen.c
++++ b/fs/fsopen.c
+@@ -88,12 +88,12 @@ const struct file_operations fscontext_fops = {
+ /*
+  * Attach a filesystem context to a file and an fd.
+  */
+-static int fscontext_create_fd(struct fs_context *fc, unsigned int o_flags)
++static int fscontext_create_fd(struct fs_context *fc)
+ {
+ 	int fd;
+ 
+ 	fd = anon_inode_getfd("fscontext", &fscontext_fops, fc,
+-			      O_RDWR | o_flags);
++			      O_RDWR | O_CLOEXEC);
+ 	if (fd < 0)
+ 		put_fs_context(fc);
+ 	return fd;
+@@ -126,7 +126,7 @@ SYSCALL_DEFINE2(fsopen, const char __user *, _fs_name, unsigned int, flags)
+ 	if (!ns_capable(current->nsproxy->mnt_ns->user_ns, CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-	if (flags & ~FSOPEN_CLOEXEC)
++	if (flags)
+ 		return -EINVAL;
+ 
+ 	fs_name = strndup_user(_fs_name, PAGE_SIZE);
+@@ -149,7 +149,7 @@ SYSCALL_DEFINE2(fsopen, const char __user *, _fs_name, unsigned int, flags)
+ 	if (ret < 0)
+ 		goto err_fc;
+ 
+-	return fscontext_create_fd(fc, flags & FSOPEN_CLOEXEC ? O_CLOEXEC : 0);
++	return fscontext_create_fd(fc);
+ 
+ err_fc:
+ 	put_fs_context(fc);
+@@ -169,8 +169,7 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
+ 	if (!ns_capable(current->nsproxy->mnt_ns->user_ns, CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-	if ((flags & ~(FSPICK_CLOEXEC |
+-		       FSPICK_SYMLINK_NOFOLLOW |
++	if ((flags & ~(FSPICK_SYMLINK_NOFOLLOW |
+ 		       FSPICK_NO_AUTOMOUNT |
+ 		       FSPICK_EMPTY_PATH)) != 0)
+ 		return -EINVAL;
+@@ -203,7 +202,7 @@ SYSCALL_DEFINE3(fspick, int, dfd, const char __user *, path, unsigned int, flags
+ 		goto err_fc;
+ 
+ 	path_put(&target);
+-	return fscontext_create_fd(fc, flags & FSPICK_CLOEXEC ? O_CLOEXEC : 0);
++	return fscontext_create_fd(fc);
+ 
+ err_fc:
+ 	put_fs_context(fc);
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 3357c3d65475..b024e2a05384 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2369,11 +2369,8 @@ SYSCALL_DEFINE3(open_tree, int, dfd, const char *, filename, unsigned, flags)
+ 	int error;
+ 	int fd;
+ 
+-	BUILD_BUG_ON(OPEN_TREE_CLOEXEC != O_CLOEXEC);
+-
+ 	if (flags & ~(AT_EMPTY_PATH | AT_NO_AUTOMOUNT | AT_RECURSIVE |
+-		      AT_SYMLINK_NOFOLLOW | OPEN_TREE_CLONE |
+-		      OPEN_TREE_CLOEXEC))
++		      AT_SYMLINK_NOFOLLOW | OPEN_TREE_CLONE))
+ 		return -EINVAL;
+ 
+ 	if ((flags & (AT_RECURSIVE | OPEN_TREE_CLONE)) == AT_RECURSIVE)
+@@ -2389,7 +2386,7 @@ SYSCALL_DEFINE3(open_tree, int, dfd, const char *, filename, unsigned, flags)
+ 	if (detached && !may_mount())
+ 		return -EPERM;
+ 
+-	fd = get_unused_fd_flags(flags & O_CLOEXEC);
++	fd = get_unused_fd_flags(O_CLOEXEC);
+ 	if (fd < 0)
+ 		return fd;
+ 
+@@ -3352,7 +3349,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
+ 	if (!may_mount())
+ 		return -EPERM;
+ 
+-	if ((flags & ~(FSMOUNT_CLOEXEC)) != 0)
++	if (flags)
+ 		return -EINVAL;
+ 
+ 	if (attr_flags & ~(MOUNT_ATTR_RDONLY |
+@@ -3457,7 +3454,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
+ 	}
+ 	file->f_mode |= FMODE_NEED_UNMOUNT;
+ 
+-	ret = get_unused_fd_flags((flags & FSMOUNT_CLOEXEC) ? O_CLOEXEC : 0);
++	ret = get_unused_fd_flags(O_CLOEXEC);
+ 	if (ret >= 0)
+ 		fd_install(ret, file);
+ 	else
+diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+index 96a0240f23fe..c688e4ac843b 100644
+--- a/include/uapi/linux/mount.h
++++ b/include/uapi/linux/mount.h
+@@ -59,7 +59,6 @@
+  * open_tree() flags.
+  */
+ #define OPEN_TREE_CLONE		1		/* Clone the target tree and attach the clone */
+-#define OPEN_TREE_CLOEXEC	O_CLOEXEC	/* Close the file on execve() */
+ 
+ /*
+  * move_mount() flags.
+@@ -72,18 +71,12 @@
+ #define MOVE_MOUNT_T_EMPTY_PATH		0x00000040 /* Empty to path permitted */
+ #define MOVE_MOUNT__MASK		0x00000077
+ 
+-/*
+- * fsopen() flags.
+- */
+-#define FSOPEN_CLOEXEC		0x00000001
+-
+ /*
+  * fspick() flags.
+  */
+-#define FSPICK_CLOEXEC		0x00000001
+-#define FSPICK_SYMLINK_NOFOLLOW	0x00000002
+-#define FSPICK_NO_AUTOMOUNT	0x00000004
+-#define FSPICK_EMPTY_PATH	0x00000008
++#define FSPICK_SYMLINK_NOFOLLOW	0x00000001
++#define FSPICK_NO_AUTOMOUNT	0x00000002
++#define FSPICK_EMPTY_PATH	0x00000004
+ 
+ /*
+  * The type of fsconfig() call made.
+@@ -99,11 +92,6 @@ enum fsconfig_command {
+ 	FSCONFIG_CMD_RECONFIGURE = 7,	/* Invoke superblock reconfiguration */
+ };
+ 
+-/*
+- * fsmount() flags.
+- */
+-#define FSMOUNT_CLOEXEC		0x00000001
+-
+ /*
+  * Mount attributes.
+  */
+-- 
+2.21.0
 
