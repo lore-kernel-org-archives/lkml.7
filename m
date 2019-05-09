@@ -2,108 +2,102 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60249C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF9AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA332177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D1C2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNrv2KQe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmXkJVqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfEIVEr (ORCPT
+        id S1726998AbfEIVGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:04:47 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43124 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfEIVEq (ORCPT
+        Thu, 9 May 2019 17:06:24 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40247 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfEIVGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:04:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c6so1931302pfa.10;
-        Thu, 09 May 2019 14:04:46 -0700 (PDT)
+        Thu, 9 May 2019 17:06:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so1824820pgl.7;
+        Thu, 09 May 2019 14:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=PXOftG3/6YrbgosB/Tyod4caSVXtKhg8wDNSGkZ5bv0=;
-        b=ZNrv2KQekf2+/q3ILwAE77MgwqImbEpT87eBY/d5YyVuf4e7bD4nK5bL1XJdglu5kY
-         cbGJWBXP8KNcec/eBtP50guZC8FzrKzhLgieoSRpPS4AGEan4taDW7a6mmtJZFxP/gW8
-         waL82qZRwop/8Q4nav+fDjgSWMrnaWXHH2cxHSd20FMcoDzsGrm5PeqPMl1cE5M7k+sy
-         W10EZp7sPe8fw9umaEDnAI97QwFy/TdW5c0Bv4bZseBEDdx/cS9S2rwlBoVO0JnW1ml0
-         hsTNsoQbfS4fNI25DdIjhX1qTomjLTLKD59S5v8HIA2spMxDoBcEaMlKH+tgNONB/0cN
-         dbwA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RwdM2UMyaoGs3iIpEHT4wikyqYXOBwn5Ujry1Qy8uJE=;
+        b=KmXkJVqBK7LAOIDQ6+WnLGtJMzDVrJ3LOkPeuv03XH5w0r+S46N+MA30htSp3updGC
+         K8M3ntGrIRKAkldyF5E9pTKQ/gNpUwWU58JZPfcrMT5ClGvSUiDIn5xeEMH3xoiMe0eD
+         i+NIxVgqVISJSpw2vJl4pvZ9XaN+nU8wkamEmXsZlE8vXh6eZyvt6bPaxEdo3R4AXY7a
+         rJb2EMYMJggpqx7Cfrrg3eGINUvVOpDt7Ccekwm6lflsgkjq6rrHW7rXbvi87m4RfNJt
+         IclOHp5o1g9QJcEjRvaEWoQBUWkoZjMdTm1CG4/PU0WJ+7xXq/U9WcI8IcwSfU1jbLs6
+         VdTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PXOftG3/6YrbgosB/Tyod4caSVXtKhg8wDNSGkZ5bv0=;
-        b=gTjI4y06cpediG6UBRhaiZo8hWjJSjbzT25b5gepS31/NpA54tRVSSPWYFhDVh25CM
-         Tj5yauCs2h0iKF+5nm0f8C4ZNxjhAPHWfa9XqFoPfDXNequzgqTxGMnP57uYTWWB8WcV
-         COf/tjOGWLfOvlwMPf1z2bDunfeZ4Z49aT7bitrjcIP6VMhlh1YGU7x6bgXpucLNTuv8
-         +D/5PZAR7KYzOyOd1AJQswXyXDCEA4acDijUDBh4oLS/exlEGbbupaqtHLOYCkyIipRp
-         cu+SHBNS/sxw3XRaJpmbgjyqyFZOXIBzaO3bLAYRpTQ9NoGU5yo6AuQ9Zk/iKi5gvANv
-         e3bQ==
-X-Gm-Message-State: APjAAAXur1bUMHhPqaMuTlYY1SPrarVknFjxBO9HP0AjLEsEkSDdl3Ry
-        fqoGYnTX+waF5VSB94F0fE4=
-X-Google-Smtp-Source: APXvYqxr3PpAzcv8um0n5MiENHdZ04NnND0L7pY74JcKcDwFJyjOygQVhzi1RhBosXWZcKmfe6PfPg==
-X-Received: by 2002:a62:5286:: with SMTP id g128mr8275883pfb.226.1557435886054;
-        Thu, 09 May 2019 14:04:46 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id l129sm6510430pfc.61.2019.05.09.14.04.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:04:45 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vignesh R <vigneshr@ti.com>,
-        Eddie James <eajames@linux.vnet.ibm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Ajay Gupta <ajayg@nvidia.com>,
-        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>,
-        linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] i2c: Allow selecting BCM2835 I2C controllers on ARCH_BRCMSTB
-Date:   Thu,  9 May 2019 14:04:36 -0700
-Message-Id: <20190509210438.28223-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RwdM2UMyaoGs3iIpEHT4wikyqYXOBwn5Ujry1Qy8uJE=;
+        b=uU2J5h5tckKKucsGm3Aqwg9q1J3/ZnzBmTnKj7CVbiUk1q54rvUuzH+OCTwkr+CgDy
+         QZQzFMmjZeB/6WPKL9LmdJ93ONM1MAuaa7Y6ZFOJZNbp8mjRbwg4hgn02hoi/AcqM+JX
+         HZT+CDu7sWU3HEPxEspcqL4Oagl/uEn9rdUJivNhuYNzGHvNZSwKuhqRdwzVDYyZqiTX
+         4iFXM7+KAP/pj9nK+64GbnkMExxhKHrA0jL1OxLyTFAgLJd8W3/bj940RME9pgcZPaZV
+         4uBmJe7TezpmWGgeBwm04azXZTIssXOPtOfghHnpyjhByxD0X08QtHPc0mDxmuU1Vo2z
+         IkMQ==
+X-Gm-Message-State: APjAAAWrTXL/q42AlE9iAo+4q0cnERHzV0BPtoU30YAdhY7p+LkzC0kB
+        hAoY6/q8IjcFaziWe4mir/dTYtIB0XMPhx5rvSc=
+X-Google-Smtp-Source: APXvYqzf58xdfv93OGQavZZgXltBWj15CC/mfJ9scyGnvZe3+sapx9YsoxAjL1TAdMG2M/WCTb1bXXnLLfs3NJaPzA4=
+X-Received: by 2002:aa7:8212:: with SMTP id k18mr8433455pfi.50.1557435982742;
+ Thu, 09 May 2019 14:06:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com> <CAHp75Vf9uPG7_K0P26nHYCH0WB6LFX3wk8aJBpLWQ-r46kDw9w@mail.gmail.com>
+ <20190508171229.GA22024@amd> <52e73640-9fbf-437b-537a-7b3dc167052f@gmail.com> <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
+In-Reply-To: <2f26dd9e-ada7-8e20-c810-a647854c338c@ti.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 10 May 2019 00:06:11 +0300
+Message-ID: <CAHp75VcSVumVg74==bM3cBcZZ2iUNDnUao6h9Q6ktcyEuAKDew@mail.gmail.com>
+Subject: Re: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard backlight
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Dasu <kdasu.kdev@gmail.com>
+On Thu, May 9, 2019 at 11:45 PM Dan Murphy <dmurphy@ti.com> wrote:
+> On 5/9/19 2:04 PM, Yurii Pavlovskyi wrote:
+> We are working on a framework for this.
+>
+> Please see this series
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=390141
+>
+> It is still a work in progress
 
-ARCH_BRCMSTB platforms have the BCM2835 I2C controllers, allow
-selecting the i2c-bcm2835 driver on such platforms.
+Side question:
+Have you considered to convert existing color LED controllers? (It
+seems to me that your proposal lacks of the idea to keep back
+compatibility with the existing controllers whre user may create a
+sysfs node based on the arbitrary label, while it's good to have
+multicolor infrastructure like in your proposal. Did I miss
+something?)
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/i2c/busses/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 26186439db6b..7277c1051ca2 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -435,7 +435,7 @@ config I2C_AXXIA
- 
- config I2C_BCM2835
- 	tristate "Broadcom BCM2835 I2C controller"
--	depends on ARCH_BCM2835
-+	depends on ARCH_BCM2835 || ARCH_BRCMSTB
- 	help
- 	  If you say yes to this option, support will be included for the
- 	  BCM2835 I2C controller.
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
