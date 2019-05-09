@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2F2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D913C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC68520578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B2C20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428161;
-	bh=hFGAcTGN8+exjIpw3elz3HCRPqeJPoKx3U8wzUVaBrI=;
+	s=default; t=1557428168;
+	bh=WSRye4QuqhDnD0KzcvLyhshoPeuDaJR9wrkaZyoDOMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JM45ohz1IC6ULdWeUgERQNP6JS0jNgJ8cutYxE+A4FWjuvnJuOaVc7i9zdzWVOjga
-	 zn/XXm+zj0DzJrx6X3YkRCCke18R+IWd44h7nUGzGxrQghP0tHgx6sTYsZXvLavIKF
-	 dPMciCkthMIxeo/9YRkBPoFqnHfkELPleXgC0q7w=
+	b=gkQJtUbyycMcttOyGSwLOUz7l5efB/ht/mKxZG8zTBLJo6zmgY9FCWME0QVYgEWS3
+	 Fyet1wku8wWH6YcQ8yy1ljw1nfjrbWvCyVuTjRH62Id/dT8ZCBXwM0OjAz1vz3Y/jk
+	 SJvhO2uC0LktTfutEFXkHO3JnQwW/0erL9BsmoHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfEIS4A (ORCPT
+        id S1729213AbfEISzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbfEISzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:24 -0400
+        id S1729198AbfEISzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6E522177E;
-        Thu,  9 May 2019 18:55:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB47204FD;
+        Thu,  9 May 2019 18:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428123;
-        bh=hFGAcTGN8+exjIpw3elz3HCRPqeJPoKx3U8wzUVaBrI=;
+        s=default; t=1557428115;
+        bh=WSRye4QuqhDnD0KzcvLyhshoPeuDaJR9wrkaZyoDOMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ouUgs92g2DcbmRMaD2T8Bp88WJVS7rnIyc5roVrYyH+GIwwCaXA50fDj9WwZcEYg
-         SiUM+dwLdU6NJDk0dD25zDqZVPbLuSv1q40xjkelDxdODDwrcCEbc83V8f9IU7TCXE
-         +gojYpNRDB5O/c0YHU2AmVf5X6ZkVwmniEskn0nE=
+        b=o+DjTKgOJ+OxL9eKvzy7o4M/kA6kBdEYT6JYakj45OZZCb7EVGVwvVW+XNm/vccMq
+         QCrHPH2U7o7plbzwRodFIPYyP+iG8UUHC45WKglZUTaHbfBugDftfqA+0eqoV9dTS8
+         LpWcfrnDql+CgRENouQHyJCsyxqP3bHSjIhF6UKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.1 26/30] UAS: fix alignment of scatter/gather segments
-Date:   Thu,  9 May 2019 20:42:58 +0200
-Message-Id: <20190509181256.628727841@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 5.1 08/30] usb: dwc3: Fix default lpm_nyet_threshold value
+Date:   Thu,  9 May 2019 20:42:40 +0200
+Message-Id: <20190509181252.423027909@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -58,78 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 3ae62a42090f1ed48e2313ed256a1182a85fb575 upstream.
+commit 8d791929b2fbdf7734c1596d808e55cb457f4562 upstream.
 
-This is the UAS version of
+The max possible value for DCTL.LPM_NYET_THRES is 15 and not 255. Change
+the default value to 15.
 
-747668dbc061b3e62bc1982767a3a1f9815fcf0e
-usb-storage: Set virt_boundary_mask to avoid SG overflows
-
-We are not as likely to be vulnerable as storage, as it is unlikelier
-that UAS is run over a controller without native support for SG,
-but the issue exists.
-The issue has been existing since the inception of the driver.
-
-Fixes: 115bb1ffa54c ("USB: Add UAS driver")
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 80caf7d21adc ("usb: dwc3: add lpm erratum support")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |   35 ++++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ drivers/usb/dwc3/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -789,24 +789,33 @@ static int uas_slave_alloc(struct scsi_d
- {
- 	struct uas_dev_info *devinfo =
- 		(struct uas_dev_info *)sdev->host->hostdata;
-+	int maxp;
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1218,7 +1218,7 @@ static void dwc3_get_properties(struct d
+ 	u8			tx_max_burst_prd;
  
- 	sdev->hostdata = devinfo;
+ 	/* default to highest possible threshold */
+-	lpm_nyet_threshold = 0xff;
++	lpm_nyet_threshold = 0xf;
  
- 	/*
--	 * USB has unusual DMA-alignment requirements: Although the
--	 * starting address of each scatter-gather element doesn't matter,
--	 * the length of each element except the last must be divisible
--	 * by the Bulk maxpacket value.  There's currently no way to
--	 * express this by block-layer constraints, so we'll cop out
--	 * and simply require addresses to be aligned at 512-byte
--	 * boundaries.  This is okay since most block I/O involves
--	 * hardware sectors that are multiples of 512 bytes in length,
--	 * and since host controllers up through USB 2.0 have maxpacket
--	 * values no larger than 512.
-+	 * We have two requirements here. We must satisfy the requirements
-+	 * of the physical HC and the demands of the protocol, as we
-+	 * definitely want no additional memory allocation in this path
-+	 * ruling out using bounce buffers.
- 	 *
--	 * But it doesn't suffice for Wireless USB, where Bulk maxpacket
--	 * values can be as large as 2048.  To make that work properly
--	 * will require changes to the block layer.
-+	 * For a transmission on USB to continue we must never send
-+	 * a package that is smaller than maxpacket. Hence the length of each
-+         * scatterlist element except the last must be divisible by the
-+         * Bulk maxpacket value.
-+	 * If the HC does not ensure that through SG,
-+	 * the upper layer must do that. We must assume nothing
-+	 * about the capabilities off the HC, so we use the most
-+	 * pessimistic requirement.
-+	 */
-+
-+	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
-+	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
-+
-+	/*
-+	 * The protocol has no requirements on alignment in the strict sense.
-+	 * Controllers may or may not have alignment restrictions.
-+	 * As this is not exported, we use an extremely conservative guess.
- 	 */
- 	blk_queue_update_dma_alignment(sdev->request_queue, (512 - 1));
- 
+ 	/* default to -3.5dB de-emphasis */
+ 	tx_de_emphasis = 1;
 
 
