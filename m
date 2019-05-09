@@ -2,101 +2,208 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8E1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C15AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EA1216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:09:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557364184;
-	bh=a0Fe5iOq9yzYPB9phD7q6sNgTD0wMUOBXAkPMDa6OKI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fC60LFZAjMebXTv6p1xzCKze5tDYS+SKXIy5exS7cjt+sIqZpBDOm905/OXEjD73F
-	 CA7CnckDhuDyzx5w4/0ob/myxy1f8K/j2QgWvQSwlQEX2dlcaj8o2brIM9DNoMUU61
-	 biarvrjdoMuRsduDXGuNwzzXG3rrv0GruRLNJa/s=
+	by mail.kernel.org (Postfix) with ESMTP id 4CDD6214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:15:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3KgZzLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfEIBJn (ORCPT
+        id S1726495AbfEIBPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfEIBJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:09:43 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F606214AF;
-        Thu,  9 May 2019 01:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557364182;
-        bh=a0Fe5iOq9yzYPB9phD7q6sNgTD0wMUOBXAkPMDa6OKI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pmbTsB9zmMA2lVN4aLELutZP8sm8eZbR74fGwDtUcpF7lHe8mFm8sNaSlf5QYzCAE
-         xT2gE18I1auYIrqQsa882Aifj21EAzWJVHnMYXFcbvBst6MNWocM9SJIlt/MKB2VTw
-         EYcm1wMWHhlRUwyKdjGFyTo7nvHw9H5kvytIiC/U=
-Date:   Wed, 8 May 2019 21:09:41 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-Subject: Re: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
- lsvmbus
-Message-ID: <20190509010941.GT1747@sasha-vm>
-References: <20190506172737.18122-1-avladu@cloudbasesolutions.com>
- <20190506173331.18906-1-avladu@cloudbasesolutions.com>
- <PU1P153MB016957AD2B1C356FA1BFB1A8BF310@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Wed, 8 May 2019 21:15:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41408 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfEIBPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:15:20 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z3so281395pgp.8;
+        Wed, 08 May 2019 18:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1+Jfl9iXviaxHbmbhnDjk1eQnpFz6l/2Nut9ww82zvo=;
+        b=a3KgZzLZ0y84UNUIY8RS+nYDRzFkAivRDtTwVjhJ1vYp+v2Z6HVSzmnnRowbVUedfI
+         93zPM5T0iF4iJCU1PddnaPwpC/nrCINNvHKs9PmQ0ayrLgURqYfh7EH67znRVZxTURN5
+         VsMO/ROT48Ly/mYey3OTt/dpawpdAk7DUuJetc8MAAQuinmU4P2PjwyMam4VRQGyIo8C
+         F5An8gjuExmDUN5kMRWiGJsQOqa4gz/Zgv9YpcjdE85z0otG8d1GXhf4e05Hdx2o8s1c
+         hn9kGYBDYT3L0e4JtQg2AhBurTKMtE9VNzBNe+yPm2LTyV/rg3Wp/BZ+nH8mhD2rC6M3
+         7+6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1+Jfl9iXviaxHbmbhnDjk1eQnpFz6l/2Nut9ww82zvo=;
+        b=a086WzWOF9zlpKfGBY4LodiG2Cqf1r78lIcu1kGog3yz0L8IXZX3AiX0Bm3K05j7UU
+         zFmvbNfY35LhML5kZ7dS0fRrhsbyrASjkP6idMqmIxkj8p+AZcj7fnrv2JqgM6i6r+A+
+         N6nKV0nuElLWf/e1MjnFkJYLwuAxJi++XY/wDHK654ADK4oQWqiN3aowMniqL7Q0KR2i
+         PCIhm5A8fEHp0Vcj/0r0ZumSDnO0d9OqH7nTiUjIvTuPEm+mkULak+uD3GkxtLL9/DQ2
+         RWZI+r6CyMa6Nq6Ra1ZcVFrKbGSEDg5OAsbcUTr2sMOotGJRRqmz615xO+V+DHzumOtc
+         ew+g==
+X-Gm-Message-State: APjAAAVnUsL4IZX+D6Com+KFV+QDYMijxJK67QglVIaqRDH8l8n3vztP
+        KBgRmvUYpzcEje71+1MWSUfPf+n1
+X-Google-Smtp-Source: APXvYqzW2wEIzqNsRgYl9IE5EX5P/24Mi1edBj4NYy1YPo+96Z3/rjpt+DtwN4pC4yu/pBUKvsKvyA==
+X-Received: by 2002:a65:628b:: with SMTP id f11mr1432751pgv.95.1557362619650;
+        Wed, 08 May 2019 17:43:39 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id 63sm543120pfu.95.2019.05.08.17.43.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 17:43:38 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+Date:   Wed, 8 May 2019 17:43:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB016957AD2B1C356FA1BFB1A8BF310@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190507080119.GB28121@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 05:02:47AM +0000, Dexuan Cui wrote:
->> From: Adrian Vladu <avladu@cloudbasesolutions.com>
->> Sent: Monday, May 6, 2019 10:34 AM
->> To: linux-kernel@vger.kernel.org
->> Cc: Adrian Vladu <avladu@cloudbasesolutions.com>; KY Srinivasan
->> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
->> Hemminger <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>;
->> Dexuan Cui <decui@microsoft.com>; Alessandro Pilotti
->> <apilotti@cloudbasesolutions.com>
->> Subject: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for lsvmbus
+On 5/7/19 1:01 AM, Greg KH wrote:
+> On Mon, May 06, 2019 at 08:14:12PM -0700, Frank Rowand wrote:
+>> On 5/1/19 4:01 PM, Brendan Higgins wrote:
+>>> ## TLDR
+>>>
+>>> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
+>>> 5.2.
+>>>
+>>> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
+>>> we would merge through your tree when the time came? Am I remembering
+>>> correctly?
+>>>
+>>> ## Background
+>>>
+>>> This patch set proposes KUnit, a lightweight unit testing and mocking
+>>> framework for the Linux kernel.
+>>>
+>>> Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+>>> it does not require installing the kernel on a test machine or in a VM
+>>> and does not require tests to be written in userspace running on a host
+>>> kernel. Additionally, KUnit is fast: From invocation to completion KUnit
+>>> can run several dozen tests in under a second. Currently, the entire
+>>> KUnit test suite for KUnit runs in under a second from the initial
+>>> invocation (build time excluded).
+>>>
+>>> KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+>>> Googletest/Googlemock for C++. KUnit provides facilities for defining
+>>> unit test cases, grouping related test cases into test suites, providing
+>>> common infrastructure for running tests, mocking, spying, and much more.
 >>
->> Fixed pep8/flake8 python style code for lsvmbus tool.
+>> As a result of the emails replying to this patch thread, I am now
+>> starting to look at kselftest.  My level of understanding is based
+>> on some slide presentations, an LWN article, https://kselftest.wiki.kernel.org/
+>> and a _tiny_ bit of looking at kselftest code.
 >>
->> The TAB indentation was on purpose ignored (pep8 rule W191) to make
->> sure the code is complying with the Linux code guideline.
->> The following command do not show any warnings now:
->> pep8 --ignore=W191 lsvmbus
->> flake8 --ignore=W191 lsvmbus
+>> tl;dr; I don't really understand kselftest yet.
 >>
->> Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
 >>
->> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->> Cc: Haiyang Zhang <haiyangz@microsoft.com>
->> Cc: Stephen Hemminger <sthemmin@microsoft.com>
->> Cc: Sasha Levin <sashal@kernel.org>
->> Cc: Dexuan Cui <decui@microsoft.com>
->> Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-[...]
->Looks good to me. Thanks, Adrian!
->
->Reviewed-by: Dexuan Cui <decui@microsoft.com>
+>> (1) why KUnit exists
+>>
+>>> ## What's so special about unit testing?
+>>>
+>>> A unit test is supposed to test a single unit of code in isolation,
+>>> hence the name. There should be no dependencies outside the control of
+>>> the test; this means no external dependencies, which makes tests orders
+>>> of magnitudes faster. Likewise, since there are no external dependencies,
+>>> there are no hoops to jump through to run the tests. Additionally, this
+>>> makes unit tests deterministic: a failing unit test always indicates a
+>>> problem. Finally, because unit tests necessarily have finer granularity,
+>>> they are able to test all code paths easily solving the classic problem
+>>> of difficulty in exercising error handling code.
+>>
+>> (2) KUnit is not meant to replace kselftest
+>>
+>>> ## Is KUnit trying to replace other testing frameworks for the kernel?
+>>>
+>>> No. Most existing tests for the Linux kernel are end-to-end tests, which
+>>> have their place. A well tested system has lots of unit tests, a
+>>> reasonable number of integration tests, and some end-to-end tests. KUnit
+>>> is just trying to address the unit test space which is currently not
+>>> being addressed.
+>>
+>> My understanding is that the intent of KUnit is to avoid booting a kernel on
+>> real hardware or in a virtual machine.  That seems to be a matter of semantics
+>> to me because isn't invoking a UML Linux just running the Linux kernel in
+>> a different form of virtualization?
+>>
+>> So I do not understand why KUnit is an improvement over kselftest.
+>>
+>> It seems to me that KUnit is just another piece of infrastructure that I
+>> am going to have to be familiar with as a kernel developer.  More overhead,
+>> more information to stuff into my tiny little brain.
+>>
+>> I would guess that some developers will focus on just one of the two test
+>> environments (and some will focus on both), splitting the development
+>> resources instead of pooling them on a common infrastructure.
+>>
+>> What am I missing?
+> 
+> kselftest provides no in-kernel framework for testing kernel code
+> specifically.  That should be what kunit provides, an "easy" way to
+> write in-kernel tests for things.
 
-Queued for hyperv-fixes, thanks!
+kselftest provides a mechanism for in-kernel tests via modules.  For
+example, see:
 
---
-Thanks,
-Sasha
+  tools/testing/selftests/vm/run_vmtests invokes:
+    tools/testing/selftests/vm/test_vmalloc.sh
+      loads module:
+        test_vmalloc
+        (which is built from lib/test_vmalloc.c if CONFIG_TEST_VMALLOC)
+
+A very quick and dirty search (likely to miss some tests) finds modules:
+
+  test_bitmap
+  test_bpf
+  test_firmware
+  test_printf
+  test_static_key_base
+  test_static_keys
+  test_user_copy
+  test_vmalloc
+
+-Frank
+
+> 
+> Brendan, did I get it right?
+> 
+> thanks,
+> 
+> greg k-h
+> .
+> 
+
