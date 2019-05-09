@@ -2,86 +2,138 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B30CC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0A7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CC62054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB2320989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="f+T0ZaBI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="op6o+sDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfEIPBv (ORCPT
+        id S1726803AbfEIPCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:01:51 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38992 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfEIPBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:01:50 -0400
-Received: from zn.tnic (p200300EC2F0F5F00A4EF991375FD2B9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:a4ef:9913:75fd:2b9a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E06F1EC0AD6;
-        Thu,  9 May 2019 17:01:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557414108;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lcBwb2Z+A8lEvl5TQHsmwSZ2gCU/axb76s/Arz6Z4D4=;
-        b=f+T0ZaBI9tX1QOINVSzFPUnyUS/ia4dOu7sR6qAO3Ct0zzrAx/jtbKTtzju7UdvnxSgqZ7
-        hjmG5doHYBzxV4aH2MKdN75OegL5Af7PV8YGFmvDHh7iFz3xAAKWQ/0bJ1Lt502CxDNnuf
-        MHFx+w2d7kzCYrJItufLtEVgf/Aeo3I=
-Date:   Thu, 9 May 2019 17:01:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
-Message-ID: <20190509150146.GE17053@zn.tnic>
-References: <20190508224201.27120-1-colin.king@canonical.com>
- <20190509141313.GA17053@zn.tnic>
- <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
- <20190509144113.GB17053@zn.tnic>
- <ebe15617-fe6a-2668-f14e-146811147f14@canonical.com>
+        Thu, 9 May 2019 11:02:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37422 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIPCq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:02:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a12so3544028wrn.4;
+        Thu, 09 May 2019 08:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4dsx/q7HbMfsJZPbIMqDoMkdbIHaHboqniF/scq0b4s=;
+        b=op6o+sDbTlaAqh7mLZq6GcfYJtBYwK/t5Ez5FeZjMGVM+R4nw64WCOnJHAIu6anCbL
+         BujfdZAeZMWJ/Dlaq2wod6cDWiBHkdyHNul9SUIeV0O98paTiQKNL4R0x324PuVX8Gjz
+         bFACvMoqM5o6BVotZK0jvKrZEwYCgTSHBdXcgXrwlzeEFePHDECxcqMvzZf2FN2552Hf
+         aQMw1DaX8t6ZcdCmAzG+Xt199k66+RES/9LNoSEjHu0kyuIlH4oCRpGLdAuWtfp2zxyu
+         cS2KNl3aGbr2CHQP0pDZPHAm33chi1iuIaAE9w8ax2fPTZ1Zi0bycLTZCT55uCViWszk
+         DqjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4dsx/q7HbMfsJZPbIMqDoMkdbIHaHboqniF/scq0b4s=;
+        b=prDAztzHNhYnvSRv9ukHuJnK1lsdGndY2o5UOq3XSfirVDP7VHyOrTS9nkyx6rw6uy
+         4KtO97QZDMRVIYVeRCv5nprV9UrSu0puy5KoLQoDaxAGRD79NqB4GzIwr9kYO4V/HcOJ
+         10h0ChBc2/cqrCmnBd+8Nf96SKxsDuBEXL0CJkH54zaGjqZ9Ek2170nHj418cjQtKqjE
+         dn480c+aZx3nZMjZWt5W8sssrQbUzgaGRvtdluoj/LkgYhXUDFWkjvjerrXNibuK9la7
+         3DX0Yyi8ACPSZNRmBI+vlUAZNhhcdcP01TJqzu5urvjmjyW+W8E9OD55t9QKCdZQJ6zo
+         ArUA==
+X-Gm-Message-State: APjAAAV4JG7HxuPx//L8WkTelGbKE55ImZsNKcBYGlbf2HgABFIv2dnZ
+        lXGNUqc4O6aB9N14WmexE0I=
+X-Google-Smtp-Source: APXvYqz1DHOTlq78BMwbYXJC2Qau6WsX7Qi1e9jzkdUqySLmmY1bFf1hVZGmkhfBKtlDD7VBl5mzVw==
+X-Received: by 2002:a5d:4ec9:: with SMTP id s9mr3667227wrv.223.1557414164337;
+        Thu, 09 May 2019 08:02:44 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id p18sm1628761wrp.38.2019.05.09.08.02.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 08:02:43 -0700 (PDT)
+Date:   Thu, 9 May 2019 17:02:42 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V12 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+Message-ID: <20190509150242.GC8907@ulmo>
+References: <1557408252-21281-1-git-send-email-Anson.Huang@nxp.com>
+ <1557408252-21281-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gLcqQrOcczDba7nC"
 Content-Disposition: inline
-In-Reply-To: <ebe15617-fe6a-2668-f14e-146811147f14@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1557408252-21281-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 03:55:32PM +0100, Colin Ian King wrote:
-> Yep, I agree, but explaining all the Coverity error types in a kernel
-> doc is going to take some effort, which I really don't have much time
-> for at the moment.
 
-I'm not suggesting you should document them all or write a comprehensive
-howto on how to run Coverity - all I'm suggesting is starting a small
-doc somewhere in Documentation/ which contains some info on what all
-those tools tags we use, mean and how people can find the information
-they contain. Basically what you said above (which I've snipped).
+--gLcqQrOcczDba7nC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But it would be a lot more helpful if it is written down so that people
-can look it up. Also, that doc will serve as a documentation of all
-those tags we're using in the kernel and what their format, etc would
-be.
+On Thu, May 09, 2019 at 01:29:19PM +0000, Anson Huang wrote:
+> Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> No change.
+> ---
+>  .../devicetree/bindings/pwm/imx-tpm-pwm.txt        | 22 ++++++++++++++++=
+++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
 
-Otherwise we'll have the current head scratching when a tag like that is
-encountered...
+Applied, thanks.
 
-Thx.
+Thierry
 
--- 
-Regards/Gruss,
-    Boris.
+--gLcqQrOcczDba7nC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzUQRIACgkQ3SOs138+
+s6GPVw/9Gdzsk9uaLau6Rkdgpm7E27qHxLaoGWnFIO4dSmbBB54pZ4RyBEndDzAM
++oKL64WpYLt3z8VCoEQTQ0kUyN3s1fcPfU8IQIAJ6D7cI8iIiaT7vyCWS3MCYT9q
++yx97WQdOo5AFnyy9VT6P4o9D3OE95QLrER7Wf3MXmAxWamrrS9cnly+DjB+Jien
+2mJfWK/nUfxYMSBOTZrKGNh85gPsrIb2AiMLGJn92KMyyd8/nRcHJMUlFZk+0bXn
+4VSRc2MFnUmlNcjYmqyDT/CcnkFVzLI6+Dlthcaiq3icjVw1Z61fyrG3IN+kW1KE
+Nhq7y2EywnEiFcNmhIYxjyqSDsblmJiPpAGD6EA2pLk/dxjvnoeu9KsiBiWZQnsA
+yWiaQKdUBAKJgP33vqiwv+mMQK8pYZrEThr8FKZ995qj37zlhP3ewtM9vrqMHUBN
+81hGXOH48ZBCkFT0vHPrm2c6+FMkqk+Y/sZmyxor5Pje8nR0MVh9X/w/u1U+wOlR
+RCzKA4pAvhWDzainC3x5uijo+HKomQ54wLq694KK97cUUp5CJxi0zD3PFMlye0Uc
+JQ7RGOWwunI3u/wkS+YUmA18kqvYzzCg7BLDA3+o7oVb1nYPIA0sSPyFqq7SXhh6
+YHy8kd3yzeuZ9ylMyUqeiei8prfyYiC1q2HyFi5w0ZImpq9bujY=
+=Jfgf
+-----END PGP SIGNATURE-----
+
+--gLcqQrOcczDba7nC--
