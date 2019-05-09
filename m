@@ -2,127 +2,102 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829B8C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F410C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607D3217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332802173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557431653;
+	bh=gMSZvH2jlV+E3jQtFqiDNxyLY2LVd3yMAAHRjgUI8bI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qhSrsykoFKEOsjmotENnPpS4MP6M7uItpK8ssnQTaz15nLTDItxWA1n0wwbjgo0Ao
+	 cE8oDqwWzkwLICDKRBgfVqf6vP1ipmGEdVaUaKWvppflW1hFhJkeIWl7rdpTGH6mym
+	 Ch2VLRFRLgjOb/ulSmSym6Ss77j2SGwo1IH1+R9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfEITvl (ORCPT
+        id S1727003AbfEITyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfEITvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:51:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC4320989;
-        Thu,  9 May 2019 19:51:39 +0000 (UTC)
-Date:   Thu, 9 May 2019 15:51:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     minyard@acm.org
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190509155137.7f84caaa@gandalf.local.home>
-In-Reply-To: <20190509193320.21105-1-minyard@acm.org>
-References: <20190509193320.21105-1-minyard@acm.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 May 2019 15:54:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37967 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfEITyM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:54:12 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 14so3091381ljj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oGG06UbFIpIka8kH8mF+DXo9oIX85rLGrtvTzTqeUYQ=;
+        b=Bhff/nyavJfT40PuALUNmV3NXjnHsrbN+pAjB4c+7XVvzcKW/ubj0wSd2FNv9dp01I
+         PEmNRE69Gq1/nhGrWzYnZGlXBoDh5fsc7w049UJnCsXJIwhkrczb6bJT2fpYeG8x9oPA
+         +f0BOPIBNwyU7J3ce6H2g/VMV1QRPpnEEQ8wU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oGG06UbFIpIka8kH8mF+DXo9oIX85rLGrtvTzTqeUYQ=;
+        b=OA8zgkQGWKCCwUXwoR1hF2JiRmfyDJeqGxowc5ueAGtL/OGMsFebOdoy/F2qRZ0NMQ
+         Px4qu4qrEHm0nPiSSU5V4oIZ5YUB4xFrpBZzuCVC9TpnDQuwXkjIOU9i+TtMyQTxEIa4
+         2NeRkBS/xw+icCER4qeBx2zTWvAe8D4Hjl83oQHLlQ2NLgepnSHHwelxujuREnU6ihAo
+         Tdxe4x+x1240hEFIEXkHFfIy/yPlpKdChUtgad2QNsUCB+PzaJsWmLRTL0gYDmR3ODQr
+         FLBvkjdebfFHNnKgFHjrhYwUKPZKY1/MADFxaxgAuq2+wWKeBTGvMbkzq/rNVcGYXfSj
+         V3lw==
+X-Gm-Message-State: APjAAAVD+cayXMlc/0i4IfiiFHLbJa+u1FEEiOVl/xBBYFWvrbj1K4YW
+        h5r/EuLfjqPBCcKY/lPrYtl0rp71oX0=
+X-Google-Smtp-Source: APXvYqzyNy+5VVj8CsmAR2X6geD+QdKvKCWIayORaVBC3Z7I8bCwyXOOfNm2a082i7/KBsRjeX2OyA==
+X-Received: by 2002:a2e:86c5:: with SMTP id n5mr3491004ljj.184.1557431649700;
+        Thu, 09 May 2019 12:54:09 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id f4sm563077ljm.80.2019.05.09.12.54.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 12:54:09 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id d15so3089567ljc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 12:54:08 -0700 (PDT)
+X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr3140904ljj.79.1557431648546;
+ Thu, 09 May 2019 12:54:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <alpine.LRH.2.21.1905100320110.25349@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1905100320110.25349@namei.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 May 2019 12:53:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whqzNFfeNOouBjH2GKMVgMi22fsNOaCgbUOnCPmKmEXeQ@mail.gmail.com>
+Message-ID: <CAHk-=whqzNFfeNOouBjH2GKMVgMi22fsNOaCgbUOnCPmKmEXeQ@mail.gmail.com>
+Subject: Re: [GIT PULL] security subsytem: TPM changes for v5.2
+To:     James Morris <jmorris@namei.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  9 May 2019 14:33:20 -0500
-minyard@acm.org wrote:
+On Thu, May 9, 2019 at 10:23 AM James Morris <jmorris@namei.org> wrote:
+>
+> Bugfixes and new selftests for v5.1 features (partial reads in /dev/tpm0).
 
-> From: Corey Minyard <cminyard@mvista.com>
-> 
-> The function call do_wait_for_common() has a race condition that
-> can result in lockups waiting for completions.  Adding the thread
-> to (and removing the thread from) the wait queue for the completion
-> is done outside the do loop in that function.  However, if the thread
-> is woken up, the swake_up_locked() function will delete the entry
-> from the wait queue.  If that happens and another thread sneaks
-> in and decrements the done count in the completion to zero, the
-> loop will go around again, but the thread will no longer be in the
-> wait queue, so there is no way to wake it up.
-> 
-> Visually, here's a diagram from Sebastian Andrzej Siewior:
->   T0                    T1                       T2
->   wait_for_completion()
->    do_wait_for_common()
->     __prepare_to_swait()
->      schedule()
->                         complete()
->                          x->done++ (0 -> 1)
->                          raw_spin_lock_irqsave()
->                          swake_up_locked()       wait_for_completion()
->                           wake_up_process(T0)
->                           list_del_init()
->                          raw_spin_unlock_irqrestore()
->                                                   raw_spin_lock_irq(&x->wait.lock)
->   raw_spin_lock_irq(&x->wait.lock)                x->done != UINT_MAX, 1 -> 0
->                                                   raw_spin_unlock_irq(&x->wait.lock)
->                                                   return 1
->    while (!x->done && timeout),
->    continue loop, not enqueued
->    on &x->wait
-> 
-> Basically, the problem is that the original wait queues used in
-> completions did not remove the item from the queue in the wakeup
-> function, but swake_up_locked() does.
-> 
-> Fix it by adding the thread to the wait queue inside the do loop.
-> The design of swait detects if it is already in the list and doesn't
-> do the list add again.
-> 
-> Fixes: a04ff6b4ec4ee7e ("completion: Use simple wait queues")
-> Signed-off-by: Corey Minyard <cminyard@mvista.com>
+What the heck is going on?
 
-Thanks!
+I got all of these long ago in the "TPM fixes" branch for 5.1. One
+month ago, merge commit a556810d8e06.
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+These are just rebased (!) copies of stuff I already have, and they should
 
--- Steve
+ (a) never have been rebased in the first place
 
-> ---
-> Changes since v1:
-> * Only move __prepare_to_swait() into the loop.  __prepare_to_swait()
->   handles if called when already in the list, and of course
->   __finish_swait() handles if the item is not queued on the
->   list.
-> 
->  kernel/sched/completion.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-> index 755a58084978..49c14137988e 100644
-> --- a/kernel/sched/completion.c
-> +++ b/kernel/sched/completion.c
-> @@ -72,12 +72,12 @@ do_wait_for_common(struct completion *x,
->  	if (!x->done) {
->  		DECLARE_SWAITQUEUE(wait);
->  
-> -		__prepare_to_swait(&x->wait, &wait);
->  		do {
->  			if (signal_pending_state(state, current)) {
->  				timeout = -ERESTARTSYS;
->  				break;
->  			}
-> +			__prepare_to_swait(&x->wait, &wait);
->  			__set_current_state(state);
->  			raw_spin_unlock_irq(&x->wait.lock);
->  			timeout = action(timeout);
+ (b) certainly not be re-sent to me as a new branch
 
+Please throw this branch away and make sure it really is dead and
+buried and never shows up again.
+
+And take a moment to look at what happened and why this broken branch
+was duplicated and sent twice!
+
+              Linus
