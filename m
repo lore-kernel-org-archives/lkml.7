@@ -2,125 +2,140 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8375C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D49C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0642085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqyPOTbm"
+	by mail.kernel.org (Postfix) with ESMTP id A8DCA217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfEIR5O (ORCPT
+        id S1726792AbfEIR5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:57:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39992 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfEIR5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:57:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d31so1588019pgl.7;
-        Thu, 09 May 2019 10:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2/Ojxz6R9uaL2KTgaEJOCwL4nXhymGztvuWe0n46Oas=;
-        b=sqyPOTbmHW6d3BX5lQrXfvRvmVT8Vhf37Zr+ifzy1/AgKiStiC9VncCPXw53Es650A
-         o5ff9frbPDhp/mEsQfUpU1WVYwKXl1VyWBxUrh34SoAXBFueb9AmKn0EYOFI3WkecKmc
-         4m7bI1fs0aZtf1cckpad1DGFyfIbfTSL8ZwtCLnTbVxp/qJEARtpbyeqPH0M74Uur9RN
-         MrUQQaPCrDhOVJhLA5Xf9SpFspA9IdMg4l6f4F9cgHQ7iwGzzRdTQTAmZkA91yJ9lKBg
-         uu5SiC0pNRlwvSLyh92gOYpw+eg0QJd49eTZrnNyipIzxP3D2p51UUsLWOEUihg+ThZl
-         Lylg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2/Ojxz6R9uaL2KTgaEJOCwL4nXhymGztvuWe0n46Oas=;
-        b=eqp3xJqkySTq2Hw5VKtY8x/f4HxSX5DZmE32KIriTBZPXT2teuAWS2iTcBFZ0phlrW
-         canUwrxqZX0qxWwgq3U2cvrrdidn+ZZI8UE6gFIPPg0maWN3JGnq5gVCbSdfb/gKSnvY
-         VdwGOYonkxN5xAiQ5/FMicDYtdscwnXfW5FQq8t9vX8WzpzkgBjuAsdj0Dcw4zbtgNAa
-         XW7xj9bRq8bwtlACdtzcaZ5IwLoEysnsD+dX3WjXxRvIGDgZuEjM3KyHEx2SHzQbQ3oU
-         rbbliitFnVz8eG9VeNFaFv261Yd9FVKJL8QyVJwWTqh7iUR9+PwdqfCdS3nW0My5V4RV
-         Auxg==
-X-Gm-Message-State: APjAAAUu+XaSC6qhn/9oLAyUbQMu8VALSLP2RMfDLmm4vKmpofLJewGt
-        MH1DkTey8LVvujE41XOLs9uYBIfpeLkKgnLjdDQ=
-X-Google-Smtp-Source: APXvYqyrrXc8pqDrg9zaDFCNTR+gfH90uQMsb+/u8yUKI37oLarx+6vUJYbsY8E+vLUwj2oLEHjksfwOgak9JFyzC3k=
-X-Received: by 2002:aa7:8212:: with SMTP id k18mr7162450pfi.50.1557424633583;
- Thu, 09 May 2019 10:57:13 -0700 (PDT)
+        Thu, 9 May 2019 13:57:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfEIR5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:57:24 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C53F21783;
+        Thu,  9 May 2019 17:57:23 +0000 (UTC)
+Date:   Thu, 9 May 2019 13:57:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] ktest: cleanup get_grub_index
+Message-ID: <20190509135721.4802161b@gandalf.local.home>
+In-Reply-To: <20190509174630.26713-3-msys.mizuma@gmail.com>
+References: <20190509174630.26713-1-msys.mizuma@gmail.com>
+        <20190509174630.26713-3-msys.mizuma@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
- <d6ee51cc-eb0f-2bb9-fef9-f8b4bf849076@gmail.com> <CAHp75VfMXAyUpWTrEHnv1NcQcHch+RHehWYTjk6KMTbXbtppPg@mail.gmail.com>
- <CAD8Lp46tCfi3ZCmmXZv3-ZDbon+6P8qC4GPR9Bt3uFFr=Sn4Cw@mail.gmail.com> <92518192-8cf0-7529-0c05-4b3e44ce04b7@gmail.com>
-In-Reply-To: <92518192-8cf0-7529-0c05-4b3e44ce04b7@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 May 2019 20:57:02 +0300
-Message-ID: <CAHp75Vdo80jfFt5s6KWK1dPJFAEa7BrQS_tcKLx6GPUrpQm+ag@mail.gmail.com>
-Subject: Re: [PATCH v3 04/11] platform/x86: asus-wmi: Improve DSTS WMI method
- ID detection
-To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 8:29 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
-> On 08.05.19 15:36, Andy Shevchenko wrote:> On Fri, Apr 19, 2019 at 1:08 PM
-> Yurii Pavlovskyi
-> > <yurii.pavlovskyi@gmail.com> wrote:
-> >>         int rv;
-> >> +       char *wmi_uid;
-> >
-> > Keep them in reversed spruce order.
->
-> What do you mean by that? Do you mean like this?
+On Thu,  9 May 2019 13:46:27 -0400
+Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
 
-> + char *wmi_uid;
-> int rv;
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> 
+> Cleanup get_grub_index().
 
-Yes.
+Hi Masayoshi,
 
-> int err;
+Thanks for the patches, quick comment below.
 
-Don't see this in the above, though.
+> 
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> ---
+>  tools/testing/ktest/ktest.pl | 50 +++++++++++-------------------------
+>  1 file changed, 15 insertions(+), 35 deletions(-)
+> 
+> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+> index 3862b23672f7..1255ea0d9df4 100755
+> --- a/tools/testing/ktest/ktest.pl
+> +++ b/tools/testing/ktest/ktest.pl
+> @@ -1934,46 +1934,26 @@ sub get_grub2_index {
+>  
+>  sub get_grub_index {
+>  
+> -    if ($reboot_type eq "grub2") {
+> -	get_grub2_index;
+> -	return;
+> -    }
+> -
+> -    if ($reboot_type ne "grub") {
+> -	return;
+> -    }
 
-> >> +#define ASUS_WMI_METHODID_DSTS         0x53544344 /* Device STatuS
-> (DCTS) */
-> >
-> > It's not clear from the description what 'C' stands for.
-> > Is there any specification which describes the difference and actual
-> > abbreviations?
-> >
-> Not that I know of. Daniel had written some research in the previous
-> version thread regarding where it is used, but as I understand from current
-> implementation the functional difference is not really there, as it serves
-> the same purpose as DSTS, just for another hardware.
->
-> On 09.05.19 08:08, Daniel Drake wrote:
-> > For clarity I think the constants could be renamed as
-> > ASUS_WMI_METHODID_DCTS and ASUS_WMI_METHODID_DSTS.
-> >
-> Agree, that'll be better.
+We still need something like:
 
-Also makes sense, but then fix up capitalization in the comment
-(perhaps "Device status" would be good in both cases).
+	if ($reboot_type !~ /^grub/) {
+		return;
+	}
 
--- 
-With Best Regards,
-Andy Shevchenko
+Because I believe this will run (and probably error) for syslinux boot
+systems. I have a couple, I could test it and find out ;-)
+
+-- Steve
+
+> -    return if (defined($grub_number) && defined($last_grub_menu) &&
+> -	       $last_grub_menu eq $grub_menu && defined($last_machine) &&
+> -	       $last_machine eq $machine);
+> -
+> -    doprint "Find grub menu ... ";
+> -    $grub_number = -1;
+> +    my $command;
+> +    my $target;
+> +    my $skip;
+> +    my $grub_menu_qt;
+>  
+> -    my $ssh_grub = $ssh_exec;
+> -    $ssh_grub =~ s,\$SSH_COMMAND,cat /boot/grub/menu.lst,g;
+> +    return if ($reboot_type ne "grub") and ($reboot_type ne "grub2");
+>  
+> -    open(IN, "$ssh_grub |")
+> -	or dodie "unable to get menu.lst";
+> -
+> -    my $found = 0;
+> -    my $grub_menu_qt = quotemeta($grub_menu);
+> +    $grub_menu_qt = quotemeta($grub_menu);
+>  
+> -    while (<IN>) {
+> -	if (/^\s*title\s+$grub_menu_qt\s*$/) {
+> -	    $grub_number++;
+> -	    $found = 1;
+> -	    last;
+> -	} elsif (/^\s*title\s/) {
+> -	    $grub_number++;
+> -	}
+> +    if ($reboot_type eq "grub") {
+> +	$command = "cat /boot/grub/menu.lst";
+> +	$target = '^\s*title\s+' . $grub_menu_qt . '\s*$';
+> +	$skip = '^\s*title\s';
+> +    } elsif ($reboot_type eq "grub2") {
+> +	$command = "cat $grub_file";
+> +	$target = '^menuentry.*' . $grub_menu_qt;
+> +	$skip = '^menuentry\s|^submenu\s';
+>      }
+> -    close(IN);
+>  
+> -    dodie "Could not find '$grub_menu' in /boot/grub/menu on $machine"
+> -	if (!$found);
+> -    doprint "$grub_number\n";
+> -    $last_grub_menu = $grub_menu;
+> -    $last_machine = $machine;
+> +    _get_grub_index($command, $target, $skip);
+>  }
+>  
+>  sub wait_for_input
+
