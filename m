@@ -2,124 +2,246 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E3AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1789CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681A1217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E7C2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 16:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xS1VywjW"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KHEHVvcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfEIQaA (ORCPT
+        id S1726698AbfEIQn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 12:30:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39081 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727410AbfEIQ30 (ORCPT
+        Thu, 9 May 2019 12:43:26 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54204 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfEIQn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 12:29:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w8so1499171wrl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:29:25 -0700 (PDT)
+        Thu, 9 May 2019 12:43:26 -0400
+Received: by mail-it1-f193.google.com with SMTP id m141so3297596ita.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 09:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=msbkGlp4GOhLlJp7h+ns/oU8AGbAhiOw2cYUQ/XgHZU=;
-        b=xS1VywjWrFyLh3lo+vb3RWdkkLAbJqqixS5IT4hU++kiORkBPbMTXfPcHMI2cmy5hn
-         xdt0HWeHDA71R+9fSDwE/gIvuX+0SiMt0AtCaBv/APZ2/Oj+Vyb7I8ZbIYIf2F5dT7PC
-         R1lokdKdcXy5XPtz/gYe2jRIBtYO5GG7KhgJfb/vYa1Ibyt2dV0SHJJHjSL+Oc6qzgBs
-         wyIosNYKxTUV4SVmdJyEoTr6p/+giTmP2ib5uUkZeYL2kKfsy5GjspWcYVfLahbI4/zs
-         DqUeYXI57tEJYSt6z4mjefpFXY0Zzp0D5VN4V3ErckH/5qfCcF4bri8usBdIuy2wXDMA
-         52Yw==
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ri3CpftuIpT9d0s+IVfuoxut7FIO9KJuWpxsKIznmbU=;
+        b=KHEHVvclKxX3b4VEd9rqQSKIfc/VB1DG46AiuqoQO6MmdzqKPChzqIjaWeLi8WZuSN
+         qg3vWPQpJh8P12dR1aDpy55Qfcft4l5n6tx87xVhtWFaRWgJ0e6J78POHm0EgkWmRDZy
+         cpd6tWNs2OYEAKfYsXj+ATze0Cs/+Vxv485d4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=msbkGlp4GOhLlJp7h+ns/oU8AGbAhiOw2cYUQ/XgHZU=;
-        b=ETavZvCS7X9lqm+5p2TIKAZXr6/hR3efhgTM0bqt67Qrp3fJCyXQNRej4vKu9zBJ6s
-         Tn87v3ChB6ZZak357ObrNIMO9Ea0ByDSgKl6+Lsw6N1YgO9goe+3R6Z7LY3yn9eY52vk
-         4cFlyWq6YXM/qQmcUHkn3xRtOZfuA/ww9C0lAmwX4JFK6BSpWJuYDYPWmHN69u6b2/pz
-         2sTqiPuqsCRuqGsR8qKz2t7eBRo0Ny0P09pB63RMdirK8QRBSJKAbQE/MfQBLKyOAErx
-         q8hrOKE9515RPnbiPv/81OBOGPKfw0pLVFQxAS2wQ5g0H5TKWdYjn95Zbq/zc+vHW+1Q
-         15rQ==
-X-Gm-Message-State: APjAAAWRSk49sCk8wZMiz1wr8ljWatx5/I9X76CLdCYosqZxea88GGE0
-        f+oyfbt3BvxSFakHIFxcBqZUXA==
-X-Google-Smtp-Source: APXvYqy25nPIxDd/ADG4cOOYu38LaDBQ0Ds9yuOXNFSzMNSqOVbU35BiUtC2tVw26LO1v2rXUAa3Kg==
-X-Received: by 2002:a5d:688a:: with SMTP id h10mr3674909wru.211.1557419364665;
-        Thu, 09 May 2019 09:29:24 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
-        by smtp.gmail.com with ESMTPSA id k2sm4116297wrg.22.2019.05.09.09.29.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 09:29:24 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     linus.walleij@linaro.org, khilman@baylibre.com
-Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/6] pinctrl: generic: add new 'drive-strength-microamp' property support
-Date:   Thu,  9 May 2019 18:29:16 +0200
-Message-Id: <20190509162920.7054-3-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190509162920.7054-1-glaroque@baylibre.com>
-References: <20190509162920.7054-1-glaroque@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ri3CpftuIpT9d0s+IVfuoxut7FIO9KJuWpxsKIznmbU=;
+        b=MPqBIs9EDMfKycFQ+cQyLS//MIuyNUDepHE8WfrFKuMHfQpTekCSAWvl/xOIPya9X0
+         m0NCZS9uBSU7leGoRmOkkGw9WckM+uTEjCOD/wR0jmQ7KCI6D52/azZ3vDNWVdgegG2h
+         JzuQfmZblSBjXOf6ArscIFMZXf+gvewjgAGdT4CLntcXroxMdOcyJsnff9+3M6swKTC7
+         kOi0AUm4mEcnBXvhxUrGlxg3svr0yyb9CyDdwP0qimEo/2SGysjvg7QeOrJCHF8Zm6Cf
+         3+IuKPCY6VVMP8FmWtnxzjh2f1wzu74nzPAA5ceLXgQhLqLtO8hRjeTlk1fecZ6IUxxp
+         A5SA==
+X-Gm-Message-State: APjAAAVVRhXfc4MJSiFUNfx2JHgAqvWQnjFyzlvmbqfhqSuZDEugYOro
+        G6QBel20WQvuG0G4GGNdMHDAmwi2RYRL0IV++kYbzQ==
+X-Google-Smtp-Source: APXvYqzWDnGMynWy3va8bT/rHKkJudfLzib87wLjGrfcxNr6pxPcPCAai2WR2EI/XFW0Fo6VtG3+2XlryAQjvA9Beww=
+X-Received: by 2002:a05:660c:4d0:: with SMTP id v16mr3974611itk.62.1557420205267;
+ Thu, 09 May 2019 09:43:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190509120903.28939-1-daniel.vetter@ffwll.ch> <20190509145620.2pjqko7copbxuzth@pathway.suse.cz>
+In-Reply-To: <20190509145620.2pjqko7copbxuzth@pathway.suse.cz>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Thu, 9 May 2019 18:43:12 +0200
+Message-ID: <CAKMK7uFTsr1F8nFExTvC7nWFQMcZ7ejh+k_X6E8EcMUaP3e29A@mail.gmail.com>
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add drive-strength-microamp property support to allow drive strength in uA
+On Thu, May 9, 2019 at 4:56 PM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Thu 2019-05-09 14:09:03, Daniel Vetter wrote:
+> > console_trylock, called from within printk, can be called from pretty
+> > much anywhere. Including try_to_wake_up. Note that this isn't common,
+> > usually the box is in pretty bad shape at that point already. But it
+> > really doesn't help when then lockdep jumps in and spams the logs,
+> > potentially obscuring the real backtrace we're really interested in.
+> > One case I've seen (slightly simplified backtrace):
+> >
+> >  Call Trace:
+> >   <IRQ>
+> >   console_trylock+0xe/0x60
+> >   vprintk_emit+0xf1/0x320
+> >   printk+0x4d/0x69
+> >   __warn_printk+0x46/0x90
+> >   native_smp_send_reschedule+0x2f/0x40
+> >   check_preempt_curr+0x81/0xa0
+> >   ttwu_do_wakeup+0x14/0x220
+> >   try_to_wake_up+0x218/0x5f0
+> >   pollwake+0x6f/0x90
+> >   credit_entropy_bits+0x204/0x310
+> >   add_interrupt_randomness+0x18f/0x210
+> >   handle_irq+0x67/0x160
+> >   do_IRQ+0x5e/0x130
+> >   common_interrupt+0xf/0xf
+> >   </IRQ>
+> >
+> > This alone isn't a problem, but the spinlock in the semaphore is also
+> > still held while waking up waiters (up() -> __up() -> try_to_wake_up()
+> > callchain), which then closes the runqueue vs. semaphore.lock loop,
+> > and upsets lockdep, which issues a circular locking splat to dmesg.
+> > Worse it upsets developers, since we don't want to spam dmesg with
+> > clutter when the machine is dying already.
+> >
+> > Fix this by creating a prinkt_safe_up() which calls wake_up_process
+> > outside of the spinlock. This isn't correct in full generality, but
+> > good enough for console_lock:
+> >
+> > - console_lock doesn't use interruptible or killable or timeout down()
+> >   calls, hence an up() is the only thing that can wake up a process.
+> >   Hence the process can't get woken and killed and reaped while we try
+> >   to wake it up too.
+> >
+> > - semaphore.c always updates the waiter list while under the spinlock,
+> >   so there's no other races. Specifically another process that races
+> >   with a quick console_lock/unlock while we've dropped the spinlock
+> >   already won't see our own waiter.
+> >
+> > Note that we only have to break the recursion for the semaphore.lock
+> > spinlock of the console_lock. Recursion within various scheduler
+> > related locks is already prevented by the printk_safe_enter/exit pair
+> > in __up_console_sem().
+>
+> This is not fully true. printk_safe() helps only when
+> the first try_to_wake_up() is called from printk_safe() context.
+>
+> > --- a/kernel/locking/semaphore.c
+> > +++ b/kernel/locking/semaphore.c
+> > @@ -197,6 +197,37 @@ struct semaphore_waiter {
+> >       bool up;
+> >  };
+> >
+> > +/**
+> > + * printk_safe_up - release the semaphore in console_unlock
+> > + * @sem: the semaphore to release
+> > + *
+> > + * Release the semaphore.  Unlike mutexes, up() may be called from any
+> > + * context and even by tasks which have never called down().
+> > + *
+> > + * NOTE: This is a special version of up() for console_unlock only. It is only
+> > + * safe if there are no killable, interruptible or timing out down() calls.
+> > + */
+> > +void printk_safe_up(struct semaphore *sem)
+> > +{
+> > +     unsigned long flags;
+> > +     struct semaphore_waiter *waiter = NULL;
+> > +
+> > +     raw_spin_lock_irqsave(&sem->lock, flags);
+> > +     if (likely(list_empty(&sem->wait_list))) {
+> > +             sem->count++;
+> > +     } else {
+> > +             waiter = list_first_entry(&sem->wait_list,
+> > +                                       struct semaphore_waiter, list);
+> > +             list_del(&waiter->list);
+> > +             waiter->up = true;
+> > +     }
+> > +     raw_spin_unlock_irqrestore(&sem->lock, flags);
+> > +
+> > +     if (waiter) /* protected by being sole wake source */
+> > +             wake_up_process(waiter->task);
+>
+> I still do not see how this could help. Let's take the above
+> backtrace as example:
+>
+>    <IRQ>
+>    console_trylock+0xe/0x60
+>    vprintk_emit+0xf1/0x320
+>    printk+0x4d/0x69
+>    __warn_printk+0x46/0x90
+>    native_smp_send_reschedule +0x2f/0x40
+>    check_preempt_curr+0x81/0xa0
+>    ttwu_do_wakeup+0x14/0x220
+>    try_to_wake_up+0x218/0x5f0
+>    pollwake+0x6f/0x90
+>    credit_entropy_bits+0x204/0x310
+>    add_interrupt_randomness+0x18f/0x210
+>    handle_irq+0x67/0x160
+>    do_IRQ+0x5e/0x130
+>    common_interrupt+0xf/0xf
+>    </IRQ>
+>
+> We have the following chain of calls:
+>
+>   + do_IRQ()
+>     ...
+>       + try_to_wake_up()    # takes p->pi_lock
+>         + ttwu_remote()     # takes rq lock
+>           + ttwu_do_wakeup()
+>             + check_preempt_curr()
+>               + native_smp_send_reschedule()
+>                 + __warn_printk()
+>                   + printk()
+>                     + vprintk_emit()
+>                       + console_trylock() # success
+>                       + console_unlock()
+>                         + up_console_sem()
+>                           + up() # wait list in not empty
+>                             + __up()
+>                               + wake_up_process()
+>                                 + try_to_wake_up()
+>
+> !BANG! Deadlock on p->pi_lock.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- drivers/pinctrl/pinconf-generic.c       | 2 ++
- include/linux/pinctrl/pinconf-generic.h | 3 +++
- 2 files changed, 5 insertions(+)
+Hm right ... I only looked at this starting with console_unlock.
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index b4f7f8a458ea..d0cbdb1ad76a 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -39,6 +39,7 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA", true),
-+	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH_UA, "output drive strength", "uA", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
-@@ -167,6 +168,7 @@ static const struct pinconf_generic_params dt_params[] = {
- 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
- 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
- 	{ "drive-strength", PIN_CONFIG_DRIVE_STRENGTH, 0 },
-+	{ "drive-strength-microamp", PIN_CONFIG_DRIVE_STRENGTH_UA, 0 },
- 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
- 	{ "input-disable", PIN_CONFIG_INPUT_ENABLE, 0 },
- 	{ "input-enable", PIN_CONFIG_INPUT_ENABLE, 1 },
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 6c0680641108..72d06d6a3099 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -55,6 +55,8 @@
-  *	push-pull mode, the argument is ignored.
-  * @PIN_CONFIG_DRIVE_STRENGTH: the pin will sink or source at most the current
-  *	passed as argument. The argument is in mA.
-+ * @PIN_CONFIG_DRIVE_STRENGTH_UA: the pin will sink or source at most the current
-+ *	passed as argument. The argument is in uA.
-  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
-  *	which means it will wait for signals to settle when reading inputs. The
-  *	argument gives the debounce time in usecs. Setting the
-@@ -112,6 +114,7 @@ enum pin_config_param {
- 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
- 	PIN_CONFIG_DRIVE_PUSH_PULL,
- 	PIN_CONFIG_DRIVE_STRENGTH,
-+	PIN_CONFIG_DRIVE_STRENGTH_UA,
- 	PIN_CONFIG_INPUT_DEBOUNCE,
- 	PIN_CONFIG_INPUT_ENABLE,
- 	PIN_CONFIG_INPUT_SCHMITT,
--- 
-2.17.1
+> It does not matter if the nested try_to_wake_up() was called
+> under sem->lock or outside.
+>
+> By other words. The patch removed one lockdep warning. But it just
+> just delayed the deadlock. It will not happen on sem->lock but
+> later on p->pi_lock.
+>
+> I am repeating myself. But IMHO, the only solution is to introduce
+> printk deferred context and use it in WARN_DEFERRED().
 
+One thing to keep in mind is that the kernel is already dying, and
+things will come crashing down later on (I've seen this only in dmesg
+tails capture in pstore in our CI, i.e. the box died for good). I just
+want to make sure that the useful information isn't overwritten by
+more dmesg splats that happen as a consequence of us somehow trying to
+run things on an offline cpu. Once console_unlock has completed in
+your above backtrace and the important stuff has gone out I'm totally
+fine with the kernel just dying. Pulling the wake_up_process out from
+under the semaphore.lock is enough to prevent lockdep from dumping
+more stuff while we're trying to print the important things, and I
+think the untangling of the locking hiararchy is useful irrespective
+of this lockdep splat. Plus Peter doesn't sound like he likes to roll
+out more printk_deferred kind of things.
+
+But if you think I should do the printk_deferred thing too I can look
+into that. Just not quite sure what that's supposed to look like now.
+-Daniel
+
+
+
+
+
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
